@@ -1,9 +1,10 @@
+# Netlify 설정 파일
+# 주의: GitHub Actions가 빌드를 담당하므로 여기서는 빌드하지 않습니다
+
 [build]
   publish = "build/web"
-  command = "flutter build web --release"
-
-[build.environment]
-  FLUTTER_VERSION = "3.38.1"
+  # GitHub Actions에서 빌드하므로 command는 비워둡니다
+  command = "echo 'Build is handled by GitHub Actions'"
 
 [[redirects]]
   from = "/*"
