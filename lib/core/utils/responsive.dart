@@ -64,11 +64,21 @@ class ResponsiveGridDelegate {
   /// 화면 크기에 따른 GridDelegate 반환
   static SliverGridDelegate getDelegate(BuildContext context) {
     final columns = getColumns(context);
+    // childAspectRatio를 화면 크기에 따라 조정하여 overflow 방지
+    double aspectRatio;
+    if (Responsive.isDesktop(context)) {
+      aspectRatio = 0.85; // 데스크톱: 더 세로로 긴 카드
+    } else if (Responsive.isTablet(context)) {
+      aspectRatio = 0.75; // 태블릿: 세로로 더 긴 카드
+    } else {
+      aspectRatio = 0.95; // 모바일: 거의 정사각형
+    }
+
     return SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: columns,
       crossAxisSpacing: AppSizes.spaceM,
       mainAxisSpacing: AppSizes.spaceM,
-      childAspectRatio: 1.2, // 카드 비율 조정
+      childAspectRatio: aspectRatio,
     );
   }
 }

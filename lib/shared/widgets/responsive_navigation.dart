@@ -33,6 +33,8 @@ class ResponsiveNavigation extends StatelessWidget {
     }
     // 태블릿/데스크톱: Navigation Rail + Body
     else {
+      final isDesktop = Responsive.isDesktop(context);
+
       return Scaffold(
         body: Row(
           children: [
@@ -40,10 +42,11 @@ class ResponsiveNavigation extends StatelessWidget {
             NavigationRail(
               selectedIndex: selectedIndex,
               onDestinationSelected: onDestinationSelected,
-              labelType: Responsive.isDesktop(context)
-                  ? NavigationRailLabelType.all
+              // extended가 true일 때는 labelType을 null로 설정해야 함
+              labelType: isDesktop
+                  ? null
                   : NavigationRailLabelType.selected,
-              extended: Responsive.isDesktop(context),
+              extended: isDesktop,
               destinations: destinations
                   .map(
                     (dest) => NavigationRailDestination(

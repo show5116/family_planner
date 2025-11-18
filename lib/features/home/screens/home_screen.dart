@@ -110,43 +110,67 @@ class _DashboardTab extends StatelessWidget {
   }
 
   Widget _buildDashboardBody(BuildContext context) {
-    return ResponsiveConstraints(
-      child: CustomScrollView(
-        slivers: [
-          // 인사말 섹션
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: ResponsivePadding.getPagePadding(context),
-              child: Column(
-                children: [
-                  const SizedBox(height: AppSizes.spaceM),
-                  _GreetingSection(),
-                  const SizedBox(height: AppSizes.spaceL),
-                ],
+    // 데스크톱에서는 최대 너비 제한
+    final maxWidth = Responsive.isDesktop(context) ? 1200.0 : double.infinity;
+    final horizontalPadding = ResponsivePadding.getHorizontalPadding(context);
+
+    return CustomScrollView(
+      slivers: [
+        // 인사말 섹션
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: AppSizes.spaceM,
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: AppSizes.spaceM),
+                    _GreetingSection(),
+                    const SizedBox(height: AppSizes.spaceL),
+                  ],
+                ),
               ),
             ),
           ),
-          // 대시보드 그리드
-          SliverPadding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsivePadding.getHorizontalPadding(context),
-            ),
-            sliver: SliverGrid(
-              gridDelegate: ResponsiveGridDelegate.getDelegate(context),
-              delegate: SliverChildListDelegate([
-                const TodayScheduleWidget(),
-                const InvestmentSummaryWidget(),
-                const TodoSummaryWidget(),
-                const AssetSummaryWidget(),
-              ]),
+        ),
+        // 대시보드 그리드
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: ResponsiveGridDelegate.getColumns(context),
+                  crossAxisSpacing: AppSizes.spaceM,
+                  mainAxisSpacing: AppSizes.spaceM,
+                  childAspectRatio: Responsive.isDesktop(context)
+                      ? 0.85
+                      : Responsive.isTablet(context)
+                          ? 0.75
+                          : 0.95,
+                  children: const [
+                    TodayScheduleWidget(),
+                    InvestmentSummaryWidget(),
+                    TodoSummaryWidget(),
+                    AssetSummaryWidget(),
+                  ],
+                ),
+              ),
             ),
           ),
-          // 하단 여백
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppSizes.spaceXL),
-          ),
-        ],
-      ),
+        ),
+        // 하단 여백
+        const SliverToBoxAdapter(
+          child: SizedBox(height: AppSizes.spaceXL),
+        ),
+      ],
     );
   }
 }
