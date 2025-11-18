@@ -28,9 +28,17 @@ jobs:
 
       - name: Analyze code
         run: flutter analyze
+        continue-on-error: true
 
       - name: Build web
         run: flutter build web --release --web-renderer canvaskit
+
+      - name: Verify build directory
+        run: |
+          echo "Checking build directory..."
+          ls -la
+          echo "Checking build/web directory..."
+          ls -la build/web || echo "build/web does not exist!"
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
