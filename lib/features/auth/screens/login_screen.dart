@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 
 /// 로그인 화면 (로고 사용 예제)
@@ -11,17 +12,34 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 반응형 최대 너비 설정
+    final maxWidth = Responsive.isMobile(context)
+        ? double.infinity
+        : Responsive.isTablet(context)
+            ? 500.0
+            : 450.0;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.spaceXL),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 로고
-                const AppLogo(size: 150),
-                const SizedBox(height: AppSizes.spaceXXL),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(
+                Responsive.isMobile(context) ? AppSizes.spaceXL : AppSizes.spaceXXL,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                // 로고 (반응형 크기)
+                AppLogo(
+                  size: Responsive.isMobile(context) ? 150 : 180,
+                ),
+                SizedBox(
+                  height: Responsive.isMobile(context)
+                      ? AppSizes.spaceXXL
+                      : AppSizes.spaceXXL * 1.5,
+                ),
 
                 // 이메일 입력
                 TextField(
@@ -117,7 +135,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
