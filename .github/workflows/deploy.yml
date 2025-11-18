@@ -31,7 +31,7 @@ jobs:
         continue-on-error: true
 
       - name: Build web
-        run: flutter build web --release --web-renderer canvaskit
+        run: flutter build web --release
 
       - name: Verify build directory
         run: |
