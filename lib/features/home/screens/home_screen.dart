@@ -92,11 +92,6 @@ class _DashboardTab extends StatelessWidget {
             onPressed: () {},
             tooltip: '알림',
           ),
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {},
-            tooltip: '설정',
-          ),
         ],
       ),
       body: RefreshIndicator(
@@ -144,24 +139,7 @@ class _DashboardTab extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: maxWidth),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: ResponsiveGridDelegate.getColumns(context),
-                  crossAxisSpacing: AppSizes.spaceM,
-                  mainAxisSpacing: AppSizes.spaceM,
-                  childAspectRatio: Responsive.isDesktop(context)
-                      ? 0.85
-                      : Responsive.isTablet(context)
-                          ? 0.75
-                          : 0.95,
-                  children: const [
-                    TodayScheduleWidget(),
-                    InvestmentSummaryWidget(),
-                    TodoSummaryWidget(),
-                    AssetSummaryWidget(),
-                  ],
-                ),
+                child: _DashboardGrid(),
               ),
             ),
           ),
@@ -169,6 +147,46 @@ class _DashboardTab extends StatelessWidget {
         // 하단 여백
         const SliverToBoxAdapter(
           child: SizedBox(height: AppSizes.spaceXL),
+        ),
+      ],
+    );
+  }
+}
+
+// 대시보드 그리드 위젯
+class _DashboardGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // 화면 크기에 따른 카드 너비 계산
+    final screenWidth = MediaQuery.of(context).size.width;
+    final maxWidth = Responsive.isDesktop(context) ? 1200.0 : screenWidth;
+    final horizontalPadding = ResponsivePadding.getHorizontalPadding(context);
+    final availableWidth = maxWidth - (horizontalPadding * 2);
+
+    // 컬럼 수에 따른 카드 너비 계산
+    final columns = ResponsiveGridDelegate.getColumns(context);
+    final spacing = AppSizes.spaceM;
+    final cardWidth = (availableWidth - (spacing * (columns - 1))) / columns;
+
+    return Wrap(
+      spacing: spacing,
+      runSpacing: spacing,
+      children: [
+        SizedBox(
+          width: cardWidth,
+          child: const TodayScheduleWidget(),
+        ),
+        SizedBox(
+          width: cardWidth,
+          child: const InvestmentSummaryWidget(),
+        ),
+        SizedBox(
+          width: cardWidth,
+          child: const TodoSummaryWidget(),
+        ),
+        SizedBox(
+          width: cardWidth,
+          child: const AssetSummaryWidget(),
         ),
       ],
     );
@@ -394,7 +412,13 @@ class _MoreTab extends StatelessWidget {
             '테마 설정',
             route: AppRoutes.theme,
           ),
-          _buildMenuItem(context, Icons.logout, '로그아웃', isDestructive: true),
+          _buildMenuItem(
+            context,
+            Icons.logout,
+            '로그아웃',
+            isDestructive: true,
+            route: AppRoutes.login,
+          ),
         ],
       ),
     );
@@ -421,7 +445,12 @@ class _MoreTab extends StatelessWidget {
       trailing: const Icon(Icons.chevron_right),
       onTap: () {
         if (route != null) {
-          context.push(route);
+          // 로그아웃은 go를 사용 (스택 초기화), 나머지는 push 사용
+          if (isDestructive) {
+            context.go(route);
+          } else {
+            context.push(route);
+          }
         }
       },
     );

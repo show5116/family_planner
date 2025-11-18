@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/screens/home_screen.dart';
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
+import 'package:family_planner/features/auth/screens/login_screen.dart';
 
 /// Family Planner 앱의 라우터 설정
 /// go_router를 사용한 선언적 라우팅
@@ -13,6 +14,13 @@ class AppRouter {
     initialLocation: AppRoutes.home,
     debugLogDiagnostics: true,
     routes: [
+      // Auth Routes
+      GoRoute(
+        path: AppRoutes.login,
+        name: 'login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+
       // Main Routes with Bottom Navigation
       GoRoute(
         path: AppRoutes.home,
@@ -26,13 +34,6 @@ class AppRouter {
         name: 'theme',
         builder: (context, state) => const ThemeSettingsScreen(),
       ),
-
-      // Auth Routes (추후 구현)
-      // GoRoute(
-      //   path: AppRoutes.login,
-      //   name: 'login',
-      //   builder: (context, state) => const LoginScreen(),
-      // ),
 
       // Assets Routes (추후 구현)
       // GoRoute(
