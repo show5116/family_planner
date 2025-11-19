@@ -1,0 +1,46 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "family_planner (Web - Chrome)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "args": [
+        "--web-port=3001"
+      ]
+    },
+    {
+      "name": "family_planner (Web - Edge)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "edge",
+      "args": [
+        "--web-port=3001"
+      ]
+    },
+    {
+      "name": "family_planner (Mobile/Desktop)",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "family_planner (Profile Mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--web-port=3001"
+      ]
+    },
+    {
+      "name": "family_planner (Release Mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--web-port=3001"
+      ]
+    }
+  ]
+}

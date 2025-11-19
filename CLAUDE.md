@@ -22,10 +22,16 @@ flutter pub upgrade
 # 기본 디바이스에서 실행
 flutter run
 
+# 웹에서 실행 (포트 3001 고정)
+flutter run -d chrome --web-port=3001
+flutter run -d edge --web-port=3001
+
+# VS Code에서 F5로 실행 시 자동으로 포트 3001 사용
+# 접속 주소: http://localhost:3001
+
 # 특정 디바이스에서 실행
 flutter devices              # 사용 가능한 디바이스 목록 표시
 flutter run -d <device-id>   # 특정 디바이스에서 실행
-flutter run -d chrome        # Chrome(웹)에서 실행
 flutter run -d windows       # Windows에서 실행
 
 # 핫 리로드 활성화 상태로 실행 (기본값)
@@ -235,3 +241,17 @@ git commit -m "Initial commit"
 - 프로덕션 코드에서는 `print()` 대신 `debugPrint()`를 사용하세요 (큰 출력에 더 좋음)
 - Material Design 3가 사용 가능하며, `main.dart`의 `ThemeData`를 통해 설정할 수 있습니다
 - `.metadata` 파일은 Flutter 프로젝트 메타데이터를 추적하므로 수동 편집을 피하세요
+
+## 포트 설정
+
+### 프론트엔드 (Flutter Web)
+- **로컬 개발**: `localhost:3001`
+- VS Code에서 F5로 실행 시 자동으로 3001 포트 사용
+- 수동 실행: `flutter run -d chrome --web-port=3001`
+
+### 백엔드 API
+- **개발 환경**: `http://localhost:3000`
+- **프로덕션**: `https://familyplannerbackend-production.up.railway.app`
+- 환경은 빌드 모드에 따라 자동 전환 (Debug → 개발, Release → 프로덕션)
+
+자세한 내용은 `lib/core/services/README.md` 참조
