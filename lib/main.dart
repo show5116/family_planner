@@ -1,11 +1,27 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/theme/app_theme.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
+import 'package:family_planner/core/config/environment.dart';
 
 void main() {
+  // 환경 설정 초기화
+  // Release 모드면 프로덕션, 아니면 개발 환경
+  if (kReleaseMode) {
+    EnvironmentConfig.setEnvironment(Environment.production);
+  } else {
+    EnvironmentConfig.setEnvironment(Environment.development);
+  }
+
+  // 환경 정보 출력 (디버그 모드)
+  if (kDebugMode) {
+    print('🚀 Environment: ${EnvironmentConfig.currentEnvironment}');
+    print('🌐 API Base URL: ${EnvironmentConfig.apiBaseUrl}');
+  }
+
   runApp(
     // Riverpod의 ProviderScope로 앱을 감싸기
     const ProviderScope(
