@@ -12,29 +12,19 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 반응형 최대 너비 설정
-    final maxWidth = Responsive.isMobile(context)
-        ? double.infinity
-        : Responsive.isTablet(context)
-            ? 500.0
-            : 450.0;
-
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxWidth),
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(
-                Responsive.isMobile(context) ? AppSizes.spaceXL : AppSizes.spaceXXL,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsivePadding.getHorizontalPadding(context),
+            vertical: AppSizes.spaceXL,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 // 로고 (반응형 크기)
-                AppLogo(
-                  size: Responsive.isMobile(context) ? 150 : 180,
-                ),
+                AppLogo(size: Responsive.isMobile(context) ? 150 : 180),
                 SizedBox(
                   height: Responsive.isMobile(context)
                       ? AppSizes.spaceXXL
@@ -47,7 +37,9 @@ class LoginScreen extends StatelessWidget {
                     labelText: '이메일',
                     prefixIcon: const Icon(Icons.email_outlined),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                      borderRadius: BorderRadius.circular(
+                        AppSizes.radiusMedium,
+                      ),
                     ),
                   ),
                 ),
@@ -60,7 +52,9 @@ class LoginScreen extends StatelessWidget {
                     labelText: '비밀번호',
                     prefixIcon: const Icon(Icons.lock_outlined),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                      borderRadius: BorderRadius.circular(
+                        AppSizes.radiusMedium,
+                      ),
                     ),
                   ),
                 ),
@@ -85,12 +79,14 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     const Expanded(child: Divider()),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceM,
+                      ),
                       child: Text(
                         '또는',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ),
                     const Expanded(child: Divider()),
@@ -129,14 +125,10 @@ class LoginScreen extends StatelessWidget {
                       '계정이 없으신가요? ',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text('회원가입'),
-                    ),
+                    TextButton(onPressed: () {}, child: const Text('회원가입')),
                   ],
                 ),
-                ],
-              ),
+              ],
             ),
           ),
         ),

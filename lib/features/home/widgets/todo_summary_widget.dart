@@ -98,7 +98,7 @@ class _TodoItemState extends State<_TodoItem> {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: priorityColor.withOpacity(0.1),
+              color: priorityColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
             ),
             child: Text(

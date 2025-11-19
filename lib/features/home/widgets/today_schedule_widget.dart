@@ -49,7 +49,7 @@ class _ScheduleItem extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: schedule.color.withOpacity(0.1),
+              color: schedule.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
             ),
             child: Icon(

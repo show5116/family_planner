@@ -8,6 +8,9 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
 import 'package:family_planner/core/utils/responsive.dart';
+import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 /// 메인 홈 화면
 /// Bottom Navigation을 포함한 메인 레이아웃
@@ -20,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  int _dashboardRefreshKey = 0;
 
   // Bottom Navigation 아이템들
   final List<NavigationDestination> _destinations = const [
@@ -50,14 +54,25 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
-  // 각 탭에 해당하는 화면들 (임시)
-  final List<Widget> _screens = const [
-    _DashboardTab(),
-    _AssetsTab(),
-    _CalendarTab(),
-    _TodoTab(),
-    _MoreTab(),
-  ];
+  // 각 탭에 해당하는 화면들
+  List<Widget> get _screens => [
+        _DashboardTab(key: ValueKey(_dashboardRefreshKey)),
+        const _AssetsTab(),
+        const _CalendarTab(),
+        const _TodoTab(),
+        const _MoreTab(),
+      ];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 화면이 다시 보일 때마다 홈 탭 새로고침
+    if (_selectedIndex == 0) {
+      setState(() {
+        _dashboardRefreshKey++;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
       onDestinationSelected: (index) {
         setState(() {
           _selectedIndex = index;
+          // 홈 탭으로 전환할 때 새로고침
+          if (index == 0) {
+            _dashboardRefreshKey++;
+          }
         });
       },
       destinations: _destinations,
@@ -79,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 // 대시보드 탭
 class _DashboardTab extends StatelessWidget {
-  const _DashboardTab();
+  const _DashboardTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -154,9 +173,40 @@ class _DashboardTab extends StatelessWidget {
 }
 
 // 대시보드 그리드 위젯
-class _DashboardGrid extends StatelessWidget {
+class _DashboardGrid extends StatefulWidget {
+  @override
+  State<_DashboardGrid> createState() => _DashboardGridState();
+}
+
+class _DashboardGridState extends State<_DashboardGrid> {
+  DashboardWidgetSettings _settings = DashboardWidgetSettings.defaultSettings();
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final settingsJson = prefs.getString('dashboard_widget_settings');
+
+    setState(() {
+      if (settingsJson != null) {
+        _settings = DashboardWidgetSettings.fromJson(
+          json.decode(settingsJson) as Map<String, dynamic>,
+        );
+      }
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     // 화면 크기에 따른 카드 너비 계산
     final screenWidth = MediaQuery.of(context).size.width;
     final maxWidth = Responsive.isDesktop(context) ? 1200.0 : screenWidth;
@@ -168,27 +218,85 @@ class _DashboardGrid extends StatelessWidget {
     final spacing = AppSizes.spaceM;
     final cardWidth = (availableWidth - (spacing * (columns - 1))) / columns;
 
-    return Wrap(
-      spacing: spacing,
-      runSpacing: spacing,
-      children: [
+    // 활성화된 위젯만 표시
+    final List<Widget> activeWidgets = [];
+
+    if (_settings.showTodaySchedule) {
+      activeWidgets.add(
         SizedBox(
           width: cardWidth,
           child: const TodayScheduleWidget(),
         ),
+      );
+    }
+
+    if (_settings.showInvestmentSummary) {
+      activeWidgets.add(
         SizedBox(
           width: cardWidth,
           child: const InvestmentSummaryWidget(),
         ),
+      );
+    }
+
+    if (_settings.showTodoSummary) {
+      activeWidgets.add(
         SizedBox(
           width: cardWidth,
           child: const TodoSummaryWidget(),
         ),
+      );
+    }
+
+    if (_settings.showAssetSummary) {
+      activeWidgets.add(
         SizedBox(
           width: cardWidth,
           child: const AssetSummaryWidget(),
         ),
-      ],
+      );
+    }
+
+    // 활성화된 위젯이 없으면 안내 메시지 표시
+    if (activeWidgets.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.widgets_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: AppSizes.spaceM),
+            Text(
+              '표시할 위젯이 없습니다',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            Text(
+              '설정에서 위젯을 활성화하세요',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+            const SizedBox(height: AppSizes.spaceL),
+            ElevatedButton.icon(
+              onPressed: () => context.push(AppRoutes.homeWidgetSettings),
+              icon: const Icon(Icons.settings),
+              label: const Text('위젯 설정'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Wrap(
+      spacing: spacing,
+      runSpacing: spacing,
+      children: activeWidgets,
     );
   }
 }
@@ -404,13 +512,11 @@ class _MoreTab extends StatelessWidget {
           _buildMenuItem(context, Icons.note, '메모'),
           _buildMenuItem(context, Icons.games, '미니게임'),
           const Divider(),
-          _buildMenuItem(context, Icons.group, '가족 관리'),
-          _buildMenuItem(context, Icons.notifications, '알림 설정'),
           _buildMenuItem(
             context,
-            Icons.palette,
-            '테마 설정',
-            route: AppRoutes.theme,
+            Icons.settings,
+            '설정',
+            route: AppRoutes.settings,
           ),
           _buildMenuItem(
             context,

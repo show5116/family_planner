@@ -76,7 +76,7 @@ class _LogoIcon extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   blurRadius: size * 0.15,
                   offset: Offset(0, size * 0.08),
                 ),
@@ -146,7 +146,7 @@ class _HousePainter extends CustomPainter {
 
     // 문 (작은 사각형)
     final doorPaint = Paint()
-      ..color = color.withOpacity(0.3)
+      ..color = color.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     canvas.drawRect(
@@ -164,7 +164,7 @@ class _HousePainter extends CustomPainter {
 
     // 창문 (좌측)
     final windowPaint = Paint()
-      ..color = color.withOpacity(0.3)
+      ..color = color.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     canvas.drawRect(

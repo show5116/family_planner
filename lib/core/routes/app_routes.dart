@@ -33,6 +33,7 @@ class AppRoutes {
 
   // Settings Routes
   static const String settings = '/settings';
+  static const String homeWidgetSettings = '/settings/home-widgets';
   static const String profile = '/settings/profile';
   static const String familyManagement = '/settings/family';
   static const String notifications = '/settings/notifications';

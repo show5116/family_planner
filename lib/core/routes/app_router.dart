@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/screens/home_screen.dart';
+import 'package:family_planner/features/settings/screens/settings_screen.dart';
+import 'package:family_planner/features/settings/screens/home_widget_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/auth/screens/login_screen.dart';
 
@@ -29,6 +31,16 @@ class AppRouter {
       ),
 
       // Settings Routes
+      GoRoute(
+        path: AppRoutes.settings,
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.homeWidgetSettings,
+        name: 'homeWidgetSettings',
+        builder: (context, state) => const HomeWidgetSettingsScreen(),
+      ),
       GoRoute(
         path: AppRoutes.theme,
         name: 'theme',
