@@ -6,6 +6,7 @@ import 'package:family_planner/core/theme/app_theme.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 void main() {
   // 환경 설정 초기화
@@ -30,13 +31,29 @@ void main() {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    // 앱 시작 시 인증 상태 확인
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authProvider.notifier).checkAuthStatus();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // 테마 모드 상태 감지
     final themeMode = ref.watch(themeModeProvider);
+    // GoRouter 인스턴스 가져오기
+    final router = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
       title: 'Family Planner',
@@ -48,7 +65,7 @@ class MyApp extends ConsumerWidget {
       themeMode: themeMode, // Provider에서 관리되는 테마 모드 사용
 
       // 라우팅 설정
-      routerConfig: AppRouter.router,
+      routerConfig: router,
 
       // 로케일 설정
       locale: const Locale('ko', 'KR'),

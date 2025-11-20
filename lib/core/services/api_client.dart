@@ -176,6 +176,22 @@ class ApiClient {
     await prefs.remove('refresh_token');
   }
 
+  /// 토큰 존재 여부 확인
+  Future<bool> hasValidToken() async {
+    final accessToken = await _getAccessToken();
+    return accessToken != null && accessToken.isNotEmpty;
+  }
+
+  /// Access Token 가져오기 (Public)
+  Future<String?> getAccessToken() async {
+    return await _getAccessToken();
+  }
+
+  /// Refresh Token 가져오기 (Public)
+  Future<String?> getRefreshToken() async {
+    return await _getRefreshToken();
+  }
+
   // HTTP Methods
 
   /// GET 요청

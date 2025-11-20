@@ -104,4 +104,40 @@ class AuthService extends ApiServiceBase {
       throw handleError(e);
     }
   }
+
+  /// 이메일 인증
+  Future<Map<String, dynamic>> verifyEmail({
+    required String code,
+  }) async {
+    try {
+      final response = await apiClient.post(
+        ApiConstants.verifyEmail,
+        data: {
+          'code': code,
+        },
+      );
+
+      return handleResponse<Map<String, dynamic>>(response);
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// 인증 이메일 재전송
+  Future<Map<String, dynamic>> resendVerification({
+    required String email,
+  }) async {
+    try {
+      final response = await apiClient.post(
+        ApiConstants.resendVerification,
+        data: {
+          'email': email,
+        },
+      );
+
+      return handleResponse<Map<String, dynamic>>(response);
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
 }

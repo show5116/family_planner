@@ -6,11 +6,13 @@ class ApiConstants {
   static const String apiVersion = '/api/v1';
 
   // Auth Endpoints
-  static const String login = '$apiVersion/auth/login';
-  static const String register = '$apiVersion/auth/register';
-  static const String logout = '$apiVersion/auth/logout';
-  static const String refreshToken = '$apiVersion/auth/refresh';
-  static const String verifyToken = '$apiVersion/auth/verify';
+  static const String login = '/auth/login';
+  static const String register = '/auth/signup';
+  static const String logout = '/auth/logout';
+  static const String refreshToken = '/auth/refresh';
+  static const String verifyToken = '/auth/me';
+  static const String verifyEmail = '/auth/verify-email';
+  static const String resendVerification = '/auth/resend-verification';
 
   // User Endpoints
   static const String userProfile = '$apiVersion/users/profile';

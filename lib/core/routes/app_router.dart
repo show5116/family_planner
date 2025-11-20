@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/screens/home_screen.dart';
@@ -6,21 +7,72 @@ import 'package:family_planner/features/settings/screens/settings_screen.dart';
 import 'package:family_planner/features/settings/screens/home_widget_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/auth/screens/login_screen.dart';
+import 'package:family_planner/features/auth/screens/signup_screen.dart';
+import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
-/// Family Planner 앱의 라우터 설정
-/// go_router를 사용한 선언적 라우팅
-class AppRouter {
-  AppRouter._(); // Private constructor
+/// GoRouter Provider
+final goRouterProvider = Provider<GoRouter>((ref) {
+  final notifier = ValueNotifier<bool>(false);
 
-  static final GoRouter router = GoRouter(
-    initialLocation: AppRoutes.home,
+  ref.listen<AuthState>(
+    authProvider,
+    (previous, next) {
+      if (previous?.isAuthenticated != next.isAuthenticated) {
+        notifier.value = next.isAuthenticated;
+      }
+    },
+  );
+
+  return GoRouter(
+    initialLocation: AppRoutes.login,
     debugLogDiagnostics: true,
+    refreshListenable: notifier,
+    redirect: (context, state) {
+      final isAuthenticated = ref.read(authProvider).isAuthenticated;
+      final isLoading = ref.read(authProvider).isLoading;
+      final isAuthPage = state.matchedLocation == AppRoutes.login ||
+          state.matchedLocation == AppRoutes.signup ||
+          state.matchedLocation == AppRoutes.emailVerification;
+
+      // 로딩 중에는 리다이렉트하지 않음
+      if (isLoading) {
+        return null;
+      }
+
+      // 인증되지 않았고 인증 페이지가 아니면 로그인 페이지로
+      if (!isAuthenticated && !isAuthPage) {
+        return AppRoutes.login;
+      }
+
+      // 인증되었고 인증 페이지에 있으면 홈으로
+      if (isAuthenticated && isAuthPage) {
+        return AppRoutes.home;
+      }
+
+      return null;
+    },
     routes: [
       // Auth Routes
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.signup,
+        name: 'signup',
+        builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.emailVerification,
+        name: 'emailVerification',
+        builder: (context, state) {
+          final email = state.extra as String?;
+          return EmailVerificationScreen(
+            email: email ?? '',
+          );
+        },
       ),
 
       // Main Routes with Bottom Navigation
@@ -106,4 +158,14 @@ class AppRouter {
       ),
     ),
   );
+});
+
+/// 레거시 지원을 위한 AppRouter 클래스
+class AppRouter {
+  AppRouter._();
+
+  /// GoRouter Provider를 통해 router에 접근
+  /// 더 이상 사용되지 않음 - goRouterProvider를 직접 사용하세요
+  @Deprecated('Use goRouterProvider instead')
+  static GoRouter? get router => null;
 }

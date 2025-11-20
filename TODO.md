@@ -41,19 +41,22 @@
 - ✅ 이메일/비밀번호 입력 필드
 - ✅ 소셜 로그인 버튼 UI (구글, 카카오, 애플)
 - ✅ 회원가입 링크
-- ⬜ 회원가입 화면 UI
+- ✅ 회원가입 화면 UI
+- ✅ 이메일 인증 화면 UI
 - ⬜ 비밀번호 찾기 화면 UI
 - ⬜ 프로필 설정 화면 UI
 
 ### 인증 로직
-- ⬜ 이메일/비밀번호 로그인 구현
-- ⬜ 회원가입 API 연동
-- ⬜ 로그인 API 연동
-- ⬜ RTR(Refresh Token Rotation) 방식 구현
-  - ⬜ AccessToken 관리
-  - ⬜ RefreshToken 자동 갱신
-  - ⬜ 토큰 만료 처리
-- ⬜ 로그인 상태 지속성 (SharedPreferences)
+- ✅ 이메일/비밀번호 로그인 구현
+- ✅ 회원가입 API 연동
+- ✅ 이메일 인증 API 연동 (POST /auth/verify-email, code 파라미터 사용)
+- ✅ 인증 이메일 재전송 기능
+- ✅ 로그인 API 연동
+- ✅ RTR(Refresh Token Rotation) 방식 구현
+  - ✅ AccessToken 관리 (SharedPreferences)
+  - ✅ RefreshToken 자동 갱신 (401 에러 시 자동 갱신)
+  - ✅ 토큰 만료 처리 (Interceptor에서 자동 처리)
+- ✅ 로그인 상태 지속성 (SharedPreferences + 자동 로그인)
 
 ### 소셜 로그인
 - ⬜ 구글 로그인 SDK 연동
@@ -62,7 +65,7 @@
 - ⬜ 소셜 로그인 백엔드 API 연동
 
 ### 상태 관리
-- ⬜ Auth Provider 구현
+- ✅ Auth Provider 구현
 - ⬜ User Provider 구현
 - ⬜ 로그인 상태 전역 관리
 

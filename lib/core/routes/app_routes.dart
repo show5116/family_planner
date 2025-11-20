@@ -5,6 +5,7 @@ class AppRoutes {
   // Auth Routes
   static const String login = '/login';
   static const String signup = '/signup';
+  static const String emailVerification = '/email-verification';
 
   // Main Routes
   static const String home = '/';
