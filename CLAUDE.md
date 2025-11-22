@@ -351,12 +351,20 @@ git commit -m "Initial commit"
 6. OAuth 클라이언트 ID 생성:
    - **웹 애플리케이션** 선택
    - 이름: "Family Planner Web"
-   - 승인된 JavaScript 원본:
-     - `http://localhost:3001` (개발용)
+   - **승인된 JavaScript 원본** (정확히 입력):
+     - `http://localhost:3001` (개발용, 포트 번호 포함)
      - `https://yourdomain.com` (프로덕션용)
-   - 승인된 리디렉션 URI:
+   - **승인된 리디렉션 URI** (정확히 입력, **매우 중요**):
      - `http://localhost:3001` (개발용)
+     - `http://localhost:3001/` (슬래시 포함, 추가 권장)
      - `https://yourdomain.com` (프로덕션용)
+     - `https://yourdomain.com/` (슬래시 포함)
+
+   ⚠️ **주의**:
+   - URI는 **대소문자를 구분**하며 **정확히 일치**해야 합니다
+   - 포트 번호, 슬래시(`/`) 유무도 정확히 일치해야 합니다
+   - `http://localhost:3001`와 `http://localhost:3001/`는 **다른 URI**입니다
+
 7. 생성된 **클라이언트 ID** 복사 (예: `123456789-abcdef.apps.googleusercontent.com`)
 
 **2. 프로젝트에 클라이언트 ID 설정**
@@ -496,6 +504,67 @@ flutter run -d chrome --web-port=3001
 # Android 실행 (에뮬레이터 또는 실제 기기)
 flutter run -d <device-id>
 ```
+
+#### 일반적인 에러 및 해결 방법
+
+**1. "redirect_uri_mismatch" 에러**
+
+```
+액세스 차단됨: 이 앱의 요청이 잘못되었습니다
+400 오류: redirect_uri_mismatch
+```
+
+**원인**: Google Cloud Console에 등록된 리디렉션 URI와 앱에서 사용하는 URI가 일치하지 않음
+
+**해결 방법**:
+1. **현재 실행 중인 URL 확인**
+   - 브라우저 주소창: `http://localhost:3001/` 확인
+   - 슬래시 유무, 포트 번호 확인
+
+2. **Google Cloud Console에서 수정**
+   - [Google Cloud Console](https://console.cloud.google.com/) 접속
+   - API 및 서비스 > 사용자 인증 정보
+   - 해당 OAuth 클라이언트 ID 클릭
+   - **승인된 리디렉션 URI** 섹션에 다음 **모두** 추가:
+     ```
+     http://localhost:3001
+     http://localhost:3001/
+     ```
+   - 저장 버튼 클릭
+
+3. **변경 사항 반영 대기**
+   - 변경 사항이 적용되기까지 **5-10분** 소요될 수 있음
+   - 브라우저 캐시 삭제 권장
+
+4. **앱 재시작**
+   ```bash
+   # 앱 종료 후 재실행
+   flutter run -d chrome --web-port=3001
+   ```
+
+**2. "ClientID not set" 에러**
+
+**원인**: `web/index.html`의 meta 태그 또는 `environment.dart`의 클라이언트 ID가 설정되지 않음
+
+**해결 방법**:
+1. `web/index.html` 확인:
+   ```html
+   <meta name="google-signin-client_id" content="YOUR_ACTUAL_CLIENT_ID.apps.googleusercontent.com">
+   ```
+2. `lib/core/config/environment.dart` 확인:
+   ```dart
+   static String get googleWebClientId {
+     return 'YOUR_ACTUAL_CLIENT_ID.apps.googleusercontent.com';
+   }
+   ```
+3. `YOUR_ACTUAL_CLIENT_ID` 부분을 실제 클라이언트 ID로 교체
+
+**3. CORS 에러**
+
+**원인**: 승인된 JavaScript 원본이 설정되지 않음
+
+**해결 방법**:
+- Google Cloud Console > OAuth 클라이언트 ID > **승인된 JavaScript 원본**에 `http://localhost:3001` 추가
 
 ### 기본 인증 API
 
