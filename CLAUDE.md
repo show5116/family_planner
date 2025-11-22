@@ -339,16 +339,22 @@ git commit -m "Initial commit"
 
 #### Google OAuth 2.0 설정
 
-**1. Google Cloud Console에서 프로젝트 생성 및 OAuth 클라이언트 ID 발급**
+**1. Google Cloud Console에서 프로젝트 생성 및 API 활성화**
 
 1. [Google Cloud Console](https://console.cloud.google.com/) 접속
 2. 새 프로젝트 생성 또는 기존 프로젝트 선택
-3. **API 및 서비스 > 사용자 인증 정보** 메뉴로 이동
-4. **사용자 인증 정보 만들기 > OAuth 클라이언트 ID** 선택
-5. 동의 화면 구성 (처음 설정하는 경우)
+3. **필수 API 활성화** (매우 중요):
+   - 좌측 메뉴에서 **API 및 서비스 > 라이브러리** 클릭
+   - "Google+ API" 검색 후 **사용 설정** 클릭
+   - (선택) "Google Identity Toolkit API" 검색 후 **사용 설정** 클릭
+   - API가 활성화될 때까지 잠시 대기
+
+4. **API 및 서비스 > 사용자 인증 정보** 메뉴로 이동
+5. **사용자 인증 정보 만들기 > OAuth 클라이언트 ID** 선택
+6. 동의 화면 구성 (처음 설정하는 경우)
    - 사용자 유형: 외부 (또는 내부)
    - 앱 이름, 사용자 지원 이메일 등 입력
-6. OAuth 클라이언트 ID 생성:
+7. OAuth 클라이언트 ID 생성:
    - **웹 애플리케이션** 선택
    - 이름: "Family Planner Web"
    - **승인된 JavaScript 원본** (정확히 입력):
@@ -365,7 +371,7 @@ git commit -m "Initial commit"
    - 포트 번호, 슬래시(`/`) 유무도 정확히 일치해야 합니다
    - `http://localhost:3001`와 `http://localhost:3001/`는 **다른 URI**입니다
 
-7. 생성된 **클라이언트 ID** 복사 (예: `123456789-abcdef.apps.googleusercontent.com`)
+8. 생성된 **클라이언트 ID** 복사 (예: `123456789-abcdef.apps.googleusercontent.com`)
 
 **2. 프로젝트에 클라이언트 ID 설정**
 
@@ -559,7 +565,42 @@ flutter run -d <device-id>
    ```
 3. `YOUR_ACTUAL_CLIENT_ID` 부분을 실제 클라이언트 ID로 교체
 
-**3. CORS 에러**
+**3. "Method doesn't allow unregistered callers" 403 에러**
+
+```
+403 에러: Method doesn't allow unregistered callers (callers without established identity).
+Please use API Key or other form of API consumer identity to call this API.
+```
+
+**원인**: Google+ API 또는 필요한 API가 활성화되지 않음
+
+**해결 방법**:
+1. **Google Cloud Console 접속**
+   - [Google Cloud Console](https://console.cloud.google.com/) 이동
+   - 올바른 프로젝트 선택 확인 (상단 프로젝트 선택 드롭다운)
+
+2. **API 라이브러리에서 활성화**
+   - 좌측 메뉴: **API 및 서비스 > 라이브러리**
+   - 검색창에 "Google+ API" 입력
+   - **Google+ API** 클릭
+   - **사용 설정** 버튼 클릭
+   - API가 활성화될 때까지 대기 (1-2분)
+
+3. **(선택) 추가 API 활성화**
+   - "Google Identity Toolkit API" 검색
+   - **사용 설정** 클릭
+
+4. **앱 재시작**
+   ```bash
+   # 앱 종료 후 재실행
+   flutter run -d chrome --web-port=3001
+   ```
+
+⚠️ **참고**:
+- Google+ API는 deprecated되었지만 Google Sign-In에서 여전히 사용됨
+- API 활성화 후 즉시 적용되지 않을 수 있음 (1-2분 대기)
+
+**4. CORS 에러**
 
 **원인**: 승인된 JavaScript 원본이 설정되지 않음
 
