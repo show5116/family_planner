@@ -1,8 +1,5 @@
 /// 애플리케이션 환경 설정
-enum Environment {
-  development,
-  production,
-}
+enum Environment { development, production }
 
 /// 환경 설정 관리 클래스
 class EnvironmentConfig {
@@ -17,7 +14,8 @@ class EnvironmentConfig {
   }
 
   /// 개발 환경 여부
-  static bool get isDevelopment => _currentEnvironment == Environment.development;
+  static bool get isDevelopment =>
+      _currentEnvironment == Environment.development;
 
   /// 프로덕션 환경 여부
   static bool get isProduction => _currentEnvironment == Environment.production;
@@ -55,7 +53,7 @@ class EnvironmentConfig {
   /// 발급 후 web/index.html의 meta 태그도 함께 업데이트 필요
   static String get googleWebClientId {
     // TODO: Google Cloud Console에서 OAuth 2.0 클라이언트 ID 발급 후 설정
-    return 'YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com';
+    return '1091403716522-pgm7m06s5tcpen6g0okcpvd8djfq0m5l.apps.googleusercontent.com';
   }
 
   /// Google OAuth Android 클라이언트 ID (선택사항)

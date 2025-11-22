@@ -7,7 +7,9 @@ import 'package:family_planner/core/theme/app_theme.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
+import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 void main() {
   // Kakao SDK 초기화
@@ -61,6 +63,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     // 테마 모드 상태 감지
     final themeMode = ref.watch(themeModeProvider);
+    // 언어 설정 상태 감지
+    final locale = ref.watch(localeProvider);
     // GoRouter 인스턴스 가져오기
     final router = ref.watch(goRouterProvider);
 
@@ -77,15 +81,17 @@ class _MyAppState extends ConsumerState<MyApp> {
       routerConfig: router,
 
       // 로케일 설정
-      locale: const Locale('ko', 'KR'),
+      locale: locale, // Provider에서 관리되는 언어 설정 (null이면 시스템 언어 사용)
       supportedLocales: const [
-        Locale('ko', 'KR'),
-        Locale('en', 'US'),
+        Locale('ko', 'KR'), // 한국어
+        Locale('en', 'US'), // 영어
+        Locale('ja', 'JP'), // 일본어
       ],
       localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+        AppLocalizations.delegate, // 앱 다국어
+        GlobalMaterialLocalizations.delegate, // Material 위젯 다국어
+        GlobalWidgetsLocalizations.delegate, // 일반 위젯 다국어
+        GlobalCupertinoLocalizations.delegate, // Cupertino 위젯 다국어
       ],
     );
   }

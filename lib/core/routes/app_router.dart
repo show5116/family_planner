@@ -6,6 +6,7 @@ import 'package:family_planner/features/home/screens/home_screen.dart';
 import 'package:family_planner/features/settings/screens/settings_screen.dart';
 import 'package:family_planner/features/settings/screens/home_widget_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
+import 'package:family_planner/features/settings/screens/language_settings_screen.dart';
 import 'package:family_planner/features/auth/screens/login_screen.dart';
 import 'package:family_planner/features/auth/screens/signup_screen.dart';
 import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
@@ -104,6 +105,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.theme,
         name: 'theme',
         builder: (context, state) => const ThemeSettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.language,
+        name: 'language',
+        builder: (context, state) => const LanguageSettingsScreen(),
       ),
 
       // Assets Routes (추후 구현)

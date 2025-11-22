@@ -31,6 +31,13 @@ class SettingsScreen extends StatelessWidget {
             subtitle: '라이트/다크 모드를 변경하세요',
             onTap: () => context.push(AppRoutes.theme),
           ),
+          _buildSettingTile(
+            context,
+            icon: Icons.language_outlined,
+            title: '언어 설정',
+            subtitle: '앱에서 사용할 언어를 변경하세요',
+            onTap: () => context.push(AppRoutes.language),
+          ),
           const Divider(),
 
           // 사용자 설정 섹션

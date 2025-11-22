@@ -40,4 +40,5 @@ class AppRoutes {
   static const String familyManagement = '/settings/family';
   static const String notifications = '/settings/notifications';
   static const String theme = '/settings/theme';
+  static const String language = '/settings/language';
 }

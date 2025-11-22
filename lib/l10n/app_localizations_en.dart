@@ -1,0 +1,284 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appTitle => 'Family Planner';
+
+  @override
+  String get appDescription => 'Daily life management planner with family';
+
+  @override
+  String get common_ok => 'OK';
+
+  @override
+  String get common_cancel => 'Cancel';
+
+  @override
+  String get common_save => 'Save';
+
+  @override
+  String get common_delete => 'Delete';
+
+  @override
+  String get common_edit => 'Edit';
+
+  @override
+  String get common_add => 'Add';
+
+  @override
+  String get common_search => 'Search';
+
+  @override
+  String get common_loading => 'Loading...';
+
+  @override
+  String get common_error => 'Error';
+
+  @override
+  String get common_retry => 'Retry';
+
+  @override
+  String get common_close => 'Close';
+
+  @override
+  String get common_done => 'Done';
+
+  @override
+  String get common_next => 'Next';
+
+  @override
+  String get common_previous => 'Previous';
+
+  @override
+  String get auth_login => 'Log in';
+
+  @override
+  String get auth_signup => 'Sign up';
+
+  @override
+  String get auth_logout => 'Log out';
+
+  @override
+  String get auth_email => 'Email';
+
+  @override
+  String get auth_password => 'Password';
+
+  @override
+  String get auth_passwordConfirm => 'Confirm Password';
+
+  @override
+  String get auth_name => 'Name';
+
+  @override
+  String get auth_forgotPassword => 'Forgot your password?';
+
+  @override
+  String get auth_noAccount => 'Don\'t have an account?';
+
+  @override
+  String get auth_haveAccount => 'Already have an account?';
+
+  @override
+  String get auth_continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get auth_continueWithKakao => 'Continue with Kakao';
+
+  @override
+  String get auth_continueWithApple => 'Continue with Apple';
+
+  @override
+  String get auth_or => 'or';
+
+  @override
+  String get auth_emailHint => 'Enter your email';
+
+  @override
+  String get auth_passwordHint => 'Enter your password';
+
+  @override
+  String get auth_nameHint => 'Enter your name';
+
+  @override
+  String get auth_emailError => 'Invalid email format';
+
+  @override
+  String get auth_passwordError => 'Password must be at least 6 characters';
+
+  @override
+  String get auth_passwordMismatch => 'Passwords do not match';
+
+  @override
+  String get auth_nameError => 'Please enter your name';
+
+  @override
+  String get auth_loginSuccess => 'Login successful';
+
+  @override
+  String get auth_loginFailed => 'Login failed';
+
+  @override
+  String get auth_signupSuccess => 'Sign up successful';
+
+  @override
+  String get auth_signupFailed => 'Sign up failed';
+
+  @override
+  String get auth_logoutSuccess => 'You have been logged out';
+
+  @override
+  String get auth_emailVerification => 'Email Verification';
+
+  @override
+  String get auth_emailVerificationMessage =>
+      'A verification code has been sent to your email.';
+
+  @override
+  String get auth_verificationCode => 'Verification Code';
+
+  @override
+  String get auth_verificationCodeHint => 'Enter verification code';
+
+  @override
+  String get auth_resendCode => 'Resend Code';
+
+  @override
+  String get auth_verify => 'Verify';
+
+  @override
+  String get auth_resetPassword => 'Reset Password';
+
+  @override
+  String get auth_resetPasswordMessage =>
+      'Enter your email address.\nWe\'ll send you a verification code.';
+
+  @override
+  String get auth_newPassword => 'New Password';
+
+  @override
+  String get auth_sendCode => 'Send Code';
+
+  @override
+  String get auth_resetPasswordSuccess =>
+      'Password has been reset. Please log in.';
+
+  @override
+  String get nav_home => 'Home';
+
+  @override
+  String get nav_assets => 'Assets';
+
+  @override
+  String get nav_calendar => 'Calendar';
+
+  @override
+  String get nav_todo => 'To-Do';
+
+  @override
+  String get nav_more => 'More';
+
+  @override
+  String get home_greeting_morning => 'Good morning!';
+
+  @override
+  String get home_greeting_afternoon => 'Good afternoon!';
+
+  @override
+  String get home_greeting_evening => 'Good evening!';
+
+  @override
+  String get home_greeting_night => 'It\'s late!';
+
+  @override
+  String get home_todaySchedule => 'Today\'s Schedule';
+
+  @override
+  String get home_noSchedule => 'No scheduled events';
+
+  @override
+  String get home_investmentSummary => 'Investment Summary';
+
+  @override
+  String get home_todoSummary => 'To-Do Summary';
+
+  @override
+  String get home_assetSummary => 'Asset Summary';
+
+  @override
+  String get settings_title => 'Settings';
+
+  @override
+  String get settings_theme => 'Theme';
+
+  @override
+  String get settings_language => 'Language';
+
+  @override
+  String get settings_homeWidgets => 'Home Widgets';
+
+  @override
+  String get settings_profile => 'Profile';
+
+  @override
+  String get settings_family => 'Family Management';
+
+  @override
+  String get settings_notifications => 'Notifications';
+
+  @override
+  String get settings_about => 'About';
+
+  @override
+  String get theme_light => 'Light Mode';
+
+  @override
+  String get theme_dark => 'Dark Mode';
+
+  @override
+  String get theme_system => 'System Default';
+
+  @override
+  String get language_korean => '한국어';
+
+  @override
+  String get language_english => 'English';
+
+  @override
+  String get language_japanese => '日本語';
+
+  @override
+  String get widgetSettings_title => 'Home Widget Settings';
+
+  @override
+  String get widgetSettings_description =>
+      'Select widgets to display on home screen';
+
+  @override
+  String get widgetSettings_todaySchedule => 'Today\'s Schedule';
+
+  @override
+  String get widgetSettings_investmentSummary => 'Investment Summary';
+
+  @override
+  String get widgetSettings_todoSummary => 'To-Do Summary';
+
+  @override
+  String get widgetSettings_assetSummary => 'Asset Summary';
+
+  @override
+  String get error_network => 'Please check your network connection';
+
+  @override
+  String get error_server => 'Server error occurred';
+
+  @override
+  String get error_unknown => 'An unknown error occurred';
+}

@@ -1,0 +1,14 @@
+# Flutter 국제화(i18n) 설정 파일
+# https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization
+
+# ARB 파일 위치
+arb-dir: lib/l10n
+
+# 템플릿 ARB 파일 (기본 언어)
+template-arb-file: app_ko.arb
+
+# 생성될 파일 이름
+output-localization-file: app_localizations.dart
+
+# 생성 파일을 lib/l10n에 저장 (기본값은 .dart_tool/flutter_gen/gen_l10n)
+output-dir: lib/l10n

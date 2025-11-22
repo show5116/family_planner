@@ -1,0 +1,116 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Family Planner",
+  "@appTitle": {
+    "description": "Application name"
+  },
+
+  "appDescription": "Daily life management planner with family",
+  "@appDescription": {
+    "description": "Application description"
+  },
+
+  "common_ok": "OK",
+  "common_cancel": "Cancel",
+  "common_save": "Save",
+  "common_delete": "Delete",
+  "common_edit": "Edit",
+  "common_add": "Add",
+  "common_search": "Search",
+  "common_loading": "Loading...",
+  "common_error": "Error",
+  "common_retry": "Retry",
+  "common_close": "Close",
+  "common_done": "Done",
+  "common_next": "Next",
+  "common_previous": "Previous",
+
+  "auth_login": "Log in",
+  "auth_signup": "Sign up",
+  "auth_logout": "Log out",
+  "auth_email": "Email",
+  "auth_password": "Password",
+  "auth_passwordConfirm": "Confirm Password",
+  "auth_name": "Name",
+  "auth_forgotPassword": "Forgot your password?",
+  "auth_noAccount": "Don't have an account?",
+  "auth_haveAccount": "Already have an account?",
+  "auth_continueWithGoogle": "Continue with Google",
+  "auth_continueWithKakao": "Continue with Kakao",
+  "auth_continueWithApple": "Continue with Apple",
+  "auth_or": "or",
+
+  "auth_emailHint": "Enter your email",
+  "auth_passwordHint": "Enter your password",
+  "auth_nameHint": "Enter your name",
+
+  "auth_emailError": "Invalid email format",
+  "auth_passwordError": "Password must be at least 6 characters",
+  "auth_passwordMismatch": "Passwords do not match",
+  "auth_nameError": "Please enter your name",
+
+  "auth_loginSuccess": "Login successful",
+  "auth_loginFailed": "Login failed",
+  "auth_signupSuccess": "Sign up successful",
+  "auth_signupFailed": "Sign up failed",
+  "auth_logoutSuccess": "You have been logged out",
+
+  "auth_emailVerification": "Email Verification",
+  "auth_emailVerificationMessage": "A verification code has been sent to your email.",
+  "auth_verificationCode": "Verification Code",
+  "auth_verificationCodeHint": "Enter verification code",
+  "auth_resendCode": "Resend Code",
+  "auth_verify": "Verify",
+
+  "auth_resetPassword": "Reset Password",
+  "auth_resetPasswordMessage": "Enter your email address.\nWe'll send you a verification code.",
+  "auth_newPassword": "New Password",
+  "auth_sendCode": "Send Code",
+  "auth_resetPasswordSuccess": "Password has been reset. Please log in.",
+
+  "nav_home": "Home",
+  "nav_assets": "Assets",
+  "nav_calendar": "Calendar",
+  "nav_todo": "To-Do",
+  "nav_more": "More",
+
+  "home_greeting_morning": "Good morning!",
+  "home_greeting_afternoon": "Good afternoon!",
+  "home_greeting_evening": "Good evening!",
+  "home_greeting_night": "It's late!",
+
+  "home_todaySchedule": "Today's Schedule",
+  "home_noSchedule": "No scheduled events",
+  "home_investmentSummary": "Investment Summary",
+  "home_todoSummary": "To-Do Summary",
+  "home_assetSummary": "Asset Summary",
+
+  "settings_title": "Settings",
+  "settings_theme": "Theme",
+  "settings_language": "Language",
+  "settings_homeWidgets": "Home Widgets",
+  "settings_profile": "Profile",
+  "settings_family": "Family Management",
+  "settings_notifications": "Notifications",
+  "settings_about": "About",
+
+  "theme_light": "Light Mode",
+  "theme_dark": "Dark Mode",
+  "theme_system": "System Default",
+
+  "language_korean": "한국어",
+  "language_english": "English",
+  "language_japanese": "日本語",
+
+  "widgetSettings_title": "Home Widget Settings",
+  "widgetSettings_description": "Select widgets to display on home screen",
+  "widgetSettings_todaySchedule": "Today's Schedule",
+  "widgetSettings_investmentSummary": "Investment Summary",
+  "widgetSettings_todoSummary": "To-Do Summary",
+  "widgetSettings_assetSummary": "Asset Summary",
+
+  "error_network": "Please check your network connection",
+  "error_server": "Server error occurred",
+  "error_unknown": "An unknown error occurred"
+}
