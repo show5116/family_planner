@@ -252,6 +252,97 @@ git commit -m "Initial commit"
 ### 백엔드 API
 - **개발 환경**: `http://localhost:3000`
 - **프로덕션**: `https://familyplannerbackend-production.up.railway.app`
+- **Swagger API 문서**: `http://localhost:3000/api` (개발 환경)
 - 환경은 빌드 모드에 따라 자동 전환 (Debug → 개발, Release → 프로덕션)
 
 자세한 내용은 `lib/core/services/README.md` 참조
+
+## 인증 API
+
+### 소셜 로그인 API
+
+#### 구글 로그인
+백엔드는 OAuth 2.0 기반 구글 로그인을 지원합니다.
+
+**플로우:**
+1. 클라이언트에서 Google Sign-In SDK를 통해 인증
+2. ID Token 또는 Access Token을 백엔드로 전송
+3. 백엔드에서 토큰 검증 후 JWT 토큰 발급
+
+**API 엔드포인트:**
+- `GET /auth/google` - Google OAuth 로그인 시작 (웹 리다이렉트 방식)
+- `GET /auth/google/callback` - Google 로그인 콜백 (웹 전용)
+
+**모바일/웹 앱 구현 방식:**
+- Flutter 앱에서는 `google_sign_in` 패키지 사용
+- Google Sign-In으로 인증 후 ID Token 또는 Access Token을 받음
+- **[현재 상태]** 백엔드에 토큰을 전달하는 전용 엔드포인트 필요
+- **[임시 구현]** `/auth/google/callback?access_token=...` 방식으로 구현되어 있으나, 이는 웹 리다이렉트 방식과 다름
+- **[TODO]** 백엔드에 모바일용 토큰 검증 엔드포인트 추가 필요 (예: `POST /auth/google/token`)
+
+#### 카카오 로그인
+백엔드는 카카오 OAuth 2.0 로그인을 지원합니다.
+
+**플로우:**
+1. 클라이언트에서 Kakao SDK를 통해 인증
+2. Access Token을 백엔드로 전송
+3. 백엔드에서 토큰 검증 후 JWT 토큰 발급
+
+**API 엔드포인트:**
+- `GET /auth/kakao` - Kakao OAuth 로그인 시작 (웹 리다이렉트 방식)
+- `GET /auth/kakao/callback` - Kakao 로그인 콜백 (웹 전용)
+
+**모바일/웹 앱 구현 방식:**
+- Flutter 앱에서는 `kakao_flutter_sdk` 패키지 사용
+- Kakao Login으로 인증 후 Access Token을 받음
+- **[현재 상태]** 백엔드에 토큰을 전달하는 전용 엔드포인트 필요
+- **[임시 구현]** `/auth/kakao/callback?access_token=...` 방식으로 구현되어 있으나, 이는 웹 리다이렉트 방식과 다름
+- **[TODO]** 백엔드에 모바일용 토큰 검증 엔드포인트 추가 필요 (예: `POST /auth/kakao/token`)
+
+#### 소셜 로그인 구현 참고 사항
+
+**현재 구현 상태:**
+- ✅ Google Sign-In SDK 연동 완료
+- ✅ Kakao Flutter SDK 연동 완료
+- ✅ 클라이언트에서 소셜 토큰 획득 로직 구현
+- ⚠️ 백엔드 API 연동 방식이 불완전 (웹 리다이렉트 방식용 엔드포인트를 모바일에서 사용 중)
+
+**백엔드 API 개선 필요 사항:**
+1. 모바일/웹 앱을 위한 토큰 검증 전용 엔드포인트 추가
+   - `POST /auth/google/token` - Google Access Token 또는 ID Token 검증
+   - `POST /auth/kakao/token` - Kakao Access Token 검증
+2. 요청 본문 형식:
+   ```json
+   {
+     "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6...",
+     "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6..." // Google의 경우
+   }
+   ```
+3. 응답 형식:
+   ```json
+   {
+     "accessToken": "jwt_access_token",
+     "refreshToken": "jwt_refresh_token",
+     "user": {
+       "id": "user_id",
+       "email": "user@example.com",
+       "name": "User Name"
+     }
+   }
+   ```
+
+**테스트 방법:**
+- 소셜 로그인 기능을 완전히 테스트하려면 백엔드 API가 위 엔드포인트를 제공해야 함
+- 현재는 클라이언트 측 SDK 연동만 테스트 가능
+
+### 기본 인증 API
+
+- `POST /auth/signup` - 회원가입
+- `POST /auth/login` - 이메일/비밀번호 로그인
+- `POST /auth/refresh` - Access Token 갱신 (RTR 방식)
+- `POST /auth/logout` - 로그아웃
+- `POST /auth/verify-email` - 이메일 인증
+- `POST /auth/resend-verification` - 인증 이메일 재전송
+- `GET /auth/me` - 현재 로그인한 사용자 정보 조회 (인증 필요)
+- `POST /auth/request-password-reset` - 비밀번호 재설정 요청
+- `POST /auth/reset-password` - 비밀번호 재설정

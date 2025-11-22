@@ -13,6 +13,14 @@ class ApiConstants {
   static const String verifyToken = '/auth/me';
   static const String verifyEmail = '/auth/verify-email';
   static const String resendVerification = '/auth/resend-verification';
+  static const String requestPasswordReset = '/auth/request-password-reset';
+  static const String resetPassword = '/auth/reset-password';
+
+  // Social Login Endpoints
+  static const String googleLogin = '/auth/google';
+  static const String googleCallback = '/auth/google/callback';
+  static const String kakaoLogin = '/auth/kakao';
+  static const String kakaoCallback = '/auth/kakao/callback';
 
   // User Endpoints
   static const String userProfile = '$apiVersion/users/profile';

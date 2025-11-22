@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:family_planner/core/theme/app_theme.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
@@ -9,6 +10,14 @@ import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 void main() {
+  // Kakao SDK 초기화
+  // TODO: Native App Key를 환경 설정 파일로 이동
+  // Kakao Developers 콘솔에서 Native App Key 발급 후 설정 필요
+  KakaoSdk.init(
+    nativeAppKey: 'YOUR_KAKAO_NATIVE_APP_KEY', // 실제 키로 교체 필요
+    javaScriptAppKey: 'YOUR_KAKAO_JAVASCRIPT_APP_KEY', // 웹용 키 (선택)
+  );
+
   // 환경 설정 초기화
   // Release 모드면 프로덕션, 아니면 개발 환경
   if (kReleaseMode) {

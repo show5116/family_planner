@@ -59,6 +59,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  /// 구글 로그인 처리
+  Future<void> _handleGoogleLogin() async {
+    try {
+      await ref.read(authProvider.notifier).loginWithGoogle();
+
+      // 로그인 성공 시 홈 화면으로 이동
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } catch (e) {
+      // 에러 처리
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google 로그인 실패: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// 카카오 로그인 처리
+  Future<void> _handleKakaoLogin() async {
+    try {
+      await ref.read(authProvider.notifier).loginWithKakao();
+
+      // 로그인 성공 시 홈 화면으로 이동
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } catch (e) {
+      // 에러 처리
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Kakao 로그인 실패: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
@@ -144,7 +188,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: AppSizes.spaceXL),
+                  const SizedBox(height: AppSizes.spaceS),
+
+                  // 비밀번호 찾기 링크
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        context.push(AppRoutes.forgotPassword);
+                      },
+                      child: const Text('비밀번호를 잊으셨나요?'),
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
 
                   // 로그인 버튼
                   SizedBox(
@@ -190,7 +246,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   _SocialLoginButton(
                     icon: Icons.g_mobiledata,
                     label: 'Google로 계속하기',
-                    onPressed: () {},
+                    onPressed: authState.isLoading ? null : _handleGoogleLogin,
                   ),
                   const SizedBox(height: AppSizes.spaceM),
                   _SocialLoginButton(
@@ -198,14 +254,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     label: 'Kakao로 계속하기',
                     backgroundColor: const Color(0xFFFEE500),
                     textColor: Colors.black87,
-                    onPressed: () {},
+                    onPressed: authState.isLoading ? null : _handleKakaoLogin,
                   ),
                   const SizedBox(height: AppSizes.spaceM),
                   _SocialLoginButton(
                     icon: Icons.apple,
                     label: 'Apple로 계속하기',
                     backgroundColor: Colors.black,
-                    onPressed: () {},
+                    onPressed: () {
+                      // Apple 로그인은 아직 미구현
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Apple 로그인은 준비 중입니다'),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: AppSizes.spaceXL),
 
@@ -239,14 +302,14 @@ class _SocialLoginButton extends StatelessWidget {
   const _SocialLoginButton({
     required this.icon,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     this.backgroundColor,
     this.textColor,
   });
 
   final IconData icon;
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? backgroundColor;
   final Color? textColor;
 

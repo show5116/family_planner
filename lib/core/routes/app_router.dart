@@ -9,6 +9,7 @@ import 'package:family_planner/features/settings/screens/theme_settings_screen.d
 import 'package:family_planner/features/auth/screens/login_screen.dart';
 import 'package:family_planner/features/auth/screens/signup_screen.dart';
 import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
+import 'package:family_planner/features/auth/screens/forgot_password_screen.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// GoRouter Provider
@@ -33,7 +34,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final isLoading = ref.read(authProvider).isLoading;
       final isAuthPage = state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.signup ||
-          state.matchedLocation == AppRoutes.emailVerification;
+          state.matchedLocation == AppRoutes.emailVerification ||
+          state.matchedLocation == AppRoutes.forgotPassword;
 
       // 로딩 중에는 리다이렉트하지 않음
       if (isLoading) {
@@ -73,6 +75,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             email: email ?? '',
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: 'forgotPassword',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
 
       // Main Routes with Bottom Navigation

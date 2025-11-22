@@ -189,6 +189,92 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = const AuthState(isLoading: false);
     }
   }
+
+  /// 구글 로그인
+  Future<void> loginWithGoogle() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final response = await _authService.loginWithGoogle();
+
+      state = state.copyWith(
+        isAuthenticated: true,
+        user: response,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      rethrow;
+    }
+  }
+
+  /// 카카오 로그인
+  Future<void> loginWithKakao() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final response = await _authService.loginWithKakao();
+
+      state = state.copyWith(
+        isAuthenticated: true,
+        user: response,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      rethrow;
+    }
+  }
+
+  /// 비밀번호 재설정 요청
+  Future<void> requestPasswordReset({
+    required String email,
+  }) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      await _authService.requestPasswordReset(email: email);
+
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      rethrow;
+    }
+  }
+
+  /// 비밀번호 재설정
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      await _authService.resetPassword(
+        email: email,
+        code: code,
+        newPassword: newPassword,
+      );
+
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+      rethrow;
+    }
+  }
 }
 
 /// Auth Provider 인스턴스
