@@ -345,9 +345,10 @@ git commit -m "Initial commit"
 2. 새 프로젝트 생성 또는 기존 프로젝트 선택
 3. **필수 API 활성화** (매우 중요):
    - 좌측 메뉴에서 **API 및 서비스 > 라이브러리** 클릭
-   - "Google+ API" 검색 후 **사용 설정** 클릭
+   - **Google+ API** 검색 후 **사용 설정** 클릭
+   - **People API** 검색 후 **사용 설정** 클릭
    - (선택) "Google Identity Toolkit API" 검색 후 **사용 설정** 클릭
-   - API가 활성화될 때까지 잠시 대기
+   - API가 활성화될 때까지 잠시 대기 (1-2분)
 
 4. **API 및 서비스 > 사용자 인증 정보** 메뉴로 이동
 5. **사용자 인증 정보 만들기 > OAuth 클라이언트 ID** 선택
@@ -572,17 +573,25 @@ flutter run -d <device-id>
 Please use API Key or other form of API consumer identity to call this API.
 ```
 
-**원인**: Google+ API 또는 필요한 API가 활성화되지 않음
+**원인**: Google+ API, People API 또는 필요한 API가 활성화되지 않음
 
 **해결 방법**:
 1. **Google Cloud Console 접속**
    - [Google Cloud Console](https://console.cloud.google.com/) 이동
    - 올바른 프로젝트 선택 확인 (상단 프로젝트 선택 드롭다운)
 
-2. **API 라이브러리에서 활성화**
+2. **필수 API 라이브러리에서 활성화**
    - 좌측 메뉴: **API 및 서비스 > 라이브러리**
+
+   **Google+ API 활성화**:
    - 검색창에 "Google+ API" 입력
    - **Google+ API** 클릭
+   - **사용 설정** 버튼 클릭
+   - API가 활성화될 때까지 대기 (1-2분)
+
+   **People API 활성화** (필수):
+   - 검색창에 "People API" 입력
+   - **Google People API** 클릭
    - **사용 설정** 버튼 클릭
    - API가 활성화될 때까지 대기 (1-2분)
 
@@ -600,7 +609,44 @@ Please use API Key or other form of API consumer identity to call this API.
 - Google+ API는 deprecated되었지만 Google Sign-In에서 여전히 사용됨
 - API 활성화 후 즉시 적용되지 않을 수 있음 (1-2분 대기)
 
-**4. CORS 에러**
+**4. "People API has not been used" 에러**
+
+```
+People API has not been used in project 1091403716522 before or it is disabled.
+Enable it by visiting https://console.developers.google.com/apis/api/people.googleapis.com/overview?project=1091403716522
+then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+```
+
+**원인**: People API가 활성화되지 않음. Google Sign-In이 사용자 프로필 정보를 가져오기 위해 People API를 사용합니다.
+
+**해결 방법**:
+1. **에러 메시지의 링크 클릭** (가장 빠름)
+   - 에러 메시지에 포함된 URL을 클릭하면 바로 People API 페이지로 이동
+   - **사용 설정** 버튼 클릭
+
+2. **또는 수동으로 활성화**:
+   - [Google Cloud Console](https://console.cloud.google.com/) 접속
+   - 올바른 프로젝트 선택 확인
+   - 좌측 메뉴: **API 및 서비스 > 라이브러리**
+   - 검색창에 "People API" 입력
+   - **Google People API** 클릭
+   - **사용 설정** 버튼 클릭
+
+3. **변경 사항 반영 대기**
+   - API 활성화 후 1-2분 대기
+   - 에러 메시지에서 언급한 대로 시스템 전파 시간 필요
+
+4. **앱 재시작**
+   ```bash
+   # 앱 종료 후 재실행
+   flutter run -d chrome --web-port=3001
+   ```
+
+⚠️ **참고**:
+- People API는 사용자의 프로필 정보(이름, 이메일, 프로필 사진 등)를 가져오는 데 필요합니다
+- Google+ API와 People API는 모두 필수입니다
+
+**5. CORS 에러**
 
 **원인**: 승인된 JavaScript 원본이 설정되지 않음
 
