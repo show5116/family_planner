@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/core/constants/api_constants.dart';
+import 'package:family_planner/core/config/environment.dart';
 
 /// 인증 서비스
 class AuthService extends ApiServiceBase {
@@ -184,8 +185,15 @@ class AuthService extends ApiServiceBase {
   }
 
   // Google Sign-In 인스턴스
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
+  // 웹에서는 clientId를 명시적으로 설정해야 함
+  late final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
+    // 웹 플랫폼에서는 clientId 필수, 모바일에서는 선택사항
+    clientId: kIsWeb
+        ? EnvironmentConfig.googleWebClientId
+        : (defaultTargetPlatform == TargetPlatform.android
+            ? EnvironmentConfig.googleAndroidClientId
+            : EnvironmentConfig.googleIosClientId),
   );
 
   /// 구글 로그인

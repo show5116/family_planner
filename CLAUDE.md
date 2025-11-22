@@ -335,6 +335,168 @@ git commit -m "Initial commit"
 - 소셜 로그인 기능을 완전히 테스트하려면 백엔드 API가 위 엔드포인트를 제공해야 함
 - 현재는 클라이언트 측 SDK 연동만 테스트 가능
 
+### 소셜 로그인 설정 방법
+
+#### Google OAuth 2.0 설정
+
+**1. Google Cloud Console에서 프로젝트 생성 및 OAuth 클라이언트 ID 발급**
+
+1. [Google Cloud Console](https://console.cloud.google.com/) 접속
+2. 새 프로젝트 생성 또는 기존 프로젝트 선택
+3. **API 및 서비스 > 사용자 인증 정보** 메뉴로 이동
+4. **사용자 인증 정보 만들기 > OAuth 클라이언트 ID** 선택
+5. 동의 화면 구성 (처음 설정하는 경우)
+   - 사용자 유형: 외부 (또는 내부)
+   - 앱 이름, 사용자 지원 이메일 등 입력
+6. OAuth 클라이언트 ID 생성:
+   - **웹 애플리케이션** 선택
+   - 이름: "Family Planner Web"
+   - 승인된 JavaScript 원본:
+     - `http://localhost:3001` (개발용)
+     - `https://yourdomain.com` (프로덕션용)
+   - 승인된 리디렉션 URI:
+     - `http://localhost:3001` (개발용)
+     - `https://yourdomain.com` (프로덕션용)
+7. 생성된 **클라이언트 ID** 복사 (예: `123456789-abcdef.apps.googleusercontent.com`)
+
+**2. 프로젝트에 클라이언트 ID 설정**
+
+```dart
+// lib/core/config/environment.dart
+static String get googleWebClientId {
+  return '123456789-abcdef.apps.googleusercontent.com'; // 발급받은 클라이언트 ID
+}
+```
+
+```html
+<!-- web/index.html -->
+<meta name="google-signin-client_id" content="123456789-abcdef.apps.googleusercontent.com">
+```
+
+**3. Android 설정 (선택사항 - 안드로이드 앱에서 사용 시)**
+
+1. Google Cloud Console에서 **Android** 클라이언트 ID 추가 생성
+2. 패키지 이름: `com.example.family_planner` (android/app/build.gradle 확인)
+3. SHA-1 인증서 지문 입력:
+   ```bash
+   # 개발용 디버그 키스토어 지문 확인
+   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+   ```
+4. 생성된 클라이언트 ID를 `environment.dart`에 설정
+
+**4. iOS 설정 (선택사항 - iOS 앱에서 사용 시)**
+
+1. Google Cloud Console에서 **iOS** 클라이언트 ID 추가 생성
+2. 번들 ID: `com.example.familyPlanner` (ios/Runner.xcodeproj 확인)
+3. 생성된 클라이언트 ID를 `environment.dart`에 설정
+4. `ios/Runner/Info.plist`에 URL 스킴 추가:
+   ```xml
+   <key>CFBundleURLTypes</key>
+   <array>
+     <dict>
+       <key>CFBundleURLSchemes</key>
+       <array>
+         <string>com.googleusercontent.apps.YOUR-CLIENT-ID</string>
+       </array>
+     </dict>
+   </array>
+   ```
+
+#### Kakao Login 설정
+
+**1. Kakao Developers에서 앱 생성**
+
+1. [Kakao Developers](https://developers.kakao.com/) 접속 및 로그인
+2. **내 애플리케이션** > **애플리케이션 추가하기**
+3. 앱 이름 입력 (예: "Family Planner")
+4. **앱 키** 확인:
+   - **네이티브 앱 키** (Android, iOS용)
+   - **JavaScript 키** (웹용)
+
+**2. 플랫폼 설정**
+
+- **Web 플랫폼 등록**:
+  - 사이트 도메인: `http://localhost:3001`, `https://yourdomain.com`
+- **Android 플랫폼 등록**:
+  - 패키지명: `com.example.family_planner`
+  - 키 해시: 디버그/릴리스 키 해시 등록
+- **iOS 플랫폼 등록**:
+  - 번들 ID: `com.example.familyPlanner`
+
+**3. Kakao Login 활성화**
+
+1. **제품 설정 > 카카오 로그인** 메뉴로 이동
+2. 카카오 로그인 **활성화** ON
+3. **Redirect URI** 등록:
+   - `http://localhost:3001/auth/kakao/callback`
+   - `https://yourdomain.com/auth/kakao/callback`
+4. **동의 항목** 설정:
+   - 닉네임, 프로필 사진, 카카오계정(이메일) 필수 동의 설정
+
+**4. 프로젝트에 앱 키 설정**
+
+```dart
+// lib/core/config/environment.dart
+static String get kakaoNativeAppKey {
+  return 'abcdef1234567890abcdef1234567890'; // 발급받은 네이티브 앱 키
+}
+
+static String get kakaoJavaScriptAppKey {
+  return '1234567890abcdef1234567890abcdef'; // 발급받은 JavaScript 키
+}
+```
+
+**5. Android 추가 설정** (`android/app/src/main/AndroidManifest.xml`):
+
+```xml
+<activity
+    android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
+    android:exported="true">
+    <intent-filter android:label="flutter_web_auth">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="kakao{YOUR_NATIVE_APP_KEY}" android:host="oauth"/>
+    </intent-filter>
+</activity>
+```
+
+**6. iOS 추가 설정** (`ios/Runner/Info.plist`):
+
+```xml
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>kakao{YOUR_NATIVE_APP_KEY}</string>
+    </array>
+  </dict>
+</array>
+
+<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>kakaokompassauth</string>
+  <string>kakaolink</string>
+</array>
+```
+
+#### 설정 확인
+
+모든 설정을 완료한 후:
+
+```bash
+# 의존성 재설치
+flutter clean
+flutter pub get
+
+# 웹 실행 및 테스트
+flutter run -d chrome --web-port=3001
+
+# Android 실행 (에뮬레이터 또는 실제 기기)
+flutter run -d <device-id>
+```
+
 ### 기본 인증 API
 
 - `POST /auth/signup` - 회원가입

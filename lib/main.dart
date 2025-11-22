@@ -11,11 +11,11 @@ import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 void main() {
   // Kakao SDK 초기화
-  // TODO: Native App Key를 환경 설정 파일로 이동
-  // Kakao Developers 콘솔에서 Native App Key 발급 후 설정 필요
+  // Kakao Developers 콘솔에서 발급: https://developers.kakao.com
+  // environment.dart에서 키 설정
   KakaoSdk.init(
-    nativeAppKey: 'YOUR_KAKAO_NATIVE_APP_KEY', // 실제 키로 교체 필요
-    javaScriptAppKey: 'YOUR_KAKAO_JAVASCRIPT_APP_KEY', // 웹용 키 (선택)
+    nativeAppKey: EnvironmentConfig.kakaoNativeAppKey,
+    javaScriptAppKey: EnvironmentConfig.kakaoJavaScriptAppKey,
   );
 
   // 환경 설정 초기화
