@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:family_planner/core/theme/app_theme.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
@@ -9,9 +10,16 @@ import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/core/services/oauth_callback_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 void main() {
+  // 웹에서 URL 해시(#) 제거 - 경로 기반 라우팅 사용
+  // 이렇게 하면 URL이 /#/path가 아닌 /path 형태가 됨
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
+
   // Kakao SDK 초기화
   // Kakao Developers 콘솔에서 발급: https://developers.kakao.com
   // environment.dart에서 키 설정
@@ -56,6 +64,13 @@ class _MyAppState extends ConsumerState<MyApp> {
     // 앱 시작 시 인증 상태 확인
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).checkAuthStatus();
+
+      // Deep Link 리스너 초기화 (웹 전용)
+      // 웹에서 OAuth URL 방식 로그인 시 콜백을 받기 위함
+      // 모바일은 SDK 방식을 사용하므로 Deep Link 불필요
+      if (kIsWeb) {
+        OAuthCallbackHandler().initDeepLinkListener();
+      }
     });
   }
 

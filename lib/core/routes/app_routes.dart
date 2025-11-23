@@ -7,6 +7,7 @@ class AppRoutes {
   static const String signup = '/signup';
   static const String emailVerification = '/email-verification';
   static const String forgotPassword = '/forgot-password';
+  static const String oauthCallback = '/auth/callback';
 
   // Main Routes
   static const String home = '/';

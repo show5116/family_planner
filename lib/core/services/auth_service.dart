@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/core/constants/api_constants.dart';
 import 'package:family_planner/core/config/environment.dart';
+import 'package:family_planner/core/services/oauth_callback_handler.dart';
 
 /// 인증 서비스
 class AuthService extends ApiServiceBase {
@@ -196,18 +198,19 @@ class AuthService extends ApiServiceBase {
             : EnvironmentConfig.googleIosClientId),
   );
 
-  /// 구글 로그인
+  /// 구글 로그인 (SDK 방식 - 모바일 전용)
   ///
-  /// [중요] 현재 구현은 임시 방식입니다.
-  /// 백엔드가 모바일/웹 앱용 토큰 검증 엔드포인트를 제공하지 않아
-  /// 웹 리다이렉트 방식의 콜백 URL을 사용하고 있습니다.
+  /// Google Sign-In SDK를 사용하여 인증 후 백엔드에 토큰을 전송합니다.
+  /// 웹에서는 loginWithGoogleOAuth()를 사용하세요.
   ///
+  /// [백엔드 API 요구사항]
   /// 올바른 구현을 위해서는 백엔드에 다음 엔드포인트가 필요합니다:
   /// - POST /auth/google/token
   /// - Request Body: { "accessToken": "...", "idToken": "..." }
   /// - Response: { "accessToken": "jwt", "refreshToken": "jwt", "user": {...} }
   ///
-  /// 자세한 내용은 CLAUDE.md의 "소셜 로그인 API" 섹션 참조
+  /// [현재 임시 구현]
+  /// 백엔드 엔드포인트가 없어 임시로 GET /auth/google/callback 사용 중
   Future<Map<String, dynamic>> loginWithGoogle() async {
     try {
       // 1. Google Sign-In으로 로그인
@@ -221,8 +224,15 @@ class AuthService extends ApiServiceBase {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      // 3. [임시] ID Token을 백엔드로 전송
-      // TODO: 백엔드에 POST /auth/google/token 엔드포인트 추가 후 수정 필요
+      // 3. [임시] Access Token을 백엔드로 전송
+      // TODO: 백엔드에 POST /auth/google/token 엔드포인트 추가 후 다음과 같이 수정:
+      // final response = await apiClient.post(
+      //   '/auth/google/token',
+      //   data: {
+      //     'accessToken': googleAuth.accessToken,
+      //     'idToken': googleAuth.idToken,
+      //   },
+      // );
       final response = await apiClient.get(
         '${ApiConstants.googleCallback}?access_token=${googleAuth.accessToken}',
       );
@@ -254,18 +264,19 @@ class AuthService extends ApiServiceBase {
     }
   }
 
-  /// 카카오 로그인
+  /// 카카오 로그인 (SDK 방식 - 모바일 전용)
   ///
-  /// [중요] 현재 구현은 임시 방식입니다.
-  /// 백엔드가 모바일/웹 앱용 토큰 검증 엔드포인트를 제공하지 않아
-  /// 웹 리다이렉트 방식의 콜백 URL을 사용하고 있습니다.
+  /// Kakao Flutter SDK를 사용하여 인증 후 백엔드에 토큰을 전송합니다.
+  /// 웹에서는 loginWithKakaoOAuth()를 사용하세요.
   ///
+  /// [백엔드 API 요구사항]
   /// 올바른 구현을 위해서는 백엔드에 다음 엔드포인트가 필요합니다:
   /// - POST /auth/kakao/token
   /// - Request Body: { "accessToken": "..." }
   /// - Response: { "accessToken": "jwt", "refreshToken": "jwt", "user": {...} }
   ///
-  /// 자세한 내용은 CLAUDE.md의 "소셜 로그인 API" 섹션 참조
+  /// [현재 임시 구현]
+  /// 백엔드 엔드포인트가 없어 임시로 GET /auth/kakao/callback 사용 중
   Future<Map<String, dynamic>> loginWithKakao() async {
     try {
       // 1. 카카오톡 설치 여부 확인
@@ -288,7 +299,13 @@ class AuthService extends ApiServiceBase {
       }
 
       // 2. [임시] Access Token을 백엔드로 전송
-      // TODO: 백엔드에 POST /auth/kakao/token 엔드포인트 추가 후 수정 필요
+      // TODO: 백엔드에 POST /auth/kakao/token 엔드포인트 추가 후 다음과 같이 수정:
+      // final response = await apiClient.post(
+      //   '/auth/kakao/token',
+      //   data: {
+      //     'accessToken': token.accessToken,
+      //   },
+      // );
       final response = await apiClient.get(
         '${ApiConstants.kakaoCallback}?access_token=${token.accessToken}',
       );
@@ -317,6 +334,87 @@ class AuthService extends ApiServiceBase {
       await UserApi.instance.logout();
     } catch (e) {
       debugPrint('Kakao logout failed: $e');
+    }
+  }
+
+  // ========== OAuth URL 방식 로그인 (웹 전용) ==========
+  // 백엔드의 OAuth 페이지를 브라우저로 열고 리다이렉트로 콜백을 받는 방식
+  // 웹 플랫폼 전용 - 모바일에서는 loginWithGoogle(), loginWithKakao() 사용
+
+  final _oauthCallbackHandler = OAuthCallbackHandler();
+
+  /// 구글 OAuth URL 로그인 (웹 전용)
+  ///
+  /// 백엔드의 OAuth 페이지를 브라우저로 열어 로그인합니다.
+  /// 로그인 완료 후 백엔드는 {FRONTEND_URL}/auth/callback?accessToken=xxx&refreshToken=xxx로 리다이렉트합니다.
+  ///
+  /// - 웹: GoRouter의 /auth/callback 라우트가 처리
+  /// - 모바일: 이 메서드 대신 loginWithGoogle() 사용 (SDK 방식)
+  Future<void> loginWithGoogleOAuth() async {
+    final oauthUrl = Uri.parse('${EnvironmentConfig.apiBaseUrl}/auth/google');
+
+    try {
+      final canLaunch = await canLaunchUrl(oauthUrl);
+      if (!canLaunch) {
+        throw Exception('브라우저를 열 수 없습니다');
+      }
+
+      // OAuth URL을 브라우저로 열기
+      await launchUrl(
+        oauthUrl,
+        mode: kIsWeb
+            ? LaunchMode.platformDefault // 웹: 같은 창에서 열기
+            : LaunchMode.externalApplication, // 모바일: 외부 브라우저로 열기
+      );
+
+      // 콜백은 OAuthCallbackHandler가 처리
+      // - 웹: GoRouter의 /auth/callback 라우트에서 handleOAuthCallback 호출
+      // - 모바일: Deep Link 리스너가 자동으로 handleOAuthCallback 호출
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// 카카오 OAuth URL 로그인 (웹 전용)
+  ///
+  /// 백엔드의 OAuth 페이지를 브라우저로 열어 로그인합니다.
+  /// 모바일에서는 이 메서드 대신 loginWithKakao() 사용 (SDK 방식)
+  Future<void> loginWithKakaoOAuth() async {
+    final oauthUrl = Uri.parse('${EnvironmentConfig.apiBaseUrl}/auth/kakao');
+
+    try {
+      final canLaunch = await canLaunchUrl(oauthUrl);
+      if (!canLaunch) {
+        throw Exception('브라우저를 열 수 없습니다');
+      }
+
+      // OAuth URL을 브라우저로 열기
+      await launchUrl(
+        oauthUrl,
+        mode: kIsWeb
+            ? LaunchMode.platformDefault
+            : LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// OAuth 콜백 스트림 가져오기
+  ///
+  /// AuthProvider에서 이 스트림을 구독하여 로그인 완료를 감지합니다.
+  Stream<OAuthCallbackResult> get oauthCallbackStream =>
+      _oauthCallbackHandler.callbackStream;
+
+  /// 저장된 토큰으로 사용자 정보 가져오기
+  ///
+  /// OAuth 콜백 후 저장된 토큰을 사용하여 사용자 정보를 조회합니다.
+  Future<Map<String, dynamic>> getUserInfo() async {
+    try {
+      final response = await apiClient.get(ApiConstants.verifyToken);
+      return handleResponse<Map<String, dynamic>>(response);
+    } catch (e) {
+      throw handleError(e);
     }
   }
 }

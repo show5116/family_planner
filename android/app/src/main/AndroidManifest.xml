@@ -24,6 +24,31 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- OAuth Callback Deep Link (App Links) -->
+            <!--
+                프로덕션 환경에서는 yourdomain.com을 실제 도메인으로 변경하세요.
+                android:autoVerify="true"를 사용하려면 웹사이트에 assetlinks.json 파일이 필요합니다.
+
+                개발 환경에서는 ngrok 등을 사용하여 로컬호스트를 공개할 수 있습니다.
+            -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- 프로덕션 도메인 -->
+                <data
+                    android:scheme="https"
+                    android:host="yourdomain.com"
+                    android:pathPrefix="/auth/callback" />
+
+                <!-- 개발용 (ngrok 등을 사용하는 경우, 주석 해제) -->
+                <!-- <data
+                    android:scheme="https"
+                    android:host="your-ngrok-url.ngrok.io"
+                    android:pathPrefix="/auth/callback" /> -->
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

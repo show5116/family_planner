@@ -11,6 +11,8 @@ import 'package:family_planner/features/auth/screens/login_screen.dart';
 import 'package:family_planner/features/auth/screens/signup_screen.dart';
 import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
 import 'package:family_planner/features/auth/screens/forgot_password_screen.dart';
+import 'package:family_planner/features/auth/screens/oauth_callback_screen.dart';
+import 'package:family_planner/features/auth/screens/splash_screen.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// GoRouter Provider
@@ -27,32 +29,46 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   );
 
   return GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.home, // 홈을 기본 위치로 설정
     debugLogDiagnostics: true,
     refreshListenable: notifier,
     redirect: (context, state) {
       final isAuthenticated = ref.read(authProvider).isAuthenticated;
       final isLoading = ref.read(authProvider).isLoading;
+
+      debugPrint('=== GoRouter Redirect ===');
+      debugPrint('Location: ${state.matchedLocation}');
+      debugPrint('URI: ${state.uri}');
+      debugPrint('isAuthenticated: $isAuthenticated');
+      debugPrint('isLoading: $isLoading');
+
       final isAuthPage = state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.signup ||
           state.matchedLocation == AppRoutes.emailVerification ||
-          state.matchedLocation == AppRoutes.forgotPassword;
+          state.matchedLocation == AppRoutes.forgotPassword ||
+          state.matchedLocation.startsWith('/auth/callback');
 
-      // 로딩 중에는 리다이렉트하지 않음
+      debugPrint('isAuthPage: $isAuthPage');
+
+      // 로딩 중에는 리다이렉트하지 않음 (토큰 확인 중)
       if (isLoading) {
+        debugPrint('Redirect: null (loading)');
         return null;
       }
 
       // 인증되지 않았고 인증 페이지가 아니면 로그인 페이지로
       if (!isAuthenticated && !isAuthPage) {
+        debugPrint('Redirect: ${AppRoutes.login} (not authenticated, not auth page)');
         return AppRoutes.login;
       }
 
       // 인증되었고 인증 페이지에 있으면 홈으로
       if (isAuthenticated && isAuthPage) {
+        debugPrint('Redirect: ${AppRoutes.home} (authenticated, on auth page)');
         return AppRoutes.home;
       }
 
+      debugPrint('Redirect: null (no redirect needed)');
       return null;
     },
     routes: [
@@ -82,12 +98,73 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: 'forgotPassword',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.oauthCallback,
+        name: 'oauthCallback',
+        builder: (context, state) {
+          // 디버깅: 받은 URL 전체 출력
+          debugPrint('=== OAuth Callback Route Builder ===');
+          debugPrint('OAuth Callback URL: ${state.uri}');
+          debugPrint('Path: ${state.path}');
+          debugPrint('MatchedLocation: ${state.matchedLocation}');
+          debugPrint('Query Parameters: ${state.uri.queryParameters}');
+
+          final accessToken = state.uri.queryParameters['accessToken'];
+          final refreshToken = state.uri.queryParameters['refreshToken'];
+
+          debugPrint('Access Token exists: ${accessToken != null}');
+          debugPrint('Refresh Token exists: ${refreshToken != null}');
+
+          if (accessToken == null || refreshToken == null) {
+            // 토큰이 없으면 로그인 화면으로
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('잘못된 OAuth 콜백입니다'),
+                    const SizedBox(height: 16),
+                    Text(
+                      'URL: ${state.uri}',
+                      style: const TextStyle(fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Query Parameters: ${state.uri.queryParameters}',
+                      style: const TextStyle(fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => context.go(AppRoutes.login),
+                      child: const Text('로그인 화면으로 돌아가기'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          return OAuthCallbackScreen(
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          );
+        },
+      ),
 
       // Main Routes with Bottom Navigation
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) {
+          // 로딩 중이면 스플래시 화면 표시
+          final isLoading = ref.read(authProvider).isLoading;
+          if (isLoading) {
+            return const SplashScreen();
+          }
+          return const HomeScreen();
+        },
       ),
 
       // Settings Routes

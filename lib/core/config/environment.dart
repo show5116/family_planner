@@ -30,6 +30,20 @@ class EnvironmentConfig {
     }
   }
 
+  /// 프론트엔드 URL (OAuth 콜백에 사용)
+  ///
+  /// 백엔드가 OAuth 인증 후 이 URL로 리다이렉트합니다.
+  /// - 개발: localhost:3001 (웹)
+  /// - 프로덕션: 실제 도메인 (웹), Universal/App Links (모바일)
+  static String get frontendUrl {
+    switch (_currentEnvironment) {
+      case Environment.development:
+        return 'http://localhost:3001';
+      case Environment.production:
+        return 'https://family-planner-web.netlify.app/';
+    }
+  }
+
   /// API 타임아웃 설정 (밀리초)
   static int get apiTimeout {
     switch (_currentEnvironment) {
@@ -52,7 +66,6 @@ class EnvironmentConfig {
   /// Google Cloud Console에서 발급: https://console.cloud.google.com/apis/credentials
   /// 발급 후 web/index.html의 meta 태그도 함께 업데이트 필요
   static String get googleWebClientId {
-    // TODO: Google Cloud Console에서 OAuth 2.0 클라이언트 ID 발급 후 설정
     return '1091403716522-pgm7m06s5tcpen6g0okcpvd8djfq0m5l.apps.googleusercontent.com';
   }
 
@@ -79,7 +92,6 @@ class EnvironmentConfig {
 
   /// Kakao JavaScript App Key (웹용)
   static String get kakaoJavaScriptAppKey {
-    // TODO: Kakao Developers 콘솔에서 JavaScript Key 발급 후 설정
-    return 'YOUR_KAKAO_JAVASCRIPT_APP_KEY';
+    return 'f0366e83a5499e200ce35d5d18688d8f';
   }
 }

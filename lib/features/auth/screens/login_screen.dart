@@ -60,14 +60,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   /// 구글 로그인 처리
+  ///
+  /// 플랫폼에 따라 자동으로 적절한 방식을 사용합니다:
+  /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
+  /// - 모바일: SDK 방식 (Google Sign-In)
   Future<void> _handleGoogleLogin() async {
     try {
       await ref.read(authProvider.notifier).loginWithGoogle();
-
-      // 로그인 성공 시 홈 화면으로 이동
-      if (mounted) {
-        context.go(AppRoutes.home);
-      }
+      // 웹: 브라우저가 열리고, OAuth 콜백이 처리되면 자동으로 홈으로 이동
+      // 모바일: SDK 로그인 완료 후 자동으로 홈으로 이동
     } catch (e) {
       // 에러 처리
       if (mounted) {
@@ -82,14 +83,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   /// 카카오 로그인 처리
+  ///
+  /// 플랫폼에 따라 자동으로 적절한 방식을 사용합니다:
+  /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
+  /// - 모바일: SDK 방식 (Kakao Flutter SDK)
   Future<void> _handleKakaoLogin() async {
     try {
       await ref.read(authProvider.notifier).loginWithKakao();
-
-      // 로그인 성공 시 홈 화면으로 이동
-      if (mounted) {
-        context.go(AppRoutes.home);
-      }
     } catch (e) {
       // 에러 처리
       if (mounted) {
