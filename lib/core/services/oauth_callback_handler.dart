@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:app_links/app_links.dart';
-import 'package:family_planner/core/services/secure_storage_service.dart';
+import 'package:family_planner/core/services/api_client.dart';
 
 /// OAuth 콜백 핸들러
 /// Universal Links (iOS) / App Links (Android) / Web 라우팅을 통해
@@ -12,7 +12,7 @@ class OAuthCallbackHandler {
   factory OAuthCallbackHandler() => _instance;
   OAuthCallbackHandler._internal();
 
-  final _secureStorage = SecureStorageService();
+  final _apiClient = ApiClient.instance;
   final _appLinks = AppLinks();
 
   // 콜백 처리 완료 알림을 위한 StreamController
@@ -85,9 +85,9 @@ class OAuthCallbackHandler {
       debugPrint('Access Token: ${accessToken.substring(0, 20)}...');
       debugPrint('Refresh Token: ${refreshToken.substring(0, 20)}...');
 
-      // 1. 토큰 저장
-      await _secureStorage.saveAccessToken(accessToken);
-      await _secureStorage.saveRefreshToken(refreshToken);
+      // 1. 토큰 저장 (ApiClient를 통해 SecureStorage에 저장)
+      await _apiClient.saveAccessToken(accessToken);
+      await _apiClient.saveRefreshToken(refreshToken);
 
       debugPrint('OAuth tokens saved successfully');
 

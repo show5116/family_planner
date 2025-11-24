@@ -1,12 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:family_planner/core/config/environment.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:family_planner/core/services/secure_storage_service.dart';
 
 /// API 클라이언트 (Dio 기반)
+/// 토큰은 FlutterSecureStorage에 암호화되어 저장됩니다.
 class ApiClient {
   late final Dio _dio;
   static ApiClient? _instance;
+  final SecureStorageService _secureStorage = SecureStorageService();
 
   ApiClient._internal() {
     _dio = Dio(
@@ -115,26 +117,22 @@ class ApiClient {
 
   /// Access Token 가져오기
   Future<String?> _getAccessToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
+    return await _secureStorage.getAccessToken();
   }
 
   /// Access Token 저장
   Future<void> saveAccessToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('access_token', token);
+    await _secureStorage.saveAccessToken(token);
   }
 
   /// Refresh Token 가져오기
   Future<String?> _getRefreshToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('refresh_token');
+    return await _secureStorage.getRefreshToken();
   }
 
   /// Refresh Token 저장
   Future<void> saveRefreshToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('refresh_token', token);
+    await _secureStorage.saveRefreshToken(token);
   }
 
   /// 토큰 갱신
@@ -171,9 +169,8 @@ class ApiClient {
 
   /// 모든 토큰 삭제 (로그아웃 시)
   Future<void> clearTokens() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('access_token');
-    await prefs.remove('refresh_token');
+    await _secureStorage.clearTokens();
+    debugPrint('All tokens cleared from SecureStorage');
   }
 
   /// 토큰 존재 여부 확인

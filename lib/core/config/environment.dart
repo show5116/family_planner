@@ -66,7 +66,10 @@ class EnvironmentConfig {
   /// Google Cloud Console에서 발급: https://console.cloud.google.com/apis/credentials
   /// 발급 후 web/index.html의 meta 태그도 함께 업데이트 필요
   static String get googleWebClientId {
-    return '1091403716522-pgm7m06s5tcpen6g0okcpvd8djfq0m5l.apps.googleusercontent.com';
+    return const String.fromEnvironment(
+      'GOOGLE_WEB_CLIENT_ID',
+      defaultValue: '1091403716522-pgm7m06s5tcpen6g0okcpvd8djfq0m5l.apps.googleusercontent.com',
+    );
   }
 
   /// Google OAuth Android 클라이언트 ID (선택사항)
@@ -86,12 +89,17 @@ class EnvironmentConfig {
   /// Kakao Native App Key
   /// Kakao Developers에서 발급: https://developers.kakao.com
   static String get kakaoNativeAppKey {
-    // TODO: Kakao Developers 콘솔에서 Native App Key 발급 후 설정
-    return 'YOUR_KAKAO_NATIVE_APP_KEY';
+    return const String.fromEnvironment(
+      'KAKAO_NATIVE_APP_KEY',
+      defaultValue: 'YOUR_KAKAO_NATIVE_APP_KEY',
+    );
   }
 
   /// Kakao JavaScript App Key (웹용)
   static String get kakaoJavaScriptAppKey {
-    return 'f0366e83a5499e200ce35d5d18688d8f';
+    return const String.fromEnvironment(
+      'KAKAO_JS_APP_KEY',
+      defaultValue: 'f0366e83a5499e200ce35d5d18688d8f',
+    );
   }
 }

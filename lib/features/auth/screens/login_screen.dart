@@ -5,6 +5,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
+import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
@@ -49,6 +50,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       // 에러 처리
       if (mounted) {
+        // ApiException인 경우 상태 코드에 따라 처리
+        if (e is ApiException) {
+          if (e.statusCode == 403) {
+            // 403: 이메일 인증 필요 - 이메일 인증 화면으로 이동
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.message),
+                backgroundColor: Colors.orange,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+
+            // 이메일 인증 화면으로 이동 (이메일 전달)
+            context.push(
+              '${AppRoutes.emailVerification}?email=${Uri.encodeComponent(_emailController.text.trim())}',
+            );
+            return;
+          } else if (e.statusCode == 401) {
+            // 401: 비밀번호 오류
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.message.isNotEmpty ? e.message : '이메일 또는 비밀번호가 올바르지 않습니다'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
+        }
+
+        // 기타 에러
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('로그인 실패: ${e.toString()}'),

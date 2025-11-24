@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/home/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/widgets/investment_summary_widget.dart';
 import 'package:family_planner/features/home/widgets/todo_summary_widget.dart';
 import 'package:family_planner/features/home/widgets/asset_summary_widget.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
@@ -14,14 +16,14 @@ import 'dart:convert';
 
 /// 메인 홈 화면
 /// Bottom Navigation을 포함한 메인 레이아웃
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
   int _dashboardRefreshKey = 0;
 
@@ -60,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const _AssetsTab(),
         const _CalendarTab(),
         const _TodoTab(),
-        const _MoreTab(),
+        _MoreTab(ref: ref),
       ];
 
   @override
@@ -461,11 +463,13 @@ class _TodoTab extends StatelessWidget {
 }
 
 // 임시 더보기 탭
-class _MoreTab extends StatelessWidget {
-  const _MoreTab();
+class _MoreTab extends ConsumerWidget {
+  const _MoreTab({required this.ref});
+
+  final WidgetRef ref;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('더보기'),
@@ -507,23 +511,24 @@ class _MoreTab extends StatelessWidget {
             ),
           ),
           // 메뉴 리스트
-          _buildMenuItem(context, Icons.credit_card, '가계관리'),
-          _buildMenuItem(context, Icons.child_care, '육아포인트'),
-          _buildMenuItem(context, Icons.note, '메모'),
-          _buildMenuItem(context, Icons.games, '미니게임'),
+          _buildMenuItem(context, ref, Icons.credit_card, '가계관리'),
+          _buildMenuItem(context, ref, Icons.child_care, '육아포인트'),
+          _buildMenuItem(context, ref, Icons.note, '메모'),
+          _buildMenuItem(context, ref, Icons.games, '미니게임'),
           const Divider(),
           _buildMenuItem(
             context,
+            ref,
             Icons.settings,
             '설정',
             route: AppRoutes.settings,
           ),
           _buildMenuItem(
             context,
+            ref,
             Icons.logout,
             '로그아웃',
             isDestructive: true,
-            route: AppRoutes.login,
           ),
         ],
       ),
@@ -532,6 +537,7 @@ class _MoreTab extends StatelessWidget {
 
   Widget _buildMenuItem(
     BuildContext context,
+    WidgetRef ref,
     IconData icon,
     String title, {
     bool isDestructive = false,
@@ -549,14 +555,30 @@ class _MoreTab extends StatelessWidget {
         ),
       ),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () {
-        if (route != null) {
-          // 로그아웃은 go를 사용 (스택 초기화), 나머지는 push 사용
-          if (isDestructive) {
-            context.go(route);
-          } else {
-            context.push(route);
+      onTap: () async {
+        // 로그아웃 처리
+        if (isDestructive && title == '로그아웃') {
+          try {
+            // 로그아웃 실행
+            await ref.read(authProvider.notifier).logout();
+
+            if (context.mounted) {
+              // 로그인 화면으로 이동 (스택 초기화)
+              context.go(AppRoutes.login);
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('로그아웃 실패: ${e.toString()}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           }
+        } else if (route != null) {
+          // 일반 라우팅
+          context.push(route);
         }
       },
     );

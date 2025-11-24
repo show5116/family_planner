@@ -55,7 +55,9 @@ class AuthService extends ApiServiceBase {
         },
       );
 
-      return handleResponse<Map<String, dynamic>>(response);
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      return data;
     } catch (e) {
       throw handleError(e);
     }
@@ -64,13 +66,33 @@ class AuthService extends ApiServiceBase {
   /// 로그아웃
   Future<void> logout() async {
     try {
+      // 백엔드 로그아웃 API 호출
       await apiClient.post(ApiConstants.logout);
     } catch (e) {
       // 로그아웃 실패해도 로컬 토큰은 삭제
       debugPrint('Logout API failed: $e');
     } finally {
+      // 소셜 로그인 SDK 로그아웃
+      try {
+        await signOutGoogle();
+        debugPrint('Google sign out completed');
+      } catch (e) {
+        debugPrint('Google sign out failed: $e');
+      }
+
+      try {
+        if (!kIsWeb) {
+          // 카카오 로그아웃은 모바일에서만 (웹에서는 SDK 미사용)
+          await signOutKakao();
+          debugPrint('Kakao logout completed');
+        }
+      } catch (e) {
+        debugPrint('Kakao logout failed: $e');
+      }
+
       // 로컬 토큰 삭제
       await apiClient.clearTokens();
+      debugPrint('Local tokens cleared');
     }
   }
 
@@ -140,7 +162,9 @@ class AuthService extends ApiServiceBase {
         },
       );
 
-      return handleResponse<Map<String, dynamic>>(response);
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      return data;
     } catch (e) {
       throw handleError(e);
     }
@@ -158,7 +182,9 @@ class AuthService extends ApiServiceBase {
         },
       );
 
-      return handleResponse<Map<String, dynamic>>(response);
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      return data;
     } catch (e) {
       throw handleError(e);
     }

@@ -7,7 +7,11 @@
       "type": "dart",
       "deviceId": "chrome",
       "args": [
-        "--web-port=3001"
+        "--web-port=3001",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
       ]
     },
     {
@@ -16,13 +20,23 @@
       "type": "dart",
       "deviceId": "edge",
       "args": [
-        "--web-port=3001"
+        "--web-port=3001",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
       ]
     },
     {
       "name": "family_planner (Mobile/Desktop)",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
+      ]
     },
     {
       "name": "family_planner (Profile Mode)",
@@ -30,7 +44,11 @@
       "type": "dart",
       "flutterMode": "profile",
       "args": [
-        "--web-port=3001"
+        "--web-port=3001",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
       ]
     },
     {
@@ -39,7 +57,11 @@
       "type": "dart",
       "flutterMode": "release",
       "args": [
-        "--web-port=3001"
+        "--web-port=3001",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
       ]
     }
   ]

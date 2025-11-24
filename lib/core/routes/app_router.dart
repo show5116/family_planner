@@ -87,9 +87,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.emailVerification,
         name: 'emailVerification',
         builder: (context, state) {
-          final email = state.extra as String?;
+          // 쿼리 파라미터에서 이메일 가져오기
+          final email = state.uri.queryParameters['email'] ??
+                        (state.extra as String?) ??
+                        '';
           return EmailVerificationScreen(
-            email: email ?? '',
+            email: email,
           );
         },
       ),
