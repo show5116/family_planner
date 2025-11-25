@@ -6,28 +6,20 @@ import 'package:family_planner/core/services/oauth_callback_handler.dart';
 
 /// 인증 상태
 class AuthState {
-  const AuthState({
-    this.isAuthenticated = false,
-    this.user,
-    this.isLoading = false,
-    this.error,
-  });
+  const AuthState({this.isAuthenticated, this.user, this.error});
 
-  final bool isAuthenticated;
+  final bool? isAuthenticated;
   final Map<String, dynamic>? user;
-  final bool isLoading;
   final String? error;
 
   AuthState copyWith({
     bool? isAuthenticated,
     Map<String, dynamic>? user,
-    bool? isLoading,
     String? error,
   }) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       user: user ?? this.user,
-      isLoading: isLoading ?? this.isLoading,
       error: error,
     );
   }
@@ -47,24 +39,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (kIsWeb) {
       debugPrint('=== AuthNotifier initialized (Web) ===');
       debugPrint('Setting up OAuth callback stream listener...');
-      _oauthSubscription = _authService.oauthCallbackStream.listen(
-        (result) {
-          debugPrint('=== OAuth Callback Received in AuthNotifier ===');
-          debugPrint('Success: ${result.isSuccess}');
-          if (result.isSuccess) {
-            debugPrint('Handling OAuth success...');
-            // 토큰 저장 완료, 사용자 정보 가져오기
-            _handleOAuthSuccess();
-          } else {
-            debugPrint('OAuth error: ${result.error}');
-            // 에러 처리
-            state = state.copyWith(
-              isLoading: false,
-              error: result.error,
-            );
-          }
-        },
-      );
+      _oauthSubscription = _authService.oauthCallbackStream.listen((result) {
+        debugPrint('=== OAuth Callback Received in AuthNotifier ===');
+        debugPrint('Success: ${result.isSuccess}');
+        if (result.isSuccess) {
+          debugPrint('Handling OAuth success...');
+          // 토큰 저장 완료, 사용자 정보 가져오기
+          _handleOAuthSuccess();
+        } else {
+          debugPrint('OAuth error: ${result.error}');
+          // 에러 처리
+          state = state.copyWith(error: result.error);
+        }
+      });
     }
   }
 
@@ -78,11 +65,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   /// 로그인
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
-    state = state.copyWith(isLoading: true, error: null);
+  Future<void> login({required String email, required String password}) async {
+    state = state.copyWith(error: null);
 
     try {
       final response = await _authService.login(
@@ -90,16 +74,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         password: password,
       );
 
-      state = state.copyWith(
-        isAuthenticated: true,
-        user: response,
-        isLoading: false,
-      );
+      state = state.copyWith(isAuthenticated: true, user: response);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
@@ -110,76 +87,56 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
     required String name,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(error: null);
 
     try {
-      await _authService.register(
-        email: email,
-        password: password,
-        name: name,
-      );
+      await _authService.register(email: email, password: password, name: name);
 
-      state = state.copyWith(isLoading: false);
+      state = const AuthState();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
 
   /// 이메일 인증
-  Future<void> verifyEmail({
-    required String code,
-  }) async {
-    state = state.copyWith(isLoading: true, error: null);
+  Future<void> verifyEmail({required String code}) async {
+    state = state.copyWith(error: null);
 
     try {
       await _authService.verifyEmail(code: code);
 
-      state = state.copyWith(isLoading: false);
+      state = const AuthState();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
 
   /// 인증 이메일 재전송
-  Future<void> resendVerification({
-    required String email,
-  }) async {
-    state = state.copyWith(isLoading: true, error: null);
+  Future<void> resendVerification({required String email}) async {
+    state = state.copyWith(error: null);
 
     try {
       await _authService.resendVerification(email: email);
 
-      state = state.copyWith(isLoading: false);
+      state = const AuthState();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
 
   /// 로그아웃
   Future<void> logout() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(error: null);
 
     try {
       await _authService.logout();
 
-      state = const AuthState();
+      state = const AuthState(isAuthenticated: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
@@ -195,114 +152,130 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// 자동 로그인 (저장된 토큰으로)
   Future<void> checkAuthStatus() async {
-    state = state.copyWith(isLoading: true);
+    debugPrint('=== checkAuthStatus 시작 ===');
+    debugPrint('현재 상태: isAuthenticated = ${state.isAuthenticated}');
+
+    // 스플래시 화면을 최소 1초간 표시하기 위한 타이머 시작
+    final startTime = DateTime.now();
 
     try {
       // 저장된 토큰이 있는지 확인
+      debugPrint('토큰 확인 중...');
       final hasToken = await _authService.apiClient.hasValidToken();
+      debugPrint('토큰 존재 여부: $hasToken');
 
       if (!hasToken) {
-        state = const AuthState(isLoading: false);
+        debugPrint('토큰 없음 → isAuthenticated = false 설정');
+        await _ensureMinimumSplashDuration(startTime);
+        state = const AuthState(isAuthenticated: false);
+        debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
         return;
       }
 
       // 토큰 검증
+      debugPrint('토큰 검증 중...');
       final isValid = await verifyToken();
+      debugPrint('토큰 유효성: $isValid');
 
       if (isValid) {
         // 토큰이 유효하면 인증 상태로 설정
-        state = state.copyWith(
-          isAuthenticated: true,
-          isLoading: false,
-        );
+        debugPrint('토큰 유효 → isAuthenticated = true 설정');
+        await _ensureMinimumSplashDuration(startTime);
+        state = state.copyWith(isAuthenticated: true);
+        debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
       } else {
         // 토큰이 유효하지 않으면 토큰 삭제
+        debugPrint('토큰 무효 → 토큰 삭제 및 isAuthenticated = false 설정');
         await _authService.apiClient.clearTokens();
-        state = const AuthState(isLoading: false);
+        await _ensureMinimumSplashDuration(startTime);
+        state = const AuthState(isAuthenticated: false);
+        debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
       }
     } catch (e) {
+      debugPrint('에러 발생: $e');
+      debugPrint('토큰 삭제 및 isAuthenticated = false 설정');
       await _authService.apiClient.clearTokens();
-      state = const AuthState(isLoading: false);
+      await _ensureMinimumSplashDuration(startTime);
+      state = const AuthState(isAuthenticated: false);
+      debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
+    }
+
+    debugPrint('=== checkAuthStatus 완료 ===');
+  }
+
+  /// 스플래시 화면 최소 표시 시간 보장 (1초)
+  Future<void> _ensureMinimumSplashDuration(DateTime startTime) async {
+    const minimumDuration = Duration(seconds: 1);
+    final elapsed = DateTime.now().difference(startTime);
+
+    if (elapsed < minimumDuration) {
+      final remaining = minimumDuration - elapsed;
+      await Future.delayed(remaining);
     }
   }
 
   /// 구글 로그인 (플랫폼별 자동 분기)
   ///
-  /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
+  /// - 웹: OAuth 팝업 방식 (팝업 창으로 인증)
   /// - 모바일: SDK 방식 (Google Sign-In)
   Future<void> loginWithGoogle() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(error: null);
 
     try {
-      if (kIsWeb) {
-        // 웹: OAuth URL 방식
-        await _authService.loginWithGoogleOAuth();
-        // 브라우저가 열리고, 콜백은 스트림으로 처리됨
-      } else {
-        // 모바일: SDK 방식
-        final response = await _authService.loginWithGoogle();
+      final response = kIsWeb
+          ? await _authService.loginWithGoogleOAuth()
+          : await _authService.loginWithGoogle();
 
-        state = state.copyWith(
-          isAuthenticated: true,
-          user: response,
-          isLoading: false,
-        );
+      // 웹의 경우 토큰이 이미 저장됨, 사용자 정보 가져오기
+      if (kIsWeb && response.isNotEmpty) {
+        final userInfo = await _authService.getUserInfo();
+        state = state.copyWith(isAuthenticated: true, user: userInfo);
+      } else if (!kIsWeb) {
+        // 모바일: response에 사용자 정보 포함
+        state = state.copyWith(isAuthenticated: true, user: response);
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
 
   /// 카카오 로그인 (플랫폼별 자동 분기)
   ///
-  /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
+  /// - 웹: OAuth 팝업 방식 (팝업 창으로 인증)
   /// - 모바일: SDK 방식 (Kakao Flutter SDK)
   Future<void> loginWithKakao() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(error: null);
 
     try {
-      if (kIsWeb) {
-        // 웹: OAuth URL 방식
-        await _authService.loginWithKakaoOAuth();
-        // 브라우저가 열리고, 콜백은 스트림으로 처리됨
-      } else {
-        // 모바일: SDK 방식
-        final response = await _authService.loginWithKakao();
+      final response = kIsWeb
+          ? await _authService.loginWithKakaoOAuth()
+          : await _authService.loginWithKakao();
 
-        state = state.copyWith(
-          isAuthenticated: true,
-          user: response,
-          isLoading: false,
-        );
+      // 웹의 경우 토큰이 이미 저장됨, 사용자 정보 가져오기
+      if (kIsWeb && response.isNotEmpty) {
+        final userInfo = await _authService.getUserInfo();
+        state = state.copyWith(isAuthenticated: true, user: userInfo);
+      } else if (!kIsWeb) {
+        // 모바일: response에 사용자 정보 포함
+        state = state.copyWith(isAuthenticated: true, user: response);
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
 
   /// 비밀번호 재설정 요청
-  Future<void> requestPasswordReset({
-    required String email,
-  }) async {
-    state = state.copyWith(isLoading: true, error: null);
+  Future<void> requestPasswordReset({required String email}) async {
+    state = state.copyWith(error: null);
 
     try {
       await _authService.requestPasswordReset(email: email);
 
-      state = state.copyWith(isLoading: false);
+      state = const AuthState();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
@@ -313,7 +286,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String code,
     required String newPassword,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(error: null);
 
     try {
       await _authService.resetPassword(
@@ -322,12 +295,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         newPassword: newPassword,
       );
 
-      state = state.copyWith(isLoading: false);
+      state = const AuthState();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
@@ -357,18 +327,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       debugPrint('User info fetched: $user');
 
       // 상태 업데이트
-      state = state.copyWith(
-        isAuthenticated: true,
-        user: user,
-        isLoading: false,
+      state = state.copyWith(isAuthenticated: true, user: user);
+      debugPrint(
+        'Auth state updated: isAuthenticated=${state.isAuthenticated}',
       );
-      debugPrint('Auth state updated: isAuthenticated=${state.isAuthenticated}');
     } catch (e) {
       debugPrint('Error in handleWebOAuthCallback: $e');
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
       rethrow;
     }
   }
@@ -381,18 +346,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await _authService.getUserInfo();
       debugPrint('User info fetched: $user');
 
-      state = state.copyWith(
-        isAuthenticated: true,
-        user: user,
-        isLoading: false,
+      state = state.copyWith(isAuthenticated: true, user: user);
+      debugPrint(
+        'Auth state updated: isAuthenticated=${state.isAuthenticated}',
       );
-      debugPrint('Auth state updated: isAuthenticated=${state.isAuthenticated}');
     } catch (e) {
       debugPrint('Error in _handleOAuthSuccess: $e');
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(error: e.toString());
     }
   }
 }

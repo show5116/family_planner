@@ -6,6 +6,7 @@ import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/core/constants/api_constants.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/services/oauth_callback_handler.dart';
+import 'package:family_planner/core/services/oauth_popup_web.dart';
 
 /// 인증 서비스
 class AuthService extends ApiServiceBase {
@@ -371,31 +372,47 @@ class AuthService extends ApiServiceBase {
 
   /// 구글 OAuth URL 로그인 (웹 전용)
   ///
-  /// 백엔드의 OAuth 페이지를 브라우저로 열어 로그인합니다.
+  /// 백엔드의 OAuth 페이지를 팝업 또는 브라우저로 열어 로그인합니다.
   /// 로그인 완료 후 백엔드는 {FRONTEND_URL}/auth/callback?accessToken=xxx&refreshToken=xxx로 리다이렉트합니다.
   ///
-  /// - 웹: GoRouter의 /auth/callback 라우트가 처리
+  /// - 웹: 팝업 창으로 열고 메시지로 토큰 수신
   /// - 모바일: 이 메서드 대신 loginWithGoogle() 사용 (SDK 방식)
-  Future<void> loginWithGoogleOAuth() async {
-    final oauthUrl = Uri.parse('${EnvironmentConfig.apiBaseUrl}/auth/google');
+  Future<Map<String, dynamic>> loginWithGoogleOAuth() async {
+    final oauthUrl = '${EnvironmentConfig.apiBaseUrl}/auth/google';
 
     try {
-      final canLaunch = await canLaunchUrl(oauthUrl);
-      if (!canLaunch) {
-        throw Exception('브라우저를 열 수 없습니다');
+      if (kIsWeb) {
+        // 웹: 팝업으로 열고 토큰 수신
+        final params = await OAuthPopupWeb.openPopup(oauthUrl: oauthUrl);
+
+        final accessToken = params['accessToken'];
+        final refreshToken = params['refreshToken'];
+
+        if (accessToken == null || refreshToken == null) {
+          throw Exception('OAuth 인증에 실패했습니다');
+        }
+
+        // 토큰 저장
+        await apiClient.saveAccessToken(accessToken);
+        await apiClient.saveRefreshToken(refreshToken);
+
+        return {
+          'accessToken': accessToken,
+          'refreshToken': refreshToken,
+        };
+      } else {
+        // 모바일: 외부 브라우저로 열기 (기존 방식)
+        final uri = Uri.parse(oauthUrl);
+        final canLaunch = await canLaunchUrl(uri);
+        if (!canLaunch) {
+          throw Exception('브라우저를 열 수 없습니다');
+        }
+
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+
+        // 모바일에서는 Deep Link로 콜백 처리
+        return {};
       }
-
-      // OAuth URL을 브라우저로 열기
-      await launchUrl(
-        oauthUrl,
-        mode: kIsWeb
-            ? LaunchMode.platformDefault // 웹: 같은 창에서 열기
-            : LaunchMode.externalApplication, // 모바일: 외부 브라우저로 열기
-      );
-
-      // 콜백은 OAuthCallbackHandler가 처리
-      // - 웹: GoRouter의 /auth/callback 라우트에서 handleOAuthCallback 호출
-      // - 모바일: Deep Link 리스너가 자동으로 handleOAuthCallback 호출
     } catch (e) {
       throw handleError(e);
     }
@@ -403,24 +420,44 @@ class AuthService extends ApiServiceBase {
 
   /// 카카오 OAuth URL 로그인 (웹 전용)
   ///
-  /// 백엔드의 OAuth 페이지를 브라우저로 열어 로그인합니다.
+  /// 백엔드의 OAuth 페이지를 팝업 또는 브라우저로 열어 로그인합니다.
   /// 모바일에서는 이 메서드 대신 loginWithKakao() 사용 (SDK 방식)
-  Future<void> loginWithKakaoOAuth() async {
-    final oauthUrl = Uri.parse('${EnvironmentConfig.apiBaseUrl}/auth/kakao');
+  Future<Map<String, dynamic>> loginWithKakaoOAuth() async {
+    final oauthUrl = '${EnvironmentConfig.apiBaseUrl}/auth/kakao';
 
     try {
-      final canLaunch = await canLaunchUrl(oauthUrl);
-      if (!canLaunch) {
-        throw Exception('브라우저를 열 수 없습니다');
-      }
+      if (kIsWeb) {
+        // 웹: 팝업으로 열고 토큰 수신
+        final params = await OAuthPopupWeb.openPopup(oauthUrl: oauthUrl);
 
-      // OAuth URL을 브라우저로 열기
-      await launchUrl(
-        oauthUrl,
-        mode: kIsWeb
-            ? LaunchMode.platformDefault
-            : LaunchMode.externalApplication,
-      );
+        final accessToken = params['accessToken'];
+        final refreshToken = params['refreshToken'];
+
+        if (accessToken == null || refreshToken == null) {
+          throw Exception('OAuth 인증에 실패했습니다');
+        }
+
+        // 토큰 저장
+        await apiClient.saveAccessToken(accessToken);
+        await apiClient.saveRefreshToken(refreshToken);
+
+        return {
+          'accessToken': accessToken,
+          'refreshToken': refreshToken,
+        };
+      } else {
+        // 모바일: 외부 브라우저로 열기 (기존 방식)
+        final uri = Uri.parse(oauthUrl);
+        final canLaunch = await canLaunchUrl(uri);
+        if (!canLaunch) {
+          throw Exception('브라우저를 열 수 없습니다');
+        }
+
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+
+        // 모바일에서는 Deep Link로 콜백 처리
+        return {};
+      }
     } catch (e) {
       throw handleError(e);
     }

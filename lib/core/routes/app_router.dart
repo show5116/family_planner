@@ -17,16 +17,19 @@ import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// GoRouter Provider
 final goRouterProvider = Provider<GoRouter>((ref) {
-  final notifier = ValueNotifier<bool>(false);
+  final notifier = ValueNotifier<int>(0);
 
-  ref.listen<AuthState>(
-    authProvider,
-    (previous, next) {
-      if (previous?.isAuthenticated != next.isAuthenticated) {
-        notifier.value = next.isAuthenticated;
-      }
-    },
-  );
+  ref.listen<AuthState>(authProvider, (previous, next) {
+    debugPrint('=== GoRouter: AuthState changed ===');
+    debugPrint('Previous: ${previous?.isAuthenticated}');
+    debugPrint('Next: ${next.isAuthenticated}');
+
+    if (previous?.isAuthenticated != next.isAuthenticated) {
+      // ValueNotifier 값을 변경하여 GoRouter가 redirect를 재실행하도록 트리거
+      notifier.value++;
+      debugPrint('GoRouter refreshListenable triggered: ${notifier.value}');
+    }
+  });
 
   return GoRouter(
     initialLocation: AppRoutes.home, // 홈을 기본 위치로 설정
@@ -34,36 +37,61 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: notifier,
     redirect: (context, state) {
       final isAuthenticated = ref.read(authProvider).isAuthenticated;
-      final isLoading = ref.read(authProvider).isLoading;
 
       debugPrint('=== GoRouter Redirect ===');
       debugPrint('Location: ${state.matchedLocation}');
       debugPrint('URI: ${state.uri}');
       debugPrint('isAuthenticated: $isAuthenticated');
-      debugPrint('isLoading: $isLoading');
 
-      final isAuthPage = state.matchedLocation == AppRoutes.login ||
-          state.matchedLocation == AppRoutes.signup ||
-          state.matchedLocation == AppRoutes.emailVerification ||
-          state.matchedLocation == AppRoutes.forgotPassword ||
-          state.matchedLocation.startsWith('/auth/callback');
-
-      debugPrint('isAuthPage: $isAuthPage');
-
-      // 로딩 중에는 리다이렉트하지 않음 (토큰 확인 중)
-      if (isLoading) {
-        debugPrint('Redirect: null (loading)');
+      // OAuth 콜백 페이지인 경우, 팝업이면 redirect 건너뛰기
+      if (state.matchedLocation.startsWith('/auth/callback')) {
+        debugPrint('OAuth callback route - checking if popup...');
+        // 팝업 여부는 OAuthCallbackScreen에서 처리하므로 redirect 없이 진행
         return null;
       }
 
+      final isAuthPage =
+          state.matchedLocation == AppRoutes.login ||
+          state.matchedLocation == AppRoutes.signup ||
+          state.matchedLocation == AppRoutes.emailVerification ||
+          state.matchedLocation == AppRoutes.forgotPassword;
+
+      final isSplashPage = state.matchedLocation == AppRoutes.splash;
+
+      debugPrint('isAuthPage: $isAuthPage');
+      debugPrint('isSplashPage: $isSplashPage');
+
+      // 인증 상태가 null (초기/로딩 상태)이면 스플래시 화면으로
+      if (isAuthenticated == null && !isSplashPage) {
+        debugPrint('Redirect: ${AppRoutes.splash} (initial/loading state)');
+        return AppRoutes.splash;
+      }
+
+      // 인증 상태 확인 완료 후 스플래시 화면에 있으면 적절한 페이지로 리다이렉트
+      if (isAuthenticated != null && isSplashPage) {
+        if (isAuthenticated) {
+          debugPrint(
+            'Redirect: ${AppRoutes.home} (loading finished, authenticated)',
+          );
+          return AppRoutes.home;
+        } else {
+          debugPrint(
+            'Redirect: ${AppRoutes.login} (loading finished, not authenticated)',
+          );
+          return AppRoutes.login;
+        }
+      }
+
       // 인증되지 않았고 인증 페이지가 아니면 로그인 페이지로
-      if (!isAuthenticated && !isAuthPage) {
-        debugPrint('Redirect: ${AppRoutes.login} (not authenticated, not auth page)');
+      if (isAuthenticated == false && !isAuthPage) {
+        debugPrint(
+          'Redirect: ${AppRoutes.login} (not authenticated, not auth page)',
+        );
         return AppRoutes.login;
       }
 
       // 인증되었고 인증 페이지에 있으면 홈으로
-      if (isAuthenticated && isAuthPage) {
+      if (isAuthenticated == true && isAuthPage) {
         debugPrint('Redirect: ${AppRoutes.home} (authenticated, on auth page)');
         return AppRoutes.home;
       }
@@ -73,6 +101,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       // Auth Routes
+      GoRoute(
+        path: AppRoutes.splash,
+        name: 'splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
@@ -88,12 +121,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: 'emailVerification',
         builder: (context, state) {
           // 쿼리 파라미터에서 이메일 가져오기
-          final email = state.uri.queryParameters['email'] ??
-                        (state.extra as String?) ??
-                        '';
-          return EmailVerificationScreen(
-            email: email,
-          );
+          final email =
+              state.uri.queryParameters['email'] ??
+              (state.extra as String?) ??
+              '';
+          return EmailVerificationScreen(email: email);
         },
       ),
       GoRoute(
@@ -160,14 +192,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.home,
         name: 'home',
-        builder: (context, state) {
-          // 로딩 중이면 스플래시 화면 표시
-          final isLoading = ref.read(authProvider).isLoading;
-          if (isLoading) {
-            return const SplashScreen();
-          }
-          return const HomeScreen();
-        },
+        builder: (context, state) => const HomeScreen(),
       ),
 
       // Settings Routes
@@ -223,9 +248,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
     // Error Page
     errorBuilder: (context, state) => Scaffold(
-      appBar: AppBar(
-        title: const Text('오류'),
-      ),
+      appBar: AppBar(title: const Text('오류')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

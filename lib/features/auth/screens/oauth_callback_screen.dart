@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/core/services/oauth_popup_helper_web.dart';
 
 /// OAuth 콜백 화면
 ///
@@ -30,12 +32,29 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
   @override
   void initState() {
     super.initState();
+
+    // 팝업인 경우 즉시 메시지 전송하고 종료
+    if (kIsWeb && OAuthPopupHelper.isPopup()) {
+      debugPrint('=== OAuthCallbackScreen: Popup detected (initState) ===');
+      debugPrint('Sending message to parent and closing popup...');
+      OAuthPopupHelper.sendMessageToParent({
+        'accessToken': widget.accessToken,
+        'refreshToken': widget.refreshToken,
+      });
+      // 창이 닫히므로 더 이상 진행하지 않음
+      return;
+    }
+
+    // 팝업이 아닌 경우에만 콜백 처리
     _processCallback();
   }
 
   Future<void> _processCallback() async {
     try {
-      debugPrint('=== OAuthCallbackScreen: Processing callback ===');
+      debugPrint('=== OAuthCallbackScreen: Processing callback (not popup) ===');
+
+      // 팝업이 아닌 경우 (일반 페이지 리다이렉트): 기존 로직 실행
+      debugPrint('Not a popup, processing callback normally');
 
       // AuthNotifier의 공개 메서드를 통해 OAuth 콜백 처리
       await ref.read(authProvider.notifier).handleWebOAuthCallback(
@@ -64,6 +83,27 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 팝업인 경우 간단한 메시지만 표시
+    if (kIsWeb && OAuthPopupHelper.isPopup()) {
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('로그인 처리 중...'),
+              SizedBox(height: 8),
+              Text(
+                '잠시만 기다려주세요.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: Center(
         child: _isProcessing

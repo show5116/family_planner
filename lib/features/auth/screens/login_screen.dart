@@ -22,6 +22,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -36,9 +37,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
+    setState(() => _isLoading = true);
+
     try {
       // 로그인 시도
-      await ref.read(authProvider.notifier).login(
+      await ref
+          .read(authProvider.notifier)
+          .login(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
@@ -48,6 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context.go(AppRoutes.home);
       }
     } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
       // 에러 처리
       if (mounted) {
         // ApiException인 경우 상태 코드에 따라 처리
@@ -71,7 +77,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             // 401: 비밀번호 오류
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(e.message.isNotEmpty ? e.message : '이메일 또는 비밀번호가 올바르지 않습니다'),
+                content: Text(
+                  e.message.isNotEmpty ? e.message : '이메일 또는 비밀번호가 올바르지 않습니다',
+                ),
                 backgroundColor: Colors.red,
               ),
             );
@@ -96,11 +104,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
   /// - 모바일: SDK 방식 (Google Sign-In)
   Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+
     try {
       await ref.read(authProvider.notifier).loginWithGoogle();
       // 웹: 브라우저가 열리고, OAuth 콜백이 처리되면 자동으로 홈으로 이동
       // 모바일: SDK 로그인 완료 후 자동으로 홈으로 이동
     } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
       // 에러 처리
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -119,9 +130,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
   /// - 모바일: SDK 방식 (Kakao Flutter SDK)
   Future<void> _handleKakaoLogin() async {
+    setState(() => _isLoading = true);
+
     try {
       await ref.read(authProvider.notifier).loginWithKakao();
     } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
       // 에러 처리
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -136,190 +150,189 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: ResponsivePadding.getHorizontalPadding(context),
-            vertical: AppSizes.spaceXL,
+            vertical: AppSizes.spaceM,
           ),
           child: Center(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // 로고 (반응형 크기)
-                  AppLogo(size: Responsive.isMobile(context) ? 150 : 180),
-                  SizedBox(
-                    height: Responsive.isMobile(context)
-                        ? AppSizes.spaceXXL
-                        : AppSizes.spaceXXL * 1.5,
-                  ),
-
-                  // 이메일 입력
-                  TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: '이메일',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppSizes.radiusMedium,
-                        ),
-                      ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // 로고 (반응형 크기)
+                    AppLogo(size: Responsive.isMobile(context) ? 400 : 500),
+                    SizedBox(
+                      height: Responsive.isMobile(context)
+                          ? AppSizes.spaceS
+                          : AppSizes.spaceL,
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '이메일을 입력해주세요';
-                      }
-                      if (!value.contains('@')) {
-                        return '올바른 이메일 형식이 아닙니다';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
 
-                  // 비밀번호 입력
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: '비밀번호',
-                      prefixIcon: const Icon(Icons.lock_outlined),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppSizes.radiusMedium,
+                    // 이메일 입력
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: '이메일',
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusMedium,
+                          ),
                         ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '비밀번호를 입력해주세요';
-                      }
-                      if (value.length < 6) {
-                        return '비밀번호는 6자 이상이어야 합니다';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: AppSizes.spaceS),
-
-                  // 비밀번호 찾기 링크
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        context.push(AppRoutes.forgotPassword);
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '이메일을 입력해주세요';
+                        }
+                        if (!value.contains('@')) {
+                          return '올바른 이메일 형식이 아닙니다';
+                        }
+                        return null;
                       },
-                      child: const Text('비밀번호를 잊으셨나요?'),
                     ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
+                    const SizedBox(height: AppSizes.spaceM),
 
-                  // 로그인 버튼
-                  SizedBox(
-                    width: double.infinity,
-                    height: AppSizes.buttonHeightLarge,
-                    child: ElevatedButton(
-                      onPressed: authState.isLoading ? null : _handleLogin,
-                      child: authState.isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text('로그인'),
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceL),
-
-                  // 구분선
-                  Row(
-                    children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.spaceM,
+                    // 비밀번호 입력
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호',
+                        prefixIcon: const Icon(Icons.lock_outlined),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
                         ),
-                        child: Text(
-                          '또는',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusMedium,
+                          ),
                         ),
                       ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: AppSizes.spaceL),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '비밀번호를 입력해주세요';
+                        }
+                        if (value.length < 6) {
+                          return '비밀번호는 6자 이상이어야 합니다';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: AppSizes.spaceS),
 
-                  // 소셜 로그인 버튼들
-                  _SocialLoginButton(
-                    icon: Icons.g_mobiledata,
-                    label: 'Google로 계속하기',
-                    onPressed: authState.isLoading ? null : _handleGoogleLogin,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                  _SocialLoginButton(
-                    icon: Icons.chat_bubble_outline,
-                    label: 'Kakao로 계속하기',
-                    backgroundColor: const Color(0xFFFEE500),
-                    textColor: Colors.black87,
-                    onPressed: authState.isLoading ? null : _handleKakaoLogin,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                  _SocialLoginButton(
-                    icon: Icons.apple,
-                    label: 'Apple로 계속하기',
-                    backgroundColor: Colors.black,
-                    onPressed: () {
-                      // Apple 로그인은 아직 미구현
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Apple 로그인은 준비 중입니다'),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: AppSizes.spaceXL),
-
-                  // 회원가입 링크
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '계정이 없으신가요? ',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      TextButton(
+                    // 비밀번호 찾기 링크
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
                         onPressed: () {
-                          context.push(AppRoutes.signup);
+                          context.push(AppRoutes.forgotPassword);
                         },
-                        child: const Text('회원가입'),
+                        child: const Text('비밀번호를 잊으셨나요?'),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+
+                    // 로그인 버튼
+                    SizedBox(
+                      width: double.infinity,
+                      height: AppSizes.buttonHeightLarge,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _handleLogin,
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text('로그인'),
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceL),
+
+                    // 구분선
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.spaceM,
+                          ),
+                          child: Text(
+                            '또는',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: AppColors.textSecondary),
+                          ),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: AppSizes.spaceL),
+
+                    // 소셜 로그인 버튼들
+                    _SocialLoginButton(
+                      icon: Icons.g_mobiledata,
+                      label: 'Google로 계속하기',
+                      onPressed: _isLoading ? null : _handleGoogleLogin,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _SocialLoginButton(
+                      icon: Icons.chat_bubble_outline,
+                      label: 'Kakao로 계속하기',
+                      backgroundColor: const Color(0xFFFEE500),
+                      textColor: Colors.black87,
+                      onPressed: _isLoading ? null : _handleKakaoLogin,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _SocialLoginButton(
+                      icon: Icons.apple,
+                      label: 'Apple로 계속하기',
+                      backgroundColor: Colors.black,
+                      onPressed: () {
+                        // Apple 로그인은 아직 미구현
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Apple 로그인은 준비 중입니다')),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: AppSizes.spaceXL),
+
+                    // 회원가입 링크
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '계정이 없으신가요? ',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.push(AppRoutes.signup);
+                          },
+                          child: const Text('회원가입'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
