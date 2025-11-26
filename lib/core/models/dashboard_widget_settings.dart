@@ -4,12 +4,19 @@ class DashboardWidgetSettings {
   final bool showInvestmentSummary;
   final bool showTodoSummary;
   final bool showAssetSummary;
+  final List<String> widgetOrder;
 
   const DashboardWidgetSettings({
     this.showTodaySchedule = true,
     this.showInvestmentSummary = true,
     this.showTodoSummary = true,
     this.showAssetSummary = true,
+    this.widgetOrder = const [
+      'todaySchedule',
+      'investmentSummary',
+      'todoSummary',
+      'assetSummary',
+    ],
   });
 
   /// 기본 설정 (모든 위젯 표시)
@@ -24,6 +31,15 @@ class DashboardWidgetSettings {
       showInvestmentSummary: json['showInvestmentSummary'] as bool? ?? true,
       showTodoSummary: json['showTodoSummary'] as bool? ?? true,
       showAssetSummary: json['showAssetSummary'] as bool? ?? true,
+      widgetOrder: (json['widgetOrder'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [
+            'todaySchedule',
+            'investmentSummary',
+            'todoSummary',
+            'assetSummary',
+          ],
     );
   }
 

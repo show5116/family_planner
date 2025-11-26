@@ -105,13 +105,15 @@ class ApiClient {
 
     // 로깅 인터셉터 추가 (개발 환경)
     if (EnvironmentConfig.enableLogging) {
-      _dio.interceptors.add(LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-        error: true,
-        requestHeader: true,
-        responseHeader: false,
-      ));
+      _dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          error: true,
+          requestHeader: true,
+          responseHeader: false,
+        ),
+      );
     }
   }
 
@@ -142,7 +144,7 @@ class ApiClient {
       if (refreshToken == null) return false;
 
       final response = await _dio.post(
-        '/api/v1/auth/refresh',
+        '/auth/refresh',
         data: {'refreshToken': refreshToken},
       );
 

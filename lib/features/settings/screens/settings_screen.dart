@@ -1,11 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/core/services/secure_storage_service.dart';
 
 /// 설정 메인 화면
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final _storage = SecureStorageService();
+  Map<String, dynamic>? _userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final userInfo = await _storage.getUserInfo();
+    if (mounted) {
+      setState(() {
+        _userInfo = userInfo;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +42,9 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          // 사용자 프로필 섹션
+          _buildUserProfile(),
+          const Divider(),
           // 화면 설정 섹션
           _buildSectionHeader(context, '화면 설정'),
           _buildSettingTile(
@@ -101,6 +131,112 @@ class SettingsScreen extends StatelessWidget {
             subtitle: '사용법을 확인하세요',
             onTap: () {
               // TODO: 도움말 화면으로 이동
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserProfile() {
+    final email = _userInfo?['email'] as String?;
+    final name = _userInfo?['name'] as String?;
+    final profileImage = _userInfo?['profileImage'] as String?;
+    final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.spaceL),
+      child: Row(
+        children: [
+          // 프로필 이미지
+          profileImage != null && profileImage.isNotEmpty
+              ? CircleAvatar(
+                  radius: 40,
+                  backgroundImage: CachedNetworkImageProvider(profileImage),
+                )
+              : CircleAvatar(
+                  radius: 40,
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: Colors.grey[400],
+                  ),
+                ),
+          const SizedBox(width: AppSizes.spaceM),
+          // 사용자 정보
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      name ?? '사용자',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    if (isAdmin) ...[
+                      const SizedBox(width: AppSizes.spaceS),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.spaceS,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          'ADMIN',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceXS),
+                Text(
+                  email ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                ),
+              ],
+            ),
+          ),
+          // 로그아웃 버튼
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('로그아웃'),
+                  content: const Text('로그아웃 하시겠습니까?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('취소'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('로그아웃'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (shouldLogout == true && mounted) {
+                await ref.read(authProvider.notifier).logout();
+                if (mounted) {
+                  context.go('/login');
+                }
+              }
             },
           ),
         ],

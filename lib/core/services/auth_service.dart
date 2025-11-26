@@ -7,9 +7,11 @@ import 'package:family_planner/core/constants/api_constants.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/services/oauth_callback_handler.dart';
 import 'package:family_planner/core/services/oauth_popup_web.dart';
+import 'package:family_planner/core/services/secure_storage_service.dart';
 
 /// 인증 서비스
 class AuthService extends ApiServiceBase {
+  final _storage = SecureStorageService();
   /// 로그인
   Future<Map<String, dynamic>> login({
     required String email,
@@ -34,9 +36,42 @@ class AuthService extends ApiServiceBase {
         await apiClient.saveRefreshToken(data['refreshToken'] as String);
       }
 
+      // 사용자 정보 저장
+      await _saveUserInfoFromResponse(data);
+
       return data;
     } catch (e) {
       throw handleError(e);
+    }
+  }
+
+  /// API 응답에서 사용자 정보 추출 및 저장
+  Future<void> _saveUserInfoFromResponse(Map<String, dynamic> data) async {
+    debugPrint('=== _saveUserInfoFromResponse ===');
+    debugPrint('Response data: $data');
+
+    // 응답 데이터 구조 확인
+    final user = data['user'] as Map<String, dynamic>?;
+
+    if (user != null) {
+      debugPrint('User data found: $user');
+      await _storage.saveUserInfo(
+        email: user['email'] as String?,
+        name: user['name'] as String?,
+        profileImage: user['profileImage'] as String?,
+        isAdmin: user['isAdmin'] as bool?,
+      );
+      debugPrint('User info saved successfully');
+    } else {
+      // user 키가 없는 경우, 최상위 레벨에서 직접 추출 시도
+      debugPrint('No "user" key found, trying top-level fields');
+      await _storage.saveUserInfo(
+        email: data['email'] as String?,
+        name: data['name'] as String?,
+        profileImage: data['profileImage'] as String?,
+        isAdmin: data['isAdmin'] as bool?,
+      );
+      debugPrint('User info saved from top-level fields');
     }
   }
 
@@ -91,9 +126,10 @@ class AuthService extends ApiServiceBase {
         debugPrint('Kakao logout failed: $e');
       }
 
-      // 로컬 토큰 삭제
+      // 로컬 토큰 및 사용자 정보 삭제
       await apiClient.clearTokens();
-      debugPrint('Local tokens cleared');
+      await _storage.clearUserInfo();
+      debugPrint('Local tokens and user info cleared');
     }
   }
 
@@ -274,6 +310,9 @@ class AuthService extends ApiServiceBase {
         await apiClient.saveRefreshToken(data['refreshToken'] as String);
       }
 
+      // 5. 사용자 정보 저장
+      await _saveUserInfoFromResponse(data);
+
       return data;
     } catch (e) {
       // 로그인 실패 시 구글 로그아웃
@@ -346,6 +385,9 @@ class AuthService extends ApiServiceBase {
       if (data['refreshToken'] != null) {
         await apiClient.saveRefreshToken(data['refreshToken'] as String);
       }
+
+      // 4. 사용자 정보 저장
+      await _saveUserInfoFromResponse(data);
 
       return data;
     } catch (e) {
@@ -471,13 +513,23 @@ class AuthService extends ApiServiceBase {
 
   /// 저장된 토큰으로 사용자 정보 가져오기
   ///
-  /// OAuth 콜백 후 저장된 토큰을 사용하여 사용자 정보를 조회합니다.
+  /// OAuth 콜백 후 저장된 토큰을 사용하여 사용자 정보를 조회하고 로컬에 저장합니다.
   Future<Map<String, dynamic>> getUserInfo() async {
     try {
       final response = await apiClient.get(ApiConstants.verifyToken);
-      return handleResponse<Map<String, dynamic>>(response);
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      // 사용자 정보 저장
+      await _saveUserInfoFromResponse(data);
+
+      return data;
     } catch (e) {
       throw handleError(e);
     }
+  }
+
+  /// 로컬에 저장된 사용자 정보 가져오기
+  Future<Map<String, dynamic>> getStoredUserInfo() async {
+    return await _storage.getUserInfo();
   }
 }

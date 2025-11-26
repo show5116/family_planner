@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_planner/features/home/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/widgets/investment_summary_widget.dart';
 import 'package:family_planner/features/home/widgets/todo_summary_widget.dart';
@@ -11,6 +12,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -463,13 +465,41 @@ class _TodoTab extends StatelessWidget {
 }
 
 // 임시 더보기 탭
-class _MoreTab extends ConsumerWidget {
+class _MoreTab extends ConsumerStatefulWidget {
   const _MoreTab({required this.ref});
 
   final WidgetRef ref;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_MoreTab> createState() => _MoreTabState();
+}
+
+class _MoreTabState extends ConsumerState<_MoreTab> {
+  final _storage = SecureStorageService();
+  Map<String, dynamic>? _userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final userInfo = await _storage.getUserInfo();
+    if (mounted) {
+      setState(() {
+        _userInfo = userInfo;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final email = _userInfo?['email'] as String?;
+    final name = _userInfo?['name'] as String?;
+    final profileImage = _userInfo?['profileImage'] as String?;
+    final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('더보기'),
@@ -485,25 +515,61 @@ class _MoreTab extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 32,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      child: const Icon(Icons.person, size: 32, color: Colors.white),
-                    ),
+                    profileImage != null && profileImage.isNotEmpty
+                        ? CircleAvatar(
+                            radius: 32,
+                            backgroundImage: CachedNetworkImageProvider(profileImage),
+                          )
+                        : CircleAvatar(
+                            radius: 32,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            child: const Icon(Icons.person, size: 32, color: Colors.white),
+                          ),
                     const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '사용자',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'user@example.com',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  name ?? '사용자',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              if (isAdmin) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Text(
+                                    'ADMIN',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            email ?? 'user@example.com',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

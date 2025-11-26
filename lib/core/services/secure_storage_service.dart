@@ -1,26 +1,28 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// 보안 스토리지 서비스
 /// flutter_secure_storage를 사용하여 민감한 데이터를 안전하게 저장
 class SecureStorageService {
   // Singleton 패턴
-  static final SecureStorageService _instance = SecureStorageService._internal();
+  static final SecureStorageService _instance =
+      SecureStorageService._internal();
   factory SecureStorageService() => _instance;
   SecureStorageService._internal();
 
   // Flutter Secure Storage 인스턴스
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock,
-    ),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
   // 키 상수
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
+  static const String _userEmailKey = 'user_email';
+  static const String _userNameKey = 'user_name';
+  static const String _userProfileImageKey = 'user_profile_image';
+  static const String _userIsAdminKey = 'user_is_admin';
 
   /// Access Token 저장
   Future<void> saveAccessToken(String token) async {
@@ -52,6 +54,88 @@ class SecureStorageService {
   Future<void> clearTokens() async {
     await _storage.delete(key: _accessTokenKey);
     await _storage.delete(key: _refreshTokenKey);
+  }
+
+  /// 사용자 정보 저장
+  Future<void> saveUserInfo({
+    String? email,
+    String? name,
+    String? profileImage,
+    bool? isAdmin,
+  }) async {
+    debugPrint('=== Saving user info ===');
+    debugPrint('Email: $email');
+    debugPrint('Name: $name');
+    debugPrint('ProfileImage: $profileImage');
+    debugPrint('IsAdmin: $isAdmin');
+
+    if (email != null) {
+      await _storage.write(key: _userEmailKey, value: email);
+      debugPrint('Email saved');
+    }
+    if (name != null) {
+      await _storage.write(key: _userNameKey, value: name);
+      debugPrint('Name saved');
+    }
+    if (profileImage != null) {
+      await _storage.write(key: _userProfileImageKey, value: profileImage);
+      debugPrint('ProfileImage saved');
+    }
+    if (isAdmin != null) {
+      await _storage.write(key: _userIsAdminKey, value: isAdmin.toString());
+      debugPrint('IsAdmin saved');
+    }
+    debugPrint('=== User info save complete ===');
+  }
+
+  /// 사용자 이메일 가져오기
+  Future<String?> getUserEmail() async {
+    return await _storage.read(key: _userEmailKey);
+  }
+
+  /// 사용자 이름 가져오기
+  Future<String?> getUserName() async {
+    return await _storage.read(key: _userNameKey);
+  }
+
+  /// 사용자 프로필 이미지 URL 가져오기
+  Future<String?> getUserProfileImage() async {
+    return await _storage.read(key: _userProfileImageKey);
+  }
+
+  /// 사용자 관리자 여부 가져오기
+  Future<bool> getUserIsAdmin() async {
+    final value = await _storage.read(key: _userIsAdminKey);
+    return value == 'true';
+  }
+
+  /// 모든 사용자 정보 가져오기
+  Future<Map<String, dynamic>> getUserInfo() async {
+    final email = await getUserEmail();
+    final name = await getUserName();
+    final profileImage = await getUserProfileImage();
+    final isAdmin = await getUserIsAdmin();
+
+    debugPrint('=== Reading user info ===');
+    debugPrint('Email: $email');
+    debugPrint('Name: $name');
+    debugPrint('ProfileImage: $profileImage');
+    debugPrint('IsAdmin: $isAdmin');
+
+    return {
+      'email': email,
+      'name': name,
+      'profileImage': profileImage,
+      'isAdmin': isAdmin,
+    };
+  }
+
+  /// 사용자 정보 삭제
+  Future<void> clearUserInfo() async {
+    await _storage.delete(key: _userEmailKey);
+    await _storage.delete(key: _userNameKey);
+    await _storage.delete(key: _userProfileImageKey);
+    await _storage.delete(key: _userIsAdminKey);
   }
 
   /// 모든 데이터 삭제
