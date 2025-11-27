@@ -60,6 +60,7 @@ class AuthService extends ApiServiceBase {
         name: user['name'] as String?,
         profileImage: user['profileImage'] as String?,
         isAdmin: user['isAdmin'] as bool?,
+        hasPassword: user['hasPassword'] as bool?,
       );
       debugPrint('User info saved successfully');
     } else {
@@ -70,6 +71,7 @@ class AuthService extends ApiServiceBase {
         name: data['name'] as String?,
         profileImage: data['profileImage'] as String?,
         isAdmin: data['isAdmin'] as bool?,
+        hasPassword: data['hasPassword'] as bool?,
       );
       debugPrint('User info saved from top-level fields');
     }

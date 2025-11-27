@@ -132,7 +132,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.forgotPassword,
         name: 'forgotPassword',
-        builder: (context, state) => const ForgotPasswordScreen(),
+        builder: (context, state) {
+          // 쿼리 파라미터에서 비밀번호 설정 모드 여부 가져오기
+          final isNewPasswordSetup =
+              state.uri.queryParameters['setup'] == 'true';
+          return ForgotPasswordScreen(
+            isNewPasswordSetup: isNewPasswordSetup,
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.oauthCallback,

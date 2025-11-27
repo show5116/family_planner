@@ -8,9 +8,21 @@ import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
-/// 비밀번호 찾기 화면
+/// 비밀번호 찾기/설정 화면
+///
+/// 두 가지 사용 사례를 지원합니다:
+/// 1. 비밀번호를 잊어버린 사용자의 비밀번호 재설정
+/// 2. 소셜 로그인만 사용한 사용자의 최초 비밀번호 설정
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
-  const ForgotPasswordScreen({super.key});
+  const ForgotPasswordScreen({
+    super.key,
+    this.isNewPasswordSetup = false,
+  });
+
+  /// 신규 비밀번호 설정 모드 여부
+  /// true: 소셜 로그인 사용자가 처음으로 비밀번호를 설정하는 경우
+  /// false: 기존 비밀번호를 잊어버려서 재설정하는 경우
+  final bool isNewPasswordSetup;
 
   @override
   ConsumerState<ForgotPasswordScreen> createState() =>
@@ -78,6 +90,19 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     }
   }
 
+  /// 안내 문구 가져오기
+  String _getGuideText() {
+    if (_isCodeSent) {
+      return widget.isNewPasswordSetup
+          ? '이메일로 전송된 인증 코드를 입력하고\n비밀번호를 설정해주세요.'
+          : '이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.';
+    } else {
+      return widget.isNewPasswordSetup
+          ? '계정 보안을 위해 비밀번호를 설정하세요.\n가입하신 이메일 주소를 입력하면\n인증 코드를 보내드립니다.'
+          : '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.';
+    }
+  }
+
   /// 비밀번호 재설정
   Future<void> _resetPassword() async {
     if (!_formKey.currentState!.validate()) {
@@ -106,15 +131,31 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       setState(() => _isLoading = false);
 
       if (mounted) {
+        final successMessage = widget.isNewPasswordSetup
+            ? '비밀번호가 설정되었습니다. 이제 로그인할 수 있습니다.'
+            : '비밀번호가 재설정되었습니다. 로그인해주세요.';
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('비밀번호가 재설정되었습니다. 로그인해주세요.'),
+          SnackBar(
+            content: Text(successMessage),
             backgroundColor: Colors.green,
           ),
         );
 
-        // 로그인 화면으로 이동
-        context.go(AppRoutes.login);
+        // 신규 설정인 경우 뒤로 가기, 재설정인 경우 로그인 화면으로
+        if (widget.isNewPasswordSetup) {
+          // 사용자 정보 업데이트 (hasPassword가 true로 변경됨)
+          try {
+            await ref.read(authServiceProvider).getUserInfo();
+          } catch (e) {
+            debugPrint('Failed to update user info: $e');
+          }
+          if (mounted) {
+            context.pop();
+          }
+        } else {
+          context.go(AppRoutes.login);
+        }
       }
     } catch (e) {
       setState(() => _isLoading = false);
@@ -132,9 +173,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 화면 제목 결정
+    final screenTitle = widget.isNewPasswordSetup ? '비밀번호 설정' : '비밀번호 찾기';
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('비밀번호 찾기'),
+        title: Text(screenTitle),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -160,9 +204,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
                     // 안내 문구
                     Text(
-                      _isCodeSent
-                          ? '이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.'
-                          : '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.',
+                      _getGuideText(),
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -336,7 +378,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text('비밀번호 재설정'),
+                              : Text(
+                                  widget.isNewPasswordSetup
+                                      ? '비밀번호 설정 완료'
+                                      : '비밀번호 재설정',
+                                ),
                         ),
                       ),
                       const SizedBox(height: AppSizes.spaceM),

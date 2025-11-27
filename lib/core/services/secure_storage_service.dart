@@ -23,6 +23,7 @@ class SecureStorageService {
   static const String _userNameKey = 'user_name';
   static const String _userProfileImageKey = 'user_profile_image';
   static const String _userIsAdminKey = 'user_is_admin';
+  static const String _userHasPasswordKey = 'user_has_password';
 
   /// Access Token 저장
   Future<void> saveAccessToken(String token) async {
@@ -62,12 +63,14 @@ class SecureStorageService {
     String? name,
     String? profileImage,
     bool? isAdmin,
+    bool? hasPassword,
   }) async {
     debugPrint('=== Saving user info ===');
     debugPrint('Email: $email');
     debugPrint('Name: $name');
     debugPrint('ProfileImage: $profileImage');
     debugPrint('IsAdmin: $isAdmin');
+    debugPrint('HasPassword: $hasPassword');
 
     if (email != null) {
       await _storage.write(key: _userEmailKey, value: email);
@@ -84,6 +87,10 @@ class SecureStorageService {
     if (isAdmin != null) {
       await _storage.write(key: _userIsAdminKey, value: isAdmin.toString());
       debugPrint('IsAdmin saved');
+    }
+    if (hasPassword != null) {
+      await _storage.write(key: _userHasPasswordKey, value: hasPassword.toString());
+      debugPrint('HasPassword saved');
     }
     debugPrint('=== User info save complete ===');
   }
@@ -109,24 +116,33 @@ class SecureStorageService {
     return value == 'true';
   }
 
+  /// 사용자 비밀번호 보유 여부 가져오기
+  Future<bool> getUserHasPassword() async {
+    final value = await _storage.read(key: _userHasPasswordKey);
+    return value == 'true';
+  }
+
   /// 모든 사용자 정보 가져오기
   Future<Map<String, dynamic>> getUserInfo() async {
     final email = await getUserEmail();
     final name = await getUserName();
     final profileImage = await getUserProfileImage();
     final isAdmin = await getUserIsAdmin();
+    final hasPassword = await getUserHasPassword();
 
     debugPrint('=== Reading user info ===');
     debugPrint('Email: $email');
     debugPrint('Name: $name');
     debugPrint('ProfileImage: $profileImage');
     debugPrint('IsAdmin: $isAdmin');
+    debugPrint('HasPassword: $hasPassword');
 
     return {
       'email': email,
       'name': name,
       'profileImage': profileImage,
       'isAdmin': isAdmin,
+      'hasPassword': hasPassword,
     };
   }
 
@@ -136,6 +152,7 @@ class SecureStorageService {
     await _storage.delete(key: _userNameKey);
     await _storage.delete(key: _userProfileImageKey);
     await _storage.delete(key: _userIsAdminKey);
+    await _storage.delete(key: _userHasPasswordKey);
   }
 
   /// 모든 데이터 삭제

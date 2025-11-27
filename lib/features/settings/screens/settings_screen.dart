@@ -15,14 +15,30 @@ class SettingsScreen extends ConsumerStatefulWidget {
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen>
+    with WidgetsBindingObserver {
   final _storage = SecureStorageService();
   Map<String, dynamic>? _userInfo;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadUserInfo();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // 앱이 다시 활성화될 때 사용자 정보 재로드
+    if (state == AppLifecycleState.resumed) {
+      _loadUserInfo();
+    }
   }
 
   Future<void> _loadUserInfo() async {
@@ -31,6 +47,58 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       setState(() {
         _userInfo = userInfo;
       });
+    }
+  }
+
+  /// 비밀번호 설정 안내 다이얼로그
+  Future<void> _showPasswordSetupGuideDialog() async {
+    final shouldSetupPassword = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.security, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('비밀번호 설정이 필요합니다'),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '소셜 로그인으로만 가입하셔서 아직 비밀번호가 설정되지 않았습니다.',
+              style: TextStyle(fontSize: 14),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '프로필을 수정하거나 계정 보안을 강화하려면 비밀번호를 설정하는 것을 권장합니다.',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '비밀번호 설정 화면으로 이동하시겠습니까?',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('나중에'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () => Navigator.pop(context, true),
+            icon: const Icon(Icons.arrow_forward),
+            label: const Text('비밀번호 설정하기'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldSetupPassword == true && mounted) {
+      // 비밀번호 설정 화면으로 이동 (setup=true 파라미터 추가)
+      context.push('${AppRoutes.forgotPassword}?setup=true');
     }
   }
 
@@ -84,8 +152,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             icon: Icons.person_outlined,
             title: '프로필 설정',
             subtitle: '프로필 정보를 수정하세요',
-            onTap: () {
-              // TODO: 프로필 설정 화면으로 이동
+            onTap: () async {
+              final hasPassword = _userInfo?['hasPassword'] as bool? ?? false;
+
+              if (!hasPassword && mounted) {
+                // 비밀번호가 없는 사용자 (소셜 로그인만 사용한 경우)
+                await _showPasswordSetupGuideDialog();
+              } else {
+                // TODO: 프로필 설정 화면으로 이동
+              }
             },
           ),
           _buildSettingTile(
