@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/home/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/widgets/investment_summary_widget.dart';
