@@ -6,10 +6,12 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/shared/widgets/user_profile_card.dart';
 import 'package:family_planner/shared/widgets/menu_list_tile.dart';
+import 'package:family_planner/features/settings/providers/bottom_navigation_settings_provider.dart';
 
 /// 더보기 탭
 ///
 /// 사용자 프로필, 추가 기능 메뉴, 설정 메뉴를 표시합니다.
+/// 하단 네비게이션에 표시되지 않는 메뉴만 동적으로 표시합니다.
 class MoreTab extends ConsumerStatefulWidget {
   const MoreTab({super.key});
 
@@ -43,6 +45,11 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     final profileImage = _userInfo?['profileImage'] as String?;
     final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
 
+    // 하단 네비게이션에 표시되지 않는 메뉴 ID 가져오기
+    final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
+    final nonDisplayedMenuIds = notifier.nonDisplayedMenuIds;
+    final availableItems = notifier.availableItems;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('더보기'),
@@ -60,36 +67,21 @@ class _MoreTabState extends ConsumerState<MoreTab> {
               isAdmin: isAdmin,
             ),
           ),
-          // 메뉴 리스트
-          MenuListTile(
-            icon: Icons.credit_card,
-            title: '가계관리',
-            onTap: () {
-              // TODO: 가계관리 화면으로 이동
-            },
-          ),
-          MenuListTile(
-            icon: Icons.child_care,
-            title: '육아포인트',
-            onTap: () {
-              // TODO: 육아포인트 화면으로 이동
-            },
-          ),
-          MenuListTile(
-            icon: Icons.note,
-            title: '메모',
-            onTap: () {
-              // TODO: 메모 화면으로 이동
-            },
-          ),
-          MenuListTile(
-            icon: Icons.games,
-            title: '미니게임',
-            onTap: () {
-              // TODO: 미니게임 화면으로 이동
-            },
-          ),
+          // 하단 네비게이션에 표시되지 않는 메뉴들
+          ...nonDisplayedMenuIds.map((menuId) {
+            final item = availableItems[menuId];
+            if (item == null) return const SizedBox.shrink();
+
+            return MenuListTile(
+              icon: item.icon,
+              title: item.label,
+              onTap: () {
+                _handleMenuTap(context, menuId);
+              },
+            );
+          }),
           const Divider(),
+          // 고정 메뉴: 설정, 로그아웃
           MenuListTile(
             icon: Icons.settings,
             title: '설정',
@@ -104,6 +96,57 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         ],
       ),
     );
+  }
+
+  /// 메뉴 탭 처리
+  void _handleMenuTap(BuildContext context, String menuId) {
+    // TODO: 각 메뉴에 맞는 라우트로 이동
+    switch (menuId) {
+      case 'assets':
+        // TODO: 자산 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('자산 화면 (준비 중)')),
+        );
+        break;
+      case 'calendar':
+        // TODO: 일정 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('일정 화면 (준비 중)')),
+        );
+        break;
+      case 'todo':
+        // TODO: 할일 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('할일 화면 (준비 중)')),
+        );
+        break;
+      case 'household':
+        // TODO: 가계관리 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('가계관리 화면 (준비 중)')),
+        );
+        break;
+      case 'childPoints':
+        // TODO: 육아포인트 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('육아포인트 화면 (준비 중)')),
+        );
+        break;
+      case 'memo':
+        // TODO: 메모 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('메모 화면 (준비 중)')),
+        );
+        break;
+      case 'miniGames':
+        // TODO: 미니게임 화면으로 이동
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('미니게임 화면 (준비 중)')),
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   Future<void> _handleLogout() async {

@@ -49,6 +49,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _buildSectionHeader(context, '화면 설정'),
           _buildSettingTile(
             context,
+            icon: Icons.navigation_outlined,
+            title: '하단 네비게이션 설정',
+            subtitle: '하단 메뉴 순서와 표시/숨김을 설정하세요',
+            onTap: () => context.push(AppRoutes.bottomNavigationSettings),
+          ),
+          _buildSettingTile(
+            context,
             icon: Icons.widgets_outlined,
             title: '홈 위젯 설정',
             subtitle: '홈 화면에 표시할 위젯을 선택하세요',

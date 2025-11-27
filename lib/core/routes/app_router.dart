@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/screens/home_screen.dart';
 import 'package:family_planner/features/settings/screens/settings_screen.dart';
+import 'package:family_planner/features/settings/screens/bottom_navigation_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/home_widget_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/language_settings_screen.dart';
@@ -200,6 +201,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.settings,
         name: 'settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.bottomNavigationSettings,
+        name: 'bottomNavigationSettings',
+        builder: (context, state) => const BottomNavigationSettingsScreen(),
       ),
       GoRoute(
         path: AppRoutes.homeWidgetSettings,

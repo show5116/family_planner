@@ -6,11 +6,12 @@ import 'package:family_planner/features/assets/screens/assets_tab.dart';
 import 'package:family_planner/features/calendar/screens/calendar_tab.dart';
 import 'package:family_planner/features/todo/screens/todo_tab.dart';
 import 'package:family_planner/features/settings/screens/more_tab.dart';
+import 'package:family_planner/features/settings/providers/bottom_navigation_settings_provider.dart';
 
 /// 메인 홈 화면
 ///
 /// Bottom Navigation을 포함한 메인 레이아웃
-/// 5개 탭: 홈(대시보드), 자산, 일정, 할일, 더보기
+/// 하단 네비게이션은 설정에 따라 동적으로 변경됩니다.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -22,49 +23,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
   int _dashboardRefreshKey = 0;
 
-  // Bottom Navigation 아이템들
-  final List<NavigationDestination> _destinations = const [
-    NavigationDestination(
-      icon: Icon(Icons.home_outlined),
-      selectedIcon: Icon(Icons.home),
-      label: '홈',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.account_balance_wallet_outlined),
-      selectedIcon: Icon(Icons.account_balance_wallet),
-      label: '자산',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.calendar_today_outlined),
-      selectedIcon: Icon(Icons.calendar_today),
-      label: '일정',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.check_box_outlined),
-      selectedIcon: Icon(Icons.check_box),
-      label: '할일',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.more_horiz),
-      selectedIcon: Icon(Icons.more_horiz),
-      label: '더보기',
-    ),
-  ];
-
-  // 각 탭에 해당하는 화면들
-  List<Widget> get _screens => [
-        DashboardTab(key: ValueKey(_dashboardRefreshKey)),
-        const AssetsTab(),
-        const CalendarTab(),
-        const TodoTab(),
-        const MoreTab(),
-      ];
+  // 각 탭 ID에 해당하는 화면 매핑
+  Widget _getScreenForId(String id) {
+    switch (id) {
+      case 'home':
+        return DashboardTab(key: ValueKey(_dashboardRefreshKey));
+      case 'assets':
+        return const AssetsTab();
+      case 'calendar':
+        return const CalendarTab();
+      case 'todo':
+        return const TodoTab();
+      case 'household':
+        // TODO: 가계관리 탭 구현
+        return const Center(child: Text('가계관리 (준비 중)'));
+      case 'childPoints':
+        // TODO: 육아포인트 탭 구현
+        return const Center(child: Text('육아포인트 (준비 중)'));
+      case 'memo':
+        // TODO: 메모 탭 구현
+        return const Center(child: Text('메모 (준비 중)'));
+      case 'miniGames':
+        // TODO: 미니게임 탭 구현
+        return const Center(child: Text('미니게임 (준비 중)'));
+      case 'more':
+        return const MoreTab();
+      default:
+        return DashboardTab(key: ValueKey(_dashboardRefreshKey));
+    }
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // 화면이 다시 보일 때마다 홈 탭 새로고침
-    if (_selectedIndex == 0) {
+    // 화면이 다시 보일 때마다 현재 탭이 홈이면 새로고침
+    final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
+    final displayedItems = notifier.displayedItems;
+
+    if (_selectedIndex < displayedItems.length &&
+        displayedItems[_selectedIndex].id == 'home') {
       setState(() {
         _dashboardRefreshKey++;
       });
@@ -73,21 +70,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 설정에서 표시할 네비게이션 아이템 가져오기
+    final notifier = ref.watch(bottomNavigationSettingsProvider.notifier);
+    final displayedItems = notifier.displayedItems;
+
+    // NavigationDestination 리스트 생성
+    final destinations = displayedItems.map((item) {
+      return NavigationDestination(
+        icon: Icon(item.icon),
+        selectedIcon: Icon(item.selectedIcon),
+        label: item.label,
+      );
+    }).toList();
+
+    // 화면 리스트 생성
+    final screens = displayedItems.map((item) => _getScreenForId(item.id)).toList();
+
+    // _selectedIndex가 범위를 벗어나면 0으로 초기화
+    if (_selectedIndex >= displayedItems.length) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+        }
+      });
+    }
+
     return ResponsiveNavigation(
       selectedIndex: _selectedIndex,
       onDestinationSelected: (index) {
         setState(() {
           _selectedIndex = index;
           // 홈 탭으로 전환할 때 새로고침
-          if (index == 0) {
+          if (index < displayedItems.length && displayedItems[index].id == 'home') {
             _dashboardRefreshKey++;
           }
         });
       },
-      destinations: _destinations,
+      destinations: destinations,
       body: IndexedStack(
         index: _selectedIndex,
-        children: _screens,
+        children: screens,
       ),
     );
   }
