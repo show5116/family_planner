@@ -222,43 +222,50 @@ class _DashboardGridState extends State<_DashboardGrid> {
     final spacing = AppSizes.spaceM;
     final cardWidth = (availableWidth - (spacing * (columns - 1))) / columns;
 
-    // 활성화된 위젯만 표시
+    // widgetOrder에 따라 순서대로 위젯 생성
     final List<Widget> activeWidgets = [];
 
-    if (_settings.showTodaySchedule) {
-      activeWidgets.add(
-        SizedBox(
-          width: cardWidth,
-          child: const TodayScheduleWidget(),
-        ),
-      );
-    }
+    for (final widgetName in _settings.widgetOrder) {
+      Widget? widget;
 
-    if (_settings.showInvestmentSummary) {
-      activeWidgets.add(
-        SizedBox(
-          width: cardWidth,
-          child: const InvestmentSummaryWidget(),
-        ),
-      );
-    }
+      switch (widgetName) {
+        case 'todaySchedule':
+          if (_settings.showTodaySchedule) {
+            widget = SizedBox(
+              width: cardWidth,
+              child: const TodayScheduleWidget(),
+            );
+          }
+          break;
+        case 'investmentSummary':
+          if (_settings.showInvestmentSummary) {
+            widget = SizedBox(
+              width: cardWidth,
+              child: const InvestmentSummaryWidget(),
+            );
+          }
+          break;
+        case 'todoSummary':
+          if (_settings.showTodoSummary) {
+            widget = SizedBox(
+              width: cardWidth,
+              child: const TodoSummaryWidget(),
+            );
+          }
+          break;
+        case 'assetSummary':
+          if (_settings.showAssetSummary) {
+            widget = SizedBox(
+              width: cardWidth,
+              child: const AssetSummaryWidget(),
+            );
+          }
+          break;
+      }
 
-    if (_settings.showTodoSummary) {
-      activeWidgets.add(
-        SizedBox(
-          width: cardWidth,
-          child: const TodoSummaryWidget(),
-        ),
-      );
-    }
-
-    if (_settings.showAssetSummary) {
-      activeWidgets.add(
-        SizedBox(
-          width: cardWidth,
-          child: const AssetSummaryWidget(),
-        ),
-      );
+      if (widget != null) {
+        activeWidgets.add(widget);
+      }
     }
 
     // 활성화된 위젯이 없으면 안내 메시지 표시

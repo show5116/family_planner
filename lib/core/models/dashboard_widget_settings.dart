@@ -50,6 +50,7 @@ class DashboardWidgetSettings {
       'showInvestmentSummary': showInvestmentSummary,
       'showTodoSummary': showTodoSummary,
       'showAssetSummary': showAssetSummary,
+      'widgetOrder': widgetOrder,
     };
   }
 
@@ -59,12 +60,14 @@ class DashboardWidgetSettings {
     bool? showInvestmentSummary,
     bool? showTodoSummary,
     bool? showAssetSummary,
+    List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
       showTodaySchedule: showTodaySchedule ?? this.showTodaySchedule,
       showInvestmentSummary: showInvestmentSummary ?? this.showInvestmentSummary,
       showTodoSummary: showTodoSummary ?? this.showTodoSummary,
       showAssetSummary: showAssetSummary ?? this.showAssetSummary,
+      widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }
 }

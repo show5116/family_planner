@@ -78,6 +78,64 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
     _saveSettings();
   }
 
+  /// 위젯 순서 변경
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      // 기존 리스트를 복사하여 가변 리스트로 만듦
+      final newOrder = List<String>.from(_settings.widgetOrder);
+      // 아이템을 제거하고 새 위치에 삽입
+      final item = newOrder.removeAt(oldIndex);
+      newOrder.insert(newIndex, item);
+      // 새로운 순서로 설정 업데이트
+      _settings = _settings.copyWith(widgetOrder: newOrder);
+    });
+    _saveSettings();
+  }
+
+  /// 위젯 정보 가져오기
+  Map<String, dynamic> _getWidgetInfo(String widgetName) {
+    switch (widgetName) {
+      case 'todaySchedule':
+        return {
+          'icon': Icons.calendar_today,
+          'title': '오늘의 일정',
+          'description': '당일 일정을 표시합니다',
+          'enabled': _settings.showTodaySchedule,
+        };
+      case 'investmentSummary':
+        return {
+          'icon': Icons.trending_up,
+          'title': '투자 지표 요약',
+          'description': '코스피, 나스닥, 환율 정보를 표시합니다',
+          'enabled': _settings.showInvestmentSummary,
+        };
+      case 'todoSummary':
+        return {
+          'icon': Icons.check_box,
+          'title': '오늘의 할일',
+          'description': '진행 중인 할일을 표시합니다',
+          'enabled': _settings.showTodoSummary,
+        };
+      case 'assetSummary':
+        return {
+          'icon': Icons.account_balance_wallet,
+          'title': '자산 현황',
+          'description': '총 자산과 수익률을 표시합니다',
+          'enabled': _settings.showAssetSummary,
+        };
+      default:
+        return {
+          'icon': Icons.widgets,
+          'title': '알 수 없는 위젯',
+          'description': '',
+          'enabled': false,
+        };
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -108,7 +166,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
                   const SizedBox(width: AppSizes.spaceM),
                   Expanded(
                     child: Text(
-                      '홈 화면에 표시할 위젯을 선택하세요',
+                      '홈 화면에 표시할 위젯을 선택하고 순서를 변경하세요',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -118,35 +176,24 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
           ),
           const SizedBox(height: AppSizes.spaceL),
 
-          // 위젯 목록
-          _buildWidgetTile(
-            icon: Icons.calendar_today,
-            title: '오늘의 일정',
-            description: '당일 일정을 표시합니다',
-            value: _settings.showTodaySchedule,
-            onChanged: (value) => _toggleWidget('todaySchedule', value),
+          // 위젯 순서 변경 섹션
+          Text(
+            '위젯 순서',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
-          _buildWidgetTile(
-            icon: Icons.trending_up,
-            title: '투자 지표 요약',
-            description: '코스피, 나스닥, 환율 정보를 표시합니다',
-            value: _settings.showInvestmentSummary,
-            onChanged: (value) => _toggleWidget('investmentSummary', value),
+          const SizedBox(height: AppSizes.spaceS),
+          Text(
+            '위젯을 길게 눌러 드래그하여 순서를 변경할 수 있습니다',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
           ),
-          _buildWidgetTile(
-            icon: Icons.check_box,
-            title: '오늘의 할일',
-            description: '진행 중인 할일을 표시합니다',
-            value: _settings.showTodoSummary,
-            onChanged: (value) => _toggleWidget('todoSummary', value),
-          ),
-          _buildWidgetTile(
-            icon: Icons.account_balance_wallet,
-            title: '자산 현황',
-            description: '총 자산과 수익률을 표시합니다',
-            value: _settings.showAssetSummary,
-            onChanged: (value) => _toggleWidget('assetSummary', value),
-          ),
+          const SizedBox(height: AppSizes.spaceM),
+
+          // 드래그 가능한 위젯 목록
+          _buildReorderableWidgetList(),
 
           const SizedBox(height: AppSizes.spaceL),
 
@@ -159,45 +206,133 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
               _saveSettings();
             },
             icon: const Icon(Icons.restore),
-            label: const Text('모든 위젯 표시'),
+            label: const Text('기본 설정으로 복원'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildWidgetTile({
+  /// 드래그 가능한 위젯 목록 빌드
+  Widget _buildReorderableWidgetList() {
+    return ReorderableListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
+      itemCount: _settings.widgetOrder.length,
+      onReorder: _onReorder,
+      proxyDecorator: (child, index, animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) {
+            final double elevation = Tween<double>(
+              begin: 0,
+              end: 6,
+            ).evaluate(animation);
+
+            return Material(
+              elevation: elevation,
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              child: Opacity(
+                opacity: 0.85,
+                child: child,
+              ),
+            );
+          },
+          child: child,
+        );
+      },
+      itemBuilder: (context, index) {
+        final widgetName = _settings.widgetOrder[index];
+        final widgetInfo = _getWidgetInfo(widgetName);
+
+        return ReorderableDragStartListener(
+          key: ValueKey(widgetName),
+          index: index,
+          child: _buildReorderableWidgetTile(
+            widgetName: widgetName,
+            icon: widgetInfo['icon'] as IconData,
+            title: widgetInfo['title'] as String,
+            description: widgetInfo['description'] as String,
+            enabled: widgetInfo['enabled'] as bool,
+          ),
+        );
+      },
+    );
+  }
+
+  /// 드래그 가능한 위젯 타일 빌드
+  Widget _buildReorderableWidgetTile({
+    required String widgetName,
     required IconData icon,
     required String title,
     required String description,
-    required bool value,
-    required ValueChanged<bool> onChanged,
+    required bool enabled,
   }) {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-      child: SwitchListTile(
-        secondary: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-          ),
-          child: Icon(
-            icon,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM,
+          vertical: AppSizes.spaceS,
         ),
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
+        child: Row(
+          children: [
+            // 드래그 핸들
+            ReorderableDragStartListener(
+              index: _settings.widgetOrder.indexOf(widgetName),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.grab,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: AppSizes.spaceM),
+                  child: Icon(
+                    Icons.drag_handle,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+            // 아이콘
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Icon(
+                icon,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: AppSizes.spaceM),
+            // 제목 및 설명
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSizes.spaceL),
+            // Switch
+            Switch(
+              value: enabled,
+              onChanged: (value) => _toggleWidget(widgetName, value),
+            ),
+          ],
         ),
-        subtitle: Text(
-          description,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        value: value,
-        onChanged: onChanged,
       ),
     );
   }
