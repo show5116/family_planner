@@ -17,6 +17,7 @@ class ProfileSettingsScreen extends ConsumerStatefulWidget {
 class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _profileImageController = TextEditingController();
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
@@ -40,6 +41,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _phoneNumberController.dispose();
     _profileImageController.dispose();
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
@@ -53,6 +55,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       setState(() {
         _userInfo = userInfo;
         _nameController.text = userInfo['name'] as String? ?? '';
+        _phoneNumberController.text = userInfo['phoneNumber'] as String? ?? '';
         _profileImageController.text = userInfo['profileImage'] as String? ?? '';
       });
     }
@@ -83,6 +86,9 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
             name: _nameController.text.trim().isEmpty
                 ? null
                 : _nameController.text.trim(),
+            phoneNumber: _phoneNumberController.text.trim().isEmpty
+                ? null
+                : _phoneNumberController.text.trim(),
             profileImage: _profileImageController.text.trim().isEmpty
                 ? null
                 : _profileImageController.text.trim(),
@@ -199,6 +205,21 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: AppSizes.spaceM),
+
+              // 전화번호 입력
+              TextFormField(
+                controller: _phoneNumberController,
+                decoration: InputDecoration(
+                  labelText: '전화번호 (선택사항)',
+                  prefixIcon: const Icon(Icons.phone_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                  ),
+                  helperText: '예: 010-1234-5678',
+                ),
+                keyboardType: TextInputType.phone,
               ),
               const SizedBox(height: AppSizes.spaceM),
 

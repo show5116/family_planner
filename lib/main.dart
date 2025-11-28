@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -14,6 +15,21 @@ import 'package:family_planner/core/services/oauth_callback_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 void main() {
+  // Flutter 바인딩 초기화
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 웹에서 키보드 이벤트 경고 제거
+  // Flutter 웹에서 키보드 입력 시 발생하는 채널 버퍼 경고를 방지
+  if (kIsWeb) {
+    // 키보드 이벤트 채널의 버퍼 용량 증가
+    ServicesBinding.instance.channelBuffers.setListener(
+      'flutter/keyevent',
+      (data, callback) async {
+        callback(data);
+      },
+    );
+  }
+
   // 웹에서 URL 해시(#) 제거 - 경로 기반 라우팅 사용
   // 이렇게 하면 URL이 /#/path가 아닌 /path 형태가 됨
   if (kIsWeb) {

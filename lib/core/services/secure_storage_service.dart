@@ -21,6 +21,7 @@ class SecureStorageService {
   static const String _refreshTokenKey = 'refresh_token';
   static const String _userEmailKey = 'user_email';
   static const String _userNameKey = 'user_name';
+  static const String _userPhoneNumberKey = 'user_phone_number';
   static const String _userProfileImageKey = 'user_profile_image';
   static const String _userIsAdminKey = 'user_is_admin';
   static const String _userHasPasswordKey = 'user_has_password';
@@ -61,6 +62,7 @@ class SecureStorageService {
   Future<void> saveUserInfo({
     String? email,
     String? name,
+    String? phoneNumber,
     String? profileImage,
     bool? isAdmin,
     bool? hasPassword,
@@ -68,6 +70,7 @@ class SecureStorageService {
     debugPrint('=== Saving user info ===');
     debugPrint('Email: $email');
     debugPrint('Name: $name');
+    debugPrint('PhoneNumber: $phoneNumber');
     debugPrint('ProfileImage: $profileImage');
     debugPrint('IsAdmin: $isAdmin');
     debugPrint('HasPassword: $hasPassword');
@@ -79,6 +82,10 @@ class SecureStorageService {
     if (name != null) {
       await _storage.write(key: _userNameKey, value: name);
       debugPrint('Name saved');
+    }
+    if (phoneNumber != null) {
+      await _storage.write(key: _userPhoneNumberKey, value: phoneNumber);
+      debugPrint('PhoneNumber saved');
     }
     if (profileImage != null) {
       await _storage.write(key: _userProfileImageKey, value: profileImage);
@@ -105,6 +112,11 @@ class SecureStorageService {
     return await _storage.read(key: _userNameKey);
   }
 
+  /// 사용자 전화번호 가져오기
+  Future<String?> getUserPhoneNumber() async {
+    return await _storage.read(key: _userPhoneNumberKey);
+  }
+
   /// 사용자 프로필 이미지 URL 가져오기
   Future<String?> getUserProfileImage() async {
     return await _storage.read(key: _userProfileImageKey);
@@ -126,6 +138,7 @@ class SecureStorageService {
   Future<Map<String, dynamic>> getUserInfo() async {
     final email = await getUserEmail();
     final name = await getUserName();
+    final phoneNumber = await getUserPhoneNumber();
     final profileImage = await getUserProfileImage();
     final isAdmin = await getUserIsAdmin();
     final hasPassword = await getUserHasPassword();
@@ -133,6 +146,7 @@ class SecureStorageService {
     debugPrint('=== Reading user info ===');
     debugPrint('Email: $email');
     debugPrint('Name: $name');
+    debugPrint('PhoneNumber: $phoneNumber');
     debugPrint('ProfileImage: $profileImage');
     debugPrint('IsAdmin: $isAdmin');
     debugPrint('HasPassword: $hasPassword');
@@ -140,6 +154,7 @@ class SecureStorageService {
     return {
       'email': email,
       'name': name,
+      'phoneNumber': phoneNumber,
       'profileImage': profileImage,
       'isAdmin': isAdmin,
       'hasPassword': hasPassword,
@@ -150,6 +165,7 @@ class SecureStorageService {
   Future<void> clearUserInfo() async {
     await _storage.delete(key: _userEmailKey);
     await _storage.delete(key: _userNameKey);
+    await _storage.delete(key: _userPhoneNumberKey);
     await _storage.delete(key: _userProfileImageKey);
     await _storage.delete(key: _userIsAdminKey);
     await _storage.delete(key: _userHasPasswordKey);

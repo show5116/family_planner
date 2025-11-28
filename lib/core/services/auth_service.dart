@@ -1,17 +1,34 @@
 import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/core/constants/api_constants.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/services/oauth_callback_handler.dart';
-import 'package:family_planner/core/services/oauth_popup_web.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
+import 'package:family_planner/core/services/google_auth_service.dart';
+import 'package:family_planner/core/services/kakao_auth_service.dart';
+import 'package:family_planner/core/services/oauth_web_service.dart';
 
 /// 인증 서비스
 class AuthService extends ApiServiceBase {
   final _storage = SecureStorageService();
+  final _googleAuthService = GoogleAuthService();
+  final _kakaoAuthService = KakaoAuthService();
+  final _oauthCallbackHandler = OAuthCallbackHandler();
+
+  // ========== 공통 헬퍼 메서드 ==========
+
+  /// 토큰 저장
+  Future<void> _saveTokens(Map<String, dynamic> data) async {
+    if (data['accessToken'] != null) {
+      await apiClient.saveAccessToken(data['accessToken'] as String);
+    }
+    if (data['refreshToken'] != null) {
+      await apiClient.saveRefreshToken(data['refreshToken'] as String);
+    }
+  }
+
+  // ========== 기본 인증 (이메일/비밀번호) ==========
+
   /// 로그인
   Future<Map<String, dynamic>> login({
     required String email,
@@ -20,21 +37,13 @@ class AuthService extends ApiServiceBase {
     try {
       final response = await apiClient.post(
         ApiConstants.login,
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
 
       // 토큰 저장
-      if (data['accessToken'] != null) {
-        await apiClient.saveAccessToken(data['accessToken'] as String);
-      }
-      if (data['refreshToken'] != null) {
-        await apiClient.saveRefreshToken(data['refreshToken'] as String);
-      }
+      await _saveTokens(data);
 
       // 사용자 정보 저장
       await _saveUserInfoFromResponse(data);
@@ -58,6 +67,7 @@ class AuthService extends ApiServiceBase {
       await _storage.saveUserInfo(
         email: user['email'] as String?,
         name: user['name'] as String?,
+        phoneNumber: user['phoneNumber'] as String?,
         profileImage: user['profileImage'] as String?,
         isAdmin: user['isAdmin'] as bool?,
         hasPassword: user['hasPassword'] as bool?,
@@ -69,6 +79,7 @@ class AuthService extends ApiServiceBase {
       await _storage.saveUserInfo(
         email: data['email'] as String?,
         name: data['name'] as String?,
+        phoneNumber: data['phoneNumber'] as String?,
         profileImage: data['profileImage'] as String?,
         isAdmin: data['isAdmin'] as bool?,
         hasPassword: data['hasPassword'] as bool?,
@@ -86,11 +97,7 @@ class AuthService extends ApiServiceBase {
     try {
       final response = await apiClient.post(
         ApiConstants.register,
-        data: {
-          'email': email,
-          'password': password,
-          'name': name,
-        },
+        data: {'email': email, 'password': password, 'name': name},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
@@ -111,27 +118,32 @@ class AuthService extends ApiServiceBase {
       debugPrint('Logout API failed: $e');
     } finally {
       // 소셜 로그인 SDK 로그아웃
-      try {
-        await signOutGoogle();
-        debugPrint('Google sign out completed');
-      } catch (e) {
-        debugPrint('Google sign out failed: $e');
-      }
-
-      try {
-        if (!kIsWeb) {
-          // 카카오 로그아웃은 모바일에서만 (웹에서는 SDK 미사용)
-          await signOutKakao();
-          debugPrint('Kakao logout completed');
-        }
-      } catch (e) {
-        debugPrint('Kakao logout failed: $e');
-      }
+      await _cleanupSocialLogin();
 
       // 로컬 토큰 및 사용자 정보 삭제
       await apiClient.clearTokens();
       await _storage.clearUserInfo();
       debugPrint('Local tokens and user info cleared');
+    }
+  }
+
+  /// 소셜 로그인 정리
+  Future<void> _cleanupSocialLogin() async {
+    try {
+      await signOutGoogle();
+      debugPrint('Google sign out completed');
+    } catch (e) {
+      debugPrint('Google sign out failed: $e');
+    }
+
+    try {
+      if (!kIsWeb) {
+        // 카카오 로그아웃은 모바일에서만 (웹에서는 SDK 미사용)
+        await signOutKakao();
+        debugPrint('Kakao logout completed');
+      }
+    } catch (e) {
+      debugPrint('Kakao logout failed: $e');
     }
   }
 
@@ -150,20 +162,13 @@ class AuthService extends ApiServiceBase {
     try {
       final response = await apiClient.post(
         ApiConstants.refreshToken,
-        data: {
-          'refreshToken': refreshToken,
-        },
+        data: {'refreshToken': refreshToken},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
 
       // 새 토큰 저장
-      if (data['accessToken'] != null) {
-        await apiClient.saveAccessToken(data['accessToken'] as String);
-      }
-      if (data['refreshToken'] != null) {
-        await apiClient.saveRefreshToken(data['refreshToken'] as String);
-      }
+      await _saveTokens(data);
 
       return data;
     } catch (e) {
@@ -172,15 +177,11 @@ class AuthService extends ApiServiceBase {
   }
 
   /// 이메일 인증
-  Future<Map<String, dynamic>> verifyEmail({
-    required String code,
-  }) async {
+  Future<Map<String, dynamic>> verifyEmail({required String code}) async {
     try {
       final response = await apiClient.post(
         ApiConstants.verifyEmail,
-        data: {
-          'code': code,
-        },
+        data: {'code': code},
       );
 
       return handleResponse<Map<String, dynamic>>(response);
@@ -196,9 +197,7 @@ class AuthService extends ApiServiceBase {
     try {
       final response = await apiClient.post(
         ApiConstants.resendVerification,
-        data: {
-          'email': email,
-        },
+        data: {'email': email},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
@@ -216,9 +215,7 @@ class AuthService extends ApiServiceBase {
     try {
       final response = await apiClient.post(
         ApiConstants.requestPasswordReset,
-        data: {
-          'email': email,
-        },
+        data: {'email': email},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
@@ -238,11 +235,7 @@ class AuthService extends ApiServiceBase {
     try {
       final response = await apiClient.post(
         ApiConstants.resetPassword,
-        data: {
-          'email': email,
-          'code': code,
-          'newPassword': newPassword,
-        },
+        data: {'email': email, 'code': code, 'newPassword': newPassword},
       );
 
       return handleResponse<Map<String, dynamic>>(response);
@@ -251,17 +244,7 @@ class AuthService extends ApiServiceBase {
     }
   }
 
-  // Google Sign-In 인스턴스
-  // 웹에서는 clientId를 명시적으로 설정해야 함
-  late final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-    // 웹 플랫폼에서는 clientId 필수, 모바일에서는 선택사항
-    clientId: kIsWeb
-        ? EnvironmentConfig.googleWebClientId
-        : (defaultTargetPlatform == TargetPlatform.android
-            ? EnvironmentConfig.googleAndroidClientId
-            : EnvironmentConfig.googleIosClientId),
-  );
+  // ========== Google 로그인 (SDK 방식 - 모바일 전용) ==========
 
   /// 구글 로그인 (SDK 방식 - 모바일 전용)
   ///
@@ -278,59 +261,49 @@ class AuthService extends ApiServiceBase {
   /// 백엔드 엔드포인트가 없어 임시로 GET /auth/google/callback 사용 중
   Future<Map<String, dynamic>> loginWithGoogle() async {
     try {
-      // 1. Google Sign-In으로 로그인
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      // 1. Google Sign-In SDK로 로그인하여 토큰 획득
+      final tokens = await _googleAuthService.signIn();
+      final accessToken = tokens['accessToken'];
 
-      if (googleUser == null) {
-        throw Exception('Google 로그인이 취소되었습니다');
+      if (accessToken == null || accessToken.isEmpty) {
+        throw Exception('Google Access Token을 가져올 수 없습니다');
       }
 
-      // 2. 인증 정보 가져오기
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // 3. [임시] Access Token을 백엔드로 전송
+      // 2. [임시] Access Token을 백엔드로 전송
       // TODO: 백엔드에 POST /auth/google/token 엔드포인트 추가 후 다음과 같이 수정:
       // final response = await apiClient.post(
       //   '/auth/google/token',
       //   data: {
-      //     'accessToken': googleAuth.accessToken,
-      //     'idToken': googleAuth.idToken,
+      //     'accessToken': tokens['accessToken'],
+      //     'idToken': tokens['idToken'],
       //   },
       // );
       final response = await apiClient.get(
-        '${ApiConstants.googleCallback}?access_token=${googleAuth.accessToken}',
+        '${ApiConstants.googleCallback}?access_token=$accessToken',
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
 
-      // 4. 토큰 저장
-      if (data['accessToken'] != null) {
-        await apiClient.saveAccessToken(data['accessToken'] as String);
-      }
-      if (data['refreshToken'] != null) {
-        await apiClient.saveRefreshToken(data['refreshToken'] as String);
-      }
+      // 3. 토큰 저장
+      await _saveTokens(data);
 
-      // 5. 사용자 정보 저장
+      // 4. 사용자 정보 저장
       await _saveUserInfoFromResponse(data);
 
       return data;
     } catch (e) {
       // 로그인 실패 시 구글 로그아웃
-      await _googleSignIn.signOut();
+      await _googleAuthService.signOut();
       throw handleError(e);
     }
   }
 
   /// 구글 로그아웃
   Future<void> signOutGoogle() async {
-    try {
-      await _googleSignIn.signOut();
-    } catch (e) {
-      debugPrint('Google sign out failed: $e');
-    }
+    await _googleAuthService.signOut();
   }
+
+  // ========== Kakao 로그인 (SDK 방식 - 모바일 전용) ==========
 
   /// 카카오 로그인 (SDK 방식 - 모바일 전용)
   ///
@@ -347,23 +320,11 @@ class AuthService extends ApiServiceBase {
   /// 백엔드 엔드포인트가 없어 임시로 GET /auth/kakao/callback 사용 중
   Future<Map<String, dynamic>> loginWithKakao() async {
     try {
-      // 1. 카카오톡 설치 여부 확인
-      bool isInstalled = await isKakaoTalkInstalled();
+      // 1. Kakao SDK로 로그인하여 Access Token 획득
+      final accessToken = await _kakaoAuthService.signIn();
 
-      OAuthToken token;
-
-      if (isInstalled) {
-        // 카카오톡으로 로그인
-        try {
-          token = await UserApi.instance.loginWithKakaoTalk();
-        } catch (e) {
-          debugPrint('카카오톡 로그인 실패: $e');
-          // 카카오톡 로그인 실패 시 카카오 계정으로 로그인
-          token = await UserApi.instance.loginWithKakaoAccount();
-        }
-      } else {
-        // 카카오 계정으로 로그인
-        token = await UserApi.instance.loginWithKakaoAccount();
+      if (accessToken.isEmpty) {
+        throw Exception('Kakao Access Token을 가져올 수 없습니다');
       }
 
       // 2. [임시] Access Token을 백엔드로 전송
@@ -371,22 +332,17 @@ class AuthService extends ApiServiceBase {
       // final response = await apiClient.post(
       //   '/auth/kakao/token',
       //   data: {
-      //     'accessToken': token.accessToken,
+      //     'accessToken': accessToken,
       //   },
       // );
       final response = await apiClient.get(
-        '${ApiConstants.kakaoCallback}?access_token=${token.accessToken}',
+        '${ApiConstants.kakaoCallback}?access_token=$accessToken',
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
 
       // 3. 토큰 저장
-      if (data['accessToken'] != null) {
-        await apiClient.saveAccessToken(data['accessToken'] as String);
-      }
-      if (data['refreshToken'] != null) {
-        await apiClient.saveRefreshToken(data['refreshToken'] as String);
-      }
+      await _saveTokens(data);
 
       // 4. 사용자 정보 저장
       await _saveUserInfoFromResponse(data);
@@ -394,25 +350,19 @@ class AuthService extends ApiServiceBase {
       return data;
     } catch (e) {
       // 로그인 실패 시 카카오 로그아웃
-      await signOutKakao();
+      await _kakaoAuthService.signOut();
       throw handleError(e);
     }
   }
 
   /// 카카오 로그아웃
   Future<void> signOutKakao() async {
-    try {
-      await UserApi.instance.logout();
-    } catch (e) {
-      debugPrint('Kakao logout failed: $e');
-    }
+    await _kakaoAuthService.signOut();
   }
 
   // ========== OAuth URL 방식 로그인 (웹 전용) ==========
   // 백엔드의 OAuth 페이지를 브라우저로 열고 리다이렉트로 콜백을 받는 방식
   // 웹 플랫폼 전용 - 모바일에서는 loginWithGoogle(), loginWithKakao() 사용
-
-  final _oauthCallbackHandler = OAuthCallbackHandler();
 
   /// 구글 OAuth URL 로그인 (웹 전용)
   ///
@@ -425,38 +375,16 @@ class AuthService extends ApiServiceBase {
     final oauthUrl = '${EnvironmentConfig.apiBaseUrl}/auth/google';
 
     try {
-      if (kIsWeb) {
-        // 웹: 팝업으로 열고 토큰 수신
-        final params = await OAuthPopupWeb.openPopup(oauthUrl: oauthUrl);
+      // OAuthWebService를 사용하여 플랫폼별 로그인 처리
+      final tokens = await OAuthWebService.login(oauthUrl);
 
-        final accessToken = params['accessToken'];
-        final refreshToken = params['refreshToken'];
-
-        if (accessToken == null || refreshToken == null) {
-          throw Exception('OAuth 인증에 실패했습니다');
-        }
-
-        // 토큰 저장
-        await apiClient.saveAccessToken(accessToken);
-        await apiClient.saveRefreshToken(refreshToken);
-
-        return {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        };
-      } else {
-        // 모바일: 외부 브라우저로 열기 (기존 방식)
-        final uri = Uri.parse(oauthUrl);
-        final canLaunch = await canLaunchUrl(uri);
-        if (!canLaunch) {
-          throw Exception('브라우저를 열 수 없습니다');
-        }
-
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-
-        // 모바일에서는 Deep Link로 콜백 처리
-        return {};
+      // 토큰이 있으면 저장 (웹에서만 반환됨)
+      if (tokens.isNotEmpty) {
+        await apiClient.saveAccessToken(tokens['accessToken']!);
+        await apiClient.saveRefreshToken(tokens['refreshToken']!);
       }
+
+      return tokens;
     } catch (e) {
       throw handleError(e);
     }
@@ -470,38 +398,16 @@ class AuthService extends ApiServiceBase {
     final oauthUrl = '${EnvironmentConfig.apiBaseUrl}/auth/kakao';
 
     try {
-      if (kIsWeb) {
-        // 웹: 팝업으로 열고 토큰 수신
-        final params = await OAuthPopupWeb.openPopup(oauthUrl: oauthUrl);
+      // OAuthWebService를 사용하여 플랫폼별 로그인 처리
+      final tokens = await OAuthWebService.login(oauthUrl);
 
-        final accessToken = params['accessToken'];
-        final refreshToken = params['refreshToken'];
-
-        if (accessToken == null || refreshToken == null) {
-          throw Exception('OAuth 인증에 실패했습니다');
-        }
-
-        // 토큰 저장
-        await apiClient.saveAccessToken(accessToken);
-        await apiClient.saveRefreshToken(refreshToken);
-
-        return {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        };
-      } else {
-        // 모바일: 외부 브라우저로 열기 (기존 방식)
-        final uri = Uri.parse(oauthUrl);
-        final canLaunch = await canLaunchUrl(uri);
-        if (!canLaunch) {
-          throw Exception('브라우저를 열 수 없습니다');
-        }
-
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-
-        // 모바일에서는 Deep Link로 콜백 처리
-        return {};
+      // 토큰이 있으면 저장 (웹에서만 반환됨)
+      if (tokens.isNotEmpty) {
+        await apiClient.saveAccessToken(tokens['accessToken']!);
+        await apiClient.saveRefreshToken(tokens['refreshToken']!);
       }
+
+      return tokens;
     } catch (e) {
       throw handleError(e);
     }
@@ -538,6 +444,7 @@ class AuthService extends ApiServiceBase {
   /// 프로필 업데이트
   Future<Map<String, dynamic>> updateProfile({
     String? name,
+    String? phoneNumber,
     String? profileImage,
     String? currentPassword,
     String? newPassword,
@@ -546,8 +453,10 @@ class AuthService extends ApiServiceBase {
       final requestData = <String, dynamic>{};
 
       if (name != null) requestData['name'] = name;
+      if (phoneNumber != null) requestData['phoneNumber'] = phoneNumber;
       if (profileImage != null) requestData['profileImage'] = profileImage;
-      if (currentPassword != null) requestData['currentPassword'] = currentPassword;
+      if (currentPassword != null)
+        requestData['currentPassword'] = currentPassword;
       if (newPassword != null) requestData['newPassword'] = newPassword;
 
       final response = await apiClient.patch(

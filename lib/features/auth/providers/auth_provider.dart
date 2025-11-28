@@ -309,6 +309,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// 프로필 업데이트
   Future<void> updateProfile({
     String? name,
+    String? phoneNumber,
     String? profileImage,
     String? currentPassword,
     String? newPassword,
@@ -318,6 +319,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final updatedUser = await _authService.updateProfile(
         name: name,
+        phoneNumber: phoneNumber,
         profileImage: profileImage,
         currentPassword: currentPassword,
         newPassword: newPassword,
