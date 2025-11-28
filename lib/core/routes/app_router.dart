@@ -8,6 +8,7 @@ import 'package:family_planner/features/settings/screens/bottom_navigation_setti
 import 'package:family_planner/features/settings/screens/home_widget_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/language_settings_screen.dart';
+import 'package:family_planner/features/settings/screens/profile_settings_screen.dart';
 import 'package:family_planner/features/auth/screens/login_screen.dart';
 import 'package:family_planner/features/auth/screens/signup_screen.dart';
 import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
@@ -33,7 +34,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   });
 
   return GoRouter(
-    initialLocation: AppRoutes.home, // 홈을 기본 위치로 설정
+    initialLocation: AppRoutes.splash, // 스플래시 화면을 기본 위치로 설정
     debugLogDiagnostics: true,
     refreshListenable: notifier,
     redirect: (context, state) {
@@ -42,6 +43,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       debugPrint('=== GoRouter Redirect ===');
       debugPrint('Location: ${state.matchedLocation}');
       debugPrint('URI: ${state.uri}');
+      debugPrint('Query Parameters: ${state.uri.queryParameters}');
       debugPrint('isAuthenticated: $isAuthenticated');
 
       // OAuth 콜백 페이지인 경우, 팝업이면 redirect 건너뛰기
@@ -50,6 +52,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         // 팝업 여부는 OAuthCallbackScreen에서 처리하므로 redirect 없이 진행
         return null;
       }
+
+      // 비밀번호 설정 모드인 경우 (인증된 사용자가 접근 가능)
+      final isPasswordSetup = state.matchedLocation == AppRoutes.forgotPassword &&
+          state.uri.queryParameters['setup'] == 'true';
 
       final isAuthPage =
           state.matchedLocation == AppRoutes.login ||
@@ -60,6 +66,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final isSplashPage = state.matchedLocation == AppRoutes.splash;
 
       debugPrint('isAuthPage: $isAuthPage');
+      debugPrint('isPasswordSetup: $isPasswordSetup');
       debugPrint('isSplashPage: $isSplashPage');
 
       // 인증 상태가 null (초기/로딩 상태)이면 스플래시 화면으로
@@ -91,8 +98,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         return AppRoutes.login;
       }
 
-      // 인증되었고 인증 페이지에 있으면 홈으로
-      if (isAuthenticated == true && isAuthPage) {
+      // 인증되었고 인증 페이지에 있으면 홈으로 (단, 비밀번호 설정 모드는 예외)
+      if (isAuthenticated == true && isAuthPage && !isPasswordSetup) {
         debugPrint('Redirect: ${AppRoutes.home} (authenticated, on auth page)');
         return AppRoutes.home;
       }
@@ -136,8 +143,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           // 쿼리 파라미터에서 비밀번호 설정 모드 여부 가져오기
           final isNewPasswordSetup =
               state.uri.queryParameters['setup'] == 'true';
+          // 이메일 가져오기 (쿼리 파라미터 또는 extra에서)
+          final email = state.uri.queryParameters['email'] ??
+              (state.extra as String?);
           return ForgotPasswordScreen(
             isNewPasswordSetup: isNewPasswordSetup,
+            email: email,
           );
         },
       ),
@@ -228,6 +239,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.language,
         name: 'language',
         builder: (context, state) => const LanguageSettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        name: 'profile',
+        builder: (context, state) => const ProfileSettingsScreen(),
       ),
 
       // Assets Routes (추후 구현)

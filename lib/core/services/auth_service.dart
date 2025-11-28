@@ -534,4 +534,34 @@ class AuthService extends ApiServiceBase {
   Future<Map<String, dynamic>> getStoredUserInfo() async {
     return await _storage.getUserInfo();
   }
+
+  /// 프로필 업데이트
+  Future<Map<String, dynamic>> updateProfile({
+    String? name,
+    String? profileImage,
+    String? currentPassword,
+    String? newPassword,
+  }) async {
+    try {
+      final requestData = <String, dynamic>{};
+
+      if (name != null) requestData['name'] = name;
+      if (profileImage != null) requestData['profileImage'] = profileImage;
+      if (currentPassword != null) requestData['currentPassword'] = currentPassword;
+      if (newPassword != null) requestData['newPassword'] = newPassword;
+
+      final response = await apiClient.patch(
+        ApiConstants.updateProfile,
+        data: requestData,
+      );
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      // 업데이트된 사용자 정보 저장
+      await _saveUserInfoFromResponse(data);
+
+      return data;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
 }

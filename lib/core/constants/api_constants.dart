@@ -15,6 +15,7 @@ class ApiConstants {
   static const String resendVerification = '/auth/resend-verification';
   static const String requestPasswordReset = '/auth/request-password-reset';
   static const String resetPassword = '/auth/reset-password';
+  static const String updateProfile = '/auth/update-profile';
 
   // Social Login Endpoints
   static const String googleLogin = '/auth/google';
@@ -24,7 +25,6 @@ class ApiConstants {
 
   // User Endpoints
   static const String userProfile = '$apiVersion/users/profile';
-  static const String updateProfile = '$apiVersion/users/profile';
   static const String changePassword = '$apiVersion/users/password';
 
   // Family Endpoints

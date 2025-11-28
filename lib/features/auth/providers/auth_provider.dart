@@ -273,7 +273,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _authService.requestPasswordReset(email: email);
 
-      state = const AuthState();
+      // 비밀번호 재설정 요청은 인증 상태에 영향을 주지 않으므로
+      // AuthState를 리셋하지 않고 에러만 클리어
+      // state = const AuthState(); // 제거: 이로 인해 isAuthenticated가 null로 변경됨
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
@@ -295,7 +297,34 @@ class AuthNotifier extends StateNotifier<AuthState> {
         newPassword: newPassword,
       );
 
-      state = const AuthState();
+      // 비밀번호 재설정도 인증 상태를 변경하지 않음
+      // (소셜 로그인 사용자가 인증된 상태에서 비밀번호를 설정하는 경우를 고려)
+      // state = const AuthState(); // 제거: 이로 인해 isAuthenticated가 null로 변경됨
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 프로필 업데이트
+  Future<void> updateProfile({
+    String? name,
+    String? profileImage,
+    String? currentPassword,
+    String? newPassword,
+  }) async {
+    state = state.copyWith(error: null);
+
+    try {
+      final updatedUser = await _authService.updateProfile(
+        name: name,
+        profileImage: profileImage,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+
+      // 업데이트된 사용자 정보로 상태 업데이트
+      state = state.copyWith(isAuthenticated: true, user: updatedUser);
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;

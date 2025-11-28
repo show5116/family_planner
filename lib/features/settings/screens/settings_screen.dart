@@ -97,8 +97,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     );
 
     if (shouldSetupPassword == true && mounted) {
-      // 비밀번호 설정 화면으로 이동 (setup=true 파라미터 추가)
-      context.push('${AppRoutes.forgotPassword}?setup=true');
+      // 비밀번호 설정 화면으로 이동 (setup=true 파라미터 및 이메일 전달)
+      final email = _userInfo?['email'] as String? ?? '';
+      context.push('${AppRoutes.forgotPassword}?setup=true&email=${Uri.encodeComponent(email)}');
     }
   }
 
@@ -159,7 +160,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 // 비밀번호가 없는 사용자 (소셜 로그인만 사용한 경우)
                 await _showPasswordSetupGuideDialog();
               } else {
-                // TODO: 프로필 설정 화면으로 이동
+                // 프로필 설정 화면으로 이동
+                if (mounted) {
+                  context.push(AppRoutes.profile);
+                }
               }
             },
           ),

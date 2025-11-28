@@ -70,8 +70,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 설정 변경을 감지하기 위해 watch
+    ref.watch(bottomNavigationSettingsProvider);
     // 설정에서 표시할 네비게이션 아이템 가져오기
-    final notifier = ref.watch(bottomNavigationSettingsProvider.notifier);
+    final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
     final displayedItems = notifier.displayedItems;
 
     // NavigationDestination 리스트 생성

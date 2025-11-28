@@ -17,12 +17,16 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({
     super.key,
     this.isNewPasswordSetup = false,
+    this.email,
   });
 
   /// 신규 비밀번호 설정 모드 여부
   /// true: 소셜 로그인 사용자가 처음으로 비밀번호를 설정하는 경우
   /// false: 기존 비밀번호를 잊어버려서 재설정하는 경우
   final bool isNewPasswordSetup;
+
+  /// 사용자 이메일 (신규 비밀번호 설정 모드에서 자동 입력용)
+  final String? email;
 
   @override
   ConsumerState<ForgotPasswordScreen> createState() =>
@@ -40,6 +44,19 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   bool _obscureConfirmPassword = true;
   bool _isCodeSent = false;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 신규 비밀번호 설정 모드이고 이메일이 제공된 경우
+    if (widget.isNewPasswordSetup && widget.email != null) {
+      _emailController.text = widget.email!;
+      // 화면 로드 후 자동으로 인증 코드 요청
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requestCode();
+      });
+    }
+  }
 
   @override
   void dispose() {

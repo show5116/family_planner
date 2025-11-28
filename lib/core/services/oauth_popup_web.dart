@@ -45,8 +45,13 @@ class OAuthPopupWeb {
     // 타임아웃 타이머 (5분)
     final timeoutTimer = Timer(const Duration(minutes: 5), () {
       if (!completer.isCompleted) {
-        popup.close();
-        completer.completeError(Exception('로그인 시간이 초과되었습니다'));
+        // 타임아웃 시 팝업 닫기 전에 다시 확인
+        if (!popup.closed) {
+          popup.close();
+        }
+        if (!completer.isCompleted) {
+          completer.completeError(Exception('로그인 시간이 초과되었습니다'));
+        }
       }
     });
 
@@ -76,8 +81,11 @@ class OAuthPopupWeb {
         window.removeEventListener('message', messageHandler.toJS);
         popup.close();
 
-        final params = Map<String, String>.from(data['params'] as Map);
-        completer.complete(params);
+        // completer가 이미 완료되지 않은 경우에만 완료
+        if (!completer.isCompleted) {
+          final params = Map<String, String>.from(data['params'] as Map);
+          completer.complete(params);
+        }
       }
     }
 

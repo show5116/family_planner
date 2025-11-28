@@ -81,6 +81,15 @@ class ApiClient {
 
           // 401 에러 처리 (토큰 만료)
           if (error.response?.statusCode == 401) {
+            final requestPath = error.requestOptions.path;
+
+            // /auth/refresh 요청 자체가 실패한 경우 재시도하지 않음 (무한 루프 방지)
+            if (requestPath.contains('/auth/refresh')) {
+              debugPrint('Refresh token request failed - clearing tokens');
+              await clearTokens();
+              return handler.next(error);
+            }
+
             // Refresh Token으로 재시도
             final refreshed = await _refreshToken();
             if (refreshed) {
@@ -95,6 +104,10 @@ class ApiClient {
               } catch (e) {
                 return handler.reject(error);
               }
+            } else {
+              // Refresh 실패 시 토큰 삭제
+              debugPrint('Token refresh failed - clearing tokens');
+              await clearTokens();
             }
           }
 
