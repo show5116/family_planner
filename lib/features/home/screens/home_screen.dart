@@ -7,6 +7,8 @@ import 'package:family_planner/features/calendar/screens/calendar_tab.dart';
 import 'package:family_planner/features/todo/screens/todo_tab.dart';
 import 'package:family_planner/features/settings/screens/more_tab.dart';
 import 'package:family_planner/features/settings/providers/bottom_navigation_settings_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/utils/navigation_label_helper.dart';
 
 /// 메인 홈 화면
 ///
@@ -24,7 +26,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _dashboardRefreshKey = 0;
 
   // 각 탭 ID에 해당하는 화면 매핑
-  Widget _getScreenForId(String id) {
+  Widget _getScreenForId(String id, AppLocalizations l10n) {
     switch (id) {
       case 'home':
         return DashboardTab(key: ValueKey(_dashboardRefreshKey));
@@ -36,16 +38,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return const TodoTab();
       case 'household':
         // TODO: 가계관리 탭 구현
-        return const Center(child: Text('가계관리 (준비 중)'));
+        return Center(child: Text('${l10n.nav_household} (${l10n.common_comingSoon})'));
       case 'childPoints':
         // TODO: 육아포인트 탭 구현
-        return const Center(child: Text('육아포인트 (준비 중)'));
+        return Center(child: Text('${l10n.nav_childPoints} (${l10n.common_comingSoon})'));
       case 'memo':
         // TODO: 메모 탭 구현
-        return const Center(child: Text('메모 (준비 중)'));
+        return Center(child: Text('${l10n.nav_memo} (${l10n.common_comingSoon})'));
       case 'miniGames':
         // TODO: 미니게임 탭 구현
-        return const Center(child: Text('미니게임 (준비 중)'));
+        return Center(child: Text('${l10n.nav_miniGames} (${l10n.common_comingSoon})'));
       case 'more':
         return const MoreTab();
       default:
@@ -70,23 +72,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     // 설정 변경을 감지하기 위해 watch
     ref.watch(bottomNavigationSettingsProvider);
     // 설정에서 표시할 네비게이션 아이템 가져오기
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
     final displayedItems = notifier.displayedItems;
 
-    // NavigationDestination 리스트 생성
+    // NavigationDestination 리스트 생성 (다국어 적용)
     final destinations = displayedItems.map((item) {
       return NavigationDestination(
         icon: Icon(item.icon),
         selectedIcon: Icon(item.selectedIcon),
-        label: item.label,
+        label: NavigationLabelHelper.getLabel(l10n, item.id),
       );
     }).toList();
 
-    // 화면 리스트 생성
-    final screens = displayedItems.map((item) => _getScreenForId(item.id)).toList();
+    // 화면 리스트 생성 (다국어 적용)
+    final screens = displayedItems.map((item) => _getScreenForId(item.id, l10n)).toList();
 
     // _selectedIndex가 범위를 벗어나면 0으로 초기화
     if (_selectedIndex >= displayedItems.length) {

@@ -126,6 +126,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_loginFailed => 'Login failed';
 
   @override
+  String get auth_loginFailedInvalidCredentials => 'Invalid email or password';
+
+  @override
+  String get auth_googleLoginFailed => 'Google login failed';
+
+  @override
+  String get auth_kakaoLoginFailed => 'Kakao login failed';
+
+  @override
   String get auth_signupSuccess => 'Sign up successful';
 
   @override
@@ -171,6 +180,87 @@ class AppLocalizationsEn extends AppLocalizations {
       'Password has been reset. Please log in.';
 
   @override
+  String get auth_signupEmailVerificationMessage =>
+      'Sign up successful. Please check your email.';
+
+  @override
+  String get auth_signupNameLabel => 'Name';
+
+  @override
+  String get auth_signupNameMinLengthError =>
+      'Name must be at least 2 characters';
+
+  @override
+  String get auth_signupPasswordHelperText => 'At least 6 characters';
+
+  @override
+  String get auth_signupConfirmPasswordLabel => 'Confirm Password';
+
+  @override
+  String get auth_signupConfirmPasswordError => 'Please confirm your password';
+
+  @override
+  String get auth_signupButton => 'Sign up';
+
+  @override
+  String get auth_forgotPasswordTitle => 'Forgot Password';
+
+  @override
+  String get auth_setPasswordTitle => 'Set Password';
+
+  @override
+  String get auth_forgotPasswordGuide =>
+      'Enter your email address.\nWe\'ll send you a verification code.';
+
+  @override
+  String get auth_forgotPasswordGuideWithCode =>
+      'Enter the verification code sent to your email\nand set a new password.';
+
+  @override
+  String get auth_setPasswordGuide =>
+      'Set a password for account security.\nEnter your registered email address and\nwe\'ll send you a verification code.';
+
+  @override
+  String get auth_setPasswordGuideWithCode =>
+      'Enter the verification code sent to your email\nand set a password.';
+
+  @override
+  String get auth_verificationCodeLabel => 'Verification Code (6 digits)';
+
+  @override
+  String get auth_verificationCodeError => 'Please enter the verification code';
+
+  @override
+  String get auth_verificationCodeLengthError =>
+      'Verification code must be 6 digits';
+
+  @override
+  String get auth_codeSentMessage =>
+      'Verification code has been sent to your email';
+
+  @override
+  String get auth_codeSentError => 'Failed to send verification code';
+
+  @override
+  String get auth_passwordResetButton => 'Reset Password';
+
+  @override
+  String get auth_passwordSetButton => 'Set Password';
+
+  @override
+  String get auth_resendCodeButton => 'Resend verification code';
+
+  @override
+  String get auth_passwordSetSuccess =>
+      'Password has been set. You can now log in.';
+
+  @override
+  String get auth_passwordResetError => 'Failed to reset password';
+
+  @override
+  String get auth_rememberPassword => 'Remember your password?';
+
+  @override
   String get nav_home => 'Home';
 
   @override
@@ -184,6 +274,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nav_more => 'More';
+
+  @override
+  String get nav_household => 'Household';
+
+  @override
+  String get nav_childPoints => 'Child Points';
+
+  @override
+  String get nav_memo => 'Memo';
+
+  @override
+  String get nav_miniGames => 'Mini Games';
 
   @override
   String get home_greeting_morning => 'Good morning!';
@@ -255,6 +357,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language_japanese => '日本語';
 
   @override
+  String get language_selectDescription => 'Select the language for the app';
+
+  @override
+  String get language_useSystemLanguage => 'Use System Language';
+
+  @override
+  String get language_useSystemLanguageDescription =>
+      'Follow device language settings';
+
+  @override
   String get widgetSettings_title => 'Home Widget Settings';
 
   @override
@@ -281,4 +393,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_unknown => 'An unknown error occurred';
+
+  @override
+  String get common_comingSoon => 'Coming Soon';
+
+  @override
+  String get common_logoutFailed => 'Logout Failed';
 }

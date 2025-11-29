@@ -1,0 +1,392 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Japanese (`ja`).
+class AppLocalizationsJa extends AppLocalizations {
+  AppLocalizationsJa([String locale = 'ja']) : super(locale);
+
+  @override
+  String get appTitle => 'Family Planner';
+
+  @override
+  String get appDescription => '家族と一緒に日常を管理するプランナー';
+
+  @override
+  String get common_ok => 'OK';
+
+  @override
+  String get common_cancel => 'キャンセル';
+
+  @override
+  String get common_save => '保存';
+
+  @override
+  String get common_delete => '削除';
+
+  @override
+  String get common_edit => '編集';
+
+  @override
+  String get common_add => '追加';
+
+  @override
+  String get common_search => '検索';
+
+  @override
+  String get common_loading => '読み込み中...';
+
+  @override
+  String get common_error => 'エラー';
+
+  @override
+  String get common_retry => '再試行';
+
+  @override
+  String get common_close => '閉じる';
+
+  @override
+  String get common_done => '完了';
+
+  @override
+  String get common_next => '次へ';
+
+  @override
+  String get common_previous => '前へ';
+
+  @override
+  String get auth_login => 'ログイン';
+
+  @override
+  String get auth_signup => '新規登録';
+
+  @override
+  String get auth_logout => 'ログアウト';
+
+  @override
+  String get auth_email => 'メール';
+
+  @override
+  String get auth_password => 'パスワード';
+
+  @override
+  String get auth_passwordConfirm => 'パスワード確認';
+
+  @override
+  String get auth_name => '名前';
+
+  @override
+  String get auth_forgotPassword => 'パスワードをお忘れですか？';
+
+  @override
+  String get auth_noAccount => 'アカウントをお持ちでないですか？';
+
+  @override
+  String get auth_haveAccount => 'すでにアカウントをお持ちですか？';
+
+  @override
+  String get auth_continueWithGoogle => 'Googleで続ける';
+
+  @override
+  String get auth_continueWithKakao => 'Kakaoで続ける';
+
+  @override
+  String get auth_continueWithApple => 'Appleで続ける';
+
+  @override
+  String get auth_or => 'または';
+
+  @override
+  String get auth_emailHint => 'メールアドレスを入力してください';
+
+  @override
+  String get auth_passwordHint => 'パスワードを入力してください';
+
+  @override
+  String get auth_nameHint => '名前を入力してください';
+
+  @override
+  String get auth_emailError => '有効なメールアドレスではありません';
+
+  @override
+  String get auth_passwordError => 'パスワードは6文字以上である必要があります';
+
+  @override
+  String get auth_passwordMismatch => 'パスワードが一致しません';
+
+  @override
+  String get auth_nameError => '名前を入力してください';
+
+  @override
+  String get auth_loginSuccess => 'ログイン成功';
+
+  @override
+  String get auth_loginFailed => 'ログイン失敗';
+
+  @override
+  String get auth_loginFailedInvalidCredentials => 'メールアドレスまたはパスワードが正しくありません';
+
+  @override
+  String get auth_googleLoginFailed => 'Googleログイン失敗';
+
+  @override
+  String get auth_kakaoLoginFailed => 'Kakaoログイン失敗';
+
+  @override
+  String get auth_signupSuccess => '登録成功';
+
+  @override
+  String get auth_signupFailed => '登録失敗';
+
+  @override
+  String get auth_logoutSuccess => 'ログアウトしました';
+
+  @override
+  String get auth_emailVerification => 'メール認証';
+
+  @override
+  String get auth_emailVerificationMessage => '登録されたメールアドレスに認証コードが送信されました。';
+
+  @override
+  String get auth_verificationCode => '認証コード';
+
+  @override
+  String get auth_verificationCodeHint => '認証コードを入力してください';
+
+  @override
+  String get auth_resendCode => '認証コードを再送信';
+
+  @override
+  String get auth_verify => '認証する';
+
+  @override
+  String get auth_resetPassword => 'パスワードリセット';
+
+  @override
+  String get auth_resetPasswordMessage =>
+      '登録されたメールアドレスを入力してください。\n認証コードを送信します。';
+
+  @override
+  String get auth_newPassword => '新しいパスワード';
+
+  @override
+  String get auth_sendCode => '認証コードを取得';
+
+  @override
+  String get auth_resetPasswordSuccess => 'パスワードがリセットされました。ログインしてください。';
+
+  @override
+  String get auth_signupEmailVerificationMessage => '登録が完了しました。メールを確認してください。';
+
+  @override
+  String get auth_signupNameLabel => '名前';
+
+  @override
+  String get auth_signupNameMinLengthError => '名前は2文字以上である必要があります';
+
+  @override
+  String get auth_signupPasswordHelperText => '最低6文字以上';
+
+  @override
+  String get auth_signupConfirmPasswordLabel => 'パスワード確認';
+
+  @override
+  String get auth_signupConfirmPasswordError => 'パスワードをもう一度入力してください';
+
+  @override
+  String get auth_signupButton => '登録';
+
+  @override
+  String get auth_forgotPasswordTitle => 'パスワードを忘れた';
+
+  @override
+  String get auth_setPasswordTitle => 'パスワード設定';
+
+  @override
+  String get auth_forgotPasswordGuide => '登録されたメールアドレスを入力してください。\n認証コードを送信します。';
+
+  @override
+  String get auth_forgotPasswordGuideWithCode =>
+      'メールで送信された認証コードを入力し、\n新しいパスワードを設定してください。';
+
+  @override
+  String get auth_setPasswordGuide =>
+      'アカウントのセキュリティのためにパスワードを設定してください。\n登録されたメールアドレスを入力すると\n認証コードを送信します。';
+
+  @override
+  String get auth_setPasswordGuideWithCode =>
+      'メールで送信された認証コードを入力し、\nパスワードを設定してください。';
+
+  @override
+  String get auth_verificationCodeLabel => '認証コード（6桁）';
+
+  @override
+  String get auth_verificationCodeError => '認証コードを入力してください';
+
+  @override
+  String get auth_verificationCodeLengthError => '認証コードは6桁です';
+
+  @override
+  String get auth_codeSentMessage => '認証コードがメールで送信されました';
+
+  @override
+  String get auth_codeSentError => '認証コード送信失敗';
+
+  @override
+  String get auth_passwordResetButton => 'パスワードリセット';
+
+  @override
+  String get auth_passwordSetButton => 'パスワード設定完了';
+
+  @override
+  String get auth_resendCodeButton => '認証コードを再送信';
+
+  @override
+  String get auth_passwordSetSuccess => 'パスワードが設定されました。ログインできます。';
+
+  @override
+  String get auth_passwordResetError => 'パスワードリセット失敗';
+
+  @override
+  String get auth_rememberPassword => 'パスワードを思い出しましたか？';
+
+  @override
+  String get nav_home => 'ホーム';
+
+  @override
+  String get nav_assets => '資産';
+
+  @override
+  String get nav_calendar => '予定';
+
+  @override
+  String get nav_todo => 'タスク';
+
+  @override
+  String get nav_more => 'その他';
+
+  @override
+  String get nav_household => '家計管理';
+
+  @override
+  String get nav_childPoints => '育児ポイント';
+
+  @override
+  String get nav_memo => 'メモ';
+
+  @override
+  String get nav_miniGames => 'ミニゲーム';
+
+  @override
+  String get home_greeting_morning => 'おはようございます！';
+
+  @override
+  String get home_greeting_afternoon => 'こんにちは！';
+
+  @override
+  String get home_greeting_evening => 'こんばんは！';
+
+  @override
+  String get home_greeting_night => '遅い時間ですね！';
+
+  @override
+  String get home_todaySchedule => '今日の予定';
+
+  @override
+  String get home_noSchedule => '予定がありません';
+
+  @override
+  String get home_investmentSummary => '投資指標サマリー';
+
+  @override
+  String get home_todoSummary => 'タスクサマリー';
+
+  @override
+  String get home_assetSummary => '資産サマリー';
+
+  @override
+  String get settings_title => '設定';
+
+  @override
+  String get settings_theme => 'テーマ設定';
+
+  @override
+  String get settings_language => '言語設定';
+
+  @override
+  String get settings_homeWidgets => 'ホームウィジェット設定';
+
+  @override
+  String get settings_profile => 'プロフィール設定';
+
+  @override
+  String get settings_family => '家族管理';
+
+  @override
+  String get settings_notifications => '通知設定';
+
+  @override
+  String get settings_about => 'アプリ情報';
+
+  @override
+  String get theme_light => 'ライトモード';
+
+  @override
+  String get theme_dark => 'ダークモード';
+
+  @override
+  String get theme_system => 'システム設定';
+
+  @override
+  String get language_korean => '한국어';
+
+  @override
+  String get language_english => 'English';
+
+  @override
+  String get language_japanese => '日本語';
+
+  @override
+  String get language_selectDescription => 'アプリで使用する言語を選択してください';
+
+  @override
+  String get language_useSystemLanguage => 'システム言語を使用';
+
+  @override
+  String get language_useSystemLanguageDescription => 'デバイスの言語設定に従います';
+
+  @override
+  String get widgetSettings_title => 'ホームウィジェット設定';
+
+  @override
+  String get widgetSettings_description => 'ホーム画面に表示するウィジェットを選択してください';
+
+  @override
+  String get widgetSettings_todaySchedule => '今日の予定';
+
+  @override
+  String get widgetSettings_investmentSummary => '投資指標サマリー';
+
+  @override
+  String get widgetSettings_todoSummary => 'タスクサマリー';
+
+  @override
+  String get widgetSettings_assetSummary => '資産サマリー';
+
+  @override
+  String get error_network => 'ネットワーク接続を確認してください';
+
+  @override
+  String get error_server => 'サーバーエラーが発生しました';
+
+  @override
+  String get error_unknown => '不明なエラーが発生しました';
+
+  @override
+  String get common_comingSoon => '準備中';
+
+  @override
+  String get common_logoutFailed => 'ログアウト失敗';
+}

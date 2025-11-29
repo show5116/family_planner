@@ -7,7 +7,10 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
+import 'package:family_planner/shared/widgets/language_selector_button.dart';
+import 'package:family_planner/shared/widgets/theme_toggle_button.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 로그인 화면
 class LoginScreen extends ConsumerStatefulWidget {
@@ -32,6 +35,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
+    final l10n = AppLocalizations.of(context)!;
+
     // 폼 유효성 검사
     if (!_formKey.currentState!.validate()) {
       return;
@@ -78,7 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  e.message.isNotEmpty ? e.message : '이메일 또는 비밀번호가 올바르지 않습니다',
+                  e.message.isNotEmpty ? e.message : l10n.auth_loginFailedInvalidCredentials,
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -90,7 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // 기타 에러
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('로그인 실패: ${e.toString()}'),
+            content: Text('${l10n.auth_loginFailed}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -104,6 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
   /// - 모바일: SDK 방식 (Google Sign-In)
   Future<void> _handleGoogleLogin() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
 
     try {
@@ -116,7 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Google 로그인 실패: ${e.toString()}'),
+            content: Text('${l10n.auth_googleLoginFailed}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -130,6 +136,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// - 웹: OAuth URL 방식 (브라우저 리다이렉트)
   /// - 모바일: SDK 방식 (Kakao Flutter SDK)
   Future<void> _handleKakaoLogin() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
 
     try {
@@ -140,7 +147,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Kakao 로그인 실패: ${e.toString()}'),
+            content: Text('${l10n.auth_kakaoLoginFailed}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -150,7 +157,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        actions: [
+          ThemeToggleButton(key: ValueKey('theme_toggle_$hashCode'), isOnPrimaryColor: true),
+          const SizedBox(width: AppSizes.spaceXS),
+          Padding(
+            padding: const EdgeInsets.only(right: AppSizes.spaceS),
+            child: LanguageSelectorButton(key: ValueKey('language_selector_$hashCode'), isOnPrimaryColor: true),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
@@ -180,7 +203,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                        labelText: '이메일',
+                        labelText: l10n.auth_email,
+                        hintText: l10n.auth_emailHint,
                         prefixIcon: const Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(
@@ -190,10 +214,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '이메일을 입력해주세요';
+                          return l10n.auth_emailHint;
                         }
                         if (!value.contains('@')) {
-                          return '올바른 이메일 형식이 아닙니다';
+                          return l10n.auth_emailError;
                         }
                         return null;
                       },
@@ -205,7 +229,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        labelText: '비밀번호',
+                        labelText: l10n.auth_password,
+                        hintText: l10n.auth_passwordHint,
                         prefixIcon: const Icon(Icons.lock_outlined),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -227,10 +252,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '비밀번호를 입력해주세요';
+                          return l10n.auth_passwordHint;
                         }
                         if (value.length < 6) {
-                          return '비밀번호는 6자 이상이어야 합니다';
+                          return l10n.auth_passwordError;
                         }
                         return null;
                       },
@@ -241,10 +266,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          animationDuration: Duration.zero,
+                        ),
                         onPressed: () {
                           context.push(AppRoutes.forgotPassword);
                         },
-                        child: const Text('비밀번호를 잊으셨나요?'),
+                        child: Text(l10n.auth_forgotPassword),
                       ),
                     ),
                     const SizedBox(height: AppSizes.spaceM),
@@ -254,6 +283,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       width: double.infinity,
                       height: AppSizes.buttonHeightLarge,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          animationDuration: Duration.zero,
+                        ),
                         onPressed: _isLoading ? null : _handleLogin,
                         child: _isLoading
                             ? const SizedBox(
@@ -263,7 +295,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text('로그인'),
+                            : Text(l10n.auth_login),
                       ),
                     ),
                     const SizedBox(height: AppSizes.spaceL),
@@ -277,7 +309,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             horizontal: AppSizes.spaceM,
                           ),
                           child: Text(
-                            '또는',
+                            l10n.auth_or,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: AppColors.textSecondary),
                           ),
@@ -290,13 +322,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     // 소셜 로그인 버튼들
                     _SocialLoginButton(
                       icon: Icons.g_mobiledata,
-                      label: 'Google로 계속하기',
+                      label: l10n.auth_continueWithGoogle,
                       onPressed: _isLoading ? null : _handleGoogleLogin,
                     ),
                     const SizedBox(height: AppSizes.spaceM),
                     _SocialLoginButton(
                       icon: Icons.chat_bubble_outline,
-                      label: 'Kakao로 계속하기',
+                      label: l10n.auth_continueWithKakao,
                       backgroundColor: const Color(0xFFFEE500),
                       textColor: Colors.black87,
                       onPressed: _isLoading ? null : _handleKakaoLogin,
@@ -304,12 +336,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: AppSizes.spaceM),
                     _SocialLoginButton(
                       icon: Icons.apple,
-                      label: 'Apple로 계속하기',
+                      label: l10n.auth_continueWithApple,
                       backgroundColor: Colors.black,
                       onPressed: () {
                         // Apple 로그인은 아직 미구현
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Apple 로그인은 준비 중입니다')),
+                          SnackBar(content: Text(l10n.common_comingSoon)),
                         );
                       },
                     ),
@@ -320,14 +352,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '계정이 없으신가요? ',
+                          l10n.auth_noAccount,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).colorScheme.primary,
+                            animationDuration: Duration.zero,
+                          ),
                           onPressed: () {
                             context.push(AppRoutes.signup);
                           },
-                          child: const Text('회원가입'),
+                          child: Text(l10n.auth_signup),
                         ),
                       ],
                     ),
@@ -367,6 +403,7 @@ class _SocialLoginButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
+          animationDuration: Duration.zero,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

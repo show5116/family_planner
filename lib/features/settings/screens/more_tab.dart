@@ -7,6 +7,8 @@ import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/shared/widgets/user_profile_card.dart';
 import 'package:family_planner/shared/widgets/menu_list_tile.dart';
 import 'package:family_planner/features/settings/providers/bottom_navigation_settings_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/utils/navigation_label_helper.dart';
 
 /// 더보기 탭
 ///
@@ -40,6 +42,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final email = _userInfo?['email'] as String?;
     final name = _userInfo?['name'] as String?;
     final profileImage = _userInfo?['profileImage'] as String?;
@@ -52,7 +55,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('더보기'),
+        title: Text(l10n.nav_more),
       ),
       body: ListView(
         children: [
@@ -67,14 +70,14 @@ class _MoreTabState extends ConsumerState<MoreTab> {
               isAdmin: isAdmin,
             ),
           ),
-          // 하단 네비게이션에 표시되지 않는 메뉴들
+          // 하단 네비게이션에 표시되지 않는 메뉴들 (다국어 적용)
           ...nonDisplayedMenuIds.map((menuId) {
             final item = availableItems[menuId];
             if (item == null) return const SizedBox.shrink();
 
             return MenuListTile(
               icon: item.icon,
-              title: item.label,
+              title: NavigationLabelHelper.getLabel(l10n, menuId),
               onTap: () {
                 _handleMenuTap(context, menuId);
               },
@@ -84,12 +87,12 @@ class _MoreTabState extends ConsumerState<MoreTab> {
           // 고정 메뉴: 설정, 로그아웃
           MenuListTile(
             icon: Icons.settings,
-            title: '설정',
+            title: l10n.settings_title,
             onTap: () => context.push(AppRoutes.settings),
           ),
           MenuListTile(
             icon: Icons.logout,
-            title: '로그아웃',
+            title: l10n.auth_logout,
             isDestructive: true,
             onTap: () => _handleLogout(),
           ),
@@ -100,56 +103,16 @@ class _MoreTabState extends ConsumerState<MoreTab> {
 
   /// 메뉴 탭 처리
   void _handleMenuTap(BuildContext context, String menuId) {
+    final l10n = AppLocalizations.of(context)!;
     // TODO: 각 메뉴에 맞는 라우트로 이동
-    switch (menuId) {
-      case 'assets':
-        // TODO: 자산 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('자산 화면 (준비 중)')),
-        );
-        break;
-      case 'calendar':
-        // TODO: 일정 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('일정 화면 (준비 중)')),
-        );
-        break;
-      case 'todo':
-        // TODO: 할일 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('할일 화면 (준비 중)')),
-        );
-        break;
-      case 'household':
-        // TODO: 가계관리 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('가계관리 화면 (준비 중)')),
-        );
-        break;
-      case 'childPoints':
-        // TODO: 육아포인트 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('육아포인트 화면 (준비 중)')),
-        );
-        break;
-      case 'memo':
-        // TODO: 메모 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('메모 화면 (준비 중)')),
-        );
-        break;
-      case 'miniGames':
-        // TODO: 미니게임 화면으로 이동
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('미니게임 화면 (준비 중)')),
-        );
-        break;
-      default:
-        break;
-    }
+    // 현재는 모든 메뉴가 준비 중 상태
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.common_comingSoon)),
+    );
   }
 
   Future<void> _handleLogout() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       // 로그아웃 실행
       await ref.read(authProvider.notifier).logout();
@@ -162,7 +125,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('로그아웃 실패: ${e.toString()}'),
+            content: Text('${l10n.common_logoutFailed}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );

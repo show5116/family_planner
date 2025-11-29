@@ -7,6 +7,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 비밀번호 찾기/설정 화면
 ///
@@ -86,9 +87,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       });
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('인증 코드가 이메일로 전송되었습니다'),
+          SnackBar(
+            content: Text(l10n.auth_codeSentMessage),
             backgroundColor: Colors.green,
           ),
         );
@@ -97,9 +99,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       setState(() => _isLoading = false);
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('인증 코드 전송 실패: ${e.toString()}'),
+            content: Text('${l10n.auth_codeSentError}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -108,15 +111,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   }
 
   /// 안내 문구 가져오기
-  String _getGuideText() {
+  String _getGuideText(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_isCodeSent) {
       return widget.isNewPasswordSetup
-          ? '이메일로 전송된 인증 코드를 입력하고\n비밀번호를 설정해주세요.'
-          : '이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.';
+          ? l10n.auth_setPasswordGuideWithCode
+          : l10n.auth_forgotPasswordGuideWithCode;
     } else {
       return widget.isNewPasswordSetup
-          ? '계정 보안을 위해 비밀번호를 설정하세요.\n가입하신 이메일 주소를 입력하면\n인증 코드를 보내드립니다.'
-          : '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.';
+          ? l10n.auth_setPasswordGuide
+          : l10n.auth_forgotPasswordGuide;
     }
   }
 
@@ -126,10 +130,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('비밀번호가 일치하지 않습니다'),
+        SnackBar(
+          content: Text(l10n.auth_passwordMismatch),
           backgroundColor: Colors.red,
         ),
       );
@@ -149,8 +155,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
       if (mounted) {
         final successMessage = widget.isNewPasswordSetup
-            ? '비밀번호가 설정되었습니다. 이제 로그인할 수 있습니다.'
-            : '비밀번호가 재설정되었습니다. 로그인해주세요.';
+            ? l10n.auth_passwordSetSuccess
+            : l10n.auth_resetPasswordSuccess;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -178,9 +184,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       setState(() => _isLoading = false);
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('비밀번호 재설정 실패: ${e.toString()}'),
+            content: Text('${l10n.auth_passwordResetError}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -190,8 +197,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     // 화면 제목 결정
-    final screenTitle = widget.isNewPasswordSetup ? '비밀번호 설정' : '비밀번호 찾기';
+    final screenTitle = widget.isNewPasswordSetup
+        ? l10n.auth_setPasswordTitle
+        : l10n.auth_forgotPasswordTitle;
 
     return Scaffold(
       appBar: AppBar(
@@ -221,7 +232,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
                     // 안내 문구
                     Text(
-                      _getGuideText(),
+                      _getGuideText(context),
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -235,7 +246,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       keyboardType: TextInputType.emailAddress,
                       enabled: !_isCodeSent,
                       decoration: InputDecoration(
-                        labelText: '이메일',
+                        labelText: l10n.auth_email,
                         prefixIcon: const Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(
@@ -245,10 +256,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '이메일을 입력해주세요';
+                          return l10n.auth_emailHint;
                         }
                         if (!value.contains('@')) {
-                          return '올바른 이메일 형식이 아닙니다';
+                          return l10n.auth_emailError;
                         }
                         return null;
                       },
@@ -270,7 +281,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text('인증 코드 받기'),
+                              : Text(l10n.auth_sendCode),
                         ),
                       ),
                     ],
@@ -285,7 +296,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         keyboardType: TextInputType.number,
                         maxLength: 6,
                         decoration: InputDecoration(
-                          labelText: '인증 코드 (6자리)',
+                          labelText: l10n.auth_verificationCodeLabel,
                           prefixIcon: const Icon(Icons.lock_outlined),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(
@@ -296,10 +307,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '인증 코드를 입력해주세요';
+                            return l10n.auth_verificationCodeError;
                           }
                           if (value.length != 6) {
-                            return '인증 코드는 6자리입니다';
+                            return l10n.auth_verificationCodeLengthError;
                           }
                           return null;
                         },
@@ -311,7 +322,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         controller: _passwordController,
                         obscureText: _obscurePassword,
                         decoration: InputDecoration(
-                          labelText: '새 비밀번호',
+                          labelText: l10n.auth_newPassword,
                           prefixIcon: const Icon(Icons.lock_outlined),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -333,10 +344,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '비밀번호를 입력해주세요';
+                            return l10n.auth_passwordHint;
                           }
                           if (value.length < 6) {
-                            return '비밀번호는 6자 이상이어야 합니다';
+                            return l10n.auth_passwordError;
                           }
                           return null;
                         },
@@ -348,7 +359,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         controller: _confirmPasswordController,
                         obscureText: _obscureConfirmPassword,
                         decoration: InputDecoration(
-                          labelText: '비밀번호 확인',
+                          labelText: l10n.auth_passwordConfirm,
                           prefixIcon: const Icon(Icons.lock_outlined),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -371,10 +382,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '비밀번호 확인을 입력해주세요';
+                            return l10n.auth_signupConfirmPasswordError;
                           }
                           if (value != _passwordController.text) {
-                            return '비밀번호가 일치하지 않습니다';
+                            return l10n.auth_passwordMismatch;
                           }
                           return null;
                         },
@@ -397,8 +408,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                 )
                               : Text(
                                   widget.isNewPasswordSetup
-                                      ? '비밀번호 설정 완료'
-                                      : '비밀번호 재설정',
+                                      ? l10n.auth_passwordSetButton
+                                      : l10n.auth_passwordResetButton,
                                 ),
                         ),
                       ),
@@ -414,7 +425,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                   _codeController.clear();
                                 });
                               },
-                        child: const Text('인증 코드 다시 받기'),
+                        child: Text(l10n.auth_resendCodeButton),
                       ),
                     ],
 
@@ -425,14 +436,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '비밀번호가 기억나셨나요? ',
+                          '${l10n.auth_rememberPassword} ',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         TextButton(
                           onPressed: () {
                             context.go(AppRoutes.login);
                           },
-                          child: const Text('로그인'),
+                          child: Text(l10n.auth_login),
                         ),
                       ],
                     ),

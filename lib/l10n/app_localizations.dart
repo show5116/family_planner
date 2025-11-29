@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 
 // ignore_for_file: type=lint
@@ -95,6 +96,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('ja'),
     Locale('ko'),
   ];
 
@@ -332,6 +334,24 @@ abstract class AppLocalizations {
   /// **'로그인 실패'**
   String get auth_loginFailed;
 
+  /// No description provided for @auth_loginFailedInvalidCredentials.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일 또는 비밀번호가 올바르지 않습니다'**
+  String get auth_loginFailedInvalidCredentials;
+
+  /// No description provided for @auth_googleLoginFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'Google 로그인 실패'**
+  String get auth_googleLoginFailed;
+
+  /// No description provided for @auth_kakaoLoginFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'Kakao 로그인 실패'**
+  String get auth_kakaoLoginFailed;
+
   /// No description provided for @auth_signupSuccess.
   ///
   /// In ko, this message translates to:
@@ -416,6 +436,150 @@ abstract class AppLocalizations {
   /// **'비밀번호가 재설정되었습니다. 로그인해주세요.'**
   String get auth_resetPasswordSuccess;
 
+  /// No description provided for @auth_signupEmailVerificationMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원가입이 완료되었습니다. 이메일을 확인해주세요.'**
+  String get auth_signupEmailVerificationMessage;
+
+  /// No description provided for @auth_signupNameLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름'**
+  String get auth_signupNameLabel;
+
+  /// No description provided for @auth_signupNameMinLengthError.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름은 2자 이상이어야 합니다'**
+  String get auth_signupNameMinLengthError;
+
+  /// No description provided for @auth_signupPasswordHelperText.
+  ///
+  /// In ko, this message translates to:
+  /// **'최소 6자 이상'**
+  String get auth_signupPasswordHelperText;
+
+  /// No description provided for @auth_signupConfirmPasswordLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호 확인'**
+  String get auth_signupConfirmPasswordLabel;
+
+  /// No description provided for @auth_signupConfirmPasswordError.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호를 다시 입력해주세요'**
+  String get auth_signupConfirmPasswordError;
+
+  /// No description provided for @auth_signupButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원가입'**
+  String get auth_signupButton;
+
+  /// No description provided for @auth_forgotPasswordTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호 찾기'**
+  String get auth_forgotPasswordTitle;
+
+  /// No description provided for @auth_setPasswordTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호 설정'**
+  String get auth_setPasswordTitle;
+
+  /// No description provided for @auth_forgotPasswordGuide.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.'**
+  String get auth_forgotPasswordGuide;
+
+  /// No description provided for @auth_forgotPasswordGuideWithCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.'**
+  String get auth_forgotPasswordGuideWithCode;
+
+  /// No description provided for @auth_setPasswordGuide.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 보안을 위해 비밀번호를 설정하세요.\n가입하신 이메일 주소를 입력하면\n인증 코드를 보내드립니다.'**
+  String get auth_setPasswordGuide;
+
+  /// No description provided for @auth_setPasswordGuideWithCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일로 전송된 인증 코드를 입력하고\n비밀번호를 설정해주세요.'**
+  String get auth_setPasswordGuideWithCode;
+
+  /// No description provided for @auth_verificationCodeLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드 (6자리)'**
+  String get auth_verificationCodeLabel;
+
+  /// No description provided for @auth_verificationCodeError.
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드를 입력해주세요'**
+  String get auth_verificationCodeError;
+
+  /// No description provided for @auth_verificationCodeLengthError.
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드는 6자리입니다'**
+  String get auth_verificationCodeLengthError;
+
+  /// No description provided for @auth_codeSentMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드가 이메일로 전송되었습니다'**
+  String get auth_codeSentMessage;
+
+  /// No description provided for @auth_codeSentError.
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드 전송 실패'**
+  String get auth_codeSentError;
+
+  /// No description provided for @auth_passwordResetButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호 재설정'**
+  String get auth_passwordResetButton;
+
+  /// No description provided for @auth_passwordSetButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호 설정 완료'**
+  String get auth_passwordSetButton;
+
+  /// No description provided for @auth_resendCodeButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드 다시 받기'**
+  String get auth_resendCodeButton;
+
+  /// No description provided for @auth_passwordSetSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호가 설정되었습니다. 이제 로그인할 수 있습니다.'**
+  String get auth_passwordSetSuccess;
+
+  /// No description provided for @auth_passwordResetError.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호 재설정 실패'**
+  String get auth_passwordResetError;
+
+  /// No description provided for @auth_rememberPassword.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호가 기억나셨나요?'**
+  String get auth_rememberPassword;
+
   /// No description provided for @nav_home.
   ///
   /// In ko, this message translates to:
@@ -445,6 +609,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'더보기'**
   String get nav_more;
+
+  /// No description provided for @nav_household.
+  ///
+  /// In ko, this message translates to:
+  /// **'가계관리'**
+  String get nav_household;
+
+  /// No description provided for @nav_childPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'육아포인트'**
+  String get nav_childPoints;
+
+  /// No description provided for @nav_memo.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모'**
+  String get nav_memo;
+
+  /// No description provided for @nav_miniGames.
+  ///
+  /// In ko, this message translates to:
+  /// **'미니게임'**
+  String get nav_miniGames;
 
   /// No description provided for @home_greeting_morning.
   ///
@@ -584,6 +772,24 @@ abstract class AppLocalizations {
   /// **'日本語'**
   String get language_japanese;
 
+  /// No description provided for @language_selectDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱에서 사용할 언어를 선택하세요'**
+  String get language_selectDescription;
+
+  /// No description provided for @language_useSystemLanguage.
+  ///
+  /// In ko, this message translates to:
+  /// **'시스템 언어 사용'**
+  String get language_useSystemLanguage;
+
+  /// No description provided for @language_useSystemLanguageDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'기기의 언어 설정을 따릅니다'**
+  String get language_useSystemLanguageDescription;
+
   /// No description provided for @widgetSettings_title.
   ///
   /// In ko, this message translates to:
@@ -637,6 +843,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'알 수 없는 오류가 발생했습니다'**
   String get error_unknown;
+
+  /// No description provided for @common_comingSoon.
+  ///
+  /// In ko, this message translates to:
+  /// **'준비 중'**
+  String get common_comingSoon;
+
+  /// No description provided for @common_logoutFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그아웃 실패'**
+  String get common_logoutFailed;
 }
 
 class _AppLocalizationsDelegate
@@ -650,7 +868,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'ko'].contains(locale.languageCode);
+      <String>['en', 'ja', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -661,6 +879,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'ja':
+      return AppLocalizationsJa();
     case 'ko':
       return AppLocalizationsKo();
   }

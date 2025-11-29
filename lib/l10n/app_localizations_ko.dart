@@ -126,6 +126,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_loginFailed => '로그인 실패';
 
   @override
+  String get auth_loginFailedInvalidCredentials => '이메일 또는 비밀번호가 올바르지 않습니다';
+
+  @override
+  String get auth_googleLoginFailed => 'Google 로그인 실패';
+
+  @override
+  String get auth_kakaoLoginFailed => 'Kakao 로그인 실패';
+
+  @override
   String get auth_signupSuccess => '회원가입 성공';
 
   @override
@@ -169,6 +178,82 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_resetPasswordSuccess => '비밀번호가 재설정되었습니다. 로그인해주세요.';
 
   @override
+  String get auth_signupEmailVerificationMessage =>
+      '회원가입이 완료되었습니다. 이메일을 확인해주세요.';
+
+  @override
+  String get auth_signupNameLabel => '이름';
+
+  @override
+  String get auth_signupNameMinLengthError => '이름은 2자 이상이어야 합니다';
+
+  @override
+  String get auth_signupPasswordHelperText => '최소 6자 이상';
+
+  @override
+  String get auth_signupConfirmPasswordLabel => '비밀번호 확인';
+
+  @override
+  String get auth_signupConfirmPasswordError => '비밀번호를 다시 입력해주세요';
+
+  @override
+  String get auth_signupButton => '회원가입';
+
+  @override
+  String get auth_forgotPasswordTitle => '비밀번호 찾기';
+
+  @override
+  String get auth_setPasswordTitle => '비밀번호 설정';
+
+  @override
+  String get auth_forgotPasswordGuide => '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.';
+
+  @override
+  String get auth_forgotPasswordGuideWithCode =>
+      '이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.';
+
+  @override
+  String get auth_setPasswordGuide =>
+      '계정 보안을 위해 비밀번호를 설정하세요.\n가입하신 이메일 주소를 입력하면\n인증 코드를 보내드립니다.';
+
+  @override
+  String get auth_setPasswordGuideWithCode =>
+      '이메일로 전송된 인증 코드를 입력하고\n비밀번호를 설정해주세요.';
+
+  @override
+  String get auth_verificationCodeLabel => '인증 코드 (6자리)';
+
+  @override
+  String get auth_verificationCodeError => '인증 코드를 입력해주세요';
+
+  @override
+  String get auth_verificationCodeLengthError => '인증 코드는 6자리입니다';
+
+  @override
+  String get auth_codeSentMessage => '인증 코드가 이메일로 전송되었습니다';
+
+  @override
+  String get auth_codeSentError => '인증 코드 전송 실패';
+
+  @override
+  String get auth_passwordResetButton => '비밀번호 재설정';
+
+  @override
+  String get auth_passwordSetButton => '비밀번호 설정 완료';
+
+  @override
+  String get auth_resendCodeButton => '인증 코드 다시 받기';
+
+  @override
+  String get auth_passwordSetSuccess => '비밀번호가 설정되었습니다. 이제 로그인할 수 있습니다.';
+
+  @override
+  String get auth_passwordResetError => '비밀번호 재설정 실패';
+
+  @override
+  String get auth_rememberPassword => '비밀번호가 기억나셨나요?';
+
+  @override
   String get nav_home => '홈';
 
   @override
@@ -182,6 +267,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nav_more => '더보기';
+
+  @override
+  String get nav_household => '가계관리';
+
+  @override
+  String get nav_childPoints => '육아포인트';
+
+  @override
+  String get nav_memo => '메모';
+
+  @override
+  String get nav_miniGames => '미니게임';
 
   @override
   String get home_greeting_morning => '좋은 아침이에요!';
@@ -253,6 +350,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get language_japanese => '日本語';
 
   @override
+  String get language_selectDescription => '앱에서 사용할 언어를 선택하세요';
+
+  @override
+  String get language_useSystemLanguage => '시스템 언어 사용';
+
+  @override
+  String get language_useSystemLanguageDescription => '기기의 언어 설정을 따릅니다';
+
+  @override
   String get widgetSettings_title => '홈 위젯 설정';
 
   @override
@@ -278,4 +384,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get error_unknown => '알 수 없는 오류가 발생했습니다';
+
+  @override
+  String get common_comingSoon => '준비 중';
+
+  @override
+  String get common_logoutFailed => '로그아웃 실패';
 }

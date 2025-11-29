@@ -52,6 +52,9 @@
 
   "auth_loginSuccess": "Login successful",
   "auth_loginFailed": "Login failed",
+  "auth_loginFailedInvalidCredentials": "Invalid email or password",
+  "auth_googleLoginFailed": "Google login failed",
+  "auth_kakaoLoginFailed": "Kakao login failed",
   "auth_signupSuccess": "Sign up successful",
   "auth_signupFailed": "Sign up failed",
   "auth_logoutSuccess": "You have been logged out",
@@ -69,11 +72,41 @@
   "auth_sendCode": "Send Code",
   "auth_resetPasswordSuccess": "Password has been reset. Please log in.",
 
+  "auth_signupEmailVerificationMessage": "Sign up successful. Please check your email.",
+  "auth_signupNameLabel": "Name",
+  "auth_signupNameMinLengthError": "Name must be at least 2 characters",
+  "auth_signupPasswordHelperText": "At least 6 characters",
+  "auth_signupConfirmPasswordLabel": "Confirm Password",
+  "auth_signupConfirmPasswordError": "Please confirm your password",
+  "auth_signupButton": "Sign up",
+
+  "auth_forgotPasswordTitle": "Forgot Password",
+  "auth_setPasswordTitle": "Set Password",
+  "auth_forgotPasswordGuide": "Enter your email address.\nWe'll send you a verification code.",
+  "auth_forgotPasswordGuideWithCode": "Enter the verification code sent to your email\nand set a new password.",
+  "auth_setPasswordGuide": "Set a password for account security.\nEnter your registered email address and\nwe'll send you a verification code.",
+  "auth_setPasswordGuideWithCode": "Enter the verification code sent to your email\nand set a password.",
+  "auth_verificationCodeLabel": "Verification Code (6 digits)",
+  "auth_verificationCodeError": "Please enter the verification code",
+  "auth_verificationCodeLengthError": "Verification code must be 6 digits",
+  "auth_codeSentMessage": "Verification code has been sent to your email",
+  "auth_codeSentError": "Failed to send verification code",
+  "auth_passwordResetButton": "Reset Password",
+  "auth_passwordSetButton": "Set Password",
+  "auth_resendCodeButton": "Resend verification code",
+  "auth_passwordSetSuccess": "Password has been set. You can now log in.",
+  "auth_passwordResetError": "Failed to reset password",
+  "auth_rememberPassword": "Remember your password?",
+
   "nav_home": "Home",
   "nav_assets": "Assets",
   "nav_calendar": "Calendar",
   "nav_todo": "To-Do",
   "nav_more": "More",
+  "nav_household": "Household",
+  "nav_childPoints": "Child Points",
+  "nav_memo": "Memo",
+  "nav_miniGames": "Mini Games",
 
   "home_greeting_morning": "Good morning!",
   "home_greeting_afternoon": "Good afternoon!",
@@ -102,6 +135,9 @@
   "language_korean": "한국어",
   "language_english": "English",
   "language_japanese": "日本語",
+  "language_selectDescription": "Select the language for the app",
+  "language_useSystemLanguage": "Use System Language",
+  "language_useSystemLanguageDescription": "Follow device language settings",
 
   "widgetSettings_title": "Home Widget Settings",
   "widgetSettings_description": "Select widgets to display on home screen",
@@ -112,5 +148,8 @@
 
   "error_network": "Please check your network connection",
   "error_server": "Server error occurred",
-  "error_unknown": "An unknown error occurred"
+  "error_unknown": "An unknown error occurred",
+
+  "common_comingSoon": "Coming Soon",
+  "common_logoutFailed": "Logout Failed"
 }
