@@ -1,9 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
+
+/// 전화번호 자동 포맷팅을 위한 InputFormatter
+class PhoneNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // 숫자만 추출
+    final digitsOnly = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // 숫자가 없으면 빈 값 반환
+    if (digitsOnly.isEmpty) {
+      return const TextEditingValue();
+    }
+
+    // 최대 11자리까지만 허용
+    final limitedDigits = digitsOnly.substring(0, digitsOnly.length > 11 ? 11 : digitsOnly.length);
+
+    // 포맷팅
+    String formatted = '';
+    if (limitedDigits.length <= 3) {
+      // 010
+      formatted = limitedDigits;
+    } else if (limitedDigits.length <= 7) {
+      // 010-1234
+      formatted = '${limitedDigits.substring(0, 3)}-${limitedDigits.substring(3)}';
+    } else {
+      // 010-1234-5678
+      formatted = '${limitedDigits.substring(0, 3)}-${limitedDigits.substring(3, 7)}-${limitedDigits.substring(7)}';
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
 
 /// 프로필 설정 화면
 class ProfileSettingsScreen extends ConsumerStatefulWidget {
@@ -31,6 +71,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
   bool _isPasswordChangeMode = false;
+  bool _hasPassword = true; // 사용자가 비밀번호를 가지고 있는지 여부
 
   @override
   void initState() {
@@ -57,6 +98,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
         _nameController.text = userInfo['name'] as String? ?? '';
         _phoneNumberController.text = userInfo['phoneNumber'] as String? ?? '';
         _profileImageController.text = userInfo['profileImage'] as String? ?? '';
+        _hasPassword = userInfo['hasPassword'] as bool? ?? true;
       });
     }
   }
@@ -66,12 +108,14 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     // 비밀번호 변경 모드인 경우 비밀번호 일치 확인
     if (_isPasswordChangeMode) {
       if (_newPasswordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('새 비밀번호가 일치하지 않습니다'),
+          SnackBar(
+            content: Text(l10n.profile_passwordsDoNotMatch),
             backgroundColor: Colors.red,
           ),
         );
@@ -92,10 +136,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
             profileImage: _profileImageController.text.trim().isEmpty
                 ? null
                 : _profileImageController.text.trim(),
-            currentPassword: _isPasswordChangeMode &&
-                    _currentPasswordController.text.isNotEmpty
-                ? _currentPasswordController.text
-                : null,
+            currentPassword: _hasPassword ? _currentPasswordController.text : null,
             newPassword:
                 _isPasswordChangeMode && _newPasswordController.text.isNotEmpty
                     ? _newPasswordController.text
@@ -105,9 +146,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       setState(() => _isLoading = false);
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('프로필이 업데이트되었습니다'),
+          SnackBar(
+            content: Text(l10n.profile_updateSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -122,14 +164,20 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
           _confirmPasswordController.clear();
           setState(() => _isPasswordChangeMode = false);
         }
+
+        // 설정 화면으로 돌아가기
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       setState(() => _isLoading = false);
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('프로필 업데이트 실패: ${e.toString()}'),
+            content: Text('${l10n.profile_updateFailed}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -140,15 +188,16 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final profileImage = _userInfo?['profileImage'] as String?;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('프로필 설정'),
+        title: Text(l10n.profile_title),
         actions: [
           if (!_isLoading)
             TextButton(
               onPressed: _updateProfile,
-              child: const Text('저장'),
+              child: Text(l10n.profile_save),
             ),
         ],
       ),
@@ -193,7 +242,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: '이름',
+                  labelText: l10n.profile_name,
                   prefixIcon: const Icon(Icons.person_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
@@ -201,7 +250,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '이름을 입력해주세요';
+                    return l10n.profile_nameRequired;
                   }
                   return null;
                 },
@@ -212,14 +261,17 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
               TextFormField(
                 controller: _phoneNumberController,
                 decoration: InputDecoration(
-                  labelText: '전화번호 (선택사항)',
+                  labelText: l10n.profile_phoneNumber,
                   prefixIcon: const Icon(Icons.phone_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                   ),
-                  helperText: '예: 010-1234-5678',
+                  helperText: l10n.profile_phoneNumberHint,
                 ),
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  PhoneNumberFormatter(),
+                ],
               ),
               const SizedBox(height: AppSizes.spaceM),
 
@@ -227,50 +279,30 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
               TextFormField(
                 controller: _profileImageController,
                 decoration: InputDecoration(
-                  labelText: '프로필 이미지 URL (선택사항)',
+                  labelText: l10n.profile_profileImage,
                   prefixIcon: const Icon(Icons.image_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                   ),
-                  helperText: '이미지 URL을 입력하세요',
+                  helperText: l10n.profile_profileImageHint,
                 ),
               ),
               const SizedBox(height: AppSizes.spaceL),
 
-              // 비밀번호 변경 섹션
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '비밀번호 변경',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  Switch(
-                    value: _isPasswordChangeMode,
-                    onChanged: (value) {
-                      setState(() {
-                        _isPasswordChangeMode = value;
-                        if (!value) {
-                          _currentPasswordController.clear();
-                          _newPasswordController.clear();
-                          _confirmPasswordController.clear();
-                        }
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-
-              if (_isPasswordChangeMode) ...[
-                // 현재 비밀번호
+              // 현재 비밀번호 (항상 표시, 필수)
+              if (_hasPassword) ...[
+                Text(
+                  l10n.profile_currentPassword,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: AppSizes.spaceS),
                 TextFormField(
                   controller: _currentPasswordController,
                   obscureText: _obscureCurrentPassword,
                   decoration: InputDecoration(
-                    labelText: '현재 비밀번호',
+                    labelText: l10n.profile_currentPassword,
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -290,21 +322,48 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (_isPasswordChangeMode &&
-                        (value == null || value.isEmpty)) {
-                      return '현재 비밀번호를 입력해주세요';
+                    if (_hasPassword && (value == null || value.isEmpty)) {
+                      return l10n.profile_currentPasswordRequired;
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: AppSizes.spaceM),
+                const SizedBox(height: AppSizes.spaceL),
+              ],
 
+              // 비밀번호 변경 섹션
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.profile_changePassword,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  Switch(
+                    value: _isPasswordChangeMode,
+                    onChanged: (value) {
+                      setState(() {
+                        _isPasswordChangeMode = value;
+                        if (!value) {
+                          _newPasswordController.clear();
+                          _confirmPasswordController.clear();
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+
+              if (_isPasswordChangeMode) ...[
                 // 새 비밀번호
                 TextFormField(
                   controller: _newPasswordController,
                   obscureText: _obscureNewPassword,
                   decoration: InputDecoration(
-                    labelText: '새 비밀번호',
+                    labelText: l10n.profile_newPassword,
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -326,10 +385,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                   validator: (value) {
                     if (_isPasswordChangeMode &&
                         (value == null || value.isEmpty)) {
-                      return '새 비밀번호를 입력해주세요';
+                      return l10n.profile_newPasswordRequired;
                     }
                     if (_isPasswordChangeMode && value!.length < 6) {
-                      return '비밀번호는 6자 이상이어야 합니다';
+                      return l10n.profile_newPasswordMinLength;
                     }
                     return null;
                   },
@@ -341,7 +400,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
                   decoration: InputDecoration(
-                    labelText: '새 비밀번호 확인',
+                    labelText: l10n.profile_confirmNewPassword,
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -363,11 +422,11 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                   validator: (value) {
                     if (_isPasswordChangeMode &&
                         (value == null || value.isEmpty)) {
-                      return '새 비밀번호 확인을 입력해주세요';
+                      return l10n.profile_confirmNewPasswordRequired;
                     }
                     if (_isPasswordChangeMode &&
                         value != _newPasswordController.text) {
-                      return '비밀번호가 일치하지 않습니다';
+                      return l10n.profile_passwordsDoNotMatch;
                     }
                     return null;
                   },
@@ -387,7 +446,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('저장'),
+                      : Text(l10n.profile_save),
                 ),
               ),
             ],

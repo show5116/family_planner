@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -48,10 +49,11 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
     );
 
     if (mounted) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('설정이 저장되었습니다'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text(l10n.widgetSettings_saveSuccess),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -96,40 +98,42 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
   }
 
   /// 위젯 정보 가져오기
-  Map<String, dynamic> _getWidgetInfo(String widgetName) {
+  Map<String, dynamic> _getWidgetInfo(String widgetName, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     switch (widgetName) {
       case 'todaySchedule':
         return {
           'icon': Icons.calendar_today,
-          'title': '오늘의 일정',
-          'description': '당일 일정을 표시합니다',
+          'title': l10n.widgetSettings_todaySchedule,
+          'description': l10n.widgetSettings_todayScheduleDesc,
           'enabled': _settings.showTodaySchedule,
         };
       case 'investmentSummary':
         return {
           'icon': Icons.trending_up,
-          'title': '투자 지표 요약',
-          'description': '코스피, 나스닥, 환율 정보를 표시합니다',
+          'title': l10n.widgetSettings_investmentSummary,
+          'description': l10n.widgetSettings_investmentSummaryDesc,
           'enabled': _settings.showInvestmentSummary,
         };
       case 'todoSummary':
         return {
           'icon': Icons.check_box,
-          'title': '오늘의 할일',
-          'description': '진행 중인 할일을 표시합니다',
+          'title': l10n.widgetSettings_todoSummary,
+          'description': l10n.widgetSettings_todoSummaryDesc,
           'enabled': _settings.showTodoSummary,
         };
       case 'assetSummary':
         return {
           'icon': Icons.account_balance_wallet,
-          'title': '자산 현황',
-          'description': '총 자산과 수익률을 표시합니다',
+          'title': l10n.widgetSettings_assetSummary,
+          'description': l10n.widgetSettings_assetSummaryDesc,
           'enabled': _settings.showAssetSummary,
         };
       default:
         return {
           'icon': Icons.widgets,
-          'title': '알 수 없는 위젯',
+          'title': 'Unknown',
           'description': '',
           'enabled': false,
         };
@@ -138,6 +142,8 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return const Scaffold(
         body: Center(
@@ -148,7 +154,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('홈 위젯 설정'),
+        title: Text(l10n.settings_homeWidgets),
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -166,7 +172,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
                   const SizedBox(width: AppSizes.spaceM),
                   Expanded(
                     child: Text(
-                      '홈 화면에 표시할 위젯을 선택하고 순서를 변경하세요',
+                      l10n.widgetSettings_guide,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -178,14 +184,14 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
 
           // 위젯 순서 변경 섹션
           Text(
-            '위젯 순서',
+            l10n.widgetSettings_widgetOrder,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '위젯을 길게 눌러 드래그하여 순서를 변경할 수 있습니다',
+            l10n.widgetSettings_dragToReorder,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -206,7 +212,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
               _saveSettings();
             },
             icon: const Icon(Icons.restore),
-            label: const Text('기본 설정으로 복원'),
+            label: Text(l10n.widgetSettings_restoreDefaults),
           ),
         ],
       ),
@@ -245,7 +251,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
       },
       itemBuilder: (context, index) {
         final widgetName = _settings.widgetOrder[index];
-        final widgetInfo = _getWidgetInfo(widgetName);
+        final widgetInfo = _getWidgetInfo(widgetName, context);
 
         return ReorderableDragStartListener(
           key: ValueKey(widgetName),

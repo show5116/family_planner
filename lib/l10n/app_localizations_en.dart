@@ -339,6 +339,181 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_about => 'About';
 
   @override
+  String get settings_bottomNavigation => 'Bottom Navigation';
+
+  @override
+  String get bottomNav_title => 'Bottom Navigation Settings';
+
+  @override
+  String get bottomNav_reset => 'Reset to Default';
+
+  @override
+  String get bottomNav_resetConfirmTitle => 'Reset Confirmation';
+
+  @override
+  String get bottomNav_resetConfirmMessage =>
+      'Reset bottom navigation settings to default?';
+
+  @override
+  String get bottomNav_resetSuccess => 'Reset to default settings';
+
+  @override
+  String get bottomNav_guideMessage =>
+      'Home and More are fixed.\nTap the middle 3 slots to select menus.';
+
+  @override
+  String get bottomNav_preview => 'Bottom Navigation Preview';
+
+  @override
+  String get bottomNav_howToUse => 'How to Use';
+
+  @override
+  String get bottomNav_instructions =>
+      '• Tap slots 2, 3, 4 to change to desired menus.\n• Slot 1 (Home) and Slot 5 (More) are fixed.\n• Menus not in bottom navigation are shown in \"More\" tab.';
+
+  @override
+  String get bottomNav_availableMenus => 'Available Menus';
+
+  @override
+  String get bottomNav_slot => 'Slot';
+
+  @override
+  String get bottomNav_unused => 'Unused';
+
+  @override
+  String bottomNav_selectMenuTitle(Object slot) {
+    return 'Select Menu for Slot';
+  }
+
+  @override
+  String get bottomNav_usedInOtherSlot =>
+      'Used in other slot (will swap if selected)';
+
+  @override
+  String get widgetSettings_saveSuccess => 'Settings saved';
+
+  @override
+  String get widgetSettings_guide =>
+      'Select widgets to display on home screen and change their order';
+
+  @override
+  String get widgetSettings_widgetOrder => 'Widget Order';
+
+  @override
+  String get widgetSettings_dragToReorder =>
+      'Long press and drag widgets to change order';
+
+  @override
+  String get widgetSettings_restoreDefaults => 'Restore Default Settings';
+
+  @override
+  String get widgetSettings_todayScheduleDesc => 'Display today\'s events';
+
+  @override
+  String get widgetSettings_investmentSummaryDesc =>
+      'Display KOSPI, NASDAQ, and exchange rate information';
+
+  @override
+  String get widgetSettings_todoSummaryDesc => 'Display in-progress tasks';
+
+  @override
+  String get widgetSettings_assetSummaryDesc =>
+      'Display total assets and return rate';
+
+  @override
+  String get themeSettings_title => 'Theme Settings';
+
+  @override
+  String get themeSettings_selectTheme => 'Select Theme';
+
+  @override
+  String get themeSettings_description =>
+      'Choose your app\'s brightness theme. You can follow system settings or choose manually.';
+
+  @override
+  String get themeSettings_lightMode => 'Light Mode';
+
+  @override
+  String get themeSettings_lightModeDesc => 'Use bright theme';
+
+  @override
+  String get themeSettings_darkMode => 'Dark Mode';
+
+  @override
+  String get themeSettings_darkModeDesc => 'Use dark theme';
+
+  @override
+  String get themeSettings_systemMode => 'System Settings';
+
+  @override
+  String get themeSettings_systemModeDesc => 'Follow device system settings';
+
+  @override
+  String get themeSettings_currentThemePreview => 'Current Theme Preview';
+
+  @override
+  String get themeSettings_currentTheme => 'Current Theme';
+
+  @override
+  String get profile_title => 'Profile Settings';
+
+  @override
+  String get profile_save => 'Save';
+
+  @override
+  String get profile_name => 'Name';
+
+  @override
+  String get profile_nameRequired => 'Please enter your name';
+
+  @override
+  String get profile_phoneNumber => 'Phone Number (Optional)';
+
+  @override
+  String get profile_phoneNumberHint => 'e.g., 010-1234-5678';
+
+  @override
+  String get profile_profileImage => 'Profile Image URL (Optional)';
+
+  @override
+  String get profile_profileImageHint => 'Enter image URL';
+
+  @override
+  String get profile_changePassword => 'Change Password';
+
+  @override
+  String get profile_currentPassword => 'Current Password';
+
+  @override
+  String get profile_currentPasswordRequired => 'Please enter current password';
+
+  @override
+  String get profile_newPassword => 'New Password';
+
+  @override
+  String get profile_newPasswordRequired => 'Please enter new password';
+
+  @override
+  String get profile_newPasswordMinLength =>
+      'Password must be at least 6 characters';
+
+  @override
+  String get profile_confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get profile_confirmNewPasswordRequired =>
+      'Please confirm new password';
+
+  @override
+  String get profile_passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get profile_updateSuccess => 'Profile updated';
+
+  @override
+  String get profile_updateFailed => 'Profile update failed';
+
+  @override
   String get theme_light => 'Light Mode';
 
   @override
@@ -384,6 +559,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetSettings_assetSummary => 'Asset Summary';
+
+  @override
+  String get settings_screenSettings => 'Screen Settings';
+
+  @override
+  String get settings_bottomNavigationTitle => 'Bottom Navigation Settings';
+
+  @override
+  String get settings_bottomNavigationSubtitle =>
+      'Configure bottom menu order and visibility';
+
+  @override
+  String get settings_homeWidgetsTitle => 'Home Widget Settings';
+
+  @override
+  String get settings_homeWidgetsSubtitle =>
+      'Select widgets to display on home screen';
+
+  @override
+  String get settings_themeTitle => 'Theme Settings';
+
+  @override
+  String get settings_themeSubtitle => 'Change between light/dark mode';
+
+  @override
+  String get settings_languageTitle => 'Language Settings';
+
+  @override
+  String get settings_languageSubtitle => 'Change the language used in the app';
+
+  @override
+  String get settings_userSettings => 'User Settings';
+
+  @override
+  String get settings_profileTitle => 'Profile Settings';
+
+  @override
+  String get settings_profileSubtitle => 'Edit your profile information';
+
+  @override
+  String get settings_familyManagementTitle => 'Family Management';
+
+  @override
+  String get settings_familyManagementSubtitle => 'Manage family members';
+
+  @override
+  String get settings_notificationSettings => 'Notification Settings';
+
+  @override
+  String get settings_notificationTitle => 'Notifications';
+
+  @override
+  String get settings_notificationSubtitle => 'Change notification preferences';
+
+  @override
+  String get settings_information => 'Information';
+
+  @override
+  String get settings_appInfoTitle => 'App Info';
+
+  @override
+  String get settings_appInfoSubtitle => 'Version 1.0.0';
+
+  @override
+  String get settings_appDescription => 'Daily planner for families';
+
+  @override
+  String get settings_helpTitle => 'Help';
+
+  @override
+  String get settings_helpSubtitle => 'View usage instructions';
+
+  @override
+  String get settings_user => 'User';
+
+  @override
+  String get settings_logout => 'Logout';
+
+  @override
+  String get settings_logoutConfirmTitle => 'Logout';
+
+  @override
+  String get settings_logoutConfirmMessage =>
+      'Are you sure you want to logout?';
+
+  @override
+  String get settings_passwordSetupRequired => 'Password Setup Required';
+
+  @override
+  String get settings_passwordSetupMessage1 =>
+      'You signed up using only social login and haven\'t set a password yet.';
+
+  @override
+  String get settings_passwordSetupMessage2 =>
+      'We recommend setting a password to edit your profile or enhance account security.';
+
+  @override
+  String get settings_passwordSetupMessage3 =>
+      'Would you like to go to the password setup screen?';
+
+  @override
+  String get settings_passwordSetupLater => 'Later';
+
+  @override
+  String get settings_passwordSetupNow => 'Set Password';
 
   @override
   String get error_network => 'Please check your network connection';

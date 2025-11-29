@@ -331,6 +331,173 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_about => 'アプリ情報';
 
   @override
+  String get settings_bottomNavigation => '下部ナビゲーション';
+
+  @override
+  String get bottomNav_title => '下部ナビゲーション設定';
+
+  @override
+  String get bottomNav_reset => 'デフォルトに戻す';
+
+  @override
+  String get bottomNav_resetConfirmTitle => 'リセット確認';
+
+  @override
+  String get bottomNav_resetConfirmMessage => '下部ナビゲーション設定をデフォルトにリセットしますか？';
+
+  @override
+  String get bottomNav_resetSuccess => 'デフォルト設定にリセットされました';
+
+  @override
+  String get bottomNav_guideMessage =>
+      'ホームとその他は固定されています。\n中央の3つのスロットをタップしてメニューを選択してください。';
+
+  @override
+  String get bottomNav_preview => '下部ナビゲーションプレビュー';
+
+  @override
+  String get bottomNav_howToUse => '使い方';
+
+  @override
+  String get bottomNav_instructions =>
+      '• スロット2、3、4をタップして希望のメニューに変更してください。\n• スロット1（ホーム）とスロット5（その他）は固定です。\n• 下部ナビゲーションにないメニューは「その他」タブに表示されます。';
+
+  @override
+  String get bottomNav_availableMenus => '利用可能なメニュー';
+
+  @override
+  String get bottomNav_slot => 'スロット';
+
+  @override
+  String get bottomNav_unused => '未使用';
+
+  @override
+  String bottomNav_selectMenuTitle(Object slot) {
+    return 'スロット $slot メニュー選択';
+  }
+
+  @override
+  String get bottomNav_usedInOtherSlot => '他のスロットで使用中（選択すると交換されます）';
+
+  @override
+  String get widgetSettings_saveSuccess => '設定が保存されました';
+
+  @override
+  String get widgetSettings_guide => 'ホーム画面に表示するウィジェットを選択し、順序を変更してください';
+
+  @override
+  String get widgetSettings_widgetOrder => 'ウィジェットの順序';
+
+  @override
+  String get widgetSettings_dragToReorder => 'ウィジェットを長押ししてドラッグし、順序を変更できます';
+
+  @override
+  String get widgetSettings_restoreDefaults => 'デフォルト設定に戻す';
+
+  @override
+  String get widgetSettings_todayScheduleDesc => '当日の予定を表示します';
+
+  @override
+  String get widgetSettings_investmentSummaryDesc => 'コスピ、ナスダック、為替レート情報を表示します';
+
+  @override
+  String get widgetSettings_todoSummaryDesc => '進行中のタスクを表示します';
+
+  @override
+  String get widgetSettings_assetSummaryDesc => '総資産と収益率を表示します';
+
+  @override
+  String get themeSettings_title => 'テーマ設定';
+
+  @override
+  String get themeSettings_selectTheme => 'テーマ選択';
+
+  @override
+  String get themeSettings_description =>
+      'アプリの明るさテーマを選択してください。システム設定に従うか、手動で選択できます。';
+
+  @override
+  String get themeSettings_lightMode => 'ライトモード';
+
+  @override
+  String get themeSettings_lightModeDesc => '明るいテーマを使用します';
+
+  @override
+  String get themeSettings_darkMode => 'ダークモード';
+
+  @override
+  String get themeSettings_darkModeDesc => '暗いテーマを使用します';
+
+  @override
+  String get themeSettings_systemMode => 'システム設定';
+
+  @override
+  String get themeSettings_systemModeDesc => 'デバイスのシステム設定に従います';
+
+  @override
+  String get themeSettings_currentThemePreview => '現在のテーマプレビュー';
+
+  @override
+  String get themeSettings_currentTheme => '現在のテーマ';
+
+  @override
+  String get profile_title => 'プロフィール設定';
+
+  @override
+  String get profile_save => '保存';
+
+  @override
+  String get profile_name => '名前';
+
+  @override
+  String get profile_nameRequired => '名前を入力してください';
+
+  @override
+  String get profile_phoneNumber => '電話番号（任意）';
+
+  @override
+  String get profile_phoneNumberHint => '例: 010-1234-5678';
+
+  @override
+  String get profile_profileImage => 'プロフィール画像URL（任意）';
+
+  @override
+  String get profile_profileImageHint => '画像URLを入力してください';
+
+  @override
+  String get profile_changePassword => 'パスワード変更';
+
+  @override
+  String get profile_currentPassword => '現在のパスワード';
+
+  @override
+  String get profile_currentPasswordRequired => '現在のパスワードを入力してください';
+
+  @override
+  String get profile_newPassword => '新しいパスワード';
+
+  @override
+  String get profile_newPasswordRequired => '新しいパスワードを入力してください';
+
+  @override
+  String get profile_newPasswordMinLength => 'パスワードは6文字以上である必要があります';
+
+  @override
+  String get profile_confirmNewPassword => '新しいパスワード確認';
+
+  @override
+  String get profile_confirmNewPasswordRequired => '新しいパスワード確認を入力してください';
+
+  @override
+  String get profile_passwordsDoNotMatch => 'パスワードが一致しません';
+
+  @override
+  String get profile_updateSuccess => 'プロフィールが更新されました';
+
+  @override
+  String get profile_updateFailed => 'プロフィール更新失敗';
+
+  @override
   String get theme_light => 'ライトモード';
 
   @override
@@ -374,6 +541,107 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get widgetSettings_assetSummary => '資産サマリー';
+
+  @override
+  String get settings_screenSettings => '画面設定';
+
+  @override
+  String get settings_bottomNavigationTitle => '下部ナビゲーション設定';
+
+  @override
+  String get settings_bottomNavigationSubtitle => '下部メニューの順序と表示/非表示を設定します';
+
+  @override
+  String get settings_homeWidgetsTitle => 'ホームウィジェット設定';
+
+  @override
+  String get settings_homeWidgetsSubtitle => 'ホーム画面に表示するウィジェットを選択します';
+
+  @override
+  String get settings_themeTitle => 'テーマ設定';
+
+  @override
+  String get settings_themeSubtitle => 'ライト/ダークモードを変更します';
+
+  @override
+  String get settings_languageTitle => '言語設定';
+
+  @override
+  String get settings_languageSubtitle => 'アプリで使用する言語を変更します';
+
+  @override
+  String get settings_userSettings => 'ユーザー設定';
+
+  @override
+  String get settings_profileTitle => 'プロフィール設定';
+
+  @override
+  String get settings_profileSubtitle => 'プロフィール情報を編集します';
+
+  @override
+  String get settings_familyManagementTitle => '家族管理';
+
+  @override
+  String get settings_familyManagementSubtitle => '家族メンバーを管理します';
+
+  @override
+  String get settings_notificationSettings => '通知設定';
+
+  @override
+  String get settings_notificationTitle => '通知設定';
+
+  @override
+  String get settings_notificationSubtitle => '通知受信設定を変更します';
+
+  @override
+  String get settings_information => '情報';
+
+  @override
+  String get settings_appInfoTitle => 'アプリ情報';
+
+  @override
+  String get settings_appInfoSubtitle => 'バージョン 1.0.0';
+
+  @override
+  String get settings_appDescription => '家族と一緒に日常を管理するプランナー';
+
+  @override
+  String get settings_helpTitle => 'ヘルプ';
+
+  @override
+  String get settings_helpSubtitle => '使い方を確認します';
+
+  @override
+  String get settings_user => 'ユーザー';
+
+  @override
+  String get settings_logout => 'ログアウト';
+
+  @override
+  String get settings_logoutConfirmTitle => 'ログアウト';
+
+  @override
+  String get settings_logoutConfirmMessage => 'ログアウトしますか？';
+
+  @override
+  String get settings_passwordSetupRequired => 'パスワード設定が必要です';
+
+  @override
+  String get settings_passwordSetupMessage1 =>
+      'ソーシャルログインのみで登録されたため、パスワードが設定されていません。';
+
+  @override
+  String get settings_passwordSetupMessage2 =>
+      'プロフィールを編集したり、アカウントのセキュリティを強化するには、パスワードの設定を推奨します。';
+
+  @override
+  String get settings_passwordSetupMessage3 => 'パスワード設定画面に移動しますか？';
+
+  @override
+  String get settings_passwordSetupLater => '後で';
+
+  @override
+  String get settings_passwordSetupNow => 'パスワードを設定';
 
   @override
   String get error_network => 'ネットワーク接続を確認してください';

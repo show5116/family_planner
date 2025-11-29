@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 테마 설정 화면
 class ThemeSettingsScreen extends ConsumerWidget {
@@ -10,10 +11,11 @@ class ThemeSettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentThemeMode = ref.watch(themeModeProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('테마 설정'),
+        title: Text(l10n.themeSettings_title),
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -33,14 +35,14 @@ class ThemeSettingsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: AppSizes.spaceS),
                       Text(
-                        '테마 선택',
+                        l10n.themeSettings_selectTheme,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSizes.spaceS),
                   Text(
-                    '앱의 밝기 테마를 선택하세요. 시스템 설정을 따르거나 직접 선택할 수 있습니다.',
+                    l10n.themeSettings_description,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -53,8 +55,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
 
           // 테마 옵션들
           _ThemeOption(
-            title: 'Light 모드',
-            subtitle: '밝은 테마를 사용합니다',
+            title: l10n.themeSettings_lightMode,
+            subtitle: l10n.themeSettings_lightModeDesc,
             icon: Icons.light_mode,
             themeMode: ThemeMode.light,
             currentThemeMode: currentThemeMode,
@@ -65,8 +67,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSizes.spaceM),
 
           _ThemeOption(
-            title: 'Dark 모드',
-            subtitle: '어두운 테마를 사용합니다',
+            title: l10n.themeSettings_darkMode,
+            subtitle: l10n.themeSettings_darkModeDesc,
             icon: Icons.dark_mode,
             themeMode: ThemeMode.dark,
             currentThemeMode: currentThemeMode,
@@ -77,8 +79,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSizes.spaceM),
 
           _ThemeOption(
-            title: '시스템 설정',
-            subtitle: '기기의 시스템 설정을 따릅니다',
+            title: l10n.themeSettings_systemMode,
+            subtitle: l10n.themeSettings_systemModeDesc,
             icon: Icons.settings_suggest,
             themeMode: ThemeMode.system,
             currentThemeMode: currentThemeMode,
@@ -97,7 +99,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '현재 테마 미리보기',
+                    l10n.themeSettings_currentThemePreview,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppSizes.spaceM),
@@ -119,11 +121,11 @@ class ThemeSettingsScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '현재 테마',
+                                l10n.themeSettings_currentTheme,
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                               Text(
-                                _getThemeModeText(currentThemeMode),
+                                _getThemeModeText(currentThemeMode, l10n),
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
@@ -141,14 +143,14 @@ class ThemeSettingsScreen extends ConsumerWidget {
     );
   }
 
-  String _getThemeModeText(ThemeMode mode) {
+  String _getThemeModeText(ThemeMode mode, AppLocalizations l10n) {
     switch (mode) {
       case ThemeMode.light:
-        return 'Light 모드';
+        return l10n.themeSettings_lightMode;
       case ThemeMode.dark:
-        return 'Dark 모드';
+        return l10n.themeSettings_darkMode;
       case ThemeMode.system:
-        return '시스템 설정';
+        return l10n.themeSettings_systemMode;
     }
   }
 }

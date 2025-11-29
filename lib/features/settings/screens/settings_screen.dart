@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 설정 메인 화면
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -52,45 +53,47 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
   /// 비밀번호 설정 안내 다이얼로그
   Future<void> _showPasswordSetupGuideDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+
     final shouldSetupPassword = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.security, color: Colors.orange),
-            SizedBox(width: 8),
-            Text('비밀번호 설정이 필요합니다'),
+            const Icon(Icons.security, color: Colors.orange),
+            const SizedBox(width: 8),
+            Text(l10n.settings_passwordSetupRequired),
           ],
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '소셜 로그인으로만 가입하셔서 아직 비밀번호가 설정되지 않았습니다.',
-              style: TextStyle(fontSize: 14),
+              l10n.settings_passwordSetupMessage1,
+              style: const TextStyle(fontSize: 14),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '프로필을 수정하거나 계정 보안을 강화하려면 비밀번호를 설정하는 것을 권장합니다.',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+              l10n.settings_passwordSetupMessage2,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '비밀번호 설정 화면으로 이동하시겠습니까?',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              l10n.settings_passwordSetupMessage3,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('나중에'),
+            child: Text(l10n.settings_passwordSetupLater),
           ),
           ElevatedButton.icon(
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.arrow_forward),
-            label: const Text('비밀번호 설정하기'),
+            label: Text(l10n.settings_passwordSetupNow),
           ),
         ],
       ),
@@ -105,9 +108,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('설정'),
+        title: Text(l10n.settings_title),
       ),
       body: ListView(
         children: [
@@ -115,44 +120,44 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           _buildUserProfile(),
           const Divider(),
           // 화면 설정 섹션
-          _buildSectionHeader(context, '화면 설정'),
+          _buildSectionHeader(context, l10n.settings_screenSettings),
           _buildSettingTile(
             context,
             icon: Icons.navigation_outlined,
-            title: '하단 네비게이션 설정',
-            subtitle: '하단 메뉴 순서와 표시/숨김을 설정하세요',
+            title: l10n.settings_bottomNavigationTitle,
+            subtitle: l10n.settings_bottomNavigationSubtitle,
             onTap: () => context.push(AppRoutes.bottomNavigationSettings),
           ),
           _buildSettingTile(
             context,
             icon: Icons.widgets_outlined,
-            title: '홈 위젯 설정',
-            subtitle: '홈 화면에 표시할 위젯을 선택하세요',
+            title: l10n.settings_homeWidgetsTitle,
+            subtitle: l10n.settings_homeWidgetsSubtitle,
             onTap: () => context.push(AppRoutes.homeWidgetSettings),
           ),
           _buildSettingTile(
             context,
             icon: Icons.palette_outlined,
-            title: '테마 설정',
-            subtitle: '라이트/다크 모드를 변경하세요',
+            title: l10n.settings_themeTitle,
+            subtitle: l10n.settings_themeSubtitle,
             onTap: () => context.push(AppRoutes.theme),
           ),
           _buildSettingTile(
             context,
             icon: Icons.language_outlined,
-            title: '언어 설정',
-            subtitle: '앱에서 사용할 언어를 변경하세요',
+            title: l10n.settings_languageTitle,
+            subtitle: l10n.settings_languageSubtitle,
             onTap: () => context.push(AppRoutes.language),
           ),
           const Divider(),
 
           // 사용자 설정 섹션
-          _buildSectionHeader(context, '사용자 설정'),
+          _buildSectionHeader(context, l10n.settings_userSettings),
           _buildSettingTile(
             context,
             icon: Icons.person_outlined,
-            title: '프로필 설정',
-            subtitle: '프로필 정보를 수정하세요',
+            title: l10n.settings_profileTitle,
+            subtitle: l10n.settings_profileSubtitle,
             onTap: () async {
               final hasPassword = _userInfo?['hasPassword'] as bool? ?? false;
 
@@ -170,8 +175,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           _buildSettingTile(
             context,
             icon: Icons.group_outlined,
-            title: '가족 관리',
-            subtitle: '가족 구성원을 관리하세요',
+            title: l10n.settings_familyManagementTitle,
+            subtitle: l10n.settings_familyManagementSubtitle,
             onTap: () {
               // TODO: 가족 관리 화면으로 이동
             },
@@ -179,12 +184,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           const Divider(),
 
           // 알림 설정 섹션
-          _buildSectionHeader(context, '알림 설정'),
+          _buildSectionHeader(context, l10n.settings_notificationSettings),
           _buildSettingTile(
             context,
             icon: Icons.notifications_outlined,
-            title: '알림 설정',
-            subtitle: '알림 수신 설정을 변경하세요',
+            title: l10n.settings_notificationTitle,
+            subtitle: l10n.settings_notificationSubtitle,
             onTap: () {
               // TODO: 알림 설정 화면으로 이동
             },
@@ -192,12 +197,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           const Divider(),
 
           // 정보 섹션
-          _buildSectionHeader(context, '정보'),
+          _buildSectionHeader(context, l10n.settings_information),
           _buildSettingTile(
             context,
             icon: Icons.info_outlined,
-            title: '앱 정보',
-            subtitle: '버전 1.0.0',
+            title: l10n.settings_appInfoTitle,
+            subtitle: l10n.settings_appInfoSubtitle,
             onTap: () {
               showAboutDialog(
                 context: context,
@@ -205,7 +210,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 applicationVersion: '1.0.0',
                 applicationIcon: const FlutterLogo(size: 48),
                 children: [
-                  const Text('가족과 함께하는 일상 플래너'),
+                  Text(l10n.settings_appDescription),
                 ],
               );
             },
@@ -213,8 +218,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           _buildSettingTile(
             context,
             icon: Icons.help_outline,
-            title: '도움말',
-            subtitle: '사용법을 확인하세요',
+            title: l10n.settings_helpTitle,
+            subtitle: l10n.settings_helpSubtitle,
             onTap: () {
               // TODO: 도움말 화면으로 이동
             },
@@ -229,6 +234,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final name = _userInfo?['name'] as String?;
     final profileImage = _userInfo?['profileImage'] as String?;
     final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(AppSizes.spaceL),
@@ -257,7 +263,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 Row(
                   children: [
                     Text(
-                      name ?? '사용자',
+                      name ?? l10n.settings_user,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -302,16 +308,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               final shouldLogout = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('로그아웃'),
-                  content: const Text('로그아웃 하시겠습니까?'),
+                  title: Text(l10n.settings_logoutConfirmTitle),
+                  content: Text(l10n.settings_logoutConfirmMessage),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
-                      child: const Text('취소'),
+                      child: Text(l10n.common_cancel),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context, true),
-                      child: const Text('로그아웃'),
+                      child: Text(l10n.settings_logout),
                     ),
                   ],
                 ),

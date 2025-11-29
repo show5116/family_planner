@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/settings/providers/bottom_navigation_settings_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 하단 네비게이션 설정 화면
 class BottomNavigationSettingsScreen extends ConsumerWidget {
@@ -11,29 +12,30 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(bottomNavigationSettingsProvider);
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('하단 네비게이션 설정'),
+        title: Text(l10n.bottomNav_title),
         actions: [
           // 초기화 버튼
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: '기본값으로 초기화',
+            tooltip: l10n.bottomNav_reset,
             onPressed: () async {
               final shouldReset = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('초기화 확인'),
-                  content: const Text('하단 네비게이션 설정을 기본값으로 초기화하시겠습니까?'),
+                  title: Text(l10n.bottomNav_resetConfirmTitle),
+                  content: Text(l10n.bottomNav_resetConfirmMessage),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
-                      child: const Text('취소'),
+                      child: Text(l10n.common_cancel),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context, true),
-                      child: const Text('초기화'),
+                      child: Text(l10n.bottomNav_reset),
                     ),
                   ],
                 ),
@@ -42,8 +44,9 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
               if (shouldReset == true) {
                 await notifier.resetToDefault();
                 if (context.mounted) {
+                  final l10n = AppLocalizations.of(context)!;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('기본값으로 초기화되었습니다')),
+                    SnackBar(content: Text(l10n.bottomNav_resetSuccess)),
                   );
                 }
               }
@@ -70,7 +73,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: Text(
-                    '홈과 더보기는 고정입니다.\n중간 3개 슬롯을 탭하여 메뉴를 선택하세요.',
+                    l10n.bottomNav_guideMessage,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
@@ -83,7 +86,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
 
           // 하단 네비게이션 미리보기
           Text(
-            '하단 네비게이션 미리보기',
+            l10n.bottomNav_preview,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -154,7 +157,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: AppSizes.spaceS),
                       Text(
-                        '사용 방법',
+                        l10n.bottomNav_howToUse,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -163,9 +166,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSizes.spaceS),
                   Text(
-                    '• 슬롯 2, 3, 4를 탭하여 원하는 메뉴로 변경하세요.\n'
-                    '• 슬롯 1(홈)과 슬롯 5(더보기)는 고정입니다.\n'
-                    '• 하단 네비게이션에 없는 메뉴는 "더보기" 탭에 표시됩니다.',
+                    l10n.bottomNav_instructions,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -176,7 +177,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
 
           // 사용 가능한 메뉴 목록
           Text(
-            '사용 가능한 메뉴',
+            l10n.bottomNav_availableMenus,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -214,7 +215,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          '슬롯 ${slotIndex + 2}',
+                          '${l10n.bottomNav_slot} ${slotIndex + 2}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -222,9 +223,9 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                           ),
                         ),
                       )
-                    : const Text(
-                        '미사용',
-                        style: TextStyle(
+                    : Text(
+                        l10n.bottomNav_unused,
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
                         ),
@@ -321,8 +322,10 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
         builder: (context, ref, child) {
           final currentSettings = ref.watch(bottomNavigationSettingsProvider);
 
+          final l10n = AppLocalizations.of(context)!;
+
           return AlertDialog(
-            title: Text('슬롯 ${slotIndex + 2} 메뉴 선택'),
+            title: Text('${l10n.bottomNav_slot} ${slotIndex + 2} ${l10n.bottomNav_selectMenuTitle}'),
             content: SizedBox(
               width: double.maxFinite,
               child: ListView.builder(
@@ -352,7 +355,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                     ),
                     subtitle: isUsedInOtherSlot
                         ? Text(
-                            '다른 슬롯에서 사용 중 (선택 시 교체)',
+                            l10n.bottomNav_usedInOtherSlot,
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.grey[600],
@@ -376,7 +379,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('취소'),
+                child: Text(l10n.common_cancel),
               ),
             ],
           );
