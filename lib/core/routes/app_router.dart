@@ -9,6 +9,7 @@ import 'package:family_planner/features/settings/screens/home_widget_settings_sc
 import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/language_settings_screen.dart';
 import 'package:family_planner/features/settings/screens/profile_settings_screen.dart';
+import 'package:family_planner/features/groups/screens/group_list_screen.dart';
 import 'package:family_planner/features/auth/screens/login_screen.dart';
 import 'package:family_planner/features/auth/screens/signup_screen.dart';
 import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
@@ -244,6 +245,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.profile,
         name: 'profile',
         builder: (context, state) => const ProfileSettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.groupManagement,
+        name: 'groupManagement',
+        builder: (context, state) => const GroupListScreen(),
       ),
 
       // Assets Routes (추후 구현)

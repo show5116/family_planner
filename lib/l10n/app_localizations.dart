@@ -1222,17 +1222,17 @@ abstract class AppLocalizations {
   /// **'프로필 정보를 수정하세요'**
   String get settings_profileSubtitle;
 
-  /// No description provided for @settings_familyManagementTitle.
+  /// No description provided for @settings_groupManagementTitle.
   ///
   /// In ko, this message translates to:
-  /// **'가족 관리'**
-  String get settings_familyManagementTitle;
+  /// **'그룹 관리'**
+  String get settings_groupManagementTitle;
 
-  /// No description provided for @settings_familyManagementSubtitle.
+  /// No description provided for @settings_groupManagementSubtitle.
   ///
   /// In ko, this message translates to:
-  /// **'가족 구성원을 관리하세요'**
-  String get settings_familyManagementSubtitle;
+  /// **'그룹과 멤버를 관리하세요'**
+  String get settings_groupManagementSubtitle;
 
   /// No description provided for @settings_notificationSettings.
   ///
@@ -1347,6 +1347,342 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'비밀번호 설정하기'**
   String get settings_passwordSetupNow;
+
+  /// No description provided for @group_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 관리'**
+  String get group_title;
+
+  /// No description provided for @group_myGroups.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 그룹'**
+  String get group_myGroups;
+
+  /// No description provided for @group_createGroup.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 생성'**
+  String get group_createGroup;
+
+  /// No description provided for @group_joinGroup.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 참여'**
+  String get group_joinGroup;
+
+  /// No description provided for @group_groupName.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 이름'**
+  String get group_groupName;
+
+  /// No description provided for @group_groupDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 설명'**
+  String get group_groupDescription;
+
+  /// No description provided for @group_groupColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 색상'**
+  String get group_groupColor;
+
+  /// No description provided for @group_defaultColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 색상'**
+  String get group_defaultColor;
+
+  /// No description provided for @group_customColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 색상'**
+  String get group_customColor;
+
+  /// No description provided for @group_inviteCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드'**
+  String get group_inviteCode;
+
+  /// No description provided for @group_members.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버'**
+  String get group_members;
+
+  /// No description provided for @group_memberCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명'**
+  String group_memberCount(int count);
+
+  /// No description provided for @group_role.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할'**
+  String get group_role;
+
+  /// No description provided for @group_owner.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹장'**
+  String get group_owner;
+
+  /// No description provided for @group_admin.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자'**
+  String get group_admin;
+
+  /// No description provided for @group_member.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버'**
+  String get group_member;
+
+  /// No description provided for @group_joinedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입일'**
+  String get group_joinedAt;
+
+  /// No description provided for @group_createdAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성일'**
+  String get group_createdAt;
+
+  /// No description provided for @group_settings.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 설정'**
+  String get group_settings;
+
+  /// No description provided for @group_editGroup.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 정보 수정'**
+  String get group_editGroup;
+
+  /// No description provided for @group_deleteGroup.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 삭제'**
+  String get group_deleteGroup;
+
+  /// No description provided for @group_leaveGroup.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 나가기'**
+  String get group_leaveGroup;
+
+  /// No description provided for @group_inviteMembers.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버 초대'**
+  String get group_inviteMembers;
+
+  /// No description provided for @group_manageMembers.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버 관리'**
+  String get group_manageMembers;
+
+  /// No description provided for @group_regenerateCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드 재생성'**
+  String get group_regenerateCode;
+
+  /// No description provided for @group_copyCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'코드 복사'**
+  String get group_copyCode;
+
+  /// No description provided for @group_enterInviteCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드 입력'**
+  String get group_enterInviteCode;
+
+  /// No description provided for @group_inviteByEmail.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일로 초대'**
+  String get group_inviteByEmail;
+
+  /// No description provided for @group_email.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일'**
+  String get group_email;
+
+  /// No description provided for @group_send.
+  ///
+  /// In ko, this message translates to:
+  /// **'보내기'**
+  String get group_send;
+
+  /// No description provided for @group_join.
+  ///
+  /// In ko, this message translates to:
+  /// **'참여하기'**
+  String get group_join;
+
+  /// No description provided for @group_cancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get group_cancel;
+
+  /// No description provided for @group_save.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get group_save;
+
+  /// No description provided for @group_delete.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get group_delete;
+
+  /// No description provided for @group_leave.
+  ///
+  /// In ko, this message translates to:
+  /// **'나가기'**
+  String get group_leave;
+
+  /// No description provided for @group_create.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성'**
+  String get group_create;
+
+  /// No description provided for @group_edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'수정'**
+  String get group_edit;
+
+  /// No description provided for @group_confirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'확인'**
+  String get group_confirm;
+
+  /// No description provided for @group_groupNameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 이름을 입력해주세요'**
+  String get group_groupNameRequired;
+
+  /// No description provided for @group_inviteCodeRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 입력해주세요'**
+  String get group_inviteCodeRequired;
+
+  /// No description provided for @group_emailRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일을 입력해주세요'**
+  String get group_emailRequired;
+
+  /// No description provided for @group_deleteConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 삭제'**
+  String get group_deleteConfirmTitle;
+
+  /// No description provided for @group_deleteConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'정말로 이 그룹을 삭제하시겠습니까?\n모든 데이터가 삭제되며 복구할 수 없습니다.'**
+  String get group_deleteConfirmMessage;
+
+  /// No description provided for @group_leaveConfirmTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 나가기'**
+  String get group_leaveConfirmTitle;
+
+  /// No description provided for @group_leaveConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'정말로 이 그룹을 나가시겠습니까?'**
+  String get group_leaveConfirmMessage;
+
+  /// No description provided for @group_ownerCannotLeave.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹장은 그룹을 나갈 수 없습니다.\n그룹장 권한을 양도하거나 그룹을 삭제해주세요.'**
+  String get group_ownerCannotLeave;
+
+  /// No description provided for @group_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹이 생성되었습니다'**
+  String get group_createSuccess;
+
+  /// No description provided for @group_joinSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹에 참여했습니다'**
+  String get group_joinSuccess;
+
+  /// No description provided for @group_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 정보가 수정되었습니다'**
+  String get group_updateSuccess;
+
+  /// No description provided for @group_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹이 삭제되었습니다'**
+  String get group_deleteSuccess;
+
+  /// No description provided for @group_leaveSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 나갔습니다'**
+  String get group_leaveSuccess;
+
+  /// No description provided for @group_inviteSent.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 이메일이 발송되었습니다'**
+  String get group_inviteSent;
+
+  /// No description provided for @group_codeRegenerated.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드가 재생성되었습니다'**
+  String get group_codeRegenerated;
+
+  /// No description provided for @group_codeCopied.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드가 복사되었습니다'**
+  String get group_codeCopied;
+
+  /// No description provided for @group_noGroups.
+  ///
+  /// In ko, this message translates to:
+  /// **'참여 중인 그룹이 없습니다'**
+  String get group_noGroups;
+
+  /// No description provided for @group_noGroupsDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'새로운 그룹을 생성하거나\n초대 코드로 그룹에 참여하세요'**
+  String get group_noGroupsDescription;
 
   /// No description provided for @error_network.
   ///

@@ -580,10 +580,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_profileSubtitle => '프로필 정보를 수정하세요';
 
   @override
-  String get settings_familyManagementTitle => '가족 관리';
+  String get settings_groupManagementTitle => '그룹 관리';
 
   @override
-  String get settings_familyManagementSubtitle => '가족 구성원을 관리하세요';
+  String get settings_groupManagementSubtitle => '그룹과 멤버를 관리하세요';
 
   @override
   String get settings_notificationSettings => '알림 설정';
@@ -643,6 +643,178 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings_passwordSetupNow => '비밀번호 설정하기';
+
+  @override
+  String get group_title => '그룹 관리';
+
+  @override
+  String get group_myGroups => '내 그룹';
+
+  @override
+  String get group_createGroup => '그룹 생성';
+
+  @override
+  String get group_joinGroup => '그룹 참여';
+
+  @override
+  String get group_groupName => '그룹 이름';
+
+  @override
+  String get group_groupDescription => '그룹 설명';
+
+  @override
+  String get group_groupColor => '그룹 색상';
+
+  @override
+  String get group_defaultColor => '기본 색상';
+
+  @override
+  String get group_customColor => '개인 색상';
+
+  @override
+  String get group_inviteCode => '초대 코드';
+
+  @override
+  String get group_members => '멤버';
+
+  @override
+  String group_memberCount(int count) {
+    return '$count명';
+  }
+
+  @override
+  String get group_role => '역할';
+
+  @override
+  String get group_owner => '그룹장';
+
+  @override
+  String get group_admin => '관리자';
+
+  @override
+  String get group_member => '멤버';
+
+  @override
+  String get group_joinedAt => '가입일';
+
+  @override
+  String get group_createdAt => '생성일';
+
+  @override
+  String get group_settings => '그룹 설정';
+
+  @override
+  String get group_editGroup => '그룹 정보 수정';
+
+  @override
+  String get group_deleteGroup => '그룹 삭제';
+
+  @override
+  String get group_leaveGroup => '그룹 나가기';
+
+  @override
+  String get group_inviteMembers => '멤버 초대';
+
+  @override
+  String get group_manageMembers => '멤버 관리';
+
+  @override
+  String get group_regenerateCode => '초대 코드 재생성';
+
+  @override
+  String get group_copyCode => '코드 복사';
+
+  @override
+  String get group_enterInviteCode => '초대 코드 입력';
+
+  @override
+  String get group_inviteByEmail => '이메일로 초대';
+
+  @override
+  String get group_email => '이메일';
+
+  @override
+  String get group_send => '보내기';
+
+  @override
+  String get group_join => '참여하기';
+
+  @override
+  String get group_cancel => '취소';
+
+  @override
+  String get group_save => '저장';
+
+  @override
+  String get group_delete => '삭제';
+
+  @override
+  String get group_leave => '나가기';
+
+  @override
+  String get group_create => '생성';
+
+  @override
+  String get group_edit => '수정';
+
+  @override
+  String get group_confirm => '확인';
+
+  @override
+  String get group_groupNameRequired => '그룹 이름을 입력해주세요';
+
+  @override
+  String get group_inviteCodeRequired => '초대 코드를 입력해주세요';
+
+  @override
+  String get group_emailRequired => '이메일을 입력해주세요';
+
+  @override
+  String get group_deleteConfirmTitle => '그룹 삭제';
+
+  @override
+  String get group_deleteConfirmMessage =>
+      '정말로 이 그룹을 삭제하시겠습니까?\n모든 데이터가 삭제되며 복구할 수 없습니다.';
+
+  @override
+  String get group_leaveConfirmTitle => '그룹 나가기';
+
+  @override
+  String get group_leaveConfirmMessage => '정말로 이 그룹을 나가시겠습니까?';
+
+  @override
+  String get group_ownerCannotLeave =>
+      '그룹장은 그룹을 나갈 수 없습니다.\n그룹장 권한을 양도하거나 그룹을 삭제해주세요.';
+
+  @override
+  String get group_createSuccess => '그룹이 생성되었습니다';
+
+  @override
+  String get group_joinSuccess => '그룹에 참여했습니다';
+
+  @override
+  String get group_updateSuccess => '그룹 정보가 수정되었습니다';
+
+  @override
+  String get group_deleteSuccess => '그룹이 삭제되었습니다';
+
+  @override
+  String get group_leaveSuccess => '그룹을 나갔습니다';
+
+  @override
+  String get group_inviteSent => '초대 이메일이 발송되었습니다';
+
+  @override
+  String get group_codeRegenerated => '초대 코드가 재생성되었습니다';
+
+  @override
+  String get group_codeCopied => '초대 코드가 복사되었습니다';
+
+  @override
+  String get group_noGroups => '참여 중인 그룹이 없습니다';
+
+  @override
+  String get group_noGroupsDescription => '새로운 그룹을 생성하거나\n초대 코드로 그룹에 참여하세요';
 
   @override
   String get error_network => '네트워크 연결을 확인해주세요';

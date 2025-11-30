@@ -579,10 +579,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_profileSubtitle => 'プロフィール情報を編集します';
 
   @override
-  String get settings_familyManagementTitle => '家族管理';
+  String get settings_groupManagementTitle => 'グループ管理';
 
   @override
-  String get settings_familyManagementSubtitle => '家族メンバーを管理します';
+  String get settings_groupManagementSubtitle => 'グループとメンバーを管理します';
 
   @override
   String get settings_notificationSettings => '通知設定';
@@ -642,6 +642,178 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settings_passwordSetupNow => 'パスワードを設定';
+
+  @override
+  String get group_title => 'グループ管理';
+
+  @override
+  String get group_myGroups => 'マイグループ';
+
+  @override
+  String get group_createGroup => 'グループ作成';
+
+  @override
+  String get group_joinGroup => 'グループ参加';
+
+  @override
+  String get group_groupName => 'グループ名';
+
+  @override
+  String get group_groupDescription => '説明';
+
+  @override
+  String get group_groupColor => 'グループカラー';
+
+  @override
+  String get group_defaultColor => 'デフォルトカラー';
+
+  @override
+  String get group_customColor => 'カスタムカラー';
+
+  @override
+  String get group_inviteCode => '招待コード';
+
+  @override
+  String get group_members => 'メンバー';
+
+  @override
+  String group_memberCount(int count) {
+    return '$count人';
+  }
+
+  @override
+  String get group_role => '役割';
+
+  @override
+  String get group_owner => 'オーナー';
+
+  @override
+  String get group_admin => '管理者';
+
+  @override
+  String get group_member => 'メンバー';
+
+  @override
+  String get group_joinedAt => '参加日';
+
+  @override
+  String get group_createdAt => '作成日';
+
+  @override
+  String get group_settings => 'グループ設定';
+
+  @override
+  String get group_editGroup => 'グループ情報編集';
+
+  @override
+  String get group_deleteGroup => 'グループ削除';
+
+  @override
+  String get group_leaveGroup => 'グループを退出';
+
+  @override
+  String get group_inviteMembers => 'メンバー招待';
+
+  @override
+  String get group_manageMembers => 'メンバー管理';
+
+  @override
+  String get group_regenerateCode => '招待コード再生成';
+
+  @override
+  String get group_copyCode => 'コードをコピー';
+
+  @override
+  String get group_enterInviteCode => '招待コード入力';
+
+  @override
+  String get group_inviteByEmail => 'メールで招待';
+
+  @override
+  String get group_email => 'メールアドレス';
+
+  @override
+  String get group_send => '送信';
+
+  @override
+  String get group_join => '参加';
+
+  @override
+  String get group_cancel => 'キャンセル';
+
+  @override
+  String get group_save => '保存';
+
+  @override
+  String get group_delete => '削除';
+
+  @override
+  String get group_leave => '退出';
+
+  @override
+  String get group_create => '作成';
+
+  @override
+  String get group_edit => '編集';
+
+  @override
+  String get group_confirm => '確認';
+
+  @override
+  String get group_groupNameRequired => 'グループ名を入力してください';
+
+  @override
+  String get group_inviteCodeRequired => '招待コードを入力してください';
+
+  @override
+  String get group_emailRequired => 'メールアドレスを入力してください';
+
+  @override
+  String get group_deleteConfirmTitle => 'グループ削除';
+
+  @override
+  String get group_deleteConfirmMessage =>
+      '本当にこのグループを削除しますか？\nすべてのデータが削除され、復元できません。';
+
+  @override
+  String get group_leaveConfirmTitle => 'グループ退出';
+
+  @override
+  String get group_leaveConfirmMessage => '本当にこのグループを退出しますか？';
+
+  @override
+  String get group_ownerCannotLeave =>
+      'オーナーはグループを退出できません。\nオーナー権限を譲渡するか、グループを削除してください。';
+
+  @override
+  String get group_createSuccess => 'グループが作成されました';
+
+  @override
+  String get group_joinSuccess => 'グループに参加しました';
+
+  @override
+  String get group_updateSuccess => 'グループ情報が更新されました';
+
+  @override
+  String get group_deleteSuccess => 'グループが削除されました';
+
+  @override
+  String get group_leaveSuccess => 'グループを退出しました';
+
+  @override
+  String get group_inviteSent => '招待メールが送信されました';
+
+  @override
+  String get group_codeRegenerated => '招待コードが再生成されました';
+
+  @override
+  String get group_codeCopied => '招待コードがコピーされました';
+
+  @override
+  String get group_noGroups => '参加中のグループがありません';
+
+  @override
+  String get group_noGroupsDescription => '新しいグループを作成するか\n招待コードでグループに参加してください';
 
   @override
   String get error_network => 'ネットワーク接続を確認してください';

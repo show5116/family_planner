@@ -40,7 +40,8 @@ class AppRoutes {
   static const String bottomNavigationSettings = '/settings/bottom-navigation';
   static const String homeWidgetSettings = '/settings/home-widgets';
   static const String profile = '/settings/profile';
-  static const String familyManagement = '/settings/family';
+  static const String groupManagement = '/settings/groups';
+  static const String groupDetail = '/settings/groups/:id';
   static const String notifications = '/settings/notifications';
   static const String theme = '/settings/theme';
   static const String language = '/settings/language';

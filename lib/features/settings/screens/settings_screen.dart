@@ -175,10 +175,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           _buildSettingTile(
             context,
             icon: Icons.group_outlined,
-            title: l10n.settings_familyManagementTitle,
-            subtitle: l10n.settings_familyManagementSubtitle,
+            title: l10n.settings_groupManagementTitle,
+            subtitle: l10n.settings_groupManagementSubtitle,
             onTap: () {
-              // TODO: 가족 관리 화면으로 이동
+              // TODO: 그룹 관리 화면으로 이동
+              context.push(AppRoutes.groupManagement);
             },
           ),
           const Divider(),

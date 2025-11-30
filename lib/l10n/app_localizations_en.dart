@@ -599,10 +599,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_profileSubtitle => 'Edit your profile information';
 
   @override
-  String get settings_familyManagementTitle => 'Family Management';
+  String get settings_groupManagementTitle => 'Group Management';
 
   @override
-  String get settings_familyManagementSubtitle => 'Manage family members';
+  String get settings_groupManagementSubtitle => 'Manage groups and members';
 
   @override
   String get settings_notificationSettings => 'Notification Settings';
@@ -664,6 +664,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_passwordSetupNow => 'Set Password';
+
+  @override
+  String get group_title => 'Group Management';
+
+  @override
+  String get group_myGroups => 'My Groups';
+
+  @override
+  String get group_createGroup => 'Create Group';
+
+  @override
+  String get group_joinGroup => 'Join Group';
+
+  @override
+  String get group_groupName => 'Group Name';
+
+  @override
+  String get group_groupDescription => 'Description';
+
+  @override
+  String get group_groupColor => 'Group Color';
+
+  @override
+  String get group_defaultColor => 'Default Color';
+
+  @override
+  String get group_customColor => 'Custom Color';
+
+  @override
+  String get group_inviteCode => 'Invite Code';
+
+  @override
+  String get group_members => 'Members';
+
+  @override
+  String group_memberCount(int count) {
+    return '$count members';
+  }
+
+  @override
+  String get group_role => 'Role';
+
+  @override
+  String get group_owner => 'Owner';
+
+  @override
+  String get group_admin => 'Admin';
+
+  @override
+  String get group_member => 'Member';
+
+  @override
+  String get group_joinedAt => 'Joined';
+
+  @override
+  String get group_createdAt => 'Created';
+
+  @override
+  String get group_settings => 'Group Settings';
+
+  @override
+  String get group_editGroup => 'Edit Group';
+
+  @override
+  String get group_deleteGroup => 'Delete Group';
+
+  @override
+  String get group_leaveGroup => 'Leave Group';
+
+  @override
+  String get group_inviteMembers => 'Invite Members';
+
+  @override
+  String get group_manageMembers => 'Manage Members';
+
+  @override
+  String get group_regenerateCode => 'Regenerate Code';
+
+  @override
+  String get group_copyCode => 'Copy Code';
+
+  @override
+  String get group_enterInviteCode => 'Enter Invite Code';
+
+  @override
+  String get group_inviteByEmail => 'Invite by Email';
+
+  @override
+  String get group_email => 'Email';
+
+  @override
+  String get group_send => 'Send';
+
+  @override
+  String get group_join => 'Join';
+
+  @override
+  String get group_cancel => 'Cancel';
+
+  @override
+  String get group_save => 'Save';
+
+  @override
+  String get group_delete => 'Delete';
+
+  @override
+  String get group_leave => 'Leave';
+
+  @override
+  String get group_create => 'Create';
+
+  @override
+  String get group_edit => 'Edit';
+
+  @override
+  String get group_confirm => 'Confirm';
+
+  @override
+  String get group_groupNameRequired => 'Please enter group name';
+
+  @override
+  String get group_inviteCodeRequired => 'Please enter invite code';
+
+  @override
+  String get group_emailRequired => 'Please enter email';
+
+  @override
+  String get group_deleteConfirmTitle => 'Delete Group';
+
+  @override
+  String get group_deleteConfirmMessage =>
+      'Are you sure you want to delete this group?\nAll data will be deleted and cannot be recovered.';
+
+  @override
+  String get group_leaveConfirmTitle => 'Leave Group';
+
+  @override
+  String get group_leaveConfirmMessage =>
+      'Are you sure you want to leave this group?';
+
+  @override
+  String get group_ownerCannotLeave =>
+      'Owner cannot leave the group.\nPlease transfer ownership or delete the group.';
+
+  @override
+  String get group_createSuccess => 'Group created successfully';
+
+  @override
+  String get group_joinSuccess => 'Joined group successfully';
+
+  @override
+  String get group_updateSuccess => 'Group updated successfully';
+
+  @override
+  String get group_deleteSuccess => 'Group deleted successfully';
+
+  @override
+  String get group_leaveSuccess => 'Left group successfully';
+
+  @override
+  String get group_inviteSent => 'Invitation email sent';
+
+  @override
+  String get group_codeRegenerated => 'Invite code regenerated';
+
+  @override
+  String get group_codeCopied => 'Invite code copied';
+
+  @override
+  String get group_noGroups => 'No groups yet';
+
+  @override
+  String get group_noGroupsDescription =>
+      'Create a new group or\njoin one with an invite code';
 
   @override
   String get error_network => 'Please check your network connection';
