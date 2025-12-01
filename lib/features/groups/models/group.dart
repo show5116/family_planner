@@ -5,6 +5,7 @@ class Group {
   final String? description;
   final String inviteCode;
   final String? defaultColor;
+  final String? myColor; // 현재 사용자의 개인 색상 (customColor)
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -14,6 +15,7 @@ class Group {
     this.description,
     required this.inviteCode,
     this.defaultColor,
+    this.myColor,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -25,6 +27,7 @@ class Group {
       description: json['description'] as String?,
       inviteCode: json['inviteCode'] as String,
       defaultColor: json['defaultColor'] as String?,
+      myColor: json['myColor'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -37,6 +40,7 @@ class Group {
       'description': description,
       'inviteCode': inviteCode,
       'defaultColor': defaultColor,
+      'myColor': myColor,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -48,6 +52,7 @@ class Group {
     String? description,
     String? inviteCode,
     String? defaultColor,
+    String? myColor,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -57,6 +62,7 @@ class Group {
       description: description ?? this.description,
       inviteCode: inviteCode ?? this.inviteCode,
       defaultColor: defaultColor ?? this.defaultColor,
+      myColor: myColor ?? this.myColor,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

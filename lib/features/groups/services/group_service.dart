@@ -151,7 +151,18 @@ class GroupService {
         '/groups/$groupId/my-color',
         data: {'customColor': customColor},
       );
-      return GroupMember.fromJson(response.data);
+
+      // 응답 데이터가 null이거나 잘못된 경우 처리
+      if (response.data == null) {
+        throw Exception('Empty response from server');
+      }
+
+      // Map이 아닌 경우 처리
+      if (response.data is! Map<String, dynamic>) {
+        throw Exception('Invalid response format: expected Map but got ${response.data.runtimeType}');
+      }
+
+      return GroupMember.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
       rethrow;
     }
@@ -173,6 +184,18 @@ class GroupService {
     try {
       final response = await _apiClient.post('/groups/$groupId/regenerate-code');
       return Group.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹의 역할 목록 조회
+  /// GET /groups/:id/roles
+  Future<List<Role>> getGroupRoles(String groupId) async {
+    try {
+      final response = await _apiClient.get('/groups/$groupId/roles');
+      final List<dynamic> data = response.data as List<dynamic>;
+      return data.map((json) => Role.fromJson(json)).toList();
     } catch (e) {
       rethrow;
     }

@@ -27,7 +27,7 @@ flutter clean && flutter pub get       # 클린 빌드
 - **프론트엔드**: `localhost:3001` (웹 개발 서버)
 - **백엔드 개발**: `http://localhost:3000`
 - **백엔드 프로덕션**: `https://familyplannerbackend-production.up.railway.app`
-- **API 문서**: `http://localhost:3000/api` (Swagger)
+- **API 문서**: `http://localhost:3000/api-json` (Swagger)
 
 ## 문서 구조
 

@@ -22,14 +22,16 @@ class GroupMember {
 
   factory GroupMember.fromJson(Map<String, dynamic> json) {
     return GroupMember(
-      id: json['id'] as String,
-      groupId: json['groupId'] as String,
-      userId: json['userId'] as String,
-      roleId: json['roleId'] as String,
+      id: json['id'] as String? ?? '',
+      groupId: json['groupId'] as String? ?? '',
+      userId: json['userId'] as String? ?? '',
+      roleId: json['roleId'] as String? ?? '',
       customColor: json['customColor'] as String?,
-      joinedAt: DateTime.parse(json['joinedAt'] as String),
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
-      role: json['role'] != null ? Role.fromJson(json['role']) : null,
+      joinedAt: json['joinedAt'] != null
+          ? DateTime.parse(json['joinedAt'] as String)
+          : DateTime.now(),
+      user: json['user'] != null ? User.fromJson(json['user'] as Map<String, dynamic>) : null,
+      role: json['role'] != null ? Role.fromJson(json['role'] as Map<String, dynamic>) : null,
     );
   }
 
@@ -68,9 +70,9 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      name: json['name'] as String,
+      id: json['id'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      name: json['name'] as String? ?? 'Unknown',
       profileImage: json['profileImage'] as String?,
     );
   }
@@ -101,8 +103,8 @@ class Role {
 
   factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
-      id: json['id'] as String,
-      name: json['name'] as String,
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? 'MEMBER',
       groupId: json['groupId'] as String?,
       isDefaultRole: json['isDefaultRole'] as bool? ?? false,
     );

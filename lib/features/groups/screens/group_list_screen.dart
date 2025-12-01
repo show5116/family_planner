@@ -323,11 +323,13 @@ class _GroupCard extends ConsumerWidget {
     final theme = Theme.of(context);
 
     // 색상 파싱 (HEX -> Color)
+    // myColor가 있으면 myColor를 사용, 없으면 defaultColor 사용
     Color? groupColor;
-    if (group.defaultColor != null && group.defaultColor!.isNotEmpty) {
+    final colorToUse = group.myColor ?? group.defaultColor;
+    if (colorToUse != null && colorToUse.isNotEmpty) {
       try {
         groupColor = Color(
-          int.parse(group.defaultColor!.substring(1), radix: 16) + 0xFF000000,
+          int.parse(colorToUse.substring(1), radix: 16) + 0xFF000000,
         );
       } catch (e) {
         groupColor = Colors.blue;

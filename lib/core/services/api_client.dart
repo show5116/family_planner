@@ -10,6 +10,9 @@ class ApiClient {
   static ApiClient? _instance;
   final SecureStorageService _secureStorage = SecureStorageService();
 
+  // 토큰 갱신 중복 방지를 위한 Future
+  Future<bool>? _refreshTokenFuture;
+
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
@@ -91,17 +94,26 @@ class ApiClient {
             }
 
             // Refresh Token으로 재시도
+            debugPrint('Attempting token refresh...');
             final refreshed = await _refreshToken();
             if (refreshed) {
+              debugPrint('Token refresh successful - retrying original request');
               // 원래 요청 재시도
               final options = error.requestOptions;
               final token = await _getAccessToken();
-              options.headers['Authorization'] = 'Bearer $token';
+
+              if (token != null) {
+                options.headers['Authorization'] = 'Bearer $token';
+                debugPrint('Updated Authorization header with new token');
+              } else {
+                debugPrint('Warning: New access token is null');
+              }
 
               try {
                 final response = await _dio.fetch(options);
                 return handler.resolve(response);
               } catch (e) {
+                debugPrint('Retry request failed: $e');
                 return handler.reject(error);
               }
             } else {
@@ -150,12 +162,36 @@ class ApiClient {
     await _secureStorage.saveRefreshToken(token);
   }
 
-  /// 토큰 갱신
+  /// 토큰 갱신 (중복 호출 방지)
   Future<bool> _refreshToken() async {
+    // 이미 토큰 갱신이 진행 중이면 해당 Future를 재사용
+    if (_refreshTokenFuture != null) {
+      debugPrint('Token refresh already in progress, waiting...');
+      return await _refreshTokenFuture!;
+    }
+
+    // 새로운 토큰 갱신 작업 시작
+    _refreshTokenFuture = _performRefreshToken();
+
+    try {
+      final result = await _refreshTokenFuture!;
+      return result;
+    } finally {
+      // 완료 후 Future 초기화
+      _refreshTokenFuture = null;
+    }
+  }
+
+  /// 실제 토큰 갱신 로직
+  Future<bool> _performRefreshToken() async {
     try {
       final refreshToken = await _getRefreshToken();
-      if (refreshToken == null) return false;
+      if (refreshToken == null) {
+        debugPrint('No refresh token available');
+        return false;
+      }
 
+      debugPrint('Sending refresh token request...');
       final response = await _dio.post(
         '/auth/refresh',
         data: {'refreshToken': refreshToken},
@@ -165,16 +201,23 @@ class ApiClient {
         final newAccessToken = response.data['accessToken'] as String?;
         final newRefreshToken = response.data['refreshToken'] as String?;
 
+        debugPrint('Refresh token response received');
+        debugPrint('New access token: ${newAccessToken != null ? "present" : "null"}');
+        debugPrint('New refresh token: ${newRefreshToken != null ? "present" : "null"}');
+
         if (newAccessToken != null) {
           await saveAccessToken(newAccessToken);
+          debugPrint('New access token saved to storage');
         }
         if (newRefreshToken != null) {
           await saveRefreshToken(newRefreshToken);
+          debugPrint('New refresh token saved to storage');
         }
 
         return true;
       }
 
+      debugPrint('Refresh token response status: ${response.statusCode}');
       return false;
     } catch (e) {
       debugPrint('Token refresh failed: $e');

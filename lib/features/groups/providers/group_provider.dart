@@ -27,6 +27,12 @@ final groupMembersProvider = FutureProvider.family<List<GroupMember>, String>((r
   return await groupService.getGroupMembers(groupId);
 });
 
+/// 그룹 역할 목록 Provider
+final groupRolesProvider = FutureProvider.family<List<Role>, String>((ref, groupId) async {
+  final groupService = ref.watch(groupServiceProvider);
+  return await groupService.getGroupRoles(groupId);
+});
+
 /// 그룹 관리 상태 관리 NotifierProvider
 class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
   final GroupService _groupService;
