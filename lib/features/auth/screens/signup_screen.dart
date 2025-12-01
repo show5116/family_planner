@@ -112,15 +112,22 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: ResponsivePadding.getHorizontalPadding(context),
-            vertical: AppSizes.spaceXL,
-          ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsivePadding.getHorizontalPadding(context),
+                vertical: AppSizes.spaceXL,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - AppSizes.spaceXL * 2,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                 // 로고
                 AppLogo(size: Responsive.isMobile(context) ? 120 : 150),
                 SizedBox(
@@ -287,11 +294,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                   ],
                 ),
-              ],
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
-    );
-  }
+    ),
+  );
+}
 }

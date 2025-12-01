@@ -1,704 +1,88 @@
 # CLAUDE.md
 
-이 파일은 Claude Code (claude.ai/code)가 이 저장소의 코드 작업을 할 때 참고하는 가이드를 제공합니다.
+이 파일은 Claude Code가 코드 작업 시 참고하는 핵심 가이드입니다.
 
 ## 프로젝트 개요
 
-Flutter 기반의 가족 플래너 애플리케이션으로, 현재 초기/템플릿 단계에 있습니다. 이 프로젝트는 Flutter SDK 3.18+ 및 Dart 3.10+를 사용하며, 다중 플랫폼을 지원합니다 (Android, iOS, Web, Windows, Linux, macOS).
+Flutter 기반 가족 플래너 애플리케이션 (Flutter 3.18+, Dart 3.10+)
+- 다중 플랫폼 지원: Web, Android, iOS, Windows, Linux, macOS
+- 상태 관리: Riverpod
+- 아키텍처: Feature-First
 
-## 개발 명령어
+## 주요 명령어
 
-### 설정 및 의존성
 ```bash
-# 의존성 설치/업데이트
-flutter pub get
+# 실행
+flutter run -d chrome --web-port=3001  # 웹 (포트 3001 고정)
+flutter run -d windows                 # Windows
 
-# 의존성을 최신 버전으로 업데이트
-flutter pub upgrade
+# 개발
+flutter analyze                        # 코드 분석
+flutter test                           # 테스트 실행
+flutter clean && flutter pub get       # 클린 빌드
 ```
-
-### 애플리케이션 실행
-```bash
-# 기본 디바이스에서 실행
-flutter run
-
-# 웹에서 실행 (포트 3001 고정)
-flutter run -d chrome --web-port=3001
-flutter run -d edge --web-port=3001
-
-# VS Code에서 F5로 실행 시 자동으로 포트 3001 사용
-# 접속 주소: http://localhost:3001
-
-# 특정 디바이스에서 실행
-flutter devices              # 사용 가능한 디바이스 목록 표시
-flutter run -d <device-id>   # 특정 디바이스에서 실행
-flutter run -d windows       # Windows에서 실행
-
-# 핫 리로드 활성화 상태로 실행 (기본값)
-# 'r'을 눌러 핫 리로드, 'R'을 눌러 핫 재시작
-```
-
-### 테스트
-```bash
-# 모든 테스트 실행
-flutter test
-
-# 특정 테스트 파일 실행
-flutter test test/widget_test.dart
-
-# 커버리지와 함께 테스트 실행
-flutter test --coverage
-
-# 감시 모드에서 테스트 실행 (내장 기능 아님, entr 등 필요)
-# 변경 사항 감시: find test -name "*_test.dart" | entr -r flutter test
-```
-
-### 코드 품질 및 분석
-```bash
-# 코드 이슈 분석 (analysis_options.yaml 사용)
-flutter analyze
-
-# 코드 포맷팅
-flutter format lib/ test/
-
-# 파일 수정 없이 포맷 확인
-flutter format --set-exit-if-changed lib/ test/
-```
-
-### 빌드
-```bash
-# Android용 빌드
-flutter build apk              # APK 빌드
-flutter build appbundle        # Play Store용 App Bundle 빌드
-
-# iOS용 빌드 (macOS 필요)
-flutter build ios
-
-# 웹용 빌드
-flutter build web
-
-# Windows용 빌드 (Windows 필요)
-flutter build windows
-
-# Linux용 빌드 (Linux 필요)
-flutter build linux
-
-# macOS용 빌드 (macOS 필요)
-flutter build macos
-```
-
-### 클린
-```bash
-# 빌드 산출물 정리
-flutter clean
-
-# 정리 및 의존성 재설치
-flutter clean && flutter pub get
-```
-
-## 코드 아키텍처
-
-### 현재 상태
-프로젝트는 현재 템플릿/스타터 단계로 최소한의 구조를 가지고 있습니다:
-- 단일 진입점: `lib/main.dart`
-- 기본 위젯 구조: MyApp (루트) → MyHomePage (stateful 카운터 데모)
-- 아키텍처 계층이 아직 구축되지 않음
-- 상태 관리 프레임워크가 구현되지 않음
-- 데이터 모델, 서비스, 리포지토리가 없음
-
-### 예상되는 향후 아키텍처
-이 가족 플래너 앱을 개발할 때 다음과 같이 코드를 구성하는 것을 고려하세요:
-
-```
-lib/
-├── main.dart                    # 진입점
-├── models/                      # 데이터 모델 (가족 구성원, 이벤트, 작업 등)
-├── screens/                     # 전체 페이지 위젯
-├── widgets/                     # 재사용 가능한 UI 컴포넌트
-├── services/                    # API 클라이언트, 외부 통합
-├── repositories/                # 데이터 액세스 계층
-├── providers/ or blocs/         # 상태 관리 (구현 시)
-├── utils/                       # 헬퍼 함수, 상수
-└── theme/                       # 테마 설정
-```
-
-### 상태 관리
-현재 StatefulWidget에서 기본 `setState()`를 사용하고 있습니다. 단순한 데모를 넘어서 확장할 때 다음을 구현하는 것을 고려하세요:
-- **Provider** (초보자에게 권장, Flutter 팀 공식)
-- **Riverpod** (타입 안전, 테스트 가능한 Provider의 진화형)
-- **BLoC** (비즈니스 로직 컴포넌트 패턴, 복잡한 앱에 적합)
-- **GetX** (상태, 라우팅, 의존성 주입을 포함한 올인원 솔루션)
-
-### 테스트 전략
-- UI 컴포넌트에 대한 위젯 테스트 (현재: `test/widget_test.dart`)
-- 비즈니스 로직에 대한 단위 테스트 (모델, 서비스, 유틸)
-- 사용자 흐름에 대한 통합 테스트 (앱이 성장할 때 고려)
-- `flutter_test` 패키지 사용 (이미 설정됨)
-- 의존성 모킹을 위해 `mockito` 또는 `mocktail` 고려
-
-### 코드 스타일
-- `flutter_lints` 패키지 규칙 준수 (`analysis_options.yaml`에서 활성화됨)
-- 성능을 위해 가능한 한 `const` 생성자 사용
-- 위젯에 대해 상속보다 컴포지션 선호
-- 위젯을 작고 집중적으로 유지 (더 작은 위젯으로 추출)
-- 위젯 생성자에 명명된 매개변수 사용
-
-## 플랫폼별 참고사항
-
-### Android
-- `android/` 디렉토리에서 설정
-- Gradle 기반 빌드 시스템
-- Min SDK 및 target SDK는 `android/app/build.gradle`에서 설정
-
-### iOS
-- `ios/` 디렉토리에서 설정
-- Xcode 기반 빌드 시스템
-- 빌드 및 실행에 macOS 필요
-
-### Web
-- `web/` 디렉토리에서 설정
-- Chrome이 있는 모든 플랫폼에서 실행 가능
-- 빌드 출력은 `build/web/`로
-
-### Desktop (Windows/Linux/macOS)
-- 각 플랫폼별 별도 디렉토리
-- Windows 빌드는 Windows 환경 필요
-- Linux 빌드는 Linux 환경 필요
-- macOS 빌드는 macOS 환경 필요
-
-## 의존성
-
-현재 최소한의 의존성:
-- `cupertino_icons` - iOS 스타일 아이콘
-- `flutter_lints` - 코드 품질 린팅 규칙 (dev 의존성)
-
-패키지를 추가할 때는 `pubspec.yaml`을 업데이트하고 `flutter pub get`을 실행하세요.
-
-## Git 워크플로우
-
-이 프로젝트는 현재 Git 저장소로 초기화되지 않았습니다. 다음과 같이 초기화하는 것을 고려하세요:
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-```
-
-## 프로젝트 문서 구조
-
-이 프로젝트는 다음 문서들을 통해 개발을 관리합니다:
-
-### TODO.md - 기능 명세
-기능 요구사항 및 개발 진행 상황을 관리합니다.
-
-### UI_ARCHITECTURE.md - UI/UX 설계
-전체 애플리케이션의 UI/UX 아키텍처를 정의합니다:
-- 네비게이션 구조 (Bottom Navigation + Drawer)
-- 디자인 시스템 (색상, 타이포그래피, 간격 등)
-- 화면 흐름도 및 정보 구조
-- 화면별 상세 레이아웃
-- 공통 컴포넌트 가이드
-
-### PROJECT_STRUCTURE.md - 프로젝트 구조
-코드베이스의 폴더 구조 및 개발 가이드:
-- Feature-First 아키텍처 설명
-- 폴더 구조 및 파일 조직
-- 사용 중인 패키지 목록
-- 코딩 규칙 및 네이밍 컨벤션
-- 개발 워크플로우
-- 유용한 명령어
-
-### TODO.md 파일 구조
-- 각 기능은 상태 이모지로 시작합니다
-- 상태 이모지:
-  - ⬜ 시작 안함
-  - 🟨 진행 중
-  - ✅ 완료
-  - ⏸️ 보류
-  - ❌ 취소
-
-### TODO.md 관리 규칙
-- 새로운 기능을 추가할 때는 ⬜ 상태로 시작
-- 기능 개발을 시작하면 🟨로 변경
-- 기능 개발이 완료되면 ✅로 변경
-- 임시로 개발을 중단하면 ⏸️로 변경
-- 기능을 구현하지 않기로 결정하면 ❌로 변경
-- 각 기능은 번호와 함께 명확한 제목을 가져야 함
-- 세부 기능은 하이픈(-) 리스트로 하위 항목 작성
-- 필요시 상세한 설명을 추가
-
-### Claude Code 작업 시 주의사항
-- 기능 개발을 시작하기 전에 TODO.md를 확인하여 현재 진행 상황 파악
-- UI 개발 시 UI_ARCHITECTURE.md의 디자인 시스템 및 레이아웃 가이드 준수
-- 기능 개발 시작 시 해당 항목을 🟨로 업데이트
-- 기능 개발 완료 시 해당 항목을 ✅로 업데이트
-- 새로운 기능 요구사항 발견 시 TODO.md에 추가
-- UI/UX 변경사항이 있을 경우 UI_ARCHITECTURE.md 업데이트
-
-## 개발 참고사항
-
-- 이 프로젝트는 Dart SDK ^3.10.0을 사용하며, 최신 Dart 기능(레코드, 패턴 등)을 포함합니다
-- 핫 리로드는 대부분의 UI 변경에 작동하며, 상태 변경이나 초기화 코드에는 핫 재시작이 필요합니다
-- 프로덕션 코드에서는 `print()` 대신 `debugPrint()`를 사용하세요 (큰 출력에 더 좋음)
-- Material Design 3가 사용 가능하며, `main.dart`의 `ThemeData`를 통해 설정할 수 있습니다
-- `.metadata` 파일은 Flutter 프로젝트 메타데이터를 추적하므로 수동 편집을 피하세요
 
 ## 포트 설정
 
-### 프론트엔드 (Flutter Web)
-- **로컬 개발**: `localhost:3001`
-- VS Code에서 F5로 실행 시 자동으로 3001 포트 사용
-- 수동 실행: `flutter run -d chrome --web-port=3001`
-
-### 백엔드 API
-- **개발 환경**: `http://localhost:3000`
-- **프로덕션**: `https://familyplannerbackend-production.up.railway.app`
-- **Swagger API 문서**: `http://localhost:3000/api` (개발 환경)
-- 환경은 빌드 모드에 따라 자동 전환 (Debug → 개발, Release → 프로덕션)
-
-자세한 내용은 `lib/core/services/README.md` 참조
-
-## 인증 API
-
-### 소셜 로그인 API
-
-#### 플랫폼별 구현 방식
-
-소셜 로그인은 플랫폼에 따라 다른 방식으로 구현됩니다:
-
-**웹 (Web):**
-- **방식**: OAuth URL 리다이렉트 방식
-- **플로우**:
-  1. 사용자가 소셜 로그인 버튼 클릭
-  2. 백엔드의 OAuth URL (`/auth/google`, `/auth/kakao`)로 리다이렉트
-  3. 백엔드가 Google/Kakao OAuth 인증 페이지로 리다이렉트
-  4. 사용자 인증 완료 후 백엔드가 토큰 검증
-  5. 백엔드가 `{FRONTEND_URL}/auth/callback?accessToken=xxx&refreshToken=xxx`로 리다이렉트
-  6. 프론트엔드가 토큰을 저장하고 로그인 완료
-
-**모바일 (Android/iOS):**
-- **방식**: SDK 방식
-- **플로우**:
-  1. 사용자가 소셜 로그인 버튼 클릭
-  2. Google Sign-In SDK / Kakao Flutter SDK로 인증
-  3. SDK에서 Access Token / ID Token 획득
-  4. 백엔드에 토큰 전송하여 검증 요청
-  5. 백엔드가 JWT 토큰 발급
-  6. 프론트엔드가 토큰을 저장하고 로그인 완료
-
-#### 구글 로그인
-
-**웹용 API 엔드포인트 (OAuth URL 방식):**
-- `GET /auth/google` - Google OAuth 로그인 시작
-- `GET /auth/google/callback` - Google 로그인 콜백
-
-**모바일용 API 엔드포인트 (SDK 방식):**
-- **[필요]** `POST /auth/google/token` - Google Access Token 또는 ID Token 검증
-  - Request Body:
-    ```json
-    {
-      "accessToken": "ya29.a0AfH6SMBx...",
-      "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6..."
-    }
-    ```
-  - Response:
-    ```json
-    {
-      "accessToken": "jwt_access_token",
-      "refreshToken": "jwt_refresh_token",
-      "user": {
-        "id": "user_id",
-        "email": "user@example.com",
-        "name": "User Name"
-      }
-    }
-    ```
-
-**[현재 임시 구현]:**
-- 모바일에서 `GET /auth/google/callback?access_token=xxx` 사용 중
-- 이는 웹 리다이렉트 방식용 엔드포인트를 임시로 사용하는 것
-- **올바른 구현을 위해서는 위의 `POST /auth/google/token` 엔드포인트가 백엔드에 필요**
-
-#### 카카오 로그인
-
-**웹용 API 엔드포인트 (OAuth URL 방식):**
-- `GET /auth/kakao` - Kakao OAuth 로그인 시작
-- `GET /auth/kakao/callback` - Kakao 로그인 콜백
-
-**모바일용 API 엔드포인트 (SDK 방식):**
-- **[필요]** `POST /auth/kakao/token` - Kakao Access Token 검증
-  - Request Body:
-    ```json
-    {
-      "accessToken": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    }
-    ```
-  - Response:
-    ```json
-    {
-      "accessToken": "jwt_access_token",
-      "refreshToken": "jwt_refresh_token",
-      "user": {
-        "id": "user_id",
-        "email": "user@example.com",
-        "name": "User Name"
-      }
-    }
-    ```
-
-**[현재 임시 구현]:**
-- 모바일에서 `GET /auth/kakao/callback?access_token=xxx` 사용 중
-- 이는 웹 리다이렉트 방식용 엔드포인트를 임시로 사용하는 것
-- **올바른 구현을 위해서는 위의 `POST /auth/kakao/token` 엔드포인트가 백엔드에 필요**
-
-#### 현재 구현 상태
-
-**프론트엔드:**
-- ✅ 플랫폼별 로그인 방식 자동 분기 구현
-- ✅ 웹: OAuth URL 방식 (브라우저 리다이렉트)
-- ✅ 모바일: SDK 방식 (Google Sign-In, Kakao Flutter SDK)
-- ✅ Google Sign-In SDK 연동 완료
-- ✅ Kakao Flutter SDK 연동 완료
-
-**백엔드:**
-- ✅ 웹용 OAuth URL 방식 엔드포인트 존재
-- ⚠️ 모바일용 토큰 검증 엔드포인트 미구현
-- 📝 임시로 웹용 callback 엔드포인트를 모바일에서 사용 중
-
-**백엔드 API 추가 필요 사항:**
-1. `POST /auth/google/token` - Google 토큰 검증 엔드포인트
-2. `POST /auth/kakao/token` - Kakao 토큰 검증 엔드포인트
-
-**테스트 방법:**
-- **웹**: 현재 구현으로 완전히 테스트 가능
-- **모바일**: 백엔드 토큰 검증 엔드포인트 추가 후 완전한 테스트 가능
-  - 현재는 임시 구현으로 동작하지만, 프로덕션 환경에서는 올바른 엔드포인트 필요
-
-### 소셜 로그인 설정 방법
-
-#### Google OAuth 2.0 설정
-
-**1. Google Cloud Console에서 프로젝트 생성 및 API 활성화**
-
-1. [Google Cloud Console](https://console.cloud.google.com/) 접속
-2. 새 프로젝트 생성 또는 기존 프로젝트 선택
-3. **필수 API 활성화** (매우 중요):
-   - 좌측 메뉴에서 **API 및 서비스 > 라이브러리** 클릭
-   - **Google+ API** 검색 후 **사용 설정** 클릭
-   - **People API** 검색 후 **사용 설정** 클릭
-   - (선택) "Google Identity Toolkit API" 검색 후 **사용 설정** 클릭
-   - API가 활성화될 때까지 잠시 대기 (1-2분)
-
-4. **API 및 서비스 > 사용자 인증 정보** 메뉴로 이동
-5. **사용자 인증 정보 만들기 > OAuth 클라이언트 ID** 선택
-6. 동의 화면 구성 (처음 설정하는 경우)
-   - 사용자 유형: 외부 (또는 내부)
-   - 앱 이름, 사용자 지원 이메일 등 입력
-7. OAuth 클라이언트 ID 생성:
-   - **웹 애플리케이션** 선택
-   - 이름: "Family Planner Web"
-   - **승인된 JavaScript 원본** (정확히 입력):
-     - `http://localhost:3001` (개발용, 포트 번호 포함)
-     - `https://yourdomain.com` (프로덕션용)
-   - **승인된 리디렉션 URI** (정확히 입력, **매우 중요**):
-     - `http://localhost:3001` (개발용)
-     - `http://localhost:3001/` (슬래시 포함, 추가 권장)
-     - `https://yourdomain.com` (프로덕션용)
-     - `https://yourdomain.com/` (슬래시 포함)
-
-   ⚠️ **주의**:
-   - URI는 **대소문자를 구분**하며 **정확히 일치**해야 합니다
-   - 포트 번호, 슬래시(`/`) 유무도 정확히 일치해야 합니다
-   - `http://localhost:3001`와 `http://localhost:3001/`는 **다른 URI**입니다
-
-8. 생성된 **클라이언트 ID** 복사 (예: `123456789-abcdef.apps.googleusercontent.com`)
-
-**2. 프로젝트에 클라이언트 ID 설정**
-
-```dart
-// lib/core/config/environment.dart
-static String get googleWebClientId {
-  return '123456789-abcdef.apps.googleusercontent.com'; // 발급받은 클라이언트 ID
-}
-```
-
-```html
-<!-- web/index.html -->
-<meta name="google-signin-client_id" content="123456789-abcdef.apps.googleusercontent.com">
-```
-
-**3. Android 설정 (선택사항 - 안드로이드 앱에서 사용 시)**
-
-1. Google Cloud Console에서 **Android** 클라이언트 ID 추가 생성
-2. 패키지 이름: `com.example.family_planner` (android/app/build.gradle 확인)
-3. SHA-1 인증서 지문 입력:
-   ```bash
-   # 개발용 디버그 키스토어 지문 확인
-   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
-   ```
-4. 생성된 클라이언트 ID를 `environment.dart`에 설정
-
-**4. iOS 설정 (선택사항 - iOS 앱에서 사용 시)**
-
-1. Google Cloud Console에서 **iOS** 클라이언트 ID 추가 생성
-2. 번들 ID: `com.example.familyPlanner` (ios/Runner.xcodeproj 확인)
-3. 생성된 클라이언트 ID를 `environment.dart`에 설정
-4. `ios/Runner/Info.plist`에 URL 스킴 추가:
-   ```xml
-   <key>CFBundleURLTypes</key>
-   <array>
-     <dict>
-       <key>CFBundleURLSchemes</key>
-       <array>
-         <string>com.googleusercontent.apps.YOUR-CLIENT-ID</string>
-       </array>
-     </dict>
-   </array>
-   ```
-
-#### Kakao Login 설정
-
-**1. Kakao Developers에서 앱 생성**
-
-1. [Kakao Developers](https://developers.kakao.com/) 접속 및 로그인
-2. **내 애플리케이션** > **애플리케이션 추가하기**
-3. 앱 이름 입력 (예: "Family Planner")
-4. **앱 키** 확인:
-   - **네이티브 앱 키** (Android, iOS용)
-   - **JavaScript 키** (웹용)
-
-**2. 플랫폼 설정**
-
-- **Web 플랫폼 등록**:
-  - 사이트 도메인: `http://localhost:3001`, `https://yourdomain.com`
-- **Android 플랫폼 등록**:
-  - 패키지명: `com.example.family_planner`
-  - 키 해시: 디버그/릴리스 키 해시 등록
-- **iOS 플랫폼 등록**:
-  - 번들 ID: `com.example.familyPlanner`
-
-**3. Kakao Login 활성화**
-
-1. **제품 설정 > 카카오 로그인** 메뉴로 이동
-2. 카카오 로그인 **활성화** ON
-3. **Redirect URI** 등록:
-   - `http://localhost:3001/auth/kakao/callback`
-   - `https://yourdomain.com/auth/kakao/callback`
-4. **동의 항목** 설정:
-   - 닉네임, 프로필 사진, 카카오계정(이메일) 필수 동의 설정
-
-**4. 프로젝트에 앱 키 설정**
-
-```dart
-// lib/core/config/environment.dart
-static String get kakaoNativeAppKey {
-  return 'abcdef1234567890abcdef1234567890'; // 발급받은 네이티브 앱 키
-}
-
-static String get kakaoJavaScriptAppKey {
-  return '1234567890abcdef1234567890abcdef'; // 발급받은 JavaScript 키
-}
-```
-
-**5. Android 추가 설정** (`android/app/src/main/AndroidManifest.xml`):
-
-```xml
-<activity
-    android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
-    android:exported="true">
-    <intent-filter android:label="flutter_web_auth">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="kakao{YOUR_NATIVE_APP_KEY}" android:host="oauth"/>
-    </intent-filter>
-</activity>
-```
-
-**6. iOS 추가 설정** (`ios/Runner/Info.plist`):
-
-```xml
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>kakao{YOUR_NATIVE_APP_KEY}</string>
-    </array>
-  </dict>
-</array>
-
-<key>LSApplicationQueriesSchemes</key>
-<array>
-  <string>kakaokompassauth</string>
-  <string>kakaolink</string>
-</array>
-```
-
-#### 설정 확인
-
-모든 설정을 완료한 후:
-
-```bash
-# 의존성 재설치
-flutter clean
-flutter pub get
-
-# 웹 실행 및 테스트
-flutter run -d chrome --web-port=3001
-
-# Android 실행 (에뮬레이터 또는 실제 기기)
-flutter run -d <device-id>
-```
-
-#### 일반적인 에러 및 해결 방법
-
-**1. "redirect_uri_mismatch" 에러**
-
-```
-액세스 차단됨: 이 앱의 요청이 잘못되었습니다
-400 오류: redirect_uri_mismatch
-```
-
-**원인**: Google Cloud Console에 등록된 리디렉션 URI와 앱에서 사용하는 URI가 일치하지 않음
-
-**해결 방법**:
-1. **현재 실행 중인 URL 확인**
-   - 브라우저 주소창: `http://localhost:3001/` 확인
-   - 슬래시 유무, 포트 번호 확인
-
-2. **Google Cloud Console에서 수정**
-   - [Google Cloud Console](https://console.cloud.google.com/) 접속
-   - API 및 서비스 > 사용자 인증 정보
-   - 해당 OAuth 클라이언트 ID 클릭
-   - **승인된 리디렉션 URI** 섹션에 다음 **모두** 추가:
-     ```
-     http://localhost:3001
-     http://localhost:3001/
-     ```
-   - 저장 버튼 클릭
-
-3. **변경 사항 반영 대기**
-   - 변경 사항이 적용되기까지 **5-10분** 소요될 수 있음
-   - 브라우저 캐시 삭제 권장
-
-4. **앱 재시작**
-   ```bash
-   # 앱 종료 후 재실행
-   flutter run -d chrome --web-port=3001
-   ```
-
-**2. "ClientID not set" 에러**
-
-**원인**: `web/index.html`의 meta 태그 또는 `environment.dart`의 클라이언트 ID가 설정되지 않음
-
-**해결 방법**:
-1. `web/index.html` 확인:
-   ```html
-   <meta name="google-signin-client_id" content="YOUR_ACTUAL_CLIENT_ID.apps.googleusercontent.com">
-   ```
-2. `lib/core/config/environment.dart` 확인:
-   ```dart
-   static String get googleWebClientId {
-     return 'YOUR_ACTUAL_CLIENT_ID.apps.googleusercontent.com';
-   }
-   ```
-3. `YOUR_ACTUAL_CLIENT_ID` 부분을 실제 클라이언트 ID로 교체
-
-**3. "Method doesn't allow unregistered callers" 403 에러**
-
-```
-403 에러: Method doesn't allow unregistered callers (callers without established identity).
-Please use API Key or other form of API consumer identity to call this API.
-```
-
-**원인**: Google+ API, People API 또는 필요한 API가 활성화되지 않음
-
-**해결 방법**:
-1. **Google Cloud Console 접속**
-   - [Google Cloud Console](https://console.cloud.google.com/) 이동
-   - 올바른 프로젝트 선택 확인 (상단 프로젝트 선택 드롭다운)
-
-2. **필수 API 라이브러리에서 활성화**
-   - 좌측 메뉴: **API 및 서비스 > 라이브러리**
-
-   **Google+ API 활성화**:
-   - 검색창에 "Google+ API" 입력
-   - **Google+ API** 클릭
-   - **사용 설정** 버튼 클릭
-   - API가 활성화될 때까지 대기 (1-2분)
-
-   **People API 활성화** (필수):
-   - 검색창에 "People API" 입력
-   - **Google People API** 클릭
-   - **사용 설정** 버튼 클릭
-   - API가 활성화될 때까지 대기 (1-2분)
-
-3. **(선택) 추가 API 활성화**
-   - "Google Identity Toolkit API" 검색
-   - **사용 설정** 클릭
-
-4. **앱 재시작**
-   ```bash
-   # 앱 종료 후 재실행
-   flutter run -d chrome --web-port=3001
-   ```
-
-⚠️ **참고**:
-- Google+ API는 deprecated되었지만 Google Sign-In에서 여전히 사용됨
-- API 활성화 후 즉시 적용되지 않을 수 있음 (1-2분 대기)
-
-**4. "People API has not been used" 에러**
-
-```
-People API has not been used in project 1091403716522 before or it is disabled.
-Enable it by visiting https://console.developers.google.com/apis/api/people.googleapis.com/overview?project=1091403716522
-then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
-```
-
-**원인**: People API가 활성화되지 않음. Google Sign-In이 사용자 프로필 정보를 가져오기 위해 People API를 사용합니다.
-
-**해결 방법**:
-1. **에러 메시지의 링크 클릭** (가장 빠름)
-   - 에러 메시지에 포함된 URL을 클릭하면 바로 People API 페이지로 이동
-   - **사용 설정** 버튼 클릭
-
-2. **또는 수동으로 활성화**:
-   - [Google Cloud Console](https://console.cloud.google.com/) 접속
-   - 올바른 프로젝트 선택 확인
-   - 좌측 메뉴: **API 및 서비스 > 라이브러리**
-   - 검색창에 "People API" 입력
-   - **Google People API** 클릭
-   - **사용 설정** 버튼 클릭
-
-3. **변경 사항 반영 대기**
-   - API 활성화 후 1-2분 대기
-   - 에러 메시지에서 언급한 대로 시스템 전파 시간 필요
-
-4. **앱 재시작**
-   ```bash
-   # 앱 종료 후 재실행
-   flutter run -d chrome --web-port=3001
-   ```
-
-⚠️ **참고**:
-- People API는 사용자의 프로필 정보(이름, 이메일, 프로필 사진 등)를 가져오는 데 필요합니다
-- Google+ API와 People API는 모두 필수입니다
-
-**5. CORS 에러**
-
-**원인**: 승인된 JavaScript 원본이 설정되지 않음
-
-**해결 방법**:
-- Google Cloud Console > OAuth 클라이언트 ID > **승인된 JavaScript 원본**에 `http://localhost:3001` 추가
-
-### 기본 인증 API
-
-- `POST /auth/signup` - 회원가입
-- `POST /auth/login` - 이메일/비밀번호 로그인
-- `POST /auth/refresh` - Access Token 갱신 (RTR 방식)
-- `POST /auth/logout` - 로그아웃
-- `POST /auth/verify-email` - 이메일 인증
-- `POST /auth/resend-verification` - 인증 이메일 재전송
-- `GET /auth/me` - 현재 로그인한 사용자 정보 조회 (인증 필요)
-- `POST /auth/request-password-reset` - 비밀번호 재설정 요청
-- `POST /auth/reset-password` - 비밀번호 재설정
+- **프론트엔드**: `localhost:3001` (웹 개발 서버)
+- **백엔드 개발**: `http://localhost:3000`
+- **백엔드 프로덕션**: `https://familyplannerbackend-production.up.railway.app`
+- **API 문서**: `http://localhost:3000/api` (Swagger)
+
+## 문서 구조
+
+### 핵심 문서
+- **TODO.md**: 기능 명세 및 진행 상황 관리
+- **UI_ARCHITECTURE.md**: UI/UX 디자인 시스템 및 화면 구조
+- **PROJECT_STRUCTURE.md**: 코드베이스 구조 및 개발 가이드
+
+### 상세 문서 (docs/)
+- **docs/API.md**: 백엔드 API 엔드포인트 상세 명세
+- **docs/SOCIAL_LOGIN_SETUP.md**: 소셜 로그인 설정 및 트러블슈팅
+
+## 개발 워크플로우
+
+### 작업 시작 전
+1. **TODO.md**에서 현재 진행 상황 확인
+2. UI 작업 시 **UI_ARCHITECTURE.md**의 디자인 시스템 참조
+3. API 연동 시 **docs/API.md** 참조
+
+### 작업 중
+1. 기능 개발 시작: TODO.md 상태를 🟨 (진행 중)으로 변경
+2. UI 개발 시 디자인 시스템 준수 (색상, 간격, 타이포그래피)
+3. 코드 스타일: `flutter_lints` 규칙 준수
+
+### 작업 완료 후
+1. TODO.md 상태를 ✅ (완료)로 변경
+2. UI/UX 변경 시 UI_ARCHITECTURE.md 업데이트
+3. 새 기능 발견 시 TODO.md에 추가
+
+## TODO.md 상태 관리
+
+- ⬜ 시작 안함
+- 🟨 진행 중
+- ✅ 완료
+- ⏸️ 보류
+- ❌ 취소
+
+## 코드 스타일 가이드
+
+- `const` 생성자 적극 활용
+- 위젯은 작고 집중적으로 유지
+- 상속보다 컴포지션 선호
+- `print()` 대신 `debugPrint()` 사용
+- Feature-First 구조 준수 (상세: PROJECT_STRUCTURE.md)
+
+## 자주 참조하는 파일
+
+- 환경 설정: `lib/core/config/environment.dart`
+- 라우팅: `lib/core/routes/app_routes.dart`
+- 테마: `lib/core/theme/app_theme.dart`
+- 디자인 상수: `lib/core/constants/app_sizes.dart`, `app_colors.dart`
+
+## 참고 사항
+
+- Hot Reload: UI 변경 시 `r` 키
+- Hot Restart: 상태/초기화 코드 변경 시 `R` 키
+- Material Design 3 사용
+- `.metadata` 파일은 수동 편집 금지

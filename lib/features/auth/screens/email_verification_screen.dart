@@ -127,14 +127,21 @@ class _EmailVerificationScreenState
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: ResponsivePadding.getHorizontalPadding(context),
-            vertical: AppSizes.spaceXL,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsivePadding.getHorizontalPadding(context),
+                vertical: AppSizes.spaceXL,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - AppSizes.spaceXL * 2,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
               // 아이콘
               Container(
                 padding: const EdgeInsets.all(AppSizes.spaceXL),
@@ -301,9 +308,11 @@ class _EmailVerificationScreenState
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -209,19 +209,25 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         title: Text(screenTitle),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: ResponsivePadding.getHorizontalPadding(context),
-            vertical: AppSizes.spaceXL,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsivePadding.getHorizontalPadding(context),
+                vertical: AppSizes.spaceXL,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - AppSizes.spaceXL * 2,
+                  maxWidth: 500,
+                ),
+                child: Center(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                     // 로고
                     Center(
                       child: AppLogo(
@@ -447,11 +453,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         ),
                       ],
                     ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
