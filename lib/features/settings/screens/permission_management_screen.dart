@@ -1,135 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
-
-/// 사용자 정보 모델
-class UserPermission {
-  final String id;
-  final String email;
-  final String name;
-  final bool isAdmin;
-  final DateTime createdAt;
-
-  UserPermission({
-    required this.id,
-    required this.email,
-    required this.name,
-    required this.isAdmin,
-    required this.createdAt,
-  });
-
-  factory UserPermission.fromJson(Map<String, dynamic> json) {
-    return UserPermission(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      name: json['name'] as String,
-      isAdmin: json['isAdmin'] as bool? ?? false,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-    );
-  }
-
-  UserPermission copyWith({
-    String? id,
-    String? email,
-    String? name,
-    bool? isAdmin,
-    DateTime? createdAt,
-  }) {
-    return UserPermission(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      name: name ?? this.name,
-      isAdmin: isAdmin ?? this.isAdmin,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
-}
+import 'package:family_planner/features/settings/models/permission.dart';
+import 'package:family_planner/features/settings/services/permission_service.dart';
 
 /// 권한 관리 상태
 class PermissionManagementState {
-  final List<UserPermission> users;
+  final List<Permission> permissions;
   final bool isLoading;
   final String? error;
+  final String? selectedCategory;
   final String searchQuery;
 
   PermissionManagementState({
-    this.users = const [],
+    this.permissions = const [],
     this.isLoading = false,
     this.error,
+    this.selectedCategory,
     this.searchQuery = '',
   });
 
   PermissionManagementState copyWith({
-    List<UserPermission>? users,
+    List<Permission>? permissions,
     bool? isLoading,
     String? error,
+    String? selectedCategory,
     String? searchQuery,
   }) {
     return PermissionManagementState(
-      users: users ?? this.users,
+      permissions: permissions ?? this.permissions,
       isLoading: isLoading ?? this.isLoading,
       error: error,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
       searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 
-  List<UserPermission> get filteredUsers {
-    if (searchQuery.isEmpty) return users;
+  List<Permission> get filteredPermissions {
+    var result = permissions;
 
-    final query = searchQuery.toLowerCase();
-    return users.where((user) {
-      return user.email.toLowerCase().contains(query) ||
-          user.name.toLowerCase().contains(query);
-    }).toList();
+    // 카테고리 필터
+    if (selectedCategory != null && selectedCategory!.isNotEmpty) {
+      result = result.where((p) => p.category == selectedCategory).toList();
+    }
+
+    // 검색어 필터
+    if (searchQuery.isNotEmpty) {
+      final query = searchQuery.toLowerCase();
+      result = result.where((p) {
+        return p.code.toLowerCase().contains(query) ||
+            p.name.toLowerCase().contains(query) ||
+            (p.description?.toLowerCase().contains(query) ?? false);
+      }).toList();
+    }
+
+    return result;
+  }
+
+  Set<String> get categories {
+    return permissions.map((p) => p.category).toSet();
   }
 }
 
 /// 권한 관리 Provider
-class PermissionManagementNotifier extends StateNotifier<PermissionManagementState> {
-  PermissionManagementNotifier() : super(PermissionManagementState()) {
-    loadUsers();
+class PermissionManagementNotifier
+    extends StateNotifier<PermissionManagementState> {
+  final PermissionService _permissionService;
+
+  PermissionManagementNotifier(this._permissionService)
+      : super(PermissionManagementState()) {
+    loadPermissions();
   }
 
-  /// 사용자 목록 로드
-  Future<void> loadUsers() async {
+  /// 권한 목록 로드
+  Future<void> loadPermissions({String? category}) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      // TODO: 실제 API 호출로 교체
-      // final response = await _apiClient.get('/permissions/users');
-      // final users = (response.data as List)
-      //     .map((json) => UserPermission.fromJson(json))
-      //     .toList();
+      final permissions = await _permissionService.getPermissions(
+        category: category,
+      );
 
-      // 임시 데모 데이터
-      await Future.delayed(const Duration(seconds: 1));
-      final users = [
-        UserPermission(
-          id: '1',
-          email: 'admin@example.com',
-          name: '관리자',
-          isAdmin: true,
-          createdAt: DateTime.now().subtract(const Duration(days: 365)),
-        ),
-        UserPermission(
-          id: '2',
-          email: 'user1@example.com',
-          name: '홍길동',
-          isAdmin: false,
-          createdAt: DateTime.now().subtract(const Duration(days: 100)),
-        ),
-        UserPermission(
-          id: '3',
-          email: 'user2@example.com',
-          name: '김철수',
-          isAdmin: false,
-          createdAt: DateTime.now().subtract(const Duration(days: 50)),
-        ),
-      ];
-
-      state = state.copyWith(users: users, isLoading: false);
+      state = state.copyWith(permissions: permissions, isLoading: false);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -143,26 +97,36 @@ class PermissionManagementNotifier extends StateNotifier<PermissionManagementSta
     state = state.copyWith(searchQuery: query);
   }
 
-  /// 관리자 권한 토글
-  Future<bool> toggleAdminPermission(String userId, bool currentIsAdmin) async {
+  /// 카테고리 필터 설정
+  void setCategory(String? category) {
+    state = state.copyWith(selectedCategory: category);
+    loadPermissions(category: category);
+  }
+
+  /// 권한 삭제 (소프트)
+  Future<bool> deletePermission(String id) async {
     try {
-      // TODO: 실제 API 호출로 교체
-      // await _apiClient.patch('/permissions/users/$userId', {
-      //   'isAdmin': !currentIsAdmin,
-      // });
+      await _permissionService.deletePermission(id);
 
-      // 임시 처리
-      await Future.delayed(const Duration(milliseconds: 500));
+      // 로컬 상태에서 제거
+      final updatedPermissions =
+          state.permissions.where((p) => p.id != id).toList();
+      state = state.copyWith(permissions: updatedPermissions);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
-      // 로컬 상태 업데이트
-      final updatedUsers = state.users.map((user) {
-        if (user.id == userId) {
-          return user.copyWith(isAdmin: !currentIsAdmin);
-        }
-        return user;
-      }).toList();
+  /// 권한 하드 삭제
+  Future<bool> hardDeletePermission(String id) async {
+    try {
+      await _permissionService.hardDeletePermission(id);
 
-      state = state.copyWith(users: updatedUsers);
+      // 로컬 상태에서 제거
+      final updatedPermissions =
+          state.permissions.where((p) => p.id != id).toList();
+      state = state.copyWith(permissions: updatedPermissions);
       return true;
     } catch (e) {
       return false;
@@ -170,9 +134,19 @@ class PermissionManagementNotifier extends StateNotifier<PermissionManagementSta
   }
 }
 
+/// Permission Service Provider
+final permissionServiceProvider = Provider<PermissionService>((ref) {
+  return PermissionService(ApiClient.instance);
+});
+
+/// Permission Management Provider
 final permissionManagementProvider =
-    StateNotifierProvider<PermissionManagementNotifier, PermissionManagementState>(
-  (ref) => PermissionManagementNotifier(),
+    StateNotifierProvider<PermissionManagementNotifier,
+        PermissionManagementState>(
+  (ref) {
+    final permissionService = ref.watch(permissionServiceProvider);
+    return PermissionManagementNotifier(permissionService);
+  },
 );
 
 /// 권한 관리 화면
@@ -191,42 +165,101 @@ class PermissionManagementScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              ref.read(permissionManagementProvider.notifier).loadUsers();
+              ref.read(permissionManagementProvider.notifier).loadPermissions();
             },
           ),
         ],
       ),
       body: Column(
         children: [
-          // 검색 바
+          // 검색 바 및 필터
           Padding(
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: l10n.permission_searchUser,
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            child: Column(
+              children: [
+                // 검색 필드
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: l10n.permission_search,
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                    ),
+                    filled: true,
+                  ),
+                  onChanged: (value) {
+                    ref
+                        .read(permissionManagementProvider.notifier)
+                        .setSearchQuery(value);
+                  },
                 ),
-                filled: true,
-              ),
-              onChanged: (value) {
-                ref.read(permissionManagementProvider.notifier)
-                    .setSearchQuery(value);
-              },
+                const SizedBox(height: AppSizes.spaceM),
+
+                // 카테고리 필터
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildCategoryChip(
+                        context,
+                        ref,
+                        l10n.permission_allCategories,
+                        null,
+                        state.selectedCategory == null,
+                      ),
+                      const SizedBox(width: AppSizes.spaceS),
+                      ...state.categories.map((category) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: AppSizes.spaceS),
+                          child: _buildCategoryChip(
+                            context,
+                            ref,
+                            category,
+                            category,
+                            state.selectedCategory == category,
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
 
-          // 사용자 목록
+          // 권한 목록
           Expanded(
-            child: _buildUserList(context, ref, l10n, state),
+            child: _buildPermissionList(context, ref, l10n, state),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showCreatePermissionDialog(context, ref, l10n),
+        icon: const Icon(Icons.add),
+        label: Text(l10n.permission_create),
       ),
     );
   }
 
-  Widget _buildUserList(
+  Widget _buildCategoryChip(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    String? category,
+    bool isSelected,
+  ) {
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (selected) {
+        ref
+            .read(permissionManagementProvider.notifier)
+            .setCategory(selected ? category : null);
+      },
+    );
+  }
+
+  Widget _buildPermissionList(
     BuildContext context,
     WidgetRef ref,
     AppLocalizations l10n,
@@ -255,14 +288,14 @@ class PermissionManagementScreen extends ConsumerWidget {
             Text(
               state.error!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-              ),
+                    color: Colors.grey,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSizes.spaceL),
             ElevatedButton.icon(
               onPressed: () {
-                ref.read(permissionManagementProvider.notifier).loadUsers();
+                ref.read(permissionManagementProvider.notifier).loadPermissions();
               },
               icon: const Icon(Icons.refresh),
               label: Text(l10n.common_retry),
@@ -272,250 +305,365 @@ class PermissionManagementScreen extends ConsumerWidget {
       );
     }
 
-    final filteredUsers = state.filteredUsers;
+    final filteredPermissions = state.filteredPermissions;
 
-    if (filteredUsers.isEmpty) {
+    if (filteredPermissions.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.people_outline,
+              Icons.security,
               size: 64,
               color: Colors.grey[400],
             ),
             const SizedBox(height: AppSizes.spaceM),
             Text(
-              l10n.permission_noUsers,
+              l10n.permission_noPermissions,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.grey,
-              ),
+                    color: Colors.grey,
+                  ),
             ),
           ],
         ),
       );
     }
 
+    // 카테고리별로 그룹화
+    final groupedPermissions = <String, List<Permission>>{};
+    for (final permission in filteredPermissions) {
+      groupedPermissions.putIfAbsent(permission.category, () => []);
+      groupedPermissions[permission.category]!.add(permission);
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(permissionManagementProvider.notifier).loadUsers();
+        await ref.read(permissionManagementProvider.notifier).loadPermissions();
       },
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
-        itemCount: filteredUsers.length,
+        padding: const EdgeInsets.only(
+          left: AppSizes.spaceM,
+          right: AppSizes.spaceM,
+          bottom: 80, // FAB 공간 확보
+        ),
+        itemCount: groupedPermissions.length,
         itemBuilder: (context, index) {
-          final user = filteredUsers[index];
-          return _buildUserCard(context, ref, l10n, user);
+          final category = groupedPermissions.keys.elementAt(index);
+          final permissions = groupedPermissions[category]!;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (index > 0) const SizedBox(height: AppSizes.spaceL),
+              // 카테고리 헤더
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceS,
+                  vertical: AppSizes.spaceM,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceM,
+                        vertical: AppSizes.spaceS,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                      ),
+                      child: Text(
+                        category,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Text(
+                      '${permissions.length}${l10n.permission_count}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              // 권한 카드들
+              ...permissions.map((permission) {
+                return _buildPermissionCard(context, ref, l10n, permission);
+              }),
+            ],
+          );
         },
       ),
     );
   }
 
-  Widget _buildUserCard(
+  Widget _buildPermissionCard(
     BuildContext context,
     WidgetRef ref,
     AppLocalizations l10n,
-    UserPermission user,
+    Permission permission,
   ) {
-    final dateFormat = DateFormat('yyyy-MM-dd');
-
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 사용자 정보
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: user.isAdmin
-                      ? Colors.red[100]
-                      : Colors.blue[100],
-                  child: Icon(
-                    user.isAdmin ? Icons.admin_panel_settings : Icons.person,
-                    color: user.isAdmin ? Colors.red[700] : Colors.blue[700],
+      child: InkWell(
+        onTap: () => _showPermissionDetailDialog(context, ref, l10n, permission),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.spaceM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // 권한 아이콘
+                  Container(
+                    padding: const EdgeInsets.all(AppSizes.spaceS),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                    ),
+                    child: Icon(
+                      Icons.key,
+                      size: 20,
+                      color: Colors.blue[700],
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSizes.spaceM),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              user.name,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: AppSizes.spaceS),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSizes.spaceS,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: user.isAdmin ? Colors.red : Colors.grey,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              user.isAdmin
-                                  ? l10n.permission_admin
-                                  : l10n.permission_user,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        user.email,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
+                  const SizedBox(width: AppSizes.spaceM),
+                  // 권한 정보
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          permission.name,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          permission.code,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                                fontFamily: 'monospace',
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
+                  // 활성 상태 배지
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceS,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: permission.isActive ? Colors.green : Colors.grey,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                    ),
+                    child: Text(
+                      permission.isActive
+                          ? l10n.permission_active
+                          : l10n.permission_inactive,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (permission.description != null &&
+                  permission.description!.isNotEmpty) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                Text(
+                  permission.description!,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[700],
+                      ),
                 ),
               ],
-            ),
-
-            const SizedBox(height: AppSizes.spaceM),
-            const Divider(),
-            const SizedBox(height: AppSizes.spaceS),
-
-            // 상세 정보
-            _buildInfoRow(
-              context,
-              icon: Icons.badge_outlined,
-              label: l10n.permission_userId,
-              value: user.id,
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            _buildInfoRow(
-              context,
-              icon: Icons.calendar_today_outlined,
-              label: l10n.permission_createdAt,
-              value: dateFormat.format(user.createdAt),
-            ),
-
-            const SizedBox(height: AppSizes.spaceM),
-
-            // 권한 변경 버튼
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => _showPermissionDialog(
-                  context,
-                  ref,
-                  l10n,
-                  user,
-                ),
-                icon: Icon(
-                  user.isAdmin
-                      ? Icons.remove_circle_outline
-                      : Icons.add_circle_outline,
-                ),
-                label: Text(
-                  user.isAdmin
-                      ? l10n.permission_revokeAdmin
-                      : l10n.permission_grantAdmin,
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: user.isAdmin ? Colors.orange : Colors.blue,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
+  Future<void> _showPermissionDetailDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    Permission permission,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(permission.name),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDetailRow(l10n.permission_code, permission.code),
+              const SizedBox(height: AppSizes.spaceS),
+              _buildDetailRow(l10n.permission_category, permission.category),
+              const SizedBox(height: AppSizes.spaceS),
+              _buildDetailRow(
+                l10n.permission_status,
+                permission.isActive
+                    ? l10n.permission_active
+                    : l10n.permission_inactive,
+              ),
+              if (permission.description != null &&
+                  permission.description!.isNotEmpty) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                Text(
+                  l10n.permission_description,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                Text(permission.description!),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.common_close),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _showEditPermissionDialog(context, ref, l10n, permission);
+            },
+            icon: const Icon(Icons.edit),
+            label: Text(l10n.common_edit),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              _showDeleteConfirmDialog(context, ref, l10n, permission);
+            },
+            icon: const Icon(Icons.delete),
+            label: Text(l10n.common_delete),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16, color: Colors.grey[600]),
-        const SizedBox(width: AppSizes.spaceS),
-        Text(
-          '$label: ',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey[600],
+        SizedBox(
+          width: 80,
+          child: Text(
+            '$label:',
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         Expanded(
-          child: Text(
-            value,
-            style: Theme.of(context).textTheme.bodySmall,
-            overflow: TextOverflow.ellipsis,
-          ),
+          child: Text(value),
         ),
       ],
     );
   }
 
-  Future<void> _showPermissionDialog(
+  Future<void> _showCreatePermissionDialog(
     BuildContext context,
     WidgetRef ref,
     AppLocalizations l10n,
-    UserPermission user,
   ) async {
-    final shouldUpdate = await showDialog<bool>(
+    // TODO: 권한 생성 다이얼로그 구현
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.common_comingSoon)),
+    );
+  }
+
+  Future<void> _showEditPermissionDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    Permission permission,
+  ) async {
+    // TODO: 권한 수정 다이얼로그 구현
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.common_comingSoon)),
+    );
+  }
+
+  Future<void> _showDeleteConfirmDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    Permission permission,
+  ) async {
+    final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          user.isAdmin
-              ? l10n.permission_confirmRevoke
-              : l10n.permission_confirmGrant,
-        ),
-        content: Text(
-          user.isAdmin
-              ? l10n.permission_revokeMessage(user.name)
-              : l10n.permission_grantMessage(user.name),
+        title: Text(l10n.permission_deleteConfirm),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.permission_deleteMessage(permission.name)),
+            const SizedBox(height: AppSizes.spaceM),
+            Text(
+              l10n.permission_deleteSoftDescription,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            Text(
+              l10n.permission_deleteHardDescription,
+              style: const TextStyle(fontSize: 12, color: Colors.red),
+            ),
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(context),
             child: Text(l10n.common_cancel),
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.common_confirm),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'soft'),
+            child: Text(l10n.permission_softDelete),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'hard'),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: Text(l10n.permission_hardDelete),
           ),
         ],
       ),
     );
 
-    if (shouldUpdate == true && context.mounted) {
-      // 권한 업데이트
-      final success = await ref
-          .read(permissionManagementProvider.notifier)
-          .toggleAdminPermission(user.id, user.isAdmin);
+    if (result != null && context.mounted) {
+      final notifier = ref.read(permissionManagementProvider.notifier);
+      final success = result == 'hard'
+          ? await notifier.hardDeletePermission(permission.id)
+          : await notifier.deletePermission(permission.id);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               success
-                  ? l10n.permission_updateSuccess
-                  : l10n.permission_updateFailed,
+                  ? l10n.permission_deleteSuccess
+                  : l10n.permission_deleteFailed,
             ),
             backgroundColor: success ? Colors.green : Colors.red,
           ),

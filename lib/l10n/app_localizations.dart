@@ -1369,7 +1369,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_permissionManagementSubtitle.
   ///
   /// In ko, this message translates to:
-  /// **'사용자 권한을 관리하세요'**
+  /// **'Role에 할당할 권한 종류를 관리하세요'**
   String get settings_permissionManagementSubtitle;
 
   /// No description provided for @permission_title.
@@ -1378,119 +1378,125 @@ abstract class AppLocalizations {
   /// **'권한 관리'**
   String get permission_title;
 
-  /// No description provided for @permission_userList.
+  /// No description provided for @permission_search.
   ///
   /// In ko, this message translates to:
-  /// **'사용자 목록'**
-  String get permission_userList;
+  /// **'권한 검색 (코드, 이름, 설명)'**
+  String get permission_search;
 
-  /// No description provided for @permission_searchUser.
+  /// No description provided for @permission_allCategories.
   ///
   /// In ko, this message translates to:
-  /// **'사용자 검색 (이메일, 이름)'**
-  String get permission_searchUser;
+  /// **'전체'**
+  String get permission_allCategories;
 
-  /// No description provided for @permission_userId.
+  /// No description provided for @permission_create.
   ///
   /// In ko, this message translates to:
-  /// **'사용자 ID'**
-  String get permission_userId;
+  /// **'권한 생성'**
+  String get permission_create;
 
-  /// No description provided for @permission_email.
+  /// No description provided for @permission_code.
   ///
   /// In ko, this message translates to:
-  /// **'이메일'**
-  String get permission_email;
+  /// **'권한 코드'**
+  String get permission_code;
 
-  /// No description provided for @permission_name.
+  /// No description provided for @permission_category.
   ///
   /// In ko, this message translates to:
-  /// **'이름'**
-  String get permission_name;
+  /// **'카테고리'**
+  String get permission_category;
 
-  /// No description provided for @permission_isAdmin.
+  /// No description provided for @permission_description.
   ///
   /// In ko, this message translates to:
-  /// **'관리자 권한'**
-  String get permission_isAdmin;
+  /// **'설명'**
+  String get permission_description;
 
-  /// No description provided for @permission_createdAt.
+  /// No description provided for @permission_status.
   ///
   /// In ko, this message translates to:
-  /// **'가입일'**
-  String get permission_createdAt;
+  /// **'상태'**
+  String get permission_status;
 
-  /// No description provided for @permission_admin.
+  /// No description provided for @permission_active.
   ///
   /// In ko, this message translates to:
-  /// **'관리자'**
-  String get permission_admin;
+  /// **'활성'**
+  String get permission_active;
 
-  /// No description provided for @permission_user.
+  /// No description provided for @permission_inactive.
   ///
   /// In ko, this message translates to:
-  /// **'일반 사용자'**
-  String get permission_user;
+  /// **'비활성'**
+  String get permission_inactive;
 
-  /// No description provided for @permission_grantAdmin.
+  /// No description provided for @permission_count.
   ///
   /// In ko, this message translates to:
-  /// **'관리자 권한 부여'**
-  String get permission_grantAdmin;
+  /// **'개'**
+  String get permission_count;
 
-  /// No description provided for @permission_revokeAdmin.
+  /// No description provided for @permission_noPermissions.
   ///
   /// In ko, this message translates to:
-  /// **'관리자 권한 회수'**
-  String get permission_revokeAdmin;
-
-  /// No description provided for @permission_confirmGrant.
-  ///
-  /// In ko, this message translates to:
-  /// **'관리자 권한을 부여하시겠습니까?'**
-  String get permission_confirmGrant;
-
-  /// No description provided for @permission_confirmRevoke.
-  ///
-  /// In ko, this message translates to:
-  /// **'관리자 권한을 회수하시겠습니까?'**
-  String get permission_confirmRevoke;
-
-  /// No description provided for @permission_grantMessage.
-  ///
-  /// In ko, this message translates to:
-  /// **'{name}님에게 관리자 권한을 부여합니다.'**
-  String permission_grantMessage(String name);
-
-  /// No description provided for @permission_revokeMessage.
-  ///
-  /// In ko, this message translates to:
-  /// **'{name}님의 관리자 권한을 회수합니다.'**
-  String permission_revokeMessage(String name);
-
-  /// No description provided for @permission_updateSuccess.
-  ///
-  /// In ko, this message translates to:
-  /// **'권한이 업데이트되었습니다'**
-  String get permission_updateSuccess;
-
-  /// No description provided for @permission_updateFailed.
-  ///
-  /// In ko, this message translates to:
-  /// **'권한 업데이트 실패'**
-  String get permission_updateFailed;
+  /// **'권한이 없습니다'**
+  String get permission_noPermissions;
 
   /// No description provided for @permission_loadFailed.
   ///
   /// In ko, this message translates to:
-  /// **'사용자 목록을 불러오는데 실패했습니다'**
+  /// **'권한 목록을 불러오는데 실패했습니다'**
   String get permission_loadFailed;
 
-  /// No description provided for @permission_noUsers.
+  /// No description provided for @permission_deleteConfirm.
   ///
   /// In ko, this message translates to:
-  /// **'사용자가 없습니다'**
-  String get permission_noUsers;
+  /// **'권한 삭제'**
+  String get permission_deleteConfirm;
+
+  /// No description provided for @permission_deleteMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 권한을 삭제하시겠습니까?'**
+  String permission_deleteMessage(String name);
+
+  /// No description provided for @permission_deleteSoftDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'소프트 삭제: 비활성화하지만 데이터는 유지됩니다'**
+  String get permission_deleteSoftDescription;
+
+  /// No description provided for @permission_deleteHardDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'하드 삭제: 데이터베이스에서 완전히 삭제됩니다 (주의!)'**
+  String get permission_deleteHardDescription;
+
+  /// No description provided for @permission_softDelete.
+  ///
+  /// In ko, this message translates to:
+  /// **'소프트 삭제'**
+  String get permission_softDelete;
+
+  /// No description provided for @permission_hardDelete.
+  ///
+  /// In ko, this message translates to:
+  /// **'하드 삭제'**
+  String get permission_hardDelete;
+
+  /// No description provided for @permission_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한이 삭제되었습니다'**
+  String get permission_deleteSuccess;
+
+  /// No description provided for @permission_deleteFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 삭제 실패'**
+  String get permission_deleteFailed;
 
   /// No description provided for @group_title.
   ///

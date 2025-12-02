@@ -675,71 +675,76 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_permissionManagementTitle => 'Permission Management';
 
   @override
-  String get settings_permissionManagementSubtitle => 'Manage user permissions';
+  String get settings_permissionManagementSubtitle =>
+      'Manage permission types for Roles';
 
   @override
   String get permission_title => 'Permission Management';
 
   @override
-  String get permission_userList => 'User List';
+  String get permission_search =>
+      'Search permissions (code, name, description)';
 
   @override
-  String get permission_searchUser => 'Search user (email, name)';
+  String get permission_allCategories => 'All';
 
   @override
-  String get permission_userId => 'User ID';
+  String get permission_create => 'Create Permission';
 
   @override
-  String get permission_email => 'Email';
+  String get permission_code => 'Code';
 
   @override
-  String get permission_name => 'Name';
+  String get permission_category => 'Category';
 
   @override
-  String get permission_isAdmin => 'Admin Permission';
+  String get permission_description => 'Description';
 
   @override
-  String get permission_createdAt => 'Joined Date';
+  String get permission_status => 'Status';
 
   @override
-  String get permission_admin => 'Admin';
+  String get permission_active => 'Active';
 
   @override
-  String get permission_user => 'User';
+  String get permission_inactive => 'Inactive';
 
   @override
-  String get permission_grantAdmin => 'Grant Admin';
+  String get permission_count => '';
 
   @override
-  String get permission_revokeAdmin => 'Revoke Admin';
+  String get permission_noPermissions => 'No permissions found';
 
   @override
-  String get permission_confirmGrant => 'Grant admin permission?';
+  String get permission_loadFailed => 'Failed to load permissions';
 
   @override
-  String get permission_confirmRevoke => 'Revoke admin permission?';
+  String get permission_deleteConfirm => 'Delete Permission';
 
   @override
-  String permission_grantMessage(String name) {
-    return 'Grant admin permission to $name.';
+  String permission_deleteMessage(String name) {
+    return 'Delete $name permission?';
   }
 
   @override
-  String permission_revokeMessage(String name) {
-    return 'Revoke admin permission from $name.';
-  }
+  String get permission_deleteSoftDescription =>
+      'Soft delete: Deactivate but keep data';
 
   @override
-  String get permission_updateSuccess => 'Permission updated successfully';
+  String get permission_deleteHardDescription =>
+      'Hard delete: Permanently remove from database (Warning!)';
 
   @override
-  String get permission_updateFailed => 'Failed to update permission';
+  String get permission_softDelete => 'Soft Delete';
 
   @override
-  String get permission_loadFailed => 'Failed to load user list';
+  String get permission_hardDelete => 'Hard Delete';
 
   @override
-  String get permission_noUsers => 'No users found';
+  String get permission_deleteSuccess => 'Permission deleted successfully';
+
+  @override
+  String get permission_deleteFailed => 'Failed to delete permission';
 
   @override
   String get group_title => 'Group Management';

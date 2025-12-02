@@ -240,42 +240,36 @@
   "settings_passwordSetupNow": "パスワードを設定",
   "settings_adminMenu": "管理者専用",
   "settings_permissionManagementTitle": "権限管理",
-  "settings_permissionManagementSubtitle": "ユーザー権限を管理します",
+  "settings_permissionManagementSubtitle": "Roleに割り当てる権限タイプを管理します",
 
   "permission_title": "権限管理",
-  "permission_userList": "ユーザーリスト",
-  "permission_searchUser": "ユーザー検索（メール、名前）",
-  "permission_userId": "ユーザーID",
-  "permission_email": "メール",
-  "permission_name": "名前",
-  "permission_isAdmin": "管理者権限",
-  "permission_createdAt": "登録日",
-  "permission_admin": "管理者",
-  "permission_user": "一般ユーザー",
-  "permission_grantAdmin": "管理者権限を付与",
-  "permission_revokeAdmin": "管理者権限を取り消し",
-  "permission_confirmGrant": "管理者権限を付与しますか？",
-  "permission_confirmRevoke": "管理者権限を取り消しますか？",
-  "permission_grantMessage": "{name}さんに管理者権限を付与します。",
-  "@permission_grantMessage": {
+  "permission_search": "権限検索（コード、名前、説明）",
+  "permission_allCategories": "すべて",
+  "permission_create": "権限作成",
+  "permission_code": "権限コード",
+  "permission_category": "カテゴリ",
+  "permission_description": "説明",
+  "permission_status": "状態",
+  "permission_active": "有効",
+  "permission_inactive": "無効",
+  "permission_count": "件",
+  "permission_noPermissions": "権限が見つかりません",
+  "permission_loadFailed": "権限の読み込みに失敗しました",
+  "permission_deleteConfirm": "権限削除",
+  "permission_deleteMessage": "{name}権限を削除しますか？",
+  "@permission_deleteMessage": {
     "placeholders": {
       "name": {
         "type": "String"
       }
     }
   },
-  "permission_revokeMessage": "{name}さんの管理者権限を取り消します。",
-  "@permission_revokeMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "permission_updateSuccess": "権限が更新されました",
-  "permission_updateFailed": "権限の更新に失敗しました",
-  "permission_loadFailed": "ユーザーリストの読み込みに失敗しました",
-  "permission_noUsers": "ユーザーが見つかりません",
+  "permission_deleteSoftDescription": "ソフト削除：無効化しますがデータは保持されます",
+  "permission_deleteHardDescription": "ハード削除：データベースから完全に削除されます（注意！）",
+  "permission_softDelete": "ソフト削除",
+  "permission_hardDelete": "ハード削除",
+  "permission_deleteSuccess": "権限が削除されました",
+  "permission_deleteFailed": "権限の削除に失敗しました",
 
   "group_title": "グループ管理",
   "group_myGroups": "マイグループ",

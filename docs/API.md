@@ -292,6 +292,95 @@ PATCH /users/me
 }
 ```
 
+## 권한(Permission) API
+
+> 운영자 전용 API: 모든 권한 관리 API는 `isAdmin: true`인 사용자만 접근 가능합니다.
+>
+> Permission은 Role에 할당할 수 있는 권한의 종류(상수)를 정의합니다.
+> 예: `GROUP_UPDATE`, `MEMBER_INVITE`, `SCHEDULE_CREATE` 등
+
+### 권한 목록 조회
+```
+GET /permissions?category={category}
+```
+**Headers:**
+```
+Authorization: Bearer {accessToken}
+```
+**Query Parameters:**
+- `category` (optional): 카테고리별 필터링 (예: `GROUP`, `MEMBER`, `ROLE`, `SCHEDULE`)
+
+**Response:**
+```json
+[
+  {
+    "id": "perm_123",
+    "code": "GROUP_UPDATE",
+    "name": "그룹 수정",
+    "description": "그룹 정보를 수정할 수 있는 권한",
+    "category": "GROUP",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-02T00:00:00Z"
+  }
+]
+```
+
+### 권한 생성
+```
+POST /permissions
+```
+**Headers:**
+```
+Authorization: Bearer {accessToken}
+```
+**Request Body:**
+```json
+{
+  "code": "CUSTOM_PERMISSION",
+  "name": "커스텀 권한",
+  "description": "설명 (선택사항)",
+  "category": "CUSTOM"
+}
+```
+
+### 권한 수정
+```
+PATCH /permissions/{id}
+```
+**Headers:**
+```
+Authorization: Bearer {accessToken}
+```
+**Request Body:**
+```json
+{
+  "name": "수정된 권한명",
+  "description": "수정된 설명",
+  "isActive": true
+}
+```
+
+### 권한 삭제 (소프트)
+```
+DELETE /permissions/{id}
+```
+**Headers:**
+```
+Authorization: Bearer {accessToken}
+```
+**설명:** 권한을 비활성화(`isActive: false`)하지만 데이터는 유지됩니다.
+
+### 권한 완전 삭제 (하드)
+```
+DELETE /permissions/{id}/hard
+```
+**Headers:**
+```
+Authorization: Bearer {accessToken}
+```
+**설명:** 데이터베이스에서 권한을 완전히 삭제합니다. ⚠️ 주의: 복구 불가능
+
 ## 에러 응답 형식
 
 ```json

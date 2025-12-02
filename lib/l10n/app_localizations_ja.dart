@@ -653,71 +653,72 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_permissionManagementTitle => '権限管理';
 
   @override
-  String get settings_permissionManagementSubtitle => 'ユーザー権限を管理します';
+  String get settings_permissionManagementSubtitle => 'Roleに割り当てる権限タイプを管理します';
 
   @override
   String get permission_title => '権限管理';
 
   @override
-  String get permission_userList => 'ユーザーリスト';
+  String get permission_search => '権限検索（コード、名前、説明）';
 
   @override
-  String get permission_searchUser => 'ユーザー検索（メール、名前）';
+  String get permission_allCategories => 'すべて';
 
   @override
-  String get permission_userId => 'ユーザーID';
+  String get permission_create => '権限作成';
 
   @override
-  String get permission_email => 'メール';
+  String get permission_code => '権限コード';
 
   @override
-  String get permission_name => '名前';
+  String get permission_category => 'カテゴリ';
 
   @override
-  String get permission_isAdmin => '管理者権限';
+  String get permission_description => '説明';
 
   @override
-  String get permission_createdAt => '登録日';
+  String get permission_status => '状態';
 
   @override
-  String get permission_admin => '管理者';
+  String get permission_active => '有効';
 
   @override
-  String get permission_user => '一般ユーザー';
+  String get permission_inactive => '無効';
 
   @override
-  String get permission_grantAdmin => '管理者権限を付与';
+  String get permission_count => '件';
 
   @override
-  String get permission_revokeAdmin => '管理者権限を取り消し';
+  String get permission_noPermissions => '権限が見つかりません';
 
   @override
-  String get permission_confirmGrant => '管理者権限を付与しますか？';
+  String get permission_loadFailed => '権限の読み込みに失敗しました';
 
   @override
-  String get permission_confirmRevoke => '管理者権限を取り消しますか？';
+  String get permission_deleteConfirm => '権限削除';
 
   @override
-  String permission_grantMessage(String name) {
-    return '$nameさんに管理者権限を付与します。';
+  String permission_deleteMessage(String name) {
+    return '$name権限を削除しますか？';
   }
 
   @override
-  String permission_revokeMessage(String name) {
-    return '$nameさんの管理者権限を取り消します。';
-  }
+  String get permission_deleteSoftDescription => 'ソフト削除：無効化しますがデータは保持されます';
 
   @override
-  String get permission_updateSuccess => '権限が更新されました';
+  String get permission_deleteHardDescription => 'ハード削除：データベースから完全に削除されます（注意！）';
 
   @override
-  String get permission_updateFailed => '権限の更新に失敗しました';
+  String get permission_softDelete => 'ソフト削除';
 
   @override
-  String get permission_loadFailed => 'ユーザーリストの読み込みに失敗しました';
+  String get permission_hardDelete => 'ハード削除';
 
   @override
-  String get permission_noUsers => 'ユーザーが見つかりません';
+  String get permission_deleteSuccess => '権限が削除されました';
+
+  @override
+  String get permission_deleteFailed => '権限の削除に失敗しました';
 
   @override
   String get group_title => 'グループ管理';

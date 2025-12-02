@@ -240,42 +240,36 @@
   "settings_passwordSetupNow": "Set Password",
   "settings_adminMenu": "Admin Only",
   "settings_permissionManagementTitle": "Permission Management",
-  "settings_permissionManagementSubtitle": "Manage user permissions",
+  "settings_permissionManagementSubtitle": "Manage permission types for Roles",
 
   "permission_title": "Permission Management",
-  "permission_userList": "User List",
-  "permission_searchUser": "Search user (email, name)",
-  "permission_userId": "User ID",
-  "permission_email": "Email",
-  "permission_name": "Name",
-  "permission_isAdmin": "Admin Permission",
-  "permission_createdAt": "Joined Date",
-  "permission_admin": "Admin",
-  "permission_user": "User",
-  "permission_grantAdmin": "Grant Admin",
-  "permission_revokeAdmin": "Revoke Admin",
-  "permission_confirmGrant": "Grant admin permission?",
-  "permission_confirmRevoke": "Revoke admin permission?",
-  "permission_grantMessage": "Grant admin permission to {name}.",
-  "@permission_grantMessage": {
+  "permission_search": "Search permissions (code, name, description)",
+  "permission_allCategories": "All",
+  "permission_create": "Create Permission",
+  "permission_code": "Code",
+  "permission_category": "Category",
+  "permission_description": "Description",
+  "permission_status": "Status",
+  "permission_active": "Active",
+  "permission_inactive": "Inactive",
+  "permission_count": "",
+  "permission_noPermissions": "No permissions found",
+  "permission_loadFailed": "Failed to load permissions",
+  "permission_deleteConfirm": "Delete Permission",
+  "permission_deleteMessage": "Delete {name} permission?",
+  "@permission_deleteMessage": {
     "placeholders": {
       "name": {
         "type": "String"
       }
     }
   },
-  "permission_revokeMessage": "Revoke admin permission from {name}.",
-  "@permission_revokeMessage": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "permission_updateSuccess": "Permission updated successfully",
-  "permission_updateFailed": "Failed to update permission",
-  "permission_loadFailed": "Failed to load user list",
-  "permission_noUsers": "No users found",
+  "permission_deleteSoftDescription": "Soft delete: Deactivate but keep data",
+  "permission_deleteHardDescription": "Hard delete: Permanently remove from database (Warning!)",
+  "permission_softDelete": "Soft Delete",
+  "permission_hardDelete": "Hard Delete",
+  "permission_deleteSuccess": "Permission deleted successfully",
+  "permission_deleteFailed": "Failed to delete permission",
 
   "group_title": "Group Management",
   "group_myGroups": "My Groups",
