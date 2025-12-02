@@ -21,6 +21,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_cancel => '취소';
 
   @override
+  String get common_confirm => '확인';
+
+  @override
   String get common_save => '저장';
 
   @override
@@ -643,6 +646,79 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings_passwordSetupNow => '비밀번호 설정하기';
+
+  @override
+  String get settings_adminMenu => '운영자 전용';
+
+  @override
+  String get settings_permissionManagementTitle => '권한 관리';
+
+  @override
+  String get settings_permissionManagementSubtitle => '사용자 권한을 관리하세요';
+
+  @override
+  String get permission_title => '권한 관리';
+
+  @override
+  String get permission_userList => '사용자 목록';
+
+  @override
+  String get permission_searchUser => '사용자 검색 (이메일, 이름)';
+
+  @override
+  String get permission_userId => '사용자 ID';
+
+  @override
+  String get permission_email => '이메일';
+
+  @override
+  String get permission_name => '이름';
+
+  @override
+  String get permission_isAdmin => '관리자 권한';
+
+  @override
+  String get permission_createdAt => '가입일';
+
+  @override
+  String get permission_admin => '관리자';
+
+  @override
+  String get permission_user => '일반 사용자';
+
+  @override
+  String get permission_grantAdmin => '관리자 권한 부여';
+
+  @override
+  String get permission_revokeAdmin => '관리자 권한 회수';
+
+  @override
+  String get permission_confirmGrant => '관리자 권한을 부여하시겠습니까?';
+
+  @override
+  String get permission_confirmRevoke => '관리자 권한을 회수하시겠습니까?';
+
+  @override
+  String permission_grantMessage(String name) {
+    return '$name님에게 관리자 권한을 부여합니다.';
+  }
+
+  @override
+  String permission_revokeMessage(String name) {
+    return '$name님의 관리자 권한을 회수합니다.';
+  }
+
+  @override
+  String get permission_updateSuccess => '권한이 업데이트되었습니다';
+
+  @override
+  String get permission_updateFailed => '권한 업데이트 실패';
+
+  @override
+  String get permission_loadFailed => '사용자 목록을 불러오는데 실패했습니다';
+
+  @override
+  String get permission_noUsers => '사용자가 없습니다';
 
   @override
   String get group_title => '그룹 관리';

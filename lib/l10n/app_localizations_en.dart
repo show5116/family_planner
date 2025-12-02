@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_cancel => 'Cancel';
 
   @override
+  String get common_confirm => 'Confirm';
+
+  @override
   String get common_save => 'Save';
 
   @override
@@ -664,6 +667,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_passwordSetupNow => 'Set Password';
+
+  @override
+  String get settings_adminMenu => 'Admin Only';
+
+  @override
+  String get settings_permissionManagementTitle => 'Permission Management';
+
+  @override
+  String get settings_permissionManagementSubtitle => 'Manage user permissions';
+
+  @override
+  String get permission_title => 'Permission Management';
+
+  @override
+  String get permission_userList => 'User List';
+
+  @override
+  String get permission_searchUser => 'Search user (email, name)';
+
+  @override
+  String get permission_userId => 'User ID';
+
+  @override
+  String get permission_email => 'Email';
+
+  @override
+  String get permission_name => 'Name';
+
+  @override
+  String get permission_isAdmin => 'Admin Permission';
+
+  @override
+  String get permission_createdAt => 'Joined Date';
+
+  @override
+  String get permission_admin => 'Admin';
+
+  @override
+  String get permission_user => 'User';
+
+  @override
+  String get permission_grantAdmin => 'Grant Admin';
+
+  @override
+  String get permission_revokeAdmin => 'Revoke Admin';
+
+  @override
+  String get permission_confirmGrant => 'Grant admin permission?';
+
+  @override
+  String get permission_confirmRevoke => 'Revoke admin permission?';
+
+  @override
+  String permission_grantMessage(String name) {
+    return 'Grant admin permission to $name.';
+  }
+
+  @override
+  String permission_revokeMessage(String name) {
+    return 'Revoke admin permission from $name.';
+  }
+
+  @override
+  String get permission_updateSuccess => 'Permission updated successfully';
+
+  @override
+  String get permission_updateFailed => 'Failed to update permission';
+
+  @override
+  String get permission_loadFailed => 'Failed to load user list';
+
+  @override
+  String get permission_noUsers => 'No users found';
 
   @override
   String get group_title => 'Group Management';

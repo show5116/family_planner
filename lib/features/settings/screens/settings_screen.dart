@@ -197,6 +197,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           ),
           const Divider(),
 
+          // 운영자 전용 섹션 (관리자만 표시)
+          if (_userInfo?['isAdmin'] as bool? ?? false) ...[
+            _buildSectionHeader(context, l10n.settings_adminMenu),
+            _buildSettingTile(
+              context,
+              icon: Icons.admin_panel_settings_outlined,
+              title: l10n.settings_permissionManagementTitle,
+              subtitle: l10n.settings_permissionManagementSubtitle,
+              onTap: () {
+                context.push(AppRoutes.permissionManagement);
+              },
+            ),
+            const Divider(),
+          ],
+
           // 정보 섹션
           _buildSectionHeader(context, l10n.settings_information),
           _buildSettingTile(

@@ -13,6 +13,7 @@
 
   "common_ok": "확인",
   "common_cancel": "취소",
+  "common_confirm": "확인",
   "common_save": "저장",
   "common_delete": "삭제",
   "common_edit": "수정",
@@ -237,6 +238,44 @@
   "settings_passwordSetupMessage3": "비밀번호 설정 화면으로 이동하시겠습니까?",
   "settings_passwordSetupLater": "나중에",
   "settings_passwordSetupNow": "비밀번호 설정하기",
+  "settings_adminMenu": "운영자 전용",
+  "settings_permissionManagementTitle": "권한 관리",
+  "settings_permissionManagementSubtitle": "사용자 권한을 관리하세요",
+
+  "permission_title": "권한 관리",
+  "permission_userList": "사용자 목록",
+  "permission_searchUser": "사용자 검색 (이메일, 이름)",
+  "permission_userId": "사용자 ID",
+  "permission_email": "이메일",
+  "permission_name": "이름",
+  "permission_isAdmin": "관리자 권한",
+  "permission_createdAt": "가입일",
+  "permission_admin": "관리자",
+  "permission_user": "일반 사용자",
+  "permission_grantAdmin": "관리자 권한 부여",
+  "permission_revokeAdmin": "관리자 권한 회수",
+  "permission_confirmGrant": "관리자 권한을 부여하시겠습니까?",
+  "permission_confirmRevoke": "관리자 권한을 회수하시겠습니까?",
+  "permission_grantMessage": "{name}님에게 관리자 권한을 부여합니다.",
+  "@permission_grantMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_revokeMessage": "{name}님의 관리자 권한을 회수합니다.",
+  "@permission_revokeMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_updateSuccess": "권한이 업데이트되었습니다",
+  "permission_updateFailed": "권한 업데이트 실패",
+  "permission_loadFailed": "사용자 목록을 불러오는데 실패했습니다",
+  "permission_noUsers": "사용자가 없습니다",
 
   "group_title": "그룹 관리",
   "group_myGroups": "내 그룹",

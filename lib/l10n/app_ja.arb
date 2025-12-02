@@ -13,6 +13,7 @@
 
   "common_ok": "OK",
   "common_cancel": "キャンセル",
+  "common_confirm": "確認",
   "common_save": "保存",
   "common_delete": "削除",
   "common_edit": "編集",
@@ -237,6 +238,44 @@
   "settings_passwordSetupMessage3": "パスワード設定画面に移動しますか？",
   "settings_passwordSetupLater": "後で",
   "settings_passwordSetupNow": "パスワードを設定",
+  "settings_adminMenu": "管理者専用",
+  "settings_permissionManagementTitle": "権限管理",
+  "settings_permissionManagementSubtitle": "ユーザー権限を管理します",
+
+  "permission_title": "権限管理",
+  "permission_userList": "ユーザーリスト",
+  "permission_searchUser": "ユーザー検索（メール、名前）",
+  "permission_userId": "ユーザーID",
+  "permission_email": "メール",
+  "permission_name": "名前",
+  "permission_isAdmin": "管理者権限",
+  "permission_createdAt": "登録日",
+  "permission_admin": "管理者",
+  "permission_user": "一般ユーザー",
+  "permission_grantAdmin": "管理者権限を付与",
+  "permission_revokeAdmin": "管理者権限を取り消し",
+  "permission_confirmGrant": "管理者権限を付与しますか？",
+  "permission_confirmRevoke": "管理者権限を取り消しますか？",
+  "permission_grantMessage": "{name}さんに管理者権限を付与します。",
+  "@permission_grantMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_revokeMessage": "{name}さんの管理者権限を取り消します。",
+  "@permission_revokeMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "permission_updateSuccess": "権限が更新されました",
+  "permission_updateFailed": "権限の更新に失敗しました",
+  "permission_loadFailed": "ユーザーリストの読み込みに失敗しました",
+  "permission_noUsers": "ユーザーが見つかりません",
 
   "group_title": "グループ管理",
   "group_myGroups": "マイグループ",

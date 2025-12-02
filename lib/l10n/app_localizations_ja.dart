@@ -21,6 +21,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_cancel => 'キャンセル';
 
   @override
+  String get common_confirm => '確認';
+
+  @override
   String get common_save => '保存';
 
   @override
@@ -642,6 +645,79 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settings_passwordSetupNow => 'パスワードを設定';
+
+  @override
+  String get settings_adminMenu => '管理者専用';
+
+  @override
+  String get settings_permissionManagementTitle => '権限管理';
+
+  @override
+  String get settings_permissionManagementSubtitle => 'ユーザー権限を管理します';
+
+  @override
+  String get permission_title => '権限管理';
+
+  @override
+  String get permission_userList => 'ユーザーリスト';
+
+  @override
+  String get permission_searchUser => 'ユーザー検索（メール、名前）';
+
+  @override
+  String get permission_userId => 'ユーザーID';
+
+  @override
+  String get permission_email => 'メール';
+
+  @override
+  String get permission_name => '名前';
+
+  @override
+  String get permission_isAdmin => '管理者権限';
+
+  @override
+  String get permission_createdAt => '登録日';
+
+  @override
+  String get permission_admin => '管理者';
+
+  @override
+  String get permission_user => '一般ユーザー';
+
+  @override
+  String get permission_grantAdmin => '管理者権限を付与';
+
+  @override
+  String get permission_revokeAdmin => '管理者権限を取り消し';
+
+  @override
+  String get permission_confirmGrant => '管理者権限を付与しますか？';
+
+  @override
+  String get permission_confirmRevoke => '管理者権限を取り消しますか？';
+
+  @override
+  String permission_grantMessage(String name) {
+    return '$nameさんに管理者権限を付与します。';
+  }
+
+  @override
+  String permission_revokeMessage(String name) {
+    return '$nameさんの管理者権限を取り消します。';
+  }
+
+  @override
+  String get permission_updateSuccess => '権限が更新されました';
+
+  @override
+  String get permission_updateFailed => '権限の更新に失敗しました';
+
+  @override
+  String get permission_loadFailed => 'ユーザーリストの読み込みに失敗しました';
+
+  @override
+  String get permission_noUsers => 'ユーザーが見つかりません';
 
   @override
   String get group_title => 'グループ管理';
