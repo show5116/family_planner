@@ -83,7 +83,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  e.message.isNotEmpty ? e.message : l10n.auth_loginFailedInvalidCredentials,
+                  e.message.isNotEmpty
+                      ? e.message
+                      : l10n.auth_loginFailedInvalidCredentials,
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -160,18 +162,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         actions: [
-          ThemeToggleButton(key: ValueKey('theme_toggle_$hashCode'), isOnPrimaryColor: true),
+          ThemeToggleButton(
+            key: ValueKey('theme_toggle_$hashCode'),
+            isOnPrimaryColor: true,
+          ),
           const SizedBox(width: AppSizes.spaceXS),
           Padding(
             padding: const EdgeInsets.only(right: AppSizes.spaceS),
-            child: LanguageSelectorButton(key: ValueKey('language_selector_$hashCode'), isOnPrimaryColor: true),
+            child: LanguageSelectorButton(
+              key: ValueKey('language_selector_$hashCode'),
+              isOnPrimaryColor: true,
+            ),
           ),
         ],
       ),
@@ -269,7 +277,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           animationDuration: Duration.zero,
                         ),
                         onPressed: () {
@@ -359,7 +369,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         TextButton(
                           style: TextButton.styleFrom(
-                            foregroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             animationDuration: Duration.zero,
                           ),
                           onPressed: () {

@@ -77,9 +77,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(authProvider.notifier).requestPasswordReset(
-            email: _emailController.text.trim(),
-          );
+      await ref
+          .read(authProvider.notifier)
+          .requestPasswordReset(email: _emailController.text.trim());
 
       setState(() {
         _isCodeSent = true;
@@ -145,7 +145,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(authProvider.notifier).resetPassword(
+      await ref
+          .read(authProvider.notifier)
+          .resetPassword(
             email: _emailController.text.trim(),
             code: _codeController.text.trim(),
             newPassword: _passwordController.text,
@@ -205,10 +207,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         : l10n.auth_forgotPasswordTitle;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text(screenTitle),
-      ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: Text(screenTitle)),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -217,9 +217,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               vertical: AppSizes.spaceM,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 500,
-              ),
+              constraints: const BoxConstraints(maxWidth: 500),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -238,8 +236,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     Text(
                       _getGuideText(context),
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                        color: AppColors.textSecondary,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSizes.spaceXXL),

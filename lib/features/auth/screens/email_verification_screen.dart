@@ -9,10 +9,7 @@ import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 이메일 인증 화면
 class EmailVerificationScreen extends ConsumerStatefulWidget {
-  const EmailVerificationScreen({
-    super.key,
-    required this.email,
-  });
+  const EmailVerificationScreen({super.key, required this.email});
 
   final String email;
 
@@ -49,9 +46,9 @@ class _EmailVerificationScreenState
     });
 
     try {
-      await ref.read(authProvider.notifier).verifyEmail(
-            code: _codeController.text.trim(),
-          );
+      await ref
+          .read(authProvider.notifier)
+          .verifyEmail(code: _codeController.text.trim());
 
       if (!mounted) return;
 
@@ -69,10 +66,7 @@ class _EmailVerificationScreenState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: AppColors.error,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
       );
     } finally {
       if (mounted) {
@@ -89,9 +83,9 @@ class _EmailVerificationScreenState
     });
 
     try {
-      await ref.read(authProvider.notifier).resendVerification(
-            email: widget.email,
-          );
+      await ref
+          .read(authProvider.notifier)
+          .resendVerification(email: widget.email);
 
       if (!mounted) return;
 
@@ -105,10 +99,7 @@ class _EmailVerificationScreenState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: AppColors.error,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
       );
     } finally {
       if (mounted) {
@@ -122,11 +113,8 @@ class _EmailVerificationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: const Text('이메일 인증'),
-        centerTitle: true,
-      ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: const Text('이메일 인증'), centerTitle: true),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -135,184 +123,180 @@ class _EmailVerificationScreenState
               vertical: AppSizes.spaceM,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 500,
-              ),
+              constraints: const BoxConstraints(maxWidth: 500),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-              // 아이콘
-              Container(
-                padding: const EdgeInsets.all(AppSizes.spaceXL),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.email_outlined,
-                  size: Responsive.isMobile(context) ? 80 : 100,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceXL),
+                  // 아이콘
+                  Container(
+                    padding: const EdgeInsets.all(AppSizes.spaceXL),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.email_outlined,
+                      size: Responsive.isMobile(context) ? 80 : 100,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceXL),
 
-              // 제목
-              Text(
-                '이메일을 확인해주세요',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  // 제목
+                  Text(
+                    '이메일을 확인해주세요',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
 
-              // 설명
-              Text(
-                '${widget.email}\n으로 인증 이메일을 보냈습니다.',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  // 설명
+                  Text(
+                    '${widget.email}\n으로 인증 이메일을 보냈습니다.',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: AppColors.textSecondary,
                     ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSizes.spaceXXL),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSizes.spaceXXL),
 
-              // 인증 코드 입력
-              Card(
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSizes.spaceL),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '인증 코드 입력',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                  // 인증 코드 입력
+                  Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSizes.spaceL),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '인증 코드 입력',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: AppSizes.spaceM),
+                          Text(
+                            '이메일에 포함된 6자리 인증 코드를 입력해주세요.',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: AppColors.textSecondary),
+                          ),
+                          const SizedBox(height: AppSizes.spaceM),
+                          TextField(
+                            controller: _codeController,
+                            decoration: InputDecoration(
+                              labelText: '인증 코드',
+                              hintText: '예: 123456',
+                              prefixIcon: const Icon(Icons.vpn_key_outlined),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radiusMedium,
+                                ),
+                              ),
                             ),
-                      ),
-                      const SizedBox(height: AppSizes.spaceM),
-                      Text(
-                        '이메일에 포함된 6자리 인증 코드를 입력해주세요.',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                      ),
-                      const SizedBox(height: AppSizes.spaceM),
-                      TextField(
-                        controller: _codeController,
-                        decoration: InputDecoration(
-                          labelText: '인증 코드',
-                          hintText: '예: 123456',
-                          prefixIcon: const Icon(Icons.vpn_key_outlined),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppSizes.radiusMedium,
+                            keyboardType: TextInputType.number,
+                            maxLength: 6,
+                            textInputAction: TextInputAction.done,
+                            onSubmitted: (_) => _handleVerifyEmail(),
+                          ),
+                          const SizedBox(height: AppSizes.spaceM),
+                          SizedBox(
+                            width: double.infinity,
+                            height: AppSizes.buttonHeightLarge,
+                            child: ElevatedButton(
+                              onPressed: _isLoading ? null : _handleVerifyEmail,
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      height: AppSizes.iconMedium,
+                                      width: AppSizes.iconMedium,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                      ),
+                                    )
+                                  : const Text('인증하기'),
                             ),
                           ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        maxLength: 6,
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) => _handleVerifyEmail(),
+                        ],
                       ),
-                      const SizedBox(height: AppSizes.spaceM),
-                      SizedBox(
-                        width: double.infinity,
-                        height: AppSizes.buttonHeightLarge,
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : _handleVerifyEmail,
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: AppSizes.iconMedium,
-                                  width: AppSizes.iconMedium,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : const Text('인증하기'),
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceXL),
+
+                  // 구분선
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.spaceM,
                         ),
+                        child: Text(
+                          '또는',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.textSecondary),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: AppSizes.spaceXL),
+
+                  // 재전송 안내
+                  Text(
+                    '이메일을 받지 못하셨나요?',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
+
+                  // 재전송 버튼
+                  SizedBox(
+                    width: double.infinity,
+                    height: AppSizes.buttonHeightLarge,
+                    child: OutlinedButton.icon(
+                      onPressed: _isResending
+                          ? null
+                          : _handleResendVerification,
+                      icon: _isResending
+                          ? const SizedBox(
+                              height: AppSizes.iconSmall,
+                              width: AppSizes.iconSmall,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.refresh),
+                      label: const Text('인증 이메일 재전송'),
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceXL),
+
+                  // 로그인 링크
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '나중에 인증하기 ',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.go(AppRoutes.login);
+                        },
+                        child: const Text('로그인으로 돌아가기'),
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceXL),
-
-              // 구분선
-              Row(
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceM,
-                    ),
-                    child: Text(
-                      '또는',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                    ),
-                  ),
-                  const Expanded(child: Divider()),
                 ],
               ),
-              const SizedBox(height: AppSizes.spaceXL),
-
-              // 재전송 안내
-              Text(
-                '이메일을 받지 못하셨나요?',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 재전송 버튼
-              SizedBox(
-                width: double.infinity,
-                height: AppSizes.buttonHeightLarge,
-                child: OutlinedButton.icon(
-                  onPressed: _isResending ? null : _handleResendVerification,
-                  icon: _isResending
-                      ? const SizedBox(
-                          height: AppSizes.iconSmall,
-                          width: AppSizes.iconSmall,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Icon(Icons.refresh),
-                  label: const Text('인증 이메일 재전송'),
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceXL),
-
-              // 로그인 링크
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '나중에 인증하기 ',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      context.go(AppRoutes.login);
-                    },
-                    child: const Text('로그인으로 돌아가기'),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-      ),
       ),
     );
   }

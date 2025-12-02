@@ -94,7 +94,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.auth_signup),
         centerTitle: true,
