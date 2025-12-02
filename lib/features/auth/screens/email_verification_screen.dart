@@ -122,26 +122,26 @@ class _EmailVerificationScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('이메일 인증'),
         centerTitle: true,
       ),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: ResponsivePadding.getHorizontalPadding(context),
-                vertical: AppSizes.spaceXL,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsivePadding.getHorizontalPadding(context),
+              vertical: AppSizes.spaceM,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
               ),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight - AppSizes.spaceXL * 2,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
               // 아이콘
               Container(
                 padding: const EdgeInsets.all(AppSizes.spaceXL),
@@ -308,13 +308,12 @@ class _EmailVerificationScreenState
                   ),
                 ],
               ),
-                ],
-              ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
       ),
-    ),
+      ),
+      ),
     );
   }
 }

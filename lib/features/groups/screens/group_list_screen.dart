@@ -134,12 +134,14 @@ class GroupListScreen extends ConsumerWidget {
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           title: Text(l10n.group_createGroup),
-          content: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                   TextFormField(
                     controller: nameController,
                     decoration: InputDecoration(
@@ -204,6 +206,7 @@ class GroupListScreen extends ConsumerWidget {
               ),
             ),
           ),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
@@ -252,11 +255,14 @@ class GroupListScreen extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.group_joinGroup),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
               TextFormField(
                 controller: codeController,
                 decoration: InputDecoration(
@@ -274,6 +280,8 @@ class GroupListScreen extends ConsumerWidget {
               ),
             ],
           ),
+        ),
+        ),
         ),
         actions: [
           TextButton(
