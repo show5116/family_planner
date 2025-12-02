@@ -19,7 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="가족과 함께하는 일상 관리 플래너 - 일정, 할일, 자산, 가계부를 한 곳에서">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 
   <!-- Google Sign-In Configuration -->
   <!-- TODO: Google Cloud Console에서 OAuth 2.0 클라이언트 ID를 발급받아 아래 YOUR_GOOGLE_WEB_CLIENT_ID를 교체하세요 -->
@@ -41,8 +41,119 @@
 
   <title>Family Planner - 가족 플래너</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* 웹에서 모바일 키보드 대응 */
+    html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      /* iOS Safari 키보드 대응 */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Flutter 앱이 키보드에 의해 밀리지 않도록 */
+    flt-glass-pane {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
+
+    /* 입력 필드 포커스 시 자동 스크롤 개선 */
+    input, textarea {
+      /* iOS에서 입력 필드 확대 방지 */
+      font-size: 16px !important;
+    }
+  </style>
 </head>
 <body>
+  <script>
+    // 웹 모바일 환경에서 키보드 대응
+    (function() {
+      'use strict';
+
+      let initialViewportHeight = window.innerHeight;
+      let currentInputElement = null;
+
+      // Visual Viewport API를 사용한 키보드 감지 (최신 브라우저)
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          const viewportHeight = window.visualViewport.height;
+          const isKeyboardVisible = viewportHeight < initialViewportHeight * 0.75;
+
+          if (isKeyboardVisible && currentInputElement) {
+            // 키보드가 열렸을 때 입력 필드가 보이도록 스크롤
+            setTimeout(() => {
+              const rect = currentInputElement.getBoundingClientRect();
+              const visibleTop = window.visualViewport.offsetTop;
+              const visibleBottom = visibleTop + window.visualViewport.height;
+
+              // 입력 필드가 키보드에 가려지면 스크롤
+              if (rect.bottom > visibleBottom - 50) {
+                currentInputElement.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                  inline: 'nearest'
+                });
+              }
+            }, 100);
+          }
+        });
+      }
+
+      // 입력 필드 포커스 이벤트
+      document.addEventListener('focusin', (e) => {
+        if (e.target.tagName === 'INPUT' ||
+            e.target.tagName === 'TEXTAREA' ||
+            e.target.isContentEditable) {
+          currentInputElement = e.target;
+
+          // 모바일 환경에서 입력 필드를 화면 중앙으로
+          if ('ontouchstart' in window) {
+            setTimeout(() => {
+              e.target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+              });
+            }, 300);
+          }
+        }
+      });
+
+      // 입력 필드 포커스 해제
+      document.addEventListener('focusout', (e) => {
+        if (currentInputElement === e.target) {
+          currentInputElement = null;
+        }
+      });
+
+      // 페이지 로드 시 초기 높이 설정
+      window.addEventListener('load', () => {
+        initialViewportHeight = window.innerHeight;
+      });
+
+      // iOS Safari 주소창 숨김 처리
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+          window.scrollTo(0, 0);
+        }
+      });
+    })();
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

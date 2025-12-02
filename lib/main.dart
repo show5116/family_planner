@@ -124,6 +124,17 @@ class _MyAppState extends ConsumerState<MyApp> {
         GlobalWidgetsLocalizations.delegate, // 일반 위젯 다국어
         GlobalCupertinoLocalizations.delegate, // Cupertino 위젯 다국어
       ],
+
+      // 웹에서 스크롤 동작 개선
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            // 텍스트 스케일 고정 (웹에서 브라우저 설정에 영향받지 않도록)
+            textScaler: TextScaler.noScaling,
+          ),
+          child: child ?? const SizedBox(),
+        );
+      },
     );
   }
 }
