@@ -44,13 +44,14 @@ class PermissionManagementState {
     String? error,
     String? searchQuery,
     String? selectedCategory,
+    bool clearCategory = false,
   }) {
     return PermissionManagementState(
       permissions: permissions ?? this.permissions,
       isLoading: isLoading ?? this.isLoading,
       error: error,
       searchQuery: searchQuery ?? this.searchQuery,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedCategory: clearCategory ? null : (selectedCategory ?? this.selectedCategory),
     );
   }
 }
@@ -87,7 +88,55 @@ class PermissionManagementNotifier
 
   /// 카테고리 필터 설정
   void setCategory(String? category) {
-    state = state.copyWith(selectedCategory: category);
+    if (category == null) {
+      state = state.copyWith(clearCategory: true);
+    } else {
+      state = state.copyWith(selectedCategory: category);
+    }
+  }
+
+  /// 권한 생성
+  Future<Permission> createPermission({
+    required String code,
+    required String name,
+    String? description,
+    required String category,
+  }) async {
+    final permission = await _permissionService.createPermission(
+      code: code,
+      name: name,
+      description: description,
+      category: category,
+    );
+
+    // 로컬 상태에 추가
+    final updatedPermissions = [...state.permissions, permission];
+    state = state.copyWith(permissions: updatedPermissions);
+
+    return permission;
+  }
+
+  /// 권한 수정
+  Future<Permission> updatePermission(
+    String id, {
+    String? name,
+    String? description,
+    bool? isActive,
+  }) async {
+    final updatedPermission = await _permissionService.updatePermission(
+      id,
+      name: name,
+      description: description,
+      isActive: isActive,
+    );
+
+    // 로컬 상태 업데이트
+    final updatedPermissions = state.permissions.map((p) {
+      return p.id == id ? updatedPermission : p;
+    }).toList();
+    state = state.copyWith(permissions: updatedPermissions);
+
+    return updatedPermission;
   }
 
   /// 권한 삭제 (소프트)

@@ -43,10 +43,13 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // 인증 토큰 추가
-          final token = await _getAccessToken();
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
+          // retry 플래그가 있으면 토큰 재설정을 건너뜀 (이미 설정됨)
+          if (options.extra['retry_with_new_token'] != true) {
+            // 인증 토큰 추가
+            final token = await _getAccessToken();
+            if (token != null) {
+              options.headers['Authorization'] = 'Bearer $token';
+            }
           }
 
           // 로그 출력 (개발 환경)
@@ -104,12 +107,16 @@ class ApiClient {
 
               if (token != null) {
                 options.headers['Authorization'] = 'Bearer $token';
+                // retry 플래그를 설정하여 onRequest에서 토큰을 다시 설정하지 않도록 함
+                options.extra['retry_with_new_token'] = true;
                 debugPrint('Updated Authorization header with new token');
+                debugPrint('Token value: ${token.substring(0, 20)}...');
               } else {
                 debugPrint('Warning: New access token is null');
               }
 
               try {
+                // 재시도 (onRequest에서 retry 플래그를 확인하여 토큰 재설정을 건너뜀)
                 final response = await _dio.fetch(options);
                 return handler.resolve(response);
               } catch (e) {
@@ -192,9 +199,15 @@ class ApiClient {
       }
 
       debugPrint('Sending refresh token request...');
+      // Options를 사용하여 Authorization 헤더를 명시적으로 제거
       final response = await _dio.post(
         '/auth/refresh',
         data: {'refreshToken': refreshToken},
+        options: Options(
+          headers: {
+            'Authorization': null, // Authorization 헤더 제거
+          },
+        ),
       );
 
       if (response.statusCode == 200) {

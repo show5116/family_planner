@@ -136,9 +136,9 @@ class PermissionCreateDialog {
   ) async {
     debugPrint('Creating permission...');
     try {
-      final permissionService = ref.read(permissionServiceProvider);
+      final notifier = ref.read(permissionManagementProvider.notifier);
       debugPrint('Calling API: createPermission');
-      final createdPermission = await permissionService.createPermission(
+      final createdPermission = await notifier.createPermission(
         code: code,
         name: name,
         description: description,
@@ -153,7 +153,6 @@ class PermissionCreateDialog {
             backgroundColor: Colors.green,
           ),
         );
-        ref.read(permissionManagementProvider.notifier).loadPermissions();
       }
     } catch (e, stackTrace) {
       debugPrint('Create permission error: $e');
@@ -299,9 +298,9 @@ class PermissionEditDialog {
   ) async {
     debugPrint('Updating permission: ${permission.id}');
     try {
-      final permissionService = ref.read(permissionServiceProvider);
+      final notifier = ref.read(permissionManagementProvider.notifier);
       debugPrint('Calling API: updatePermission');
-      final updatedPermission = await permissionService.updatePermission(
+      final updatedPermission = await notifier.updatePermission(
         permission.id,
         name: name,
         description: description,
@@ -316,7 +315,6 @@ class PermissionEditDialog {
             backgroundColor: Colors.green,
           ),
         );
-        ref.read(permissionManagementProvider.notifier).loadPermissions();
       }
     } catch (e, stackTrace) {
       debugPrint('Update permission error: $e');
