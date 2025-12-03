@@ -14,7 +14,6 @@
 - ✅ 이메일 인증 화면 UI
 - ✅ 비밀번호 찾기 화면 UI
 - ✅ 비밀번호 찾기 링크 연결 (로그인 화면)
-- ⬜ 프로필 설정 화면 UI
 
 ## 인증 로직
 - ✅ 이메일/비밀번호 로그인 구현
@@ -41,15 +40,20 @@
   - 상세 내용은 CLAUDE.md의 "소셜 로그인 API" 섹션 참조
 
 ## 상태 관리
-- ✅ Auth Provider 구현
-- ⬜ User Provider 구현
-- ⬜ 로그인 상태 전역 관리
+- ✅ Auth Provider 구현 (AuthNotifier + AuthState)
+- ✅ 로그인 상태 전역 관리 (isAuthenticated, user)
+- ✅ 사용자 정보 관리 (AuthState.user)
+- ✅ OAuth 콜백 처리 (웹 전용)
+- ✅ 프로필 업데이트 시 상태 자동 갱신
 
 ---
 
 ## 관련 파일
-- `lib/features/auth/`
-- `lib/core/providers/auth_provider.dart`
+- `lib/features/auth/screens/` - 인증 관련 화면들
+- `lib/features/auth/providers/auth_provider.dart` - AuthNotifier, AuthState
+- `lib/core/services/auth_service.dart` - 인증 API 서비스
+- `lib/core/services/oauth_callback_handler.dart` - OAuth 콜백 처리
+- `lib/core/services/secure_storage_service.dart` - 토큰 및 사용자 정보 저장
 
 ## 노트
 - 소셜 로그인 백엔드 API가 완성되면 연동 필요
