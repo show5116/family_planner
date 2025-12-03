@@ -154,6 +154,12 @@ abstract class AppLocalizations {
   /// **'추가'**
   String get common_add;
 
+  /// No description provided for @common_create.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성'**
+  String get common_create;
+
   /// No description provided for @common_search.
   ///
   /// In ko, this message translates to:
@@ -1497,6 +1503,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'권한 삭제 실패'**
   String get permission_deleteFailed;
+
+  /// No description provided for @permission_name.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 이름'**
+  String get permission_name;
+
+  /// No description provided for @permission_codeAndNameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 코드와 이름은 필수입니다'**
+  String get permission_codeAndNameRequired;
+
+  /// No description provided for @permission_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한이 생성되었습니다'**
+  String get permission_createSuccess;
+
+  /// No description provided for @permission_createFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 생성 실패'**
+  String get permission_createFailed;
+
+  /// No description provided for @permission_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한이 수정되었습니다'**
+  String get permission_updateSuccess;
+
+  /// No description provided for @permission_updateFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 수정 실패'**
+  String get permission_updateFailed;
 
   /// No description provided for @group_title.
   ///

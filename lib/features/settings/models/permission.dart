@@ -8,8 +8,8 @@ class Permission {
   final String? description;
   final String category;
   final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Permission({
     required this.id,
@@ -18,8 +18,8 @@ class Permission {
     this.description,
     required this.category,
     required this.isActive,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Permission.fromJson(Map<String, dynamic> json) {
@@ -30,8 +30,12 @@ class Permission {
       description: json['description'] as String?,
       category: json['category'] as String,
       isActive: json['isActive'] as bool? ?? true,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
     );
   }
 
@@ -43,8 +47,8 @@ class Permission {
       'description': description,
       'category': category,
       'isActive': isActive,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
+      if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
     };
   }
 

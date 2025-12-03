@@ -21,7 +21,29 @@ class PermissionService {
         queryParameters: queryParams,
       );
 
-      final List<dynamic> data = response.data as List<dynamic>;
+      // 응답 형태 확인 및 처리
+      final dynamic responseData = response.data;
+
+      List<dynamic> data;
+      if (responseData is List) {
+        // 배열 형태의 응답
+        data = responseData;
+      } else if (responseData is Map) {
+        // Map 형태의 응답 처리
+        // 일반적인 페이지네이션 응답 형태를 처리
+        if (responseData.containsKey('data')) {
+          data = responseData['data'] as List<dynamic>;
+        } else if (responseData.containsKey('items')) {
+          data = responseData['items'] as List<dynamic>;
+        } else if (responseData.containsKey('permissions')) {
+          data = responseData['permissions'] as List<dynamic>;
+        } else {
+          throw Exception('Unexpected response format: $responseData');
+        }
+      } else {
+        throw Exception('Unexpected response type: ${responseData.runtimeType}');
+      }
+
       return data.map((json) => Permission.fromJson(json)).toList();
     } catch (e) {
       rethrow;
@@ -47,7 +69,27 @@ class PermissionService {
         },
       );
 
-      return Permission.fromJson(response.data);
+      // 응답 형태 확인 및 처리
+      final dynamic responseData = response.data;
+
+      if (responseData is Map) {
+        // permission 키가 있는 경우 (예: { permission: {...} })
+        if (responseData.containsKey('permission')) {
+          return Permission.fromJson(
+              responseData['permission'] as Map<String, dynamic>);
+        }
+        // data 키가 있는 경우 (예: { data: {...} })
+        else if (responseData.containsKey('data')) {
+          return Permission.fromJson(
+              responseData['data'] as Map<String, dynamic>);
+        }
+        // 직접 Permission 객체인 경우
+        else {
+          return Permission.fromJson(responseData as Map<String, dynamic>);
+        }
+      }
+
+      throw Exception('Unexpected response format: $responseData');
     } catch (e) {
       rethrow;
     }
@@ -71,7 +113,27 @@ class PermissionService {
         },
       );
 
-      return Permission.fromJson(response.data);
+      // 응답 형태 확인 및 처리
+      final dynamic responseData = response.data;
+
+      if (responseData is Map) {
+        // permission 키가 있는 경우 (예: { permission: {...} })
+        if (responseData.containsKey('permission')) {
+          return Permission.fromJson(
+              responseData['permission'] as Map<String, dynamic>);
+        }
+        // data 키가 있는 경우 (예: { data: {...} })
+        else if (responseData.containsKey('data')) {
+          return Permission.fromJson(
+              responseData['data'] as Map<String, dynamic>);
+        }
+        // 직접 Permission 객체인 경우
+        else {
+          return Permission.fromJson(responseData as Map<String, dynamic>);
+        }
+      }
+
+      throw Exception('Unexpected response format: $responseData');
     } catch (e) {
       rethrow;
     }

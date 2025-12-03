@@ -36,6 +36,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_add => '追加';
 
   @override
+  String get common_create => '作成';
+
+  @override
   String get common_search => '検索';
 
   @override
@@ -719,6 +722,24 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get permission_deleteFailed => '権限の削除に失敗しました';
+
+  @override
+  String get permission_name => '権限名';
+
+  @override
+  String get permission_codeAndNameRequired => 'コードと名前は必須です';
+
+  @override
+  String get permission_createSuccess => '権限が作成されました';
+
+  @override
+  String get permission_createFailed => '権限の作成に失敗しました';
+
+  @override
+  String get permission_updateSuccess => '権限が更新されました';
+
+  @override
+  String get permission_updateFailed => '権限の更新に失敗しました';
 
   @override
   String get group_title => 'グループ管理';

@@ -36,6 +36,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_add => '추가';
 
   @override
+  String get common_create => '생성';
+
+  @override
   String get common_search => '검색';
 
   @override
@@ -721,6 +724,24 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get permission_deleteFailed => '권한 삭제 실패';
+
+  @override
+  String get permission_name => '권한 이름';
+
+  @override
+  String get permission_codeAndNameRequired => '권한 코드와 이름은 필수입니다';
+
+  @override
+  String get permission_createSuccess => '권한이 생성되었습니다';
+
+  @override
+  String get permission_createFailed => '권한 생성 실패';
+
+  @override
+  String get permission_updateSuccess => '권한이 수정되었습니다';
+
+  @override
+  String get permission_updateFailed => '권한 수정 실패';
 
   @override
   String get group_title => '그룹 관리';

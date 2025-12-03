@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_add => 'Add';
 
   @override
+  String get common_create => 'Create';
+
+  @override
   String get common_search => 'Search';
 
   @override
@@ -745,6 +748,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permission_deleteFailed => 'Failed to delete permission';
+
+  @override
+  String get permission_name => 'Permission Name';
+
+  @override
+  String get permission_codeAndNameRequired => 'Code and name are required';
+
+  @override
+  String get permission_createSuccess => 'Permission created successfully';
+
+  @override
+  String get permission_createFailed => 'Failed to create permission';
+
+  @override
+  String get permission_updateSuccess => 'Permission updated successfully';
+
+  @override
+  String get permission_updateFailed => 'Failed to update permission';
 
   @override
   String get group_title => 'Group Management';
