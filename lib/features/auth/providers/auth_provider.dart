@@ -33,6 +33,10 @@ final authServiceProvider = Provider<AuthService>((ref) {
 /// Auth Provider
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(this._authService) : super(const AuthState()) {
+    // 401 에러 시 자동 로그아웃 콜백 설정
+    _authService.apiClient.onUnauthorized = _handleUnauthorized;
+    debugPrint('=== AuthNotifier: onUnauthorized callback registered ===');
+
     // OAuth 콜백 스트림 구독 (웹 전용)
     // 웹에서 OAuth URL 방식 로그인 시 콜백 처리를 위함
     // 모바일은 SDK 방식을 사용하므로 불필요
@@ -385,6 +389,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
       debugPrint('Error in _handleOAuthSuccess: $e');
       state = state.copyWith(error: e.toString());
     }
+  }
+
+  /// 401 에러 발생 시 호출되는 콜백 (ApiClient에서 호출)
+  void _handleUnauthorized() {
+    debugPrint('=== _handleUnauthorized called ===');
+    debugPrint('401 Unauthorized error detected - forcing logout');
+
+    // 인증 상태를 false로 설정하여 로그인 화면으로 리다이렉트
+    state = const AuthState(isAuthenticated: false);
+
+    debugPrint('Auth state updated: isAuthenticated=${state.isAuthenticated}');
+    debugPrint('GoRouter will redirect to login screen');
   }
 }
 

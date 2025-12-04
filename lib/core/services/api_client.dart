@@ -13,6 +13,9 @@ class ApiClient {
   // 토큰 갱신 중복 방지를 위한 Future
   Future<bool>? _refreshTokenFuture;
 
+  // 401 에러 시 호출될 콜백 (로그아웃 처리)
+  void Function()? onUnauthorized;
+
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
@@ -124,9 +127,15 @@ class ApiClient {
                 return handler.reject(error);
               }
             } else {
-              // Refresh 실패 시 토큰 삭제
-              debugPrint('Token refresh failed - clearing tokens');
+              // Refresh 실패 시 토큰 삭제 및 로그아웃 콜백 호출
+              debugPrint('Token refresh failed - clearing tokens and triggering logout');
               await clearTokens();
+
+              // 로그아웃 콜백 호출 (로그인 화면으로 리다이렉트)
+              if (onUnauthorized != null) {
+                debugPrint('Calling onUnauthorized callback');
+                onUnauthorized!();
+              }
             }
           }
 
