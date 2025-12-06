@@ -171,8 +171,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           debugPrint('Access Token exists: ${accessToken != null}');
           debugPrint('Refresh Token exists: ${refreshToken != null}');
 
-          if (accessToken == null || refreshToken == null) {
-            // 토큰이 없으면 로그인 화면으로
+          // 웹 환경에서는 RefreshToken이 HTTP Only Cookie로 전달되므로
+          // accessToken만 있어도 정상입니다
+          if (accessToken == null) {
+            // AccessToken이 없으면 로그인 화면으로
             return Scaffold(
               body: Center(
                 child: Column(
@@ -202,9 +204,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             );
           }
 
+          // 웹: accessToken만 쿼리로 전달, refreshToken은 쿠키
+          // 모바일: accessToken, refreshToken 모두 쿼리로 전달
           return OAuthCallbackScreen(
             accessToken: accessToken,
-            refreshToken: refreshToken,
+            refreshToken: refreshToken, // 웹에서는 null일 수 있음 (쿠키로 관리)
           );
         },
       ),

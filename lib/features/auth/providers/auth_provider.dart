@@ -342,20 +342,32 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// 웹 OAuth 콜백 처리 (공개 메서드)
   ///
   /// OAuthCallbackScreen에서 호출되어 토큰을 저장하고 사용자 정보를 가져옵니다.
+  ///
+  /// **토큰 처리:**
+  /// - accessToken: 항상 저장 (모든 플랫폼)
+  /// - refreshToken: 모바일에서만 저장, 웹은 HTTP Only Cookie로 관리
   Future<void> handleWebOAuthCallback({
     required String accessToken,
-    required String refreshToken,
+    String? refreshToken, // 웹에서는 null (쿠키로 관리)
   }) async {
     try {
       debugPrint('=== handleWebOAuthCallback called ===');
       debugPrint('Access Token: ${accessToken.substring(0, 20)}...');
-      debugPrint('Refresh Token: ${refreshToken.substring(0, 20)}...');
+      debugPrint('Refresh Token: ${refreshToken != null ? "${refreshToken.substring(0, 20)}..." : "null (managed by cookie)"}');
 
-      // 토큰 저장
+      // AccessToken 저장 (모든 플랫폼)
       await _authService.apiClient.saveAccessToken(accessToken);
-      await _authService.apiClient.saveRefreshToken(refreshToken);
+      debugPrint('AccessToken saved');
 
-      debugPrint('Tokens saved, fetching user info...');
+      // RefreshToken 저장 (모바일만)
+      if (refreshToken != null && !kIsWeb) {
+        await _authService.apiClient.saveRefreshToken(refreshToken);
+        debugPrint('RefreshToken saved (Mobile)');
+      } else if (kIsWeb) {
+        debugPrint('RefreshToken managed by HTTP Only Cookie (Web)');
+      }
+
+      debugPrint('Tokens processed, fetching user info...');
 
       // 사용자 정보 가져오기
       final user = await _authService.getUserInfo();

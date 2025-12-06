@@ -18,12 +18,28 @@ class AuthService extends ApiServiceBase {
   // ========== 공통 헬퍼 메서드 ==========
 
   /// 토큰 저장
+  ///
+  /// - AccessToken: 모든 플랫폼에서 SecureStorage에 저장
+  /// - RefreshToken:
+  ///   - 웹: HTTP Only Cookie로 관리 (백엔드에서 자동 설정, 저장 불필요)
+  ///   - 모바일: SecureStorage에 저장
   Future<void> _saveTokens(Map<String, dynamic> data) async {
+    // 모든 플랫폼에서 AccessToken 저장
     if (data['accessToken'] != null) {
       await apiClient.saveAccessToken(data['accessToken'] as String);
+      debugPrint('AccessToken saved to storage');
     }
-    if (data['refreshToken'] != null) {
-      await apiClient.saveRefreshToken(data['refreshToken'] as String);
+
+    // RefreshToken 처리
+    if (kIsWeb) {
+      // 웹: RefreshToken은 HTTP Only Cookie로 관리 (백엔드에서 자동 설정)
+      debugPrint('Web: RefreshToken managed via HTTP Only Cookie');
+    } else {
+      // 모바일: RefreshToken 저장
+      if (data['refreshToken'] != null) {
+        await apiClient.saveRefreshToken(data['refreshToken'] as String);
+        debugPrint('Mobile: RefreshToken saved to storage');
+      }
     }
   }
 
@@ -375,9 +391,9 @@ class AuthService extends ApiServiceBase {
   /// 구글 OAuth URL 로그인 (웹 전용)
   ///
   /// 백엔드의 OAuth 페이지를 팝업 또는 브라우저로 열어 로그인합니다.
-  /// 로그인 완료 후 백엔드는 {FRONTEND_URL}/auth/callback?accessToken=xxx&refreshToken=xxx로 리다이렉트합니다.
+  /// 로그인 완료 후 백엔드는 {FRONTEND_URL}/auth/callback?accessToken=xxx로 리다이렉트합니다.
   ///
-  /// - 웹: 팝업 창으로 열고 메시지로 토큰 수신
+  /// - 웹: 팝업 창으로 열고, AccessToken은 응답으로 받아 저장, RefreshToken은 HTTP Only Cookie로 관리
   /// - 모바일: 이 메서드 대신 loginWithGoogle() 사용 (SDK 방식)
   Future<Map<String, dynamic>> loginWithGoogleOAuth() async {
     final oauthUrl = '${EnvironmentConfig.apiBaseUrl}/auth/google';
@@ -386,10 +402,10 @@ class AuthService extends ApiServiceBase {
       // OAuthWebService를 사용하여 플랫폼별 로그인 처리
       final tokens = await OAuthWebService.login(oauthUrl);
 
-      // 토큰이 있으면 저장 (웹에서만 반환됨)
-      if (tokens.isNotEmpty) {
+      // 웹: AccessToken은 저장, RefreshToken은 쿠키로 관리
+      if (tokens['accessToken'] != null) {
         await apiClient.saveAccessToken(tokens['accessToken']!);
-        await apiClient.saveRefreshToken(tokens['refreshToken']!);
+        debugPrint('Web OAuth: AccessToken saved, RefreshToken via cookie');
       }
 
       return tokens;
@@ -409,10 +425,10 @@ class AuthService extends ApiServiceBase {
       // OAuthWebService를 사용하여 플랫폼별 로그인 처리
       final tokens = await OAuthWebService.login(oauthUrl);
 
-      // 토큰이 있으면 저장 (웹에서만 반환됨)
-      if (tokens.isNotEmpty) {
+      // 웹: AccessToken은 저장, RefreshToken은 쿠키로 관리
+      if (tokens['accessToken'] != null) {
         await apiClient.saveAccessToken(tokens['accessToken']!);
-        await apiClient.saveRefreshToken(tokens['refreshToken']!);
+        debugPrint('Web OAuth: AccessToken saved, RefreshToken via cookie');
       }
 
       return tokens;
@@ -463,8 +479,9 @@ class AuthService extends ApiServiceBase {
       if (name != null) requestData['name'] = name;
       if (phoneNumber != null) requestData['phoneNumber'] = phoneNumber;
       if (profileImage != null) requestData['profileImage'] = profileImage;
-      if (currentPassword != null)
+      if (currentPassword != null) {
         requestData['currentPassword'] = currentPassword;
+      }
       if (newPassword != null) requestData['newPassword'] = newPassword;
 
       final response = await apiClient.patch(

@@ -45,9 +45,19 @@ class OAuthPopupWeb {
     // 타임아웃 타이머 (5분)
     final timeoutTimer = Timer(const Duration(minutes: 5), () {
       if (!completer.isCompleted) {
-        // 타임아웃 시 팝업 닫기 전에 다시 확인
-        if (!popup.closed) {
-          popup.close();
+        // 타임아웃 시 팝업 닫기 시도
+        try {
+          // Cross-Origin-Opener-Policy로 인해 popup.closed가 차단될 수 있음
+          if (!popup.closed) {
+            popup.close();
+          }
+        } catch (e) {
+          // COOP 정책으로 인한 에러는 무시하고 팝업 닫기 시도
+          try {
+            popup.close();
+          } catch (_) {
+            // 팝업 닫기도 실패하면 무시
+          }
         }
         if (!completer.isCompleted) {
           completer.completeError(Exception('로그인 시간이 초과되었습니다'));
@@ -57,12 +67,19 @@ class OAuthPopupWeb {
 
     // 팝업이 닫혔는지 주기적으로 확인
     final checkClosedTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      if (popup.closed) {
-        timer.cancel();
-        timeoutTimer.cancel();
-        if (!completer.isCompleted) {
-          completer.completeError(Exception('로그인이 취소되었습니다'));
+      try {
+        // Cross-Origin-Opener-Policy로 인해 popup.closed가 차단될 수 있음
+        // 하지만 postMessage는 정상 작동하므로 이는 백업 메커니즘일 뿐
+        if (popup.closed) {
+          timer.cancel();
+          timeoutTimer.cancel();
+          if (!completer.isCompleted) {
+            completer.completeError(Exception('로그인이 취소되었습니다'));
+          }
         }
+      } catch (e) {
+        // COOP 정책으로 인한 에러는 무시
+        // 정상 로그인 흐름은 postMessage로 처리됨
       }
     });
 

@@ -29,6 +29,7 @@ class OAuthWebService {
   /// 웹에서 OAuth 로그인
   ///
   /// 팝업 창으로 OAuth 페이지를 열고 postMessage로 토큰을 수신합니다.
+  /// 웹에서는 RefreshToken이 HTTP Only Cookie로 관리되므로 accessToken만 검증합니다.
   static Future<Map<String, String>> _loginWeb(String oauthUrl) async {
     try {
       // 팝업으로 열고 토큰 수신
@@ -37,13 +38,15 @@ class OAuthWebService {
       final accessToken = params['accessToken'];
       final refreshToken = params['refreshToken'];
 
-      if (accessToken == null || refreshToken == null) {
-        throw Exception('OAuth 인증에 실패했습니다');
+      // 웹: RefreshToken은 HTTP Only Cookie로 관리되므로 accessToken만 필수
+      if (accessToken == null) {
+        throw Exception('OAuth 인증에 실패했습니다 (AccessToken 없음)');
       }
 
       return {
         'accessToken': accessToken,
-        'refreshToken': refreshToken,
+        // RefreshToken은 웹에서는 null일 수 있음 (쿠키로 관리)
+        if (refreshToken != null) 'refreshToken': refreshToken,
       };
     } catch (e) {
       throw Exception('OAuth 로그인 실패: $e');

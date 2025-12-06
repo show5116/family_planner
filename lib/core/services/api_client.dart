@@ -4,7 +4,12 @@ import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
 
 /// API 클라이언트 (Dio 기반)
-/// 토큰은 FlutterSecureStorage에 암호화되어 저장됩니다.
+///
+/// **인증 방식:**
+/// - AccessToken: 모든 플랫폼에서 SecureStorage에 저장 및 Authorization 헤더로 전송
+/// - RefreshToken:
+///   - 웹: HTTP Only Cookie 사용 (백엔드에서 자동으로 쿠키 설정/전송)
+///   - 모바일: SecureStorage에 저장 및 요청 body로 전송
 class ApiClient {
   late final Dio _dio;
   static ApiClient? _instance;
@@ -26,6 +31,10 @@ class ApiClient {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+        // 웹 환경에서 쿠키 자동 전송 활성화 (RefreshToken용)
+        extra: {
+          'withCredentials': kIsWeb,
+        },
       ),
     );
 
@@ -46,9 +55,14 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // 웹 환경에서 쿠키 자동 전송 활성화 (RefreshToken용)
+          if (kIsWeb) {
+            options.extra['withCredentials'] = true;
+          }
+
+          // 모든 플랫폼에서 AccessToken을 Authorization 헤더에 추가
           // retry 플래그가 있으면 토큰 재설정을 건너뜀 (이미 설정됨)
           if (options.extra['retry_with_new_token'] != true) {
-            // 인증 토큰 추가
             final token = await _getAccessToken();
             if (token != null) {
               options.headers['Authorization'] = 'Bearer $token';
@@ -59,6 +73,8 @@ class ApiClient {
           if (EnvironmentConfig.enableLogging) {
             debugPrint('┌── Request ────────────────────────────────────');
             debugPrint('│ ${options.method} ${options.uri}');
+            debugPrint('│ Platform: ${kIsWeb ? "Web" : "Mobile"}');
+            debugPrint('│ Auth: AccessToken in Header${kIsWeb ? " + RefreshToken in Cookie" : " + RefreshToken in Storage"}');
             debugPrint('│ Headers: ${options.headers}');
             if (options.data != null) {
               debugPrint('│ Body: ${options.data}');
@@ -96,6 +112,12 @@ class ApiClient {
             if (requestPath.contains('/auth/refresh')) {
               debugPrint('Refresh token request failed - clearing tokens');
               await clearTokens();
+
+              // 로그아웃 콜백 호출
+              if (onUnauthorized != null) {
+                debugPrint('Calling onUnauthorized callback');
+                onUnauthorized!();
+              }
               return handler.next(error);
             }
 
@@ -106,20 +128,21 @@ class ApiClient {
               debugPrint('Token refresh successful - retrying original request');
               // 원래 요청 재시도
               final options = error.requestOptions;
-              final token = await _getAccessToken();
 
+              // 모든 플랫폼에서 새 AccessToken으로 Authorization 헤더 업데이트
+              final token = await _getAccessToken();
               if (token != null) {
                 options.headers['Authorization'] = 'Bearer $token';
                 // retry 플래그를 설정하여 onRequest에서 토큰을 다시 설정하지 않도록 함
                 options.extra['retry_with_new_token'] = true;
-                debugPrint('Updated Authorization header with new token');
+                debugPrint('Updated Authorization header with new AccessToken');
                 debugPrint('Token value: ${token.substring(0, 20)}...');
               } else {
                 debugPrint('Warning: New access token is null');
               }
 
               try {
-                // 재시도 (onRequest에서 retry 플래그를 확인하여 토큰 재설정을 건너뜀)
+                // 재시도
                 final response = await _dio.fetch(options);
                 return handler.resolve(response);
               } catch (e) {
@@ -201,39 +224,68 @@ class ApiClient {
   /// 실제 토큰 갱신 로직
   Future<bool> _performRefreshToken() async {
     try {
-      final refreshToken = await _getRefreshToken();
-      if (refreshToken == null) {
-        debugPrint('No refresh token available');
-        return false;
+      debugPrint('Sending refresh token request...');
+      debugPrint('Platform: ${kIsWeb ? "Web (RefreshToken via Cookie)" : "Mobile (RefreshToken via Body)"}');
+
+      Response response;
+
+      if (kIsWeb) {
+        // 웹: 쿠키로 refreshToken이 자동 전송됨
+        response = await _dio.post(
+          '/auth/refresh',
+          options: Options(
+            headers: {
+              'Authorization': null, // Authorization 헤더 제거
+            },
+            extra: {
+              'withCredentials': true, // 쿠키 자동 전송 (RefreshToken)
+            },
+          ),
+        );
+      } else {
+        // 모바일: refreshToken을 body에 담아 전송
+        final refreshToken = await _getRefreshToken();
+        if (refreshToken == null) {
+          debugPrint('No refresh token available');
+          return false;
+        }
+
+        response = await _dio.post(
+          '/auth/refresh',
+          data: {'refreshToken': refreshToken},
+          options: Options(
+            headers: {
+              'Authorization': null, // Authorization 헤더 제거
+            },
+          ),
+        );
       }
 
-      debugPrint('Sending refresh token request...');
-      // Options를 사용하여 Authorization 헤더를 명시적으로 제거
-      final response = await _dio.post(
-        '/auth/refresh',
-        data: {'refreshToken': refreshToken},
-        options: Options(
-          headers: {
-            'Authorization': null, // Authorization 헤더 제거
-          },
-        ),
-      );
-
       if (response.statusCode == 200) {
-        final newAccessToken = response.data['accessToken'] as String?;
-        final newRefreshToken = response.data['refreshToken'] as String?;
-
         debugPrint('Refresh token response received');
+
+        // 모든 플랫폼에서 새 AccessToken 저장
+        final newAccessToken = response.data['accessToken'] as String?;
         debugPrint('New access token: ${newAccessToken != null ? "present" : "null"}');
-        debugPrint('New refresh token: ${newRefreshToken != null ? "present" : "null"}');
 
         if (newAccessToken != null) {
           await saveAccessToken(newAccessToken);
           debugPrint('New access token saved to storage');
         }
-        if (newRefreshToken != null) {
-          await saveRefreshToken(newRefreshToken);
-          debugPrint('New refresh token saved to storage');
+
+        // RefreshToken 처리
+        if (kIsWeb) {
+          // 웹: RefreshToken은 HTTP Only Cookie로 관리 (백엔드에서 자동 설정)
+          debugPrint('Web: RefreshToken managed via HTTP Only Cookie');
+        } else {
+          // 모바일: RefreshToken을 Storage에 저장
+          final newRefreshToken = response.data['refreshToken'] as String?;
+          debugPrint('New refresh token: ${newRefreshToken != null ? "present" : "null"}');
+
+          if (newRefreshToken != null) {
+            await saveRefreshToken(newRefreshToken);
+            debugPrint('Mobile: New refresh token saved to storage');
+          }
         }
 
         return true;
