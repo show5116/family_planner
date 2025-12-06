@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/core/constants/api_constants.dart';
@@ -27,19 +28,10 @@ class AuthService extends ApiServiceBase {
     // 모든 플랫폼에서 AccessToken 저장
     if (data['accessToken'] != null) {
       await apiClient.saveAccessToken(data['accessToken'] as String);
-      debugPrint('AccessToken saved to storage');
     }
 
-    // RefreshToken 처리
-    if (kIsWeb) {
-      // 웹: RefreshToken은 HTTP Only Cookie로 관리 (백엔드에서 자동 설정)
-      debugPrint('Web: RefreshToken managed via HTTP Only Cookie');
-    } else {
-      // 모바일: RefreshToken 저장
-      if (data['refreshToken'] != null) {
-        await apiClient.saveRefreshToken(data['refreshToken'] as String);
-        debugPrint('Mobile: RefreshToken saved to storage');
-      }
+    if (data['refreshToken'] != null) {
+      await apiClient.saveRefreshToken(data['refreshToken'] as String);
     }
   }
 
@@ -182,12 +174,29 @@ class AuthService extends ApiServiceBase {
   }
 
   /// 토큰 갱신
-  Future<Map<String, dynamic>> refreshToken(String refreshToken) async {
+  ///
+  /// - 웹: RefreshToken은 HTTP Only Cookie로 자동 전송 (body 불필요)
+  /// - 모바일: RefreshToken을 body에 담아 전송
+  Future<Map<String, dynamic>> refreshToken(String? refreshToken) async {
     try {
-      final response = await apiClient.post(
-        ApiConstants.refreshToken,
-        data: {'refreshToken': refreshToken},
-      );
+      Response response;
+
+      if (refreshToken == null) {
+        // 웹: 쿠키로 refreshToken이 자동 전송됨
+        response = await apiClient.post(
+          ApiConstants.refreshToken,
+          options: Options(
+            extra: {
+              'withCredentials': true, // 쿠키 자동 전송 (RefreshToken)
+            },
+          ),
+        );
+      } else {
+        response = await apiClient.post(
+          ApiConstants.refreshToken,
+          data: {'refreshToken': refreshToken},
+        );
+      }
 
       final data = handleResponse<Map<String, dynamic>>(response);
 

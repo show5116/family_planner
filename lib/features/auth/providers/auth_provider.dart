@@ -156,55 +156,58 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// 자동 로그인 (저장된 토큰으로)
   Future<void> checkAuthStatus() async {
-    debugPrint('=== checkAuthStatus 시작 ===');
-    debugPrint('현재 상태: isAuthenticated = ${state.isAuthenticated}');
-
     // 스플래시 화면을 최소 1초간 표시하기 위한 타이머 시작
     final startTime = DateTime.now();
 
     try {
-      // 저장된 토큰이 있는지 확인
-      debugPrint('토큰 확인 중...');
       final hasToken = await _authService.apiClient.hasValidToken();
-      debugPrint('토큰 존재 여부: $hasToken');
 
       if (!hasToken) {
-        debugPrint('토큰 없음 → isAuthenticated = false 설정');
         await _ensureMinimumSplashDuration(startTime);
         state = const AuthState(isAuthenticated: false);
-        debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
         return;
       }
 
       // 토큰 검증
-      debugPrint('토큰 검증 중...');
-      final isValid = await verifyToken();
-      debugPrint('토큰 유효성: $isValid');
+      bool isValid = await verifyToken();
+
+      if (!isValid) {
+        debugPrint('토큰 검증 실패(만료 가능성) → 토큰 갱신 시도');
+        try {
+          // 플랫폼별 RefreshToken 처리
+          // - 웹: HTTP Only Cookie로 전송 (null 전달)
+          // - 모바일: Storage에서 가져와서 전달
+          final refreshToken = kIsWeb
+              ? null
+              : await _authService.apiClient.getRefreshToken();
+
+          await _authService.refreshToken(refreshToken);
+
+          // 갱신 성공! 다시 유효하다고 판단
+          isValid = true;
+        } catch (refreshError) {
+          // 갱신마저 실패했다면 그때 진짜 로그아웃 처리
+          isValid = false;
+        }
+      }
+
+      await _ensureMinimumSplashDuration(startTime);
 
       if (isValid) {
-        // 토큰이 유효하면 인증 상태로 설정
-        debugPrint('토큰 유효 → isAuthenticated = true 설정');
-        await _ensureMinimumSplashDuration(startTime);
-        state = state.copyWith(isAuthenticated: true);
-        debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
+        // 유효하면(또는 갱신 성공하면) 사용자 정보 가져오기 시도 (선택 사항)
+        // final user = await _authService.getUserInfo();
+        state = state.copyWith(isAuthenticated: true); // user: user
       } else {
-        // 토큰이 유효하지 않으면 토큰 삭제
-        debugPrint('토큰 무효 → 토큰 삭제 및 isAuthenticated = false 설정');
+        // 최종 실패 시 토큰 삭제 및 로그아웃
+        debugPrint('최종 인증 실패 → 토큰 삭제');
         await _authService.apiClient.clearTokens();
-        await _ensureMinimumSplashDuration(startTime);
         state = const AuthState(isAuthenticated: false);
-        debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
       }
     } catch (e) {
-      debugPrint('에러 발생: $e');
-      debugPrint('토큰 삭제 및 isAuthenticated = false 설정');
       await _authService.apiClient.clearTokens();
       await _ensureMinimumSplashDuration(startTime);
       state = const AuthState(isAuthenticated: false);
-      debugPrint('상태 업데이트 완료: isAuthenticated = ${state.isAuthenticated}');
     }
-
-    debugPrint('=== checkAuthStatus 완료 ===');
   }
 
   /// 스플래시 화면 최소 표시 시간 보장 (1초)
@@ -351,35 +354,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
     String? refreshToken, // 웹에서는 null (쿠키로 관리)
   }) async {
     try {
-      debugPrint('=== handleWebOAuthCallback called ===');
-      debugPrint('Access Token: ${accessToken.substring(0, 20)}...');
-      debugPrint('Refresh Token: ${refreshToken != null ? "${refreshToken.substring(0, 20)}..." : "null (managed by cookie)"}');
-
       // AccessToken 저장 (모든 플랫폼)
       await _authService.apiClient.saveAccessToken(accessToken);
-      debugPrint('AccessToken saved');
 
       // RefreshToken 저장 (모바일만)
       if (refreshToken != null && !kIsWeb) {
         await _authService.apiClient.saveRefreshToken(refreshToken);
-        debugPrint('RefreshToken saved (Mobile)');
-      } else if (kIsWeb) {
-        debugPrint('RefreshToken managed by HTTP Only Cookie (Web)');
-      }
-
-      debugPrint('Tokens processed, fetching user info...');
+      } else if (kIsWeb) {}
 
       // 사용자 정보 가져오기
       final user = await _authService.getUserInfo();
-      debugPrint('User info fetched: $user');
 
       // 상태 업데이트
       state = state.copyWith(isAuthenticated: true, user: user);
-      debugPrint(
-        'Auth state updated: isAuthenticated=${state.isAuthenticated}',
-      );
     } catch (e) {
-      debugPrint('Error in handleWebOAuthCallback: $e');
       state = state.copyWith(error: e.toString());
       rethrow;
     }
@@ -388,31 +376,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// OAuth 콜백 성공 처리 (내부 메서드)
   Future<void> _handleOAuthSuccess() async {
     try {
-      debugPrint('=== _handleOAuthSuccess called ===');
       // 저장된 토큰으로 사용자 정보 가져오기
       final user = await _authService.getUserInfo();
-      debugPrint('User info fetched: $user');
 
       state = state.copyWith(isAuthenticated: true, user: user);
-      debugPrint(
-        'Auth state updated: isAuthenticated=${state.isAuthenticated}',
-      );
     } catch (e) {
-      debugPrint('Error in _handleOAuthSuccess: $e');
       state = state.copyWith(error: e.toString());
     }
   }
 
   /// 401 에러 발생 시 호출되는 콜백 (ApiClient에서 호출)
   void _handleUnauthorized() {
-    debugPrint('=== _handleUnauthorized called ===');
-    debugPrint('401 Unauthorized error detected - forcing logout');
-
     // 인증 상태를 false로 설정하여 로그인 화면으로 리다이렉트
     state = const AuthState(isAuthenticated: false);
-
-    debugPrint('Auth state updated: isAuthenticated=${state.isAuthenticated}');
-    debugPrint('GoRouter will redirect to login screen');
   }
 }
 
