@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,6 +78,16 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   bool _isLoading = false;
   bool _isPasswordChangeMode = false;
   bool _hasPassword = true; // 사용자가 비밀번호를 가지고 있는지 여부
+
+  // 모바일 웹 환경 체크
+  bool get _isMobileWeb {
+    return kIsWeb &&
+           (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS);
+  }
+
+  // 화면 높이 고정을 위한 변수
+  double? _initialScreenHeight;
 
   @override
   void initState() {
@@ -200,6 +211,20 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     final profileImage = _userInfo?['profileImage'] as String?;
     final l10n = AppLocalizations.of(context)!;
 
+    // 모바일 웹에서 초기 화면 높이 저장
+    if (_isMobileWeb && _initialScreenHeight == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _initialScreenHeight = MediaQuery.of(context).size.height;
+        });
+      });
+    }
+
+    // 모바일 웹에서 고정 높이 적용, 그 외에는 화면 높이 사용
+    final screenHeight = _isMobileWeb && _initialScreenHeight != null
+        ? _initialScreenHeight!
+        : MediaQuery.of(context).size.height;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -212,17 +237,19 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
             ),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
+      body: SizedBox(
+        height: screenHeight - MediaQuery.of(context).padding.top - kToolbarHeight,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                   // 프로필 이미지 미리보기
                   Center(
                     child: Column(
@@ -473,6 +500,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                     ),
                   ),
                 ],
+                ),
               ),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+
+  // 모바일 웹 환경 체크
+  bool get _isMobileWeb {
+    return kIsWeb &&
+           (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS);
+  }
+
+  // 화면 높이 고정을 위한 변수
+  double? _initialScreenHeight;
 
   @override
   void dispose() {
@@ -161,6 +172,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // 모바일 웹에서 초기 화면 높이 저장
+    if (_isMobileWeb && _initialScreenHeight == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _initialScreenHeight = MediaQuery.of(context).size.height;
+        });
+      });
+    }
+
+    // 모바일 웹에서 고정 높이 적용, 그 외에는 화면 높이 사용
+    final screenHeight = _isMobileWeb && _initialScreenHeight != null
+        ? _initialScreenHeight!
+        : MediaQuery.of(context).size.height;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -184,22 +209,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ],
       ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsivePadding.getHorizontalPadding(context),
-              vertical: AppSizes.spaceM,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
+        child: SizedBox(
+          height: screenHeight - MediaQuery.of(context).padding.top - kToolbarHeight,
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsivePadding.getHorizontalPadding(context),
+                vertical: AppSizes.spaceM,
               ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                     // 로고 (반응형 크기)
                     AppLogo(size: Responsive.isMobile(context) ? 400 : 500),
                     SizedBox(
@@ -382,6 +409,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
                   ],
+                  ),
                 ),
               ),
             ),
