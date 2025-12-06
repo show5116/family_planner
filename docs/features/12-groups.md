@@ -90,6 +90,14 @@
 - ✅ ADMIN: 관리자, 초대 권한 포함
 - ✅ MEMBER: 일반 멤버, 조회만 가능
 - ✅ 역할 목록 조회 (GET /groups/:id/roles)
+- ✅ **공통 역할 관리 시스템 (운영자 전용)**
+  - ✅ 공통 역할 목록 조회 (GET /roles)
+  - ✅ 공통 역할 상세 조회 (GET /roles/:id)
+  - ✅ 공통 역할 생성 (POST /roles)
+  - ✅ 공통 역할 수정 (PATCH /roles/:id)
+  - ✅ 공통 역할 삭제 (DELETE /roles/:id)
+  - ✅ 공통 역할 권한 관리 (PATCH /roles/:id with permissions 배열)
+  - ✅ 공통 역할 관리 UI (관리자 설정 메뉴)
 
 ### 그룹별 커스텀 역할 (group_id 지정)
 - ⬜ 그룹별 고유 역할 생성 기능 (추후 구현)
@@ -118,13 +126,35 @@
 - ✅ Groups Provider 구현 (GroupNotifier)
 - ✅ Group Members Provider 구현 (groupMembersProvider)
 - ✅ Roles Provider 구현 (groupRolesProvider)
+- ✅ Common Roles Provider 구현 (CommonRoleNotifier) - 운영자 전용
 
 ---
 
 ## 관련 파일
-- `lib/features/groups/`
-- `lib/features/groups/providers/group_provider.dart`
+
+### 그룹 관리
+- `lib/features/groups/` - 그룹 관련 모든 파일
+- `lib/features/groups/models/group.dart` - 그룹 모델
+- `lib/features/groups/models/group_member.dart` - 그룹 멤버 및 Role 모델
+- `lib/features/groups/services/group_service.dart` - 그룹 API 서비스
+- `lib/features/groups/providers/group_provider.dart` - 그룹 상태 관리
+- `lib/features/groups/screens/` - 그룹 관련 화면들
+
+### 공통 역할 관리 (운영자 전용)
+- `lib/features/roles/` - 공통 역할 관리 파일
+- `lib/features/roles/models/common_role.dart` - CommonRole 모델
+- `lib/features/roles/services/common_role_service.dart` - 공통 역할 API 서비스
+- `lib/features/roles/providers/common_role_provider.dart` - 공통 역할 상태 관리
+- `lib/features/roles/screens/common_role_list_screen.dart` - 공통 역할 목록 화면
+- `lib/features/roles/screens/common_role_permissions_screen.dart` - 역할 권한 관리 화면
+- `lib/features/roles/widgets/common_role_dialogs.dart` - 생성/수정 다이얼로그
+
+### 라우팅
+- `lib/core/routes/app_routes.dart` - 라우트 경로 상수
+- `lib/core/routes/admin_routes.dart` - 관리자 전용 라우트
 
 ## 노트
 - 그룹별 필터 기능은 각 기능(일정, ToDo 등) 개발 시 통합 필요
 - 역할별 권한 시스템은 추후 확장 가능하도록 설계됨
+- 공통 역할 관리는 운영자(isAdmin: true)만 접근 가능
+- 공통 역할은 모든 그룹에서 기본으로 사용 가능한 역할 (OWNER, ADMIN, MEMBER 등)

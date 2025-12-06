@@ -202,11 +202,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             _buildSectionHeader(context, l10n.settings_adminMenu),
             _buildSettingTile(
               context,
-              icon: Icons.admin_panel_settings_outlined,
+              icon: Icons.security_outlined,
               title: l10n.settings_permissionManagementTitle,
               subtitle: l10n.settings_permissionManagementSubtitle,
               onTap: () {
                 context.push(AppRoutes.permissionManagement);
+              },
+            ),
+            _buildSettingTile(
+              context,
+              icon: Icons.admin_panel_settings_outlined,
+              title: '공통 역할 관리',
+              subtitle: '시스템 전체에 적용되는 공통 역할 관리',
+              onTap: () {
+                context.push(AppRoutes.commonRoleManagement);
               },
             ),
             const Divider(),

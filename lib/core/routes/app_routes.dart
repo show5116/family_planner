@@ -48,4 +48,6 @@ class AppRoutes {
 
   // Admin Routes
   static const String permissionManagement = '/settings/permissions';
+  static const String commonRoleManagement = '/settings/common-roles';
+  static const String commonRolePermissions = '/settings/common-roles/:id/permissions';
 }
