@@ -9,10 +9,7 @@ import 'package:family_planner/features/settings/permissions/models/permission.d
 class CommonRolePermissionsScreen extends ConsumerStatefulWidget {
   final String roleId;
 
-  const CommonRolePermissionsScreen({
-    super.key,
-    required this.roleId,
-  });
+  const CommonRolePermissionsScreen({super.key, required this.roleId});
 
   @override
   ConsumerState<CommonRolePermissionsScreen> createState() =>
@@ -21,21 +18,26 @@ class CommonRolePermissionsScreen extends ConsumerStatefulWidget {
 
 class _CommonRolePermissionsScreenState
     extends ConsumerState<CommonRolePermissionsScreen> {
-  Set<String> selectedPermissionIds = {};
+  Set<String> selectedPermissionCodes = {}; // 권한 코드 (예: "group:read")
   bool isModified = false;
   String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
-    final roleAsync = ref.watch(commonRoleDetailProvider(widget.roleId));
+    final rolesState = ref.watch(commonRoleProvider);
     final permissionsState = ref.watch(permissionManagementProvider);
 
-    return roleAsync.when(
-      loading: () => Scaffold(
+    // 로딩 중
+    if (rolesState.isLoading) {
+      return Scaffold(
         appBar: AppBar(title: const Text('권한 관리')),
         body: const Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, stack) => Scaffold(
+      );
+    }
+
+    // 에러 발생
+    if (rolesState.error != null) {
+      return Scaffold(
         appBar: AppBar(title: const Text('권한 관리')),
         body: Center(
           child: Column(
@@ -45,11 +47,14 @@ class _CommonRolePermissionsScreenState
               const SizedBox(height: AppSizes.spaceM),
               const Text('역할 정보를 불러오는데 실패했습니다'),
               const SizedBox(height: AppSizes.spaceS),
-              Text(error.toString(), style: const TextStyle(color: Colors.grey)),
+              Text(
+                rolesState.error!,
+                style: const TextStyle(color: Colors.grey),
+              ),
               const SizedBox(height: AppSizes.spaceL),
               ElevatedButton.icon(
                 onPressed: () {
-                  ref.invalidate(commonRoleDetailProvider(widget.roleId));
+                  ref.read(commonRoleProvider.notifier).loadRoles();
                 },
                 icon: const Icon(Icons.refresh),
                 label: const Text('다시 시도'),
@@ -57,56 +62,59 @@ class _CommonRolePermissionsScreenState
             ],
           ),
         ),
-      ),
-      data: (role) {
-        // 초기화: 역할에 할당된 권한 ID를 selectedPermissionIds에 설정
-        if (selectedPermissionIds.isEmpty && !isModified) {
-          selectedPermissionIds = role.permissionIds.toSet();
-        }
+      );
+    }
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('${role.name} 권한 관리'),
-            elevation: 0,
-            actions: [
-              if (isModified)
-                TextButton(
-                  onPressed: () => _savePermissions(role.id),
-                  child: const Text(
-                    '저장',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          body: Column(
-            children: [
-              // 검색 및 정보 영역
-              Container(
-                padding: const EdgeInsets.all(AppSizes.spaceM),
-                color: Theme.of(context).colorScheme.surface,
-                child: Column(
-                  children: [
-                    // 역할 정보
-                    _buildRoleInfo(context, role),
-                    const SizedBox(height: AppSizes.spaceM),
-                    // 검색 필드
-                    _buildSearchField(context),
-                  ],
+    // 전체 역할 목록에서 해당 roleId의 역할 찾기
+    final role = rolesState.roles.firstWhere(
+      (r) => r.id == widget.roleId,
+      orElse: () => throw Exception('역할을 찾을 수 없습니다'),
+    );
+
+    // 초기화: 역할에 할당된 권한 코드를 selectedPermissionCodes에 설정
+    if (selectedPermissionCodes.isEmpty && !isModified) {
+      selectedPermissionCodes = role.permissions.toSet();
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${role.name} 권한 관리'),
+        elevation: 0,
+        actions: [
+          if (isModified)
+            TextButton(
+              onPressed: () => _savePermissions(role.id),
+              child: const Text(
+                '저장',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const Divider(height: 1),
-              // 권한 목록
-              Expanded(
-                child: _buildPermissionsList(context, permissionsState),
-              ),
-            ],
+            ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // 검색 및 정보 영역
+          Container(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            color: Theme.of(context).colorScheme.surface,
+            child: Column(
+              children: [
+                // 역할 정보
+                _buildRoleInfo(context, role),
+                const SizedBox(height: AppSizes.spaceM),
+                // 검색 필드
+                _buildSearchField(context),
+              ],
+            ),
           ),
-        );
-      },
+          const Divider(height: 1),
+          // 권한 목록
+          Expanded(child: _buildPermissionsList(context, permissionsState)),
+        ],
+      ),
     );
   }
 
@@ -114,7 +122,9 @@ class _CommonRolePermissionsScreenState
     return Container(
       padding: const EdgeInsets.all(AppSizes.spaceM),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+        color: Theme.of(
+          context,
+        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
       ),
       child: Row(
@@ -132,8 +142,8 @@ class _CommonRolePermissionsScreenState
                 Text(
                   role.name,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 if (role.description != null)
                   Text(
@@ -153,7 +163,7 @@ class _CommonRolePermissionsScreenState
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
             ),
             child: Text(
-              '${selectedPermissionIds.length}개 선택',
+              '${selectedPermissionCodes.length}개 선택',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
@@ -183,10 +193,7 @@ class _CommonRolePermissionsScreenState
     );
   }
 
-  Widget _buildPermissionsList(
-    BuildContext context,
-    dynamic permissionsState,
-  ) {
+  Widget _buildPermissionsList(BuildContext context, dynamic permissionsState) {
     if (permissionsState.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -207,7 +214,9 @@ class _CommonRolePermissionsScreenState
             const SizedBox(height: AppSizes.spaceL),
             ElevatedButton.icon(
               onPressed: () {
-                ref.read(permissionManagementProvider.notifier).loadPermissions();
+                ref
+                    .read(permissionManagementProvider.notifier)
+                    .loadPermissions();
               },
               icon: const Icon(Icons.refresh),
               label: const Text('다시 시도'),
@@ -226,9 +235,7 @@ class _CommonRolePermissionsScreenState
     }).toList();
 
     if (filteredPermissions.isEmpty) {
-      return const Center(
-        child: Text('검색 결과가 없습니다'),
-      );
+      return const Center(child: Text('검색 결과가 없습니다'));
     }
 
     // 카테고리별로 그룹화
@@ -249,7 +256,7 @@ class _CommonRolePermissionsScreenState
           children: [
             _buildCategoryHeader(context, category, permissions.length),
             ...permissions.map((permission) {
-              final isSelected = selectedPermissionIds.contains(permission.id);
+              final isSelected = selectedPermissionCodes.contains(permission.code);
               return CheckboxListTile(
                 title: Text(permission.name),
                 subtitle: Text(
@@ -261,9 +268,9 @@ class _CommonRolePermissionsScreenState
                     ? (value) {
                         setState(() {
                           if (value == true) {
-                            selectedPermissionIds.add(permission.id);
+                            selectedPermissionCodes.add(permission.code);
                           } else {
-                            selectedPermissionIds.remove(permission.id);
+                            selectedPermissionCodes.remove(permission.code);
                           }
                           isModified = true;
                         });
@@ -306,18 +313,17 @@ class _CommonRolePermissionsScreenState
             child: Text(
               category,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(width: AppSizes.spaceS),
           Text(
             '$count개',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
           ),
         ],
       ),
@@ -326,20 +332,18 @@ class _CommonRolePermissionsScreenState
 
   Future<void> _savePermissions(String roleId) async {
     try {
-      await ref.read(commonRoleProvider.notifier).updateRolePermissions(
-            roleId,
-            selectedPermissionIds.toList(),
-          );
+      await ref
+          .read(commonRoleProvider.notifier)
+          .updateRolePermissions(roleId, selectedPermissionCodes.toList());
 
       if (mounted) {
         setState(() {
           isModified = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('권한이 저장되었습니다')),
-        );
-        // Provider 새로고침
-        ref.invalidate(commonRoleDetailProvider(roleId));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('권한이 저장되었습니다')));
+        // commonRoleProvider는 updateRolePermissions 내부에서 자동으로 업데이트됨
       }
     } catch (e) {
       if (mounted) {

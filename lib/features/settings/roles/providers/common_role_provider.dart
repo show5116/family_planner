@@ -14,11 +14,7 @@ class CommonRoleState {
   final bool isLoading;
   final String? error;
 
-  CommonRoleState({
-    this.roles = const [],
-    this.isLoading = false,
-    this.error,
-  });
+  CommonRoleState({this.roles = const [], this.isLoading = false, this.error});
 
   CommonRoleState copyWith({
     List<CommonRole>? roles,
@@ -48,10 +44,7 @@ class CommonRoleNotifier extends StateNotifier<CommonRoleState> {
       final roles = await _service.getCommonRoles();
       state = state.copyWith(roles: roles, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -65,9 +58,7 @@ class CommonRoleNotifier extends StateNotifier<CommonRoleState> {
         name: name,
         isDefaultRole: isDefaultRole,
       );
-      state = state.copyWith(
-        roles: [...state.roles, newRole],
-      );
+      state = state.copyWith(roles: [...state.roles, newRole]);
     } catch (e) {
       rethrow;
     }
@@ -133,13 +124,6 @@ class CommonRoleNotifier extends StateNotifier<CommonRoleState> {
 /// 공통 역할 관리 Provider
 final commonRoleProvider =
     StateNotifierProvider<CommonRoleNotifier, CommonRoleState>((ref) {
-  final service = ref.watch(commonRoleServiceProvider);
-  return CommonRoleNotifier(service);
-});
-
-/// 특정 공통 역할 상세 조회 Provider (권한 포함)
-final commonRoleDetailProvider =
-    FutureProvider.family<CommonRole, String>((ref, roleId) async {
-  final service = ref.watch(commonRoleServiceProvider);
-  return service.getCommonRole(roleId);
-});
+      final service = ref.watch(commonRoleServiceProvider);
+      return CommonRoleNotifier(service);
+    });

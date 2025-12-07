@@ -1,5 +1,3 @@
-import 'package:family_planner/features/settings/permissions/models/permission.dart';
-
 /// 공통 역할 모델 (groupId = null)
 /// 운영자가 관리하는 전역 역할
 class CommonRole {
@@ -7,7 +5,7 @@ class CommonRole {
   final String name;
   final String? description;
   final bool isDefaultRole;
-  final List<Permission>? permissions; // 역할에 할당된 권한 목록
+  final List<String> permissions; // 권한 코드 문자열 배열 (예: ["group:read", "group:update"])
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -16,7 +14,7 @@ class CommonRole {
     required this.name,
     this.description,
     required this.isDefaultRole,
-    this.permissions,
+    required this.permissions,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -29,9 +27,9 @@ class CommonRole {
       isDefaultRole: json['isDefaultRole'] as bool? ?? false,
       permissions: json['permissions'] != null
           ? (json['permissions'] as List<dynamic>)
-              .map((p) => Permission.fromJson(p as Map<String, dynamic>))
+              .map((p) => p as String)
               .toList()
-          : null,
+          : [],
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -43,7 +41,7 @@ class CommonRole {
       'name': name,
       'description': description,
       'isDefaultRole': isDefaultRole,
-      'permissions': permissions?.map((p) => p.toJson()).toList(),
+      'permissions': permissions,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -54,7 +52,7 @@ class CommonRole {
     String? name,
     String? description,
     bool? isDefaultRole,
-    List<Permission>? permissions,
+    List<String>? permissions,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -69,7 +67,6 @@ class CommonRole {
     );
   }
 
-  /// 권한 ID 목록 반환
-  List<String> get permissionIds =>
-      permissions?.map((p) => p.id).toList() ?? [];
+  /// 권한 코드 목록 반환 (permissions와 동일)
+  List<String> get permissionCodes => permissions;
 }

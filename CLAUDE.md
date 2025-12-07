@@ -27,7 +27,17 @@ flutter clean && flutter pub get       # 클린 빌드
 - **프론트엔드**: `localhost:3001` (웹 개발 서버)
 - **백엔드 개발**: `http://localhost:3000`
 - **백엔드 프로덕션**: `https://familyplannerbackend-production.up.railway.app`
-- **API 문서**: `http://localhost:3000/api-json` (Swagger)
+- **API 문서 (Swagger)**:
+  - 개발: `http://localhost:3000/api-json`
+  - 프로덕션: `https://familyplannerbackend-production.up.railway.app/api-json`
+  - **중요**: Swagger 문서 확인 시 WebFetch가 아닌 `curl` 명령어 사용 필수
+    ```bash
+    # 개발 환경
+    curl http://localhost:3000/api-json
+
+    # 프로덕션 환경
+    curl https://familyplannerbackend-production.up.railway.app/api-json
+    ```
 
 ## 문서 구조
 
