@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:family_planner/core/services/auth_service.dart';
-import 'package:family_planner/core/services/oauth_callback_handler.dart';
+import 'package:family_planner/features/auth/services/auth_service.dart';
+import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 
 /// 인증 상태
 class AuthState {

@@ -32,7 +32,8 @@ lib/
 │   ├── auth/                          # 인증 기능
 │   │   ├── screens/                   # 화면
 │   │   ├── widgets/                   # 위젯
-│   │   └── providers/                 # 상태 관리 (Riverpod)
+│   │   ├── providers/                 # 상태 관리 (Riverpod)
+│   │   └── services/                  # API 서비스
 │   │
 │   ├── home/                          # 메인 홈 (대시보드)
 │   │   ├── screens/
@@ -40,43 +41,62 @@ lib/
 │   │   ├── widgets/
 │   │   └── providers/
 │   │
-│   ├── assets/                        # 자산 관리
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   └── providers/
+│   ├── settings/                      # 설정 관련 기능
+│   │   ├── common/                    # 일반 설정
+│   │   │   ├── screens/
+│   │   │   └── providers/
+│   │   ├── groups/                    # 그룹 관리
+│   │   │   ├── models/
+│   │   │   ├── services/
+│   │   │   ├── providers/
+│   │   │   └── screens/
+│   │   ├── roles/                     # 공통 역할 관리 (운영자 전용)
+│   │   │   ├── models/
+│   │   │   ├── services/
+│   │   │   ├── providers/
+│   │   │   ├── screens/
+│   │   │   └── widgets/
+│   │   └── permissions/               # 권한 관리 (운영자 전용)
+│   │       ├── models/
+│   │       ├── services/
+│   │       ├── providers/
+│   │       ├── screens/
+│   │       └── widgets/
 │   │
-│   ├── calendar/                      # 일정 관리
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   └── providers/
-│   │
-│   ├── todo/                          # ToDoList
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   └── providers/
-│   │
-│   ├── household/                     # 가계 관리
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   └── providers/
-│   │
-│   ├── child_points/                  # 육아 포인트
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   └── providers/
-│   │
-│   ├── memo/                          # 메모
-│   │   ├── screens/
-│   │   ├── widgets/
-│   │   └── providers/
-│   │
-│   ├── mini_games/                    # 미니 게임
-│   │   ├── screens/
-│   │   └── widgets/
-│   │
-│   └── settings/                      # 설정
-│       ├── screens/
-│       └── widgets/
+│   └── main/                          # 메인 기능들
+│       ├── assets/                    # 자산 관리
+│       │   ├── screens/
+│       │   ├── widgets/
+│       │   └── providers/
+│       │
+│       ├── calendar/                  # 일정 관리
+│       │   ├── screens/
+│       │   ├── widgets/
+│       │   └── providers/
+│       │
+│       ├── todo/                      # ToDoList
+│       │   ├── screens/
+│       │   ├── widgets/
+│       │   └── providers/
+│       │
+│       ├── household/                 # 가계 관리
+│       │   ├── screens/
+│       │   ├── widgets/
+│       │   └── providers/
+│       │
+│       ├── child_points/              # 육아 포인트
+│       │   ├── screens/
+│       │   ├── widgets/
+│       │   └── providers/
+│       │
+│       ├── memo/                      # 메모
+│       │   ├── screens/
+│       │   ├── widgets/
+│       │   └── providers/
+│       │
+│       └── mini_games/                # 미니 게임
+│           ├── screens/
+│           └── widgets/
 │
 └── shared/                            # 공유 리소스
     ├── models/                        # 공통 데이터 모델

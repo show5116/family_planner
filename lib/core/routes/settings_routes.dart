@@ -1,12 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/features/settings/screens/settings_screen.dart';
-import 'package:family_planner/features/settings/screens/bottom_navigation_settings_screen.dart';
-import 'package:family_planner/features/settings/screens/home_widget_settings_screen.dart';
-import 'package:family_planner/features/settings/screens/theme_settings_screen.dart';
-import 'package:family_planner/features/settings/screens/language_settings_screen.dart';
-import 'package:family_planner/features/settings/screens/profile_settings_screen.dart';
-import 'package:family_planner/features/groups/screens/group_list_screen.dart';
+import 'package:family_planner/features/settings/common/screens/settings_screen.dart';
+import 'package:family_planner/features/settings/common/screens/bottom_navigation_settings_screen.dart';
+import 'package:family_planner/features/settings/common/screens/home_widget_settings_screen.dart';
+import 'package:family_planner/features/settings/common/screens/theme_settings_screen.dart';
+import 'package:family_planner/features/settings/common/screens/language_settings_screen.dart';
+import 'package:family_planner/features/settings/common/screens/profile_settings_screen.dart';
+import 'package:family_planner/features/settings/groups/screens/group_list_screen.dart';
 
 /// 설정 관련 라우트 목록
 ///

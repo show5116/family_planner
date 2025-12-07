@@ -102,7 +102,7 @@
 ### 프로필 설정
 - `lib/features/settings/screens/profile_settings_screen.dart` (484줄)
 - `lib/features/auth/providers/auth_provider.dart` (updateProfile 메서드)
-- `lib/core/services/auth_service.dart` (updateProfile API)
+- `lib/features/auth/services/auth_service.dart` (updateProfile API)
 - `lib/core/services/secure_storage_service.dart` (getUserInfo)
 
 ### 권한 관리

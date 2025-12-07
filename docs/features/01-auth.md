@@ -51,8 +51,8 @@
 ## 관련 파일
 - `lib/features/auth/screens/` - 인증 관련 화면들
 - `lib/features/auth/providers/auth_provider.dart` - AuthNotifier, AuthState
-- `lib/core/services/auth_service.dart` - 인증 API 서비스
-- `lib/core/services/oauth_callback_handler.dart` - OAuth 콜백 처리
+- `lib/features/auth/services/auth_service.dart` - 인증 API 서비스
+- `lib/features/auth/services/oauth_callback_handler.dart` - OAuth 콜백 처리
 - `lib/core/services/secure_storage_service.dart` - 토큰 및 사용자 정보 저장
 
 ## 노트

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
-import 'package:family_planner/core/services/oauth_popup_helper_web.dart';
+import 'package:family_planner/features/auth/services/oauth_popup_helper_web.dart';
 
 /// OAuth 콜백 화면
 ///

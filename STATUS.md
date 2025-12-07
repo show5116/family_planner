@@ -2,7 +2,7 @@
 
 > 현재 개발 진행 상황 상세 정보
 >
-> **Last Updated**: 2025-12-02
+> **Last Updated**: 2025-12-07
 
 ---
 
@@ -186,6 +186,27 @@
 ---
 
 ## 📅 Recent Updates
+
+### 2025-12-07
+- ✅ **전체 기능 디렉토리 구조 리팩토링**
+  - 일관성 있는 구조로 재구성:
+    - `features/auth/` - 인증 (그대로 유지)
+    - `features/home/` - 홈/대시보드 (그대로 유지)
+    - `features/settings/` - 설정 관련 기능
+      - `common/` - 일반 설정 화면 및 Provider
+      - `groups/` - 그룹 관리
+      - `roles/` - 공통 역할 관리 (운영자 전용)
+      - `permissions/` - 권한 관리 (운영자 전용)
+    - `features/main/` - 메인 기능들
+      - `assets/` - 자산관리
+      - `calendar/` - 일정관리
+      - `todo/` - 할일
+      - `household/` - 가계관리
+      - `child_points/` - 육아포인트
+      - `memo/` - 메모
+      - `mini_games/` - 미니게임
+  - 모든 import 경로 업데이트 완료
+  - 문서 업데이트
 
 ### 2025-12-06
 - ✅ **공통 역할 관리 시스템 구현 완료** (운영자 전용)

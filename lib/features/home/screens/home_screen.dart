@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
 import 'package:family_planner/features/home/screens/dashboard_tab.dart';
-import 'package:family_planner/features/assets/screens/assets_tab.dart';
-import 'package:family_planner/features/calendar/screens/calendar_tab.dart';
-import 'package:family_planner/features/todo/screens/todo_tab.dart';
-import 'package:family_planner/features/settings/screens/more_tab.dart';
-import 'package:family_planner/features/settings/providers/bottom_navigation_settings_provider.dart';
+import 'package:family_planner/features/main/assets/screens/assets_tab.dart';
+import 'package:family_planner/features/main/calendar/screens/calendar_tab.dart';
+import 'package:family_planner/features/main/todo/screens/todo_tab.dart';
+import 'package:family_planner/features/settings/common/screens/more_tab.dart';
+import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/navigation_label_helper.dart';
 

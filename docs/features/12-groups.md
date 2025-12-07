@@ -133,21 +133,35 @@
 ## 관련 파일
 
 ### 그룹 관리
-- `lib/features/groups/` - 그룹 관련 모든 파일
-- `lib/features/groups/models/group.dart` - 그룹 모델
-- `lib/features/groups/models/group_member.dart` - 그룹 멤버 및 Role 모델
-- `lib/features/groups/services/group_service.dart` - 그룹 API 서비스
-- `lib/features/groups/providers/group_provider.dart` - 그룹 상태 관리
-- `lib/features/groups/screens/` - 그룹 관련 화면들
+- `lib/features/settings/groups/` - 그룹 관련 모든 파일
+- `lib/features/settings/groups/models/group.dart` - 그룹 모델
+- `lib/features/settings/groups/models/group_member.dart` - 그룹 멤버 및 Role 모델
+- `lib/features/settings/groups/services/group_service.dart` - 그룹 API 서비스
+- `lib/features/settings/groups/providers/group_provider.dart` - 그룹 상태 관리
+- `lib/features/settings/groups/screens/` - 그룹 관련 화면들
 
 ### 공통 역할 관리 (운영자 전용)
-- `lib/features/roles/` - 공통 역할 관리 파일
-- `lib/features/roles/models/common_role.dart` - CommonRole 모델
-- `lib/features/roles/services/common_role_service.dart` - 공통 역할 API 서비스
-- `lib/features/roles/providers/common_role_provider.dart` - 공통 역할 상태 관리
-- `lib/features/roles/screens/common_role_list_screen.dart` - 공통 역할 목록 화면
-- `lib/features/roles/screens/common_role_permissions_screen.dart` - 역할 권한 관리 화면
-- `lib/features/roles/widgets/common_role_dialogs.dart` - 생성/수정 다이얼로그
+- `lib/features/settings/roles/` - 공통 역할 관리 파일
+- `lib/features/settings/roles/models/common_role.dart` - CommonRole 모델
+- `lib/features/settings/roles/services/common_role_service.dart` - 공통 역할 API 서비스
+- `lib/features/settings/roles/providers/common_role_provider.dart` - 공통 역할 상태 관리
+- `lib/features/settings/roles/screens/common_role_list_screen.dart` - 공통 역할 목록 화면
+- `lib/features/settings/roles/screens/common_role_permissions_screen.dart` - 역할 권한 관리 화면
+- `lib/features/settings/roles/widgets/common_role_dialogs.dart` - 생성/수정 다이얼로그
+
+### 권한 관리 (운영자 전용)
+- `lib/features/settings/permissions/` - 권한 관리 파일
+- `lib/features/settings/permissions/models/permission.dart` - Permission 모델
+- `lib/features/settings/permissions/services/permission_service.dart` - 권한 API 서비스
+- `lib/features/settings/permissions/providers/permission_management_provider.dart` - 권한 상태 관리
+- `lib/features/settings/permissions/screens/permission_management_screen.dart` - 권한 관리 화면
+- `lib/features/settings/permissions/widgets/` - 권한 관련 위젯
+
+### 일반 설정
+- `lib/features/settings/common/` - 일반 설정 화면 및 Provider
+- `lib/features/settings/common/screens/settings_screen.dart` - 설정 메인 화면
+- `lib/features/settings/common/screens/more_tab.dart` - 더보기 탭
+- `lib/features/settings/common/providers/` - 일반 설정 관련 Provider
 
 ### 라우팅
 - `lib/core/routes/app_routes.dart` - 라우트 경로 상수

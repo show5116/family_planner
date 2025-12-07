@@ -11,7 +11,7 @@ import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
-import 'package:family_planner/core/services/oauth_callback_handler.dart';
+import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 void main() {
