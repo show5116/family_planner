@@ -7,6 +7,8 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 권한 생성 다이얼로그
 class PermissionCreateDialog {
+  static const String _customCategoryValue = '__CUSTOM__';
+
   static Future<void> show(
     BuildContext context,
     WidgetRef ref,
@@ -15,114 +17,162 @@ class PermissionCreateDialog {
     final codeController = TextEditingController();
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
-    String selectedCategory = 'BASIC';
+    final customCategoryController = TextEditingController();
+
+    // 기존 카테고리 목록 가져오기
+    final existingCategories = ref.read(permissionManagementProvider).categories;
+    String selectedCategory = existingCategories.isNotEmpty ? existingCategories.first : _customCategoryValue;
 
     await showDialog<bool>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (builderContext, setState) => AlertDialog(
-          title: Text(l10n.permission_create),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: codeController,
-                  decoration: InputDecoration(
-                    labelText: l10n.permission_code,
-                    hintText: 'EXAMPLE_CODE',
-                    border: const OutlineInputBorder(),
+        builder: (builderContext, setState) {
+          final isCustom = selectedCategory == _customCategoryValue;
+
+          return AlertDialog(
+            title: Text(l10n.permission_create),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: codeController,
+                    decoration: InputDecoration(
+                      labelText: l10n.permission_code,
+                      hintText: 'EXAMPLE_CODE',
+                      border: const OutlineInputBorder(),
+                    ),
+                    textCapitalization: TextCapitalization.characters,
                   ),
-                  textCapitalization: TextCapitalization.characters,
-                ),
-                const SizedBox(height: AppSizes.spaceM),
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: l10n.permission_name,
-                    hintText: '예시 권한',
-                    border: const OutlineInputBorder(),
+                  const SizedBox(height: AppSizes.spaceM),
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: l10n.permission_name,
+                      hintText: '예시 권한',
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSizes.spaceM),
-                TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    labelText: l10n.permission_description,
-                    hintText: '이 권한에 대한 설명을 입력하세요',
-                    border: const OutlineInputBorder(),
+                  const SizedBox(height: AppSizes.spaceM),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      labelText: l10n.permission_description,
+                      hintText: '이 권한에 대한 설명을 입력하세요',
+                      border: const OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
                   ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: AppSizes.spaceM),
-                DropdownButtonFormField<String>(
-                  initialValue: selectedCategory,
-                  decoration: InputDecoration(
-                    labelText: l10n.permission_category,
-                    border: const OutlineInputBorder(),
-                  ),
-                  items: ['BASIC', 'MEMBER', 'ROLE', 'INVITE', 'SCHEDULE', 'ASSET']
-                      .map(
+                  const SizedBox(height: AppSizes.spaceM),
+                  // 카테고리 드롭다운
+                  DropdownButtonFormField<String>(
+                    initialValue: selectedCategory,
+                    decoration: InputDecoration(
+                      labelText: l10n.permission_category,
+                      border: const OutlineInputBorder(),
+                    ),
+                    items: [
+                      // 기존 카테고리들
+                      ...existingCategories.map(
                         (category) => DropdownMenuItem(
                           value: category,
                           child: Text(category),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        selectedCategory = value;
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(l10n.common_cancel),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (codeController.text.isEmpty ||
-                    nameController.text.isEmpty) {
-                  ScaffoldMessenger.of(builderContext).showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.permission_codeAndNameRequired),
-                      backgroundColor: Colors.red,
+                      ),
+                      // 마지막에 "직접 입력" 옵션 추가
+                      const DropdownMenuItem(
+                        value: _customCategoryValue,
+                        child: Text('+ 직접 입력'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedCategory = value;
+                        });
+                      }
+                    },
+                  ),
+                  // "직접 입력" 선택 시 텍스트 필드 표시
+                  if (isCustom) ...[
+                    const SizedBox(height: AppSizes.spaceM),
+                    TextField(
+                      controller: customCategoryController,
+                      decoration: const InputDecoration(
+                        labelText: '새 카테고리 이름',
+                        hintText: 'NEW_CATEGORY',
+                        border: OutlineInputBorder(),
+                      ),
+                      textCapitalization: TextCapitalization.characters,
                     ),
-                  );
-                  return;
-                }
-                Navigator.pop(dialogContext);
-
-                // 생성 실행
-                await _performCreate(
-                  context,
-                  ref,
-                  l10n,
-                  codeController.text.toUpperCase(),
-                  nameController.text,
-                  descriptionController.text.isEmpty
-                      ? null
-                      : descriptionController.text,
-                  selectedCategory,
-                );
-              },
-              child: Text(l10n.common_create),
+                  ],
+                ],
+              ),
             ),
-          ],
-        ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(l10n.common_cancel),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (codeController.text.isEmpty ||
+                      nameController.text.isEmpty) {
+                    ScaffoldMessenger.of(builderContext).showSnackBar(
+                      SnackBar(
+                        content: Text(l10n.permission_codeAndNameRequired),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // 카테고리 결정
+                  String finalCategory;
+                  if (isCustom) {
+                    final customValue = customCategoryController.text.trim().toUpperCase();
+                    if (customValue.isEmpty) {
+                      ScaffoldMessenger.of(builderContext).showSnackBar(
+                        const SnackBar(
+                          content: Text('새 카테고리 이름을 입력해주세요'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    finalCategory = customValue;
+                  } else {
+                    finalCategory = selectedCategory;
+                  }
+
+                  Navigator.pop(dialogContext);
+
+                  // 생성 실행
+                  await _performCreate(
+                    context,
+                    ref,
+                    l10n,
+                    codeController.text.toUpperCase(),
+                    nameController.text,
+                    descriptionController.text.isEmpty
+                        ? null
+                        : descriptionController.text,
+                    finalCategory,
+                  );
+                },
+                child: Text(l10n.common_create),
+              ),
+            ],
+          );
+        },
       ),
     );
 
     codeController.dispose();
     nameController.dispose();
     descriptionController.dispose();
+    customCategoryController.dispose();
   }
 
   static Future<void> _performCreate(
