@@ -93,20 +93,45 @@ class Role {
   final String name;
   final String? groupId;
   final bool isDefaultRole;
+  final List<String> permissions;
 
   Role({
     required this.id,
     required this.name,
     this.groupId,
     required this.isDefaultRole,
+    this.permissions = const [],
   });
 
   factory Role.fromJson(Map<String, dynamic> json) {
+    // permissions 필드 안전하게 파싱
+    List<String> parsePermissions(dynamic permissionsData) {
+      if (permissionsData == null) return [];
+
+      // 이미 List<String>인 경우
+      if (permissionsData is List<String>) {
+        return permissionsData;
+      }
+
+      // List<dynamic>인 경우
+      if (permissionsData is List) {
+        return permissionsData.map((e) => e.toString()).toList();
+      }
+
+      // String인 경우 (예: "VIEW,CREATE,UPDATE")
+      if (permissionsData is String) {
+        return permissionsData.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+      }
+
+      return [];
+    }
+
     return Role(
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? 'MEMBER',
       groupId: json['groupId'] as String?,
       isDefaultRole: json['isDefaultRole'] as bool? ?? false,
+      permissions: parsePermissions(json['permissions']),
     );
   }
 
@@ -116,6 +141,12 @@ class Role {
       'name': name,
       'groupId': groupId,
       'isDefaultRole': isDefaultRole,
+      'permissions': permissions,
     };
+  }
+
+  /// 특정 권한을 가지고 있는지 확인
+  bool hasPermission(String permission) {
+    return permissions.contains(permission);
   }
 }

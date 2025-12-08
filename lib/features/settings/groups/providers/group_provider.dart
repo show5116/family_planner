@@ -196,6 +196,68 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       rethrow;
     }
   }
+
+  /// 그룹별 커스텀 역할 생성
+  Future<Role> createGroupRole(
+    String groupId, {
+    required String name,
+    required List<String> permissions,
+    bool isDefaultRole = false,
+  }) async {
+    try {
+      final role = await _groupService.createGroupRole(
+        groupId,
+        name: name,
+        permissions: permissions,
+        isDefaultRole: isDefaultRole,
+      );
+
+      // 역할 목록 새로고침
+      _ref.invalidate(groupRolesProvider(groupId));
+
+      return role;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹별 커스텀 역할 수정
+  Future<Role> updateGroupRole(
+    String groupId,
+    String roleId, {
+    String? name,
+    List<String>? permissions,
+    bool? isDefaultRole,
+  }) async {
+    try {
+      final role = await _groupService.updateGroupRole(
+        groupId,
+        roleId,
+        name: name,
+        permissions: permissions,
+        isDefaultRole: isDefaultRole,
+      );
+
+      // 역할 목록 새로고침
+      _ref.invalidate(groupRolesProvider(groupId));
+
+      return role;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹별 커스텀 역할 삭제
+  Future<void> deleteGroupRole(String groupId, String roleId) async {
+    try {
+      await _groupService.deleteGroupRole(groupId, roleId);
+
+      // 역할 목록 새로고침
+      _ref.invalidate(groupRolesProvider(groupId));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// 그룹 관리 NotifierProvider

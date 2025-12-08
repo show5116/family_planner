@@ -200,4 +200,61 @@ class GroupService {
       rethrow;
     }
   }
+
+  /// 그룹별 커스텀 역할 생성
+  /// POST /groups/:groupId/roles
+  Future<Role> createGroupRole(
+    String groupId, {
+    required String name,
+    required List<String> permissions,
+    bool isDefaultRole = false,
+  }) async {
+    try {
+      final response = await _apiClient.post(
+        '/groups/$groupId/roles',
+        data: {
+          'name': name,
+          'permissions': permissions,
+          'isDefaultRole': isDefaultRole,
+        },
+      );
+      return Role.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹별 커스텀 역할 수정
+  /// PATCH /groups/:groupId/roles/:id
+  Future<Role> updateGroupRole(
+    String groupId,
+    String roleId, {
+    String? name,
+    List<String>? permissions,
+    bool? isDefaultRole,
+  }) async {
+    try {
+      final response = await _apiClient.patch(
+        '/groups/$groupId/roles/$roleId',
+        data: {
+          if (name != null) 'name': name,
+          if (permissions != null) 'permissions': permissions,
+          if (isDefaultRole != null) 'isDefaultRole': isDefaultRole,
+        },
+      );
+      return Role.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹별 커스텀 역할 삭제
+  /// DELETE /groups/:groupId/roles/:id
+  Future<void> deleteGroupRole(String groupId, String roleId) async {
+    try {
+      await _apiClient.delete('/groups/$groupId/roles/$roleId');
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
