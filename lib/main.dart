@@ -10,7 +10,6 @@ import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/providers/locale_provider.dart';
-import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -77,10 +76,9 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    // 앱 시작 시 인증 상태 확인
+    // 앱 시작 시 초기화 작업
+    // 참고: 인증 상태 확인은 SplashScreen에서 처리됨 (중복 호출 방지)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(authProvider.notifier).checkAuthStatus();
-
       // Deep Link 리스너 초기화 (웹 전용)
       // 웹에서 OAuth URL 방식 로그인 시 콜백을 받기 위함
       // 모바일은 SDK 방식을 사용하므로 Deep Link 불필요
