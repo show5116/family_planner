@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
@@ -239,72 +240,15 @@ class SettingsTab extends StatelessWidget {
     AppLocalizations l10n,
     Color currentColor,
   ) async {
-    Color selectedColor = currentColor;
-
-    final confirmed = await showDialog<bool>(
+    final selectedColor = await showColorPickerDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(l10n.group_customColor),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Wrap(
-                spacing: AppSizes.spaceS,
-                runSpacing: AppSizes.spaceS,
-                children: [
-                  Colors.red,
-                  Colors.pink,
-                  Colors.purple,
-                  Colors.deepPurple,
-                  Colors.indigo,
-                  Colors.blue,
-                  Colors.lightBlue,
-                  Colors.cyan,
-                  Colors.teal,
-                  Colors.green,
-                  Colors.lightGreen,
-                  Colors.lime,
-                  Colors.yellow,
-                  Colors.amber,
-                  Colors.orange,
-                  Colors.deepOrange,
-                  Colors.brown,
-                  Colors.grey,
-                ].map((color) {
-                  return InkWell(
-                    onTap: () => setState(() => selectedColor = color),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                        border: selectedColor == color
-                            ? Border.all(color: Colors.black, width: 3)
-                            : Border.all(color: Colors.grey[300]!),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.group_cancel),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.group_save),
-            ),
-          ],
-        ),
-      ),
+      title: l10n.group_customColor,
+      initialColor: currentColor,
+      confirmText: l10n.group_save,
+      cancelText: l10n.group_cancel,
     );
 
-    if (confirmed == true) {
+    if (selectedColor != null) {
       onColorChange(selectedColor);
     }
   }

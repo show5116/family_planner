@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
@@ -62,14 +63,17 @@ class GroupService {
     String? defaultColor,
   }) async {
     try {
+      final requestData = {
+        if (name != null) 'name': name,
+        if (description != null) 'description': description,
+        if (defaultColor != null) 'defaultColor': defaultColor,
+      };
+
       final response = await _apiClient.patch(
         '/groups/$groupId',
-        data: {
-          if (name != null) 'name': name,
-          if (description != null) 'description': description,
-          if (defaultColor != null) 'defaultColor': defaultColor,
-        },
+        data: requestData,
       );
+
       return Group.fromJson(response.data);
     } catch (e) {
       rethrow;
@@ -142,10 +146,7 @@ class GroupService {
 
   /// 개인 그룹 색상 설정
   /// PATCH /groups/:id/my-color
-  Future<GroupMember> updateMyColor(
-    String groupId,
-    String customColor,
-  ) async {
+  Future<GroupMember> updateMyColor(String groupId, String customColor) async {
     try {
       final response = await _apiClient.patch(
         '/groups/$groupId/my-color',
@@ -159,7 +160,9 @@ class GroupService {
 
       // Map이 아닌 경우 처리
       if (response.data is! Map<String, dynamic>) {
-        throw Exception('Invalid response format: expected Map but got ${response.data.runtimeType}');
+        throw Exception(
+          'Invalid response format: expected Map but got ${response.data.runtimeType}',
+        );
       }
 
       return GroupMember.fromJson(response.data as Map<String, dynamic>);
@@ -182,7 +185,9 @@ class GroupService {
   /// POST /groups/:id/regenerate-code
   Future<Group> regenerateInviteCode(String groupId) async {
     try {
-      final response = await _apiClient.post('/groups/$groupId/regenerate-code');
+      final response = await _apiClient.post(
+        '/groups/$groupId/regenerate-code',
+      );
       return Group.fromJson(response.data);
     } catch (e) {
       rethrow;
