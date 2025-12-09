@@ -240,6 +240,8 @@ class ApiClient {
             extra: {
               'withCredentials': true, // 쿠키 자동 전송 (RefreshToken)
             },
+            // validateStatus를 설정하지 않으면 Dio가 200-299만 성공으로 간주
+            // 401 등은 자동으로 DioException이 되어 catch 블록으로 이동
           ),
         );
       } else {
@@ -261,17 +263,31 @@ class ApiClient {
         );
       }
 
-      if (response.statusCode == 200) {
-        debugPrint('Refresh token response received');
+      debugPrint('Refresh token response status: ${response.statusCode}');
+      debugPrint('Refresh token response data: ${response.data}');
+
+      // 200-299 상태 코드는 성공 (Dio 기본 동작)
+      if (response.statusCode != null &&
+          response.statusCode! >= 200 &&
+          response.statusCode! < 300) {
+
+        // 응답 데이터가 없거나 accessToken이 없으면 실패
+        if (response.data == null) {
+          debugPrint('Refresh token response has no data');
+          return false;
+        }
 
         // 모든 플랫폼에서 새 AccessToken 저장
         final newAccessToken = response.data['accessToken'] as String?;
-        debugPrint('New access token: ${newAccessToken != null ? "present" : "null"}');
+        debugPrint('New access token: ${newAccessToken != null ? "present (${newAccessToken.length} chars)" : "null"}');
 
-        if (newAccessToken != null) {
-          await saveAccessToken(newAccessToken);
-          debugPrint('New access token saved to storage');
+        if (newAccessToken == null || newAccessToken.isEmpty) {
+          debugPrint('No access token in refresh response');
+          return false;
         }
+
+        await saveAccessToken(newAccessToken);
+        debugPrint('New access token saved to storage');
 
         // RefreshToken 처리
         if (kIsWeb) {
@@ -280,9 +296,9 @@ class ApiClient {
         } else {
           // 모바일: RefreshToken을 Storage에 저장
           final newRefreshToken = response.data['refreshToken'] as String?;
-          debugPrint('New refresh token: ${newRefreshToken != null ? "present" : "null"}');
+          debugPrint('New refresh token: ${newRefreshToken != null ? "present (${newRefreshToken.length} chars)" : "null"}');
 
-          if (newRefreshToken != null) {
+          if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
             await saveRefreshToken(newRefreshToken);
             debugPrint('Mobile: New refresh token saved to storage');
           }
@@ -291,10 +307,15 @@ class ApiClient {
         return true;
       }
 
-      debugPrint('Refresh token response status: ${response.statusCode}');
+      debugPrint('Unexpected refresh token response status: ${response.statusCode}');
       return false;
     } catch (e) {
       debugPrint('Token refresh failed: $e');
+      if (e is DioException) {
+        debugPrint('DioException type: ${e.type}');
+        debugPrint('Response status: ${e.response?.statusCode}');
+        debugPrint('Response data: ${e.response?.data}');
+      }
       return false;
     }
   }
