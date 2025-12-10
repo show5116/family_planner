@@ -125,10 +125,15 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       // 웹에서 스크롤 동작 개선
       builder: (context, child) {
+        final mediaQuery = MediaQuery.of(context);
         return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
+          data: mediaQuery.copyWith(
             // 텍스트 스케일 고정 (웹에서 브라우저 설정에 영향받지 않도록)
             textScaler: TextScaler.noScaling,
+            // 웹 환경에서 viewInsets.bottom을 0으로 설정하여 모바일 크롬의 가상 키보드로 인한 레이아웃 깨짐 방지
+            viewInsets: kIsWeb
+                ? mediaQuery.viewInsets.copyWith(bottom: 0)
+                : mediaQuery.viewInsets,
           ),
           child: child ?? const SizedBox(),
         );
