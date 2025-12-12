@@ -10,6 +10,7 @@ import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/providers/locale_provider.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -21,12 +22,12 @@ void main() {
   // Flutter 웹에서 키보드 입력 시 발생하는 채널 버퍼 경고를 방지
   if (kIsWeb) {
     // 키보드 이벤트 채널의 버퍼 용량 증가
-    ServicesBinding.instance.channelBuffers.setListener(
-      'flutter/keyevent',
-      (data, callback) async {
-        callback(data);
-      },
-    );
+    ServicesBinding.instance.channelBuffers.setListener('flutter/keyevent', (
+      data,
+      callback,
+    ) async {
+      callback(data);
+    });
   }
 
   // 웹에서 URL 해시(#) 제거 - 경로 기반 라우팅 사용
@@ -59,9 +60,7 @@ void main() {
 
   runApp(
     // Riverpod의 ProviderScope로 앱을 감싸기
-    const ProviderScope(
-      child: MyApp(),
-    ),
+    const ProviderScope(child: MyApp()),
   );
 }
 
@@ -73,15 +72,14 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  double _lastValidHeight = 0.0;
+  double _lastValidWidth = 0.0;
+
   @override
   void initState() {
     super.initState();
-    // 앱 시작 시 초기화 작업
-    // 참고: 인증 상태 확인은 SplashScreen에서 처리됨 (중복 호출 방지)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Deep Link 리스너 초기화 (웹 전용)
-      // 웹에서 OAuth URL 방식 로그인 시 콜백을 받기 위함
-      // 모바일은 SDK 방식을 사용하므로 Deep Link 불필요
+      ref.read(authProvider.notifier).checkAuthStatus();
       if (kIsWeb) {
         OAuthCallbackHandler().initDeepLinkListener();
       }
@@ -90,11 +88,8 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // 테마 모드 상태 감지
     final themeMode = ref.watch(themeModeProvider);
-    // 언어 설정 상태 감지
     final locale = ref.watch(localeProvider);
-    // GoRouter 인스턴스 가져오기
     final router = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
@@ -105,7 +100,6 @@ class _MyAppState extends ConsumerState<MyApp> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode, // Provider에서 관리되는 테마 모드 사용
-
       // 라우팅 설정
       routerConfig: router,
 
@@ -126,15 +120,42 @@ class _MyAppState extends ConsumerState<MyApp> {
       // 웹에서 스크롤 동작 개선
       builder: (context, child) {
         final mediaQuery = MediaQuery.of(context);
+        if (kIsWeb) {
+          final currentSize = mediaQuery.size;
+
+          // 1. 높이 캐싱 로직
+          // 가로(Width)가 변했다면(회전 등), 높이 기준도 초기화하고 새로 잡습니다.
+          if (currentSize.width != _lastValidWidth) {
+            _lastValidWidth = currentSize.width;
+            _lastValidHeight = currentSize.height;
+          } else {
+            // 가로는 그대로인데, 높이가 더 커졌다면(키보드가 내려감) 최신 높이로 갱신
+            if (currentSize.height > _lastValidHeight) {
+              _lastValidHeight = currentSize.height;
+            }
+            // 높이가 작아졌다면(키보드가 올라옴)? -> _lastValidHeight를 그대로 유지 (갱신 X)
+          }
+
+          // 2. 강제 고정 MediaQuery 생성
+          // 현재 화면 높이가 줄어들었더라도(_lastValidHeight보다 작더라도)
+          // 우리는 무조건 '가장 컸던 높이(_lastValidHeight)'를 사용하라고 강제합니다.
+          return MediaQuery(
+            data: mediaQuery.copyWith(
+              textScaler: TextScaler.noScaling,
+              // 키보드 영역 0으로 강제
+              viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
+              size: Size(
+                currentSize.width,
+                _lastValidHeight > 0 ? _lastValidHeight : currentSize.height,
+              ),
+            ),
+            child: child ?? const SizedBox(),
+          );
+        }
+
+        // 웹이 아니면 기본 로직
         return MediaQuery(
-          data: mediaQuery.copyWith(
-            // 텍스트 스케일 고정 (웹에서 브라우저 설정에 영향받지 않도록)
-            textScaler: TextScaler.noScaling,
-            // 웹 환경에서 viewInsets.bottom을 0으로 설정하여 모바일 크롬의 가상 키보드로 인한 레이아웃 깨짐 방지
-            viewInsets: kIsWeb
-                ? mediaQuery.viewInsets.copyWith(bottom: 0)
-                : mediaQuery.viewInsets,
-          ),
+          data: mediaQuery.copyWith(textScaler: TextScaler.noScaling),
           child: child ?? const SizedBox(),
         );
       },
