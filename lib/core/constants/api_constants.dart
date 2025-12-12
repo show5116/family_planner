@@ -16,6 +16,7 @@ class ApiConstants {
   static const String requestPasswordReset = '/auth/request-password-reset';
   static const String resetPassword = '/auth/reset-password';
   static const String updateProfile = '/auth/update-profile';
+  static const String uploadProfilePhoto = '/auth/upload-profile-photo';
 
   // Social Login Endpoints
   static const String googleLogin = '/auth/google';

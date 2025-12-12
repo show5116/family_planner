@@ -76,7 +76,7 @@ class AuthService extends ApiServiceBase {
         email: user['email'] as String?,
         name: user['name'] as String?,
         phoneNumber: user['phoneNumber'] as String?,
-        profileImage: user['profileImage'] as String?,
+        profileImageUrl: user['profileImageUrl'] as String?,
         isAdmin: user['isAdmin'] as bool?,
         hasPassword: user['hasPassword'] as bool?,
       );
@@ -88,7 +88,7 @@ class AuthService extends ApiServiceBase {
         email: data['email'] as String?,
         name: data['name'] as String?,
         phoneNumber: data['phoneNumber'] as String?,
-        profileImage: data['profileImage'] as String?,
+        profileImageUrl: data['profileImageUrl'] as String?,
         isAdmin: data['isAdmin'] as bool?,
         hasPassword: data['hasPassword'] as bool?,
       );
@@ -478,7 +478,6 @@ class AuthService extends ApiServiceBase {
   Future<Map<String, dynamic>> updateProfile({
     String? name,
     String? phoneNumber,
-    String? profileImage,
     String? currentPassword,
     String? newPassword,
   }) async {
@@ -487,7 +486,6 @@ class AuthService extends ApiServiceBase {
 
       if (name != null) requestData['name'] = name;
       if (phoneNumber != null) requestData['phoneNumber'] = phoneNumber;
-      if (profileImage != null) requestData['profileImage'] = profileImage;
       if (currentPassword != null) {
         requestData['currentPassword'] = currentPassword;
       }
@@ -501,6 +499,47 @@ class AuthService extends ApiServiceBase {
 
       // 업데이트된 사용자 정보 저장
       await _saveUserInfoFromResponse(data);
+
+      return data;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// 프로필 사진 업로드
+  ///
+  /// 이미지 파일을 업로드하여 프로필 사진을 설정합니다.
+  /// 이미지는 자동으로 300x300px로 최적화되며, 기존 사진이 있으면 삭제됩니다.
+  ///
+  /// [fileBytes]: 업로드할 이미지 파일의 바이트 데이터
+  /// [fileName]: 파일 이름
+  /// Returns: { "profileImageKey": "profiles/uuid-123.jpg", "profileImageUrl": "https://..." }
+  Future<Map<String, dynamic>> uploadProfilePhoto(
+    List<int> fileBytes,
+    String fileName,
+  ) async {
+    try {
+      // FormData 생성 (웹과 모바일 모두 지원)
+      final formData = FormData.fromMap({
+        'photo': MultipartFile.fromBytes(
+          fileBytes,
+          filename: fileName,
+        ),
+      });
+
+      final response = await apiClient.post(
+        ApiConstants.uploadProfilePhoto,
+        data: formData,
+      );
+
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      // 업데이트된 프로필 이미지 URL 저장
+      if (data['profileImageUrl'] != null) {
+        await _storage.saveUserInfo(
+          profileImageUrl: data['profileImageUrl'] as String,
+        );
+      }
 
       return data;
     } catch (e) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
@@ -64,7 +65,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
-  final _profileImageController = TextEditingController();
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -78,6 +78,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   bool _isLoading = false;
   bool _isPasswordChangeMode = false;
   bool _hasPassword = true; // 사용자가 비밀번호를 가지고 있는지 여부
+  bool _isUploadingImage = false;
 
   // 모바일 웹 환경 체크
   bool get _isMobileWeb {
@@ -99,7 +100,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   void dispose() {
     _nameController.dispose();
     _phoneNumberController.dispose();
-    _profileImageController.dispose();
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
@@ -113,8 +113,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
         _userInfo = userInfo;
         _nameController.text = userInfo['name'] as String? ?? '';
         _phoneNumberController.text = userInfo['phoneNumber'] as String? ?? '';
-        _profileImageController.text =
-            userInfo['profileImage'] as String? ?? '';
         _hasPassword = userInfo['hasPassword'] as bool? ?? true;
       });
     }
@@ -152,9 +150,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
             phoneNumber: _phoneNumberController.text.trim().isEmpty
                 ? null
                 : _phoneNumberController.text.trim(),
-            profileImage: _profileImageController.text.trim().isEmpty
-                ? null
-                : _profileImageController.text.trim(),
             currentPassword: _hasPassword
                 ? _currentPasswordController.text
                 : null,
@@ -206,9 +201,64 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     }
   }
 
+  /// 프로필 사진 업로드
+  Future<void> _uploadProfilePhoto() async {
+    final l10n = AppLocalizations.of(context)!;
+    final picker = ImagePicker();
+
+    try {
+      setState(() => _isUploadingImage = true);
+
+      // 이미지 선택
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (image == null) {
+        setState(() => _isUploadingImage = false);
+        return;
+      }
+
+      // 이미지 파일을 바이트로 읽기 (웹과 모바일 모두 지원)
+      final bytes = await image.readAsBytes();
+      final fileName = image.name;
+
+      // 프로필 사진 업로드
+      await ref.read(authProvider.notifier).uploadProfilePhoto(bytes, fileName);
+
+      // 사용자 정보 재로드
+      await _loadUserInfo();
+
+      setState(() => _isUploadingImage = false);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.profile_uploadSuccess),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() => _isUploadingImage = false);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.profile_uploadFailed}: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final profileImage = _userInfo?['profileImage'] as String?;
+    final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
     final l10n = AppLocalizations.of(context)!;
 
     // 모바일 웹에서 초기 화면 높이 저장
@@ -250,25 +300,53 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                  // 프로필 이미지 미리보기
+                  // 프로필 이미지 미리보기 및 업로드
                   Center(
                     child: Column(
                       children: [
-                        profileImage != null && profileImage.isNotEmpty
-                            ? CircleAvatar(
-                                radius: 60,
-                                backgroundImage: CachedNetworkImageProvider(
-                                  profileImage,
-                                ),
-                              )
-                            : CircleAvatar(
-                                radius: 60,
-                                child: Icon(
-                                  Icons.person,
-                                  size: 60,
-                                  color: Colors.grey[400],
+                        Stack(
+                          children: [
+                            profileImageUrl != null && profileImageUrl.isNotEmpty
+                                ? CircleAvatar(
+                                    radius: 60,
+                                    backgroundImage: CachedNetworkImageProvider(
+                                      profileImageUrl,
+                                    ),
+                                  )
+                                : CircleAvatar(
+                                    radius: 60,
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: Colors.grey[400],
+                                    ),
+                                  ),
+                            if (_isUploadingImage)
+                              const Positioned.fill(
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Colors.black54,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                child: IconButton(
+                                  icon: const Icon(Icons.camera_alt, size: 20),
+                                  color: Colors.white,
+                                  onPressed: _isUploadingImage ? null : _uploadProfilePhoto,
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: AppSizes.spaceS),
                         Text(
                           _userInfo?['email'] as String? ?? '',
@@ -316,22 +394,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                     ),
                     keyboardType: TextInputType.phone,
                     inputFormatters: [PhoneNumberFormatter()],
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-
-                  // 프로필 이미지 URL 입력
-                  TextFormField(
-                    controller: _profileImageController,
-                    decoration: InputDecoration(
-                      labelText: l10n.profile_profileImage,
-                      prefixIcon: const Icon(Icons.image_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppSizes.radiusMedium,
-                        ),
-                      ),
-                      helperText: l10n.profile_profileImageHint,
-                    ),
                   ),
                   const SizedBox(height: AppSizes.spaceL),
 

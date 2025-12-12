@@ -465,10 +465,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get profile_phoneNumberHint => '例: 010-1234-5678';
 
   @override
-  String get profile_profileImage => 'プロフィール画像URL（任意）';
+  String get profile_uploadSuccess => 'プロフィール写真がアップロードされました';
 
   @override
-  String get profile_profileImageHint => '画像URLを入力してください';
+  String get profile_uploadFailed => 'プロフィール写真のアップロードに失敗しました';
 
   @override
   String get profile_changePassword => 'パスワード変更';

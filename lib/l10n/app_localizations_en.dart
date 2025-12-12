@@ -479,10 +479,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile_phoneNumberHint => 'e.g., 010-1234-5678';
 
   @override
-  String get profile_profileImage => 'Profile Image URL (Optional)';
+  String get profile_uploadSuccess => 'Profile photo uploaded successfully';
 
   @override
-  String get profile_profileImageHint => 'Enter image URL';
+  String get profile_uploadFailed => 'Profile photo upload failed';
 
   @override
   String get profile_changePassword => 'Change Password';

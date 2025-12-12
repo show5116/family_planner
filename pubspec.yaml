@@ -69,6 +69,9 @@ dependencies:
   flutter_slidable: ^3.1.1
   cached_network_image: ^3.4.1
 
+  # Image & File Picker
+  image_picker: ^1.1.2
+
   # Authentication
   google_sign_in: ^6.2.1
   kakao_flutter_sdk: ^1.9.6

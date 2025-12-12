@@ -994,17 +994,17 @@ abstract class AppLocalizations {
   /// **'예: 010-1234-5678'**
   String get profile_phoneNumberHint;
 
-  /// No description provided for @profile_profileImage.
+  /// No description provided for @profile_uploadSuccess.
   ///
   /// In ko, this message translates to:
-  /// **'프로필 이미지 URL (선택사항)'**
-  String get profile_profileImage;
+  /// **'프로필 사진이 업로드되었습니다'**
+  String get profile_uploadSuccess;
 
-  /// No description provided for @profile_profileImageHint.
+  /// No description provided for @profile_uploadFailed.
   ///
   /// In ko, this message translates to:
-  /// **'이미지 URL을 입력하세요'**
-  String get profile_profileImageHint;
+  /// **'프로필 사진 업로드 실패'**
+  String get profile_uploadFailed;
 
   /// No description provided for @profile_changePassword.
   ///

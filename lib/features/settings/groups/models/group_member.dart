@@ -59,13 +59,13 @@ class User {
   final String id;
   final String email;
   final String name;
-  final String? profileImage;
+  final String? profileImageUrl;
 
   User({
     required this.id,
     required this.email,
     required this.name,
-    this.profileImage,
+    this.profileImageUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -73,7 +73,7 @@ class User {
       id: json['id'] as String? ?? '',
       email: json['email'] as String? ?? '',
       name: json['name'] as String? ?? 'Unknown',
-      profileImage: json['profileImage'] as String?,
+      profileImageUrl: json['profileImageUrl'] as String?,
     );
   }
 
@@ -82,7 +82,7 @@ class User {
       'id': id,
       'email': email,
       'name': name,
-      'profileImage': profileImage,
+      'profileImageUrl': profileImageUrl,
     };
   }
 }

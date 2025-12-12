@@ -9,13 +9,13 @@ class UserProfileCard extends StatelessWidget {
     super.key,
     this.name,
     this.email,
-    this.profileImage,
+    this.profileImageUrl,
     this.isAdmin = false,
   });
 
   final String? name;
   final String? email;
-  final String? profileImage;
+  final String? profileImageUrl;
   final bool isAdmin;
 
   @override
@@ -37,10 +37,10 @@ class UserProfileCard extends StatelessWidget {
   }
 
   Widget _buildProfileImage(BuildContext context) {
-    if (profileImage != null && profileImage!.isNotEmpty) {
+    if (profileImageUrl != null && profileImageUrl!.isNotEmpty) {
       return CircleAvatar(
         radius: 32,
-        backgroundImage: CachedNetworkImageProvider(profileImage!),
+        backgroundImage: CachedNetworkImageProvider(profileImageUrl!),
       );
     }
 

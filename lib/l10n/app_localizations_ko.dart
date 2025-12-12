@@ -466,10 +466,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get profile_phoneNumberHint => '예: 010-1234-5678';
 
   @override
-  String get profile_profileImage => '프로필 이미지 URL (선택사항)';
+  String get profile_uploadSuccess => '프로필 사진이 업로드되었습니다';
 
   @override
-  String get profile_profileImageHint => '이미지 URL을 입력하세요';
+  String get profile_uploadFailed => '프로필 사진 업로드 실패';
 
   @override
   String get profile_changePassword => '비밀번호 변경';

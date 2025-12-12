@@ -84,10 +84,10 @@ class MemberCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: member.user?.profileImage != null
-              ? NetworkImage(member.user!.profileImage!)
+          backgroundImage: member.user?.profileImageUrl != null
+              ? NetworkImage(member.user!.profileImageUrl!)
               : null,
-          child: member.user?.profileImage == null
+          child: member.user?.profileImageUrl == null
               ? Text(
                   (member.user?.name ?? 'U').substring(0, 1),
                   style: const TextStyle(fontWeight: FontWeight.bold),

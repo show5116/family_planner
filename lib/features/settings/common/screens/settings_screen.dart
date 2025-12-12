@@ -257,7 +257,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   Widget _buildUserProfile() {
     final email = _userInfo?['email'] as String?;
     final name = _userInfo?['name'] as String?;
-    final profileImage = _userInfo?['profileImage'] as String?;
+    final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
     final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
     final l10n = AppLocalizations.of(context)!;
 
@@ -266,10 +266,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
       child: Row(
         children: [
           // 프로필 이미지
-          profileImage != null && profileImage.isNotEmpty
+          profileImageUrl != null && profileImageUrl.isNotEmpty
               ? CircleAvatar(
                   radius: 40,
-                  backgroundImage: CachedNetworkImageProvider(profileImage),
+                  backgroundImage: CachedNetworkImageProvider(profileImageUrl),
                 )
               : CircleAvatar(
                   radius: 40,

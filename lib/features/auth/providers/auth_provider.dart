@@ -317,7 +317,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> updateProfile({
     String? name,
     String? phoneNumber,
-    String? profileImage,
     String? currentPassword,
     String? newPassword,
   }) async {
@@ -327,13 +326,28 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final updatedUser = await _authService.updateProfile(
         name: name,
         phoneNumber: phoneNumber,
-        profileImage: profileImage,
         currentPassword: currentPassword,
         newPassword: newPassword,
       );
 
       // 업데이트된 사용자 정보로 상태 업데이트
       state = state.copyWith(isAuthenticated: true, user: updatedUser);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 프로필 사진 업로드
+  Future<void> uploadProfilePhoto(List<int> fileBytes, String fileName) async {
+    state = state.copyWith(error: null);
+
+    try {
+      await _authService.uploadProfilePhoto(fileBytes, fileName);
+
+      // 사용자 정보 새로고침
+      final user = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: user);
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;

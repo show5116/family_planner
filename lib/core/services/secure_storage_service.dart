@@ -22,7 +22,7 @@ class SecureStorageService {
   static const String _userEmailKey = 'user_email';
   static const String _userNameKey = 'user_name';
   static const String _userPhoneNumberKey = 'user_phone_number';
-  static const String _userProfileImageKey = 'user_profile_image';
+  static const String _userProfileImageUrlKey = 'user_profile_image_url';
   static const String _userIsAdminKey = 'user_is_admin';
   static const String _userHasPasswordKey = 'user_has_password';
 
@@ -63,7 +63,7 @@ class SecureStorageService {
     String? email,
     String? name,
     String? phoneNumber,
-    String? profileImage,
+    String? profileImageUrl,
     bool? isAdmin,
     bool? hasPassword,
   }) async {
@@ -71,7 +71,7 @@ class SecureStorageService {
     debugPrint('Email: $email');
     debugPrint('Name: $name');
     debugPrint('PhoneNumber: $phoneNumber');
-    debugPrint('ProfileImage: $profileImage');
+    debugPrint('ProfileImageUrl: $profileImageUrl');
     debugPrint('IsAdmin: $isAdmin');
     debugPrint('HasPassword: $hasPassword');
 
@@ -87,9 +87,9 @@ class SecureStorageService {
       await _storage.write(key: _userPhoneNumberKey, value: phoneNumber);
       debugPrint('PhoneNumber saved');
     }
-    if (profileImage != null) {
-      await _storage.write(key: _userProfileImageKey, value: profileImage);
-      debugPrint('ProfileImage saved');
+    if (profileImageUrl != null) {
+      await _storage.write(key: _userProfileImageUrlKey, value: profileImageUrl);
+      debugPrint('ProfileImageUrl saved');
     }
     if (isAdmin != null) {
       await _storage.write(key: _userIsAdminKey, value: isAdmin.toString());
@@ -118,8 +118,8 @@ class SecureStorageService {
   }
 
   /// 사용자 프로필 이미지 URL 가져오기
-  Future<String?> getUserProfileImage() async {
-    return await _storage.read(key: _userProfileImageKey);
+  Future<String?> getUserProfileImageUrl() async {
+    return await _storage.read(key: _userProfileImageUrlKey);
   }
 
   /// 사용자 관리자 여부 가져오기
@@ -139,7 +139,7 @@ class SecureStorageService {
     final email = await getUserEmail();
     final name = await getUserName();
     final phoneNumber = await getUserPhoneNumber();
-    final profileImage = await getUserProfileImage();
+    final profileImageUrl = await getUserProfileImageUrl();
     final isAdmin = await getUserIsAdmin();
     final hasPassword = await getUserHasPassword();
 
@@ -147,7 +147,7 @@ class SecureStorageService {
     debugPrint('Email: $email');
     debugPrint('Name: $name');
     debugPrint('PhoneNumber: $phoneNumber');
-    debugPrint('ProfileImage: $profileImage');
+    debugPrint('ProfileImageUrl: $profileImageUrl');
     debugPrint('IsAdmin: $isAdmin');
     debugPrint('HasPassword: $hasPassword');
 
@@ -155,7 +155,7 @@ class SecureStorageService {
       'email': email,
       'name': name,
       'phoneNumber': phoneNumber,
-      'profileImage': profileImage,
+      'profileImageUrl': profileImageUrl,
       'isAdmin': isAdmin,
       'hasPassword': hasPassword,
     };
@@ -166,7 +166,7 @@ class SecureStorageService {
     await _storage.delete(key: _userEmailKey);
     await _storage.delete(key: _userNameKey);
     await _storage.delete(key: _userPhoneNumberKey);
-    await _storage.delete(key: _userProfileImageKey);
+    await _storage.delete(key: _userProfileImageUrlKey);
     await _storage.delete(key: _userIsAdminKey);
     await _storage.delete(key: _userHasPasswordKey);
   }

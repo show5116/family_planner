@@ -45,7 +45,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     final l10n = AppLocalizations.of(context)!;
     final email = _userInfo?['email'] as String?;
     final name = _userInfo?['name'] as String?;
-    final profileImage = _userInfo?['profileImage'] as String?;
+    final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
     final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
 
     // 하단 네비게이션에 표시되지 않는 메뉴 ID 가져오기
@@ -66,7 +66,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
             child: UserProfileCard(
               name: name,
               email: email,
-              profileImage: profileImage,
+              profileImageUrl: profileImageUrl,
               isAdmin: isAdmin,
             ),
           ),
