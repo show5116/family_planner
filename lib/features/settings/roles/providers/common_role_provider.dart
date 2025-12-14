@@ -119,6 +119,22 @@ class CommonRoleNotifier extends StateNotifier<CommonRoleState> {
       rethrow;
     }
   }
+
+  /// 공통 역할 일괄 정렬 순서 업데이트
+  Future<void> updateSortOrders(
+    Map<String, int> sortOrders,
+    List<CommonRole> reorderedRoles,
+  ) async {
+    try {
+      // API 호출 (성공 시 빈 응답)
+      await _service.bulkUpdateSortOrder(sortOrders);
+
+      // 성공하면 재정렬된 역할 목록을 로컬 상태에 반영
+      state = state.copyWith(roles: reorderedRoles);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// 공통 역할 관리 Provider

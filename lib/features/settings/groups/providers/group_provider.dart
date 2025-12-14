@@ -258,6 +258,21 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       rethrow;
     }
   }
+
+  /// 그룹별 역할 일괄 정렬 순서 업데이트
+  Future<void> updateGroupRoleSortOrders(
+    String groupId,
+    Map<String, int> sortOrders,
+  ) async {
+    try {
+      await _groupService.bulkUpdateGroupRoleSortOrder(groupId, sortOrders);
+
+      // 역할 목록 새로고침
+      _ref.invalidate(groupRolesProvider(groupId));
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// 그룹 관리 NotifierProvider

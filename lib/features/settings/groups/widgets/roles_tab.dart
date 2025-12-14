@@ -6,9 +6,10 @@ import 'package:family_planner/features/settings/groups/models/group_member.dart
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
 import 'package:family_planner/features/settings/groups/widgets/role_management_dialogs.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 그룹 역할 탭
-class RolesTab extends ConsumerWidget {
+class RolesTab extends ConsumerStatefulWidget {
   final String groupId;
   final AsyncValue<List<Role>> rolesAsync;
   final bool isOwner;
@@ -27,29 +28,147 @@ class RolesTab extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RolesTab> createState() => _RolesTabState();
+}
+
+class _RolesTabState extends ConsumerState<RolesTab> {
+  List<Role>? _reorderedRoles;
+  bool _hasChanges = false;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return rolesAsync.when(
+    return widget.rolesAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) => ErrorView(
         message: '역할 목록을 불러올 수 없습니다\n$error',
-        onRetry: onRetry,
+        onRetry: widget.onRetry,
       ),
-      data: (roles) => ListView(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
+      data: (roles) {
+        return Column(
+          children: [
+            // 저장 버튼 (변경사항이 있을 때만 표시)
+            if (_hasChanges)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceM,
+                  vertical: AppSizes.spaceS,
+                ),
+                color: theme.colorScheme.primaryContainer,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '순서가 변경되었습니다',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _cancelReorder,
+                      child: const Text('취소'),
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    ElevatedButton(
+                      onPressed: _saveSortOrder,
+                      child: const Text('저장'),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: _buildRoleList(context, ref, l10n, theme, roles),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// 역할 목록
+  Widget _buildRoleList(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    ThemeData theme,
+    List<Role> roles,
+  ) {
+    final displayRoles = _reorderedRoles ?? roles;
+
+    if (displayRoles.isEmpty) {
+      return _buildEmptyContent(context, ref, l10n, theme);
+    }
+
+    // 항상 ReorderableListView 사용 (드래그 앤 드롭 항상 가능)
+    return ReorderableListView.builder(
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      itemCount: displayRoles.length,
+      buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
+      proxyDecorator: (child, index, animation) {
+        return Material(
+          elevation: 8.0,
+          borderRadius: BorderRadius.circular(12),
+          child: child,
+        );
+      },
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          // 처음 변경 시 복사본 생성
+          _reorderedRoles ??= List.from(displayRoles);
+
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          final item = _reorderedRoles!.removeAt(oldIndex);
+          _reorderedRoles!.insert(newIndex, item);
+
+          // 변경사항 표시
+          _hasChanges = true;
+        });
+      },
+      header: Column(
         children: [
           _buildHeader(context, ref, l10n, theme),
           const SizedBox(height: AppSizes.spaceM),
-          if (roles.isEmpty)
-            _buildEmptyState(theme)
-          else
-            ...roles.map((role) => _buildRoleCard(context, l10n, theme, role)),
-          const SizedBox(height: AppSizes.spaceM),
-          _buildInfoCard(theme, isOwner),
         ],
       ),
+      footer: Column(
+        children: [
+          const SizedBox(height: AppSizes.spaceM),
+          _buildInfoCard(theme, widget.isOwner),
+        ],
+      ),
+      itemBuilder: (context, index) {
+        final role = displayRoles[index];
+        return ReorderableDragStartListener(
+          key: ValueKey(role.id),
+          index: index,
+          child: _buildRoleCard(context, l10n, theme, role),
+        );
+      },
+    );
+  }
+
+  /// 빈 콘텐츠 (헤더 + 빈 상태 + 정보 카드)
+  Widget _buildEmptyContent(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    ThemeData theme,
+  ) {
+    return ListView(
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      children: [
+        _buildHeader(context, ref, l10n, theme),
+        const SizedBox(height: AppSizes.spaceM),
+        _buildEmptyState(theme),
+        const SizedBox(height: AppSizes.spaceM),
+        _buildInfoCard(theme, widget.isOwner),
+      ],
     );
   }
 
@@ -73,13 +192,13 @@ class RolesTab extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (isOwner)
+                if (widget.isOwner)
                   ElevatedButton.icon(
                     onPressed: () => GroupRoleCreateDialog.show(
                       context,
                       ref,
                       l10n,
-                      groupId,
+                      widget.groupId,
                     ),
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text('역할 추가'),
@@ -125,7 +244,7 @@ class RolesTab extends ConsumerWidget {
   /// 역할 카드
   Widget _buildRoleCard(BuildContext context, AppLocalizations l10n, ThemeData theme, Role role) {
     final isCustomRole = role.groupId != null;
-    final canEdit = isOwner && isCustomRole;
+    final canEdit = widget.isOwner && isCustomRole;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -136,6 +255,11 @@ class RolesTab extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSizes.spaceM),
           child: Row(
             children: [
+              const Icon(
+                Icons.drag_handle,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: AppSizes.spaceM),
               CircleAvatar(
                 backgroundColor: GroupUtils.getRoleColor(role.name),
                 child: Icon(
@@ -230,7 +354,7 @@ class RolesTab extends ConsumerWidget {
               title: const Text('역할 수정'),
               onTap: () {
                 Navigator.pop(context);
-                onEditRole(role);
+                widget.onEditRole(role);
               },
             ),
             ListTile(
@@ -238,12 +362,98 @@ class RolesTab extends ConsumerWidget {
               title: const Text('역할 삭제', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
-                onDeleteRole(role);
+                widget.onDeleteRole(role);
               },
             ),
           ],
         ),
       ),
     );
+  }
+
+  /// 순서 변경 취소
+  void _cancelReorder() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('순서 변경 취소'),
+        content: const Text('변경한 순서를 취소하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('아니오'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {
+                _reorderedRoles = null;
+                _hasChanges = false;
+              });
+            },
+            child: const Text('예'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 정렬 순서 저장
+  Future<void> _saveSortOrder() async {
+    if (_reorderedRoles == null) return;
+
+    // 확인 다이얼로그
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('순서 저장'),
+        content: const Text('변경한 순서를 저장하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('취소'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('저장'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    try {
+      final sortOrders = <String, int>{};
+      for (var i = 0; i < _reorderedRoles!.length; i++) {
+        sortOrders[_reorderedRoles![i].id] = i;
+      }
+
+      // API 호출만 수행 (성공 시 빈 응답)
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .updateGroupRoleSortOrders(widget.groupId, sortOrders);
+
+      if (mounted) {
+        // 성공하면 로컬 상태만 초기화 (provider는 자동으로 invalidate됨)
+        setState(() {
+          _reorderedRoles = null;
+          _hasChanges = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('정렬 순서가 저장되었습니다')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('저장 실패: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

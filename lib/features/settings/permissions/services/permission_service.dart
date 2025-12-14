@@ -158,4 +158,31 @@ class PermissionService {
       rethrow;
     }
   }
+
+  /// 권한 일괄 정렬 순서 업데이트
+  /// PATCH /permissions/bulk/sort-order
+  /// items: 권한 ID와 sortOrder의 배열 (예: [{"id": "id1", "sortOrder": 0}, ...])
+  /// 성공 시 빈 응답 반환하므로 void 처리
+  Future<void> bulkUpdateSortOrder(
+    Map<String, int> sortOrders,
+  ) async {
+    try {
+      // Map을 items 배열로 변환
+      final items = sortOrders.entries
+          .map((entry) => {
+                'id': entry.key,
+                'sortOrder': entry.value,
+              })
+          .toList();
+
+      await _apiClient.patch(
+        '/permissions/bulk/sort-order',
+        data: {'items': items},
+      );
+
+      // 성공하면 void 반환 (상태는 프로바이더에서 관리)
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

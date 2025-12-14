@@ -168,6 +168,22 @@ class PermissionManagementNotifier
       return false;
     }
   }
+
+  /// 권한 일괄 정렬 순서 업데이트
+  Future<void> updateSortOrders(
+    Map<String, int> sortOrders,
+    List<Permission> reorderedPermissions,
+  ) async {
+    try {
+      // API 호출 (성공 시 빈 응답)
+      await _permissionService.bulkUpdateSortOrder(sortOrders);
+
+      // 성공하면 재정렬된 권한 목록을 로컬 상태에 반영
+      state = state.copyWith(permissions: reorderedPermissions);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// Permission Service Provider
