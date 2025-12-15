@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
+import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:family_planner/shared/widgets/language_selector_button.dart';
@@ -108,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // 기타 에러
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.auth_loginFailed}: ${e.toString()}'),
+            content: Text('${l10n.auth_loginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -135,7 +136,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.auth_googleLoginFailed}: ${e.toString()}'),
+            content: Text('${l10n.auth_googleLoginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -160,7 +161,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.auth_kakaoLoginFailed}: ${e.toString()}'),
+            content: Text('${l10n.auth_kakaoLoginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
             backgroundColor: Colors.red,
           ),
         );

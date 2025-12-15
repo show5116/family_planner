@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/utils/validators.dart';
+import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:family_planner/shared/widgets/language_selector_button.dart';
 import 'package:family_planner/shared/widgets/theme_toggle_button.dart';
@@ -89,7 +90,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+        SnackBar(content: Text(ErrorHandler.getErrorMessage(e)), backgroundColor: AppColors.error),
       );
     } finally {
       if (mounted) {

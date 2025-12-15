@@ -5,6 +5,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
+import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 이메일 인증 화면
@@ -66,7 +67,7 @@ class _EmailVerificationScreenState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+        SnackBar(content: Text(ErrorHandler.getErrorMessage(e)), backgroundColor: AppColors.error),
       );
     } finally {
       if (mounted) {
@@ -99,7 +100,7 @@ class _EmailVerificationScreenState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
+        SnackBar(content: Text(ErrorHandler.getErrorMessage(e)), backgroundColor: AppColors.error),
       );
     } finally {
       if (mounted) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
+import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
@@ -44,7 +45,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     return widget.rolesAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) => ErrorView(
-        message: '역할 목록을 불러올 수 없습니다\n$error',
+        message: '역할 목록을 불러올 수 없습니다\n${ErrorHandler.getErrorMessage(error)}',
         onRetry: widget.onRetry,
       ),
       data: (roles) {
@@ -406,12 +407,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('저장 실패: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showErrorSnackBar(context, e);
       }
     }
   }
