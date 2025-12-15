@@ -21,6 +21,9 @@ class ApiClient {
   // 401 에러 시 호출될 콜백 (로그아웃 처리)
   void Function()? onUnauthorized;
 
+  // API 에러 시 호출될 콜백 (에러 메시지 표시) - 401, 500 제외
+  void Function(String message)? onError;
+
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
@@ -104,8 +107,10 @@ class ApiClient {
             debugPrint('└───────────────────────────────────────────────');
           }
 
+          final statusCode = error.response?.statusCode;
+
           // 401 에러 처리 (토큰 만료)
-          if (error.response?.statusCode == 401) {
+          if (statusCode == 401) {
             final requestPath = error.requestOptions.path;
 
             // /auth/refresh 요청 자체가 실패한 경우 재시도하지 않음 (무한 루프 방지)
@@ -162,6 +167,14 @@ class ApiClient {
             }
           }
 
+          // 401 (인증 실패, 이미 처리됨), 500 (서버 내부 오류) 제외한 에러 메시지 표시
+          if (statusCode != null && statusCode != 401 && statusCode != 500) {
+            final errorMessage = _extractErrorMessage(error.response?.data);
+            if (errorMessage != null && onError != null) {
+              onError!(errorMessage);
+            }
+          }
+
           return handler.next(error);
         },
       ),
@@ -179,6 +192,31 @@ class ApiClient {
         ),
       );
     }
+  }
+
+  /// 에러 응답에서 메시지 추출
+  String? _extractErrorMessage(dynamic data) {
+    if (data == null) return null;
+
+    if (data is Map) {
+      // 일반적인 에러 응답 형식들
+      if (data['message'] != null) {
+        return data['message'] as String;
+      }
+      if (data['error'] != null) {
+        if (data['error'] is String) {
+          return data['error'] as String;
+        }
+        if (data['error'] is Map && data['error']['message'] != null) {
+          return data['error']['message'] as String;
+        }
+      }
+      if (data['msg'] != null) {
+        return data['msg'] as String;
+      }
+    }
+
+    return null;
   }
 
   /// Access Token 가져오기
