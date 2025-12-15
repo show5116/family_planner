@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/widgets/color_picker.dart';
+import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
@@ -47,9 +48,7 @@ class GroupDialogs {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('오류: $e')));
+          ErrorHandler.showErrorSnackBar(context, e);
         }
       }
     }
@@ -148,9 +147,7 @@ class GroupDialogs {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('오류: $e')));
+          ErrorHandler.showErrorSnackBar(context, e);
         }
       }
     }
@@ -258,9 +255,7 @@ class GroupDialogs {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('오류: $e')));
+          ErrorHandler.showErrorSnackBar(context, e);
         }
       }
     }
@@ -420,9 +415,7 @@ class GroupDialogs {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('오류: $e')));
+          ErrorHandler.showErrorSnackBar(context, e);
         }
       }
     }
@@ -468,9 +461,7 @@ class GroupDialogs {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('오류: $e')));
+          ErrorHandler.showErrorSnackBar(context, e);
         }
       }
     }

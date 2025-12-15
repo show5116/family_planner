@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
+import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
@@ -44,7 +45,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     return widget.rolesAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) => ErrorView(
-        message: '역할 목록을 불러올 수 없습니다\n$error',
+        message: '역할 목록을 불러올 수 없습니다\n${ErrorHandler.getErrorMessage(error)}',
         onRetry: widget.onRetry,
       ),
       data: (roles) {
@@ -79,6 +80,9 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       return _buildEmptyContent(context, ref, l10n, theme);
     }
 
+    // groupId가 null이 아닌 항목에 기본 역할이 있는지 확인
+    final hasCustomDefaultRole = displayRoles.any((role) => role.groupId != null && role.isDefaultRole);
+
     // 항상 ReorderableListView 사용 (드래그 앤 드롭 항상 가능)
     return ReorderableListView.builder(
       padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -86,6 +90,10 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
       proxyDecorator: buildReorderableProxyDecorator,
       onReorder: (oldIndex, newIndex) {
+        // groupId가 null인 항목은 재정렬 불가
+        final role = displayRoles[oldIndex];
+        if (role.groupId == null) return;
+
         setState(() {
           // 처음 변경 시 복사본 생성
           _reorderedRoles ??= List.from(displayRoles);
@@ -114,11 +122,18 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       ),
       itemBuilder: (context, index) {
         final role = displayRoles[index];
-        return ReorderableDragStartListener(
-          key: ValueKey(role.id),
-          index: index,
-          child: _buildRoleCard(context, l10n, theme, role),
-        );
+        final isDraggable = role.groupId != null;
+
+        return isDraggable
+            ? ReorderableDragStartListener(
+                key: ValueKey(role.id),
+                index: index,
+                child: _buildRoleCard(context, l10n, theme, role, hasCustomDefaultRole),
+              )
+            : Container(
+                key: ValueKey(role.id),
+                child: _buildRoleCard(context, l10n, theme, role, hasCustomDefaultRole),
+              );
       },
     );
   }
@@ -212,9 +227,11 @@ class _RolesTabState extends ConsumerState<RolesTab> {
   }
 
   /// 역할 카드
-  Widget _buildRoleCard(BuildContext context, AppLocalizations l10n, ThemeData theme, Role role) {
+  Widget _buildRoleCard(BuildContext context, AppLocalizations l10n, ThemeData theme, Role role, bool hasCustomDefaultRole) {
     final isCustomRole = role.groupId != null;
     final canEdit = widget.isOwner && isCustomRole;
+    // groupId가 null이 아닌 항목에 기본 역할이 있으면, null인 항목의 기본 역할은 숨김
+    final showDefaultBadge = role.isDefaultRole && (!hasCustomDefaultRole || role.groupId != null);
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -225,8 +242,11 @@ class _RolesTabState extends ConsumerState<RolesTab> {
           padding: const EdgeInsets.all(AppSizes.spaceM),
           child: Row(
             children: [
-              const DragHandleIcon(),
-              const SizedBox(width: AppSizes.spaceM),
+              // groupId가 null인 경우 드래그 핸들 숨김
+              if (isCustomRole) ...[
+                const DragHandleIcon(),
+                const SizedBox(width: AppSizes.spaceM),
+              ],
               CircleAvatar(
                 backgroundColor: GroupUtils.getRoleColor(role.name),
                 child: Icon(
@@ -240,16 +260,37 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      GroupUtils.getRoleName(l10n, role.name),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'ID: ${role.name}',
-                      style: theme.textTheme.bodySmall,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            GroupUtils.getRoleName(l10n, role.name),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        if (showDefaultBadge)
+                          Container(
+                            margin: const EdgeInsets.only(left: AppSizes.spaceS),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.spaceS,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[100],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '기본 역할',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.blue[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     if (role.permissions.isNotEmpty) ...[
                       const SizedBox(height: 4),
@@ -260,26 +301,6 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                         ),
                       ),
                     ],
-                    if (role.isDefaultRole)
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.spaceS,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '기본 역할',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.blue[700],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
@@ -359,8 +380,13 @@ class _RolesTabState extends ConsumerState<RolesTab> {
 
     try {
       final sortOrders = <String, int>{};
+      var sortIndex = 0;
+      // groupId가 null이 아닌 항목만 정렬 순서에 포함
       for (var i = 0; i < _reorderedRoles!.length; i++) {
-        sortOrders[_reorderedRoles![i].id] = i;
+        final role = _reorderedRoles![i];
+        if (role.groupId != null) {
+          sortOrders[role.id] = sortIndex++;
+        }
       }
 
       // API 호출만 수행 (성공 시 빈 응답)
@@ -381,12 +407,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('저장 실패: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showErrorSnackBar(context, e);
       }
     }
   }
