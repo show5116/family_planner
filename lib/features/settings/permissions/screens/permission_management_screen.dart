@@ -1,4 +1,5 @@
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/settings/permissions/models/permission.dart';
 import 'package:family_planner/features/settings/permissions/providers/permission_management_provider.dart';
 import 'package:family_planner/features/settings/permissions/widgets/permission_dialogs.dart';
@@ -45,34 +46,9 @@ class _PermissionManagementScreenState
           ),
           // 저장 버튼 (변경사항이 있을 때만 표시)
           if (_hasChanges)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '순서가 변경되었습니다',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _cancelReorder,
-                    child: const Text('취소'),
-                  ),
-                  const SizedBox(width: AppSizes.spaceS),
-                  ElevatedButton(
-                    onPressed: _saveSortOrder,
-                    child: const Text('저장'),
-                  ),
-                ],
-              ),
+            ReorderChangesBar(
+              onSave: _saveSortOrder,
+              onCancel: _cancelReorder,
             ),
           // 권한 목록
           Expanded(
@@ -184,13 +160,7 @@ class _PermissionManagementScreenState
       padding: const EdgeInsets.all(AppSizes.spaceM),
       itemCount: permissions.length,
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
-      proxyDecorator: (child, index, animation) {
-        return Material(
-          elevation: 8.0,
-          borderRadius: BorderRadius.circular(12),
-          child: child,
-        );
-      },
+      proxyDecorator: buildReorderableProxyDecorator,
       onReorder: (oldIndex, newIndex) {
         setState(() {
           // 처음 변경 시 복사본 생성
@@ -214,10 +184,7 @@ class _PermissionManagementScreenState
           child: Card(
             margin: const EdgeInsets.only(bottom: AppSizes.spaceS),
             child: ListTile(
-              leading: const Icon(
-                Icons.drag_handle,
-                color: Colors.grey,
-              ),
+              leading: const DragHandleIcon(),
               title: Text(permission.name),
               subtitle: Text(permission.code),
               trailing: Chip(
@@ -297,30 +264,14 @@ class _PermissionManagementScreenState
   }
 
   /// 순서 변경 취소
-  void _cancelReorder() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('순서 변경 취소'),
-        content: const Text('변경한 순서를 취소하시겠습니까?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('아니오'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              setState(() {
-                _reorderedPermissions = null;
-                _hasChanges = false;
-              });
-            },
-            child: const Text('예'),
-          ),
-        ],
-      ),
-    );
+  Future<void> _cancelReorder() async {
+    final confirmed = await showReorderCancelDialog(context);
+    if (confirmed && mounted) {
+      setState(() {
+        _reorderedPermissions = null;
+        _hasChanges = false;
+      });
+    }
   }
 
   /// 정렬 순서 저장
@@ -328,25 +279,8 @@ class _PermissionManagementScreenState
     if (_reorderedPermissions == null) return;
 
     // 확인 다이얼로그
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('순서 저장'),
-        content: const Text('변경한 순서를 저장하시겠습니까?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('저장'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) return;
+    final confirm = await showReorderSaveDialog(context);
+    if (!confirm) return;
 
     try {
       final sortOrders = <String, int>{};

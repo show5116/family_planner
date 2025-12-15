@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/settings/roles/providers/common_role_provider.dart';
 import 'package:family_planner/features/settings/roles/widgets/common_role_dialogs.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -35,34 +36,9 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
         children: [
           // 저장 버튼 (변경사항이 있을 때만 표시)
           if (_hasChanges)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '순서가 변경되었습니다',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _cancelReorder,
-                    child: const Text('취소'),
-                  ),
-                  const SizedBox(width: AppSizes.spaceS),
-                  ElevatedButton(
-                    onPressed: _saveSortOrder,
-                    child: const Text('저장'),
-                  ),
-                ],
-              ),
+            ReorderChangesBar(
+              onSave: _saveSortOrder,
+              onCancel: _cancelReorder,
             ),
           // 역할 목록
           Expanded(
@@ -103,13 +79,7 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
       padding: const EdgeInsets.all(AppSizes.spaceM),
       itemCount: roles.length,
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
-      proxyDecorator: (child, index, animation) {
-        return Material(
-          elevation: 8.0,
-          borderRadius: BorderRadius.circular(12),
-          child: child,
-        );
-      },
+      proxyDecorator: buildReorderableProxyDecorator,
       onReorder: (oldIndex, newIndex) {
         setState(() {
           // 처음 변경 시 복사본 생성
@@ -133,10 +103,7 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
           child: Card(
             margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
             child: ListTile(
-              leading: const Icon(
-                Icons.drag_handle,
-                color: Colors.grey,
-              ),
+              leading: const DragHandleIcon(),
               title: Row(
                 children: [
                   Text(
@@ -342,30 +309,14 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
   }
 
   /// 순서 변경 취소
-  void _cancelReorder() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('순서 변경 취소'),
-        content: const Text('변경한 순서를 취소하시겠습니까?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('아니오'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              setState(() {
-                _reorderedRoles = null;
-                _hasChanges = false;
-              });
-            },
-            child: const Text('예'),
-          ),
-        ],
-      ),
-    );
+  Future<void> _cancelReorder() async {
+    final confirmed = await showReorderCancelDialog(context);
+    if (confirmed && mounted) {
+      setState(() {
+        _reorderedRoles = null;
+        _hasChanges = false;
+      });
+    }
   }
 
   /// 정렬 순서 저장
@@ -373,25 +324,8 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
     if (_reorderedRoles == null) return;
 
     // 확인 다이얼로그
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('순서 저장'),
-        content: const Text('변경한 순서를 저장하시겠습니까?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('저장'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) return;
+    final confirm = await showReorderSaveDialog(context);
+    if (!confirm) return;
 
     try {
       final sortOrders = <String, int>{};

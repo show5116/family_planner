@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -227,28 +228,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
       buildDefaultDragHandles: false,
       itemCount: _settings.widgetOrder.length,
       onReorder: _onReorder,
-      proxyDecorator: (child, index, animation) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            final double elevation = Tween<double>(
-              begin: 0,
-              end: 6,
-            ).evaluate(animation);
-
-            return Material(
-              elevation: elevation,
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-              child: Opacity(
-                opacity: 0.85,
-                child: child,
-              ),
-            );
-          },
-          child: child,
-        );
-      },
+      proxyDecorator: buildReorderableProxyDecorator,
       itemBuilder: (context, index) {
         final widgetName = _settings.widgetOrder[index];
         final widgetInfo = _getWidgetInfo(widgetName, context);
@@ -286,16 +266,13 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
         child: Row(
           children: [
             // 드래그 핸들
-            ReorderableDragStartListener(
-              index: _settings.widgetOrder.indexOf(widgetName),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.grab,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: AppSizes.spaceM),
-                  child: Icon(
-                    Icons.drag_handle,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+            MouseRegion(
+              cursor: SystemMouseCursors.grab,
+              child: Padding(
+                padding: const EdgeInsets.only(right: AppSizes.spaceM),
+                child: Icon(
+                  Icons.drag_handle,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ),
