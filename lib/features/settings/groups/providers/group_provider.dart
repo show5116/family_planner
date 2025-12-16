@@ -203,6 +203,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
     required String name,
     required List<String> permissions,
     bool isDefaultRole = false,
+    String? color,
   }) async {
     try {
       final role = await _groupService.createGroupRole(
@@ -210,6 +211,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
         name: name,
         permissions: permissions,
         isDefaultRole: isDefaultRole,
+        color: color,
       );
 
       // 역할 목록 새로고침
@@ -228,6 +230,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
     String? name,
     List<String>? permissions,
     bool? isDefaultRole,
+    String? color,
   }) async {
     try {
       final role = await _groupService.updateGroupRole(
@@ -236,6 +239,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
         name: name,
         permissions: permissions,
         isDefaultRole: isDefaultRole,
+        color: color,
       );
 
       // 역할 목록 새로고침

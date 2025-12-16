@@ -1,4 +1,5 @@
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/permissions/providers/permission_management_provider.dart';
@@ -17,6 +18,7 @@ class GroupRoleCreateDialog {
     final nameController = TextEditingController();
     bool isDefaultRole = false;
     List<String> selectedPermissions = [];
+    Color? selectedColor;
 
     // 권한 목록 로드
     final permissionsAsync = ref.read(permissionManagementProvider);
@@ -54,6 +56,25 @@ class GroupRoleCreateDialog {
                           isDefaultRole = value;
                         });
                       },
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    const Text(
+                      '역할 색상',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceS),
+                    ColorPicker(
+                      selectedColor: selectedColor,
+                      onColorSelected: (color) {
+                        setState(() {
+                          selectedColor = color;
+                        });
+                      },
+                      showRgbInput: false,
+                      showAdvancedPicker: false,
                     ),
                     const SizedBox(height: AppSizes.spaceM),
                     const Text(
@@ -112,6 +133,9 @@ class GroupRoleCreateDialog {
                     nameController.text.toUpperCase(),
                     selectedPermissions,
                     isDefaultRole,
+                    selectedColor != null
+                        ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
+                        : null,
                   );
                 },
                 child: Text(l10n.common_create),
@@ -133,6 +157,7 @@ class GroupRoleCreateDialog {
     String name,
     List<String> permissions,
     bool isDefaultRole,
+    String? color,
   ) async {
     debugPrint('Creating group role...');
     try {
@@ -143,6 +168,7 @@ class GroupRoleCreateDialog {
         name: name,
         permissions: permissions,
         isDefaultRole: isDefaultRole,
+        color: color,
       );
       debugPrint('Role created: ${createdRole.id}');
 
@@ -182,6 +208,9 @@ class GroupRoleEditDialog {
     final nameController = TextEditingController(text: role.name);
     bool isDefaultRole = role.isDefaultRole;
     List<String> selectedPermissions = List.from(role.permissions);
+    Color? selectedColor = role.color != null
+        ? Color(int.parse(role.color!.substring(1), radix: 16) + 0xFF000000)
+        : null;
 
     // 권한 목록 로드
     final permissionsAsync = ref.read(permissionManagementProvider);
@@ -217,6 +246,25 @@ class GroupRoleEditDialog {
                         isDefaultRole = value;
                       });
                     },
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
+                  const Text(
+                    '역할 색상',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  ColorPicker(
+                    selectedColor: selectedColor,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    },
+                    showRgbInput: false,
+                    showAdvancedPicker: false,
                   ),
                   const SizedBox(height: AppSizes.spaceM),
                   const Text(
@@ -275,6 +323,9 @@ class GroupRoleEditDialog {
                   nameController.text.toUpperCase(),
                   selectedPermissions,
                   isDefaultRole,
+                  selectedColor != null
+                      ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
+                      : null,
                 );
               },
               child: Text(l10n.common_save),
@@ -296,6 +347,7 @@ class GroupRoleEditDialog {
     String name,
     List<String> permissions,
     bool isDefaultRole,
+    String? color,
   ) async {
     debugPrint('Updating role: $roleId');
     try {
@@ -307,6 +359,7 @@ class GroupRoleEditDialog {
         name: name,
         permissions: permissions,
         isDefaultRole: isDefaultRole,
+        color: color,
       );
       debugPrint('Role updated: ${updatedRole.id}');
 

@@ -212,6 +212,7 @@ class GroupService {
     required String name,
     required List<String> permissions,
     bool isDefaultRole = false,
+    String? color,
   }) async {
     try {
       final response = await _apiClient.post(
@@ -220,6 +221,7 @@ class GroupService {
           'name': name,
           'permissions': permissions,
           'isDefaultRole': isDefaultRole,
+          if (color != null) 'color': color,
         },
       );
       return Role.fromJson(response.data);
@@ -236,6 +238,7 @@ class GroupService {
     String? name,
     List<String>? permissions,
     bool? isDefaultRole,
+    String? color,
   }) async {
     try {
       final response = await _apiClient.patch(
@@ -244,6 +247,7 @@ class GroupService {
           if (name != null) 'name': name,
           if (permissions != null) 'permissions': permissions,
           if (isDefaultRole != null) 'isDefaultRole': isDefaultRole,
+          if (color != null) 'color': color,
         },
       );
       return Role.fromJson(response.data);

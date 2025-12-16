@@ -6,6 +6,7 @@ class CommonRole {
   final String? description;
   final bool isDefaultRole;
   final List<String> permissions; // 권한 코드 문자열 배열 (예: ["group:read", "group:update"])
+  final String? color;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -15,6 +16,7 @@ class CommonRole {
     this.description,
     required this.isDefaultRole,
     required this.permissions,
+    this.color,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -30,6 +32,7 @@ class CommonRole {
               .map((p) => p as String)
               .toList()
           : [],
+      color: json['color'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -42,6 +45,7 @@ class CommonRole {
       'description': description,
       'isDefaultRole': isDefaultRole,
       'permissions': permissions,
+      'color': color,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -53,6 +57,7 @@ class CommonRole {
     String? description,
     bool? isDefaultRole,
     List<String>? permissions,
+    String? color,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -62,6 +67,7 @@ class CommonRole {
       description: description ?? this.description,
       isDefaultRole: isDefaultRole ?? this.isDefaultRole,
       permissions: permissions ?? this.permissions,
+      color: color ?? this.color,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

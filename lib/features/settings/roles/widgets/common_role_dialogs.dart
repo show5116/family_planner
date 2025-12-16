@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/features/settings/roles/models/common_role.dart';
 import 'package:family_planner/features/settings/roles/providers/common_role_provider.dart';
 
@@ -10,6 +11,7 @@ class CommonRoleCreateDialog {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     bool isDefaultRole = false;
+    Color? selectedColor;
 
     return showDialog(
       context: context,
@@ -48,6 +50,25 @@ class CommonRoleCreateDialog {
                     },
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
+                  const SizedBox(height: AppSizes.spaceM),
+                  const Text(
+                    '역할 색상',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  ColorPicker(
+                    selectedColor: selectedColor,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    },
+                    showRgbInput: false,
+                    showAdvancedPicker: false,
+                  ),
                 ],
               ),
             ),
@@ -64,6 +85,9 @@ class CommonRoleCreateDialog {
                     await ref.read(commonRoleProvider.notifier).createRole(
                           name: nameController.text.trim(),
                           isDefaultRole: isDefaultRole,
+                          color: selectedColor != null
+                              ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
+                              : null,
                         );
 
                     if (context.mounted) {
@@ -103,6 +127,9 @@ class CommonRoleEditDialog {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: role.name);
     bool isDefaultRole = role.isDefaultRole;
+    Color? selectedColor = role.color != null
+        ? Color(int.parse(role.color!.substring(1), radix: 16) + 0xFF000000)
+        : null;
 
     return showDialog(
       context: context,
@@ -140,6 +167,25 @@ class CommonRoleEditDialog {
                     },
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
+                  const SizedBox(height: AppSizes.spaceM),
+                  const Text(
+                    '역할 색상',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  ColorPicker(
+                    selectedColor: selectedColor,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    },
+                    showRgbInput: false,
+                    showAdvancedPicker: false,
+                  ),
                 ],
               ),
             ),
@@ -157,6 +203,9 @@ class CommonRoleEditDialog {
                           role.id,
                           name: nameController.text.trim(),
                           isDefaultRole: isDefaultRole,
+                          color: selectedColor != null
+                              ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
+                              : null,
                         );
 
                     if (context.mounted) {

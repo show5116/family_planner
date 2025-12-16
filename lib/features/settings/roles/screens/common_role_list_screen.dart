@@ -103,7 +103,27 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
           child: Card(
             margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
             child: ListTile(
-              leading: const DragHandleIcon(),
+              leading: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const DragHandleIcon(),
+                  const SizedBox(width: AppSizes.spaceS),
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: role.color != null
+                        ? Color(int.parse(role.color!.substring(1), radix: 16) + 0xFF000000)
+                        : Colors.blue,
+                    child: Text(
+                      role.name.substring(0, 1),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               title: Row(
                 children: [
                   Text(

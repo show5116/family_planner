@@ -94,6 +94,7 @@ class Role {
   final String? groupId;
   final bool isDefaultRole;
   final List<String> permissions;
+  final String? color;
 
   Role({
     required this.id,
@@ -101,6 +102,7 @@ class Role {
     this.groupId,
     required this.isDefaultRole,
     this.permissions = const [],
+    this.color,
   });
 
   factory Role.fromJson(Map<String, dynamic> json) {
@@ -132,6 +134,7 @@ class Role {
       groupId: json['groupId'] as String?,
       isDefaultRole: json['isDefaultRole'] as bool? ?? false,
       permissions: parsePermissions(json['permissions']),
+      color: json['color'] as String?,
     );
   }
 
@@ -142,6 +145,7 @@ class Role {
       'groupId': groupId,
       'isDefaultRole': isDefaultRole,
       'permissions': permissions,
+      'color': color,
     };
   }
 

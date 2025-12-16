@@ -177,23 +177,6 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                     ),
                   ),
                 ),
-                if (widget.isOwner)
-                  ElevatedButton.icon(
-                    onPressed: () => GroupRoleCreateDialog.show(
-                      context,
-                      ref,
-                      l10n,
-                      widget.groupId,
-                    ),
-                    icon: const Icon(Icons.add, size: 18),
-                    label: const Text('역할 추가'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.spaceM,
-                        vertical: AppSizes.spaceS,
-                      ),
-                    ),
-                  ),
               ],
             ),
             const SizedBox(height: AppSizes.spaceS),
@@ -248,7 +231,9 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                 const SizedBox(width: AppSizes.spaceM),
               ],
               CircleAvatar(
-                backgroundColor: GroupUtils.getRoleColor(role.name),
+                backgroundColor: role.color != null
+                    ? Color(int.parse(role.color!.substring(1), radix: 16) + 0xFF000000)
+                    : GroupUtils.getRoleColor(role.name),
                 child: Icon(
                   GroupUtils.getRoleIcon(role.name),
                   color: Colors.white,
@@ -305,7 +290,9 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                 ),
               ),
               if (canEdit)
-                const Icon(Icons.edit, size: 20, color: Colors.grey),
+                const Icon(Icons.edit, size: 20, color: Colors.grey)
+              else if (!isCustomRole)
+                const Icon(Icons.lock, size: 20, color: Colors.grey),
             ],
           ),
         ),

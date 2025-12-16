@@ -33,6 +33,9 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      setState(() {}); // 탭 변경 시 FAB 업데이트
+    });
   }
 
   @override
@@ -108,13 +111,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
               _buildRolesTab(isOwner),
             ],
           ),
-          floatingActionButton: canManage
-              ? FloatingActionButton.extended(
-                  onPressed: () => GroupDialogs.showInviteMemberDialog(context, l10n),
-                  icon: const Icon(Icons.person_add),
-                  label: Text(l10n.group_inviteMembers),
-                )
-              : null,
+          floatingActionButton: _buildFloatingActionButton(canManage, isOwner),
         );
       },
     );
@@ -185,6 +182,35 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         role,
       ),
     );
+  }
+
+  /// FloatingActionButton 빌드
+  Widget? _buildFloatingActionButton(bool canManage, bool isOwner) {
+    final l10n = AppLocalizations.of(context)!;
+    final tabIndex = _tabController.index;
+
+    if (tabIndex == 0 && canManage) {
+      // 멤버 탭 - 멤버 초대 버튼
+      return FloatingActionButton.extended(
+        onPressed: () => GroupDialogs.showInviteMemberDialog(context, l10n),
+        icon: const Icon(Icons.person_add),
+        label: Text(l10n.group_inviteMembers),
+      );
+    } else if (tabIndex == 2 && isOwner) {
+      // 역할 탭 - 역할 추가 버튼
+      return FloatingActionButton.extended(
+        onPressed: () => GroupRoleCreateDialog.show(
+          context,
+          ref,
+          l10n,
+          widget.groupId,
+        ),
+        icon: const Icon(Icons.add),
+        label: const Text('역할 추가'),
+      );
+    }
+
+    return null;
   }
 
   /// 색상 업데이트

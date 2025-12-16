@@ -52,11 +52,13 @@ class CommonRoleNotifier extends StateNotifier<CommonRoleState> {
   Future<void> createRole({
     required String name,
     bool isDefaultRole = false,
+    String? color,
   }) async {
     try {
       final newRole = await _service.createCommonRole(
         name: name,
         isDefaultRole: isDefaultRole,
+        color: color,
       );
       state = state.copyWith(roles: [...state.roles, newRole]);
     } catch (e) {
@@ -69,12 +71,14 @@ class CommonRoleNotifier extends StateNotifier<CommonRoleState> {
     String roleId, {
     String? name,
     bool? isDefaultRole,
+    String? color,
   }) async {
     try {
       final updatedRole = await _service.updateCommonRole(
         roleId,
         name: name,
         isDefaultRole: isDefaultRole,
+        color: color,
       );
 
       state = state.copyWith(

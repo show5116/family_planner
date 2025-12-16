@@ -39,6 +39,7 @@ class CommonRoleService {
     required String name,
     bool isDefaultRole = false,
     List<String> permissions = const [],
+    String? color,
   }) async {
     try {
       final response = await _apiClient.post(
@@ -47,6 +48,7 @@ class CommonRoleService {
           'name': name,
           'isDefaultRole': isDefaultRole,
           'permissions': permissions,
+          if (color != null) 'color': color,
           // groupId는 보내지 않으면 백엔드에서 자동으로 null 처리
         },
       );
@@ -71,6 +73,7 @@ class CommonRoleService {
     String? name,
     bool? isDefaultRole,
     List<String>? permissions,
+    String? color,
   }) async {
     try {
       final response = await _apiClient.patch(
@@ -79,6 +82,7 @@ class CommonRoleService {
           if (name != null) 'name': name,
           if (isDefaultRole != null) 'isDefaultRole': isDefaultRole,
           if (permissions != null) 'permissions': permissions,
+          if (color != null) 'color': color,
         },
       );
 
