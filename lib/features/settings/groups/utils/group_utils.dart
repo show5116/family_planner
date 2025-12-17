@@ -81,4 +81,12 @@ class GroupUtils {
     if (members.isEmpty) return false;
     return members.first.role?.name == 'OWNER';
   }
+
+  /// 현재 사용자가 특정 권한을 가지고 있는지 확인
+  static bool hasPermission(List<dynamic> members, String permission) {
+    if (members.isEmpty) return false;
+    final role = members.first.role;
+    if (role == null) return false;
+    return role.hasPermission(permission);
+  }
 }

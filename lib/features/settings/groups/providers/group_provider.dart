@@ -16,9 +16,16 @@ final myGroupsProvider = FutureProvider<List<Group>>((ref) async {
 });
 
 /// 특정 그룹 상세 Provider
+/// 그룹 목록에서 해당 그룹을 찾아서 반환 (myRole 포함 보장)
 final groupDetailProvider = FutureProvider.family<Group, String>((ref, groupId) async {
-  final groupService = ref.watch(groupServiceProvider);
-  return await groupService.getGroup(groupId);
+  // 먼저 그룹 목록에서 찾기 (myRole 포함됨)
+  final groupsAsync = await ref.watch(myGroupsProvider.future);
+  final group = groupsAsync.firstWhere(
+    (g) => g.id == groupId,
+    orElse: () => throw Exception('그룹을 찾을 수 없습니다'),
+  );
+
+  return group;
 });
 
 /// 그룹 멤버 목록 Provider
@@ -158,7 +165,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
   }
 
   /// 개인 색상 설정
-  Future<void> updateMyColor(String groupId, String customColor) async {
+  Future<void> updateMyColor(String groupId, String? customColor) async {
     try {
       await _groupService.updateMyColor(groupId, customColor);
 

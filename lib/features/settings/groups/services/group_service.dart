@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
@@ -47,8 +48,10 @@ class GroupService {
   Future<Group> getGroup(String groupId) async {
     try {
       final response = await _apiClient.get('/groups/$groupId');
-      return Group.fromJson(response.data);
+      final group = Group.fromJson(response.data);
+      return group;
     } catch (e) {
+      debugPrint('[GroupService.getGroup] Error: $e');
       rethrow;
     }
   }
@@ -145,7 +148,7 @@ class GroupService {
 
   /// 개인 그룹 색상 설정
   /// PATCH /groups/:id/my-color
-  Future<GroupMember> updateMyColor(String groupId, String customColor) async {
+  Future<GroupMember> updateMyColor(String groupId, String? customColor) async {
     try {
       final response = await _apiClient.patch(
         '/groups/$groupId/my-color',
@@ -277,10 +280,7 @@ class GroupService {
     try {
       // Map을 items 배열로 변환
       final items = sortOrders.entries
-          .map((entry) => {
-                'id': entry.key,
-                'sortOrder': entry.value,
-              })
+          .map((entry) => {'id': entry.key, 'sortOrder': entry.value})
           .toList();
 
       await _apiClient.patch(

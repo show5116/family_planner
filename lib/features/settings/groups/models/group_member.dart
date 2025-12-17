@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+
 /// 그룹 멤버 모델
 class GroupMember {
   final String id;
@@ -22,16 +25,18 @@ class GroupMember {
 
   factory GroupMember.fromJson(Map<String, dynamic> json) {
     return GroupMember(
-      id: json['id'] as String? ?? '',
-      groupId: json['groupId'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
-      roleId: json['roleId'] as String? ?? '',
+      id: json['id'] as String,
+      groupId: json['groupId'] as String,
+      userId: json['userId'] as String,
+      roleId: json['roleId'] as String,
       customColor: json['customColor'] as String?,
-      joinedAt: json['joinedAt'] != null
-          ? DateTime.parse(json['joinedAt'] as String)
-          : DateTime.now(),
-      user: json['user'] != null ? User.fromJson(json['user'] as Map<String, dynamic>) : null,
-      role: json['role'] != null ? Role.fromJson(json['role'] as Map<String, dynamic>) : null,
+      joinedAt: DateTime.parse(json['joinedAt'] as String),
+      user: json['user'] != null
+          ? User.fromJson(json['user'] as Map<String, dynamic>)
+          : null,
+      role: json['role'] != null
+          ? Role.fromJson(json['role'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -48,13 +53,30 @@ class GroupMember {
     };
   }
 
-  /// 표시할 색상 (customColor가 있으면 customColor, 없으면 그룹 defaultColor)
-  String? getDisplayColor(String? groupDefaultColor) {
-    return customColor ?? groupDefaultColor;
+  GroupMember copyWith({
+    String? id,
+    String? groupId,
+    String? userId,
+    String? roleId,
+    String? customColor,
+    DateTime? joinedAt,
+    User? user,
+    Role? role,
+  }) {
+    return GroupMember(
+      id: id ?? this.id,
+      groupId: groupId ?? this.groupId,
+      userId: userId ?? this.userId,
+      roleId: roleId ?? this.roleId,
+      customColor: customColor ?? this.customColor,
+      joinedAt: joinedAt ?? this.joinedAt,
+      user: user ?? this.user,
+      role: role ?? this.role,
+    );
   }
 }
 
-/// 사용자 정보 (간단 버전)
+/// 사용자 정보
 class User {
   final String id;
   final String email;
@@ -70,9 +92,9 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      name: json['name'] as String? ?? 'Unknown',
+      id: json['id'] as String,
+      email: json['email'] as String,
+      name: json['name'] as String,
       profileImageUrl: json['profileImageUrl'] as String?,
     );
   }
@@ -120,8 +142,20 @@ class Role {
         return permissionsData.map((e) => e.toString()).toList();
       }
 
-      // String인 경우 (예: "VIEW,CREATE,UPDATE")
+      // String인 경우
       if (permissionsData is String) {
+        // JSON 문자열인 경우 (예: "[\"MANAGE_ROLE\",\"INVITE_MEMBER\"]")
+        if (permissionsData.trim().startsWith('[')) {
+          try {
+            final decoded = jsonDecode(permissionsData) as List;
+            return decoded.map((e) => e.toString()).toList();
+          } catch (e) {
+            debugPrint('[Role.parsePermissions] JSON decode error: $e');
+            return [];
+          }
+        }
+
+        // 콤마로 구분된 문자열인 경우 (예: "VIEW,CREATE,UPDATE")
         return permissionsData.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
       }
 

@@ -5,9 +5,9 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
-import 'package:family_planner/features/settings/groups/widgets/members_tab.dart';
-import 'package:family_planner/features/settings/groups/widgets/settings_tab.dart';
-import 'package:family_planner/features/settings/groups/widgets/roles_tab.dart';
+import 'package:family_planner/features/settings/groups/widgets/tabs/members/members_tab.dart';
+import 'package:family_planner/features/settings/groups/widgets/tabs/settings/settings_tab.dart';
+import 'package:family_planner/features/settings/groups/widgets/tabs/roles/roles_tab.dart';
 import 'package:family_planner/features/settings/groups/widgets/group_dialogs.dart';
 import 'package:family_planner/features/settings/groups/widgets/role_management_dialogs.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
@@ -78,19 +78,6 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         return Scaffold(
           appBar: AppBar(
             title: Text(group.name),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () => GroupDialogs.showSettingsBottomSheet(
-                  context,
-                  ref,
-                  l10n,
-                  group,
-                  canManage,
-                  isOwner,
-                ),
-              ),
-            ],
             bottom: TabBar(
               controller: _tabController,
               labelColor: Colors.white,
@@ -154,6 +141,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         widget.groupId,
       ),
       onColorChange: (color) => _updateColor(color),
+      onResetColor: () => _resetColor(),
     );
   }
 
@@ -239,6 +227,34 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('색상 변경 실패: ${e.toString()}'),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    }
+  }
+
+  /// 색상 초기화 (그룹 기본 색상으로 되돌림)
+  Future<void> _resetColor() async {
+    try {
+      await ref.read(groupNotifierProvider.notifier).updateMyColor(
+        widget.groupId,
+        null, // null을 전달하여 customColor 제거
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('그룹 기본 색상으로 초기화되었습니다')),
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Error resetting color: $e');
+      debugPrint('Stack trace: $stackTrace');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('색상 초기화 실패: ${e.toString()}'),
             duration: const Duration(seconds: 5),
           ),
         );
