@@ -908,6 +908,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_codeCopied => '招待コードがコピーされました';
 
   @override
+  String get group_codeExpired => '招待コードが期限切れです';
+
+  @override
+  String group_codeExpiresInDays(int count) {
+    return '$count日後に期限切れ';
+  }
+
+  @override
+  String group_codeExpiresInHours(int count) {
+    return '$count時間後に期限切れ';
+  }
+
+  @override
+  String group_codeExpiresInMinutes(int count) {
+    return '$count分後に期限切れ';
+  }
+
+  @override
   String get group_noGroups => '参加中のグループがありません';
 
   @override

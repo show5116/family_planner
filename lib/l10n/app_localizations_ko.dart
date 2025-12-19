@@ -910,6 +910,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_codeCopied => '초대 코드가 복사되었습니다';
 
   @override
+  String get group_codeExpired => '초대 코드가 만료되었습니다';
+
+  @override
+  String group_codeExpiresInDays(int count) {
+    return '$count일 후 만료';
+  }
+
+  @override
+  String group_codeExpiresInHours(int count) {
+    return '$count시간 후 만료';
+  }
+
+  @override
+  String group_codeExpiresInMinutes(int count) {
+    return '$count분 후 만료';
+  }
+
+  @override
   String get group_noGroups => '참여 중인 그룹이 없습니다';
 
   @override

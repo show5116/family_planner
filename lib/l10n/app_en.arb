@@ -339,6 +339,31 @@
   "group_inviteSent": "Invitation email sent",
   "group_codeRegenerated": "Invite code regenerated",
   "group_codeCopied": "Invite code copied",
+  "group_codeExpired": "Invite code expired",
+  "group_codeExpiresInDays": "Expires in {count} days",
+  "@group_codeExpiresInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "group_codeExpiresInHours": "Expires in {count} hours",
+  "@group_codeExpiresInHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "group_codeExpiresInMinutes": "Expires in {count} minutes",
+  "@group_codeExpiresInMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "group_noGroups": "No groups yet",
   "group_noGroupsDescription": "Create a new group or\njoin one with an invite code",
 

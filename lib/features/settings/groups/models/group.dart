@@ -7,6 +7,7 @@ class Group {
   final String name;
   final String? description;
   final String inviteCode;
+  final DateTime inviteCodeExpiresAt;
   final String? defaultColor;
   final String? myColor; // 현재 사용자의 개인 색상 (customColor)
   final Role? myRole; // 현재 사용자의 역할 및 권한
@@ -18,6 +19,7 @@ class Group {
     required this.name,
     this.description,
     required this.inviteCode,
+    required this.inviteCodeExpiresAt,
     this.defaultColor,
     this.myColor,
     this.myRole,
@@ -42,6 +44,7 @@ class Group {
       name: json['name'] as String,
       description: json['description'] as String?,
       inviteCode: json['inviteCode'] as String,
+      inviteCodeExpiresAt: DateTime.parse(json['inviteCodeExpiresAt'] as String),
       defaultColor: json['defaultColor'] as String?,
       myColor: json['myColor'] as String?,
       myRole: parsedMyRole,
@@ -56,6 +59,7 @@ class Group {
       'name': name,
       'description': description,
       'inviteCode': inviteCode,
+      'inviteCodeExpiresAt': inviteCodeExpiresAt.toIso8601String(),
       'defaultColor': defaultColor,
       'myColor': myColor,
       'myRole': myRole?.toJson(),
@@ -69,6 +73,7 @@ class Group {
     String? name,
     String? description,
     String? inviteCode,
+    DateTime? inviteCodeExpiresAt,
     String? defaultColor,
     String? myColor,
     Role? myRole,
@@ -80,6 +85,7 @@ class Group {
       name: name ?? this.name,
       description: description ?? this.description,
       inviteCode: inviteCode ?? this.inviteCode,
+      inviteCodeExpiresAt: inviteCodeExpiresAt ?? this.inviteCodeExpiresAt,
       defaultColor: defaultColor ?? this.defaultColor,
       myColor: myColor ?? this.myColor,
       myRole: myRole ?? this.myRole,

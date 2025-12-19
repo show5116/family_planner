@@ -935,6 +935,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_codeCopied => 'Invite code copied';
 
   @override
+  String get group_codeExpired => 'Invite code expired';
+
+  @override
+  String group_codeExpiresInDays(int count) {
+    return 'Expires in $count days';
+  }
+
+  @override
+  String group_codeExpiresInHours(int count) {
+    return 'Expires in $count hours';
+  }
+
+  @override
+  String group_codeExpiresInMinutes(int count) {
+    return 'Expires in $count minutes';
+  }
+
+  @override
   String get group_noGroups => 'No groups yet';
 
   @override

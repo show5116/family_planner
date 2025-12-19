@@ -339,6 +339,31 @@
   "group_inviteSent": "招待メールが送信されました",
   "group_codeRegenerated": "招待コードが再生成されました",
   "group_codeCopied": "招待コードがコピーされました",
+  "group_codeExpired": "招待コードが期限切れです",
+  "group_codeExpiresInDays": "{count}日後に期限切れ",
+  "@group_codeExpiresInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "group_codeExpiresInHours": "{count}時間後に期限切れ",
+  "@group_codeExpiresInHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "group_codeExpiresInMinutes": "{count}分後に期限切れ",
+  "@group_codeExpiresInMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "group_noGroups": "参加中のグループがありません",
   "group_noGroupsDescription": "新しいグループを作成するか\n招待コードでグループに参加してください",
 

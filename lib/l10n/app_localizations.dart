@@ -1864,6 +1864,30 @@ abstract class AppLocalizations {
   /// **'초대 코드가 복사되었습니다'**
   String get group_codeCopied;
 
+  /// No description provided for @group_codeExpired.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드가 만료되었습니다'**
+  String get group_codeExpired;
+
+  /// No description provided for @group_codeExpiresInDays.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}일 후 만료'**
+  String group_codeExpiresInDays(int count);
+
+  /// No description provided for @group_codeExpiresInHours.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}시간 후 만료'**
+  String group_codeExpiresInHours(int count);
+
+  /// No description provided for @group_codeExpiresInMinutes.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}분 후 만료'**
+  String group_codeExpiresInMinutes(int count);
+
   /// No description provided for @group_noGroups.
   ///
   /// In ko, this message translates to:
