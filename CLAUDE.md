@@ -27,17 +27,12 @@ flutter clean && flutter pub get       # 클린 빌드
 - **프론트엔드**: `localhost:3001` (웹 개발 서버)
 - **백엔드 개발**: `http://localhost:3000`
 - **백엔드 프로덕션**: `https://familyplannerbackend-production.up.railway.app`
-- **API 문서 (Swagger)**:
-  - 개발: `http://localhost:3000/api-json`
-  - 프로덕션: `https://familyplannerbackend-production.up.railway.app/api-json`
-  - **중요**: Swagger 문서 확인 시 WebFetch가 아닌 `curl` 명령어 사용 필수
-    ```bash
-    # 개발 환경
-    curl http://localhost:3000/api-json
 
-    # 프로덕션 환경
-    curl https://familyplannerbackend-production.up.railway.app/api-json
-    ```
+## API 문서 참조 방법
+
+- **사용할 문서**: `docs/api/` 디렉토리 내부의 문서들
+- 이 문서들은 백엔드 코드 기반으로 자동 생성되어 항상 최신 상태로 동기화됩니다
+- API 엔드포인트, 요청/응답 스키마, 예제 등 모든 정보가 포함되어 있습니다
 
 ## 문서 구조
 
@@ -69,7 +64,7 @@ flutter clean && flutter pub get       # 클린 빌드
 - [13-common.md](docs/features/13-common.md) - 공통 기능 ⬜
 
 ### 🔧 기타 문서 (docs/)
-- **[docs/API.md](docs/API.md)**: 백엔드 API 엔드포인트 상세 명세
+- **[docs/api/](docs/api/)**: 백엔드 API 자동 생성 문서 (백엔드 코드 기반)
 - **[docs/SOCIAL_LOGIN_SETUP.md](docs/SOCIAL_LOGIN_SETUP.md)**: 소셜 로그인 설정 및 트러블슈팅
 
 ## 개발 워크플로우
@@ -78,7 +73,7 @@ flutter clean && flutter pub get       # 클린 빌드
 1. **[ROADMAP.md](ROADMAP.md)** 또는 **[STATUS.md](STATUS.md)**에서 전체 진행 상황 확인
 2. 작업할 기능의 **[docs/features/](docs/features/)** 문서에서 상세 요구사항 확인
 3. UI 작업 시 **[UI_ARCHITECTURE.md](UI_ARCHITECTURE.md)**의 디자인 시스템 참조
-4. API 연동 시 **[docs/API.md](docs/API.md)** 참조
+4. API 연동 시 **[docs/api/](docs/api/)** 디렉토리 내 문서 참조
 
 ### 작업 중
 1. 기능 개발 시작: 해당 기능 문서의 상태를 🟨 (진행 중)으로 변경
