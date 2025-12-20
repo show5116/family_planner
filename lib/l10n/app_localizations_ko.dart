@@ -777,6 +777,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_members => '멤버';
 
   @override
+  String get group_pending => '대기중';
+
+  @override
+  String get group_noPendingRequests => '대기 중인 가입 요청이 없습니다';
+
+  @override
   String group_memberCount(int count) {
     return '$count명';
   }
@@ -858,6 +864,24 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get group_confirm => '확인';
+
+  @override
+  String get group_accept => '승인';
+
+  @override
+  String get group_reject => '거부';
+
+  @override
+  String get group_requestedAt => '요청일';
+
+  @override
+  String get group_acceptSuccess => '가입 요청이 승인되었습니다';
+
+  @override
+  String get group_rejectSuccess => '가입 요청이 거부되었습니다';
+
+  @override
+  String get group_rejectConfirmMessage => '정말로 이 가입 요청을 거부하시겠습니까?';
 
   @override
   String get group_groupNameRequired => '그룹 이름을 입력해주세요';

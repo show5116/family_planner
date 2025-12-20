@@ -20,7 +20,8 @@
 - ✅ 역할 관리 화면 (그룹 역할 목록 조회)
 - ✅ 초대 코드 표시 UI
 - ✅ 초대 코드 입력 화면
-- ⬜ 이메일 초대 화면 (백엔드 API 필요)
+- ✅ 이메일 초대 화면
+- ✅ 가입 요청 관리 UI (대기 중 탭)
 - ✅ 그룹 색상 설정 UI (기본 색상, 개인 커스텀 색상)
 - ⬜ 그룹 필터 UI (일정, ToDo, 메모, 가계부 등)
 
@@ -28,6 +29,7 @@
 - ✅ Group 모델 (id, name, description, inviteCode, defaultColor)
 - ✅ GroupMember 모델 (id, groupId, userId, roleId, customColor, joinedAt)
 - ✅ Role 모델 (id, name, groupId, is_default_role, permissions)
+- ✅ JoinRequest 모델 (id, groupId, type, email, status, createdAt, updatedAt)
 
 ## 그룹 생성 및 관리 기능
 - ✅ 그룹 생성 (POST /groups)
@@ -60,11 +62,24 @@
   - 백엔드에서 중복 검사 후 고유 코드 생성
 
 ### 이메일 초대 방식
-- ⬜ 이메일로 초대 (POST /groups/:id/invite-by-email)
-  - 초대 권한이 있는 역할만 가능
+- ✅ 이메일로 초대 (POST /groups/:id/invite-by-email)
+  - 초대 권한(INVITE_MEMBER)이 있는 역할만 가능
   - 초대할 사용자 이메일 입력
-  - 시스템에서 초대 이메일 자동 발송 (초대 코드 포함)
-  - **백엔드 API 필요**
+  - 해당 이메일로 가입된 사용자에게 초대 메일 자동 발송
+  - 초대 코드와 가입 요청 ID 포함
+  - 초대받은 사용자가 초대 코드로 가입하면 자동 승인됨
+
+### 가입 요청 관리
+- ✅ 가입 요청 목록 조회 (GET /groups/:id/join-requests)
+  - INVITE_MEMBER 권한 필요
+  - status 쿼리 파라미터로 필터링 (PENDING, ACCEPTED, REJECTED)
+  - 멤버 탭의 "대기중" 탭에서 확인 가능
+- ✅ 가입 요청 승인 (POST /groups/:id/join-requests/:requestId/accept)
+  - INVITE_MEMBER 권한 필요
+  - PENDING 상태의 요청을 승인하고 멤버로 추가
+- ✅ 가입 요청 거부 (POST /groups/:id/join-requests/:requestId/reject)
+  - INVITE_MEMBER 권한 필요
+  - PENDING 상태의 요청을 거부
 
 ## 멤버 관리
 - ✅ 그룹 멤버 목록 조회 (GET /groups/:id/members)
@@ -114,7 +129,10 @@
 - ⬜ 그룹장 양도 API (POST /groups/:id/transfer-ownership) - 백엔드 필요
 - ✅ 초대 코드로 가입 API (POST /groups/join)
 - ✅ 초대 코드 재생성 API (POST /groups/:id/regenerate-code)
-- ⬜ 이메일 초대 API (POST /groups/:id/invite-by-email) - 백엔드 필요
+- ✅ 이메일 초대 API (POST /groups/:id/invite-by-email)
+- ✅ 가입 요청 목록 조회 API (GET /groups/:id/join-requests)
+- ✅ 가입 요청 승인 API (POST /groups/:id/join-requests/:requestId/accept)
+- ✅ 가입 요청 거부 API (POST /groups/:id/join-requests/:requestId/reject)
 - ✅ 멤버 목록 조회 API (GET /groups/:id/members)
 - ✅ 개인 색상 설정 API (PATCH /groups/:id/my-color)
 - ✅ 멤버 역할 변경 API (PATCH /groups/:id/members/:userId/role)
@@ -126,6 +144,7 @@
 - ✅ Groups Provider 구현 (GroupNotifier)
 - ✅ Group Members Provider 구현 (groupMembersProvider)
 - ✅ Roles Provider 구현 (groupRolesProvider)
+- ✅ Join Requests Provider 구현 (groupJoinRequestsProvider)
 - ✅ Common Roles Provider 구현 (CommonRoleNotifier) - 운영자 전용
 
 ---
@@ -136,9 +155,11 @@
 - `lib/features/settings/groups/` - 그룹 관련 모든 파일
 - `lib/features/settings/groups/models/group.dart` - 그룹 모델
 - `lib/features/settings/groups/models/group_member.dart` - 그룹 멤버 및 Role 모델
+- `lib/features/settings/groups/models/join_request.dart` - 가입 요청 모델
 - `lib/features/settings/groups/services/group_service.dart` - 그룹 API 서비스
 - `lib/features/settings/groups/providers/group_provider.dart` - 그룹 상태 관리
 - `lib/features/settings/groups/screens/` - 그룹 관련 화면들
+- `lib/features/settings/groups/widgets/tabs/members/` - 멤버 탭 위젯 (참여중/대기중 토글)
 
 ### 공통 역할 관리 (운영자 전용)
 - `lib/features/settings/roles/` - 공통 역할 관리 파일
@@ -172,3 +193,6 @@
 - 역할별 권한 시스템은 추후 확장 가능하도록 설계됨
 - 공통 역할 관리는 운영자(isAdmin: true)만 접근 가능
 - 공통 역할은 모든 그룹에서 기본으로 사용 가능한 역할 (OWNER, ADMIN, MEMBER 등)
+- 이메일 초대는 해당 이메일로 가입된 사용자가 있어야 함
+- 초대받은 사용자는 이메일 초대 시 자동으로 승인되고, 일반 가입 요청은 관리자 승인 필요
+- INVITE_MEMBER 권한이 있는 사용자만 대기 중인 가입 요청을 확인하고 승인/거부 가능

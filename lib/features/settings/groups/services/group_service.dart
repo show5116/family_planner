@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/models/join_request.dart';
 
 /// 그룹 관리 서비스
 class GroupService {
@@ -289,6 +290,73 @@ class GroupService {
       );
 
       // 성공하면 void 반환 (상태는 프로바이더에서 관리)
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹 가입 요청 목록 조회
+  /// GET /groups/:id/join-requests
+  /// status 쿼리 파라미터로 필터링 가능 (PENDING, ACCEPTED, REJECTED)
+  Future<List<JoinRequest>> getJoinRequests(
+    String groupId, {
+    String? status,
+  }) async {
+    try {
+      final response = await _apiClient.get(
+        '/groups/$groupId/join-requests',
+        queryParameters: status != null ? {'status': status} : null,
+      );
+      final List<dynamic> data = response.data as List<dynamic>;
+      return data.map((json) => JoinRequest.fromJson(json)).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 가입 요청 승인
+  /// POST /groups/:id/join-requests/:requestId/accept
+  Future<GroupMember> acceptJoinRequest(
+    String groupId,
+    String requestId,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        '/groups/$groupId/join-requests/$requestId/accept',
+      );
+      return GroupMember.fromJson(response.data['member']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 가입 요청 거부
+  /// POST /groups/:id/join-requests/:requestId/reject
+  Future<void> rejectJoinRequest(
+    String groupId,
+    String requestId,
+  ) async {
+    try {
+      await _apiClient.post(
+        '/groups/$groupId/join-requests/$requestId/reject',
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 이메일로 그룹 초대
+  /// POST /groups/:id/invite-by-email
+  Future<Map<String, dynamic>> inviteByEmail(
+    String groupId,
+    String email,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        '/groups/$groupId/invite-by-email',
+        data: {'email': email},
+      );
+      return response.data as Map<String, dynamic>;
     } catch (e) {
       rethrow;
     }

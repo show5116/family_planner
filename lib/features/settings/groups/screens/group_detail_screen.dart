@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/models/join_request.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/members/members_tab.dart';
@@ -49,6 +50,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final l10n = AppLocalizations.of(context)!;
     final groupAsync = ref.watch(groupDetailProvider(widget.groupId));
     final membersAsync = ref.watch(groupMembersProvider(widget.groupId));
+    final joinRequestsAsync = ref.watch(groupJoinRequestsProvider(widget.groupId));
 
     return groupAsync.when(
       loading: () => const Scaffold(
@@ -93,7 +95,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
           body: TabBarView(
             controller: _tabController,
             children: [
-              _buildMembersTab(l10n, membersAsync),
+              _buildMembersTab(l10n, membersAsync, joinRequestsAsync),
               _buildSettingsTab(group, membersAsync, canManage),
               _buildRolesTab(isOwner),
             ],
@@ -105,10 +107,18 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   }
 
   /// 멤버 탭 빌드
-  Widget _buildMembersTab(AppLocalizations l10n, AsyncValue<List<GroupMember>> membersAsync) {
+  Widget _buildMembersTab(
+    AppLocalizations l10n,
+    AsyncValue<List<GroupMember>> membersAsync,
+    AsyncValue<List<JoinRequest>> joinRequestsAsync,
+  ) {
     return MembersTab(
       membersAsync: membersAsync,
-      onRetry: () => ref.invalidate(groupMembersProvider(widget.groupId)),
+      joinRequestsAsync: joinRequestsAsync,
+      onRetry: () {
+        ref.invalidate(groupMembersProvider(widget.groupId));
+        ref.invalidate(groupJoinRequestsProvider(widget.groupId));
+      },
       onRemoveMember: (member) => GroupDialogs.showRemoveMemberDialog(
         context,
         ref,
@@ -123,7 +133,71 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         widget.groupId,
         member,
       ),
+      onAcceptRequest: (request) => _handleAcceptRequest(l10n, request),
+      onRejectRequest: (request) => _handleRejectRequest(l10n, request),
     );
+  }
+
+  /// 가입 요청 승인 처리
+  Future<void> _handleAcceptRequest(AppLocalizations l10n, JoinRequest request) async {
+    try {
+      await ref.read(groupNotifierProvider.notifier).acceptJoinRequest(
+            widget.groupId,
+            request.id,
+          );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.group_acceptSuccess)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
+
+  /// 가입 요청 거부 처리
+  Future<void> _handleRejectRequest(AppLocalizations l10n, JoinRequest request) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.group_confirm),
+        content: Text(l10n.group_rejectConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.group_cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.group_reject),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await ref.read(groupNotifierProvider.notifier).rejectJoinRequest(
+            widget.groupId,
+            request.id,
+          );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.group_rejectSuccess)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
   /// 설정 탭 빌드
@@ -135,6 +209,12 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       membersAsync: membersAsync,
       canManage: canManage,
       onRegenerateCode: () => GroupDialogs.showRegenerateCodeDialog(
+        context,
+        ref,
+        l10n,
+        widget.groupId,
+      ),
+      onInviteByEmail: () => GroupDialogs.showInviteMemberDialog(
         context,
         ref,
         l10n,
@@ -180,7 +260,12 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     if (tabIndex == 0 && canManage) {
       // 멤버 탭 - 멤버 초대 버튼
       return FloatingActionButton.extended(
-        onPressed: () => GroupDialogs.showInviteMemberDialog(context, l10n),
+        onPressed: () => GroupDialogs.showInviteMemberDialog(
+          context,
+          ref,
+          l10n,
+          widget.groupId,
+        ),
         icon: const Icon(Icons.person_add),
         label: Text(l10n.group_inviteMembers),
       );

@@ -89,4 +89,12 @@ class GroupUtils {
     if (role == null) return false;
     return role.hasPermission(permission);
   }
+
+  /// 현재 사용자가 멤버를 초대할 수 있는지 확인
+  static bool canInviteMembers(List<dynamic> members) {
+    if (members.isEmpty) return false;
+    final role = members.first.role;
+    if (role == null) return false;
+    return role.hasPermission('INVITE_MEMBER');
+  }
 }

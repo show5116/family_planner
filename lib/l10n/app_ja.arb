@@ -289,6 +289,8 @@
   "group_customColor": "カスタムカラー",
   "group_inviteCode": "招待コード",
   "group_members": "メンバー",
+  "group_pending": "保留中",
+  "group_noPendingRequests": "保留中の参加リクエストはありません",
   "group_memberCount": "{count}人",
   "@group_memberCount": {
     "placeholders": {
@@ -323,6 +325,12 @@
   "group_create": "作成",
   "group_edit": "編集",
   "group_confirm": "確認",
+  "group_accept": "承認",
+  "group_reject": "拒否",
+  "group_requestedAt": "リクエスト日",
+  "group_acceptSuccess": "参加リクエストが承認されました",
+  "group_rejectSuccess": "参加リクエストが拒否されました",
+  "group_rejectConfirmMessage": "本当にこの参加リクエストを拒否しますか？",
   "group_groupNameRequired": "グループ名を入力してください",
   "group_inviteCodeRequired": "招待コードを入力してください",
   "group_emailRequired": "メールアドレスを入力してください",

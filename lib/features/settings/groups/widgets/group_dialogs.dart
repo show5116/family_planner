@@ -54,55 +54,93 @@ class GroupDialogs {
     }
   }
 
-  /// 멤버 초대 다이얼로그
-  static void showInviteMemberDialog(
+  /// 멤버 초대 다이얼로그 (이메일 초대)
+  static Future<void> showInviteMemberDialog(
     BuildContext context,
+    WidgetRef ref,
     AppLocalizations l10n,
-  ) {
+    String groupId,
+  ) async {
     final emailController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
-    showDialog(
+    final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.group_inviteByEmail),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: l10n.group_email,
-                border: const OutlineInputBorder(),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: l10n.group_email,
+                  border: const OutlineInputBorder(),
+                  hintText: 'user@example.com',
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return l10n.group_emailRequired;
+                  }
+                  if (!value.contains('@')) {
+                    return '올바른 이메일 주소를 입력해주세요';
+                  }
+                  return null;
+                },
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '초대 코드를 공유하거나 이메일로 직접 초대할 수 있습니다.',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
+              const SizedBox(height: AppSizes.spaceM),
+              Text(
+                '해당 이메일로 가입된 사용자에게 초대 메일이 발송됩니다.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, false),
             child: Text(l10n.group_cancel),
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: 이메일 초대 기능은 백엔드 API 추가 필요
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('이메일 초대 기능은 개발 중입니다. 초대 코드를 공유해주세요.'),
-                ),
-              );
+              if (formKey.currentState?.validate() ?? false) {
+                Navigator.pop(context, true);
+              }
             },
             child: Text(l10n.group_send),
           ),
         ],
       ),
     );
+
+    if (result == true && context.mounted) {
+      try {
+        final response = await ref
+            .read(groupNotifierProvider.notifier)
+            .inviteByEmail(groupId, emailController.text.trim());
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '${response['email']}에게 초대 이메일이 발송되었습니다',
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ErrorHandler.showErrorSnackBar(context, e);
+        }
+      }
+    }
+
+    emailController.dispose();
   }
 
   /// 멤버 삭제 다이얼로그

@@ -1606,6 +1606,18 @@ abstract class AppLocalizations {
   /// **'멤버'**
   String get group_members;
 
+  /// No description provided for @group_pending.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기중'**
+  String get group_pending;
+
+  /// No description provided for @group_noPendingRequests.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기 중인 가입 요청이 없습니다'**
+  String get group_noPendingRequests;
+
   /// No description provided for @group_memberCount.
   ///
   /// In ko, this message translates to:
@@ -1767,6 +1779,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'확인'**
   String get group_confirm;
+
+  /// No description provided for @group_accept.
+  ///
+  /// In ko, this message translates to:
+  /// **'승인'**
+  String get group_accept;
+
+  /// No description provided for @group_reject.
+  ///
+  /// In ko, this message translates to:
+  /// **'거부'**
+  String get group_reject;
+
+  /// No description provided for @group_requestedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'요청일'**
+  String get group_requestedAt;
+
+  /// No description provided for @group_acceptSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 요청이 승인되었습니다'**
+  String get group_acceptSuccess;
+
+  /// No description provided for @group_rejectSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 요청이 거부되었습니다'**
+  String get group_rejectSuccess;
+
+  /// No description provided for @group_rejectConfirmMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'정말로 이 가입 요청을 거부하시겠습니까?'**
+  String get group_rejectConfirmMessage;
 
   /// No description provided for @group_groupNameRequired.
   ///

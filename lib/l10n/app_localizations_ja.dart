@@ -775,6 +775,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_members => 'メンバー';
 
   @override
+  String get group_pending => '保留中';
+
+  @override
+  String get group_noPendingRequests => '保留中の参加リクエストはありません';
+
+  @override
   String group_memberCount(int count) {
     return '$count人';
   }
@@ -856,6 +862,24 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get group_confirm => '確認';
+
+  @override
+  String get group_accept => '承認';
+
+  @override
+  String get group_reject => '拒否';
+
+  @override
+  String get group_requestedAt => 'リクエスト日';
+
+  @override
+  String get group_acceptSuccess => '参加リクエストが承認されました';
+
+  @override
+  String get group_rejectSuccess => '参加リクエストが拒否されました';
+
+  @override
+  String get group_rejectConfirmMessage => '本当にこの参加リクエストを拒否しますか？';
 
   @override
   String get group_groupNameRequired => 'グループ名を入力してください';

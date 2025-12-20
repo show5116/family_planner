@@ -801,6 +801,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_members => 'Members';
 
   @override
+  String get group_pending => 'Pending';
+
+  @override
+  String get group_noPendingRequests => 'No pending join requests';
+
+  @override
   String group_memberCount(int count) {
     return '$count members';
   }
@@ -882,6 +888,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get group_confirm => 'Confirm';
+
+  @override
+  String get group_accept => 'Accept';
+
+  @override
+  String get group_reject => 'Reject';
+
+  @override
+  String get group_requestedAt => 'Requested';
+
+  @override
+  String get group_acceptSuccess => 'Join request has been accepted';
+
+  @override
+  String get group_rejectSuccess => 'Join request has been rejected';
+
+  @override
+  String get group_rejectConfirmMessage =>
+      'Are you sure you want to reject this join request?';
 
   @override
   String get group_groupNameRequired => 'Please enter group name';

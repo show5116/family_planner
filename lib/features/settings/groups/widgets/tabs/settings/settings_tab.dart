@@ -15,6 +15,7 @@ class SettingsTab extends ConsumerWidget {
   final AsyncValue<List<GroupMember>> membersAsync;
   final bool canManage;
   final VoidCallback onRegenerateCode;
+  final VoidCallback? onInviteByEmail;
   final Function(Color color) onColorChange;
   final VoidCallback onResetColor;
 
@@ -24,6 +25,7 @@ class SettingsTab extends ConsumerWidget {
     required this.membersAsync,
     required this.canManage,
     required this.onRegenerateCode,
+    this.onInviteByEmail,
     required this.onColorChange,
     required this.onResetColor,
   });
@@ -46,6 +48,7 @@ class SettingsTab extends ConsumerWidget {
             group: group,
             canManage: canManage,
             onRegenerateCode: onRegenerateCode,
+            onInviteByEmail: onInviteByEmail,
           ),
           const SizedBox(height: AppSizes.spaceM),
         ],

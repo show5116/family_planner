@@ -3,6 +3,7 @@ import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/settings/groups/services/group_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/models/join_request.dart';
 
 /// GroupService Provider
 final groupServiceProvider = Provider<GroupService>((ref) {
@@ -38,6 +39,12 @@ final groupMembersProvider = FutureProvider.family<List<GroupMember>, String>((r
 final groupRolesProvider = FutureProvider.family<List<Role>, String>((ref, groupId) async {
   final groupService = ref.watch(groupServiceProvider);
   return await groupService.getGroupRoles(groupId);
+});
+
+/// 그룹 가입 요청 목록 Provider (PENDING 상태만)
+final groupJoinRequestsProvider = FutureProvider.family<List<JoinRequest>, String>((ref, groupId) async {
+  final groupService = ref.watch(groupServiceProvider);
+  return await groupService.getJoinRequests(groupId, status: 'PENDING');
 });
 
 /// 그룹 관리 상태 관리 NotifierProvider
@@ -280,6 +287,45 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
 
       // 역할 목록 새로고침
       _ref.invalidate(groupRolesProvider(groupId));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 가입 요청 승인
+  Future<void> acceptJoinRequest(String groupId, String requestId) async {
+    try {
+      await _groupService.acceptJoinRequest(groupId, requestId);
+
+      // 멤버 목록 및 가입 요청 목록 새로고침
+      _ref.invalidate(groupMembersProvider(groupId));
+      _ref.invalidate(groupJoinRequestsProvider(groupId));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 가입 요청 거부
+  Future<void> rejectJoinRequest(String groupId, String requestId) async {
+    try {
+      await _groupService.rejectJoinRequest(groupId, requestId);
+
+      // 가입 요청 목록 새로고침
+      _ref.invalidate(groupJoinRequestsProvider(groupId));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 이메일로 초대
+  Future<Map<String, dynamic>> inviteByEmail(String groupId, String email) async {
+    try {
+      final result = await _groupService.inviteByEmail(groupId, email);
+
+      // 가입 요청 목록 새로고침
+      _ref.invalidate(groupJoinRequestsProvider(groupId));
+
+      return result;
     } catch (e) {
       rethrow;
     }

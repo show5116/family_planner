@@ -289,6 +289,8 @@
   "group_customColor": "Custom Color",
   "group_inviteCode": "Invite Code",
   "group_members": "Members",
+  "group_pending": "Pending",
+  "group_noPendingRequests": "No pending join requests",
   "group_memberCount": "{count} members",
   "@group_memberCount": {
     "placeholders": {
@@ -323,6 +325,12 @@
   "group_create": "Create",
   "group_edit": "Edit",
   "group_confirm": "Confirm",
+  "group_accept": "Accept",
+  "group_reject": "Reject",
+  "group_requestedAt": "Requested",
+  "group_acceptSuccess": "Join request has been accepted",
+  "group_rejectSuccess": "Join request has been rejected",
+  "group_rejectConfirmMessage": "Are you sure you want to reject this join request?",
   "group_groupNameRequired": "Please enter group name",
   "group_inviteCodeRequired": "Please enter invite code",
   "group_emailRequired": "Please enter email",
