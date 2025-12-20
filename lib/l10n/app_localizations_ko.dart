@@ -875,6 +875,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_requestedAt => '요청일';
 
   @override
+  String get group_invitedAt => '초대일';
+
+  @override
   String get group_acceptSuccess => '가입 요청이 승인되었습니다';
 
   @override

@@ -873,6 +873,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_requestedAt => 'リクエスト日';
 
   @override
+  String get group_invitedAt => '招待日';
+
+  @override
   String get group_acceptSuccess => '参加リクエストが承認されました';
 
   @override

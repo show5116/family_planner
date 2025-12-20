@@ -328,6 +328,7 @@
   "group_accept": "承認",
   "group_reject": "拒否",
   "group_requestedAt": "リクエスト日",
+  "group_invitedAt": "招待日",
   "group_acceptSuccess": "参加リクエストが承認されました",
   "group_rejectSuccess": "参加リクエストが拒否されました",
   "group_rejectConfirmMessage": "本当にこの参加リクエストを拒否しますか？",

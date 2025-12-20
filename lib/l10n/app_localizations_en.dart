@@ -899,6 +899,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_requestedAt => 'Requested';
 
   @override
+  String get group_invitedAt => 'Invited';
+
+  @override
   String get group_acceptSuccess => 'Join request has been accepted';
 
   @override

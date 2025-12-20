@@ -1798,6 +1798,12 @@ abstract class AppLocalizations {
   /// **'요청일'**
   String get group_requestedAt;
 
+  /// No description provided for @group_invitedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대일'**
+  String get group_invitedAt;
+
   /// No description provided for @group_acceptSuccess.
   ///
   /// In ko, this message translates to:

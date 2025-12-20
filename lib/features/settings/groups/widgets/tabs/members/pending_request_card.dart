@@ -21,6 +21,7 @@ class PendingRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final isInvite = request.type == 'INVITE';
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -32,9 +33,10 @@ class PendingRequestCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  child: Text(
-                    request.email.substring(0, 1).toUpperCase(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  backgroundColor: isInvite ? Colors.blue[100] : Colors.grey[200],
+                  child: Icon(
+                    isInvite ? Icons.email_outlined : Icons.person_add,
+                    color: isInvite ? Colors.blue[700] : Colors.grey[700],
                   ),
                 ),
                 const SizedBox(width: AppSizes.spaceM),
@@ -42,15 +44,43 @@ class PendingRequestCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        request.email,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              request.email,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.spaceS,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isInvite ? Colors.blue[50] : Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isInvite ? Colors.blue[200]! : Colors.grey[300]!,
+                              ),
+                            ),
+                            child: Text(
+                              isInvite ? '초대됨' : '가입 요청',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: isInvite ? Colors.blue[700] : Colors.grey[700],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${l10n.group_requestedAt}: ${GroupUtils.formatDate(request.createdAt)}',
+                        isInvite
+                            ? '${l10n.group_invitedAt}: ${GroupUtils.formatDate(request.createdAt)}'
+                            : '${l10n.group_requestedAt}: ${GroupUtils.formatDate(request.createdAt)}',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -60,21 +90,24 @@ class PendingRequestCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: AppSizes.spaceM),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: onReject,
-                  child: Text(l10n.group_reject),
-                ),
-                const SizedBox(width: AppSizes.spaceS),
-                ElevatedButton(
-                  onPressed: onAccept,
-                  child: Text(l10n.group_accept),
-                ),
-              ],
-            ),
+            // 일반 가입 요청(REQUEST)만 승인/거부 버튼 표시
+            if (!isInvite) ...[
+              const SizedBox(height: AppSizes.spaceM),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: onReject,
+                    child: Text(l10n.group_reject),
+                  ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  ElevatedButton(
+                    onPressed: onAccept,
+                    child: Text(l10n.group_accept),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

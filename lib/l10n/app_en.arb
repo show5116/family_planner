@@ -328,6 +328,7 @@
   "group_accept": "Accept",
   "group_reject": "Reject",
   "group_requestedAt": "Requested",
+  "group_invitedAt": "Invited",
   "group_acceptSuccess": "Join request has been accepted",
   "group_rejectSuccess": "Join request has been rejected",
   "group_rejectConfirmMessage": "Are you sure you want to reject this join request?",

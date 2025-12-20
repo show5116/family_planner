@@ -328,6 +328,7 @@
   "group_accept": "승인",
   "group_reject": "거부",
   "group_requestedAt": "요청일",
+  "group_invitedAt": "초대일",
   "group_acceptSuccess": "가입 요청이 승인되었습니다",
   "group_rejectSuccess": "가입 요청이 거부되었습니다",
   "group_rejectConfirmMessage": "정말로 이 가입 요청을 거부하시겠습니까?",
