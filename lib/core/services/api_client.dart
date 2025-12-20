@@ -126,6 +126,12 @@ class ApiClient {
               return handler.next(error);
             }
 
+            // /auth/login 요청이 실패한 경우 refresh 시도하지 않음 (잘못된 자격 증명)
+            if (requestPath.contains('/auth/login')) {
+              debugPrint('Login request failed with 401 - invalid credentials');
+              return handler.next(error);
+            }
+
             // Refresh Token으로 재시도
             debugPrint('Attempting token refresh...');
             final refreshed = await _refreshToken();
