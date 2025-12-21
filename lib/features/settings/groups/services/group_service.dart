@@ -95,13 +95,14 @@ class GroupService {
 
   /// 초대 코드로 그룹 가입
   /// POST /groups/join
-  Future<Group> joinGroup(String inviteCode) async {
+  /// 성공 시 가입 요청 정보를 반환 (그룹 객체 아님)
+  Future<Map<String, dynamic>> joinGroup(String inviteCode) async {
     try {
       final response = await _apiClient.post(
         '/groups/join',
         data: {'inviteCode': inviteCode},
       );
-      return Group.fromJson(response.data);
+      return response.data as Map<String, dynamic>;
     } catch (e) {
       rethrow;
     }
@@ -355,6 +356,37 @@ class GroupService {
       final response = await _apiClient.post(
         '/groups/$groupId/invite-by-email',
         data: {'email': email},
+      );
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 초대 취소
+  /// DELETE /groups/:id/invites/:requestId
+  Future<void> cancelInvite(
+    String groupId,
+    String requestId,
+  ) async {
+    try {
+      await _apiClient.delete(
+        '/groups/$groupId/invites/$requestId',
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 초대 재전송
+  /// POST /groups/:id/invites/:requestId/resend
+  Future<Map<String, dynamic>> resendInvite(
+    String groupId,
+    String requestId,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        '/groups/$groupId/invites/$requestId/resend',
       );
       return response.data as Map<String, dynamic>;
     } catch (e) {

@@ -9,12 +9,16 @@ class PendingRequestCard extends StatelessWidget {
   final JoinRequest request;
   final VoidCallback onAccept;
   final VoidCallback onReject;
+  final VoidCallback? onCancel;
+  final VoidCallback? onResend;
 
   const PendingRequestCard({
     super.key,
     required this.request,
     required this.onAccept,
     required this.onReject,
+    this.onCancel,
+    this.onResend,
   });
 
   @override
@@ -90,12 +94,28 @@ class PendingRequestCard extends StatelessWidget {
                 ),
               ],
             ),
-            // 일반 가입 요청(REQUEST)만 승인/거부 버튼 표시
-            if (!isInvite) ...[
-              const SizedBox(height: AppSizes.spaceM),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
+            const SizedBox(height: AppSizes.spaceM),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // 초대됨(INVITE)인 경우: 초대 취소 및 재전송 버튼
+                if (isInvite) ...[
+                  if (onCancel != null)
+                    TextButton(
+                      onPressed: onCancel,
+                      child: const Text('초대 취소'),
+                    ),
+                  if (onResend != null) ...[
+                    const SizedBox(width: AppSizes.spaceS),
+                    ElevatedButton.icon(
+                      onPressed: onResend,
+                      icon: const Icon(Icons.email_outlined, size: 18),
+                      label: const Text('재전송'),
+                    ),
+                  ],
+                ]
+                // 일반 가입 요청(REQUEST)인 경우: 승인/거부 버튼
+                else ...[
                   TextButton(
                     onPressed: onReject,
                     child: Text(l10n.group_reject),
@@ -106,8 +126,8 @@ class PendingRequestCard extends StatelessWidget {
                     child: Text(l10n.group_accept),
                   ),
                 ],
-              ),
-            ],
+              ],
+            ),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 인증 상태
 class AuthState {
@@ -32,7 +33,7 @@ final authServiceProvider = Provider<AuthService>((ref) {
 
 /// Auth Provider
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier(this._authService) : super(const AuthState()) {
+  AuthNotifier(this._authService, this._ref) : super(const AuthState()) {
     // 401 에러 시 자동 로그아웃 콜백 설정
     _authService.apiClient.onUnauthorized = _handleUnauthorized;
     debugPrint('=== AuthNotifier: onUnauthorized callback registered ===');
@@ -60,6 +61,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   final AuthService _authService;
+  final Ref _ref;
   StreamSubscription<OAuthCallbackResult>? _oauthSubscription;
 
   @override
@@ -138,11 +140,22 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _authService.logout();
 
+      // 그룹 관련 provider 초기화
+      _invalidateGroupProviders();
+
       state = const AuthState(isAuthenticated: false);
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
     }
+  }
+
+  /// 그룹 관련 provider들을 모두 초기화
+  void _invalidateGroupProviders() {
+    // 그룹 관리 provider들 초기화
+    _ref.invalidate(myGroupsProvider);
+    _ref.invalidate(groupNotifierProvider);
+    // family provider들은 자동으로 무효화됨 (부모 provider가 무효화되면)
   }
 
   /// 토큰 검증
@@ -409,5 +422,5 @@ class AuthNotifier extends StateNotifier<AuthState> {
 /// Auth Provider 인스턴스
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final authService = ref.watch(authServiceProvider);
-  return AuthNotifier(authService);
+  return AuthNotifier(authService, ref);
 });

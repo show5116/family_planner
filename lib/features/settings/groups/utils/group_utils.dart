@@ -68,33 +68,54 @@ class GroupUtils {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
+  /// 멤버 목록에서 현재 사용자 찾기
+  /// 현재 사용자 ID를 전달받아서 해당하는 멤버를 찾음
+  static dynamic _getCurrentUserMember(List<dynamic> members, String? currentUserId) {
+    if (members.isEmpty || currentUserId == null) return null;
+
+    try {
+      return members.firstWhere(
+        (member) => member.user?.id == currentUserId,
+        orElse: () => null,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// 현재 사용자가 그룹을 관리할 수 있는지 확인
-  static bool canManageGroup(List<dynamic> members) {
-    if (members.isEmpty) return false;
-    // 첫 번째 멤버를 현재 사용자로 간주 (실제로는 authProvider에서 가져와야 함)
-    final roleName = members.first.role?.name ?? '';
+  static bool canManageGroup(List<dynamic> members, {String? currentUserId}) {
+    final currentMember = _getCurrentUserMember(members, currentUserId);
+    if (currentMember == null) return false;
+    final roleName = currentMember.role?.name ?? '';
     return roleName == 'OWNER' || roleName == 'ADMIN';
   }
 
   /// 현재 사용자가 OWNER인지 확인
-  static bool isOwner(List<dynamic> members) {
-    if (members.isEmpty) return false;
-    return members.first.role?.name == 'OWNER';
+  static bool isOwner(List<dynamic> members, {String? currentUserId}) {
+    final currentMember = _getCurrentUserMember(members, currentUserId);
+    if (currentMember == null) return false;
+    return currentMember.role?.name == 'OWNER';
   }
 
   /// 현재 사용자가 특정 권한을 가지고 있는지 확인
-  static bool hasPermission(List<dynamic> members, String permission) {
-    if (members.isEmpty) return false;
-    final role = members.first.role;
+  static bool hasPermission(List<dynamic> members, String permission, {String? currentUserId}) {
+    final currentMember = _getCurrentUserMember(members, currentUserId);
+    if (currentMember == null) return false;
+    final role = currentMember.role;
     if (role == null) return false;
     return role.hasPermission(permission);
   }
 
   /// 현재 사용자가 멤버를 초대할 수 있는지 확인
-  static bool canInviteMembers(List<dynamic> members) {
-    if (members.isEmpty) return false;
-    final role = members.first.role;
+  static bool canInviteMembers(List<dynamic> members, {String? currentUserId}) {
+    final currentMember = _getCurrentUserMember(members, currentUserId);
+    if (currentMember == null) return false;
+    final role = currentMember.role;
     if (role == null) return false;
-    return role.hasPermission('INVITE_MEMBER');
+
+    final hasPermission = role.hasPermission('INVITE_MEMBER');
+    debugPrint('[GroupUtils.canInviteMembers] currentUserId: $currentUserId, role: ${currentMember.role?.name}, permissions: ${role.permissions}, hasInvitePermission: $hasPermission');
+    return hasPermission;
   }
 }

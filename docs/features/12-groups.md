@@ -80,6 +80,12 @@
 - ✅ 가입 요청 거부 (POST /groups/:id/join-requests/:requestId/reject)
   - INVITE_MEMBER 권한 필요
   - PENDING 상태의 요청을 거부
+- ✅ 초대 취소 (DELETE /groups/:id/invites/:requestId)
+  - INVITE_MEMBER 권한 필요
+  - INVITE 타입의 PENDING 상태 초대를 취소
+- ✅ 초대 재전송 (POST /groups/:id/invites/:requestId/resend)
+  - INVITE_MEMBER 권한 필요
+  - INVITE 타입의 PENDING 상태 초대 이메일을 재전송
 
 ## 멤버 관리
 - ✅ 그룹 멤버 목록 조회 (GET /groups/:id/members)
@@ -115,10 +121,17 @@
   - ✅ 공통 역할 관리 UI (관리자 설정 메뉴)
 
 ### 그룹별 커스텀 역할 (group_id 지정)
-- ⬜ 그룹별 고유 역할 생성 기능 (추후 구현)
-- ⬜ is_default_role 플래그로 초대 시 자동 부여 역할 지정
-- ⬜ 역할별 세부 권한 정의 (조회, 생성, 수정, 삭제, 초대 등)
-- ⬜ 그룹장(OWNER)의 역할 생성 및 권한 편집 기능
+- ✅ 그룹별 고유 역할 생성 기능 (POST /groups/:groupId/roles)
+  - MANAGE_ROLE 권한 필요
+  - 역할명, 권한 배열, 색상, 정렬 순서 설정 가능
+- ✅ is_default_role 플래그로 초대 시 자동 부여 역할 지정
+  - 백엔드에서 is_default_role=true인 역할을 자동 부여
+- ✅ 역할별 세부 권한 정의
+  - 권한 배열로 세부 권한 관리 (VIEW, CREATE, UPDATE, DELETE, INVITE_MEMBER 등)
+  - 역할 생성 및 수정 시 permissions 배열 지정 가능
+- ✅ MANAGE_ROLE 권한이 있는 사용자의 역할 생성 및 권한 편집 기능
+  - 역할 생성, 수정, 삭제 UI 구현 완료
+  - 역할별 정렬 순서 관리 (드래그 앤 드롭)
 
 ## API 연동
 - ✅ 그룹 생성 API (POST /groups)
@@ -133,6 +146,8 @@
 - ✅ 가입 요청 목록 조회 API (GET /groups/:id/join-requests)
 - ✅ 가입 요청 승인 API (POST /groups/:id/join-requests/:requestId/accept)
 - ✅ 가입 요청 거부 API (POST /groups/:id/join-requests/:requestId/reject)
+- ✅ 초대 취소 API (DELETE /groups/:id/invites/:requestId)
+- ✅ 초대 재전송 API (POST /groups/:id/invites/:requestId/resend)
 - ✅ 멤버 목록 조회 API (GET /groups/:id/members)
 - ✅ 개인 색상 설정 API (PATCH /groups/:id/my-color)
 - ✅ 멤버 역할 변경 API (PATCH /groups/:id/members/:userId/role)

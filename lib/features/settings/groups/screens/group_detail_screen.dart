@@ -12,6 +12,7 @@ import 'package:family_planner/features/settings/groups/widgets/tabs/roles/roles
 import 'package:family_planner/features/settings/groups/widgets/group_dialogs.dart';
 import 'package:family_planner/features/settings/groups/widgets/role_management_dialogs.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 그룹 상세 화면
 class GroupDetailScreen extends ConsumerStatefulWidget {
@@ -50,7 +51,8 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final l10n = AppLocalizations.of(context)!;
     final groupAsync = ref.watch(groupDetailProvider(widget.groupId));
     final membersAsync = ref.watch(groupMembersProvider(widget.groupId));
-    final joinRequestsAsync = ref.watch(groupJoinRequestsProvider(widget.groupId));
+    final authState = ref.watch(authProvider);
+    final currentUserId = authState.user?['id'] as String?;
 
     return groupAsync.when(
       loading: () => const Scaffold(
@@ -68,14 +70,25 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       ),
       data: (group) {
         final canManage = membersAsync.maybeWhen(
-          data: (members) => GroupUtils.canManageGroup(members),
+          data: (members) => GroupUtils.canManageGroup(members, currentUserId: currentUserId),
           orElse: () => false,
         );
 
         final isOwner = membersAsync.maybeWhen(
-          data: (members) => GroupUtils.isOwner(members),
+          data: (members) => GroupUtils.isOwner(members, currentUserId: currentUserId),
           orElse: () => false,
         );
+
+        // 초대 권한 확인
+        final canInvite = membersAsync.maybeWhen(
+          data: (members) => GroupUtils.canInviteMembers(members, currentUserId: currentUserId),
+          orElse: () => false,
+        );
+
+        // 초대 권한이 있을 때만 가입 요청 목록 조회
+        final joinRequestsAsync = canInvite
+            ? ref.watch(groupJoinRequestsProvider(widget.groupId))
+            : const AsyncValue<List<JoinRequest>>.data([]);
 
         return Scaffold(
           appBar: AppBar(
@@ -135,6 +148,8 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       ),
       onAcceptRequest: (request) => _handleAcceptRequest(l10n, request),
       onRejectRequest: (request) => _handleRejectRequest(l10n, request),
+      onCancelInvite: (request) => _handleCancelInvite(l10n, request),
+      onResendInvite: (request) => _handleResendInvite(l10n, request),
     );
   }
 
@@ -189,6 +204,68 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.group_rejectSuccess)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
+
+  /// 초대 취소 처리
+  Future<void> _handleCancelInvite(AppLocalizations l10n, JoinRequest request) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('초대 취소'),
+        content: Text('${request.email}에게 보낸 초대를 취소하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.group_cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('취소'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await ref.read(groupNotifierProvider.notifier).cancelInvite(
+            widget.groupId,
+            request.id,
+          );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('초대가 취소되었습니다')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
+
+  /// 초대 재전송 처리
+  Future<void> _handleResendInvite(AppLocalizations l10n, JoinRequest request) async {
+    try {
+      await ref.read(groupNotifierProvider.notifier).resendInvite(
+            widget.groupId,
+            request.id,
+          );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${request.email}에게 초대 이메일이 재전송되었습니다')),
         );
       }
     } catch (e) {

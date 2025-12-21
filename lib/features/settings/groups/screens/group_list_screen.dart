@@ -292,14 +292,16 @@ class GroupListScreen extends ConsumerWidget {
             onPressed: () async {
               if (formKey.currentState!.validate()) {
                 try {
-                  await ref.read(groupNotifierProvider.notifier).joinGroup(
+                  final result = await ref.read(groupNotifierProvider.notifier).joinGroup(
                         codeController.text.trim(),
                       );
 
                   if (dialogContext.mounted) {
                     Navigator.pop(dialogContext);
+                    // API 응답 메시지 표시
+                    final message = result['message'] as String? ?? l10n.group_joinSuccess;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l10n.group_joinSuccess)),
+                      SnackBar(content: Text(message)),
                     );
                   }
                 } catch (e) {

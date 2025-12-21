@@ -129,14 +129,14 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
   }
 
   /// 초대 코드로 그룹 가입
-  Future<Group?> joinGroup(String inviteCode) async {
+  Future<Map<String, dynamic>> joinGroup(String inviteCode) async {
     try {
-      final group = await _groupService.joinGroup(inviteCode);
+      final result = await _groupService.joinGroup(inviteCode);
 
-      // 그룹 목록 새로고침
+      // 그룹 목록 새로고침 (이메일 초대인 경우 즉시 가입, 일반 요청인 경우 대기)
       await loadGroups();
 
-      return group;
+      return result;
     } catch (e) {
       rethrow;
     }
@@ -323,6 +323,32 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       final result = await _groupService.inviteByEmail(groupId, email);
 
       // 가입 요청 목록 새로고침
+      _ref.invalidate(groupJoinRequestsProvider(groupId));
+
+      return result;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 초대 취소
+  Future<void> cancelInvite(String groupId, String requestId) async {
+    try {
+      await _groupService.cancelInvite(groupId, requestId);
+
+      // 가입 요청 목록 새로고침
+      _ref.invalidate(groupJoinRequestsProvider(groupId));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 초대 재전송
+  Future<Map<String, dynamic>> resendInvite(String groupId, String requestId) async {
+    try {
+      final result = await _groupService.resendInvite(groupId, requestId);
+
+      // 가입 요청 목록 새로고침 (필요시)
       _ref.invalidate(groupJoinRequestsProvider(groupId));
 
       return result;

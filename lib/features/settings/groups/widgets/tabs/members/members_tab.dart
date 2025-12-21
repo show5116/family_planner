@@ -8,6 +8,7 @@ import 'package:family_planner/features/settings/groups/widgets/common_widgets.d
 import 'package:family_planner/features/settings/groups/widgets/tabs/members/member_card.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/members/pending_request_card.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 그룹 멤버 탭
 class MembersTab extends ConsumerStatefulWidget {
@@ -18,6 +19,8 @@ class MembersTab extends ConsumerStatefulWidget {
   final Function(GroupMember member) onChangeRole;
   final Function(JoinRequest request) onAcceptRequest;
   final Function(JoinRequest request) onRejectRequest;
+  final Function(JoinRequest request)? onCancelInvite;
+  final Function(JoinRequest request)? onResendInvite;
 
   const MembersTab({
     super.key,
@@ -28,6 +31,8 @@ class MembersTab extends ConsumerStatefulWidget {
     required this.onChangeRole,
     required this.onAcceptRequest,
     required this.onRejectRequest,
+    this.onCancelInvite,
+    this.onResendInvite,
   });
 
   @override
@@ -40,10 +45,12 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final authState = ref.watch(authProvider);
+    final currentUserId = authState.user?['id'] as String?;
 
     // 초대 권한 확인
     final canInvite = widget.membersAsync.maybeWhen(
-      data: (members) => GroupUtils.canInviteMembers(members),
+      data: (members) => GroupUtils.canInviteMembers(members, currentUserId: currentUserId),
       orElse: () => false,
     );
 
@@ -139,10 +146,18 @@ class _MembersTabState extends ConsumerState<MembersTab> {
           itemCount: requests.length,
           itemBuilder: (context, index) {
             final request = requests[index];
+            final isInvite = request.type == 'INVITE';
+
             return PendingRequestCard(
               request: request,
               onAccept: () => widget.onAcceptRequest(request),
               onReject: () => widget.onRejectRequest(request),
+              onCancel: isInvite && widget.onCancelInvite != null
+                  ? () => widget.onCancelInvite!(request)
+                  : null,
+              onResend: isInvite && widget.onResendInvite != null
+                  ? () => widget.onResendInvite!(request)
+                  : null,
             );
           },
         );
