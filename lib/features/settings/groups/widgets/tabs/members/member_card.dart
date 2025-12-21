@@ -9,6 +9,7 @@ import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 class MemberCard extends StatelessWidget {
   final GroupMember member;
   final List<GroupMember> allMembers;
+  final String? currentUserId;
   final VoidCallback onRemove;
   final VoidCallback onChangeRole;
 
@@ -16,6 +17,7 @@ class MemberCard extends StatelessWidget {
     super.key,
     required this.member,
     required this.allMembers,
+    required this.currentUserId,
     required this.onRemove,
     required this.onChangeRole,
   });
@@ -27,9 +29,14 @@ class MemberCard extends StatelessWidget {
 
     final String roleName = GroupUtils.getRoleName(l10n, member.role?.name ?? 'MEMBER');
     final bool isOwner = member.role?.name == 'OWNER';
-    // 첫 번째 멤버를 현재 사용자로 간주
-    final bool canManage = allMembers.isNotEmpty &&
-        allMembers.first.role?.name == 'OWNER' && !isOwner;
+    final bool isCurrentUser = member.user?.id == currentUserId;
+
+    debugPrint('[MemberCard] member.user?.id: ${member.user?.id} (${member.user?.id.runtimeType}), currentUserId: $currentUserId (${currentUserId.runtimeType}), isCurrentUser: $isCurrentUser, name: ${member.user?.name}');
+
+    // MANAGE_MEMBER 권한이 있고, 본인이 아니고, OWNER가 아닌 경우에만 메뉴 표시
+    final bool canManage = GroupUtils.canManageMembers(allMembers, currentUserId: currentUserId)
+        && !isCurrentUser
+        && !isOwner;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -45,11 +52,36 @@ class MemberCard extends StatelessWidget {
                 )
               : null,
         ),
-        title: Text(
-          member.user?.name ?? 'Unknown',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          children: [
+            Text(
+              member.user?.name ?? 'Unknown',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (isCurrentUser) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.green[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '나',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.green[700],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +92,12 @@ class MemberCard extends StatelessWidget {
               children: [
                 RoleBadge(
                   roleName: roleName,
-                  color: GroupUtils.getRoleColor(member.role?.name ?? 'MEMBER'),
+                  color: member.role?.color != null
+                      ? Color(
+                          int.parse(member.role!.color!.substring(1), radix: 16) +
+                              0xFF000000,
+                        )
+                      : Colors.grey,
                 ),
                 const SizedBox(width: 8),
                 Text(

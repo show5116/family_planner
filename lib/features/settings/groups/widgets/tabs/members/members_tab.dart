@@ -46,7 +46,11 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
-    final currentUserId = authState.user?['id'] as String?;
+    debugPrint('[MembersTab.build] authState: isAuthenticated=${authState.isAuthenticated}, user=${authState.user}');
+    debugPrint('[MembersTab.build] user keys: ${authState.user?.keys}');
+
+    final currentUserId = authState.user?['id']?.toString();
+    debugPrint('[MembersTab.build] currentUserId: $currentUserId');
 
     // 초대 권한 확인
     final canInvite = widget.membersAsync.maybeWhen(
@@ -95,6 +99,14 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   }
 
   Widget _buildMembersList() {
+    final authState = ref.watch(authProvider);
+    debugPrint('[MembersTab._buildMembersList] authState: isAuthenticated=${authState.isAuthenticated}, user=${authState.user}');
+    debugPrint('[MembersTab._buildMembersList] user keys: ${authState.user?.keys}');
+    debugPrint('[MembersTab._buildMembersList] user[\'id\']: ${authState.user?['id']} (${authState.user?['id'].runtimeType})');
+
+    final currentUserId = authState.user?['id']?.toString();
+    debugPrint('[MembersTab._buildMembersList] currentUserId: $currentUserId (${currentUserId.runtimeType})');
+
     return widget.membersAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) => ErrorView(
@@ -108,14 +120,28 @@ class _MembersTabState extends ConsumerState<MembersTab> {
             icon: Icons.people_outline,
           );
         }
+
+        // 본인을 최상단으로 정렬
+        final sortedMembers = List<GroupMember>.from(members);
+        sortedMembers.sort((a, b) {
+          final aIsCurrentUser = a.user?.id == currentUserId;
+          final bIsCurrentUser = b.user?.id == currentUserId;
+          debugPrint('[MembersTab.sort] a.user?.id: ${a.user?.id}, b.user?.id: ${b.user?.id}, currentUserId: $currentUserId, aIsCurrentUser: $aIsCurrentUser, bIsCurrentUser: $bIsCurrentUser');
+          if (aIsCurrentUser && !bIsCurrentUser) return -1;
+          if (!aIsCurrentUser && bIsCurrentUser) return 1;
+          return 0;
+        });
+        debugPrint('[MembersTab] sortedMembers first: ${sortedMembers.first.user?.id}, name: ${sortedMembers.first.user?.name}');
+
         return ListView.builder(
           padding: const EdgeInsets.all(AppSizes.spaceM),
-          itemCount: members.length,
+          itemCount: sortedMembers.length,
           itemBuilder: (context, index) {
-            final member = members[index];
+            final member = sortedMembers[index];
             return MemberCard(
               member: member,
               allMembers: members,
+              currentUserId: currentUserId,
               onRemove: () => widget.onRemoveMember(member),
               onChangeRole: () => widget.onChangeRole(member),
             );

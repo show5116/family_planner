@@ -16,6 +16,7 @@ class RolesTab extends ConsumerStatefulWidget {
   final String groupId;
   final AsyncValue<List<Role>> rolesAsync;
   final bool isOwner;
+  final bool canManageRole;
   final VoidCallback onRetry;
   final Function(Role role) onEditRole;
   final Function(Role role) onDeleteRole;
@@ -25,6 +26,7 @@ class RolesTab extends ConsumerStatefulWidget {
     required this.groupId,
     required this.rolesAsync,
     required this.isOwner,
+    required this.canManageRole,
     required this.onRetry,
     required this.onEditRole,
     required this.onDeleteRole,
@@ -120,7 +122,11 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       ),
       itemBuilder: (context, index) {
         final role = displayRoles[index];
-        final isDraggable = role.groupId != null;
+
+        // 드래그 가능 조건:
+        // 1. MANAGE_ROLE 권한 있음
+        // 2. groupId가 null이 아님 (그룹별 커스텀 역할만)
+        final isDraggable = widget.canManageRole && role.groupId != null;
 
         return isDraggable
             ? ReorderableDragStartListener(
@@ -130,6 +136,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                   role: role,
                   hasCustomDefaultRole: hasCustomDefaultRole,
                   isOwner: widget.isOwner,
+                  canManageRole: widget.canManageRole,
                   onTap: () => _showRoleOptions(context, l10n, role),
                 ),
               )
@@ -139,6 +146,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                   role: role,
                   hasCustomDefaultRole: hasCustomDefaultRole,
                   isOwner: widget.isOwner,
+                  canManageRole: widget.canManageRole,
                 ),
               );
       },

@@ -207,9 +207,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await _ensureMinimumSplashDuration(startTime);
 
       if (isValid) {
-        // 유효하면(또는 갱신 성공하면) 사용자 정보 가져오기 시도 (선택 사항)
-        // final user = await _authService.getUserInfo();
-        state = state.copyWith(isAuthenticated: true); // user: user
+        // 유효하면(또는 갱신 성공하면) 사용자 정보 가져오기
+        try {
+          final user = await _authService.getUserInfo();
+          state = state.copyWith(isAuthenticated: true, user: user);
+        } catch (e) {
+          debugPrint('사용자 정보 가져오기 실패: $e');
+          state = state.copyWith(isAuthenticated: true);
+        }
       } else {
         // 최종 실패 시 토큰 삭제 및 로그아웃
         debugPrint('최종 인증 실패 → 토큰 삭제');

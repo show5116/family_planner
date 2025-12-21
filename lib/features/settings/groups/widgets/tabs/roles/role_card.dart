@@ -10,6 +10,7 @@ class RoleCard extends StatelessWidget {
   final Role role;
   final bool hasCustomDefaultRole;
   final bool isOwner;
+  final bool canManageRole;
   final VoidCallback? onTap;
 
   const RoleCard({
@@ -17,6 +18,7 @@ class RoleCard extends StatelessWidget {
     required this.role,
     required this.hasCustomDefaultRole,
     required this.isOwner,
+    required this.canManageRole,
     this.onTap,
   });
 
@@ -26,7 +28,8 @@ class RoleCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     final isCustomRole = role.groupId != null;
-    final canEdit = isOwner && isCustomRole && onTap != null;
+    final canEdit = canManageRole && isCustomRole && onTap != null;
+    final showDragHandle = canManageRole && isCustomRole;
     // groupId가 null이 아닌 항목에 기본 역할이 있으면, null인 항목의 기본 역할은 숨김
     final showDefaultBadge =
         role.isDefaultRole && (!hasCustomDefaultRole || role.groupId != null);
@@ -40,8 +43,8 @@ class RoleCard extends StatelessWidget {
           padding: const EdgeInsets.all(AppSizes.spaceM),
           child: Row(
             children: [
-              // groupId가 null인 경우 드래그 핸들 숨김
-              if (isCustomRole) ...[
+              // MANAGE_ROLE 권한이 있고 그룹별 커스텀 역할인 경우만 드래그 핸들 표시
+              if (showDragHandle) ...[
                 const DragHandleIcon(),
                 const SizedBox(width: AppSizes.spaceM),
               ],
@@ -51,7 +54,7 @@ class RoleCard extends StatelessWidget {
                         int.parse(role.color!.substring(1), radix: 16) +
                             0xFF000000,
                       )
-                    : GroupUtils.getRoleColor(role.name),
+                    : Colors.grey,
                 child: Icon(
                   GroupUtils.getRoleIcon(role.name),
                   color: Colors.white,

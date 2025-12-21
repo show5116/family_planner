@@ -52,7 +52,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final groupAsync = ref.watch(groupDetailProvider(widget.groupId));
     final membersAsync = ref.watch(groupMembersProvider(widget.groupId));
     final authState = ref.watch(authProvider);
-    final currentUserId = authState.user?['id'] as String?;
+    final currentUserId = authState.user?['id']?.toString();
 
     return groupAsync.when(
       loading: () => const Scaffold(
@@ -85,6 +85,12 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
           orElse: () => false,
         );
 
+        // 역할 관리 권한 확인
+        final canManageRole = membersAsync.maybeWhen(
+          data: (members) => GroupUtils.hasPermission(members, 'MANAGE_ROLE', currentUserId: currentUserId),
+          orElse: () => false,
+        );
+
         // 초대 권한이 있을 때만 가입 요청 목록 조회
         final joinRequestsAsync = canInvite
             ? ref.watch(groupJoinRequestsProvider(widget.groupId))
@@ -110,10 +116,10 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
             children: [
               _buildMembersTab(l10n, membersAsync, joinRequestsAsync),
               _buildSettingsTab(group, membersAsync, canManage),
-              _buildRolesTab(isOwner),
+              _buildRolesTab(isOwner, canManageRole),
             ],
           ),
-          floatingActionButton: _buildFloatingActionButton(canManage, isOwner),
+          floatingActionButton: _buildFloatingActionButton(canManage, isOwner, canManageRole),
         );
       },
     );
@@ -303,7 +309,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   }
 
   /// 역할 탭 빌드
-  Widget _buildRolesTab(bool isOwner) {
+  Widget _buildRolesTab(bool isOwner, bool canManageRole) {
     final l10n = AppLocalizations.of(context)!;
     final rolesAsync = ref.watch(groupRolesProvider(widget.groupId));
 
@@ -311,6 +317,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       groupId: widget.groupId,
       rolesAsync: rolesAsync,
       isOwner: isOwner,
+      canManageRole: canManageRole,
       onRetry: () => ref.invalidate(groupRolesProvider(widget.groupId)),
       onEditRole: (role) => GroupRoleEditDialog.show(
         context,
@@ -330,7 +337,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   }
 
   /// FloatingActionButton 빌드
-  Widget? _buildFloatingActionButton(bool canManage, bool isOwner) {
+  Widget? _buildFloatingActionButton(bool canManage, bool isOwner, bool canManageRole) {
     final l10n = AppLocalizations.of(context)!;
     final tabIndex = _tabController.index;
 
@@ -346,7 +353,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         icon: const Icon(Icons.person_add),
         label: Text(l10n.group_inviteMembers),
       );
-    } else if (tabIndex == 2 && isOwner) {
+    } else if (tabIndex == 2 && canManageRole) {
       // 역할 탭 - 역할 추가 버튼
       return FloatingActionButton.extended(
         onPressed: () => GroupRoleCreateDialog.show(

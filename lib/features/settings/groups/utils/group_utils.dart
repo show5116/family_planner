@@ -17,20 +17,6 @@ class GroupUtils {
     }
   }
 
-  /// 역할 색상 가져오기
-  static Color getRoleColor(String role) {
-    switch (role) {
-      case 'OWNER':
-        return Colors.red;
-      case 'ADMIN':
-        return Colors.orange;
-      case 'MEMBER':
-        return Colors.blue;
-      default:
-        return Colors.grey;
-    }
-  }
-
   /// 역할 아이콘 가져오기
   static IconData getRoleIcon(String role) {
     switch (role) {
@@ -117,5 +103,10 @@ class GroupUtils {
     final hasPermission = role.hasPermission('INVITE_MEMBER');
     debugPrint('[GroupUtils.canInviteMembers] currentUserId: $currentUserId, role: ${currentMember.role?.name}, permissions: ${role.permissions}, hasInvitePermission: $hasPermission');
     return hasPermission;
+  }
+
+  /// 현재 사용자가 멤버를 관리할 수 있는지 확인
+  static bool canManageMembers(List<dynamic> members, {String? currentUserId}) {
+    return hasPermission(members, 'MANAGE_MEMBER', currentUserId: currentUserId);
   }
 }
