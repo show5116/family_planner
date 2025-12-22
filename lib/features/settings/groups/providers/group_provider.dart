@@ -356,6 +356,25 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       rethrow;
     }
   }
+
+  /// 그룹장 권한 양도
+  Future<Map<String, dynamic>> transferOwnership(
+    String groupId,
+    String newOwnerId,
+  ) async {
+    try {
+      final result = await _groupService.transferOwnership(groupId, newOwnerId);
+
+      // 멤버 목록, 그룹 목록, 그룹 상세 정보 새로고침
+      _ref.invalidate(groupMembersProvider(groupId));
+      _ref.invalidate(groupDetailProvider(groupId));
+      _ref.invalidate(myGroupsProvider);
+
+      return result;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// 그룹 관리 NotifierProvider

@@ -13,6 +13,7 @@ class MemberCard extends StatelessWidget {
   final String? currentUserId;
   final VoidCallback onRemove;
   final VoidCallback onChangeRole;
+  final VoidCallback? onTransferOwnership;
 
   const MemberCard({
     super.key,
@@ -21,6 +22,7 @@ class MemberCard extends StatelessWidget {
     required this.currentUserId,
     required this.onRemove,
     required this.onChangeRole,
+    this.onTransferOwnership,
   });
 
   @override
@@ -36,6 +38,13 @@ class MemberCard extends StatelessWidget {
     final bool canManage = group.hasPermission('MANAGE_MEMBER')
         && !isCurrentUser
         && !isOwner;
+
+    // 현재 사용자가 OWNER이고, 대상이 본인이 아닌 경우 그룹장 양도 가능
+    final bool isCurrentUserOwner = group.myRole?.name == 'OWNER';
+    final bool canTransfer = isCurrentUserOwner && !isCurrentUser && onTransferOwnership != null;
+
+    // 메뉴 표시 조건: MANAGE_MEMBER 권한이 있거나 그룹장 양도가 가능한 경우
+    final bool showMenu = canManage || canTransfer;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -109,24 +118,41 @@ class MemberCard extends StatelessWidget {
             ),
           ],
         ),
-        trailing: canManage
+        trailing: showMenu
             ? PopupMenuButton<String>(
                 onSelected: (value) {
                   if (value == 'remove') {
                     onRemove();
                   } else if (value == 'changeRole') {
                     onChangeRole();
+                  } else if (value == 'transferOwnership') {
+                    onTransferOwnership?.call();
                   }
                 },
                 itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'changeRole',
-                    child: Text(l10n.group_role),
-                  ),
-                  PopupMenuItem(
-                    value: 'remove',
-                    child: Text(l10n.group_delete),
-                  ),
+                  // 그룹장 양도 옵션 (OWNER만, 본인이 아닌 경우)
+                  if (canTransfer)
+                    PopupMenuItem(
+                      value: 'transferOwnership',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.swap_horiz, size: 20, color: Colors.orange),
+                          const SizedBox(width: 8),
+                          const Text('그룹장 양도'),
+                        ],
+                      ),
+                    ),
+                  // 역할 변경 및 삭제 옵션 (MANAGE_MEMBER 권한 있는 경우)
+                  if (canManage) ...[
+                    PopupMenuItem(
+                      value: 'changeRole',
+                      child: Text(l10n.group_role),
+                    ),
+                    PopupMenuItem(
+                      value: 'remove',
+                      child: Text(l10n.group_delete),
+                    ),
+                  ],
                 ],
               )
             : null,

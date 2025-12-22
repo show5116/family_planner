@@ -18,6 +18,7 @@ class MembersTab extends ConsumerStatefulWidget {
   final VoidCallback onRetry;
   final Function(GroupMember member) onRemoveMember;
   final Function(GroupMember member) onChangeRole;
+  final Function(GroupMember member)? onTransferOwnership;
   final Function(JoinRequest request) onAcceptRequest;
   final Function(JoinRequest request) onRejectRequest;
   final Function(JoinRequest request)? onCancelInvite;
@@ -31,6 +32,7 @@ class MembersTab extends ConsumerStatefulWidget {
     required this.onRetry,
     required this.onRemoveMember,
     required this.onChangeRole,
+    this.onTransferOwnership,
     required this.onAcceptRequest,
     required this.onRejectRequest,
     this.onCancelInvite,
@@ -129,6 +131,9 @@ class _MembersTabState extends ConsumerState<MembersTab> {
               currentUserId: currentUserId,
               onRemove: () => widget.onRemoveMember(member),
               onChangeRole: () => widget.onChangeRole(member),
+              onTransferOwnership: widget.onTransferOwnership != null
+                  ? () => widget.onTransferOwnership!(member)
+                  : null,
             );
           },
         );

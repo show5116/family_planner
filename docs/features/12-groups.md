@@ -23,7 +23,6 @@
 - ✅ 이메일 초대 화면
 - ✅ 가입 요청 관리 UI (대기 중 탭)
 - ✅ 그룹 색상 설정 UI (기본 색상, 개인 커스텀 색상)
-- ⬜ 그룹 필터 UI (일정, ToDo, 메모, 가계부 등)
 
 ## 데이터 모델
 - ✅ Group 모델 (id, name, description, inviteCode, defaultColor)
@@ -46,9 +45,11 @@
   - 기본 색상 변경 가능
 - ✅ 그룹 삭제 (DELETE /groups/:id)
   - OWNER만 가능
-- ⬜ 그룹장 양도 (POST /groups/:id/transfer-ownership)
+- ✅ 그룹장 양도 (POST /groups/:id/transfer-ownership)
   - 현재 OWNER만 가능
-  - 다른 멤버에게 OWNER 역할 이전 (백엔드 API 필요)
+  - 다른 멤버에게 OWNER 역할 이전
+  - 양도 후 이전 OWNER는 기본 역할(is_default_role=true)로 변경
+  - 확인 다이얼로그로 주의사항 안내 후 실행
 
 ## 초대 시스템
 
@@ -139,7 +140,7 @@
 - ✅ 그룹 상세 조회 API (GET /groups/:id)
 - ✅ 그룹 정보 수정 API (PATCH /groups/:id)
 - ✅ 그룹 삭제 API (DELETE /groups/:id)
-- ⬜ 그룹장 양도 API (POST /groups/:id/transfer-ownership) - 백엔드 필요
+- ✅ 그룹장 양도 API (POST /groups/:id/transfer-ownership)
 - ✅ 초대 코드로 가입 API (POST /groups/join)
 - ✅ 초대 코드 재생성 API (POST /groups/:id/regenerate-code)
 - ✅ 이메일 초대 API (POST /groups/:id/invite-by-email)
@@ -204,7 +205,6 @@
 - `lib/core/routes/admin_routes.dart` - 관리자 전용 라우트
 
 ## 노트
-- 그룹별 필터 기능은 각 기능(일정, ToDo 등) 개발 시 통합 필요
 - 역할별 권한 시스템은 추후 확장 가능하도록 설계됨
 - 공통 역할 관리는 운영자(isAdmin: true)만 접근 가능
 - 공통 역할은 모든 그룹에서 기본으로 사용 가능한 역할 (OWNER, ADMIN, MEMBER 등)

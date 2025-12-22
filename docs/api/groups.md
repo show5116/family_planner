@@ -354,7 +354,7 @@
 **요약:** OWNER 권한 양도 (현재 OWNER만 가능)
 
 **설명:**
-그룹의 OWNER 권한을 다른 멤버에게 양도합니다. 양도 후 현재 OWNER는 MEMBER 역할로 변경됩니다.
+그룹의 OWNER 권한을 다른 멤버에게 양도합니다. 양도 후 현재 OWNER는 DEFAULT 역할로 변경됩니다.
 
 **Path Parameters:**
 

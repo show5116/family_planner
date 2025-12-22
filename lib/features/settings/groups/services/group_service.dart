@@ -393,4 +393,22 @@ class GroupService {
       rethrow;
     }
   }
+
+  /// 그룹장 권한 양도
+  /// POST /groups/:id/transfer-ownership
+  /// newOwnerId: 새로운 OWNER가 될 사용자 ID
+  Future<Map<String, dynamic>> transferOwnership(
+    String groupId,
+    String newOwnerId,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        '/groups/$groupId/transfer-ownership',
+        data: {'newOwnerId': newOwnerId},
+      );
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
