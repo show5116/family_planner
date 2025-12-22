@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/models/join_request.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/members/member_card.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/members/pending_request_card.dart';
-import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 그룹 멤버 탭
 class MembersTab extends ConsumerStatefulWidget {
+  final Group group;
   final AsyncValue<List<GroupMember>> membersAsync;
   final AsyncValue<List<JoinRequest>> joinRequestsAsync;
   final VoidCallback onRetry;
@@ -24,6 +25,7 @@ class MembersTab extends ConsumerStatefulWidget {
 
   const MembersTab({
     super.key,
+    required this.group,
     required this.membersAsync,
     required this.joinRequestsAsync,
     required this.onRetry,
@@ -46,17 +48,10 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
-    debugPrint('[MembersTab.build] authState: isAuthenticated=${authState.isAuthenticated}, user=${authState.user}');
-    debugPrint('[MembersTab.build] user keys: ${authState.user?.keys}');
-
     final currentUserId = authState.user?['id']?.toString();
-    debugPrint('[MembersTab.build] currentUserId: $currentUserId');
 
-    // 초대 권한 확인
-    final canInvite = widget.membersAsync.maybeWhen(
-      data: (members) => GroupUtils.canInviteMembers(members, currentUserId: currentUserId),
-      orElse: () => false,
-    );
+    // Group 객체의 myRole을 사용하여 권한 확인
+    final canInvite = widget.group.hasPermission('INVITE_MEMBER');
 
     return Column(
       children: [
@@ -92,21 +87,13 @@ class _MembersTabState extends ConsumerState<MembersTab> {
         Expanded(
           child: _showPending
               ? _buildPendingRequestsList()
-              : _buildMembersList(),
+              : _buildMembersList(currentUserId),
         ),
       ],
     );
   }
 
-  Widget _buildMembersList() {
-    final authState = ref.watch(authProvider);
-    debugPrint('[MembersTab._buildMembersList] authState: isAuthenticated=${authState.isAuthenticated}, user=${authState.user}');
-    debugPrint('[MembersTab._buildMembersList] user keys: ${authState.user?.keys}');
-    debugPrint('[MembersTab._buildMembersList] user[\'id\']: ${authState.user?['id']} (${authState.user?['id'].runtimeType})');
-
-    final currentUserId = authState.user?['id']?.toString();
-    debugPrint('[MembersTab._buildMembersList] currentUserId: $currentUserId (${currentUserId.runtimeType})');
-
+  Widget _buildMembersList(String? currentUserId) {
     return widget.membersAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) => ErrorView(
@@ -124,14 +111,12 @@ class _MembersTabState extends ConsumerState<MembersTab> {
         // 본인을 최상단으로 정렬
         final sortedMembers = List<GroupMember>.from(members);
         sortedMembers.sort((a, b) {
-          final aIsCurrentUser = a.user?.id == currentUserId;
-          final bIsCurrentUser = b.user?.id == currentUserId;
-          debugPrint('[MembersTab.sort] a.user?.id: ${a.user?.id}, b.user?.id: ${b.user?.id}, currentUserId: $currentUserId, aIsCurrentUser: $aIsCurrentUser, bIsCurrentUser: $bIsCurrentUser');
+          final aIsCurrentUser = a.user?.id?.toString() == currentUserId;
+          final bIsCurrentUser = b.user?.id?.toString() == currentUserId;
           if (aIsCurrentUser && !bIsCurrentUser) return -1;
           if (!aIsCurrentUser && bIsCurrentUser) return 1;
           return 0;
         });
-        debugPrint('[MembersTab] sortedMembers first: ${sortedMembers.first.user?.id}, name: ${sortedMembers.first.user?.name}');
 
         return ListView.builder(
           padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -139,8 +124,8 @@ class _MembersTabState extends ConsumerState<MembersTab> {
           itemBuilder: (context, index) {
             final member = sortedMembers[index];
             return MemberCard(
+              group: widget.group,
               member: member,
-              allMembers: members,
               currentUserId: currentUserId,
               onRemove: () => widget.onRemoveMember(member),
               onChangeRole: () => widget.onChangeRole(member),

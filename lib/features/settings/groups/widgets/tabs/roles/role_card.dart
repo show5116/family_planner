@@ -28,7 +28,7 @@ class RoleCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     final isCustomRole = role.groupId != null;
-    final canEdit = canManageRole && isCustomRole && onTap != null;
+    final canEdit = canManageRole && isCustomRole;
     final showDragHandle = canManageRole && isCustomRole;
     // groupId가 null이 아닌 항목에 기본 역할이 있으면, null인 항목의 기본 역할은 숨김
     final showDefaultBadge =
@@ -37,7 +37,7 @@ class RoleCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
       child: InkWell(
-        onTap: canEdit ? onTap : null,
+        onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.spaceM),

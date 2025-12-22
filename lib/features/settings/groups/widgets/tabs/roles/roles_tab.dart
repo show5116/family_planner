@@ -4,17 +4,21 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/roles/role_card.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/roles/role_header.dart';
 import 'package:family_planner/features/settings/groups/widgets/tabs/roles/role_info_card.dart';
+import 'package:family_planner/features/settings/groups/widgets/role_management_dialogs.dart';
 
 /// 그룹 역할 탭
 class RolesTab extends ConsumerStatefulWidget {
+  final Group group;
   final String groupId;
   final AsyncValue<List<Role>> rolesAsync;
+  final List<GroupMember> members;
   final bool isOwner;
   final bool canManageRole;
   final VoidCallback onRetry;
@@ -23,8 +27,10 @@ class RolesTab extends ConsumerStatefulWidget {
 
   const RolesTab({
     super.key,
+    required this.group,
     required this.groupId,
     required this.rolesAsync,
+    required this.members,
     required this.isOwner,
     required this.canManageRole,
     required this.onRetry,
@@ -137,7 +143,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                   hasCustomDefaultRole: hasCustomDefaultRole,
                   isOwner: widget.isOwner,
                   canManageRole: widget.canManageRole,
-                  onTap: () => _showRoleOptions(context, l10n, role),
+                  onTap: () => _handleRoleTap(context, l10n, role),
                 ),
               )
             : Container(
@@ -147,6 +153,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
                   hasCustomDefaultRole: hasCustomDefaultRole,
                   isOwner: widget.isOwner,
                   canManageRole: widget.canManageRole,
+                  onTap: () => _handleRoleTap(context, l10n, role),
                 ),
               );
       },
@@ -187,7 +194,23 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     );
   }
 
-  /// 역할 옵션 표시
+  /// 역할 카드 탭 처리
+  void _handleRoleTap(
+    BuildContext context,
+    AppLocalizations l10n,
+    Role role,
+  ) {
+    // MANAGE_ROLE 권한이 있으면 옵션 표시 (편집/삭제)
+    if (widget.canManageRole) {
+      _showRoleOptions(context, l10n, role);
+      return;
+    }
+
+    // 권한이 없는 경우, 모든 역할 조회 가능
+    GroupRoleViewDialog.show(context, ref, l10n, role);
+  }
+
+  /// 역할 옵션 표시 (편집/삭제)
   void _showRoleOptions(
     BuildContext context,
     AppLocalizations l10n,

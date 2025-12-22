@@ -57,13 +57,13 @@ class GroupUtils {
   /// 멤버 목록에서 현재 사용자 찾기
   /// 현재 사용자 ID를 전달받아서 해당하는 멤버를 찾음
   static dynamic _getCurrentUserMember(List<dynamic> members, String? currentUserId) {
-    if (members.isEmpty || currentUserId == null) return null;
+    if (members.isEmpty || currentUserId == null) {
+      return null;
+    }
 
     try {
-      return members.firstWhere(
-        (member) => member.user?.id == currentUserId,
-        orElse: () => null,
-      );
+      final found = members.where((member) => member.user?.id?.toString() == currentUserId).toList();
+      return found.isNotEmpty ? found.first : null;
     } catch (e) {
       return null;
     }
@@ -99,10 +99,7 @@ class GroupUtils {
     if (currentMember == null) return false;
     final role = currentMember.role;
     if (role == null) return false;
-
-    final hasPermission = role.hasPermission('INVITE_MEMBER');
-    debugPrint('[GroupUtils.canInviteMembers] currentUserId: $currentUserId, role: ${currentMember.role?.name}, permissions: ${role.permissions}, hasInvitePermission: $hasPermission');
-    return hasPermission;
+    return role.hasPermission('INVITE_MEMBER');
   }
 
   /// 현재 사용자가 멤버를 관리할 수 있는지 확인

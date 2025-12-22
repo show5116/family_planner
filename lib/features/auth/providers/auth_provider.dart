@@ -80,6 +80,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         password: password,
       );
 
+      // 이전 계정의 캐시된 데이터 초기화
+      _invalidateGroupProviders();
+
       state = state.copyWith(isAuthenticated: true, user: response);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -251,6 +254,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
           ? await _authService.loginWithGoogleOAuth()
           : await _authService.loginWithGoogle();
 
+      // 이전 계정의 캐시된 데이터 초기화
+      _invalidateGroupProviders();
+
       // 웹의 경우 토큰이 이미 저장됨, 사용자 정보 가져오기
       if (kIsWeb && response.isNotEmpty) {
         final userInfo = await _authService.getUserInfo();
@@ -276,6 +282,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final response = kIsWeb
           ? await _authService.loginWithKakaoOAuth()
           : await _authService.loginWithKakao();
+
+      // 이전 계정의 캐시된 데이터 초기화
+      _invalidateGroupProviders();
 
       // 웹의 경우 토큰이 이미 저장됨, 사용자 정보 가져오기
       if (kIsWeb && response.isNotEmpty) {
@@ -394,6 +403,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         await _authService.apiClient.saveRefreshToken(refreshToken);
       } else if (kIsWeb) {}
 
+      // 이전 계정의 캐시된 데이터 초기화
+      _invalidateGroupProviders();
+
       // 사용자 정보 가져오기
       final user = await _authService.getUserInfo();
 
@@ -408,6 +420,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// OAuth 콜백 성공 처리 (내부 메서드)
   Future<void> _handleOAuthSuccess() async {
     try {
+      // 이전 계정의 캐시된 데이터 초기화
+      _invalidateGroupProviders();
+
       // 저장된 토큰으로 사용자 정보 가져오기
       final user = await _authService.getUserInfo();
 

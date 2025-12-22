@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/widgets/common_widgets.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 
 /// 멤버 카드 위젯
 class MemberCard extends StatelessWidget {
+  final Group group;
   final GroupMember member;
-  final List<GroupMember> allMembers;
   final String? currentUserId;
   final VoidCallback onRemove;
   final VoidCallback onChangeRole;
 
   const MemberCard({
     super.key,
+    required this.group,
     required this.member,
-    required this.allMembers,
     required this.currentUserId,
     required this.onRemove,
     required this.onChangeRole,
@@ -29,12 +30,10 @@ class MemberCard extends StatelessWidget {
 
     final String roleName = GroupUtils.getRoleName(l10n, member.role?.name ?? 'MEMBER');
     final bool isOwner = member.role?.name == 'OWNER';
-    final bool isCurrentUser = member.user?.id == currentUserId;
+    final bool isCurrentUser = member.user?.id?.toString() == currentUserId;
 
-    debugPrint('[MemberCard] member.user?.id: ${member.user?.id} (${member.user?.id.runtimeType}), currentUserId: $currentUserId (${currentUserId.runtimeType}), isCurrentUser: $isCurrentUser, name: ${member.user?.name}');
-
-    // MANAGE_MEMBER 권한이 있고, 본인이 아니고, OWNER가 아닌 경우에만 메뉴 표시
-    final bool canManage = GroupUtils.canManageMembers(allMembers, currentUserId: currentUserId)
+    // Group의 myRole을 사용하여 MANAGE_MEMBER 권한이 있고, 본인이 아니고, OWNER가 아닌 경우에만 메뉴 표시
+    final bool canManage = group.hasPermission('MANAGE_MEMBER')
         && !isCurrentUser
         && !isOwner;
 

@@ -20,127 +20,141 @@ class GroupRoleCreateDialog {
     List<String> selectedPermissions = [];
     Color? selectedColor;
 
-    // 권한 목록 로드
-    final permissionsAsync = ref.read(permissionManagementProvider);
-    final allPermissions = permissionsAsync.permissions;
-
     await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (builderContext, setState) {
-          return AlertDialog(
-            title: const Text('역할 생성'),
-            content: SingleChildScrollView(
-              child: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: '역할 이름',
-                        hintText: 'CUSTOM_ROLE',
-                        border: OutlineInputBorder(),
-                      ),
-                      textCapitalization: TextCapitalization.characters,
+      builder: (dialogContext) => Consumer(
+        builder: (consumerContext, consumerRef, child) {
+          // 권한 목록을 watch하여 로딩 상태 확인
+          final permissionsState = consumerRef.watch(permissionManagementProvider);
+          final allPermissions = permissionsState.permissions;
+          final isLoadingPermissions = permissionsState.isLoading;
+
+          return StatefulBuilder(
+            builder: (builderContext, setState) {
+              return AlertDialog(
+                title: const Text('역할 생성'),
+                content: SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: nameController,
+                          decoration: const InputDecoration(
+                            labelText: '역할 이름',
+                            hintText: 'CUSTOM_ROLE',
+                            border: OutlineInputBorder(),
+                          ),
+                          textCapitalization: TextCapitalization.characters,
+                        ),
+                        const SizedBox(height: AppSizes.spaceM),
+                        SwitchListTile(
+                          title: const Text('기본 역할'),
+                          subtitle: const Text('새 멤버 가입 시 자동 부여'),
+                          value: isDefaultRole,
+                          onChanged: (value) {
+                            setState(() {
+                              isDefaultRole = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: AppSizes.spaceM),
+                        const Text(
+                          '역할 색상',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: AppSizes.spaceS),
+                        ColorPicker(
+                          selectedColor: selectedColor,
+                          onColorSelected: (color) {
+                            setState(() {
+                              selectedColor = color;
+                            });
+                          },
+                          showRgbInput: false,
+                          showAdvancedPicker: false,
+                        ),
+                        const SizedBox(height: AppSizes.spaceM),
+                        const Text(
+                          '권한 선택',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: AppSizes.spaceS),
+                        // 권한 로딩 중이면 스피너 표시
+                        if (isLoadingPermissions)
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(AppSizes.spaceM),
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        else
+                          ...allPermissions.map((permission) {
+                            final isSelected = selectedPermissions.contains(permission.code);
+                            return CheckboxListTile(
+                              title: Text(permission.name),
+                              subtitle: Text(permission.code),
+                              value: isSelected,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value == true) {
+                                    selectedPermissions.add(permission.code);
+                                  } else {
+                                    selectedPermissions.remove(permission.code);
+                                  }
+                                });
+                              },
+                            );
+                          }),
+                      ],
                     ),
-                    const SizedBox(height: AppSizes.spaceM),
-                    SwitchListTile(
-                      title: const Text('기본 역할'),
-                      subtitle: const Text('새 멤버 가입 시 자동 부여'),
-                      value: isDefaultRole,
-                      onChanged: (value) {
-                        setState(() {
-                          isDefaultRole = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-                    const Text(
-                      '역할 색상',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.spaceS),
-                    ColorPicker(
-                      selectedColor: selectedColor,
-                      onColorSelected: (color) {
-                        setState(() {
-                          selectedColor = color;
-                        });
-                      },
-                      showRgbInput: false,
-                      showAdvancedPicker: false,
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-                    const Text(
-                      '권한 선택',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.spaceS),
-                    ...allPermissions.map((permission) {
-                      final isSelected = selectedPermissions.contains(permission.code);
-                      return CheckboxListTile(
-                        title: Text(permission.name),
-                        subtitle: Text(permission.code),
-                        value: isSelected,
-                        onChanged: (value) {
-                          setState(() {
-                            if (value == true) {
-                              selectedPermissions.add(permission.code);
-                            } else {
-                              selectedPermissions.remove(permission.code);
-                            }
-                          });
-                        },
-                      );
-                    }),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: Text(l10n.common_cancel),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (nameController.text.isEmpty) {
-                    ScaffoldMessenger.of(builderContext).showSnackBar(
-                      const SnackBar(
-                        content: Text('역할 이름을 입력해주세요'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                    return;
-                  }
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: Text(l10n.common_cancel),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (nameController.text.isEmpty) {
+                        ScaffoldMessenger.of(builderContext).showSnackBar(
+                          const SnackBar(
+                            content: Text('역할 이름을 입력해주세요'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
 
-                  Navigator.pop(dialogContext);
+                      Navigator.pop(dialogContext);
 
-                  await _performCreate(
-                    context,
-                    ref,
-                    l10n,
-                    groupId,
-                    nameController.text.toUpperCase(),
-                    selectedPermissions,
-                    isDefaultRole,
-                    selectedColor != null
-                        ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
-                        : null,
-                  );
-                },
-                child: Text(l10n.common_create),
-              ),
-            ],
+                      await _performCreate(
+                        context,
+                        ref,
+                        l10n,
+                        groupId,
+                        nameController.text.toUpperCase(),
+                        selectedPermissions,
+                        isDefaultRole,
+                        selectedColor != null
+                            ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
+                            : null,
+                      );
+                    },
+                    child: Text(l10n.common_create),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -212,126 +226,140 @@ class GroupRoleEditDialog {
         ? Color(int.parse(role.color!.substring(1), radix: 16) + 0xFF000000)
         : null;
 
-    // 권한 목록 로드
-    final permissionsAsync = ref.read(permissionManagementProvider);
-    final allPermissions = permissionsAsync.permissions;
-
     await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (builderContext, setState) => AlertDialog(
-          title: const Text('역할 수정'),
-          content: SingleChildScrollView(
-            child: SizedBox(
-              width: double.maxFinite,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      labelText: '역할 이름',
-                      border: OutlineInputBorder(),
-                    ),
-                    textCapitalization: TextCapitalization.characters,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                  SwitchListTile(
-                    title: const Text('기본 역할'),
-                    subtitle: const Text('새 멤버 가입 시 자동 부여'),
-                    value: isDefaultRole,
-                    onChanged: (value) {
-                      setState(() {
-                        isDefaultRole = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                  const Text(
-                    '역할 색상',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceS),
-                  ColorPicker(
-                    selectedColor: selectedColor,
-                    onColorSelected: (color) {
-                      setState(() {
-                        selectedColor = color;
-                      });
-                    },
-                    showRgbInput: false,
-                    showAdvancedPicker: false,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                  const Text(
-                    '권한 선택',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceS),
-                  ...allPermissions.map((permission) {
-                    final isSelected = selectedPermissions.contains(permission.code);
-                    return CheckboxListTile(
-                      title: Text(permission.name),
-                      subtitle: Text(permission.code),
-                      value: isSelected,
-                      onChanged: (value) {
-                        setState(() {
-                          if (value == true) {
-                            selectedPermissions.add(permission.code);
-                          } else {
-                            selectedPermissions.remove(permission.code);
-                          }
-                        });
-                      },
-                    );
-                  }),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(l10n.common_cancel),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (nameController.text.isEmpty) {
-                  ScaffoldMessenger.of(builderContext).showSnackBar(
-                    const SnackBar(
-                      content: Text('역할 이름을 입력해주세요'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-                Navigator.pop(dialogContext);
+      builder: (dialogContext) => Consumer(
+        builder: (consumerContext, consumerRef, child) {
+          // 권한 목록을 watch하여 로딩 상태 확인
+          final permissionsState = consumerRef.watch(permissionManagementProvider);
+          final allPermissions = permissionsState.permissions;
+          final isLoadingPermissions = permissionsState.isLoading;
 
-                await _performUpdate(
-                  context,
-                  ref,
-                  l10n,
-                  groupId,
-                  role.id,
-                  nameController.text.toUpperCase(),
-                  selectedPermissions,
-                  isDefaultRole,
-                  selectedColor != null
-                      ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
-                      : null,
-                );
-              },
-              child: Text(l10n.common_save),
+          return StatefulBuilder(
+            builder: (builderContext, setState) => AlertDialog(
+              title: const Text('역할 수정'),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          labelText: '역할 이름',
+                          border: OutlineInputBorder(),
+                        ),
+                        textCapitalization: TextCapitalization.characters,
+                      ),
+                      const SizedBox(height: AppSizes.spaceM),
+                      SwitchListTile(
+                        title: const Text('기본 역할'),
+                        subtitle: const Text('새 멤버 가입 시 자동 부여'),
+                        value: isDefaultRole,
+                        onChanged: (value) {
+                          setState(() {
+                            isDefaultRole = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: AppSizes.spaceM),
+                      const Text(
+                        '역할 색상',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: AppSizes.spaceS),
+                      ColorPicker(
+                        selectedColor: selectedColor,
+                        onColorSelected: (color) {
+                          setState(() {
+                            selectedColor = color;
+                          });
+                        },
+                        showRgbInput: false,
+                        showAdvancedPicker: false,
+                      ),
+                      const SizedBox(height: AppSizes.spaceM),
+                      const Text(
+                        '권한 선택',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: AppSizes.spaceS),
+                      // 권한 로딩 중이면 스피너 표시
+                      if (isLoadingPermissions)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(AppSizes.spaceM),
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      else
+                        ...allPermissions.map((permission) {
+                          final isSelected = selectedPermissions.contains(permission.code);
+                          return CheckboxListTile(
+                            title: Text(permission.name),
+                            subtitle: Text(permission.code),
+                            value: isSelected,
+                            onChanged: (value) {
+                              setState(() {
+                                if (value == true) {
+                                  selectedPermissions.add(permission.code);
+                                } else {
+                                  selectedPermissions.remove(permission.code);
+                                }
+                              });
+                            },
+                          );
+                        }),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: Text(l10n.common_cancel),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (nameController.text.isEmpty) {
+                      ScaffoldMessenger.of(builderContext).showSnackBar(
+                        const SnackBar(
+                          content: Text('역할 이름을 입력해주세요'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    Navigator.pop(dialogContext);
+
+                    await _performUpdate(
+                      context,
+                      ref,
+                      l10n,
+                      groupId,
+                      role.id,
+                      nameController.text.toUpperCase(),
+                      selectedPermissions,
+                      isDefaultRole,
+                      selectedColor != null
+                          ? '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}'
+                          : null,
+                    );
+                  },
+                  child: Text(l10n.common_save),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
 
@@ -472,5 +500,152 @@ class GroupRoleDeleteDialog {
         );
       }
     }
+  }
+}
+
+/// 그룹 역할 조회 전용 다이얼로그
+class GroupRoleViewDialog {
+  static Future<void> show(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    Role role,
+  ) async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Consumer(
+        builder: (consumerContext, consumerRef, child) {
+          final permissionsState = consumerRef.watch(permissionManagementProvider);
+          final allPermissions = permissionsState.permissions;
+          final isLoadingPermissions = permissionsState.isLoading;
+
+          return AlertDialog(
+            title: Text(role.name),
+            content: SingleChildScrollView(
+              child: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                // 기본 역할 표시
+                if (role.isDefaultRole)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceM,
+                      vertical: AppSizes.spaceS,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.star, size: 16, color: Colors.blue[700]),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(
+                          '기본 역할 (새 멤버 가입 시 자동 부여)',
+                          style: TextStyle(
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (role.isDefaultRole) const SizedBox(height: AppSizes.spaceM),
+
+                // 역할 색상 표시
+                if (role.color != null) ...[
+                  const Text(
+                    '역할 색상',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Color(
+                        int.parse(role.color!.substring(1), radix: 16) +
+                            0xFF000000,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
+                ],
+
+                // 권한 목록 표시
+                const Text(
+                  '권한 목록',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                if (isLoadingPermissions)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppSizes.spaceM),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else if (role.permissions.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.spaceM),
+                    child: Text(
+                      '권한이 없습니다',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  )
+                else
+                  ...allPermissions.map((permission) {
+                    final hasPermission = role.permissions.contains(permission.code);
+                    return ListTile(
+                      dense: true,
+                      leading: Icon(
+                        hasPermission ? Icons.check_circle : Icons.cancel,
+                        color: hasPermission ? Colors.green : Colors.grey[300],
+                        size: 20,
+                      ),
+                      title: Text(
+                        permission.name,
+                        style: TextStyle(
+                          color: hasPermission ? Colors.black : Colors.grey,
+                        ),
+                      ),
+                      subtitle: Text(
+                        permission.code,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: hasPermission ? Colors.grey[600] : Colors.grey[400],
+                        ),
+                      ),
+                    );
+                  }),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(l10n.common_close),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

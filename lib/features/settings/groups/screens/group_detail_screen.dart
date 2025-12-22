@@ -12,7 +12,6 @@ import 'package:family_planner/features/settings/groups/widgets/tabs/roles/roles
 import 'package:family_planner/features/settings/groups/widgets/group_dialogs.dart';
 import 'package:family_planner/features/settings/groups/widgets/role_management_dialogs.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
-import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 그룹 상세 화면
 class GroupDetailScreen extends ConsumerStatefulWidget {
@@ -51,8 +50,6 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final l10n = AppLocalizations.of(context)!;
     final groupAsync = ref.watch(groupDetailProvider(widget.groupId));
     final membersAsync = ref.watch(groupMembersProvider(widget.groupId));
-    final authState = ref.watch(authProvider);
-    final currentUserId = authState.user?['id']?.toString();
 
     return groupAsync.when(
       loading: () => const Scaffold(
@@ -69,27 +66,11 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         ),
       ),
       data: (group) {
-        final canManage = membersAsync.maybeWhen(
-          data: (members) => GroupUtils.canManageGroup(members, currentUserId: currentUserId),
-          orElse: () => false,
-        );
-
-        final isOwner = membersAsync.maybeWhen(
-          data: (members) => GroupUtils.isOwner(members, currentUserId: currentUserId),
-          orElse: () => false,
-        );
-
-        // 초대 권한 확인
-        final canInvite = membersAsync.maybeWhen(
-          data: (members) => GroupUtils.canInviteMembers(members, currentUserId: currentUserId),
-          orElse: () => false,
-        );
-
-        // 역할 관리 권한 확인
-        final canManageRole = membersAsync.maybeWhen(
-          data: (members) => GroupUtils.hasPermission(members, 'MANAGE_ROLE', currentUserId: currentUserId),
-          orElse: () => false,
-        );
+        // Group 객체의 myRole을 사용하여 권한 확인
+        final isOwner = group.myRole?.name == 'OWNER';
+        final canManage = isOwner || group.myRole?.name == 'ADMIN';
+        final canInvite = group.hasPermission('INVITE_MEMBER');
+        final canManageRole = group.hasPermission('MANAGE_ROLE');
 
         // 초대 권한이 있을 때만 가입 요청 목록 조회
         final joinRequestsAsync = canInvite
@@ -114,9 +95,9 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
           body: TabBarView(
             controller: _tabController,
             children: [
-              _buildMembersTab(l10n, membersAsync, joinRequestsAsync),
+              _buildMembersTab(l10n, group, membersAsync, joinRequestsAsync),
               _buildSettingsTab(group, membersAsync, canManage),
-              _buildRolesTab(isOwner, canManageRole),
+              _buildRolesTab(group, membersAsync, isOwner, canManageRole),
             ],
           ),
           floatingActionButton: _buildFloatingActionButton(canManage, isOwner, canManageRole),
@@ -128,10 +109,12 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   /// 멤버 탭 빌드
   Widget _buildMembersTab(
     AppLocalizations l10n,
+    Group group,
     AsyncValue<List<GroupMember>> membersAsync,
     AsyncValue<List<JoinRequest>> joinRequestsAsync,
   ) {
     return MembersTab(
+      group: group,
       membersAsync: membersAsync,
       joinRequestsAsync: joinRequestsAsync,
       onRetry: () {
@@ -309,29 +292,43 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   }
 
   /// 역할 탭 빌드
-  Widget _buildRolesTab(bool isOwner, bool canManageRole) {
+  Widget _buildRolesTab(
+    Group group,
+    AsyncValue<List<GroupMember>> membersAsync,
+    bool isOwner,
+    bool canManageRole,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     final rolesAsync = ref.watch(groupRolesProvider(widget.groupId));
 
-    return RolesTab(
-      groupId: widget.groupId,
-      rolesAsync: rolesAsync,
-      isOwner: isOwner,
-      canManageRole: canManageRole,
-      onRetry: () => ref.invalidate(groupRolesProvider(widget.groupId)),
-      onEditRole: (role) => GroupRoleEditDialog.show(
-        context,
-        ref,
-        l10n,
-        widget.groupId,
-        role,
+    return membersAsync.when(
+      loading: () => const LoadingView(),
+      error: (error, stack) => ErrorView(
+        message: error.toString(),
+        onRetry: () => ref.invalidate(groupMembersProvider(widget.groupId)),
       ),
-      onDeleteRole: (role) => GroupRoleDeleteDialog.show(
-        context,
-        ref,
-        l10n,
-        widget.groupId,
-        role,
+      data: (members) => RolesTab(
+        group: group,
+        groupId: widget.groupId,
+        rolesAsync: rolesAsync,
+        members: members,
+        isOwner: isOwner,
+        canManageRole: canManageRole,
+        onRetry: () => ref.invalidate(groupRolesProvider(widget.groupId)),
+        onEditRole: (role) => GroupRoleEditDialog.show(
+          context,
+          ref,
+          l10n,
+          widget.groupId,
+          role,
+        ),
+        onDeleteRole: (role) => GroupRoleDeleteDialog.show(
+          context,
+          ref,
+          l10n,
+          widget.groupId,
+          role,
+        ),
       ),
     );
   }
