@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 2/14 기능 (14%)
+- **완료**: 3/14 기능 (21%)
 - **진행 중**: 3/14 기능 (21%)
-- **미시작**: 9/14 기능 (64%)
+- **미시작**: 8/14 기능 (57%)
 
-**마지막 업데이트**: 2025-12-23
+**마지막 업데이트**: 2025-12-24
 
 ---
 
@@ -55,10 +55,10 @@
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
 | 다국어 지원 | 🟨 진행 중 | [11-i18n.md](docs/features/11-i18n.md) | P1 |
-| 설정 메뉴 | 🟨 진행 중 | [12-settings.md](docs/features/12-settings.md) | P1 |
+| 설정 메뉴 | ✅ 완료 | [12-settings.md](docs/features/12-settings.md) | P1 |
 | 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
 
-**참고**: 그룹 관리는 Phase 1에 위치하며 [12-groups.md](docs/features/12-groups.md)에서 별도 관리됩니다.
+**참고**: 설정 메뉴는 프로필 설정, 테마 설정, 홈 위젯 설정을 포함하며, 그룹 관리([12-groups.md](docs/features/12-groups.md))와 권한 관리는 별도 관리됩니다.
 
 ---
 
@@ -89,9 +89,27 @@
 
 ---
 
-## 📈 Development Status
+## 📈 최근 완료된 기능
 
-현재 진행 상황 상세 정보는 [STATUS.md](STATUS.md)를 참고하세요.
+### 2025-12-24
+- ✅ **그룹 관리 기능 완료** ([12-groups.md](docs/features/12-groups.md))
+  - 그룹 CRUD, 초대 시스템, 멤버 관리, 역할 체계 완료
+  - 공통 역할 관리 시스템 (운영자 전용) 구현
+
+- ✅ **설정 메뉴 주요 기능 완료** ([12-settings.md](docs/features/12-settings.md))
+  - 프로필 설정 (이미지 업로드 포함) 완료
+  - 테마 설정, 홈 위젯 설정 완료
+  - 권한 관리 화면 (운영자 전용) 완료
+
+### 진행 중인 작업
+- 🟨 **회원 가입 및 로그인** (~90% 완료)
+  - 남은 작업: 애플 로그인, 소셜 로그인 백엔드 완성
+
+- 🟨 **메인화면 (대시보드)** (~50% 완료)
+  - 남은 작업: 위젯 데이터 연동, 새로고침, 순서 변경
+
+- 🟨 **다국어 지원** (~75% 완료)
+  - 남은 작업: 대시보드 및 그룹 관리 화면 다국어 적용
 
 ---
 
@@ -112,11 +130,11 @@
 
 ## 📚 Related Documentation
 
-- [STATUS.md](STATUS.md) - 현재 진행 상황 상세
-- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - 프로젝트 구조
+- [CLAUDE.md](CLAUDE.md) - 개발 가이드 (개발 시 필독)
+- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - 프로젝트 구조 및 아키�ecture
 - [UI_ARCHITECTURE.md](UI_ARCHITECTURE.md) - UI/UX 디자인 시스템
-- [docs/API.md](docs/API.md) - API 문서
-- [CLAUDE.md](CLAUDE.md) - 개발 가이드
+- [docs/features/](docs/features/) - 기능별 상세 문서
+- [docs/api/](docs/api/) - 백엔드 API 문서 (자동 생성)
 
 ---
 

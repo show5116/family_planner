@@ -37,9 +37,8 @@ flutter clean && flutter pub get       # 클린 빌드
 ## 문서 구조
 
 ### 📋 프로젝트 관리 문서
-- **[ROADMAP.md](ROADMAP.md)**: 전체 프로젝트 로드맵 및 기능 목록
-- **[STATUS.md](STATUS.md)**: 현재 개발 진행 상황 상세
-- **[TODO.md](TODO.md)**: ⚠️ 아카이브됨 (기능별 문서로 분할됨)
+- **[ROADMAP.md](ROADMAP.md)**: 전체 프로젝트 로드맵, 진행 상황 및 최근 완료 기능
+- **[TODO.md](TODO.md)**: 기능별 문서 인덱스 (빠른 참조용)
 
 ### 🏗️ 아키텍처 문서
 - **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)**: 코드베이스 구조 및 개발 가이드
@@ -59,8 +58,8 @@ flutter clean && flutter pub get       # 클린 빌드
 - [09-memo.md](docs/features/09-memo.md) - 메모 ⬜
 - [10-minigame.md](docs/features/10-minigame.md) - 미니게임 ⬜
 - [11-i18n.md](docs/features/11-i18n.md) - 다국어 🟨
-- [12-settings.md](docs/features/12-settings.md) - 설정 🟨
-- [12-groups.md](docs/features/12-groups.md) - 그룹관리 🟨
+- [12-settings.md](docs/features/12-settings.md) - 설정 ✅
+- [12-groups.md](docs/features/12-groups.md) - 그룹관리 ✅
 - [13-common.md](docs/features/13-common.md) - 공통 기능 ⬜
 
 ### 🔧 기타 문서 (docs/)
@@ -70,10 +69,9 @@ flutter clean && flutter pub get       # 클린 빌드
 ## 개발 워크플로우
 
 ### 작업 시작 전
-1. **[ROADMAP.md](ROADMAP.md)** 또는 **[STATUS.md](STATUS.md)**에서 전체 진행 상황 확인
+1. **[ROADMAP.md](ROADMAP.md)**에서 전체 진행 상황 및 우선순위 확인
 2. 작업할 기능의 **[docs/features/](docs/features/)** 문서에서 상세 요구사항 확인
-3. UI 작업 시 **[UI_ARCHITECTURE.md](UI_ARCHITECTURE.md)**의 디자인 시스템 참조
-4. API 연동 시 **[docs/api/](docs/api/)** 디렉토리 내 문서 참조
+3. API 연동 시 **[docs/api/](docs/api/)** 디렉토리 내 문서 참조
 
 ### 작업 중
 1. 기능 개발 시작: 해당 기능 문서의 상태를 🟨 (진행 중)으로 변경
@@ -82,9 +80,8 @@ flutter clean && flutter pub get       # 클린 빌드
 
 ### 작업 완료 후
 1. 해당 기능 문서의 상태를 ✅ (완료)로 변경
-2. **[STATUS.md](STATUS.md)**의 전체 진행 상황 업데이트
-3. UI/UX 변경 시 **[UI_ARCHITECTURE.md](UI_ARCHITECTURE.md)** 업데이트
-4. 새로운 세부 작업 발견 시 해당 기능 문서에 추가
+2. **[ROADMAP.md](ROADMAP.md)**의 진행 상황 및 최근 완료 섹션 업데이트
+3. 새로운 세부 작업 발견 시 해당 기능 문서에 추가
 
 ## 작업 상태 관리
 

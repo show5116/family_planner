@@ -1,8 +1,7 @@
 # Family Planner - TODO
 
 ### 전체 로드맵 및 진행 상황
-- **[ROADMAP.md](ROADMAP.md)** - 전체 프로젝트 로드맵 및 기능 목록
-- **[STATUS.md](STATUS.md)** - 현재 개발 진행 상황 상세
+- **[ROADMAP.md](ROADMAP.md)** - 전체 프로젝트 로드맵, 진행 상황 및 최근 완료 기능
 
 ### 기능별 상세 문서
 각 기능의 요구사항, 진행 상황, API 연동 등은 다음 문서에서 관리합니다:
@@ -21,8 +20,8 @@
 | ⬜ | 메모 | [09-memo.md](docs/features/09-memo.md) |
 | ⬜ | 미니게임 | [10-minigame.md](docs/features/10-minigame.md) |
 | 🟨 | 다국어 | [11-i18n.md](docs/features/11-i18n.md) |
-| 🟨 | 설정 | [12-settings.md](docs/features/12-settings.md) |
-| 🟨 | 그룹관리 | [12-groups.md](docs/features/12-groups.md) |
+| ✅ | 설정 | [12-settings.md](docs/features/12-settings.md) |
+| ✅ | 그룹관리 | [12-groups.md](docs/features/12-groups.md) |
 | ⬜ | 공통 기능 | [13-common.md](docs/features/13-common.md) |
 
 ---
@@ -30,12 +29,15 @@
 ## 📖 문서 사용 가이드
 
 ### 빠른 시작
-1. **전체 그림 파악**: [ROADMAP.md](ROADMAP.md) 확인
-2. **현재 상황 확인**: [STATUS.md](STATUS.md) 확인
-3. **특정 기능 작업**: [docs/features/](docs/features/) 해당 문서 확인
+1. **전체 진행 상황 파악**: [ROADMAP.md](ROADMAP.md) 확인
+2. **특정 기능 작업**: [docs/features/](docs/features/) 해당 문서 확인
+3. **개발 가이드**: [CLAUDE.md](CLAUDE.md) 참고
 
 ### 개발 워크플로우
-작업 시작 → 기능 문서에서 요구사항 확인 → 작업 → 기능 문서 상태 업데이트 → STATUS.md 업데이트
+1. ROADMAP.md에서 우선순위 확인
+2. 기능 문서에서 상세 요구사항 확인
+3. 작업 완료 후 기능 문서 상태 업데이트
+4. ROADMAP.md 진행 상황 업데이트
 
 자세한 내용은 [CLAUDE.md](CLAUDE.md)를 참고하세요.
 
