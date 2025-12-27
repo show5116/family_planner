@@ -23,6 +23,11 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          echo "✅ .env file created"
+
       - name: Install dependencies
         run: flutter pub get
 
