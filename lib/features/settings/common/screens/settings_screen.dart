@@ -192,7 +192,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             title: l10n.settings_notificationTitle,
             subtitle: l10n.settings_notificationSubtitle,
             onTap: () {
-              // TODO: 알림 설정 화면으로 이동
+              context.push(AppRoutes.notifications);
             },
           ),
           const Divider(),

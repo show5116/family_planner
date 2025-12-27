@@ -1,6 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -13,14 +16,52 @@ import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
+import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
+import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'firebase_options.dart';
 
 /// 전역 ScaffoldMessenger Key
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-void main() {
+/// 백그라운드 메시지 핸들러 (Top-level 함수)
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  debugPrint('백그라운드 메시지 수신: ${message.messageId}');
+}
+
+void main() async {
   // Flutter 바인딩 초기화
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 환경 변수 로드
+  try {
+    await dotenv.load(fileName: '.env');
+    debugPrint('✅ 환경 변수 로드 완료');
+  } catch (e) {
+    debugPrint('⚠️ 환경 변수 로드 실패: $e');
+    debugPrint('⚠️ .env 파일이 없거나 읽을 수 없습니다. 기본값을 사용합니다.');
+  }
+
+  // Firebase 초기화
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('✅ Firebase 초기화 완료');
+
+    // 백그라운드 메시지 핸들러 등록
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    // Firebase Messaging 초기화
+    await FirebaseMessagingService.initialize();
+
+    // 로컬 알림 초기화
+    await LocalNotificationService.initialize();
+  } catch (e) {
+    debugPrint('❌ Firebase 초기화 실패: $e');
+  }
 
   // 웹에서 키보드 이벤트 경고 제거
   // Flutter 웹에서 키보드 입력 시 발생하는 채널 버퍼 경고를 방지

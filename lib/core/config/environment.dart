@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 /// 애플리케이션 환경 설정
 enum Environment { development, production }
 
@@ -24,9 +26,10 @@ class EnvironmentConfig {
   static String get apiBaseUrl {
     switch (_currentEnvironment) {
       case Environment.development:
-        return 'http://localhost:3000';
+        return dotenv.get('API_BASE_URL_DEV', fallback: 'http://localhost:3000');
       case Environment.production:
-        return 'https://familyplannerbackend-production.up.railway.app';
+        return dotenv.get('API_BASE_URL_PROD',
+            fallback: 'https://familyplannerbackend-production.up.railway.app');
     }
   }
 
@@ -66,40 +69,31 @@ class EnvironmentConfig {
   /// Google Cloud Console에서 발급: https://console.cloud.google.com/apis/credentials
   /// 발급 후 web/index.html의 meta 태그도 함께 업데이트 필요
   static String get googleWebClientId {
-    return const String.fromEnvironment(
-      'GOOGLE_WEB_CLIENT_ID',
-      defaultValue: '1091403716522-pgm7m06s5tcpen6g0okcpvd8djfq0m5l.apps.googleusercontent.com',
-    );
+    return dotenv.get('GOOGLE_WEB_CLIENT_ID', fallback: '');
   }
 
   /// Google OAuth Android 클라이언트 ID (선택사항)
   /// android/app/src/main/res/values/strings.xml에서도 설정 필요
   static String? get googleAndroidClientId {
-    // 필요시 설정
-    return null;
+    final value = dotenv.get('GOOGLE_ANDROID_CLIENT_ID', fallback: '');
+    return value.isEmpty ? null : value;
   }
 
   /// Google OAuth iOS 클라이언트 ID (선택사항)
   /// ios/Runner/Info.plist에서도 설정 필요
   static String? get googleIosClientId {
-    // 필요시 설정
-    return null;
+    final value = dotenv.get('GOOGLE_IOS_CLIENT_ID', fallback: '');
+    return value.isEmpty ? null : value;
   }
 
   /// Kakao Native App Key
   /// Kakao Developers에서 발급: https://developers.kakao.com
   static String get kakaoNativeAppKey {
-    return const String.fromEnvironment(
-      'KAKAO_NATIVE_APP_KEY',
-      defaultValue: 'YOUR_KAKAO_NATIVE_APP_KEY',
-    );
+    return dotenv.get('KAKAO_NATIVE_APP_KEY', fallback: 'YOUR_KAKAO_NATIVE_APP_KEY');
   }
 
   /// Kakao JavaScript App Key (웹용)
   static String get kakaoJavaScriptAppKey {
-    return const String.fromEnvironment(
-      'KAKAO_JS_APP_KEY',
-      defaultValue: 'f0366e83a5499e200ce35d5d18688d8f',
-    );
+    return dotenv.get('KAKAO_JAVASCRIPT_APP_KEY', fallback: '');
   }
 }

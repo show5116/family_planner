@@ -90,6 +90,16 @@ dependencies:
   json_annotation: ^4.9.0
   web: ^1.1.1
 
+  # Environment Variables
+  flutter_dotenv: ^5.2.1
+
+  # Firebase
+  firebase_core: ^3.10.0
+  firebase_messaging: ^15.1.6
+
+  # Local Notifications
+  flutter_local_notifications: ^18.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -125,6 +135,7 @@ flutter:
   assets:
     - assets/images/logos/
     - assets/images/icons/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

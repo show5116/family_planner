@@ -7,6 +7,7 @@ import 'package:family_planner/features/settings/common/screens/theme_settings_s
 import 'package:family_planner/features/settings/common/screens/language_settings_screen.dart';
 import 'package:family_planner/features/settings/common/screens/profile_settings_screen.dart';
 import 'package:family_planner/features/settings/groups/screens/group_list_screen.dart';
+import 'package:family_planner/features/notification/presentation/screens/notification_settings_screen.dart';
 
 /// 설정 관련 라우트 목록
 ///
@@ -54,6 +55,11 @@ List<RouteBase> getSettingsRoutes() {
       path: AppRoutes.groupManagement,
       name: 'groupManagement',
       builder: (context, state) => const GroupListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.notifications,
+      name: 'notifications',
+      builder: (context, state) => const NotificationSettingsScreen(),
     ),
   ];
 }
