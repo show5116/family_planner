@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/notification/providers/fcm_token_provider.dart';
 
 /// 인증 상태
 class AuthState {
@@ -84,6 +85,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       _invalidateGroupProviders();
 
       state = state.copyWith(isAuthenticated: true, user: response);
+
+      // 로그인 성공 후 FCM 토큰 등록
+      await _registerFcmToken();
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
@@ -141,6 +145,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(error: null);
 
     try {
+      // 로그아웃 전 FCM 토큰 삭제
+      await _deleteFcmToken();
+
       await _authService.logout();
 
       // 그룹 관련 provider 초기화
@@ -159,6 +166,37 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _ref.invalidate(myGroupsProvider);
     _ref.invalidate(groupNotifierProvider);
     // family provider들은 자동으로 무효화됨 (부모 provider가 무효화되면)
+  }
+
+  /// FCM 토큰 등록 (로그인 성공 후)
+  Future<void> _registerFcmToken() async {
+    try {
+      debugPrint('🟢 [AuthProvider] _registerFcmToken 시작');
+
+      // FCM 토큰 notifier의 refreshToken 메서드를 직접 호출하여 백엔드에 등록
+      final fcmTokenNotifier = _ref.read(fcmTokenProvider.notifier);
+      debugPrint('  - FcmTokenProvider notifier 가져옴, refreshToken() 호출...');
+
+      await fcmTokenNotifier.refreshToken();
+
+      debugPrint('✅ [AuthProvider] FCM 토큰 등록 완료');
+    } catch (e, stackTrace) {
+      debugPrint('❌ [AuthProvider] FCM 토큰 등록 실패: $e');
+      debugPrint('StackTrace: $stackTrace');
+      // 토큰 등록 실패는 로그인 자체를 막지 않음
+    }
+  }
+
+  /// FCM 토큰 삭제 (로그아웃 시)
+  Future<void> _deleteFcmToken() async {
+    try {
+      final fcmTokenNotifier = _ref.read(fcmTokenProvider.notifier);
+      await fcmTokenNotifier.deleteToken();
+      debugPrint('FCM 토큰 삭제 완료');
+    } catch (e) {
+      debugPrint('FCM 토큰 삭제 실패: $e');
+      // 토큰 삭제 실패는 로그아웃 자체를 막지 않음
+    }
   }
 
   /// 토큰 검증
@@ -214,9 +252,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
         try {
           final user = await _authService.getUserInfo();
           state = state.copyWith(isAuthenticated: true, user: user);
+
+          // 자동 로그인 성공 시 FCM 토큰 등록
+          await _registerFcmToken();
         } catch (e) {
           debugPrint('사용자 정보 가져오기 실패: $e');
           state = state.copyWith(isAuthenticated: true);
+
+          // 실패해도 토큰은 등록 시도
+          await _registerFcmToken();
         }
       } else {
         // 최종 실패 시 토큰 삭제 및 로그아웃
@@ -265,6 +309,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         // 모바일: response에 사용자 정보 포함
         state = state.copyWith(isAuthenticated: true, user: response);
       }
+
+      // 구글 로그인 성공 후 FCM 토큰 등록
+      await _registerFcmToken();
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
@@ -294,6 +341,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         // 모바일: response에 사용자 정보 포함
         state = state.copyWith(isAuthenticated: true, user: response);
       }
+
+      // 카카오 로그인 성공 후 FCM 토큰 등록
+      await _registerFcmToken();
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
@@ -411,6 +461,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       // 상태 업데이트
       state = state.copyWith(isAuthenticated: true, user: user);
+
+      // OAuth 콜백 성공 후 FCM 토큰 등록
+      await _registerFcmToken();
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
@@ -427,6 +480,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await _authService.getUserInfo();
 
       state = state.copyWith(isAuthenticated: true, user: user);
+
+      // OAuth 성공 후 FCM 토큰 등록
+      await _registerFcmToken();
     } catch (e) {
       state = state.copyWith(error: e.toString());
     }

@@ -4,13 +4,46 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/routes/app_routes.dart';
+import '../../data/repositories/notification_repository.dart';
 import '../../providers/notification_settings_provider.dart';
+import '../../providers/unread_notifications_provider.dart';
+import '../../providers/unread_count_provider.dart';
 import '../widgets/notification_permission_card.dart';
 import '../widgets/notification_toggle_item.dart';
 
 /// 알림 설정 화면
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
+
+  /// 테스트 알림 전송
+  Future<void> _sendTestNotification(BuildContext context, WidgetRef ref) async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      await repository.sendTestNotification();
+
+      // Provider 새로고침하여 새 알림 가져오기
+      ref.invalidate(unreadNotificationsProvider);
+      ref.invalidate(unreadCountProvider);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('테스트 알림이 전송되었습니다'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('테스트 알림 전송 실패: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -137,6 +170,19 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 onTap: () {
                   context.push(AppRoutes.notificationHistory);
                 },
+              ),
+            ),
+
+            const SizedBox(height: AppSizes.spaceL),
+
+            // 테스트 알림 버튼 (운영자 전용)
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.notifications_active, color: Colors.orange),
+                title: const Text('테스트 알림 전송'),
+                subtitle: const Text('테스트 알림을 자신에게 전송합니다 (운영자 전용)'),
+                trailing: const Icon(Icons.send),
+                onTap: () => _sendTestNotification(context, ref),
               ),
             ),
           ],

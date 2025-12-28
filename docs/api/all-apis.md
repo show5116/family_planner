@@ -1645,6 +1645,28 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
 
 ---
 
+### POST `notifications/test`
+
+**요약:** 테스트 알림 전송 (운영자 전용)
+
+**인증/권한:**
+
+- AdminGuard
+
+**Responses:**
+
+#### 200 - 테스트 알림 전송 성공
+
+```json
+{
+  "message": "토큰이 삭제되었습니다" // string
+}
+```
+
+#### 403 - 운영자 권한 필요
+
+---
+
 ## permissions
 
 **Base Path:** `/permissions`

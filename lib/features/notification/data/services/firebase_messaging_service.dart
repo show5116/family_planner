@@ -61,6 +61,8 @@ class FirebaseMessagingService {
         final vapidKey = DefaultFirebaseOptions.webVapidKey;
         if (vapidKey.isEmpty) {
           debugPrint('⚠️ FIREBASE_WEB_VAPID_KEY가 .env에 설정되지 않았습니다');
+          debugPrint('   개발 환경에서는 FCM 푸시 알림을 사용할 수 없습니다.');
+          debugPrint('   프로덕션 배포 시 Firebase 설정을 완료해주세요.');
           return null;
         }
         return await _messaging.getToken(vapidKey: vapidKey);
@@ -68,7 +70,13 @@ class FirebaseMessagingService {
         return await _messaging.getToken();
       }
     } catch (e) {
-      debugPrint('FCM Token 가져오기 실패: $e');
+      if (kIsWeb) {
+        debugPrint('⚠️ 웹 환경에서 FCM Token 가져오기 실패 (개발 환경에서는 정상)');
+        debugPrint('   Service Worker 설정이 필요합니다: firebase-messaging-sw.js');
+        debugPrint('   로컬 개발 시에는 FCM 푸시 알림 없이 진행됩니다.');
+      } else {
+        debugPrint('FCM Token 가져오기 실패: $e');
+      }
       return null;
     }
   }
