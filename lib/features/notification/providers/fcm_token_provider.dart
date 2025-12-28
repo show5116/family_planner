@@ -50,12 +50,18 @@ class FcmToken extends _$FcmToken {
   /// 토큰 삭제
   Future<void> deleteToken() async {
     try {
+      final currentToken = await future;
+      if (currentToken == null) {
+        debugPrint('삭제할 FCM 토큰이 없습니다');
+        return;
+      }
+
       // Firebase에서 토큰 삭제
       await FirebaseMessagingService.deleteToken();
 
       // 백엔드에서 토큰 삭제
       final repository = ref.read(notificationRepositoryProvider);
-      await repository.deleteFcmToken();
+      await repository.deleteFcmToken(currentToken);
 
       state = const AsyncValue.data(null);
       debugPrint('FCM 토큰 삭제 완료');

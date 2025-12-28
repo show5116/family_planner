@@ -1,7 +1,7 @@
 # 14. 알림 (Notification)
 
 ## 상태
-🟨 진행 중 (프론트엔드 완료, 백엔드 API 대기)
+🟨 진행 중
 
 ---
 
@@ -61,23 +61,15 @@
 - [ ] 읽음 처리 API 연동
 - [ ] 페이지네이션 구현
 
-## API 연동 (백엔드 작업 필요)
-- [ ] FCM 토큰 등록 (POST /api/notifications/token)
-- [ ] FCM 토큰 삭제 (DELETE /api/notifications/token)
-- [ ] 알림 설정 조회 (GET /api/notifications/settings)
-- [ ] 알림 설정 수정 (PUT /api/notifications/settings)
-- [ ] 알림 히스토리 조회 (GET /api/notifications)
-- [ ] 알림 읽음 처리 (PUT /api/notifications/:id/read)
-- [ ] 알림 삭제 (DELETE /api/notifications/:id)
-
-## 백엔드 구현 필요 사항
-- [ ] 데이터베이스 테이블 생성
-  - fcm_tokens (user_id, token, device_type)
-  - notification_settings (user_id, 카테고리별 enabled 플래그)
-  - notifications (user_id, title, body, type, data, is_read, timestamp)
-- [ ] Firebase Admin SDK 설정
-- [ ] FCM 알림 전송 서비스 구현
-- [ ] 각 기능별 알림 트리거 추가 (일정, 가계부, 할일 등)
+## API 연동
+- ✅ FCM 토큰 등록 (POST /notifications/token)
+- ✅ FCM 토큰 삭제 (DELETE /notifications/token/:token)
+- ✅ 알림 설정 조회 (GET /notifications/settings)
+- ✅ 알림 설정 수정 (PUT /notifications/settings)
+- ✅ 알림 히스토리 조회 (GET /notifications)
+- ✅ 읽지 않은 알림 개수 (GET /notifications/unread-count)
+- ✅ 알림 읽음 처리 (PUT /notifications/:id/read)
+- ✅ 알림 삭제 (DELETE /notifications/:id)
 
 ## 참고 문서
 - [Firebase 설정 가이드](../FIREBASE_SETUP.md)

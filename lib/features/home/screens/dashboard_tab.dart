@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/home/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/widgets/investment_summary_widget.dart';
 import 'package:family_planner/features/home/widgets/todo_summary_widget.dart';
 import 'package:family_planner/features/home/widgets/asset_summary_widget.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
+import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
@@ -12,26 +15,70 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 /// 대시보드 탭
-class DashboardTab extends StatelessWidget {
+class DashboardTab extends ConsumerWidget {
   const DashboardTab({super.key});
 
+  /// 알림 팝업 표시
+  void _showNotificationPopup(BuildContext context) {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(
+      context: context,
+      position: position,
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+      ),
+      items: [
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          child: const NotificationPopupCard(),
+        ),
+      ],
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCountAsync = ref.watch(unreadCountProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Family Planner'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
-            tooltip: '알림',
+          // 알림 아이콘 with 배지
+          Builder(
+            builder: (context) => IconButton(
+              icon: Badge(
+                label: unreadCountAsync.when(
+                  data: (count) => count > 0 ? Text('$count') : null,
+                  loading: () => null,
+                  error: (_, __) => null,
+                ),
+                isLabelVisible: unreadCountAsync.maybeWhen(
+                  data: (count) => count > 0,
+                  orElse: () => false,
+                ),
+                child: const Icon(Icons.notifications_outlined),
+              ),
+              onPressed: () => _showNotificationPopup(context),
+              tooltip: '알림',
+            ),
           ),
         ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          // TODO: 데이터 새로고침
-          await Future.delayed(const Duration(seconds: 1));
+          // 알림 새로고침
+          ref.invalidate(unreadCountProvider);
         },
         child: _buildDashboardBody(context),
       ),

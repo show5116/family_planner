@@ -40,25 +40,52 @@ class NotificationSettings extends _$NotificationSettings {
     bool? scheduleEnabled,
     bool? todoEnabled,
     bool? householdEnabled,
-    bool? groupInviteEnabled,
-    bool? announcementEnabled,
+    bool? assetEnabled,
+    bool? childcareEnabled,
+    bool? groupEnabled,
+    bool? systemEnabled,
   }) async {
     final current = await future;
     final updated = current.copyWith(
       scheduleEnabled: scheduleEnabled ?? current.scheduleEnabled,
       todoEnabled: todoEnabled ?? current.todoEnabled,
       householdEnabled: householdEnabled ?? current.householdEnabled,
-      groupInviteEnabled: groupInviteEnabled ?? current.groupInviteEnabled,
-      announcementEnabled: announcementEnabled ?? current.announcementEnabled,
+      assetEnabled: assetEnabled ?? current.assetEnabled,
+      childcareEnabled: childcareEnabled ?? current.childcareEnabled,
+      groupEnabled: groupEnabled ?? current.groupEnabled,
+      systemEnabled: systemEnabled ?? current.systemEnabled,
     );
 
     // 로컬 저장
     await _saveToLocal(updated);
 
-    // 백엔드 동기화
+    // 백엔드 동기화 (변경된 필드만)
     try {
       final repository = ref.read(notificationRepositoryProvider);
-      await repository.updateSettings(updated);
+
+      // 변경된 카테고리만 백엔드에 전송
+      if (scheduleEnabled != null) {
+        await repository.updateSetting(category: 'SCHEDULE', enabled: scheduleEnabled);
+      }
+      if (todoEnabled != null) {
+        await repository.updateSetting(category: 'TODO', enabled: todoEnabled);
+      }
+      if (householdEnabled != null) {
+        await repository.updateSetting(category: 'HOUSEHOLD', enabled: householdEnabled);
+      }
+      if (assetEnabled != null) {
+        await repository.updateSetting(category: 'ASSET', enabled: assetEnabled);
+      }
+      if (childcareEnabled != null) {
+        await repository.updateSetting(category: 'CHILDCARE', enabled: childcareEnabled);
+      }
+      if (groupEnabled != null) {
+        await repository.updateSetting(category: 'GROUP', enabled: groupEnabled);
+      }
+      if (systemEnabled != null) {
+        await repository.updateSetting(category: 'SYSTEM', enabled: systemEnabled);
+      }
+
       debugPrint('알림 설정 백엔드 동기화 완료');
     } catch (e) {
       debugPrint('알림 설정 백엔드 동기화 실패: $e');

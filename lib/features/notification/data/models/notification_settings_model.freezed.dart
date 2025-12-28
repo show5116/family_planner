@@ -26,8 +26,10 @@ mixin _$NotificationSettingsModel {
   bool get scheduleEnabled => throw _privateConstructorUsedError;
   bool get todoEnabled => throw _privateConstructorUsedError;
   bool get householdEnabled => throw _privateConstructorUsedError;
-  bool get groupInviteEnabled => throw _privateConstructorUsedError;
-  bool get announcementEnabled => throw _privateConstructorUsedError;
+  bool get assetEnabled => throw _privateConstructorUsedError;
+  bool get childcareEnabled => throw _privateConstructorUsedError;
+  bool get groupEnabled => throw _privateConstructorUsedError;
+  bool get systemEnabled => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,8 +52,10 @@ abstract class $NotificationSettingsModelCopyWith<$Res> {
     bool scheduleEnabled,
     bool todoEnabled,
     bool householdEnabled,
-    bool groupInviteEnabled,
-    bool announcementEnabled,
+    bool assetEnabled,
+    bool childcareEnabled,
+    bool groupEnabled,
+    bool systemEnabled,
   });
 }
 
@@ -76,8 +80,10 @@ class _$NotificationSettingsModelCopyWithImpl<
     Object? scheduleEnabled = null,
     Object? todoEnabled = null,
     Object? householdEnabled = null,
-    Object? groupInviteEnabled = null,
-    Object? announcementEnabled = null,
+    Object? assetEnabled = null,
+    Object? childcareEnabled = null,
+    Object? groupEnabled = null,
+    Object? systemEnabled = null,
   }) {
     return _then(
       _value.copyWith(
@@ -93,13 +99,21 @@ class _$NotificationSettingsModelCopyWithImpl<
                 ? _value.householdEnabled
                 : householdEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
-            groupInviteEnabled: null == groupInviteEnabled
-                ? _value.groupInviteEnabled
-                : groupInviteEnabled // ignore: cast_nullable_to_non_nullable
+            assetEnabled: null == assetEnabled
+                ? _value.assetEnabled
+                : assetEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
-            announcementEnabled: null == announcementEnabled
-                ? _value.announcementEnabled
-                : announcementEnabled // ignore: cast_nullable_to_non_nullable
+            childcareEnabled: null == childcareEnabled
+                ? _value.childcareEnabled
+                : childcareEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            groupEnabled: null == groupEnabled
+                ? _value.groupEnabled
+                : groupEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            systemEnabled: null == systemEnabled
+                ? _value.systemEnabled
+                : systemEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
           )
           as $Val,
@@ -120,8 +134,10 @@ abstract class _$$NotificationSettingsModelImplCopyWith<$Res>
     bool scheduleEnabled,
     bool todoEnabled,
     bool householdEnabled,
-    bool groupInviteEnabled,
-    bool announcementEnabled,
+    bool assetEnabled,
+    bool childcareEnabled,
+    bool groupEnabled,
+    bool systemEnabled,
   });
 }
 
@@ -146,8 +162,10 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
     Object? scheduleEnabled = null,
     Object? todoEnabled = null,
     Object? householdEnabled = null,
-    Object? groupInviteEnabled = null,
-    Object? announcementEnabled = null,
+    Object? assetEnabled = null,
+    Object? childcareEnabled = null,
+    Object? groupEnabled = null,
+    Object? systemEnabled = null,
   }) {
     return _then(
       _$NotificationSettingsModelImpl(
@@ -163,13 +181,21 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
             ? _value.householdEnabled
             : householdEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
-        groupInviteEnabled: null == groupInviteEnabled
-            ? _value.groupInviteEnabled
-            : groupInviteEnabled // ignore: cast_nullable_to_non_nullable
+        assetEnabled: null == assetEnabled
+            ? _value.assetEnabled
+            : assetEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
-        announcementEnabled: null == announcementEnabled
-            ? _value.announcementEnabled
-            : announcementEnabled // ignore: cast_nullable_to_non_nullable
+        childcareEnabled: null == childcareEnabled
+            ? _value.childcareEnabled
+            : childcareEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        groupEnabled: null == groupEnabled
+            ? _value.groupEnabled
+            : groupEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        systemEnabled: null == systemEnabled
+            ? _value.systemEnabled
+            : systemEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
       ),
     );
@@ -183,8 +209,10 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     this.scheduleEnabled = true,
     this.todoEnabled = true,
     this.householdEnabled = true,
-    this.groupInviteEnabled = true,
-    this.announcementEnabled = true,
+    this.assetEnabled = true,
+    this.childcareEnabled = true,
+    this.groupEnabled = true,
+    this.systemEnabled = true,
   });
 
   factory _$NotificationSettingsModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -201,14 +229,20 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
   final bool householdEnabled;
   @override
   @JsonKey()
-  final bool groupInviteEnabled;
+  final bool assetEnabled;
   @override
   @JsonKey()
-  final bool announcementEnabled;
+  final bool childcareEnabled;
+  @override
+  @JsonKey()
+  final bool groupEnabled;
+  @override
+  @JsonKey()
+  final bool systemEnabled;
 
   @override
   String toString() {
-    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, groupInviteEnabled: $groupInviteEnabled, announcementEnabled: $announcementEnabled)';
+    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, systemEnabled: $systemEnabled)';
   }
 
   @override
@@ -222,10 +256,14 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
                 other.todoEnabled == todoEnabled) &&
             (identical(other.householdEnabled, householdEnabled) ||
                 other.householdEnabled == householdEnabled) &&
-            (identical(other.groupInviteEnabled, groupInviteEnabled) ||
-                other.groupInviteEnabled == groupInviteEnabled) &&
-            (identical(other.announcementEnabled, announcementEnabled) ||
-                other.announcementEnabled == announcementEnabled));
+            (identical(other.assetEnabled, assetEnabled) ||
+                other.assetEnabled == assetEnabled) &&
+            (identical(other.childcareEnabled, childcareEnabled) ||
+                other.childcareEnabled == childcareEnabled) &&
+            (identical(other.groupEnabled, groupEnabled) ||
+                other.groupEnabled == groupEnabled) &&
+            (identical(other.systemEnabled, systemEnabled) ||
+                other.systemEnabled == systemEnabled));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -235,8 +273,10 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     scheduleEnabled,
     todoEnabled,
     householdEnabled,
-    groupInviteEnabled,
-    announcementEnabled,
+    assetEnabled,
+    childcareEnabled,
+    groupEnabled,
+    systemEnabled,
   );
 
   /// Create a copy of NotificationSettingsModel
@@ -261,8 +301,10 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
     final bool scheduleEnabled,
     final bool todoEnabled,
     final bool householdEnabled,
-    final bool groupInviteEnabled,
-    final bool announcementEnabled,
+    final bool assetEnabled,
+    final bool childcareEnabled,
+    final bool groupEnabled,
+    final bool systemEnabled,
   }) = _$NotificationSettingsModelImpl;
 
   factory _NotificationSettingsModel.fromJson(Map<String, dynamic> json) =
@@ -275,9 +317,13 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
   @override
   bool get householdEnabled;
   @override
-  bool get groupInviteEnabled;
+  bool get assetEnabled;
   @override
-  bool get announcementEnabled;
+  bool get childcareEnabled;
+  @override
+  bool get groupEnabled;
+  @override
+  bool get systemEnabled;
 
   /// Create a copy of NotificationSettingsModel
   /// with the given fields replaced by the non-null parameter values.

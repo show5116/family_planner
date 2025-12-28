@@ -10,8 +10,10 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     @Default(true) bool scheduleEnabled,
     @Default(true) bool todoEnabled,
     @Default(true) bool householdEnabled,
-    @Default(true) bool groupInviteEnabled,
-    @Default(true) bool announcementEnabled,
+    @Default(true) bool assetEnabled,
+    @Default(true) bool childcareEnabled,
+    @Default(true) bool groupEnabled,
+    @Default(true) bool systemEnabled,
   }) = _NotificationSettingsModel;
 
   factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>

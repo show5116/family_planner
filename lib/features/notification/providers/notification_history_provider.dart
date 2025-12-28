@@ -22,12 +22,18 @@ class NotificationHistory extends _$NotificationHistory {
   Future<List<NotificationModel>> _fetchNotifications() async {
     try {
       final repository = ref.read(notificationRepositoryProvider);
-      final notifications = await repository.getHistory(
+      final result = await repository.getHistory(
         page: _currentPage,
         limit: _limit,
       );
 
-      _hasMore = notifications.length >= _limit;
+      final notifications = result['notifications'] as List<NotificationModel>;
+      final meta = result['meta'] as Map<String, dynamic>;
+
+      // 다음 페이지가 있는지 확인
+      final totalPages = meta['totalPages'] as int;
+      _hasMore = _currentPage < totalPages;
+
       return notifications;
     } catch (e) {
       debugPrint('알림 히스토리 조회 실패: $e');
@@ -46,12 +52,16 @@ class NotificationHistory extends _$NotificationHistory {
 
     try {
       final repository = ref.read(notificationRepositoryProvider);
-      final newNotifications = await repository.getHistory(
+      final result = await repository.getHistory(
         page: _currentPage,
         limit: _limit,
       );
 
-      _hasMore = newNotifications.length >= _limit;
+      final newNotifications = result['notifications'] as List<NotificationModel>;
+      final meta = result['meta'] as Map<String, dynamic>;
+
+      final totalPages = meta['totalPages'] as int;
+      _hasMore = _currentPage < totalPages;
 
       state = AsyncValue.data([...currentList, ...newNotifications]);
     } catch (e) {

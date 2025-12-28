@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../providers/notification_settings_provider.dart';
 import '../widgets/notification_permission_card.dart';
 import '../widgets/notification_toggle_item.dart';
@@ -16,9 +17,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
     final settingsAsync = ref.watch(notificationSettingsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('알림 설정'),
-      ),
+      appBar: AppBar(title: const Text('알림 설정')),
       body: settingsAsync.when(
         data: (settings) => ListView(
           padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -30,9 +29,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
             // 알림 설정
             Text(
               '알림 설정',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: AppSizes.spaceM),
 
@@ -76,26 +75,50 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   ),
                   const Divider(height: 1),
                   NotificationToggleItem(
-                    icon: Icons.group_add_outlined,
-                    title: '그룹 초대 알림',
-                    subtitle: '그룹 초대 및 승인 알림을 받습니다',
-                    value: settings.groupInviteEnabled,
+                    icon: Icons.savings_outlined,
+                    title: '자산 알림',
+                    subtitle: '자산 변동 관련 알림을 받습니다',
+                    value: settings.assetEnabled,
                     onChanged: (value) {
                       ref
                           .read(notificationSettingsProvider.notifier)
-                          .updateSetting(groupInviteEnabled: value);
+                          .updateSetting(assetEnabled: value);
+                    },
+                  ),
+                  const Divider(height: 1),
+                  NotificationToggleItem(
+                    icon: Icons.child_care_outlined,
+                    title: '육아 알림',
+                    subtitle: '육아 포인트 관련 알림을 받습니다',
+                    value: settings.childcareEnabled,
+                    onChanged: (value) {
+                      ref
+                          .read(notificationSettingsProvider.notifier)
+                          .updateSetting(childcareEnabled: value);
+                    },
+                  ),
+                  const Divider(height: 1),
+                  NotificationToggleItem(
+                    icon: Icons.group_outlined,
+                    title: '그룹 알림',
+                    subtitle: '그룹 관련 알림을 받습니다',
+                    value: settings.groupEnabled,
+                    onChanged: (value) {
+                      ref
+                          .read(notificationSettingsProvider.notifier)
+                          .updateSetting(groupEnabled: value);
                     },
                   ),
                   const Divider(height: 1),
                   NotificationToggleItem(
                     icon: Icons.campaign_outlined,
-                    title: '공지사항',
-                    subtitle: '중요한 공지사항 알림을 받습니다',
-                    value: settings.announcementEnabled,
+                    title: '시스템 알림',
+                    subtitle: '중요한 시스템 알림을 받습니다',
+                    value: settings.systemEnabled,
                     onChanged: (value) {
                       ref
                           .read(notificationSettingsProvider.notifier)
-                          .updateSetting(announcementEnabled: value);
+                          .updateSetting(systemEnabled: value);
                     },
                   ),
                 ],
@@ -112,7 +135,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 subtitle: const Text('받은 알림 목록을 확인합니다'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  context.push('/settings/notifications/history');
+                  context.push(AppRoutes.notificationHistory);
                 },
               ),
             ),

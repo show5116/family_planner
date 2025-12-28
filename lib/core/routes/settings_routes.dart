@@ -8,6 +8,7 @@ import 'package:family_planner/features/settings/common/screens/language_setting
 import 'package:family_planner/features/settings/common/screens/profile_settings_screen.dart';
 import 'package:family_planner/features/settings/groups/screens/group_list_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_settings_screen.dart';
+import 'package:family_planner/features/notification/presentation/screens/notification_history_screen.dart';
 
 /// 설정 관련 라우트 목록
 ///
@@ -60,6 +61,11 @@ List<RouteBase> getSettingsRoutes() {
       path: AppRoutes.notifications,
       name: 'notifications',
       builder: (context, state) => const NotificationSettingsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.notificationHistory,
+      name: 'notificationHistory',
+      builder: (context, state) => const NotificationHistoryScreen(),
     ),
   ];
 }

@@ -12,8 +12,10 @@ _$NotificationSettingsModelImpl _$$NotificationSettingsModelImplFromJson(
   scheduleEnabled: json['scheduleEnabled'] as bool? ?? true,
   todoEnabled: json['todoEnabled'] as bool? ?? true,
   householdEnabled: json['householdEnabled'] as bool? ?? true,
-  groupInviteEnabled: json['groupInviteEnabled'] as bool? ?? true,
-  announcementEnabled: json['announcementEnabled'] as bool? ?? true,
+  assetEnabled: json['assetEnabled'] as bool? ?? true,
+  childcareEnabled: json['childcareEnabled'] as bool? ?? true,
+  groupEnabled: json['groupEnabled'] as bool? ?? true,
+  systemEnabled: json['systemEnabled'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$$NotificationSettingsModelImplToJson(
@@ -22,6 +24,8 @@ Map<String, dynamic> _$$NotificationSettingsModelImplToJson(
   'scheduleEnabled': instance.scheduleEnabled,
   'todoEnabled': instance.todoEnabled,
   'householdEnabled': instance.householdEnabled,
-  'groupInviteEnabled': instance.groupInviteEnabled,
-  'announcementEnabled': instance.announcementEnabled,
+  'assetEnabled': instance.assetEnabled,
+  'childcareEnabled': instance.childcareEnabled,
+  'groupEnabled': instance.groupEnabled,
+  'systemEnabled': instance.systemEnabled,
 };

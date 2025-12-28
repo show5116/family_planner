@@ -43,6 +43,7 @@ class AppRoutes {
   static const String groupManagement = '/settings/groups';
   static const String groupDetail = '/settings/groups/:id';
   static const String notifications = '/settings/notifications';
+  static const String notificationHistory = '/settings/notifications/history';
   static const String theme = '/settings/theme';
   static const String language = '/settings/language';
 
