@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/routes/app_routes.dart';
-import '../../data/repositories/notification_repository.dart';
-import '../../providers/notification_settings_provider.dart';
-import '../../providers/unread_notifications_provider.dart';
-import '../../providers/unread_count_provider.dart';
-import '../widgets/notification_permission_card.dart';
-import '../widgets/notification_toggle_item.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
+import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
+import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_permission_card.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_toggle_item.dart';
 
 /// 알림 설정 화면
 class NotificationSettingsScreen extends ConsumerWidget {

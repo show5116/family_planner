@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
 
 /// 알림 권한 상태 카드
 class NotificationPermissionCard extends ConsumerStatefulWidget {

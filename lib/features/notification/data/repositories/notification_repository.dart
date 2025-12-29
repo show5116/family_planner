@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/services/api_client.dart';
-import '../models/notification_model.dart';
-import '../models/notification_settings_model.dart';
+import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/features/notification/data/models/notification_model.dart';
+import 'package:family_planner/features/notification/data/models/notification_settings_model.dart';
 
 /// 알림 Repository Provider
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {

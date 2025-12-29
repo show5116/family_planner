@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../data/repositories/notification_repository.dart';
-import '../data/services/firebase_messaging_service.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
 
 part 'fcm_token_provider.g.dart';
 

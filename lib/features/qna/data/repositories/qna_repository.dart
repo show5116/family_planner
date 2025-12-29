@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/services/api_client.dart';
-import '../models/qna_model.dart';
-import '../dto/qna_dto.dart';
+import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/features/qna/data/models/qna_model.dart';
+import 'package:family_planner/features/qna/data/dto/qna_dto.dart';
 
 /// QnA Repository Provider
 final qnaRepositoryProvider = Provider<QnaRepository>((ref) {

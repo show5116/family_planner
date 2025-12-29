@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../providers/announcement_provider.dart';
-import '../../data/dto/announcement_dto.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
+import 'package:family_planner/features/announcements/data/dto/announcement_dto.dart';
 
 /// 공지사항 작성/수정 화면 (ADMIN 전용)
 class AnnouncementFormScreen extends ConsumerStatefulWidget {

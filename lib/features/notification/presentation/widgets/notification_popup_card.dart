@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/routes/app_routes.dart';
-import '../../data/models/notification_model.dart';
-import '../../data/repositories/notification_repository.dart';
-import '../../providers/unread_notifications_provider.dart';
-import '../../providers/unread_count_provider.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/notification/data/models/notification_model.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
+import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 
 /// 알림 팝업 카드
 /// 우측 상단 알림 아이콘을 클릭하면 나타나는 작은 팝업

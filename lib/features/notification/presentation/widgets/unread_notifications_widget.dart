@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/routes/app_routes.dart';
-import '../../data/models/notification_model.dart';
-import '../../data/repositories/notification_repository.dart';
-import '../../providers/unread_notifications_provider.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/notification/data/models/notification_model.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 
 /// 읽지 않은 알림 위젯 (홈 화면용)
 class UnreadNotificationsWidget extends ConsumerWidget {

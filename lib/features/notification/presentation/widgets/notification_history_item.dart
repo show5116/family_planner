@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../data/models/notification_model.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/notification/data/models/notification_model.dart';
 
 /// 알림 히스토리 아이템
 class NotificationHistoryItem extends StatelessWidget {

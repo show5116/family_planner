@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../data/repositories/notification_repository.dart';
-import '../../providers/notification_history_provider.dart';
-import '../widgets/notification_history_item.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/providers/notification_history_provider.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_history_item.dart';
 
 /// 알림 히스토리 화면
 class NotificationHistoryScreen extends ConsumerStatefulWidget {

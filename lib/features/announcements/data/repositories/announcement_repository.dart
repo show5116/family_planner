@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/services/api_client.dart';
-import '../models/announcement_model.dart';
-import '../dto/announcement_dto.dart';
+import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
+import 'package:family_planner/features/announcements/data/dto/announcement_dto.dart';
 
 /// 공지사항 Repository Provider
 final announcementRepositoryProvider = Provider<AnnouncementRepository>((ref) {

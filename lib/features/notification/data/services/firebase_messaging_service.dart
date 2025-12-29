@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../../../firebase_options.dart';
-import 'local_notification_service.dart';
+import 'package:family_planner/firebase_options.dart';
+import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
 
 /// Firebase Cloud Messaging 서비스
 class FirebaseMessagingService {

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// 사용자가 ADMIN 역할인지 확인하는 Provider
 ///

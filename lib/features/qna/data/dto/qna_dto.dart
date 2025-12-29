@@ -1,4 +1,4 @@
-import '../models/qna_model.dart';
+import 'package:family_planner/features/qna/data/models/qna_model.dart';
 
 /// 질문 작성/수정 DTO
 class CreateQuestionDto {

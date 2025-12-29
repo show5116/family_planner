@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/models/notification_settings_model.dart';
-import '../data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/data/models/notification_settings_model.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
 
 part 'notification_settings_provider.g.dart';
 

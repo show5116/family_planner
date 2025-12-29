@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../data/models/announcement_model.dart';
-import '../data/repositories/announcement_repository.dart';
-import '../data/dto/announcement_dto.dart';
+import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
+import 'package:family_planner/features/announcements/data/repositories/announcement_repository.dart';
+import 'package:family_planner/features/announcements/data/dto/announcement_dto.dart';
 
 part 'announcement_provider.g.dart';
 

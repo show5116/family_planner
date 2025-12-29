@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
 
 part 'unread_count_provider.g.dart';
 

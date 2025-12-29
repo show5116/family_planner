@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
 
 /// 알림 토글 아이템
 class NotificationToggleItem extends StatelessWidget {

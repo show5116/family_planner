@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../providers/announcement_provider.dart';
-import '../../utils/announcement_utils.dart';
-import '../../data/models/announcement_model.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
+import 'package:family_planner/features/announcements/utils/announcement_utils.dart';
+import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
 
 /// 공지사항 목록 화면
 class AnnouncementListScreen extends ConsumerStatefulWidget {
