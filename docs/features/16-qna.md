@@ -1,7 +1,7 @@
 # 16. Q&A (문의하기)
 
 ## 상태
-⬜ 시작 안함
+🟨 진행 중 (기본 구조 완료, UI 구현 필요)
 
 ---
 
@@ -86,28 +86,28 @@
 ## 데이터 모델
 
 ### QuestionModel
-- [ ] id (String)
-- [ ] userId (String)
-- [ ] userName (String) - 작성자 이름
-- [ ] title (String)
-- [ ] content (String)
-- [ ] category (QuestionCategory enum)
-- [ ] status (QuestionStatus enum)
-- [ ] visibility (QuestionVisibility enum)
-- [ ] attachments (List<Attachment>?)
-- [ ] answers (List<AnswerModel>)
-- [ ] createdAt (DateTime)
-- [ ] updatedAt (DateTime)
+- ✅ id (String)
+- ✅ userId (String)
+- ✅ userName (String) - 작성자 이름
+- ✅ title (String)
+- ✅ content (String)
+- ✅ category (QuestionCategory enum)
+- ✅ status (QuestionStatus enum)
+- ✅ visibility (QuestionVisibility enum)
+- ✅ attachments (List<Attachment>?)
+- ✅ answers (List<AnswerModel>)
+- ✅ createdAt (DateTime)
+- ✅ updatedAt (DateTime)
 
 ### AnswerModel
-- [ ] id (String)
-- [ ] questionId (String)
-- [ ] adminId (String)
-- [ ] adminName (String)
-- [ ] content (String)
-- [ ] attachments (List<Attachment>?)
-- [ ] createdAt (DateTime)
-- [ ] updatedAt (DateTime)
+- ✅ id (String)
+- ✅ questionId (String)
+- ✅ adminId (String)
+- ✅ adminName (String)
+- ✅ content (String)
+- ✅ attachments (List<Attachment>?)
+- ✅ createdAt (DateTime)
+- ✅ updatedAt (DateTime)
 
 ### Enums
 ```dart
@@ -165,19 +165,19 @@ enum QuestionVisibility {
 ---
 
 ## Repository 구현
-- [ ] QnaRepository
-  - [ ] 공개 질문 목록 조회 (GET /qna/public-questions)
-  - [ ] 내 질문 목록 조회 (GET /qna/my-questions)
-  - [ ] 질문 상세 조회 (GET /qna/questions/:id)
-  - [ ] 질문 작성 (POST /qna/questions)
-  - [ ] 질문 수정 (PUT /qna/questions/:id)
-  - [ ] 질문 삭제 (DELETE /qna/questions/:id)
-  - [ ] 질문 해결 완료 (PATCH /qna/questions/:id/resolve)
-  - [ ] 모든 질문 조회 (GET /qna/admin/questions) - ADMIN
-  - [ ] 답변 작성 (POST /qna/questions/:questionId/answers) - ADMIN
-  - [ ] 답변 수정 (PUT /qna/questions/:questionId/answers/:id) - ADMIN
-  - [ ] 답변 삭제 (DELETE /qna/questions/:questionId/answers/:id) - ADMIN
-  - [ ] 통계 조회 (GET /qna/admin/statistics) - ADMIN
+- ✅ QnaRepository
+  - ✅ 공개 질문 목록 조회 (GET /qna/public-questions)
+  - ✅ 내 질문 목록 조회 (GET /qna/my-questions)
+  - ✅ 질문 상세 조회 (GET /qna/questions/:id)
+  - ✅ 질문 작성 (POST /qna/questions)
+  - ✅ 질문 수정 (PUT /qna/questions/:id)
+  - ✅ 질문 삭제 (DELETE /qna/questions/:id)
+  - ✅ 질문 해결 완료 (PATCH /qna/questions/:id/resolve)
+  - ⬜ 모든 질문 조회 (GET /qna/admin/questions) - ADMIN (추후 구현)
+  - ✅ 답변 작성 (POST /qna/questions/:questionId/answers) - ADMIN
+  - ⬜ 답변 수정 (PUT /qna/questions/:questionId/answers/:id) - ADMIN (추후 구현)
+  - ⬜ 답변 삭제 (DELETE /qna/questions/:questionId/answers/:id) - ADMIN (추후 구현)
+  - ⬜ 통계 조회 (GET /qna/admin/statistics) - ADMIN (추후 구현)
 
 ---
 
