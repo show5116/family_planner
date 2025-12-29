@@ -7,6 +7,7 @@ import 'package:family_planner/core/routes/auth_routes.dart';
 import 'package:family_planner/core/routes/main_routes.dart';
 import 'package:family_planner/core/routes/settings_routes.dart';
 import 'package:family_planner/core/routes/admin_routes.dart';
+import 'package:family_planner/core/routes/announcement_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 
 /// GoRouter Provider
@@ -41,6 +42,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       // Admin Routes (관리자)
       ...getAdminRoutes(),
+
+      // Announcement Routes (공지사항)
+      ...getAnnouncementRoutes(),
     ],
 
     // Error Page

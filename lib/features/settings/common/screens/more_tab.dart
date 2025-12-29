@@ -9,6 +9,7 @@ import 'package:family_planner/shared/widgets/menu_list_tile.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/navigation_label_helper.dart';
+import 'package:family_planner/core/utils/user_utils.dart';
 
 /// 더보기 탭
 ///
@@ -46,7 +47,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     final email = _userInfo?['email'] as String?;
     final name = _userInfo?['name'] as String?;
     final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
-    final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
+    final isAdmin = isUserAdmin(_userInfo);
 
     // 하단 네비게이션에 표시되지 않는 메뉴 ID 가져오기
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
