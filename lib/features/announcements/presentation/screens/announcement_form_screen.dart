@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
 import 'package:family_planner/features/announcements/data/dto/announcement_dto.dart';
+import 'package:family_planner/shared/widgets/markdown_editor.dart';
 
 /// 공지사항 작성/수정 화면 (ADMIN 전용)
 class AnnouncementFormScreen extends ConsumerStatefulWidget {
@@ -140,16 +141,16 @@ class _AnnouncementFormScreenState
             ),
             const SizedBox(height: AppSizes.spaceL),
 
-            // 내용 입력
-            TextFormField(
+            // 내용 입력 - 마크다운 에디터 사용
+            MarkdownEditor(
               controller: _contentController,
-              decoration: const InputDecoration(
-                labelText: '내용',
-                hintText: '공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.',
-                border: OutlineInputBorder(),
-                alignLabelWithHint: true,
-              ),
-              maxLines: 15,
+              labelText: '내용',
+              hintText: '공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.',
+              minLines: 15,
+              maxLines: 30,
+              showPreview: true,
+              showToolbar: true,
+              showGuide: true,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return '내용을 입력해주세요';
@@ -162,48 +163,9 @@ class _AnnouncementFormScreenState
             ),
             const SizedBox(height: AppSizes.spaceL),
 
-            // 마크다운 도움말
-            Card(
-              color: AppColors.info.withOpacity(0.05),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSizes.spaceM),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.info_outline,
-                          size: AppSizes.iconSmall,
-                          color: AppColors.info,
-                        ),
-                        const SizedBox(width: AppSizes.spaceS),
-                        Text(
-                          '마크다운 사용 가이드',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    color: AppColors.info,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSizes.spaceS),
-                    Text(
-                      '# 제목\n**굵게** *기울임*\n- 리스트 항목',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontFamily: 'monospace',
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSizes.spaceL),
-
             // 첨부파일 안내 (향후 구현)
             Card(
-              color: AppColors.warning.withOpacity(0.05),
+              color: AppColors.warning.withValues(alpha: 0.05),
               child: Padding(
                 padding: const EdgeInsets.all(AppSizes.spaceM),
                 child: Row(
