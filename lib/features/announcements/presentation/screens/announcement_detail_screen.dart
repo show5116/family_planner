@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:flutter_markdown/flutter_markdown.dart';
+
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
@@ -113,7 +115,7 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                       vertical: AppSizes.spaceXS,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                     ),
                     child: Row(
@@ -201,10 +203,10 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                 const Divider(),
                 const SizedBox(height: AppSizes.spaceL),
 
-                // 내용
-                Text(
-                  announcement.content,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                // 내용 (마크다운 렌더링)
+                MarkdownBody(
+                  data: announcement.content,
+                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
                 ),
 
                 // 첨부파일

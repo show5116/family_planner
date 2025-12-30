@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_markdown/flutter_markdown.dart';
+
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 
@@ -272,9 +275,7 @@ class _MarkdownEditorState extends State<MarkdownEditor> {
     );
   }
 
-  /// 미리보기 위젯 (간단한 텍스트 표시)
-  ///
-  /// TODO: flutter_markdown 패키지를 추가하여 실제 마크다운 렌더링 구현
+  /// 미리보기 위젯 (마크다운 렌더링)
   Widget _buildPreview() {
     final text = widget.controller.text;
 
@@ -289,11 +290,11 @@ class _MarkdownEditorState extends State<MarkdownEditor> {
       );
     }
 
-    return SingleChildScrollView(
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
+    return Markdown(
+      data: text,
+      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
