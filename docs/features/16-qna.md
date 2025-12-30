@@ -1,7 +1,7 @@
 # 16. Q&A (문의하기)
 
 ## 상태
-🟨 진행 중 (기본 구조 완료, UI 구현 필요)
+✅ 완료 (Phase 1: 사용자 기능 완료, 관리자 기능 미구현)
 
 ---
 
@@ -23,45 +23,51 @@
 ## UI 구현
 
 ### 공개 Q&A 화면 (모든 사용자)
-- [ ] 공개 질문 목록 화면
-  - [ ] 카테고리별 필터 (탭 또는 드롭다운)
-  - [ ] 상태별 필터 (전체/대기중/답변완료/해결)
-  - [ ] 검색 기능 (제목/내용)
-  - [ ] 질문 카드 (제목, 카테고리, 상태, 작성일, 답변 개수)
-  - [ ] 페이지네이션 (무한 스크롤)
-- [ ] 공개 질문 상세 화면
-  - [ ] 질문 내용 (제목, 카테고리, 작성자, 작성일, 내용, 첨부파일)
-  - [ ] 답변 목록 (관리자 답변, 작성일, 내용, 첨부파일)
-  - [ ] 공개 질문임을 표시하는 뱃지
+- ✅ 공개 질문 목록 화면
+  - ✅ 카테고리별 필터 (팝업 메뉴)
+  - ✅ 상태별 필터 (탭: 전체/대기중/답변완료/해결)
+  - ✅ 검색 기능 (제목/내용)
+  - ✅ 질문 카드 (제목, 카테고리, 상태, 작성자, 작성일, 답변 개수)
+  - ✅ 페이지네이션 (무한 스크롤)
+  - ✅ Pull-to-refresh
+  - ✅ 빈 상태 화면
+- ✅ 공개 질문 상세 화면
+  - ✅ 질문 내용 (제목, 카테고리, 작성자, 작성일, 내용, 첨부파일)
+  - ✅ 답변 목록 (관리자 답변, 작성일, 내용, 첨부파일)
+  - ✅ 공개 질문임을 표시하는 뱃지
+  - ✅ 마크다운 렌더링
 
 ### 내 질문 화면
-- [ ] 내 질문 목록 화면
-  - [ ] 공개/비공개 모두 표시
-  - [ ] 상태별 필터 (탭)
-  - [ ] 카테고리별 필터
-  - [ ] 질문 카드 (공개/비공개 아이콘 표시)
-- [ ] 내 질문 상세 화면
-  - [ ] 질문 정보 (제목, 카테고리, 상태, 공개여부)
-  - [ ] 질문 내용 및 첨부파일
-  - [ ] 답변 목록
-  - [ ] 수정 버튼 (PENDING 상태만)
-  - [ ] 삭제 버튼
-  - [ ] 해결 완료 버튼 (ANSWERED 상태만)
+- ✅ 내 질문 목록 화면
+  - ✅ 공개/비공개 모두 표시
+  - ✅ 상태별 필터 (탭: 전체/대기중/답변완료/해결)
+  - ✅ 카테고리별 필터 (팝업 메뉴)
+  - ✅ 질문 카드 (공개/비공개 아이콘 표시)
+  - ✅ 페이지네이션 (무한 스크롤)
+  - ✅ Pull-to-refresh
+  - ✅ 빈 상태 화면
+  - ✅ FAB: 질문 작성 버튼
+- ✅ 내 질문 상세 화면
+  - ✅ 질문 정보 (제목, 카테고리, 상태, 공개여부)
+  - ✅ 질문 내용 및 첨부파일 (UI 완료, 다운로드 기능 추후 구현)
+  - ✅ 답변 목록
+  - ✅ 수정 버튼 (PENDING 상태만)
+  - ✅ 삭제 버튼
+  - ✅ 해결 완료 버튼 (ANSWERED 상태만)
+  - ✅ 마크다운 렌더링
 
-### 질문 작성 화면
-- [ ] 카테고리 선택 (버그/기능제안/사용법/계정/결제/기타)
-- [ ] 제목 입력 (1~200자)
-- [ ] 내용 입력 (1~5000자, 마크다운 지원)
-- [ ] 공개/비공개 선택 (라디오 버튼)
+### 질문 작성/수정 화면
+- ✅ 카테고리 선택 (버그/기능제안/사용법/계정/결제/기타) - ChoiceChip
+- ✅ 제목 입력 (1~200자)
+- ✅ 내용 입력 (10~5000자, 마크다운 지원) - MarkdownEditor 사용
+- ✅ 공개/비공개 선택 (라디오 버튼)
   - 공개 설명: "다른 사용자도 볼 수 있습니다 (FAQ로 활용)"
   - 비공개 설명: "나와 관리자만 볼 수 있습니다"
-- [ ] 첨부파일 업로드 (이미지, 문서)
-- [ ] 작성 완료 시 알림 표시: "질문이 등록되었습니다. 답변은 알림으로 안내드립니다."
-
-### 질문 수정 화면
-- [ ] 질문 작성 화면과 동일
-- [ ] PENDING 상태에서만 수정 가능
-- [ ] 답변 완료 후에는 수정 불가 안내
+- ⬜ 첨부파일 업로드 (이미지, 문서) - 추후 구현
+- ✅ 작성 완료 시 알림 표시: "질문이 등록되었습니다. 답변은 알림으로 안내드립니다."
+- ✅ PENDING 상태에서만 수정 가능
+- ✅ 답변 완료 후에는 수정 불가 안내
+- ✅ 안내 메시지 카드
 
 ### 관리자 전용 화면 (ADMIN)
 - [ ] 모든 질문 관리 화면
@@ -137,29 +143,40 @@ enum QuestionVisibility {
 ## Provider 구현
 
 ### 공개 질문
-- [ ] PublicQuestionsProvider (AsyncNotifier)
+- ✅ PublicQuestionsProvider (AsyncNotifier)
   - 공개 질문 목록 조회
   - 카테고리/상태 필터
   - 검색 기능
   - 페이지네이션
+  - 무한 스크롤
 
 ### 내 질문
-- [ ] MyQuestionsProvider (AsyncNotifier)
+- ✅ MyQuestionsProvider (AsyncNotifier)
   - 내 질문 목록 조회
   - 상태/카테고리 필터
   - 새로고침
+  - 페이지네이션
+  - 무한 스크롤
 
 ### 질문 상세
-- [ ] QuestionDetailProvider (FutureProvider)
+- ✅ QuestionDetailProvider (FutureProvider)
   - 질문 상세 조회 (답변 포함)
   - 공개/비공개 권한 확인
 
+### 질문 관리
+- ✅ QuestionManagementProvider (AsyncNotifier)
+  - 질문 작성
+  - 질문 수정
+  - 질문 삭제
+  - 질문 해결 완료
+  - 답변 작성 (ADMIN)
+
 ### 관리자 (ADMIN)
-- [ ] AdminQuestionsProvider (AsyncNotifier)
+- ⬜ AdminQuestionsProvider (AsyncNotifier) - 추후 구현
   - 모든 질문 조회
   - PENDING 우선 정렬
   - 검색/필터
-- [ ] QnaStatisticsProvider (FutureProvider)
+- ⬜ QnaStatisticsProvider (FutureProvider) - 추후 구현
   - 통계 데이터 조회
 
 ---
@@ -182,14 +199,14 @@ enum QuestionVisibility {
 ---
 
 ## 라우팅
-- [ ] `/qna/public` - 공개 Q&A 목록
-- [ ] `/qna/public/:id` - 공개 질문 상세
-- [ ] `/qna/my-questions` - 내 질문 목록
-- [ ] `/qna/my-questions/:id` - 내 질문 상세
-- [ ] `/qna/create` - 질문 작성
-- [ ] `/qna/:id/edit` - 질문 수정
-- [ ] `/admin/qna` - 관리자 질문 관리 (ADMIN)
-- [ ] `/admin/qna/statistics` - 통계 (ADMIN)
+- ✅ `/qna/public` - 공개 Q&A 목록
+- ✅ `/qna/public/:id` - 공개 질문 상세
+- ✅ `/qna/my-questions` - 내 질문 목록
+- ✅ `/qna/my-questions/:id` - 내 질문 상세
+- ✅ `/qna/create` - 질문 작성
+- ✅ `/qna/:id/edit` - 질문 수정
+- ⬜ `/admin/qna` - 관리자 질문 관리 (ADMIN) - 추후 구현
+- ⬜ `/admin/qna/statistics` - 통계 (ADMIN) - 추후 구현
 
 ---
 
@@ -241,25 +258,40 @@ enum QuestionVisibility {
 
 ## 주요 기능 구현 순서
 
-### Phase 1: 사용자 - 질문 작성 및 조회
-1. QuestionModel, AnswerModel, Enum 정의
-2. QnaRepository 구현 (사용자 API)
-3. 질문 작성 화면
-4. 내 질문 목록/상세 화면
-5. 공개 질문 목록/상세 화면
+### Phase 1: 사용자 - 질문 작성 및 조회 ✅
+1. ✅ QuestionModel, AnswerModel, Enum 정의 (기존 완료)
+2. ✅ QnaRepository 구현 (사용자 API) (기존 완료)
+3. ✅ QnaUtils 유틸리티 함수 (카테고리/상태/공개여부 확장 메서드)
+4. ✅ Providers 구현 (PublicQuestions, MyQuestions, QuestionDetail, QuestionManagement)
+5. ✅ 질문 작성/수정 화면 (QuestionFormScreen)
+   - 카테고리 선택 (ChoiceChip)
+   - 공개/비공개 선택 (RadioListTile)
+   - 마크다운 에디터 통합 (MarkdownEditor)
+6. ✅ 내 질문 목록 화면 (MyQuestionsScreen)
+   - 상태별 탭 (전체/대기중/답변완료/해결완료)
+   - 카테고리 필터
+   - 무한 스크롤
+   - Pull-to-refresh
+7. ✅ 내 질문 상세 화면 (QuestionDetailScreen)
+   - 질문 정보 및 내용 (마크다운 렌더링)
+   - 답변 목록 (관리자 답변 표시)
+   - 수정/삭제/해결완료 버튼
+8. ✅ 공개 질문 목록 화면 (PublicQuestionsScreen)
+   - 상태별 탭
+   - 카테고리 필터
+   - 검색 기능
+   - 무한 스크롤
+9. ✅ 라우팅 설정 (qna_routes.dart, app_router.dart, app_routes.dart)
 
-### Phase 2: 사용자 - 질문 관리
-1. 질문 수정 화면
-2. 질문 삭제 기능
-3. 해결 완료 버튼
-4. 첨부파일 업로드/다운로드
+### Phase 2: 사용자 - 질문 관리 ⬜
+1. ⬜ 첨부파일 업로드/다운로드 (추후 구현)
 
-### Phase 3: 관리자 기능
-1. ADMIN 권한 확인
-2. 관리자 질문 관리 화면
-3. 답변 작성 화면
-4. 답변 수정/삭제 기능
-5. 통계 대시보드
+### Phase 3: 관리자 기능 ⬜
+1. ⬜ ADMIN 권한 확인 (isAdminProvider 사용)
+2. ⬜ 관리자 질문 관리 화면 (AdminQuestionsScreen)
+3. ⬜ 답변 작성 화면 (AnswerFormDialog or Screen)
+4. ⬜ 답변 수정/삭제 기능
+5. ⬜ 통계 대시보드 (QnaStatisticsScreen)
 
 ---
 
