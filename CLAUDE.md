@@ -43,6 +43,7 @@ flutter clean && flutter pub get       # 클린 빌드
 ### 🏗️ 아키텍처 문서
 - **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)**: 코드베이스 구조 및 개발 가이드
 - **[UI_ARCHITECTURE.md](UI_ARCHITECTURE.md)**: UI/UX 디자인 시스템 및 화면 구조
+- **[CODE_STYLE.md](CODE_STYLE.md)**: 코드 스타일 및 컨벤션 가이드 (필수 준수)
 
 ### 📚 기능별 상세 문서 (docs/features/)
 각 기능의 요구사항, 진행 상황, API 연동 등을 독립적으로 관리:
@@ -76,7 +77,9 @@ flutter clean && flutter pub get       # 클린 빌드
 ### 작업 중
 1. 기능 개발 시작: 해당 기능 문서의 상태를 🟨 (진행 중)으로 변경
 2. UI 개발 시 디자인 시스템 준수 (색상, 간격, 타이포그래피)
-3. 코드 스타일: `flutter_lints` 규칙 준수
+3. **코드 스타일: [CODE_STYLE.md](CODE_STYLE.md) 가이드 필수 준수**
+4. Import는 절대 경로(`package:family_planner/...`) 사용
+5. 상수(AppColors, AppSizes) 및 Theme 활용
 
 ### 작업 완료 후
 1. 해당 기능 문서의 상태를 ✅ (완료)로 변경
@@ -94,11 +97,41 @@ flutter clean && flutter pub get       # 클린 빌드
 
 ## 코드 스타일 가이드
 
+**⚠️ 중요: 모든 코드는 [CODE_STYLE.md](CODE_STYLE.md)의 규칙을 엄격히 준수해야 합니다.**
+
+### 핵심 규칙 (자세한 내용은 CODE_STYLE.md 참조)
+
+#### Import 규칙
+- ✅ 절대 경로 사용: `import 'package:family_planner/...'`
+- ❌ 상대 경로 금지: `import '../../...'`
+- Import 순서: dart → flutter → 외부패키지 → family_planner → part
+
+#### 명명 규칙
+- 파일명: `snake_case` (announcement_list_screen.dart)
+- 클래스명: `PascalCase` (AnnouncementListScreen)
+- 변수/함수: `camelCase` (isAdmin, handleSubmit)
+- Private: `_camelCase` (_isLoading, _buildContent)
+
+#### 상수 활용
+- ✅ `AppColors.primary`, `AppSizes.spaceM`
+- ✅ `Theme.of(context).textTheme.titleMedium`
+- ❌ 하드코딩 금지: `Color(0xFF...)`, `16.0`
+
+#### 위젯 구조
 - `const` 생성자 적극 활용
-- 위젯은 작고 집중적으로 유지
+- 위젯은 작고 집중적으로 유지 (build 메서드 분해)
 - 상속보다 컴포지션 선호
+- Private 위젯 클래스로 재사용 컴포넌트 분리
+
+#### 상태 관리
+- Riverpod `@riverpod` 어노테이션 사용 (권장)
+- Provider의 `when()` 패턴으로 async 상태 처리
+- 에러 처리 및 로깅 필수
+
+#### 기타
 - `print()` 대신 `debugPrint()` 사용
-- Feature-First 구조 준수 (상세: PROJECT_STRUCTURE.md)
+- 문서 주석(`///`) 작성
+- Feature-First 구조 준수
 
 ## 자주 참조하는 파일
 
