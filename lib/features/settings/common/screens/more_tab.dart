@@ -85,6 +85,18 @@ class _MoreTabState extends ConsumerState<MoreTab> {
             );
           }),
           const Divider(),
+          // 고정 메뉴: 공지사항, QnA
+          MenuListTile(
+            icon: Icons.campaign,
+            title: '공지사항',
+            onTap: () => context.push(AppRoutes.announcements),
+          ),
+          MenuListTile(
+            icon: Icons.question_answer,
+            title: 'Q&A',
+            onTap: () => context.push(AppRoutes.publicQuestions),
+          ),
+          const Divider(),
           // 고정 메뉴: 설정, 로그아웃
           MenuListTile(
             icon: Icons.settings,
