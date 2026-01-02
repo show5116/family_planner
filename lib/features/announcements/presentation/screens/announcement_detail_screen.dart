@@ -159,7 +159,7 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                     ),
                     const SizedBox(width: AppSizes.spaceXS),
                     Text(
-                      announcement.authorName,
+                      announcement.author.name,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -208,43 +208,6 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                   data: announcement.content,
                   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
                 ),
-
-                // 첨부파일
-                if (announcement.attachments?.isNotEmpty == true) ...[
-                  const SizedBox(height: AppSizes.spaceXL),
-                  const Divider(),
-                  const SizedBox(height: AppSizes.spaceL),
-                  Text(
-                    '첨부파일',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                  ...announcement.attachments!.map((attachment) {
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: AppSizes.spaceS),
-                      child: ListTile(
-                        leading: const Icon(Icons.attach_file),
-                        title: Text(attachment.name),
-                        subtitle: Text(
-                          '${(attachment.size / 1024).toStringAsFixed(1)} KB',
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.download),
-                          onPressed: () {
-                            // TODO: 파일 다운로드 구현
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('파일 다운로드 기능은 추후 구현 예정입니다'),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  }),
-                ],
               ],
             ),
           );

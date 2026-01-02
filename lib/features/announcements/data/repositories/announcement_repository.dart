@@ -27,17 +27,24 @@ class AnnouncementRepository {
     bool pinnedOnly = false,
   }) async {
     try {
-      debugPrint('🔵 [AnnouncementRepository] 공지사항 목록 조회 API 호출');
-      debugPrint('  - Page: $page, Limit: $limit, PinnedOnly: $pinnedOnly');
-
       final response = await _dio.get('/announcements', queryParameters: {
         'page': page,
         'limit': limit,
         if (pinnedOnly) 'pinnedOnly': true,
       });
 
-      debugPrint('✅ [AnnouncementRepository] 공지사항 목록 조회 성공');
-      return AnnouncementListResponse.fromJson(response.data);
+      // API 응답 구조: { data: [...], meta: { total, page, limit, totalPages } }
+      final data = response.data as Map<String, dynamic>;
+      final meta = data['meta'] as Map<String, dynamic>;
+
+      return AnnouncementListResponse(
+        items: (data['data'] as List<dynamic>)
+            .map((e) => AnnouncementModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        total: meta['total'] as int,
+        page: meta['page'] as int,
+        limit: meta['limit'] as int,
+      );
     } on DioException catch (e) {
       debugPrint('❌ [AnnouncementRepository] 공지사항 목록 조회 실패: ${e.message}');
       throw Exception('공지사항 목록 조회 실패: ${e.message}');
@@ -47,14 +54,9 @@ class AnnouncementRepository {
   /// 공지사항 상세 조회 (조회 시 자동 읽음 처리)
   Future<AnnouncementModel> getAnnouncementById(String id) async {
     try {
-      debugPrint('🔵 [AnnouncementRepository] 공지사항 상세 조회 API 호출: $id');
-
       final response = await _dio.get('/announcements/$id');
-
-      debugPrint('✅ [AnnouncementRepository] 공지사항 상세 조회 성공');
       return AnnouncementModel.fromJson(response.data);
     } on DioException catch (e) {
-      debugPrint('❌ [AnnouncementRepository] 공지사항 상세 조회 실패: ${e.message}');
       if (e.response?.statusCode == 404) {
         throw Exception('공지사항을 찾을 수 없습니다');
       }
@@ -66,16 +68,9 @@ class AnnouncementRepository {
   Future<AnnouncementModel> createAnnouncement(
       CreateAnnouncementDto dto) async {
     try {
-      debugPrint('🔵 [AnnouncementRepository] 공지사항 작성 API 호출');
-      debugPrint('  - Title: ${dto.title}');
-      debugPrint('  - IsPinned: ${dto.isPinned}');
-
       final response = await _dio.post('/announcements', data: dto.toJson());
-
-      debugPrint('✅ [AnnouncementRepository] 공지사항 작성 성공');
       return AnnouncementModel.fromJson(response.data);
     } on DioException catch (e) {
-      debugPrint('❌ [AnnouncementRepository] 공지사항 작성 실패: ${e.message}');
       throw Exception('공지사항 작성 실패: ${e.message}');
     }
   }
@@ -86,14 +81,9 @@ class AnnouncementRepository {
     CreateAnnouncementDto dto,
   ) async {
     try {
-      debugPrint('🔵 [AnnouncementRepository] 공지사항 수정 API 호출: $id');
-
       final response = await _dio.put('/announcements/$id', data: dto.toJson());
-
-      debugPrint('✅ [AnnouncementRepository] 공지사항 수정 성공');
       return AnnouncementModel.fromJson(response.data);
     } on DioException catch (e) {
-      debugPrint('❌ [AnnouncementRepository] 공지사항 수정 실패: ${e.message}');
       if (e.response?.statusCode == 404) {
         throw Exception('공지사항을 찾을 수 없습니다');
       }
@@ -104,13 +94,8 @@ class AnnouncementRepository {
   /// 공지사항 삭제 (ADMIN 전용)
   Future<void> deleteAnnouncement(String id) async {
     try {
-      debugPrint('🔵 [AnnouncementRepository] 공지사항 삭제 API 호출: $id');
-
       await _dio.delete('/announcements/$id');
-
-      debugPrint('✅ [AnnouncementRepository] 공지사항 삭제 성공');
     } on DioException catch (e) {
-      debugPrint('❌ [AnnouncementRepository] 공지사항 삭제 실패: ${e.message}');
       if (e.response?.statusCode == 404) {
         throw Exception('공지사항을 찾을 수 없습니다');
       }
@@ -121,18 +106,12 @@ class AnnouncementRepository {
   /// 공지사항 고정/해제 (ADMIN 전용)
   Future<AnnouncementModel> togglePin(String id, bool isPinned) async {
     try {
-      debugPrint(
-          '🔵 [AnnouncementRepository] 공지사항 고정/해제 API 호출: $id, isPinned: $isPinned');
-
       final response = await _dio.patch(
         '/announcements/$id/pin',
         data: TogglePinDto(isPinned: isPinned).toJson(),
       );
-
-      debugPrint('✅ [AnnouncementRepository] 공지사항 고정/해제 성공');
       return AnnouncementModel.fromJson(response.data);
     } on DioException catch (e) {
-      debugPrint('❌ [AnnouncementRepository] 공지사항 고정/해제 실패: ${e.message}');
       if (e.response?.statusCode == 404) {
         throw Exception('공지사항을 찾을 수 없습니다');
       }

@@ -90,9 +90,16 @@ class _AnnouncementFormScreenState
               ),
             )
           else
-            TextButton(
-              onPressed: _handleSubmit,
-              child: Text(_isEditMode ? '수정' : '등록'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+              child: FilledButton(
+                onPressed: _handleSubmit,
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                ),
+                child: Text(_isEditMode ? '수정' : '등록'),
+              ),
             ),
         ],
       ),

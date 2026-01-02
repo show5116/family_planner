@@ -82,6 +82,10 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('공개 Q&A'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
         actions: [
           // 카테고리 필터
           PopupMenuButton<QuestionCategory?>(

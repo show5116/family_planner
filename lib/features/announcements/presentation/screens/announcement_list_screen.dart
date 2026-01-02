@@ -55,6 +55,10 @@ class _AnnouncementListScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('공지사항'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
         actions: [
           // ADMIN만 작성 버튼 표시
           if (isAdmin)
@@ -170,6 +174,36 @@ class _AnnouncementCard extends StatelessWidget {
     required this.isAdmin,
   });
 
+  /// 마크다운 구조 제거 (미리보기용)
+  String _stripMarkdown(String markdown) {
+    return markdown
+        // 헤더 제거 (# ## ### 등)
+        .replaceAll(RegExp(r'^#+\s+', multiLine: true), '')
+        // 볼드/이탤릭 제거 (**text**, *text*, __text__, _text_)
+        .replaceAll(RegExp(r'\*\*([^*]+)\*\*'), r'$1')
+        .replaceAll(RegExp(r'__([^_]+)__'), r'$1')
+        .replaceAll(RegExp(r'\*([^*]+)\*'), r'$1')
+        .replaceAll(RegExp(r'_([^_]+)_'), r'$1')
+        // 링크 제거 [text](url)
+        .replaceAll(RegExp(r'\[([^\]]+)\]\([^)]+\)'), r'$1')
+        // 코드 블록 제거 ```code```
+        .replaceAll(RegExp(r'```[^`]*```'), '')
+        // 인라인 코드 제거 `code`
+        .replaceAll(RegExp(r'`([^`]+)`'), r'$1')
+        // 리스트 마커 제거 (-, *, +)
+        .replaceAll(RegExp(r'^[\-\*\+]\s+', multiLine: true), '')
+        // 숫자 리스트 마커 제거 (1. 2. 등)
+        .replaceAll(RegExp(r'^\d+\.\s+', multiLine: true), '')
+        // 인용 제거 (>)
+        .replaceAll(RegExp(r'^>\s+', multiLine: true), '')
+        // 구분선 제거 (---, ***)
+        .replaceAll(RegExp(r'^[\-\*]{3,}$', multiLine: true), '')
+        // 연속된 공백/줄바꿈을 하나로
+        .replaceAll(RegExp(r'\n+'), ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('yyyy.MM.dd');
@@ -177,7 +211,7 @@ class _AnnouncementCard extends StatelessWidget {
     return Card(
       elevation: AppSizes.elevation1,
       color: announcement.isPinned
-          ? AppColors.primary.withOpacity(0.05)
+          ? AppColors.primary.withValues(alpha: 0.05)
           : AppColors.surface,
       child: InkWell(
         onTap: () {
@@ -225,18 +259,18 @@ class _AnnouncementCard extends StatelessWidget {
               // 제목
               Text(
                 announcement.title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight:
-                          announcement.isRead ? FontWeight.normal : FontWeight.bold,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: announcement.isRead ? null : AppColors.primary,
                     ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: AppSizes.spaceXS),
+              const SizedBox(height: AppSizes.spaceS),
 
-              // 내용 미리보기
+              // 내용 미리보기 (마크다운 구조 제거)
               Text(
-                announcement.content,
+                _stripMarkdown(announcement.content),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -244,28 +278,11 @@ class _AnnouncementCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              // 첨부파일 및 읽은 사람 수
-              if (announcement.attachments?.isNotEmpty == true ||
-                  announcement.readCount > 0) ...[
+              // 읽은 사람 수
+              if (announcement.readCount > 0) ...[
                 const SizedBox(height: AppSizes.spaceS),
                 Row(
                   children: [
-                    if (announcement.attachments?.isNotEmpty == true) ...[
-                      Icon(
-                        Icons.attach_file,
-                        size: AppSizes.iconSmall,
-                        color: AppColors.textSecondary,
-                      ),
-                      const SizedBox(width: AppSizes.spaceXS),
-                      Text(
-                        '${announcement.attachments!.length}',
-                        style:
-                            Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
-                      ),
-                      const SizedBox(width: AppSizes.spaceM),
-                    ],
                     Icon(
                       Icons.visibility,
                       size: AppSizes.iconSmall,

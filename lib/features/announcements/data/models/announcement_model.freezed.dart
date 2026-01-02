@@ -202,6 +202,177 @@ abstract class _Attachment implements Attachment {
       throw _privateConstructorUsedError;
 }
 
+AnnouncementAuthor _$AnnouncementAuthorFromJson(Map<String, dynamic> json) {
+  return _AnnouncementAuthor.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AnnouncementAuthor {
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+
+  /// Serializes this AnnouncementAuthor to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of AnnouncementAuthor
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AnnouncementAuthorCopyWith<AnnouncementAuthor> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AnnouncementAuthorCopyWith<$Res> {
+  factory $AnnouncementAuthorCopyWith(
+    AnnouncementAuthor value,
+    $Res Function(AnnouncementAuthor) then,
+  ) = _$AnnouncementAuthorCopyWithImpl<$Res, AnnouncementAuthor>;
+  @useResult
+  $Res call({String id, String name});
+}
+
+/// @nodoc
+class _$AnnouncementAuthorCopyWithImpl<$Res, $Val extends AnnouncementAuthor>
+    implements $AnnouncementAuthorCopyWith<$Res> {
+  _$AnnouncementAuthorCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of AnnouncementAuthor
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? name = null}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$AnnouncementAuthorImplCopyWith<$Res>
+    implements $AnnouncementAuthorCopyWith<$Res> {
+  factory _$$AnnouncementAuthorImplCopyWith(
+    _$AnnouncementAuthorImpl value,
+    $Res Function(_$AnnouncementAuthorImpl) then,
+  ) = __$$AnnouncementAuthorImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String name});
+}
+
+/// @nodoc
+class __$$AnnouncementAuthorImplCopyWithImpl<$Res>
+    extends _$AnnouncementAuthorCopyWithImpl<$Res, _$AnnouncementAuthorImpl>
+    implements _$$AnnouncementAuthorImplCopyWith<$Res> {
+  __$$AnnouncementAuthorImplCopyWithImpl(
+    _$AnnouncementAuthorImpl _value,
+    $Res Function(_$AnnouncementAuthorImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AnnouncementAuthor
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? name = null}) {
+    return _then(
+      _$AnnouncementAuthorImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AnnouncementAuthorImpl implements _AnnouncementAuthor {
+  const _$AnnouncementAuthorImpl({required this.id, required this.name});
+
+  factory _$AnnouncementAuthorImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AnnouncementAuthorImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'AnnouncementAuthor(id: $id, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AnnouncementAuthorImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, name);
+
+  /// Create a copy of AnnouncementAuthor
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AnnouncementAuthorImplCopyWith<_$AnnouncementAuthorImpl> get copyWith =>
+      __$$AnnouncementAuthorImplCopyWithImpl<_$AnnouncementAuthorImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AnnouncementAuthorImplToJson(this);
+  }
+}
+
+abstract class _AnnouncementAuthor implements AnnouncementAuthor {
+  const factory _AnnouncementAuthor({
+    required final String id,
+    required final String name,
+  }) = _$AnnouncementAuthorImpl;
+
+  factory _AnnouncementAuthor.fromJson(Map<String, dynamic> json) =
+      _$AnnouncementAuthorImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get name;
+
+  /// Create a copy of AnnouncementAuthor
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AnnouncementAuthorImplCopyWith<_$AnnouncementAuthorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 AnnouncementModel _$AnnouncementModelFromJson(Map<String, dynamic> json) {
   return _AnnouncementModel.fromJson(json);
 }
@@ -209,12 +380,10 @@ AnnouncementModel _$AnnouncementModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AnnouncementModel {
   String get id => throw _privateConstructorUsedError;
-  String get authorId => throw _privateConstructorUsedError;
-  String get authorName => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   bool get isPinned => throw _privateConstructorUsedError;
-  List<Attachment>? get attachments => throw _privateConstructorUsedError;
+  AnnouncementAuthor get author => throw _privateConstructorUsedError;
   bool get isRead => throw _privateConstructorUsedError;
   int get readCount => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -239,17 +408,17 @@ abstract class $AnnouncementModelCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    String authorId,
-    String authorName,
     String title,
     String content,
     bool isPinned,
-    List<Attachment>? attachments,
+    AnnouncementAuthor author,
     bool isRead,
     int readCount,
     DateTime createdAt,
     DateTime updatedAt,
   });
+
+  $AnnouncementAuthorCopyWith<$Res> get author;
 }
 
 /// @nodoc
@@ -268,12 +437,10 @@ class _$AnnouncementModelCopyWithImpl<$Res, $Val extends AnnouncementModel>
   @override
   $Res call({
     Object? id = null,
-    Object? authorId = null,
-    Object? authorName = null,
     Object? title = null,
     Object? content = null,
     Object? isPinned = null,
-    Object? attachments = freezed,
+    Object? author = null,
     Object? isRead = null,
     Object? readCount = null,
     Object? createdAt = null,
@@ -284,14 +451,6 @@ class _$AnnouncementModelCopyWithImpl<$Res, $Val extends AnnouncementModel>
             id: null == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            authorId: null == authorId
-                ? _value.authorId
-                : authorId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            authorName: null == authorName
-                ? _value.authorName
-                : authorName // ignore: cast_nullable_to_non_nullable
                       as String,
             title: null == title
                 ? _value.title
@@ -305,10 +464,10 @@ class _$AnnouncementModelCopyWithImpl<$Res, $Val extends AnnouncementModel>
                 ? _value.isPinned
                 : isPinned // ignore: cast_nullable_to_non_nullable
                       as bool,
-            attachments: freezed == attachments
-                ? _value.attachments
-                : attachments // ignore: cast_nullable_to_non_nullable
-                      as List<Attachment>?,
+            author: null == author
+                ? _value.author
+                : author // ignore: cast_nullable_to_non_nullable
+                      as AnnouncementAuthor,
             isRead: null == isRead
                 ? _value.isRead
                 : isRead // ignore: cast_nullable_to_non_nullable
@@ -329,6 +488,16 @@ class _$AnnouncementModelCopyWithImpl<$Res, $Val extends AnnouncementModel>
           as $Val,
     );
   }
+
+  /// Create a copy of AnnouncementModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AnnouncementAuthorCopyWith<$Res> get author {
+    return $AnnouncementAuthorCopyWith<$Res>(_value.author, (value) {
+      return _then(_value.copyWith(author: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -342,17 +511,18 @@ abstract class _$$AnnouncementModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    String authorId,
-    String authorName,
     String title,
     String content,
     bool isPinned,
-    List<Attachment>? attachments,
+    AnnouncementAuthor author,
     bool isRead,
     int readCount,
     DateTime createdAt,
     DateTime updatedAt,
   });
+
+  @override
+  $AnnouncementAuthorCopyWith<$Res> get author;
 }
 
 /// @nodoc
@@ -370,12 +540,10 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? authorId = null,
-    Object? authorName = null,
     Object? title = null,
     Object? content = null,
     Object? isPinned = null,
-    Object? attachments = freezed,
+    Object? author = null,
     Object? isRead = null,
     Object? readCount = null,
     Object? createdAt = null,
@@ -386,14 +554,6 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
         id: null == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        authorId: null == authorId
-            ? _value.authorId
-            : authorId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        authorName: null == authorName
-            ? _value.authorName
-            : authorName // ignore: cast_nullable_to_non_nullable
                   as String,
         title: null == title
             ? _value.title
@@ -407,10 +567,10 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
             ? _value.isPinned
             : isPinned // ignore: cast_nullable_to_non_nullable
                   as bool,
-        attachments: freezed == attachments
-            ? _value._attachments
-            : attachments // ignore: cast_nullable_to_non_nullable
-                  as List<Attachment>?,
+        author: null == author
+            ? _value.author
+            : author // ignore: cast_nullable_to_non_nullable
+                  as AnnouncementAuthor,
         isRead: null == isRead
             ? _value.isRead
             : isRead // ignore: cast_nullable_to_non_nullable
@@ -437,17 +597,15 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
 class _$AnnouncementModelImpl implements _AnnouncementModel {
   const _$AnnouncementModelImpl({
     required this.id,
-    required this.authorId,
-    required this.authorName,
     required this.title,
     required this.content,
     this.isPinned = false,
-    final List<Attachment>? attachments,
+    required this.author,
     this.isRead = false,
     this.readCount = 0,
     required this.createdAt,
     required this.updatedAt,
-  }) : _attachments = attachments;
+  });
 
   factory _$AnnouncementModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AnnouncementModelImplFromJson(json);
@@ -455,26 +613,14 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
   @override
   final String id;
   @override
-  final String authorId;
-  @override
-  final String authorName;
-  @override
   final String title;
   @override
   final String content;
   @override
   @JsonKey()
   final bool isPinned;
-  final List<Attachment>? _attachments;
   @override
-  List<Attachment>? get attachments {
-    final value = _attachments;
-    if (value == null) return null;
-    if (_attachments is EqualUnmodifiableListView) return _attachments;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  final AnnouncementAuthor author;
   @override
   @JsonKey()
   final bool isRead;
@@ -488,7 +634,7 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
 
   @override
   String toString() {
-    return 'AnnouncementModel(id: $id, authorId: $authorId, authorName: $authorName, title: $title, content: $content, isPinned: $isPinned, attachments: $attachments, isRead: $isRead, readCount: $readCount, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'AnnouncementModel(id: $id, title: $title, content: $content, isPinned: $isPinned, author: $author, isRead: $isRead, readCount: $readCount, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -497,18 +643,11 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
         (other.runtimeType == runtimeType &&
             other is _$AnnouncementModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.authorId, authorId) ||
-                other.authorId == authorId) &&
-            (identical(other.authorName, authorName) ||
-                other.authorName == authorName) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.isPinned, isPinned) ||
                 other.isPinned == isPinned) &&
-            const DeepCollectionEquality().equals(
-              other._attachments,
-              _attachments,
-            ) &&
+            (identical(other.author, author) || other.author == author) &&
             (identical(other.isRead, isRead) || other.isRead == isRead) &&
             (identical(other.readCount, readCount) ||
                 other.readCount == readCount) &&
@@ -523,12 +662,10 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
   int get hashCode => Object.hash(
     runtimeType,
     id,
-    authorId,
-    authorName,
     title,
     content,
     isPinned,
-    const DeepCollectionEquality().hash(_attachments),
+    author,
     isRead,
     readCount,
     createdAt,
@@ -555,12 +692,10 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
 abstract class _AnnouncementModel implements AnnouncementModel {
   const factory _AnnouncementModel({
     required final String id,
-    required final String authorId,
-    required final String authorName,
     required final String title,
     required final String content,
     final bool isPinned,
-    final List<Attachment>? attachments,
+    required final AnnouncementAuthor author,
     final bool isRead,
     final int readCount,
     required final DateTime createdAt,
@@ -573,17 +708,13 @@ abstract class _AnnouncementModel implements AnnouncementModel {
   @override
   String get id;
   @override
-  String get authorId;
-  @override
-  String get authorName;
-  @override
   String get title;
   @override
   String get content;
   @override
   bool get isPinned;
   @override
-  List<Attachment>? get attachments;
+  AnnouncementAuthor get author;
   @override
   bool get isRead;
   @override
@@ -743,10 +874,10 @@ class __$$AnnouncementListResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AnnouncementListResponseImpl implements _AnnouncementListResponse {
   const _$AnnouncementListResponseImpl({
-    required final List<AnnouncementModel> items,
-    required this.total,
-    required this.page,
-    required this.limit,
+    final List<AnnouncementModel> items = const [],
+    this.total = 0,
+    this.page = 1,
+    this.limit = 20,
   }) : _items = items;
 
   factory _$AnnouncementListResponseImpl.fromJson(Map<String, dynamic> json) =>
@@ -754,6 +885,7 @@ class _$AnnouncementListResponseImpl implements _AnnouncementListResponse {
 
   final List<AnnouncementModel> _items;
   @override
+  @JsonKey()
   List<AnnouncementModel> get items {
     if (_items is EqualUnmodifiableListView) return _items;
     // ignore: implicit_dynamic_type
@@ -761,10 +893,13 @@ class _$AnnouncementListResponseImpl implements _AnnouncementListResponse {
   }
 
   @override
+  @JsonKey()
   final int total;
   @override
+  @JsonKey()
   final int page;
   @override
+  @JsonKey()
   final int limit;
 
   @override
@@ -812,10 +947,10 @@ class _$AnnouncementListResponseImpl implements _AnnouncementListResponse {
 
 abstract class _AnnouncementListResponse implements AnnouncementListResponse {
   const factory _AnnouncementListResponse({
-    required final List<AnnouncementModel> items,
-    required final int total,
-    required final int page,
-    required final int limit,
+    final List<AnnouncementModel> items,
+    final int total,
+    final int page,
+    final int limit,
   }) = _$AnnouncementListResponseImpl;
 
   factory _AnnouncementListResponse.fromJson(Map<String, dynamic> json) =

@@ -20,18 +20,25 @@ Map<String, dynamic> _$$AttachmentImplToJson(_$AttachmentImpl instance) =>
       'size': instance.size,
     };
 
+_$AnnouncementAuthorImpl _$$AnnouncementAuthorImplFromJson(
+  Map<String, dynamic> json,
+) => _$AnnouncementAuthorImpl(
+  id: json['id'] as String,
+  name: json['name'] as String,
+);
+
+Map<String, dynamic> _$$AnnouncementAuthorImplToJson(
+  _$AnnouncementAuthorImpl instance,
+) => <String, dynamic>{'id': instance.id, 'name': instance.name};
+
 _$AnnouncementModelImpl _$$AnnouncementModelImplFromJson(
   Map<String, dynamic> json,
 ) => _$AnnouncementModelImpl(
   id: json['id'] as String,
-  authorId: json['authorId'] as String,
-  authorName: json['authorName'] as String,
   title: json['title'] as String,
   content: json['content'] as String,
   isPinned: json['isPinned'] as bool? ?? false,
-  attachments: (json['attachments'] as List<dynamic>?)
-      ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  author: AnnouncementAuthor.fromJson(json['author'] as Map<String, dynamic>),
   isRead: json['isRead'] as bool? ?? false,
   readCount: (json['readCount'] as num?)?.toInt() ?? 0,
   createdAt: DateTime.parse(json['createdAt'] as String),
@@ -42,12 +49,10 @@ Map<String, dynamic> _$$AnnouncementModelImplToJson(
   _$AnnouncementModelImpl instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'authorId': instance.authorId,
-  'authorName': instance.authorName,
   'title': instance.title,
   'content': instance.content,
   'isPinned': instance.isPinned,
-  'attachments': instance.attachments,
+  'author': instance.author,
   'isRead': instance.isRead,
   'readCount': instance.readCount,
   'createdAt': instance.createdAt.toIso8601String(),
@@ -57,12 +62,14 @@ Map<String, dynamic> _$$AnnouncementModelImplToJson(
 _$AnnouncementListResponseImpl _$$AnnouncementListResponseImplFromJson(
   Map<String, dynamic> json,
 ) => _$AnnouncementListResponseImpl(
-  items: (json['items'] as List<dynamic>)
-      .map((e) => AnnouncementModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  total: (json['total'] as num).toInt(),
-  page: (json['page'] as num).toInt(),
-  limit: (json['limit'] as num).toInt(),
+  items:
+      (json['items'] as List<dynamic>?)
+          ?.map((e) => AnnouncementModel.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  total: (json['total'] as num?)?.toInt() ?? 0,
+  page: (json['page'] as num?)?.toInt() ?? 1,
+  limit: (json['limit'] as num?)?.toInt() ?? 20,
 );
 
 Map<String, dynamic> _$$AnnouncementListResponseImplToJson(

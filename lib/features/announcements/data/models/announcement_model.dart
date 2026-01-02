@@ -16,17 +16,27 @@ class Attachment with _$Attachment {
       _$AttachmentFromJson(json);
 }
 
+/// 작성자 정보 모델
+@freezed
+class AnnouncementAuthor with _$AnnouncementAuthor {
+  const factory AnnouncementAuthor({
+    required String id,
+    required String name,
+  }) = _AnnouncementAuthor;
+
+  factory AnnouncementAuthor.fromJson(Map<String, dynamic> json) =>
+      _$AnnouncementAuthorFromJson(json);
+}
+
 /// 공지사항 모델
 @freezed
 class AnnouncementModel with _$AnnouncementModel {
   const factory AnnouncementModel({
     required String id,
-    required String authorId,
-    required String authorName,
     required String title,
     required String content,
     @Default(false) bool isPinned,
-    List<Attachment>? attachments,
+    required AnnouncementAuthor author,
     @Default(false) bool isRead,
     @Default(0) int readCount,
     required DateTime createdAt,
@@ -41,10 +51,10 @@ class AnnouncementModel with _$AnnouncementModel {
 @freezed
 class AnnouncementListResponse with _$AnnouncementListResponse {
   const factory AnnouncementListResponse({
-    required List<AnnouncementModel> items,
-    required int total,
-    required int page,
-    required int limit,
+    @Default([]) List<AnnouncementModel> items,
+    @Default(0) int total,
+    @Default(1) int page,
+    @Default(20) int limit,
   }) = _AnnouncementListResponse;
 
   factory AnnouncementListResponse.fromJson(Map<String, dynamic> json) =>
