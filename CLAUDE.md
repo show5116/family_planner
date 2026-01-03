@@ -41,7 +41,6 @@ flutter clean && flutter pub get       # 클린 빌드
 - **[TODO.md](TODO.md)**: 기능별 문서 인덱스 (빠른 참조용)
 
 ### 🏗️ 아키텍처 문서
-- **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)**: 코드베이스 구조 및 개발 가이드
 - **[UI_ARCHITECTURE.md](UI_ARCHITECTURE.md)**: UI/UX 디자인 시스템 및 화면 구조
 - **[CODE_STYLE.md](CODE_STYLE.md)**: 코드 스타일 및 컨벤션 가이드 (필수 준수)
 
