@@ -381,5 +381,54 @@
   "error_unknown": "An unknown error occurred",
 
   "common_comingSoon": "Coming Soon",
-  "common_logoutFailed": "Logout Failed"
+  "common_logoutFailed": "Logout Failed",
+
+  "announcement_title": "Announcements",
+  "announcement_list": "Announcement List",
+  "announcement_detail": "Announcement Detail",
+  "announcement_create": "Create Announcement",
+  "announcement_edit": "Edit Announcement",
+  "announcement_delete": "Delete Announcement",
+  "announcement_pin": "Pin to Top",
+  "announcement_unpin": "Unpin",
+  "announcement_pinned": "Pinned",
+  "announcement_pinDescription": "Pin important announcements to the top of the list",
+  "announcement_category": "Category",
+  "announcement_category_none": "No Category",
+  "announcement_category_announcement": "Announcement",
+  "announcement_category_event": "Event",
+  "announcement_category_update": "Update",
+  "announcement_content": "Content",
+  "announcement_author": "Author",
+  "announcement_createdAt": "Created",
+  "announcement_updatedAt": "Updated",
+  "announcement_readCount": "{count} read",
+  "@announcement_readCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "announcement_createSuccess": "Announcement created",
+  "announcement_createError": "Failed to create announcement",
+  "announcement_updateSuccess": "Announcement updated",
+  "announcement_updateError": "Failed to update announcement",
+  "announcement_deleteSuccess": "Announcement deleted",
+  "announcement_deleteError": "Failed to delete announcement",
+  "announcement_deleteDialogTitle": "Delete Announcement",
+  "announcement_deleteDialogMessage": "Are you sure you want to delete this announcement?\nThis cannot be undone.",
+  "announcement_pinSuccess": "Announcement pinned",
+  "announcement_unpinSuccess": "Announcement unpinned",
+  "announcement_deleteConfirm": "Delete this announcement?\nThis cannot be undone.",
+  "announcement_loadError": "Failed to load announcement",
+  "announcement_empty": "No announcements yet",
+  "announcement_titleHint": "Enter announcement title",
+  "announcement_contentHint": "Enter announcement content\n\nMarkdown is supported.",
+  "announcement_categoryHint": "Select category (optional)",
+  "announcement_titleRequired": "Please enter a title",
+  "announcement_titleMinLength": "Title must be at least 3 characters",
+  "announcement_contentRequired": "Please enter content",
+  "announcement_contentMinLength": "Content must be at least 10 characters",
+  "announcement_attachmentComingSoon": "File attachment feature coming soon"
 }

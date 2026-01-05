@@ -382,6 +382,7 @@ mixin _$AnnouncementModel {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  AnnouncementCategory? get category => throw _privateConstructorUsedError;
   bool get isPinned => throw _privateConstructorUsedError;
   AnnouncementAuthor get author => throw _privateConstructorUsedError;
   bool get isRead => throw _privateConstructorUsedError;
@@ -410,6 +411,7 @@ abstract class $AnnouncementModelCopyWith<$Res> {
     String id,
     String title,
     String content,
+    AnnouncementCategory? category,
     bool isPinned,
     AnnouncementAuthor author,
     bool isRead,
@@ -439,6 +441,7 @@ class _$AnnouncementModelCopyWithImpl<$Res, $Val extends AnnouncementModel>
     Object? id = null,
     Object? title = null,
     Object? content = null,
+    Object? category = freezed,
     Object? isPinned = null,
     Object? author = null,
     Object? isRead = null,
@@ -460,6 +463,10 @@ class _$AnnouncementModelCopyWithImpl<$Res, $Val extends AnnouncementModel>
                 ? _value.content
                 : content // ignore: cast_nullable_to_non_nullable
                       as String,
+            category: freezed == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as AnnouncementCategory?,
             isPinned: null == isPinned
                 ? _value.isPinned
                 : isPinned // ignore: cast_nullable_to_non_nullable
@@ -513,6 +520,7 @@ abstract class _$$AnnouncementModelImplCopyWith<$Res>
     String id,
     String title,
     String content,
+    AnnouncementCategory? category,
     bool isPinned,
     AnnouncementAuthor author,
     bool isRead,
@@ -542,6 +550,7 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? title = null,
     Object? content = null,
+    Object? category = freezed,
     Object? isPinned = null,
     Object? author = null,
     Object? isRead = null,
@@ -563,6 +572,10 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
             ? _value.content
             : content // ignore: cast_nullable_to_non_nullable
                   as String,
+        category: freezed == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as AnnouncementCategory?,
         isPinned: null == isPinned
             ? _value.isPinned
             : isPinned // ignore: cast_nullable_to_non_nullable
@@ -599,6 +612,7 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
     required this.id,
     required this.title,
     required this.content,
+    this.category,
     this.isPinned = false,
     required this.author,
     this.isRead = false,
@@ -617,6 +631,8 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
   @override
   final String content;
   @override
+  final AnnouncementCategory? category;
+  @override
   @JsonKey()
   final bool isPinned;
   @override
@@ -634,7 +650,7 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
 
   @override
   String toString() {
-    return 'AnnouncementModel(id: $id, title: $title, content: $content, isPinned: $isPinned, author: $author, isRead: $isRead, readCount: $readCount, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'AnnouncementModel(id: $id, title: $title, content: $content, category: $category, isPinned: $isPinned, author: $author, isRead: $isRead, readCount: $readCount, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -645,6 +661,8 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
             (identical(other.isPinned, isPinned) ||
                 other.isPinned == isPinned) &&
             (identical(other.author, author) || other.author == author) &&
@@ -664,6 +682,7 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
     id,
     title,
     content,
+    category,
     isPinned,
     author,
     isRead,
@@ -694,6 +713,7 @@ abstract class _AnnouncementModel implements AnnouncementModel {
     required final String id,
     required final String title,
     required final String content,
+    final AnnouncementCategory? category,
     final bool isPinned,
     required final AnnouncementAuthor author,
     final bool isRead,
@@ -711,6 +731,8 @@ abstract class _AnnouncementModel implements AnnouncementModel {
   String get title;
   @override
   String get content;
+  @override
+  AnnouncementCategory? get category;
   @override
   bool get isPinned;
   @override

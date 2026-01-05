@@ -972,4 +972,131 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get common_logoutFailed => 'ログアウト失敗';
+
+  @override
+  String get announcement_title => 'お知らせ';
+
+  @override
+  String get announcement_list => 'お知らせ一覧';
+
+  @override
+  String get announcement_detail => 'お知らせ詳細';
+
+  @override
+  String get announcement_create => 'お知らせ作成';
+
+  @override
+  String get announcement_edit => 'お知らせ編集';
+
+  @override
+  String get announcement_delete => 'お知らせ削除';
+
+  @override
+  String get announcement_pin => '上部固定';
+
+  @override
+  String get announcement_unpin => '固定解除';
+
+  @override
+  String get announcement_pinned => '固定お知らせ';
+
+  @override
+  String get announcement_pinDescription => '重要なお知らせをリストの上部に固定します';
+
+  @override
+  String get announcement_category => 'カテゴリー';
+
+  @override
+  String get announcement_category_none => 'カテゴリーなし';
+
+  @override
+  String get announcement_category_announcement => 'お知らせ';
+
+  @override
+  String get announcement_category_event => 'イベント';
+
+  @override
+  String get announcement_category_update => 'アップデート';
+
+  @override
+  String get announcement_content => '内容';
+
+  @override
+  String get announcement_author => '作成者';
+
+  @override
+  String get announcement_createdAt => '作成日';
+
+  @override
+  String get announcement_updatedAt => '更新日';
+
+  @override
+  String announcement_readCount(int count) {
+    return '$count人が閲覧';
+  }
+
+  @override
+  String get announcement_createSuccess => 'お知らせを登録しました';
+
+  @override
+  String get announcement_createError => 'お知らせの登録に失敗しました';
+
+  @override
+  String get announcement_updateSuccess => 'お知らせを更新しました';
+
+  @override
+  String get announcement_updateError => 'お知らせの更新に失敗しました';
+
+  @override
+  String get announcement_deleteSuccess => 'お知らせを削除しました';
+
+  @override
+  String get announcement_deleteError => 'お知らせの削除に失敗しました';
+
+  @override
+  String get announcement_deleteDialogTitle => 'お知らせの削除';
+
+  @override
+  String get announcement_deleteDialogMessage =>
+      'このお知らせを削除しますか？\n削除されたお知らせは復元できません。';
+
+  @override
+  String get announcement_pinSuccess => 'お知らせを固定しました';
+
+  @override
+  String get announcement_unpinSuccess => '固定を解除しました';
+
+  @override
+  String get announcement_deleteConfirm => 'このお知らせを削除しますか？\n削除されたお知らせは復元できません。';
+
+  @override
+  String get announcement_loadError => 'お知らせを読み込めません';
+
+  @override
+  String get announcement_empty => '登録されたお知らせがありません';
+
+  @override
+  String get announcement_titleHint => 'お知らせのタイトルを入力してください';
+
+  @override
+  String get announcement_contentHint =>
+      'お知らせの内容を入力してください\n\nMarkdown形式をサポートしています。';
+
+  @override
+  String get announcement_categoryHint => 'カテゴリーを選択してください（任意）';
+
+  @override
+  String get announcement_titleRequired => 'タイトルを入力してください';
+
+  @override
+  String get announcement_titleMinLength => 'タイトルは3文字以上入力してください';
+
+  @override
+  String get announcement_contentRequired => '内容を入力してください';
+
+  @override
+  String get announcement_contentMinLength => '内容は10文字以上入力してください';
+
+  @override
+  String get announcement_attachmentComingSoon => 'ファイル添付機能は今後のアップデートで提供予定です';
 }

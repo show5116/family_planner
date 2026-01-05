@@ -9,6 +9,8 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
 import 'package:family_planner/features/announcements/utils/announcement_utils.dart';
+import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 공지사항 상세 화면
 class AnnouncementDetailScreen extends ConsumerWidget {
@@ -21,13 +23,14 @@ class AnnouncementDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final announcementAsync =
         ref.watch(announcementDetailProvider(announcementId));
     final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('공지사항'),
+        title: Text(l10n.announcement_detail),
         actions: [
           // ADMIN만 수정/삭제 버튼 표시
           if (isAdmin)
@@ -48,7 +51,7 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(newPinState ? '공지사항이 고정되었습니다' : '고정이 해제되었습니다'),
+                          content: Text(newPinState ? l10n.announcement_pinSuccess : l10n.announcement_unpinSuccess),
                         ),
                       );
                     }
@@ -60,13 +63,13 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                 final isPinned = announcement?.isPinned ?? false;
 
                 return [
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'edit',
                     child: Row(
                       children: [
-                        Icon(Icons.edit, size: AppSizes.iconSmall),
-                        SizedBox(width: AppSizes.spaceS),
-                        Text('수정'),
+                        const Icon(Icons.edit, size: AppSizes.iconSmall),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(l10n.common_edit),
                       ],
                     ),
                   ),
@@ -79,17 +82,17 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                           size: AppSizes.iconSmall,
                         ),
                         const SizedBox(width: AppSizes.spaceS),
-                        Text(isPinned ? '고정 해제' : '고정'),
+                        Text(isPinned ? l10n.announcement_unpin : l10n.announcement_pin),
                       ],
                     ),
                   ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete, size: AppSizes.iconSmall, color: AppColors.error),
-                        SizedBox(width: AppSizes.spaceS),
-                        Text('삭제', style: TextStyle(color: AppColors.error)),
+                        const Icon(Icons.delete, size: AppSizes.iconSmall, color: AppColors.error),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(l10n.common_delete, style: const TextStyle(color: AppColors.error)),
                       ],
                     ),
                   ),
@@ -107,38 +110,76 @@ class AnnouncementDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 고정 뱃지
-                if (announcement.isPinned)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceS,
-                      vertical: AppSizes.spaceXS,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.push_pin,
-                          size: AppSizes.iconSmall,
-                          color: AppColors.primary,
+                // 뱃지 영역 (카테고리 + 고정)
+                Row(
+                  children: [
+                    // 카테고리 뱃지
+                    if (announcement.category != null) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.spaceS,
+                          vertical: AppSizes.spaceXS,
                         ),
-                        const SizedBox(width: AppSizes.spaceXS),
-                        Text(
-                          '고정 공지',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppColors.primary,
+                        decoration: BoxDecoration(
+                          color: announcement.category!.color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              announcement.category!.icon,
+                              size: AppSizes.iconSmall,
+                              color: announcement.category!.color,
+                            ),
+                            const SizedBox(width: AppSizes.spaceXS),
+                            Text(
+                              announcement.category!.displayName(l10n),
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: announcement.category!.color,
                                     fontWeight: FontWeight.bold,
                                   ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                if (announcement.isPinned) const SizedBox(height: AppSizes.spaceM),
+                      ),
+                      const SizedBox(width: AppSizes.spaceS),
+                    ],
+                    // 고정 뱃지
+                    if (announcement.isPinned)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.spaceS,
+                          vertical: AppSizes.spaceXS,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.push_pin,
+                              size: AppSizes.iconSmall,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: AppSizes.spaceXS),
+                            Text(
+                              l10n.announcement_pinned,
+                              style:
+                                  Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+                if (announcement.isPinned || announcement.category != null)
+                  const SizedBox(height: AppSizes.spaceM),
 
                 // 제목
                 Text(
@@ -191,7 +232,7 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                     ),
                     const SizedBox(width: AppSizes.spaceXS),
                     Text(
-                      '${announcement.readCount}명이 읽음',
+                      l10n.announcement_readCount(announcement.readCount),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -224,7 +265,7 @@ class AnnouncementDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: AppSizes.spaceL),
               Text(
-                '공지사항을 불러올 수 없습니다',
+                l10n.announcement_loadError,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: AppSizes.spaceS),
@@ -244,15 +285,16 @@ class AnnouncementDetailScreen extends ConsumerWidget {
 
   /// 삭제 확인 다이얼로그
   void _showDeleteConfirmDialog(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('공지사항 삭제'),
-        content: const Text('이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.'),
+        title: Text(l10n.announcement_deleteDialogTitle),
+        content: Text(l10n.announcement_deleteDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -265,18 +307,18 @@ class AnnouncementDetailScreen extends ConsumerWidget {
               if (context.mounted) {
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('공지사항이 삭제되었습니다')),
+                    SnackBar(content: Text(l10n.announcement_deleteSuccess)),
                   );
                   context.pop(); // 목록으로 돌아가기
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('공지사항 삭제에 실패했습니다')),
+                    SnackBar(content: Text(l10n.announcement_deleteError)),
                   );
                 }
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),

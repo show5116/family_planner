@@ -8,6 +8,8 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
 import 'package:family_planner/features/announcements/utils/announcement_utils.dart';
 import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
+import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 공지사항 목록 화면
 class AnnouncementListScreen extends ConsumerStatefulWidget {
@@ -49,12 +51,13 @@ class _AnnouncementListScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final announcementsAsync = ref.watch(announcementListProvider);
     final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('공지사항'),
+        title: Text(l10n.announcement_title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -64,7 +67,7 @@ class _AnnouncementListScreenState
           if (isAdmin)
             IconButton(
               icon: const Icon(Icons.add),
-              tooltip: '공지사항 작성',
+              tooltip: l10n.announcement_create,
               onPressed: () {
                 context.push('/announcements/create');
               },
@@ -105,6 +108,7 @@ class _AnnouncementListScreenState
 
   /// 빈 상태 위젯
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +120,7 @@ class _AnnouncementListScreenState
           ),
           const SizedBox(height: AppSizes.spaceL),
           Text(
-            '등록된 공지사항이 없습니다',
+            l10n.announcement_empty,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -128,6 +132,7 @@ class _AnnouncementListScreenState
 
   /// 에러 상태 위젯
   Widget _buildErrorState(String error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +144,7 @@ class _AnnouncementListScreenState
           ),
           const SizedBox(height: AppSizes.spaceL),
           Text(
-            '공지사항을 불러올 수 없습니다',
+            l10n.announcement_loadError,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: AppSizes.spaceS),
@@ -156,7 +161,7 @@ class _AnnouncementListScreenState
               ref.read(announcementListProvider.notifier).refresh();
             },
             icon: const Icon(Icons.refresh),
-            label: const Text('다시 시도'),
+            label: Text(l10n.common_retry),
           ),
         ],
       ),
@@ -206,6 +211,7 @@ class _AnnouncementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('yyyy.MM.dd');
 
     return Card(
@@ -256,6 +262,44 @@ class _AnnouncementCard extends StatelessWidget {
               ),
               const SizedBox(height: AppSizes.spaceS),
 
+              // 카테고리 뱃지 + 제목
+              Row(
+                children: [
+                  if (announcement.category != null) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceS,
+                        vertical: AppSizes.spaceXS,
+                      ),
+                      decoration: BoxDecoration(
+                        color: announcement.category!.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            announcement.category!.icon,
+                            size: AppSizes.iconSmall,
+                            color: announcement.category!.color,
+                          ),
+                          const SizedBox(width: AppSizes.spaceXS),
+                          Text(
+                            announcement.category!.displayName(l10n),
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  color: announcement.category!.color,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                  ],
+                ],
+              ),
+              if (announcement.category != null) const SizedBox(height: AppSizes.spaceS),
+
               // 제목
               Text(
                 announcement.title,
@@ -290,7 +334,7 @@ class _AnnouncementCard extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSizes.spaceXS),
                     Text(
-                      '${announcement.readCount}명 읽음',
+                      l10n.announcement_readCount(announcement.readCount),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.textSecondary,
                           ),

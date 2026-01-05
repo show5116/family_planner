@@ -974,4 +974,131 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get common_logoutFailed => '로그아웃 실패';
+
+  @override
+  String get announcement_title => '공지사항';
+
+  @override
+  String get announcement_list => '공지사항 목록';
+
+  @override
+  String get announcement_detail => '공지사항 상세';
+
+  @override
+  String get announcement_create => '공지사항 작성';
+
+  @override
+  String get announcement_edit => '공지사항 수정';
+
+  @override
+  String get announcement_delete => '공지사항 삭제';
+
+  @override
+  String get announcement_pin => '상단 고정';
+
+  @override
+  String get announcement_unpin => '고정 해제';
+
+  @override
+  String get announcement_pinned => '고정 공지';
+
+  @override
+  String get announcement_pinDescription => '중요한 공지사항을 목록 상단에 고정합니다';
+
+  @override
+  String get announcement_category => '카테고리';
+
+  @override
+  String get announcement_category_none => '카테고리 없음';
+
+  @override
+  String get announcement_category_announcement => '공지';
+
+  @override
+  String get announcement_category_event => '이벤트';
+
+  @override
+  String get announcement_category_update => '업데이트';
+
+  @override
+  String get announcement_content => '내용';
+
+  @override
+  String get announcement_author => '작성자';
+
+  @override
+  String get announcement_createdAt => '작성일';
+
+  @override
+  String get announcement_updatedAt => '수정일';
+
+  @override
+  String announcement_readCount(int count) {
+    return '$count명 읽음';
+  }
+
+  @override
+  String get announcement_createSuccess => '공지사항이 등록되었습니다';
+
+  @override
+  String get announcement_createError => '공지사항 등록에 실패했습니다';
+
+  @override
+  String get announcement_updateSuccess => '공지사항이 수정되었습니다';
+
+  @override
+  String get announcement_updateError => '공지사항 수정에 실패했습니다';
+
+  @override
+  String get announcement_deleteSuccess => '공지사항이 삭제되었습니다';
+
+  @override
+  String get announcement_deleteError => '공지사항 삭제에 실패했습니다';
+
+  @override
+  String get announcement_deleteDialogTitle => '공지사항 삭제';
+
+  @override
+  String get announcement_deleteDialogMessage =>
+      '이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.';
+
+  @override
+  String get announcement_pinSuccess => '공지사항이 고정되었습니다';
+
+  @override
+  String get announcement_unpinSuccess => '고정이 해제되었습니다';
+
+  @override
+  String get announcement_deleteConfirm =>
+      '이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.';
+
+  @override
+  String get announcement_loadError => '공지사항을 불러올 수 없습니다';
+
+  @override
+  String get announcement_empty => '등록된 공지사항이 없습니다';
+
+  @override
+  String get announcement_titleHint => '공지사항 제목을 입력하세요';
+
+  @override
+  String get announcement_contentHint => '공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.';
+
+  @override
+  String get announcement_categoryHint => '카테고리를 선택하세요 (선택사항)';
+
+  @override
+  String get announcement_titleRequired => '제목을 입력해주세요';
+
+  @override
+  String get announcement_titleMinLength => '제목은 최소 3자 이상 입력해주세요';
+
+  @override
+  String get announcement_contentRequired => '내용을 입력해주세요';
+
+  @override
+  String get announcement_contentMinLength => '내용은 최소 10자 이상 입력해주세요';
+
+  @override
+  String get announcement_attachmentComingSoon => '첨부파일 업로드 기능은 추후 업데이트 예정입니다';
 }

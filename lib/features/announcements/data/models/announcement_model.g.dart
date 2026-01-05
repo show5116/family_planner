@@ -37,6 +37,10 @@ _$AnnouncementModelImpl _$$AnnouncementModelImplFromJson(
   id: json['id'] as String,
   title: json['title'] as String,
   content: json['content'] as String,
+  category: $enumDecodeNullable(
+    _$AnnouncementCategoryEnumMap,
+    json['category'],
+  ),
   isPinned: json['isPinned'] as bool? ?? false,
   author: AnnouncementAuthor.fromJson(json['author'] as Map<String, dynamic>),
   isRead: json['isRead'] as bool? ?? false,
@@ -51,12 +55,19 @@ Map<String, dynamic> _$$AnnouncementModelImplToJson(
   'id': instance.id,
   'title': instance.title,
   'content': instance.content,
+  'category': _$AnnouncementCategoryEnumMap[instance.category],
   'isPinned': instance.isPinned,
   'author': instance.author,
   'isRead': instance.isRead,
   'readCount': instance.readCount,
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
+};
+
+const _$AnnouncementCategoryEnumMap = {
+  AnnouncementCategory.announcement: 'announcement',
+  AnnouncementCategory.event: 'event',
+  AnnouncementCategory.update: 'update',
 };
 
 _$AnnouncementListResponseImpl _$$AnnouncementListResponseImplFromJson(

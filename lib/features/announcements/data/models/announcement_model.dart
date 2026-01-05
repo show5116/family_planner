@@ -28,6 +28,13 @@ class AnnouncementAuthor with _$AnnouncementAuthor {
       _$AnnouncementAuthorFromJson(json);
 }
 
+/// 공지사항 카테고리
+enum AnnouncementCategory {
+  announcement,
+  event,
+  update;
+}
+
 /// 공지사항 모델
 @freezed
 class AnnouncementModel with _$AnnouncementModel {
@@ -35,6 +42,7 @@ class AnnouncementModel with _$AnnouncementModel {
     required String id,
     required String title,
     required String content,
+    AnnouncementCategory? category,
     @Default(false) bool isPinned,
     required AnnouncementAuthor author,
     @Default(false) bool isRead,

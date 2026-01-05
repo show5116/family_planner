@@ -1983,6 +1983,252 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'로그아웃 실패'**
   String get common_logoutFailed;
+
+  /// No description provided for @announcement_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항'**
+  String get announcement_title;
+
+  /// No description provided for @announcement_list.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 목록'**
+  String get announcement_list;
+
+  /// No description provided for @announcement_detail.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 상세'**
+  String get announcement_detail;
+
+  /// No description provided for @announcement_create.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 작성'**
+  String get announcement_create;
+
+  /// No description provided for @announcement_edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 수정'**
+  String get announcement_edit;
+
+  /// No description provided for @announcement_delete.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 삭제'**
+  String get announcement_delete;
+
+  /// No description provided for @announcement_pin.
+  ///
+  /// In ko, this message translates to:
+  /// **'상단 고정'**
+  String get announcement_pin;
+
+  /// No description provided for @announcement_unpin.
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 해제'**
+  String get announcement_unpin;
+
+  /// No description provided for @announcement_pinned.
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 공지'**
+  String get announcement_pinned;
+
+  /// No description provided for @announcement_pinDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'중요한 공지사항을 목록 상단에 고정합니다'**
+  String get announcement_pinDescription;
+
+  /// No description provided for @announcement_category.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get announcement_category;
+
+  /// No description provided for @announcement_category_none.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 없음'**
+  String get announcement_category_none;
+
+  /// No description provided for @announcement_category_announcement.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지'**
+  String get announcement_category_announcement;
+
+  /// No description provided for @announcement_category_event.
+  ///
+  /// In ko, this message translates to:
+  /// **'이벤트'**
+  String get announcement_category_event;
+
+  /// No description provided for @announcement_category_update.
+  ///
+  /// In ko, this message translates to:
+  /// **'업데이트'**
+  String get announcement_category_update;
+
+  /// No description provided for @announcement_content.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get announcement_content;
+
+  /// No description provided for @announcement_author.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성자'**
+  String get announcement_author;
+
+  /// No description provided for @announcement_createdAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성일'**
+  String get announcement_createdAt;
+
+  /// No description provided for @announcement_updatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'수정일'**
+  String get announcement_updatedAt;
+
+  /// No description provided for @announcement_readCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명 읽음'**
+  String announcement_readCount(int count);
+
+  /// No description provided for @announcement_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항이 등록되었습니다'**
+  String get announcement_createSuccess;
+
+  /// No description provided for @announcement_createError.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 등록에 실패했습니다'**
+  String get announcement_createError;
+
+  /// No description provided for @announcement_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항이 수정되었습니다'**
+  String get announcement_updateSuccess;
+
+  /// No description provided for @announcement_updateError.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 수정에 실패했습니다'**
+  String get announcement_updateError;
+
+  /// No description provided for @announcement_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항이 삭제되었습니다'**
+  String get announcement_deleteSuccess;
+
+  /// No description provided for @announcement_deleteError.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 삭제에 실패했습니다'**
+  String get announcement_deleteError;
+
+  /// No description provided for @announcement_deleteDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 삭제'**
+  String get announcement_deleteDialogTitle;
+
+  /// No description provided for @announcement_deleteDialogMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.'**
+  String get announcement_deleteDialogMessage;
+
+  /// No description provided for @announcement_pinSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항이 고정되었습니다'**
+  String get announcement_pinSuccess;
+
+  /// No description provided for @announcement_unpinSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'고정이 해제되었습니다'**
+  String get announcement_unpinSuccess;
+
+  /// No description provided for @announcement_deleteConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.'**
+  String get announcement_deleteConfirm;
+
+  /// No description provided for @announcement_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항을 불러올 수 없습니다'**
+  String get announcement_loadError;
+
+  /// No description provided for @announcement_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 공지사항이 없습니다'**
+  String get announcement_empty;
+
+  /// No description provided for @announcement_titleHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 제목을 입력하세요'**
+  String get announcement_titleHint;
+
+  /// No description provided for @announcement_contentHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.'**
+  String get announcement_contentHint;
+
+  /// No description provided for @announcement_categoryHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리를 선택하세요 (선택사항)'**
+  String get announcement_categoryHint;
+
+  /// No description provided for @announcement_titleRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get announcement_titleRequired;
+
+  /// No description provided for @announcement_titleMinLength.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목은 최소 3자 이상 입력해주세요'**
+  String get announcement_titleMinLength;
+
+  /// No description provided for @announcement_contentRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용을 입력해주세요'**
+  String get announcement_contentRequired;
+
+  /// No description provided for @announcement_contentMinLength.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용은 최소 10자 이상 입력해주세요'**
+  String get announcement_contentMinLength;
+
+  /// No description provided for @announcement_attachmentComingSoon.
+  ///
+  /// In ko, this message translates to:
+  /// **'첨부파일 업로드 기능은 추후 업데이트 예정입니다'**
+  String get announcement_attachmentComingSoon;
 }
 
 class _AppLocalizationsDelegate

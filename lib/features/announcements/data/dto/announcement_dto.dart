@@ -1,13 +1,17 @@
+import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
+
 /// 공지사항 작성/수정 DTO
 class CreateAnnouncementDto {
   final String title;
   final String content;
+  final AnnouncementCategory? category;
   final bool? isPinned;
   final List<AttachmentDto>? attachments;
 
   CreateAnnouncementDto({
     required this.title,
     required this.content,
+    this.category,
     this.isPinned,
     this.attachments,
   });
@@ -16,6 +20,7 @@ class CreateAnnouncementDto {
     return {
       'title': title,
       'content': content,
+      if (category != null) 'category': category!.name,
       if (isPinned != null) 'isPinned': isPinned,
       if (attachments != null)
         'attachments': attachments!.map((e) => e.toJson()).toList(),

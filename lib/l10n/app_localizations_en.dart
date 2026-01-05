@@ -1001,4 +1001,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get common_logoutFailed => 'Logout Failed';
+
+  @override
+  String get announcement_title => 'Announcements';
+
+  @override
+  String get announcement_list => 'Announcement List';
+
+  @override
+  String get announcement_detail => 'Announcement Detail';
+
+  @override
+  String get announcement_create => 'Create Announcement';
+
+  @override
+  String get announcement_edit => 'Edit Announcement';
+
+  @override
+  String get announcement_delete => 'Delete Announcement';
+
+  @override
+  String get announcement_pin => 'Pin to Top';
+
+  @override
+  String get announcement_unpin => 'Unpin';
+
+  @override
+  String get announcement_pinned => 'Pinned';
+
+  @override
+  String get announcement_pinDescription =>
+      'Pin important announcements to the top of the list';
+
+  @override
+  String get announcement_category => 'Category';
+
+  @override
+  String get announcement_category_none => 'No Category';
+
+  @override
+  String get announcement_category_announcement => 'Announcement';
+
+  @override
+  String get announcement_category_event => 'Event';
+
+  @override
+  String get announcement_category_update => 'Update';
+
+  @override
+  String get announcement_content => 'Content';
+
+  @override
+  String get announcement_author => 'Author';
+
+  @override
+  String get announcement_createdAt => 'Created';
+
+  @override
+  String get announcement_updatedAt => 'Updated';
+
+  @override
+  String announcement_readCount(int count) {
+    return '$count read';
+  }
+
+  @override
+  String get announcement_createSuccess => 'Announcement created';
+
+  @override
+  String get announcement_createError => 'Failed to create announcement';
+
+  @override
+  String get announcement_updateSuccess => 'Announcement updated';
+
+  @override
+  String get announcement_updateError => 'Failed to update announcement';
+
+  @override
+  String get announcement_deleteSuccess => 'Announcement deleted';
+
+  @override
+  String get announcement_deleteError => 'Failed to delete announcement';
+
+  @override
+  String get announcement_deleteDialogTitle => 'Delete Announcement';
+
+  @override
+  String get announcement_deleteDialogMessage =>
+      'Are you sure you want to delete this announcement?\nThis cannot be undone.';
+
+  @override
+  String get announcement_pinSuccess => 'Announcement pinned';
+
+  @override
+  String get announcement_unpinSuccess => 'Announcement unpinned';
+
+  @override
+  String get announcement_deleteConfirm =>
+      'Delete this announcement?\nThis cannot be undone.';
+
+  @override
+  String get announcement_loadError => 'Failed to load announcement';
+
+  @override
+  String get announcement_empty => 'No announcements yet';
+
+  @override
+  String get announcement_titleHint => 'Enter announcement title';
+
+  @override
+  String get announcement_contentHint =>
+      'Enter announcement content\n\nMarkdown is supported.';
+
+  @override
+  String get announcement_categoryHint => 'Select category (optional)';
+
+  @override
+  String get announcement_titleRequired => 'Please enter a title';
+
+  @override
+  String get announcement_titleMinLength =>
+      'Title must be at least 3 characters';
+
+  @override
+  String get announcement_contentRequired => 'Please enter content';
+
+  @override
+  String get announcement_contentMinLength =>
+      'Content must be at least 10 characters';
+
+  @override
+  String get announcement_attachmentComingSoon =>
+      'File attachment feature coming soon';
 }

@@ -6,7 +6,10 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
 import 'package:family_planner/features/announcements/data/dto/announcement_dto.dart';
+import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
+import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
 import 'package:family_planner/shared/widgets/markdown_editor.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 공지사항 작성/수정 화면 (ADMIN 전용)
 class AnnouncementFormScreen extends ConsumerStatefulWidget {
@@ -28,6 +31,7 @@ class _AnnouncementFormScreenState
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  AnnouncementCategory? _category;
   bool _isPinned = false;
   bool _isLoading = false;
 
@@ -55,13 +59,15 @@ class _AnnouncementFormScreenState
         setState(() {
           _titleController.text = announcement.title;
           _contentController.text = announcement.content;
+          _category = announcement.category;
           _isPinned = announcement.isPinned;
         });
       },
       loading: () {},
       error: (error, stack) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('공지사항을 불러올 수 없습니다: $error')),
+          SnackBar(content: Text('${l10n.announcement_loadError}: $error')),
         );
       },
     );
@@ -76,9 +82,10 @@ class _AnnouncementFormScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditMode ? '공지사항 수정' : '공지사항 작성'),
+        title: Text(_isEditMode ? l10n.announcement_edit : l10n.announcement_create),
         actions: [
           if (_isLoading)
             const Padding(
@@ -98,7 +105,7 @@ class _AnnouncementFormScreenState
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                 ),
-                child: Text(_isEditMode ? '수정' : '등록'),
+                child: Text(_isEditMode ? l10n.common_edit : l10n.common_create),
               ),
             ),
         ],
@@ -111,8 +118,8 @@ class _AnnouncementFormScreenState
             // 고정 여부 스위치
             Card(
               child: SwitchListTile(
-                title: const Text('상단 고정'),
-                subtitle: const Text('중요한 공지사항을 목록 상단에 고정합니다'),
+                title: Text(l10n.announcement_pin),
+                subtitle: Text(l10n.announcement_pinDescription),
                 value: _isPinned,
                 onChanged: (value) {
                   setState(() {
@@ -127,20 +134,58 @@ class _AnnouncementFormScreenState
             ),
             const SizedBox(height: AppSizes.spaceL),
 
+            // 카테고리 선택
+            DropdownButtonFormField<AnnouncementCategory>(
+              initialValue: _category,
+              decoration: InputDecoration(
+                labelText: l10n.announcement_category,
+                hintText: l10n.announcement_categoryHint,
+                border: const OutlineInputBorder(),
+              ),
+              items: [
+                DropdownMenuItem<AnnouncementCategory>(
+                  value: null,
+                  child: Text(l10n.announcement_category_none),
+                ),
+                ...AnnouncementCategory.values.map((category) {
+                  return DropdownMenuItem<AnnouncementCategory>(
+                    value: category,
+                    child: Row(
+                      children: [
+                        Icon(
+                          category.icon,
+                          size: AppSizes.iconSmall,
+                          color: category.color,
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(category.displayName(l10n)),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _category = value;
+                });
+              },
+            ),
+            const SizedBox(height: AppSizes.spaceL),
+
             // 제목 입력
             TextFormField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: '제목',
-                hintText: '공지사항 제목을 입력하세요',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.announcement_title,
+                hintText: l10n.announcement_titleHint,
+                border: const OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return '제목을 입력해주세요';
+                  return l10n.announcement_titleRequired;
                 }
                 if (value.trim().length < 3) {
-                  return '제목은 최소 3자 이상 입력해주세요';
+                  return l10n.announcement_titleMinLength;
                 }
                 return null;
               },
@@ -151,8 +196,8 @@ class _AnnouncementFormScreenState
             // 내용 입력 - 마크다운 에디터 사용
             MarkdownEditor(
               controller: _contentController,
-              labelText: '내용',
-              hintText: '공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.',
+              labelText: l10n.announcement_content,
+              hintText: l10n.announcement_contentHint,
               minLines: 15,
               maxLines: 30,
               showPreview: true,
@@ -160,10 +205,10 @@ class _AnnouncementFormScreenState
               showGuide: true,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return '내용을 입력해주세요';
+                  return l10n.announcement_contentRequired;
                 }
                 if (value.trim().length < 10) {
-                  return '내용은 최소 10자 이상 입력해주세요';
+                  return l10n.announcement_contentMinLength;
                 }
                 return null;
               },
@@ -185,7 +230,7 @@ class _AnnouncementFormScreenState
                     const SizedBox(width: AppSizes.spaceS),
                     Expanded(
                       child: Text(
-                        '첨부파일 업로드 기능은 추후 업데이트 예정입니다',
+                        l10n.announcement_attachmentComingSoon,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: AppColors.warning,
                             ),
@@ -207,6 +252,8 @@ class _AnnouncementFormScreenState
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     setState(() {
       _isLoading = true;
     });
@@ -215,6 +262,7 @@ class _AnnouncementFormScreenState
       final dto = CreateAnnouncementDto(
         title: _titleController.text.trim(),
         content: _contentController.text.trim(),
+        category: _category,
         isPinned: _isPinned,
       );
 
@@ -228,7 +276,7 @@ class _AnnouncementFormScreenState
       if (result != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isEditMode ? '공지사항이 수정되었습니다' : '공지사항이 등록되었습니다'),
+            content: Text(_isEditMode ? l10n.announcement_updateSuccess : l10n.announcement_createSuccess),
           ),
         );
 
@@ -241,7 +289,7 @@ class _AnnouncementFormScreenState
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isEditMode ? '공지사항 수정에 실패했습니다' : '공지사항 등록에 실패했습니다'),
+            content: Text(_isEditMode ? l10n.announcement_updateError : l10n.announcement_createError),
           ),
         );
       }
@@ -249,7 +297,7 @@ class _AnnouncementFormScreenState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('오류가 발생했습니다: $e')),
+        SnackBar(content: Text('${l10n.common_error}: $e')),
       );
     } finally {
       if (mounted) {
