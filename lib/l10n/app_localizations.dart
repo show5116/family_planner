@@ -2229,6 +2229,354 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'첨부파일 업로드 기능은 추후 업데이트 예정입니다'**
   String get announcement_attachmentComingSoon;
+
+  /// No description provided for @qna_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'Q&A'**
+  String get qna_title;
+
+  /// No description provided for @qna_publicQuestions.
+  ///
+  /// In ko, this message translates to:
+  /// **'공개 Q&A'**
+  String get qna_publicQuestions;
+
+  /// No description provided for @qna_myQuestions.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 질문'**
+  String get qna_myQuestions;
+
+  /// No description provided for @qna_askQuestion.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문하기'**
+  String get qna_askQuestion;
+
+  /// No description provided for @qna_question.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문'**
+  String get qna_question;
+
+  /// No description provided for @qna_answer.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변'**
+  String get qna_answer;
+
+  /// No description provided for @qna_category.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get qna_category;
+
+  /// No description provided for @qna_categoryFilter.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 필터'**
+  String get qna_categoryFilter;
+
+  /// No description provided for @qna_categoryAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get qna_categoryAll;
+
+  /// No description provided for @qna_categoryNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 없음'**
+  String get qna_categoryNone;
+
+  /// No description provided for @qna_status.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get qna_status;
+
+  /// No description provided for @qna_statusAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get qna_statusAll;
+
+  /// No description provided for @qna_statusPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 대기'**
+  String get qna_statusPending;
+
+  /// No description provided for @qna_statusAnswered.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 완료'**
+  String get qna_statusAnswered;
+
+  /// No description provided for @qna_statusResolved.
+  ///
+  /// In ko, this message translates to:
+  /// **'해결됨'**
+  String get qna_statusResolved;
+
+  /// No description provided for @qna_search.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 검색'**
+  String get qna_search;
+
+  /// No description provided for @qna_searchHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문을 검색하세요'**
+  String get qna_searchHint;
+
+  /// No description provided for @qna_questionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 제목'**
+  String get qna_questionTitle;
+
+  /// No description provided for @qna_questionTitleHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 제목을 입력하세요'**
+  String get qna_questionTitleHint;
+
+  /// No description provided for @qna_questionContent.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 내용'**
+  String get qna_questionContent;
+
+  /// No description provided for @qna_questionContentHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 내용을 입력하세요'**
+  String get qna_questionContentHint;
+
+  /// No description provided for @qna_answerContent.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 내용'**
+  String get qna_answerContent;
+
+  /// No description provided for @qna_answerContentHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변을 입력하세요'**
+  String get qna_answerContentHint;
+
+  /// No description provided for @qna_isPublic.
+  ///
+  /// In ko, this message translates to:
+  /// **'공개 여부'**
+  String get qna_isPublic;
+
+  /// No description provided for @qna_publicQuestion.
+  ///
+  /// In ko, this message translates to:
+  /// **'공개 질문'**
+  String get qna_publicQuestion;
+
+  /// No description provided for @qna_privateQuestion.
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개 질문'**
+  String get qna_privateQuestion;
+
+  /// No description provided for @qna_author.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성자'**
+  String get qna_author;
+
+  /// No description provided for @qna_answerer.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변자'**
+  String get qna_answerer;
+
+  /// No description provided for @qna_createdAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성일'**
+  String get qna_createdAt;
+
+  /// No description provided for @qna_answeredAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변일'**
+  String get qna_answeredAt;
+
+  /// No description provided for @qna_viewCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}회 조회'**
+  String qna_viewCount(int count);
+
+  /// No description provided for @qna_answerCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 답변'**
+  String qna_answerCount(int count);
+
+  /// No description provided for @qna_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 질문이 없습니다'**
+  String get qna_empty;
+
+  /// No description provided for @qna_noAnswer.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 답변이 없습니다'**
+  String get qna_noAnswer;
+
+  /// No description provided for @qna_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문을 불러올 수 없습니다'**
+  String get qna_loadError;
+
+  /// No description provided for @qna_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문이 등록되었습니다'**
+  String get qna_createSuccess;
+
+  /// No description provided for @qna_createError.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 등록에 실패했습니다'**
+  String get qna_createError;
+
+  /// No description provided for @qna_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문이 수정되었습니다'**
+  String get qna_updateSuccess;
+
+  /// No description provided for @qna_updateError.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 수정에 실패했습니다'**
+  String get qna_updateError;
+
+  /// No description provided for @qna_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문이 삭제되었습니다'**
+  String get qna_deleteSuccess;
+
+  /// No description provided for @qna_deleteError.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 삭제에 실패했습니다'**
+  String get qna_deleteError;
+
+  /// No description provided for @qna_deleteDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 삭제'**
+  String get qna_deleteDialogTitle;
+
+  /// No description provided for @qna_deleteDialogMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 질문을 삭제하시겠습니까?\n삭제된 질문은 복구할 수 없습니다.'**
+  String get qna_deleteDialogMessage;
+
+  /// No description provided for @qna_answerSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변이 등록되었습니다'**
+  String get qna_answerSuccess;
+
+  /// No description provided for @qna_answerError.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 등록에 실패했습니다'**
+  String get qna_answerError;
+
+  /// No description provided for @qna_answerUpdateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변이 수정되었습니다'**
+  String get qna_answerUpdateSuccess;
+
+  /// No description provided for @qna_answerUpdateError.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 수정에 실패했습니다'**
+  String get qna_answerUpdateError;
+
+  /// No description provided for @qna_answerDeleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변이 삭제되었습니다'**
+  String get qna_answerDeleteSuccess;
+
+  /// No description provided for @qna_answerDeleteError.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 삭제에 실패했습니다'**
+  String get qna_answerDeleteError;
+
+  /// No description provided for @qna_markResolved.
+  ///
+  /// In ko, this message translates to:
+  /// **'해결됨으로 표시'**
+  String get qna_markResolved;
+
+  /// No description provided for @qna_markUnresolved.
+  ///
+  /// In ko, this message translates to:
+  /// **'미해결로 표시'**
+  String get qna_markUnresolved;
+
+  /// No description provided for @qna_resolveSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문이 해결됨으로 표시되었습니다'**
+  String get qna_resolveSuccess;
+
+  /// No description provided for @qna_resolveError.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태 변경에 실패했습니다'**
+  String get qna_resolveError;
+
+  /// No description provided for @qna_titleRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get qna_titleRequired;
+
+  /// No description provided for @qna_titleMinLength.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목은 최소 3자 이상 입력해주세요'**
+  String get qna_titleMinLength;
+
+  /// No description provided for @qna_contentRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용을 입력해주세요'**
+  String get qna_contentRequired;
+
+  /// No description provided for @qna_contentMinLength.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용은 최소 10자 이상 입력해주세요'**
+  String get qna_contentMinLength;
+
+  /// No description provided for @qna_answerRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'답변을 입력해주세요'**
+  String get qna_answerRequired;
 }
 
 class _AppLocalizationsDelegate

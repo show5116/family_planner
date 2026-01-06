@@ -1099,4 +1099,182 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get announcement_attachmentComingSoon => 'ファイル添付機能は今後のアップデートで提供予定です';
+
+  @override
+  String get qna_title => 'Q&A';
+
+  @override
+  String get qna_publicQuestions => '公開Q&A';
+
+  @override
+  String get qna_myQuestions => '私の質問';
+
+  @override
+  String get qna_askQuestion => '質問する';
+
+  @override
+  String get qna_question => '質問';
+
+  @override
+  String get qna_answer => '回答';
+
+  @override
+  String get qna_category => 'カテゴリー';
+
+  @override
+  String get qna_categoryFilter => 'カテゴリーフィルター';
+
+  @override
+  String get qna_categoryAll => 'すべて';
+
+  @override
+  String get qna_categoryNone => 'カテゴリーなし';
+
+  @override
+  String get qna_status => 'ステータス';
+
+  @override
+  String get qna_statusAll => 'すべて';
+
+  @override
+  String get qna_statusPending => '回答待ち';
+
+  @override
+  String get qna_statusAnswered => '回答済み';
+
+  @override
+  String get qna_statusResolved => '解決済み';
+
+  @override
+  String get qna_search => '質問検索';
+
+  @override
+  String get qna_searchHint => '質問を検索';
+
+  @override
+  String get qna_questionTitle => '質問タイトル';
+
+  @override
+  String get qna_questionTitleHint => '質問のタイトルを入力してください';
+
+  @override
+  String get qna_questionContent => '質問内容';
+
+  @override
+  String get qna_questionContentHint => '質問内容を入力してください';
+
+  @override
+  String get qna_answerContent => '回答内容';
+
+  @override
+  String get qna_answerContentHint => '回答を入力してください';
+
+  @override
+  String get qna_isPublic => '公開設定';
+
+  @override
+  String get qna_publicQuestion => '公開質問';
+
+  @override
+  String get qna_privateQuestion => '非公開質問';
+
+  @override
+  String get qna_author => '作成者';
+
+  @override
+  String get qna_answerer => '回答者';
+
+  @override
+  String get qna_createdAt => '作成日';
+
+  @override
+  String get qna_answeredAt => '回答日';
+
+  @override
+  String qna_viewCount(int count) {
+    return '$count回閲覧';
+  }
+
+  @override
+  String qna_answerCount(int count) {
+    return '$count件の回答';
+  }
+
+  @override
+  String get qna_empty => '登録された質問がありません';
+
+  @override
+  String get qna_noAnswer => 'まだ回答がありません';
+
+  @override
+  String get qna_loadError => '質問を読み込めません';
+
+  @override
+  String get qna_createSuccess => '質問を登録しました';
+
+  @override
+  String get qna_createError => '質問の登録に失敗しました';
+
+  @override
+  String get qna_updateSuccess => '質問を更新しました';
+
+  @override
+  String get qna_updateError => '質問の更新に失敗しました';
+
+  @override
+  String get qna_deleteSuccess => '質問を削除しました';
+
+  @override
+  String get qna_deleteError => '質問の削除に失敗しました';
+
+  @override
+  String get qna_deleteDialogTitle => '質問の削除';
+
+  @override
+  String get qna_deleteDialogMessage => 'この質問を削除しますか？\n削除された質問は復元できません。';
+
+  @override
+  String get qna_answerSuccess => '回答を投稿しました';
+
+  @override
+  String get qna_answerError => '回答の投稿に失敗しました';
+
+  @override
+  String get qna_answerUpdateSuccess => '回答を更新しました';
+
+  @override
+  String get qna_answerUpdateError => '回答の更新に失敗しました';
+
+  @override
+  String get qna_answerDeleteSuccess => '回答を削除しました';
+
+  @override
+  String get qna_answerDeleteError => '回答の削除に失敗しました';
+
+  @override
+  String get qna_markResolved => '解決済みにする';
+
+  @override
+  String get qna_markUnresolved => '未解決にする';
+
+  @override
+  String get qna_resolveSuccess => '質問を解決済みにしました';
+
+  @override
+  String get qna_resolveError => 'ステータスの変更に失敗しました';
+
+  @override
+  String get qna_titleRequired => 'タイトルを入力してください';
+
+  @override
+  String get qna_titleMinLength => 'タイトルは3文字以上入力してください';
+
+  @override
+  String get qna_contentRequired => '内容を入力してください';
+
+  @override
+  String get qna_contentMinLength => '内容は10文字以上入力してください';
+
+  @override
+  String get qna_answerRequired => '回答を入力してください';
 }

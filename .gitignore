@@ -55,3 +55,6 @@ nul
 .env
 .env.local
 .env.*.local
+
+# Auto-generated Firebase Service Worker (generated from .env)
+web/firebase-messaging-sw.js

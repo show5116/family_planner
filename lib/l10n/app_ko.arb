@@ -430,5 +430,78 @@
   "announcement_titleMinLength": "제목은 최소 3자 이상 입력해주세요",
   "announcement_contentRequired": "내용을 입력해주세요",
   "announcement_contentMinLength": "내용은 최소 10자 이상 입력해주세요",
-  "announcement_attachmentComingSoon": "첨부파일 업로드 기능은 추후 업데이트 예정입니다"
+  "announcement_attachmentComingSoon": "첨부파일 업로드 기능은 추후 업데이트 예정입니다",
+
+  "qna_title": "Q&A",
+  "qna_publicQuestions": "공개 Q&A",
+  "qna_myQuestions": "내 질문",
+  "qna_askQuestion": "질문하기",
+  "qna_question": "질문",
+  "qna_answer": "답변",
+  "qna_category": "카테고리",
+  "qna_categoryFilter": "카테고리 필터",
+  "qna_categoryAll": "전체",
+  "qna_categoryNone": "카테고리 없음",
+  "qna_status": "상태",
+  "qna_statusAll": "전체",
+  "qna_statusPending": "답변 대기",
+  "qna_statusAnswered": "답변 완료",
+  "qna_statusResolved": "해결됨",
+  "qna_search": "질문 검색",
+  "qna_searchHint": "질문을 검색하세요",
+  "qna_questionTitle": "질문 제목",
+  "qna_questionTitleHint": "질문 제목을 입력하세요",
+  "qna_questionContent": "질문 내용",
+  "qna_questionContentHint": "질문 내용을 입력하세요",
+  "qna_answerContent": "답변 내용",
+  "qna_answerContentHint": "답변을 입력하세요",
+  "qna_isPublic": "공개 여부",
+  "qna_publicQuestion": "공개 질문",
+  "qna_privateQuestion": "비공개 질문",
+  "qna_author": "작성자",
+  "qna_answerer": "답변자",
+  "qna_createdAt": "작성일",
+  "qna_answeredAt": "답변일",
+  "qna_viewCount": "{count}회 조회",
+  "@qna_viewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "qna_answerCount": "{count}개 답변",
+  "@qna_answerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "qna_empty": "등록된 질문이 없습니다",
+  "qna_noAnswer": "아직 답변이 없습니다",
+  "qna_loadError": "질문을 불러올 수 없습니다",
+  "qna_createSuccess": "질문이 등록되었습니다",
+  "qna_createError": "질문 등록에 실패했습니다",
+  "qna_updateSuccess": "질문이 수정되었습니다",
+  "qna_updateError": "질문 수정에 실패했습니다",
+  "qna_deleteSuccess": "질문이 삭제되었습니다",
+  "qna_deleteError": "질문 삭제에 실패했습니다",
+  "qna_deleteDialogTitle": "질문 삭제",
+  "qna_deleteDialogMessage": "이 질문을 삭제하시겠습니까?\n삭제된 질문은 복구할 수 없습니다.",
+  "qna_answerSuccess": "답변이 등록되었습니다",
+  "qna_answerError": "답변 등록에 실패했습니다",
+  "qna_answerUpdateSuccess": "답변이 수정되었습니다",
+  "qna_answerUpdateError": "답변 수정에 실패했습니다",
+  "qna_answerDeleteSuccess": "답변이 삭제되었습니다",
+  "qna_answerDeleteError": "답변 삭제에 실패했습니다",
+  "qna_markResolved": "해결됨으로 표시",
+  "qna_markUnresolved": "미해결로 표시",
+  "qna_resolveSuccess": "질문이 해결됨으로 표시되었습니다",
+  "qna_resolveError": "상태 변경에 실패했습니다",
+  "qna_titleRequired": "제목을 입력해주세요",
+  "qna_titleMinLength": "제목은 최소 3자 이상 입력해주세요",
+  "qna_contentRequired": "내용을 입력해주세요",
+  "qna_contentMinLength": "내용은 최소 10자 이상 입력해주세요",
+  "qna_answerRequired": "답변을 입력해주세요"
 }

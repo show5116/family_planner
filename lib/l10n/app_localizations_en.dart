@@ -1133,4 +1133,183 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get announcement_attachmentComingSoon =>
       'File attachment feature coming soon';
+
+  @override
+  String get qna_title => 'Q&A';
+
+  @override
+  String get qna_publicQuestions => 'Public Q&A';
+
+  @override
+  String get qna_myQuestions => 'My Questions';
+
+  @override
+  String get qna_askQuestion => 'Ask Question';
+
+  @override
+  String get qna_question => 'Question';
+
+  @override
+  String get qna_answer => 'Answer';
+
+  @override
+  String get qna_category => 'Category';
+
+  @override
+  String get qna_categoryFilter => 'Category Filter';
+
+  @override
+  String get qna_categoryAll => 'All';
+
+  @override
+  String get qna_categoryNone => 'No Category';
+
+  @override
+  String get qna_status => 'Status';
+
+  @override
+  String get qna_statusAll => 'All';
+
+  @override
+  String get qna_statusPending => 'Pending';
+
+  @override
+  String get qna_statusAnswered => 'Answered';
+
+  @override
+  String get qna_statusResolved => 'Resolved';
+
+  @override
+  String get qna_search => 'Search Questions';
+
+  @override
+  String get qna_searchHint => 'Search for questions';
+
+  @override
+  String get qna_questionTitle => 'Question Title';
+
+  @override
+  String get qna_questionTitleHint => 'Enter question title';
+
+  @override
+  String get qna_questionContent => 'Question Content';
+
+  @override
+  String get qna_questionContentHint => 'Enter your question';
+
+  @override
+  String get qna_answerContent => 'Answer Content';
+
+  @override
+  String get qna_answerContentHint => 'Enter your answer';
+
+  @override
+  String get qna_isPublic => 'Visibility';
+
+  @override
+  String get qna_publicQuestion => 'Public Question';
+
+  @override
+  String get qna_privateQuestion => 'Private Question';
+
+  @override
+  String get qna_author => 'Author';
+
+  @override
+  String get qna_answerer => 'Answered by';
+
+  @override
+  String get qna_createdAt => 'Created';
+
+  @override
+  String get qna_answeredAt => 'Answered';
+
+  @override
+  String qna_viewCount(int count) {
+    return '$count views';
+  }
+
+  @override
+  String qna_answerCount(int count) {
+    return '$count answers';
+  }
+
+  @override
+  String get qna_empty => 'No questions yet';
+
+  @override
+  String get qna_noAnswer => 'No answer yet';
+
+  @override
+  String get qna_loadError => 'Failed to load questions';
+
+  @override
+  String get qna_createSuccess => 'Question created';
+
+  @override
+  String get qna_createError => 'Failed to create question';
+
+  @override
+  String get qna_updateSuccess => 'Question updated';
+
+  @override
+  String get qna_updateError => 'Failed to update question';
+
+  @override
+  String get qna_deleteSuccess => 'Question deleted';
+
+  @override
+  String get qna_deleteError => 'Failed to delete question';
+
+  @override
+  String get qna_deleteDialogTitle => 'Delete Question';
+
+  @override
+  String get qna_deleteDialogMessage =>
+      'Are you sure you want to delete this question?\nThis cannot be undone.';
+
+  @override
+  String get qna_answerSuccess => 'Answer posted';
+
+  @override
+  String get qna_answerError => 'Failed to post answer';
+
+  @override
+  String get qna_answerUpdateSuccess => 'Answer updated';
+
+  @override
+  String get qna_answerUpdateError => 'Failed to update answer';
+
+  @override
+  String get qna_answerDeleteSuccess => 'Answer deleted';
+
+  @override
+  String get qna_answerDeleteError => 'Failed to delete answer';
+
+  @override
+  String get qna_markResolved => 'Mark as Resolved';
+
+  @override
+  String get qna_markUnresolved => 'Mark as Unresolved';
+
+  @override
+  String get qna_resolveSuccess => 'Question marked as resolved';
+
+  @override
+  String get qna_resolveError => 'Failed to change status';
+
+  @override
+  String get qna_titleRequired => 'Please enter a title';
+
+  @override
+  String get qna_titleMinLength => 'Title must be at least 3 characters';
+
+  @override
+  String get qna_contentRequired => 'Please enter content';
+
+  @override
+  String get qna_contentMinLength => 'Content must be at least 10 characters';
+
+  @override
+  String get qna_answerRequired => 'Please enter an answer';
 }

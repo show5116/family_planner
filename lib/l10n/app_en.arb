@@ -430,5 +430,78 @@
   "announcement_titleMinLength": "Title must be at least 3 characters",
   "announcement_contentRequired": "Please enter content",
   "announcement_contentMinLength": "Content must be at least 10 characters",
-  "announcement_attachmentComingSoon": "File attachment feature coming soon"
+  "announcement_attachmentComingSoon": "File attachment feature coming soon",
+
+  "qna_title": "Q&A",
+  "qna_publicQuestions": "Public Q&A",
+  "qna_myQuestions": "My Questions",
+  "qna_askQuestion": "Ask Question",
+  "qna_question": "Question",
+  "qna_answer": "Answer",
+  "qna_category": "Category",
+  "qna_categoryFilter": "Category Filter",
+  "qna_categoryAll": "All",
+  "qna_categoryNone": "No Category",
+  "qna_status": "Status",
+  "qna_statusAll": "All",
+  "qna_statusPending": "Pending",
+  "qna_statusAnswered": "Answered",
+  "qna_statusResolved": "Resolved",
+  "qna_search": "Search Questions",
+  "qna_searchHint": "Search for questions",
+  "qna_questionTitle": "Question Title",
+  "qna_questionTitleHint": "Enter question title",
+  "qna_questionContent": "Question Content",
+  "qna_questionContentHint": "Enter your question",
+  "qna_answerContent": "Answer Content",
+  "qna_answerContentHint": "Enter your answer",
+  "qna_isPublic": "Visibility",
+  "qna_publicQuestion": "Public Question",
+  "qna_privateQuestion": "Private Question",
+  "qna_author": "Author",
+  "qna_answerer": "Answered by",
+  "qna_createdAt": "Created",
+  "qna_answeredAt": "Answered",
+  "qna_viewCount": "{count} views",
+  "@qna_viewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "qna_answerCount": "{count} answers",
+  "@qna_answerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "qna_empty": "No questions yet",
+  "qna_noAnswer": "No answer yet",
+  "qna_loadError": "Failed to load questions",
+  "qna_createSuccess": "Question created",
+  "qna_createError": "Failed to create question",
+  "qna_updateSuccess": "Question updated",
+  "qna_updateError": "Failed to update question",
+  "qna_deleteSuccess": "Question deleted",
+  "qna_deleteError": "Failed to delete question",
+  "qna_deleteDialogTitle": "Delete Question",
+  "qna_deleteDialogMessage": "Are you sure you want to delete this question?\nThis cannot be undone.",
+  "qna_answerSuccess": "Answer posted",
+  "qna_answerError": "Failed to post answer",
+  "qna_answerUpdateSuccess": "Answer updated",
+  "qna_answerUpdateError": "Failed to update answer",
+  "qna_answerDeleteSuccess": "Answer deleted",
+  "qna_answerDeleteError": "Failed to delete answer",
+  "qna_markResolved": "Mark as Resolved",
+  "qna_markUnresolved": "Mark as Unresolved",
+  "qna_resolveSuccess": "Question marked as resolved",
+  "qna_resolveError": "Failed to change status",
+  "qna_titleRequired": "Please enter a title",
+  "qna_titleMinLength": "Title must be at least 3 characters",
+  "qna_contentRequired": "Please enter content",
+  "qna_contentMinLength": "Content must be at least 10 characters",
+  "qna_answerRequired": "Please enter an answer"
 }

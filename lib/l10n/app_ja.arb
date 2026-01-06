@@ -430,5 +430,78 @@
   "announcement_titleMinLength": "タイトルは3文字以上入力してください",
   "announcement_contentRequired": "内容を入力してください",
   "announcement_contentMinLength": "内容は10文字以上入力してください",
-  "announcement_attachmentComingSoon": "ファイル添付機能は今後のアップデートで提供予定です"
+  "announcement_attachmentComingSoon": "ファイル添付機能は今後のアップデートで提供予定です",
+
+  "qna_title": "Q&A",
+  "qna_publicQuestions": "公開Q&A",
+  "qna_myQuestions": "私の質問",
+  "qna_askQuestion": "質問する",
+  "qna_question": "質問",
+  "qna_answer": "回答",
+  "qna_category": "カテゴリー",
+  "qna_categoryFilter": "カテゴリーフィルター",
+  "qna_categoryAll": "すべて",
+  "qna_categoryNone": "カテゴリーなし",
+  "qna_status": "ステータス",
+  "qna_statusAll": "すべて",
+  "qna_statusPending": "回答待ち",
+  "qna_statusAnswered": "回答済み",
+  "qna_statusResolved": "解決済み",
+  "qna_search": "質問検索",
+  "qna_searchHint": "質問を検索",
+  "qna_questionTitle": "質問タイトル",
+  "qna_questionTitleHint": "質問のタイトルを入力してください",
+  "qna_questionContent": "質問内容",
+  "qna_questionContentHint": "質問内容を入力してください",
+  "qna_answerContent": "回答内容",
+  "qna_answerContentHint": "回答を入力してください",
+  "qna_isPublic": "公開設定",
+  "qna_publicQuestion": "公開質問",
+  "qna_privateQuestion": "非公開質問",
+  "qna_author": "作成者",
+  "qna_answerer": "回答者",
+  "qna_createdAt": "作成日",
+  "qna_answeredAt": "回答日",
+  "qna_viewCount": "{count}回閲覧",
+  "@qna_viewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "qna_answerCount": "{count}件の回答",
+  "@qna_answerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "qna_empty": "登録された質問がありません",
+  "qna_noAnswer": "まだ回答がありません",
+  "qna_loadError": "質問を読み込めません",
+  "qna_createSuccess": "質問を登録しました",
+  "qna_createError": "質問の登録に失敗しました",
+  "qna_updateSuccess": "質問を更新しました",
+  "qna_updateError": "質問の更新に失敗しました",
+  "qna_deleteSuccess": "質問を削除しました",
+  "qna_deleteError": "質問の削除に失敗しました",
+  "qna_deleteDialogTitle": "質問の削除",
+  "qna_deleteDialogMessage": "この質問を削除しますか？\n削除された質問は復元できません。",
+  "qna_answerSuccess": "回答を投稿しました",
+  "qna_answerError": "回答の投稿に失敗しました",
+  "qna_answerUpdateSuccess": "回答を更新しました",
+  "qna_answerUpdateError": "回答の更新に失敗しました",
+  "qna_answerDeleteSuccess": "回答を削除しました",
+  "qna_answerDeleteError": "回答の削除に失敗しました",
+  "qna_markResolved": "解決済みにする",
+  "qna_markUnresolved": "未解決にする",
+  "qna_resolveSuccess": "質問を解決済みにしました",
+  "qna_resolveError": "ステータスの変更に失敗しました",
+  "qna_titleRequired": "タイトルを入力してください",
+  "qna_titleMinLength": "タイトルは3文字以上入力してください",
+  "qna_contentRequired": "内容を入力してください",
+  "qna_contentMinLength": "内容は10文字以上入力してください",
+  "qna_answerRequired": "回答を入力してください"
 }

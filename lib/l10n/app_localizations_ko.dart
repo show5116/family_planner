@@ -1101,4 +1101,182 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get announcement_attachmentComingSoon => '첨부파일 업로드 기능은 추후 업데이트 예정입니다';
+
+  @override
+  String get qna_title => 'Q&A';
+
+  @override
+  String get qna_publicQuestions => '공개 Q&A';
+
+  @override
+  String get qna_myQuestions => '내 질문';
+
+  @override
+  String get qna_askQuestion => '질문하기';
+
+  @override
+  String get qna_question => '질문';
+
+  @override
+  String get qna_answer => '답변';
+
+  @override
+  String get qna_category => '카테고리';
+
+  @override
+  String get qna_categoryFilter => '카테고리 필터';
+
+  @override
+  String get qna_categoryAll => '전체';
+
+  @override
+  String get qna_categoryNone => '카테고리 없음';
+
+  @override
+  String get qna_status => '상태';
+
+  @override
+  String get qna_statusAll => '전체';
+
+  @override
+  String get qna_statusPending => '답변 대기';
+
+  @override
+  String get qna_statusAnswered => '답변 완료';
+
+  @override
+  String get qna_statusResolved => '해결됨';
+
+  @override
+  String get qna_search => '질문 검색';
+
+  @override
+  String get qna_searchHint => '질문을 검색하세요';
+
+  @override
+  String get qna_questionTitle => '질문 제목';
+
+  @override
+  String get qna_questionTitleHint => '질문 제목을 입력하세요';
+
+  @override
+  String get qna_questionContent => '질문 내용';
+
+  @override
+  String get qna_questionContentHint => '질문 내용을 입력하세요';
+
+  @override
+  String get qna_answerContent => '답변 내용';
+
+  @override
+  String get qna_answerContentHint => '답변을 입력하세요';
+
+  @override
+  String get qna_isPublic => '공개 여부';
+
+  @override
+  String get qna_publicQuestion => '공개 질문';
+
+  @override
+  String get qna_privateQuestion => '비공개 질문';
+
+  @override
+  String get qna_author => '작성자';
+
+  @override
+  String get qna_answerer => '답변자';
+
+  @override
+  String get qna_createdAt => '작성일';
+
+  @override
+  String get qna_answeredAt => '답변일';
+
+  @override
+  String qna_viewCount(int count) {
+    return '$count회 조회';
+  }
+
+  @override
+  String qna_answerCount(int count) {
+    return '$count개 답변';
+  }
+
+  @override
+  String get qna_empty => '등록된 질문이 없습니다';
+
+  @override
+  String get qna_noAnswer => '아직 답변이 없습니다';
+
+  @override
+  String get qna_loadError => '질문을 불러올 수 없습니다';
+
+  @override
+  String get qna_createSuccess => '질문이 등록되었습니다';
+
+  @override
+  String get qna_createError => '질문 등록에 실패했습니다';
+
+  @override
+  String get qna_updateSuccess => '질문이 수정되었습니다';
+
+  @override
+  String get qna_updateError => '질문 수정에 실패했습니다';
+
+  @override
+  String get qna_deleteSuccess => '질문이 삭제되었습니다';
+
+  @override
+  String get qna_deleteError => '질문 삭제에 실패했습니다';
+
+  @override
+  String get qna_deleteDialogTitle => '질문 삭제';
+
+  @override
+  String get qna_deleteDialogMessage => '이 질문을 삭제하시겠습니까?\n삭제된 질문은 복구할 수 없습니다.';
+
+  @override
+  String get qna_answerSuccess => '답변이 등록되었습니다';
+
+  @override
+  String get qna_answerError => '답변 등록에 실패했습니다';
+
+  @override
+  String get qna_answerUpdateSuccess => '답변이 수정되었습니다';
+
+  @override
+  String get qna_answerUpdateError => '답변 수정에 실패했습니다';
+
+  @override
+  String get qna_answerDeleteSuccess => '답변이 삭제되었습니다';
+
+  @override
+  String get qna_answerDeleteError => '답변 삭제에 실패했습니다';
+
+  @override
+  String get qna_markResolved => '해결됨으로 표시';
+
+  @override
+  String get qna_markUnresolved => '미해결로 표시';
+
+  @override
+  String get qna_resolveSuccess => '질문이 해결됨으로 표시되었습니다';
+
+  @override
+  String get qna_resolveError => '상태 변경에 실패했습니다';
+
+  @override
+  String get qna_titleRequired => '제목을 입력해주세요';
+
+  @override
+  String get qna_titleMinLength => '제목은 최소 3자 이상 입력해주세요';
+
+  @override
+  String get qna_contentRequired => '내용을 입력해주세요';
+
+  @override
+  String get qna_contentMinLength => '내용은 최소 10자 이상 입력해주세요';
+
+  @override
+  String get qna_answerRequired => '답변을 입력해주세요';
 }

@@ -88,12 +88,12 @@ class _MoreTabState extends ConsumerState<MoreTab> {
           // 고정 메뉴: 공지사항, QnA
           MenuListTile(
             icon: Icons.campaign,
-            title: '공지사항',
+            title: l10n.announcement_title,
             onTap: () => context.push(AppRoutes.announcements),
           ),
           MenuListTile(
             icon: Icons.question_answer,
-            title: 'Q&A',
+            title: l10n.qna_title,
             onTap: () => context.push(AppRoutes.publicQuestions),
           ),
           const Divider(),
