@@ -22,6 +22,40 @@ flutter test                           # 테스트 실행
 flutter clean && flutter pub get       # 클린 빌드
 ```
 
+## Claude Skills 🤖
+
+프로젝트에는 반복 작업을 자동화하는 **6개의 Claude Skills**가 설정되어 있습니다.
+
+### 자동 실행 Skills (P0 - 최우선)
+
+자연어로 요청하면 자동으로 실행됩니다:
+
+- 🏗️ **feature-create**: 새 기능 자동 생성 (Screen, Provider, Model, Repository)
+  - 예: "일정관리 기능을 만들어주세요"
+- 🌐 **i18n-add**: 다국어 문자열 자동 추가 (한/영/일)
+  - 예: "로그인 버튼 텍스트 추가해줘"
+- 📝 **docs-update**: 문서 자동 업데이트 (ROADMAP.md, TODO.md)
+  - 예: "공지사항 기능 완료"
+
+### 수동 실행 Skills (필요 시)
+
+명시적으로 요청해야 실행됩니다:
+
+- 🔍 **code-review**: CODE_STYLE.md 기준 코드 리뷰
+  - 사용: "login_screen.dart 리뷰해주세요"
+- 🔄 **api-sync**: API 문서와 프론트엔드 동기화 확인
+  - 사용: "공지사항 API 동기화 확인해줘"
+- 🧪 **test-generate**: 테스트 코드 자동 생성
+  - 사용: "AnnouncementListScreen 테스트 생성해줘"
+
+### 토큰 효율성 최적화
+
+자동 실행 Skills는 가장 빈번하고 효과적인 3개만 선별하여 토큰 사용량을 최소화했습니다.
+
+📚 **상세 가이드**: [.claude/skills/README.md](.claude/skills/README.md)
+
+---
+
 ## 포트 설정
 
 - **프론트엔드**: `localhost:3001` (웹 개발 서버)
@@ -36,101 +70,38 @@ flutter clean && flutter pub get       # 클린 빌드
 
 ## 문서 구조
 
-### 📋 프로젝트 관리 문서
-- **[ROADMAP.md](ROADMAP.md)**: 전체 프로젝트 로드맵, 진행 상황 및 최근 완료 기능
-- **[TODO.md](TODO.md)**: 기능별 문서 인덱스 (빠른 참조용)
+- **[ROADMAP.md](ROADMAP.md)**: 프로젝트 로드맵 및 진행 상황
+- **[CODE_STYLE.md](CODE_STYLE.md)**: 코드 컨벤션 (필수 준수)
+- **[docs/features/](docs/features/)**: 기능별 상세 문서 (15개)
+- **[docs/api/](docs/api/)**: 백엔드 API 문서 (자동 생성)
 
-### 🏗️ 아키텍처 문서
-- **[UI_ARCHITECTURE.md](UI_ARCHITECTURE.md)**: UI/UX 디자인 시스템 및 화면 구조
-- **[CODE_STYLE.md](CODE_STYLE.md)**: 코드 스타일 및 컨벤션 가이드 (필수 준수)
+**⚠️ 중요 - 토큰 효율성:**
+- **작업 중인 기능 문서만** 읽어야 합니다
+- 다른 기능 문서는 읽지 마세요 (불필요한 토큰 낭비)
+- 예: 공지사항 작업 시 → `docs/features/15-announcements.md`만 읽기
 
-### 📚 기능별 상세 문서 (docs/features/)
-각 기능의 요구사항, 진행 상황, API 연동 등을 독립적으로 관리:
-- [00-setup.md](docs/features/00-setup.md) - 프로젝트 초기 설정 ✅
-- [01-auth.md](docs/features/01-auth.md) - 회원 가입 및 로그인 🟨
-- [02-dashboard.md](docs/features/02-dashboard.md) - 메인화면 (대시보드) 🟨
-- [03-assets.md](docs/features/03-assets.md) - 자산관리 ⬜
-- [04-investment.md](docs/features/04-investment.md) - 투자지표 ⬜
-- [05-household.md](docs/features/05-household.md) - 가계관리 ⬜
-- [06-schedule.md](docs/features/06-schedule.md) - 일정관리 ⬜
-- [07-todo.md](docs/features/07-todo.md) - ToDoList ⬜
-- [08-childcare.md](docs/features/08-childcare.md) - 육아포인트 ⬜
-- [09-memo.md](docs/features/09-memo.md) - 메모 ⬜
-- [10-minigame.md](docs/features/10-minigame.md) - 미니게임 ⬜
-- [11-i18n.md](docs/features/11-i18n.md) - 다국어 🟨
-- [12-settings.md](docs/features/12-settings.md) - 설정 ✅
-- [12-groups.md](docs/features/12-groups.md) - 그룹관리 ✅
-- [13-common.md](docs/features/13-common.md) - 공통 기능 ⬜
-
-### 🔧 기타 문서 (docs/)
-- **[docs/api/](docs/api/)**: 백엔드 API 자동 생성 문서 (백엔드 코드 기반)
-- **[docs/SOCIAL_LOGIN_SETUP.md](docs/SOCIAL_LOGIN_SETUP.md)**: 소셜 로그인 설정 및 트러블슈팅
+**기능 문서 작성 가이드:**
+- **✅ 완료**: UI 구현 체크리스트 + 데이터 모델 + 기능 구현 + 구현 위치 (100-150줄)
+- **🟨 진행중**: 상세 체크리스트 유지
+- **⬜ 미시작**: 핵심 기능 개요만 (30-50줄)
 
 ## 개발 워크플로우
 
-### 작업 시작 전
-1. **[ROADMAP.md](ROADMAP.md)**에서 전체 진행 상황 및 우선순위 확인
-2. 작업할 기능의 **[docs/features/](docs/features/)** 문서에서 상세 요구사항 확인
-3. API 연동 시 **[docs/api/](docs/api/)** 디렉토리 내 문서 참조
+1. **작업 전**: [ROADMAP.md](ROADMAP.md) 및 해당 기능 문서 확인
+2. **작업 중**: [CODE_STYLE.md](CODE_STYLE.md) 준수, 상태를 🟨로 변경
+3. **완료 후**: 상태를 ✅로 변경, ROADMAP.md 업데이트
 
-### 작업 중
-1. 기능 개발 시작: 해당 기능 문서의 상태를 🟨 (진행 중)으로 변경
-2. UI 개발 시 디자인 시스템 준수 (색상, 간격, 타이포그래피)
-3. **코드 스타일: [CODE_STYLE.md](CODE_STYLE.md) 가이드 필수 준수**
-4. Import는 절대 경로(`package:family_planner/...`) 사용
-5. 상수(AppColors, AppSizes) 및 Theme 활용
+**상태 아이콘**: ⬜ 시작 안함 | 🟨 진행 중 | ✅ 완료 | ⏸️ 보류 | ❌ 취소
 
-### 작업 완료 후
-1. 해당 기능 문서의 상태를 ✅ (완료)로 변경
-2. **[ROADMAP.md](ROADMAP.md)**의 진행 상황 및 최근 완료 섹션 업데이트
-3. 새로운 세부 작업 발견 시 해당 기능 문서에 추가
+## 코드 스타일
 
-## 작업 상태 관리
+**필수: [CODE_STYLE.md](CODE_STYLE.md) 엄격히 준수**
 
-상태 아이콘:
-- ⬜ 시작 안함
-- 🟨 진행 중
-- ✅ 완료
-- ⏸️ 보류
-- ❌ 취소
-
-## 코드 스타일 가이드
-
-**⚠️ 중요: 모든 코드는 [CODE_STYLE.md](CODE_STYLE.md)의 규칙을 엄격히 준수해야 합니다.**
-
-### 핵심 규칙 (자세한 내용은 CODE_STYLE.md 참조)
-
-#### Import 규칙
-- ✅ 절대 경로 사용: `import 'package:family_planner/...'`
-- ❌ 상대 경로 금지: `import '../../...'`
-- Import 순서: dart → flutter → 외부패키지 → family_planner → part
-
-#### 명명 규칙
-- 파일명: `snake_case` (announcement_list_screen.dart)
-- 클래스명: `PascalCase` (AnnouncementListScreen)
-- 변수/함수: `camelCase` (isAdmin, handleSubmit)
-- Private: `_camelCase` (_isLoading, _buildContent)
-
-#### 상수 활용
-- ✅ `AppColors.primary`, `AppSizes.spaceM`
-- ✅ `Theme.of(context).textTheme.titleMedium`
-- ❌ 하드코딩 금지: `Color(0xFF...)`, `16.0`
-
-#### 위젯 구조
-- `const` 생성자 적극 활용
-- 위젯은 작고 집중적으로 유지 (build 메서드 분해)
-- 상속보다 컴포지션 선호
-- Private 위젯 클래스로 재사용 컴포넌트 분리
-
-#### 상태 관리
-- Riverpod `@riverpod` 어노테이션 사용 (권장)
-- Provider의 `when()` 패턴으로 async 상태 처리
-- 에러 처리 및 로깅 필수
-
-#### 기타
-- `print()` 대신 `debugPrint()` 사용
-- 문서 주석(`///`) 작성
-- Feature-First 구조 준수
+- **Import**: 절대 경로 (`package:family_planner/...`)
+- **상수**: `AppColors.*`, `AppSizes.*`, `Theme.of(context)`
+- **명명**: snake_case 파일, PascalCase 클래스, camelCase 변수
+- **위젯**: const 생성자, build 메서드 분해
+- **Riverpod**: `@riverpod` 어노테이션 + `when()` 패턴
 
 ## 자주 참조하는 파일
 

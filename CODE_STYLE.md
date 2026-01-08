@@ -64,60 +64,28 @@ debugPrint('❌ [Repository] 실패: $error');
 
 ## 4. 위젯 구조
 
+**클래스 순서:**
+1. 멤버 변수
+2. Lifecycle (initState, dispose)
+3. Private 메서드 (_buildXxx)
+4. build 메서드
+5. Private 하위 위젯 (파일 하단)
+
+**핵심 패턴:**
 ```dart
-// 파일 구조 순서
-class MyScreen extends ConsumerStatefulWidget {
-  const MyScreen({super.key});  // ✅ const 생성자
+// const 생성자
+const MyScreen({super.key});
 
-  @override
-  ConsumerState<MyScreen> createState() => _MyScreenState();
+// build 분해
+Widget build(BuildContext context) {
+  final data = ref.watch(dataProvider);
+  return data.when(
+    data: _buildContent,
+    loading: () => const CircularProgressIndicator(),
+    error: (e, st) => Text('Error: $e'),
+  );
 }
-
-class _MyScreenState extends ConsumerState<MyScreen> {
-  // 1. 멤버 변수
-  final _controller = ScrollController();
-  bool _isLoading = false;
-
-  // 2. Lifecycle
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  // 3. Private 메서드
-  void _onScroll() {}
-  Widget _buildContent() {}
-
-  // 4. build (마지막)
-  @override
-  Widget build(BuildContext context) {
-    final data = ref.watch(dataProvider);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('제목')),
-      body: data.when(
-        data: _buildContent,
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => _buildError(e),
-      ),
-    );
-  }
-}
-
-// 5. Private 하위 위젯 (파일 하단)
-class _ItemCard extends StatelessWidget {}
 ```
-
-**핵심:**
-- const 생성자 적극 활용
-- build 메서드 분해 (`_buildXxx()`)
-- 재사용 위젯은 private 클래스로 분리
 
 ---
 
@@ -127,35 +95,14 @@ class _ItemCard extends StatelessWidget {}
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'provider.g.dart';
 
-// 간단한 조회
+// @riverpod 어노테이션 사용
 @riverpod
 Future<List<Model>> items(ItemsRef ref) async {
-  final repo = ref.watch(repositoryProvider);
-  return await repo.getItems();
+  return await ref.watch(repositoryProvider).getItems();
 }
 
-// 상태 관리 클래스
-@riverpod
-class ItemList extends _$ItemList {
-  int _page = 1;
-  bool _hasMore = true;
-
-  @override
-  Future<List<Model>> build() async {
-    return _fetch();
-  }
-
-  Future<void> loadMore() async {
-    if (!_hasMore) return;
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => _fetch(page: ++_page));
-  }
-
-  bool get hasMore => _hasMore;
-}
-
-// UI 사용
-final itemsAsync = ref.watch(itemListProvider);
+// UI에서 when() 패턴
+final itemsAsync = ref.watch(itemsProvider);
 itemsAsync.when(
   data: (items) => ListView(...),
   loading: () => const CircularProgressIndicator(),
@@ -169,29 +116,16 @@ itemsAsync.when(
 
 ```
 lib/
-├── core/              # 앱 전역
-│   ├── constants/     # AppColors, AppSizes
-│   ├── routes/
-│   └── theme/
+├── core/              # 전역 (constants, routes, theme)
 ├── features/          # Feature별
 │   └── feature_name/
-│       ├── data/
-│       │   ├── models/
-│       │   ├── dto/
-│       │   └── repositories/
+│       ├── data/      # models, dto, repositories
 │       ├── providers/
-│       └── presentation/
-│           ├── screens/
-│           └── widgets/
+│       └── presentation/  # screens, widgets
 └── shared/            # 공유 위젯
-    └── widgets/
 ```
 
-**파일명:**
-- 화면: `*_screen.dart`
-- Provider: `*_provider.dart`
-- Model: `*_model.dart`
-- DTO: `*_dto.dart`
+**파일명**: `*_screen.dart`, `*_provider.dart`, `*_model.dart`
 
 ---
 
@@ -226,19 +160,15 @@ color: AppColors.info.withOpacity(0.05)
 
 ```dart
 try {
-  debugPrint('🔵 [Repository] 작업 시작');
+  debugPrint('🔵 [Repository] 시작');
   final result = await repository.doSomething();
   debugPrint('✅ [Repository] 성공');
   return result;
 } on DioException catch (e) {
-  debugPrint('❌ [Repository] DioException: ${e.message}');
-  if (e.response?.statusCode == 404) {
-    throw Exception('리소스를 찾을 수 없습니다');
-  }
+  debugPrint('❌ [Repository] 실패: ${e.message}');
   throw Exception('작업 실패: ${e.message}');
 } catch (e, st) {
-  debugPrint('❌ [Repository] Error: $e');
-  debugPrint('StackTrace: $st');
+  debugPrint('❌ [Repository] Error: $e\n$st');
   rethrow;
 }
 ```
@@ -261,4 +191,4 @@ try {
 
 ---
 
-**마지막 업데이트**: 2025-12-30
+**마지막 업데이트**: 2026-01-08 (토큰 최적화)

@@ -47,8 +47,6 @@ app.*.map.json
 
 # claude
 
-.claude/
-
 nul
 
 # Environment variables (contains sensitive keys)
