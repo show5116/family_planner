@@ -15,23 +15,16 @@ class FcmToken extends _$FcmToken {
   Future<String?> build() async {
     debugPrint('=== FcmToken.build() 시작 ===');
 
-    // FCM 토큰 가져오기
+    // FCM 토큰 가져오기만 수행 (백엔드 등록은 하지 않음)
+    // 백엔드 등록은 로그인 성공 후 refreshToken()을 통해 명시적으로 수행
     final token = await FirebaseMessagingService.getToken();
     debugPrint('FCM 토큰 가져오기 결과: ${token != null ? "성공 (${token.substring(0, 20)}...)" : "실패 (null)"}');
 
-    // 백엔드에 토큰 등록
-    if (token != null) {
-      debugPrint('백엔드에 FCM 토큰 등록 시도...');
-      await _registerToken(token);
-    } else {
-      if (kIsWeb) {
-        debugPrint('ℹ️ 웹 개발 환경에서는 FCM 토큰이 없어도 정상입니다');
-      } else {
-        debugPrint('⚠️ FCM 토큰이 null이므로 백엔드 등록을 건너뜁니다');
-      }
+    if (token == null && kIsWeb) {
+      debugPrint('ℹ️ 웹 개발 환경에서는 FCM 토큰이 없어도 정상입니다');
     }
 
-    debugPrint('=== FcmToken.build() 완료 ===');
+    debugPrint('=== FcmToken.build() 완료 (백엔드 등록 안함) ===');
     return token;
   }
 
