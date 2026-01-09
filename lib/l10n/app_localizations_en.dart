@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_previous => 'Previous';
 
   @override
+  String get common_all => 'All';
+
+  @override
   String get auth_login => 'Log in';
 
   @override

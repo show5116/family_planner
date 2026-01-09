@@ -20,11 +20,23 @@ class CreateAnnouncementDto {
     return {
       'title': title,
       'content': content,
-      if (category != null) 'category': category!.name,
+      if (category != null) 'category': _categoryToString(category!),
       if (isPinned != null) 'isPinned': isPinned,
       if (attachments != null)
         'attachments': attachments!.map((e) => e.toJson()).toList(),
     };
+  }
+
+  /// 카테고리 enum을 대문자 문자열로 변환 (백엔드 요구사항)
+  String _categoryToString(AnnouncementCategory category) {
+    switch (category) {
+      case AnnouncementCategory.announcement:
+        return 'ANNOUNCEMENT';
+      case AnnouncementCategory.event:
+        return 'EVENT';
+      case AnnouncementCategory.update:
+        return 'UPDATE';
+    }
   }
 }
 

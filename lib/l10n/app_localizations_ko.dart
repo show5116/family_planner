@@ -63,6 +63,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_previous => '이전';
 
   @override
+  String get common_all => '전체';
+
+  @override
   String get auth_login => '로그인';
 
   @override

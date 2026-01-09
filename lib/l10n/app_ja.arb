@@ -27,6 +27,7 @@
   "common_done": "完了",
   "common_next": "次へ",
   "common_previous": "前へ",
+  "common_all": "すべて",
 
   "auth_login": "ログイン",
   "auth_signup": "新規登録",

@@ -35,6 +35,44 @@ enum AnnouncementCategory {
   update;
 }
 
+/// 공지사항 카테고리 JsonConverter (대소문자 무관)
+class AnnouncementCategoryConverter
+    implements JsonConverter<AnnouncementCategory?, String?> {
+  const AnnouncementCategoryConverter();
+
+  @override
+  AnnouncementCategory? fromJson(String? json) {
+    if (json == null) return null;
+
+    // 대소문자 구분 없이 변환
+    switch (json.toLowerCase()) {
+      case 'announcement':
+        return AnnouncementCategory.announcement;
+      case 'event':
+        return AnnouncementCategory.event;
+      case 'update':
+        return AnnouncementCategory.update;
+      default:
+        return null;
+    }
+  }
+
+  @override
+  String? toJson(AnnouncementCategory? category) {
+    if (category == null) return null;
+
+    // 항상 대문자로 전송 (백엔드 요구사항)
+    switch (category) {
+      case AnnouncementCategory.announcement:
+        return 'ANNOUNCEMENT';
+      case AnnouncementCategory.event:
+        return 'EVENT';
+      case AnnouncementCategory.update:
+        return 'UPDATE';
+    }
+  }
+}
+
 /// 공지사항 모델
 @freezed
 class AnnouncementModel with _$AnnouncementModel {
@@ -42,7 +80,7 @@ class AnnouncementModel with _$AnnouncementModel {
     required String id,
     required String title,
     required String content,
-    AnnouncementCategory? category,
+    @AnnouncementCategoryConverter() AnnouncementCategory? category,
     @Default(false) bool isPinned,
     required AnnouncementAuthor author,
     @Default(false) bool isRead,

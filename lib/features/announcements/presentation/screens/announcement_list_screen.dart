@@ -54,6 +54,8 @@ class _AnnouncementListScreenState
     final l10n = AppLocalizations.of(context)!;
     final announcementsAsync = ref.watch(announcementListProvider);
     final isAdmin = ref.watch(isAdminProvider);
+    final notifier = ref.read(announcementListProvider.notifier);
+    final selectedCategory = notifier.selectedCategory;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,34 +76,102 @@ class _AnnouncementListScreenState
             ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(announcementListProvider.notifier).refresh();
-        },
-        child: announcementsAsync.when(
-          data: (announcements) {
-            if (announcements.isEmpty) {
-              return _buildEmptyState();
-            }
-
-            return ListView.separated(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(AppSizes.spaceM),
-              itemCount: announcements.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: AppSizes.spaceM),
-              itemBuilder: (context, index) {
-                final announcement = announcements[index];
-                return _AnnouncementCard(
-                  announcement: announcement,
-                  isAdmin: isAdmin,
-                );
+      body: Column(
+        children: [
+          // 카테고리 필터 칩
+          _buildCategoryFilter(selectedCategory),
+          // 공지사항 목록
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(announcementListProvider.notifier).refresh();
               },
+              child: announcementsAsync.when(
+                data: (announcements) {
+                  if (announcements.isEmpty) {
+                    return _buildEmptyState();
+                  }
+
+                  return ListView.separated(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(AppSizes.spaceM),
+                    itemCount: announcements.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSizes.spaceM),
+                    itemBuilder: (context, index) {
+                      final announcement = announcements[index];
+                      return _AnnouncementCard(
+                        announcement: announcement,
+                        isAdmin: isAdmin,
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => _buildErrorState(error.toString()),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 카테고리 필터 칩
+  Widget _buildCategoryFilter(AnnouncementCategory? selectedCategory) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      height: 56, // 고정 높이로 레이아웃 안정성 확보
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+        children: [
+          // 전체 칩
+          Padding(
+            padding: const EdgeInsets.only(right: AppSizes.spaceS),
+            child: FilterChip(
+              label: Text(
+                l10n.common_all,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              selected: selectedCategory == null,
+              onSelected: (selected) {
+                if (selected) {
+                  ref.read(announcementListProvider.notifier).setCategory(null);
+                }
+              },
+            ),
+          ),
+          // 카테고리별 칩
+          ...AnnouncementCategory.values.map((category) {
+            return Padding(
+              padding: const EdgeInsets.only(right: AppSizes.spaceS),
+              child: FilterChip(
+                avatar: Icon(
+                  category.icon,
+                  size: AppSizes.iconSmall,
+                  color: selectedCategory == category
+                      ? category.color
+                      : AppColors.textSecondary,
+                ),
+                label: Text(
+                  category.displayName(l10n),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                selected: selectedCategory == category,
+                onSelected: (selected) {
+                  ref.read(announcementListProvider.notifier).setCategory(
+                        selected ? category : null,
+                      );
+                },
+              ),
             );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => _buildErrorState(error.toString()),
-        ),
+          }),
+        ],
       ),
     );
   }

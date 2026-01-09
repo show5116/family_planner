@@ -27,6 +27,7 @@
   "common_done": "Done",
   "common_next": "Next",
   "common_previous": "Previous",
+  "common_all": "All",
 
   "auth_login": "Log in",
   "auth_signup": "Sign up",

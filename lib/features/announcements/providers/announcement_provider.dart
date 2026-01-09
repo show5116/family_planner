@@ -13,6 +13,7 @@ class AnnouncementList extends _$AnnouncementList {
   int _currentPage = 1;
   bool _hasMore = true;
   List<AnnouncementModel> _items = [];
+  AnnouncementCategory? _selectedCategory;
 
   @override
   Future<List<AnnouncementModel>> build() async {
@@ -22,7 +23,11 @@ class AnnouncementList extends _$AnnouncementList {
   /// 공지사항 목록 로드
   Future<List<AnnouncementModel>> _loadAnnouncements({int page = 1}) async {
     final repository = ref.read(announcementRepositoryProvider);
-    final response = await repository.getAnnouncements(page: page, limit: 20);
+    final response = await repository.getAnnouncements(
+      page: page,
+      limit: 20,
+      category: _selectedCategory,
+    );
 
     _hasMore = response.items.length >= 20;
     _currentPage = page;
@@ -57,6 +62,15 @@ class AnnouncementList extends _$AnnouncementList {
       return await _loadAnnouncements(page: 1);
     });
   }
+
+  /// 카테고리 필터 설정
+  Future<void> setCategory(AnnouncementCategory? category) async {
+    _selectedCategory = category;
+    await refresh();
+  }
+
+  /// 현재 선택된 카테고리
+  AnnouncementCategory? get selectedCategory => _selectedCategory;
 
   /// 공지사항 작성 후 목록 갱신
   Future<void> afterCreate() async {

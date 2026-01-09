@@ -208,6 +208,12 @@ abstract class AppLocalizations {
   /// **'이전'**
   String get common_previous;
 
+  /// No description provided for @common_all.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get common_all;
+
   /// No description provided for @auth_login.
   ///
   /// In ko, this message translates to:

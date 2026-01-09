@@ -382,6 +382,7 @@ mixin _$AnnouncementModel {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  @AnnouncementCategoryConverter()
   AnnouncementCategory? get category => throw _privateConstructorUsedError;
   bool get isPinned => throw _privateConstructorUsedError;
   AnnouncementAuthor get author => throw _privateConstructorUsedError;
@@ -411,7 +412,7 @@ abstract class $AnnouncementModelCopyWith<$Res> {
     String id,
     String title,
     String content,
-    AnnouncementCategory? category,
+    @AnnouncementCategoryConverter() AnnouncementCategory? category,
     bool isPinned,
     AnnouncementAuthor author,
     bool isRead,
@@ -520,7 +521,7 @@ abstract class _$$AnnouncementModelImplCopyWith<$Res>
     String id,
     String title,
     String content,
-    AnnouncementCategory? category,
+    @AnnouncementCategoryConverter() AnnouncementCategory? category,
     bool isPinned,
     AnnouncementAuthor author,
     bool isRead,
@@ -612,7 +613,7 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
     required this.id,
     required this.title,
     required this.content,
-    this.category,
+    @AnnouncementCategoryConverter() this.category,
     this.isPinned = false,
     required this.author,
     this.isRead = false,
@@ -631,6 +632,7 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
   @override
   final String content;
   @override
+  @AnnouncementCategoryConverter()
   final AnnouncementCategory? category;
   @override
   @JsonKey()
@@ -713,7 +715,7 @@ abstract class _AnnouncementModel implements AnnouncementModel {
     required final String id,
     required final String title,
     required final String content,
-    final AnnouncementCategory? category,
+    @AnnouncementCategoryConverter() final AnnouncementCategory? category,
     final bool isPinned,
     required final AnnouncementAuthor author,
     final bool isRead,
@@ -732,6 +734,7 @@ abstract class _AnnouncementModel implements AnnouncementModel {
   @override
   String get content;
   @override
+  @AnnouncementCategoryConverter()
   AnnouncementCategory? get category;
   @override
   bool get isPinned;

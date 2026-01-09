@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 3/15 기능 (20%)
-- **진행 중**: 4/15 기능 (27%)
-- **미시작**: 8/15 기능 (53%)
+- **완료**: 4/16 기능 (25%)
+- **진행 중**: 4/16 기능 (25%)
+- **미시작**: 8/16 기능 (50%)
 
-**마지막 업데이트**: 2025-12-27
+**마지막 업데이트**: 2026-01-09
 
 ---
 
@@ -57,6 +57,7 @@
 | 다국어 지원 | 🟨 진행 중 | [11-i18n.md](docs/features/11-i18n.md) | P1 |
 | 설정 메뉴 | ✅ 완료 | [12-settings.md](docs/features/12-settings.md) | P1 |
 | 알림 시스템 | 🟨 진행 중 | [14-notification.md](docs/features/14-notification.md) | P1 |
+| 공지사항 | ✅ 완료 | [15-announcements.md](docs/features/15-announcements.md) | P1 |
 | 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
 
 **참고**: 설정 메뉴는 프로필 설정, 테마 설정, 홈 위젯 설정을 포함하며, 그룹 관리([12-groups.md](docs/features/12-groups.md))와 권한 관리는 별도 관리됩니다.
@@ -91,6 +92,16 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-01-09
+- ✅ **공지사항 시스템 완료** ([15-announcements.md](docs/features/15-announcements.md))
+  - 공지사항 CRUD 기능 완료 (ADMIN 전용)
+  - 목록/상세 화면 구현 (고정 공지, 읽음 표시)
+  - 카테고리 필터 기능 (전체/공지사항/이벤트/업데이트)
+  - 마크다운 지원 (작성 및 렌더링)
+  - 무한 스크롤 및 Pull-to-refresh
+  - 백엔드 API 완전 연동
+  - 대소문자 호환 JsonConverter 구현
 
 ### 2025-12-27
 - ✅ **알림 시스템 프론트엔드 구현 완료** ([14-notification.md](docs/features/14-notification.md))

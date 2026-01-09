@@ -20,16 +20,19 @@ class AnnouncementRepository {
   /// 공지사항 목록 조회
   /// [page]: 페이지 번호 (기본값: 1)
   /// [limit]: 페이지당 개수 (기본값: 20)
+  /// [category]: 카테고리 필터
   /// [pinnedOnly]: 고정 공지만 조회 (기본값: false)
   Future<AnnouncementListResponse> getAnnouncements({
     int page = 1,
     int limit = 20,
+    AnnouncementCategory? category,
     bool pinnedOnly = false,
   }) async {
     try {
       final response = await _dio.get('/announcements', queryParameters: {
         'page': page,
         'limit': limit,
+        if (category != null) 'category': _categoryToString(category),
         if (pinnedOnly) 'pinnedOnly': true,
       });
 
@@ -116,6 +119,18 @@ class AnnouncementRepository {
         throw Exception('공지사항을 찾을 수 없습니다');
       }
       throw Exception('공지사항 고정/해제 실패: ${e.message}');
+    }
+  }
+
+  /// 카테고리 enum을 대문자 문자열로 변환 (백엔드 요구사항)
+  String _categoryToString(AnnouncementCategory category) {
+    switch (category) {
+      case AnnouncementCategory.announcement:
+        return 'ANNOUNCEMENT';
+      case AnnouncementCategory.event:
+        return 'EVENT';
+      case AnnouncementCategory.update:
+        return 'UPDATE';
     }
   }
 }

@@ -24,6 +24,7 @@
 | ✅ | 그룹관리 | [12-groups.md](docs/features/12-groups.md) |
 | ⬜ | 공통 기능 | [13-common.md](docs/features/13-common.md) |
 | 🟨 | 알림 | [14-notification.md](docs/features/14-notification.md) |
+| ✅ | 공지사항 | [15-announcements.md](docs/features/15-announcements.md) |
 
 ---
 

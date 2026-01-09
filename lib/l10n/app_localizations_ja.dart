@@ -63,6 +63,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_previous => '前へ';
 
   @override
+  String get common_all => 'すべて';
+
+  @override
   String get auth_login => 'ログイン';
 
   @override

@@ -27,6 +27,7 @@
   "common_done": "완료",
   "common_next": "다음",
   "common_previous": "이전",
+  "common_all": "전체",
 
   "auth_login": "로그인",
   "auth_signup": "회원가입",
