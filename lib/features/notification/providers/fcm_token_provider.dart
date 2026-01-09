@@ -101,12 +101,12 @@ class FcmToken extends _$FcmToken {
   /// 플랫폼 문자열 반환
   String _getPlatform() {
     if (kIsWeb) {
-      return 'web';
+      return 'WEB';
     } else if (Platform.isAndroid) {
-      return 'android';
+      return 'ANDROID';
     } else if (Platform.isIOS) {
-      return 'ios';
+      return 'IOS';
     }
-    return 'unknown';
+    return 'UNKNOWN';
   }
 }
