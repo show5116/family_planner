@@ -152,12 +152,12 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                     if (announcement.isPinned)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.spaceS,
-                          vertical: AppSizes.spaceXS,
+                          horizontal: AppSizes.spaceM,
+                          vertical: AppSizes.spaceS,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                          color: AppColors.primary.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -171,9 +171,9 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                             Text(
                               l10n.announcement_pinned,
                               style:
-                                  Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  Theme.of(context).textTheme.labelMedium?.copyWith(
                                         color: AppColors.primary,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                       ),
                             ),
                           ],

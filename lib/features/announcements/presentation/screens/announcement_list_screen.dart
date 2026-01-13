@@ -285,10 +285,20 @@ class _AnnouncementCard extends StatelessWidget {
     final dateFormat = DateFormat('yyyy.MM.dd');
 
     return Card(
-      elevation: AppSizes.elevation1,
+      elevation: announcement.isPinned ? 0 : AppSizes.elevation1,
+      surfaceTintColor: Colors.transparent,
       color: announcement.isPinned
-          ? AppColors.primary.withValues(alpha: 0.05)
-          : AppColors.surface,
+          ? AppColors.primary.withValues(alpha: 0.1)
+          : null,
+      shape: announcement.isPinned
+          ? RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+              side: BorderSide(
+                color: AppColors.primary.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+            )
+          : null,
       child: InkWell(
         onTap: () {
           context.push('/announcements/${announcement.id}');
