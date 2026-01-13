@@ -90,41 +90,67 @@
 <body>
   <!-- Fix for RawKeyboard null safety issue in Flutter Web -->
   <script>
-    // Intercept keyboard events before they reach Flutter engine
-    window.addEventListener('keydown', function(event) {
-      // Ensure all boolean properties have default values
-      if (event.repeat === undefined || event.repeat === null) {
-        Object.defineProperty(event, 'repeat', {
-          value: false,
-          writable: false,
-          enumerable: true
-        });
-      }
-      if (event.isComposing === undefined || event.isComposing === null) {
-        Object.defineProperty(event, 'isComposing', {
-          value: false,
-          writable: false,
-          enumerable: true
-        });
-      }
-    }, true); // Use capture phase to intercept early
+    (function() {
+      // Patch KeyboardEvent prototype to ensure boolean properties are never null
+      const originalRepeatGetter = Object.getOwnPropertyDescriptor(KeyboardEvent.prototype, 'repeat')?.get;
+      const originalIsComposingGetter = Object.getOwnPropertyDescriptor(KeyboardEvent.prototype, 'isComposing')?.get;
 
-    window.addEventListener('keyup', function(event) {
-      if (event.repeat === undefined || event.repeat === null) {
-        Object.defineProperty(event, 'repeat', {
-          value: false,
-          writable: false,
+      // Override repeat getter
+      if (originalRepeatGetter) {
+        Object.defineProperty(KeyboardEvent.prototype, 'repeat', {
+          get: function() {
+            const value = originalRepeatGetter.call(this);
+            return value === null || value === undefined ? false : value;
+          },
+          configurable: true,
           enumerable: true
         });
       }
-      if (event.isComposing === undefined || event.isComposing === null) {
-        Object.defineProperty(event, 'isComposing', {
-          value: false,
-          writable: false,
+
+      // Override isComposing getter
+      if (originalIsComposingGetter) {
+        Object.defineProperty(KeyboardEvent.prototype, 'isComposing', {
+          get: function() {
+            const value = originalIsComposingGetter.call(this);
+            return value === null || value === undefined ? false : value;
+          },
+          configurable: true,
           enumerable: true
         });
       }
-    }, true);
+
+      // Fallback: Also intercept events as they bubble
+      const patchEvent = function(event) {
+        if (event.repeat === null || event.repeat === undefined) {
+          try {
+            Object.defineProperty(event, 'repeat', {
+              value: false,
+              writable: true,
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e) {
+            // Ignore if property is not configurable
+          }
+        }
+        if (event.isComposing === null || event.isComposing === undefined) {
+          try {
+            Object.defineProperty(event, 'isComposing', {
+              value: false,
+              writable: true,
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e) {
+            // Ignore if property is not configurable
+          }
+        }
+      };
+
+      window.addEventListener('keydown', patchEvent, true);
+      window.addEventListener('keyup', patchEvent, true);
+      window.addEventListener('keypress', patchEvent, true);
+    })();
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
