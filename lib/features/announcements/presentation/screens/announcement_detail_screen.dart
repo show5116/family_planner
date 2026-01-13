@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter_markdown/flutter_markdown.dart';
-
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/providers/announcement_provider.dart';
 import 'package:family_planner/features/announcements/utils/announcement_utils.dart';
 import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
+import 'package:family_planner/shared/widgets/rich_text_viewer.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 공지사항 상세 화면
@@ -49,6 +48,10 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                         .togglePin(announcementId, newPinState);
 
                     if (context.mounted) {
+                      // 목록 및 상세 정보 새로고침
+                      ref.invalidate(announcementListProvider);
+                      ref.invalidate(announcementDetailProvider(announcementId));
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(newPinState ? l10n.announcement_pinSuccess : l10n.announcement_unpinSuccess),
@@ -244,10 +247,9 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                 const Divider(),
                 const SizedBox(height: AppSizes.spaceL),
 
-                // 내용 (마크다운 렌더링)
-                MarkdownBody(
-                  data: announcement.content,
-                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+                // 내용 (HTML 렌더링)
+                RichTextViewer(
+                  content: announcement.content,
                 ),
               ],
             ),
@@ -306,6 +308,9 @@ class AnnouncementDetailScreen extends ConsumerWidget {
 
               if (context.mounted) {
                 if (success) {
+                  // 목록 새로고침
+                  ref.invalidate(announcementListProvider);
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(l10n.announcement_deleteSuccess)),
                   );

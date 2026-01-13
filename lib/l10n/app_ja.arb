@@ -425,7 +425,7 @@
   "announcement_loadError": "お知らせを読み込めません",
   "announcement_empty": "登録されたお知らせがありません",
   "announcement_titleHint": "お知らせのタイトルを入力してください",
-  "announcement_contentHint": "お知らせの内容を入力してください\n\nMarkdown形式をサポートしています。",
+  "announcement_contentHint": "お知らせの内容を入力してください",
   "announcement_categoryHint": "カテゴリーを選択してください（任意）",
   "announcement_titleRequired": "タイトルを入力してください",
   "announcement_titleMinLength": "タイトルは3文字以上入力してください",

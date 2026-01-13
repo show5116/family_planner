@@ -1113,8 +1113,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get announcement_titleHint => 'Enter announcement title';
 
   @override
-  String get announcement_contentHint =>
-      'Enter announcement content\n\nMarkdown is supported.';
+  String get announcement_contentHint => 'Enter announcement content';
 
   @override
   String get announcement_categoryHint => 'Select category (optional)';

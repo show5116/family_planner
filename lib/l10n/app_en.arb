@@ -425,7 +425,7 @@
   "announcement_loadError": "Failed to load announcement",
   "announcement_empty": "No announcements yet",
   "announcement_titleHint": "Enter announcement title",
-  "announcement_contentHint": "Enter announcement content\n\nMarkdown is supported.",
+  "announcement_contentHint": "Enter announcement content",
   "announcement_categoryHint": "Select category (optional)",
   "announcement_titleRequired": "Please enter a title",
   "announcement_titleMinLength": "Title must be at least 3 characters",

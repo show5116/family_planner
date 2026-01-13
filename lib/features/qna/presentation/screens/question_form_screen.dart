@@ -8,7 +8,7 @@ import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/features/qna/data/dto/qna_dto.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
-import 'package:family_planner/shared/widgets/markdown_editor.dart';
+import 'package:family_planner/shared/widgets/rich_text_editor.dart';
 
 /// 질문 작성/수정 화면
 class QuestionFormScreen extends ConsumerStatefulWidget {
@@ -87,16 +87,13 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
               _buildTitleField(),
               const SizedBox(height: AppSizes.spaceL),
 
-              // 내용 입력 (마크다운 에디터)
-              MarkdownEditor(
+              // 내용 입력 (리치 텍스트 에디터)
+              RichTextEditor(
                 controller: _contentController,
                 labelText: '내용',
-                hintText: '질문 내용을 자세히 작성해주세요.\n\n마크다운 형식을 지원합니다.',
+                hintText: '질문 내용을 자세히 작성해주세요.',
                 minLines: 15,
                 maxLines: 30,
-                showPreview: true,
-                showToolbar: true,
-                showGuide: true,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return '내용을 입력해주세요';

@@ -13,7 +13,7 @@
 - **전체 회원 대상**: 그룹 구분 없이 모든 회원에게 노출
 - **고정 기능**: 중요 공지 상단 고정 (pinned)
 - **읽음 추적**: 회원별 읽음 여부 및 읽은 사람 수
-- **마크다운 지원**: 내용 작성 및 렌더링
+- **리치 텍스트 에디터**: WYSIWYG 방식의 일반 사용자 친화적 에디터 (XSS 방어)
 - **알림 연동**: 새 공지 시 전체 회원에게 푸시 알림
 
 ---
@@ -31,17 +31,17 @@
 
 ### 공지사항 상세 화면
 - ✅ 제목, 작성일, 내용 표시
-- ✅ 마크다운 렌더링 (flutter_markdown)
+- ✅ HTML 렌더링 (RichTextViewer, XSS 방어)
 - ✅ 자동 읽음 처리 (화면 진입 시)
 - ✅ 읽은 사람 수 표시
 - ✅ 첨부파일 다운로드/미리보기 (UI 완료, 다운로드 기능 추후 구현)
 
 ### 관리자 전용 화면 (ADMIN)
 - ✅ 공지사항 작성 화면
-  - 제목, 내용 입력 (마크다운)
-  - 카테고리 선택 (공지사항/이벤트/업데이트)
+  - 제목, 내용 입력 (리치 텍스트 에디터)
+  - 카테고리 선택 (공지사항/이벤트/업데이트/기타)
   - 고정 여부 토글
-  - 미리보기 기능
+  - WYSIWYG 에디터 (굵게, 기울임, 밑줄, 링크 등)
 - ✅ 공지사항 수정 화면
 - ✅ 공지사항 삭제 확인 다이얼로그
 - ✅ 고정/해제 토글 버튼
@@ -59,8 +59,8 @@
 - ✅ authorId (String)
 - ✅ authorName (String)
 - ✅ title (String)
-- ✅ content (String) - 마크다운
-- ✅ category (AnnouncementCategory?) - announcement/event/update
+- ✅ content (String) - HTML (새니타이징됨)
+- ✅ category (AnnouncementCategory?) - announcement/event/update/other
 - ✅ isPinned (bool)
 - ✅ attachments (List<Attachment>?)
 - ✅ isRead (bool)

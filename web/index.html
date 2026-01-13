@@ -88,6 +88,44 @@
   </style>
 </head>
 <body>
+  <!-- Fix for RawKeyboard null safety issue in Flutter Web -->
+  <script>
+    // Intercept keyboard events before they reach Flutter engine
+    window.addEventListener('keydown', function(event) {
+      // Ensure all boolean properties have default values
+      if (event.repeat === undefined || event.repeat === null) {
+        Object.defineProperty(event, 'repeat', {
+          value: false,
+          writable: false,
+          enumerable: true
+        });
+      }
+      if (event.isComposing === undefined || event.isComposing === null) {
+        Object.defineProperty(event, 'isComposing', {
+          value: false,
+          writable: false,
+          enumerable: true
+        });
+      }
+    }, true); // Use capture phase to intercept early
+
+    window.addEventListener('keyup', function(event) {
+      if (event.repeat === undefined || event.repeat === null) {
+        Object.defineProperty(event, 'repeat', {
+          value: false,
+          writable: false,
+          enumerable: true
+        });
+      }
+      if (event.isComposing === undefined || event.isComposing === null) {
+        Object.defineProperty(event, 'isComposing', {
+          value: false,
+          writable: false,
+          enumerable: true
+        });
+      }
+    }, true);
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

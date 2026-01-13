@@ -3,14 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter_markdown/flutter_markdown.dart';
-
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
+import 'package:family_planner/shared/widgets/rich_text_viewer.dart';
 
 /// 질문 상세 화면
 class QuestionDetailScreen extends ConsumerWidget {
@@ -120,10 +119,9 @@ class QuestionDetailScreen extends ConsumerWidget {
                 const Divider(),
                 const SizedBox(height: AppSizes.spaceL),
 
-                // 질문 내용 (마크다운 렌더링)
-                MarkdownBody(
-                  data: question.content,
-                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+                // 질문 내용 (HTML 렌더링)
+                RichTextViewer(
+                  content: question.content,
                 ),
 
                 // 첨부파일
@@ -395,10 +393,9 @@ class QuestionDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceL),
 
-            // 답변 내용 (마크다운 렌더링)
-            MarkdownBody(
-              data: answer.content,
-              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+            // 답변 내용 (HTML 렌더링)
+            RichTextViewer(
+              content: answer.content,
             ),
 
             // 첨부파일

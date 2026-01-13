@@ -8,7 +8,7 @@ import 'package:family_planner/features/announcements/providers/announcement_pro
 import 'package:family_planner/features/announcements/data/dto/announcement_dto.dart';
 import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
 import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
-import 'package:family_planner/shared/widgets/markdown_editor.dart';
+import 'package:family_planner/shared/widgets/rich_text_editor.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 공지사항 작성/수정 화면 (ADMIN 전용)
@@ -193,16 +193,13 @@ class _AnnouncementFormScreenState
             ),
             const SizedBox(height: AppSizes.spaceL),
 
-            // 내용 입력 - 마크다운 에디터 사용
-            MarkdownEditor(
+            // 내용 입력 - 리치 텍스트 에디터 사용
+            RichTextEditor(
               controller: _contentController,
               labelText: l10n.announcement_content,
               hintText: l10n.announcement_contentHint,
               minLines: 15,
               maxLines: 30,
-              showPreview: true,
-              showToolbar: true,
-              showGuide: true,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return l10n.announcement_contentRequired;
@@ -274,6 +271,14 @@ class _AnnouncementFormScreenState
       if (!mounted) return;
 
       if (result != null) {
+        // 목록 새로고침
+        ref.invalidate(announcementListProvider);
+
+        // 수정 모드인 경우 상세 정보도 새로고침
+        if (_isEditMode) {
+          ref.invalidate(announcementDetailProvider(widget.announcementId!));
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_isEditMode ? l10n.announcement_updateSuccess : l10n.announcement_createSuccess),
@@ -281,11 +286,7 @@ class _AnnouncementFormScreenState
         );
 
         // 목록으로 이동
-        if (_isEditMode) {
-          context.pop(); // 상세 화면으로 돌아가기
-        } else {
-          context.go('/announcements'); // 목록으로 이동
-        }
+        context.pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

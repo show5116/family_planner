@@ -1085,7 +1085,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get announcement_titleHint => '공지사항 제목을 입력하세요';
 
   @override
-  String get announcement_contentHint => '공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.';
+  String get announcement_contentHint => '공지사항 내용을 입력하세요';
 
   @override
   String get announcement_categoryHint => '카테고리를 선택하세요 (선택사항)';

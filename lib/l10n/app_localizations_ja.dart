@@ -1082,8 +1082,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get announcement_titleHint => 'お知らせのタイトルを入力してください';
 
   @override
-  String get announcement_contentHint =>
-      'お知らせの内容を入力してください\n\nMarkdown形式をサポートしています。';
+  String get announcement_contentHint => 'お知らせの内容を入力してください';
 
   @override
   String get announcement_categoryHint => 'カテゴリーを選択してください（任意）';

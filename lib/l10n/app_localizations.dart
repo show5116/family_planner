@@ -2197,7 +2197,7 @@ abstract class AppLocalizations {
   /// No description provided for @announcement_contentHint.
   ///
   /// In ko, this message translates to:
-  /// **'공지사항 내용을 입력하세요\n\n마크다운 형식을 지원합니다.'**
+  /// **'공지사항 내용을 입력하세요'**
   String get announcement_contentHint;
 
   /// No description provided for @announcement_categoryHint.
