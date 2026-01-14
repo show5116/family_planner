@@ -92,6 +92,15 @@ class AnnouncementList extends _$AnnouncementList {
     state = AsyncValue.data([..._items]);
   }
 
+  /// 공지사항 읽음 처리 (로컬 상태만 업데이트)
+  void markAsRead(String id) {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index != -1 && !_items[index].isRead) {
+      _items[index] = _items[index].copyWith(isRead: true);
+      state = AsyncValue.data([..._items]);
+    }
+  }
+
   /// 더 가져올 데이터가 있는지 여부
   bool get hasMore => _hasMore;
 }
