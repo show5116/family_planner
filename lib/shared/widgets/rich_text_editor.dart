@@ -39,6 +39,12 @@ class RichTextEditor extends StatefulWidget {
   /// 읽기 전용 여부
   final bool readOnly;
 
+  /// 간소화 모드 (Q&A용: 굵게, 리스트, 이미지만 표시)
+  final bool simpleMode;
+
+  /// 이미지 첨부 콜백 (null이면 이미지 버튼 숨김)
+  final VoidCallback? onImageAttach;
+
   const RichTextEditor({
     super.key,
     required this.controller,
@@ -48,6 +54,8 @@ class RichTextEditor extends StatefulWidget {
     this.maxLines,
     this.validator,
     this.readOnly = false,
+    this.simpleMode = false,
+    this.onImageAttach,
   });
 
   @override
@@ -99,6 +107,11 @@ class _RichTextEditorState extends State<RichTextEditor> {
 
   /// 툴바 위젯
   Widget _buildToolbar() {
+    // 간소화 모드: 이미지, 굵게, 리스트만 표시
+    if (widget.simpleMode) {
+      return _buildSimpleToolbar();
+    }
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -208,6 +221,63 @@ class _RichTextEditorState extends State<RichTextEditor> {
               icon: Icons.horizontal_rule,
               tooltip: '구분선',
               onPressed: _insertHorizontalRule,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 간소화 툴바 (Q&A용)
+  Widget _buildSimpleToolbar() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM,
+          vertical: AppSizes.spaceS,
+        ),
+        child: Row(
+          children: [
+            // 이미지 첨부 (가장 먼저 배치)
+            if (widget.onImageAttach != null) ...[
+              _ToolbarButton(
+                icon: Icons.image,
+                tooltip: '이미지 첨부',
+                onPressed: widget.onImageAttach!,
+              ),
+              const SizedBox(width: AppSizes.spaceM),
+              Container(
+                width: 1,
+                height: 24,
+                color: Theme.of(context).dividerColor,
+              ),
+              const SizedBox(width: AppSizes.spaceM),
+            ],
+
+            // 굵게
+            _ToolbarButton(
+              icon: Icons.format_bold,
+              tooltip: '굵게',
+              isActive: _isBold,
+              onPressed: () => _toggleStyle('bold'),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+
+            // 리스트
+            _ToolbarButton(
+              icon: Icons.format_list_bulleted,
+              tooltip: '글머리 기호',
+              onPressed: () => _insertList('ul'),
+            ),
+
+            const Spacer(),
+
+            // 도움말 텍스트
+            Text(
+              '간단한 서식만 지원됩니다',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).hintColor,
+                  ),
             ),
           ],
         ),

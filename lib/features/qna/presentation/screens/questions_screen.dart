@@ -91,6 +91,40 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
           onPressed: () => context.pop(),
         ),
         actions: [
+          // 내 질문만 보기 토글
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '내 질문만',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: _showMyQuestionsOnly
+                          ? Colors.white
+                          : Colors.white70,
+                      fontWeight: _showMyQuestionsOnly
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+              ),
+              Switch(
+                value: _showMyQuestionsOnly,
+                activeThumbColor: Colors.white,
+                activeTrackColor: Colors.white38,
+                inactiveThumbColor: Colors.white70,
+                inactiveTrackColor: Colors.white24,
+                onChanged: (value) {
+                  setState(() {
+                    _showMyQuestionsOnly = value;
+                  });
+                  // 토글 시 filter만 변경 (같은 Provider 인스턴스 유지)
+                  ref
+                      .read(questionsProvider(filter: 'public').notifier)
+                      .setFilter(_currentFilter);
+                },
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ],
+          ),
           // 카테고리 필터
           PopupMenuButton<QuestionCategory?>(
             icon: const Icon(Icons.filter_list),
@@ -134,59 +168,9 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
             onPressed: _showSearchDialog,
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Column(
-            children: [
-              // 상태 탭 + 내 질문만 보기 토글
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
-                child: Row(
-                  children: [
-                    // 상태 탭
-                    Expanded(
-                      child: AppTabBar(
-                        controller: _tabController,
-                        tabs: const ['전체', '대기중', '답변완료'],
-                      ),
-                    ),
-                    const SizedBox(width: AppSizes.spaceM),
-                    // 내 질문만 보기 토글
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '내 질문만',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: _showMyQuestionsOnly
-                                    ? AppColors.primary
-                                    : AppColors.textSecondary,
-                                fontWeight: _showMyQuestionsOnly
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                              ),
-                        ),
-                        const SizedBox(width: AppSizes.spaceXS),
-                        Switch(
-                          value: _showMyQuestionsOnly,
-                          onChanged: (value) {
-                            setState(() {
-                              _showMyQuestionsOnly = value;
-                            });
-                            // 토글 시 filter만 변경 (같은 Provider 인스턴스 유지)
-                            ref
-                                .read(questionsProvider(filter: 'public').notifier)
-                                .setFilter(_currentFilter);
-                          },
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        bottom: AppTabBar(
+          controller: _tabController,
+          tabs: const ['전체', '대기중', '답변완료'],
         ),
       ),
       body: Column(
@@ -328,29 +312,16 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
   /// 빈 상태 위젯
   Widget _buildEmptyState() {
     String message;
-    IconData icon;
+    const icon = Icons.question_answer_outlined;
 
     if (_searchQuery != null && _searchQuery!.isNotEmpty) {
       message = '검색 결과가 없습니다';
-      icon = Icons.search_off;
-    } else if (_currentFilter == 'my') {
-      if (_selectedStatus != null) {
-        message = '${_selectedStatus!.displayName} 상태의 질문이 없습니다';
-      } else if (_selectedCategory != null) {
-        message = '${_selectedCategory!.displayName} 카테고리의 질문이 없습니다';
-      } else {
-        message = '아직 작성한 질문이 없습니다\n궁금한 점을 질문해보세요!';
-      }
-      icon = Icons.question_answer_outlined;
+    } else if (_selectedStatus != null) {
+      message = '${_selectedStatus!.displayName} 상태의 질문이 없습니다';
+    } else if (_selectedCategory != null) {
+      message = '${_selectedCategory!.displayName} 카테고리의 질문이 없습니다';
     } else {
-      if (_selectedStatus != null) {
-        message = '${_selectedStatus!.displayName} 상태의 공개 질문이 없습니다';
-      } else if (_selectedCategory != null) {
-        message = '${_selectedCategory!.displayName} 카테고리의 공개 질문이 없습니다';
-      } else {
-        message = '아직 공개된 질문이 없습니다';
-      }
-      icon = Icons.public_off;
+      message = '아직 작성한 질문이 없습니다\n궁금한 점을 질문해보세요!';
     }
 
     return Center(

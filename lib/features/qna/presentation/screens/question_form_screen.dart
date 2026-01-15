@@ -87,13 +87,15 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
               _buildTitleField(),
               const SizedBox(height: AppSizes.spaceL),
 
-              // 내용 입력 (리치 텍스트 에디터)
+              // 내용 입력 (리치 텍스트 에디터 - 간소화 모드)
               RichTextEditor(
                 controller: _contentController,
                 labelText: '내용',
-                hintText: '질문 내용을 자세히 작성해주세요.',
+                hintText: '질문 내용을 자세히 작성해주세요.\n스크린샷이 있으면 더 빠른 답변이 가능합니다.',
                 minLines: 15,
                 maxLines: 30,
+                simpleMode: true,
+                onImageAttach: _handleImageAttach,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return '내용을 입력해주세요';
@@ -136,15 +138,30 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
   /// 안내 카드
   Widget _buildInfoCard() {
     return Card(
-      color: AppColors.info.withValues(alpha: 0.05),
+      color: AppColors.primary.withValues(alpha: 0.08),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+        side: BorderSide(
+          color: AppColors.primary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.spaceM),
         child: Row(
           children: [
-            const Icon(
-              Icons.info_outline,
-              color: AppColors.info,
-              size: AppSizes.iconMedium,
+            Container(
+              padding: const EdgeInsets.all(AppSizes.spaceS),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: const Icon(
+                Icons.lightbulb_outline,
+                color: AppColors.primary,
+                size: AppSizes.iconMedium,
+              ),
             ),
             const SizedBox(width: AppSizes.spaceM),
             Expanded(
@@ -154,7 +171,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                   Text(
                     '질문 작성 안내',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.info,
+                          color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -162,7 +179,8 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                   Text(
                     '• 질문은 관리자가 확인 후 답변드립니다.\n• 답변은 알림으로 안내됩니다.\n• 대기 중 상태에서만 수정/삭제 가능합니다.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.info,
+                          color: AppColors.primary.withValues(alpha: 0.8),
+                          height: 1.5,
                         ),
                   ),
                 ],
@@ -290,6 +308,16 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
         }
         return null;
       },
+    );
+  }
+
+  /// 이미지 첨부 처리
+  void _handleImageAttach() {
+    // TODO: 이미지 첨부 기능 구현
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('이미지 첨부 기능은 준비 중입니다'),
+      ),
     );
   }
 
