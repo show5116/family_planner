@@ -59,10 +59,8 @@ class AppRoutes {
   static const String announcementEdit = '/announcements/:id/edit';
 
   // QnA Routes
-  static const String publicQuestions = '/qna/public';
-  static const String publicQuestionDetail = '/qna/public/:id';
-  static const String myQuestions = '/qna/my-questions';
-  static const String myQuestionDetail = '/qna/my-questions/:id';
+  static const String questions = '/qna';
+  static const String questionDetail = '/qna/questions/:id';
   static const String questionCreate = '/qna/create';
   static const String questionEdit = '/qna/:id/edit';
 }

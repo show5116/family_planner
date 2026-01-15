@@ -25,8 +25,6 @@ enum QuestionStatus {
   pending, // 대기 중 (답변 대기)
   @JsonValue('ANSWERED')
   answered, // 답변 완료
-  @JsonValue('RESOLVED')
-  resolved, // 해결 완료 (사용자 확인)
 }
 
 /// 질문 공개 여부
@@ -50,15 +48,26 @@ class Attachment with _$Attachment {
       _$AttachmentFromJson(json);
 }
 
+/// 사용자 정보 모델 (작성자용)
+@freezed
+class QuestionUser with _$QuestionUser {
+  const factory QuestionUser({
+    required String id,
+    required String name,
+  }) = _QuestionUser;
+
+  factory QuestionUser.fromJson(Map<String, dynamic> json) =>
+      _$QuestionUserFromJson(json);
+}
+
 /// 답변 모델
 @freezed
 class AnswerModel with _$AnswerModel {
   const factory AnswerModel({
     required String id,
-    required String questionId,
-    required String adminId,
-    required String adminName,
     required String content,
+    required String adminId,
+    required QuestionUser admin,
     List<Attachment>? attachments,
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -68,18 +77,17 @@ class AnswerModel with _$AnswerModel {
       _$AnswerModelFromJson(json);
 }
 
-/// 질문 모델
+/// 질문 상세 모델 (상세 조회, 작성, 수정, 해결시 사용)
 @freezed
 class QuestionModel with _$QuestionModel {
   const factory QuestionModel({
     required String id,
-    required String userId,
-    required String userName,
     required String title,
     required String content,
     required QuestionCategory category,
     required QuestionStatus status,
     required QuestionVisibility visibility,
+    required QuestionUser user,
     List<Attachment>? attachments,
     @Default([]) List<AnswerModel> answers,
     required DateTime createdAt,
@@ -90,14 +98,46 @@ class QuestionModel with _$QuestionModel {
       _$QuestionModelFromJson(json);
 }
 
+/// 질문 목록 항목 모델 (목록 조회시 사용)
+@freezed
+class QuestionListItem with _$QuestionListItem {
+  const factory QuestionListItem({
+    required String id,
+    required String title,
+    required String content,
+    required QuestionCategory category,
+    required QuestionStatus status,
+    required QuestionVisibility visibility,
+    required int answerCount,
+    required QuestionUser user,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _QuestionListItem;
+
+  factory QuestionListItem.fromJson(Map<String, dynamic> json) =>
+      _$QuestionListItemFromJson(json);
+}
+
+/// 페이지네이션 메타 정보
+@freezed
+class PaginationMeta with _$PaginationMeta {
+  const factory PaginationMeta({
+    required int total,
+    required int page,
+    required int limit,
+    required int totalPages,
+  }) = _PaginationMeta;
+
+  factory PaginationMeta.fromJson(Map<String, dynamic> json) =>
+      _$PaginationMetaFromJson(json);
+}
+
 /// 질문 목록 응답 모델
 @freezed
 class QuestionListResponse with _$QuestionListResponse {
   const factory QuestionListResponse({
-    required List<QuestionModel> items,
-    required int total,
-    required int page,
-    required int limit,
+    required List<QuestionListItem> data,
+    required PaginationMeta meta,
   }) = _QuestionListResponse;
 
   factory QuestionListResponse.fromJson(Map<String, dynamic> json) =>
@@ -111,7 +151,6 @@ class QnaStatistics with _$QnaStatistics {
     required int totalQuestions,
     required int pendingCount,
     required int answeredCount,
-    required int resolvedCount,
     required Map<String, int> categoryStats,
   }) = _QnaStatistics;
 

@@ -94,7 +94,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
           MenuListTile(
             icon: Icons.question_answer,
             title: l10n.qna_title,
-            onTap: () => context.push(AppRoutes.publicQuestions),
+            onTap: () => context.push(AppRoutes.questions),
           ),
           const Divider(),
           // 고정 메뉴: 설정, 로그아웃

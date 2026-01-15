@@ -159,47 +159,160 @@ class _QuestionDetailProviderElement
   String get id => (origin as QuestionDetailProvider).id;
 }
 
-String _$publicQuestionsHash() => r'1a61d1d60ce4c6476cea7f6ca8a76104c2475be7';
+String _$questionsHash() => r'd94484a45108d712d464d620d29b3bf484c63e0e';
 
-/// 공개 질문 목록 Provider
+abstract class _$Questions
+    extends BuildlessAutoDisposeAsyncNotifier<List<QuestionListItem>> {
+  late final String? filter;
+
+  FutureOr<List<QuestionListItem>> build({String? filter});
+}
+
+/// 질문 목록 Provider (통합)
 ///
-/// Copied from [PublicQuestions].
-@ProviderFor(PublicQuestions)
-final publicQuestionsProvider =
-    AutoDisposeAsyncNotifierProvider<
-      PublicQuestions,
-      List<QuestionModel>
-    >.internal(
-      PublicQuestions.new,
-      name: r'publicQuestionsProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$publicQuestionsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+/// Copied from [Questions].
+@ProviderFor(Questions)
+const questionsProvider = QuestionsFamily();
 
-typedef _$PublicQuestions = AutoDisposeAsyncNotifier<List<QuestionModel>>;
-String _$myQuestionsHash() => r'a2f77a0495473d934acb17325c9ff419cb412329';
-
-/// 내 질문 목록 Provider
+/// 질문 목록 Provider (통합)
 ///
-/// Copied from [MyQuestions].
-@ProviderFor(MyQuestions)
-final myQuestionsProvider =
-    AutoDisposeAsyncNotifierProvider<MyQuestions, List<QuestionModel>>.internal(
-      MyQuestions.new,
-      name: r'myQuestionsProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$myQuestionsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+/// Copied from [Questions].
+class QuestionsFamily extends Family<AsyncValue<List<QuestionListItem>>> {
+  /// 질문 목록 Provider (통합)
+  ///
+  /// Copied from [Questions].
+  const QuestionsFamily();
 
-typedef _$MyQuestions = AutoDisposeAsyncNotifier<List<QuestionModel>>;
+  /// 질문 목록 Provider (통합)
+  ///
+  /// Copied from [Questions].
+  QuestionsProvider call({String? filter}) {
+    return QuestionsProvider(filter: filter);
+  }
+
+  @override
+  QuestionsProvider getProviderOverride(covariant QuestionsProvider provider) {
+    return call(filter: provider.filter);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'questionsProvider';
+}
+
+/// 질문 목록 Provider (통합)
+///
+/// Copied from [Questions].
+class QuestionsProvider
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          Questions,
+          List<QuestionListItem>
+        > {
+  /// 질문 목록 Provider (통합)
+  ///
+  /// Copied from [Questions].
+  QuestionsProvider({String? filter})
+    : this._internal(
+        () => Questions()..filter = filter,
+        from: questionsProvider,
+        name: r'questionsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$questionsHash,
+        dependencies: QuestionsFamily._dependencies,
+        allTransitiveDependencies: QuestionsFamily._allTransitiveDependencies,
+        filter: filter,
+      );
+
+  QuestionsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.filter,
+  }) : super.internal();
+
+  final String? filter;
+
+  @override
+  FutureOr<List<QuestionListItem>> runNotifierBuild(
+    covariant Questions notifier,
+  ) {
+    return notifier.build(filter: filter);
+  }
+
+  @override
+  Override overrideWith(Questions Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: QuestionsProvider._internal(
+        () => create()..filter = filter,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        filter: filter,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<Questions, List<QuestionListItem>>
+  createElement() {
+    return _QuestionsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is QuestionsProvider && other.filter == filter;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, filter.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin QuestionsRef
+    on AutoDisposeAsyncNotifierProviderRef<List<QuestionListItem>> {
+  /// The parameter `filter` of this provider.
+  String? get filter;
+}
+
+class _QuestionsProviderElement
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          Questions,
+          List<QuestionListItem>
+        >
+    with QuestionsRef {
+  _QuestionsProviderElement(super.provider);
+
+  @override
+  String? get filter => (origin as QuestionsProvider).filter;
+}
+
 String _$questionManagementHash() =>
-    r'1f367354e968b88627c8ed2a888847792c901938';
+    r'43772c9b4efff89f6c0a0b6316f8bd88d58abf0d';
 
 /// 질문 관리 Provider (작성, 수정, 삭제)
 ///

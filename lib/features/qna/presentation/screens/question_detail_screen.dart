@@ -33,7 +33,7 @@ class QuestionDetailScreen extends ConsumerWidget {
           questionAsync.when(
             data: (question) {
               // 본인 질문인 경우에만 메뉴 표시
-              if (currentUserId == question.userId) {
+              if (currentUserId == question.user.id) {
                 return PopupMenuButton<String>(
                   onSelected: (value) async {
                     if (value == 'edit') {
@@ -52,11 +52,6 @@ class QuestionDetailScreen extends ConsumerWidget {
                       }
                     } else if (value == 'delete') {
                       _showDeleteConfirmDialog(context, ref, questionId);
-                    } else if (value == 'resolve') {
-                      // 해결 완료 (ANSWERED 상태만 가능)
-                      if (question.status == QuestionStatus.answered) {
-                        await _resolveQuestion(context, ref, questionId);
-                      }
                     }
                   },
                   itemBuilder: (context) => [
@@ -68,19 +63,6 @@ class QuestionDetailScreen extends ConsumerWidget {
                             Icon(Icons.edit, size: AppSizes.iconSmall),
                             SizedBox(width: AppSizes.spaceS),
                             Text('수정'),
-                          ],
-                        ),
-                      ),
-                    if (question.status == QuestionStatus.answered)
-                      const PopupMenuItem(
-                        value: 'resolve',
-                        child: Row(
-                          children: [
-                            Icon(Icons.check_circle,
-                                size: AppSizes.iconSmall,
-                                color: AppColors.success),
-                            SizedBox(width: AppSizes.spaceS),
-                            Text('해결 완료'),
                           ],
                         ),
                       ),
@@ -276,7 +258,7 @@ class QuestionDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(width: AppSizes.spaceXS),
             Text(
-              question.userName,
+              question.user.name,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -371,7 +353,7 @@ class QuestionDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  answer.adminName,
+                  answer.admin.name,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -480,36 +462,5 @@ class QuestionDetailScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  /// 해결 완료 처리
-  Future<void> _resolveQuestion(
-    BuildContext context,
-    WidgetRef ref,
-    String questionId,
-  ) async {
-    try {
-      await ref
-          .read(questionManagementProvider.notifier)
-          .resolveQuestion(questionId);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('질문이 해결 완료 처리되었습니다'),
-            backgroundColor: AppColors.success,
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('해결 완료 처리 실패: $e'),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    }
   }
 }

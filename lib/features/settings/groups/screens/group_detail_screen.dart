@@ -12,6 +12,7 @@ import 'package:family_planner/features/settings/groups/widgets/tabs/roles/roles
 import 'package:family_planner/features/settings/groups/widgets/group_dialogs.dart';
 import 'package:family_planner/features/settings/groups/widgets/role_management_dialogs.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
+import 'package:family_planner/shared/widgets/app_tab_bar.dart';
 
 /// 그룹 상세 화면
 class GroupDetailScreen extends ConsumerStatefulWidget {
@@ -80,15 +81,12 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         return Scaffold(
           appBar: AppBar(
             title: Text(group.name),
-            bottom: TabBar(
+            bottom: AppTabBar(
               controller: _tabController,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white70,
-              indicatorColor: Colors.white,
               tabs: [
-                Tab(text: l10n.group_members),
-                Tab(text: l10n.group_settings),
-                Tab(text: l10n.group_role),
+                l10n.group_members,
+                l10n.group_settings,
+                l10n.group_role,
               ],
             ),
           ),

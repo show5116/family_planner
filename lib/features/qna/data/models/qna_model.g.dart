@@ -20,13 +20,18 @@ Map<String, dynamic> _$$AttachmentImplToJson(_$AttachmentImpl instance) =>
       'size': instance.size,
     };
 
+_$QuestionUserImpl _$$QuestionUserImplFromJson(Map<String, dynamic> json) =>
+    _$QuestionUserImpl(id: json['id'] as String, name: json['name'] as String);
+
+Map<String, dynamic> _$$QuestionUserImplToJson(_$QuestionUserImpl instance) =>
+    <String, dynamic>{'id': instance.id, 'name': instance.name};
+
 _$AnswerModelImpl _$$AnswerModelImplFromJson(Map<String, dynamic> json) =>
     _$AnswerModelImpl(
       id: json['id'] as String,
-      questionId: json['questionId'] as String,
-      adminId: json['adminId'] as String,
-      adminName: json['adminName'] as String,
       content: json['content'] as String,
+      adminId: json['adminId'] as String,
+      admin: QuestionUser.fromJson(json['admin'] as Map<String, dynamic>),
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -37,10 +42,9 @@ _$AnswerModelImpl _$$AnswerModelImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$AnswerModelImplToJson(_$AnswerModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'questionId': instance.questionId,
-      'adminId': instance.adminId,
-      'adminName': instance.adminName,
       'content': instance.content,
+      'adminId': instance.adminId,
+      'admin': instance.admin,
       'attachments': instance.attachments,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
@@ -49,13 +53,12 @@ Map<String, dynamic> _$$AnswerModelImplToJson(_$AnswerModelImpl instance) =>
 _$QuestionModelImpl _$$QuestionModelImplFromJson(Map<String, dynamic> json) =>
     _$QuestionModelImpl(
       id: json['id'] as String,
-      userId: json['userId'] as String,
-      userName: json['userName'] as String,
       title: json['title'] as String,
       content: json['content'] as String,
       category: $enumDecode(_$QuestionCategoryEnumMap, json['category']),
       status: $enumDecode(_$QuestionStatusEnumMap, json['status']),
       visibility: $enumDecode(_$QuestionVisibilityEnumMap, json['visibility']),
+      user: QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -71,13 +74,12 @@ _$QuestionModelImpl _$$QuestionModelImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$QuestionModelImplToJson(_$QuestionModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
-      'userName': instance.userName,
       'title': instance.title,
       'content': instance.content,
       'category': _$QuestionCategoryEnumMap[instance.category]!,
       'status': _$QuestionStatusEnumMap[instance.status]!,
       'visibility': _$QuestionVisibilityEnumMap[instance.visibility]!,
+      'user': instance.user,
       'attachments': instance.attachments,
       'answers': instance.answers,
       'createdAt': instance.createdAt.toIso8601String(),
@@ -96,7 +98,6 @@ const _$QuestionCategoryEnumMap = {
 const _$QuestionStatusEnumMap = {
   QuestionStatus.pending: 'PENDING',
   QuestionStatus.answered: 'ANSWERED',
-  QuestionStatus.resolved: 'RESOLVED',
 };
 
 const _$QuestionVisibilityEnumMap = {
@@ -104,32 +105,71 @@ const _$QuestionVisibilityEnumMap = {
   QuestionVisibility.private: 'PRIVATE',
 };
 
+_$QuestionListItemImpl _$$QuestionListItemImplFromJson(
+  Map<String, dynamic> json,
+) => _$QuestionListItemImpl(
+  id: json['id'] as String,
+  title: json['title'] as String,
+  content: json['content'] as String,
+  category: $enumDecode(_$QuestionCategoryEnumMap, json['category']),
+  status: $enumDecode(_$QuestionStatusEnumMap, json['status']),
+  visibility: $enumDecode(_$QuestionVisibilityEnumMap, json['visibility']),
+  answerCount: (json['answerCount'] as num).toInt(),
+  user: QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+);
+
+Map<String, dynamic> _$$QuestionListItemImplToJson(
+  _$QuestionListItemImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'title': instance.title,
+  'content': instance.content,
+  'category': _$QuestionCategoryEnumMap[instance.category]!,
+  'status': _$QuestionStatusEnumMap[instance.status]!,
+  'visibility': _$QuestionVisibilityEnumMap[instance.visibility]!,
+  'answerCount': instance.answerCount,
+  'user': instance.user,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+};
+
+_$PaginationMetaImpl _$$PaginationMetaImplFromJson(Map<String, dynamic> json) =>
+    _$PaginationMetaImpl(
+      total: (json['total'] as num).toInt(),
+      page: (json['page'] as num).toInt(),
+      limit: (json['limit'] as num).toInt(),
+      totalPages: (json['totalPages'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$PaginationMetaImplToJson(
+  _$PaginationMetaImpl instance,
+) => <String, dynamic>{
+  'total': instance.total,
+  'page': instance.page,
+  'limit': instance.limit,
+  'totalPages': instance.totalPages,
+};
+
 _$QuestionListResponseImpl _$$QuestionListResponseImplFromJson(
   Map<String, dynamic> json,
 ) => _$QuestionListResponseImpl(
-  items: (json['items'] as List<dynamic>)
-      .map((e) => QuestionModel.fromJson(e as Map<String, dynamic>))
+  data: (json['data'] as List<dynamic>)
+      .map((e) => QuestionListItem.fromJson(e as Map<String, dynamic>))
       .toList(),
-  total: (json['total'] as num).toInt(),
-  page: (json['page'] as num).toInt(),
-  limit: (json['limit'] as num).toInt(),
+  meta: PaginationMeta.fromJson(json['meta'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$$QuestionListResponseImplToJson(
   _$QuestionListResponseImpl instance,
-) => <String, dynamic>{
-  'items': instance.items,
-  'total': instance.total,
-  'page': instance.page,
-  'limit': instance.limit,
-};
+) => <String, dynamic>{'data': instance.data, 'meta': instance.meta};
 
 _$QnaStatisticsImpl _$$QnaStatisticsImplFromJson(Map<String, dynamic> json) =>
     _$QnaStatisticsImpl(
       totalQuestions: (json['totalQuestions'] as num).toInt(),
       pendingCount: (json['pendingCount'] as num).toInt(),
       answeredCount: (json['answeredCount'] as num).toInt(),
-      resolvedCount: (json['resolvedCount'] as num).toInt(),
       categoryStats: Map<String, int>.from(json['categoryStats'] as Map),
     );
 
@@ -138,6 +178,5 @@ Map<String, dynamic> _$$QnaStatisticsImplToJson(_$QnaStatisticsImpl instance) =>
       'totalQuestions': instance.totalQuestions,
       'pendingCount': instance.pendingCount,
       'answeredCount': instance.answeredCount,
-      'resolvedCount': instance.resolvedCount,
       'categoryStats': instance.categoryStats,
     };

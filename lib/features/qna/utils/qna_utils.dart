@@ -69,8 +69,6 @@ extension QuestionStatusExtension on QuestionStatus {
         return '대기 중';
       case QuestionStatus.answered:
         return '답변 완료';
-      case QuestionStatus.resolved:
-        return '해결 완료';
     }
   }
 
@@ -80,8 +78,6 @@ extension QuestionStatusExtension on QuestionStatus {
       case QuestionStatus.pending:
         return AppColors.warning;
       case QuestionStatus.answered:
-        return AppColors.primary;
-      case QuestionStatus.resolved:
         return AppColors.success;
     }
   }
@@ -93,8 +89,6 @@ extension QuestionStatusExtension on QuestionStatus {
         return Icons.schedule;
       case QuestionStatus.answered:
         return Icons.check_circle;
-      case QuestionStatus.resolved:
-        return Icons.verified;
     }
   }
 }

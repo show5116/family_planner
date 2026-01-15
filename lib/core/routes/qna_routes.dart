@@ -2,50 +2,30 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
-import 'package:family_planner/features/qna/presentation/screens/public_questions_screen.dart';
-import 'package:family_planner/features/qna/presentation/screens/my_questions_screen.dart';
+import 'package:family_planner/features/qna/presentation/screens/questions_screen.dart';
 import 'package:family_planner/features/qna/presentation/screens/question_detail_screen.dart';
 import 'package:family_planner/features/qna/presentation/screens/question_form_screen.dart';
 
 /// Q&A 관련 라우트 목록
 ///
 /// 포함되는 화면:
-/// - Public Questions (공개 Q&A 목록)
-/// - Public Question Detail (공개 질문 상세)
-/// - My Questions (내 질문 목록)
-/// - My Question Detail (내 질문 상세)
+/// - Questions (Q&A 목록 - 공개/내 질문 통합)
+/// - Question Detail (질문 상세)
 /// - Question Create (질문 작성)
 /// - Question Edit (질문 수정)
 List<RouteBase> getQnaRoutes() {
   return [
-    // 공개 Q&A 목록
+    // Q&A 목록 (통합)
     GoRoute(
-      path: AppRoutes.publicQuestions,
-      name: 'publicQuestions',
-      builder: (context, state) => const PublicQuestionsScreen(),
+      path: AppRoutes.questions,
+      name: 'questions',
+      builder: (context, state) => const QuestionsScreen(),
     ),
 
-    // 공개 질문 상세
+    // 질문 상세
     GoRoute(
-      path: AppRoutes.publicQuestionDetail,
-      name: 'publicQuestionDetail',
-      builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return QuestionDetailScreen(questionId: id);
-      },
-    ),
-
-    // 내 질문 목록
-    GoRoute(
-      path: AppRoutes.myQuestions,
-      name: 'myQuestions',
-      builder: (context, state) => const MyQuestionsScreen(),
-    ),
-
-    // 내 질문 상세
-    GoRoute(
-      path: AppRoutes.myQuestionDetail,
-      name: 'myQuestionDetail',
+      path: AppRoutes.questionDetail,
+      name: 'questionDetail',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return QuestionDetailScreen(questionId: id);
@@ -74,3 +54,4 @@ List<RouteBase> getQnaRoutes() {
     ),
   ];
 }
+

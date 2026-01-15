@@ -8,22 +8,23 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
+import 'package:family_planner/shared/widgets/app_tab_bar.dart';
 
-/// 공개 Q&A 목록 화면
-class PublicQuestionsScreen extends ConsumerStatefulWidget {
-  const PublicQuestionsScreen({super.key});
+/// Q&A 목록 화면 (통합)
+class QuestionsScreen extends ConsumerStatefulWidget {
+  const QuestionsScreen({super.key});
 
   @override
-  ConsumerState<PublicQuestionsScreen> createState() =>
-      _PublicQuestionsScreenState();
+  ConsumerState<QuestionsScreen> createState() => _QuestionsScreenState();
 }
 
-class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
+class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
+  bool _showMyQuestionsOnly = false;
   QuestionStatus? _selectedStatus;
   QuestionCategory? _selectedCategory;
   String? _searchQuery;
@@ -31,7 +32,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_onTabChanged);
     _scrollController.addListener(_onScroll);
   }
@@ -45,18 +46,22 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
     super.dispose();
   }
 
+  String get _currentFilter => _showMyQuestionsOnly ? 'my' : 'public';
+
   void _onTabChanged() {
     final status = _getStatusFromTab(_tabController.index);
     setState(() {
       _selectedStatus = status;
     });
-    ref.read(publicQuestionsProvider.notifier).setStatusFilter(status);
+    ref
+        .read(questionsProvider(filter: 'public').notifier)
+        .setStatusFilter(status);
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
-      ref.read(publicQuestionsProvider.notifier).loadMore();
+      ref.read(questionsProvider(filter: 'public').notifier).loadMore();
     }
   }
 
@@ -68,8 +73,6 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
         return QuestionStatus.pending;
       case 2:
         return QuestionStatus.answered;
-      case 3:
-        return QuestionStatus.resolved;
       default:
         return null;
     }
@@ -77,11 +80,12 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final questionsAsync = ref.watch(publicQuestionsProvider);
+    // 단일 Provider 인스턴스 사용 (filter는 초기값)
+    final questionsAsync = ref.watch(questionsProvider(filter: 'public'));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('공개 Q&A'),
+        title: const Text('Q&A'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -96,7 +100,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
                 _selectedCategory = category;
               });
               ref
-                  .read(publicQuestionsProvider.notifier)
+                  .read(questionsProvider(filter: 'public').notifier)
                   .setCategoryFilter(category);
             },
             itemBuilder: (context) => [
@@ -130,14 +134,59 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
             onPressed: _showSearchDialog,
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: '전체'),
-            Tab(text: '대기중'),
-            Tab(text: '답변완료'),
-            Tab(text: '해결완료'),
-          ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Column(
+            children: [
+              // 상태 탭 + 내 질문만 보기 토글
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+                child: Row(
+                  children: [
+                    // 상태 탭
+                    Expanded(
+                      child: AppTabBar(
+                        controller: _tabController,
+                        tabs: const ['전체', '대기중', '답변완료'],
+                      ),
+                    ),
+                    const SizedBox(width: AppSizes.spaceM),
+                    // 내 질문만 보기 토글
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '내 질문만',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: _showMyQuestionsOnly
+                                    ? AppColors.primary
+                                    : AppColors.textSecondary,
+                                fontWeight: _showMyQuestionsOnly
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceXS),
+                        Switch(
+                          value: _showMyQuestionsOnly,
+                          onChanged: (value) {
+                            setState(() {
+                              _showMyQuestionsOnly = value;
+                            });
+                            // 토글 시 filter만 변경 (같은 Provider 인스턴스 유지)
+                            ref
+                                .read(questionsProvider(filter: 'public').notifier)
+                                .setFilter(_currentFilter);
+                          },
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: Column(
@@ -175,7 +224,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
                         _searchController.clear();
                       });
                       ref
-                          .read(publicQuestionsProvider.notifier)
+                          .read(questionsProvider(filter: 'public').notifier)
                           .setSearchQuery(null);
                     },
                   ),
@@ -193,7 +242,9 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
 
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await ref.read(publicQuestionsProvider.notifier).refresh();
+                    await ref
+                        .read(questionsProvider(filter: 'public').notifier)
+                        .refresh();
                   },
                   child: ListView.separated(
                     controller: _scrollController,
@@ -203,7 +254,10 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
                         const SizedBox(height: AppSizes.spaceM),
                     itemBuilder: (context, index) {
                       final question = questions[index];
-                      return _QuestionCard(question: question);
+                      return _QuestionCard(
+                        question: question,
+                        showVisibility: _currentFilter == 'my',
+                      );
                     },
                   ),
                 );
@@ -213,6 +267,13 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          context.push('/qna/create');
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('질문 작성'),
       ),
     );
   }
@@ -259,20 +320,37 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
     setState(() {
       _searchQuery = query.trim();
     });
-    ref.read(publicQuestionsProvider.notifier).setSearchQuery(query.trim());
+    ref
+        .read(questionsProvider(filter: 'public').notifier)
+        .setSearchQuery(query.trim());
   }
 
   /// 빈 상태 위젯
   Widget _buildEmptyState() {
     String message;
+    IconData icon;
+
     if (_searchQuery != null && _searchQuery!.isNotEmpty) {
       message = '검색 결과가 없습니다';
-    } else if (_selectedStatus != null) {
-      message = '${_selectedStatus!.displayName} 상태의 공개 질문이 없습니다';
-    } else if (_selectedCategory != null) {
-      message = '${_selectedCategory!.displayName} 카테고리의 공개 질문이 없습니다';
+      icon = Icons.search_off;
+    } else if (_currentFilter == 'my') {
+      if (_selectedStatus != null) {
+        message = '${_selectedStatus!.displayName} 상태의 질문이 없습니다';
+      } else if (_selectedCategory != null) {
+        message = '${_selectedCategory!.displayName} 카테고리의 질문이 없습니다';
+      } else {
+        message = '아직 작성한 질문이 없습니다\n궁금한 점을 질문해보세요!';
+      }
+      icon = Icons.question_answer_outlined;
     } else {
-      message = '아직 공개된 질문이 없습니다';
+      if (_selectedStatus != null) {
+        message = '${_selectedStatus!.displayName} 상태의 공개 질문이 없습니다';
+      } else if (_selectedCategory != null) {
+        message = '${_selectedCategory!.displayName} 카테고리의 공개 질문이 없습니다';
+      } else {
+        message = '아직 공개된 질문이 없습니다';
+      }
+      icon = Icons.public_off;
     }
 
     return Center(
@@ -280,7 +358,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.public_off,
+            icon,
             size: AppSizes.iconXLarge * 2,
             color: AppColors.textSecondary,
           ),
@@ -290,6 +368,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppColors.textSecondary,
                 ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -309,7 +388,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
           ),
           const SizedBox(height: AppSizes.spaceL),
           Text(
-            '공개 질문 목록을 불러올 수 없습니다',
+            '질문 목록을 불러올 수 없습니다',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: AppSizes.spaceS),
@@ -323,7 +402,7 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
           const SizedBox(height: AppSizes.spaceL),
           ElevatedButton.icon(
             onPressed: () {
-              ref.invalidate(publicQuestionsProvider);
+              ref.invalidate(questionsProvider(filter: 'public'));
             },
             icon: const Icon(Icons.refresh),
             label: const Text('다시 시도'),
@@ -336,9 +415,13 @@ class _PublicQuestionsScreenState extends ConsumerState<PublicQuestionsScreen>
 
 /// 질문 카드 위젯
 class _QuestionCard extends ConsumerWidget {
-  final QuestionModel question;
+  final QuestionListItem question;
+  final bool showVisibility;
 
-  const _QuestionCard({required this.question});
+  const _QuestionCard({
+    required this.question,
+    this.showVisibility = false,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -347,7 +430,7 @@ class _QuestionCard extends ConsumerWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          context.push('/qna/public/${question.id}');
+          context.push('/qna/questions/${question.id}');
         },
         borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
         child: Padding(
@@ -355,7 +438,7 @@ class _QuestionCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 헤더 (카테고리, 상태)
+              // 헤더 (카테고리, 상태, 공개여부)
               Row(
                 children: [
                   // 카테고리
@@ -421,10 +504,20 @@ class _QuestionCard extends ConsumerWidget {
                     ),
                   ),
 
+                  // 공개여부 (내 질문에만 표시)
+                  if (showVisibility) ...[
+                    const SizedBox(width: AppSizes.spaceS),
+                    Icon(
+                      question.visibility.icon,
+                      size: AppSizes.iconSmall,
+                      color: question.visibility.color,
+                    ),
+                  ],
+
                   const Spacer(),
 
                   // 답변 개수
-                  if (question.answers.isNotEmpty)
+                  if (question.answerCount > 0)
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSizes.spaceS,
@@ -445,7 +538,7 @@ class _QuestionCard extends ConsumerWidget {
                           ),
                           const SizedBox(width: AppSizes.spaceXS),
                           Text(
-                            '${question.answers.length}',
+                            '${question.answerCount}',
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall
@@ -493,7 +586,7 @@ class _QuestionCard extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    question.userName,
+                    question.user.name,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.textSecondary,
                         ),

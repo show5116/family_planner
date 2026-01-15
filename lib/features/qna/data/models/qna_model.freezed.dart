@@ -202,6 +202,174 @@ abstract class _Attachment implements Attachment {
       throw _privateConstructorUsedError;
 }
 
+QuestionUser _$QuestionUserFromJson(Map<String, dynamic> json) {
+  return _QuestionUser.fromJson(json);
+}
+
+/// @nodoc
+mixin _$QuestionUser {
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+
+  /// Serializes this QuestionUser to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of QuestionUser
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $QuestionUserCopyWith<QuestionUser> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QuestionUserCopyWith<$Res> {
+  factory $QuestionUserCopyWith(
+    QuestionUser value,
+    $Res Function(QuestionUser) then,
+  ) = _$QuestionUserCopyWithImpl<$Res, QuestionUser>;
+  @useResult
+  $Res call({String id, String name});
+}
+
+/// @nodoc
+class _$QuestionUserCopyWithImpl<$Res, $Val extends QuestionUser>
+    implements $QuestionUserCopyWith<$Res> {
+  _$QuestionUserCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of QuestionUser
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? name = null}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$QuestionUserImplCopyWith<$Res>
+    implements $QuestionUserCopyWith<$Res> {
+  factory _$$QuestionUserImplCopyWith(
+    _$QuestionUserImpl value,
+    $Res Function(_$QuestionUserImpl) then,
+  ) = __$$QuestionUserImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String name});
+}
+
+/// @nodoc
+class __$$QuestionUserImplCopyWithImpl<$Res>
+    extends _$QuestionUserCopyWithImpl<$Res, _$QuestionUserImpl>
+    implements _$$QuestionUserImplCopyWith<$Res> {
+  __$$QuestionUserImplCopyWithImpl(
+    _$QuestionUserImpl _value,
+    $Res Function(_$QuestionUserImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of QuestionUser
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? id = null, Object? name = null}) {
+    return _then(
+      _$QuestionUserImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$QuestionUserImpl implements _QuestionUser {
+  const _$QuestionUserImpl({required this.id, required this.name});
+
+  factory _$QuestionUserImpl.fromJson(Map<String, dynamic> json) =>
+      _$$QuestionUserImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'QuestionUser(id: $id, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QuestionUserImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, name);
+
+  /// Create a copy of QuestionUser
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QuestionUserImplCopyWith<_$QuestionUserImpl> get copyWith =>
+      __$$QuestionUserImplCopyWithImpl<_$QuestionUserImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$QuestionUserImplToJson(this);
+  }
+}
+
+abstract class _QuestionUser implements QuestionUser {
+  const factory _QuestionUser({
+    required final String id,
+    required final String name,
+  }) = _$QuestionUserImpl;
+
+  factory _QuestionUser.fromJson(Map<String, dynamic> json) =
+      _$QuestionUserImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get name;
+
+  /// Create a copy of QuestionUser
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$QuestionUserImplCopyWith<_$QuestionUserImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 AnswerModel _$AnswerModelFromJson(Map<String, dynamic> json) {
   return _AnswerModel.fromJson(json);
 }
@@ -209,10 +377,9 @@ AnswerModel _$AnswerModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AnswerModel {
   String get id => throw _privateConstructorUsedError;
-  String get questionId => throw _privateConstructorUsedError;
-  String get adminId => throw _privateConstructorUsedError;
-  String get adminName => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  String get adminId => throw _privateConstructorUsedError;
+  QuestionUser get admin => throw _privateConstructorUsedError;
   List<Attachment>? get attachments => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -236,14 +403,15 @@ abstract class $AnswerModelCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    String questionId,
-    String adminId,
-    String adminName,
     String content,
+    String adminId,
+    QuestionUser admin,
     List<Attachment>? attachments,
     DateTime createdAt,
     DateTime updatedAt,
   });
+
+  $QuestionUserCopyWith<$Res> get admin;
 }
 
 /// @nodoc
@@ -262,10 +430,9 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
   @override
   $Res call({
     Object? id = null,
-    Object? questionId = null,
-    Object? adminId = null,
-    Object? adminName = null,
     Object? content = null,
+    Object? adminId = null,
+    Object? admin = null,
     Object? attachments = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -276,22 +443,18 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as String,
-            questionId: null == questionId
-                ? _value.questionId
-                : questionId // ignore: cast_nullable_to_non_nullable
+            content: null == content
+                ? _value.content
+                : content // ignore: cast_nullable_to_non_nullable
                       as String,
             adminId: null == adminId
                 ? _value.adminId
                 : adminId // ignore: cast_nullable_to_non_nullable
                       as String,
-            adminName: null == adminName
-                ? _value.adminName
-                : adminName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            content: null == content
-                ? _value.content
-                : content // ignore: cast_nullable_to_non_nullable
-                      as String,
+            admin: null == admin
+                ? _value.admin
+                : admin // ignore: cast_nullable_to_non_nullable
+                      as QuestionUser,
             attachments: freezed == attachments
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
@@ -308,6 +471,16 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
           as $Val,
     );
   }
+
+  /// Create a copy of AnswerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $QuestionUserCopyWith<$Res> get admin {
+    return $QuestionUserCopyWith<$Res>(_value.admin, (value) {
+      return _then(_value.copyWith(admin: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -321,14 +494,16 @@ abstract class _$$AnswerModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    String questionId,
-    String adminId,
-    String adminName,
     String content,
+    String adminId,
+    QuestionUser admin,
     List<Attachment>? attachments,
     DateTime createdAt,
     DateTime updatedAt,
   });
+
+  @override
+  $QuestionUserCopyWith<$Res> get admin;
 }
 
 /// @nodoc
@@ -346,10 +521,9 @@ class __$$AnswerModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? questionId = null,
-    Object? adminId = null,
-    Object? adminName = null,
     Object? content = null,
+    Object? adminId = null,
+    Object? admin = null,
     Object? attachments = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -360,22 +534,18 @@ class __$$AnswerModelImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as String,
-        questionId: null == questionId
-            ? _value.questionId
-            : questionId // ignore: cast_nullable_to_non_nullable
+        content: null == content
+            ? _value.content
+            : content // ignore: cast_nullable_to_non_nullable
                   as String,
         adminId: null == adminId
             ? _value.adminId
             : adminId // ignore: cast_nullable_to_non_nullable
                   as String,
-        adminName: null == adminName
-            ? _value.adminName
-            : adminName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        content: null == content
-            ? _value.content
-            : content // ignore: cast_nullable_to_non_nullable
-                  as String,
+        admin: null == admin
+            ? _value.admin
+            : admin // ignore: cast_nullable_to_non_nullable
+                  as QuestionUser,
         attachments: freezed == attachments
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
@@ -398,10 +568,9 @@ class __$$AnswerModelImplCopyWithImpl<$Res>
 class _$AnswerModelImpl implements _AnswerModel {
   const _$AnswerModelImpl({
     required this.id,
-    required this.questionId,
-    required this.adminId,
-    required this.adminName,
     required this.content,
+    required this.adminId,
+    required this.admin,
     final List<Attachment>? attachments,
     required this.createdAt,
     required this.updatedAt,
@@ -413,13 +582,11 @@ class _$AnswerModelImpl implements _AnswerModel {
   @override
   final String id;
   @override
-  final String questionId;
+  final String content;
   @override
   final String adminId;
   @override
-  final String adminName;
-  @override
-  final String content;
+  final QuestionUser admin;
   final List<Attachment>? _attachments;
   @override
   List<Attachment>? get attachments {
@@ -437,7 +604,7 @@ class _$AnswerModelImpl implements _AnswerModel {
 
   @override
   String toString() {
-    return 'AnswerModel(id: $id, questionId: $questionId, adminId: $adminId, adminName: $adminName, content: $content, attachments: $attachments, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'AnswerModel(id: $id, content: $content, adminId: $adminId, admin: $admin, attachments: $attachments, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -446,12 +613,9 @@ class _$AnswerModelImpl implements _AnswerModel {
         (other.runtimeType == runtimeType &&
             other is _$AnswerModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.questionId, questionId) ||
-                other.questionId == questionId) &&
-            (identical(other.adminId, adminId) || other.adminId == adminId) &&
-            (identical(other.adminName, adminName) ||
-                other.adminName == adminName) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.adminId, adminId) || other.adminId == adminId) &&
+            (identical(other.admin, admin) || other.admin == admin) &&
             const DeepCollectionEquality().equals(
               other._attachments,
               _attachments,
@@ -467,10 +631,9 @@ class _$AnswerModelImpl implements _AnswerModel {
   int get hashCode => Object.hash(
     runtimeType,
     id,
-    questionId,
-    adminId,
-    adminName,
     content,
+    adminId,
+    admin,
     const DeepCollectionEquality().hash(_attachments),
     createdAt,
     updatedAt,
@@ -493,10 +656,9 @@ class _$AnswerModelImpl implements _AnswerModel {
 abstract class _AnswerModel implements AnswerModel {
   const factory _AnswerModel({
     required final String id,
-    required final String questionId,
-    required final String adminId,
-    required final String adminName,
     required final String content,
+    required final String adminId,
+    required final QuestionUser admin,
     final List<Attachment>? attachments,
     required final DateTime createdAt,
     required final DateTime updatedAt,
@@ -508,13 +670,11 @@ abstract class _AnswerModel implements AnswerModel {
   @override
   String get id;
   @override
-  String get questionId;
+  String get content;
   @override
   String get adminId;
   @override
-  String get adminName;
-  @override
-  String get content;
+  QuestionUser get admin;
   @override
   List<Attachment>? get attachments;
   @override
@@ -537,13 +697,12 @@ QuestionModel _$QuestionModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$QuestionModel {
   String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get userName => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   QuestionCategory get category => throw _privateConstructorUsedError;
   QuestionStatus get status => throw _privateConstructorUsedError;
   QuestionVisibility get visibility => throw _privateConstructorUsedError;
+  QuestionUser get user => throw _privateConstructorUsedError;
   List<Attachment>? get attachments => throw _privateConstructorUsedError;
   List<AnswerModel> get answers => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -568,18 +727,19 @@ abstract class $QuestionModelCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    String userId,
-    String userName,
     String title,
     String content,
     QuestionCategory category,
     QuestionStatus status,
     QuestionVisibility visibility,
+    QuestionUser user,
     List<Attachment>? attachments,
     List<AnswerModel> answers,
     DateTime createdAt,
     DateTime updatedAt,
   });
+
+  $QuestionUserCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -598,13 +758,12 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
   @override
   $Res call({
     Object? id = null,
-    Object? userId = null,
-    Object? userName = null,
     Object? title = null,
     Object? content = null,
     Object? category = null,
     Object? status = null,
     Object? visibility = null,
+    Object? user = null,
     Object? attachments = freezed,
     Object? answers = null,
     Object? createdAt = null,
@@ -615,14 +774,6 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
             id: null == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userName: null == userName
-                ? _value.userName
-                : userName // ignore: cast_nullable_to_non_nullable
                       as String,
             title: null == title
                 ? _value.title
@@ -644,6 +795,10 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
                 ? _value.visibility
                 : visibility // ignore: cast_nullable_to_non_nullable
                       as QuestionVisibility,
+            user: null == user
+                ? _value.user
+                : user // ignore: cast_nullable_to_non_nullable
+                      as QuestionUser,
             attachments: freezed == attachments
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
@@ -664,6 +819,16 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
           as $Val,
     );
   }
+
+  /// Create a copy of QuestionModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $QuestionUserCopyWith<$Res> get user {
+    return $QuestionUserCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -677,18 +842,20 @@ abstract class _$$QuestionModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    String userId,
-    String userName,
     String title,
     String content,
     QuestionCategory category,
     QuestionStatus status,
     QuestionVisibility visibility,
+    QuestionUser user,
     List<Attachment>? attachments,
     List<AnswerModel> answers,
     DateTime createdAt,
     DateTime updatedAt,
   });
+
+  @override
+  $QuestionUserCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -706,13 +873,12 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? userId = null,
-    Object? userName = null,
     Object? title = null,
     Object? content = null,
     Object? category = null,
     Object? status = null,
     Object? visibility = null,
+    Object? user = null,
     Object? attachments = freezed,
     Object? answers = null,
     Object? createdAt = null,
@@ -723,14 +889,6 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
         id: null == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userName: null == userName
-            ? _value.userName
-            : userName // ignore: cast_nullable_to_non_nullable
                   as String,
         title: null == title
             ? _value.title
@@ -752,6 +910,10 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
             ? _value.visibility
             : visibility // ignore: cast_nullable_to_non_nullable
                   as QuestionVisibility,
+        user: null == user
+            ? _value.user
+            : user // ignore: cast_nullable_to_non_nullable
+                  as QuestionUser,
         attachments: freezed == attachments
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
@@ -778,13 +940,12 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
 class _$QuestionModelImpl implements _QuestionModel {
   const _$QuestionModelImpl({
     required this.id,
-    required this.userId,
-    required this.userName,
     required this.title,
     required this.content,
     required this.category,
     required this.status,
     required this.visibility,
+    required this.user,
     final List<Attachment>? attachments,
     final List<AnswerModel> answers = const [],
     required this.createdAt,
@@ -798,10 +959,6 @@ class _$QuestionModelImpl implements _QuestionModel {
   @override
   final String id;
   @override
-  final String userId;
-  @override
-  final String userName;
-  @override
   final String title;
   @override
   final String content;
@@ -811,6 +968,8 @@ class _$QuestionModelImpl implements _QuestionModel {
   final QuestionStatus status;
   @override
   final QuestionVisibility visibility;
+  @override
+  final QuestionUser user;
   final List<Attachment>? _attachments;
   @override
   List<Attachment>? get attachments {
@@ -837,7 +996,7 @@ class _$QuestionModelImpl implements _QuestionModel {
 
   @override
   String toString() {
-    return 'QuestionModel(id: $id, userId: $userId, userName: $userName, title: $title, content: $content, category: $category, status: $status, visibility: $visibility, attachments: $attachments, answers: $answers, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'QuestionModel(id: $id, title: $title, content: $content, category: $category, status: $status, visibility: $visibility, user: $user, attachments: $attachments, answers: $answers, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -846,9 +1005,6 @@ class _$QuestionModelImpl implements _QuestionModel {
         (other.runtimeType == runtimeType &&
             other is _$QuestionModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.userName, userName) ||
-                other.userName == userName) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.category, category) ||
@@ -856,6 +1012,7 @@ class _$QuestionModelImpl implements _QuestionModel {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.visibility, visibility) ||
                 other.visibility == visibility) &&
+            (identical(other.user, user) || other.user == user) &&
             const DeepCollectionEquality().equals(
               other._attachments,
               _attachments,
@@ -872,13 +1029,12 @@ class _$QuestionModelImpl implements _QuestionModel {
   int get hashCode => Object.hash(
     runtimeType,
     id,
-    userId,
-    userName,
     title,
     content,
     category,
     status,
     visibility,
+    user,
     const DeepCollectionEquality().hash(_attachments),
     const DeepCollectionEquality().hash(_answers),
     createdAt,
@@ -902,13 +1058,12 @@ class _$QuestionModelImpl implements _QuestionModel {
 abstract class _QuestionModel implements QuestionModel {
   const factory _QuestionModel({
     required final String id,
-    required final String userId,
-    required final String userName,
     required final String title,
     required final String content,
     required final QuestionCategory category,
     required final QuestionStatus status,
     required final QuestionVisibility visibility,
+    required final QuestionUser user,
     final List<Attachment>? attachments,
     final List<AnswerModel> answers,
     required final DateTime createdAt,
@@ -921,10 +1076,6 @@ abstract class _QuestionModel implements QuestionModel {
   @override
   String get id;
   @override
-  String get userId;
-  @override
-  String get userName;
-  @override
   String get title;
   @override
   String get content;
@@ -934,6 +1085,8 @@ abstract class _QuestionModel implements QuestionModel {
   QuestionStatus get status;
   @override
   QuestionVisibility get visibility;
+  @override
+  QuestionUser get user;
   @override
   List<Attachment>? get attachments;
   @override
@@ -951,16 +1104,609 @@ abstract class _QuestionModel implements QuestionModel {
       throw _privateConstructorUsedError;
 }
 
+QuestionListItem _$QuestionListItemFromJson(Map<String, dynamic> json) {
+  return _QuestionListItem.fromJson(json);
+}
+
+/// @nodoc
+mixin _$QuestionListItem {
+  String get id => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  QuestionCategory get category => throw _privateConstructorUsedError;
+  QuestionStatus get status => throw _privateConstructorUsedError;
+  QuestionVisibility get visibility => throw _privateConstructorUsedError;
+  int get answerCount => throw _privateConstructorUsedError;
+  QuestionUser get user => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
+
+  /// Serializes this QuestionListItem to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of QuestionListItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $QuestionListItemCopyWith<QuestionListItem> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QuestionListItemCopyWith<$Res> {
+  factory $QuestionListItemCopyWith(
+    QuestionListItem value,
+    $Res Function(QuestionListItem) then,
+  ) = _$QuestionListItemCopyWithImpl<$Res, QuestionListItem>;
+  @useResult
+  $Res call({
+    String id,
+    String title,
+    String content,
+    QuestionCategory category,
+    QuestionStatus status,
+    QuestionVisibility visibility,
+    int answerCount,
+    QuestionUser user,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+
+  $QuestionUserCopyWith<$Res> get user;
+}
+
+/// @nodoc
+class _$QuestionListItemCopyWithImpl<$Res, $Val extends QuestionListItem>
+    implements $QuestionListItemCopyWith<$Res> {
+  _$QuestionListItemCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of QuestionListItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? title = null,
+    Object? content = null,
+    Object? category = null,
+    Object? status = null,
+    Object? visibility = null,
+    Object? answerCount = null,
+    Object? user = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            content: null == content
+                ? _value.content
+                : content // ignore: cast_nullable_to_non_nullable
+                      as String,
+            category: null == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as QuestionCategory,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as QuestionStatus,
+            visibility: null == visibility
+                ? _value.visibility
+                : visibility // ignore: cast_nullable_to_non_nullable
+                      as QuestionVisibility,
+            answerCount: null == answerCount
+                ? _value.answerCount
+                : answerCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            user: null == user
+                ? _value.user
+                : user // ignore: cast_nullable_to_non_nullable
+                      as QuestionUser,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of QuestionListItem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $QuestionUserCopyWith<$Res> get user {
+    return $QuestionUserCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$QuestionListItemImplCopyWith<$Res>
+    implements $QuestionListItemCopyWith<$Res> {
+  factory _$$QuestionListItemImplCopyWith(
+    _$QuestionListItemImpl value,
+    $Res Function(_$QuestionListItemImpl) then,
+  ) = __$$QuestionListItemImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String title,
+    String content,
+    QuestionCategory category,
+    QuestionStatus status,
+    QuestionVisibility visibility,
+    int answerCount,
+    QuestionUser user,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+
+  @override
+  $QuestionUserCopyWith<$Res> get user;
+}
+
+/// @nodoc
+class __$$QuestionListItemImplCopyWithImpl<$Res>
+    extends _$QuestionListItemCopyWithImpl<$Res, _$QuestionListItemImpl>
+    implements _$$QuestionListItemImplCopyWith<$Res> {
+  __$$QuestionListItemImplCopyWithImpl(
+    _$QuestionListItemImpl _value,
+    $Res Function(_$QuestionListItemImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of QuestionListItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? title = null,
+    Object? content = null,
+    Object? category = null,
+    Object? status = null,
+    Object? visibility = null,
+    Object? answerCount = null,
+    Object? user = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+  }) {
+    return _then(
+      _$QuestionListItemImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        content: null == content
+            ? _value.content
+            : content // ignore: cast_nullable_to_non_nullable
+                  as String,
+        category: null == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as QuestionCategory,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as QuestionStatus,
+        visibility: null == visibility
+            ? _value.visibility
+            : visibility // ignore: cast_nullable_to_non_nullable
+                  as QuestionVisibility,
+        answerCount: null == answerCount
+            ? _value.answerCount
+            : answerCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        user: null == user
+            ? _value.user
+            : user // ignore: cast_nullable_to_non_nullable
+                  as QuestionUser,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$QuestionListItemImpl implements _QuestionListItem {
+  const _$QuestionListItemImpl({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.category,
+    required this.status,
+    required this.visibility,
+    required this.answerCount,
+    required this.user,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory _$QuestionListItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$QuestionListItemImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String title;
+  @override
+  final String content;
+  @override
+  final QuestionCategory category;
+  @override
+  final QuestionStatus status;
+  @override
+  final QuestionVisibility visibility;
+  @override
+  final int answerCount;
+  @override
+  final QuestionUser user;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
+
+  @override
+  String toString() {
+    return 'QuestionListItem(id: $id, title: $title, content: $content, category: $category, status: $status, visibility: $visibility, answerCount: $answerCount, user: $user, createdAt: $createdAt, updatedAt: $updatedAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QuestionListItemImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.visibility, visibility) ||
+                other.visibility == visibility) &&
+            (identical(other.answerCount, answerCount) ||
+                other.answerCount == answerCount) &&
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    title,
+    content,
+    category,
+    status,
+    visibility,
+    answerCount,
+    user,
+    createdAt,
+    updatedAt,
+  );
+
+  /// Create a copy of QuestionListItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QuestionListItemImplCopyWith<_$QuestionListItemImpl> get copyWith =>
+      __$$QuestionListItemImplCopyWithImpl<_$QuestionListItemImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$QuestionListItemImplToJson(this);
+  }
+}
+
+abstract class _QuestionListItem implements QuestionListItem {
+  const factory _QuestionListItem({
+    required final String id,
+    required final String title,
+    required final String content,
+    required final QuestionCategory category,
+    required final QuestionStatus status,
+    required final QuestionVisibility visibility,
+    required final int answerCount,
+    required final QuestionUser user,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+  }) = _$QuestionListItemImpl;
+
+  factory _QuestionListItem.fromJson(Map<String, dynamic> json) =
+      _$QuestionListItemImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get title;
+  @override
+  String get content;
+  @override
+  QuestionCategory get category;
+  @override
+  QuestionStatus get status;
+  @override
+  QuestionVisibility get visibility;
+  @override
+  int get answerCount;
+  @override
+  QuestionUser get user;
+  @override
+  DateTime get createdAt;
+  @override
+  DateTime get updatedAt;
+
+  /// Create a copy of QuestionListItem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$QuestionListItemImplCopyWith<_$QuestionListItemImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PaginationMeta _$PaginationMetaFromJson(Map<String, dynamic> json) {
+  return _PaginationMeta.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PaginationMeta {
+  int get total => throw _privateConstructorUsedError;
+  int get page => throw _privateConstructorUsedError;
+  int get limit => throw _privateConstructorUsedError;
+  int get totalPages => throw _privateConstructorUsedError;
+
+  /// Serializes this PaginationMeta to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PaginationMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PaginationMetaCopyWith<PaginationMeta> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PaginationMetaCopyWith<$Res> {
+  factory $PaginationMetaCopyWith(
+    PaginationMeta value,
+    $Res Function(PaginationMeta) then,
+  ) = _$PaginationMetaCopyWithImpl<$Res, PaginationMeta>;
+  @useResult
+  $Res call({int total, int page, int limit, int totalPages});
+}
+
+/// @nodoc
+class _$PaginationMetaCopyWithImpl<$Res, $Val extends PaginationMeta>
+    implements $PaginationMetaCopyWith<$Res> {
+  _$PaginationMetaCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PaginationMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? total = null,
+    Object? page = null,
+    Object? limit = null,
+    Object? totalPages = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            total: null == total
+                ? _value.total
+                : total // ignore: cast_nullable_to_non_nullable
+                      as int,
+            page: null == page
+                ? _value.page
+                : page // ignore: cast_nullable_to_non_nullable
+                      as int,
+            limit: null == limit
+                ? _value.limit
+                : limit // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalPages: null == totalPages
+                ? _value.totalPages
+                : totalPages // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$PaginationMetaImplCopyWith<$Res>
+    implements $PaginationMetaCopyWith<$Res> {
+  factory _$$PaginationMetaImplCopyWith(
+    _$PaginationMetaImpl value,
+    $Res Function(_$PaginationMetaImpl) then,
+  ) = __$$PaginationMetaImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int total, int page, int limit, int totalPages});
+}
+
+/// @nodoc
+class __$$PaginationMetaImplCopyWithImpl<$Res>
+    extends _$PaginationMetaCopyWithImpl<$Res, _$PaginationMetaImpl>
+    implements _$$PaginationMetaImplCopyWith<$Res> {
+  __$$PaginationMetaImplCopyWithImpl(
+    _$PaginationMetaImpl _value,
+    $Res Function(_$PaginationMetaImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of PaginationMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? total = null,
+    Object? page = null,
+    Object? limit = null,
+    Object? totalPages = null,
+  }) {
+    return _then(
+      _$PaginationMetaImpl(
+        total: null == total
+            ? _value.total
+            : total // ignore: cast_nullable_to_non_nullable
+                  as int,
+        page: null == page
+            ? _value.page
+            : page // ignore: cast_nullable_to_non_nullable
+                  as int,
+        limit: null == limit
+            ? _value.limit
+            : limit // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalPages: null == totalPages
+            ? _value.totalPages
+            : totalPages // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PaginationMetaImpl implements _PaginationMeta {
+  const _$PaginationMetaImpl({
+    required this.total,
+    required this.page,
+    required this.limit,
+    required this.totalPages,
+  });
+
+  factory _$PaginationMetaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PaginationMetaImplFromJson(json);
+
+  @override
+  final int total;
+  @override
+  final int page;
+  @override
+  final int limit;
+  @override
+  final int totalPages;
+
+  @override
+  String toString() {
+    return 'PaginationMeta(total: $total, page: $page, limit: $limit, totalPages: $totalPages)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PaginationMetaImpl &&
+            (identical(other.total, total) || other.total == total) &&
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, total, page, limit, totalPages);
+
+  /// Create a copy of PaginationMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PaginationMetaImplCopyWith<_$PaginationMetaImpl> get copyWith =>
+      __$$PaginationMetaImplCopyWithImpl<_$PaginationMetaImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PaginationMetaImplToJson(this);
+  }
+}
+
+abstract class _PaginationMeta implements PaginationMeta {
+  const factory _PaginationMeta({
+    required final int total,
+    required final int page,
+    required final int limit,
+    required final int totalPages,
+  }) = _$PaginationMetaImpl;
+
+  factory _PaginationMeta.fromJson(Map<String, dynamic> json) =
+      _$PaginationMetaImpl.fromJson;
+
+  @override
+  int get total;
+  @override
+  int get page;
+  @override
+  int get limit;
+  @override
+  int get totalPages;
+
+  /// Create a copy of PaginationMeta
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PaginationMetaImplCopyWith<_$PaginationMetaImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 QuestionListResponse _$QuestionListResponseFromJson(Map<String, dynamic> json) {
   return _QuestionListResponse.fromJson(json);
 }
 
 /// @nodoc
 mixin _$QuestionListResponse {
-  List<QuestionModel> get items => throw _privateConstructorUsedError;
-  int get total => throw _privateConstructorUsedError;
-  int get page => throw _privateConstructorUsedError;
-  int get limit => throw _privateConstructorUsedError;
+  List<QuestionListItem> get data => throw _privateConstructorUsedError;
+  PaginationMeta get meta => throw _privateConstructorUsedError;
 
   /// Serializes this QuestionListResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -979,7 +1725,9 @@ abstract class $QuestionListResponseCopyWith<$Res> {
     $Res Function(QuestionListResponse) then,
   ) = _$QuestionListResponseCopyWithImpl<$Res, QuestionListResponse>;
   @useResult
-  $Res call({List<QuestionModel> items, int total, int page, int limit});
+  $Res call({List<QuestionListItem> data, PaginationMeta meta});
+
+  $PaginationMetaCopyWith<$Res> get meta;
 }
 
 /// @nodoc
@@ -999,33 +1747,30 @@ class _$QuestionListResponseCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? items = null,
-    Object? total = null,
-    Object? page = null,
-    Object? limit = null,
-  }) {
+  $Res call({Object? data = null, Object? meta = null}) {
     return _then(
       _value.copyWith(
-            items: null == items
-                ? _value.items
-                : items // ignore: cast_nullable_to_non_nullable
-                      as List<QuestionModel>,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
-            page: null == page
-                ? _value.page
-                : page // ignore: cast_nullable_to_non_nullable
-                      as int,
-            limit: null == limit
-                ? _value.limit
-                : limit // ignore: cast_nullable_to_non_nullable
-                      as int,
+            data: null == data
+                ? _value.data
+                : data // ignore: cast_nullable_to_non_nullable
+                      as List<QuestionListItem>,
+            meta: null == meta
+                ? _value.meta
+                : meta // ignore: cast_nullable_to_non_nullable
+                      as PaginationMeta,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of QuestionListResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PaginationMetaCopyWith<$Res> get meta {
+    return $PaginationMetaCopyWith<$Res>(_value.meta, (value) {
+      return _then(_value.copyWith(meta: value) as $Val);
+    });
   }
 }
 
@@ -1038,7 +1783,10 @@ abstract class _$$QuestionListResponseImplCopyWith<$Res>
   ) = __$$QuestionListResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<QuestionModel> items, int total, int page, int limit});
+  $Res call({List<QuestionListItem> data, PaginationMeta meta});
+
+  @override
+  $PaginationMetaCopyWith<$Res> get meta;
 }
 
 /// @nodoc
@@ -1054,30 +1802,17 @@ class __$$QuestionListResponseImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? items = null,
-    Object? total = null,
-    Object? page = null,
-    Object? limit = null,
-  }) {
+  $Res call({Object? data = null, Object? meta = null}) {
     return _then(
       _$QuestionListResponseImpl(
-        items: null == items
-            ? _value._items
-            : items // ignore: cast_nullable_to_non_nullable
-                  as List<QuestionModel>,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
-        page: null == page
-            ? _value.page
-            : page // ignore: cast_nullable_to_non_nullable
-                  as int,
-        limit: null == limit
-            ? _value.limit
-            : limit // ignore: cast_nullable_to_non_nullable
-                  as int,
+        data: null == data
+            ? _value._data
+            : data // ignore: cast_nullable_to_non_nullable
+                  as List<QuestionListItem>,
+        meta: null == meta
+            ? _value.meta
+            : meta // ignore: cast_nullable_to_non_nullable
+                  as PaginationMeta,
       ),
     );
   }
@@ -1087,33 +1822,27 @@ class __$$QuestionListResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$QuestionListResponseImpl implements _QuestionListResponse {
   const _$QuestionListResponseImpl({
-    required final List<QuestionModel> items,
-    required this.total,
-    required this.page,
-    required this.limit,
-  }) : _items = items;
+    required final List<QuestionListItem> data,
+    required this.meta,
+  }) : _data = data;
 
   factory _$QuestionListResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$QuestionListResponseImplFromJson(json);
 
-  final List<QuestionModel> _items;
+  final List<QuestionListItem> _data;
   @override
-  List<QuestionModel> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
+  List<QuestionListItem> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
+    return EqualUnmodifiableListView(_data);
   }
 
   @override
-  final int total;
-  @override
-  final int page;
-  @override
-  final int limit;
+  final PaginationMeta meta;
 
   @override
   String toString() {
-    return 'QuestionListResponse(items: $items, total: $total, page: $page, limit: $limit)';
+    return 'QuestionListResponse(data: $data, meta: $meta)';
   }
 
   @override
@@ -1121,20 +1850,16 @@ class _$QuestionListResponseImpl implements _QuestionListResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$QuestionListResponseImpl &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.total, total) || other.total == total) &&
-            (identical(other.page, page) || other.page == page) &&
-            (identical(other.limit, limit) || other.limit == limit));
+            const DeepCollectionEquality().equals(other._data, _data) &&
+            (identical(other.meta, meta) || other.meta == meta));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
-    const DeepCollectionEquality().hash(_items),
-    total,
-    page,
-    limit,
+    const DeepCollectionEquality().hash(_data),
+    meta,
   );
 
   /// Create a copy of QuestionListResponse
@@ -1157,23 +1882,17 @@ class _$QuestionListResponseImpl implements _QuestionListResponse {
 
 abstract class _QuestionListResponse implements QuestionListResponse {
   const factory _QuestionListResponse({
-    required final List<QuestionModel> items,
-    required final int total,
-    required final int page,
-    required final int limit,
+    required final List<QuestionListItem> data,
+    required final PaginationMeta meta,
   }) = _$QuestionListResponseImpl;
 
   factory _QuestionListResponse.fromJson(Map<String, dynamic> json) =
       _$QuestionListResponseImpl.fromJson;
 
   @override
-  List<QuestionModel> get items;
+  List<QuestionListItem> get data;
   @override
-  int get total;
-  @override
-  int get page;
-  @override
-  int get limit;
+  PaginationMeta get meta;
 
   /// Create a copy of QuestionListResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -1192,7 +1911,6 @@ mixin _$QnaStatistics {
   int get totalQuestions => throw _privateConstructorUsedError;
   int get pendingCount => throw _privateConstructorUsedError;
   int get answeredCount => throw _privateConstructorUsedError;
-  int get resolvedCount => throw _privateConstructorUsedError;
   Map<String, int> get categoryStats => throw _privateConstructorUsedError;
 
   /// Serializes this QnaStatistics to a JSON map.
@@ -1216,7 +1934,6 @@ abstract class $QnaStatisticsCopyWith<$Res> {
     int totalQuestions,
     int pendingCount,
     int answeredCount,
-    int resolvedCount,
     Map<String, int> categoryStats,
   });
 }
@@ -1239,7 +1956,6 @@ class _$QnaStatisticsCopyWithImpl<$Res, $Val extends QnaStatistics>
     Object? totalQuestions = null,
     Object? pendingCount = null,
     Object? answeredCount = null,
-    Object? resolvedCount = null,
     Object? categoryStats = null,
   }) {
     return _then(
@@ -1255,10 +1971,6 @@ class _$QnaStatisticsCopyWithImpl<$Res, $Val extends QnaStatistics>
             answeredCount: null == answeredCount
                 ? _value.answeredCount
                 : answeredCount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            resolvedCount: null == resolvedCount
-                ? _value.resolvedCount
-                : resolvedCount // ignore: cast_nullable_to_non_nullable
                       as int,
             categoryStats: null == categoryStats
                 ? _value.categoryStats
@@ -1283,7 +1995,6 @@ abstract class _$$QnaStatisticsImplCopyWith<$Res>
     int totalQuestions,
     int pendingCount,
     int answeredCount,
-    int resolvedCount,
     Map<String, int> categoryStats,
   });
 }
@@ -1305,7 +2016,6 @@ class __$$QnaStatisticsImplCopyWithImpl<$Res>
     Object? totalQuestions = null,
     Object? pendingCount = null,
     Object? answeredCount = null,
-    Object? resolvedCount = null,
     Object? categoryStats = null,
   }) {
     return _then(
@@ -1321,10 +2031,6 @@ class __$$QnaStatisticsImplCopyWithImpl<$Res>
         answeredCount: null == answeredCount
             ? _value.answeredCount
             : answeredCount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        resolvedCount: null == resolvedCount
-            ? _value.resolvedCount
-            : resolvedCount // ignore: cast_nullable_to_non_nullable
                   as int,
         categoryStats: null == categoryStats
             ? _value._categoryStats
@@ -1342,7 +2048,6 @@ class _$QnaStatisticsImpl implements _QnaStatistics {
     required this.totalQuestions,
     required this.pendingCount,
     required this.answeredCount,
-    required this.resolvedCount,
     required final Map<String, int> categoryStats,
   }) : _categoryStats = categoryStats;
 
@@ -1355,8 +2060,6 @@ class _$QnaStatisticsImpl implements _QnaStatistics {
   final int pendingCount;
   @override
   final int answeredCount;
-  @override
-  final int resolvedCount;
   final Map<String, int> _categoryStats;
   @override
   Map<String, int> get categoryStats {
@@ -1367,7 +2070,7 @@ class _$QnaStatisticsImpl implements _QnaStatistics {
 
   @override
   String toString() {
-    return 'QnaStatistics(totalQuestions: $totalQuestions, pendingCount: $pendingCount, answeredCount: $answeredCount, resolvedCount: $resolvedCount, categoryStats: $categoryStats)';
+    return 'QnaStatistics(totalQuestions: $totalQuestions, pendingCount: $pendingCount, answeredCount: $answeredCount, categoryStats: $categoryStats)';
   }
 
   @override
@@ -1381,8 +2084,6 @@ class _$QnaStatisticsImpl implements _QnaStatistics {
                 other.pendingCount == pendingCount) &&
             (identical(other.answeredCount, answeredCount) ||
                 other.answeredCount == answeredCount) &&
-            (identical(other.resolvedCount, resolvedCount) ||
-                other.resolvedCount == resolvedCount) &&
             const DeepCollectionEquality().equals(
               other._categoryStats,
               _categoryStats,
@@ -1396,7 +2097,6 @@ class _$QnaStatisticsImpl implements _QnaStatistics {
     totalQuestions,
     pendingCount,
     answeredCount,
-    resolvedCount,
     const DeepCollectionEquality().hash(_categoryStats),
   );
 
@@ -1419,7 +2119,6 @@ abstract class _QnaStatistics implements QnaStatistics {
     required final int totalQuestions,
     required final int pendingCount,
     required final int answeredCount,
-    required final int resolvedCount,
     required final Map<String, int> categoryStats,
   }) = _$QnaStatisticsImpl;
 
@@ -1432,8 +2131,6 @@ abstract class _QnaStatistics implements QnaStatistics {
   int get pendingCount;
   @override
   int get answeredCount;
-  @override
-  int get resolvedCount;
   @override
   Map<String, int> get categoryStats;
 

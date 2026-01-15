@@ -203,7 +203,7 @@ final unreadAnnouncementCountProvider = AutoDisposeFutureProvider<int>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UnreadAnnouncementCountRef = AutoDisposeFutureProviderRef<int>;
-String _$announcementListHash() => r'bc50c709369b08e3673481eb8ca74fece02376c8';
+String _$announcementListHash() => r'2fb9950940ee6278d582e661287231efd915450b';
 
 /// 공지사항 목록 Provider (무한 스크롤 지원)
 ///

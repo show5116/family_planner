@@ -17,55 +17,35 @@ class QnaRepository {
 
   QnaRepository();
 
-  /// 공개 질문 목록 조회
-  Future<QuestionListResponse> getPublicQuestions({
+  /// 질문 목록 조회 (통합)
+  /// filter: 'public' (공개 질문), 'my' (내 질문), 'all' (모든 질문 - ADMIN 전용)
+  Future<QuestionListResponse> getQuestions({
     int page = 1,
     int limit = 20,
+    String? filter, // 'public', 'my', 'all'
     QuestionStatus? status,
     QuestionCategory? category,
     String? search,
   }) async {
     try {
-      debugPrint('🔵 [QnaRepository] 공개 질문 목록 조회');
+      debugPrint('🔵 [QnaRepository] 질문 목록 조회 (filter: $filter)');
 
-      final response = await _dio.get('/qna/public-questions', queryParameters: {
+      final response = await _dio.get('/qna/questions', queryParameters: {
         'page': page,
         'limit': limit,
+        if (filter != null) 'filter': filter,
         if (status != null) 'status': status.name.toUpperCase(),
         if (category != null) 'category': category.name.toUpperCase(),
         if (search != null && search.isNotEmpty) 'search': search,
       });
 
-      debugPrint('✅ [QnaRepository] 공개 질문 목록 조회 성공');
+      debugPrint('✅ [QnaRepository] 질문 목록 조회 성공');
+      debugPrint('📦 [QnaRepository] 응답 데이터: ${response.data}');
       return QuestionListResponse.fromJson(response.data);
     } on DioException catch (e) {
-      debugPrint('❌ [QnaRepository] 공개 질문 목록 조회 실패: ${e.message}');
-      throw Exception('공개 질문 목록 조회 실패: ${e.message}');
-    }
-  }
-
-  /// 내 질문 목록 조회
-  Future<QuestionListResponse> getMyQuestions({
-    int page = 1,
-    int limit = 20,
-    QuestionStatus? status,
-    QuestionCategory? category,
-  }) async {
-    try {
-      debugPrint('🔵 [QnaRepository] 내 질문 목록 조회');
-
-      final response = await _dio.get('/qna/my-questions', queryParameters: {
-        'page': page,
-        'limit': limit,
-        if (status != null) 'status': status.name.toUpperCase(),
-        if (category != null) 'category': category.name.toUpperCase(),
-      });
-
-      debugPrint('✅ [QnaRepository] 내 질문 목록 조회 성공');
-      return QuestionListResponse.fromJson(response.data);
-    } on DioException catch (e) {
-      debugPrint('❌ [QnaRepository] 내 질문 목록 조회 실패: ${e.message}');
-      throw Exception('내 질문 목록 조회 실패: ${e.message}');
+      debugPrint('❌ [QnaRepository] 질문 목록 조회 실패: ${e.message}');
+      debugPrint('📦 [QnaRepository] 응답 데이터: ${e.response?.data}');
+      throw Exception('질문 목록 조회 실패: ${e.message}');
     }
   }
 
@@ -128,21 +108,6 @@ class QnaRepository {
     } on DioException catch (e) {
       debugPrint('❌ [QnaRepository] 질문 삭제 실패: ${e.message}');
       throw Exception('질문 삭제 실패: ${e.message}');
-    }
-  }
-
-  /// 질문 해결 완료
-  Future<QuestionModel> resolveQuestion(String id) async {
-    try {
-      debugPrint('🔵 [QnaRepository] 질문 해결 완료: $id');
-
-      final response = await _dio.patch('/qna/questions/$id/resolve');
-
-      debugPrint('✅ [QnaRepository] 질문 해결 완료 성공');
-      return QuestionModel.fromJson(response.data);
-    } on DioException catch (e) {
-      debugPrint('❌ [QnaRepository] 질문 해결 완료 실패: ${e.message}');
-      throw Exception('질문 해결 완료 실패: ${e.message}');
     }
   }
 
