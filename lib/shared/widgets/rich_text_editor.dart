@@ -1,12 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/core/utils/html_sanitizer.dart';
+import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/services/storage_service.dart';
 
-/// 리치 텍스트 에디터 위젯
+/// 리치 텍스트 에디터 위젯 (flutter_quill 기반)
 ///
-/// 일반 사용자를 위한 WYSIWYG 스타일의 텍스트 에디터
-/// HTML 형식으로 저장되며 XSS 공격으로부터 안전
+/// 진정한 WYSIWYG 에디터로, 보이는 대로 편집됩니다.
+/// 내부적으로 Delta 포맷을 사용하며, HTML로 변환하여 저장합니다.
 ///
 /// 사용 예시:
 /// ```dart
@@ -18,7 +25,7 @@ import 'package:family_planner/core/utils/html_sanitizer.dart';
 /// )
 /// ```
 class RichTextEditor extends StatefulWidget {
-  /// 텍스트 입력 컨트롤러 (HTML 형식)
+  /// 텍스트 입력 컨트롤러 (HTML 형식으로 동기화)
   final TextEditingController controller;
 
   /// 라벨 텍스트
@@ -42,8 +49,8 @@ class RichTextEditor extends StatefulWidget {
   /// 간소화 모드 (Q&A용: 굵게, 리스트, 이미지만 표시)
   final bool simpleMode;
 
-  /// 이미지 첨부 콜백 (null이면 이미지 버튼 숨김)
-  final VoidCallback? onImageAttach;
+  /// 이미지 업로드 타입 (null이면 이미지 버튼 숨김)
+  final EditorImageType? imageUploadType;
 
   const RichTextEditor({
     super.key,
@@ -55,7 +62,7 @@ class RichTextEditor extends StatefulWidget {
     this.validator,
     this.readOnly = false,
     this.simpleMode = false,
-    this.onImageAttach,
+    this.imageUploadType,
   });
 
   @override
@@ -63,19 +70,97 @@ class RichTextEditor extends StatefulWidget {
 }
 
 class _RichTextEditorState extends State<RichTextEditor> {
-  // 현재 선택된 텍스트 스타일
-  bool _isBold = false;
-  bool _isItalic = false;
-  bool _isUnderline = false;
-  bool _isStrikethrough = false;
-  String _currentHeading = 'normal';
-  TextAlign _textAlign = TextAlign.left;
-
+  late QuillController _quillController;
   final FocusNode _focusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+  final ImagePicker _imagePicker = ImagePicker();
+  bool _isUploadingImage = false;
+  String? _validationError;
+
+  @override
+  void initState() {
+    super.initState();
+    _initQuillController();
+
+    // TextEditingController의 변경사항을 감지
+    widget.controller.addListener(_onExternalControllerChange);
+  }
+
+  /// Quill 컨트롤러 초기화
+  void _initQuillController() {
+    final initialHtml = widget.controller.text;
+
+    if (initialHtml.isNotEmpty) {
+      // HTML을 Delta로 변환
+      try {
+        final converter = HtmlToDelta();
+        final delta = converter.convert(initialHtml);
+        _quillController = QuillController(
+          document: Document.fromDelta(delta),
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+      } catch (e) {
+        debugPrint('⚠️ [RichTextEditor] HTML 파싱 실패, 빈 문서로 시작: $e');
+        _quillController = QuillController.basic();
+      }
+    } else {
+      _quillController = QuillController.basic();
+    }
+
+    // Quill 컨트롤러의 변경사항을 TextEditingController에 동기화
+    _quillController.addListener(_syncToTextController);
+  }
+
+  /// 외부 TextEditingController 변경 감지
+  void _onExternalControllerChange() {
+    // 외부에서 controller.text가 변경된 경우 (수정 모드에서 데이터 로드 등)
+    // Quill 문서와 동기화되어 있지 않으면 업데이트
+    final currentHtml = _getHtml();
+    if (widget.controller.text != currentHtml && widget.controller.text.isNotEmpty) {
+      try {
+        final converter = HtmlToDelta();
+        final delta = converter.convert(widget.controller.text);
+        _quillController.document = Document.fromDelta(delta);
+      } catch (e) {
+        debugPrint('⚠️ [RichTextEditor] 외부 HTML 동기화 실패: $e');
+      }
+    }
+  }
+
+  /// Quill 문서를 TextEditingController에 동기화
+  void _syncToTextController() {
+    final html = _getHtml();
+    if (widget.controller.text != html) {
+      widget.controller.text = html;
+    }
+  }
+
+  /// Delta를 HTML로 변환
+  String _getHtml() {
+    final delta = _quillController.document.toDelta();
+    final converter = QuillDeltaToHtmlConverter(
+      delta.toJson(),
+      ConverterOptions(
+        converterOptions: OpConverterOptions(
+          inlineStylesFlag: true,
+        ),
+      ),
+    );
+    return converter.convert();
+  }
+
+  /// 일반 텍스트 가져오기 (유효성 검사용)
+  String _getPlainText() {
+    return _quillController.document.toPlainText().trim();
+  }
 
   @override
   void dispose() {
+    widget.controller.removeListener(_onExternalControllerChange);
+    _quillController.removeListener(_syncToTextController);
+    _quillController.dispose();
     _focusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -101,131 +186,27 @@ class _RichTextEditorState extends State<RichTextEditor> {
 
         // 에디터
         _buildEditor(),
+
+        // 유효성 검사 에러 메시지
+        if (_validationError != null) ...[
+          const SizedBox(height: AppSizes.spaceXS),
+          Text(
+            _validationError!,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.error,
+                ),
+          ),
+        ],
       ],
     );
   }
 
   /// 툴바 위젯
   Widget _buildToolbar() {
-    // 간소화 모드: 이미지, 굵게, 리스트만 표시
     if (widget.simpleMode) {
       return _buildSimpleToolbar();
     }
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceS,
-          vertical: AppSizes.spaceXS,
-        ),
-        child: Wrap(
-          spacing: AppSizes.spaceXS,
-          runSpacing: AppSizes.spaceXS,
-          children: [
-            // 제목 스타일
-            _buildHeadingDropdown(),
-            const VerticalDivider(width: 1),
-
-            // 굵게
-            _ToolbarButton(
-              icon: Icons.format_bold,
-              tooltip: '굵게',
-              isActive: _isBold,
-              onPressed: () => _toggleStyle('bold'),
-            ),
-
-            // 기울임
-            _ToolbarButton(
-              icon: Icons.format_italic,
-              tooltip: '기울임',
-              isActive: _isItalic,
-              onPressed: () => _toggleStyle('italic'),
-            ),
-
-            // 밑줄
-            _ToolbarButton(
-              icon: Icons.format_underlined,
-              tooltip: '밑줄',
-              isActive: _isUnderline,
-              onPressed: () => _toggleStyle('underline'),
-            ),
-
-            // 취소선
-            _ToolbarButton(
-              icon: Icons.format_strikethrough,
-              tooltip: '취소선',
-              isActive: _isStrikethrough,
-              onPressed: () => _toggleStyle('strikethrough'),
-            ),
-
-            const VerticalDivider(width: 1),
-
-            // 왼쪽 정렬
-            _ToolbarButton(
-              icon: Icons.format_align_left,
-              tooltip: '왼쪽 정렬',
-              isActive: _textAlign == TextAlign.left,
-              onPressed: () => _setTextAlign(TextAlign.left),
-            ),
-
-            // 가운데 정렬
-            _ToolbarButton(
-              icon: Icons.format_align_center,
-              tooltip: '가운데 정렬',
-              isActive: _textAlign == TextAlign.center,
-              onPressed: () => _setTextAlign(TextAlign.center),
-            ),
-
-            // 오른쪽 정렬
-            _ToolbarButton(
-              icon: Icons.format_align_right,
-              tooltip: '오른쪽 정렬',
-              isActive: _textAlign == TextAlign.right,
-              onPressed: () => _setTextAlign(TextAlign.right),
-            ),
-
-            const VerticalDivider(width: 1),
-
-            // 리스트
-            _ToolbarButton(
-              icon: Icons.format_list_bulleted,
-              tooltip: '글머리 기호',
-              onPressed: () => _insertList('ul'),
-            ),
-
-            // 번호 리스트
-            _ToolbarButton(
-              icon: Icons.format_list_numbered,
-              tooltip: '번호 매기기',
-              onPressed: () => _insertList('ol'),
-            ),
-
-            const VerticalDivider(width: 1),
-
-            // 링크
-            _ToolbarButton(
-              icon: Icons.link,
-              tooltip: '링크',
-              onPressed: _insertLink,
-            ),
-
-            // 인용
-            _ToolbarButton(
-              icon: Icons.format_quote,
-              tooltip: '인용',
-              onPressed: _insertQuote,
-            ),
-
-            // 구분선
-            _ToolbarButton(
-              icon: Icons.horizontal_rule,
-              tooltip: '구분선',
-              onPressed: _insertHorizontalRule,
-            ),
-          ],
-        ),
-      ),
-    );
+    return _buildFullToolbar();
   }
 
   /// 간소화 툴바 (Q&A용)
@@ -238,13 +219,19 @@ class _RichTextEditorState extends State<RichTextEditor> {
         ),
         child: Row(
           children: [
-            // 이미지 첨부 (가장 먼저 배치)
-            if (widget.onImageAttach != null) ...[
-              _ToolbarButton(
-                icon: Icons.image,
-                tooltip: '이미지 첨부',
-                onPressed: widget.onImageAttach!,
-              ),
+            // 이미지 첨부
+            if (widget.imageUploadType != null) ...[
+              _isUploadingImage
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : _ToolbarButton(
+                      icon: Icons.image,
+                      tooltip: '이미지 첨부',
+                      onPressed: _handleImageUpload,
+                    ),
               const SizedBox(width: AppSizes.spaceM),
               Container(
                 width: 1,
@@ -258,8 +245,8 @@ class _RichTextEditorState extends State<RichTextEditor> {
             _ToolbarButton(
               icon: Icons.format_bold,
               tooltip: '굵게',
-              isActive: _isBold,
-              onPressed: () => _toggleStyle('bold'),
+              isActive: _quillController.getSelectionStyle().attributes.containsKey('bold'),
+              onPressed: () => _quillController.formatSelection(Attribute.bold),
             ),
             const SizedBox(width: AppSizes.spaceS),
 
@@ -267,7 +254,8 @@ class _RichTextEditorState extends State<RichTextEditor> {
             _ToolbarButton(
               icon: Icons.format_list_bulleted,
               tooltip: '글머리 기호',
-              onPressed: () => _insertList('ul'),
+              isActive: _quillController.getSelectionStyle().attributes.containsKey('list'),
+              onPressed: () => _quillController.formatSelection(Attribute.ul),
             ),
 
             const Spacer(),
@@ -285,277 +273,263 @@ class _RichTextEditorState extends State<RichTextEditor> {
     );
   }
 
-  /// 제목 드롭다운
-  Widget _buildHeadingDropdown() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).dividerColor),
-        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-      ),
-      child: DropdownButton<String>(
-        value: _currentHeading,
-        underline: const SizedBox(),
-        isDense: true,
-        items: const [
-          DropdownMenuItem(value: 'normal', child: Text('본문')),
-          DropdownMenuItem(value: 'h1', child: Text('제목 1')),
-          DropdownMenuItem(value: 'h2', child: Text('제목 2')),
-          DropdownMenuItem(value: 'h3', child: Text('제목 3')),
-        ],
-        onChanged: (value) {
-          if (value != null) {
-            setState(() {
-              _currentHeading = value;
-            });
-            _applyHeading(value);
-          }
-        },
+  /// 전체 툴바 (공지사항용)
+  Widget _buildFullToolbar() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceS,
+          vertical: AppSizes.spaceXS,
+        ),
+        child: QuillSimpleToolbar(
+          controller: _quillController,
+          config: QuillSimpleToolbarConfig(
+            showDividers: true,
+            showFontFamily: false,
+            showFontSize: false,
+            showBoldButton: true,
+            showItalicButton: true,
+            showUnderLineButton: true,
+            showStrikeThrough: true,
+            showInlineCode: false,
+            showColorButton: false,
+            showBackgroundColorButton: false,
+            showClearFormat: true,
+            showAlignmentButtons: true,
+            showLeftAlignment: true,
+            showCenterAlignment: true,
+            showRightAlignment: true,
+            showJustifyAlignment: false,
+            showHeaderStyle: true,
+            showListNumbers: true,
+            showListBullets: true,
+            showListCheck: false,
+            showCodeBlock: false,
+            showQuote: true,
+            showIndent: false,
+            showLink: true,
+            showUndo: true,
+            showRedo: true,
+            showDirection: false,
+            showSearchButton: false,
+            showSubscript: false,
+            showSuperscript: false,
+            customButtons: widget.imageUploadType != null
+                ? [
+                    QuillToolbarCustomButtonOptions(
+                      icon: _isUploadingImage
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.image, size: 18),
+                      tooltip: '이미지 첨부',
+                      onPressed: _handleImageUpload,
+                    ),
+                  ]
+                : [],
+          ),
+        ),
       ),
     );
   }
 
   /// 에디터 위젯
   Widget _buildEditor() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).dividerColor),
-        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-      ),
-      padding: const EdgeInsets.all(AppSizes.spaceM),
-      child: TextFormField(
-        controller: widget.controller,
-        focusNode: _focusNode,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: widget.hintText,
-        ),
-        minLines: widget.minLines,
-        maxLines: widget.maxLines,
-        validator: widget.validator,
-        readOnly: widget.readOnly,
-        style: _buildTextStyle(),
-        textAlign: _textAlign,
-      ),
+    final lineHeight = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 16;
+    final minHeight = lineHeight * widget.minLines + AppSizes.spaceM * 2;
+
+    return FormField<String>(
+      initialValue: _getPlainText(),
+      validator: (value) {
+        if (widget.validator != null) {
+          final plainText = _getPlainText();
+          final error = widget.validator!(plainText);
+          setState(() => _validationError = error);
+          return error;
+        }
+        return null;
+      },
+      builder: (field) {
+        return Container(
+          constraints: BoxConstraints(minHeight: minHeight),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: _validationError != null
+                  ? AppColors.error
+                  : Theme.of(context).dividerColor,
+            ),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+          ),
+          child: QuillEditor(
+            controller: _quillController,
+            focusNode: _focusNode,
+            scrollController: _scrollController,
+            config: QuillEditorConfig(
+              autoFocus: false,
+              expands: false,
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              placeholder: widget.hintText,
+              readOnlyMouseCursor: SystemMouseCursors.text,
+              scrollable: true,
+              enableInteractiveSelection: true,
+              embedBuilders: [
+                // 이미지 임베드 빌더
+                _ImageEmbedBuilder(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  /// 현재 텍스트 스타일 빌드
-  TextStyle _buildTextStyle() {
-    var style = Theme.of(context).textTheme.bodyMedium!;
+  /// 이미지 업로드 처리
+  Future<void> _handleImageUpload() async {
+    if (widget.imageUploadType == null) return;
 
-    if (_isBold) {
-      style = style.copyWith(fontWeight: FontWeight.bold);
-    }
-
-    if (_isItalic) {
-      style = style.copyWith(fontStyle: FontStyle.italic);
-    }
-
-    final decorations = <TextDecoration>[];
-    if (_isUnderline) decorations.add(TextDecoration.underline);
-    if (_isStrikethrough) decorations.add(TextDecoration.lineThrough);
-
-    if (decorations.isNotEmpty) {
-      style = style.copyWith(
-        decoration: TextDecoration.combine(decorations),
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
       );
-    }
 
-    // 제목 스타일
-    switch (_currentHeading) {
-      case 'h1':
-        style = Theme.of(context).textTheme.displaySmall!;
-        break;
-      case 'h2':
-        style = Theme.of(context).textTheme.headlineMedium!;
-        break;
-      case 'h3':
-        style = Theme.of(context).textTheme.titleLarge!;
-        break;
-    }
+      if (image == null) return;
 
-    return style;
-  }
+      setState(() => _isUploadingImage = true);
 
-  /// 스타일 토글
-  void _toggleStyle(String style) {
-    setState(() {
-      switch (style) {
-        case 'bold':
-          _isBold = !_isBold;
-          break;
-        case 'italic':
-          _isItalic = !_isItalic;
-          break;
-        case 'underline':
-          _isUnderline = !_isUnderline;
-          break;
-        case 'strikethrough':
-          _isStrikethrough = !_isStrikethrough;
-          break;
-      }
-    });
+      final originalBytes = await image.readAsBytes();
+      final fileName = image.name;
 
-    _applyStyleToSelection(style);
-  }
+      // 클라이언트 사이드 이미지 압축
+      final compressedBytes = await _compressImage(originalBytes, fileName);
 
-  /// 선택된 텍스트에 스타일 적용
-  void _applyStyleToSelection(String style) {
-    final controller = widget.controller;
-    final selection = controller.selection;
+      debugPrint('🖼️ [RichTextEditor] 이미지 압축 완료 - 원본: ${originalBytes.length} bytes, 압축: ${compressedBytes.length} bytes');
 
-    if (!selection.isValid || selection.isCollapsed) return;
+      // 이미지 업로드
+      final result = await StorageService.instance.uploadEditorImage(
+        fileBytes: compressedBytes,
+        fileName: fileName,
+        type: widget.imageUploadType!,
+      );
 
-    final selectedText = selection.textInside(controller.text);
-    String styledText;
+      // 에디터에 이미지 삽입
+      _insertImage(result.url);
 
-    switch (style) {
-      case 'bold':
-        styledText = _isBold ? '<strong>$selectedText</strong>' : selectedText;
-        break;
-      case 'italic':
-        styledText = _isItalic ? '<em>$selectedText</em>' : selectedText;
-        break;
-      case 'underline':
-        styledText = _isUnderline ? '<u>$selectedText</u>' : selectedText;
-        break;
-      case 'strikethrough':
-        styledText =
-            _isStrikethrough ? '<s>$selectedText</s>' : selectedText;
-        break;
-      default:
-        styledText = selectedText;
-    }
-
-    final newText = controller.text.replaceRange(
-      selection.start,
-      selection.end,
-      styledText,
-    );
-
-    controller.value = TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: selection.start + styledText.length),
-    );
-  }
-
-  /// 제목 스타일 적용
-  void _applyHeading(String heading) {
-    final controller = widget.controller;
-    final selection = controller.selection;
-
-    if (!selection.isValid) return;
-
-    // 현재 줄 찾기
-    final text = controller.text;
-    final lineStart = text.lastIndexOf('\n', selection.start - 1) + 1;
-    final lineEnd = text.indexOf('\n', selection.end);
-    final actualLineEnd = lineEnd == -1 ? text.length : lineEnd;
-
-    final lineText = text.substring(lineStart, actualLineEnd);
-    String styledText;
-
-    if (heading == 'normal') {
-      styledText = '<p>$lineText</p>';
-    } else {
-      styledText = '<$heading>$lineText</$heading>';
-    }
-
-    final newText = text.replaceRange(lineStart, actualLineEnd, styledText);
-    controller.value = TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: lineStart + styledText.length),
-    );
-  }
-
-  /// 텍스트 정렬 설정
-  void _setTextAlign(TextAlign align) {
-    setState(() {
-      _textAlign = align;
-    });
-  }
-
-  /// 리스트 삽입
-  void _insertList(String listType) {
-    final controller = widget.controller;
-    final selection = controller.selection;
-    final offset = selection.baseOffset;
-
-    final listHtml = listType == 'ul'
-        ? '<ul>\n  <li>항목 1</li>\n  <li>항목 2</li>\n</ul>'
-        : '<ol>\n  <li>항목 1</li>\n  <li>항목 2</li>\n</ol>';
-
-    final newText = controller.text.substring(0, offset) +
-        listHtml +
-        controller.text.substring(offset);
-
-    controller.value = TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: offset + listHtml.length),
-    );
-  }
-
-  /// 링크 삽입
-  void _insertLink() {
-    showDialog<Map<String, String>>(
-      context: context,
-      builder: (context) => _LinkDialog(),
-    ).then((result) {
-      if (result != null) {
-        final text = result['text'] ?? '';
-        final url = result['url'] ?? '';
-        final linkHtml = '<a href="${HtmlSanitizer.escapeHtml(url)}">$text</a>';
-
-        final controller = widget.controller;
-        final selection = controller.selection;
-        final offset = selection.baseOffset;
-
-        final newText = controller.text.substring(0, offset) +
-            linkHtml +
-            controller.text.substring(offset);
-
-        controller.value = TextEditingValue(
-          text: newText,
-          selection: TextSelection.collapsed(offset: offset + linkHtml.length),
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('이미지가 업로드되었습니다'),
+            backgroundColor: AppColors.success,
+          ),
         );
       }
-    });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('이미지 업로드 실패: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isUploadingImage = false);
+      }
+    }
   }
 
-  /// 인용 삽입
-  void _insertQuote() {
-    final controller = widget.controller;
-    final selection = controller.selection;
-    final offset = selection.baseOffset;
+  /// 이미지 압축
+  Future<List<int>> _compressImage(Uint8List bytes, String fileName) async {
+    if (kIsWeb) return bytes;
 
-    const quoteHtml = '<blockquote>인용문을 입력하세요</blockquote>';
+    final extension = fileName.split('.').last.toLowerCase();
+    if (extension == 'gif' || extension == 'svg') return bytes;
 
-    final newText = controller.text.substring(0, offset) +
-        quoteHtml +
-        controller.text.substring(offset);
+    try {
+      final compressedBytes = await FlutterImageCompress.compressWithList(
+        bytes,
+        minWidth: 1200,
+        minHeight: 1200,
+        quality: 85,
+        format: _getCompressFormat(extension),
+      );
 
-    controller.value = TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: offset + quoteHtml.length),
+      if (compressedBytes.length >= bytes.length) return bytes;
+      return compressedBytes;
+    } catch (e) {
+      debugPrint('⚠️ [RichTextEditor] 이미지 압축 실패, 원본 사용: $e');
+      return bytes;
+    }
+  }
+
+  /// 압축 포맷 결정
+  CompressFormat _getCompressFormat(String extension) {
+    switch (extension) {
+      case 'png':
+        return CompressFormat.png;
+      case 'webp':
+        return CompressFormat.webp;
+      case 'heic':
+        return CompressFormat.heic;
+      default:
+        return CompressFormat.jpeg;
+    }
+  }
+
+  /// 이미지 삽입
+  void _insertImage(String imageUrl) {
+    final index = _quillController.selection.baseOffset;
+    _quillController.document.insert(index, BlockEmbed.image(imageUrl));
+    _quillController.updateSelection(
+      TextSelection.collapsed(offset: index + 1),
+      ChangeSource.local,
     );
   }
+}
 
-  /// 구분선 삽입
-  void _insertHorizontalRule() {
-    final controller = widget.controller;
-    final selection = controller.selection;
-    final offset = selection.baseOffset;
+/// 이미지 임베드 빌더
+class _ImageEmbedBuilder extends EmbedBuilder {
+  @override
+  String get key => BlockEmbed.imageType;
 
-    const hrHtml = '<hr>';
+  @override
+  Widget build(
+    BuildContext context,
+    EmbedContext embedContext,
+  ) {
+    final imageUrl = embedContext.node.value.data;
 
-    final newText = controller.text.substring(0, offset) +
-        hrHtml +
-        controller.text.substring(offset);
-
-    controller.value = TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: offset + hrHtml.length),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
+      constraints: const BoxConstraints(maxWidth: double.infinity),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.contain,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              height: 200,
+              color: Colors.grey[200],
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              height: 100,
+              color: Colors.grey[200],
+              child: const Center(
+                child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -598,67 +572,6 @@ class _ToolbarButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// 링크 삽입 다이얼로그
-class _LinkDialog extends StatefulWidget {
-  @override
-  State<_LinkDialog> createState() => _LinkDialogState();
-}
-
-class _LinkDialogState extends State<_LinkDialog> {
-  final _textController = TextEditingController();
-  final _urlController = TextEditingController();
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    _urlController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('링크 삽입'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _textController,
-            decoration: const InputDecoration(
-              labelText: '링크 텍스트',
-              hintText: '표시할 텍스트',
-            ),
-          ),
-          const SizedBox(height: AppSizes.spaceM),
-          TextField(
-            controller: _urlController,
-            decoration: const InputDecoration(
-              labelText: 'URL',
-              hintText: 'https://example.com',
-            ),
-            keyboardType: TextInputType.url,
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
-        ),
-        FilledButton(
-          onPressed: () {
-            Navigator.pop(context, {
-              'text': _textController.text,
-              'url': _urlController.text,
-            });
-          },
-          child: const Text('삽입'),
-        ),
-      ],
     );
   }
 }

@@ -10,6 +10,7 @@ import 'package:family_planner/features/announcements/data/models/announcement_m
 import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
 import 'package:family_planner/shared/widgets/rich_text_editor.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/services/storage_service.dart';
 
 /// 공지사항 작성/수정 화면 (ADMIN 전용)
 class AnnouncementFormScreen extends ConsumerStatefulWidget {
@@ -200,6 +201,7 @@ class _AnnouncementFormScreenState
               hintText: l10n.announcement_contentHint,
               minLines: 15,
               maxLines: 30,
+              imageUploadType: EditorImageType.announcements,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return l10n.announcement_contentRequired;
@@ -209,33 +211,6 @@ class _AnnouncementFormScreenState
                 }
                 return null;
               },
-            ),
-            const SizedBox(height: AppSizes.spaceL),
-
-            // 첨부파일 안내 (향후 구현)
-            Card(
-              color: AppColors.warning.withValues(alpha: 0.05),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSizes.spaceM),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      size: AppSizes.iconSmall,
-                      color: AppColors.warning,
-                    ),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Expanded(
-                      child: Text(
-                        l10n.announcement_attachmentComingSoon,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppColors.warning,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ],
         ),

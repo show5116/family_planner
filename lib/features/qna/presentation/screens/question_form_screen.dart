@@ -9,6 +9,7 @@ import 'package:family_planner/features/qna/data/dto/qna_dto.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
 import 'package:family_planner/shared/widgets/rich_text_editor.dart';
+import 'package:family_planner/core/services/storage_service.dart';
 
 /// 질문 작성/수정 화면
 class QuestionFormScreen extends ConsumerStatefulWidget {
@@ -95,7 +96,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                 minLines: 15,
                 maxLines: 30,
                 simpleMode: true,
-                onImageAttach: _handleImageAttach,
+                imageUploadType: EditorImageType.qna,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return '내용을 입력해주세요';
@@ -308,16 +309,6 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
         }
         return null;
       },
-    );
-  }
-
-  /// 이미지 첨부 처리
-  void _handleImageAttach() {
-    // TODO: 이미지 첨부 기능 구현
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('이미지 첨부 기능은 준비 중입니다'),
-      ),
     );
   }
 

@@ -71,4 +71,7 @@ class ApiConstants {
   // Notification Endpoints
   static const String notifications = '$apiVersion/notifications';
   static const String notificationSettings = '$apiVersion/notifications/settings';
+
+  // Storage Endpoints
+  static const String editorUpload = '/storage/editor-upload';
 }
