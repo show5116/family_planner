@@ -1,17 +1,21 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
-import 'package:family_planner/features/qna/data/repositories/qna_repository.dart';
 import 'package:family_planner/features/qna/data/dto/qna_dto.dart';
+import 'package:family_planner/features/qna/services/qna_service.dart';
 
 part 'qna_provider.g.dart';
 
 /// 질문 목록 Provider (통합)
+///
+/// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+/// keepAlive: 페이징 중에는 캐시 유지
 @riverpod
 class Questions extends _$Questions {
   int _page = 1;
   bool _hasMore = true;
-  String? _filter; // 'public', 'my', 'all'
+  String? _filter;
   QuestionStatus? _statusFilter;
   QuestionCategory? _categoryFilter;
   String? _searchQuery;
@@ -26,11 +30,11 @@ class Questions extends _$Questions {
 
   /// 질문 목록 조회
   Future<List<QuestionListItem>> _fetchQuestions() async {
-    final repo = ref.read(qnaRepositoryProvider);
-    final response = await repo.getQuestions(
+    final service = ref.read(qnaServiceProvider);
+    final response = await service.getQuestions(
+      filter: _filter,
       page: _page,
       limit: 20,
-      filter: _filter,
       status: _statusFilter,
       category: _categoryFilter,
       search: _searchQuery,
@@ -91,13 +95,17 @@ class Questions extends _$Questions {
 }
 
 /// 질문 상세 Provider
+///
+/// autoDispose: 상세 화면을 벗어나면 캐시 삭제
 @riverpod
-Future<QuestionModel> questionDetail(QuestionDetailRef ref, String id) async {
-  final repo = ref.watch(qnaRepositoryProvider);
-  return await repo.getQuestionById(id);
+Future<QuestionModel> questionDetail(Ref ref, String id) async {
+  final service = ref.watch(qnaServiceProvider);
+  return await service.getQuestionById(id);
 }
 
 /// 질문 관리 Provider (작성, 수정, 삭제)
+///
+/// 상태를 저장하지 않고 단순 액션 처리용
 @riverpod
 class QuestionManagement extends _$QuestionManagement {
   @override
@@ -106,69 +114,77 @@ class QuestionManagement extends _$QuestionManagement {
   /// 질문 작성
   Future<QuestionModel> createQuestion(CreateQuestionDto dto) async {
     state = const AsyncValue.loading();
-    return await AsyncValue.guard(() async {
-      final repo = ref.read(qnaRepositoryProvider);
-      final question = await repo.createQuestion(dto);
+    try {
+      final service = ref.read(qnaServiceProvider);
+      final question = await service.createQuestion(dto);
 
-      // 내 질문 목록 새로고침
+      // 목록 캐시 무효화
       ref.invalidate(questionsProvider(filter: 'my'));
+      ref.invalidate(questionsProvider(filter: 'public'));
 
+      state = const AsyncValue.data(null);
       return question;
-    }).then((result) {
-      state = result;
-      return result.requireValue;
-    });
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
   }
 
   /// 질문 수정
   Future<QuestionModel> updateQuestion(String id, CreateQuestionDto dto) async {
     state = const AsyncValue.loading();
-    return await AsyncValue.guard(() async {
-      final repo = ref.read(qnaRepositoryProvider);
-      final question = await repo.updateQuestion(id, dto);
+    try {
+      final service = ref.read(qnaServiceProvider);
+      final question = await service.updateQuestion(id, dto);
 
-      // 관련 Provider 무효화
+      // 관련 캐시 무효화
       ref.invalidate(questionDetailProvider(id));
       ref.invalidate(questionsProvider(filter: 'my'));
+      ref.invalidate(questionsProvider(filter: 'public'));
 
+      state = const AsyncValue.data(null);
       return question;
-    }).then((result) {
-      state = result;
-      return result.requireValue;
-    });
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
   }
 
   /// 질문 삭제
   Future<void> deleteQuestion(String id) async {
     state = const AsyncValue.loading();
-    await AsyncValue.guard(() async {
-      final repo = ref.read(qnaRepositoryProvider);
-      await repo.deleteQuestion(id);
+    try {
+      final service = ref.read(qnaServiceProvider);
+      await service.deleteQuestion(id);
 
-      // 관련 Provider 무효화
+      // 관련 캐시 무효화
       ref.invalidate(questionsProvider(filter: 'my'));
       ref.invalidate(questionsProvider(filter: 'public'));
-    }).then((result) {
-      state = result;
-    });
+
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
   }
 
   /// 답변 작성 (ADMIN 전용)
   Future<AnswerModel> createAnswer(String questionId, CreateAnswerDto dto) async {
     state = const AsyncValue.loading();
-    return await AsyncValue.guard(() async {
-      final repo = ref.read(qnaRepositoryProvider);
-      final answer = await repo.createAnswer(questionId, dto);
+    try {
+      final service = ref.read(qnaServiceProvider);
+      final answer = await service.createAnswer(questionId, dto);
 
-      // 관련 Provider 무효화
+      // 관련 캐시 무효화
       ref.invalidate(questionDetailProvider(questionId));
       ref.invalidate(questionsProvider(filter: 'my'));
       ref.invalidate(questionsProvider(filter: 'public'));
 
+      state = const AsyncValue.data(null);
       return answer;
-    }).then((result) {
-      state = result;
-      return result.requireValue;
-    });
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
   }
 }

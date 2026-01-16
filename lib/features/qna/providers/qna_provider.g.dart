@@ -6,7 +6,7 @@ part of 'qna_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$questionDetailHash() => r'8643e7b0f1bc1e1dc07a1ae3619c4202879988f4';
+String _$questionDetailHash() => r'dfa4f7b899fa57794be4852aa68f3dedd9315c18';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,20 +31,28 @@ class _SystemHash {
 
 /// 질문 상세 Provider
 ///
+/// autoDispose: 상세 화면을 벗어나면 캐시 삭제
+///
 /// Copied from [questionDetail].
 @ProviderFor(questionDetail)
 const questionDetailProvider = QuestionDetailFamily();
 
 /// 질문 상세 Provider
 ///
+/// autoDispose: 상세 화면을 벗어나면 캐시 삭제
+///
 /// Copied from [questionDetail].
 class QuestionDetailFamily extends Family<AsyncValue<QuestionModel>> {
   /// 질문 상세 Provider
+  ///
+  /// autoDispose: 상세 화면을 벗어나면 캐시 삭제
   ///
   /// Copied from [questionDetail].
   const QuestionDetailFamily();
 
   /// 질문 상세 Provider
+  ///
+  /// autoDispose: 상세 화면을 벗어나면 캐시 삭제
   ///
   /// Copied from [questionDetail].
   QuestionDetailProvider call(String id) {
@@ -75,9 +83,13 @@ class QuestionDetailFamily extends Family<AsyncValue<QuestionModel>> {
 
 /// 질문 상세 Provider
 ///
+/// autoDispose: 상세 화면을 벗어나면 캐시 삭제
+///
 /// Copied from [questionDetail].
 class QuestionDetailProvider extends AutoDisposeFutureProvider<QuestionModel> {
   /// 질문 상세 Provider
+  ///
+  /// autoDispose: 상세 화면을 벗어나면 캐시 삭제
   ///
   /// Copied from [questionDetail].
   QuestionDetailProvider(String id)
@@ -159,7 +171,7 @@ class _QuestionDetailProviderElement
   String get id => (origin as QuestionDetailProvider).id;
 }
 
-String _$questionsHash() => r'd94484a45108d712d464d620d29b3bf484c63e0e';
+String _$questionsHash() => r'6c083822156afda1b759964e4c040f4632824d48';
 
 abstract class _$Questions
     extends BuildlessAutoDisposeAsyncNotifier<List<QuestionListItem>> {
@@ -170,20 +182,32 @@ abstract class _$Questions
 
 /// 질문 목록 Provider (통합)
 ///
+/// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+/// keepAlive: 페이징 중에는 캐시 유지
+///
 /// Copied from [Questions].
 @ProviderFor(Questions)
 const questionsProvider = QuestionsFamily();
 
 /// 질문 목록 Provider (통합)
 ///
+/// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+/// keepAlive: 페이징 중에는 캐시 유지
+///
 /// Copied from [Questions].
 class QuestionsFamily extends Family<AsyncValue<List<QuestionListItem>>> {
   /// 질문 목록 Provider (통합)
+  ///
+  /// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+  /// keepAlive: 페이징 중에는 캐시 유지
   ///
   /// Copied from [Questions].
   const QuestionsFamily();
 
   /// 질문 목록 Provider (통합)
+  ///
+  /// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+  /// keepAlive: 페이징 중에는 캐시 유지
   ///
   /// Copied from [Questions].
   QuestionsProvider call({String? filter}) {
@@ -212,6 +236,9 @@ class QuestionsFamily extends Family<AsyncValue<List<QuestionListItem>>> {
 
 /// 질문 목록 Provider (통합)
 ///
+/// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+/// keepAlive: 페이징 중에는 캐시 유지
+///
 /// Copied from [Questions].
 class QuestionsProvider
     extends
@@ -220,6 +247,9 @@ class QuestionsProvider
           List<QuestionListItem>
         > {
   /// 질문 목록 Provider (통합)
+  ///
+  /// autoDispose: 화면을 벗어나면 캐시 삭제 → 항상 최신 데이터 보장
+  /// keepAlive: 페이징 중에는 캐시 유지
   ///
   /// Copied from [Questions].
   QuestionsProvider({String? filter})
@@ -312,9 +342,11 @@ class _QuestionsProviderElement
 }
 
 String _$questionManagementHash() =>
-    r'43772c9b4efff89f6c0a0b6316f8bd88d58abf0d';
+    r'e616f0499592629c5928311b5780510dea83c0c8';
 
 /// 질문 관리 Provider (작성, 수정, 삭제)
+///
+/// 상태를 저장하지 않고 단순 액션 처리용
 ///
 /// Copied from [QuestionManagement].
 @ProviderFor(QuestionManagement)
