@@ -702,7 +702,7 @@ mixin _$QuestionModel {
   QuestionCategory get category => throw _privateConstructorUsedError;
   QuestionStatus get status => throw _privateConstructorUsedError;
   QuestionVisibility get visibility => throw _privateConstructorUsedError;
-  QuestionUser get user => throw _privateConstructorUsedError;
+  QuestionUser? get user => throw _privateConstructorUsedError;
   List<Attachment>? get attachments => throw _privateConstructorUsedError;
   List<AnswerModel> get answers => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -732,14 +732,14 @@ abstract class $QuestionModelCopyWith<$Res> {
     QuestionCategory category,
     QuestionStatus status,
     QuestionVisibility visibility,
-    QuestionUser user,
+    QuestionUser? user,
     List<Attachment>? attachments,
     List<AnswerModel> answers,
     DateTime createdAt,
     DateTime updatedAt,
   });
 
-  $QuestionUserCopyWith<$Res> get user;
+  $QuestionUserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -763,7 +763,7 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
     Object? category = null,
     Object? status = null,
     Object? visibility = null,
-    Object? user = null,
+    Object? user = freezed,
     Object? attachments = freezed,
     Object? answers = null,
     Object? createdAt = null,
@@ -795,10 +795,10 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
                 ? _value.visibility
                 : visibility // ignore: cast_nullable_to_non_nullable
                       as QuestionVisibility,
-            user: null == user
+            user: freezed == user
                 ? _value.user
                 : user // ignore: cast_nullable_to_non_nullable
-                      as QuestionUser,
+                      as QuestionUser?,
             attachments: freezed == attachments
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
@@ -824,8 +824,12 @@ class _$QuestionModelCopyWithImpl<$Res, $Val extends QuestionModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $QuestionUserCopyWith<$Res> get user {
-    return $QuestionUserCopyWith<$Res>(_value.user, (value) {
+  $QuestionUserCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $QuestionUserCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -847,7 +851,7 @@ abstract class _$$QuestionModelImplCopyWith<$Res>
     QuestionCategory category,
     QuestionStatus status,
     QuestionVisibility visibility,
-    QuestionUser user,
+    QuestionUser? user,
     List<Attachment>? attachments,
     List<AnswerModel> answers,
     DateTime createdAt,
@@ -855,7 +859,7 @@ abstract class _$$QuestionModelImplCopyWith<$Res>
   });
 
   @override
-  $QuestionUserCopyWith<$Res> get user;
+  $QuestionUserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -878,7 +882,7 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
     Object? category = null,
     Object? status = null,
     Object? visibility = null,
-    Object? user = null,
+    Object? user = freezed,
     Object? attachments = freezed,
     Object? answers = null,
     Object? createdAt = null,
@@ -910,10 +914,10 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
             ? _value.visibility
             : visibility // ignore: cast_nullable_to_non_nullable
                   as QuestionVisibility,
-        user: null == user
+        user: freezed == user
             ? _value.user
             : user // ignore: cast_nullable_to_non_nullable
-                  as QuestionUser,
+                  as QuestionUser?,
         attachments: freezed == attachments
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
@@ -945,7 +949,7 @@ class _$QuestionModelImpl implements _QuestionModel {
     required this.category,
     required this.status,
     required this.visibility,
-    required this.user,
+    this.user,
     final List<Attachment>? attachments,
     final List<AnswerModel> answers = const [],
     required this.createdAt,
@@ -969,7 +973,7 @@ class _$QuestionModelImpl implements _QuestionModel {
   @override
   final QuestionVisibility visibility;
   @override
-  final QuestionUser user;
+  final QuestionUser? user;
   final List<Attachment>? _attachments;
   @override
   List<Attachment>? get attachments {
@@ -1063,7 +1067,7 @@ abstract class _QuestionModel implements QuestionModel {
     required final QuestionCategory category,
     required final QuestionStatus status,
     required final QuestionVisibility visibility,
-    required final QuestionUser user,
+    final QuestionUser? user,
     final List<Attachment>? attachments,
     final List<AnswerModel> answers,
     required final DateTime createdAt,
@@ -1086,7 +1090,7 @@ abstract class _QuestionModel implements QuestionModel {
   @override
   QuestionVisibility get visibility;
   @override
-  QuestionUser get user;
+  QuestionUser? get user;
   @override
   List<Attachment>? get attachments;
   @override
@@ -1117,7 +1121,7 @@ mixin _$QuestionListItem {
   QuestionStatus get status => throw _privateConstructorUsedError;
   QuestionVisibility get visibility => throw _privateConstructorUsedError;
   int get answerCount => throw _privateConstructorUsedError;
-  QuestionUser get user => throw _privateConstructorUsedError;
+  QuestionUser? get user => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
@@ -1146,12 +1150,12 @@ abstract class $QuestionListItemCopyWith<$Res> {
     QuestionStatus status,
     QuestionVisibility visibility,
     int answerCount,
-    QuestionUser user,
+    QuestionUser? user,
     DateTime createdAt,
     DateTime updatedAt,
   });
 
-  $QuestionUserCopyWith<$Res> get user;
+  $QuestionUserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -1176,7 +1180,7 @@ class _$QuestionListItemCopyWithImpl<$Res, $Val extends QuestionListItem>
     Object? status = null,
     Object? visibility = null,
     Object? answerCount = null,
-    Object? user = null,
+    Object? user = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -1210,10 +1214,10 @@ class _$QuestionListItemCopyWithImpl<$Res, $Val extends QuestionListItem>
                 ? _value.answerCount
                 : answerCount // ignore: cast_nullable_to_non_nullable
                       as int,
-            user: null == user
+            user: freezed == user
                 ? _value.user
                 : user // ignore: cast_nullable_to_non_nullable
-                      as QuestionUser,
+                      as QuestionUser?,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -1231,8 +1235,12 @@ class _$QuestionListItemCopyWithImpl<$Res, $Val extends QuestionListItem>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $QuestionUserCopyWith<$Res> get user {
-    return $QuestionUserCopyWith<$Res>(_value.user, (value) {
+  $QuestionUserCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $QuestionUserCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -1255,13 +1263,13 @@ abstract class _$$QuestionListItemImplCopyWith<$Res>
     QuestionStatus status,
     QuestionVisibility visibility,
     int answerCount,
-    QuestionUser user,
+    QuestionUser? user,
     DateTime createdAt,
     DateTime updatedAt,
   });
 
   @override
-  $QuestionUserCopyWith<$Res> get user;
+  $QuestionUserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -1285,7 +1293,7 @@ class __$$QuestionListItemImplCopyWithImpl<$Res>
     Object? status = null,
     Object? visibility = null,
     Object? answerCount = null,
-    Object? user = null,
+    Object? user = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -1319,10 +1327,10 @@ class __$$QuestionListItemImplCopyWithImpl<$Res>
             ? _value.answerCount
             : answerCount // ignore: cast_nullable_to_non_nullable
                   as int,
-        user: null == user
+        user: freezed == user
             ? _value.user
             : user // ignore: cast_nullable_to_non_nullable
-                  as QuestionUser,
+                  as QuestionUser?,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -1347,7 +1355,7 @@ class _$QuestionListItemImpl implements _QuestionListItem {
     required this.status,
     required this.visibility,
     required this.answerCount,
-    required this.user,
+    this.user,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -1370,7 +1378,7 @@ class _$QuestionListItemImpl implements _QuestionListItem {
   @override
   final int answerCount;
   @override
-  final QuestionUser user;
+  final QuestionUser? user;
   @override
   final DateTime createdAt;
   @override
@@ -1445,7 +1453,7 @@ abstract class _QuestionListItem implements QuestionListItem {
     required final QuestionStatus status,
     required final QuestionVisibility visibility,
     required final int answerCount,
-    required final QuestionUser user,
+    final QuestionUser? user,
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$QuestionListItemImpl;
@@ -1468,7 +1476,7 @@ abstract class _QuestionListItem implements QuestionListItem {
   @override
   int get answerCount;
   @override
-  QuestionUser get user;
+  QuestionUser? get user;
   @override
   DateTime get createdAt;
   @override

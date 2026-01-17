@@ -87,7 +87,7 @@ class QuestionModel with _$QuestionModel {
     required QuestionCategory category,
     required QuestionStatus status,
     required QuestionVisibility visibility,
-    required QuestionUser user,
+    QuestionUser? user,
     List<Attachment>? attachments,
     @Default([]) List<AnswerModel> answers,
     required DateTime createdAt,
@@ -109,7 +109,7 @@ class QuestionListItem with _$QuestionListItem {
     required QuestionStatus status,
     required QuestionVisibility visibility,
     required int answerCount,
-    required QuestionUser user,
+    QuestionUser? user,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _QuestionListItem;

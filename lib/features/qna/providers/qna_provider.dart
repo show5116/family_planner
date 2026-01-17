@@ -109,82 +109,55 @@ Future<QuestionModel> questionDetail(Ref ref, String id) async {
 @riverpod
 class QuestionManagement extends _$QuestionManagement {
   @override
-  FutureOr<void> build() {}
+  FutureOr<void> build() {
+    return null;
+  }
 
   /// 질문 작성
   Future<QuestionModel> createQuestion(CreateQuestionDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final service = ref.read(qnaServiceProvider);
-      final question = await service.createQuestion(dto);
+    final service = ref.read(qnaServiceProvider);
+    final question = await service.createQuestion(dto);
 
-      // 목록 캐시 무효화
-      ref.invalidate(questionsProvider(filter: 'my'));
-      ref.invalidate(questionsProvider(filter: 'public'));
+    // 목록 캐시 무효화
+    ref.invalidate(questionsProvider(filter: 'my'));
+    ref.invalidate(questionsProvider(filter: 'public'));
 
-      state = const AsyncValue.data(null);
-      return question;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+    return question;
   }
 
   /// 질문 수정
   Future<QuestionModel> updateQuestion(String id, CreateQuestionDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final service = ref.read(qnaServiceProvider);
-      final question = await service.updateQuestion(id, dto);
+    final service = ref.read(qnaServiceProvider);
+    final question = await service.updateQuestion(id, dto);
 
-      // 관련 캐시 무효화
-      ref.invalidate(questionDetailProvider(id));
-      ref.invalidate(questionsProvider(filter: 'my'));
-      ref.invalidate(questionsProvider(filter: 'public'));
+    // 관련 캐시 무효화
+    ref.invalidate(questionDetailProvider(id));
+    ref.invalidate(questionsProvider(filter: 'my'));
+    ref.invalidate(questionsProvider(filter: 'public'));
 
-      state = const AsyncValue.data(null);
-      return question;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+    return question;
   }
 
   /// 질문 삭제
   Future<void> deleteQuestion(String id) async {
-    state = const AsyncValue.loading();
-    try {
-      final service = ref.read(qnaServiceProvider);
-      await service.deleteQuestion(id);
+    final service = ref.read(qnaServiceProvider);
+    await service.deleteQuestion(id);
 
-      // 관련 캐시 무효화
-      ref.invalidate(questionsProvider(filter: 'my'));
-      ref.invalidate(questionsProvider(filter: 'public'));
-
-      state = const AsyncValue.data(null);
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+    // 관련 캐시 무효화
+    ref.invalidate(questionsProvider(filter: 'my'));
+    ref.invalidate(questionsProvider(filter: 'public'));
   }
 
   /// 답변 작성 (ADMIN 전용)
   Future<AnswerModel> createAnswer(String questionId, CreateAnswerDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final service = ref.read(qnaServiceProvider);
-      final answer = await service.createAnswer(questionId, dto);
+    final service = ref.read(qnaServiceProvider);
+    final answer = await service.createAnswer(questionId, dto);
 
-      // 관련 캐시 무효화
-      ref.invalidate(questionDetailProvider(questionId));
-      ref.invalidate(questionsProvider(filter: 'my'));
-      ref.invalidate(questionsProvider(filter: 'public'));
+    // 관련 캐시 무효화
+    ref.invalidate(questionDetailProvider(questionId));
+    ref.invalidate(questionsProvider(filter: 'my'));
+    ref.invalidate(questionsProvider(filter: 'public'));
 
-      state = const AsyncValue.data(null);
-      return answer;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+    return answer;
   }
 }

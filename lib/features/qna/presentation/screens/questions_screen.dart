@@ -9,6 +9,7 @@ import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
+import 'package:family_planner/shared/widgets/editor/utils/html_utils.dart';
 
 /// Q&A 목록 화면 (통합)
 class QuestionsScreen extends ConsumerStatefulWidget {
@@ -538,7 +539,7 @@ class _QuestionCard extends ConsumerWidget {
 
               // 내용 미리보기
               Text(
-                question.content,
+                stripHtmlTags(question.content),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -557,7 +558,7 @@ class _QuestionCard extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    question.user.name,
+                    question.user?.name ?? '익명',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.textSecondary,
                         ),

@@ -92,7 +92,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
               RichTextEditor(
                 controller: _contentController,
                 labelText: '내용',
-                hintText: '질문 내용을 자세히 작성해주세요.\n스크린샷이 있으면 더 빠른 답변이 가능합니다.',
+                hintText: '질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.',
                 minLines: 15,
                 maxLines: 30,
                 simpleMode: true,

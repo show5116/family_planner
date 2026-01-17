@@ -149,6 +149,13 @@ class _RichTextEditorState extends State<RichTextEditor>
       _quillController = QuillController.basic();
     }
 
+    // 리스너 등록 전 초기 동기화 시도 (에러 무시)
+    try {
+      _getHtml();
+    } catch (e) {
+      debugPrint('⚠️ [RichTextEditor] 초기 HTML 변환 실패 (무시됨): $e');
+    }
+
     _quillController.addListener(_syncToTextController);
   }
 
@@ -190,16 +197,29 @@ class _RichTextEditorState extends State<RichTextEditor>
 
   /// Delta를 HTML로 변환
   String _getHtml() {
-    final delta = _quillController.document.toDelta();
-    final converter = QuillDeltaToHtmlConverter(
-      delta.toJson(),
-      ConverterOptions(
-        converterOptions: OpConverterOptions(
-          inlineStylesFlag: true,
+    try {
+      // 빈 문서인 경우 빈 문자열 반환
+      final plainText = _quillController.document.toPlainText();
+      if (plainText.trim().isEmpty) {
+        return '';
+      }
+
+      final delta = _quillController.document.toDelta();
+      final deltaJson = delta.toJson();
+      final converter = QuillDeltaToHtmlConverter(
+        deltaJson,
+        ConverterOptions(
+          converterOptions: OpConverterOptions(
+            inlineStylesFlag: true,
+          ),
         ),
-      ),
-    );
-    return converter.convert();
+      );
+      return converter.convert();
+    } catch (e) {
+      debugPrint('⚠️ [RichTextEditor] Delta to HTML 변환 실패: $e');
+      // 변환 실패 시 plain text 반환
+      return _quillController.document.toPlainText();
+    }
   }
 
   /// 일반 텍스트 가져오기 (유효성 검사용)
@@ -310,7 +330,8 @@ class _RichTextEditorState extends State<RichTextEditor>
               autoFocus: false,
               expands: false,
               padding: const EdgeInsets.all(AppSizes.spaceM),
-              placeholder: widget.hintText,
+              // flutter_quill 버그: placeholder에 줄바꿈이 있으면 JSON 파싱 에러 발생
+              placeholder: widget.hintText.replaceAll('\n', ' '),
               readOnlyMouseCursor: SystemMouseCursors.text,
               scrollable: false,
               enableInteractiveSelection: true,

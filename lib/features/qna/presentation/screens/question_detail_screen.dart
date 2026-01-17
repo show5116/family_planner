@@ -33,7 +33,7 @@ class QuestionDetailScreen extends ConsumerWidget {
           questionAsync.when(
             data: (question) {
               // 본인 질문인 경우에만 메뉴 표시
-              if (currentUserId == question.user.id) {
+              if (currentUserId == question.user?.id) {
                 return PopupMenuButton<String>(
                   onSelected: (value) async {
                     if (value == 'edit') {
@@ -258,7 +258,7 @@ class QuestionDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(width: AppSizes.spaceXS),
             Text(
-              question.user.name,
+              question.user?.name ?? '익명',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),

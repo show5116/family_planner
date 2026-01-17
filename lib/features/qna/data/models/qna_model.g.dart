@@ -58,7 +58,9 @@ _$QuestionModelImpl _$$QuestionModelImplFromJson(Map<String, dynamic> json) =>
       category: $enumDecode(_$QuestionCategoryEnumMap, json['category']),
       status: $enumDecode(_$QuestionStatusEnumMap, json['status']),
       visibility: $enumDecode(_$QuestionVisibilityEnumMap, json['visibility']),
-      user: QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -115,7 +117,9 @@ _$QuestionListItemImpl _$$QuestionListItemImplFromJson(
   status: $enumDecode(_$QuestionStatusEnumMap, json['status']),
   visibility: $enumDecode(_$QuestionVisibilityEnumMap, json['visibility']),
   answerCount: (json['answerCount'] as num).toInt(),
-  user: QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
+  user: json['user'] == null
+      ? null
+      : QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: DateTime.parse(json['updatedAt'] as String),
 );
