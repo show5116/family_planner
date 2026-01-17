@@ -32,7 +32,7 @@ class MemberCard extends StatelessWidget {
 
     final String roleName = GroupUtils.getRoleName(l10n, member.role?.name ?? 'MEMBER');
     final bool isOwner = member.role?.name == 'OWNER';
-    final bool isCurrentUser = member.user?.id?.toString() == currentUserId;
+    final bool isCurrentUser = member.user?.id == currentUserId;
 
     // Group의 myRole을 사용하여 MANAGE_MEMBER 권한이 있고, 본인이 아니고, OWNER가 아닌 경우에만 메뉴 표시
     final bool canManage = group.hasPermission('MANAGE_MEMBER')

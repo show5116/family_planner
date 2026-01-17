@@ -113,8 +113,8 @@ class _MembersTabState extends ConsumerState<MembersTab> {
         // 본인을 최상단으로 정렬
         final sortedMembers = List<GroupMember>.from(members);
         sortedMembers.sort((a, b) {
-          final aIsCurrentUser = a.user?.id?.toString() == currentUserId;
-          final bIsCurrentUser = b.user?.id?.toString() == currentUserId;
+          final aIsCurrentUser = a.user?.id == currentUserId;
+          final bIsCurrentUser = b.user?.id == currentUserId;
           if (aIsCurrentUser && !bIsCurrentUser) return -1;
           if (!aIsCurrentUser && bIsCurrentUser) return 1;
           return 0;

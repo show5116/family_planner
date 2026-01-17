@@ -102,7 +102,9 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   flutter_image_compress: ^2.4.0
   flutter_quill: ^11.5.0
+  flutter_quill_delta_from_html: ^1.4.1
   vsc_quill_delta_to_html: ^1.0.5
+  http_parser: ^4.1.2
 
 dev_dependencies:
   flutter_test:
