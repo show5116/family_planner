@@ -10,6 +10,7 @@ import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
 import 'package:family_planner/shared/widgets/editor/utils/html_utils.dart';
+import 'package:family_planner/core/utils/user_utils.dart';
 
 /// Q&A 목록 화면 (통합)
 class QuestionsScreen extends ConsumerStatefulWidget {
@@ -47,7 +48,14 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
     super.dispose();
   }
 
-  String get _currentFilter => _showMyQuestionsOnly ? 'my' : 'public';
+  /// 공개 질문 필터 (admin은 all, 일반 사용자는 public)
+  String get _publicFilter {
+    final isAdmin = ref.read(isAdminProvider);
+    return isAdmin ? 'all' : 'public';
+  }
+
+  /// 현재 선택된 필터
+  String get _currentFilter => _showMyQuestionsOnly ? 'my' : _publicFilter;
 
   void _onTabChanged() {
     final status = _getStatusFromTab(_tabController.index);
@@ -55,14 +63,14 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
       _selectedStatus = status;
     });
     ref
-        .read(questionsProvider(filter: 'public').notifier)
+        .read(questionsProvider(filter: _publicFilter).notifier)
         .setStatusFilter(status);
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
-      ref.read(questionsProvider(filter: 'public').notifier).loadMore();
+      ref.read(questionsProvider(filter: _publicFilter).notifier).loadMore();
     }
   }
 
@@ -82,7 +90,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
   @override
   Widget build(BuildContext context) {
     // 단일 Provider 인스턴스 사용 (filter는 초기값)
-    final questionsAsync = ref.watch(questionsProvider(filter: 'public'));
+    final questionsAsync = ref.watch(questionsProvider(filter: _publicFilter));
 
     return Scaffold(
       appBar: AppBar(
@@ -119,7 +127,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
                   });
                   // 토글 시 filter만 변경 (같은 Provider 인스턴스 유지)
                   ref
-                      .read(questionsProvider(filter: 'public').notifier)
+                      .read(questionsProvider(filter: _publicFilter).notifier)
                       .setFilter(_currentFilter);
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -135,7 +143,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
                 _selectedCategory = category;
               });
               ref
-                  .read(questionsProvider(filter: 'public').notifier)
+                  .read(questionsProvider(filter: _publicFilter).notifier)
                   .setCategoryFilter(category);
             },
             itemBuilder: (context) => [
@@ -209,7 +217,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
                         _searchController.clear();
                       });
                       ref
-                          .read(questionsProvider(filter: 'public').notifier)
+                          .read(questionsProvider(filter: _publicFilter).notifier)
                           .setSearchQuery(null);
                     },
                   ),
@@ -228,7 +236,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
                 return RefreshIndicator(
                   onRefresh: () async {
                     await ref
-                        .read(questionsProvider(filter: 'public').notifier)
+                        .read(questionsProvider(filter: _publicFilter).notifier)
                         .refresh();
                   },
                   child: ListView.separated(
@@ -306,7 +314,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
       _searchQuery = query.trim();
     });
     ref
-        .read(questionsProvider(filter: 'public').notifier)
+        .read(questionsProvider(filter: _publicFilter).notifier)
         .setSearchQuery(query.trim());
   }
 
@@ -374,7 +382,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
           const SizedBox(height: AppSizes.spaceL),
           ElevatedButton.icon(
             onPressed: () {
-              ref.invalidate(questionsProvider(filter: 'public'));
+              ref.invalidate(questionsProvider(filter: _publicFilter));
             },
             icon: const Icon(Icons.refresh),
             label: const Text('다시 시도'),

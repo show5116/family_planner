@@ -7,12 +7,16 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
+import 'package:family_planner/features/qna/data/dto/qna_dto.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
 import 'package:family_planner/shared/widgets/rich_text_viewer.dart';
+import 'package:family_planner/shared/widgets/rich_text_editor.dart';
+import 'package:family_planner/core/services/storage_service.dart';
+import 'package:family_planner/core/utils/user_utils.dart';
 
 /// 질문 상세 화면
-class QuestionDetailScreen extends ConsumerWidget {
+class QuestionDetailScreen extends ConsumerStatefulWidget {
   final String questionId;
 
   const QuestionDetailScreen({
@@ -21,10 +25,26 @@ class QuestionDetailScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final questionAsync = ref.watch(questionDetailProvider(questionId));
+  ConsumerState<QuestionDetailScreen> createState() =>
+      _QuestionDetailScreenState();
+}
+
+class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
+  final _answerController = TextEditingController();
+  bool _isSubmittingAnswer = false;
+
+  @override
+  void dispose() {
+    _answerController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final questionAsync = ref.watch(questionDetailProvider(widget.questionId));
     final authState = ref.watch(authProvider);
     final currentUserId = authState.user?['id'] as String?;
+    final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,7 +71,7 @@ class QuestionDetailScreen extends ConsumerWidget {
                         );
                       }
                     } else if (value == 'delete') {
-                      _showDeleteConfirmDialog(context, ref, questionId);
+                      _showDeleteConfirmDialog(context, widget.questionId);
                     }
                   },
                   itemBuilder: (context) => [
@@ -167,6 +187,14 @@ class QuestionDetailScreen extends ConsumerWidget {
                   ...question.answers.map((answer) {
                     return _buildAnswerCard(context, answer);
                   }),
+                ],
+
+                // 운영자 답변 작성 섹션
+                if (isAdmin) ...[
+                  const SizedBox(height: AppSizes.spaceXL),
+                  const Divider(),
+                  const SizedBox(height: AppSizes.spaceL),
+                  _buildAnswerForm(context, question),
                 ],
               ],
             ),
@@ -414,12 +442,139 @@ class QuestionDetailScreen extends ConsumerWidget {
     );
   }
 
+  /// 운영자 답변 작성 폼
+  Widget _buildAnswerForm(BuildContext context, QuestionModel question) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceL),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceS,
+                    vertical: AppSizes.spaceXS,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                  ),
+                  child: Text(
+                    'ADMIN',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const SizedBox(width: AppSizes.spaceS),
+                Text(
+                  '답변 작성',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.spaceL),
+
+            // 답변 에디터
+            RichTextEditor(
+              controller: _answerController,
+              labelText: '',
+              hintText: '답변 내용을 입력하세요',
+              minLines: 8,
+              simpleMode: true,
+              imageUploadType: EditorImageType.qna,
+            ),
+            const SizedBox(height: AppSizes.spaceL),
+
+            // 제출 버튼
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _isSubmittingAnswer ? null : () => _submitAnswer(question.id),
+                icon: _isSubmittingAnswer
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.send),
+                label: Text(_isSubmittingAnswer ? '답변 등록 중...' : '답변 등록'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 답변 제출
+  Future<void> _submitAnswer(String questionId) async {
+    final content = _answerController.text.trim();
+    if (content.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('답변 내용을 입력해주세요'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSubmittingAnswer = true;
+    });
+
+    try {
+      final dto = CreateAnswerDto(content: content);
+      await ref.read(questionManagementProvider.notifier).createAnswer(questionId, dto);
+
+      if (mounted) {
+        _answerController.clear();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('답변이 등록되었습니다'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        // 상세 정보 새로고침
+        ref.invalidate(questionDetailProvider(questionId));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('답변 등록 실패: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmittingAnswer = false;
+        });
+      }
+    }
+  }
+
   /// 삭제 확인 다이얼로그
-  void _showDeleteConfirmDialog(
-    BuildContext context,
-    WidgetRef ref,
-    String questionId,
-  ) {
+  void _showDeleteConfirmDialog(BuildContext context, String questionId) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(

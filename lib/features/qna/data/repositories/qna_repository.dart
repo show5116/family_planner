@@ -117,7 +117,7 @@ class QnaRepository {
       debugPrint('🔵 [QnaRepository] 답변 작성: $questionId');
 
       final response = await _dio.post(
-        '/qna/questions/$questionId/answers',
+        '/qna/admin/questions/$questionId/answers',
         data: dto.toJson(),
       );
 
