@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 
 /// 읽지 않은 알림 위젯 (홈 화면용)
@@ -113,35 +114,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
   /// 데이터에 따라 상세 화면으로 이동
   void _navigateToDetail(BuildContext context, NotificationModel notification) {
-    final data = notification.data;
-    if (data == null) return;
-
-    // 카테고리별 화면 이동
-    switch (notification.category) {
-      case NotificationCategory.schedule:
-        if (data['scheduleId'] != null) {
-          context.push('${AppRoutes.calendarDetail}?id=${data['scheduleId']}');
-        }
-        break;
-      case NotificationCategory.todo:
-        if (data['todoId'] != null) {
-          context.push('${AppRoutes.todoDetail}?id=${data['todoId']}');
-        }
-        break;
-      case NotificationCategory.household:
-        if (data['householdId'] != null) {
-          context.push('${AppRoutes.householdDetail}?id=${data['householdId']}');
-        }
-        break;
-      case NotificationCategory.group:
-        if (data['groupId'] != null) {
-          context.push(AppRoutes.groupDetail.replaceFirst(':id', data['groupId'] as String));
-        }
-        break;
-      default:
-        // 기본적으로 알림 히스토리 화면으로 이동
-        context.push(AppRoutes.notificationHistory);
-    }
+    NotificationNavigationService.navigateToDetail(context, notification);
   }
 
   /// 빈 상태 위젯

@@ -28,6 +28,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash, // 스플래시 화면을 기본 위치로 설정
     debugLogDiagnostics: true,
     refreshListenable: notifier,
+    navigatorKey: AppRouter.navigatorKey,
 
     redirect: (context, state) => handleRouterRedirect(context, state, ref),
 
@@ -84,6 +85,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 /// 레거시 지원을 위한 AppRouter 클래스
 class AppRouter {
   AppRouter._();
+
+  /// 전역 Navigator Key (푸시 알림 등에서 context 없이 라우팅할 때 사용)
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   /// GoRouter Provider를 통해 router에 접근
   /// 더 이상 사용되지 않음 - goRouterProvider를 직접 사용하세요

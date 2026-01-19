@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/notification/data/models/notification_model.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
 import 'package:family_planner/features/notification/providers/notification_history_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_history_item.dart';
 
@@ -69,13 +71,18 @@ class _NotificationHistoryScreenState
   }
 
   /// 알림 탭
-  Future<void> _onTap(String notificationId) async {
+  Future<void> _onTap(NotificationModel notification) async {
     try {
       final repository = ref.read(notificationRepositoryProvider);
-      await repository.markAsRead(notificationId);
+      await repository.markAsRead(notification.id);
 
       // Provider 새로고침
       ref.invalidate(notificationHistoryProvider);
+
+      // 해당 화면으로 이동
+      if (mounted) {
+        NotificationNavigationService.navigateToDetail(context, notification);
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -125,7 +132,7 @@ class _NotificationHistoryScreenState
                 final notification = notifications[index];
                 return NotificationHistoryItem(
                   notification: notification,
-                  onTap: () => _onTap(notification.id),
+                  onTap: () => _onTap(notification),
                   onDelete: () => _onDelete(notification.id),
                 );
               },

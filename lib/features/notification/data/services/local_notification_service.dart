@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'package:family_planner/core/routes/app_router.dart';
+import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
 
 /// 로컬 알림 서비스
 class LocalNotificationService {
@@ -104,23 +108,26 @@ class LocalNotificationService {
 
   /// 알림 데이터에 따라 화면 이동
   static void _navigateToScreen(Map<String, dynamic> data) {
-    // TODO: GoRouter를 사용하여 화면 이동 구현
-    final type = data['type'] as String?;
-    final id = data['id'] as String?;
+    debugPrint('화면 이동 데이터: $data');
 
-    debugPrint('화면 이동: type=$type, id=$id');
+    // GoRouter의 navigatorKey를 통해 context 획득
+    final context = AppRouter.navigatorKey.currentContext;
+    if (context == null) {
+      debugPrint('화면 이동 실패: context가 null입니다');
+      return;
+    }
 
-    // 예시:
-    // final router = ref.read(goRouterProvider);
-    // switch (type) {
-    //   case 'schedule':
-    //     router.go('/schedule/$id');
-    //     break;
-    //   case 'todo':
-    //     router.go('/todo/$id');
-    //     break;
-    //   // ...
-    // }
+    // 카테고리 정보로 화면 이동
+    final category = data['category'] as String?;
+    final navigated = NotificationNavigationService.navigateByData(
+      context,
+      category,
+      data,
+    );
+
+    if (!navigated) {
+      debugPrint('화면 이동 실패: 유효하지 않은 데이터');
+    }
   }
 
   /// 모든 알림 취소
