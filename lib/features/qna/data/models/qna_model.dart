@@ -25,6 +25,8 @@ enum QuestionStatus {
   pending, // 대기 중 (답변 대기)
   @JsonValue('ANSWERED')
   answered, // 답변 완료
+  @JsonValue('RESOLVED')
+  resolved, // 해결 완료
 }
 
 /// 질문 공개 여부

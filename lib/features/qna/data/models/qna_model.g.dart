@@ -100,6 +100,7 @@ const _$QuestionCategoryEnumMap = {
 const _$QuestionStatusEnumMap = {
   QuestionStatus.pending: 'PENDING',
   QuestionStatus.answered: 'ANSWERED',
+  QuestionStatus.resolved: 'RESOLVED',
 };
 
 const _$QuestionVisibilityEnumMap = {

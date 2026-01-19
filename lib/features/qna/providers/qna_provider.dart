@@ -146,6 +146,19 @@ class QuestionManagement extends _$QuestionManagement {
     // 관련 캐시 무효화
     ref.invalidate(questionsProvider(filter: 'my'));
     ref.invalidate(questionsProvider(filter: 'public'));
+    ref.invalidate(questionsProvider(filter: 'all'));
+  }
+
+  /// 질문 해결완료 처리
+  Future<void> resolveQuestion(String id) async {
+    final service = ref.read(qnaServiceProvider);
+    await service.resolveQuestion(id);
+
+    // 관련 캐시 무효화
+    ref.invalidate(questionDetailProvider(id));
+    ref.invalidate(questionsProvider(filter: 'my'));
+    ref.invalidate(questionsProvider(filter: 'public'));
+    ref.invalidate(questionsProvider(filter: 'all'));
   }
 
   /// 답변 작성 (ADMIN 전용)

@@ -101,6 +101,15 @@ class QnaService {
     debugPrint('✅ [QnaService] 질문 삭제 완료');
   }
 
+  /// 질문 해결완료 처리
+  Future<void> resolveQuestion(String id) async {
+    debugPrint('🔵 [QnaService] 질문 해결완료 - id: $id');
+
+    await _repository.resolveQuestion(id);
+
+    debugPrint('✅ [QnaService] 질문 해결완료 완료');
+  }
+
   /// 답변 작성 (ADMIN 전용)
   Future<AnswerModel> createAnswer(String questionId, CreateAnswerDto dto) async {
     debugPrint('🔵 [QnaService] 답변 작성 - questionId: $questionId');

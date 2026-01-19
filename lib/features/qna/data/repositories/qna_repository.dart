@@ -111,6 +111,20 @@ class QnaRepository {
     }
   }
 
+  /// 질문 해결완료 처리 (본인만)
+  Future<void> resolveQuestion(String id) async {
+    try {
+      debugPrint('🔵 [QnaRepository] 질문 해결완료: $id');
+
+      await _dio.post('/qna/questions/$id/resolve');
+
+      debugPrint('✅ [QnaRepository] 질문 해결완료 성공');
+    } on DioException catch (e) {
+      debugPrint('❌ [QnaRepository] 질문 해결완료 실패: ${e.message}');
+      throw Exception('해결완료 처리 실패: ${e.message}');
+    }
+  }
+
   /// 답변 작성 (ADMIN 전용)
   Future<AnswerModel> createAnswer(String questionId, CreateAnswerDto dto) async {
     try {

@@ -53,6 +53,48 @@ class RichTextViewer extends StatelessWidget {
           }
         }
       },
+      sizedImageBuilder: (config) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Image.network(
+            config.uri.toString(),
+            width: config.width,
+            height: config.height,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.broken_image, color: Colors.grey),
+                    SizedBox(width: 8),
+                    Text('이미지를 불러올 수 없습니다'),
+                  ],
+                ),
+              );
+            },
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                padding: const EdgeInsets.all(16),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
       shrinkWrap: true,
       selectable: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -129,6 +171,18 @@ class RichTextViewer extends StatelessWidget {
     markdown = markdown.replaceAllMapped(
       RegExp(r'''<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)</a>''', dotAll: true),
       (match) => '[${match.group(2)}](${match.group(1)})',
+    );
+
+    // 이미지
+    markdown = markdown.replaceAllMapped(
+      RegExp(r'''<img[^>]*src=["']([^"']*)["'][^>]*>''', dotAll: true),
+      (match) {
+        final src = match.group(1) ?? '';
+        // alt 속성 추출 시도
+        final altMatch = RegExp(r'''alt=["']([^"']*)["']''').firstMatch(match.group(0) ?? '');
+        final alt = altMatch?.group(1) ?? '';
+        return '![$alt]($src)\n\n';
+      },
     );
 
     // 순서 없는 리스트

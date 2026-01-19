@@ -57,25 +57,28 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                 return PopupMenuButton<String>(
                   onSelected: (value) async {
                     if (value == 'edit') {
-                      // 수정 (PENDING 상태만 가능)
-                      if (question.status == QuestionStatus.pending) {
+                      // 수정 (RESOLVED 상태는 불가)
+                      if (question.status == QuestionStatus.resolved) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('해결 완료된 질문은 수정할 수 없습니다'),
+                          ),
+                        );
+                      } else {
                         context.push(
                           '/qna/${question.id}/edit',
                           extra: question,
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('답변 완료 후에는 수정할 수 없습니다'),
-                          ),
-                        );
                       }
+                    } else if (value == 'resolve') {
+                      _showResolveConfirmDialog(context, question.id);
                     } else if (value == 'delete') {
                       _showDeleteConfirmDialog(context, widget.questionId);
                     }
                   },
                   itemBuilder: (context) => [
-                    if (question.status == QuestionStatus.pending)
+                    // 수정 (RESOLVED 상태가 아닐 때만)
+                    if (question.status != QuestionStatus.resolved)
                       const PopupMenuItem(
                         value: 'edit',
                         child: Row(
@@ -83,6 +86,20 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                             Icon(Icons.edit, size: AppSizes.iconSmall),
                             SizedBox(width: AppSizes.spaceS),
                             Text('수정'),
+                          ],
+                        ),
+                      ),
+                    // 해결완료 (ANSWERED 상태일 때만)
+                    if (question.status == QuestionStatus.answered)
+                      const PopupMenuItem(
+                        value: 'resolve',
+                        child: Row(
+                          children: [
+                            Icon(Icons.check_circle,
+                                size: AppSizes.iconSmall, color: AppColors.success),
+                            SizedBox(width: AppSizes.spaceS),
+                            Text('해결완료',
+                                style: TextStyle(color: AppColors.success)),
                           ],
                         ),
                       ),
@@ -351,9 +368,16 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
   Widget _buildAnswerCard(BuildContext context, AnswerModel answer) {
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH:mm');
 
-    return Card(
-      color: AppColors.primary.withValues(alpha: 0.03),
+    return Container(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.spaceL),
         child: Column(
@@ -571,6 +595,54 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
         });
       }
     }
+  }
+
+  /// 해결완료 확인 다이얼로그
+  void _showResolveConfirmDialog(BuildContext context, String questionId) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('해결완료 처리'),
+        content: const Text('이 질문을 해결완료로 처리하시겠습니까?\n해결완료 후에는 질문을 수정할 수 없습니다.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+
+              try {
+                await ref
+                    .read(questionManagementProvider.notifier)
+                    .resolveQuestion(questionId);
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('질문이 해결완료 처리되었습니다'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('해결완료 처리 실패: $e'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                }
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.success),
+            child: const Text('해결완료'),
+          ),
+        ],
+      ),
+    );
   }
 
   /// 삭제 확인 다이얼로그
