@@ -25,6 +25,7 @@ class MoreTab extends ConsumerStatefulWidget {
 class _MoreTabState extends ConsumerState<MoreTab> {
   final _storage = SecureStorageService();
   Map<String, dynamic>? _userInfo;
+  bool _isLoggingOut = false;
 
   @override
   void initState() {
@@ -54,63 +55,75 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     final nonDisplayedMenuIds = notifier.nonDisplayedMenuIds;
     final availableItems = notifier.availableItems;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.nav_more),
-      ),
-      body: ListView(
-        children: [
-          const SizedBox(height: 16),
-          // 프로필 영역
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: UserProfileCard(
-              name: name,
-              email: email,
-              profileImageUrl: profileImageUrl,
-              isAdmin: isAdmin,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.nav_more),
+          ),
+          body: ListView(
+            children: [
+              const SizedBox(height: 16),
+              // 프로필 영역
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: UserProfileCard(
+                  name: name,
+                  email: email,
+                  profileImageUrl: profileImageUrl,
+                  isAdmin: isAdmin,
+                ),
+              ),
+              // 하단 네비게이션에 표시되지 않는 메뉴들 (다국어 적용)
+              ...nonDisplayedMenuIds.map((menuId) {
+                final item = availableItems[menuId];
+                if (item == null) return const SizedBox.shrink();
+
+                return MenuListTile(
+                  icon: item.icon,
+                  title: NavigationLabelHelper.getLabel(l10n, menuId),
+                  onTap: () {
+                    _handleMenuTap(context, menuId);
+                  },
+                );
+              }),
+              const Divider(),
+              // 고정 메뉴: 공지사항, QnA
+              MenuListTile(
+                icon: Icons.campaign,
+                title: l10n.announcement_title,
+                onTap: () => context.push(AppRoutes.announcements),
+              ),
+              MenuListTile(
+                icon: Icons.question_answer,
+                title: l10n.qna_title,
+                onTap: () => context.push(AppRoutes.questions),
+              ),
+              const Divider(),
+              // 고정 메뉴: 설정, 로그아웃
+              MenuListTile(
+                icon: Icons.settings,
+                title: l10n.settings_title,
+                onTap: () => context.push(AppRoutes.settings),
+              ),
+              MenuListTile(
+                icon: Icons.logout,
+                title: l10n.auth_logout,
+                isDestructive: true,
+                onTap: () => _handleLogout(),
+              ),
+            ],
+          ),
+        ),
+        // 로그아웃 진행 중 로딩 오버레이
+        if (_isLoggingOut)
+          Container(
+            color: Colors.black54,
+            child: const Center(
+              child: CircularProgressIndicator(),
             ),
           ),
-          // 하단 네비게이션에 표시되지 않는 메뉴들 (다국어 적용)
-          ...nonDisplayedMenuIds.map((menuId) {
-            final item = availableItems[menuId];
-            if (item == null) return const SizedBox.shrink();
-
-            return MenuListTile(
-              icon: item.icon,
-              title: NavigationLabelHelper.getLabel(l10n, menuId),
-              onTap: () {
-                _handleMenuTap(context, menuId);
-              },
-            );
-          }),
-          const Divider(),
-          // 고정 메뉴: 공지사항, QnA
-          MenuListTile(
-            icon: Icons.campaign,
-            title: l10n.announcement_title,
-            onTap: () => context.push(AppRoutes.announcements),
-          ),
-          MenuListTile(
-            icon: Icons.question_answer,
-            title: l10n.qna_title,
-            onTap: () => context.push(AppRoutes.questions),
-          ),
-          const Divider(),
-          // 고정 메뉴: 설정, 로그아웃
-          MenuListTile(
-            icon: Icons.settings,
-            title: l10n.settings_title,
-            onTap: () => context.push(AppRoutes.settings),
-          ),
-          MenuListTile(
-            icon: Icons.logout,
-            title: l10n.auth_logout,
-            isDestructive: true,
-            onTap: () => _handleLogout(),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -125,7 +138,14 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   }
 
   Future<void> _handleLogout() async {
+    if (_isLoggingOut) return; // 중복 클릭 방지
+
     final l10n = AppLocalizations.of(context)!;
+
+    setState(() {
+      _isLoggingOut = true;
+    });
+
     try {
       // 로그아웃 실행
       await ref.read(authProvider.notifier).logout();
@@ -142,6 +162,12 @@ class _MoreTabState extends ConsumerState<MoreTab> {
             backgroundColor: Colors.red,
           ),
         );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoggingOut = false;
+        });
       }
     }
   }
