@@ -120,6 +120,25 @@ class QnaService {
     return answer;
   }
 
+  /// 답변 수정 (ADMIN 전용)
+  Future<AnswerModel> updateAnswer(String questionId, String answerId, CreateAnswerDto dto) async {
+    debugPrint('🔵 [QnaService] 답변 수정 - answerId: $answerId');
+
+    final answer = await _repository.updateAnswer(questionId, answerId, dto);
+
+    debugPrint('✅ [QnaService] 답변 수정 완료');
+    return answer;
+  }
+
+  /// 답변 삭제 (ADMIN 전용)
+  Future<void> deleteAnswer(String questionId, String answerId) async {
+    debugPrint('🔵 [QnaService] 답변 삭제 - answerId: $answerId');
+
+    await _repository.deleteAnswer(questionId, answerId);
+
+    debugPrint('✅ [QnaService] 답변 삭제 완료');
+  }
+
   /// 질문 내용 유효성 검사
   void _validateQuestionContent(String title, String content) {
     if (title.trim().length < 5) {

@@ -202,7 +202,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                   ),
                   const SizedBox(height: AppSizes.spaceL),
                   ...question.answers.map((answer) {
-                    return _buildAnswerCard(context, answer);
+                    return _buildAnswerCard(context, question.id, answer, isAdmin);
                   }),
                 ],
 
@@ -365,7 +365,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
   }
 
   /// 답변 카드 위젯
-  Widget _buildAnswerCard(BuildContext context, AnswerModel answer) {
+  Widget _buildAnswerCard(BuildContext context, String questionId, AnswerModel answer, bool isAdmin) {
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH:mm');
 
     return Container(
@@ -405,7 +405,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  answer.admin.name,
+                  answer.admin?.name ?? '관리자',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -423,6 +423,47 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                         color: AppColors.textSecondary,
                       ),
                 ),
+                // 운영자용 수정/삭제 메뉴
+                if (isAdmin) ...[
+                  const SizedBox(width: AppSizes.spaceS),
+                  PopupMenuButton<String>(
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: AppSizes.iconSmall,
+                      color: AppColors.textSecondary,
+                    ),
+                    padding: EdgeInsets.zero,
+                    onSelected: (value) {
+                      if (value == 'edit') {
+                        _showEditAnswerDialog(context, questionId, answer);
+                      } else if (value == 'delete') {
+                        _showDeleteAnswerDialog(context, questionId, answer.id);
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit, size: AppSizes.iconSmall),
+                            SizedBox(width: AppSizes.spaceS),
+                            Text('수정'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, size: AppSizes.iconSmall, color: AppColors.error),
+                            SizedBox(width: AppSizes.spaceS),
+                            Text('삭제', style: TextStyle(color: AppColors.error)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: AppSizes.spaceL),
@@ -677,6 +718,132 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('질문 삭제 실패: $e'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                }
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 답변 수정 다이얼로그
+  void _showEditAnswerDialog(BuildContext context, String questionId, AnswerModel answer) {
+    final editController = TextEditingController(text: answer.content);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('답변 수정'),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: RichTextEditor(
+            controller: editController,
+            labelText: '',
+            hintText: '답변 내용을 입력하세요',
+            minLines: 8,
+            simpleMode: true,
+            imageUploadType: EditorImageType.qna,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              editController.dispose();
+            },
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final content = editController.text.trim();
+              if (content.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('답변 내용을 입력해주세요'),
+                    backgroundColor: AppColors.error,
+                  ),
+                );
+                return;
+              }
+
+              Navigator.of(dialogContext).pop();
+              editController.dispose();
+
+              try {
+                final dto = CreateAnswerDto(content: content);
+                await ref
+                    .read(questionManagementProvider.notifier)
+                    .updateAnswer(questionId, answer.id, dto);
+
+                if (mounted) {
+                  ScaffoldMessenger.of(this.context).showSnackBar(
+                    const SnackBar(
+                      content: Text('답변이 수정되었습니다'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                  ref.invalidate(questionDetailProvider(questionId));
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(this.context).showSnackBar(
+                    SnackBar(
+                      content: Text('답변 수정 실패: $e'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('수정'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 답변 삭제 확인 다이얼로그
+  void _showDeleteAnswerDialog(BuildContext context, String questionId, String answerId) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('답변 삭제'),
+        content: const Text('이 답변을 삭제하시겠습니까?\n삭제된 답변은 복구할 수 없습니다.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+
+              try {
+                await ref
+                    .read(questionManagementProvider.notifier)
+                    .deleteAnswer(questionId, answerId);
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('답변이 삭제되었습니다'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                  ref.invalidate(questionDetailProvider(questionId));
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('답변 삭제 실패: $e'),
                       backgroundColor: AppColors.error,
                     ),
                   );

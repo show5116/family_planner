@@ -173,4 +173,27 @@ class QuestionManagement extends _$QuestionManagement {
 
     return answer;
   }
+
+  /// 답변 수정 (ADMIN 전용)
+  Future<AnswerModel> updateAnswer(String questionId, String answerId, CreateAnswerDto dto) async {
+    final service = ref.read(qnaServiceProvider);
+    final answer = await service.updateAnswer(questionId, answerId, dto);
+
+    // 관련 캐시 무효화
+    ref.invalidate(questionDetailProvider(questionId));
+
+    return answer;
+  }
+
+  /// 답변 삭제 (ADMIN 전용)
+  Future<void> deleteAnswer(String questionId, String answerId) async {
+    final service = ref.read(qnaServiceProvider);
+    await service.deleteAnswer(questionId, answerId);
+
+    // 관련 캐시 무효화
+    ref.invalidate(questionDetailProvider(questionId));
+    ref.invalidate(questionsProvider(filter: 'my'));
+    ref.invalidate(questionsProvider(filter: 'public'));
+    ref.invalidate(questionsProvider(filter: 'all'));
+  }
 }

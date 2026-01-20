@@ -105,6 +105,7 @@ dependencies:
   flutter_quill_delta_from_html: ^1.4.1
   vsc_quill_delta_to_html: ^1.0.5
   http_parser: ^4.1.2
+  flutter_html: ^3.0.0
 
 dev_dependencies:
   flutter_test:

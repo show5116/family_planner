@@ -34,7 +34,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(_onTabChanged);
     _scrollController.addListener(_onScroll);
   }
@@ -82,6 +82,8 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
         return QuestionStatus.pending;
       case 2:
         return QuestionStatus.answered;
+      case 3:
+        return QuestionStatus.resolved;
       default:
         return null;
     }
@@ -179,7 +181,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
         ],
         bottom: AppTabBar(
           controller: _tabController,
-          tabs: const ['전체', '대기중', '답변완료'],
+          tabs: const ['전체', '대기중', '답변완료', '해결완료'],
         ),
       ),
       body: Column(

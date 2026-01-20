@@ -31,6 +31,7 @@ const _allowedTags = {
   'hr',
   'div',
   'span',
+  'img',
 };
 
 /// 허용된 HTML 속성 목록 (태그별)
@@ -45,6 +46,7 @@ const _allowedAttributes = {
   'h4': {'class', 'style'},
   'h5': {'class', 'style'},
   'h6': {'class', 'style'},
+  'img': {'src', 'alt', 'width', 'height'},
 };
 
 /// 허용된 CSS 속성 목록
@@ -223,13 +225,15 @@ class HtmlSanitizer {
   static String _cleanAttributes(String attributesStr, Set<String> allowedAttrs) {
     if (attributesStr.trim().isEmpty) return '';
 
-    final attrPattern = RegExp(r'''(\w+)\s*=\s*["']?([^"'>\s]*)["']?''');
+    // 따옴표로 감싸진 속성값과 그렇지 않은 속성값 모두 처리
+    final attrPattern = RegExp(r'''(\w+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))''');
     final matches = attrPattern.allMatches(attributesStr);
 
     final cleanedAttrs = <String>[];
     for (final match in matches) {
       final attrName = match.group(1)?.toLowerCase();
-      final attrValue = match.group(2);
+      // 따옴표로 감싸진 값 또는 그렇지 않은 값 추출
+      final attrValue = match.group(2) ?? match.group(3) ?? match.group(4);
 
       if (attrName != null &&
           attrValue != null &&

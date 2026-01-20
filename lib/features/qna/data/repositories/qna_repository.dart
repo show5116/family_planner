@@ -142,4 +142,36 @@ class QnaRepository {
       throw Exception('답변 작성 실패: ${e.message}');
     }
   }
+
+  /// 답변 수정 (ADMIN 전용)
+  Future<AnswerModel> updateAnswer(String questionId, String answerId, CreateAnswerDto dto) async {
+    try {
+      debugPrint('🔵 [QnaRepository] 답변 수정: $answerId');
+
+      final response = await _dio.put(
+        '/qna/admin/questions/$questionId/answers/$answerId',
+        data: dto.toJson(),
+      );
+
+      debugPrint('✅ [QnaRepository] 답변 수정 성공');
+      return AnswerModel.fromJson(response.data);
+    } on DioException catch (e) {
+      debugPrint('❌ [QnaRepository] 답변 수정 실패: ${e.message}');
+      throw Exception('답변 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 답변 삭제 (ADMIN 전용)
+  Future<void> deleteAnswer(String questionId, String answerId) async {
+    try {
+      debugPrint('🔵 [QnaRepository] 답변 삭제: $answerId');
+
+      await _dio.delete('/qna/admin/questions/$questionId/answers/$answerId');
+
+      debugPrint('✅ [QnaRepository] 답변 삭제 성공');
+    } on DioException catch (e) {
+      debugPrint('❌ [QnaRepository] 답변 삭제 실패: ${e.message}');
+      throw Exception('답변 삭제 실패: ${e.message}');
+    }
+  }
 }

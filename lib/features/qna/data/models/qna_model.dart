@@ -68,8 +68,8 @@ class AnswerModel with _$AnswerModel {
   const factory AnswerModel({
     required String id,
     required String content,
-    required String adminId,
-    required QuestionUser admin,
+    String? adminId,
+    QuestionUser? admin,
     List<Attachment>? attachments,
     required DateTime createdAt,
     required DateTime updatedAt,

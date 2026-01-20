@@ -30,8 +30,10 @@ _$AnswerModelImpl _$$AnswerModelImplFromJson(Map<String, dynamic> json) =>
     _$AnswerModelImpl(
       id: json['id'] as String,
       content: json['content'] as String,
-      adminId: json['adminId'] as String,
-      admin: QuestionUser.fromJson(json['admin'] as Map<String, dynamic>),
+      adminId: json['adminId'] as String?,
+      admin: json['admin'] == null
+          ? null
+          : QuestionUser.fromJson(json['admin'] as Map<String, dynamic>),
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
           .toList(),

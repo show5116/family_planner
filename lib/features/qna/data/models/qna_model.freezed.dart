@@ -378,8 +378,8 @@ AnswerModel _$AnswerModelFromJson(Map<String, dynamic> json) {
 mixin _$AnswerModel {
   String get id => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  String get adminId => throw _privateConstructorUsedError;
-  QuestionUser get admin => throw _privateConstructorUsedError;
+  String? get adminId => throw _privateConstructorUsedError;
+  QuestionUser? get admin => throw _privateConstructorUsedError;
   List<Attachment>? get attachments => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -404,14 +404,14 @@ abstract class $AnswerModelCopyWith<$Res> {
   $Res call({
     String id,
     String content,
-    String adminId,
-    QuestionUser admin,
+    String? adminId,
+    QuestionUser? admin,
     List<Attachment>? attachments,
     DateTime createdAt,
     DateTime updatedAt,
   });
 
-  $QuestionUserCopyWith<$Res> get admin;
+  $QuestionUserCopyWith<$Res>? get admin;
 }
 
 /// @nodoc
@@ -431,8 +431,8 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
   $Res call({
     Object? id = null,
     Object? content = null,
-    Object? adminId = null,
-    Object? admin = null,
+    Object? adminId = freezed,
+    Object? admin = freezed,
     Object? attachments = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -447,14 +447,14 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
                 ? _value.content
                 : content // ignore: cast_nullable_to_non_nullable
                       as String,
-            adminId: null == adminId
+            adminId: freezed == adminId
                 ? _value.adminId
                 : adminId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            admin: null == admin
+                      as String?,
+            admin: freezed == admin
                 ? _value.admin
                 : admin // ignore: cast_nullable_to_non_nullable
-                      as QuestionUser,
+                      as QuestionUser?,
             attachments: freezed == attachments
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
@@ -476,8 +476,12 @@ class _$AnswerModelCopyWithImpl<$Res, $Val extends AnswerModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $QuestionUserCopyWith<$Res> get admin {
-    return $QuestionUserCopyWith<$Res>(_value.admin, (value) {
+  $QuestionUserCopyWith<$Res>? get admin {
+    if (_value.admin == null) {
+      return null;
+    }
+
+    return $QuestionUserCopyWith<$Res>(_value.admin!, (value) {
       return _then(_value.copyWith(admin: value) as $Val);
     });
   }
@@ -495,15 +499,15 @@ abstract class _$$AnswerModelImplCopyWith<$Res>
   $Res call({
     String id,
     String content,
-    String adminId,
-    QuestionUser admin,
+    String? adminId,
+    QuestionUser? admin,
     List<Attachment>? attachments,
     DateTime createdAt,
     DateTime updatedAt,
   });
 
   @override
-  $QuestionUserCopyWith<$Res> get admin;
+  $QuestionUserCopyWith<$Res>? get admin;
 }
 
 /// @nodoc
@@ -522,8 +526,8 @@ class __$$AnswerModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? content = null,
-    Object? adminId = null,
-    Object? admin = null,
+    Object? adminId = freezed,
+    Object? admin = freezed,
     Object? attachments = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -538,14 +542,14 @@ class __$$AnswerModelImplCopyWithImpl<$Res>
             ? _value.content
             : content // ignore: cast_nullable_to_non_nullable
                   as String,
-        adminId: null == adminId
+        adminId: freezed == adminId
             ? _value.adminId
             : adminId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        admin: null == admin
+                  as String?,
+        admin: freezed == admin
             ? _value.admin
             : admin // ignore: cast_nullable_to_non_nullable
-                  as QuestionUser,
+                  as QuestionUser?,
         attachments: freezed == attachments
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
@@ -569,8 +573,8 @@ class _$AnswerModelImpl implements _AnswerModel {
   const _$AnswerModelImpl({
     required this.id,
     required this.content,
-    required this.adminId,
-    required this.admin,
+    this.adminId,
+    this.admin,
     final List<Attachment>? attachments,
     required this.createdAt,
     required this.updatedAt,
@@ -584,9 +588,9 @@ class _$AnswerModelImpl implements _AnswerModel {
   @override
   final String content;
   @override
-  final String adminId;
+  final String? adminId;
   @override
-  final QuestionUser admin;
+  final QuestionUser? admin;
   final List<Attachment>? _attachments;
   @override
   List<Attachment>? get attachments {
@@ -657,8 +661,8 @@ abstract class _AnswerModel implements AnswerModel {
   const factory _AnswerModel({
     required final String id,
     required final String content,
-    required final String adminId,
-    required final QuestionUser admin,
+    final String? adminId,
+    final QuestionUser? admin,
     final List<Attachment>? attachments,
     required final DateTime createdAt,
     required final DateTime updatedAt,
@@ -672,9 +676,9 @@ abstract class _AnswerModel implements AnswerModel {
   @override
   String get content;
   @override
-  String get adminId;
+  String? get adminId;
   @override
-  QuestionUser get admin;
+  QuestionUser? get admin;
   @override
   List<Attachment>? get attachments;
   @override
