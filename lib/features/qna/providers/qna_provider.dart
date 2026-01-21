@@ -143,10 +143,9 @@ class QuestionManagement extends _$QuestionManagement {
     final service = ref.read(qnaServiceProvider);
     await service.deleteQuestion(id);
 
-    // 관련 캐시 무효화
+    // 관련 캐시 무효화 (filter=all은 운영자 전용이므로 제외)
     ref.invalidate(questionsProvider(filter: 'my'));
     ref.invalidate(questionsProvider(filter: 'public'));
-    ref.invalidate(questionsProvider(filter: 'all'));
   }
 
   /// 질문 해결완료 처리
@@ -154,11 +153,10 @@ class QuestionManagement extends _$QuestionManagement {
     final service = ref.read(qnaServiceProvider);
     await service.resolveQuestion(id);
 
-    // 관련 캐시 무효화
+    // 관련 캐시 무효화 (filter=all은 운영자 전용이므로 제외)
     ref.invalidate(questionDetailProvider(id));
     ref.invalidate(questionsProvider(filter: 'my'));
     ref.invalidate(questionsProvider(filter: 'public'));
-    ref.invalidate(questionsProvider(filter: 'all'));
   }
 
   /// 답변 작성 (ADMIN 전용)
@@ -191,6 +189,7 @@ class QuestionManagement extends _$QuestionManagement {
     await service.deleteAnswer(questionId, answerId);
 
     // 관련 캐시 무효화
+    // 답변 삭제는 ADMIN 전용이므로 filter=all도 무효화
     ref.invalidate(questionDetailProvider(questionId));
     ref.invalidate(questionsProvider(filter: 'my'));
     ref.invalidate(questionsProvider(filter: 'public'));

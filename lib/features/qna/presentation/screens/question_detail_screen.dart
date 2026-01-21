@@ -43,7 +43,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
   Widget build(BuildContext context) {
     final questionAsync = ref.watch(questionDetailProvider(widget.questionId));
     final authState = ref.watch(authProvider);
-    final currentUserId = authState.user?['id'] as String?;
+    final currentUserId = authState.user?['id']?.toString();
     final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
@@ -204,6 +204,15 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                   ...question.answers.map((answer) {
                     return _buildAnswerCard(context, question.id, answer, isAdmin);
                   }),
+                ],
+
+                // 해결 완료 버튼 (질문자 본인 + 답변완료 상태일 때만)
+                if (currentUserId == question.user?.id &&
+                    question.status == QuestionStatus.answered) ...[
+                  const SizedBox(height: AppSizes.spaceXL),
+                  const Divider(),
+                  const SizedBox(height: AppSizes.spaceL),
+                  _buildResolveSection(context, question),
                 ],
 
                 // 운영자 답변 작성 섹션
@@ -636,6 +645,63 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
         });
       }
     }
+  }
+
+  /// 해결 완료 섹션 위젯
+  Widget _buildResolveSection(BuildContext context, QuestionModel question) {
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.spaceL),
+      decoration: BoxDecoration(
+        color: AppColors.success.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        border: Border.all(
+          color: AppColors.success.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                color: AppColors.success,
+                size: AppSizes.iconMedium,
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+              Text(
+                '문제가 해결되셨나요?',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.success,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          Text(
+            '답변이 도움이 되셨다면 해결 완료로 변경해주세요.\n1주일간 상태를 변경하지 않으면 자동으로 해결 완료로 변경됩니다.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+          ),
+          const SizedBox(height: AppSizes.spaceL),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => _showResolveConfirmDialog(context, question.id),
+              icon: const Icon(Icons.check_circle),
+              label: const Text('해결 완료'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.success,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// 해결완료 확인 다이얼로그
