@@ -6,6 +6,8 @@ import 'package:family_planner/features/notification/data/models/notification_mo
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
 import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
 import 'package:family_planner/features/notification/providers/notification_history_provider.dart';
+import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
+import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_history_item.dart';
 
 /// 알림 히스토리 화면
@@ -92,6 +94,50 @@ class _NotificationHistoryScreenState
     }
   }
 
+  /// 읽음 처리만 (화면 이동 없음)
+  Future<void> _onMarkAsReadOnly(NotificationModel notification) async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      await repository.markAsRead(notification.id);
+
+      // Provider 상태 업데이트
+      ref.read(unreadCountProvider.notifier).decrementCount();
+      ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
+      ref.invalidate(notificationHistoryProvider);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('알림 읽음 처리 실패: $e')),
+        );
+      }
+    }
+  }
+
+  /// 전체 읽음 처리
+  Future<void> _onMarkAllAsRead() async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      final count = await repository.markAllAsRead();
+
+      // Provider 상태 업데이트
+      ref.read(unreadCountProvider.notifier).clearCount();
+      ref.read(unreadNotificationsProvider.notifier).clearAll();
+      ref.invalidate(notificationHistoryProvider);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$count개의 알림을 읽음 처리했습니다')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('전체 읽음 처리 실패: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final historyState = ref.watch(notificationHistoryProvider);
@@ -100,6 +146,16 @@ class _NotificationHistoryScreenState
       appBar: AppBar(
         title: const Text('알림'),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: _onMarkAllAsRead,
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+            child: const Text('전체 읽음'),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+        ],
       ),
       body: historyState.when(
         data: (notifications) {
@@ -134,6 +190,9 @@ class _NotificationHistoryScreenState
                   notification: notification,
                   onTap: () => _onTap(notification),
                   onDelete: () => _onDelete(notification.id),
+                  onMarkAsRead: notification.isRead
+                      ? null
+                      : () => _onMarkAsReadOnly(notification),
                 );
               },
             ),

@@ -38,4 +38,9 @@ class UnreadCount extends _$UnreadCount {
       }
     });
   }
+
+  /// 전체 읽음 처리 시 개수 0으로 초기화
+  void clearCount() {
+    state = const AsyncValue.data(0);
+  }
 }

@@ -8,6 +8,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
 import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
+import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 
 /// 읽지 않은 알림 위젯 (홈 화면용)
@@ -41,6 +42,10 @@ class UnreadNotificationsWidget extends ConsumerWidget {
                   ),
                 ),
                 TextButton(
+                  onPressed: () => _onMarkAllAsRead(context, ref),
+                  child: const Text('전체 읽음'),
+                ),
+                TextButton(
                   onPressed: () {
                     context.push(AppRoutes.notificationHistory);
                   },
@@ -64,6 +69,11 @@ class UnreadNotificationsWidget extends ConsumerWidget {
                     .map((notification) => _NotificationItem(
                           notification: notification,
                           onTap: () => _onNotificationTap(
+                            context,
+                            ref,
+                            notification,
+                          ),
+                          onMarkAsRead: () => _onMarkAsReadOnly(
                             context,
                             ref,
                             notification,
@@ -98,6 +108,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
       // Provider 상태 업데이트
       ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
+      ref.read(unreadCountProvider.notifier).decrementCount();
 
       // 상세 화면으로 이동 (data에 따라 다른 화면으로)
       if (context.mounted && notification.data != null) {
@@ -115,6 +126,52 @@ class UnreadNotificationsWidget extends ConsumerWidget {
   /// 데이터에 따라 상세 화면으로 이동
   void _navigateToDetail(BuildContext context, NotificationModel notification) {
     NotificationNavigationService.navigateToDetail(context, notification);
+  }
+
+  /// 읽음 처리만 (화면 이동 없음)
+  Future<void> _onMarkAsReadOnly(
+    BuildContext context,
+    WidgetRef ref,
+    NotificationModel notification,
+  ) async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      await repository.markAsRead(notification.id);
+
+      // Provider 상태 업데이트
+      ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
+      ref.read(unreadCountProvider.notifier).decrementCount();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('알림 처리 실패: $e')),
+        );
+      }
+    }
+  }
+
+  /// 전체 읽음 처리
+  Future<void> _onMarkAllAsRead(BuildContext context, WidgetRef ref) async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      final count = await repository.markAllAsRead();
+
+      // Provider 상태 업데이트
+      ref.read(unreadCountProvider.notifier).clearCount();
+      ref.read(unreadNotificationsProvider.notifier).clearAll();
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$count개의 알림을 읽음 처리했습니다')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('전체 읽음 처리 실패: $e')),
+        );
+      }
+    }
   }
 
   /// 빈 상태 위젯
@@ -170,10 +227,12 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 class _NotificationItem extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback onTap;
+  final VoidCallback onMarkAsRead;
 
   const _NotificationItem({
     required this.notification,
     required this.onTap,
+    required this.onMarkAsRead,
   });
 
   @override
@@ -250,14 +309,17 @@ class _NotificationItem extends StatelessWidget {
               ),
             ),
 
-            // 읽지 않음 표시
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
+            // 읽음 처리 버튼
+            IconButton(
+              onPressed: onMarkAsRead,
+              icon: Icon(
+                Icons.check_circle_outline,
                 color: theme.colorScheme.primary,
-                shape: BoxShape.circle,
+                size: 20,
               ),
+              tooltip: '읽음 처리',
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
           ],
         ),

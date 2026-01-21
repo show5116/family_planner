@@ -50,4 +50,9 @@ class UnreadNotifications extends _$UnreadNotifications {
         .toList();
     state = AsyncValue.data(updatedList);
   }
+
+  /// 전체 읽음 처리 (로컬 상태 업데이트)
+  void clearAll() {
+    state = const AsyncValue.data([]);
+  }
 }

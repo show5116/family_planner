@@ -152,6 +152,16 @@ class NotificationRepository {
     }
   }
 
+  /// 전체 알림 읽음 처리
+  Future<int> markAllAsRead() async {
+    try {
+      final response = await _dio.put('/notifications/read-all');
+      return response.data['count'] as int;
+    } on DioException catch (e) {
+      throw Exception('전체 알림 읽음 처리 실패: ${e.message}');
+    }
+  }
+
   /// 알림 삭제
   Future<void> deleteNotification(String notificationId) async {
     try {

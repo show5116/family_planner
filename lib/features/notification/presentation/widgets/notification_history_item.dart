@@ -9,12 +9,14 @@ class NotificationHistoryItem extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
+  final VoidCallback? onMarkAsRead;
 
   const NotificationHistoryItem({
     super.key,
     required this.notification,
     this.onTap,
     this.onDelete,
+    this.onMarkAsRead,
   });
 
   @override
@@ -135,16 +137,19 @@ class NotificationHistoryItem extends StatelessWidget {
                 ),
               ),
 
-              // 읽지 않음 표시
-              if (!notification.isRead) ...[
+              // 읽음 처리 버튼 (읽지 않은 경우에만 표시)
+              if (!notification.isRead && onMarkAsRead != null) ...[
                 const SizedBox(width: AppSizes.spaceS),
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
+                IconButton(
+                  onPressed: onMarkAsRead,
+                  icon: Icon(
+                    Icons.check_circle_outline,
                     color: theme.colorScheme.primary,
-                    shape: BoxShape.circle,
+                    size: 20,
                   ),
+                  tooltip: '읽음 처리',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 ),
               ],
             ],

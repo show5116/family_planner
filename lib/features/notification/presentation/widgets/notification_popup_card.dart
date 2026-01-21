@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
+import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 
@@ -32,27 +33,42 @@ class NotificationPopupCard extends ConsumerWidget {
             // 헤더
             Padding(
               padding: const EdgeInsets.all(AppSizes.spaceM),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.notifications_outlined,
-                    color: Theme.of(context).colorScheme.primary,
+                  // 타이틀 행
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.notifications_outlined,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Text(
+                        '읽지 않은 알림',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: AppSizes.spaceS),
-                  Expanded(
-                    child: Text(
-                      '읽지 않은 알림',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      context.push(AppRoutes.notificationHistory);
-                    },
-                    child: const Text('전체보기'),
+                  const SizedBox(height: AppSizes.spaceS),
+                  // 버튼 행
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => _onMarkAllAsRead(context, ref),
+                        child: const Text('전체 읽음'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.push(AppRoutes.notificationHistory);
+                        },
+                        child: const Text('전체보기'),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -76,6 +92,11 @@ class NotificationPopupCard extends ConsumerWidget {
                       return _NotificationPopupItem(
                         notification: notification,
                         onTap: () => _onNotificationTap(
+                          context,
+                          ref,
+                          notification,
+                        ),
+                        onMarkAsRead: () => _onMarkAsReadOnly(
                           context,
                           ref,
                           notification,
@@ -130,37 +151,56 @@ class NotificationPopupCard extends ConsumerWidget {
     }
   }
 
+  /// 읽음 처리만 (화면 이동 없음)
+  Future<void> _onMarkAsReadOnly(
+    BuildContext context,
+    WidgetRef ref,
+    NotificationModel notification,
+  ) async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      await repository.markAsRead(notification.id);
+
+      // Provider 상태 업데이트
+      ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
+      ref.read(unreadCountProvider.notifier).decrementCount();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('알림 처리 실패: $e')),
+        );
+      }
+    }
+  }
+
+  /// 전체 읽음 처리
+  Future<void> _onMarkAllAsRead(BuildContext context, WidgetRef ref) async {
+    try {
+      final repository = ref.read(notificationRepositoryProvider);
+      final count = await repository.markAllAsRead();
+
+      // Provider 상태 업데이트
+      ref.read(unreadCountProvider.notifier).clearCount();
+      ref.read(unreadNotificationsProvider.notifier).clearAll();
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$count개의 알림을 읽음 처리했습니다')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('전체 읽음 처리 실패: $e')),
+        );
+      }
+    }
+  }
+
   /// 데이터에 따라 상세 화면으로 이동
   void _navigateToDetail(BuildContext context, NotificationModel notification) {
-    final data = notification.data;
-    if (data == null) return;
-
-    // 카테고리별 화면 이동
-    switch (notification.category) {
-      case NotificationCategory.schedule:
-        if (data['scheduleId'] != null) {
-          context.push('${AppRoutes.calendarDetail}?id=${data['scheduleId']}');
-        }
-        break;
-      case NotificationCategory.todo:
-        if (data['todoId'] != null) {
-          context.push('${AppRoutes.todoDetail}?id=${data['todoId']}');
-        }
-        break;
-      case NotificationCategory.household:
-        if (data['householdId'] != null) {
-          context.push('${AppRoutes.householdDetail}?id=${data['householdId']}');
-        }
-        break;
-      case NotificationCategory.group:
-        if (data['groupId'] != null) {
-          context.push(AppRoutes.groupDetail.replaceFirst(':id', data['groupId'] as String));
-        }
-        break;
-      default:
-        // 기본적으로 알림 히스토리 화면으로 이동
-        context.push(AppRoutes.notificationHistory);
-    }
+    NotificationNavigationService.navigateToDetail(context, notification);
   }
 
   /// 빈 상태 위젯
@@ -218,10 +258,12 @@ class NotificationPopupCard extends ConsumerWidget {
 class _NotificationPopupItem extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback onTap;
+  final VoidCallback onMarkAsRead;
 
   const _NotificationPopupItem({
     required this.notification,
     required this.onTap,
+    required this.onMarkAsRead,
   });
 
   @override
@@ -299,15 +341,17 @@ class _NotificationPopupItem extends StatelessWidget {
               ),
             ),
 
-            // 읽지 않음 표시
-            Container(
-              width: 8,
-              height: 8,
-              margin: const EdgeInsets.only(top: 4),
-              decoration: BoxDecoration(
+            // 읽음 처리 버튼
+            IconButton(
+              onPressed: onMarkAsRead,
+              icon: Icon(
+                Icons.check_circle_outline,
                 color: theme.colorScheme.primary,
-                shape: BoxShape.circle,
+                size: 20,
               ),
+              tooltip: '읽음 처리',
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
           ],
         ),
