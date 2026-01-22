@@ -150,8 +150,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       await _authService.logout();
 
-      // 그룹 관련 provider 초기화
-      _invalidateGroupProviders();
+      // 그룹 관련 provider 초기화 (로그아웃 시에는 상태만 비움, 다시 fetch 안함)
+      _invalidateGroupProviders(clearOnly: true);
 
       state = const AuthState(isAuthenticated: false);
     } catch (e) {
@@ -161,10 +161,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   /// 그룹 관련 provider들을 모두 초기화
-  void _invalidateGroupProviders() {
-    // 그룹 관리 provider들 초기화
-    _ref.invalidate(myGroupsProvider);
-    _ref.invalidate(groupNotifierProvider);
+  /// [clearOnly]가 true면 invalidate 없이 상태만 비움 (로그아웃 시)
+  /// [clearOnly]가 false면 invalidate 수행 (계정 전환 시 새로 fetch 필요)
+  void _invalidateGroupProviders({bool clearOnly = false}) {
+    if (clearOnly) {
+      // 로그아웃 시: 상태만 비우고 다시 fetch하지 않음
+      // groupNotifierProvider의 상태를 빈 데이터로 설정
+      _ref.read(groupNotifierProvider.notifier).clearGroups();
+    } else {
+      // 로그인/계정 전환 시: invalidate하여 새 계정의 데이터를 fetch
+      _ref.invalidate(myGroupsProvider);
+      _ref.invalidate(groupNotifierProvider);
+    }
     // family provider들은 자동으로 무효화됨 (부모 provider가 무효화되면)
   }
 

@@ -67,6 +67,11 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
     }
   }
 
+  /// 그룹 목록 비우기 (로그아웃 시 사용 - API 호출 없이 상태만 초기화)
+  void clearGroups() {
+    state = const AsyncValue.data([]);
+  }
+
   /// 그룹 생성
   Future<Group?> createGroup({
     required String name,
