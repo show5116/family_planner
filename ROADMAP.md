@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 4/16 기능 (25%)
-- **진행 중**: 4/16 기능 (25%)
-- **미시작**: 8/16 기능 (50%)
+- **완료**: 5/17 기능 (29%)
+- **진행 중**: 4/17 기능 (24%)
+- **미시작**: 8/17 기능 (47%)
 
-**마지막 업데이트**: 2026-01-21
+**마지막 업데이트**: 2026-01-22
 
 ---
 
@@ -58,6 +58,7 @@
 | 설정 메뉴 | ✅ 완료 | [12-settings.md](docs/features/12-settings.md) | P1 |
 | 알림 시스템 | 🟨 진행 중 | [14-notification.md](docs/features/14-notification.md) | P1 |
 | 공지사항 | ✅ 완료 | [15-announcements.md](docs/features/15-announcements.md) | P1 |
+| Q&A (문의하기) | ✅ 완료 | [16-qna.md](docs/features/16-qna.md) | P1 |
 | 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
 
 **참고**: 설정 메뉴는 프로필 설정, 테마 설정, 홈 위젯 설정을 포함하며, 그룹 관리([12-groups.md](docs/features/12-groups.md))와 권한 관리는 별도 관리됩니다.
@@ -92,6 +93,18 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-01-22
+- ✅ **Q&A (문의하기) 기능 완료** ([16-qna.md](docs/features/16-qna.md))
+  - 공개 Q&A 목록/상세 화면 구현
+  - 내 질문 목록/상세/작성/수정 화면 구현
+  - 카테고리별 필터 (버그, 기능 제안, 사용법, 계정, 결제, 기타)
+  - 상태별 탭 필터 (전체/대기중/답변완료/해결완료)
+  - 리치 텍스트 에디터 (flutter-quill) 적용 및 이미지 업로드
+  - HTML 렌더링 (RichTextViewer) 및 XSS 방어
+  - 질문 해결 완료 버튼 (ANSWERED → RESOLVED)
+  - **관리자 답변 기능 완료**: 작성, 수정, 삭제
+  - 다국어 지원 (한/영/일)
 
 ### 2026-01-21
 - 🟨 **알림 시스템 기능 추가** ([14-notification.md](docs/features/14-notification.md))
