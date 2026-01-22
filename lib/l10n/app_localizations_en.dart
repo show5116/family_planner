@@ -1314,4 +1314,143 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get qna_answerRequired => 'Please enter an answer';
+
+  @override
+  String get schedule_today => 'Today';
+
+  @override
+  String get schedule_add => 'Add Schedule';
+
+  @override
+  String get schedule_edit => 'Edit Schedule';
+
+  @override
+  String get schedule_delete => 'Delete Schedule';
+
+  @override
+  String get schedule_detail => 'Schedule Details';
+
+  @override
+  String get schedule_allDay => 'All Day';
+
+  @override
+  String get schedule_loadError => 'Failed to load schedules';
+
+  @override
+  String get schedule_empty => 'No schedules';
+
+  @override
+  String get schedule_createSuccess => 'Schedule created';
+
+  @override
+  String get schedule_createError => 'Failed to create schedule';
+
+  @override
+  String get schedule_updateSuccess => 'Schedule updated';
+
+  @override
+  String get schedule_updateError => 'Failed to update schedule';
+
+  @override
+  String get schedule_deleteSuccess => 'Schedule deleted';
+
+  @override
+  String get schedule_deleteError => 'Failed to delete schedule';
+
+  @override
+  String get schedule_deleteDialogTitle => 'Delete Schedule';
+
+  @override
+  String get schedule_deleteDialogMessage =>
+      'Are you sure you want to delete this schedule?';
+
+  @override
+  String get schedule_title => 'Title';
+
+  @override
+  String get schedule_titleHint => 'Enter schedule title';
+
+  @override
+  String get schedule_titleRequired => 'Please enter a title';
+
+  @override
+  String get schedule_description => 'Description';
+
+  @override
+  String get schedule_descriptionHint => 'Enter description (optional)';
+
+  @override
+  String get schedule_location => 'Location';
+
+  @override
+  String get schedule_locationHint => 'Enter location (optional)';
+
+  @override
+  String get schedule_startDate => 'Start Date';
+
+  @override
+  String get schedule_endDate => 'End Date';
+
+  @override
+  String get schedule_startTime => 'Start Time';
+
+  @override
+  String get schedule_endTime => 'End Time';
+
+  @override
+  String get schedule_color => 'Color';
+
+  @override
+  String get schedule_share => 'Sharing';
+
+  @override
+  String get schedule_sharePrivate => 'Private';
+
+  @override
+  String get schedule_shareFamily => 'Family';
+
+  @override
+  String get schedule_shareSpecific => 'Specific Members';
+
+  @override
+  String get schedule_reminder => 'Reminder';
+
+  @override
+  String get schedule_reminderNone => 'None';
+
+  @override
+  String get schedule_reminderAtTime => 'At time';
+
+  @override
+  String get schedule_reminder5Min => '5 minutes before';
+
+  @override
+  String get schedule_reminder15Min => '15 minutes before';
+
+  @override
+  String get schedule_reminder30Min => '30 minutes before';
+
+  @override
+  String get schedule_reminder1Hour => '1 hour before';
+
+  @override
+  String get schedule_reminder1Day => '1 day before';
+
+  @override
+  String get schedule_recurrence => 'Repeat';
+
+  @override
+  String get schedule_recurrenceNone => 'No repeat';
+
+  @override
+  String get schedule_recurrenceDaily => 'Daily';
+
+  @override
+  String get schedule_recurrenceWeekly => 'Weekly';
+
+  @override
+  String get schedule_recurrenceMonthly => 'Monthly';
+
+  @override
+  String get schedule_recurrenceYearly => 'Yearly';
 }

@@ -1279,4 +1279,142 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get qna_answerRequired => '回答を入力してください';
+
+  @override
+  String get schedule_today => '今日';
+
+  @override
+  String get schedule_add => '予定を追加';
+
+  @override
+  String get schedule_edit => '予定を編集';
+
+  @override
+  String get schedule_delete => '予定を削除';
+
+  @override
+  String get schedule_detail => '予定の詳細';
+
+  @override
+  String get schedule_allDay => '終日';
+
+  @override
+  String get schedule_loadError => '予定を読み込めません';
+
+  @override
+  String get schedule_empty => '予定がありません';
+
+  @override
+  String get schedule_createSuccess => '予定を登録しました';
+
+  @override
+  String get schedule_createError => '予定の登録に失敗しました';
+
+  @override
+  String get schedule_updateSuccess => '予定を更新しました';
+
+  @override
+  String get schedule_updateError => '予定の更新に失敗しました';
+
+  @override
+  String get schedule_deleteSuccess => '予定を削除しました';
+
+  @override
+  String get schedule_deleteError => '予定の削除に失敗しました';
+
+  @override
+  String get schedule_deleteDialogTitle => '予定の削除';
+
+  @override
+  String get schedule_deleteDialogMessage => 'この予定を削除しますか？';
+
+  @override
+  String get schedule_title => 'タイトル';
+
+  @override
+  String get schedule_titleHint => '予定のタイトルを入力';
+
+  @override
+  String get schedule_titleRequired => 'タイトルを入力してください';
+
+  @override
+  String get schedule_description => '説明';
+
+  @override
+  String get schedule_descriptionHint => '説明を入力（任意）';
+
+  @override
+  String get schedule_location => '場所';
+
+  @override
+  String get schedule_locationHint => '場所を入力（任意）';
+
+  @override
+  String get schedule_startDate => '開始日';
+
+  @override
+  String get schedule_endDate => '終了日';
+
+  @override
+  String get schedule_startTime => '開始時刻';
+
+  @override
+  String get schedule_endTime => '終了時刻';
+
+  @override
+  String get schedule_color => '色';
+
+  @override
+  String get schedule_share => '共有設定';
+
+  @override
+  String get schedule_sharePrivate => '自分のみ';
+
+  @override
+  String get schedule_shareFamily => '家族全員';
+
+  @override
+  String get schedule_shareSpecific => '特定のメンバー';
+
+  @override
+  String get schedule_reminder => 'リマインダー';
+
+  @override
+  String get schedule_reminderNone => 'なし';
+
+  @override
+  String get schedule_reminderAtTime => '開始時刻';
+
+  @override
+  String get schedule_reminder5Min => '5分前';
+
+  @override
+  String get schedule_reminder15Min => '15分前';
+
+  @override
+  String get schedule_reminder30Min => '30分前';
+
+  @override
+  String get schedule_reminder1Hour => '1時間前';
+
+  @override
+  String get schedule_reminder1Day => '1日前';
+
+  @override
+  String get schedule_recurrence => '繰り返し';
+
+  @override
+  String get schedule_recurrenceNone => '繰り返しなし';
+
+  @override
+  String get schedule_recurrenceDaily => '毎日';
+
+  @override
+  String get schedule_recurrenceWeekly => '毎週';
+
+  @override
+  String get schedule_recurrenceMonthly => '毎月';
+
+  @override
+  String get schedule_recurrenceYearly => '毎年';
 }

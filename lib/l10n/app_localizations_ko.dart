@@ -1282,4 +1282,142 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get qna_answerRequired => '답변을 입력해주세요';
+
+  @override
+  String get schedule_today => '오늘';
+
+  @override
+  String get schedule_add => '일정 추가';
+
+  @override
+  String get schedule_edit => '일정 수정';
+
+  @override
+  String get schedule_delete => '일정 삭제';
+
+  @override
+  String get schedule_detail => '일정 상세';
+
+  @override
+  String get schedule_allDay => '종일';
+
+  @override
+  String get schedule_loadError => '일정을 불러올 수 없습니다';
+
+  @override
+  String get schedule_empty => '등록된 일정이 없습니다';
+
+  @override
+  String get schedule_createSuccess => '일정이 등록되었습니다';
+
+  @override
+  String get schedule_createError => '일정 등록에 실패했습니다';
+
+  @override
+  String get schedule_updateSuccess => '일정이 수정되었습니다';
+
+  @override
+  String get schedule_updateError => '일정 수정에 실패했습니다';
+
+  @override
+  String get schedule_deleteSuccess => '일정이 삭제되었습니다';
+
+  @override
+  String get schedule_deleteError => '일정 삭제에 실패했습니다';
+
+  @override
+  String get schedule_deleteDialogTitle => '일정 삭제';
+
+  @override
+  String get schedule_deleteDialogMessage => '이 일정을 삭제하시겠습니까?';
+
+  @override
+  String get schedule_title => '제목';
+
+  @override
+  String get schedule_titleHint => '일정 제목을 입력하세요';
+
+  @override
+  String get schedule_titleRequired => '제목을 입력해주세요';
+
+  @override
+  String get schedule_description => '설명';
+
+  @override
+  String get schedule_descriptionHint => '일정 설명을 입력하세요 (선택)';
+
+  @override
+  String get schedule_location => '장소';
+
+  @override
+  String get schedule_locationHint => '장소를 입력하세요 (선택)';
+
+  @override
+  String get schedule_startDate => '시작일';
+
+  @override
+  String get schedule_endDate => '종료일';
+
+  @override
+  String get schedule_startTime => '시작 시간';
+
+  @override
+  String get schedule_endTime => '종료 시간';
+
+  @override
+  String get schedule_color => '색상';
+
+  @override
+  String get schedule_share => '공유 설정';
+
+  @override
+  String get schedule_sharePrivate => '나만 보기';
+
+  @override
+  String get schedule_shareFamily => '가족 전체';
+
+  @override
+  String get schedule_shareSpecific => '특정 멤버';
+
+  @override
+  String get schedule_reminder => '알림';
+
+  @override
+  String get schedule_reminderNone => '없음';
+
+  @override
+  String get schedule_reminderAtTime => '정시';
+
+  @override
+  String get schedule_reminder5Min => '5분 전';
+
+  @override
+  String get schedule_reminder15Min => '15분 전';
+
+  @override
+  String get schedule_reminder30Min => '30분 전';
+
+  @override
+  String get schedule_reminder1Hour => '1시간 전';
+
+  @override
+  String get schedule_reminder1Day => '1일 전';
+
+  @override
+  String get schedule_recurrence => '반복';
+
+  @override
+  String get schedule_recurrenceNone => '반복 안함';
+
+  @override
+  String get schedule_recurrenceDaily => '매일';
+
+  @override
+  String get schedule_recurrenceWeekly => '매주';
+
+  @override
+  String get schedule_recurrenceMonthly => '매월';
+
+  @override
+  String get schedule_recurrenceYearly => '매년';
 }

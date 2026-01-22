@@ -6,7 +6,7 @@ part of 'unread_count_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$unreadCountHash() => r'db3cf69af4f678a0a916278e4f079116f0808988';
+String _$unreadCountHash() => r'82ee64cc3d72478bae3d0d328c3de3474c30aa4d';
 
 /// 읽지 않은 알림 개수 Provider
 ///

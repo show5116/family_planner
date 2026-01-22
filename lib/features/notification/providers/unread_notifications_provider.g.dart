@@ -7,7 +7,7 @@ part of 'unread_notifications_provider.dart';
 // **************************************************************************
 
 String _$unreadNotificationsHash() =>
-    r'adb1c87142d15d0468059b865701a1604181ff08';
+    r'1dbc9989c336eb218e08b98c9a2fa9bac0434ac2';
 
 /// 읽지 않은 알림 Provider
 /// 홈 화면에서 최신 읽지 않은 알림 목록을 표시하기 위해 사용

@@ -2583,6 +2583,282 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'답변을 입력해주세요'**
   String get qna_answerRequired;
+
+  /// No description provided for @schedule_today.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get schedule_today;
+
+  /// No description provided for @schedule_add.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 추가'**
+  String get schedule_add;
+
+  /// No description provided for @schedule_edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 수정'**
+  String get schedule_edit;
+
+  /// No description provided for @schedule_delete.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 삭제'**
+  String get schedule_delete;
+
+  /// No description provided for @schedule_detail.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 상세'**
+  String get schedule_detail;
+
+  /// No description provided for @schedule_allDay.
+  ///
+  /// In ko, this message translates to:
+  /// **'종일'**
+  String get schedule_allDay;
+
+  /// No description provided for @schedule_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정을 불러올 수 없습니다'**
+  String get schedule_loadError;
+
+  /// No description provided for @schedule_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 일정이 없습니다'**
+  String get schedule_empty;
+
+  /// No description provided for @schedule_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정이 등록되었습니다'**
+  String get schedule_createSuccess;
+
+  /// No description provided for @schedule_createError.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 등록에 실패했습니다'**
+  String get schedule_createError;
+
+  /// No description provided for @schedule_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정이 수정되었습니다'**
+  String get schedule_updateSuccess;
+
+  /// No description provided for @schedule_updateError.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 수정에 실패했습니다'**
+  String get schedule_updateError;
+
+  /// No description provided for @schedule_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정이 삭제되었습니다'**
+  String get schedule_deleteSuccess;
+
+  /// No description provided for @schedule_deleteError.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 삭제에 실패했습니다'**
+  String get schedule_deleteError;
+
+  /// No description provided for @schedule_deleteDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 삭제'**
+  String get schedule_deleteDialogTitle;
+
+  /// No description provided for @schedule_deleteDialogMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 일정을 삭제하시겠습니까?'**
+  String get schedule_deleteDialogMessage;
+
+  /// No description provided for @schedule_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get schedule_title;
+
+  /// No description provided for @schedule_titleHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 제목을 입력하세요'**
+  String get schedule_titleHint;
+
+  /// No description provided for @schedule_titleRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get schedule_titleRequired;
+
+  /// No description provided for @schedule_description.
+  ///
+  /// In ko, this message translates to:
+  /// **'설명'**
+  String get schedule_description;
+
+  /// No description provided for @schedule_descriptionHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 설명을 입력하세요 (선택)'**
+  String get schedule_descriptionHint;
+
+  /// No description provided for @schedule_location.
+  ///
+  /// In ko, this message translates to:
+  /// **'장소'**
+  String get schedule_location;
+
+  /// No description provided for @schedule_locationHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'장소를 입력하세요 (선택)'**
+  String get schedule_locationHint;
+
+  /// No description provided for @schedule_startDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'시작일'**
+  String get schedule_startDate;
+
+  /// No description provided for @schedule_endDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'종료일'**
+  String get schedule_endDate;
+
+  /// No description provided for @schedule_startTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'시작 시간'**
+  String get schedule_startTime;
+
+  /// No description provided for @schedule_endTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'종료 시간'**
+  String get schedule_endTime;
+
+  /// No description provided for @schedule_color.
+  ///
+  /// In ko, this message translates to:
+  /// **'색상'**
+  String get schedule_color;
+
+  /// No description provided for @schedule_share.
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 설정'**
+  String get schedule_share;
+
+  /// No description provided for @schedule_sharePrivate.
+  ///
+  /// In ko, this message translates to:
+  /// **'나만 보기'**
+  String get schedule_sharePrivate;
+
+  /// No description provided for @schedule_shareFamily.
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 전체'**
+  String get schedule_shareFamily;
+
+  /// No description provided for @schedule_shareSpecific.
+  ///
+  /// In ko, this message translates to:
+  /// **'특정 멤버'**
+  String get schedule_shareSpecific;
+
+  /// No description provided for @schedule_reminder.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get schedule_reminder;
+
+  /// No description provided for @schedule_reminderNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'없음'**
+  String get schedule_reminderNone;
+
+  /// No description provided for @schedule_reminderAtTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'정시'**
+  String get schedule_reminderAtTime;
+
+  /// No description provided for @schedule_reminder5Min.
+  ///
+  /// In ko, this message translates to:
+  /// **'5분 전'**
+  String get schedule_reminder5Min;
+
+  /// No description provided for @schedule_reminder15Min.
+  ///
+  /// In ko, this message translates to:
+  /// **'15분 전'**
+  String get schedule_reminder15Min;
+
+  /// No description provided for @schedule_reminder30Min.
+  ///
+  /// In ko, this message translates to:
+  /// **'30분 전'**
+  String get schedule_reminder30Min;
+
+  /// No description provided for @schedule_reminder1Hour.
+  ///
+  /// In ko, this message translates to:
+  /// **'1시간 전'**
+  String get schedule_reminder1Hour;
+
+  /// No description provided for @schedule_reminder1Day.
+  ///
+  /// In ko, this message translates to:
+  /// **'1일 전'**
+  String get schedule_reminder1Day;
+
+  /// No description provided for @schedule_recurrence.
+  ///
+  /// In ko, this message translates to:
+  /// **'반복'**
+  String get schedule_recurrence;
+
+  /// No description provided for @schedule_recurrenceNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 안함'**
+  String get schedule_recurrenceNone;
+
+  /// No description provided for @schedule_recurrenceDaily.
+  ///
+  /// In ko, this message translates to:
+  /// **'매일'**
+  String get schedule_recurrenceDaily;
+
+  /// No description provided for @schedule_recurrenceWeekly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주'**
+  String get schedule_recurrenceWeekly;
+
+  /// No description provided for @schedule_recurrenceMonthly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매월'**
+  String get schedule_recurrenceMonthly;
+
+  /// No description provided for @schedule_recurrenceYearly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매년'**
+  String get schedule_recurrenceYearly;
 }
 
 class _AppLocalizationsDelegate
