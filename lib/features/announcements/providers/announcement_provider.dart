@@ -79,8 +79,12 @@ class AnnouncementList extends _$AnnouncementList {
 
   /// 공지사항 수정 후 목록 갱신
   Future<void> afterUpdate(String id, AnnouncementModel updated) async {
+    if (_items.isEmpty) return;
+
     final index = _items.indexWhere((item) => item.id == id);
     if (index != -1) {
+      // 리스트가 unmodifiable일 수 있으므로 복사본 생성
+      _items = List<AnnouncementModel>.from(_items);
       _items[index] = updated;
       state = AsyncValue.data([..._items]);
     }
@@ -88,14 +92,23 @@ class AnnouncementList extends _$AnnouncementList {
 
   /// 공지사항 삭제 후 목록 갱신
   Future<void> afterDelete(String id) async {
+    if (_items.isEmpty) return;
+
+    // 리스트가 unmodifiable일 수 있으므로 복사본 생성
+    _items = List<AnnouncementModel>.from(_items);
     _items.removeWhere((item) => item.id == id);
     state = AsyncValue.data([..._items]);
   }
 
   /// 공지사항 읽음 처리 (로컬 상태만 업데이트)
   void markAsRead(String id) {
+    // state가 로딩 중이거나 에러 상태면 무시
+    if (!state.hasValue || _items.isEmpty) return;
+
     final index = _items.indexWhere((item) => item.id == id);
     if (index != -1 && !_items[index].isRead) {
+      // 리스트가 unmodifiable일 수 있으므로 복사본 생성
+      _items = List<AnnouncementModel>.from(_items);
       _items[index] = _items[index].copyWith(isRead: true);
       state = AsyncValue.data([..._items]);
     }
@@ -153,8 +166,8 @@ class AnnouncementManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final announcement = await _repository.createAnnouncement(dto);
 
-      // 목록 갱신
-      _ref.read(announcementListProvider.notifier).afterCreate();
+      // 목록 갱신 (완료될 때까지 대기)
+      await _ref.read(announcementListProvider.notifier).afterCreate();
 
       state = const AsyncValue.data(null);
       return announcement;

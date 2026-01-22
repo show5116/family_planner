@@ -106,8 +106,11 @@ class AnnouncementDetailScreen extends ConsumerWidget {
       ),
       body: announcementAsync.when(
         data: (announcement) {
-          // 공지사항을 읽었으므로 목록의 읽음 상태 즉시 업데이트
-          ref.read(announcementListProvider.notifier).markAsRead(announcementId);
+          // 공지사항을 읽었으므로 목록의 읽음 상태 업데이트
+          // build 중 Provider 수정 불가하므로 다음 프레임에서 실행
+          Future(() {
+            ref.read(announcementListProvider.notifier).markAsRead(announcementId);
+          });
 
           final dateFormat = DateFormat('yyyy년 MM월 dd일 HH:mm');
 

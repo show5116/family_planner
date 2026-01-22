@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -174,6 +175,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         GlobalMaterialLocalizations.delegate, // Material 위젯 다국어
         GlobalWidgetsLocalizations.delegate, // 일반 위젯 다국어
         GlobalCupertinoLocalizations.delegate, // Cupertino 위젯 다국어
+        FlutterQuillLocalizations.delegate, // Flutter Quill 에디터 다국어
       ],
 
       // 웹에서 스크롤 동작 개선

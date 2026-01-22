@@ -246,13 +246,8 @@ class _AnnouncementFormScreenState
       if (!mounted) return;
 
       if (result != null) {
-        // 목록 새로고침
-        ref.invalidate(announcementListProvider);
-
-        // 수정 모드인 경우 상세 정보도 새로고침
-        if (_isEditMode) {
-          ref.invalidate(announcementDetailProvider(widget.announcementId!));
-        }
+        // 목록 갱신은 announcementManagementProvider에서 이미 처리됨
+        // invalidate 호출 시 Provider 내부 상태(_items)가 초기화되므로 호출하지 않음
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
