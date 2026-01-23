@@ -25,6 +25,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
   int _dashboardRefreshKey = 0;
 
+  // 방문한 탭 ID를 추적 (Lazy Loading용)
+  final Set<String> _visitedTabs = {'home'}; // 홈은 기본으로 방문
+
   // 각 탭 ID에 해당하는 화면 매핑
   Widget _getScreenForId(String id, AppLocalizations l10n) {
     switch (id) {
@@ -89,9 +92,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }).toList();
 
-    // 화면 리스트 생성 (다국어 적용)
-    final screens = displayedItems.map((item) => _getScreenForId(item.id, l10n)).toList();
-
     // _selectedIndex가 범위를 벗어나면 0으로 초기화
     if (_selectedIndex >= displayedItems.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -108,6 +108,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onDestinationSelected: (index) {
         setState(() {
           _selectedIndex = index;
+          // 방문한 탭으로 기록
+          if (index < displayedItems.length) {
+            _visitedTabs.add(displayedItems[index].id);
+          }
           // 홈 탭으로 전환할 때 새로고침
           if (index < displayedItems.length && displayedItems[index].id == 'home') {
             _dashboardRefreshKey++;
@@ -115,10 +119,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         });
       },
       destinations: destinations,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: screens,
-      ),
+      body: _buildLazyBody(displayedItems, l10n),
+    );
+  }
+
+  /// Lazy Loading 방식의 탭 body 빌드
+  /// 방문한 탭만 빌드하고, 이미 빌드된 탭은 Offstage로 숨겨서 상태 유지
+  Widget _buildLazyBody(List<NavigationItem> displayedItems, AppLocalizations l10n) {
+    return Stack(
+      children: List.generate(displayedItems.length, (index) {
+        final item = displayedItems[index];
+        final isSelected = index == _selectedIndex;
+        final hasVisited = _visitedTabs.contains(item.id);
+
+        // 방문하지 않은 탭은 빌드하지 않음
+        if (!hasVisited) {
+          return const SizedBox.shrink();
+        }
+
+        // 방문한 탭은 Offstage로 숨기거나 표시
+        return Offstage(
+          offstage: !isSelected,
+          child: TickerMode(
+            enabled: isSelected, // 비활성 탭의 애니메이션 중지
+            child: _getScreenForId(item.id, l10n),
+          ),
+        );
+      }),
     );
   }
 }
