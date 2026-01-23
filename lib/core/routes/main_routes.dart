@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/screens/home_screen.dart';
+import 'package:family_planner/features/main/calendar/screens/task_form_screen.dart';
+import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -24,12 +26,33 @@ List<RouteBase> getMainRoutes() {
     //   builder: (context, state) => const AssetsScreen(),
     // ),
 
-    // Calendar Routes (추후 구현)
-    // GoRoute(
-    //   path: AppRoutes.calendar,
-    //   name: 'calendar',
-    //   builder: (context, state) => const CalendarScreen(),
-    // ),
+    // Calendar Routes
+    GoRoute(
+      path: AppRoutes.calendarAdd,
+      name: 'calendarAdd',
+      builder: (context, state) {
+        final extra = state.extra;
+        DateTime? initialDate;
+        if (extra is DateTime) {
+          initialDate = extra;
+        }
+        return TaskFormScreen(initialDate: initialDate);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.calendarDetail,
+      name: 'calendarDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is Map<String, dynamic>) {
+          return TaskFormScreen(
+            taskId: extra['taskId'] as String?,
+            task: extra['task'] as TaskModel?,
+          );
+        }
+        return const TaskFormScreen();
+      },
+    ),
 
     // Todo Routes (추후 구현)
     // GoRoute(

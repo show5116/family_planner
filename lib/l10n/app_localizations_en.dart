@@ -1398,6 +1398,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_endTime => 'End Time';
 
   @override
+  String get schedule_dueDate => 'Set Due Date';
+
+  @override
+  String get schedule_dueDateSelect => 'Due Date';
+
+  @override
+  String get schedule_dueTime => 'Due Time';
+
+  @override
   String get schedule_color => 'Color';
 
   @override

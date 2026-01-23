@@ -1362,6 +1362,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_endTime => '終了時刻';
 
   @override
+  String get schedule_dueDate => '期限を設定';
+
+  @override
+  String get schedule_dueDateSelect => '期限日';
+
+  @override
+  String get schedule_dueTime => '期限時刻';
+
+  @override
   String get schedule_color => '色';
 
   @override

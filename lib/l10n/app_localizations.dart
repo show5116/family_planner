@@ -2746,6 +2746,24 @@ abstract class AppLocalizations {
   /// **'종료 시간'**
   String get schedule_endTime;
 
+  /// No description provided for @schedule_dueDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'마감일 설정'**
+  String get schedule_dueDate;
+
+  /// No description provided for @schedule_dueDateSelect.
+  ///
+  /// In ko, this message translates to:
+  /// **'마감 날짜'**
+  String get schedule_dueDateSelect;
+
+  /// No description provided for @schedule_dueTime.
+  ///
+  /// In ko, this message translates to:
+  /// **'마감 시간'**
+  String get schedule_dueTime;
+
   /// No description provided for @schedule_color.
   ///
   /// In ko, this message translates to:

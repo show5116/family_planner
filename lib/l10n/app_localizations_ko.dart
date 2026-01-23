@@ -1365,6 +1365,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_endTime => '종료 시간';
 
   @override
+  String get schedule_dueDate => '마감일 설정';
+
+  @override
+  String get schedule_dueDateSelect => '마감 날짜';
+
+  @override
+  String get schedule_dueTime => '마감 시간';
+
+  @override
   String get schedule_color => '색상';
 
   @override

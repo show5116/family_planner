@@ -224,19 +224,49 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             const Icon(Icons.chevron_right, color: AppColors.primary),
       ),
 
-      // 요일 스타일
+      // 요일 스타일 (dowBuilder에서 커스텀 처리하므로 기본값 사용)
       daysOfWeekStyle: DaysOfWeekStyle(
         weekdayStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
               fontWeight: FontWeight.w600,
             ),
         weekendStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.error.withValues(alpha: 0.8),
             ),
       ),
 
-      // 캘린더 빌더 (커스텀 마커)
+      // 캘린더 빌더 (커스텀 마커 + 토/일 색상 분리)
       calendarBuilders: CalendarBuilders(
+        // 요일 헤더 빌더 (토요일 파란색, 일요일 빨간색)
+        dowBuilder: (context, day) {
+          final text = DateFormat.E(Localizations.localeOf(context).toString())
+              .format(day);
+          Color textColor;
+          if (day.weekday == DateTime.sunday) {
+            textColor = AppColors.error.withValues(alpha: 0.8);
+          } else if (day.weekday == DateTime.saturday) {
+            textColor = AppColors.primary;
+          } else {
+            textColor = Theme.of(context).colorScheme.onSurface;
+          }
+          return Center(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+            ),
+          );
+        },
+        // 기본 날짜 빌더 (토요일 파란색, 일요일 빨간색)
+        defaultBuilder: (context, date, focusedDay) {
+          return _buildDayCell(date, isSelected: false, isToday: false);
+        },
+        // 선택된 날짜는 기본 스타일 사용 (selectedDecoration)
+        // 오늘 날짜도 기본 스타일 사용 (todayDecoration)
+        outsideBuilder: (context, date, focusedDay) {
+          return _buildDayCell(date, isSelected: false, isToday: false, isOutside: true);
+        },
         markerBuilder: (context, date, events) {
           if (events.isEmpty) return null;
 
@@ -322,7 +352,10 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                     task: task,
                     timeFormat: timeFormat,
                     onTap: () {
-                      context.push('/calendar/${task.id}');
+                      context.push('/calendar/detail', extra: {
+                        'taskId': task.id,
+                        'task': task,
+                      });
                     },
                     onToggleComplete: () {
                       ref.read(taskManagementProvider.notifier).toggleComplete(
@@ -363,6 +396,39 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                 ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// 날짜 셀 빌더 (토요일 파란색, 일요일 빨간색)
+  Widget _buildDayCell(
+    DateTime date, {
+    required bool isSelected,
+    required bool isToday,
+    bool isOutside = false,
+  }) {
+    Color textColor;
+
+    if (isOutside) {
+      textColor = AppColors.textSecondary.withValues(alpha: 0.5);
+    } else if (date.weekday == DateTime.sunday) {
+      // 일요일: 빨간색
+      textColor = AppColors.error.withValues(alpha: 0.8);
+    } else if (date.weekday == DateTime.saturday) {
+      // 토요일: 파란색
+      textColor = AppColors.primary;
+    } else {
+      // 평일: 기본 색상
+      textColor = Theme.of(context).colorScheme.onSurface;
+    }
+
+    return Center(
+      child: Text(
+        '${date.day}',
+        style: TextStyle(
+          color: textColor,
+          fontSize: 14,
+        ),
       ),
     );
   }
