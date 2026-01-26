@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/screens/home_screen.dart';
 import 'package:family_planner/features/main/calendar/screens/task_form_screen.dart';
+import 'package:family_planner/features/main/calendar/screens/category_management_screen.dart';
 import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
 
 /// 메인 기능 라우트 목록
@@ -52,6 +53,11 @@ List<RouteBase> getMainRoutes() {
         }
         return const TaskFormScreen();
       },
+    ),
+    GoRoute(
+      path: AppRoutes.categoryManagement,
+      name: 'categoryManagement',
+      builder: (context, state) => const CategoryManagementScreen(),
     ),
 
     // Todo Routes (추후 구현)

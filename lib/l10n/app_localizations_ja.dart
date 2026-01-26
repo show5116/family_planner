@@ -1426,4 +1426,74 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get schedule_recurrenceYearly => '毎年';
+
+  @override
+  String get schedule_personal => '個人の予定';
+
+  @override
+  String get schedule_group => 'グループの予定';
+
+  @override
+  String get category_management => 'カテゴリー管理';
+
+  @override
+  String get category_add => 'カテゴリー追加';
+
+  @override
+  String get category_edit => 'カテゴリー編集';
+
+  @override
+  String get category_empty => 'カテゴリーがありません';
+
+  @override
+  String get category_emptyHint => 'カテゴリーを追加して予定を分類しましょう';
+
+  @override
+  String get category_loadError => 'カテゴリーの読み込みに失敗しました';
+
+  @override
+  String get category_name => 'カテゴリー名';
+
+  @override
+  String get category_nameHint => '例：仕事、個人、家族';
+
+  @override
+  String get category_nameRequired => 'カテゴリー名を入力してください';
+
+  @override
+  String get category_description => '説明';
+
+  @override
+  String get category_descriptionHint => 'カテゴリーの説明（任意）';
+
+  @override
+  String get category_emoji => '絵文字';
+
+  @override
+  String get category_color => '色';
+
+  @override
+  String get category_createSuccess => 'カテゴリーを作成しました';
+
+  @override
+  String get category_createError => 'カテゴリーの作成に失敗しました';
+
+  @override
+  String get category_updateSuccess => 'カテゴリーを更新しました';
+
+  @override
+  String get category_updateError => 'カテゴリーの更新に失敗しました';
+
+  @override
+  String get category_deleteSuccess => 'カテゴリーを削除しました';
+
+  @override
+  String get category_deleteError => 'カテゴリーの削除に失敗しました';
+
+  @override
+  String get category_deleteDialogTitle => 'カテゴリー削除';
+
+  @override
+  String get category_deleteDialogMessage =>
+      'このカテゴリーを削除しますか？\n関連する予定があると削除できません。';
 }

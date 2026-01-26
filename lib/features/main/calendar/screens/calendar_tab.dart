@@ -8,6 +8,8 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/calendar/providers/task_provider.dart';
 import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 일정 관리 탭 (월간 캘린더 뷰)
@@ -34,6 +36,8 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     final l10n = AppLocalizations.of(context)!;
     final selectedDate = ref.watch(selectedDateProvider);
     final focusedMonth = ref.watch(focusedMonthProvider);
+    final selectedGroupId = ref.watch(selectedGroupIdProvider);
+    final groupsAsync = ref.watch(myGroupsProvider);
 
     // 현재 보고 있는 월의 Task 데이터
     final tasksAsync = ref.watch(
@@ -42,7 +46,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.nav_calendar),
+        title: _buildGroupSelector(l10n, selectedGroupId, groupsAsync),
         actions: [
           IconButton(
             icon: const Icon(Icons.today),
@@ -55,6 +59,25 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             onPressed: () {
               // TODO: 일정 검색 기능
             },
+          ),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'categories') {
+                context.push('/calendar/categories');
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'categories',
+                child: Row(
+                  children: [
+                    const Icon(Icons.category_outlined, size: 20),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Text(l10n.category_management),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -91,6 +114,75 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     });
     ref.read(selectedDateProvider.notifier).state = today;
     ref.read(focusedMonthProvider.notifier).state = today;
+  }
+
+  /// 그룹 선택 드롭다운
+  Widget _buildGroupSelector(
+    AppLocalizations l10n,
+    String? selectedGroupId,
+    AsyncValue<List<Group>> groupsAsync,
+  ) {
+    return groupsAsync.when(
+      data: (groups) {
+        // 개인 + 그룹 목록
+        final items = <DropdownMenuItem<String?>>[];
+
+        // 개인 일정 옵션
+        items.add(
+          DropdownMenuItem<String?>(
+            value: null,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.person, size: 20),
+                const SizedBox(width: AppSizes.spaceS),
+                Text(l10n.schedule_personal),
+              ],
+            ),
+          ),
+        );
+
+        // 그룹 옵션들
+        for (final group in groups) {
+          items.add(
+            DropdownMenuItem<String?>(
+              value: group.id,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.group,
+                    size: 20,
+                    color: group.defaultColor != null
+                        ? Color(int.parse('FF${group.defaultColor!.replaceFirst('#', '')}', radix: 16))
+                        : null,
+                  ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Text(
+                    group.name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return DropdownButtonHideUnderline(
+          child: DropdownButton<String?>(
+            value: selectedGroupId,
+            items: items,
+            onChanged: (value) {
+              ref.read(selectedGroupIdProvider.notifier).state = value;
+            },
+            icon: const Icon(Icons.arrow_drop_down),
+            isDense: true,
+          ),
+        );
+      },
+      loading: () => Text(l10n.nav_calendar),
+      error: (error, stack) => Text(l10n.nav_calendar),
+    );
   }
 
   /// 월간 캘린더 위젯

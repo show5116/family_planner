@@ -12,13 +12,17 @@ final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 /// 현재 보고 있는 월 Provider (캘린더 페이지 이동용)
 final focusedMonthProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
-/// 월간 Task Provider (캘린더 뷰용)
+/// 현재 선택된 그룹 ID Provider (null이면 개인 일정)
+final selectedGroupIdProvider = StateProvider<String?>((ref) => null);
+
+/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
 @riverpod
 class MonthlyTasks extends _$MonthlyTasks {
   @override
   Future<List<TaskModel>> build(int year, int month) async {
     final repository = ref.watch(taskRepositoryProvider);
-    return await repository.getCalendarTasks(year: year, month: month);
+    final groupId = ref.watch(selectedGroupIdProvider);
+    return await repository.getCalendarTasks(year: year, month: month, groupId: groupId);
   }
 
   /// 새로고침
@@ -26,7 +30,8 @@ class MonthlyTasks extends _$MonthlyTasks {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final repository = ref.read(taskRepositoryProvider);
-      return await repository.getCalendarTasks(year: year, month: month);
+      final groupId = ref.read(selectedGroupIdProvider);
+      return await repository.getCalendarTasks(year: year, month: month, groupId: groupId);
     });
   }
 
@@ -150,12 +155,150 @@ Future<TaskDetailModel> taskDetail(Ref ref, String id) async {
   return await repository.getTaskById(id);
 }
 
-/// 카테고리 목록 Provider
+/// 카테고리 목록 Provider (groupId 파라미터 지원)
 @riverpod
 Future<List<CategoryModel>> categories(Ref ref, {String? groupId}) async {
   final repository = ref.watch(taskRepositoryProvider);
   return await repository.getCategories(groupId: groupId);
 }
+
+/// 현재 선택된 그룹의 카테고리 목록 Provider
+@riverpod
+Future<List<CategoryModel>> selectedGroupCategories(Ref ref) async {
+  final groupId = ref.watch(selectedGroupIdProvider);
+  final repository = ref.watch(taskRepositoryProvider);
+  return await repository.getCategories(groupId: groupId);
+}
+
+/// 카테고리 관리 Notifier (그룹 지원)
+class CategoryManagementNotifier extends StateNotifier<AsyncValue<List<CategoryModel>>> {
+  final TaskRepository _repository;
+  final Ref _ref;
+  String? _groupId;
+
+  CategoryManagementNotifier(this._repository, this._ref)
+      : super(const AsyncValue.loading()) {
+    _groupId = _ref.read(selectedGroupIdProvider);
+    _loadCategories();
+
+    // 그룹 변경 감지
+    _ref.listen(selectedGroupIdProvider, (previous, next) {
+      if (previous != next) {
+        _groupId = next;
+        _loadCategories();
+      }
+    });
+  }
+
+  Future<void> _loadCategories() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => _repository.getCategories(groupId: _groupId));
+  }
+
+  /// 새로고침
+  Future<void> refresh() async {
+    await _loadCategories();
+  }
+
+  /// 카테고리 생성
+  Future<CategoryModel?> createCategory({
+    required String name,
+    String? description,
+    String? emoji,
+    String? color,
+  }) async {
+    try {
+      final category = await _repository.createCategory(
+        name: name,
+        description: description,
+        emoji: emoji,
+        color: color,
+        groupId: _groupId,
+      );
+
+      // 로컬 상태에 추가
+      if (state.hasValue) {
+        final categories = List<CategoryModel>.from(state.value!);
+        categories.add(category);
+        state = AsyncValue.data(categories);
+      }
+
+      // categories provider 무효화
+      _ref.invalidate(categoriesProvider(groupId: _groupId));
+      _ref.invalidate(selectedGroupCategoriesProvider);
+
+      return category;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 카테고리 수정
+  Future<CategoryModel?> updateCategory(
+    String id, {
+    String? name,
+    String? description,
+    String? emoji,
+    String? color,
+  }) async {
+    try {
+      final category = await _repository.updateCategory(
+        id,
+        name: name,
+        description: description,
+        emoji: emoji,
+        color: color,
+      );
+
+      // 로컬 상태 업데이트
+      if (state.hasValue) {
+        final categories = List<CategoryModel>.from(state.value!);
+        final index = categories.indexWhere((c) => c.id == id);
+        if (index != -1) {
+          categories[index] = category;
+          state = AsyncValue.data(categories);
+        }
+      }
+
+      // categories provider 무효화
+      _ref.invalidate(categoriesProvider(groupId: _groupId));
+      _ref.invalidate(selectedGroupCategoriesProvider);
+
+      return category;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 카테고리 삭제
+  Future<bool> deleteCategory(String id) async {
+    try {
+      await _repository.deleteCategory(id);
+
+      // 로컬 상태에서 제거
+      if (state.hasValue) {
+        final categories = List<CategoryModel>.from(state.value!);
+        categories.removeWhere((c) => c.id == id);
+        state = AsyncValue.data(categories);
+      }
+
+      // categories provider 무효화
+      _ref.invalidate(categoriesProvider(groupId: _groupId));
+      _ref.invalidate(selectedGroupCategoriesProvider);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+}
+
+/// 카테고리 관리 Provider
+final categoryManagementProvider =
+    StateNotifierProvider<CategoryManagementNotifier, AsyncValue<List<CategoryModel>>>((ref) {
+  final repository = ref.watch(taskRepositoryProvider);
+  return CategoryManagementNotifier(repository, ref);
+});
 
 /// Task 관리 Notifier
 class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {

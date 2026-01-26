@@ -208,6 +208,48 @@ class TaskRepository {
     }
   }
 
+  /// 카테고리 수정
+  Future<CategoryModel> updateCategory(
+    String id, {
+    String? name,
+    String? description,
+    String? emoji,
+    String? color,
+  }) async {
+    try {
+      final response = await _dio.put('/tasks/categories/$id', data: {
+        if (name != null) 'name': name,
+        if (description != null) 'description': description,
+        if (emoji != null) 'emoji': emoji,
+        if (color != null) 'color': color,
+      });
+      return CategoryModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw Exception('카테고리를 찾을 수 없습니다');
+      }
+      if (e.response?.statusCode == 403) {
+        throw Exception('수정 권한이 없습니다');
+      }
+      throw Exception('카테고리 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 카테고리 삭제
+  Future<void> deleteCategory(String id) async {
+    try {
+      await _dio.delete('/tasks/categories/$id');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw Exception('카테고리를 찾을 수 없습니다');
+      }
+      if (e.response?.statusCode == 403) {
+        throw Exception('연결된 일정이 있어 삭제할 수 없습니다');
+      }
+      throw Exception('카테고리 삭제 실패: ${e.message}');
+    }
+  }
+
   /// 반복 일정 일시정지/재개
   Future<RecurringModel> toggleRecurringPause(String recurringId) async {
     try {

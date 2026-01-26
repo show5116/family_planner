@@ -324,22 +324,22 @@ class _TaskDetailProviderElement
 
 String _$categoriesHash() => r'64b6e78fe81e55e84168f6136a92eef20189a259';
 
-/// 카테고리 목록 Provider
+/// 카테고리 목록 Provider (groupId 파라미터 지원)
 ///
 /// Copied from [categories].
 @ProviderFor(categories)
 const categoriesProvider = CategoriesFamily();
 
-/// 카테고리 목록 Provider
+/// 카테고리 목록 Provider (groupId 파라미터 지원)
 ///
 /// Copied from [categories].
 class CategoriesFamily extends Family<AsyncValue<List<CategoryModel>>> {
-  /// 카테고리 목록 Provider
+  /// 카테고리 목록 Provider (groupId 파라미터 지원)
   ///
   /// Copied from [categories].
   const CategoriesFamily();
 
-  /// 카테고리 목록 Provider
+  /// 카테고리 목록 Provider (groupId 파라미터 지원)
   ///
   /// Copied from [categories].
   CategoriesProvider call({String? groupId}) {
@@ -368,12 +368,12 @@ class CategoriesFamily extends Family<AsyncValue<List<CategoryModel>>> {
   String? get name => r'categoriesProvider';
 }
 
-/// 카테고리 목록 Provider
+/// 카테고리 목록 Provider (groupId 파라미터 지원)
 ///
 /// Copied from [categories].
 class CategoriesProvider
     extends AutoDisposeFutureProvider<List<CategoryModel>> {
-  /// 카테고리 목록 Provider
+  /// 카테고리 목록 Provider (groupId 파라미터 지원)
   ///
   /// Copied from [categories].
   CategoriesProvider({String? groupId})
@@ -454,7 +454,29 @@ class _CategoriesProviderElement
   String? get groupId => (origin as CategoriesProvider).groupId;
 }
 
-String _$monthlyTasksHash() => r'034a611b8976345d7d9cbe9f1fb15bca7702fdf6';
+String _$selectedGroupCategoriesHash() =>
+    r'477219df0000b5fed9e4134e78e4cfa8613ad75d';
+
+/// 현재 선택된 그룹의 카테고리 목록 Provider
+///
+/// Copied from [selectedGroupCategories].
+@ProviderFor(selectedGroupCategories)
+final selectedGroupCategoriesProvider =
+    AutoDisposeFutureProvider<List<CategoryModel>>.internal(
+      selectedGroupCategories,
+      name: r'selectedGroupCategoriesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$selectedGroupCategoriesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SelectedGroupCategoriesRef =
+    AutoDisposeFutureProviderRef<List<CategoryModel>>;
+String _$monthlyTasksHash() => r'2f89ad4e9dd3fcc9fa6b724b3ddbf673d8abe95f';
 
 abstract class _$MonthlyTasks
     extends BuildlessAutoDisposeAsyncNotifier<List<TaskModel>> {
@@ -464,22 +486,22 @@ abstract class _$MonthlyTasks
   FutureOr<List<TaskModel>> build(int year, int month);
 }
 
-/// 월간 Task Provider (캘린더 뷰용)
+/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
 ///
 /// Copied from [MonthlyTasks].
 @ProviderFor(MonthlyTasks)
 const monthlyTasksProvider = MonthlyTasksFamily();
 
-/// 월간 Task Provider (캘린더 뷰용)
+/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
 ///
 /// Copied from [MonthlyTasks].
 class MonthlyTasksFamily extends Family<AsyncValue<List<TaskModel>>> {
-  /// 월간 Task Provider (캘린더 뷰용)
+  /// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
   ///
   /// Copied from [MonthlyTasks].
   const MonthlyTasksFamily();
 
-  /// 월간 Task Provider (캘린더 뷰용)
+  /// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
   ///
   /// Copied from [MonthlyTasks].
   MonthlyTasksProvider call(int year, int month) {
@@ -508,13 +530,13 @@ class MonthlyTasksFamily extends Family<AsyncValue<List<TaskModel>>> {
   String? get name => r'monthlyTasksProvider';
 }
 
-/// 월간 Task Provider (캘린더 뷰용)
+/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
 ///
 /// Copied from [MonthlyTasks].
 class MonthlyTasksProvider
     extends
         AutoDisposeAsyncNotifierProviderImpl<MonthlyTasks, List<TaskModel>> {
-  /// 월간 Task Provider (캘린더 뷰용)
+  /// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
   ///
   /// Copied from [MonthlyTasks].
   MonthlyTasksProvider(int year, int month)

@@ -1462,4 +1462,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schedule_recurrenceYearly => 'Yearly';
+
+  @override
+  String get schedule_personal => 'Personal';
+
+  @override
+  String get schedule_group => 'Group';
+
+  @override
+  String get category_management => 'Manage Categories';
+
+  @override
+  String get category_add => 'Add Category';
+
+  @override
+  String get category_edit => 'Edit Category';
+
+  @override
+  String get category_empty => 'No categories';
+
+  @override
+  String get category_emptyHint => 'Add categories to organize your schedules';
+
+  @override
+  String get category_loadError => 'Failed to load categories';
+
+  @override
+  String get category_name => 'Category Name';
+
+  @override
+  String get category_nameHint => 'e.g., Work, Personal, Family';
+
+  @override
+  String get category_nameRequired => 'Please enter a category name';
+
+  @override
+  String get category_description => 'Description';
+
+  @override
+  String get category_descriptionHint =>
+      'Description of the category (optional)';
+
+  @override
+  String get category_emoji => 'Emoji';
+
+  @override
+  String get category_color => 'Color';
+
+  @override
+  String get category_createSuccess => 'Category created';
+
+  @override
+  String get category_createError => 'Failed to create category';
+
+  @override
+  String get category_updateSuccess => 'Category updated';
+
+  @override
+  String get category_updateError => 'Failed to update category';
+
+  @override
+  String get category_deleteSuccess => 'Category deleted';
+
+  @override
+  String get category_deleteError => 'Failed to delete category';
+
+  @override
+  String get category_deleteDialogTitle => 'Delete Category';
+
+  @override
+  String get category_deleteDialogMessage =>
+      'Are you sure you want to delete this category?\nCategories with linked schedules cannot be deleted.';
 }

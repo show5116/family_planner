@@ -2877,6 +2877,144 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'매년'**
   String get schedule_recurrenceYearly;
+
+  /// No description provided for @schedule_personal.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 일정'**
+  String get schedule_personal;
+
+  /// No description provided for @schedule_group.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 일정'**
+  String get schedule_group;
+
+  /// No description provided for @category_management.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 관리'**
+  String get category_management;
+
+  /// No description provided for @category_add.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 추가'**
+  String get category_add;
+
+  /// No description provided for @category_edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 수정'**
+  String get category_edit;
+
+  /// No description provided for @category_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리가 없습니다'**
+  String get category_empty;
+
+  /// No description provided for @category_emptyHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리를 추가하여 일정을 분류해보세요'**
+  String get category_emptyHint;
+
+  /// No description provided for @category_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 로딩 실패'**
+  String get category_loadError;
+
+  /// No description provided for @category_name.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 이름'**
+  String get category_name;
+
+  /// No description provided for @category_nameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 업무, 개인, 가족'**
+  String get category_nameHint;
+
+  /// No description provided for @category_nameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 이름을 입력해주세요'**
+  String get category_nameRequired;
+
+  /// No description provided for @category_description.
+  ///
+  /// In ko, this message translates to:
+  /// **'설명'**
+  String get category_description;
+
+  /// No description provided for @category_descriptionHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리에 대한 설명 (선택)'**
+  String get category_descriptionHint;
+
+  /// No description provided for @category_emoji.
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지'**
+  String get category_emoji;
+
+  /// No description provided for @category_color.
+  ///
+  /// In ko, this message translates to:
+  /// **'색상'**
+  String get category_color;
+
+  /// No description provided for @category_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리가 생성되었습니다'**
+  String get category_createSuccess;
+
+  /// No description provided for @category_createError.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 생성 실패'**
+  String get category_createError;
+
+  /// No description provided for @category_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리가 수정되었습니다'**
+  String get category_updateSuccess;
+
+  /// No description provided for @category_updateError.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 수정 실패'**
+  String get category_updateError;
+
+  /// No description provided for @category_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리가 삭제되었습니다'**
+  String get category_deleteSuccess;
+
+  /// No description provided for @category_deleteError.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 삭제 실패'**
+  String get category_deleteError;
+
+  /// No description provided for @category_deleteDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 삭제'**
+  String get category_deleteDialogTitle;
+
+  /// No description provided for @category_deleteDialogMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 카테고리를 삭제하시겠습니까?\n연결된 일정이 있으면 삭제할 수 없습니다.'**
+  String get category_deleteDialogMessage;
 }
 
 class _AppLocalizationsDelegate

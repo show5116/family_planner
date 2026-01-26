@@ -8,6 +8,8 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
 import 'package:family_planner/features/main/calendar/data/repositories/task_repository.dart';
 import 'package:family_planner/features/main/calendar/providers/task_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 일정 추가/수정 화면
@@ -117,7 +119,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   Future<void> _loadCategories() async {
     try {
       final repository = ref.read(taskRepositoryProvider);
-      final categories = await repository.getCategories();
+      final groupId = ref.read(selectedGroupIdProvider);
+      final categories = await repository.getCategories(groupId: groupId);
       if (mounted) {
         setState(() {
           _categories = categories;
@@ -148,6 +151,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final selectedGroupId = ref.watch(selectedGroupIdProvider);
+    final groupsAsync = ref.watch(myGroupsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -168,6 +173,10 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 그룹 선택
+              _buildGroupSelector(l10n, selectedGroupId, groupsAsync),
+              const SizedBox(height: AppSizes.spaceL),
+
               // 제목 입력
               _buildTitleField(l10n),
               const SizedBox(height: AppSizes.spaceL),
@@ -231,6 +240,109 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  /// 그룹 선택 섹션
+  Widget _buildGroupSelector(
+    AppLocalizations l10n,
+    String? selectedGroupId,
+    AsyncValue<List<Group>> groupsAsync,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.schedule_group,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          child: groupsAsync.when(
+            data: (groups) {
+              // 개인 + 그룹 목록
+              final items = <DropdownMenuItem<String?>>[];
+
+              // 개인 일정 옵션
+              items.add(
+                DropdownMenuItem<String?>(
+                  value: null,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.person, size: 20),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Text(l10n.schedule_personal),
+                    ],
+                  ),
+                ),
+              );
+
+              // 그룹 옵션들
+              for (final group in groups) {
+                items.add(
+                  DropdownMenuItem<String?>(
+                    value: group.id,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.group,
+                          size: 20,
+                          color: group.defaultColor != null
+                              ? Color(int.parse('FF${group.defaultColor!.replaceFirst('#', '')}', radix: 16))
+                              : null,
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Expanded(
+                          child: Text(
+                            group.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceM,
+                  vertical: AppSizes.spaceS,
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String?>(
+                    value: selectedGroupId,
+                    items: items,
+                    onChanged: (value) {
+                      ref.read(selectedGroupIdProvider.notifier).state = value;
+                      // 그룹 변경 시 카테고리 다시 로드
+                      _selectedCategory = null;
+                      _loadCategories();
+                    },
+                    isExpanded: true,
+                    icon: const Icon(Icons.arrow_drop_down),
+                  ),
+                ),
+              );
+            },
+            loading: () => const Padding(
+              padding: EdgeInsets.all(AppSizes.spaceM),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (error, stack) => Padding(
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              child: Text(
+                l10n.schedule_personal,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -370,21 +482,54 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '카테고리',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              l10n.category_management.split(' ').first, // "카테고리"
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            TextButton.icon(
+              onPressed: () async {
+                await context.push('/calendar/categories');
+                // 카테고리 관리 화면에서 돌아오면 다시 로드
+                _loadCategories();
+              },
+              icon: const Icon(Icons.settings, size: 18),
+              label: Text(l10n.category_management),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+                visualDensity: VisualDensity.compact,
               ),
+            ),
+          ],
         ),
         const SizedBox(height: AppSizes.spaceM),
         if (_isLoadingCategories)
           const Center(child: CircularProgressIndicator())
         else if (_categories.isEmpty)
-          Text(
-            '카테고리가 없습니다',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  l10n.category_empty,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                 ),
+                const SizedBox(height: AppSizes.spaceS),
+                TextButton.icon(
+                  onPressed: () async {
+                    await context.push('/calendar/categories');
+                    _loadCategories();
+                  },
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.category_add),
+                ),
+              ],
+            ),
           )
         else
           Wrap(
@@ -798,6 +943,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
             .toList();
       }
 
+      // 현재 선택된 그룹 ID
+      final groupId = ref.read(selectedGroupIdProvider);
+
       final dto = CreateTaskDto(
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim().isEmpty
@@ -809,6 +957,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         type: TaskType.schedule,
         priority: _priority,
         categoryId: _selectedCategory!.id,
+        groupId: groupId,
         scheduledAt: scheduledAt.toIso8601String(),
         dueAt: dueAt?.toIso8601String(),
         recurring: recurring,

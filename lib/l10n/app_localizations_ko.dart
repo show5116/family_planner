@@ -1429,4 +1429,74 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get schedule_recurrenceYearly => '매년';
+
+  @override
+  String get schedule_personal => '개인 일정';
+
+  @override
+  String get schedule_group => '그룹 일정';
+
+  @override
+  String get category_management => '카테고리 관리';
+
+  @override
+  String get category_add => '카테고리 추가';
+
+  @override
+  String get category_edit => '카테고리 수정';
+
+  @override
+  String get category_empty => '카테고리가 없습니다';
+
+  @override
+  String get category_emptyHint => '카테고리를 추가하여 일정을 분류해보세요';
+
+  @override
+  String get category_loadError => '카테고리 로딩 실패';
+
+  @override
+  String get category_name => '카테고리 이름';
+
+  @override
+  String get category_nameHint => '예: 업무, 개인, 가족';
+
+  @override
+  String get category_nameRequired => '카테고리 이름을 입력해주세요';
+
+  @override
+  String get category_description => '설명';
+
+  @override
+  String get category_descriptionHint => '카테고리에 대한 설명 (선택)';
+
+  @override
+  String get category_emoji => '이모지';
+
+  @override
+  String get category_color => '색상';
+
+  @override
+  String get category_createSuccess => '카테고리가 생성되었습니다';
+
+  @override
+  String get category_createError => '카테고리 생성 실패';
+
+  @override
+  String get category_updateSuccess => '카테고리가 수정되었습니다';
+
+  @override
+  String get category_updateError => '카테고리 수정 실패';
+
+  @override
+  String get category_deleteSuccess => '카테고리가 삭제되었습니다';
+
+  @override
+  String get category_deleteError => '카테고리 삭제 실패';
+
+  @override
+  String get category_deleteDialogTitle => '카테고리 삭제';
+
+  @override
+  String get category_deleteDialogMessage =>
+      '이 카테고리를 삭제하시겠습니까?\n연결된 일정이 있으면 삭제할 수 없습니다.';
 }
