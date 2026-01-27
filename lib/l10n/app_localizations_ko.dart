@@ -1434,7 +1434,37 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_personal => '개인 일정';
 
   @override
-  String get schedule_group => '그룹 일정';
+  String get schedule_group => '그룹';
+
+  @override
+  String get schedule_taskType => '일정 유형';
+
+  @override
+  String get schedule_taskTypeCalendarOnly => '단순 일정';
+
+  @override
+  String get schedule_taskTypeCalendarOnlyDesc => '캘린더에만 표시됩니다';
+
+  @override
+  String get schedule_taskTypeTodoLinked => '할일 연동';
+
+  @override
+  String get schedule_taskTypeTodoLinkedDesc => '캘린더와 할일 목록에 모두 표시됩니다';
+
+  @override
+  String get schedule_priority => '우선순위';
+
+  @override
+  String get schedule_priorityLow => '낮음';
+
+  @override
+  String get schedule_priorityMedium => '보통';
+
+  @override
+  String get schedule_priorityHigh => '높음';
+
+  @override
+  String get schedule_priorityUrgent => '긴급';
 
   @override
   String get category_management => '카테고리 관리';

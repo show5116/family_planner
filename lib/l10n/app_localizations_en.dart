@@ -1470,6 +1470,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_group => 'Group';
 
   @override
+  String get schedule_taskType => 'Schedule Type';
+
+  @override
+  String get schedule_taskTypeCalendarOnly => 'Calendar Only';
+
+  @override
+  String get schedule_taskTypeCalendarOnlyDesc => 'Shown only on calendar';
+
+  @override
+  String get schedule_taskTypeTodoLinked => 'Todo Linked';
+
+  @override
+  String get schedule_taskTypeTodoLinkedDesc =>
+      'Shown on both calendar and todo list';
+
+  @override
+  String get schedule_priority => 'Priority';
+
+  @override
+  String get schedule_priorityLow => 'Low';
+
+  @override
+  String get schedule_priorityMedium => 'Medium';
+
+  @override
+  String get schedule_priorityHigh => 'High';
+
+  @override
+  String get schedule_priorityUrgent => 'Urgent';
+
+  @override
   String get category_management => 'Manage Categories';
 
   @override

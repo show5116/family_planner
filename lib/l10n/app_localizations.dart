@@ -2887,8 +2887,68 @@ abstract class AppLocalizations {
   /// No description provided for @schedule_group.
   ///
   /// In ko, this message translates to:
-  /// **'그룹 일정'**
+  /// **'그룹'**
   String get schedule_group;
+
+  /// No description provided for @schedule_taskType.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 유형'**
+  String get schedule_taskType;
+
+  /// No description provided for @schedule_taskTypeCalendarOnly.
+  ///
+  /// In ko, this message translates to:
+  /// **'단순 일정'**
+  String get schedule_taskTypeCalendarOnly;
+
+  /// No description provided for @schedule_taskTypeCalendarOnlyDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더에만 표시됩니다'**
+  String get schedule_taskTypeCalendarOnlyDesc;
+
+  /// No description provided for @schedule_taskTypeTodoLinked.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 연동'**
+  String get schedule_taskTypeTodoLinked;
+
+  /// No description provided for @schedule_taskTypeTodoLinkedDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더와 할일 목록에 모두 표시됩니다'**
+  String get schedule_taskTypeTodoLinkedDesc;
+
+  /// No description provided for @schedule_priority.
+  ///
+  /// In ko, this message translates to:
+  /// **'우선순위'**
+  String get schedule_priority;
+
+  /// No description provided for @schedule_priorityLow.
+  ///
+  /// In ko, this message translates to:
+  /// **'낮음'**
+  String get schedule_priorityLow;
+
+  /// No description provided for @schedule_priorityMedium.
+  ///
+  /// In ko, this message translates to:
+  /// **'보통'**
+  String get schedule_priorityMedium;
+
+  /// No description provided for @schedule_priorityHigh.
+  ///
+  /// In ko, this message translates to:
+  /// **'높음'**
+  String get schedule_priorityHigh;
+
+  /// No description provided for @schedule_priorityUrgent.
+  ///
+  /// In ko, this message translates to:
+  /// **'긴급'**
+  String get schedule_priorityUrgent;
 
   /// No description provided for @category_management.
   ///

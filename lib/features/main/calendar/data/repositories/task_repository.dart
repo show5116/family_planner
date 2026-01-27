@@ -285,10 +285,10 @@ class TaskRepository {
   /// TaskType enum to string
   String _taskTypeToString(TaskType type) {
     switch (type) {
-      case TaskType.schedule:
-        return 'SCHEDULE';
-      case TaskType.todo:
-        return 'TODO';
+      case TaskType.calendarOnly:
+        return 'CALENDAR_ONLY';
+      case TaskType.todoLinked:
+        return 'TODO_LINKED';
     }
   }
 

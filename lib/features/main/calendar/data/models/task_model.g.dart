@@ -144,8 +144,8 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
     };
 
 const _$TaskTypeEnumMap = {
-  TaskType.schedule: 'SCHEDULE',
-  TaskType.todo: 'TODO',
+  TaskType.calendarOnly: 'CALENDAR_ONLY',
+  TaskType.todoLinked: 'TODO_LINKED',
 };
 
 const _$TaskPriorityEnumMap = {

@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
 import 'package:family_planner/features/main/calendar/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 카테고리 관리 화면
@@ -19,59 +20,147 @@ class CategoryManagementScreen extends ConsumerWidget {
     final selectedGroupId = ref.watch(selectedGroupIdProvider);
     final groupsAsync = ref.watch(myGroupsProvider);
 
-    // 현재 선택된 그룹 이름
-    String? groupName;
-    groupsAsync.whenData((groups) {
-      if (selectedGroupId != null) {
-        final group = groups.where((g) => g.id == selectedGroupId).firstOrNull;
-        groupName = group?.name;
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.category_management),
-            if (groupName != null || selectedGroupId == null)
-              Text(
-                groupName ?? l10n.schedule_personal,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-              ),
-          ],
-        ),
+        title: Text(l10n.category_management),
       ),
-      body: categoriesAsync.when(
-        data: (categories) {
-          if (categories.isEmpty) {
-            return _buildEmptyState(context, l10n);
-          }
+      body: Column(
+        children: [
+          // 그룹 선택 섹션
+          _buildGroupSelector(context, ref, l10n, selectedGroupId, groupsAsync),
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
-            itemCount: categories.length,
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: AppSizes.spaceS),
-            itemBuilder: (context, index) {
-              final category = categories[index];
-              return _CategoryListItem(
-                category: category,
-                onEdit: () => _showCategoryDialog(context, ref, l10n, category: category),
-                onDelete: () => _confirmDelete(context, ref, l10n, category),
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => _buildErrorState(context, l10n, ref, error.toString()),
+          // 카테고리 목록
+          Expanded(
+            child: categoriesAsync.when(
+              data: (categories) {
+                if (categories.isEmpty) {
+                  return _buildEmptyState(context, l10n);
+                }
+
+                return ListView.separated(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  itemCount: categories.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppSizes.spaceS),
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return _CategoryListItem(
+                      category: category,
+                      onEdit: () => _showCategoryDialog(context, ref, l10n, category: category),
+                      onDelete: () => _confirmDelete(context, ref, l10n, category),
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => _buildErrorState(context, l10n, ref, error.toString()),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCategoryDialog(context, ref, l10n),
         tooltip: l10n.category_add,
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  /// 그룹 선택 섹션
+  Widget _buildGroupSelector(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    String? selectedGroupId,
+    AsyncValue<List<Group>> groupsAsync,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).dividerColor,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Text(
+            l10n.schedule_group,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(width: AppSizes.spaceM),
+          Expanded(
+            child: groupsAsync.when(
+              data: (groups) {
+                final items = <DropdownMenuItem<String?>>[];
+
+                // 개인 옵션
+                items.add(
+                  DropdownMenuItem<String?>(
+                    value: null,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person, size: 20),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(l10n.schedule_personal),
+                      ],
+                    ),
+                  ),
+                );
+
+                // 그룹 옵션들
+                for (final group in groups) {
+                  items.add(
+                    DropdownMenuItem<String?>(
+                      value: group.id,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.group,
+                            size: 20,
+                            color: group.defaultColor != null
+                                ? Color(int.parse('FF${group.defaultColor!.replaceFirst('#', '')}', radix: 16))
+                                : null,
+                          ),
+                          const SizedBox(width: AppSizes.spaceS),
+                          Expanded(
+                            child: Text(
+                              group.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return DropdownButtonHideUnderline(
+                  child: DropdownButton<String?>(
+                    value: selectedGroupId,
+                    items: items,
+                    onChanged: (value) {
+                      ref.read(selectedGroupIdProvider.notifier).state = value;
+                    },
+                    isExpanded: true,
+                    icon: const Icon(Icons.arrow_drop_down),
+                  ),
+                );
+              },
+              loading: () => const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              error: (error, stack) => Text(l10n.schedule_personal),
+            ),
+          ),
+        ],
       ),
     );
   }

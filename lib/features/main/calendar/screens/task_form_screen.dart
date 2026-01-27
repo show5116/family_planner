@@ -46,6 +46,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   TimeOfDay? _dueTime;
   bool _isAllDay = true;
   bool _hasDueDate = false;
+  TaskType _taskType = TaskType.calendarOnly;
   TaskPriority _priority = TaskPriority.medium;
   RecurringRuleType? _recurringType;
   List<int> _selectedReminders = []; // 분 단위 오프셋
@@ -94,6 +95,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     }
 
     _priority = task.priority ?? TaskPriority.medium;
+    _taskType = task.type ?? TaskType.calendarOnly;
     _selectedCategory = task.category;
 
     if (task.recurring != null) {
@@ -191,6 +193,10 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 
               // 카테고리 선택
               _buildCategorySection(l10n),
+              const SizedBox(height: AppSizes.spaceL),
+
+              // 일정 유형 선택
+              _buildTaskTypeSection(l10n),
               const SizedBox(height: AppSizes.spaceL),
 
               // 우선순위 선택
@@ -572,13 +578,76 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     );
   }
 
+  /// 일정 유형 선택 섹션
+  Widget _buildTaskTypeSection(AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.schedule_taskType,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: AppSizes.spaceM),
+        Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          child: Column(
+            children: [
+              RadioListTile<TaskType>(
+                title: Text(l10n.schedule_taskTypeCalendarOnly),
+                subtitle: Text(
+                  l10n.schedule_taskTypeCalendarOnlyDesc,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                ),
+                value: TaskType.calendarOnly,
+                groupValue: _taskType,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _taskType = value;
+                    });
+                  }
+                },
+                secondary: const Icon(Icons.calendar_today),
+              ),
+              const Divider(height: 1),
+              RadioListTile<TaskType>(
+                title: Text(l10n.schedule_taskTypeTodoLinked),
+                subtitle: Text(
+                  l10n.schedule_taskTypeTodoLinkedDesc,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                ),
+                value: TaskType.todoLinked,
+                groupValue: _taskType,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _taskType = value;
+                    });
+                  }
+                },
+                secondary: const Icon(Icons.checklist),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   /// 우선순위 선택 섹션
   Widget _buildPrioritySection(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '우선순위',
+          l10n.schedule_priority,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -588,22 +657,22 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           segments: [
             ButtonSegment(
               value: TaskPriority.low,
-              label: const Text('낮음'),
+              label: Text(l10n.schedule_priorityLow),
               icon: const Icon(Icons.arrow_downward, size: 16),
             ),
             ButtonSegment(
               value: TaskPriority.medium,
-              label: const Text('보통'),
+              label: Text(l10n.schedule_priorityMedium),
               icon: const Icon(Icons.remove, size: 16),
             ),
             ButtonSegment(
               value: TaskPriority.high,
-              label: const Text('높음'),
+              label: Text(l10n.schedule_priorityHigh),
               icon: const Icon(Icons.arrow_upward, size: 16),
             ),
             ButtonSegment(
               value: TaskPriority.urgent,
-              label: const Text('긴급'),
+              label: Text(l10n.schedule_priorityUrgent),
               icon: const Icon(Icons.priority_high, size: 16),
             ),
           ],
@@ -954,7 +1023,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         location: _locationController.text.trim().isEmpty
             ? null
             : _locationController.text.trim(),
-        type: TaskType.schedule,
+        type: _taskType,
         priority: _priority,
         categoryId: _selectedCategory!.id,
         groupId: groupId,

@@ -1431,7 +1431,37 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_personal => '個人の予定';
 
   @override
-  String get schedule_group => 'グループの予定';
+  String get schedule_group => 'グループ';
+
+  @override
+  String get schedule_taskType => '予定タイプ';
+
+  @override
+  String get schedule_taskTypeCalendarOnly => 'カレンダーのみ';
+
+  @override
+  String get schedule_taskTypeCalendarOnlyDesc => 'カレンダーにのみ表示されます';
+
+  @override
+  String get schedule_taskTypeTodoLinked => 'ToDo連動';
+
+  @override
+  String get schedule_taskTypeTodoLinkedDesc => 'カレンダーとToDoリストの両方に表示されます';
+
+  @override
+  String get schedule_priority => '優先度';
+
+  @override
+  String get schedule_priorityLow => '低';
+
+  @override
+  String get schedule_priorityMedium => '中';
+
+  @override
+  String get schedule_priorityHigh => '高';
+
+  @override
+  String get schedule_priorityUrgent => '緊急';
 
   @override
   String get category_management => 'カテゴリー管理';

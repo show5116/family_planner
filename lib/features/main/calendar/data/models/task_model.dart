@@ -5,10 +5,10 @@ part 'task_model.g.dart';
 
 /// Task 타입
 enum TaskType {
-  @JsonValue('SCHEDULE')
-  schedule, // 일정
-  @JsonValue('TODO')
-  todo, // 할일
+  @JsonValue('CALENDAR_ONLY')
+  calendarOnly, // 단순 일정 (캘린더에만 표시)
+  @JsonValue('TODO_LINKED')
+  todoLinked, // 할일 연동 (캘린더 + 할일 목록에 표시)
 }
 
 /// Task 우선순위
