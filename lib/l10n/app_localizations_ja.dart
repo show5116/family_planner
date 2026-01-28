@@ -1464,6 +1464,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_priorityUrgent => '緊急';
 
   @override
+  String get schedule_participants => '参加者';
+
+  @override
+  String get schedule_participantsHint => 'この予定に参加するグループメンバーを選択してください';
+
+  @override
+  String get schedule_noMembers => 'グループメンバーがいません';
+
+  @override
+  String get schedule_participantsLoadError => 'メンバーリストを読み込めませんでした';
+
+  @override
+  String get schedule_participantsSelectAll => '全員選択';
+
+  @override
+  String get schedule_participantsDeselectAll => '全員解除';
+
+  @override
   String get category_management => 'カテゴリー管理';
 
   @override

@@ -21,6 +21,7 @@
 - ✅ 반복 설정 모델 (RecurringModel, RecurringRuleDto)
 - ✅ 알림 설정 모델 (TaskReminderDto, TaskReminderResponse)
 - ✅ 우선순위/타입 enum (TaskPriority, TaskType)
+- ✅ 참가자 모델 (TaskParticipantModel, ParticipantUserModel)
 
 ## 기능 구현
 - ✅ 당일 일정 등록
@@ -30,8 +31,9 @@
 - ✅ 마감일 설정 (시작일과 별도로 설정 가능)
 - ✅ 당일 오전 알람 (알림 설정 UI 구현)
 - ✅ 1시간 전 알람 (알림 설정 UI 구현)
-- ✅ 사용자 정의 시간 알람 (/15분/30분/1시간/1일 전)
-- ⬜ 푸시 알림 지원 (FCM 연동요)
+- ✅ 사용자 정의 시간 알람 (5분/15분/30분/1시간/1일 전)
+- ✅ 참가자 선택 (그룹 일정에서 멤버 선택)
+- ⬜ 푸시 알림 지원 (FCM 연동 필요)
 - ⬜ 일정 검색 기능
 
 ## API 연동
@@ -76,3 +78,4 @@
 - 한국 캘린더 색상 컨벤션 적용: 일요일(빨간색), 토요일(파란색)
 - 하단 네비게이션 탭 Lazy Loading 적용 (방문 시에만 빌드)
 - 그룹별 일정/카테고리 분리 관리: 개인(groupId=null) 또는 그룹 선택 가능
+- 그룹 일정에서 참가자 선택 가능 (participantIds로 그룹 멤버 지정)

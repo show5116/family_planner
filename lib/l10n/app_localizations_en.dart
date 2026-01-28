@@ -1501,6 +1501,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_priorityUrgent => 'Urgent';
 
   @override
+  String get schedule_participants => 'Participants';
+
+  @override
+  String get schedule_participantsHint =>
+      'Select group members to participate in this schedule';
+
+  @override
+  String get schedule_noMembers => 'No group members';
+
+  @override
+  String get schedule_participantsLoadError => 'Failed to load members';
+
+  @override
+  String get schedule_participantsSelectAll => 'Select All';
+
+  @override
+  String get schedule_participantsDeselectAll => 'Deselect All';
+
+  @override
   String get category_management => 'Manage Categories';
 
   @override

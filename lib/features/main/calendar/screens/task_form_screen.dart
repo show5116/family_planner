@@ -10,6 +10,7 @@ import 'package:family_planner/features/main/calendar/data/repositories/task_rep
 import 'package:family_planner/features/main/calendar/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 일정 추가/수정 화면
@@ -55,6 +56,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   bool _isLoadingCategories = true;
   List<CategoryModel> _categories = [];
 
+  // 참가자 관련
+  List<String> _selectedParticipantIds = [];
+
   bool _isSubmitting = false;
 
   bool get _isEditMode => widget.task != null;
@@ -97,6 +101,11 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     _priority = task.priority ?? TaskPriority.medium;
     _taskType = task.type ?? TaskType.calendarOnly;
     _selectedCategory = task.category;
+
+    // 참가자 설정
+    if (task.participants.isNotEmpty) {
+      _selectedParticipantIds = task.participants.map((p) => p.userId).toList();
+    }
 
     if (task.recurring != null) {
       _recurringType = _parseRecurringType(task.recurring!.ruleType);
@@ -202,6 +211,12 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               // 우선순위 선택
               _buildPrioritySection(l10n),
               const SizedBox(height: AppSizes.spaceL),
+
+              // 참가자 선택 (그룹 일정인 경우에만 표시)
+              if (selectedGroupId != null) ...[
+                _buildParticipantsSection(l10n, selectedGroupId),
+                const SizedBox(height: AppSizes.spaceL),
+              ],
 
               // 반복 설정
               _buildRecurringSection(l10n),
@@ -687,6 +702,140 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     );
   }
 
+  /// 참가자 선택 섹션 (그룹 일정 전용)
+  Widget _buildParticipantsSection(AppLocalizations l10n, String groupId) {
+    final membersAsync = ref.watch(groupMembersProvider(groupId));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              l10n.schedule_participants,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            // 전체 선택/해제 버튼
+            membersAsync.maybeWhen(
+              data: (members) {
+                if (members.isEmpty) return const SizedBox.shrink();
+
+                final allSelected = members.every(
+                  (m) => _selectedParticipantIds.contains(m.userId),
+                );
+
+                return TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      if (allSelected) {
+                        // 전체 해제
+                        _selectedParticipantIds.clear();
+                      } else {
+                        // 전체 선택
+                        _selectedParticipantIds = members.map((m) => m.userId).toList();
+                      }
+                    });
+                  },
+                  icon: Icon(
+                    allSelected ? Icons.deselect : Icons.select_all,
+                    size: 18,
+                  ),
+                  label: Text(
+                    allSelected
+                        ? l10n.schedule_participantsDeselectAll
+                        : l10n.schedule_participantsSelectAll,
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                );
+              },
+              orElse: () => const SizedBox.shrink(),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        Text(
+          l10n.schedule_participantsHint,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.textSecondary,
+              ),
+        ),
+        const SizedBox(height: AppSizes.spaceM),
+        membersAsync.when(
+          data: (members) {
+            if (members.isEmpty) {
+              return Text(
+                l10n.schedule_noMembers,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+              );
+            }
+
+            return Wrap(
+              spacing: AppSizes.spaceS,
+              runSpacing: AppSizes.spaceS,
+              children: members.map((member) {
+                final isSelected = _selectedParticipantIds.contains(member.userId);
+                final userName = member.user?.name ?? 'Unknown';
+
+                return FilterChip(
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircleAvatar(
+                        radius: 12,
+                        backgroundColor: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : AppColors.textSecondary.withValues(alpha: 0.3),
+                        child: Text(
+                          userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isSelected ? Colors.white : AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: AppSizes.spaceXS),
+                      Text(userName),
+                    ],
+                  ),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedParticipantIds.add(member.userId);
+                      } else {
+                        _selectedParticipantIds.remove(member.userId);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            );
+          },
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(AppSizes.spaceM),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          error: (error, stack) => Text(
+            l10n.schedule_participantsLoadError,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.error,
+                ),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// 반복 설정 섹션
   Widget _buildRecurringSection(AppLocalizations l10n) {
     return Column(
@@ -1031,6 +1180,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         dueAt: dueAt?.toIso8601String(),
         recurring: recurring,
         reminders: reminders,
+        participantIds: groupId != null && _selectedParticipantIds.isNotEmpty
+            ? _selectedParticipantIds
+            : null,
       );
 
       if (_isEditMode) {
@@ -1043,6 +1195,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           priority: dto.priority,
           scheduledAt: dto.scheduledAt,
           dueAt: dto.dueAt,
+          participantIds: dto.participantIds,
         );
 
         await ref.read(taskManagementProvider.notifier).updateTask(

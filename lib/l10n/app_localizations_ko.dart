@@ -1467,6 +1467,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_priorityUrgent => '긴급';
 
   @override
+  String get schedule_participants => '참가자';
+
+  @override
+  String get schedule_participantsHint => '이 일정에 참여할 그룹 멤버를 선택하세요';
+
+  @override
+  String get schedule_noMembers => '그룹 멤버가 없습니다';
+
+  @override
+  String get schedule_participantsLoadError => '멤버 목록을 불러올 수 없습니다';
+
+  @override
+  String get schedule_participantsSelectAll => '전체 선택';
+
+  @override
+  String get schedule_participantsDeselectAll => '전체 해제';
+
+  @override
   String get category_management => '카테고리 관리';
 
   @override

@@ -1115,6 +1115,480 @@ abstract class _TaskHistoryModel implements TaskHistoryModel {
       throw _privateConstructorUsedError;
 }
 
+ParticipantUserModel _$ParticipantUserModelFromJson(Map<String, dynamic> json) {
+  return _ParticipantUserModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ParticipantUserModel {
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String? get profileImageKey => throw _privateConstructorUsedError;
+
+  /// Serializes this ParticipantUserModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of ParticipantUserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ParticipantUserModelCopyWith<ParticipantUserModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ParticipantUserModelCopyWith<$Res> {
+  factory $ParticipantUserModelCopyWith(
+    ParticipantUserModel value,
+    $Res Function(ParticipantUserModel) then,
+  ) = _$ParticipantUserModelCopyWithImpl<$Res, ParticipantUserModel>;
+  @useResult
+  $Res call({String id, String name, String? profileImageKey});
+}
+
+/// @nodoc
+class _$ParticipantUserModelCopyWithImpl<
+  $Res,
+  $Val extends ParticipantUserModel
+>
+    implements $ParticipantUserModelCopyWith<$Res> {
+  _$ParticipantUserModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of ParticipantUserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? profileImageKey = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            profileImageKey: freezed == profileImageKey
+                ? _value.profileImageKey
+                : profileImageKey // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$ParticipantUserModelImplCopyWith<$Res>
+    implements $ParticipantUserModelCopyWith<$Res> {
+  factory _$$ParticipantUserModelImplCopyWith(
+    _$ParticipantUserModelImpl value,
+    $Res Function(_$ParticipantUserModelImpl) then,
+  ) = __$$ParticipantUserModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String name, String? profileImageKey});
+}
+
+/// @nodoc
+class __$$ParticipantUserModelImplCopyWithImpl<$Res>
+    extends _$ParticipantUserModelCopyWithImpl<$Res, _$ParticipantUserModelImpl>
+    implements _$$ParticipantUserModelImplCopyWith<$Res> {
+  __$$ParticipantUserModelImplCopyWithImpl(
+    _$ParticipantUserModelImpl _value,
+    $Res Function(_$ParticipantUserModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ParticipantUserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? profileImageKey = freezed,
+  }) {
+    return _then(
+      _$ParticipantUserModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        profileImageKey: freezed == profileImageKey
+            ? _value.profileImageKey
+            : profileImageKey // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ParticipantUserModelImpl implements _ParticipantUserModel {
+  const _$ParticipantUserModelImpl({
+    required this.id,
+    required this.name,
+    this.profileImageKey,
+  });
+
+  factory _$ParticipantUserModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ParticipantUserModelImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String name;
+  @override
+  final String? profileImageKey;
+
+  @override
+  String toString() {
+    return 'ParticipantUserModel(id: $id, name: $name, profileImageKey: $profileImageKey)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ParticipantUserModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.profileImageKey, profileImageKey) ||
+                other.profileImageKey == profileImageKey));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, name, profileImageKey);
+
+  /// Create a copy of ParticipantUserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ParticipantUserModelImplCopyWith<_$ParticipantUserModelImpl>
+  get copyWith =>
+      __$$ParticipantUserModelImplCopyWithImpl<_$ParticipantUserModelImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ParticipantUserModelImplToJson(this);
+  }
+}
+
+abstract class _ParticipantUserModel implements ParticipantUserModel {
+  const factory _ParticipantUserModel({
+    required final String id,
+    required final String name,
+    final String? profileImageKey,
+  }) = _$ParticipantUserModelImpl;
+
+  factory _ParticipantUserModel.fromJson(Map<String, dynamic> json) =
+      _$ParticipantUserModelImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get name;
+  @override
+  String? get profileImageKey;
+
+  /// Create a copy of ParticipantUserModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ParticipantUserModelImplCopyWith<_$ParticipantUserModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+TaskParticipantModel _$TaskParticipantModelFromJson(Map<String, dynamic> json) {
+  return _TaskParticipantModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TaskParticipantModel {
+  String get id => throw _privateConstructorUsedError;
+  String get taskId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  ParticipantUserModel? get user => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+
+  /// Serializes this TaskParticipantModel to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TaskParticipantModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TaskParticipantModelCopyWith<TaskParticipantModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TaskParticipantModelCopyWith<$Res> {
+  factory $TaskParticipantModelCopyWith(
+    TaskParticipantModel value,
+    $Res Function(TaskParticipantModel) then,
+  ) = _$TaskParticipantModelCopyWithImpl<$Res, TaskParticipantModel>;
+  @useResult
+  $Res call({
+    String id,
+    String taskId,
+    String userId,
+    ParticipantUserModel? user,
+    DateTime createdAt,
+  });
+
+  $ParticipantUserModelCopyWith<$Res>? get user;
+}
+
+/// @nodoc
+class _$TaskParticipantModelCopyWithImpl<
+  $Res,
+  $Val extends TaskParticipantModel
+>
+    implements $TaskParticipantModelCopyWith<$Res> {
+  _$TaskParticipantModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TaskParticipantModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? taskId = null,
+    Object? userId = null,
+    Object? user = freezed,
+    Object? createdAt = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            taskId: null == taskId
+                ? _value.taskId
+                : taskId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            user: freezed == user
+                ? _value.user
+                : user // ignore: cast_nullable_to_non_nullable
+                      as ParticipantUserModel?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
+  }
+
+  /// Create a copy of TaskParticipantModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ParticipantUserModelCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $ParticipantUserModelCopyWith<$Res>(_value.user!, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$TaskParticipantModelImplCopyWith<$Res>
+    implements $TaskParticipantModelCopyWith<$Res> {
+  factory _$$TaskParticipantModelImplCopyWith(
+    _$TaskParticipantModelImpl value,
+    $Res Function(_$TaskParticipantModelImpl) then,
+  ) = __$$TaskParticipantModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String taskId,
+    String userId,
+    ParticipantUserModel? user,
+    DateTime createdAt,
+  });
+
+  @override
+  $ParticipantUserModelCopyWith<$Res>? get user;
+}
+
+/// @nodoc
+class __$$TaskParticipantModelImplCopyWithImpl<$Res>
+    extends _$TaskParticipantModelCopyWithImpl<$Res, _$TaskParticipantModelImpl>
+    implements _$$TaskParticipantModelImplCopyWith<$Res> {
+  __$$TaskParticipantModelImplCopyWithImpl(
+    _$TaskParticipantModelImpl _value,
+    $Res Function(_$TaskParticipantModelImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of TaskParticipantModel
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? taskId = null,
+    Object? userId = null,
+    Object? user = freezed,
+    Object? createdAt = null,
+  }) {
+    return _then(
+      _$TaskParticipantModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        taskId: null == taskId
+            ? _value.taskId
+            : taskId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        user: freezed == user
+            ? _value.user
+            : user // ignore: cast_nullable_to_non_nullable
+                  as ParticipantUserModel?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TaskParticipantModelImpl implements _TaskParticipantModel {
+  const _$TaskParticipantModelImpl({
+    required this.id,
+    required this.taskId,
+    required this.userId,
+    this.user,
+    required this.createdAt,
+  });
+
+  factory _$TaskParticipantModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TaskParticipantModelImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String taskId;
+  @override
+  final String userId;
+  @override
+  final ParticipantUserModel? user;
+  @override
+  final DateTime createdAt;
+
+  @override
+  String toString() {
+    return 'TaskParticipantModel(id: $id, taskId: $taskId, userId: $userId, user: $user, createdAt: $createdAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TaskParticipantModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.taskId, taskId) || other.taskId == taskId) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, id, taskId, userId, user, createdAt);
+
+  /// Create a copy of TaskParticipantModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TaskParticipantModelImplCopyWith<_$TaskParticipantModelImpl>
+  get copyWith =>
+      __$$TaskParticipantModelImplCopyWithImpl<_$TaskParticipantModelImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TaskParticipantModelImplToJson(this);
+  }
+}
+
+abstract class _TaskParticipantModel implements TaskParticipantModel {
+  const factory _TaskParticipantModel({
+    required final String id,
+    required final String taskId,
+    required final String userId,
+    final ParticipantUserModel? user,
+    required final DateTime createdAt,
+  }) = _$TaskParticipantModelImpl;
+
+  factory _TaskParticipantModel.fromJson(Map<String, dynamic> json) =
+      _$TaskParticipantModelImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get taskId;
+  @override
+  String get userId;
+  @override
+  ParticipantUserModel? get user;
+  @override
+  DateTime get createdAt;
+
+  /// Create a copy of TaskParticipantModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TaskParticipantModelImplCopyWith<_$TaskParticipantModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
 TaskModel _$TaskModelFromJson(Map<String, dynamic> json) {
   return _TaskModel.fromJson(json);
 }
@@ -1136,6 +1610,8 @@ mixin _$TaskModel {
   bool get isCompleted => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
   RecurringModel? get recurring => throw _privateConstructorUsedError;
+  List<TaskParticipantModel> get participants =>
+      throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
@@ -1170,6 +1646,7 @@ abstract class $TaskModelCopyWith<$Res> {
     bool isCompleted,
     DateTime? completedAt,
     RecurringModel? recurring,
+    List<TaskParticipantModel> participants,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -1208,6 +1685,7 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
     Object? isCompleted = null,
     Object? completedAt = freezed,
     Object? recurring = freezed,
+    Object? participants = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -1273,6 +1751,10 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
                 ? _value.recurring
                 : recurring // ignore: cast_nullable_to_non_nullable
                       as RecurringModel?,
+            participants: null == participants
+                ? _value.participants
+                : participants // ignore: cast_nullable_to_non_nullable
+                      as List<TaskParticipantModel>,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -1340,6 +1822,7 @@ abstract class _$$TaskModelImplCopyWith<$Res>
     bool isCompleted,
     DateTime? completedAt,
     RecurringModel? recurring,
+    List<TaskParticipantModel> participants,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -1379,6 +1862,7 @@ class __$$TaskModelImplCopyWithImpl<$Res>
     Object? isCompleted = null,
     Object? completedAt = freezed,
     Object? recurring = freezed,
+    Object? participants = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -1444,6 +1928,10 @@ class __$$TaskModelImplCopyWithImpl<$Res>
             ? _value.recurring
             : recurring // ignore: cast_nullable_to_non_nullable
                   as RecurringModel?,
+        participants: null == participants
+            ? _value._participants
+            : participants // ignore: cast_nullable_to_non_nullable
+                  as List<TaskParticipantModel>,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -1476,9 +1964,11 @@ class _$TaskModelImpl extends _TaskModel {
     this.isCompleted = false,
     this.completedAt,
     this.recurring,
+    final List<TaskParticipantModel> participants = const [],
     required this.createdAt,
     required this.updatedAt,
-  }) : super._();
+  }) : _participants = participants,
+       super._();
 
   factory _$TaskModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskModelImplFromJson(json);
@@ -1514,6 +2004,15 @@ class _$TaskModelImpl extends _TaskModel {
   final DateTime? completedAt;
   @override
   final RecurringModel? recurring;
+  final List<TaskParticipantModel> _participants;
+  @override
+  @JsonKey()
+  List<TaskParticipantModel> get participants {
+    if (_participants is EqualUnmodifiableListView) return _participants;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_participants);
+  }
+
   @override
   final DateTime createdAt;
   @override
@@ -1521,7 +2020,7 @@ class _$TaskModelImpl extends _TaskModel {
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, userId: $userId, groupId: $groupId, title: $title, description: $description, location: $location, type: $type, priority: $priority, category: $category, scheduledAt: $scheduledAt, dueAt: $dueAt, daysUntilDue: $daysUntilDue, isCompleted: $isCompleted, completedAt: $completedAt, recurring: $recurring, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'TaskModel(id: $id, userId: $userId, groupId: $groupId, title: $title, description: $description, location: $location, type: $type, priority: $priority, category: $category, scheduledAt: $scheduledAt, dueAt: $dueAt, daysUntilDue: $daysUntilDue, isCompleted: $isCompleted, completedAt: $completedAt, recurring: $recurring, participants: $participants, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1553,6 +2052,10 @@ class _$TaskModelImpl extends _TaskModel {
                 other.completedAt == completedAt) &&
             (identical(other.recurring, recurring) ||
                 other.recurring == recurring) &&
+            const DeepCollectionEquality().equals(
+              other._participants,
+              _participants,
+            ) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -1578,6 +2081,7 @@ class _$TaskModelImpl extends _TaskModel {
     isCompleted,
     completedAt,
     recurring,
+    const DeepCollectionEquality().hash(_participants),
     createdAt,
     updatedAt,
   );
@@ -1613,6 +2117,7 @@ abstract class _TaskModel extends TaskModel {
     final bool isCompleted,
     final DateTime? completedAt,
     final RecurringModel? recurring,
+    final List<TaskParticipantModel> participants,
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$TaskModelImpl;
@@ -1651,6 +2156,8 @@ abstract class _TaskModel extends TaskModel {
   DateTime? get completedAt;
   @override
   RecurringModel? get recurring;
+  @override
+  List<TaskParticipantModel> get participants;
   @override
   DateTime get createdAt;
   @override
@@ -2330,6 +2837,7 @@ mixin _$CreateTaskDto {
   String? get dueAt => throw _privateConstructorUsedError;
   RecurringRuleDto? get recurring => throw _privateConstructorUsedError;
   List<TaskReminderDto>? get reminders => throw _privateConstructorUsedError;
+  List<String>? get participantIds => throw _privateConstructorUsedError;
 
   /// Serializes this CreateTaskDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2360,6 +2868,7 @@ abstract class $CreateTaskDtoCopyWith<$Res> {
     String? dueAt,
     RecurringRuleDto? recurring,
     List<TaskReminderDto>? reminders,
+    List<String>? participantIds,
   });
 
   $RecurringRuleDtoCopyWith<$Res>? get recurring;
@@ -2391,6 +2900,7 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
     Object? dueAt = freezed,
     Object? recurring = freezed,
     Object? reminders = freezed,
+    Object? participantIds = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -2438,6 +2948,10 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
                 ? _value.reminders
                 : reminders // ignore: cast_nullable_to_non_nullable
                       as List<TaskReminderDto>?,
+            participantIds: freezed == participantIds
+                ? _value.participantIds
+                : participantIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
           )
           as $Val,
     );
@@ -2479,6 +2993,7 @@ abstract class _$$CreateTaskDtoImplCopyWith<$Res>
     String? dueAt,
     RecurringRuleDto? recurring,
     List<TaskReminderDto>? reminders,
+    List<String>? participantIds,
   });
 
   @override
@@ -2510,6 +3025,7 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
     Object? dueAt = freezed,
     Object? recurring = freezed,
     Object? reminders = freezed,
+    Object? participantIds = freezed,
   }) {
     return _then(
       _$CreateTaskDtoImpl(
@@ -2557,6 +3073,10 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
             ? _value._reminders
             : reminders // ignore: cast_nullable_to_non_nullable
                   as List<TaskReminderDto>?,
+        participantIds: freezed == participantIds
+            ? _value._participantIds
+            : participantIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
       ),
     );
   }
@@ -2577,7 +3097,9 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
     this.dueAt,
     this.recurring,
     final List<TaskReminderDto>? reminders,
-  }) : _reminders = reminders;
+    final List<String>? participantIds,
+  }) : _reminders = reminders,
+       _participantIds = participantIds;
 
   factory _$CreateTaskDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateTaskDtoImplFromJson(json);
@@ -2612,9 +3134,19 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<String>? _participantIds;
+  @override
+  List<String>? get participantIds {
+    final value = _participantIds;
+    if (value == null) return null;
+    if (_participantIds is EqualUnmodifiableListView) return _participantIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'CreateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, groupId: $groupId, scheduledAt: $scheduledAt, dueAt: $dueAt, recurring: $recurring, reminders: $reminders)';
+    return 'CreateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, groupId: $groupId, scheduledAt: $scheduledAt, dueAt: $dueAt, recurring: $recurring, reminders: $reminders, participantIds: $participantIds)';
   }
 
   @override
@@ -2641,6 +3173,10 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
             const DeepCollectionEquality().equals(
               other._reminders,
               _reminders,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._participantIds,
+              _participantIds,
             ));
   }
 
@@ -2659,6 +3195,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
     dueAt,
     recurring,
     const DeepCollectionEquality().hash(_reminders),
+    const DeepCollectionEquality().hash(_participantIds),
   );
 
   /// Create a copy of CreateTaskDto
@@ -2688,6 +3225,7 @@ abstract class _CreateTaskDto implements CreateTaskDto {
     final String? dueAt,
     final RecurringRuleDto? recurring,
     final List<TaskReminderDto>? reminders,
+    final List<String>? participantIds,
   }) = _$CreateTaskDtoImpl;
 
   factory _CreateTaskDto.fromJson(Map<String, dynamic> json) =
@@ -2715,6 +3253,8 @@ abstract class _CreateTaskDto implements CreateTaskDto {
   RecurringRuleDto? get recurring;
   @override
   List<TaskReminderDto>? get reminders;
+  @override
+  List<String>? get participantIds;
 
   /// Create a copy of CreateTaskDto
   /// with the given fields replaced by the non-null parameter values.
@@ -2737,6 +3277,7 @@ mixin _$UpdateTaskDto {
   TaskPriority? get priority => throw _privateConstructorUsedError;
   String? get scheduledAt => throw _privateConstructorUsedError;
   String? get dueAt => throw _privateConstructorUsedError;
+  List<String>? get participantIds => throw _privateConstructorUsedError;
 
   /// Serializes this UpdateTaskDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2763,6 +3304,7 @@ abstract class $UpdateTaskDtoCopyWith<$Res> {
     TaskPriority? priority,
     String? scheduledAt,
     String? dueAt,
+    List<String>? participantIds,
   });
 }
 
@@ -2788,6 +3330,7 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
     Object? priority = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
+    Object? participantIds = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -2819,6 +3362,10 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
                 ? _value.dueAt
                 : dueAt // ignore: cast_nullable_to_non_nullable
                       as String?,
+            participantIds: freezed == participantIds
+                ? _value.participantIds
+                : participantIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
           )
           as $Val,
     );
@@ -2842,6 +3389,7 @@ abstract class _$$UpdateTaskDtoImplCopyWith<$Res>
     TaskPriority? priority,
     String? scheduledAt,
     String? dueAt,
+    List<String>? participantIds,
   });
 }
 
@@ -2866,6 +3414,7 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
     Object? priority = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
+    Object? participantIds = freezed,
   }) {
     return _then(
       _$UpdateTaskDtoImpl(
@@ -2897,6 +3446,10 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
             ? _value.dueAt
             : dueAt // ignore: cast_nullable_to_non_nullable
                   as String?,
+        participantIds: freezed == participantIds
+            ? _value._participantIds
+            : participantIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
       ),
     );
   }
@@ -2913,7 +3466,8 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     this.priority,
     this.scheduledAt,
     this.dueAt,
-  });
+    final List<String>? participantIds,
+  }) : _participantIds = participantIds;
 
   factory _$UpdateTaskDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$UpdateTaskDtoImplFromJson(json);
@@ -2932,10 +3486,19 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
   final String? scheduledAt;
   @override
   final String? dueAt;
+  final List<String>? _participantIds;
+  @override
+  List<String>? get participantIds {
+    final value = _participantIds;
+    if (value == null) return null;
+    if (_participantIds is EqualUnmodifiableListView) return _participantIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, scheduledAt: $scheduledAt, dueAt: $dueAt)';
+    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds)';
   }
 
   @override
@@ -2953,7 +3516,11 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
                 other.priority == priority) &&
             (identical(other.scheduledAt, scheduledAt) ||
                 other.scheduledAt == scheduledAt) &&
-            (identical(other.dueAt, dueAt) || other.dueAt == dueAt));
+            (identical(other.dueAt, dueAt) || other.dueAt == dueAt) &&
+            const DeepCollectionEquality().equals(
+              other._participantIds,
+              _participantIds,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2967,6 +3534,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     priority,
     scheduledAt,
     dueAt,
+    const DeepCollectionEquality().hash(_participantIds),
   );
 
   /// Create a copy of UpdateTaskDto
@@ -2992,6 +3560,7 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
     final TaskPriority? priority,
     final String? scheduledAt,
     final String? dueAt,
+    final List<String>? participantIds,
   }) = _$UpdateTaskDtoImpl;
 
   factory _UpdateTaskDto.fromJson(Map<String, dynamic> json) =
@@ -3011,6 +3580,8 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
   String? get scheduledAt;
   @override
   String? get dueAt;
+  @override
+  List<String>? get participantIds;
 
   /// Create a copy of UpdateTaskDto
   /// with the given fields replaced by the non-null parameter values.

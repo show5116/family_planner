@@ -91,36 +91,78 @@ Map<String, dynamic> _$$TaskHistoryModelImplToJson(
   'createdAt': instance.createdAt.toIso8601String(),
 };
 
-_$TaskModelImpl _$$TaskModelImplFromJson(Map<String, dynamic> json) =>
-    _$TaskModelImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      groupId: json['groupId'] as String?,
-      title: json['title'] as String,
-      description: json['description'] as String?,
-      location: json['location'] as String?,
-      type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
-      priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
-      category: json['category'] == null
-          ? null
-          : CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
-      scheduledAt: json['scheduledAt'] == null
-          ? null
-          : DateTime.parse(json['scheduledAt'] as String),
-      dueAt: json['dueAt'] == null
-          ? null
-          : DateTime.parse(json['dueAt'] as String),
-      daysUntilDue: (json['daysUntilDue'] as num?)?.toInt(),
-      isCompleted: json['isCompleted'] as bool? ?? false,
-      completedAt: json['completedAt'] == null
-          ? null
-          : DateTime.parse(json['completedAt'] as String),
-      recurring: json['recurring'] == null
-          ? null
-          : RecurringModel.fromJson(json['recurring'] as Map<String, dynamic>),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-    );
+_$ParticipantUserModelImpl _$$ParticipantUserModelImplFromJson(
+  Map<String, dynamic> json,
+) => _$ParticipantUserModelImpl(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  profileImageKey: json['profileImageKey'] as String?,
+);
+
+Map<String, dynamic> _$$ParticipantUserModelImplToJson(
+  _$ParticipantUserModelImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'profileImageKey': instance.profileImageKey,
+};
+
+_$TaskParticipantModelImpl _$$TaskParticipantModelImplFromJson(
+  Map<String, dynamic> json,
+) => _$TaskParticipantModelImpl(
+  id: json['id'] as String,
+  taskId: json['taskId'] as String,
+  userId: json['userId'] as String,
+  user: json['user'] == null
+      ? null
+      : ParticipantUserModel.fromJson(json['user'] as Map<String, dynamic>),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+);
+
+Map<String, dynamic> _$$TaskParticipantModelImplToJson(
+  _$TaskParticipantModelImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'taskId': instance.taskId,
+  'userId': instance.userId,
+  'user': instance.user,
+  'createdAt': instance.createdAt.toIso8601String(),
+};
+
+_$TaskModelImpl _$$TaskModelImplFromJson(
+  Map<String, dynamic> json,
+) => _$TaskModelImpl(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  groupId: json['groupId'] as String?,
+  title: json['title'] as String,
+  description: json['description'] as String?,
+  location: json['location'] as String?,
+  type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
+  priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
+  category: json['category'] == null
+      ? null
+      : CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
+  scheduledAt: json['scheduledAt'] == null
+      ? null
+      : DateTime.parse(json['scheduledAt'] as String),
+  dueAt: json['dueAt'] == null ? null : DateTime.parse(json['dueAt'] as String),
+  daysUntilDue: (json['daysUntilDue'] as num?)?.toInt(),
+  isCompleted: json['isCompleted'] as bool? ?? false,
+  completedAt: json['completedAt'] == null
+      ? null
+      : DateTime.parse(json['completedAt'] as String),
+  recurring: json['recurring'] == null
+      ? null
+      : RecurringModel.fromJson(json['recurring'] as Map<String, dynamic>),
+  participants:
+      (json['participants'] as List<dynamic>?)
+          ?.map((e) => TaskParticipantModel.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+);
 
 Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
     <String, dynamic>{
@@ -139,6 +181,7 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
       'isCompleted': instance.isCompleted,
       'completedAt': instance.completedAt?.toIso8601String(),
       'recurring': instance.recurring,
+      'participants': instance.participants,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
@@ -206,6 +249,9 @@ _$CreateTaskDtoImpl _$$CreateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       reminders: (json['reminders'] as List<dynamic>?)
           ?.map((e) => TaskReminderDto.fromJson(e as Map<String, dynamic>))
           .toList(),
+      participantIds: (json['participantIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$CreateTaskDtoImplToJson(_$CreateTaskDtoImpl instance) =>
@@ -221,6 +267,7 @@ Map<String, dynamic> _$$CreateTaskDtoImplToJson(_$CreateTaskDtoImpl instance) =>
       'dueAt': instance.dueAt,
       'recurring': instance.recurring,
       'reminders': instance.reminders,
+      'participantIds': instance.participantIds,
     };
 
 _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
@@ -232,6 +279,9 @@ _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
       scheduledAt: json['scheduledAt'] as String?,
       dueAt: json['dueAt'] as String?,
+      participantIds: (json['participantIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$UpdateTaskDtoImplToJson(_$UpdateTaskDtoImpl instance) =>
@@ -243,6 +293,7 @@ Map<String, dynamic> _$$UpdateTaskDtoImplToJson(_$UpdateTaskDtoImpl instance) =>
       'priority': _$TaskPriorityEnumMap[instance.priority],
       'scheduledAt': instance.scheduledAt,
       'dueAt': instance.dueAt,
+      'participantIds': instance.participantIds,
     };
 
 _$RecurringRuleDtoImpl _$$RecurringRuleDtoImplFromJson(

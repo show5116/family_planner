@@ -567,6 +567,12 @@
   "schedule_priorityMedium": "보통",
   "schedule_priorityHigh": "높음",
   "schedule_priorityUrgent": "긴급",
+  "schedule_participants": "참가자",
+  "schedule_participantsHint": "이 일정에 참여할 그룹 멤버를 선택하세요",
+  "schedule_noMembers": "그룹 멤버가 없습니다",
+  "schedule_participantsLoadError": "멤버 목록을 불러올 수 없습니다",
+  "schedule_participantsSelectAll": "전체 선택",
+  "schedule_participantsDeselectAll": "전체 해제",
 
   "category_management": "카테고리 관리",
   "category_add": "카테고리 추가",

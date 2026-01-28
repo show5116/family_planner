@@ -116,6 +116,34 @@ class TaskHistoryModel with _$TaskHistoryModel {
       _$TaskHistoryModelFromJson(json);
 }
 
+/// 참여자 사용자 정보 모델
+@freezed
+class ParticipantUserModel with _$ParticipantUserModel {
+  const factory ParticipantUserModel({
+    required String id,
+    required String name,
+    String? profileImageKey,
+  }) = _ParticipantUserModel;
+
+  factory ParticipantUserModel.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantUserModelFromJson(json);
+}
+
+/// Task 참여자 모델
+@freezed
+class TaskParticipantModel with _$TaskParticipantModel {
+  const factory TaskParticipantModel({
+    required String id,
+    required String taskId,
+    required String userId,
+    ParticipantUserModel? user,
+    required DateTime createdAt,
+  }) = _TaskParticipantModel;
+
+  factory TaskParticipantModel.fromJson(Map<String, dynamic> json) =>
+      _$TaskParticipantModelFromJson(json);
+}
+
 /// Task 모델 (일정/할일 통합)
 @freezed
 class TaskModel with _$TaskModel {
@@ -137,6 +165,7 @@ class TaskModel with _$TaskModel {
     @Default(false) bool isCompleted,
     DateTime? completedAt,
     RecurringModel? recurring,
+    @Default([]) List<TaskParticipantModel> participants,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _TaskModel;
@@ -232,6 +261,7 @@ class CreateTaskDto with _$CreateTaskDto {
     String? dueAt,
     RecurringRuleDto? recurring,
     List<TaskReminderDto>? reminders,
+    List<String>? participantIds,
   }) = _CreateTaskDto;
 
   factory CreateTaskDto.fromJson(Map<String, dynamic> json) =>
@@ -249,6 +279,7 @@ class UpdateTaskDto with _$UpdateTaskDto {
     TaskPriority? priority,
     String? scheduledAt,
     String? dueAt,
+    List<String>? participantIds,
   }) = _UpdateTaskDto;
 
   factory UpdateTaskDto.fromJson(Map<String, dynamic> json) =>

@@ -2950,6 +2950,42 @@ abstract class AppLocalizations {
   /// **'긴급'**
   String get schedule_priorityUrgent;
 
+  /// No description provided for @schedule_participants.
+  ///
+  /// In ko, this message translates to:
+  /// **'참가자'**
+  String get schedule_participants;
+
+  /// No description provided for @schedule_participantsHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 일정에 참여할 그룹 멤버를 선택하세요'**
+  String get schedule_participantsHint;
+
+  /// No description provided for @schedule_noMembers.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 멤버가 없습니다'**
+  String get schedule_noMembers;
+
+  /// No description provided for @schedule_participantsLoadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버 목록을 불러올 수 없습니다'**
+  String get schedule_participantsLoadError;
+
+  /// No description provided for @schedule_participantsSelectAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 선택'**
+  String get schedule_participantsSelectAll;
+
+  /// No description provided for @schedule_participantsDeselectAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 해제'**
+  String get schedule_participantsDeselectAll;
+
   /// No description provided for @category_management.
   ///
   /// In ko, this message translates to:

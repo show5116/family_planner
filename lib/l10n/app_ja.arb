@@ -567,6 +567,12 @@
   "schedule_priorityMedium": "中",
   "schedule_priorityHigh": "高",
   "schedule_priorityUrgent": "緊急",
+  "schedule_participants": "参加者",
+  "schedule_participantsHint": "この予定に参加するグループメンバーを選択してください",
+  "schedule_noMembers": "グループメンバーがいません",
+  "schedule_participantsLoadError": "メンバーリストを読み込めませんでした",
+  "schedule_participantsSelectAll": "全員選択",
+  "schedule_participantsDeselectAll": "全員解除",
 
   "category_management": "カテゴリー管理",
   "category_add": "カテゴリー追加",

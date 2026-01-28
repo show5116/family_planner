@@ -567,6 +567,12 @@
   "schedule_priorityMedium": "Medium",
   "schedule_priorityHigh": "High",
   "schedule_priorityUrgent": "Urgent",
+  "schedule_participants": "Participants",
+  "schedule_participantsHint": "Select group members to participate in this schedule",
+  "schedule_noMembers": "No group members",
+  "schedule_participantsLoadError": "Failed to load members",
+  "schedule_participantsSelectAll": "Select All",
+  "schedule_participantsDeselectAll": "Deselect All",
 
   "category_management": "Manage Categories",
   "category_add": "Add Category",
