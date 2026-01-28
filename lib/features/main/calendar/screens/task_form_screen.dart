@@ -915,8 +915,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 
   /// 알림 설정 섹션
   Widget _buildReminderSection(AppLocalizations l10n) {
-    final reminderOptions = [
-      (0, l10n.schedule_reminderAtTime),
+    // 미리 정의된 빠른 선택 옵션
+    final quickOptions = [
       (5, l10n.schedule_reminder5Min),
       (15, l10n.schedule_reminder15Min),
       (30, l10n.schedule_reminder30Min),
@@ -934,30 +934,332 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               ),
         ),
         const SizedBox(height: AppSizes.spaceM),
+
+        // 빠른 선택 칩 + 추가 버튼
         Wrap(
           spacing: AppSizes.spaceS,
           runSpacing: AppSizes.spaceS,
-          children: reminderOptions.map((option) {
-            final (minutes, label) = option;
-            final isSelected = _selectedReminders.contains(minutes);
+          children: [
+            // 빠른 선택 칩들
+            ...quickOptions.map((option) {
+              final (minutes, label) = option;
+              final isSelected = _selectedReminders.contains(minutes);
 
-            return FilterChip(
-              label: Text(label),
-              selected: isSelected,
-              onSelected: (selected) {
-                setState(() {
-                  if (selected) {
-                    _selectedReminders.add(minutes);
-                  } else {
-                    _selectedReminders.remove(minutes);
-                  }
-                });
-              },
-            );
-          }).toList(),
+              return FilterChip(
+                label: Text(label),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      if (!_selectedReminders.contains(minutes)) {
+                        _selectedReminders.add(minutes);
+                        _selectedReminders.sort();
+                      }
+                    } else {
+                      _selectedReminders.remove(minutes);
+                    }
+                  });
+                },
+              );
+            }),
+
+            // 커스텀 시간 추가 버튼
+            ActionChip(
+              avatar: const Icon(Icons.add, size: 18),
+              label: Text(l10n.schedule_reminderCustom),
+              onPressed: () => _showCustomReminderPicker(l10n),
+            ),
+          ],
         ),
+
+        // 선택된 알림 리스트
+        if (_selectedReminders.isNotEmpty) ...[
+          const SizedBox(height: AppSizes.spaceM),
+          Card(
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceS,
+                vertical: AppSizes.spaceXS,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _selectedReminders.map((minutes) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.notifications_outlined, size: 20),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Expanded(
+                          child: Text(
+                            _formatReminderTime(minutes, l10n),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 18),
+                          onPressed: () {
+                            setState(() {
+                              _selectedReminders.remove(minutes);
+                            });
+                          },
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ],
       ],
     );
+  }
+
+  /// 알림 시간 포맷팅
+  String _formatReminderTime(int minutes, AppLocalizations l10n) {
+    if (minutes == 0) {
+      return l10n.schedule_reminderAtTime;
+    } else if (minutes < 60) {
+      return l10n.schedule_reminderMinutesBefore(minutes);
+    } else if (minutes < 1440) {
+      final hours = minutes ~/ 60;
+      final remainingMinutes = minutes % 60;
+      if (remainingMinutes == 0) {
+        return l10n.schedule_reminderHoursBefore(hours);
+      } else {
+        return l10n.schedule_reminderHoursMinutesBefore(hours, remainingMinutes);
+      }
+    } else {
+      final days = minutes ~/ 1440;
+      final remainingHours = (minutes % 1440) ~/ 60;
+      if (remainingHours == 0) {
+        return l10n.schedule_reminderDaysBefore(days);
+      } else {
+        return l10n.schedule_reminderDaysHoursBefore(days, remainingHours);
+      }
+    }
+  }
+
+  /// 커스텀 알림 시간 선택 다이얼로그
+  Future<void> _showCustomReminderPicker(AppLocalizations l10n) async {
+    int selectedDays = 0;
+    int selectedHours = 0;
+    int selectedMinutes = 0;
+
+    final result = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(l10n.schedule_reminderCustomTitle),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l10n.schedule_reminderCustomHint,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceL),
+
+                  // 시간 선택 휠
+                  SizedBox(
+                    height: 150,
+                    child: Row(
+                      children: [
+                        // 일 선택
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text(
+                                l10n.schedule_reminderDays,
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                              Expanded(
+                                child: ListWheelScrollView.useDelegate(
+                                  itemExtent: 40,
+                                  perspective: 0.005,
+                                  diameterRatio: 1.2,
+                                  physics: const FixedExtentScrollPhysics(),
+                                  onSelectedItemChanged: (index) {
+                                    setDialogState(() {
+                                      selectedDays = index;
+                                    });
+                                  },
+                                  childDelegate: ListWheelChildBuilderDelegate(
+                                    builder: (context, index) {
+                                      if (index < 0 || index > 30) return null;
+                                      return Center(
+                                        child: Text(
+                                          '$index',
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                fontWeight: index == selectedDays
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    childCount: 31,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // 시간 선택
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text(
+                                l10n.schedule_reminderHours,
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                              Expanded(
+                                child: ListWheelScrollView.useDelegate(
+                                  itemExtent: 40,
+                                  perspective: 0.005,
+                                  diameterRatio: 1.2,
+                                  physics: const FixedExtentScrollPhysics(),
+                                  onSelectedItemChanged: (index) {
+                                    setDialogState(() {
+                                      selectedHours = index;
+                                    });
+                                  },
+                                  childDelegate: ListWheelChildBuilderDelegate(
+                                    builder: (context, index) {
+                                      if (index < 0 || index > 23) return null;
+                                      return Center(
+                                        child: Text(
+                                          '$index',
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                fontWeight: index == selectedHours
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    childCount: 24,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // 분 선택
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text(
+                                l10n.schedule_reminderMinutes,
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                              Expanded(
+                                child: ListWheelScrollView.useDelegate(
+                                  itemExtent: 40,
+                                  perspective: 0.005,
+                                  diameterRatio: 1.2,
+                                  physics: const FixedExtentScrollPhysics(),
+                                  onSelectedItemChanged: (index) {
+                                    setDialogState(() {
+                                      selectedMinutes = index * 5; // 5분 단위
+                                    });
+                                  },
+                                  childDelegate: ListWheelChildBuilderDelegate(
+                                    builder: (context, index) {
+                                      if (index < 0 || index > 11) return null;
+                                      final minutes = index * 5;
+                                      return Center(
+                                        child: Text(
+                                          '$minutes',
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                fontWeight: minutes == selectedMinutes
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    childCount: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: AppSizes.spaceM),
+
+                  // 선택된 시간 미리보기
+                  Container(
+                    padding: const EdgeInsets.all(AppSizes.spaceM),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.notifications_active, size: 20),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(
+                          _formatReminderTime(
+                            selectedDays * 1440 + selectedHours * 60 + selectedMinutes,
+                            l10n,
+                          ),
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(l10n.common_cancel),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    final totalMinutes = selectedDays * 1440 + selectedHours * 60 + selectedMinutes;
+                    Navigator.pop(context, totalMinutes);
+                  },
+                  child: Text(l10n.common_add),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (result != null && result > 0) {
+      setState(() {
+        if (!_selectedReminders.contains(result)) {
+          _selectedReminders.add(result);
+          _selectedReminders.sort();
+        }
+      });
+    }
   }
 
   /// 장소 입력 필드

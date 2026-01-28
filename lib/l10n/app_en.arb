@@ -573,6 +573,44 @@
   "schedule_participantsLoadError": "Failed to load members",
   "schedule_participantsSelectAll": "Select All",
   "schedule_participantsDeselectAll": "Deselect All",
+  "schedule_reminderCustom": "Custom",
+  "schedule_reminderCustomTitle": "Set Reminder Time",
+  "schedule_reminderCustomHint": "Set when to be reminded before the event",
+  "schedule_reminderDays": "Days",
+  "schedule_reminderHours": "Hours",
+  "schedule_reminderMinutes": "Min",
+  "schedule_reminderMinutesBefore": "{minutes} min before",
+  "@schedule_reminderMinutesBefore": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "schedule_reminderHoursBefore": "{hours} hour(s) before",
+  "@schedule_reminderHoursBefore": {
+    "placeholders": {
+      "hours": {"type": "int"}
+    }
+  },
+  "schedule_reminderHoursMinutesBefore": "{hours}h {minutes}m before",
+  "@schedule_reminderHoursMinutesBefore": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "schedule_reminderDaysBefore": "{days} day(s) before",
+  "@schedule_reminderDaysBefore": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "schedule_reminderDaysHoursBefore": "{days}d {hours}h before",
+  "@schedule_reminderDaysHoursBefore": {
+    "placeholders": {
+      "days": {"type": "int"},
+      "hours": {"type": "int"}
+    }
+  },
 
   "category_management": "Manage Categories",
   "category_add": "Add Category",

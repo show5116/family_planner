@@ -1482,6 +1482,49 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_participantsDeselectAll => '全員解除';
 
   @override
+  String get schedule_reminderCustom => 'カスタム';
+
+  @override
+  String get schedule_reminderCustomTitle => 'リマインダー時間設定';
+
+  @override
+  String get schedule_reminderCustomHint => '予定開始前に通知を受け取る時間を設定してください';
+
+  @override
+  String get schedule_reminderDays => '日';
+
+  @override
+  String get schedule_reminderHours => '時間';
+
+  @override
+  String get schedule_reminderMinutes => '分';
+
+  @override
+  String schedule_reminderMinutesBefore(int minutes) {
+    return '$minutes分前';
+  }
+
+  @override
+  String schedule_reminderHoursBefore(int hours) {
+    return '$hours時間前';
+  }
+
+  @override
+  String schedule_reminderHoursMinutesBefore(int hours, int minutes) {
+    return '$hours時間$minutes分前';
+  }
+
+  @override
+  String schedule_reminderDaysBefore(int days) {
+    return '$days日前';
+  }
+
+  @override
+  String schedule_reminderDaysHoursBefore(int days, int hours) {
+    return '$days日$hours時間前';
+  }
+
+  @override
   String get category_management => 'カテゴリー管理';
 
   @override

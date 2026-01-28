@@ -2986,6 +2986,72 @@ abstract class AppLocalizations {
   /// **'전체 해제'**
   String get schedule_participantsDeselectAll;
 
+  /// No description provided for @schedule_reminderCustom.
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 설정'**
+  String get schedule_reminderCustom;
+
+  /// No description provided for @schedule_reminderCustomTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 시간 설정'**
+  String get schedule_reminderCustomTitle;
+
+  /// No description provided for @schedule_reminderCustomHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 시작 전 알림받을 시간을 설정하세요'**
+  String get schedule_reminderCustomHint;
+
+  /// No description provided for @schedule_reminderDays.
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get schedule_reminderDays;
+
+  /// No description provided for @schedule_reminderHours.
+  ///
+  /// In ko, this message translates to:
+  /// **'시간'**
+  String get schedule_reminderHours;
+
+  /// No description provided for @schedule_reminderMinutes.
+  ///
+  /// In ko, this message translates to:
+  /// **'분'**
+  String get schedule_reminderMinutes;
+
+  /// No description provided for @schedule_reminderMinutesBefore.
+  ///
+  /// In ko, this message translates to:
+  /// **'{minutes}분 전'**
+  String schedule_reminderMinutesBefore(int minutes);
+
+  /// No description provided for @schedule_reminderHoursBefore.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 전'**
+  String schedule_reminderHoursBefore(int hours);
+
+  /// No description provided for @schedule_reminderHoursMinutesBefore.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 {minutes}분 전'**
+  String schedule_reminderHoursMinutesBefore(int hours, int minutes);
+
+  /// No description provided for @schedule_reminderDaysBefore.
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 전'**
+  String schedule_reminderDaysBefore(int days);
+
+  /// No description provided for @schedule_reminderDaysHoursBefore.
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 {hours}시간 전'**
+  String schedule_reminderDaysHoursBefore(int days, int hours);
+
   /// No description provided for @category_management.
   ///
   /// In ko, this message translates to:

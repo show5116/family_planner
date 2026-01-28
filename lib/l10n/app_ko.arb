@@ -573,6 +573,44 @@
   "schedule_participantsLoadError": "멤버 목록을 불러올 수 없습니다",
   "schedule_participantsSelectAll": "전체 선택",
   "schedule_participantsDeselectAll": "전체 해제",
+  "schedule_reminderCustom": "직접 설정",
+  "schedule_reminderCustomTitle": "알림 시간 설정",
+  "schedule_reminderCustomHint": "일정 시작 전 알림받을 시간을 설정하세요",
+  "schedule_reminderDays": "일",
+  "schedule_reminderHours": "시간",
+  "schedule_reminderMinutes": "분",
+  "schedule_reminderMinutesBefore": "{minutes}분 전",
+  "@schedule_reminderMinutesBefore": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "schedule_reminderHoursBefore": "{hours}시간 전",
+  "@schedule_reminderHoursBefore": {
+    "placeholders": {
+      "hours": {"type": "int"}
+    }
+  },
+  "schedule_reminderHoursMinutesBefore": "{hours}시간 {minutes}분 전",
+  "@schedule_reminderHoursMinutesBefore": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "schedule_reminderDaysBefore": "{days}일 전",
+  "@schedule_reminderDaysBefore": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "schedule_reminderDaysHoursBefore": "{days}일 {hours}시간 전",
+  "@schedule_reminderDaysHoursBefore": {
+    "placeholders": {
+      "days": {"type": "int"},
+      "hours": {"type": "int"}
+    }
+  },
 
   "category_management": "카테고리 관리",
   "category_add": "카테고리 추가",

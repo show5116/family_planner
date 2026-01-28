@@ -573,6 +573,44 @@
   "schedule_participantsLoadError": "メンバーリストを読み込めませんでした",
   "schedule_participantsSelectAll": "全員選択",
   "schedule_participantsDeselectAll": "全員解除",
+  "schedule_reminderCustom": "カスタム",
+  "schedule_reminderCustomTitle": "リマインダー時間設定",
+  "schedule_reminderCustomHint": "予定開始前に通知を受け取る時間を設定してください",
+  "schedule_reminderDays": "日",
+  "schedule_reminderHours": "時間",
+  "schedule_reminderMinutes": "分",
+  "schedule_reminderMinutesBefore": "{minutes}分前",
+  "@schedule_reminderMinutesBefore": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "schedule_reminderHoursBefore": "{hours}時間前",
+  "@schedule_reminderHoursBefore": {
+    "placeholders": {
+      "hours": {"type": "int"}
+    }
+  },
+  "schedule_reminderHoursMinutesBefore": "{hours}時間{minutes}分前",
+  "@schedule_reminderHoursMinutesBefore": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "schedule_reminderDaysBefore": "{days}日前",
+  "@schedule_reminderDaysBefore": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "schedule_reminderDaysHoursBefore": "{days}日{hours}時間前",
+  "@schedule_reminderDaysHoursBefore": {
+    "placeholders": {
+      "days": {"type": "int"},
+      "hours": {"type": "int"}
+    }
+  },
 
   "category_management": "カテゴリー管理",
   "category_add": "カテゴリー追加",

@@ -1485,6 +1485,49 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_participantsDeselectAll => '전체 해제';
 
   @override
+  String get schedule_reminderCustom => '직접 설정';
+
+  @override
+  String get schedule_reminderCustomTitle => '알림 시간 설정';
+
+  @override
+  String get schedule_reminderCustomHint => '일정 시작 전 알림받을 시간을 설정하세요';
+
+  @override
+  String get schedule_reminderDays => '일';
+
+  @override
+  String get schedule_reminderHours => '시간';
+
+  @override
+  String get schedule_reminderMinutes => '분';
+
+  @override
+  String schedule_reminderMinutesBefore(int minutes) {
+    return '$minutes분 전';
+  }
+
+  @override
+  String schedule_reminderHoursBefore(int hours) {
+    return '$hours시간 전';
+  }
+
+  @override
+  String schedule_reminderHoursMinutesBefore(int hours, int minutes) {
+    return '$hours시간 $minutes분 전';
+  }
+
+  @override
+  String schedule_reminderDaysBefore(int days) {
+    return '$days일 전';
+  }
+
+  @override
+  String schedule_reminderDaysHoursBefore(int days, int hours) {
+    return '$days일 $hours시간 전';
+  }
+
+  @override
   String get category_management => '카테고리 관리';
 
   @override

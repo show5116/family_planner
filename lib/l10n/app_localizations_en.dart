@@ -1520,6 +1520,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_participantsDeselectAll => 'Deselect All';
 
   @override
+  String get schedule_reminderCustom => 'Custom';
+
+  @override
+  String get schedule_reminderCustomTitle => 'Set Reminder Time';
+
+  @override
+  String get schedule_reminderCustomHint =>
+      'Set when to be reminded before the event';
+
+  @override
+  String get schedule_reminderDays => 'Days';
+
+  @override
+  String get schedule_reminderHours => 'Hours';
+
+  @override
+  String get schedule_reminderMinutes => 'Min';
+
+  @override
+  String schedule_reminderMinutesBefore(int minutes) {
+    return '$minutes min before';
+  }
+
+  @override
+  String schedule_reminderHoursBefore(int hours) {
+    return '$hours hour(s) before';
+  }
+
+  @override
+  String schedule_reminderHoursMinutesBefore(int hours, int minutes) {
+    return '${hours}h ${minutes}m before';
+  }
+
+  @override
+  String schedule_reminderDaysBefore(int days) {
+    return '$days day(s) before';
+  }
+
+  @override
+  String schedule_reminderDaysHoursBefore(int days, int hours) {
+    return '${days}d ${hours}h before';
+  }
+
+  @override
   String get category_management => 'Manage Categories';
 
   @override
