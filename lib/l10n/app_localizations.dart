@@ -3177,6 +3177,312 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'이 카테고리를 삭제하시겠습니까?\n연결된 일정이 있으면 삭제할 수 없습니다.'**
   String get category_deleteDialogMessage;
+
+  /// No description provided for @schedule_recurringEvery.
+  ///
+  /// In ko, this message translates to:
+  /// **'매'**
+  String get schedule_recurringEvery;
+
+  /// No description provided for @schedule_recurringIntervalDay.
+  ///
+  /// In ko, this message translates to:
+  /// **'일마다'**
+  String get schedule_recurringIntervalDay;
+
+  /// No description provided for @schedule_recurringIntervalWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'주마다'**
+  String get schedule_recurringIntervalWeek;
+
+  /// No description provided for @schedule_recurringIntervalMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'개월마다'**
+  String get schedule_recurringIntervalMonth;
+
+  /// No description provided for @schedule_recurringIntervalYear.
+  ///
+  /// In ko, this message translates to:
+  /// **'년마다'**
+  String get schedule_recurringIntervalYear;
+
+  /// No description provided for @schedule_recurringDaysOfWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 요일'**
+  String get schedule_recurringDaysOfWeek;
+
+  /// No description provided for @schedule_daySun.
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get schedule_daySun;
+
+  /// No description provided for @schedule_dayMon.
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get schedule_dayMon;
+
+  /// No description provided for @schedule_dayTue.
+  ///
+  /// In ko, this message translates to:
+  /// **'화'**
+  String get schedule_dayTue;
+
+  /// No description provided for @schedule_dayWed.
+  ///
+  /// In ko, this message translates to:
+  /// **'수'**
+  String get schedule_dayWed;
+
+  /// No description provided for @schedule_dayThu.
+  ///
+  /// In ko, this message translates to:
+  /// **'목'**
+  String get schedule_dayThu;
+
+  /// No description provided for @schedule_dayFri.
+  ///
+  /// In ko, this message translates to:
+  /// **'금'**
+  String get schedule_dayFri;
+
+  /// No description provided for @schedule_daySat.
+  ///
+  /// In ko, this message translates to:
+  /// **'토'**
+  String get schedule_daySat;
+
+  /// No description provided for @schedule_daySunday.
+  ///
+  /// In ko, this message translates to:
+  /// **'일요일'**
+  String get schedule_daySunday;
+
+  /// No description provided for @schedule_dayMonday.
+  ///
+  /// In ko, this message translates to:
+  /// **'월요일'**
+  String get schedule_dayMonday;
+
+  /// No description provided for @schedule_dayTuesday.
+  ///
+  /// In ko, this message translates to:
+  /// **'화요일'**
+  String get schedule_dayTuesday;
+
+  /// No description provided for @schedule_dayWednesday.
+  ///
+  /// In ko, this message translates to:
+  /// **'수요일'**
+  String get schedule_dayWednesday;
+
+  /// No description provided for @schedule_dayThursday.
+  ///
+  /// In ko, this message translates to:
+  /// **'목요일'**
+  String get schedule_dayThursday;
+
+  /// No description provided for @schedule_dayFriday.
+  ///
+  /// In ko, this message translates to:
+  /// **'금요일'**
+  String get schedule_dayFriday;
+
+  /// No description provided for @schedule_daySaturday.
+  ///
+  /// In ko, this message translates to:
+  /// **'토요일'**
+  String get schedule_daySaturday;
+
+  /// No description provided for @schedule_recurringMonthlyType.
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 반복 방식'**
+  String get schedule_recurringMonthlyType;
+
+  /// No description provided for @schedule_recurringMonthlyDayOfMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 기준'**
+  String get schedule_recurringMonthlyDayOfMonth;
+
+  /// No description provided for @schedule_recurringMonthlyWeekOfMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'요일 기준'**
+  String get schedule_recurringMonthlyWeekOfMonth;
+
+  /// No description provided for @schedule_recurringMonthlyEveryMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'매월'**
+  String get schedule_recurringMonthlyEveryMonth;
+
+  /// No description provided for @schedule_recurringDay.
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get schedule_recurringDay;
+
+  /// No description provided for @schedule_recurringWeek1.
+  ///
+  /// In ko, this message translates to:
+  /// **'첫째 주'**
+  String get schedule_recurringWeek1;
+
+  /// No description provided for @schedule_recurringWeek2.
+  ///
+  /// In ko, this message translates to:
+  /// **'둘째 주'**
+  String get schedule_recurringWeek2;
+
+  /// No description provided for @schedule_recurringWeek3.
+  ///
+  /// In ko, this message translates to:
+  /// **'셋째 주'**
+  String get schedule_recurringWeek3;
+
+  /// No description provided for @schedule_recurringWeek4.
+  ///
+  /// In ko, this message translates to:
+  /// **'넷째 주'**
+  String get schedule_recurringWeek4;
+
+  /// No description provided for @schedule_recurringWeekLast.
+  ///
+  /// In ko, this message translates to:
+  /// **'마지막 주'**
+  String get schedule_recurringWeekLast;
+
+  /// No description provided for @schedule_recurringYearlyType.
+  ///
+  /// In ko, this message translates to:
+  /// **'연간 반복 방식'**
+  String get schedule_recurringYearlyType;
+
+  /// No description provided for @schedule_recurringYearlyDayOfMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 기준'**
+  String get schedule_recurringYearlyDayOfMonth;
+
+  /// No description provided for @schedule_recurringYearlyWeekOfMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'요일 기준'**
+  String get schedule_recurringYearlyWeekOfMonth;
+
+  /// No description provided for @schedule_recurringYearlyEveryYear.
+  ///
+  /// In ko, this message translates to:
+  /// **'매년'**
+  String get schedule_recurringYearlyEveryYear;
+
+  /// No description provided for @schedule_month1.
+  ///
+  /// In ko, this message translates to:
+  /// **'1월'**
+  String get schedule_month1;
+
+  /// No description provided for @schedule_month2.
+  ///
+  /// In ko, this message translates to:
+  /// **'2월'**
+  String get schedule_month2;
+
+  /// No description provided for @schedule_month3.
+  ///
+  /// In ko, this message translates to:
+  /// **'3월'**
+  String get schedule_month3;
+
+  /// No description provided for @schedule_month4.
+  ///
+  /// In ko, this message translates to:
+  /// **'4월'**
+  String get schedule_month4;
+
+  /// No description provided for @schedule_month5.
+  ///
+  /// In ko, this message translates to:
+  /// **'5월'**
+  String get schedule_month5;
+
+  /// No description provided for @schedule_month6.
+  ///
+  /// In ko, this message translates to:
+  /// **'6월'**
+  String get schedule_month6;
+
+  /// No description provided for @schedule_month7.
+  ///
+  /// In ko, this message translates to:
+  /// **'7월'**
+  String get schedule_month7;
+
+  /// No description provided for @schedule_month8.
+  ///
+  /// In ko, this message translates to:
+  /// **'8월'**
+  String get schedule_month8;
+
+  /// No description provided for @schedule_month9.
+  ///
+  /// In ko, this message translates to:
+  /// **'9월'**
+  String get schedule_month9;
+
+  /// No description provided for @schedule_month10.
+  ///
+  /// In ko, this message translates to:
+  /// **'10월'**
+  String get schedule_month10;
+
+  /// No description provided for @schedule_month11.
+  ///
+  /// In ko, this message translates to:
+  /// **'11월'**
+  String get schedule_month11;
+
+  /// No description provided for @schedule_month12.
+  ///
+  /// In ko, this message translates to:
+  /// **'12월'**
+  String get schedule_month12;
+
+  /// No description provided for @schedule_recurringEndCondition.
+  ///
+  /// In ko, this message translates to:
+  /// **'종료 조건'**
+  String get schedule_recurringEndCondition;
+
+  /// No description provided for @schedule_recurringEndNever.
+  ///
+  /// In ko, this message translates to:
+  /// **'종료 없음'**
+  String get schedule_recurringEndNever;
+
+  /// No description provided for @schedule_recurringEndDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜까지'**
+  String get schedule_recurringEndDate;
+
+  /// No description provided for @schedule_recurringEndCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'횟수만큼'**
+  String get schedule_recurringEndCount;
+
+  /// No description provided for @schedule_recurringCountTimes.
+  ///
+  /// In ko, this message translates to:
+  /// **'회 반복'**
+  String get schedule_recurringCountTimes;
 }
 
 class _AppLocalizationsDelegate

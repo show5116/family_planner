@@ -8,6 +8,25 @@ import 'package:family_planner/features/main/task/providers/task_provider.dart';
 part 'task_form_provider.freezed.dart';
 part 'task_form_provider.g.dart';
 
+/// 반복 종료 타입
+enum RecurringEndType {
+  never,
+  date,
+  count,
+}
+
+/// 월간 반복 타입
+enum MonthlyType {
+  dayOfMonth, // 매월 N일
+  weekOfMonth, // 매월 N째 주 X요일
+}
+
+/// 연간 반복 타입
+enum YearlyType {
+  dayOfMonth, // 매년 N월 N일
+  weekOfMonth, // 매년 N월 N째 주 X요일
+}
+
 /// Task Form 상태 모델
 /// - categories는 별도 Provider(selectedGroupCategoriesProvider)로 관리
 /// - UI 렌더링에 필요한 상태만 포함
@@ -31,6 +50,22 @@ class TaskFormState with _$TaskFormState {
     @Default(TaskType.calendarOnly) TaskType taskType,
     @Default(TaskPriority.medium) TaskPriority priority,
     RecurringRuleType? recurringType,
+
+    // 반복 상세 설정
+    @Default(1) int recurringInterval, // 반복 간격 (1 = 매번, 2 = 격일/격주 등)
+    @Default(RecurringEndType.never) RecurringEndType recurringEndType,
+    DateTime? recurringEndDate, // endType이 date일 때
+    @Default(10) int recurringCount, // endType이 count일 때
+    @Default([]) List<int> recurringDaysOfWeek, // weekly: 요일 선택 (0=일 ~ 6=토)
+    @Default(MonthlyType.dayOfMonth) MonthlyType monthlyType,
+    @Default(1) int monthlyDayOfMonth, // 1-31
+    @Default(1) int monthlyWeekOfMonth, // 1-5 (5=마지막 주)
+    @Default(1) int monthlyDayOfWeek, // 0-6
+    @Default(YearlyType.dayOfMonth) YearlyType yearlyType,
+    @Default(1) int yearlyMonth, // 1-12
+    @Default(1) int yearlyDayOfMonth, // 1-31
+    @Default(1) int yearlyWeekOfMonth, // 1-5
+    @Default(1) int yearlyDayOfWeek, // 0-6
 
     // 알림 (분 단위)
     @Default([]) List<int> selectedReminders,
@@ -95,8 +130,55 @@ class TaskFormState with _$TaskFormState {
   /// 반복 규칙 DTO 생성
   RecurringRuleDto? get recurringDto {
     if (recurringType == null) return null;
+
+    final config = <String, dynamic>{
+      'interval': recurringInterval,
+      'endType': recurringEndType.name.toUpperCase(),
+    };
+
+    // 종료 조건 설정
+    if (recurringEndType == RecurringEndType.date && recurringEndDate != null) {
+      config['endDate'] = recurringEndDate!.toIso8601String().split('T')[0];
+    } else if (recurringEndType == RecurringEndType.count) {
+      config['count'] = recurringCount;
+    }
+
+    // 타입별 추가 설정
+    switch (recurringType!) {
+      case RecurringRuleType.daily:
+        // daily는 공통 필드만 사용
+        break;
+      case RecurringRuleType.weekly:
+        config['daysOfWeek'] = recurringDaysOfWeek.isNotEmpty
+            ? recurringDaysOfWeek
+            : [startDate.weekday % 7]; // 기본값: 시작일의 요일
+        break;
+      case RecurringRuleType.monthly:
+        config['monthlyType'] =
+            monthlyType == MonthlyType.dayOfMonth ? 'dayOfMonth' : 'weekOfMonth';
+        if (monthlyType == MonthlyType.dayOfMonth) {
+          config['dayOfMonth'] = monthlyDayOfMonth;
+        } else {
+          config['weekOfMonth'] = monthlyWeekOfMonth;
+          config['dayOfWeek'] = monthlyDayOfWeek;
+        }
+        break;
+      case RecurringRuleType.yearly:
+        config['month'] = yearlyMonth;
+        config['yearlyType'] =
+            yearlyType == YearlyType.dayOfMonth ? 'dayOfMonth' : 'weekOfMonth';
+        if (yearlyType == YearlyType.dayOfMonth) {
+          config['dayOfMonth'] = yearlyDayOfMonth;
+        } else {
+          config['weekOfMonth'] = yearlyWeekOfMonth;
+          config['dayOfWeek'] = yearlyDayOfWeek;
+        }
+        break;
+    }
+
     return RecurringRuleDto(
       ruleType: recurringType!,
+      ruleConfig: config,
       generationType: RecurringGenerationType.autoScheduler,
     );
   }
@@ -204,9 +286,89 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       }
     }
 
+    // 반복 설정 파싱
     RecurringRuleType? recurringType;
+    int recurringInterval = 1;
+    RecurringEndType recurringEndType = RecurringEndType.never;
+    DateTime? recurringEndDate;
+    int recurringCount = 10;
+    List<int> recurringDaysOfWeek = [];
+    MonthlyType monthlyType = MonthlyType.dayOfMonth;
+    int monthlyDayOfMonth = startDate.day;
+    int monthlyWeekOfMonth = ((startDate.day - 1) ~/ 7) + 1;
+    int monthlyDayOfWeek = startDate.weekday % 7;
+    YearlyType yearlyType = YearlyType.dayOfMonth;
+    int yearlyMonth = startDate.month;
+    int yearlyDayOfMonth = startDate.day;
+    int yearlyWeekOfMonth = ((startDate.day - 1) ~/ 7) + 1;
+    int yearlyDayOfWeek = startDate.weekday % 7;
+
     if (task.recurring != null) {
       recurringType = _parseRecurringType(task.recurring!.ruleType);
+      final config = task.recurring!.ruleConfig;
+      if (config != null) {
+        recurringInterval = (config['interval'] as num?)?.toInt() ?? 1;
+
+        final endTypeStr = config['endType'] as String?;
+        if (endTypeStr != null) {
+          switch (endTypeStr.toUpperCase()) {
+            case 'DATE':
+              recurringEndType = RecurringEndType.date;
+              if (config['endDate'] != null) {
+                recurringEndDate = DateTime.tryParse(config['endDate'] as String);
+              }
+              break;
+            case 'COUNT':
+              recurringEndType = RecurringEndType.count;
+              recurringCount = (config['count'] as num?)?.toInt() ?? 10;
+              break;
+            default:
+              recurringEndType = RecurringEndType.never;
+          }
+        }
+
+        // Weekly 설정
+        if (config['daysOfWeek'] != null) {
+          recurringDaysOfWeek = (config['daysOfWeek'] as List)
+              .map((e) => (e as num).toInt())
+              .toList();
+        }
+
+        // Monthly 설정
+        if (config['monthlyType'] != null) {
+          monthlyType = config['monthlyType'] == 'weekOfMonth'
+              ? MonthlyType.weekOfMonth
+              : MonthlyType.dayOfMonth;
+        }
+        if (config['dayOfMonth'] != null) {
+          monthlyDayOfMonth = (config['dayOfMonth'] as num).toInt();
+        }
+        if (config['weekOfMonth'] != null) {
+          monthlyWeekOfMonth = (config['weekOfMonth'] as num).toInt();
+        }
+        if (config['dayOfWeek'] != null) {
+          monthlyDayOfWeek = (config['dayOfWeek'] as num).toInt();
+        }
+
+        // Yearly 설정
+        if (config['month'] != null) {
+          yearlyMonth = (config['month'] as num).toInt();
+        }
+        if (config['yearlyType'] != null) {
+          yearlyType = config['yearlyType'] == 'weekOfMonth'
+              ? YearlyType.weekOfMonth
+              : YearlyType.dayOfMonth;
+        }
+        if (config['dayOfMonth'] != null && recurringType == RecurringRuleType.yearly) {
+          yearlyDayOfMonth = (config['dayOfMonth'] as num).toInt();
+        }
+        if (config['weekOfMonth'] != null && recurringType == RecurringRuleType.yearly) {
+          yearlyWeekOfMonth = (config['weekOfMonth'] as num).toInt();
+        }
+        if (config['dayOfWeek'] != null && recurringType == RecurringRuleType.yearly) {
+          yearlyDayOfWeek = (config['dayOfWeek'] as num).toInt();
+        }
+      }
     }
 
     return TaskFormState(
@@ -222,6 +384,20 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       taskType: task.type ?? TaskType.calendarOnly,
       priority: task.priority ?? TaskPriority.medium,
       recurringType: recurringType,
+      recurringInterval: recurringInterval,
+      recurringEndType: recurringEndType,
+      recurringEndDate: recurringEndDate,
+      recurringCount: recurringCount,
+      recurringDaysOfWeek: recurringDaysOfWeek,
+      monthlyType: monthlyType,
+      monthlyDayOfMonth: monthlyDayOfMonth,
+      monthlyWeekOfMonth: monthlyWeekOfMonth,
+      monthlyDayOfWeek: monthlyDayOfWeek,
+      yearlyType: yearlyType,
+      yearlyMonth: yearlyMonth,
+      yearlyDayOfMonth: yearlyDayOfMonth,
+      yearlyWeekOfMonth: yearlyWeekOfMonth,
+      yearlyDayOfWeek: yearlyDayOfWeek,
       selectedCategory: task.category,
       selectedParticipantIds: task.participants.map((p) => p.userId).toList(),
       editingTask: task,
@@ -306,7 +482,94 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   }
 
   void setRecurringType(RecurringRuleType? value) {
-    state = state.copyWith(recurringType: value);
+    // 반복 타입 변경 시 기본값으로 초기화
+    if (value != state.recurringType) {
+      final weekday = state.startDate.weekday % 7; // 0=일 ~ 6=토
+      state = state.copyWith(
+        recurringType: value,
+        recurringInterval: 1,
+        recurringEndType: RecurringEndType.never,
+        recurringDaysOfWeek: value == RecurringRuleType.weekly ? [weekday] : [],
+        monthlyType: MonthlyType.dayOfMonth,
+        monthlyDayOfMonth: state.startDate.day,
+        monthlyWeekOfMonth: ((state.startDate.day - 1) ~/ 7) + 1,
+        monthlyDayOfWeek: weekday,
+        yearlyType: YearlyType.dayOfMonth,
+        yearlyMonth: state.startDate.month,
+        yearlyDayOfMonth: state.startDate.day,
+        yearlyWeekOfMonth: ((state.startDate.day - 1) ~/ 7) + 1,
+        yearlyDayOfWeek: weekday,
+      );
+    } else {
+      state = state.copyWith(recurringType: value);
+    }
+  }
+
+  // ============ 반복 상세 설정 ============
+
+  void setRecurringInterval(int value) {
+    state = state.copyWith(recurringInterval: value.clamp(1, 99));
+  }
+
+  void setRecurringEndType(RecurringEndType value) {
+    state = state.copyWith(recurringEndType: value);
+  }
+
+  void setRecurringEndDate(DateTime? value) {
+    state = state.copyWith(recurringEndDate: value);
+  }
+
+  void setRecurringCount(int value) {
+    state = state.copyWith(recurringCount: value.clamp(1, 999));
+  }
+
+  void toggleDayOfWeek(int day) {
+    final days = List<int>.from(state.recurringDaysOfWeek);
+    if (days.contains(day)) {
+      if (days.length > 1) {
+        days.remove(day);
+      }
+    } else {
+      days.add(day);
+      days.sort();
+    }
+    state = state.copyWith(recurringDaysOfWeek: days);
+  }
+
+  void setMonthlyType(MonthlyType value) {
+    state = state.copyWith(monthlyType: value);
+  }
+
+  void setMonthlyDayOfMonth(int value) {
+    state = state.copyWith(monthlyDayOfMonth: value.clamp(1, 31));
+  }
+
+  void setMonthlyWeekOfMonth(int value) {
+    state = state.copyWith(monthlyWeekOfMonth: value.clamp(1, 5));
+  }
+
+  void setMonthlyDayOfWeek(int value) {
+    state = state.copyWith(monthlyDayOfWeek: value.clamp(0, 6));
+  }
+
+  void setYearlyType(YearlyType value) {
+    state = state.copyWith(yearlyType: value);
+  }
+
+  void setYearlyMonth(int value) {
+    state = state.copyWith(yearlyMonth: value.clamp(1, 12));
+  }
+
+  void setYearlyDayOfMonth(int value) {
+    state = state.copyWith(yearlyDayOfMonth: value.clamp(1, 31));
+  }
+
+  void setYearlyWeekOfMonth(int value) {
+    state = state.copyWith(yearlyWeekOfMonth: value.clamp(1, 5));
+  }
+
+  void setYearlyDayOfWeek(int value) {
+    state = state.copyWith(yearlyDayOfWeek: value.clamp(0, 6));
   }
 
   // ============ 카테고리 ============

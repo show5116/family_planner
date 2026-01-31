@@ -1627,4 +1627,157 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get category_deleteDialogMessage =>
       'Are you sure you want to delete this category?\nCategories with linked schedules cannot be deleted.';
+
+  @override
+  String get schedule_recurringEvery => 'Every';
+
+  @override
+  String get schedule_recurringIntervalDay => 'day(s)';
+
+  @override
+  String get schedule_recurringIntervalWeek => 'week(s)';
+
+  @override
+  String get schedule_recurringIntervalMonth => 'month(s)';
+
+  @override
+  String get schedule_recurringIntervalYear => 'year(s)';
+
+  @override
+  String get schedule_recurringDaysOfWeek => 'Repeat on';
+
+  @override
+  String get schedule_daySun => 'Sun';
+
+  @override
+  String get schedule_dayMon => 'Mon';
+
+  @override
+  String get schedule_dayTue => 'Tue';
+
+  @override
+  String get schedule_dayWed => 'Wed';
+
+  @override
+  String get schedule_dayThu => 'Thu';
+
+  @override
+  String get schedule_dayFri => 'Fri';
+
+  @override
+  String get schedule_daySat => 'Sat';
+
+  @override
+  String get schedule_daySunday => 'Sunday';
+
+  @override
+  String get schedule_dayMonday => 'Monday';
+
+  @override
+  String get schedule_dayTuesday => 'Tuesday';
+
+  @override
+  String get schedule_dayWednesday => 'Wednesday';
+
+  @override
+  String get schedule_dayThursday => 'Thursday';
+
+  @override
+  String get schedule_dayFriday => 'Friday';
+
+  @override
+  String get schedule_daySaturday => 'Saturday';
+
+  @override
+  String get schedule_recurringMonthlyType => 'Monthly repeat type';
+
+  @override
+  String get schedule_recurringMonthlyDayOfMonth => 'Day of month';
+
+  @override
+  String get schedule_recurringMonthlyWeekOfMonth => 'Day of week';
+
+  @override
+  String get schedule_recurringMonthlyEveryMonth => 'Every month on';
+
+  @override
+  String get schedule_recurringDay => '';
+
+  @override
+  String get schedule_recurringWeek1 => 'First';
+
+  @override
+  String get schedule_recurringWeek2 => 'Second';
+
+  @override
+  String get schedule_recurringWeek3 => 'Third';
+
+  @override
+  String get schedule_recurringWeek4 => 'Fourth';
+
+  @override
+  String get schedule_recurringWeekLast => 'Last';
+
+  @override
+  String get schedule_recurringYearlyType => 'Yearly repeat type';
+
+  @override
+  String get schedule_recurringYearlyDayOfMonth => 'Day of month';
+
+  @override
+  String get schedule_recurringYearlyWeekOfMonth => 'Day of week';
+
+  @override
+  String get schedule_recurringYearlyEveryYear => 'Every year on';
+
+  @override
+  String get schedule_month1 => 'January';
+
+  @override
+  String get schedule_month2 => 'February';
+
+  @override
+  String get schedule_month3 => 'March';
+
+  @override
+  String get schedule_month4 => 'April';
+
+  @override
+  String get schedule_month5 => 'May';
+
+  @override
+  String get schedule_month6 => 'June';
+
+  @override
+  String get schedule_month7 => 'July';
+
+  @override
+  String get schedule_month8 => 'August';
+
+  @override
+  String get schedule_month9 => 'September';
+
+  @override
+  String get schedule_month10 => 'October';
+
+  @override
+  String get schedule_month11 => 'November';
+
+  @override
+  String get schedule_month12 => 'December';
+
+  @override
+  String get schedule_recurringEndCondition => 'End condition';
+
+  @override
+  String get schedule_recurringEndNever => 'Never';
+
+  @override
+  String get schedule_recurringEndDate => 'Until date';
+
+  @override
+  String get schedule_recurringEndCount => 'After count';
+
+  @override
+  String get schedule_recurringCountTimes => 'times';
 }

@@ -1587,4 +1587,157 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get category_deleteDialogMessage =>
       'このカテゴリーを削除しますか？\n関連する予定があると削除できません。';
+
+  @override
+  String get schedule_recurringEvery => '毎';
+
+  @override
+  String get schedule_recurringIntervalDay => '日ごと';
+
+  @override
+  String get schedule_recurringIntervalWeek => '週ごと';
+
+  @override
+  String get schedule_recurringIntervalMonth => 'ヶ月ごと';
+
+  @override
+  String get schedule_recurringIntervalYear => '年ごと';
+
+  @override
+  String get schedule_recurringDaysOfWeek => '繰り返す曜日';
+
+  @override
+  String get schedule_daySun => '日';
+
+  @override
+  String get schedule_dayMon => '月';
+
+  @override
+  String get schedule_dayTue => '火';
+
+  @override
+  String get schedule_dayWed => '水';
+
+  @override
+  String get schedule_dayThu => '木';
+
+  @override
+  String get schedule_dayFri => '金';
+
+  @override
+  String get schedule_daySat => '土';
+
+  @override
+  String get schedule_daySunday => '日曜日';
+
+  @override
+  String get schedule_dayMonday => '月曜日';
+
+  @override
+  String get schedule_dayTuesday => '火曜日';
+
+  @override
+  String get schedule_dayWednesday => '水曜日';
+
+  @override
+  String get schedule_dayThursday => '木曜日';
+
+  @override
+  String get schedule_dayFriday => '金曜日';
+
+  @override
+  String get schedule_daySaturday => '土曜日';
+
+  @override
+  String get schedule_recurringMonthlyType => '月次繰り返しタイプ';
+
+  @override
+  String get schedule_recurringMonthlyDayOfMonth => '日付基準';
+
+  @override
+  String get schedule_recurringMonthlyWeekOfMonth => '曜日基準';
+
+  @override
+  String get schedule_recurringMonthlyEveryMonth => '毎月';
+
+  @override
+  String get schedule_recurringDay => '日';
+
+  @override
+  String get schedule_recurringWeek1 => '第1';
+
+  @override
+  String get schedule_recurringWeek2 => '第2';
+
+  @override
+  String get schedule_recurringWeek3 => '第3';
+
+  @override
+  String get schedule_recurringWeek4 => '第4';
+
+  @override
+  String get schedule_recurringWeekLast => '最終';
+
+  @override
+  String get schedule_recurringYearlyType => '年次繰り返しタイプ';
+
+  @override
+  String get schedule_recurringYearlyDayOfMonth => '日付基準';
+
+  @override
+  String get schedule_recurringYearlyWeekOfMonth => '曜日基準';
+
+  @override
+  String get schedule_recurringYearlyEveryYear => '毎年';
+
+  @override
+  String get schedule_month1 => '1月';
+
+  @override
+  String get schedule_month2 => '2月';
+
+  @override
+  String get schedule_month3 => '3月';
+
+  @override
+  String get schedule_month4 => '4月';
+
+  @override
+  String get schedule_month5 => '5月';
+
+  @override
+  String get schedule_month6 => '6月';
+
+  @override
+  String get schedule_month7 => '7月';
+
+  @override
+  String get schedule_month8 => '8月';
+
+  @override
+  String get schedule_month9 => '9月';
+
+  @override
+  String get schedule_month10 => '10月';
+
+  @override
+  String get schedule_month11 => '11月';
+
+  @override
+  String get schedule_month12 => '12月';
+
+  @override
+  String get schedule_recurringEndCondition => '終了条件';
+
+  @override
+  String get schedule_recurringEndNever => '終了なし';
+
+  @override
+  String get schedule_recurringEndDate => '日付まで';
+
+  @override
+  String get schedule_recurringEndCount => '回数指定';
+
+  @override
+  String get schedule_recurringCountTimes => '回繰り返し';
 }

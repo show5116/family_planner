@@ -1590,4 +1590,157 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get category_deleteDialogMessage =>
       '이 카테고리를 삭제하시겠습니까?\n연결된 일정이 있으면 삭제할 수 없습니다.';
+
+  @override
+  String get schedule_recurringEvery => '매';
+
+  @override
+  String get schedule_recurringIntervalDay => '일마다';
+
+  @override
+  String get schedule_recurringIntervalWeek => '주마다';
+
+  @override
+  String get schedule_recurringIntervalMonth => '개월마다';
+
+  @override
+  String get schedule_recurringIntervalYear => '년마다';
+
+  @override
+  String get schedule_recurringDaysOfWeek => '반복 요일';
+
+  @override
+  String get schedule_daySun => '일';
+
+  @override
+  String get schedule_dayMon => '월';
+
+  @override
+  String get schedule_dayTue => '화';
+
+  @override
+  String get schedule_dayWed => '수';
+
+  @override
+  String get schedule_dayThu => '목';
+
+  @override
+  String get schedule_dayFri => '금';
+
+  @override
+  String get schedule_daySat => '토';
+
+  @override
+  String get schedule_daySunday => '일요일';
+
+  @override
+  String get schedule_dayMonday => '월요일';
+
+  @override
+  String get schedule_dayTuesday => '화요일';
+
+  @override
+  String get schedule_dayWednesday => '수요일';
+
+  @override
+  String get schedule_dayThursday => '목요일';
+
+  @override
+  String get schedule_dayFriday => '금요일';
+
+  @override
+  String get schedule_daySaturday => '토요일';
+
+  @override
+  String get schedule_recurringMonthlyType => '월간 반복 방식';
+
+  @override
+  String get schedule_recurringMonthlyDayOfMonth => '날짜 기준';
+
+  @override
+  String get schedule_recurringMonthlyWeekOfMonth => '요일 기준';
+
+  @override
+  String get schedule_recurringMonthlyEveryMonth => '매월';
+
+  @override
+  String get schedule_recurringDay => '일';
+
+  @override
+  String get schedule_recurringWeek1 => '첫째 주';
+
+  @override
+  String get schedule_recurringWeek2 => '둘째 주';
+
+  @override
+  String get schedule_recurringWeek3 => '셋째 주';
+
+  @override
+  String get schedule_recurringWeek4 => '넷째 주';
+
+  @override
+  String get schedule_recurringWeekLast => '마지막 주';
+
+  @override
+  String get schedule_recurringYearlyType => '연간 반복 방식';
+
+  @override
+  String get schedule_recurringYearlyDayOfMonth => '날짜 기준';
+
+  @override
+  String get schedule_recurringYearlyWeekOfMonth => '요일 기준';
+
+  @override
+  String get schedule_recurringYearlyEveryYear => '매년';
+
+  @override
+  String get schedule_month1 => '1월';
+
+  @override
+  String get schedule_month2 => '2월';
+
+  @override
+  String get schedule_month3 => '3월';
+
+  @override
+  String get schedule_month4 => '4월';
+
+  @override
+  String get schedule_month5 => '5월';
+
+  @override
+  String get schedule_month6 => '6월';
+
+  @override
+  String get schedule_month7 => '7월';
+
+  @override
+  String get schedule_month8 => '8월';
+
+  @override
+  String get schedule_month9 => '9월';
+
+  @override
+  String get schedule_month10 => '10월';
+
+  @override
+  String get schedule_month11 => '11월';
+
+  @override
+  String get schedule_month12 => '12월';
+
+  @override
+  String get schedule_recurringEndCondition => '종료 조건';
+
+  @override
+  String get schedule_recurringEndNever => '종료 없음';
+
+  @override
+  String get schedule_recurringEndDate => '날짜까지';
+
+  @override
+  String get schedule_recurringEndCount => '횟수만큼';
+
+  @override
+  String get schedule_recurringCountTimes => '회 반복';
 }
