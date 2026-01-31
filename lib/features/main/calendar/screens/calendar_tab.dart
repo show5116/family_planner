@@ -6,8 +6,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
-import 'package:family_planner/features/main/calendar/providers/task_provider.dart';
-import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
+import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';

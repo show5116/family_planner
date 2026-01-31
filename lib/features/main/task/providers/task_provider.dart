@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
-import 'package:family_planner/features/main/calendar/data/repositories/task_repository.dart';
+import 'package:family_planner/features/main/task/data/models/task_model.dart';
+import 'package:family_planner/features/main/task/data/repositories/task_repository.dart';
 
 part 'task_provider.g.dart';
 

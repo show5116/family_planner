@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
-import 'package:family_planner/features/main/calendar/data/models/task_model.dart';
+import 'package:family_planner/features/main/task/data/models/task_model.dart';
 
 /// Task Repository Provider
 final taskRepositoryProvider = Provider<TaskRepository>((ref) {
