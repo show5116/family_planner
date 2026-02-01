@@ -12,6 +12,14 @@ import 'package:family_planner/features/settings/groups/providers/group_provider
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+/// 멀티데이 이벤트의 위치
+enum _MultiDayPosition {
+  single, // 단일 일정 (마커)
+  start, // 시작일 (왼쪽 둥근 바)
+  middle, // 중간 (직선 바)
+  end, // 종료일 (오른쪽 둥근 바)
+}
+
 /// 일정 관리 탭 (월간 캘린더 뷰)
 class CalendarTab extends ConsumerStatefulWidget {
   const CalendarTab({super.key});
@@ -24,6 +32,34 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+
+  /// 멀티데이 이벤트의 위치를 반환 (start, middle, end, single)
+  _MultiDayPosition _getMultiDayPosition(TaskModel task, DateTime date) {
+    if (task.scheduledAt == null) return _MultiDayPosition.single;
+
+    final startDate = DateTime(
+      task.scheduledAt!.year,
+      task.scheduledAt!.month,
+      task.scheduledAt!.day,
+    );
+    final targetDate = DateTime(date.year, date.month, date.day);
+
+    // 마감일이 없으면 단일 일정
+    if (task.dueAt == null) return _MultiDayPosition.single;
+
+    final endDate = DateTime(
+      task.dueAt!.year,
+      task.dueAt!.month,
+      task.dueAt!.day,
+    );
+
+    // 시작일과 종료일이 같으면 단일 일정
+    if (startDate == endDate) return _MultiDayPosition.single;
+
+    if (targetDate == startDate) return _MultiDayPosition.start;
+    if (targetDate == endDate) return _MultiDayPosition.end;
+    return _MultiDayPosition.middle;
+  }
 
   @override
   void initState() {
@@ -362,25 +398,49 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
         markerBuilder: (context, date, events) {
           if (events.isEmpty) return null;
 
+          // 멀티데이 이벤트와 단일 이벤트 분리
+          final multiDayEvents = <TaskModel>[];
+          final singleDayEvents = <TaskModel>[];
+
+          for (final task in events) {
+            final position = _getMultiDayPosition(task, date);
+            if (position == _MultiDayPosition.single) {
+              singleDayEvents.add(task);
+            } else {
+              multiDayEvents.add(task);
+            }
+          }
+
           return Positioned(
+            left: 0,
+            right: 0,
             bottom: 1,
-            child: Row(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(
-                events.length > 3 ? 3 : events.length,
-                (index) {
-                  final task = events[index];
-                  return Container(
-                    width: 6,
-                    height: 6,
-                    margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                    decoration: BoxDecoration(
-                      color: Color(task.colorValue),
-                      shape: BoxShape.circle,
-                    ),
-                  );
-                },
-              ),
+              children: [
+                // 멀티데이 이벤트 바
+                ...multiDayEvents.take(2).map((task) {
+                  final position = _getMultiDayPosition(task, date);
+                  final color = Color(task.colorValue);
+                  return _buildMultiDayBar(position, color);
+                }),
+                // 단일 이벤트 마커
+                if (singleDayEvents.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: singleDayEvents.take(3).map((task) {
+                      return Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.symmetric(horizontal: 0.5),
+                        decoration: BoxDecoration(
+                          color: Color(task.colorValue),
+                          shape: BoxShape.circle,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+              ],
             ),
           );
         },
@@ -525,6 +585,53 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     );
   }
 
+  /// 멀티데이 이벤트 바 빌더
+  Widget _buildMultiDayBar(_MultiDayPosition position, Color color) {
+    const barHeight = 4.0;
+    const verticalMargin = 1.0;
+
+    BorderRadius borderRadius;
+    EdgeInsets margin;
+
+    switch (position) {
+      case _MultiDayPosition.start:
+        // 시작일: 왼쪽만 둥글게, 오른쪽은 셀 끝까지
+        borderRadius = const BorderRadius.only(
+          topLeft: Radius.circular(barHeight / 2),
+          bottomLeft: Radius.circular(barHeight / 2),
+        );
+        margin = const EdgeInsets.only(left: 4, right: 0, top: verticalMargin, bottom: verticalMargin);
+        break;
+      case _MultiDayPosition.middle:
+        // 중간: 둥글기 없이 셀 전체
+        borderRadius = BorderRadius.zero;
+        margin = const EdgeInsets.only(left: 0, right: 0, top: verticalMargin, bottom: verticalMargin);
+        break;
+      case _MultiDayPosition.end:
+        // 종료일: 오른쪽만 둥글게, 왼쪽은 셀 시작부터
+        borderRadius = const BorderRadius.only(
+          topRight: Radius.circular(barHeight / 2),
+          bottomRight: Radius.circular(barHeight / 2),
+        );
+        margin = const EdgeInsets.only(left: 0, right: 4, top: verticalMargin, bottom: verticalMargin);
+        break;
+      case _MultiDayPosition.single:
+        // 단일 일정은 여기 오지 않음
+        borderRadius = BorderRadius.circular(barHeight / 2);
+        margin = const EdgeInsets.symmetric(horizontal: 4, vertical: verticalMargin);
+        break;
+    }
+
+    return Container(
+      height: barHeight,
+      margin: margin,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: borderRadius,
+      ),
+    );
+  }
+
   /// 에러 상태
   Widget _buildErrorState(String error) {
     final l10n = AppLocalizations.of(context)!;
@@ -580,6 +687,37 @@ class _TaskListItem extends StatelessWidget {
     required this.onTap,
     required this.onToggleComplete,
   });
+
+  /// 기간 일정 여부 (시작일과 종료일이 다른 경우)
+  bool get _hasDateRange {
+    if (task.scheduledAt == null || task.dueAt == null) return false;
+    final startDate = DateTime(
+      task.scheduledAt!.year,
+      task.scheduledAt!.month,
+      task.scheduledAt!.day,
+    );
+    final endDate = DateTime(
+      task.dueAt!.year,
+      task.dueAt!.month,
+      task.dueAt!.day,
+    );
+    return startDate != endDate;
+  }
+
+  /// 시간/기간 표시 문자열
+  String _getTimeDisplay(AppLocalizations l10n) {
+    if (_hasDateRange) {
+      // 기간 일정: "1/15 ~ 1/20" 형식
+      final startDate = task.scheduledAt!;
+      final endDate = task.dueAt!;
+      return '${startDate.month}/${startDate.day} ~ ${endDate.month}/${endDate.day}';
+    } else if (task.isAllDay) {
+      return l10n.schedule_allDay;
+    } else if (task.scheduledAt != null) {
+      return timeFormat.format(task.scheduledAt!);
+    }
+    return '-';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -654,27 +792,28 @@ class _TaskListItem extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSizes.spaceXS),
 
-                    // 시간 / 종일 표시
+                    // 시간 / 종일 / 기간 표시
                     Row(
                       children: [
                         Icon(
-                          task.isAllDay
-                              ? Icons.wb_sunny_outlined
-                              : Icons.access_time,
+                          _hasDateRange
+                              ? Icons.date_range
+                              : task.isAllDay
+                                  ? Icons.wb_sunny_outlined
+                                  : Icons.access_time,
                           size: AppSizes.iconSmall,
                           color: AppColors.textSecondary,
                         ),
                         const SizedBox(width: AppSizes.spaceXS),
-                        Text(
-                          task.isAllDay
-                              ? l10n.schedule_allDay
-                              : task.scheduledAt != null
-                                  ? timeFormat.format(task.scheduledAt!)
-                                  : '-',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
+                        Flexible(
+                          child: Text(
+                            _getTimeDisplay(l10n),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         // D-Day 표시
                         if (task.daysUntilDue != null) ...[
