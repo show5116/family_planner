@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
+import 'package:family_planner/features/qna/presentation/widgets/question_card.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
-import 'package:family_planner/shared/widgets/editor/utils/html_utils.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 
 /// Q&A 목록 화면 (통합)
@@ -249,7 +248,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
                         const SizedBox(height: AppSizes.spaceM),
                     itemBuilder: (context, index) {
                       final question = questions[index];
-                      return _QuestionCard(
+                      return QuestionCard(
                         question: question,
                         showVisibility: _currentFilter == 'my',
                       );
@@ -390,207 +389,6 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
             label: const Text('다시 시도'),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// 질문 카드 위젯
-class _QuestionCard extends ConsumerWidget {
-  final QuestionListItem question;
-  final bool showVisibility;
-
-  const _QuestionCard({
-    required this.question,
-    this.showVisibility = false,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dateFormat = DateFormat('yyyy.MM.dd HH:mm');
-
-    return Card(
-      child: InkWell(
-        onTap: () {
-          context.push('/qna/questions/${question.id}');
-        },
-        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 헤더 (카테고리, 상태, 공개여부)
-              Row(
-                children: [
-                  // 카테고리
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceS,
-                      vertical: AppSizes.spaceXS,
-                    ),
-                    decoration: BoxDecoration(
-                      color: question.category.color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          question.category.icon,
-                          size: AppSizes.iconSmall,
-                          color: question.category.color,
-                        ),
-                        const SizedBox(width: AppSizes.spaceXS),
-                        Text(
-                          question.category.displayName,
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: question.category.color,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSizes.spaceS),
-
-                  // 상태
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceS,
-                      vertical: AppSizes.spaceXS,
-                    ),
-                    decoration: BoxDecoration(
-                      color: question.status.color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          question.status.icon,
-                          size: AppSizes.iconSmall,
-                          color: question.status.color,
-                        ),
-                        const SizedBox(width: AppSizes.spaceXS),
-                        Text(
-                          question.status.displayName,
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: question.status.color,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // 공개여부 (내 질문에만 표시)
-                  if (showVisibility) ...[
-                    const SizedBox(width: AppSizes.spaceS),
-                    Icon(
-                      question.visibility.icon,
-                      size: AppSizes.iconSmall,
-                      color: question.visibility.color,
-                    ),
-                  ],
-
-                  const Spacer(),
-
-                  // 답변 개수
-                  if (question.answerCount > 0)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.spaceS,
-                        vertical: AppSizes.spaceXS,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius:
-                            BorderRadius.circular(AppSizes.radiusSmall),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.chat_bubble_outline,
-                            size: AppSizes.iconSmall,
-                            color: AppColors.primary,
-                          ),
-                          const SizedBox(width: AppSizes.spaceXS),
-                          Text(
-                            '${question.answerCount}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 제목
-              Text(
-                question.title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-
-              // 내용 미리보기
-              Text(
-                stripHtmlTags(question.content),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 작성자 및 작성일
-              Row(
-                children: [
-                  Icon(
-                    Icons.person_outline,
-                    size: AppSizes.iconSmall,
-                    color: AppColors.textSecondary,
-                  ),
-                  const SizedBox(width: AppSizes.spaceXS),
-                  Text(
-                    question.user?.name ?? '익명',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                  ),
-                  const SizedBox(width: AppSizes.spaceM),
-                  Icon(
-                    Icons.access_time,
-                    size: AppSizes.iconSmall,
-                    color: AppColors.textSecondary,
-                  ),
-                  const SizedBox(width: AppSizes.spaceXS),
-                  Text(
-                    dateFormat.format(question.createdAt),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

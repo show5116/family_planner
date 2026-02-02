@@ -9,6 +9,8 @@ import 'package:family_planner/features/notification/providers/notification_hist
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_history_item.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_empty_state.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_error_state.dart';
 
 /// 알림 히스토리 화면
 class NotificationHistoryScreen extends ConsumerStatefulWidget {
@@ -39,7 +41,6 @@ class _NotificationHistoryScreenState
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.8) {
-      // 80% 스크롤 시 다음 페이지 로드
       ref.read(notificationHistoryProvider.notifier).loadMore();
     }
   }
@@ -54,8 +55,6 @@ class _NotificationHistoryScreenState
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.deleteNotification(notificationId);
-
-      // Provider 새로고침
       ref.invalidate(notificationHistoryProvider);
 
       if (mounted) {
@@ -77,11 +76,8 @@ class _NotificationHistoryScreenState
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notification.id);
-
-      // Provider 새로고침
       ref.invalidate(notificationHistoryProvider);
 
-      // 해당 화면으로 이동
       if (mounted) {
         NotificationNavigationService.navigateToDetail(context, notification);
       }
@@ -100,7 +96,6 @@ class _NotificationHistoryScreenState
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notification.id);
 
-      // Provider 상태 업데이트
       ref.read(unreadCountProvider.notifier).decrementCount();
       ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
       ref.invalidate(notificationHistoryProvider);
@@ -119,7 +114,6 @@ class _NotificationHistoryScreenState
       final repository = ref.read(notificationRepositoryProvider);
       final count = await repository.markAllAsRead();
 
-      // Provider 상태 업데이트
       ref.read(unreadCountProvider.notifier).clearCount();
       ref.read(unreadNotificationsProvider.notifier).clearAll();
       ref.invalidate(notificationHistoryProvider);
@@ -160,7 +154,7 @@ class _NotificationHistoryScreenState
       body: historyState.when(
         data: (notifications) {
           if (notifications.isEmpty) {
-            return _buildEmptyState();
+            return const NotificationEmptyState();
           }
 
           return RefreshIndicator(
@@ -169,22 +163,10 @@ class _NotificationHistoryScreenState
               controller: _scrollController,
               itemCount: notifications.length + 1,
               itemBuilder: (context, index) {
-                // 로딩 인디케이터
                 if (index == notifications.length) {
-                  final hasMore =
-                      ref.read(notificationHistoryProvider.notifier).hasMore;
-                  if (hasMore) {
-                    return const Padding(
-                      padding: EdgeInsets.all(AppSizes.spaceM),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
+                  return _buildLoadingIndicator();
                 }
 
-                // 알림 아이템
                 final notification = notifications[index];
                 return NotificationHistoryItem(
                   notification: notification,
@@ -198,69 +180,24 @@ class _NotificationHistoryScreenState
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => NotificationErrorState(
+          error: error,
+          onRetry: _onRefresh,
         ),
-        error: (error, stack) => _buildErrorState(error),
       ),
     );
   }
 
-  /// 빈 상태 위젯
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.notifications_none,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: AppSizes.spaceM),
-          Text(
-            '알림이 없습니다',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 에러 상태 위젯
-  Widget _buildErrorState(Object error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: AppSizes.spaceM),
-          Text(
-            '알림을 불러오는 데 실패했습니다',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSizes.spaceS),
-          Text(
-            error.toString(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSizes.spaceM),
-          ElevatedButton.icon(
-            onPressed: _onRefresh,
-            icon: const Icon(Icons.refresh),
-            label: const Text('다시 시도'),
-          ),
-        ],
-      ),
-    );
+  /// 로딩 인디케이터
+  Widget _buildLoadingIndicator() {
+    final hasMore = ref.read(notificationHistoryProvider.notifier).hasMore;
+    if (hasMore) {
+      return const Padding(
+        padding: EdgeInsets.all(AppSizes.spaceM),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

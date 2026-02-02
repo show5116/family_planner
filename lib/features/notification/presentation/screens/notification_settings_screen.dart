@@ -9,7 +9,8 @@ import 'package:family_planner/features/notification/providers/notification_sett
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_permission_card.dart';
-import 'package:family_planner/features/notification/presentation/widgets/notification_toggle_item.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_settings_section.dart';
+import 'package:family_planner/features/notification/presentation/widgets/notification_error_state.dart';
 
 /// 알림 설정 화면
 class NotificationSettingsScreen extends ConsumerWidget {
@@ -21,7 +22,6 @@ class NotificationSettingsScreen extends ConsumerWidget {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.sendTestNotification();
 
-      // Provider 새로고침하여 새 알림 가져오기
       ref.invalidate(unreadNotificationsProvider);
       ref.invalidate(unreadCountProvider);
 
@@ -59,152 +59,68 @@ class NotificationSettingsScreen extends ConsumerWidget {
             const NotificationPermissionCard(),
             const SizedBox(height: AppSizes.spaceL),
 
-            // 알림 설정
-            Text(
-              '알림 설정',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-
-            Card(
-              child: Column(
-                children: [
-                  NotificationToggleItem(
-                    icon: Icons.calendar_today_outlined,
-                    title: '일정 알림',
-                    subtitle: '일정 시작 전 알림을 받습니다',
-                    value: settings.scheduleEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(scheduleEnabled: value);
-                    },
-                  ),
-                  const Divider(height: 1),
-                  NotificationToggleItem(
-                    icon: Icons.check_box_outlined,
-                    title: '할 일 알림',
-                    subtitle: '할 일 마감 기한 알림을 받습니다',
-                    value: settings.todoEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(todoEnabled: value);
-                    },
-                  ),
-                  const Divider(height: 1),
-                  NotificationToggleItem(
-                    icon: Icons.account_balance_wallet_outlined,
-                    title: '가계부 알림',
-                    subtitle: '가계부 관련 알림을 받습니다',
-                    value: settings.householdEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(householdEnabled: value);
-                    },
-                  ),
-                  const Divider(height: 1),
-                  NotificationToggleItem(
-                    icon: Icons.savings_outlined,
-                    title: '자산 알림',
-                    subtitle: '자산 변동 관련 알림을 받습니다',
-                    value: settings.assetEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(assetEnabled: value);
-                    },
-                  ),
-                  const Divider(height: 1),
-                  NotificationToggleItem(
-                    icon: Icons.child_care_outlined,
-                    title: '육아 알림',
-                    subtitle: '육아 포인트 관련 알림을 받습니다',
-                    value: settings.childcareEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(childcareEnabled: value);
-                    },
-                  ),
-                  const Divider(height: 1),
-                  NotificationToggleItem(
-                    icon: Icons.group_outlined,
-                    title: '그룹 알림',
-                    subtitle: '그룹 관련 알림을 받습니다',
-                    value: settings.groupEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(groupEnabled: value);
-                    },
-                  ),
-                  const Divider(height: 1),
-                  NotificationToggleItem(
-                    icon: Icons.campaign_outlined,
-                    title: '시스템 알림',
-                    subtitle: '중요한 시스템 알림을 받습니다',
-                    value: settings.systemEnabled,
-                    onChanged: (value) {
-                      ref
-                          .read(notificationSettingsProvider.notifier)
-                          .updateSetting(systemEnabled: value);
-                    },
-                  ),
-                ],
-              ),
-            ),
-
+            // 알림 설정 섹션
+            NotificationSettingsSection(settings: settings),
             const SizedBox(height: AppSizes.spaceL),
 
             // 알림 히스토리 버튼
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.history),
-                title: const Text('알림 히스토리'),
-                subtitle: const Text('받은 알림 목록을 확인합니다'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  context.push(AppRoutes.notificationHistory);
-                },
-              ),
+            _NotificationHistoryTile(
+              onTap: () => context.push(AppRoutes.notificationHistory),
             ),
-
             const SizedBox(height: AppSizes.spaceL),
 
             // 테스트 알림 버튼 (운영자 전용)
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.notifications_active, color: Colors.orange),
-                title: const Text('테스트 알림 전송'),
-                subtitle: const Text('테스트 알림을 자신에게 전송합니다 (운영자 전용)'),
-                trailing: const Icon(Icons.send),
-                onTap: () => _sendTestNotification(context, ref),
-              ),
+            _TestNotificationTile(
+              onTap: () => _sendTestNotification(context, ref),
             ),
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.red),
-              const SizedBox(height: AppSizes.spaceM),
-              Text('알림 설정을 불러올 수 없습니다\n$error'),
-              const SizedBox(height: AppSizes.spaceM),
-              ElevatedButton(
-                onPressed: () {
-                  ref.invalidate(notificationSettingsProvider);
-                },
-                child: const Text('다시 시도'),
-              ),
-            ],
-          ),
+        error: (error, _) => NotificationErrorState(
+          error: error,
+          title: '알림 설정을 불러올 수 없습니다',
+          onRetry: () => ref.invalidate(notificationSettingsProvider),
         ),
+      ),
+    );
+  }
+}
+
+/// 알림 히스토리 타일
+class _NotificationHistoryTile extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _NotificationHistoryTile({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.history),
+        title: const Text('알림 히스토리'),
+        subtitle: const Text('받은 알림 목록을 확인합니다'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+/// 테스트 알림 타일
+class _TestNotificationTile extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _TestNotificationTile({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.notifications_active, color: Colors.orange),
+        title: const Text('테스트 알림 전송'),
+        subtitle: const Text('테스트 알림을 자신에게 전송합니다 (운영자 전용)'),
+        trailing: const Icon(Icons.send),
+        onTap: onTap,
       ),
     );
   }
