@@ -9,8 +9,8 @@ import 'package:family_planner/features/notification/providers/notification_hist
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_history_item.dart';
-import 'package:family_planner/features/notification/presentation/widgets/notification_empty_state.dart';
-import 'package:family_planner/features/notification/presentation/widgets/notification_error_state.dart';
+import 'package:family_planner/shared/widgets/app_empty_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 알림 히스토리 화면
 class NotificationHistoryScreen extends ConsumerStatefulWidget {
@@ -154,7 +154,10 @@ class _NotificationHistoryScreenState
       body: historyState.when(
         data: (notifications) {
           if (notifications.isEmpty) {
-            return const NotificationEmptyState();
+            return const AppEmptyState(
+              icon: Icons.notifications_none,
+              message: '알림이 없습니다',
+            );
           }
 
           return RefreshIndicator(
@@ -181,8 +184,9 @@ class _NotificationHistoryScreenState
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => NotificationErrorState(
+        error: (error, _) => AppErrorState(
           error: error,
+          title: '알림을 불러오는 데 실패했습니다',
           onRetry: _onRefresh,
         ),
       ),

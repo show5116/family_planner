@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/features/home/screens/home_screen.dart';
-import 'package:family_planner/features/main/task/screens/task_form_screen.dart';
-import 'package:family_planner/features/main/task/screens/category_management_screen.dart';
+import 'package:family_planner/features/home/presentation/screens/home_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 
 /// 메인 기능 라우트 목록

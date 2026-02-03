@@ -1,12 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/features/settings/common/screens/settings_screen.dart';
-import 'package:family_planner/features/settings/common/screens/bottom_navigation_settings_screen.dart';
-import 'package:family_planner/features/settings/common/screens/home_widget_settings_screen.dart';
-import 'package:family_planner/features/settings/common/screens/theme_settings_screen.dart';
-import 'package:family_planner/features/settings/common/screens/language_settings_screen.dart';
-import 'package:family_planner/features/settings/common/screens/profile_settings_screen.dart';
-import 'package:family_planner/features/settings/groups/screens/group_list_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/settings_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/bottom_navigation_settings_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/home_widget_settings_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/theme_settings_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/language_settings_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/profile_settings_screen.dart';
+import 'package:family_planner/features/settings/groups/presentation/screens/group_list_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_settings_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_history_screen.dart';
 

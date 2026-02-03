@@ -10,7 +10,7 @@ import 'package:family_planner/features/notification/providers/unread_notificati
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_permission_card.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_settings_section.dart';
-import 'package:family_planner/features/notification/presentation/widgets/notification_error_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 알림 설정 화면
 class NotificationSettingsScreen extends ConsumerWidget {
@@ -76,7 +76,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => NotificationErrorState(
+        error: (error, _) => AppErrorState(
           error: error,
           title: '알림 설정을 불러올 수 없습니다',
           onRetry: () => ref.invalidate(notificationSettingsProvider),

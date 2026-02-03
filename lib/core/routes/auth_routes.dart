@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/features/auth/screens/login_screen.dart';
-import 'package:family_planner/features/auth/screens/signup_screen.dart';
-import 'package:family_planner/features/auth/screens/email_verification_screen.dart';
-import 'package:family_planner/features/auth/screens/forgot_password_screen.dart';
-import 'package:family_planner/features/auth/screens/oauth_callback_screen.dart';
-import 'package:family_planner/features/auth/screens/splash_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/login_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/signup_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/email_verification_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/oauth_callback_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/splash_screen.dart';
 
 /// 인증 관련 라우트 목록
 ///
