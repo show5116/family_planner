@@ -476,7 +476,7 @@ final selectedGroupCategoriesProvider =
 // ignore: unused_element
 typedef SelectedGroupCategoriesRef =
     AutoDisposeFutureProviderRef<List<CategoryModel>>;
-String _$monthlyTasksHash() => r'2f89ad4e9dd3fcc9fa6b724b3ddbf673d8abe95f';
+String _$monthlyTasksHash() => r'438eb7be2cab042ddff723a76942d98f4ef9e05e';
 
 abstract class _$MonthlyTasks
     extends BuildlessAutoDisposeAsyncNotifier<List<TaskModel>> {
@@ -486,22 +486,22 @@ abstract class _$MonthlyTasks
   FutureOr<List<TaskModel>> build(int year, int month);
 }
 
-/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+/// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
 ///
 /// Copied from [MonthlyTasks].
 @ProviderFor(MonthlyTasks)
 const monthlyTasksProvider = MonthlyTasksFamily();
 
-/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+/// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
 ///
 /// Copied from [MonthlyTasks].
 class MonthlyTasksFamily extends Family<AsyncValue<List<TaskModel>>> {
-  /// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+  /// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
   ///
   /// Copied from [MonthlyTasks].
   const MonthlyTasksFamily();
 
-  /// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+  /// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
   ///
   /// Copied from [MonthlyTasks].
   MonthlyTasksProvider call(int year, int month) {
@@ -530,13 +530,13 @@ class MonthlyTasksFamily extends Family<AsyncValue<List<TaskModel>>> {
   String? get name => r'monthlyTasksProvider';
 }
 
-/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+/// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
 ///
 /// Copied from [MonthlyTasks].
 class MonthlyTasksProvider
     extends
         AutoDisposeAsyncNotifierProviderImpl<MonthlyTasks, List<TaskModel>> {
-  /// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+  /// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
   ///
   /// Copied from [MonthlyTasks].
   MonthlyTasksProvider(int year, int month)
@@ -637,6 +637,147 @@ class _MonthlyTasksProviderElement
   int get year => (origin as MonthlyTasksProvider).year;
   @override
   int get month => (origin as MonthlyTasksProvider).month;
+}
+
+String _$todoTasksHash() => r'73eef17feee3212c20880dd6ade268f21922d1f6';
+
+abstract class _$TodoTasks
+    extends BuildlessAutoDisposeAsyncNotifier<TaskListResponse> {
+  late final int page;
+
+  FutureOr<TaskListResponse> build({int page = 1});
+}
+
+/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+///
+/// Copied from [TodoTasks].
+@ProviderFor(TodoTasks)
+const todoTasksProvider = TodoTasksFamily();
+
+/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+///
+/// Copied from [TodoTasks].
+class TodoTasksFamily extends Family<AsyncValue<TaskListResponse>> {
+  /// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+  ///
+  /// Copied from [TodoTasks].
+  const TodoTasksFamily();
+
+  /// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+  ///
+  /// Copied from [TodoTasks].
+  TodoTasksProvider call({int page = 1}) {
+    return TodoTasksProvider(page: page);
+  }
+
+  @override
+  TodoTasksProvider getProviderOverride(covariant TodoTasksProvider provider) {
+    return call(page: provider.page);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'todoTasksProvider';
+}
+
+/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+///
+/// Copied from [TodoTasks].
+class TodoTasksProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<TodoTasks, TaskListResponse> {
+  /// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+  ///
+  /// Copied from [TodoTasks].
+  TodoTasksProvider({int page = 1})
+    : this._internal(
+        () => TodoTasks()..page = page,
+        from: todoTasksProvider,
+        name: r'todoTasksProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$todoTasksHash,
+        dependencies: TodoTasksFamily._dependencies,
+        allTransitiveDependencies: TodoTasksFamily._allTransitiveDependencies,
+        page: page,
+      );
+
+  TodoTasksProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.page,
+  }) : super.internal();
+
+  final int page;
+
+  @override
+  FutureOr<TaskListResponse> runNotifierBuild(covariant TodoTasks notifier) {
+    return notifier.build(page: page);
+  }
+
+  @override
+  Override overrideWith(TodoTasks Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: TodoTasksProvider._internal(
+        () => create()..page = page,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        page: page,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<TodoTasks, TaskListResponse>
+  createElement() {
+    return _TodoTasksProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TodoTasksProvider && other.page == page;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, page.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin TodoTasksRef on AutoDisposeAsyncNotifierProviderRef<TaskListResponse> {
+  /// The parameter `page` of this provider.
+  int get page;
+}
+
+class _TodoTasksProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<TodoTasks, TaskListResponse>
+    with TodoTasksRef {
+  _TodoTasksProviderElement(super.provider);
+
+  @override
+  int get page => (origin as TodoTasksProvider).page;
 }
 
 // ignore_for_file: type=lint

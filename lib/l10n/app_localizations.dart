@@ -3483,6 +3483,114 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'회 반복'**
   String get schedule_recurringCountTimes;
+
+  /// No description provided for @todo_add.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 추가'**
+  String get todo_add;
+
+  /// No description provided for @todo_edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 수정'**
+  String get todo_edit;
+
+  /// No description provided for @todo_delete.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 삭제'**
+  String get todo_delete;
+
+  /// No description provided for @todo_detail.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 상세'**
+  String get todo_detail;
+
+  /// No description provided for @todo_showCompleted.
+  ///
+  /// In ko, this message translates to:
+  /// **'완료 포함'**
+  String get todo_showCompleted;
+
+  /// No description provided for @todo_priority.
+  ///
+  /// In ko, this message translates to:
+  /// **'우선순위'**
+  String get todo_priority;
+
+  /// No description provided for @todo_priorityLow.
+  ///
+  /// In ko, this message translates to:
+  /// **'낮음'**
+  String get todo_priorityLow;
+
+  /// No description provided for @todo_priorityMedium.
+  ///
+  /// In ko, this message translates to:
+  /// **'보통'**
+  String get todo_priorityMedium;
+
+  /// No description provided for @todo_priorityHigh.
+  ///
+  /// In ko, this message translates to:
+  /// **'높음'**
+  String get todo_priorityHigh;
+
+  /// No description provided for @todo_priorityUrgent.
+  ///
+  /// In ko, this message translates to:
+  /// **'긴급'**
+  String get todo_priorityUrgent;
+
+  /// No description provided for @todo_noTodos.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 할일이 없습니다'**
+  String get todo_noTodos;
+
+  /// No description provided for @todo_allCompleted.
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 할일을 완료했습니다!'**
+  String get todo_allCompleted;
+
+  /// No description provided for @todo_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일을 불러올 수 없습니다'**
+  String get todo_loadError;
+
+  /// No description provided for @todo_noDueDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'마감일 없음'**
+  String get todo_noDueDate;
+
+  /// No description provided for @todo_viewKanban.
+  ///
+  /// In ko, this message translates to:
+  /// **'칸반 보드'**
+  String get todo_viewKanban;
+
+  /// No description provided for @todo_viewList.
+  ///
+  /// In ko, this message translates to:
+  /// **'리스트 보기'**
+  String get todo_viewList;
+
+  /// No description provided for @todo_statusInProgress.
+  ///
+  /// In ko, this message translates to:
+  /// **'진행중'**
+  String get todo_statusInProgress;
+
+  /// No description provided for @todo_statusCompleted.
+  ///
+  /// In ko, this message translates to:
+  /// **'완료'**
+  String get todo_statusCompleted;
 }
 
 class _AppLocalizationsDelegate

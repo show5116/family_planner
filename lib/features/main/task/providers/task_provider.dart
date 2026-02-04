@@ -12,17 +12,40 @@ final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 /// 현재 보고 있는 월 Provider (캘린더 페이지 이동용)
 final focusedMonthProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
-/// 현재 선택된 그룹 ID Provider (null이면 개인 일정)
+/// 현재 선택된 그룹 ID 목록 Provider (다중 선택 지원, 캘린더 필터용)
+final selectedGroupIdsProvider = StateProvider<List<String>>((ref) => []);
+
+/// 개인 일정 포함 여부 Provider (기본값: true)
+final includePersonalProvider = StateProvider<bool>((ref) => true);
+
+/// 현재 선택된 카테고리 ID 목록 Provider (캘린더 필터용)
+final selectedCategoryIdsProvider = StateProvider<List<String>>((ref) => []);
+
+/// 현재 선택된 그룹 ID Provider (카테고리 관리 등 단일 그룹 선택용)
 final selectedGroupIdProvider = StateProvider<String?>((ref) => null);
 
-/// 월간 Task Provider (캘린더 뷰용) - 그룹 지원
+/// Todo 필터: 완료된 항목 표시 여부 (기본값: false)
+final showCompletedTodosProvider = StateProvider<bool>((ref) => false);
+
+/// Todo 필터: 우선순위 필터 (null이면 전체)
+final todoFilterPriorityProvider = StateProvider<TaskPriority?>((ref) => null);
+
+/// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
 @riverpod
 class MonthlyTasks extends _$MonthlyTasks {
   @override
   Future<List<TaskModel>> build(int year, int month) async {
     final repository = ref.watch(taskRepositoryProvider);
-    final groupId = ref.watch(selectedGroupIdProvider);
-    return await repository.getCalendarTasks(year: year, month: month, groupId: groupId);
+    final groupIds = ref.watch(selectedGroupIdsProvider);
+    final includePersonal = ref.watch(includePersonalProvider);
+    final categoryIds = ref.watch(selectedCategoryIdsProvider);
+    return await repository.getCalendarTasks(
+      year: year,
+      month: month,
+      groupIds: groupIds.isEmpty ? null : groupIds,
+      includePersonal: includePersonal,
+      categoryIds: categoryIds.isEmpty ? null : categoryIds,
+    );
   }
 
   /// 새로고침
@@ -30,8 +53,16 @@ class MonthlyTasks extends _$MonthlyTasks {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final repository = ref.read(taskRepositoryProvider);
-      final groupId = ref.read(selectedGroupIdProvider);
-      return await repository.getCalendarTasks(year: year, month: month, groupId: groupId);
+      final groupIds = ref.read(selectedGroupIdsProvider);
+      final includePersonal = ref.read(includePersonalProvider);
+      final categoryIds = ref.read(selectedCategoryIdsProvider);
+      return await repository.getCalendarTasks(
+        year: year,
+        month: month,
+        groupIds: groupIds.isEmpty ? null : groupIds,
+        includePersonal: includePersonal,
+        categoryIds: categoryIds.isEmpty ? null : categoryIds,
+      );
     });
   }
 
@@ -153,6 +184,96 @@ Map<DateTime, int> taskCountByDate(Ref ref, int year, int month) {
 Future<TaskDetailModel> taskDetail(Ref ref, String id) async {
   final repository = ref.watch(taskRepositoryProvider);
   return await repository.getTaskById(id);
+}
+
+/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+@riverpod
+class TodoTasks extends _$TodoTasks {
+  @override
+  Future<TaskListResponse> build({int page = 1}) async {
+    final repository = ref.watch(taskRepositoryProvider);
+    final groupIds = ref.watch(selectedGroupIdsProvider);
+    final includePersonal = ref.watch(includePersonalProvider);
+    final showCompleted = ref.watch(showCompletedTodosProvider);
+    final priorityFilter = ref.watch(todoFilterPriorityProvider);
+
+    return await repository.getTasks(
+      view: 'todo',
+      type: TaskType.todoLinked,
+      groupIds: groupIds.isEmpty ? null : groupIds,
+      includePersonal: includePersonal,
+      isCompleted: showCompleted ? null : false,
+      priority: priorityFilter,
+      page: page,
+      limit: 100,
+    );
+  }
+
+  /// 새로고침
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final repository = ref.read(taskRepositoryProvider);
+      final groupIds = ref.read(selectedGroupIdsProvider);
+      final includePersonal = ref.read(includePersonalProvider);
+      final showCompleted = ref.read(showCompletedTodosProvider);
+      final priorityFilter = ref.read(todoFilterPriorityProvider);
+
+      return await repository.getTasks(
+        view: 'todo',
+        type: TaskType.todoLinked,
+        groupIds: groupIds.isEmpty ? null : groupIds,
+        includePersonal: includePersonal,
+        isCompleted: showCompleted ? null : false,
+        priority: priorityFilter,
+        page: page,
+        limit: 100,
+      );
+    });
+  }
+
+  /// Task 추가 후 로컬 상태 갱신
+  void addTask(TaskModel task) {
+    if (!state.hasValue) return;
+
+    final response = state.value!;
+    final tasks = List<TaskModel>.from(response.data);
+    tasks.insert(0, task);
+    state = AsyncValue.data(
+      response.copyWith(
+        data: tasks,
+        meta: response.meta.copyWith(total: response.meta.total + 1),
+      ),
+    );
+  }
+
+  /// Task 수정 후 로컬 상태 갱신
+  void updateTask(TaskModel task) {
+    if (!state.hasValue) return;
+
+    final response = state.value!;
+    final tasks = List<TaskModel>.from(response.data);
+    final index = tasks.indexWhere((t) => t.id == task.id);
+    if (index != -1) {
+      tasks[index] = task;
+      state = AsyncValue.data(response.copyWith(data: tasks));
+    }
+  }
+
+  /// Task 삭제 후 로컬 상태 갱신
+  void removeTask(String taskId) {
+    if (!state.hasValue) return;
+
+    final response = state.value!;
+    final tasks = List<TaskModel>.from(response.data);
+    tasks.removeWhere((t) => t.id == taskId);
+    state = AsyncValue.data(
+      response.copyWith(
+        data: tasks,
+        meta: response.meta.copyWith(total: response.meta.total - 1),
+      ),
+    );
+  }
 }
 
 /// 카테고리 목록 Provider (groupId 파라미터 지원)

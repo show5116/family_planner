@@ -684,5 +684,24 @@
   "schedule_recurringEndNever": "Never",
   "schedule_recurringEndDate": "Until date",
   "schedule_recurringEndCount": "After count",
-  "schedule_recurringCountTimes": "times"
+  "schedule_recurringCountTimes": "times",
+
+  "todo_add": "Add Todo",
+  "todo_edit": "Edit Todo",
+  "todo_delete": "Delete Todo",
+  "todo_detail": "Todo Detail",
+  "todo_showCompleted": "Show Completed",
+  "todo_priority": "Priority",
+  "todo_priorityLow": "Low",
+  "todo_priorityMedium": "Medium",
+  "todo_priorityHigh": "High",
+  "todo_priorityUrgent": "Urgent",
+  "todo_noTodos": "No todos registered",
+  "todo_allCompleted": "All todos completed!",
+  "todo_loadError": "Failed to load todos",
+  "todo_noDueDate": "No due date",
+  "todo_viewKanban": "Kanban Board",
+  "todo_viewList": "List View",
+  "todo_statusInProgress": "In Progress",
+  "todo_statusCompleted": "Completed"
 }

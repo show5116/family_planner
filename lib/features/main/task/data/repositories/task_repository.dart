@@ -18,13 +18,17 @@ class TaskRepository {
 
   /// Task 목록 조회 (캘린더/할일 뷰)
   /// [view]: 'calendar' 또는 'todo'
+  /// [groupIds]: 그룹 ID 목록
+  /// [includePersonal]: 개인 일정 포함 여부 (기본값: true)
+  /// [categoryIds]: 카테고리 ID 목록
   /// [startDate], [endDate]: 기간 필터
   /// [type]: Task 타입 (SCHEDULE/TODO)
   /// [isCompleted]: 완료 여부 필터
   Future<TaskListResponse> getTasks({
     String? view,
-    String? groupId,
-    String? categoryId,
+    List<String>? groupIds,
+    bool? includePersonal,
+    List<String>? categoryIds,
     TaskType? type,
     TaskPriority? priority,
     bool? isCompleted,
@@ -36,8 +40,9 @@ class TaskRepository {
     try {
       final response = await _dio.get('/tasks', queryParameters: {
         if (view != null) 'view': view,
-        if (groupId != null) 'groupId': groupId,
-        if (categoryId != null) 'categoryId': categoryId,
+        if (groupIds != null && groupIds.isNotEmpty) 'groupIds': groupIds.join(','),
+        if (includePersonal != null) 'includePersonal': includePersonal,
+        if (categoryIds != null && categoryIds.isNotEmpty) 'categoryIds': categoryIds.join(','),
         if (type != null) 'type': _taskTypeToString(type),
         if (priority != null) 'priority': _priorityToString(priority),
         if (isCompleted != null) 'isCompleted': isCompleted,
@@ -55,10 +60,15 @@ class TaskRepository {
   }
 
   /// 캘린더 뷰용 Task 목록 조회 (월간)
+  /// [groupIds]: 그룹 ID 목록
+  /// [includePersonal]: 개인 일정 포함 여부 (기본값: true)
+  /// [categoryIds]: 카테고리 ID 목록
   Future<List<TaskModel>> getCalendarTasks({
     required int year,
     required int month,
-    String? groupId,
+    List<String>? groupIds,
+    bool includePersonal = true,
+    List<String>? categoryIds,
   }) async {
     // 해당 월의 첫날과 마지막날
     final startDate = DateTime(year, month, 1);
@@ -68,7 +78,9 @@ class TaskRepository {
       view: 'calendar',
       startDate: startDate,
       endDate: endDate,
-      groupId: groupId,
+      groupIds: groupIds,
+      includePersonal: includePersonal,
+      categoryIds: categoryIds,
       limit: 500, // 월간 일정은 충분히 가져옴
     );
 

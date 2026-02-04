@@ -1743,4 +1743,58 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get schedule_recurringCountTimes => '회 반복';
+
+  @override
+  String get todo_add => '할일 추가';
+
+  @override
+  String get todo_edit => '할일 수정';
+
+  @override
+  String get todo_delete => '할일 삭제';
+
+  @override
+  String get todo_detail => '할일 상세';
+
+  @override
+  String get todo_showCompleted => '완료 포함';
+
+  @override
+  String get todo_priority => '우선순위';
+
+  @override
+  String get todo_priorityLow => '낮음';
+
+  @override
+  String get todo_priorityMedium => '보통';
+
+  @override
+  String get todo_priorityHigh => '높음';
+
+  @override
+  String get todo_priorityUrgent => '긴급';
+
+  @override
+  String get todo_noTodos => '등록된 할일이 없습니다';
+
+  @override
+  String get todo_allCompleted => '모든 할일을 완료했습니다!';
+
+  @override
+  String get todo_loadError => '할일을 불러올 수 없습니다';
+
+  @override
+  String get todo_noDueDate => '마감일 없음';
+
+  @override
+  String get todo_viewKanban => '칸반 보드';
+
+  @override
+  String get todo_viewList => '리스트 보기';
+
+  @override
+  String get todo_statusInProgress => '진행중';
+
+  @override
+  String get todo_statusCompleted => '완료';
 }

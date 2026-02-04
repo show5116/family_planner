@@ -1740,4 +1740,58 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get schedule_recurringCountTimes => '回繰り返し';
+
+  @override
+  String get todo_add => 'タスク追加';
+
+  @override
+  String get todo_edit => 'タスク編集';
+
+  @override
+  String get todo_delete => 'タスク削除';
+
+  @override
+  String get todo_detail => 'タスク詳細';
+
+  @override
+  String get todo_showCompleted => '完了済みを表示';
+
+  @override
+  String get todo_priority => '優先度';
+
+  @override
+  String get todo_priorityLow => '低';
+
+  @override
+  String get todo_priorityMedium => '中';
+
+  @override
+  String get todo_priorityHigh => '高';
+
+  @override
+  String get todo_priorityUrgent => '緊急';
+
+  @override
+  String get todo_noTodos => '登録されたタスクがありません';
+
+  @override
+  String get todo_allCompleted => 'すべてのタスクを完了しました！';
+
+  @override
+  String get todo_loadError => 'タスクを読み込めません';
+
+  @override
+  String get todo_noDueDate => '期限なし';
+
+  @override
+  String get todo_viewKanban => 'カンバンボード';
+
+  @override
+  String get todo_viewList => 'リスト表示';
+
+  @override
+  String get todo_statusInProgress => '進行中';
+
+  @override
+  String get todo_statusCompleted => '完了';
 }

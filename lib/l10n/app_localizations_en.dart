@@ -1780,4 +1780,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schedule_recurringCountTimes => 'times';
+
+  @override
+  String get todo_add => 'Add Todo';
+
+  @override
+  String get todo_edit => 'Edit Todo';
+
+  @override
+  String get todo_delete => 'Delete Todo';
+
+  @override
+  String get todo_detail => 'Todo Detail';
+
+  @override
+  String get todo_showCompleted => 'Show Completed';
+
+  @override
+  String get todo_priority => 'Priority';
+
+  @override
+  String get todo_priorityLow => 'Low';
+
+  @override
+  String get todo_priorityMedium => 'Medium';
+
+  @override
+  String get todo_priorityHigh => 'High';
+
+  @override
+  String get todo_priorityUrgent => 'Urgent';
+
+  @override
+  String get todo_noTodos => 'No todos registered';
+
+  @override
+  String get todo_allCompleted => 'All todos completed!';
+
+  @override
+  String get todo_loadError => 'Failed to load todos';
+
+  @override
+  String get todo_noDueDate => 'No due date';
+
+  @override
+  String get todo_viewKanban => 'Kanban Board';
+
+  @override
+  String get todo_viewList => 'List View';
+
+  @override
+  String get todo_statusInProgress => 'In Progress';
+
+  @override
+  String get todo_statusCompleted => 'Completed';
 }

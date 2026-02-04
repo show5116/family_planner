@@ -684,5 +684,24 @@
   "schedule_recurringEndNever": "종료 없음",
   "schedule_recurringEndDate": "날짜까지",
   "schedule_recurringEndCount": "횟수만큼",
-  "schedule_recurringCountTimes": "회 반복"
+  "schedule_recurringCountTimes": "회 반복",
+
+  "todo_add": "할일 추가",
+  "todo_edit": "할일 수정",
+  "todo_delete": "할일 삭제",
+  "todo_detail": "할일 상세",
+  "todo_showCompleted": "완료 포함",
+  "todo_priority": "우선순위",
+  "todo_priorityLow": "낮음",
+  "todo_priorityMedium": "보통",
+  "todo_priorityHigh": "높음",
+  "todo_priorityUrgent": "긴급",
+  "todo_noTodos": "등록된 할일이 없습니다",
+  "todo_allCompleted": "모든 할일을 완료했습니다!",
+  "todo_loadError": "할일을 불러올 수 없습니다",
+  "todo_noDueDate": "마감일 없음",
+  "todo_viewKanban": "칸반 보드",
+  "todo_viewList": "리스트 보기",
+  "todo_statusInProgress": "진행중",
+  "todo_statusCompleted": "완료"
 }

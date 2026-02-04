@@ -684,5 +684,24 @@
   "schedule_recurringEndNever": "終了なし",
   "schedule_recurringEndDate": "日付まで",
   "schedule_recurringEndCount": "回数指定",
-  "schedule_recurringCountTimes": "回繰り返し"
+  "schedule_recurringCountTimes": "回繰り返し",
+
+  "todo_add": "タスク追加",
+  "todo_edit": "タスク編集",
+  "todo_delete": "タスク削除",
+  "todo_detail": "タスク詳細",
+  "todo_showCompleted": "完了済みを表示",
+  "todo_priority": "優先度",
+  "todo_priorityLow": "低",
+  "todo_priorityMedium": "中",
+  "todo_priorityHigh": "高",
+  "todo_priorityUrgent": "緊急",
+  "todo_noTodos": "登録されたタスクがありません",
+  "todo_allCompleted": "すべてのタスクを完了しました！",
+  "todo_loadError": "タスクを読み込めません",
+  "todo_noDueDate": "期限なし",
+  "todo_viewKanban": "カンバンボード",
+  "todo_viewList": "リスト表示",
+  "todo_statusInProgress": "進行中",
+  "todo_statusCompleted": "完了"
 }

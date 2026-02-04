@@ -60,11 +60,32 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) => const CategoryManagementScreen(),
     ),
 
-    // Todo Routes (추후 구현)
-    // GoRoute(
-    //   path: AppRoutes.todo,
-    //   name: 'todo',
-    //   builder: (context, state) => const TodoScreen(),
-    // ),
+    // Todo Routes
+    GoRoute(
+      path: AppRoutes.todoAdd,
+      name: 'todoAdd',
+      builder: (context, state) {
+        final extra = state.extra;
+        DateTime? initialDate;
+        if (extra is DateTime) {
+          initialDate = extra;
+        }
+        return TaskFormScreen(initialDate: initialDate);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.todoDetail,
+      name: 'todoDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is Map<String, dynamic>) {
+          return TaskFormScreen(
+            taskId: extra['taskId'] as String?,
+            task: extra['task'] as TaskModel?,
+          );
+        }
+        return const TaskFormScreen();
+      },
+    ),
   ];
 }
