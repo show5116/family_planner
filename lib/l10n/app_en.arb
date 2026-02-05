@@ -703,5 +703,7 @@
   "todo_viewKanban": "Kanban Board",
   "todo_viewList": "List View",
   "todo_statusInProgress": "In Progress",
-  "todo_statusCompleted": "Completed"
+  "todo_statusCompleted": "Completed",
+  "todo_prevWeek": "Previous week",
+  "todo_nextWeek": "Next week"
 }

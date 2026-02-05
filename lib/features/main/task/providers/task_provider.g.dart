@@ -639,7 +639,7 @@ class _MonthlyTasksProviderElement
   int get month => (origin as MonthlyTasksProvider).month;
 }
 
-String _$todoTasksHash() => r'73eef17feee3212c20880dd6ade268f21922d1f6';
+String _$todoTasksHash() => r'1cee23ff413987461039e47405b237008e66b0b4';
 
 abstract class _$TodoTasks
     extends BuildlessAutoDisposeAsyncNotifier<TaskListResponse> {
@@ -648,22 +648,22 @@ abstract class _$TodoTasks
   FutureOr<TaskListResponse> build({int page = 1});
 }
 
-/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+/// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
 ///
 /// Copied from [TodoTasks].
 @ProviderFor(TodoTasks)
 const todoTasksProvider = TodoTasksFamily();
 
-/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+/// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
 ///
 /// Copied from [TodoTasks].
 class TodoTasksFamily extends Family<AsyncValue<TaskListResponse>> {
-  /// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+  /// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
   ///
   /// Copied from [TodoTasks].
   const TodoTasksFamily();
 
-  /// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+  /// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
   ///
   /// Copied from [TodoTasks].
   TodoTasksProvider call({int page = 1}) {
@@ -690,12 +690,12 @@ class TodoTasksFamily extends Family<AsyncValue<TaskListResponse>> {
   String? get name => r'todoTasksProvider';
 }
 
-/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+/// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
 ///
 /// Copied from [TodoTasks].
 class TodoTasksProvider
     extends AutoDisposeAsyncNotifierProviderImpl<TodoTasks, TaskListResponse> {
-  /// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+  /// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
   ///
   /// Copied from [TodoTasks].
   TodoTasksProvider({int page = 1})

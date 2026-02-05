@@ -1797,4 +1797,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get todo_statusCompleted => '완료';
+
+  @override
+  String get todo_prevWeek => '이전 주';
+
+  @override
+  String get todo_nextWeek => '다음 주';
 }

@@ -30,6 +30,13 @@ final showCompletedTodosProvider = StateProvider<bool>((ref) => false);
 /// Todo 필터: 우선순위 필터 (null이면 전체)
 final todoFilterPriorityProvider = StateProvider<TaskPriority?>((ref) => null);
 
+/// Todo: 현재 선택된 주의 시작일 (월요일 기준)
+final todoSelectedWeekStartProvider = StateProvider<DateTime>((ref) {
+  final now = DateTime.now();
+  // 이번 주 월요일
+  return DateTime(now.year, now.month, now.day - (now.weekday - 1));
+});
+
 /// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
 @riverpod
 class MonthlyTasks extends _$MonthlyTasks {
@@ -186,7 +193,7 @@ Future<TaskDetailModel> taskDetail(Ref ref, String id) async {
   return await repository.getTaskById(id);
 }
 
-/// Todo 목록 Provider (할일 뷰용) - 페이지네이션 지원
+/// Todo 목록 Provider (할일 뷰용) - 주간 날짜 범위 기반 조회
 @riverpod
 class TodoTasks extends _$TodoTasks {
   @override
@@ -196,6 +203,10 @@ class TodoTasks extends _$TodoTasks {
     final includePersonal = ref.watch(includePersonalProvider);
     final showCompleted = ref.watch(showCompletedTodosProvider);
     final priorityFilter = ref.watch(todoFilterPriorityProvider);
+    final weekStart = ref.watch(todoSelectedWeekStartProvider);
+
+    final startDate = weekStart;
+    final endDate = DateTime(weekStart.year, weekStart.month, weekStart.day + 6, 23, 59, 59);
 
     return await repository.getTasks(
       view: 'todo',
@@ -204,6 +215,8 @@ class TodoTasks extends _$TodoTasks {
       includePersonal: includePersonal,
       isCompleted: showCompleted ? null : false,
       priority: priorityFilter,
+      startDate: startDate,
+      endDate: endDate,
       page: page,
       limit: 100,
     );
@@ -218,6 +231,10 @@ class TodoTasks extends _$TodoTasks {
       final includePersonal = ref.read(includePersonalProvider);
       final showCompleted = ref.read(showCompletedTodosProvider);
       final priorityFilter = ref.read(todoFilterPriorityProvider);
+      final weekStart = ref.read(todoSelectedWeekStartProvider);
+
+      final startDate = weekStart;
+      final endDate = DateTime(weekStart.year, weekStart.month, weekStart.day + 6, 23, 59, 59);
 
       return await repository.getTasks(
         view: 'todo',
@@ -226,6 +243,8 @@ class TodoTasks extends _$TodoTasks {
         includePersonal: includePersonal,
         isCompleted: showCompleted ? null : false,
         priority: priorityFilter,
+        startDate: startDate,
+        endDate: endDate,
         page: page,
         limit: 100,
       );

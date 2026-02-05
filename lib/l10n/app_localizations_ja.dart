@@ -1794,4 +1794,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get todo_statusCompleted => '完了';
+
+  @override
+  String get todo_prevWeek => '前の週';
+
+  @override
+  String get todo_nextWeek => '次の週';
 }

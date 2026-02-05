@@ -8,6 +8,7 @@ import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_kanban_column.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_list_item.dart';
+import 'package:family_planner/features/main/todo/presentation/widgets/todo_week_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -83,29 +84,40 @@ class _TodoTabState extends ConsumerState<TodoTab> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(todoTasksProvider(page: 1));
-        },
-        child: todosAsync.when(
-          data: (response) {
-            if (response.data.isEmpty) {
-              return _EmptyState(l10n: l10n);
-            }
+      body: Column(
+        children: [
+          // 주간 날짜 선택 바
+          const TodoWeekBar(),
+          const Divider(height: 1),
 
-            return viewType == TodoViewType.kanban
-                ? _KanbanView(tasks: response.data)
-                : _ListView(tasks: response.data);
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => _ErrorState(
-            error: error.toString(),
-            onRetry: () {
-              ref.invalidate(todoTasksProvider(page: 1));
-            },
-            l10n: l10n,
+          // 할일 목록
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(todoTasksProvider(page: 1));
+              },
+              child: todosAsync.when(
+                data: (response) {
+                  if (response.data.isEmpty) {
+                    return _EmptyState(l10n: l10n);
+                  }
+
+                  return viewType == TodoViewType.kanban
+                      ? _KanbanView(tasks: response.data)
+                      : _ListView(tasks: response.data);
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => _ErrorState(
+                  error: error.toString(),
+                  onRetry: () {
+                    ref.invalidate(todoTasksProvider(page: 1));
+                  },
+                  l10n: l10n,
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'todo_fab',

@@ -3591,6 +3591,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'완료'**
   String get todo_statusCompleted;
+
+  /// No description provided for @todo_prevWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 주'**
+  String get todo_prevWeek;
+
+  /// No description provided for @todo_nextWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 주'**
+  String get todo_nextWeek;
 }
 
 class _AppLocalizationsDelegate
