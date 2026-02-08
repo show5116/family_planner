@@ -322,6 +322,48 @@ class _TaskDetailProviderElement
   String get id => (origin as TaskDetailProvider).id;
 }
 
+String _$todoSelectedDateTasksHash() =>
+    r'd9fd00a091988e48338e35fc310ec4edb56afdc8';
+
+/// 선택된 날짜의 할일 목록 Provider (시작일~마감일 사이에 해당 날짜가 포함된 경우)
+///
+/// Copied from [todoSelectedDateTasks].
+@ProviderFor(todoSelectedDateTasks)
+final todoSelectedDateTasksProvider =
+    AutoDisposeFutureProvider<List<TaskModel>>.internal(
+      todoSelectedDateTasks,
+      name: r'todoSelectedDateTasksProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$todoSelectedDateTasksHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TodoSelectedDateTasksRef =
+    AutoDisposeFutureProviderRef<List<TaskModel>>;
+String _$todoCountByDateHash() => r'ee7302cc1eaf2ba50bef0d1f591dfafbcec568fd';
+
+/// 주간 날짜별 할일 개수 Provider (캘린더 마커용)
+///
+/// Copied from [todoCountByDate].
+@ProviderFor(todoCountByDate)
+final todoCountByDateProvider =
+    AutoDisposeProvider<Map<DateTime, int>>.internal(
+      todoCountByDate,
+      name: r'todoCountByDateProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$todoCountByDateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TodoCountByDateRef = AutoDisposeProviderRef<Map<DateTime, int>>;
 String _$categoriesHash() => r'64b6e78fe81e55e84168f6136a92eef20189a259';
 
 /// 카테고리 목록 Provider (groupId 파라미터 지원)
@@ -639,7 +681,7 @@ class _MonthlyTasksProviderElement
   int get month => (origin as MonthlyTasksProvider).month;
 }
 
-String _$todoTasksHash() => r'1cee23ff413987461039e47405b237008e66b0b4';
+String _$todoTasksHash() => r'a4b87f1a51519f4f6536f786f6f39373ae702010';
 
 abstract class _$TodoTasks
     extends BuildlessAutoDisposeAsyncNotifier<TaskListResponse> {

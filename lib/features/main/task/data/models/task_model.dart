@@ -53,6 +53,18 @@ enum TaskReminderType {
   atTime,
 }
 
+/// Task 상태
+enum TaskStatus {
+  @JsonValue('PENDING')
+  pending, // 대기 중
+  @JsonValue('IN_PROGRESS')
+  inProgress, // 진행 중
+  @JsonValue('COMPLETED')
+  completed, // 완료
+  @JsonValue('CANCELLED')
+  cancelled, // 취소
+}
+
 /// 카테고리 모델
 @freezed
 class CategoryModel with _$CategoryModel {
@@ -162,7 +174,7 @@ class TaskModel with _$TaskModel {
     DateTime? scheduledAt,
     DateTime? dueAt,
     int? daysUntilDue,
-    @Default(false) bool isCompleted,
+    @Default(TaskStatus.pending) TaskStatus status,
     DateTime? completedAt,
     RecurringModel? recurring,
     @Default([]) List<TaskParticipantModel> participants,
@@ -188,6 +200,18 @@ class TaskModel with _$TaskModel {
         scheduledAt!.minute == 0 &&
         scheduledAt!.second == 0;
   }
+
+  /// 완료 여부 (status가 completed인 경우)
+  bool get isCompleted => status == TaskStatus.completed;
+
+  /// 진행 중 여부
+  bool get isInProgress => status == TaskStatus.inProgress;
+
+  /// 취소 여부
+  bool get isCancelled => status == TaskStatus.cancelled;
+
+  /// 대기 중 여부
+  bool get isPending => status == TaskStatus.pending;
 }
 
 /// Task 상세 모델 (알림, 이력 포함)

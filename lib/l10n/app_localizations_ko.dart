@@ -1793,14 +1793,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get todo_viewList => '리스트 보기';
 
   @override
+  String get todo_statusPending => '대기중';
+
+  @override
   String get todo_statusInProgress => '진행중';
 
   @override
   String get todo_statusCompleted => '완료';
 
   @override
+  String get todo_statusCancelled => '취소됨';
+
+  @override
   String get todo_prevWeek => '이전 주';
 
   @override
   String get todo_nextWeek => '다음 주';
+
+  @override
+  String get todo_changeStatus => '상태 변경';
 }

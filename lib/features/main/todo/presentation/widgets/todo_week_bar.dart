@@ -14,6 +14,8 @@ class TodoWeekBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final weekStart = ref.watch(todoSelectedWeekStartProvider);
+    final selectedDate = ref.watch(todoSelectedDateProvider);
+    final todoCountByDate = ref.watch(todoCountByDateProvider);
     final weekEnd = DateTime(weekStart.year, weekStart.month, weekStart.day + 6);
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -43,7 +45,7 @@ class TodoWeekBar extends ConsumerWidget {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => _pickDate(context, ref, weekStart),
+                    onTap: () => _pickDate(context, ref, selectedDate),
                     child: Text(
                       _formatWeekRange(weekStart, weekEnd, l10n),
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -55,7 +57,7 @@ class TodoWeekBar extends ConsumerWidget {
                 ),
                 // 오늘 버튼
                 TextButton(
-                  onPressed: () => _goToThisWeek(ref),
+                  onPressed: () => _goToToday(ref),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
                     minimumSize: const Size(0, 32),
@@ -96,12 +98,18 @@ class TodoWeekBar extends ConsumerWidget {
                   weekStart.month,
                   weekStart.day + index,
                 );
-                final isToday = date == today;
+                final normalizedDate = DateTime(date.year, date.month, date.day);
+                final isToday = normalizedDate == today;
+                final isSelected = normalizedDate == selectedDate;
+                final taskCount = todoCountByDate[normalizedDate] ?? 0;
 
                 return Expanded(
                   child: _DayChip(
                     date: date,
                     isToday: isToday,
+                    isSelected: isSelected,
+                    taskCount: taskCount,
+                    onTap: () => _selectDate(ref, date),
                     l10n: l10n,
                   ),
                 );
@@ -114,14 +122,23 @@ class TodoWeekBar extends ConsumerWidget {
   }
 
   void _changeWeek(WidgetRef ref, DateTime current, int days) {
-    ref.read(todoSelectedWeekStartProvider.notifier).state =
-        DateTime(current.year, current.month, current.day + days);
+    final newWeekStart = DateTime(current.year, current.month, current.day + days);
+    ref.read(todoSelectedWeekStartProvider.notifier).state = newWeekStart;
+    // 주가 변경되면 선택 날짜도 해당 주의 첫날로 변경
+    ref.read(todoSelectedDateProvider.notifier).state = newWeekStart;
   }
 
-  void _goToThisWeek(WidgetRef ref) {
+  void _goToToday(WidgetRef ref) {
     final now = DateTime.now();
-    ref.read(todoSelectedWeekStartProvider.notifier).state =
-        DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    final today = DateTime(now.year, now.month, now.day);
+    final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    ref.read(todoSelectedWeekStartProvider.notifier).state = monday;
+    ref.read(todoSelectedDateProvider.notifier).state = today;
+  }
+
+  void _selectDate(WidgetRef ref, DateTime date) {
+    final normalizedDate = DateTime(date.year, date.month, date.day);
+    ref.read(todoSelectedDateProvider.notifier).state = normalizedDate;
   }
 
   Future<void> _pickDate(
@@ -138,7 +155,9 @@ class TodoWeekBar extends ConsumerWidget {
     if (picked != null) {
       // 선택한 날짜가 속한 주의 월요일로 설정
       final monday = DateTime(picked.year, picked.month, picked.day - (picked.weekday - 1));
+      final normalizedPicked = DateTime(picked.year, picked.month, picked.day);
       ref.read(todoSelectedWeekStartProvider.notifier).state = monday;
+      ref.read(todoSelectedDateProvider.notifier).state = normalizedPicked;
     }
   }
 
@@ -154,11 +173,17 @@ class TodoWeekBar extends ConsumerWidget {
 class _DayChip extends StatelessWidget {
   final DateTime date;
   final bool isToday;
+  final bool isSelected;
+  final int taskCount;
+  final VoidCallback onTap;
   final AppLocalizations l10n;
 
   const _DayChip({
     required this.date,
     required this.isToday,
+    required this.isSelected,
+    required this.taskCount,
+    required this.onTap,
     required this.l10n,
   });
 
@@ -186,34 +211,69 @@ class _DayChip extends StatelessWidget {
       dayColor = AppColors.textSecondary;
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          dayNames[date.weekday - 1],
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: dayColor,
-            fontSize: 11,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: isToday ? AppColors.primary : Colors.transparent,
-            shape: BoxShape.circle,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            '${date.day}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isToday ? Colors.white : AppColors.textPrimary,
-              fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            dayNames[date.weekday - 1],
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: isSelected ? AppColors.primary : dayColor,
+              fontSize: 11,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 2),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.primary
+                  : isToday
+                      ? AppColors.primary.withValues(alpha: 0.1)
+                      : Colors.transparent,
+              shape: BoxShape.circle,
+              border: isToday && !isSelected
+                  ? Border.all(color: AppColors.primary, width: 1.5)
+                  : null,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              '${date.day}',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: isSelected
+                    ? Colors.white
+                    : isToday
+                        ? AppColors.primary
+                        : AppColors.textPrimary,
+                fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          // 할일 개수 표시 (점)
+          if (taskCount > 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                taskCount > 3 ? 3 : taskCount,
+                (index) => Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 1),
+                  width: 4,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primary : AppColors.secondary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            )
+          else
+            const SizedBox(height: 4),
+        ],
+      ),
     );
   }
 }

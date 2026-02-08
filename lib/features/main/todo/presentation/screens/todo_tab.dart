@@ -31,31 +31,38 @@ class _TodoTabState extends ConsumerState<TodoTab> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final viewType = ref.watch(todoViewTypeProvider);
+    final selectedDate = ref.watch(todoSelectedDateProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
 
-    // 완료 포함해서 모든 할일 가져오기 (칸반에서 필요)
-    final todosAsync = ref.watch(todoTasksProvider(page: 1));
+    // 선택된 날짜에 해당하는 할일만 가져오기
+    final selectedDateTasksAsync = ref.watch(todoSelectedDateTasksProvider);
+
+    // 모바일에서는 항상 리스트 뷰 사용
+    final effectiveViewType = isMobile ? TodoViewType.list : viewType;
 
     return Scaffold(
       appBar: AppBar(
         title: const CalendarGroupSelector(),
         actions: [
-          // 뷰 전환 버튼
-          IconButton(
-            icon: Icon(
-              viewType == TodoViewType.kanban
-                  ? Icons.view_list
-                  : Icons.view_kanban,
+          // 뷰 전환 버튼 (모바일에서는 숨김 - 칸반 뷰가 모바일에서 사용하기 어려움)
+          if (!isMobile)
+            IconButton(
+              icon: Icon(
+                viewType == TodoViewType.kanban
+                    ? Icons.view_list
+                    : Icons.view_kanban,
+              ),
+              tooltip: viewType == TodoViewType.kanban
+                  ? l10n.todo_viewList
+                  : l10n.todo_viewKanban,
+              onPressed: () {
+                ref.read(todoViewTypeProvider.notifier).state =
+                    viewType == TodoViewType.kanban
+                        ? TodoViewType.list
+                        : TodoViewType.kanban;
+              },
             ),
-            tooltip: viewType == TodoViewType.kanban
-                ? l10n.todo_viewList
-                : l10n.todo_viewKanban,
-            onPressed: () {
-              ref.read(todoViewTypeProvider.notifier).state =
-                  viewType == TodoViewType.kanban
-                      ? TodoViewType.list
-                      : TodoViewType.kanban;
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: l10n.common_search,
@@ -90,21 +97,24 @@ class _TodoTabState extends ConsumerState<TodoTab> {
           const TodoWeekBar(),
           const Divider(height: 1),
 
+          // 선택된 날짜 표시
+          _SelectedDateHeader(selectedDate: selectedDate, l10n: l10n),
+
           // 할일 목록
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
                 ref.invalidate(todoTasksProvider(page: 1));
               },
-              child: todosAsync.when(
-                data: (response) {
-                  if (response.data.isEmpty) {
+              child: selectedDateTasksAsync.when(
+                data: (tasks) {
+                  if (tasks.isEmpty) {
                     return _EmptyState(l10n: l10n);
                   }
 
-                  return viewType == TodoViewType.kanban
-                      ? _KanbanView(tasks: response.data)
-                      : _ListView(tasks: response.data);
+                  return effectiveViewType == TodoViewType.kanban
+                      ? _KanbanView(tasks: tasks)
+                      : _ListView(tasks: tasks);
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stack) => _ErrorState(
@@ -131,7 +141,102 @@ class _TodoTabState extends ConsumerState<TodoTab> {
   }
 }
 
-/// 칸반 뷰
+/// 선택된 날짜 헤더
+class _SelectedDateHeader extends ConsumerWidget {
+  final DateTime selectedDate;
+  final AppLocalizations l10n;
+
+  const _SelectedDateHeader({
+    required this.selectedDate,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final isToday = selectedDate == today;
+    final showCompleted = ref.watch(showCompletedTodosProvider);
+
+    final dayNames = [
+      l10n.schedule_daySun,
+      l10n.schedule_dayMon,
+      l10n.schedule_dayTue,
+      l10n.schedule_dayWed,
+      l10n.schedule_dayThu,
+      l10n.schedule_dayFri,
+      l10n.schedule_daySat,
+    ];
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceS,
+      ),
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Row(
+        children: [
+          Text(
+            '${selectedDate.month}월 ${selectedDate.day}일 (${dayNames[selectedDate.weekday % 7]})',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (isToday) ...[
+            const SizedBox(width: AppSizes.spaceS),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                l10n.schedule_today,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+          const Spacer(),
+          // 완료된 항목 보기 체크박스
+          InkWell(
+            onTap: () {
+              ref.read(showCompletedTodosProvider.notifier).state = !showCompleted;
+            },
+            borderRadius: BorderRadius.circular(4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Checkbox(
+                    value: showCompleted,
+                    onChanged: (value) {
+                      ref.read(showCompletedTodosProvider.notifier).state = value ?? false;
+                    },
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  l10n.todo_showCompleted,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 칸반 뷰 (모바일: 세로 스크롤, 태블릿/데스크톱: 가로 스크롤)
 class _KanbanView extends ConsumerWidget {
   final List<TaskModel> tasks;
 
@@ -140,73 +245,272 @@ class _KanbanView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
 
-    // 완료 여부로 분류
-    final inProgressTasks = tasks.where((t) => !t.isCompleted).toList();
+    // 상태별로 분류
+    final pendingTasks = tasks.where((t) => t.isPending).toList();
+    final inProgressTasks = tasks.where((t) => t.isInProgress).toList();
     final completedTasks = tasks.where((t) => t.isCompleted).toList();
 
+    final columns = [
+      _KanbanColumnData(
+        title: l10n.todo_statusPending,
+        icon: Icons.pending_outlined,
+        color: AppColors.textSecondary,
+        tasks: pendingTasks,
+        targetStatus: TaskStatus.pending,
+      ),
+      _KanbanColumnData(
+        title: l10n.todo_statusInProgress,
+        icon: Icons.play_circle_outline,
+        color: AppColors.primary,
+        tasks: inProgressTasks,
+        targetStatus: TaskStatus.inProgress,
+      ),
+      _KanbanColumnData(
+        title: l10n.todo_statusCompleted,
+        icon: Icons.check_circle_outline,
+        color: AppColors.success,
+        tasks: completedTasks,
+        targetStatus: TaskStatus.completed,
+      ),
+    ];
+
+    if (isMobile) {
+      // 모바일: 세로 스크롤, 접을 수 있는 섹션
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          children: columns.map((col) {
+            return _MobileKanbanSection(
+              title: col.title,
+              icon: col.icon,
+              color: col.color,
+              tasks: col.tasks,
+              targetStatus: col.targetStatus,
+              onTaskTap: (task) {
+                context.push('/todo/detail', extra: {
+                  'taskId': task.id,
+                  'task': task,
+                });
+              },
+              onStatusChange: (task, status) {
+                _updateStatus(ref, task, status);
+              },
+              onAcceptDrop: (task) {
+                if (task.status != col.targetStatus) {
+                  _updateStatus(ref, task, col.targetStatus);
+                }
+              },
+            );
+          }).toList(),
+        ),
+      );
+    }
+
+    // 태블릿/데스크톱: 가로 스크롤
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(AppSizes.spaceM),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 진행중 컬럼
-          TodoKanbanColumn(
-            title: l10n.todo_statusInProgress,
-            icon: Icons.play_circle_outline,
-            color: AppColors.primary,
-            tasks: inProgressTasks,
-            onTaskTap: (task) {
-              context.push('/todo/detail', extra: {
-                'taskId': task.id,
-                'task': task,
-              });
-            },
-            onTaskComplete: (task) {
-              _toggleComplete(ref, task);
-            },
-            onAcceptDrop: (task) {
-              if (task.isCompleted) {
-                _toggleComplete(ref, task);
-              }
-            },
-          ),
-          const SizedBox(width: AppSizes.spaceM),
-
-          // 완료 컬럼
-          TodoKanbanColumn(
-            title: l10n.todo_statusCompleted,
-            icon: Icons.check_circle_outline,
-            color: AppColors.success,
-            tasks: completedTasks,
-            onTaskTap: (task) {
-              context.push('/todo/detail', extra: {
-                'taskId': task.id,
-                'task': task,
-              });
-            },
-            onTaskComplete: (task) {
-              _toggleComplete(ref, task);
-            },
-            onAcceptDrop: (task) {
-              if (!task.isCompleted) {
-                _toggleComplete(ref, task);
-              }
-            },
-          ),
-        ],
+        children: columns.map((col) {
+          return Padding(
+            padding: const EdgeInsets.only(right: AppSizes.spaceM),
+            child: TodoKanbanColumn(
+              title: col.title,
+              icon: col.icon,
+              color: col.color,
+              tasks: col.tasks,
+              onTaskTap: (task) {
+                context.push('/todo/detail', extra: {
+                  'taskId': task.id,
+                  'task': task,
+                });
+              },
+              onStatusChange: (task, status) {
+                _updateStatus(ref, task, status);
+              },
+              onAcceptDrop: (task) {
+                if (task.status != col.targetStatus) {
+                  _updateStatus(ref, task, col.targetStatus);
+                }
+              },
+            ),
+          );
+        }).toList(),
       ),
     );
   }
 
-  void _toggleComplete(WidgetRef ref, TaskModel task) {
-    ref.read(taskManagementProvider.notifier).toggleComplete(
+  void _updateStatus(WidgetRef ref, TaskModel task, TaskStatus status) {
+    ref.read(taskManagementProvider.notifier).updateStatus(
       task.id,
-      !task.isCompleted,
+      status,
       task.scheduledAt ?? task.dueAt ?? DateTime.now(),
     );
     ref.invalidate(todoTasksProvider(page: 1));
+  }
+}
+
+/// 칸반 컬럼 데이터
+class _KanbanColumnData {
+  final String title;
+  final IconData icon;
+  final Color color;
+  final List<TaskModel> tasks;
+  final TaskStatus targetStatus;
+
+  const _KanbanColumnData({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.tasks,
+    required this.targetStatus,
+  });
+}
+
+/// 모바일용 칸반 섹션 (접을 수 있는 ExpansionTile)
+class _MobileKanbanSection extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color color;
+  final List<TaskModel> tasks;
+  final TaskStatus targetStatus;
+  final Function(TaskModel) onTaskTap;
+  final Function(TaskModel, TaskStatus) onStatusChange;
+  final Function(TaskModel) onAcceptDrop;
+
+  const _MobileKanbanSection({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.tasks,
+    required this.targetStatus,
+    required this.onTaskTap,
+    required this.onStatusChange,
+    required this.onAcceptDrop,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<TaskModel>(
+      onWillAcceptWithDetails: (details) => true,
+      onAcceptWithDetails: (details) {
+        onAcceptDrop(details.data);
+      },
+      builder: (context, candidateData, rejectedData) {
+        final isHovering = candidateData.isNotEmpty;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+          decoration: BoxDecoration(
+            color: isHovering
+                ? color.withValues(alpha: 0.1)
+                : Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+            border: isHovering
+                ? Border.all(color: color, width: 2)
+                : null,
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              initiallyExpanded: tasks.isNotEmpty,
+              leading: Icon(icon, color: color, size: 20),
+              title: Row(
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${tasks.length}',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              children: [
+                if (tasks.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(AppSizes.spaceL),
+                    child: Text(
+                      '항목이 없습니다',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  )
+                else
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSizes.spaceM,
+                      0,
+                      AppSizes.spaceM,
+                      AppSizes.spaceM,
+                    ),
+                    itemCount: tasks.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSizes.spaceS),
+                    itemBuilder: (context, index) {
+                      final task = tasks[index];
+                      return LongPressDraggable<TaskModel>(
+                        data: task,
+                        feedback: Material(
+                          elevation: 8,
+                          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width - 64,
+                            child: Opacity(
+                              opacity: 0.9,
+                              child: TodoListItem(
+                                task: task,
+                                onTap: () {},
+                                onStatusChange: (_) {},
+                              ),
+                            ),
+                          ),
+                        ),
+                        childWhenDragging: Opacity(
+                          opacity: 0.4,
+                          child: TodoListItem(
+                            task: task,
+                            onTap: () {},
+                            onStatusChange: (_) {},
+                          ),
+                        ),
+                        child: TodoListItem(
+                          task: task,
+                          onTap: () => onTaskTap(task),
+                          onStatusChange: (status) => onStatusChange(task, status),
+                        ),
+                      );
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -220,12 +524,12 @@ class _ListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
-    // 완료되지 않은 것 먼저, 우선순위 높은 것 먼저
+    // 상태 순서: 대기중 -> 진행중 -> 완료, 우선순위 높은 것 먼저
     final sortedTasks = List<TaskModel>.from(tasks)
       ..sort((a, b) {
-        // 완료되지 않은 것 먼저
-        if (a.isCompleted != b.isCompleted) {
-          return a.isCompleted ? 1 : -1;
+        // 상태별 정렬 (대기중 -> 진행중 -> 완료)
+        if (a.status != b.status) {
+          return a.status.index.compareTo(b.status.index);
         }
         // 우선순위 높은 것 먼저
         final priorityA = a.priority?.index ?? 0;
@@ -239,9 +543,9 @@ class _ListView extends ConsumerWidget {
       itemBuilder: (context, index) {
         final task = sortedTasks[index];
 
-        // 섹션 헤더 표시 (진행중/완료)
+        // 섹션 헤더 표시 (상태별)
         final showHeader = index == 0 ||
-            sortedTasks[index - 1].isCompleted != task.isCompleted;
+            sortedTasks[index - 1].status != task.status;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,16 +553,10 @@ class _ListView extends ConsumerWidget {
             if (showHeader) ...[
               if (index > 0) const SizedBox(height: AppSizes.spaceL),
               _SectionHeader(
-                title: task.isCompleted
-                    ? l10n.todo_statusCompleted
-                    : l10n.todo_statusInProgress,
-                icon: task.isCompleted
-                    ? Icons.check_circle_outline
-                    : Icons.play_circle_outline,
-                color: task.isCompleted ? AppColors.success : AppColors.primary,
-                count: task.isCompleted
-                    ? tasks.where((t) => t.isCompleted).length
-                    : tasks.where((t) => !t.isCompleted).length,
+                title: _getStatusTitle(l10n, task.status),
+                icon: _getStatusIcon(task.status),
+                color: _getStatusColor(task.status),
+                count: tasks.where((t) => t.status == task.status).length,
               ),
               const SizedBox(height: AppSizes.spaceS),
             ],
@@ -272,10 +570,10 @@ class _ListView extends ConsumerWidget {
                     'task': task,
                   });
                 },
-                onToggleComplete: () {
-                  ref.read(taskManagementProvider.notifier).toggleComplete(
+                onStatusChange: (newStatus) {
+                  ref.read(taskManagementProvider.notifier).updateStatus(
                     task.id,
-                    !task.isCompleted,
+                    newStatus,
                     task.scheduledAt ?? task.dueAt ?? DateTime.now(),
                   );
                   ref.invalidate(todoTasksProvider(page: 1));
@@ -286,6 +584,45 @@ class _ListView extends ConsumerWidget {
         );
       },
     );
+  }
+
+  String _getStatusTitle(AppLocalizations l10n, TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return l10n.todo_statusPending;
+      case TaskStatus.inProgress:
+        return l10n.todo_statusInProgress;
+      case TaskStatus.completed:
+        return l10n.todo_statusCompleted;
+      case TaskStatus.cancelled:
+        return l10n.todo_statusCancelled;
+    }
+  }
+
+  IconData _getStatusIcon(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return Icons.pending_outlined;
+      case TaskStatus.inProgress:
+        return Icons.play_circle_outline;
+      case TaskStatus.completed:
+        return Icons.check_circle_outline;
+      case TaskStatus.cancelled:
+        return Icons.cancel_outlined;
+    }
+  }
+
+  Color _getStatusColor(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return AppColors.textSecondary;
+      case TaskStatus.inProgress:
+        return AppColors.primary;
+      case TaskStatus.completed:
+        return AppColors.success;
+      case TaskStatus.cancelled:
+        return AppColors.error;
+    }
   }
 }
 

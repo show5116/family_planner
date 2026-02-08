@@ -148,7 +148,9 @@ _$TaskModelImpl _$$TaskModelImplFromJson(
       : DateTime.parse(json['scheduledAt'] as String),
   dueAt: json['dueAt'] == null ? null : DateTime.parse(json['dueAt'] as String),
   daysUntilDue: (json['daysUntilDue'] as num?)?.toInt(),
-  isCompleted: json['isCompleted'] as bool? ?? false,
+  status:
+      $enumDecodeNullable(_$TaskStatusEnumMap, json['status']) ??
+      TaskStatus.pending,
   completedAt: json['completedAt'] == null
       ? null
       : DateTime.parse(json['completedAt'] as String),
@@ -178,7 +180,7 @@ Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
       'scheduledAt': instance.scheduledAt?.toIso8601String(),
       'dueAt': instance.dueAt?.toIso8601String(),
       'daysUntilDue': instance.daysUntilDue,
-      'isCompleted': instance.isCompleted,
+      'status': _$TaskStatusEnumMap[instance.status]!,
       'completedAt': instance.completedAt?.toIso8601String(),
       'recurring': instance.recurring,
       'participants': instance.participants,
@@ -196,6 +198,13 @@ const _$TaskPriorityEnumMap = {
   TaskPriority.medium: 'MEDIUM',
   TaskPriority.high: 'HIGH',
   TaskPriority.urgent: 'URGENT',
+};
+
+const _$TaskStatusEnumMap = {
+  TaskStatus.pending: 'PENDING',
+  TaskStatus.inProgress: 'IN_PROGRESS',
+  TaskStatus.completed: 'COMPLETED',
+  TaskStatus.cancelled: 'CANCELLED',
 };
 
 _$TaskListResponseImpl _$$TaskListResponseImplFromJson(

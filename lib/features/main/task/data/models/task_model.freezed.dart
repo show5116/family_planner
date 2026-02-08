@@ -1607,7 +1607,7 @@ mixin _$TaskModel {
   DateTime? get scheduledAt => throw _privateConstructorUsedError;
   DateTime? get dueAt => throw _privateConstructorUsedError;
   int? get daysUntilDue => throw _privateConstructorUsedError;
-  bool get isCompleted => throw _privateConstructorUsedError;
+  TaskStatus get status => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
   RecurringModel? get recurring => throw _privateConstructorUsedError;
   List<TaskParticipantModel> get participants =>
@@ -1643,7 +1643,7 @@ abstract class $TaskModelCopyWith<$Res> {
     DateTime? scheduledAt,
     DateTime? dueAt,
     int? daysUntilDue,
-    bool isCompleted,
+    TaskStatus status,
     DateTime? completedAt,
     RecurringModel? recurring,
     List<TaskParticipantModel> participants,
@@ -1682,7 +1682,7 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? daysUntilDue = freezed,
-    Object? isCompleted = null,
+    Object? status = null,
     Object? completedAt = freezed,
     Object? recurring = freezed,
     Object? participants = null,
@@ -1739,10 +1739,10 @@ class _$TaskModelCopyWithImpl<$Res, $Val extends TaskModel>
                 ? _value.daysUntilDue
                 : daysUntilDue // ignore: cast_nullable_to_non_nullable
                       as int?,
-            isCompleted: null == isCompleted
-                ? _value.isCompleted
-                : isCompleted // ignore: cast_nullable_to_non_nullable
-                      as bool,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as TaskStatus,
             completedAt: freezed == completedAt
                 ? _value.completedAt
                 : completedAt // ignore: cast_nullable_to_non_nullable
@@ -1819,7 +1819,7 @@ abstract class _$$TaskModelImplCopyWith<$Res>
     DateTime? scheduledAt,
     DateTime? dueAt,
     int? daysUntilDue,
-    bool isCompleted,
+    TaskStatus status,
     DateTime? completedAt,
     RecurringModel? recurring,
     List<TaskParticipantModel> participants,
@@ -1859,7 +1859,7 @@ class __$$TaskModelImplCopyWithImpl<$Res>
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? daysUntilDue = freezed,
-    Object? isCompleted = null,
+    Object? status = null,
     Object? completedAt = freezed,
     Object? recurring = freezed,
     Object? participants = null,
@@ -1916,10 +1916,10 @@ class __$$TaskModelImplCopyWithImpl<$Res>
             ? _value.daysUntilDue
             : daysUntilDue // ignore: cast_nullable_to_non_nullable
                   as int?,
-        isCompleted: null == isCompleted
-            ? _value.isCompleted
-            : isCompleted // ignore: cast_nullable_to_non_nullable
-                  as bool,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as TaskStatus,
         completedAt: freezed == completedAt
             ? _value.completedAt
             : completedAt // ignore: cast_nullable_to_non_nullable
@@ -1961,7 +1961,7 @@ class _$TaskModelImpl extends _TaskModel {
     this.scheduledAt,
     this.dueAt,
     this.daysUntilDue,
-    this.isCompleted = false,
+    this.status = TaskStatus.pending,
     this.completedAt,
     this.recurring,
     final List<TaskParticipantModel> participants = const [],
@@ -1999,7 +1999,7 @@ class _$TaskModelImpl extends _TaskModel {
   final int? daysUntilDue;
   @override
   @JsonKey()
-  final bool isCompleted;
+  final TaskStatus status;
   @override
   final DateTime? completedAt;
   @override
@@ -2020,7 +2020,7 @@ class _$TaskModelImpl extends _TaskModel {
 
   @override
   String toString() {
-    return 'TaskModel(id: $id, userId: $userId, groupId: $groupId, title: $title, description: $description, location: $location, type: $type, priority: $priority, category: $category, scheduledAt: $scheduledAt, dueAt: $dueAt, daysUntilDue: $daysUntilDue, isCompleted: $isCompleted, completedAt: $completedAt, recurring: $recurring, participants: $participants, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'TaskModel(id: $id, userId: $userId, groupId: $groupId, title: $title, description: $description, location: $location, type: $type, priority: $priority, category: $category, scheduledAt: $scheduledAt, dueAt: $dueAt, daysUntilDue: $daysUntilDue, status: $status, completedAt: $completedAt, recurring: $recurring, participants: $participants, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -2046,8 +2046,7 @@ class _$TaskModelImpl extends _TaskModel {
             (identical(other.dueAt, dueAt) || other.dueAt == dueAt) &&
             (identical(other.daysUntilDue, daysUntilDue) ||
                 other.daysUntilDue == daysUntilDue) &&
-            (identical(other.isCompleted, isCompleted) ||
-                other.isCompleted == isCompleted) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.completedAt, completedAt) ||
                 other.completedAt == completedAt) &&
             (identical(other.recurring, recurring) ||
@@ -2078,7 +2077,7 @@ class _$TaskModelImpl extends _TaskModel {
     scheduledAt,
     dueAt,
     daysUntilDue,
-    isCompleted,
+    status,
     completedAt,
     recurring,
     const DeepCollectionEquality().hash(_participants),
@@ -2114,7 +2113,7 @@ abstract class _TaskModel extends TaskModel {
     final DateTime? scheduledAt,
     final DateTime? dueAt,
     final int? daysUntilDue,
-    final bool isCompleted,
+    final TaskStatus status,
     final DateTime? completedAt,
     final RecurringModel? recurring,
     final List<TaskParticipantModel> participants,
@@ -2151,7 +2150,7 @@ abstract class _TaskModel extends TaskModel {
   @override
   int? get daysUntilDue;
   @override
-  bool get isCompleted;
+  TaskStatus get status;
   @override
   DateTime? get completedAt;
   @override

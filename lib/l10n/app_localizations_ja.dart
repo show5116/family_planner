@@ -1790,14 +1790,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get todo_viewList => 'リスト表示';
 
   @override
+  String get todo_statusPending => '保留中';
+
+  @override
   String get todo_statusInProgress => '進行中';
 
   @override
   String get todo_statusCompleted => '完了';
 
   @override
+  String get todo_statusCancelled => 'キャンセル';
+
+  @override
   String get todo_prevWeek => '前の週';
 
   @override
   String get todo_nextWeek => '次の週';
+
+  @override
+  String get todo_changeStatus => '状態変更';
 }

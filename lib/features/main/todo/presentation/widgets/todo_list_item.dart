@@ -9,13 +9,13 @@ import 'package:family_planner/l10n/app_localizations.dart';
 class TodoListItem extends StatelessWidget {
   final TaskModel task;
   final VoidCallback onTap;
-  final VoidCallback onToggleComplete;
+  final void Function(TaskStatus status) onStatusChange;
 
   const TodoListItem({
     super.key,
     required this.task,
     required this.onTap,
-    required this.onToggleComplete,
+    required this.onStatusChange,
   });
 
   @override
@@ -33,11 +33,11 @@ class TodoListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 완료 체크박스
-              _CompletionCheckbox(
-                isCompleted: task.isCompleted,
+              // 상태 드롭다운
+              _StatusDropdown(
+                status: task.status,
                 color: color,
-                onTap: onToggleComplete,
+                onStatusChange: onStatusChange,
               ),
               const SizedBox(width: AppSizes.spaceM),
 
@@ -65,42 +65,118 @@ class TodoListItem extends StatelessWidget {
   }
 }
 
-/// 완료 체크박스
-class _CompletionCheckbox extends StatelessWidget {
-  final bool isCompleted;
+/// 상태 선택 드롭다운
+class _StatusDropdown extends StatelessWidget {
+  final TaskStatus status;
   final Color color;
-  final VoidCallback onTap;
+  final void Function(TaskStatus status) onStatusChange;
 
-  const _CompletionCheckbox({
-    required this.isCompleted,
+  const _StatusDropdown({
+    required this.status,
     required this.color,
-    required this.onTap,
+    required this.onStatusChange,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    final l10n = AppLocalizations.of(context)!;
+
+    return PopupMenuButton<TaskStatus>(
+      initialValue: status,
+      onSelected: onStatusChange,
+      tooltip: l10n.todo_changeStatus,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(
+        minWidth: 32,
+        minHeight: 32,
+      ),
+      position: PopupMenuPosition.under,
       child: Container(
-        width: 24,
-        height: 24,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
-          color: isCompleted ? color : Colors.transparent,
+          color: _getStatusColor(status).withValues(alpha: 0.15),
           border: Border.all(
-            color: color,
+            color: _getStatusColor(status),
             width: 2,
           ),
           borderRadius: BorderRadius.circular(6),
         ),
-        child: isCompleted
-            ? const Icon(
-                Icons.check,
-                size: 16,
-                color: Colors.white,
-              )
-            : null,
+        child: Icon(
+          _getStatusIcon(status),
+          size: 16,
+          color: _getStatusColor(status),
+        ),
+      ),
+      itemBuilder: (context) => [
+        _buildMenuItem(context, TaskStatus.pending, l10n.todo_statusPending),
+        _buildMenuItem(context, TaskStatus.inProgress, l10n.todo_statusInProgress),
+        _buildMenuItem(context, TaskStatus.completed, l10n.todo_statusCompleted),
+        _buildMenuItem(context, TaskStatus.cancelled, l10n.todo_statusCancelled),
+      ],
+    );
+  }
+
+  PopupMenuItem<TaskStatus> _buildMenuItem(
+    BuildContext context,
+    TaskStatus itemStatus,
+    String label,
+  ) {
+    final isSelected = status == itemStatus;
+    return PopupMenuItem<TaskStatus>(
+      value: itemStatus,
+      child: Row(
+        children: [
+          Icon(
+            _getStatusIcon(itemStatus),
+            size: 18,
+            color: _getStatusColor(itemStatus),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? _getStatusColor(itemStatus) : null,
+                ),
+          ),
+          if (isSelected) ...[
+            const Spacer(),
+            Icon(
+              Icons.check,
+              size: 16,
+              color: _getStatusColor(itemStatus),
+            ),
+          ],
+        ],
       ),
     );
+  }
+
+  IconData _getStatusIcon(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return Icons.radio_button_unchecked;
+      case TaskStatus.inProgress:
+        return Icons.play_circle_outline;
+      case TaskStatus.completed:
+        return Icons.check_circle;
+      case TaskStatus.cancelled:
+        return Icons.cancel_outlined;
+    }
+  }
+
+  Color _getStatusColor(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return AppColors.textSecondary;
+      case TaskStatus.inProgress:
+        return AppColors.primary;
+      case TaskStatus.completed:
+        return AppColors.success;
+      case TaskStatus.cancelled:
+        return AppColors.error;
+    }
   }
 }
 

@@ -23,7 +23,7 @@ class TaskRepository {
   /// [categoryIds]: 카테고리 ID 목록
   /// [startDate], [endDate]: 기간 필터
   /// [type]: Task 타입 (SCHEDULE/TODO)
-  /// [isCompleted]: 완료 여부 필터
+  /// [status]: 상태 필터 (PENDING, IN_PROGRESS, COMPLETED, CANCELLED)
   Future<TaskListResponse> getTasks({
     String? view,
     List<String>? groupIds,
@@ -31,7 +31,7 @@ class TaskRepository {
     List<String>? categoryIds,
     TaskType? type,
     TaskPriority? priority,
-    bool? isCompleted,
+    TaskStatus? status,
     DateTime? startDate,
     DateTime? endDate,
     int page = 1,
@@ -45,7 +45,7 @@ class TaskRepository {
         if (categoryIds != null && categoryIds.isNotEmpty) 'categoryIds': categoryIds.join(','),
         if (type != null) 'type': _taskTypeToString(type),
         if (priority != null) 'priority': _priorityToString(priority),
-        if (isCompleted != null) 'isCompleted': isCompleted,
+        if (status != null) 'status': _statusToString(status),
         if (startDate != null) 'startDate': startDate.toIso8601String(),
         if (endDate != null) 'endDate': endDate.toIso8601String(),
         'page': page,
@@ -141,20 +141,28 @@ class TaskRepository {
     }
   }
 
-  /// Task 완료/미완료 처리
-  Future<TaskModel> toggleComplete(String id, bool isCompleted) async {
+  /// Task 상태 변경
+  Future<TaskModel> updateStatus(String id, TaskStatus status) async {
     try {
       final response = await _dio.patch(
-        '/tasks/$id/complete',
-        data: {'isCompleted': isCompleted},
+        '/tasks/$id/status',
+        data: {'status': _statusToString(status)},
       );
       return TaskModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         throw Exception('일정을 찾을 수 없습니다');
       }
-      throw Exception('완료 처리 실패: ${e.message}');
+      throw Exception('상태 변경 실패: ${e.message}');
     }
+  }
+
+  /// Task 완료/미완료 토글 (하위 호환성 유지)
+  Future<TaskModel> toggleComplete(String id, bool isCompleted) async {
+    return updateStatus(
+      id,
+      isCompleted ? TaskStatus.completed : TaskStatus.pending,
+    );
   }
 
   /// Task 삭제
@@ -315,6 +323,20 @@ class TaskRepository {
         return 'HIGH';
       case TaskPriority.urgent:
         return 'URGENT';
+    }
+  }
+
+  /// TaskStatus enum to string
+  String _statusToString(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return 'PENDING';
+      case TaskStatus.inProgress:
+        return 'IN_PROGRESS';
+      case TaskStatus.completed:
+        return 'COMPLETED';
+      case TaskStatus.cancelled:
+        return 'CANCELLED';
     }
   }
 }

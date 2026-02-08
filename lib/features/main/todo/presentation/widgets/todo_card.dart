@@ -9,13 +9,13 @@ import 'package:family_planner/l10n/app_localizations.dart';
 class TodoCard extends StatelessWidget {
   final TaskModel task;
   final VoidCallback onTap;
-  final VoidCallback onToggleComplete;
+  final void Function(TaskStatus status)? onStatusChange;
 
   const TodoCard({
     super.key,
     required this.task,
     required this.onTap,
-    required this.onToggleComplete,
+    this.onStatusChange,
   });
 
   @override
@@ -44,14 +44,14 @@ class TodoCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 헤더: 체크박스 + 제목
+              // 헤더: 상태 아이콘 + 제목
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _CompletionCheckbox(
-                    isCompleted: task.isCompleted,
+                  _StatusIcon(
+                    status: task.status,
                     color: color,
-                    onTap: onToggleComplete,
+                    onStatusChange: onStatusChange,
                   ),
                   const SizedBox(width: AppSizes.spaceS),
                   Expanded(
@@ -123,35 +123,127 @@ class TodoCard extends StatelessWidget {
   }
 }
 
-/// 완료 체크박스
-class _CompletionCheckbox extends StatelessWidget {
-  final bool isCompleted;
+/// 상태 아이콘 (드롭다운 또는 단순 표시)
+class _StatusIcon extends StatelessWidget {
+  final TaskStatus status;
   final Color color;
-  final VoidCallback onTap;
+  final void Function(TaskStatus status)? onStatusChange;
 
-  const _CompletionCheckbox({
-    required this.isCompleted,
+  const _StatusIcon({
+    required this.status,
     required this.color,
-    required this.onTap,
+    this.onStatusChange,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    final l10n = AppLocalizations.of(context)!;
+
+    // 드래그 중이거나 콜백이 없으면 단순 아이콘만 표시
+    if (onStatusChange == null) {
+      return Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: _getStatusColor(status).withValues(alpha: 0.15),
+          border: Border.all(color: _getStatusColor(status), width: 2),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(
+          _getStatusIcon(status),
+          size: 14,
+          color: _getStatusColor(status),
+        ),
+      );
+    }
+
+    // 드롭다운 메뉴
+    return PopupMenuButton<TaskStatus>(
+      initialValue: status,
+      onSelected: onStatusChange,
+      tooltip: l10n.todo_changeStatus,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+      position: PopupMenuPosition.under,
       child: Container(
         width: 20,
         height: 20,
         decoration: BoxDecoration(
-          color: isCompleted ? color : Colors.transparent,
-          border: Border.all(color: color, width: 2),
+          color: _getStatusColor(status).withValues(alpha: 0.15),
+          border: Border.all(color: _getStatusColor(status), width: 2),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: isCompleted
-            ? const Icon(Icons.check, size: 14, color: Colors.white)
-            : null,
+        child: Icon(
+          _getStatusIcon(status),
+          size: 14,
+          color: _getStatusColor(status),
+        ),
+      ),
+      itemBuilder: (context) => [
+        _buildMenuItem(context, TaskStatus.pending, l10n.todo_statusPending),
+        _buildMenuItem(context, TaskStatus.inProgress, l10n.todo_statusInProgress),
+        _buildMenuItem(context, TaskStatus.completed, l10n.todo_statusCompleted),
+        _buildMenuItem(context, TaskStatus.cancelled, l10n.todo_statusCancelled),
+      ],
+    );
+  }
+
+  PopupMenuItem<TaskStatus> _buildMenuItem(
+    BuildContext context,
+    TaskStatus itemStatus,
+    String label,
+  ) {
+    final isSelected = status == itemStatus;
+    return PopupMenuItem<TaskStatus>(
+      value: itemStatus,
+      child: Row(
+        children: [
+          Icon(
+            _getStatusIcon(itemStatus),
+            size: 16,
+            color: _getStatusColor(itemStatus),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? _getStatusColor(itemStatus) : null,
+                ),
+          ),
+          if (isSelected) ...[
+            const Spacer(),
+            Icon(Icons.check, size: 16, color: _getStatusColor(itemStatus)),
+          ],
+        ],
       ),
     );
+  }
+
+  IconData _getStatusIcon(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return Icons.radio_button_unchecked;
+      case TaskStatus.inProgress:
+        return Icons.play_circle_outline;
+      case TaskStatus.completed:
+        return Icons.check_circle;
+      case TaskStatus.cancelled:
+        return Icons.cancel_outlined;
+    }
+  }
+
+  Color _getStatusColor(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending:
+        return AppColors.textSecondary;
+      case TaskStatus.inProgress:
+        return AppColors.primary;
+      case TaskStatus.completed:
+        return AppColors.success;
+      case TaskStatus.cancelled:
+        return AppColors.error;
+    }
   }
 }
 

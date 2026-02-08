@@ -702,8 +702,11 @@
   "todo_noDueDate": "마감일 없음",
   "todo_viewKanban": "칸반 보드",
   "todo_viewList": "리스트 보기",
+  "todo_statusPending": "대기중",
   "todo_statusInProgress": "진행중",
   "todo_statusCompleted": "완료",
+  "todo_statusCancelled": "취소됨",
   "todo_prevWeek": "이전 주",
-  "todo_nextWeek": "다음 주"
+  "todo_nextWeek": "다음 주",
+  "todo_changeStatus": "상태 변경"
 }

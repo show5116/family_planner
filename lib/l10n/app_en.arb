@@ -702,8 +702,11 @@
   "todo_noDueDate": "No due date",
   "todo_viewKanban": "Kanban Board",
   "todo_viewList": "List View",
+  "todo_statusPending": "Pending",
   "todo_statusInProgress": "In Progress",
   "todo_statusCompleted": "Completed",
+  "todo_statusCancelled": "Cancelled",
   "todo_prevWeek": "Previous week",
-  "todo_nextWeek": "Next week"
+  "todo_nextWeek": "Next week",
+  "todo_changeStatus": "Change status"
 }

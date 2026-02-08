@@ -27,6 +27,9 @@ final selectedGroupIdProvider = StateProvider<String?>((ref) => null);
 /// Todo 필터: 완료된 항목 표시 여부 (기본값: false)
 final showCompletedTodosProvider = StateProvider<bool>((ref) => false);
 
+/// Todo 필터: 상태 필터 (null이면 전체)
+final todoFilterStatusProvider = StateProvider<TaskStatus?>((ref) => null);
+
 /// Todo 필터: 우선순위 필터 (null이면 전체)
 final todoFilterPriorityProvider = StateProvider<TaskPriority?>((ref) => null);
 
@@ -35,6 +38,12 @@ final todoSelectedWeekStartProvider = StateProvider<DateTime>((ref) {
   final now = DateTime.now();
   // 이번 주 월요일
   return DateTime(now.year, now.month, now.day - (now.weekday - 1));
+});
+
+/// Todo: 현재 선택된 날짜 (기본값: 오늘)
+final todoSelectedDateProvider = StateProvider<DateTime>((ref) {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day);
 });
 
 /// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
@@ -208,18 +217,28 @@ class TodoTasks extends _$TodoTasks {
     final startDate = weekStart;
     final endDate = DateTime(weekStart.year, weekStart.month, weekStart.day + 6, 23, 59, 59);
 
-    return await repository.getTasks(
+    final response = await repository.getTasks(
       view: 'todo',
       type: TaskType.todoLinked,
       groupIds: groupIds.isEmpty ? null : groupIds,
       includePersonal: includePersonal,
-      isCompleted: showCompleted ? null : false,
       priority: priorityFilter,
       startDate: startDate,
       endDate: endDate,
       page: page,
       limit: 100,
     );
+
+    // 완료된 항목 숨김 처리 (클라이언트 필터링)
+    if (!showCompleted) {
+      final filteredData = response.data.where((t) => !t.isCompleted).toList();
+      return response.copyWith(
+        data: filteredData,
+        meta: response.meta.copyWith(total: filteredData.length),
+      );
+    }
+
+    return response;
   }
 
   /// 새로고침
@@ -236,18 +255,28 @@ class TodoTasks extends _$TodoTasks {
       final startDate = weekStart;
       final endDate = DateTime(weekStart.year, weekStart.month, weekStart.day + 6, 23, 59, 59);
 
-      return await repository.getTasks(
+      final response = await repository.getTasks(
         view: 'todo',
         type: TaskType.todoLinked,
         groupIds: groupIds.isEmpty ? null : groupIds,
         includePersonal: includePersonal,
-        isCompleted: showCompleted ? null : false,
         priority: priorityFilter,
         startDate: startDate,
         endDate: endDate,
         page: page,
         limit: 100,
       );
+
+      // 완료된 항목 숨김 처리 (클라이언트 필터링)
+      if (!showCompleted) {
+        final filteredData = response.data.where((t) => !t.isCompleted).toList();
+        return response.copyWith(
+          data: filteredData,
+          meta: response.meta.copyWith(total: filteredData.length),
+        );
+      }
+
+      return response;
     });
   }
 
@@ -293,6 +322,87 @@ class TodoTasks extends _$TodoTasks {
       ),
     );
   }
+}
+
+/// 선택된 날짜의 할일 목록 Provider (시작일~마감일 사이에 해당 날짜가 포함된 경우)
+@riverpod
+Future<List<TaskModel>> todoSelectedDateTasks(Ref ref) async {
+  final selectedDate = ref.watch(todoSelectedDateProvider);
+  final todosAsync = ref.watch(todoTasksProvider(page: 1));
+
+  return todosAsync.maybeWhen(
+    data: (response) {
+      return response.data.where((task) {
+        // scheduledAt 또는 dueAt이 없으면 제외
+        if (task.scheduledAt == null) return false;
+
+        final taskStartDate = DateTime(
+          task.scheduledAt!.year,
+          task.scheduledAt!.month,
+          task.scheduledAt!.day,
+        );
+        final selected = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+        );
+
+        // dueAt이 있으면 기간 일정으로 처리
+        if (task.dueAt != null) {
+          final taskEndDate = DateTime(
+            task.dueAt!.year,
+            task.dueAt!.month,
+            task.dueAt!.day,
+          );
+          return !selected.isBefore(taskStartDate) && !selected.isAfter(taskEndDate);
+        }
+
+        // dueAt이 없으면 scheduledAt만 비교
+        return taskStartDate == selected;
+      }).toList();
+    },
+    orElse: () => <TaskModel>[],
+  );
+}
+
+/// 주간 날짜별 할일 개수 Provider (캘린더 마커용)
+@riverpod
+Map<DateTime, int> todoCountByDate(Ref ref) {
+  final todosAsync = ref.watch(todoTasksProvider(page: 1));
+
+  return todosAsync.maybeWhen(
+    data: (response) {
+      final Map<DateTime, int> countMap = {};
+
+      for (final task in response.data) {
+        if (task.scheduledAt == null) continue;
+
+        final startDate = DateTime(
+          task.scheduledAt!.year,
+          task.scheduledAt!.month,
+          task.scheduledAt!.day,
+        );
+
+        // dueAt이 있으면 기간 동안 모든 날짜에 표시
+        final endDate = task.dueAt != null
+            ? DateTime(
+                task.dueAt!.year,
+                task.dueAt!.month,
+                task.dueAt!.day,
+              )
+            : startDate;
+
+        for (var date = startDate;
+            !date.isAfter(endDate);
+            date = date.add(const Duration(days: 1))) {
+          countMap[date] = (countMap[date] ?? 0) + 1;
+        }
+      }
+
+      return countMap;
+    },
+    orElse: () => <DateTime, int>{},
+  );
 }
 
 /// 카테고리 목록 Provider (groupId 파라미터 지원)
@@ -514,11 +624,11 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  /// Task 완료/미완료 토글
-  Future<TaskModel?> toggleComplete(String id, bool isCompleted, DateTime taskDate) async {
+  /// Task 상태 변경
+  Future<TaskModel?> updateStatus(String id, TaskStatus status, DateTime taskDate) async {
     state = const AsyncValue.loading();
     try {
-      final task = await _repository.toggleComplete(id, isCompleted);
+      final task = await _repository.updateStatus(id, status);
 
       // 해당 월의 Task 목록 갱신
       _ref
@@ -534,6 +644,15 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
       state = AsyncValue.error(e, st);
       return null;
     }
+  }
+
+  /// Task 완료/미완료 토글 (하위 호환성 유지)
+  Future<TaskModel?> toggleComplete(String id, bool isCompleted, DateTime taskDate) async {
+    return updateStatus(
+      id,
+      isCompleted ? TaskStatus.completed : TaskStatus.pending,
+      taskDate,
+    );
   }
 
   /// Task 삭제

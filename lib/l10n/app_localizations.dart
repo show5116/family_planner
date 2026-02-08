@@ -3580,6 +3580,12 @@ abstract class AppLocalizations {
   /// **'리스트 보기'**
   String get todo_viewList;
 
+  /// No description provided for @todo_statusPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기중'**
+  String get todo_statusPending;
+
   /// No description provided for @todo_statusInProgress.
   ///
   /// In ko, this message translates to:
@@ -3592,6 +3598,12 @@ abstract class AppLocalizations {
   /// **'완료'**
   String get todo_statusCompleted;
 
+  /// No description provided for @todo_statusCancelled.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소됨'**
+  String get todo_statusCancelled;
+
   /// No description provided for @todo_prevWeek.
   ///
   /// In ko, this message translates to:
@@ -3603,6 +3615,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'다음 주'**
   String get todo_nextWeek;
+
+  /// No description provided for @todo_changeStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태 변경'**
+  String get todo_changeStatus;
 }
 
 class _AppLocalizationsDelegate

@@ -11,7 +11,7 @@ class TodoKanbanColumn extends StatelessWidget {
   final Color color;
   final List<TaskModel> tasks;
   final Function(TaskModel) onTaskTap;
-  final Function(TaskModel) onTaskComplete;
+  final Function(TaskModel, TaskStatus) onStatusChange;
   final Function(TaskModel) onAcceptDrop;
 
   const TodoKanbanColumn({
@@ -21,7 +21,7 @@ class TodoKanbanColumn extends StatelessWidget {
     required this.color,
     required this.tasks,
     required this.onTaskTap,
-    required this.onTaskComplete,
+    required this.onStatusChange,
     required this.onAcceptDrop,
   });
 
@@ -82,7 +82,7 @@ class TodoKanbanColumn extends StatelessWidget {
                           return _DraggableTodoCard(
                             task: task,
                             onTap: () => onTaskTap(task),
-                            onToggleComplete: () => onTaskComplete(task),
+                            onStatusChange: (status) => onStatusChange(task, status),
                           );
                         },
                       ),
@@ -189,12 +189,12 @@ class _EmptyColumn extends StatelessWidget {
 class _DraggableTodoCard extends StatelessWidget {
   final TaskModel task;
   final VoidCallback onTap;
-  final VoidCallback onToggleComplete;
+  final void Function(TaskStatus status) onStatusChange;
 
   const _DraggableTodoCard({
     required this.task,
     required this.onTap,
-    required this.onToggleComplete,
+    required this.onStatusChange,
   });
 
   @override
@@ -211,7 +211,7 @@ class _DraggableTodoCard extends StatelessWidget {
             child: TodoCard(
               task: task,
               onTap: () {},
-              onToggleComplete: () {},
+              // 드래그 중에는 상태 변경 불가
             ),
           ),
         ),
@@ -221,13 +221,12 @@ class _DraggableTodoCard extends StatelessWidget {
         child: TodoCard(
           task: task,
           onTap: () {},
-          onToggleComplete: () {},
         ),
       ),
       child: TodoCard(
         task: task,
         onTap: onTap,
-        onToggleComplete: onToggleComplete,
+        onStatusChange: onStatusChange,
       ),
     );
   }

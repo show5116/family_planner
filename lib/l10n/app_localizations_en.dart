@@ -1830,14 +1830,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todo_viewList => 'List View';
 
   @override
+  String get todo_statusPending => 'Pending';
+
+  @override
   String get todo_statusInProgress => 'In Progress';
 
   @override
   String get todo_statusCompleted => 'Completed';
 
   @override
+  String get todo_statusCancelled => 'Cancelled';
+
+  @override
   String get todo_prevWeek => 'Previous week';
 
   @override
   String get todo_nextWeek => 'Next week';
+
+  @override
+  String get todo_changeStatus => 'Change status';
 }
