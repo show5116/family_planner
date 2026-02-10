@@ -1839,7 +1839,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todo_statusCompleted => 'Completed';
 
   @override
-  String get todo_statusCancelled => 'Cancelled';
+  String get todo_statusHold => 'Hold';
+
+  @override
+  String get todo_statusDrop => 'Drop';
+
+  @override
+  String get todo_statusFailed => 'Failed';
 
   @override
   String get todo_prevWeek => 'Previous week';
@@ -1849,4 +1855,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todo_changeStatus => 'Change status';
+
+  @override
+  String get todo_viewByDate => 'By Date';
+
+  @override
+  String get todo_viewOverview => 'Overview';
+
+  @override
+  String get todo_overviewOverdue => 'Overdue';
+
+  @override
+  String get todo_overviewToday => 'Today';
+
+  @override
+  String get todo_overviewTomorrow => 'Tomorrow';
+
+  @override
+  String get todo_overviewThisWeek => 'This Week';
+
+  @override
+  String get todo_overviewNextWeek => 'Next Week';
+
+  @override
+  String get todo_overviewLater => 'Later';
+
+  @override
+  String get todo_overviewNoDueDate => 'No Due Date';
 }

@@ -335,8 +335,12 @@ class TaskRepository {
         return 'IN_PROGRESS';
       case TaskStatus.completed:
         return 'COMPLETED';
-      case TaskStatus.cancelled:
-        return 'CANCELLED';
+      case TaskStatus.hold:
+        return 'HOLD';
+      case TaskStatus.drop:
+        return 'DROP';
+      case TaskStatus.failed:
+        return 'FAILED';
     }
   }
 }

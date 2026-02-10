@@ -705,8 +705,19 @@
   "todo_statusPending": "Pending",
   "todo_statusInProgress": "In Progress",
   "todo_statusCompleted": "Completed",
-  "todo_statusCancelled": "Cancelled",
+  "todo_statusHold": "Hold",
+  "todo_statusDrop": "Drop",
+  "todo_statusFailed": "Failed",
   "todo_prevWeek": "Previous week",
   "todo_nextWeek": "Next week",
-  "todo_changeStatus": "Change status"
+  "todo_changeStatus": "Change status",
+  "todo_viewByDate": "By Date",
+  "todo_viewOverview": "Overview",
+  "todo_overviewOverdue": "Overdue",
+  "todo_overviewToday": "Today",
+  "todo_overviewTomorrow": "Tomorrow",
+  "todo_overviewThisWeek": "This Week",
+  "todo_overviewNextWeek": "Next Week",
+  "todo_overviewLater": "Later",
+  "todo_overviewNoDueDate": "No Due Date"
 }

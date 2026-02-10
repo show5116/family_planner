@@ -705,8 +705,19 @@
   "todo_statusPending": "대기중",
   "todo_statusInProgress": "진행중",
   "todo_statusCompleted": "완료",
-  "todo_statusCancelled": "취소됨",
+  "todo_statusHold": "보류",
+  "todo_statusDrop": "드롭",
+  "todo_statusFailed": "실패",
   "todo_prevWeek": "이전 주",
   "todo_nextWeek": "다음 주",
-  "todo_changeStatus": "상태 변경"
+  "todo_changeStatus": "상태 변경",
+  "todo_viewByDate": "날짜별 보기",
+  "todo_viewOverview": "모아 보기",
+  "todo_overviewOverdue": "지난 할일",
+  "todo_overviewToday": "오늘",
+  "todo_overviewTomorrow": "내일",
+  "todo_overviewThisWeek": "이번 주",
+  "todo_overviewNextWeek": "다음 주",
+  "todo_overviewLater": "그 이후",
+  "todo_overviewNoDueDate": "기한 없음"
 }

@@ -24,6 +24,12 @@ final selectedCategoryIdsProvider = StateProvider<List<String>>((ref) => []);
 /// 현재 선택된 그룹 ID Provider (카테고리 관리 등 단일 그룹 선택용)
 final selectedGroupIdProvider = StateProvider<String?>((ref) => null);
 
+/// Todo 뷰 모드 (날짜별 보기 / 모아 보기)
+enum TodoViewMode { byDate, overview }
+
+/// Todo 뷰 모드 Provider
+final todoViewModeProvider = StateProvider<TodoViewMode>((ref) => TodoViewMode.byDate);
+
 /// Todo 필터: 완료된 항목 표시 여부 (기본값: false)
 final showCompletedTodosProvider = StateProvider<bool>((ref) => false);
 
@@ -321,6 +327,40 @@ class TodoTasks extends _$TodoTasks {
         meta: response.meta.copyWith(total: response.meta.total - 1),
       ),
     );
+  }
+}
+
+/// 모아 보기용 전체 할일 목록 Provider (날짜 제한 없이 조회)
+@riverpod
+class TodoOverviewTasks extends _$TodoOverviewTasks {
+  @override
+  Future<TaskListResponse> build() async {
+    final repository = ref.watch(taskRepositoryProvider);
+    final groupIds = ref.watch(selectedGroupIdsProvider);
+    final includePersonal = ref.watch(includePersonalProvider);
+    final showCompleted = ref.watch(showCompletedTodosProvider);
+    final priorityFilter = ref.watch(todoFilterPriorityProvider);
+
+    final response = await repository.getTasks(
+      view: 'todo',
+      type: TaskType.todoLinked,
+      groupIds: groupIds.isEmpty ? null : groupIds,
+      includePersonal: includePersonal,
+      priority: priorityFilter,
+      page: 1,
+      limit: 200,
+    );
+
+    // 완료된 항목 숨김 처리 (클라이언트 필터링)
+    if (!showCompleted) {
+      final filteredData = response.data.where((t) => !t.isCompleted).toList();
+      return response.copyWith(
+        data: filteredData,
+        meta: response.meta.copyWith(total: filteredData.length),
+      );
+    }
+
+    return response;
   }
 }
 

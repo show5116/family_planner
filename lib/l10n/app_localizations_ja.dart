@@ -1799,7 +1799,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get todo_statusCompleted => '完了';
 
   @override
-  String get todo_statusCancelled => 'キャンセル';
+  String get todo_statusHold => '保留';
+
+  @override
+  String get todo_statusDrop => 'ドロップ';
+
+  @override
+  String get todo_statusFailed => '失敗';
 
   @override
   String get todo_prevWeek => '前の週';
@@ -1809,4 +1815,31 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get todo_changeStatus => '状態変更';
+
+  @override
+  String get todo_viewByDate => '日付別表示';
+
+  @override
+  String get todo_viewOverview => '一覧表示';
+
+  @override
+  String get todo_overviewOverdue => '期限超過';
+
+  @override
+  String get todo_overviewToday => '今日';
+
+  @override
+  String get todo_overviewTomorrow => '明日';
+
+  @override
+  String get todo_overviewThisWeek => '今週';
+
+  @override
+  String get todo_overviewNextWeek => '来週';
+
+  @override
+  String get todo_overviewLater => 'それ以降';
+
+  @override
+  String get todo_overviewNoDueDate => '期限なし';
 }

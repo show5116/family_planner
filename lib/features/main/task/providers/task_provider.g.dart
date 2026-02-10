@@ -822,5 +822,26 @@ class _TodoTasksProviderElement
   int get page => (origin as TodoTasksProvider).page;
 }
 
+String _$todoOverviewTasksHash() => r'ce5834c8aa79c59add03cb47def0695f2bc14ac5';
+
+/// 모아 보기용 전체 할일 목록 Provider (날짜 제한 없이 조회)
+///
+/// Copied from [TodoOverviewTasks].
+@ProviderFor(TodoOverviewTasks)
+final todoOverviewTasksProvider =
+    AutoDisposeAsyncNotifierProvider<
+      TodoOverviewTasks,
+      TaskListResponse
+    >.internal(
+      TodoOverviewTasks.new,
+      name: r'todoOverviewTasksProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$todoOverviewTasksHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$TodoOverviewTasks = AutoDisposeAsyncNotifier<TaskListResponse>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

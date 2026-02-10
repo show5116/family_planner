@@ -183,7 +183,9 @@ class _StatusIcon extends StatelessWidget {
         _buildMenuItem(context, TaskStatus.pending, l10n.todo_statusPending),
         _buildMenuItem(context, TaskStatus.inProgress, l10n.todo_statusInProgress),
         _buildMenuItem(context, TaskStatus.completed, l10n.todo_statusCompleted),
-        _buildMenuItem(context, TaskStatus.cancelled, l10n.todo_statusCancelled),
+        _buildMenuItem(context, TaskStatus.hold, l10n.todo_statusHold),
+        _buildMenuItem(context, TaskStatus.drop, l10n.todo_statusDrop),
+        _buildMenuItem(context, TaskStatus.failed, l10n.todo_statusFailed),
       ],
     );
   }
@@ -228,8 +230,12 @@ class _StatusIcon extends StatelessWidget {
         return Icons.play_circle_outline;
       case TaskStatus.completed:
         return Icons.check_circle;
-      case TaskStatus.cancelled:
-        return Icons.cancel_outlined;
+      case TaskStatus.hold:
+        return Icons.pause_circle_outline;
+      case TaskStatus.drop:
+        return Icons.remove_circle_outline;
+      case TaskStatus.failed:
+        return Icons.error_outline;
     }
   }
 
@@ -241,7 +247,11 @@ class _StatusIcon extends StatelessWidget {
         return AppColors.primary;
       case TaskStatus.completed:
         return AppColors.success;
-      case TaskStatus.cancelled:
+      case TaskStatus.hold:
+        return AppColors.warning;
+      case TaskStatus.drop:
+        return AppColors.textSecondary;
+      case TaskStatus.failed:
         return AppColors.error;
     }
   }

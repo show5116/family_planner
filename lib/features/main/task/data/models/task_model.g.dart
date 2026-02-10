@@ -204,7 +204,9 @@ const _$TaskStatusEnumMap = {
   TaskStatus.pending: 'PENDING',
   TaskStatus.inProgress: 'IN_PROGRESS',
   TaskStatus.completed: 'COMPLETED',
-  TaskStatus.cancelled: 'CANCELLED',
+  TaskStatus.hold: 'HOLD',
+  TaskStatus.drop: 'DROP',
+  TaskStatus.failed: 'FAILED',
 };
 
 _$TaskListResponseImpl _$$TaskListResponseImplFromJson(

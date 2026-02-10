@@ -1802,7 +1802,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get todo_statusCompleted => '완료';
 
   @override
-  String get todo_statusCancelled => '취소됨';
+  String get todo_statusHold => '보류';
+
+  @override
+  String get todo_statusDrop => '드롭';
+
+  @override
+  String get todo_statusFailed => '실패';
 
   @override
   String get todo_prevWeek => '이전 주';
@@ -1812,4 +1818,31 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get todo_changeStatus => '상태 변경';
+
+  @override
+  String get todo_viewByDate => '날짜별 보기';
+
+  @override
+  String get todo_viewOverview => '모아 보기';
+
+  @override
+  String get todo_overviewOverdue => '지난 할일';
+
+  @override
+  String get todo_overviewToday => '오늘';
+
+  @override
+  String get todo_overviewTomorrow => '내일';
+
+  @override
+  String get todo_overviewThisWeek => '이번 주';
+
+  @override
+  String get todo_overviewNextWeek => '다음 주';
+
+  @override
+  String get todo_overviewLater => '그 이후';
+
+  @override
+  String get todo_overviewNoDueDate => '기한 없음';
 }

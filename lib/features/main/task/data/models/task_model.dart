@@ -56,13 +56,17 @@ enum TaskReminderType {
 /// Task 상태
 enum TaskStatus {
   @JsonValue('PENDING')
-  pending, // 대기 중
+  pending, // 대기중
   @JsonValue('IN_PROGRESS')
-  inProgress, // 진행 중
+  inProgress, // 진행중
   @JsonValue('COMPLETED')
   completed, // 완료
-  @JsonValue('CANCELLED')
-  cancelled, // 취소
+  @JsonValue('HOLD')
+  hold, // 보류
+  @JsonValue('DROP')
+  drop, // 드롭
+  @JsonValue('FAILED')
+  failed, // 실패
 }
 
 /// 카테고리 모델
@@ -207,8 +211,14 @@ class TaskModel with _$TaskModel {
   /// 진행 중 여부
   bool get isInProgress => status == TaskStatus.inProgress;
 
-  /// 취소 여부
-  bool get isCancelled => status == TaskStatus.cancelled;
+  /// 보류 여부
+  bool get isHold => status == TaskStatus.hold;
+
+  /// 드롭 여부
+  bool get isDrop => status == TaskStatus.drop;
+
+  /// 실패 여부
+  bool get isFailed => status == TaskStatus.failed;
 
   /// 대기 중 여부
   bool get isPending => status == TaskStatus.pending;

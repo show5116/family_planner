@@ -3598,11 +3598,23 @@ abstract class AppLocalizations {
   /// **'완료'**
   String get todo_statusCompleted;
 
-  /// No description provided for @todo_statusCancelled.
+  /// No description provided for @todo_statusHold.
   ///
   /// In ko, this message translates to:
-  /// **'취소됨'**
-  String get todo_statusCancelled;
+  /// **'보류'**
+  String get todo_statusHold;
+
+  /// No description provided for @todo_statusDrop.
+  ///
+  /// In ko, this message translates to:
+  /// **'드롭'**
+  String get todo_statusDrop;
+
+  /// No description provided for @todo_statusFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'실패'**
+  String get todo_statusFailed;
 
   /// No description provided for @todo_prevWeek.
   ///
@@ -3621,6 +3633,60 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'상태 변경'**
   String get todo_changeStatus;
+
+  /// No description provided for @todo_viewByDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜별 보기'**
+  String get todo_viewByDate;
+
+  /// No description provided for @todo_viewOverview.
+  ///
+  /// In ko, this message translates to:
+  /// **'모아 보기'**
+  String get todo_viewOverview;
+
+  /// No description provided for @todo_overviewOverdue.
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 할일'**
+  String get todo_overviewOverdue;
+
+  /// No description provided for @todo_overviewToday.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get todo_overviewToday;
+
+  /// No description provided for @todo_overviewTomorrow.
+  ///
+  /// In ko, this message translates to:
+  /// **'내일'**
+  String get todo_overviewTomorrow;
+
+  /// No description provided for @todo_overviewThisWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주'**
+  String get todo_overviewThisWeek;
+
+  /// No description provided for @todo_overviewNextWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 주'**
+  String get todo_overviewNextWeek;
+
+  /// No description provided for @todo_overviewLater.
+  ///
+  /// In ko, this message translates to:
+  /// **'그 이후'**
+  String get todo_overviewLater;
+
+  /// No description provided for @todo_overviewNoDueDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'기한 없음'**
+  String get todo_overviewNoDueDate;
 }
 
 class _AppLocalizationsDelegate
