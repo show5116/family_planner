@@ -236,7 +236,7 @@ class _SelectedDateHeader extends ConsumerWidget {
   }
 }
 
-/// 칸반 뷰 (모바일: 세로 스크롤, 태블릿/데스크톱: 가로 스크롤)
+/// 칸반 뷰 (태블릿/데스크톱 전용 - 가로 스크롤)
 class _KanbanView extends ConsumerWidget {
   final List<TaskModel> tasks;
 
@@ -245,101 +245,81 @@ class _KanbanView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
 
     // 상태별로 분류
     final pendingTasks = tasks.where((t) => t.isPending).toList();
     final inProgressTasks = tasks.where((t) => t.isInProgress).toList();
     final completedTasks = tasks.where((t) => t.isCompleted).toList();
 
-    final columns = [
-      _KanbanColumnData(
-        title: l10n.todo_statusPending,
-        icon: Icons.pending_outlined,
-        color: AppColors.textSecondary,
-        tasks: pendingTasks,
-        targetStatus: TaskStatus.pending,
-      ),
-      _KanbanColumnData(
-        title: l10n.todo_statusInProgress,
-        icon: Icons.play_circle_outline,
-        color: AppColors.primary,
-        tasks: inProgressTasks,
-        targetStatus: TaskStatus.inProgress,
-      ),
-      _KanbanColumnData(
-        title: l10n.todo_statusCompleted,
-        icon: Icons.check_circle_outline,
-        color: AppColors.success,
-        tasks: completedTasks,
-        targetStatus: TaskStatus.completed,
-      ),
-    ];
-
-    if (isMobile) {
-      // 모바일: 세로 스크롤, 접을 수 있는 섹션
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Column(
-          children: columns.map((col) {
-            return _MobileKanbanSection(
-              title: col.title,
-              icon: col.icon,
-              color: col.color,
-              tasks: col.tasks,
-              targetStatus: col.targetStatus,
-              onTaskTap: (task) {
-                context.push('/todo/detail', extra: {
-                  'taskId': task.id,
-                  'task': task,
-                });
-              },
-              onStatusChange: (task, status) {
-                _updateStatus(ref, task, status);
-              },
-              onAcceptDrop: (task) {
-                if (task.status != col.targetStatus) {
-                  _updateStatus(ref, task, col.targetStatus);
-                }
-              },
-            );
-          }).toList(),
-        ),
-      );
-    }
-
-    // 태블릿/데스크톱: 가로 스크롤
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(AppSizes.spaceM),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: columns.map((col) {
-          return Padding(
-            padding: const EdgeInsets.only(right: AppSizes.spaceM),
-            child: TodoKanbanColumn(
-              title: col.title,
-              icon: col.icon,
-              color: col.color,
-              tasks: col.tasks,
-              onTaskTap: (task) {
-                context.push('/todo/detail', extra: {
-                  'taskId': task.id,
-                  'task': task,
-                });
-              },
-              onStatusChange: (task, status) {
-                _updateStatus(ref, task, status);
-              },
-              onAcceptDrop: (task) {
-                if (task.status != col.targetStatus) {
-                  _updateStatus(ref, task, col.targetStatus);
-                }
-              },
-            ),
-          );
-        }).toList(),
+        children: [
+          TodoKanbanColumn(
+            title: l10n.todo_statusPending,
+            icon: Icons.pending_outlined,
+            color: AppColors.textSecondary,
+            tasks: pendingTasks,
+            onTaskTap: (task) {
+              context.push('/todo/detail', extra: {
+                'taskId': task.id,
+                'task': task,
+              });
+            },
+            onStatusChange: (task, status) {
+              _updateStatus(ref, task, status);
+            },
+            onAcceptDrop: (task) {
+              if (!task.isPending) {
+                _updateStatus(ref, task, TaskStatus.pending);
+              }
+            },
+          ),
+          const SizedBox(width: AppSizes.spaceM),
+          TodoKanbanColumn(
+            title: l10n.todo_statusInProgress,
+            icon: Icons.play_circle_outline,
+            color: AppColors.primary,
+            tasks: inProgressTasks,
+            onTaskTap: (task) {
+              context.push('/todo/detail', extra: {
+                'taskId': task.id,
+                'task': task,
+              });
+            },
+            onStatusChange: (task, status) {
+              _updateStatus(ref, task, status);
+            },
+            onAcceptDrop: (task) {
+              if (!task.isInProgress) {
+                _updateStatus(ref, task, TaskStatus.inProgress);
+              }
+            },
+          ),
+          const SizedBox(width: AppSizes.spaceM),
+          TodoKanbanColumn(
+            title: l10n.todo_statusCompleted,
+            icon: Icons.check_circle_outline,
+            color: AppColors.success,
+            tasks: completedTasks,
+            onTaskTap: (task) {
+              context.push('/todo/detail', extra: {
+                'taskId': task.id,
+                'task': task,
+              });
+            },
+            onStatusChange: (task, status) {
+              _updateStatus(ref, task, status);
+            },
+            onAcceptDrop: (task) {
+              if (!task.isCompleted) {
+                _updateStatus(ref, task, TaskStatus.completed);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -351,166 +331,6 @@ class _KanbanView extends ConsumerWidget {
       task.scheduledAt ?? task.dueAt ?? DateTime.now(),
     );
     ref.invalidate(todoTasksProvider(page: 1));
-  }
-}
-
-/// 칸반 컬럼 데이터
-class _KanbanColumnData {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final List<TaskModel> tasks;
-  final TaskStatus targetStatus;
-
-  const _KanbanColumnData({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.tasks,
-    required this.targetStatus,
-  });
-}
-
-/// 모바일용 칸반 섹션 (접을 수 있는 ExpansionTile)
-class _MobileKanbanSection extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final List<TaskModel> tasks;
-  final TaskStatus targetStatus;
-  final Function(TaskModel) onTaskTap;
-  final Function(TaskModel, TaskStatus) onStatusChange;
-  final Function(TaskModel) onAcceptDrop;
-
-  const _MobileKanbanSection({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.tasks,
-    required this.targetStatus,
-    required this.onTaskTap,
-    required this.onStatusChange,
-    required this.onAcceptDrop,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DragTarget<TaskModel>(
-      onWillAcceptWithDetails: (details) => true,
-      onAcceptWithDetails: (details) {
-        onAcceptDrop(details.data);
-      },
-      builder: (context, candidateData, rejectedData) {
-        final isHovering = candidateData.isNotEmpty;
-
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-          decoration: BoxDecoration(
-            color: isHovering
-                ? color.withValues(alpha: 0.1)
-                : Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-            border: isHovering
-                ? Border.all(color: color, width: 2)
-                : null,
-          ),
-          child: Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              initiallyExpanded: tasks.isNotEmpty,
-              leading: Icon(icon, color: color, size: 20),
-              title: Row(
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
-                  ),
-                  const SizedBox(width: AppSizes.spaceS),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${tasks.length}',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              children: [
-                if (tasks.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(AppSizes.spaceL),
-                    child: Text(
-                      '항목이 없습니다',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  )
-                else
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSizes.spaceM,
-                      0,
-                      AppSizes.spaceM,
-                      AppSizes.spaceM,
-                    ),
-                    itemCount: tasks.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: AppSizes.spaceS),
-                    itemBuilder: (context, index) {
-                      final task = tasks[index];
-                      return LongPressDraggable<TaskModel>(
-                        data: task,
-                        feedback: Material(
-                          elevation: 8,
-                          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width - 64,
-                            child: Opacity(
-                              opacity: 0.9,
-                              child: TodoListItem(
-                                task: task,
-                                onTap: () {},
-                                onStatusChange: (_) {},
-                              ),
-                            ),
-                          ),
-                        ),
-                        childWhenDragging: Opacity(
-                          opacity: 0.4,
-                          child: TodoListItem(
-                            task: task,
-                            onTap: () {},
-                            onStatusChange: (_) {},
-                          ),
-                        ),
-                        child: TodoListItem(
-                          task: task,
-                          onTap: () => onTaskTap(task),
-                          onStatusChange: (status) => onStatusChange(task, status),
-                        ),
-                      );
-                    },
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }
 
