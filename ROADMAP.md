@@ -9,10 +9,10 @@
 ## 📊 Progress Overview
 
 - **완료**: 5/17 기능 (29%)
-- **진행 중**: 5/17 기능 (29%)
-- **미시작**: 7/17 기능 (41%)
+- **진행 중**: 6/17 기능 (35%)
+- **미시작**: 6/17 기능 (35%)
 
-**마지막 업데이트**: 2026-01-28
+**마지막 업데이트**: 2026-02-12
 
 ---
 
@@ -32,7 +32,7 @@
 |------|------|------|----------|
 | 메인화면 (대시보드) | 🟨 진행 중 | [02-dashboard.md](docs/features/02-dashboard.md) | P1 |
 | 일정 관리 | 🟨 진행 중 | [06-schedule.md](docs/features/06-schedule.md) | P1 |
-| ToDoList | ⬜ 시작 안함 | [07-todo.md](docs/features/07-todo.md) | P1 |
+| ToDoList | 🟨 진행 중 | [07-todo.md](docs/features/07-todo.md) | P1 |
 | 메모 | ⬜ 시작 안함 | [09-memo.md](docs/features/09-memo.md) | P2 |
 
 ### Phase 3: 자산 및 금융 (Finance & Assets)
@@ -93,6 +93,17 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-02-12
+- 🟨 **ToDoList 기능 진행 중** ([07-todo.md](docs/features/07-todo.md))
+  - TaskStatus 6가지 상태 백엔드 동기화 (PENDING, IN_PROGRESS, COMPLETED, HOLD, DROP, FAILED)
+  - 체크박스를 상태 드롭다운(PopupMenuButton)으로 교체
+  - 모바일 환경 칸반 보드 제거 (리스트 뷰 전용)
+  - 모아 보기(Overview) 기능 추가 - 날짜 섹션별 그룹핑 (지난 할일/오늘/내일/이번 주/다음 주/그 이후/기한 없음)
+  - [날짜별 보기] / [모아 보기] SegmentedButton 뷰 모드 전환
+  - 날짜별 보기: 주간 바 + 날짜 선택 기능
+  - 완료 포함 체크박스 필터
+  - 다국어 지원 (한/영/일)
 
 ### 2026-01-28
 - 🟨 **일정 관리 기능 진행 중** ([06-schedule.md](docs/features/06-schedule.md))
@@ -166,6 +177,10 @@
   - 완료: Firebase 설정, 서비스 레이어, Provider, 설정 UI, 메시지 처리
   - 완료: 알림 히스토리 화면, 전체 읽음 처리, 개별 읽음 처리, 알림 클릭 시 화면 라우팅
   - 남은 작업: 프로덕션 환경 FCM 테스트
+
+- 🟨 **ToDoList** (~80% 완료)
+  - 완료: 할일 CRUD, 칸반/리스트 뷰, 상태 드롭다운(6가지), 날짜별 보기, 모아 보기, 주간 바
+  - 남은 작업: 필터링/정렬 UI, 완료 아카이브
 
 ---
 
