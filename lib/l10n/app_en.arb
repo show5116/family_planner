@@ -686,6 +686,10 @@
   "schedule_recurringEndCount": "After count",
   "schedule_recurringCountTimes": "times",
 
+  "schedule_searchHint": "Search by title, description, location",
+  "schedule_searchNoResults": "No search results",
+  "schedule_searchResultCount": "{count} results found",
+
   "todo_add": "Add Todo",
   "todo_edit": "Edit Todo",
   "todo_delete": "Delete Todo",
@@ -719,5 +723,20 @@
   "todo_overviewThisWeek": "This Week",
   "todo_overviewNextWeek": "Next Week",
   "todo_overviewLater": "Later",
-  "todo_overviewNoDueDate": "No Due Date"
+  "todo_overviewNoDueDate": "No Due Date",
+  "todo_filter": "Filter",
+  "todo_filterAll": "All",
+  "todo_filterStatus": "Status",
+  "todo_filterPriority": "Priority",
+  "todo_sortBy": "Sort",
+  "todo_sortByStatus": "By Status",
+  "todo_sortByPriority": "By Priority",
+  "todo_sortByDueDate": "By Due Date",
+  "todo_sortByCreatedAt": "By Created",
+  "todo_filterApplied": "Filter applied",
+  "todo_clearFilter": "Clear filter",
+
+  "todo_searchHint": "Search by title, description",
+  "todo_searchNoResults": "No search results",
+  "todo_searchResultCount": "{count} results found"
 }

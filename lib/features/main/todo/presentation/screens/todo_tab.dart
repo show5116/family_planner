@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,10 +68,20 @@ class _TodoTabState extends ConsumerState<TodoTab> {
               },
             ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(
+              ref.watch(todoSearchActiveProvider)
+                  ? Icons.search_off
+                  : Icons.search,
+            ),
             tooltip: l10n.common_search,
             onPressed: () {
-              // TODO: 할일 검색 기능
+              final isActive = ref.read(todoSearchActiveProvider);
+              if (isActive) {
+                ref.read(todoSearchQueryProvider.notifier).state = null;
+                ref.read(todoSearchActiveProvider.notifier).state = false;
+              } else {
+                ref.read(todoSearchActiveProvider.notifier).state = true;
+              }
             },
           ),
           PopupMenuButton<String>(
@@ -95,40 +107,56 @@ class _TodoTabState extends ConsumerState<TodoTab> {
       ),
       body: Column(
         children: [
-          // 뷰 모드 전환 (날짜별 보기 / 모아 보기)
-          _ViewModeToggle(viewMode: viewMode, l10n: l10n),
-          const Divider(height: 1),
+          // 검색바 (검색 모드일 때 표시)
+          if (ref.watch(todoSearchActiveProvider))
+            const _TodoSearchBar(),
 
-          // 날짜별 보기 모드일 때만 주간 바 + 날짜 헤더 표시
-          if (!isOverview) ...[
-            const TodoWeekBar(),
+          // 검색 쿼리가 있으면 검색 결과, 아니면 기존 뷰
+          if (ref.watch(todoSearchQueryProvider) != null) ...[
+            const Expanded(
+              child: _TodoSearchResults(),
+            ),
+          ] else ...[
+            // 뷰 모드 전환 (날짜별 보기 / 모아 보기)
+            _ViewModeToggle(viewMode: viewMode, l10n: l10n),
             const Divider(height: 1),
-            _SelectedDateHeader(selectedDate: selectedDate, l10n: l10n),
+
+            // 날짜별 보기 모드일 때만 주간 바 + 날짜 헤더 표시
+            if (!isOverview) ...[
+              const TodoWeekBar(),
+              const Divider(height: 1),
+              _SelectedDateHeader(selectedDate: selectedDate, l10n: l10n),
+            ],
+
+            // 모아 보기일 때 완료 포함 헤더
+            if (isOverview)
+              _OverviewHeader(l10n: l10n),
+
+            // 필터/정렬 바
+            const _FilterSortBar(),
+
+            // 할일 목록
+            Expanded(
+              child: isOverview
+                  ? const _OverviewListView()
+                  : _DateViewContent(
+                      effectiveViewType: effectiveViewType,
+                      l10n: l10n,
+                    ),
+            ),
           ],
-
-          // 모아 보기일 때 완료 포함 헤더
-          if (isOverview)
-            _OverviewHeader(l10n: l10n),
-
-          // 할일 목록
-          Expanded(
-            child: isOverview
-                ? const _OverviewListView()
-                : _DateViewContent(
-                    effectiveViewType: effectiveViewType,
-                    l10n: l10n,
-                  ),
-          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'todo_fab',
-        onPressed: () {
-          context.push('/todo/add');
-        },
-        tooltip: l10n.todo_add,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: ref.watch(todoSearchQueryProvider) != null
+          ? null
+          : FloatingActionButton(
+              heroTag: 'todo_fab',
+              onPressed: () {
+                context.push('/todo/add');
+              },
+              tooltip: l10n.todo_add,
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }
@@ -283,6 +311,278 @@ class _OverviewHeader extends ConsumerWidget {
   }
 }
 
+/// 필터/정렬 바
+class _FilterSortBar extends ConsumerWidget {
+  const _FilterSortBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final filterStatus = ref.watch(todoFilterStatusProvider);
+    final filterPriority = ref.watch(todoFilterPriorityProvider);
+    final sortBy = ref.watch(todoSortByProvider);
+    final hasFilter = filterStatus != null || filterPriority != null;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceXS,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            // 상태 필터
+            _FilterChip(
+              label: filterStatus != null
+                  ? _getStatusLabel(l10n, filterStatus)
+                  : l10n.todo_filterStatus,
+              icon: Icons.flag_outlined,
+              isActive: filterStatus != null,
+              onTap: () => _showStatusFilterMenu(context, ref, l10n),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+
+            // 우선순위 필터
+            _FilterChip(
+              label: filterPriority != null
+                  ? _getPriorityLabel(l10n, filterPriority)
+                  : l10n.todo_filterPriority,
+              icon: Icons.priority_high,
+              isActive: filterPriority != null,
+              onTap: () => _showPriorityFilterMenu(context, ref, l10n),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+
+            // 정렬
+            _FilterChip(
+              label: _getSortLabel(l10n, sortBy),
+              icon: Icons.sort,
+              isActive: sortBy != TodoSortBy.status,
+              onTap: () => _showSortMenu(context, ref, l10n),
+            ),
+
+            // 필터 초기화
+            if (hasFilter) ...[
+              const SizedBox(width: AppSizes.spaceS),
+              ActionChip(
+                avatar: const Icon(Icons.clear, size: 16),
+                label: Text(
+                  l10n.todo_clearFilter,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+                visualDensity: VisualDensity.compact,
+                onPressed: () {
+                  ref.read(todoFilterStatusProvider.notifier).state = null;
+                  ref.read(todoFilterPriorityProvider.notifier).state = null;
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showStatusFilterMenu(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+    final current = ref.read(todoFilterStatusProvider);
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.all_inclusive),
+              title: Text(l10n.todo_filterAll),
+              selected: current == null,
+              onTap: () {
+                ref.read(todoFilterStatusProvider.notifier).state = null;
+                Navigator.pop(context);
+              },
+            ),
+            ...TaskStatus.values.map((status) => ListTile(
+              leading: Icon(
+                _getStatusIconData(status),
+                color: _getStatusColorValue(status),
+              ),
+              title: Text(_getStatusLabel(l10n, status)),
+              selected: current == status,
+              onTap: () {
+                ref.read(todoFilterStatusProvider.notifier).state = status;
+                Navigator.pop(context);
+              },
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showPriorityFilterMenu(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+    final current = ref.read(todoFilterPriorityProvider);
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.all_inclusive),
+              title: Text(l10n.todo_filterAll),
+              selected: current == null,
+              onTap: () {
+                ref.read(todoFilterPriorityProvider.notifier).state = null;
+                Navigator.pop(context);
+              },
+            ),
+            ...TaskPriority.values.map((priority) => ListTile(
+              leading: Icon(
+                Icons.flag,
+                color: _getPriorityColor(priority),
+              ),
+              title: Text(_getPriorityLabel(l10n, priority)),
+              selected: current == priority,
+              onTap: () {
+                ref.read(todoFilterPriorityProvider.notifier).state = priority;
+                Navigator.pop(context);
+              },
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSortMenu(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+    final current = ref.read(todoSortByProvider);
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: TodoSortBy.values.map((sort) => ListTile(
+            leading: Icon(_getSortIcon(sort)),
+            title: Text(_getSortLabel(l10n, sort)),
+            selected: current == sort,
+            onTap: () {
+              ref.read(todoSortByProvider.notifier).state = sort;
+              Navigator.pop(context);
+            },
+          )).toList(),
+        ),
+      ),
+    );
+  }
+
+  String _getStatusLabel(AppLocalizations l10n, TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending: return l10n.todo_statusPending;
+      case TaskStatus.inProgress: return l10n.todo_statusInProgress;
+      case TaskStatus.completed: return l10n.todo_statusCompleted;
+      case TaskStatus.hold: return l10n.todo_statusHold;
+      case TaskStatus.drop: return l10n.todo_statusDrop;
+      case TaskStatus.failed: return l10n.todo_statusFailed;
+    }
+  }
+
+  String _getPriorityLabel(AppLocalizations l10n, TaskPriority priority) {
+    switch (priority) {
+      case TaskPriority.low: return l10n.todo_priorityLow;
+      case TaskPriority.medium: return l10n.todo_priorityMedium;
+      case TaskPriority.high: return l10n.todo_priorityHigh;
+      case TaskPriority.urgent: return l10n.todo_priorityUrgent;
+    }
+  }
+
+  Color _getPriorityColor(TaskPriority priority) {
+    switch (priority) {
+      case TaskPriority.low: return AppColors.textSecondary;
+      case TaskPriority.medium: return AppColors.primary;
+      case TaskPriority.high: return AppColors.warning;
+      case TaskPriority.urgent: return AppColors.error;
+    }
+  }
+
+  String _getSortLabel(AppLocalizations l10n, TodoSortBy sort) {
+    switch (sort) {
+      case TodoSortBy.status: return l10n.todo_sortByStatus;
+      case TodoSortBy.priority: return l10n.todo_sortByPriority;
+      case TodoSortBy.dueDate: return l10n.todo_sortByDueDate;
+      case TodoSortBy.createdAt: return l10n.todo_sortByCreatedAt;
+    }
+  }
+
+  IconData _getSortIcon(TodoSortBy sort) {
+    switch (sort) {
+      case TodoSortBy.status: return Icons.flag_outlined;
+      case TodoSortBy.priority: return Icons.priority_high;
+      case TodoSortBy.dueDate: return Icons.event;
+      case TodoSortBy.createdAt: return Icons.access_time;
+    }
+  }
+
+  IconData _getStatusIconData(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending: return Icons.radio_button_unchecked;
+      case TaskStatus.inProgress: return Icons.play_circle_outline;
+      case TaskStatus.completed: return Icons.check_circle;
+      case TaskStatus.hold: return Icons.pause_circle_outline;
+      case TaskStatus.drop: return Icons.remove_circle_outline;
+      case TaskStatus.failed: return Icons.error_outline;
+    }
+  }
+
+  Color _getStatusColorValue(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pending: return AppColors.textSecondary;
+      case TaskStatus.inProgress: return AppColors.primary;
+      case TaskStatus.completed: return AppColors.success;
+      case TaskStatus.hold: return AppColors.warning;
+      case TaskStatus.drop: return AppColors.textSecondary;
+      case TaskStatus.failed: return AppColors.error;
+    }
+  }
+}
+
+/// 필터 칩
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _FilterChip({
+    required this.label,
+    required this.icon,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: Icon(
+        icon,
+        size: 16,
+        color: isActive ? AppColors.primary : null,
+      ),
+      label: Text(
+        label,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: isActive ? AppColors.primary : null,
+          fontWeight: isActive ? FontWeight.bold : null,
+        ),
+      ),
+      visualDensity: VisualDensity.compact,
+      side: isActive
+          ? const BorderSide(color: AppColors.primary)
+          : null,
+      onPressed: onTap,
+    );
+  }
+}
+
 /// 모아 보기 리스트 뷰
 class _OverviewListView extends ConsumerWidget {
   const _OverviewListView();
@@ -298,7 +598,19 @@ class _OverviewListView extends ConsumerWidget {
       },
       child: overviewTasksAsync.when(
         data: (response) {
-          final tasks = response.data;
+          final filterStatus = ref.watch(todoFilterStatusProvider);
+          final filterPriority = ref.watch(todoFilterPriorityProvider);
+          final sortBy = ref.watch(todoSortByProvider);
+
+          // 필터 적용
+          var tasks = List<TaskModel>.from(response.data);
+          if (filterStatus != null) {
+            tasks = tasks.where((t) => t.status == filterStatus).toList();
+          }
+          if (filterPriority != null) {
+            tasks = tasks.where((t) => t.priority == filterPriority).toList();
+          }
+
           if (tasks.isEmpty) {
             return _EmptyState(l10n: l10n);
           }
@@ -342,6 +654,11 @@ class _OverviewListView extends ConsumerWidget {
             } else {
               sections[_OverviewSection.later]!.add(task);
             }
+          }
+
+          // 각 섹션 내 정렬 적용
+          for (final section in sections.values) {
+            section.sort((a, b) => _compareTasks(a, b, sortBy));
           }
 
           // 비어있지 않은 섹션만 표시
@@ -413,6 +730,32 @@ class _OverviewListView extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  int _compareTasks(TaskModel a, TaskModel b, TodoSortBy sortBy) {
+    switch (sortBy) {
+      case TodoSortBy.status:
+        if (a.status != b.status) {
+          return a.status.index.compareTo(b.status.index);
+        }
+        final priorityA = a.priority?.index ?? 0;
+        final priorityB = b.priority?.index ?? 0;
+        return priorityB.compareTo(priorityA);
+      case TodoSortBy.priority:
+        final priorityA = a.priority?.index ?? 0;
+        final priorityB = b.priority?.index ?? 0;
+        if (priorityA != priorityB) return priorityB.compareTo(priorityA);
+        return a.status.index.compareTo(b.status.index);
+      case TodoSortBy.dueDate:
+        final dueDateA = a.dueAt ?? a.scheduledAt;
+        final dueDateB = b.dueAt ?? b.scheduledAt;
+        if (dueDateA == null && dueDateB == null) return 0;
+        if (dueDateA == null) return 1;
+        if (dueDateB == null) return -1;
+        return dueDateA.compareTo(dueDateB);
+      case TodoSortBy.createdAt:
+        return b.createdAt.compareTo(a.createdAt);
+    }
   }
 }
 
@@ -684,19 +1027,25 @@ class _ListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final filterStatus = ref.watch(todoFilterStatusProvider);
+    final filterPriority = ref.watch(todoFilterPriorityProvider);
+    final sortBy = ref.watch(todoSortByProvider);
 
-    // 상태 순서: 대기중 -> 진행중 -> 완료, 우선순위 높은 것 먼저
-    final sortedTasks = List<TaskModel>.from(tasks)
-      ..sort((a, b) {
-        // 상태별 정렬 (대기중 -> 진행중 -> 완료)
-        if (a.status != b.status) {
-          return a.status.index.compareTo(b.status.index);
-        }
-        // 우선순위 높은 것 먼저
-        final priorityA = a.priority?.index ?? 0;
-        final priorityB = b.priority?.index ?? 0;
-        return priorityB.compareTo(priorityA);
-      });
+    // 필터 적용
+    var filteredTasks = List<TaskModel>.from(tasks);
+    if (filterStatus != null) {
+      filteredTasks = filteredTasks.where((t) => t.status == filterStatus).toList();
+    }
+    if (filterPriority != null) {
+      filteredTasks = filteredTasks.where((t) => t.priority == filterPriority).toList();
+    }
+
+    if (filteredTasks.isEmpty) {
+      return _EmptyState(l10n: l10n);
+    }
+
+    // 정렬 적용
+    final sortedTasks = filteredTasks..sort((a, b) => _compareTasks(a, b, sortBy));
 
     return ListView.builder(
       padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -717,7 +1066,7 @@ class _ListView extends ConsumerWidget {
                 title: _getStatusTitle(l10n, task.status),
                 icon: _getStatusIcon(task.status),
                 color: _getStatusColor(task.status),
-                count: tasks.where((t) => t.status == task.status).length,
+                count: sortedTasks.where((t) => t.status == task.status).length,
               ),
               const SizedBox(height: AppSizes.spaceS),
             ],
@@ -795,6 +1144,34 @@ class _ListView extends ConsumerWidget {
         return AppColors.textSecondary;
       case TaskStatus.failed:
         return AppColors.error;
+    }
+  }
+
+  int _compareTasks(TaskModel a, TaskModel b, TodoSortBy sortBy) {
+    switch (sortBy) {
+      case TodoSortBy.status:
+        if (a.status != b.status) {
+          return a.status.index.compareTo(b.status.index);
+        }
+        final priorityA = a.priority?.index ?? 0;
+        final priorityB = b.priority?.index ?? 0;
+        return priorityB.compareTo(priorityA);
+      case TodoSortBy.priority:
+        final priorityA = a.priority?.index ?? 0;
+        final priorityB = b.priority?.index ?? 0;
+        if (priorityA != priorityB) {
+          return priorityB.compareTo(priorityA);
+        }
+        return a.status.index.compareTo(b.status.index);
+      case TodoSortBy.dueDate:
+        final dueDateA = a.dueAt ?? a.scheduledAt;
+        final dueDateB = b.dueAt ?? b.scheduledAt;
+        if (dueDateA == null && dueDateB == null) return 0;
+        if (dueDateA == null) return 1;
+        if (dueDateB == null) return -1;
+        return dueDateA.compareTo(dueDateB);
+      case TodoSortBy.createdAt:
+        return b.createdAt.compareTo(a.createdAt);
     }
   }
 }
@@ -920,6 +1297,219 @@ class _ErrorState extends StatelessWidget {
             label: Text(l10n.common_retry),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 할일 검색 바 위젯
+class _TodoSearchBar extends ConsumerStatefulWidget {
+  const _TodoSearchBar();
+
+  @override
+  ConsumerState<_TodoSearchBar> createState() => _TodoSearchBarState();
+}
+
+class _TodoSearchBarState extends ConsumerState<_TodoSearchBar> {
+  final _controller = TextEditingController();
+  final _focusNode = FocusNode();
+  Timer? _debounceTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      ref.read(todoSearchQueryProvider.notifier).state =
+          value.trim().isEmpty ? null : value.trim();
+    });
+  }
+
+  void _clearSearch() {
+    _controller.clear();
+    ref.read(todoSearchQueryProvider.notifier).state = null;
+    ref.read(todoSearchActiveProvider.notifier).state = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceS,
+      ),
+      child: TextField(
+        controller: _controller,
+        focusNode: _focusNode,
+        decoration: InputDecoration(
+          hintText: l10n.todo_searchHint,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: _clearSearch,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          ),
+          filled: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
+        ),
+        onChanged: _onSearchChanged,
+      ),
+    );
+  }
+}
+
+/// 할일 검색 결과 위젯
+class _TodoSearchResults extends ConsumerWidget {
+  const _TodoSearchResults();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final searchQuery = ref.watch(todoSearchQueryProvider);
+    final resultsAsync = ref.watch(todoSearchResultsProvider);
+
+    // 쿼리가 없으면 힌트 표시
+    if (searchQuery == null || searchQuery.trim().isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search,
+              size: AppSizes.iconXLarge,
+              color: AppColors.textSecondary,
+            ),
+            const SizedBox(height: AppSizes.spaceM),
+            Text(
+              l10n.todo_searchHint,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return resultsAsync.when(
+      data: (tasks) {
+        if (tasks.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.search_off,
+                  size: AppSizes.iconXLarge,
+                  color: AppColors.textSecondary,
+                ),
+                const SizedBox(height: AppSizes.spaceM),
+                Text(
+                  l10n.todo_searchNoResults,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 검색 결과 개수
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceS,
+              ),
+              child: Text(
+                l10n.todo_searchResultCount(tasks.length),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+              ),
+            ),
+            // 결과 목록
+            Expanded(
+              child: ListView.separated(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+                itemCount: tasks.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: AppSizes.spaceS),
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+                  return TodoListItem(
+                    task: task,
+                    onTap: () {
+                      context.push('/todo/detail', extra: {
+                        'taskId': task.id,
+                        'task': task,
+                      });
+                    },
+                    onStatusChange: (newStatus) {
+                      ref.read(taskManagementProvider.notifier).updateStatus(
+                            task.id,
+                            newStatus,
+                            task.scheduledAt ?? task.dueAt ?? DateTime.now(),
+                          );
+                      ref.invalidate(todoSearchResultsProvider);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: AppSizes.iconXLarge,
+              color: AppColors.error,
+            ),
+            const SizedBox(height: AppSizes.spaceM),
+            Text(
+              l10n.todo_loadError,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            ElevatedButton.icon(
+              onPressed: () {
+                ref.invalidate(todoSearchResultsProvider);
+              },
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.common_retry),
+            ),
+          ],
+        ),
       ),
     );
   }

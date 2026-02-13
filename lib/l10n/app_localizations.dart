@@ -3484,6 +3484,24 @@ abstract class AppLocalizations {
   /// **'회 반복'**
   String get schedule_recurringCountTimes;
 
+  /// No description provided for @schedule_searchHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목, 설명, 장소로 검색'**
+  String get schedule_searchHint;
+
+  /// No description provided for @schedule_searchNoResults.
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get schedule_searchNoResults;
+
+  /// No description provided for @schedule_searchResultCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과 {count}건'**
+  String schedule_searchResultCount(int count);
+
   /// No description provided for @todo_add.
   ///
   /// In ko, this message translates to:
@@ -3687,6 +3705,90 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'기한 없음'**
   String get todo_overviewNoDueDate;
+
+  /// No description provided for @todo_filter.
+  ///
+  /// In ko, this message translates to:
+  /// **'필터'**
+  String get todo_filter;
+
+  /// No description provided for @todo_filterAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get todo_filterAll;
+
+  /// No description provided for @todo_filterStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get todo_filterStatus;
+
+  /// No description provided for @todo_filterPriority.
+  ///
+  /// In ko, this message translates to:
+  /// **'우선순위'**
+  String get todo_filterPriority;
+
+  /// No description provided for @todo_sortBy.
+  ///
+  /// In ko, this message translates to:
+  /// **'정렬'**
+  String get todo_sortBy;
+
+  /// No description provided for @todo_sortByStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태순'**
+  String get todo_sortByStatus;
+
+  /// No description provided for @todo_sortByPriority.
+  ///
+  /// In ko, this message translates to:
+  /// **'우선순위순'**
+  String get todo_sortByPriority;
+
+  /// No description provided for @todo_sortByDueDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'마감일순'**
+  String get todo_sortByDueDate;
+
+  /// No description provided for @todo_sortByCreatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'생성일순'**
+  String get todo_sortByCreatedAt;
+
+  /// No description provided for @todo_filterApplied.
+  ///
+  /// In ko, this message translates to:
+  /// **'필터 적용됨'**
+  String get todo_filterApplied;
+
+  /// No description provided for @todo_clearFilter.
+  ///
+  /// In ko, this message translates to:
+  /// **'필터 초기화'**
+  String get todo_clearFilter;
+
+  /// No description provided for @todo_searchHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 제목, 설명으로 검색'**
+  String get todo_searchHint;
+
+  /// No description provided for @todo_searchNoResults.
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get todo_searchNoResults;
+
+  /// No description provided for @todo_searchResultCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과 {count}건'**
+  String todo_searchResultCount(int count);
 }
 
 class _AppLocalizationsDelegate

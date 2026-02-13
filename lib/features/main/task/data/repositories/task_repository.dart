@@ -34,6 +34,7 @@ class TaskRepository {
     TaskStatus? status,
     DateTime? startDate,
     DateTime? endDate,
+    String? search,
     int page = 1,
     int limit = 100,
   }) async {
@@ -48,6 +49,7 @@ class TaskRepository {
         if (status != null) 'status': _statusToString(status),
         if (startDate != null) 'startDate': startDate.toIso8601String(),
         if (endDate != null) 'endDate': endDate.toIso8601String(),
+        if (search != null && search.isNotEmpty) 'search': search,
         'page': page,
         'limit': limit,
       });

@@ -11,6 +11,8 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_view.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/task_list_section.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_bar.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_results.dart';
 
 /// 일정 관리 탭 (월간 캘린더 뷰)
 class CalendarTab extends ConsumerStatefulWidget {
@@ -52,10 +54,20 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             onPressed: _goToToday,
           ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(
+              ref.watch(calendarSearchActiveProvider)
+                  ? Icons.search_off
+                  : Icons.search,
+            ),
             tooltip: l10n.common_search,
             onPressed: () {
-              // TODO: 일정 검색 기능
+              final isActive = ref.read(calendarSearchActiveProvider);
+              if (isActive) {
+                ref.read(calendarSearchQueryProvider.notifier).state = null;
+                ref.read(calendarSearchActiveProvider.notifier).state = false;
+              } else {
+                ref.read(calendarSearchActiveProvider.notifier).state = true;
+              }
             },
           ),
           PopupMenuButton<String>(
@@ -81,33 +93,46 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       ),
       body: Column(
         children: [
-          // 월간 캘린더
-          CalendarView(
-            tasksAsync: tasksAsync,
-            focusedDay: _focusedDay,
-            selectedDay: _selectedDay,
-            calendarFormat: _calendarFormat,
-            onDaySelected: _onDaySelected,
-            onPageChanged: _onPageChanged,
-            onFormatChanged: _onFormatChanged,
-          ),
+          // 검색바 (검색 모드일 때 표시)
+          if (ref.watch(calendarSearchActiveProvider))
+            const CalendarSearchBar(),
 
-          const Divider(height: 1),
+          // 검색 쿼리가 있으면 검색 결과, 아니면 캘린더 뷰
+          if (ref.watch(calendarSearchQueryProvider) != null) ...[
+            const Expanded(
+              child: CalendarSearchResults(),
+            ),
+          ] else ...[
+            // 월간 캘린더
+            CalendarView(
+              tasksAsync: tasksAsync,
+              focusedDay: _focusedDay,
+              selectedDay: _selectedDay,
+              calendarFormat: _calendarFormat,
+              onDaySelected: _onDaySelected,
+              onPageChanged: _onPageChanged,
+              onFormatChanged: _onFormatChanged,
+            ),
 
-          // 선택된 날짜 일정 목록
-          Expanded(
-            child: TaskListSection(selectedDate: selectedDate),
-          ),
+            const Divider(height: 1),
+
+            // 선택된 날짜 일정 목록
+            Expanded(
+              child: TaskListSection(selectedDate: selectedDate),
+            ),
+          ],
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'calendar_fab',
-        onPressed: () {
-          context.push('/calendar/add', extra: selectedDate);
-        },
-        tooltip: l10n.schedule_add,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: ref.watch(calendarSearchQueryProvider) != null
+          ? null
+          : FloatingActionButton(
+              heroTag: 'calendar_fab',
+              onPressed: () {
+                context.push('/calendar/add', extra: selectedDate);
+              },
+              tooltip: l10n.schedule_add,
+              child: const Icon(Icons.add),
+            ),
     );
   }
 

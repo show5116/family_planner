@@ -24,6 +24,18 @@ final selectedCategoryIdsProvider = StateProvider<List<String>>((ref) => []);
 /// 현재 선택된 그룹 ID Provider (카테고리 관리 등 단일 그룹 선택용)
 final selectedGroupIdProvider = StateProvider<String?>((ref) => null);
 
+/// 캘린더 검색 모드 활성화 여부
+final calendarSearchActiveProvider = StateProvider<bool>((ref) => false);
+
+/// 캘린더 검색 쿼리 Provider
+final calendarSearchQueryProvider = StateProvider<String?>((ref) => null);
+
+/// 할일 검색 모드 활성화 여부
+final todoSearchActiveProvider = StateProvider<bool>((ref) => false);
+
+/// 할일 검색 쿼리 Provider
+final todoSearchQueryProvider = StateProvider<String?>((ref) => null);
+
 /// Todo 뷰 모드 (날짜별 보기 / 모아 보기)
 enum TodoViewMode { byDate, overview }
 
@@ -38,6 +50,12 @@ final todoFilterStatusProvider = StateProvider<TaskStatus?>((ref) => null);
 
 /// Todo 필터: 우선순위 필터 (null이면 전체)
 final todoFilterPriorityProvider = StateProvider<TaskPriority?>((ref) => null);
+
+/// Todo 정렬 기준
+enum TodoSortBy { status, priority, dueDate, createdAt }
+
+/// Todo 정렬 Provider (기본값: 상태순)
+final todoSortByProvider = StateProvider<TodoSortBy>((ref) => TodoSortBy.status);
 
 /// Todo: 현재 선택된 주의 시작일 (월요일 기준)
 final todoSelectedWeekStartProvider = StateProvider<DateTime>((ref) {
@@ -117,6 +135,55 @@ class MonthlyTasks extends _$MonthlyTasks {
     tasks.removeWhere((t) => t.id == taskId);
     state = AsyncValue.data(tasks);
   }
+}
+
+/// 캘린더 검색 결과 Provider
+@riverpod
+Future<List<TaskModel>> calendarSearchResults(Ref ref) async {
+  final searchQuery = ref.watch(calendarSearchQueryProvider);
+  if (searchQuery == null || searchQuery.trim().isEmpty) {
+    return [];
+  }
+
+  final repository = ref.watch(taskRepositoryProvider);
+  final groupIds = ref.watch(selectedGroupIdsProvider);
+  final includePersonal = ref.watch(includePersonalProvider);
+  final categoryIds = ref.watch(selectedCategoryIdsProvider);
+
+  final response = await repository.getTasks(
+    view: 'calendar',
+    search: searchQuery.trim(),
+    groupIds: groupIds.isEmpty ? null : groupIds,
+    includePersonal: includePersonal,
+    categoryIds: categoryIds.isEmpty ? null : categoryIds,
+    limit: 50,
+  );
+
+  return response.data;
+}
+
+/// 할일 검색 결과 Provider
+@riverpod
+Future<List<TaskModel>> todoSearchResults(Ref ref) async {
+  final searchQuery = ref.watch(todoSearchQueryProvider);
+  if (searchQuery == null || searchQuery.trim().isEmpty) {
+    return [];
+  }
+
+  final repository = ref.watch(taskRepositoryProvider);
+  final groupIds = ref.watch(selectedGroupIdsProvider);
+  final includePersonal = ref.watch(includePersonalProvider);
+
+  final response = await repository.getTasks(
+    view: 'todo',
+    type: TaskType.todoLinked,
+    search: searchQuery.trim(),
+    groupIds: groupIds.isEmpty ? null : groupIds,
+    includePersonal: includePersonal,
+    limit: 50,
+  );
+
+  return response.data;
 }
 
 /// 선택된 날짜의 Task Provider

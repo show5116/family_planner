@@ -1745,6 +1745,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_recurringCountTimes => '회 반복';
 
   @override
+  String get schedule_searchHint => '제목, 설명, 장소로 검색';
+
+  @override
+  String get schedule_searchNoResults => '검색 결과가 없습니다';
+
+  @override
+  String schedule_searchResultCount(int count) {
+    return '검색 결과 $count건';
+  }
+
+  @override
   String get todo_add => '할일 추가';
 
   @override
@@ -1845,4 +1856,48 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get todo_overviewNoDueDate => '기한 없음';
+
+  @override
+  String get todo_filter => '필터';
+
+  @override
+  String get todo_filterAll => '전체';
+
+  @override
+  String get todo_filterStatus => '상태';
+
+  @override
+  String get todo_filterPriority => '우선순위';
+
+  @override
+  String get todo_sortBy => '정렬';
+
+  @override
+  String get todo_sortByStatus => '상태순';
+
+  @override
+  String get todo_sortByPriority => '우선순위순';
+
+  @override
+  String get todo_sortByDueDate => '마감일순';
+
+  @override
+  String get todo_sortByCreatedAt => '생성일순';
+
+  @override
+  String get todo_filterApplied => '필터 적용됨';
+
+  @override
+  String get todo_clearFilter => '필터 초기화';
+
+  @override
+  String get todo_searchHint => '할일 제목, 설명으로 검색';
+
+  @override
+  String get todo_searchNoResults => '검색 결과가 없습니다';
+
+  @override
+  String todo_searchResultCount(int count) {
+    return '검색 결과 $count건';
+  }
 }

@@ -1782,6 +1782,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_recurringCountTimes => 'times';
 
   @override
+  String get schedule_searchHint => 'Search by title, description, location';
+
+  @override
+  String get schedule_searchNoResults => 'No search results';
+
+  @override
+  String schedule_searchResultCount(int count) {
+    return '$count results found';
+  }
+
+  @override
   String get todo_add => 'Add Todo';
 
   @override
@@ -1882,4 +1893,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todo_overviewNoDueDate => 'No Due Date';
+
+  @override
+  String get todo_filter => 'Filter';
+
+  @override
+  String get todo_filterAll => 'All';
+
+  @override
+  String get todo_filterStatus => 'Status';
+
+  @override
+  String get todo_filterPriority => 'Priority';
+
+  @override
+  String get todo_sortBy => 'Sort';
+
+  @override
+  String get todo_sortByStatus => 'By Status';
+
+  @override
+  String get todo_sortByPriority => 'By Priority';
+
+  @override
+  String get todo_sortByDueDate => 'By Due Date';
+
+  @override
+  String get todo_sortByCreatedAt => 'By Created';
+
+  @override
+  String get todo_filterApplied => 'Filter applied';
+
+  @override
+  String get todo_clearFilter => 'Clear filter';
+
+  @override
+  String get todo_searchHint => 'Search by title, description';
+
+  @override
+  String get todo_searchNoResults => 'No search results';
+
+  @override
+  String todo_searchResultCount(int count) {
+    return '$count results found';
+  }
 }

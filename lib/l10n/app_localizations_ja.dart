@@ -1742,6 +1742,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_recurringCountTimes => '回繰り返し';
 
   @override
+  String get schedule_searchHint => 'タイトル、説明、場所で検索';
+
+  @override
+  String get schedule_searchNoResults => '検索結果がありません';
+
+  @override
+  String schedule_searchResultCount(int count) {
+    return '検索結果 $count件';
+  }
+
+  @override
   String get todo_add => 'タスク追加';
 
   @override
@@ -1842,4 +1853,48 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get todo_overviewNoDueDate => '期限なし';
+
+  @override
+  String get todo_filter => 'フィルター';
+
+  @override
+  String get todo_filterAll => 'すべて';
+
+  @override
+  String get todo_filterStatus => '状態';
+
+  @override
+  String get todo_filterPriority => '優先度';
+
+  @override
+  String get todo_sortBy => '並べ替え';
+
+  @override
+  String get todo_sortByStatus => '状態順';
+
+  @override
+  String get todo_sortByPriority => '優先度順';
+
+  @override
+  String get todo_sortByDueDate => '期限順';
+
+  @override
+  String get todo_sortByCreatedAt => '作成日順';
+
+  @override
+  String get todo_filterApplied => 'フィルター適用中';
+
+  @override
+  String get todo_clearFilter => 'フィルターをクリア';
+
+  @override
+  String get todo_searchHint => 'タイトル、説明で検索';
+
+  @override
+  String get todo_searchNoResults => '検索結果がありません';
+
+  @override
+  String todo_searchResultCount(int count) {
+    return '検索結果 $count件';
+  }
 }

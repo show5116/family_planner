@@ -686,6 +686,17 @@
   "schedule_recurringEndCount": "횟수만큼",
   "schedule_recurringCountTimes": "회 반복",
 
+  "schedule_searchHint": "제목, 설명, 장소로 검색",
+  "schedule_searchNoResults": "검색 결과가 없습니다",
+  "schedule_searchResultCount": "검색 결과 {count}건",
+  "@schedule_searchResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
   "todo_add": "할일 추가",
   "todo_edit": "할일 수정",
   "todo_delete": "할일 삭제",
@@ -719,5 +730,27 @@
   "todo_overviewThisWeek": "이번 주",
   "todo_overviewNextWeek": "다음 주",
   "todo_overviewLater": "그 이후",
-  "todo_overviewNoDueDate": "기한 없음"
+  "todo_overviewNoDueDate": "기한 없음",
+  "todo_filter": "필터",
+  "todo_filterAll": "전체",
+  "todo_filterStatus": "상태",
+  "todo_filterPriority": "우선순위",
+  "todo_sortBy": "정렬",
+  "todo_sortByStatus": "상태순",
+  "todo_sortByPriority": "우선순위순",
+  "todo_sortByDueDate": "마감일순",
+  "todo_sortByCreatedAt": "생성일순",
+  "todo_filterApplied": "필터 적용됨",
+  "todo_clearFilter": "필터 초기화",
+
+  "todo_searchHint": "할일 제목, 설명으로 검색",
+  "todo_searchNoResults": "검색 결과가 없습니다",
+  "todo_searchResultCount": "검색 결과 {count}건",
+  "@todo_searchResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

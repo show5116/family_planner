@@ -6,6 +6,48 @@ part of 'task_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$calendarSearchResultsHash() =>
+    r'34d2043da34194fbb1fe17ad001e4e702892bf17';
+
+/// 캘린더 검색 결과 Provider
+///
+/// Copied from [calendarSearchResults].
+@ProviderFor(calendarSearchResults)
+final calendarSearchResultsProvider =
+    AutoDisposeFutureProvider<List<TaskModel>>.internal(
+      calendarSearchResults,
+      name: r'calendarSearchResultsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$calendarSearchResultsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CalendarSearchResultsRef =
+    AutoDisposeFutureProviderRef<List<TaskModel>>;
+String _$todoSearchResultsHash() => r'c9b573c97ac880baf5df2b974fc9f1c1280eaeb4';
+
+/// 할일 검색 결과 Provider
+///
+/// Copied from [todoSearchResults].
+@ProviderFor(todoSearchResults)
+final todoSearchResultsProvider =
+    AutoDisposeFutureProvider<List<TaskModel>>.internal(
+      todoSearchResults,
+      name: r'todoSearchResultsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$todoSearchResultsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TodoSearchResultsRef = AutoDisposeFutureProviderRef<List<TaskModel>>;
 String _$selectedDateTasksHash() => r'467c6c95bc14110e97e3263b46029ce35d671a94';
 
 /// 선택된 날짜의 Task Provider

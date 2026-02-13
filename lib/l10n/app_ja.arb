@@ -686,6 +686,10 @@
   "schedule_recurringEndCount": "回数指定",
   "schedule_recurringCountTimes": "回繰り返し",
 
+  "schedule_searchHint": "タイトル、説明、場所で検索",
+  "schedule_searchNoResults": "検索結果がありません",
+  "schedule_searchResultCount": "検索結果 {count}件",
+
   "todo_add": "タスク追加",
   "todo_edit": "タスク編集",
   "todo_delete": "タスク削除",
@@ -719,5 +723,20 @@
   "todo_overviewThisWeek": "今週",
   "todo_overviewNextWeek": "来週",
   "todo_overviewLater": "それ以降",
-  "todo_overviewNoDueDate": "期限なし"
+  "todo_overviewNoDueDate": "期限なし",
+  "todo_filter": "フィルター",
+  "todo_filterAll": "すべて",
+  "todo_filterStatus": "状態",
+  "todo_filterPriority": "優先度",
+  "todo_sortBy": "並べ替え",
+  "todo_sortByStatus": "状態順",
+  "todo_sortByPriority": "優先度順",
+  "todo_sortByDueDate": "期限順",
+  "todo_sortByCreatedAt": "作成日順",
+  "todo_filterApplied": "フィルター適用中",
+  "todo_clearFilter": "フィルターをクリア",
+
+  "todo_searchHint": "タイトル、説明で検索",
+  "todo_searchNoResults": "検索結果がありません",
+  "todo_searchResultCount": "検索結果 {count}件"
 }
