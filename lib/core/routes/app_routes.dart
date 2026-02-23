@@ -30,8 +30,9 @@ class AppRoutes {
   static const String childPoints = '/child-points';
   static const String childPointsDetail = '/child-points/detail';
   static const String memo = '/memo';
-  static const String memoDetail = '/memo/detail';
   static const String memoAdd = '/memo/add';
+  static const String memoDetail = '/memo/:id';
+  static const String memoEdit = '/memo/:id/edit';
   static const String miniGames = '/mini-games';
   static const String ladderGame = '/mini-games/ladder';
   static const String rouletteGame = '/mini-games/roulette';

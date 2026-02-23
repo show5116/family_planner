@@ -9,6 +9,7 @@ import 'package:family_planner/core/constants/api_constants.dart';
 enum EditorImageType {
   qna,
   announcements,
+  memos,
 }
 
 /// 에디터 이미지 업로드 응답

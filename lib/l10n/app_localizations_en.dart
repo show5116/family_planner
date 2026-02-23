@@ -1937,4 +1937,107 @@ class AppLocalizationsEn extends AppLocalizations {
   String todo_searchResultCount(int count) {
     return '$count results found';
   }
+
+  @override
+  String get memo_title => 'Memo';
+
+  @override
+  String get memo_list => 'Memo List';
+
+  @override
+  String get memo_detail => 'Memo Detail';
+
+  @override
+  String get memo_create => 'Create Memo';
+
+  @override
+  String get memo_edit => 'Edit Memo';
+
+  @override
+  String get memo_delete => 'Delete Memo';
+
+  @override
+  String get memo_content => 'Content';
+
+  @override
+  String get memo_category => 'Category';
+
+  @override
+  String get memo_categoryHint => 'Enter category (optional)';
+
+  @override
+  String get memo_tags => 'Tags';
+
+  @override
+  String get memo_tagsHint => 'Add tags';
+
+  @override
+  String get memo_author => 'Author';
+
+  @override
+  String get memo_createdAt => 'Created';
+
+  @override
+  String get memo_updatedAt => 'Updated';
+
+  @override
+  String get memo_createSuccess => 'Memo created';
+
+  @override
+  String get memo_createError => 'Failed to create memo';
+
+  @override
+  String get memo_updateSuccess => 'Memo updated';
+
+  @override
+  String get memo_updateError => 'Failed to update memo';
+
+  @override
+  String get memo_deleteSuccess => 'Memo deleted';
+
+  @override
+  String get memo_deleteError => 'Failed to delete memo';
+
+  @override
+  String get memo_deleteDialogTitle => 'Delete Memo';
+
+  @override
+  String get memo_deleteDialogMessage =>
+      'Are you sure you want to delete this memo?\nThis cannot be undone.';
+
+  @override
+  String get memo_loadError => 'Failed to load memo';
+
+  @override
+  String get memo_empty => 'No memos yet';
+
+  @override
+  String get memo_titleHint => 'Enter memo title';
+
+  @override
+  String get memo_contentHint => 'Enter memo content';
+
+  @override
+  String get memo_titleRequired => 'Please enter a title';
+
+  @override
+  String get memo_titleMinLength => 'Title must be at least 2 characters';
+
+  @override
+  String get memo_contentRequired => 'Please enter content';
+
+  @override
+  String get memo_searchHint => 'Search by title, content';
+
+  @override
+  String get memo_searchNoResults => 'No search results';
+
+  @override
+  String get memo_tagAdd => 'Add Tag';
+
+  @override
+  String get memo_tagName => 'Tag Name';
+
+  @override
+  String get memo_tagNameHint => 'Enter tag name';
 }

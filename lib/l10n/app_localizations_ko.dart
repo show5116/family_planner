@@ -1900,4 +1900,106 @@ class AppLocalizationsKo extends AppLocalizations {
   String todo_searchResultCount(int count) {
     return '검색 결과 $count건';
   }
+
+  @override
+  String get memo_title => '메모';
+
+  @override
+  String get memo_list => '메모 목록';
+
+  @override
+  String get memo_detail => '메모 상세';
+
+  @override
+  String get memo_create => '메모 작성';
+
+  @override
+  String get memo_edit => '메모 수정';
+
+  @override
+  String get memo_delete => '메모 삭제';
+
+  @override
+  String get memo_content => '내용';
+
+  @override
+  String get memo_category => '카테고리';
+
+  @override
+  String get memo_categoryHint => '카테고리를 입력하세요 (선택사항)';
+
+  @override
+  String get memo_tags => '태그';
+
+  @override
+  String get memo_tagsHint => '태그를 추가하세요';
+
+  @override
+  String get memo_author => '작성자';
+
+  @override
+  String get memo_createdAt => '작성일';
+
+  @override
+  String get memo_updatedAt => '수정일';
+
+  @override
+  String get memo_createSuccess => '메모가 작성되었습니다';
+
+  @override
+  String get memo_createError => '메모 작성에 실패했습니다';
+
+  @override
+  String get memo_updateSuccess => '메모가 수정되었습니다';
+
+  @override
+  String get memo_updateError => '메모 수정에 실패했습니다';
+
+  @override
+  String get memo_deleteSuccess => '메모가 삭제되었습니다';
+
+  @override
+  String get memo_deleteError => '메모 삭제에 실패했습니다';
+
+  @override
+  String get memo_deleteDialogTitle => '메모 삭제';
+
+  @override
+  String get memo_deleteDialogMessage => '이 메모를 삭제하시겠습니까?\n삭제된 메모는 복구할 수 없습니다.';
+
+  @override
+  String get memo_loadError => '메모를 불러올 수 없습니다';
+
+  @override
+  String get memo_empty => '작성된 메모가 없습니다';
+
+  @override
+  String get memo_titleHint => '메모 제목을 입력하세요';
+
+  @override
+  String get memo_contentHint => '메모 내용을 입력하세요';
+
+  @override
+  String get memo_titleRequired => '제목을 입력해주세요';
+
+  @override
+  String get memo_titleMinLength => '제목은 최소 2자 이상 입력해주세요';
+
+  @override
+  String get memo_contentRequired => '내용을 입력해주세요';
+
+  @override
+  String get memo_searchHint => '제목, 내용으로 검색';
+
+  @override
+  String get memo_searchNoResults => '검색 결과가 없습니다';
+
+  @override
+  String get memo_tagAdd => '태그 추가';
+
+  @override
+  String get memo_tagName => '태그 이름';
+
+  @override
+  String get memo_tagNameHint => '태그 이름을 입력하세요';
 }

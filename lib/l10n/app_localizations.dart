@@ -3789,6 +3789,210 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'검색 결과 {count}건'**
   String todo_searchResultCount(int count);
+
+  /// No description provided for @memo_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모'**
+  String get memo_title;
+
+  /// No description provided for @memo_list.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 목록'**
+  String get memo_list;
+
+  /// No description provided for @memo_detail.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 상세'**
+  String get memo_detail;
+
+  /// No description provided for @memo_create.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 작성'**
+  String get memo_create;
+
+  /// No description provided for @memo_edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 수정'**
+  String get memo_edit;
+
+  /// No description provided for @memo_delete.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 삭제'**
+  String get memo_delete;
+
+  /// No description provided for @memo_content.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get memo_content;
+
+  /// No description provided for @memo_category.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get memo_category;
+
+  /// No description provided for @memo_categoryHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리를 입력하세요 (선택사항)'**
+  String get memo_categoryHint;
+
+  /// No description provided for @memo_tags.
+  ///
+  /// In ko, this message translates to:
+  /// **'태그'**
+  String get memo_tags;
+
+  /// No description provided for @memo_tagsHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'태그를 추가하세요'**
+  String get memo_tagsHint;
+
+  /// No description provided for @memo_author.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성자'**
+  String get memo_author;
+
+  /// No description provided for @memo_createdAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성일'**
+  String get memo_createdAt;
+
+  /// No description provided for @memo_updatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'수정일'**
+  String get memo_updatedAt;
+
+  /// No description provided for @memo_createSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모가 작성되었습니다'**
+  String get memo_createSuccess;
+
+  /// No description provided for @memo_createError.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 작성에 실패했습니다'**
+  String get memo_createError;
+
+  /// No description provided for @memo_updateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모가 수정되었습니다'**
+  String get memo_updateSuccess;
+
+  /// No description provided for @memo_updateError.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 수정에 실패했습니다'**
+  String get memo_updateError;
+
+  /// No description provided for @memo_deleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모가 삭제되었습니다'**
+  String get memo_deleteSuccess;
+
+  /// No description provided for @memo_deleteError.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 삭제에 실패했습니다'**
+  String get memo_deleteError;
+
+  /// No description provided for @memo_deleteDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 삭제'**
+  String get memo_deleteDialogTitle;
+
+  /// No description provided for @memo_deleteDialogMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 메모를 삭제하시겠습니까?\n삭제된 메모는 복구할 수 없습니다.'**
+  String get memo_deleteDialogMessage;
+
+  /// No description provided for @memo_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모를 불러올 수 없습니다'**
+  String get memo_loadError;
+
+  /// No description provided for @memo_empty.
+  ///
+  /// In ko, this message translates to:
+  /// **'작성된 메모가 없습니다'**
+  String get memo_empty;
+
+  /// No description provided for @memo_titleHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 제목을 입력하세요'**
+  String get memo_titleHint;
+
+  /// No description provided for @memo_contentHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 내용을 입력하세요'**
+  String get memo_contentHint;
+
+  /// No description provided for @memo_titleRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get memo_titleRequired;
+
+  /// No description provided for @memo_titleMinLength.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목은 최소 2자 이상 입력해주세요'**
+  String get memo_titleMinLength;
+
+  /// No description provided for @memo_contentRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용을 입력해주세요'**
+  String get memo_contentRequired;
+
+  /// No description provided for @memo_searchHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목, 내용으로 검색'**
+  String get memo_searchHint;
+
+  /// No description provided for @memo_searchNoResults.
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get memo_searchNoResults;
+
+  /// No description provided for @memo_tagAdd.
+  ///
+  /// In ko, this message translates to:
+  /// **'태그 추가'**
+  String get memo_tagAdd;
+
+  /// No description provided for @memo_tagName.
+  ///
+  /// In ko, this message translates to:
+  /// **'태그 이름'**
+  String get memo_tagName;
+
+  /// No description provided for @memo_tagNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'태그 이름을 입력하세요'**
+  String get memo_tagNameHint;
 }
 
 class _AppLocalizationsDelegate

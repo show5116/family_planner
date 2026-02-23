@@ -1897,4 +1897,106 @@ class AppLocalizationsJa extends AppLocalizations {
   String todo_searchResultCount(int count) {
     return '検索結果 $count件';
   }
+
+  @override
+  String get memo_title => 'メモ';
+
+  @override
+  String get memo_list => 'メモ一覧';
+
+  @override
+  String get memo_detail => 'メモ詳細';
+
+  @override
+  String get memo_create => 'メモ作成';
+
+  @override
+  String get memo_edit => 'メモ編集';
+
+  @override
+  String get memo_delete => 'メモ削除';
+
+  @override
+  String get memo_content => '内容';
+
+  @override
+  String get memo_category => 'カテゴリー';
+
+  @override
+  String get memo_categoryHint => 'カテゴリーを入力してください（任意）';
+
+  @override
+  String get memo_tags => 'タグ';
+
+  @override
+  String get memo_tagsHint => 'タグを追加';
+
+  @override
+  String get memo_author => '作成者';
+
+  @override
+  String get memo_createdAt => '作成日';
+
+  @override
+  String get memo_updatedAt => '更新日';
+
+  @override
+  String get memo_createSuccess => 'メモを作成しました';
+
+  @override
+  String get memo_createError => 'メモの作成に失敗しました';
+
+  @override
+  String get memo_updateSuccess => 'メモを更新しました';
+
+  @override
+  String get memo_updateError => 'メモの更新に失敗しました';
+
+  @override
+  String get memo_deleteSuccess => 'メモを削除しました';
+
+  @override
+  String get memo_deleteError => 'メモの削除に失敗しました';
+
+  @override
+  String get memo_deleteDialogTitle => 'メモの削除';
+
+  @override
+  String get memo_deleteDialogMessage => 'このメモを削除しますか？\n削除されたメモは復元できません。';
+
+  @override
+  String get memo_loadError => 'メモを読み込めません';
+
+  @override
+  String get memo_empty => '作成されたメモがありません';
+
+  @override
+  String get memo_titleHint => 'メモのタイトルを入力';
+
+  @override
+  String get memo_contentHint => 'メモの内容を入力';
+
+  @override
+  String get memo_titleRequired => 'タイトルを入力してください';
+
+  @override
+  String get memo_titleMinLength => 'タイトルは2文字以上入力してください';
+
+  @override
+  String get memo_contentRequired => '内容を入力してください';
+
+  @override
+  String get memo_searchHint => 'タイトル、内容で検索';
+
+  @override
+  String get memo_searchNoResults => '検索結果がありません';
+
+  @override
+  String get memo_tagAdd => 'タグ追加';
+
+  @override
+  String get memo_tagName => 'タグ名';
+
+  @override
+  String get memo_tagNameHint => 'タグ名を入力してください';
 }

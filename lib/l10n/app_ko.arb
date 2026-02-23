@@ -752,5 +752,40 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "memo_title": "메모",
+  "memo_list": "메모 목록",
+  "memo_detail": "메모 상세",
+  "memo_create": "메모 작성",
+  "memo_edit": "메모 수정",
+  "memo_delete": "메모 삭제",
+  "memo_content": "내용",
+  "memo_category": "카테고리",
+  "memo_categoryHint": "카테고리를 입력하세요 (선택사항)",
+  "memo_tags": "태그",
+  "memo_tagsHint": "태그를 추가하세요",
+  "memo_author": "작성자",
+  "memo_createdAt": "작성일",
+  "memo_updatedAt": "수정일",
+  "memo_createSuccess": "메모가 작성되었습니다",
+  "memo_createError": "메모 작성에 실패했습니다",
+  "memo_updateSuccess": "메모가 수정되었습니다",
+  "memo_updateError": "메모 수정에 실패했습니다",
+  "memo_deleteSuccess": "메모가 삭제되었습니다",
+  "memo_deleteError": "메모 삭제에 실패했습니다",
+  "memo_deleteDialogTitle": "메모 삭제",
+  "memo_deleteDialogMessage": "이 메모를 삭제하시겠습니까?\n삭제된 메모는 복구할 수 없습니다.",
+  "memo_loadError": "메모를 불러올 수 없습니다",
+  "memo_empty": "작성된 메모가 없습니다",
+  "memo_titleHint": "메모 제목을 입력하세요",
+  "memo_contentHint": "메모 내용을 입력하세요",
+  "memo_titleRequired": "제목을 입력해주세요",
+  "memo_titleMinLength": "제목은 최소 2자 이상 입력해주세요",
+  "memo_contentRequired": "내용을 입력해주세요",
+  "memo_searchHint": "제목, 내용으로 검색",
+  "memo_searchNoResults": "검색 결과가 없습니다",
+  "memo_tagAdd": "태그 추가",
+  "memo_tagName": "태그 이름",
+  "memo_tagNameHint": "태그 이름을 입력하세요"
 }

@@ -4,14 +4,17 @@ import 'package:family_planner/features/home/presentation/screens/home_screen.da
 import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
+import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
+import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
+import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
 /// 포함되는 화면:
 /// - Home (메인 대시보드)
-/// - Assets (자산관리) - 추후 구현
-/// - Calendar (일정관리) - 추후 구현
-/// - Todo (할일목록) - 추후 구현
+/// - Calendar (일정관리)
+/// - Todo (할일목록)
+/// - Memo (메모)
 List<RouteBase> getMainRoutes() {
   return [
     GoRoute(
@@ -85,6 +88,34 @@ List<RouteBase> getMainRoutes() {
           );
         }
         return const TaskFormScreen();
+      },
+    ),
+
+    // Memo Routes (메모)
+    GoRoute(
+      path: AppRoutes.memo,
+      name: 'memoList',
+      builder: (context, state) => const MemoListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.memoAdd,
+      name: 'memoCreate',
+      builder: (context, state) => const MemoFormScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.memoDetail,
+      name: 'memoDetail',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return MemoDetailScreen(memoId: id);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.memoEdit,
+      name: 'memoEdit',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return MemoFormScreen(memoId: id);
       },
     ),
   ];
