@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +11,7 @@ import 'package:family_planner/features/main/todo/presentation/widgets/todo_list
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_week_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_search_bar.dart';
 
 /// 뷰 타입 (칸반/리스트)
 enum TodoViewType { kanban, list }
@@ -1303,78 +1302,22 @@ class _ErrorState extends StatelessWidget {
 }
 
 /// 할일 검색 바 위젯
-class _TodoSearchBar extends ConsumerStatefulWidget {
+class _TodoSearchBar extends ConsumerWidget {
   const _TodoSearchBar();
 
   @override
-  ConsumerState<_TodoSearchBar> createState() => _TodoSearchBarState();
-}
-
-class _TodoSearchBarState extends ConsumerState<_TodoSearchBar> {
-  final _controller = TextEditingController();
-  final _focusNode = FocusNode();
-  Timer? _debounceTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _focusNode.requestFocus();
-    });
-  }
-
-  @override
-  void dispose() {
-    _debounceTimer?.cancel();
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  void _onSearchChanged(String value) {
-    _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      ref.read(todoSearchQueryProvider.notifier).state =
-          value.trim().isEmpty ? null : value.trim();
-    });
-  }
-
-  void _clearSearch() {
-    _controller.clear();
-    ref.read(todoSearchQueryProvider.notifier).state = null;
-    ref.read(todoSearchActiveProvider.notifier).state = false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.spaceM,
-        vertical: AppSizes.spaceS,
-      ),
-      child: TextField(
-        controller: _controller,
-        focusNode: _focusNode,
-        decoration: InputDecoration(
-          hintText: l10n.todo_searchHint,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: _clearSearch,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-          ),
-          filled: true,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceM,
-            vertical: AppSizes.spaceS,
-          ),
-        ),
-        onChanged: _onSearchChanged,
-      ),
+    return AppSearchBar(
+      hintText: l10n.todo_searchHint,
+      onSearch: (query) {
+        ref.read(todoSearchQueryProvider.notifier).state = query;
+      },
+      onClose: () {
+        ref.read(todoSearchQueryProvider.notifier).state = null;
+        ref.read(todoSearchActiveProvider.notifier).state = false;
+      },
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
+import 'package:family_planner/shared/widgets/app_search_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 목록 화면
@@ -20,7 +21,6 @@ class MemoListScreen extends ConsumerStatefulWidget {
 
 class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
 
   @override
@@ -32,7 +32,6 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -50,14 +49,9 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     setState(() {
       _isSearching = !_isSearching;
       if (!_isSearching) {
-        _searchController.clear();
         ref.read(memoListProvider.notifier).setSearch(null);
       }
     });
-  }
-
-  void _onSearchSubmitted(String query) {
-    ref.read(memoListProvider.notifier).setSearch(query);
   }
 
   @override
@@ -67,24 +61,15 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.memo_searchHint,
-                  border: InputBorder.none,
-                ),
-                onSubmitted: _onSearchSubmitted,
-              )
-            : Text(l10n.memo_title),
+        title: Text(l10n.memo_title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            icon: const Icon(Icons.search),
+            tooltip: l10n.common_search,
             onPressed: _toggleSearch,
           ),
           IconButton(
@@ -94,36 +79,50 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => ref.read(memoListProvider.notifier).refresh(),
-        child: memosAsync.when(
-          data: (memos) {
-            if (memos.isEmpty) {
-              return AppEmptyState(
-                icon: Icons.note_outlined,
-                message: l10n.memo_empty,
-              );
-            }
-
-            return ListView.separated(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(AppSizes.spaceM),
-              itemCount: memos.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: AppSizes.spaceM),
-              itemBuilder: (context, index) {
-                final memo = memos[index];
-                return MemoCard(memo: memo);
+      body: Column(
+        children: [
+          if (_isSearching)
+            AppSearchBar(
+              hintText: l10n.memo_searchHint,
+              onSearch: (query) {
+                ref.read(memoListProvider.notifier).setSearch(query);
               },
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => AppErrorState(
-            error: error,
-            title: l10n.memo_loadError,
-            onRetry: () => ref.read(memoListProvider.notifier).refresh(),
+              onClose: _toggleSearch,
+            ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => ref.read(memoListProvider.notifier).refresh(),
+              child: memosAsync.when(
+                data: (memos) {
+                  if (memos.isEmpty) {
+                    return AppEmptyState(
+                      icon: Icons.note_outlined,
+                      message: l10n.memo_empty,
+                    );
+                  }
+
+                  return ListView.separated(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(AppSizes.spaceM),
+                    itemCount: memos.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSizes.spaceM),
+                    itemBuilder: (context, index) {
+                      final memo = memos[index];
+                      return MemoCard(memo: memo);
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => AppErrorState(
+                  error: error,
+                  title: l10n.memo_loadError,
+                  onRetry: () => ref.read(memoListProvider.notifier).refresh(),
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
