@@ -773,5 +773,23 @@
   "memo_searchNoResults": "No search results",
   "memo_tagAdd": "Add Tag",
   "memo_tagName": "Tag Name",
-  "memo_tagNameHint": "Enter tag name"
+  "memo_tagNameHint": "Enter tag name",
+  "memo_typeNote": "Note",
+  "memo_typeChecklist": "Checklist",
+  "memo_typeSelect": "Memo Type",
+  "memo_checklist": "Checklist",
+  "memo_checklistAdd": "Add Item",
+  "memo_checklistAddHint": "Enter new item",
+  "memo_checklistEmpty": "No checklist items",
+  "memo_checklistReset": "Reset All",
+  "memo_checklistResetConfirm": "Uncheck all items?",
+  "memo_checklistDeleteItem": "Delete Item",
+  "memo_checklistEditItem": "Edit Item",
+  "memo_checklistProgress": "{checked}/{total} done",
+  "@memo_checklistProgress": {
+    "placeholders": {
+      "checked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }

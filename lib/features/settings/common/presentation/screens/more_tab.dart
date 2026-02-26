@@ -88,12 +88,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                 );
               }),
               const Divider(),
-              // 고정 메뉴: 메모, 공지사항, QnA
-              MenuListTile(
-                icon: Icons.note_outlined,
-                title: l10n.memo_title,
-                onTap: () => context.push(AppRoutes.memo),
-              ),
+              // 고정 메뉴: 공지사항, QnA
               MenuListTile(
                 icon: Icons.campaign,
                 title: l10n.announcement_title,
@@ -135,11 +130,14 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   /// 메뉴 탭 처리
   void _handleMenuTap(BuildContext context, String menuId) {
     final l10n = AppLocalizations.of(context)!;
-    // TODO: 각 메뉴에 맞는 라우트로 이동
-    // 현재는 모든 메뉴가 준비 중 상태
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.common_comingSoon)),
-    );
+    switch (menuId) {
+      case 'memo':
+        context.push(AppRoutes.memo);
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.common_comingSoon)),
+        );
+    }
   }
 
   Future<void> _handleLogout() async {

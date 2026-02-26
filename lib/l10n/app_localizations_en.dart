@@ -2040,4 +2040,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get memo_tagNameHint => 'Enter tag name';
+
+  @override
+  String get memo_typeNote => 'Note';
+
+  @override
+  String get memo_typeChecklist => 'Checklist';
+
+  @override
+  String get memo_typeSelect => 'Memo Type';
+
+  @override
+  String get memo_checklist => 'Checklist';
+
+  @override
+  String get memo_checklistAdd => 'Add Item';
+
+  @override
+  String get memo_checklistAddHint => 'Enter new item';
+
+  @override
+  String get memo_checklistEmpty => 'No checklist items';
+
+  @override
+  String get memo_checklistReset => 'Reset All';
+
+  @override
+  String get memo_checklistResetConfirm => 'Uncheck all items?';
+
+  @override
+  String get memo_checklistDeleteItem => 'Delete Item';
+
+  @override
+  String get memo_checklistEditItem => 'Edit Item';
+
+  @override
+  String memo_checklistProgress(int checked, int total) {
+    return '$checked/$total done';
+  }
 }

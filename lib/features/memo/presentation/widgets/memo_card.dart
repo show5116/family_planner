@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 카드 위젯
 class MemoCard extends StatelessWidget {
@@ -59,8 +60,11 @@ class MemoCard extends StatelessWidget {
               _buildTitle(context),
               const SizedBox(height: AppSizes.spaceS),
 
-              // 내용 미리보기
-              if (memo.content.isNotEmpty) ...[
+              // 체크리스트 진행률 또는 내용 미리보기
+              if (memo.type == MemoType.checklist) ...[
+                _buildChecklistProgress(context),
+                const SizedBox(height: AppSizes.spaceS),
+              ] else if (memo.content.isNotEmpty) ...[
                 _buildContentPreview(context),
                 const SizedBox(height: AppSizes.spaceS),
               ],
@@ -80,11 +84,47 @@ class MemoCard extends StatelessWidget {
     );
   }
 
+  Widget _buildChecklistProgress(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final total = memo.checklistItems.length;
+    final checked = memo.checklistItems.where((i) => i.isChecked).length;
+    final progress = total == 0 ? 0.0 : checked / total;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.checklist,
+                size: AppSizes.iconSmall, color: AppColors.primary),
+            const SizedBox(width: AppSizes.spaceXS),
+            Text(
+              l10n.memo_checklistProgress(checked, total),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: AppColors.primary.withValues(alpha: 0.15),
+          color: AppColors.primary,
+          minHeight: 4,
+          borderRadius: BorderRadius.circular(2),
+        ),
+      ],
+    );
+  }
+
   Widget _buildHeader(BuildContext context, DateFormat dateFormat) {
     return Row(
       children: [
         Icon(
-          Icons.note_outlined,
+          memo.type == MemoType.checklist
+              ? Icons.checklist
+              : Icons.note_outlined,
           size: AppSizes.iconSmall,
           color: AppColors.textSecondary,
         ),

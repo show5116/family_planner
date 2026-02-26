@@ -13,6 +13,30 @@ enum MemoFormat {
   html;
 }
 
+/// 메모 타입
+enum MemoType {
+  @JsonValue('NOTE')
+  note,
+  @JsonValue('CHECKLIST')
+  checklist;
+}
+
+/// 체크리스트 항목 모델
+@freezed
+class ChecklistItem with _$ChecklistItem {
+  const factory ChecklistItem({
+    required String id,
+    required String content,
+    required bool isChecked,
+    required int order,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _ChecklistItem;
+
+  factory ChecklistItem.fromJson(Map<String, dynamic> json) =>
+      _$ChecklistItemFromJson(json);
+}
+
 /// 메모 공개 범위
 enum MemoVisibility {
   @JsonValue('PRIVATE')
@@ -72,12 +96,14 @@ class MemoModel with _$MemoModel {
     required String title,
     @Default('') String content,
     MemoFormat? format,
+    MemoType? type,
     String? category,
     MemoVisibility? visibility,
     String? groupId,
     required MemoAuthor user,
     @Default([]) List<MemoTag> tags,
     @Default([]) List<MemoAttachment> attachments,
+    @Default([]) List<ChecklistItem> checklistItems,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _MemoModel;

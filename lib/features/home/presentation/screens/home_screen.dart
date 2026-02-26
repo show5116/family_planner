@@ -5,6 +5,7 @@ import 'package:family_planner/features/home/presentation/screens/dashboard_tab.
 import 'package:family_planner/features/main/assets/presentation/screens/assets_tab.dart';
 import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/todo/presentation/screens/todo_tab.dart';
+import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/more_tab.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -46,8 +47,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         // TODO: 육아포인트 탭 구현
         return Center(child: Text('${l10n.nav_childPoints} (${l10n.common_comingSoon})'));
       case 'memo':
-        // TODO: 메모 탭 구현
-        return Center(child: Text('${l10n.nav_memo} (${l10n.common_comingSoon})'));
+        return const MemoListScreen();
       case 'miniGames':
         // TODO: 미니게임 탭 구현
         return Center(child: Text('${l10n.nav_miniGames} (${l10n.common_comingSoon})'));

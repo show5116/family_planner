@@ -131,4 +131,79 @@ class MemoRepository {
       throw Exception('메모 삭제 실패: ${e.message}');
     }
   }
+
+  // ── 체크리스트 ──────────────────────────────────────────────────
+
+  /// 체크리스트 항목 추가
+  Future<ChecklistItem> addChecklistItem(
+      String memoId, CreateChecklistItemDto dto) async {
+    try {
+      debugPrint('🔵 [MemoRepository] 체크리스트 항목 추가: $memoId');
+      final response =
+          await _dio.post('/memos/$memoId/checklist', data: dto.toJson());
+      final result = ChecklistItem.fromJson(response.data);
+      debugPrint('✅ [MemoRepository] 항목 추가 성공: ${result.id}');
+      return result;
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 항목 추가 실패: ${e.message}');
+      throw Exception('체크리스트 항목 추가 실패: ${e.message}');
+    }
+  }
+
+  /// 체크리스트 항목 수정 (내용/순서)
+  Future<ChecklistItem> updateChecklistItem(
+      String memoId, String itemId, UpdateChecklistItemDto dto) async {
+    try {
+      debugPrint('🔵 [MemoRepository] 체크리스트 항목 수정: $itemId');
+      final response = await _dio.patch(
+          '/memos/$memoId/checklist/$itemId',
+          data: dto.toJson());
+      final result = ChecklistItem.fromJson(response.data);
+      debugPrint('✅ [MemoRepository] 항목 수정 성공');
+      return result;
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 항목 수정 실패: ${e.message}');
+      throw Exception('체크리스트 항목 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 체크리스트 항목 삭제
+  Future<void> deleteChecklistItem(String memoId, String itemId) async {
+    try {
+      debugPrint('🔵 [MemoRepository] 체크리스트 항목 삭제: $itemId');
+      await _dio.delete('/memos/$memoId/checklist/$itemId');
+      debugPrint('✅ [MemoRepository] 항목 삭제 성공');
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 항목 삭제 실패: ${e.message}');
+      throw Exception('체크리스트 항목 삭제 실패: ${e.message}');
+    }
+  }
+
+  /// 체크리스트 항목 체크/해제 토글
+  Future<ChecklistItem> toggleChecklistItem(
+      String memoId, String itemId) async {
+    try {
+      debugPrint('🔵 [MemoRepository] 체크리스트 토글: $itemId');
+      final response = await _dio
+          .post('/memos/$memoId/checklist/$itemId/toggle');
+      final result = ChecklistItem.fromJson(response.data);
+      debugPrint('✅ [MemoRepository] 토글 성공: isChecked=${result.isChecked}');
+      return result;
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 토글 실패: ${e.message}');
+      throw Exception('체크리스트 토글 실패: ${e.message}');
+    }
+  }
+
+  /// 체크리스트 전체 체크 해제
+  Future<void> resetChecklist(String memoId) async {
+    try {
+      debugPrint('🔵 [MemoRepository] 체크리스트 전체 초기화: $memoId');
+      await _dio.post('/memos/$memoId/checklist/reset');
+      debugPrint('✅ [MemoRepository] 전체 초기화 성공');
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 전체 초기화 실패: ${e.message}');
+      throw Exception('체크리스트 초기화 실패: ${e.message}');
+    }
+  }
 }

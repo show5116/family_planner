@@ -6,6 +6,26 @@ part of 'memo_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$ChecklistItemImpl _$$ChecklistItemImplFromJson(Map<String, dynamic> json) =>
+    _$ChecklistItemImpl(
+      id: json['id'] as String,
+      content: json['content'] as String,
+      isChecked: json['isChecked'] as bool,
+      order: (json['order'] as num).toInt(),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
+
+Map<String, dynamic> _$$ChecklistItemImplToJson(_$ChecklistItemImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'content': instance.content,
+      'isChecked': instance.isChecked,
+      'order': instance.order,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };
+
 _$MemoAuthorImpl _$$MemoAuthorImplFromJson(Map<String, dynamic> json) =>
     _$MemoAuthorImpl(id: json['id'] as String, name: json['name'] as String);
 
@@ -53,6 +73,7 @@ _$MemoModelImpl _$$MemoModelImplFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       content: json['content'] as String? ?? '',
       format: $enumDecodeNullable(_$MemoFormatEnumMap, json['format']),
+      type: $enumDecodeNullable(_$MemoTypeEnumMap, json['type']),
       category: json['category'] as String?,
       visibility: $enumDecodeNullable(
         _$MemoVisibilityEnumMap,
@@ -70,6 +91,11 @@ _$MemoModelImpl _$$MemoModelImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => MemoAttachment.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      checklistItems:
+          (json['checklistItems'] as List<dynamic>?)
+              ?.map((e) => ChecklistItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -80,12 +106,14 @@ Map<String, dynamic> _$$MemoModelImplToJson(_$MemoModelImpl instance) =>
       'title': instance.title,
       'content': instance.content,
       'format': _$MemoFormatEnumMap[instance.format],
+      'type': _$MemoTypeEnumMap[instance.type],
       'category': instance.category,
       'visibility': _$MemoVisibilityEnumMap[instance.visibility],
       'groupId': instance.groupId,
       'user': instance.user,
       'tags': instance.tags,
       'attachments': instance.attachments,
+      'checklistItems': instance.checklistItems,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
@@ -94,6 +122,11 @@ const _$MemoFormatEnumMap = {
   MemoFormat.text: 'TEXT',
   MemoFormat.markdown: 'MARKDOWN',
   MemoFormat.html: 'HTML',
+};
+
+const _$MemoTypeEnumMap = {
+  MemoType.note: 'NOTE',
+  MemoType.checklist: 'CHECKLIST',
 };
 
 const _$MemoVisibilityEnumMap = {

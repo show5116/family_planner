@@ -2002,4 +2002,42 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get memo_tagNameHint => '태그 이름을 입력하세요';
+
+  @override
+  String get memo_typeNote => '일반 메모';
+
+  @override
+  String get memo_typeChecklist => '체크리스트';
+
+  @override
+  String get memo_typeSelect => '메모 유형';
+
+  @override
+  String get memo_checklist => '체크리스트';
+
+  @override
+  String get memo_checklistAdd => '항목 추가';
+
+  @override
+  String get memo_checklistAddHint => '새 항목을 입력하세요';
+
+  @override
+  String get memo_checklistEmpty => '체크리스트 항목이 없습니다';
+
+  @override
+  String get memo_checklistReset => '전체 초기화';
+
+  @override
+  String get memo_checklistResetConfirm => '모든 항목의 체크를 해제하시겠습니까?';
+
+  @override
+  String get memo_checklistDeleteItem => '항목 삭제';
+
+  @override
+  String get memo_checklistEditItem => '항목 수정';
+
+  @override
+  String memo_checklistProgress(int checked, int total) {
+    return '$checked/$total 완료';
+  }
 }

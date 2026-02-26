@@ -773,5 +773,23 @@
   "memo_searchNoResults": "検索結果がありません",
   "memo_tagAdd": "タグ追加",
   "memo_tagName": "タグ名",
-  "memo_tagNameHint": "タグ名を入力してください"
+  "memo_tagNameHint": "タグ名を入力してください",
+  "memo_typeNote": "通常メモ",
+  "memo_typeChecklist": "チェックリスト",
+  "memo_typeSelect": "メモの種類",
+  "memo_checklist": "チェックリスト",
+  "memo_checklistAdd": "項目を追加",
+  "memo_checklistAddHint": "新しい項目を入力",
+  "memo_checklistEmpty": "チェックリストの項目がありません",
+  "memo_checklistReset": "全てリセット",
+  "memo_checklistResetConfirm": "全ての項目のチェックを外しますか？",
+  "memo_checklistDeleteItem": "項目を削除",
+  "memo_checklistEditItem": "項目を編集",
+  "memo_checklistProgress": "{checked}/{total} 完了",
+  "@memo_checklistProgress": {
+    "placeholders": {
+      "checked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }

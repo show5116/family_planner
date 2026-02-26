@@ -15,6 +15,280 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
+ChecklistItem _$ChecklistItemFromJson(Map<String, dynamic> json) {
+  return _ChecklistItem.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ChecklistItem {
+  String get id => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  bool get isChecked => throw _privateConstructorUsedError;
+  int get order => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
+
+  /// Serializes this ChecklistItem to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of ChecklistItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ChecklistItemCopyWith<ChecklistItem> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ChecklistItemCopyWith<$Res> {
+  factory $ChecklistItemCopyWith(
+    ChecklistItem value,
+    $Res Function(ChecklistItem) then,
+  ) = _$ChecklistItemCopyWithImpl<$Res, ChecklistItem>;
+  @useResult
+  $Res call({
+    String id,
+    String content,
+    bool isChecked,
+    int order,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+}
+
+/// @nodoc
+class _$ChecklistItemCopyWithImpl<$Res, $Val extends ChecklistItem>
+    implements $ChecklistItemCopyWith<$Res> {
+  _$ChecklistItemCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of ChecklistItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? content = null,
+    Object? isChecked = null,
+    Object? order = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            content: null == content
+                ? _value.content
+                : content // ignore: cast_nullable_to_non_nullable
+                      as String,
+            isChecked: null == isChecked
+                ? _value.isChecked
+                : isChecked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            order: null == order
+                ? _value.order
+                : order // ignore: cast_nullable_to_non_nullable
+                      as int,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$ChecklistItemImplCopyWith<$Res>
+    implements $ChecklistItemCopyWith<$Res> {
+  factory _$$ChecklistItemImplCopyWith(
+    _$ChecklistItemImpl value,
+    $Res Function(_$ChecklistItemImpl) then,
+  ) = __$$ChecklistItemImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String content,
+    bool isChecked,
+    int order,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+}
+
+/// @nodoc
+class __$$ChecklistItemImplCopyWithImpl<$Res>
+    extends _$ChecklistItemCopyWithImpl<$Res, _$ChecklistItemImpl>
+    implements _$$ChecklistItemImplCopyWith<$Res> {
+  __$$ChecklistItemImplCopyWithImpl(
+    _$ChecklistItemImpl _value,
+    $Res Function(_$ChecklistItemImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ChecklistItem
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? content = null,
+    Object? isChecked = null,
+    Object? order = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+  }) {
+    return _then(
+      _$ChecklistItemImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        content: null == content
+            ? _value.content
+            : content // ignore: cast_nullable_to_non_nullable
+                  as String,
+        isChecked: null == isChecked
+            ? _value.isChecked
+            : isChecked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        order: null == order
+            ? _value.order
+            : order // ignore: cast_nullable_to_non_nullable
+                  as int,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ChecklistItemImpl implements _ChecklistItem {
+  const _$ChecklistItemImpl({
+    required this.id,
+    required this.content,
+    required this.isChecked,
+    required this.order,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory _$ChecklistItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChecklistItemImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String content;
+  @override
+  final bool isChecked;
+  @override
+  final int order;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
+
+  @override
+  String toString() {
+    return 'ChecklistItem(id: $id, content: $content, isChecked: $isChecked, order: $order, createdAt: $createdAt, updatedAt: $updatedAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ChecklistItemImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.isChecked, isChecked) ||
+                other.isChecked == isChecked) &&
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    content,
+    isChecked,
+    order,
+    createdAt,
+    updatedAt,
+  );
+
+  /// Create a copy of ChecklistItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ChecklistItemImplCopyWith<_$ChecklistItemImpl> get copyWith =>
+      __$$ChecklistItemImplCopyWithImpl<_$ChecklistItemImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ChecklistItemImplToJson(this);
+  }
+}
+
+abstract class _ChecklistItem implements ChecklistItem {
+  const factory _ChecklistItem({
+    required final String id,
+    required final String content,
+    required final bool isChecked,
+    required final int order,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+  }) = _$ChecklistItemImpl;
+
+  factory _ChecklistItem.fromJson(Map<String, dynamic> json) =
+      _$ChecklistItemImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get content;
+  @override
+  bool get isChecked;
+  @override
+  int get order;
+  @override
+  DateTime get createdAt;
+  @override
+  DateTime get updatedAt;
+
+  /// Create a copy of ChecklistItem
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ChecklistItemImplCopyWith<_$ChecklistItemImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 MemoAuthor _$MemoAuthorFromJson(Map<String, dynamic> json) {
   return _MemoAuthor.fromJson(json);
 }
@@ -649,12 +923,14 @@ mixin _$MemoModel {
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   MemoFormat? get format => throw _privateConstructorUsedError;
+  MemoType? get type => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
   MemoVisibility? get visibility => throw _privateConstructorUsedError;
   String? get groupId => throw _privateConstructorUsedError;
   MemoAuthor get user => throw _privateConstructorUsedError;
   List<MemoTag> get tags => throw _privateConstructorUsedError;
   List<MemoAttachment> get attachments => throw _privateConstructorUsedError;
+  List<ChecklistItem> get checklistItems => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
@@ -678,12 +954,14 @@ abstract class $MemoModelCopyWith<$Res> {
     String title,
     String content,
     MemoFormat? format,
+    MemoType? type,
     String? category,
     MemoVisibility? visibility,
     String? groupId,
     MemoAuthor user,
     List<MemoTag> tags,
     List<MemoAttachment> attachments,
+    List<ChecklistItem> checklistItems,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -710,12 +988,14 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
     Object? title = null,
     Object? content = null,
     Object? format = freezed,
+    Object? type = freezed,
     Object? category = freezed,
     Object? visibility = freezed,
     Object? groupId = freezed,
     Object? user = null,
     Object? tags = null,
     Object? attachments = null,
+    Object? checklistItems = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -737,6 +1017,10 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
                 ? _value.format
                 : format // ignore: cast_nullable_to_non_nullable
                       as MemoFormat?,
+            type: freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as MemoType?,
             category: freezed == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
@@ -761,6 +1045,10 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
                       as List<MemoAttachment>,
+            checklistItems: null == checklistItems
+                ? _value.checklistItems
+                : checklistItems // ignore: cast_nullable_to_non_nullable
+                      as List<ChecklistItem>,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -799,12 +1087,14 @@ abstract class _$$MemoModelImplCopyWith<$Res>
     String title,
     String content,
     MemoFormat? format,
+    MemoType? type,
     String? category,
     MemoVisibility? visibility,
     String? groupId,
     MemoAuthor user,
     List<MemoTag> tags,
     List<MemoAttachment> attachments,
+    List<ChecklistItem> checklistItems,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -831,12 +1121,14 @@ class __$$MemoModelImplCopyWithImpl<$Res>
     Object? title = null,
     Object? content = null,
     Object? format = freezed,
+    Object? type = freezed,
     Object? category = freezed,
     Object? visibility = freezed,
     Object? groupId = freezed,
     Object? user = null,
     Object? tags = null,
     Object? attachments = null,
+    Object? checklistItems = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -858,6 +1150,10 @@ class __$$MemoModelImplCopyWithImpl<$Res>
             ? _value.format
             : format // ignore: cast_nullable_to_non_nullable
                   as MemoFormat?,
+        type: freezed == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as MemoType?,
         category: freezed == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
@@ -882,6 +1178,10 @@ class __$$MemoModelImplCopyWithImpl<$Res>
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
                   as List<MemoAttachment>,
+        checklistItems: null == checklistItems
+            ? _value._checklistItems
+            : checklistItems // ignore: cast_nullable_to_non_nullable
+                  as List<ChecklistItem>,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -903,16 +1203,19 @@ class _$MemoModelImpl implements _MemoModel {
     required this.title,
     this.content = '',
     this.format,
+    this.type,
     this.category,
     this.visibility,
     this.groupId,
     required this.user,
     final List<MemoTag> tags = const [],
     final List<MemoAttachment> attachments = const [],
+    final List<ChecklistItem> checklistItems = const [],
     required this.createdAt,
     required this.updatedAt,
   }) : _tags = tags,
-       _attachments = attachments;
+       _attachments = attachments,
+       _checklistItems = checklistItems;
 
   factory _$MemoModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemoModelImplFromJson(json);
@@ -926,6 +1229,8 @@ class _$MemoModelImpl implements _MemoModel {
   final String content;
   @override
   final MemoFormat? format;
+  @override
+  final MemoType? type;
   @override
   final String? category;
   @override
@@ -952,6 +1257,15 @@ class _$MemoModelImpl implements _MemoModel {
     return EqualUnmodifiableListView(_attachments);
   }
 
+  final List<ChecklistItem> _checklistItems;
+  @override
+  @JsonKey()
+  List<ChecklistItem> get checklistItems {
+    if (_checklistItems is EqualUnmodifiableListView) return _checklistItems;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_checklistItems);
+  }
+
   @override
   final DateTime createdAt;
   @override
@@ -959,7 +1273,7 @@ class _$MemoModelImpl implements _MemoModel {
 
   @override
   String toString() {
-    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, category: $category, visibility: $visibility, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, type: $type, category: $category, visibility: $visibility, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistItems: $checklistItems, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -971,6 +1285,7 @@ class _$MemoModelImpl implements _MemoModel {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.format, format) || other.format == format) &&
+            (identical(other.type, type) || other.type == type) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.visibility, visibility) ||
@@ -981,6 +1296,10 @@ class _$MemoModelImpl implements _MemoModel {
             const DeepCollectionEquality().equals(
               other._attachments,
               _attachments,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._checklistItems,
+              _checklistItems,
             ) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -996,12 +1315,14 @@ class _$MemoModelImpl implements _MemoModel {
     title,
     content,
     format,
+    type,
     category,
     visibility,
     groupId,
     user,
     const DeepCollectionEquality().hash(_tags),
     const DeepCollectionEquality().hash(_attachments),
+    const DeepCollectionEquality().hash(_checklistItems),
     createdAt,
     updatedAt,
   );
@@ -1026,12 +1347,14 @@ abstract class _MemoModel implements MemoModel {
     required final String title,
     final String content,
     final MemoFormat? format,
+    final MemoType? type,
     final String? category,
     final MemoVisibility? visibility,
     final String? groupId,
     required final MemoAuthor user,
     final List<MemoTag> tags,
     final List<MemoAttachment> attachments,
+    final List<ChecklistItem> checklistItems,
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$MemoModelImpl;
@@ -1048,6 +1371,8 @@ abstract class _MemoModel implements MemoModel {
   @override
   MemoFormat? get format;
   @override
+  MemoType? get type;
+  @override
   String? get category;
   @override
   MemoVisibility? get visibility;
@@ -1059,6 +1384,8 @@ abstract class _MemoModel implements MemoModel {
   List<MemoTag> get tags;
   @override
   List<MemoAttachment> get attachments;
+  @override
+  List<ChecklistItem> get checklistItems;
   @override
   DateTime get createdAt;
   @override

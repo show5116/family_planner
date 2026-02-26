@@ -3993,6 +3993,78 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'태그 이름을 입력하세요'**
   String get memo_tagNameHint;
+
+  /// No description provided for @memo_typeNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 메모'**
+  String get memo_typeNote;
+
+  /// No description provided for @memo_typeChecklist.
+  ///
+  /// In ko, this message translates to:
+  /// **'체크리스트'**
+  String get memo_typeChecklist;
+
+  /// No description provided for @memo_typeSelect.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 유형'**
+  String get memo_typeSelect;
+
+  /// No description provided for @memo_checklist.
+  ///
+  /// In ko, this message translates to:
+  /// **'체크리스트'**
+  String get memo_checklist;
+
+  /// No description provided for @memo_checklistAdd.
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 추가'**
+  String get memo_checklistAdd;
+
+  /// No description provided for @memo_checklistAddHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 항목을 입력하세요'**
+  String get memo_checklistAddHint;
+
+  /// No description provided for @memo_checklistEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'체크리스트 항목이 없습니다'**
+  String get memo_checklistEmpty;
+
+  /// No description provided for @memo_checklistReset.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 초기화'**
+  String get memo_checklistReset;
+
+  /// No description provided for @memo_checklistResetConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 항목의 체크를 해제하시겠습니까?'**
+  String get memo_checklistResetConfirm;
+
+  /// No description provided for @memo_checklistDeleteItem.
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 삭제'**
+  String get memo_checklistDeleteItem;
+
+  /// No description provided for @memo_checklistEditItem.
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 수정'**
+  String get memo_checklistEditItem;
+
+  /// No description provided for @memo_checklistProgress.
+  ///
+  /// In ko, this message translates to:
+  /// **'{checked}/{total} 완료'**
+  String memo_checklistProgress(int checked, int total);
 }
 
 class _AppLocalizationsDelegate

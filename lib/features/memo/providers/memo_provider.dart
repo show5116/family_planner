@@ -3,7 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/data/repositories/memo_repository.dart';
-import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
+import 'package:family_planner/features/memo/data/dto/memo_dto.dart'
+    show CreateMemoDto, UpdateMemoDto, CreateChecklistItemDto, UpdateChecklistItemDto;
 
 part 'memo_provider.g.dart';
 
@@ -195,3 +196,111 @@ final memoManagementProvider =
   final repository = ref.watch(memoRepositoryProvider);
   return MemoManagementNotifier(repository, ref);
 });
+
+// ── 체크리스트 ──────────────────────────────────────────────────
+
+/// 체크리스트 상태: 항목 목록을 로컬에서 관리
+class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
+  final MemoRepository _repository;
+  final Ref _ref;
+  final String memoId;
+
+  ChecklistNotifier(this._repository, this._ref, this.memoId)
+      : super(const AsyncValue.loading());
+
+  /// 초기 항목 목록 세팅 (상세 화면에서 memo.checklistItems 전달)
+  void init(List<ChecklistItem> items) {
+    state = AsyncValue.data(List<ChecklistItem>.from(items));
+  }
+
+  List<ChecklistItem> get _items =>
+      state.valueOrNull ?? [];
+
+  /// 항목 추가
+  Future<void> addItem(String content) async {
+    try {
+      final dto = CreateChecklistItemDto(
+        content: content,
+        order: _items.length,
+      );
+      final newItem = await _repository.addChecklistItem(memoId, dto);
+      state = AsyncValue.data([..._items, newItem]);
+      _invalidateDetail();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// 항목 내용 수정
+  Future<void> updateItem(String itemId, String content) async {
+    try {
+      final dto = UpdateChecklistItemDto(content: content);
+      final updated =
+          await _repository.updateChecklistItem(memoId, itemId, dto);
+      state = AsyncValue.data(
+        _items.map((i) => i.id == itemId ? updated : i).toList(),
+      );
+      _invalidateDetail();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// 항목 삭제
+  Future<void> deleteItem(String itemId) async {
+    try {
+      await _repository.deleteChecklistItem(memoId, itemId);
+      state = AsyncValue.data(
+        _items.where((i) => i.id != itemId).toList(),
+      );
+      _invalidateDetail();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// 항목 체크/해제 토글
+  Future<void> toggleItem(String itemId) async {
+    // 낙관적 업데이트
+    state = AsyncValue.data(
+      _items
+          .map((i) => i.id == itemId ? i.copyWith(isChecked: !i.isChecked) : i)
+          .toList(),
+    );
+    try {
+      final updated = await _repository.toggleChecklistItem(memoId, itemId);
+      state = AsyncValue.data(
+        _items.map((i) => i.id == itemId ? updated : i).toList(),
+      );
+      _invalidateDetail();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// 전체 체크 해제
+  Future<void> resetAll() async {
+    try {
+      await _repository.resetChecklist(memoId);
+      state = AsyncValue.data(
+        _items.map((i) => i.copyWith(isChecked: false)).toList(),
+      );
+      _invalidateDetail();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  void _invalidateDetail() {
+    _ref.invalidate(memoDetailProvider(memoId));
+  }
+}
+
+/// 체크리스트 Provider (memoId별 인스턴스)
+final checklistProvider = StateNotifierProvider.family<
+    ChecklistNotifier, AsyncValue<List<ChecklistItem>>, String>(
+  (ref, memoId) {
+    final repository = ref.watch(memoRepositoryProvider);
+    return ChecklistNotifier(repository, ref, memoId);
+  },
+);

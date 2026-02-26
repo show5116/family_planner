@@ -1999,4 +1999,42 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get memo_tagNameHint => 'タグ名を入力してください';
+
+  @override
+  String get memo_typeNote => '通常メモ';
+
+  @override
+  String get memo_typeChecklist => 'チェックリスト';
+
+  @override
+  String get memo_typeSelect => 'メモの種類';
+
+  @override
+  String get memo_checklist => 'チェックリスト';
+
+  @override
+  String get memo_checklistAdd => '項目を追加';
+
+  @override
+  String get memo_checklistAddHint => '新しい項目を入力';
+
+  @override
+  String get memo_checklistEmpty => 'チェックリストの項目がありません';
+
+  @override
+  String get memo_checklistReset => '全てリセット';
+
+  @override
+  String get memo_checklistResetConfirm => '全ての項目のチェックを外しますか？';
+
+  @override
+  String get memo_checklistDeleteItem => '項目を削除';
+
+  @override
+  String get memo_checklistEditItem => '項目を編集';
+
+  @override
+  String memo_checklistProgress(int checked, int total) {
+    return '$checked/$total 完了';
+  }
 }

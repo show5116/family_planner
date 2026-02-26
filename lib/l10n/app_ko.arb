@@ -787,5 +787,23 @@
   "memo_searchNoResults": "검색 결과가 없습니다",
   "memo_tagAdd": "태그 추가",
   "memo_tagName": "태그 이름",
-  "memo_tagNameHint": "태그 이름을 입력하세요"
+  "memo_tagNameHint": "태그 이름을 입력하세요",
+  "memo_typeNote": "일반 메모",
+  "memo_typeChecklist": "체크리스트",
+  "memo_typeSelect": "메모 유형",
+  "memo_checklist": "체크리스트",
+  "memo_checklistAdd": "항목 추가",
+  "memo_checklistAddHint": "새 항목을 입력하세요",
+  "memo_checklistEmpty": "체크리스트 항목이 없습니다",
+  "memo_checklistReset": "전체 초기화",
+  "memo_checklistResetConfirm": "모든 항목의 체크를 해제하시겠습니까?",
+  "memo_checklistDeleteItem": "항목 삭제",
+  "memo_checklistEditItem": "항목 수정",
+  "memo_checklistProgress": "{checked}/{total} 완료",
+  "@memo_checklistProgress": {
+    "placeholders": {
+      "checked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }
