@@ -1,12 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/presentation/screens/home_screen.dart';
-import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
-import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
+import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/screens/expense_form_screen.dart';
+import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
+import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
-import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
+import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -15,6 +19,7 @@ import 'package:family_planner/features/memo/presentation/screens/memo_form_scre
 /// - Calendar (일정관리)
 /// - Todo (할일목록)
 /// - Memo (메모)
+/// - Household (가계부)
 List<RouteBase> getMainRoutes() {
   return [
     GoRoute(
@@ -89,6 +94,46 @@ List<RouteBase> getMainRoutes() {
         }
         return const TaskFormScreen();
       },
+    ),
+
+    // Household Routes (가계부)
+    GoRoute(
+      path: AppRoutes.household,
+      name: 'household',
+      builder: (context, state) => const HouseholdScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.householdAdd,
+      name: 'householdAdd',
+      builder: (context, state) {
+        final extra = state.extra;
+        String? groupId;
+        if (extra is Map<String, dynamic>) {
+          groupId = extra['groupId'] as String?;
+        }
+        return ExpenseFormScreen(groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.householdDetail,
+      name: 'householdDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        ExpenseModel? expense;
+        String? groupId;
+        if (extra is ExpenseModel) {
+          expense = extra;
+        } else if (extra is Map<String, dynamic>) {
+          expense = extra['expense'] as ExpenseModel?;
+          groupId = extra['groupId'] as String?;
+        }
+        return ExpenseFormScreen(expense: expense, groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.householdStatistics,
+      name: 'householdStatistics',
+      builder: (context, state) => const HouseholdStatisticsScreen(),
     ),
 
     // Memo Routes (메모)

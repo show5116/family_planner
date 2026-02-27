@@ -131,6 +131,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   void _handleMenuTap(BuildContext context, String menuId) {
     final l10n = AppLocalizations.of(context)!;
     switch (menuId) {
+      case 'household':
+        context.push(AppRoutes.household);
       case 'memo':
         context.push(AppRoutes.memo);
       default:

@@ -2042,6 +2042,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memo_tagNameHint => 'Enter tag name';
 
   @override
+  String get memo_visibility => 'Visibility';
+
+  @override
+  String get memo_visibilityPrivate => 'Only Me';
+
+  @override
+  String get memo_visibilityFamily => 'Family';
+
+  @override
+  String get memo_visibilityGroup => 'Specific Group';
+
+  @override
+  String get memo_groupSelect => 'Select Group';
+
+  @override
   String get memo_typeNote => 'Note';
 
   @override
@@ -2078,4 +2093,122 @@ class AppLocalizationsEn extends AppLocalizations {
   String memo_checklistProgress(int checked, int total) {
     return '$checked/$total done';
   }
+
+  @override
+  String get household_title => 'Household';
+
+  @override
+  String get household_expense => 'Expense';
+
+  @override
+  String get household_no_group_selected => 'Please select a group';
+
+  @override
+  String get household_add_expense => 'Add Expense';
+
+  @override
+  String get household_edit_expense => 'Edit Expense';
+
+  @override
+  String get household_delete_expense => 'Delete Expense';
+
+  @override
+  String get household_delete_confirm =>
+      'Are you sure you want to delete this expense?';
+
+  @override
+  String get household_amount => 'Amount';
+
+  @override
+  String get household_category => 'Category';
+
+  @override
+  String get household_payment_method => 'Payment Method';
+
+  @override
+  String get household_description => 'Description';
+
+  @override
+  String get household_date => 'Date';
+
+  @override
+  String get household_recurring => 'Fixed Expense';
+
+  @override
+  String get household_total_expense => 'Total Expense';
+
+  @override
+  String get household_total_budget => 'Total Budget';
+
+  @override
+  String get household_statistics => 'Statistics';
+
+  @override
+  String get household_monthly_statistics => 'Monthly Statistics';
+
+  @override
+  String get household_no_expenses => 'No expenses found';
+
+  @override
+  String get household_category_food => 'Food';
+
+  @override
+  String get household_category_transport => 'Transport';
+
+  @override
+  String get household_category_leisure => 'Leisure';
+
+  @override
+  String get household_category_living => 'Living';
+
+  @override
+  String get household_category_health => 'Health';
+
+  @override
+  String get household_category_education => 'Education';
+
+  @override
+  String get household_category_clothing => 'Clothing';
+
+  @override
+  String get household_category_other => 'Other';
+
+  @override
+  String get household_payment_cash => 'Cash';
+
+  @override
+  String get household_payment_card => 'Card';
+
+  @override
+  String get household_payment_transfer => 'Transfer';
+
+  @override
+  String get household_payment_other => 'Other';
+
+  @override
+  String get household_budget_settings => 'Budget Settings';
+
+  @override
+  String get household_budget_amount => 'Budget Amount';
+
+  @override
+  String get household_set_budget => 'Set Budget';
+
+  @override
+  String get household_amount_hint => 'Enter amount';
+
+  @override
+  String get household_description_hint => 'Enter description';
+
+  @override
+  String get household_amount_required => 'Amount is required';
+
+  @override
+  String get household_save_success => 'Saved successfully';
+
+  @override
+  String get household_delete_success => 'Deleted successfully';
+
+  @override
+  String get household_budget_saved => 'Budget has been set';
 }

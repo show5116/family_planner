@@ -8,6 +8,8 @@ import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/core/widgets/group_dropdown.dart';
 import 'package:family_planner/shared/widgets/editor/rich_text_editor.dart';
 import 'package:family_planner/core/services/storage_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -33,6 +35,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
   final _categoryController = TextEditingController();
   List<String> _tags = [];
   MemoType _memoType = MemoType.note;
+  MemoVisibility _visibility = MemoVisibility.private_;
+  String? _selectedGroupId;
 
   // 체크리스트 항목 (작성 시 로컬 상태로 관리)
   final List<_ChecklistDraft> _checklistDrafts = [];
@@ -63,6 +67,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           _categoryController.text = memo.category ?? '';
           _tags = memo.tags.map((t) => t.name).toList();
           _memoType = memo.type ?? MemoType.note;
+          _visibility = memo.visibility ?? MemoVisibility.private_;
+          _selectedGroupId = memo.groupId;
           _checklistDrafts.clear();
           for (final item in memo.checklistItems) {
             _checklistDrafts.add(_ChecklistDraft(
@@ -179,6 +185,78 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
               ),
               const SizedBox(height: AppSizes.spaceL),
             ],
+
+            // 공개 범위 선택
+            Text(
+              l10n.memo_visibility,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            SegmentedButton<MemoVisibility>(
+              segments: [
+                ButtonSegment(
+                  value: MemoVisibility.private_,
+                  label: Text(l10n.memo_visibilityPrivate),
+                  icon: const Icon(Icons.lock_outline),
+                ),
+                ButtonSegment(
+                  value: MemoVisibility.family,
+                  label: Text(l10n.memo_visibilityFamily),
+                  icon: const Icon(Icons.people_outline),
+                ),
+                ButtonSegment(
+                  value: MemoVisibility.group,
+                  label: Text(l10n.memo_visibilityGroup),
+                  icon: const Icon(Icons.group_outlined),
+                ),
+              ],
+              selected: {_visibility},
+              onSelectionChanged: (selected) {
+                setState(() {
+                  _visibility = selected.first;
+                  if (_visibility != MemoVisibility.group) {
+                    _selectedGroupId = null;
+                  }
+                });
+              },
+            ),
+
+            // 그룹 선택 (visibility=GROUP 일 때만 표시)
+            if (_visibility == MemoVisibility.group) ...[
+              const SizedBox(height: AppSizes.spaceM),
+              Text(
+                l10n.memo_groupSelect,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+              ref.watch(myGroupsProvider).when(
+                data: (groups) => Card(
+                  elevation: 0,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerHighest
+                      .withValues(alpha: 0.3),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceM,
+                      vertical: AppSizes.spaceS,
+                    ),
+                    child: GroupDropdown(
+                      groups: groups,
+                      selectedGroupId: _selectedGroupId,
+                      onChanged: (value) {
+                        setState(() => _selectedGroupId = value);
+                      },
+                      style: GroupDropdownStyle.form,
+                    ),
+                  ),
+                ),
+                loading: () =>
+                    const Center(child: CircularProgressIndicator()),
+                error: (_, _) => Text(l10n.common_error),
+              ),
+            ],
+            const SizedBox(height: AppSizes.spaceL),
 
             // 카테고리 입력
             TextFormField(

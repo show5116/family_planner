@@ -2004,6 +2004,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get memo_tagNameHint => '태그 이름을 입력하세요';
 
   @override
+  String get memo_visibility => '공개 범위';
+
+  @override
+  String get memo_visibilityPrivate => '나만 보기';
+
+  @override
+  String get memo_visibilityFamily => '가족 전체';
+
+  @override
+  String get memo_visibilityGroup => '특정 그룹';
+
+  @override
+  String get memo_groupSelect => '그룹 선택';
+
+  @override
   String get memo_typeNote => '일반 메모';
 
   @override
@@ -2040,4 +2055,121 @@ class AppLocalizationsKo extends AppLocalizations {
   String memo_checklistProgress(int checked, int total) {
     return '$checked/$total 완료';
   }
+
+  @override
+  String get household_title => '가계부';
+
+  @override
+  String get household_expense => '지출';
+
+  @override
+  String get household_no_group_selected => '그룹을 선택해주세요';
+
+  @override
+  String get household_add_expense => '지출 추가';
+
+  @override
+  String get household_edit_expense => '지출 수정';
+
+  @override
+  String get household_delete_expense => '지출 삭제';
+
+  @override
+  String get household_delete_confirm => '지출을 삭제하시겠습니까?';
+
+  @override
+  String get household_amount => '금액';
+
+  @override
+  String get household_category => '카테고리';
+
+  @override
+  String get household_payment_method => '결제 수단';
+
+  @override
+  String get household_description => '내용';
+
+  @override
+  String get household_date => '날짜';
+
+  @override
+  String get household_recurring => '고정 지출';
+
+  @override
+  String get household_total_expense => '총 지출';
+
+  @override
+  String get household_total_budget => '총 예산';
+
+  @override
+  String get household_statistics => '통계';
+
+  @override
+  String get household_monthly_statistics => '월간 통계';
+
+  @override
+  String get household_no_expenses => '지출 내역이 없습니다';
+
+  @override
+  String get household_category_food => '식비';
+
+  @override
+  String get household_category_transport => '교통비';
+
+  @override
+  String get household_category_leisure => '여가비';
+
+  @override
+  String get household_category_living => '생활비';
+
+  @override
+  String get household_category_health => '의료비';
+
+  @override
+  String get household_category_education => '교육비';
+
+  @override
+  String get household_category_clothing => '의류비';
+
+  @override
+  String get household_category_other => '기타';
+
+  @override
+  String get household_payment_cash => '현금';
+
+  @override
+  String get household_payment_card => '카드';
+
+  @override
+  String get household_payment_transfer => '이체';
+
+  @override
+  String get household_payment_other => '기타';
+
+  @override
+  String get household_budget_settings => '예산 설정';
+
+  @override
+  String get household_budget_amount => '예산 금액';
+
+  @override
+  String get household_set_budget => '예산 설정';
+
+  @override
+  String get household_amount_hint => '금액을 입력하세요';
+
+  @override
+  String get household_description_hint => '내용을 입력하세요';
+
+  @override
+  String get household_amount_required => '금액을 입력해주세요';
+
+  @override
+  String get household_save_success => '저장되었습니다';
+
+  @override
+  String get household_delete_success => '삭제되었습니다';
+
+  @override
+  String get household_budget_saved => '예산이 설정되었습니다';
 }

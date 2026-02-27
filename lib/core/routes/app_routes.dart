@@ -21,7 +21,9 @@ class AppRoutes {
   static const String assetDetail = '/assets/detail';
   static const String investmentIndicators = '/investment-indicators';
   static const String household = '/household';
+  static const String householdAdd = '/household/add';
   static const String householdDetail = '/household/detail';
+  static const String householdStatistics = '/household/statistics';
   static const String calendarDetail = '/calendar/detail';
   static const String calendarAdd = '/calendar/add';
   static const String categoryManagement = '/calendar/categories';

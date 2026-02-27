@@ -2001,6 +2001,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get memo_tagNameHint => 'タグ名を入力してください';
 
   @override
+  String get memo_visibility => '公開範囲';
+
+  @override
+  String get memo_visibilityPrivate => '自分のみ';
+
+  @override
+  String get memo_visibilityFamily => '家族全員';
+
+  @override
+  String get memo_visibilityGroup => '特定グループ';
+
+  @override
+  String get memo_groupSelect => 'グループを選択';
+
+  @override
   String get memo_typeNote => '通常メモ';
 
   @override
@@ -2037,4 +2052,121 @@ class AppLocalizationsJa extends AppLocalizations {
   String memo_checklistProgress(int checked, int total) {
     return '$checked/$total 完了';
   }
+
+  @override
+  String get household_title => '家計簿';
+
+  @override
+  String get household_expense => '支出';
+
+  @override
+  String get household_no_group_selected => 'グループを選択してください';
+
+  @override
+  String get household_add_expense => '支出を追加';
+
+  @override
+  String get household_edit_expense => '支出を編集';
+
+  @override
+  String get household_delete_expense => '支出を削除';
+
+  @override
+  String get household_delete_confirm => 'この支出を削除しますか？';
+
+  @override
+  String get household_amount => '金額';
+
+  @override
+  String get household_category => 'カテゴリ';
+
+  @override
+  String get household_payment_method => '支払い方法';
+
+  @override
+  String get household_description => '内容';
+
+  @override
+  String get household_date => '日付';
+
+  @override
+  String get household_recurring => '固定費';
+
+  @override
+  String get household_total_expense => '総支出';
+
+  @override
+  String get household_total_budget => '総予算';
+
+  @override
+  String get household_statistics => '統計';
+
+  @override
+  String get household_monthly_statistics => '月間統計';
+
+  @override
+  String get household_no_expenses => '支出履歴がありません';
+
+  @override
+  String get household_category_food => '食費';
+
+  @override
+  String get household_category_transport => '交通費';
+
+  @override
+  String get household_category_leisure => 'レジャー費';
+
+  @override
+  String get household_category_living => '生活費';
+
+  @override
+  String get household_category_health => '医療費';
+
+  @override
+  String get household_category_education => '教育費';
+
+  @override
+  String get household_category_clothing => '被服費';
+
+  @override
+  String get household_category_other => 'その他';
+
+  @override
+  String get household_payment_cash => '現金';
+
+  @override
+  String get household_payment_card => 'カード';
+
+  @override
+  String get household_payment_transfer => '振込';
+
+  @override
+  String get household_payment_other => 'その他';
+
+  @override
+  String get household_budget_settings => '予算設定';
+
+  @override
+  String get household_budget_amount => '予算金額';
+
+  @override
+  String get household_set_budget => '予算を設定';
+
+  @override
+  String get household_amount_hint => '金額を入力してください';
+
+  @override
+  String get household_description_hint => '内容を入力してください';
+
+  @override
+  String get household_amount_required => '金額を入力してください';
+
+  @override
+  String get household_save_success => '保存されました';
+
+  @override
+  String get household_delete_success => '削除されました';
+
+  @override
+  String get household_budget_saved => '予算が設定されました';
 }

@@ -3994,6 +3994,36 @@ abstract class AppLocalizations {
   /// **'태그 이름을 입력하세요'**
   String get memo_tagNameHint;
 
+  /// No description provided for @memo_visibility.
+  ///
+  /// In ko, this message translates to:
+  /// **'공개 범위'**
+  String get memo_visibility;
+
+  /// No description provided for @memo_visibilityPrivate.
+  ///
+  /// In ko, this message translates to:
+  /// **'나만 보기'**
+  String get memo_visibilityPrivate;
+
+  /// No description provided for @memo_visibilityFamily.
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 전체'**
+  String get memo_visibilityFamily;
+
+  /// No description provided for @memo_visibilityGroup.
+  ///
+  /// In ko, this message translates to:
+  /// **'특정 그룹'**
+  String get memo_visibilityGroup;
+
+  /// No description provided for @memo_groupSelect.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get memo_groupSelect;
+
   /// No description provided for @memo_typeNote.
   ///
   /// In ko, this message translates to:
@@ -4065,6 +4095,240 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'{checked}/{total} 완료'**
   String memo_checklistProgress(int checked, int total);
+
+  /// 가계부 메인 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부'**
+  String get household_title;
+
+  /// 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'지출'**
+  String get household_expense;
+
+  /// 그룹 미선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택해주세요'**
+  String get household_no_group_selected;
+
+  /// 지출 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 추가'**
+  String get household_add_expense;
+
+  /// 지출 수정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 수정'**
+  String get household_edit_expense;
+
+  /// 지출 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 삭제'**
+  String get household_delete_expense;
+
+  /// 지출 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'지출을 삭제하시겠습니까?'**
+  String get household_delete_confirm;
+
+  /// 금액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'금액'**
+  String get household_amount;
+
+  /// 카테고리 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get household_category;
+
+  /// 결제 수단 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 수단'**
+  String get household_payment_method;
+
+  /// 내용 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get household_description;
+
+  /// 날짜 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜'**
+  String get household_date;
+
+  /// 고정 지출 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 지출'**
+  String get household_recurring;
+
+  /// 총 지출 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 지출'**
+  String get household_total_expense;
+
+  /// 총 예산 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 예산'**
+  String get household_total_budget;
+
+  /// 통계 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get household_statistics;
+
+  /// 월간 통계 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 통계'**
+  String get household_monthly_statistics;
+
+  /// 지출 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 내역이 없습니다'**
+  String get household_no_expenses;
+
+  /// 카테고리: 식비
+  ///
+  /// In ko, this message translates to:
+  /// **'식비'**
+  String get household_category_food;
+
+  /// 카테고리: 교통비
+  ///
+  /// In ko, this message translates to:
+  /// **'교통비'**
+  String get household_category_transport;
+
+  /// 카테고리: 여가비
+  ///
+  /// In ko, this message translates to:
+  /// **'여가비'**
+  String get household_category_leisure;
+
+  /// 카테고리: 생활비
+  ///
+  /// In ko, this message translates to:
+  /// **'생활비'**
+  String get household_category_living;
+
+  /// 카테고리: 의료비
+  ///
+  /// In ko, this message translates to:
+  /// **'의료비'**
+  String get household_category_health;
+
+  /// 카테고리: 교육비
+  ///
+  /// In ko, this message translates to:
+  /// **'교육비'**
+  String get household_category_education;
+
+  /// 카테고리: 의류비
+  ///
+  /// In ko, this message translates to:
+  /// **'의류비'**
+  String get household_category_clothing;
+
+  /// 카테고리: 기타
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get household_category_other;
+
+  /// 결제수단: 현금
+  ///
+  /// In ko, this message translates to:
+  /// **'현금'**
+  String get household_payment_cash;
+
+  /// 결제수단: 카드
+  ///
+  /// In ko, this message translates to:
+  /// **'카드'**
+  String get household_payment_card;
+
+  /// 결제수단: 이체
+  ///
+  /// In ko, this message translates to:
+  /// **'이체'**
+  String get household_payment_transfer;
+
+  /// 결제수단: 기타
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get household_payment_other;
+
+  /// 예산 설정 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'예산 설정'**
+  String get household_budget_settings;
+
+  /// 예산 금액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'예산 금액'**
+  String get household_budget_amount;
+
+  /// 예산 설정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'예산 설정'**
+  String get household_set_budget;
+
+  /// 금액 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'금액을 입력하세요'**
+  String get household_amount_hint;
+
+  /// 내용 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'내용을 입력하세요'**
+  String get household_description_hint;
+
+  /// 금액 필수 유효성 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'금액을 입력해주세요'**
+  String get household_amount_required;
+
+  /// 저장 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'저장되었습니다'**
+  String get household_save_success;
+
+  /// 삭제 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제되었습니다'**
+  String get household_delete_success;
+
+  /// 예산 설정 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'예산이 설정되었습니다'**
+  String get household_budget_saved;
 }
 
 class _AppLocalizationsDelegate
