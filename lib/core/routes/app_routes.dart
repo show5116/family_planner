@@ -24,6 +24,7 @@ class AppRoutes {
   static const String householdAdd = '/household/add';
   static const String householdDetail = '/household/detail';
   static const String householdStatistics = '/household/statistics';
+  static const String householdRecurring = '/household/recurring';
   static const String calendarDetail = '/calendar/detail';
   static const String calendarAdd = '/calendar/add';
   static const String categoryManagement = '/calendar/categories';

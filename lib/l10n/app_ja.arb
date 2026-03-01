@@ -875,5 +875,17 @@
   "household_delete_success": "削除されました",
   "@household_delete_success": { "description": "削除成功メッセージ" },
   "household_budget_saved": "予算が設定されました",
-  "@household_budget_saved": { "description": "予算設定成功メッセージ" }
+  "@household_budget_saved": { "description": "予算設定成功メッセージ" },
+  "household_recurring_expenses": "固定費",
+  "@household_recurring_expenses": { "description": "固定費画面タイトル" },
+  "household_recurring_no_expenses": "固定費がありません",
+  "@household_recurring_no_expenses": { "description": "固定費なしメッセージ" },
+  "household_budget_set": "予算設定",
+  "@household_budget_set": { "description": "予算設定ボタン/タイトル" },
+  "household_budget_total_label": "全体予算",
+  "@household_budget_total_label": { "description": "全体予算項目ラベル" },
+  "household_budget_category_label": "カテゴリ別予算",
+  "@household_budget_category_label": { "description": "カテゴリ別予算セクションラベル" },
+  "household_budget_not_set": "未設定",
+  "@household_budget_not_set": { "description": "予算未設定状態表示" }
 }

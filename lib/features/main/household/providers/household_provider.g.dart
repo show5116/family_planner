@@ -232,5 +232,28 @@ final householdExpensesProvider =
     );
 
 typedef _$HouseholdExpenses = AutoDisposeAsyncNotifier<List<ExpenseModel>>;
+String _$householdRecurringExpensesHash() =>
+    r'a5e3c97ebc95a05afa1dec1612a0263f811ef157';
+
+/// 고정 지출 목록 Provider (isRecurring=true)
+///
+/// Copied from [HouseholdRecurringExpenses].
+@ProviderFor(HouseholdRecurringExpenses)
+final householdRecurringExpensesProvider =
+    AutoDisposeAsyncNotifierProvider<
+      HouseholdRecurringExpenses,
+      List<ExpenseModel>
+    >.internal(
+      HouseholdRecurringExpenses.new,
+      name: r'householdRecurringExpensesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$householdRecurringExpensesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$HouseholdRecurringExpenses =
+    AutoDisposeAsyncNotifier<List<ExpenseModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

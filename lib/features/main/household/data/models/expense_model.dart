@@ -1,12 +1,11 @@
 /// 지출 카테고리
 enum ExpenseCategory {
+  transportation,
   food,
-  transport,
   leisure,
   living,
-  health,
+  medical,
   education,
-  clothing,
   other,
 }
 
@@ -15,7 +14,6 @@ enum PaymentMethod {
   cash,
   card,
   transfer,
-  other,
 }
 
 /// 지출 모델
@@ -68,26 +66,24 @@ class ExpenseModel {
 
   static ExpenseCategory parseCategory(String value) {
     switch (value) {
+      case 'TRANSPORTATION':
+        return ExpenseCategory.transportation;
       case 'FOOD':
         return ExpenseCategory.food;
-      case 'TRANSPORT':
-        return ExpenseCategory.transport;
       case 'LEISURE':
         return ExpenseCategory.leisure;
       case 'LIVING':
         return ExpenseCategory.living;
-      case 'HEALTH':
-        return ExpenseCategory.health;
+      case 'MEDICAL':
+        return ExpenseCategory.medical;
       case 'EDUCATION':
         return ExpenseCategory.education;
-      case 'CLOTHING':
-        return ExpenseCategory.clothing;
       default:
         return ExpenseCategory.other;
     }
   }
 
-  static PaymentMethod _parsePaymentMethod(String value) {
+  static PaymentMethod? _parsePaymentMethod(String value) {
     switch (value) {
       case 'CASH':
         return PaymentMethod.cash;
@@ -96,7 +92,7 @@ class ExpenseModel {
       case 'TRANSFER':
         return PaymentMethod.transfer;
       default:
-        return PaymentMethod.other;
+        return null;
     }
   }
 
@@ -195,20 +191,18 @@ class UpdateExpenseDto {
 /// ExpenseCategory → API 문자열 변환
 String _categoryToString(ExpenseCategory category) {
   switch (category) {
+    case ExpenseCategory.transportation:
+      return 'TRANSPORTATION';
     case ExpenseCategory.food:
       return 'FOOD';
-    case ExpenseCategory.transport:
-      return 'TRANSPORT';
     case ExpenseCategory.leisure:
       return 'LEISURE';
     case ExpenseCategory.living:
       return 'LIVING';
-    case ExpenseCategory.health:
-      return 'HEALTH';
+    case ExpenseCategory.medical:
+      return 'MEDICAL';
     case ExpenseCategory.education:
       return 'EDUCATION';
-    case ExpenseCategory.clothing:
-      return 'CLOTHING';
     case ExpenseCategory.other:
       return 'OTHER';
   }
@@ -223,7 +217,5 @@ String _paymentMethodToString(PaymentMethod method) {
       return 'CARD';
     case PaymentMethod.transfer:
       return 'TRANSFER';
-    case PaymentMethod.other:
-      return 'OTHER';
   }
 }

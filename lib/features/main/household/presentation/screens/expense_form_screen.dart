@@ -6,17 +6,21 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   /// null이면 추가 모드, non-null이면 수정 모드
   final ExpenseModel? expense;
   final String? groupId;
+  /// 추가 모드에서 고정 지출 기본값 (기본: false)
+  final bool initialIsRecurring;
 
   const ExpenseFormScreen({
     super.key,
     this.expense,
     this.groupId,
+    this.initialIsRecurring = false,
   });
 
   @override
@@ -48,6 +52,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       _isRecurring = e.isRecurring;
     } else {
       _selectedDate = DateTime.now();
+      _isRecurring = widget.initialIsRecurring;
     }
   }
 
@@ -63,10 +68,30 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     final l10n = AppLocalizations.of(context)!;
     final managementState = ref.watch(householdManagementProvider);
     final isLoading = managementState is AsyncLoading;
+    final groupsAsync = ref.watch(myGroupsProvider);
+    final effectiveGroupId = widget.groupId ?? ref.watch(householdSelectedGroupIdProvider);
+    final groupName = groupsAsync.whenOrNull(
+      data: (groups) => groups
+          .where((g) => g.id == effectiveGroupId)
+          .map((g) => g.name)
+          .firstOrNull,
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditMode ? l10n.household_edit_expense : l10n.household_add_expense),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_isEditMode ? l10n.household_edit_expense : l10n.household_add_expense),
+            if (groupName != null)
+              Text(
+                groupName,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.white70,
+                    ),
+              ),
+          ],
+        ),
         actions: [
           if (isLoading)
             const Padding(
@@ -74,12 +99,16 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
               child: SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
               ),
             )
           else
             TextButton(
               onPressed: _submit,
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
               child: Text(l10n.common_save),
             ),
         ],

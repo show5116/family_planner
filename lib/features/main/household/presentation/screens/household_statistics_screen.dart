@@ -5,6 +5,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 class HouseholdStatisticsScreen extends ConsumerWidget {
@@ -15,12 +16,32 @@ class HouseholdStatisticsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
     final year = selectedMonth.split('-')[0];
+    final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
+    final groupsAsync = ref.watch(myGroupsProvider);
+    final groupName = groupsAsync.whenOrNull(
+      data: (groups) => groups
+          .where((g) => g.id == selectedGroupId)
+          .map((g) => g.name)
+          .firstOrNull,
+    );
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(l10n.household_statistics),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.household_statistics),
+              if (groupName != null)
+                Text(
+                  groupName,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.white70,
+                      ),
+                ),
+            ],
+          ),
           bottom: TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white60,

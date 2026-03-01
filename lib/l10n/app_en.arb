@@ -875,5 +875,17 @@
   "household_delete_success": "Deleted successfully",
   "@household_delete_success": { "description": "Delete success message" },
   "household_budget_saved": "Budget has been set",
-  "@household_budget_saved": { "description": "Budget set success message" }
+  "@household_budget_saved": { "description": "Budget set success message" },
+  "household_recurring_expenses": "Fixed Expenses",
+  "@household_recurring_expenses": { "description": "Fixed expenses screen title" },
+  "household_recurring_no_expenses": "No fixed expenses",
+  "@household_recurring_no_expenses": { "description": "No fixed expenses message" },
+  "household_budget_set": "Budget Settings",
+  "@household_budget_set": { "description": "Budget settings button/title" },
+  "household_budget_total_label": "Total Budget",
+  "@household_budget_total_label": { "description": "Total budget item label" },
+  "household_budget_category_label": "Budget by Category",
+  "@household_budget_category_label": { "description": "Budget by category section label" },
+  "household_budget_not_set": "Not set",
+  "@household_budget_not_set": { "description": "Budget not set status" }
 }

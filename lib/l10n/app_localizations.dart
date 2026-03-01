@@ -4329,6 +4329,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'예산이 설정되었습니다'**
   String get household_budget_saved;
+
+  /// 고정 지출 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 지출'**
+  String get household_recurring_expenses;
+
+  /// 고정 지출 없음 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 지출이 없습니다'**
+  String get household_recurring_no_expenses;
+
+  /// 예산 설정 버튼/제목
+  ///
+  /// In ko, this message translates to:
+  /// **'예산 설정'**
+  String get household_budget_set;
+
+  /// 전체 예산 항목 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 예산'**
+  String get household_budget_total_label;
+
+  /// 카테고리별 예산 섹션 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별 예산'**
+  String get household_budget_category_label;
+
+  /// 예산 미설정 상태 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'미설정'**
+  String get household_budget_not_set;
 }
 
 class _AppLocalizationsDelegate

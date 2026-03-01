@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/widgets/budget_setting_sheet.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
@@ -49,6 +50,16 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
       appBar: AppBar(
         title: Text(l10n.household_title),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.account_balance_wallet_outlined),
+            tooltip: l10n.household_budget_set,
+            onPressed: () => showBudgetSettingSheet(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.repeat),
+            tooltip: l10n.household_recurring_expenses,
+            onPressed: () => context.push(AppRoutes.householdRecurring),
+          ),
           IconButton(
             icon: const Icon(Icons.bar_chart),
             tooltip: l10n.household_statistics,

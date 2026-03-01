@@ -2211,4 +2211,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get household_budget_saved => 'Budget has been set';
+
+  @override
+  String get household_recurring_expenses => 'Fixed Expenses';
+
+  @override
+  String get household_recurring_no_expenses => 'No fixed expenses';
+
+  @override
+  String get household_budget_set => 'Budget Settings';
+
+  @override
+  String get household_budget_total_label => 'Total Budget';
+
+  @override
+  String get household_budget_category_label => 'Budget by Category';
+
+  @override
+  String get household_budget_not_set => 'Not set';
 }

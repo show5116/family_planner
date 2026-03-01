@@ -2172,4 +2172,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get household_budget_saved => '예산이 설정되었습니다';
+
+  @override
+  String get household_recurring_expenses => '고정 지출';
+
+  @override
+  String get household_recurring_no_expenses => '고정 지출이 없습니다';
+
+  @override
+  String get household_budget_set => '예산 설정';
+
+  @override
+  String get household_budget_total_label => '전체 예산';
+
+  @override
+  String get household_budget_category_label => '카테고리별 예산';
+
+  @override
+  String get household_budget_not_set => '미설정';
 }

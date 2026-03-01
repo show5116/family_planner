@@ -13,7 +13,7 @@
 - ✅ 지출 추가/수정 폼 (금액, 카테고리, 결제수단, 날짜, 내용, 고정지출)
 - ✅ 통계 화면 (월간: 카테고리별 + 예산 비율 / 연간: 월별 막대 차트)
 - ⬜ 카테고리별 원형 차트
-- ⬜ 고정비용 관리 화면 (별도 화면)
+- ✅ 고정비용 관리 화면 (별도 화면, `/household/recurring`)
 
 ## 데이터 모델
 - ✅ 지출 모델 (ExpenseModel) + CreateExpenseDto, UpdateExpenseDto
@@ -64,6 +64,7 @@
 - `lib/features/main/household/presentation/screens/household_screen.dart`
 - `lib/features/main/household/presentation/screens/expense_form_screen.dart`
 - `lib/features/main/household/presentation/screens/household_statistics_screen.dart`
+- `lib/features/main/household/presentation/screens/recurring_expenses_screen.dart`
 - `lib/features/main/household/presentation/widgets/expense_list_item.dart`
 
 ## 라우트
@@ -71,6 +72,7 @@
 - `/household/add` → ExpenseFormScreen (추가, extra: `{'groupId': String}`)
 - `/household/detail` → ExpenseFormScreen (수정, extra: ExpenseModel 또는 `{'expense': ExpenseModel}`)
 - `/household/statistics` → HouseholdStatisticsScreen
+- `/household/recurring` → RecurringExpensesScreen
 
 ## 노트
 - 고정비용 자동 반영은 백엔드 `POST /household/expenses/recurring/copy` API 활용 예정

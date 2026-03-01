@@ -2169,4 +2169,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get household_budget_saved => '予算が設定されました';
+
+  @override
+  String get household_recurring_expenses => '固定費';
+
+  @override
+  String get household_recurring_no_expenses => '固定費がありません';
+
+  @override
+  String get household_budget_set => '予算設定';
+
+  @override
+  String get household_budget_total_label => '全体予算';
+
+  @override
+  String get household_budget_category_label => 'カテゴリ別予算';
+
+  @override
+  String get household_budget_not_set => '未設定';
 }

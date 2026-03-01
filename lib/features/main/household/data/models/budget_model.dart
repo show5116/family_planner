@@ -60,20 +60,18 @@ class SetBudgetDto {
 
   static String categoryToString(ExpenseCategory category) {
     switch (category) {
+      case ExpenseCategory.transportation:
+        return 'TRANSPORTATION';
       case ExpenseCategory.food:
         return 'FOOD';
-      case ExpenseCategory.transport:
-        return 'TRANSPORT';
       case ExpenseCategory.leisure:
         return 'LEISURE';
       case ExpenseCategory.living:
         return 'LIVING';
-      case ExpenseCategory.health:
-        return 'HEALTH';
+      case ExpenseCategory.medical:
+        return 'MEDICAL';
       case ExpenseCategory.education:
         return 'EDUCATION';
-      case ExpenseCategory.clothing:
-        return 'CLOTHING';
       case ExpenseCategory.other:
         return 'OTHER';
     }

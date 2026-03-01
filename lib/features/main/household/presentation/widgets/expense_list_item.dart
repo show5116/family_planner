@@ -7,20 +7,18 @@ import 'package:family_planner/l10n/app_localizations.dart';
 /// 카테고리별 아이콘
 IconData categoryIcon(ExpenseCategory? category) {
   switch (category) {
+    case ExpenseCategory.transportation:
+      return Icons.directions_bus;
     case ExpenseCategory.food:
       return Icons.restaurant;
-    case ExpenseCategory.transport:
-      return Icons.directions_bus;
     case ExpenseCategory.leisure:
       return Icons.sports_esports;
     case ExpenseCategory.living:
       return Icons.home;
-    case ExpenseCategory.health:
+    case ExpenseCategory.medical:
       return Icons.local_hospital;
     case ExpenseCategory.education:
       return Icons.school;
-    case ExpenseCategory.clothing:
-      return Icons.checkroom;
     case ExpenseCategory.other:
     case null:
       return Icons.category;
@@ -30,20 +28,18 @@ IconData categoryIcon(ExpenseCategory? category) {
 /// 카테고리별 색상
 Color categoryColor(ExpenseCategory? category) {
   switch (category) {
+    case ExpenseCategory.transportation:
+      return Colors.blue;
     case ExpenseCategory.food:
       return Colors.orange;
-    case ExpenseCategory.transport:
-      return Colors.blue;
     case ExpenseCategory.leisure:
       return Colors.purple;
     case ExpenseCategory.living:
       return Colors.green;
-    case ExpenseCategory.health:
+    case ExpenseCategory.medical:
       return Colors.red;
     case ExpenseCategory.education:
       return Colors.indigo;
-    case ExpenseCategory.clothing:
-      return Colors.pink;
     case ExpenseCategory.other:
     case null:
       return Colors.grey;
@@ -53,20 +49,18 @@ Color categoryColor(ExpenseCategory? category) {
 /// 카테고리 이름 반환
 String categoryName(AppLocalizations l10n, ExpenseCategory? category) {
   switch (category) {
+    case ExpenseCategory.transportation:
+      return l10n.household_category_transport;
     case ExpenseCategory.food:
       return l10n.household_category_food;
-    case ExpenseCategory.transport:
-      return l10n.household_category_transport;
     case ExpenseCategory.leisure:
       return l10n.household_category_leisure;
     case ExpenseCategory.living:
       return l10n.household_category_living;
-    case ExpenseCategory.health:
+    case ExpenseCategory.medical:
       return l10n.household_category_health;
     case ExpenseCategory.education:
       return l10n.household_category_education;
-    case ExpenseCategory.clothing:
-      return l10n.household_category_clothing;
     case ExpenseCategory.other:
     case null:
       return l10n.household_category_other;
@@ -82,7 +76,6 @@ String paymentMethodName(AppLocalizations l10n, PaymentMethod? method) {
       return l10n.household_payment_card;
     case PaymentMethod.transfer:
       return l10n.household_payment_transfer;
-    case PaymentMethod.other:
     case null:
       return l10n.household_payment_other;
   }

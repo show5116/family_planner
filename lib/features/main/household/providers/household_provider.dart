@@ -96,6 +96,44 @@ Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) as
   return repository.getYearlyStatistics(groupId: groupId, year: year);
 }
 
+/// 고정 지출 목록 Provider (isRecurring=true)
+@riverpod
+class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
+  @override
+  Future<List<ExpenseModel>> build() async {
+    final groupId = ref.watch(householdSelectedGroupIdProvider);
+    if (groupId == null) return [];
+
+    final repository = ref.watch(householdRepositoryProvider);
+    final all = await repository.getExpenses(groupId: groupId);
+    return all.where((e) => e.isRecurring).toList();
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final groupId = ref.read(householdSelectedGroupIdProvider);
+      if (groupId == null) return <ExpenseModel>[];
+      final all = await ref
+          .read(householdRepositoryProvider)
+          .getExpenses(groupId: groupId);
+      return all.where((e) => e.isRecurring).toList();
+    });
+  }
+
+  void addExpense(ExpenseModel expense) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data([expense, ...state.value!]);
+  }
+
+  void removeExpense(String id) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.where((e) => e.id != id).toList(),
+    );
+  }
+}
+
 /// 예산 목록 Provider
 @riverpod
 Future<List<BudgetModel>> householdBudgets(Ref ref) async {
