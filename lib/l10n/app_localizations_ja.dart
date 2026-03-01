@@ -2187,4 +2187,99 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get household_budget_not_set => '未設定';
+
+  @override
+  String get asset_title => '資産管理';
+  @override
+  String get asset_statistics => '統計';
+  @override
+  String get asset_no_group_selected => 'グループを選択してください';
+  @override
+  String get asset_no_accounts => '登録された口座がありません';
+  @override
+  String get asset_total_balance => '総残高';
+  @override
+  String get asset_total_principal => '総元金';
+  @override
+  String get asset_total_profit => '総利益';
+  @override
+  String get asset_profit_rate => '利回り';
+  @override
+  String get asset_account_name => '口座名';
+  @override
+  String get asset_account_name_hint => '例）住宅積立';
+  @override
+  String get asset_account_name_required => '口座名を入力してください';
+  @override
+  String get asset_institution => '金融機関';
+  @override
+  String get asset_institution_hint => '例）三菱UFJ銀行';
+  @override
+  String get asset_institution_required => '金融機関名を入力してください';
+  @override
+  String get asset_account_number => '口座番号（任意）';
+  @override
+  String get asset_account_number_hint => '例）123-456-789';
+  @override
+  String get asset_account_type => '口座種別';
+  @override
+  String get asset_type_bank => '銀行';
+  @override
+  String get asset_type_stock => '株式';
+  @override
+  String get asset_type_fund => 'ファンド';
+  @override
+  String get asset_type_insurance => '保険';
+  @override
+  String get asset_type_real_estate => '不動産';
+  @override
+  String get asset_type_cash => '現金';
+  @override
+  String get asset_type_other => 'その他';
+  @override
+  String get asset_add_account => '口座追加';
+  @override
+  String get asset_edit_account => '口座編集';
+  @override
+  String get asset_delete_account => '口座削除';
+  @override
+  String get asset_delete_account_confirm => 'この口座を削除しますか？\n関連するすべての記録も削除されます。';
+  @override
+  String get asset_delete_success => '削除されました';
+  @override
+  String get asset_save_success => '保存されました';
+  @override
+  String get asset_account_detail => '口座詳細';
+  @override
+  String get asset_records => '資産記録';
+  @override
+  String get asset_no_records => '記録がありません';
+  @override
+  String get asset_add_record => '記録追加';
+  @override
+  String get asset_record_date => '記録日';
+  @override
+  String get asset_balance => '残高';
+  @override
+  String get asset_principal => '元金';
+  @override
+  String get asset_profit => '利益';
+  @override
+  String get asset_note => 'メモ（任意）';
+  @override
+  String get asset_note_hint => '例）利息受取';
+  @override
+  String get asset_amount_hint => '金額を入力してください';
+  @override
+  String get asset_amount_required => '金額を入力してください';
+  @override
+  String get asset_record_date_required => '記録日を選択してください';
+  @override
+  String get asset_record_save_success => '記録が保存されました';
+  @override
+  String get asset_statistics_title => '資産統計';
+  @override
+  String get asset_by_type => '種別別状況';
+  @override
+  String assetAccountCount(int count) => '$count口座';
 }

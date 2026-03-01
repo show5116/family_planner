@@ -2229,4 +2229,99 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get household_budget_not_set => 'Not set';
+
+  @override
+  String get asset_title => 'Assets';
+  @override
+  String get asset_statistics => 'Statistics';
+  @override
+  String get asset_no_group_selected => 'Please select a group';
+  @override
+  String get asset_no_accounts => 'No accounts registered';
+  @override
+  String get asset_total_balance => 'Total Balance';
+  @override
+  String get asset_total_principal => 'Total Principal';
+  @override
+  String get asset_total_profit => 'Total Profit';
+  @override
+  String get asset_profit_rate => 'Return Rate';
+  @override
+  String get asset_account_name => 'Account Name';
+  @override
+  String get asset_account_name_hint => 'e.g., Main Savings';
+  @override
+  String get asset_account_name_required => 'Please enter account name';
+  @override
+  String get asset_institution => 'Institution';
+  @override
+  String get asset_institution_hint => 'e.g., Kookmin Bank';
+  @override
+  String get asset_institution_required => 'Please enter institution name';
+  @override
+  String get asset_account_number => 'Account Number (Optional)';
+  @override
+  String get asset_account_number_hint => 'e.g., 123-456-789';
+  @override
+  String get asset_account_type => 'Account Type';
+  @override
+  String get asset_type_bank => 'Bank';
+  @override
+  String get asset_type_stock => 'Stock';
+  @override
+  String get asset_type_fund => 'Fund';
+  @override
+  String get asset_type_insurance => 'Insurance';
+  @override
+  String get asset_type_real_estate => 'Real Estate';
+  @override
+  String get asset_type_cash => 'Cash';
+  @override
+  String get asset_type_other => 'Other';
+  @override
+  String get asset_add_account => 'Add Account';
+  @override
+  String get asset_edit_account => 'Edit Account';
+  @override
+  String get asset_delete_account => 'Delete Account';
+  @override
+  String get asset_delete_account_confirm => 'Are you sure you want to delete this account?\nAll related records will also be deleted.';
+  @override
+  String get asset_delete_success => 'Deleted successfully';
+  @override
+  String get asset_save_success => 'Saved successfully';
+  @override
+  String get asset_account_detail => 'Account Detail';
+  @override
+  String get asset_records => 'Records';
+  @override
+  String get asset_no_records => 'No records yet';
+  @override
+  String get asset_add_record => 'Add Record';
+  @override
+  String get asset_record_date => 'Record Date';
+  @override
+  String get asset_balance => 'Balance';
+  @override
+  String get asset_principal => 'Principal';
+  @override
+  String get asset_profit => 'Profit';
+  @override
+  String get asset_note => 'Note (Optional)';
+  @override
+  String get asset_note_hint => 'e.g., Interest received';
+  @override
+  String get asset_amount_hint => 'Enter amount';
+  @override
+  String get asset_amount_required => 'Please enter amount';
+  @override
+  String get asset_record_date_required => 'Please select record date';
+  @override
+  String get asset_record_save_success => 'Record saved';
+  @override
+  String get asset_statistics_title => 'Asset Statistics';
+  @override
+  String get asset_by_type => 'By Type';
+  @override
+  String assetAccountCount(int count) => '$count accounts';
 }

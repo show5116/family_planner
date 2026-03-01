@@ -2190,4 +2190,99 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get household_budget_not_set => '미설정';
+
+  @override
+  String get asset_title => '자산관리';
+  @override
+  String get asset_statistics => '통계';
+  @override
+  String get asset_no_group_selected => '그룹을 선택해주세요';
+  @override
+  String get asset_no_accounts => '등록된 계좌가 없습니다';
+  @override
+  String get asset_total_balance => '총 잔액';
+  @override
+  String get asset_total_principal => '총 원금';
+  @override
+  String get asset_total_profit => '총 수익금';
+  @override
+  String get asset_profit_rate => '수익률';
+  @override
+  String get asset_account_name => '계좌명';
+  @override
+  String get asset_account_name_hint => '예) 주택청약';
+  @override
+  String get asset_account_name_required => '계좌명을 입력해주세요';
+  @override
+  String get asset_institution => '금융기관';
+  @override
+  String get asset_institution_hint => '예) 국민은행';
+  @override
+  String get asset_institution_required => '금융기관명을 입력해주세요';
+  @override
+  String get asset_account_number => '계좌번호 (선택)';
+  @override
+  String get asset_account_number_hint => '예) 123-456-789';
+  @override
+  String get asset_account_type => '계좌 유형';
+  @override
+  String get asset_type_bank => '은행';
+  @override
+  String get asset_type_stock => '주식';
+  @override
+  String get asset_type_fund => '펀드';
+  @override
+  String get asset_type_insurance => '보험';
+  @override
+  String get asset_type_real_estate => '부동산';
+  @override
+  String get asset_type_cash => '현금';
+  @override
+  String get asset_type_other => '기타';
+  @override
+  String get asset_add_account => '계좌 추가';
+  @override
+  String get asset_edit_account => '계좌 수정';
+  @override
+  String get asset_delete_account => '계좌 삭제';
+  @override
+  String get asset_delete_account_confirm => '이 계좌를 삭제하시겠습니까?\n관련된 모든 기록도 함께 삭제됩니다.';
+  @override
+  String get asset_delete_success => '삭제되었습니다';
+  @override
+  String get asset_save_success => '저장되었습니다';
+  @override
+  String get asset_account_detail => '계좌 상세';
+  @override
+  String get asset_records => '자산 기록';
+  @override
+  String get asset_no_records => '기록이 없습니다';
+  @override
+  String get asset_add_record => '기록 추가';
+  @override
+  String get asset_record_date => '기록 날짜';
+  @override
+  String get asset_balance => '잔액';
+  @override
+  String get asset_principal => '원금';
+  @override
+  String get asset_profit => '수익금';
+  @override
+  String get asset_note => '메모 (선택)';
+  @override
+  String get asset_note_hint => '예) 이자 입금';
+  @override
+  String get asset_amount_hint => '금액을 입력하세요';
+  @override
+  String get asset_amount_required => '금액을 입력해주세요';
+  @override
+  String get asset_record_date_required => '기록 날짜를 선택해주세요';
+  @override
+  String get asset_record_save_success => '기록이 저장되었습니다';
+  @override
+  String get asset_statistics_title => '자산 통계';
+  @override
+  String get asset_by_type => '유형별 현황';
+  @override
+  String assetAccountCount(int count) => '$count개 계좌';
 }

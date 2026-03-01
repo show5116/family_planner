@@ -1,6 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/presentation/screens/home_screen.dart';
+import 'package:family_planner/features/main/assets/data/models/account_model.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/account_form_screen.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/asset_statistics_screen.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/presentation/screens/expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
@@ -29,12 +34,39 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) => const HomeScreen(),
     ),
 
-    // Assets Routes (추후 구현)
-    // GoRoute(
-    //   path: AppRoutes.assets,
-    //   name: 'assets',
-    //   builder: (context, state) => const AssetsScreen(),
-    // ),
+    // Assets Routes (자산관리)
+    GoRoute(
+      path: AppRoutes.assets,
+      name: 'assets',
+      builder: (context, state) => const AssetScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.assetAccountAdd,
+      name: 'assetAccountAdd',
+      builder: (context, state) {
+        final extra = state.extra;
+        String? groupId;
+        AccountModel? account;
+        if (extra is Map<String, dynamic>) {
+          groupId = extra['groupId'] as String?;
+          account = extra['account'] as AccountModel?;
+        }
+        return AccountFormScreen(groupId: groupId, account: account);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.assetAccountDetail,
+      name: 'assetAccountDetail',
+      builder: (context, state) {
+        final account = state.extra as AccountModel;
+        return AccountDetailScreen(account: account);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.assetStatistics,
+      name: 'assetStatistics',
+      builder: (context, state) => const AssetStatisticsScreen(),
+    ),
 
     // Calendar Routes
     GoRoute(

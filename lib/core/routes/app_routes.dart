@@ -19,6 +19,9 @@ class AppRoutes {
 
   // Feature Routes
   static const String assetDetail = '/assets/detail';
+  static const String assetAccountAdd = '/assets/accounts/add';
+  static const String assetAccountDetail = '/assets/accounts/detail';
+  static const String assetStatistics = '/assets/statistics';
   static const String investmentIndicators = '/investment-indicators';
   static const String household = '/household';
   static const String householdAdd = '/household/add';

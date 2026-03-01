@@ -4365,6 +4365,54 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'미설정'**
   String get household_budget_not_set;
+
+  String get asset_title;
+  String get asset_statistics;
+  String get asset_no_group_selected;
+  String get asset_no_accounts;
+  String get asset_total_balance;
+  String get asset_total_principal;
+  String get asset_total_profit;
+  String get asset_profit_rate;
+  String get asset_account_name;
+  String get asset_account_name_hint;
+  String get asset_account_name_required;
+  String get asset_institution;
+  String get asset_institution_hint;
+  String get asset_institution_required;
+  String get asset_account_number;
+  String get asset_account_number_hint;
+  String get asset_account_type;
+  String get asset_type_bank;
+  String get asset_type_stock;
+  String get asset_type_fund;
+  String get asset_type_insurance;
+  String get asset_type_real_estate;
+  String get asset_type_cash;
+  String get asset_type_other;
+  String get asset_add_account;
+  String get asset_edit_account;
+  String get asset_delete_account;
+  String get asset_delete_account_confirm;
+  String get asset_delete_success;
+  String get asset_save_success;
+  String get asset_account_detail;
+  String get asset_records;
+  String get asset_no_records;
+  String get asset_add_record;
+  String get asset_record_date;
+  String get asset_balance;
+  String get asset_principal;
+  String get asset_profit;
+  String get asset_note;
+  String get asset_note_hint;
+  String get asset_amount_hint;
+  String get asset_amount_required;
+  String get asset_record_date_required;
+  String get asset_record_save_success;
+  String get asset_statistics_title;
+  String get asset_by_type;
+  String assetAccountCount(int count);
 }
 
 class _AppLocalizationsDelegate
