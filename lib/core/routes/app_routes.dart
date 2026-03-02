@@ -23,6 +23,7 @@ class AppRoutes {
   static const String assetAccountDetail = '/assets/accounts/detail';
   static const String assetStatistics = '/assets/statistics';
   static const String investmentIndicators = '/investment-indicators';
+  static const String indicatorDetail = '/investment-indicators/:symbol';
   static const String household = '/household';
   static const String householdAdd = '/household/add';
   static const String householdDetail = '/household/detail';

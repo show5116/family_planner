@@ -16,6 +16,8 @@ import 'package:family_planner/features/main/task/presentation/screens/category_
 import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
+import 'package:family_planner/features/main/investment/presentation/screens/indicator_detail_screen.dart';
+import 'package:family_planner/features/main/investment/presentation/screens/investment_indicators_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
 
 /// 메인 기능 라우트 목록
@@ -32,6 +34,21 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.home,
       name: 'home',
       builder: (context, state) => const HomeScreen(),
+    ),
+
+    // Investment Indicators Routes (투자지표)
+    GoRoute(
+      path: AppRoutes.investmentIndicators,
+      name: 'investmentIndicators',
+      builder: (context, state) => const InvestmentIndicatorsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.indicatorDetail,
+      name: 'indicatorDetail',
+      builder: (context, state) {
+        final symbol = state.pathParameters['symbol']!;
+        return IndicatorDetailScreen(symbol: symbol);
+      },
     ),
 
     // Assets Routes (자산관리)

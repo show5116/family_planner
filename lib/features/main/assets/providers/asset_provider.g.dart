@@ -6,7 +6,7 @@ part of 'asset_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$assetStatisticsHash() => r'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0';
+String _$assetStatisticsHash() => r'6c05ac4e76c4d992b1eed5c55f47e8e815e442af';
 
 /// 자산 통계 Provider
 ///
@@ -25,17 +25,18 @@ final assetStatisticsProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AssetStatisticsRef =
-    AutoDisposeFutureProviderRef<AssetStatisticsModel>;
-
-String _$assetAccountsHash() => r'b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1';
+typedef AssetStatisticsRef = AutoDisposeFutureProviderRef<AssetStatisticsModel>;
+String _$assetAccountsHash() => r'9a52b94d6ee8dd733db83b3bb8fe1bb86fe0d69c';
 
 /// 계좌 목록 Provider
 ///
 /// Copied from [AssetAccounts].
 @ProviderFor(AssetAccounts)
 final assetAccountsProvider =
-    AutoDisposeAsyncNotifierProvider<AssetAccounts, List<AccountModel>>.internal(
+    AutoDisposeAsyncNotifierProvider<
+      AssetAccounts,
+      List<AccountModel>
+    >.internal(
       AssetAccounts.new,
       name: r'assetAccountsProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -46,8 +47,7 @@ final assetAccountsProvider =
     );
 
 typedef _$AssetAccounts = AutoDisposeAsyncNotifier<List<AccountModel>>;
-
-String _$assetRecordsHash() => r'c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2';
+String _$assetRecordsHash() => r'4e0c6dbf11107825df3a3406592bf3fdac9753b7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -68,6 +68,13 @@ class _SystemHash {
     hash = hash ^ (hash >> 11);
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
+}
+
+abstract class _$AssetRecords
+    extends BuildlessAutoDisposeAsyncNotifier<List<AssetRecordModel>> {
+  late final String accountId;
+
+  FutureOr<List<AssetRecordModel>> build(String accountId);
 }
 
 /// 자산 기록 Provider
@@ -118,13 +125,17 @@ class AssetRecordsFamily extends Family<AsyncValue<List<AssetRecordModel>>> {
 ///
 /// Copied from [AssetRecords].
 class AssetRecordsProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<AssetRecords, List<AssetRecordModel>> {
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          AssetRecords,
+          List<AssetRecordModel>
+        > {
   /// 자산 기록 Provider
   ///
   /// Copied from [AssetRecords].
   AssetRecordsProvider(String accountId)
     : this._internal(
-        () => AssetRecords(),
+        () => AssetRecords()..accountId = accountId,
         from: assetRecordsProvider,
         name: r'assetRecordsProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -160,7 +171,7 @@ class AssetRecordsProvider
     return ProviderOverride(
       origin: this,
       override: AssetRecordsProvider._internal(
-        create,
+        () => create()..accountId = accountId,
         from: from,
         name: null,
         dependencies: null,
@@ -173,7 +184,7 @@ class AssetRecordsProvider
 
   @override
   AutoDisposeAsyncNotifierProviderElement<AssetRecords, List<AssetRecordModel>>
-      createElement() {
+  createElement() {
     return _AssetRecordsProviderElement(this);
   }
 
@@ -186,6 +197,7 @@ class AssetRecordsProvider
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, accountId.hashCode);
+
     return _SystemHash.finish(hash);
   }
 }
@@ -199,17 +211,17 @@ mixin AssetRecordsRef
 }
 
 class _AssetRecordsProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<
-        AssetRecords,
-        List<AssetRecordModel>>
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          AssetRecords,
+          List<AssetRecordModel>
+        >
     with AssetRecordsRef {
   _AssetRecordsProviderElement(super.provider);
 
   @override
   String get accountId => (origin as AssetRecordsProvider).accountId;
 }
-
-typedef _$AssetRecords = AutoDisposeAsyncNotifier<List<AssetRecordModel>>;
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

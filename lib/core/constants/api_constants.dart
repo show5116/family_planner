@@ -39,8 +39,8 @@ class ApiConstants {
   static const String assetTransactions = '$apiVersion/assets/transactions';
 
   // Investment Endpoints
-  static const String investmentIndicators = '$apiVersion/investments/indicators';
-  static const String marketData = '$apiVersion/investments/market-data';
+  static const String indicators = '$apiVersion/indicators';
+  static const String indicatorBookmarks = '$apiVersion/indicators/bookmarks';
 
   // Household Endpoints
   static const String household = '$apiVersion/household';
