@@ -2190,96 +2190,283 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get asset_title => '資産管理';
+
   @override
   String get asset_statistics => '統計';
+
   @override
   String get asset_no_group_selected => 'グループを選択してください';
+
   @override
   String get asset_no_accounts => '登録された口座がありません';
+
   @override
   String get asset_total_balance => '総残高';
+
   @override
   String get asset_total_principal => '総元金';
+
   @override
   String get asset_total_profit => '総利益';
+
   @override
   String get asset_profit_rate => '利回り';
+
   @override
   String get asset_account_name => '口座名';
+
   @override
   String get asset_account_name_hint => '例）住宅積立';
+
   @override
   String get asset_account_name_required => '口座名を入力してください';
+
   @override
   String get asset_institution => '金融機関';
+
   @override
   String get asset_institution_hint => '例）三菱UFJ銀行';
+
   @override
   String get asset_institution_required => '金融機関名を入力してください';
+
   @override
   String get asset_account_number => '口座番号（任意）';
+
   @override
   String get asset_account_number_hint => '例）123-456-789';
+
   @override
   String get asset_account_type => '口座種別';
+
   @override
   String get asset_type_bank => '銀行';
+
   @override
   String get asset_type_stock => '株式';
+
   @override
   String get asset_type_fund => 'ファンド';
+
   @override
   String get asset_type_insurance => '保険';
+
   @override
   String get asset_type_real_estate => '不動産';
+
   @override
   String get asset_type_cash => '現金';
+
   @override
   String get asset_type_other => 'その他';
+
   @override
   String get asset_add_account => '口座追加';
+
   @override
   String get asset_edit_account => '口座編集';
+
   @override
   String get asset_delete_account => '口座削除';
+
   @override
   String get asset_delete_account_confirm => 'この口座を削除しますか？\n関連するすべての記録も削除されます。';
+
   @override
   String get asset_delete_success => '削除されました';
+
   @override
   String get asset_save_success => '保存されました';
+
   @override
   String get asset_account_detail => '口座詳細';
+
   @override
   String get asset_records => '資産記録';
+
   @override
   String get asset_no_records => '記録がありません';
+
   @override
   String get asset_add_record => '記録追加';
+
   @override
   String get asset_record_date => '記録日';
+
   @override
   String get asset_balance => '残高';
+
   @override
   String get asset_principal => '元金';
+
   @override
   String get asset_profit => '利益';
+
   @override
   String get asset_note => 'メモ（任意）';
+
   @override
   String get asset_note_hint => '例）利息受取';
+
   @override
   String get asset_amount_hint => '金額を入力してください';
+
   @override
   String get asset_amount_required => '金額を入力してください';
+
   @override
   String get asset_record_date_required => '記録日を選択してください';
+
   @override
   String get asset_record_save_success => '記録が保存されました';
+
   @override
   String get asset_statistics_title => '資産統計';
+
   @override
   String get asset_by_type => '種別別状況';
+
   @override
-  String assetAccountCount(int count) => '$count口座';
+  String asset_account_count(int count) {
+    return '$count口座';
+  }
+
+  @override
+  String get childcare_title => '育児ポイント';
+
+  @override
+  String get childcare_accounts => '子どものアカウント';
+
+  @override
+  String get childcare_add_account => 'アカウント追加';
+
+  @override
+  String get childcare_balance => 'ポイント残高';
+
+  @override
+  String get childcare_monthly_allowance => '月々のお小遣い';
+
+  @override
+  String get childcare_savings_balance => '貯金残高';
+
+  @override
+  String get childcare_savings_interest_rate => '利子率';
+
+  @override
+  String get childcare_tab_points => 'ポイント';
+
+  @override
+  String get childcare_tab_rewards => '報酬';
+
+  @override
+  String get childcare_tab_rules => 'ルール';
+
+  @override
+  String get childcare_tab_history => '履歴';
+
+  @override
+  String get childcare_add_transaction => 'ポイント付与/減算';
+
+  @override
+  String get childcare_add_reward => '報酬追加';
+
+  @override
+  String get childcare_add_rule => 'ルール追加';
+
+  @override
+  String get childcare_transaction_type_earn => 'ポイント獲得';
+
+  @override
+  String get childcare_transaction_type_spend => 'ポイント使用';
+
+  @override
+  String get childcare_transaction_type_penalty => 'ルール違反減算';
+
+  @override
+  String get childcare_transaction_type_monthly => '月々のお小遣い';
+
+  @override
+  String get childcare_transaction_type_savings_deposit => '貯金入金';
+
+  @override
+  String get childcare_transaction_type_savings_withdraw => '貯金出金';
+
+  @override
+  String get childcare_transaction_type_interest => '利子支払い';
+
+  @override
+  String childcare_reward_points_cost(int points) {
+    return '${points}pt';
+  }
+
+  @override
+  String childcare_rule_penalty(int penalty) {
+    return '-${penalty}pt';
+  }
+
+  @override
+  String get childcare_savings_deposit => '入金';
+
+  @override
+  String get childcare_savings_withdraw => '出金';
+
+  @override
+  String get childcare_empty_accounts => '子どものアカウントがありません。\nアカウントを追加してください。';
+
+  @override
+  String get childcare_empty_transactions => '取引履歴がありません。';
+
+  @override
+  String get childcare_empty_rewards => '報酬がありません。\n報酬を追加してください。';
+
+  @override
+  String get childcare_empty_rules => 'ルールがありません。\nルールを追加してください。';
+
+  @override
+  String get childcare_account_child_id => '子どものユーザーID';
+
+  @override
+  String get childcare_account_monthly_allowance => '月々のお小遣い(pt)';
+
+  @override
+  String get childcare_account_savings_rate => '貯金利子率(%)';
+
+  @override
+  String get childcare_transaction_amount => '金額';
+
+  @override
+  String get childcare_transaction_description => '説明';
+
+  @override
+  String get childcare_transaction_type => '取引タイプ';
+
+  @override
+  String get childcare_reward_name => '報酬名';
+
+  @override
+  String get childcare_reward_description => '説明（任意）';
+
+  @override
+  String get childcare_reward_points => 'ポイントコスト';
+
+  @override
+  String get childcare_rule_name => 'ルール名';
+
+  @override
+  String get childcare_rule_description => '説明（任意）';
+
+  @override
+  String get childcare_rule_penalty_points => '減算ポイント';
+
+  @override
+  String get childcare_savings_amount => '金額';
+
+  @override
+  String get childcare_delete_confirm => '削除してもよろしいですか？';
+
+  @override
+  String get childcare_select_group => 'グループを選択してください';
+
+  @override
+  String get childcare_no_group => 'グループに参加すると育児ポイントが使えます。';
 }

@@ -4366,53 +4366,557 @@ abstract class AppLocalizations {
   /// **'미설정'**
   String get household_budget_not_set;
 
+  /// 자산관리 메인 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자산관리'**
   String get asset_title;
+
+  /// 자산 통계 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
   String get asset_statistics;
+
+  /// 그룹 미선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택해주세요'**
   String get asset_no_group_selected;
+
+  /// 계좌 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 계좌가 없습니다'**
   String get asset_no_accounts;
+
+  /// 총 잔액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 잔액'**
   String get asset_total_balance;
+
+  /// 총 원금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 원금'**
   String get asset_total_principal;
+
+  /// 총 수익금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 수익금'**
   String get asset_total_profit;
+
+  /// 수익률 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수익률'**
   String get asset_profit_rate;
+
+  /// 계좌명 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌명'**
   String get asset_account_name;
+
+  /// 계좌명 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예) 주택청약'**
   String get asset_account_name_hint;
+
+  /// 계좌명 필수
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌명을 입력해주세요'**
   String get asset_account_name_required;
+
+  /// 금융기관명 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'금융기관'**
   String get asset_institution;
+
+  /// 금융기관 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예) 국민은행'**
   String get asset_institution_hint;
+
+  /// 금융기관 필수
+  ///
+  /// In ko, this message translates to:
+  /// **'금융기관명을 입력해주세요'**
   String get asset_institution_required;
+
+  /// 계좌번호 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌번호 (선택)'**
   String get asset_account_number;
+
+  /// 계좌번호 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예) 123-456-789'**
   String get asset_account_number_hint;
+
+  /// 계좌 유형 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 유형'**
   String get asset_account_type;
+
+  /// 계좌 유형: 은행
+  ///
+  /// In ko, this message translates to:
+  /// **'은행'**
   String get asset_type_bank;
+
+  /// 계좌 유형: 주식
+  ///
+  /// In ko, this message translates to:
+  /// **'주식'**
   String get asset_type_stock;
+
+  /// 계좌 유형: 펀드
+  ///
+  /// In ko, this message translates to:
+  /// **'펀드'**
   String get asset_type_fund;
+
+  /// 계좌 유형: 보험
+  ///
+  /// In ko, this message translates to:
+  /// **'보험'**
   String get asset_type_insurance;
+
+  /// 계좌 유형: 부동산
+  ///
+  /// In ko, this message translates to:
+  /// **'부동산'**
   String get asset_type_real_estate;
+
+  /// 계좌 유형: 현금
+  ///
+  /// In ko, this message translates to:
+  /// **'현금'**
   String get asset_type_cash;
+
+  /// 계좌 유형: 기타
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
   String get asset_type_other;
+
+  /// 계좌 추가 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 추가'**
   String get asset_add_account;
+
+  /// 계좌 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 수정'**
   String get asset_edit_account;
+
+  /// 계좌 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 삭제'**
   String get asset_delete_account;
+
+  /// 계좌 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 계좌를 삭제하시겠습니까?\n관련된 모든 기록도 함께 삭제됩니다.'**
   String get asset_delete_account_confirm;
+
+  /// 삭제 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제되었습니다'**
   String get asset_delete_success;
+
+  /// 저장 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'저장되었습니다'**
   String get asset_save_success;
+
+  /// 계좌 상세 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 상세'**
   String get asset_account_detail;
+
+  /// 자산 기록 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 기록'**
   String get asset_records;
+
+  /// 기록 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'기록이 없습니다'**
   String get asset_no_records;
+
+  /// 기록 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 추가'**
   String get asset_add_record;
+
+  /// 기록 날짜 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 날짜'**
   String get asset_record_date;
+
+  /// 잔액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액'**
   String get asset_balance;
+
+  /// 원금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'원금'**
   String get asset_principal;
+
+  /// 수익금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수익금'**
   String get asset_profit;
+
+  /// 메모 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 (선택)'**
   String get asset_note;
+
+  /// 메모 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예) 이자 입금'**
   String get asset_note_hint;
+
+  /// 금액 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'금액을 입력하세요'**
   String get asset_amount_hint;
+
+  /// 금액 필수
+  ///
+  /// In ko, this message translates to:
+  /// **'금액을 입력해주세요'**
   String get asset_amount_required;
+
+  /// 기록 날짜 필수
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 날짜를 선택해주세요'**
   String get asset_record_date_required;
+
+  /// 기록 저장 성공
+  ///
+  /// In ko, this message translates to:
+  /// **'기록이 저장되었습니다'**
   String get asset_record_save_success;
+
+  /// 자산 통계 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 통계'**
   String get asset_statistics_title;
+
+  /// 유형별 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유형별 현황'**
   String get asset_by_type;
-  String assetAccountCount(int count);
+
+  /// No description provided for @asset_account_count.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 계좌'**
+  String asset_account_count(int count);
+
+  /// 육아포인트 메인 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'육아포인트'**
+  String get childcare_title;
+
+  /// 자녀 계정 목록
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 계정'**
+  String get childcare_accounts;
+
+  /// 계정 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 추가'**
+  String get childcare_add_account;
+
+  /// 포인트 잔액
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 잔액'**
+  String get childcare_balance;
+
+  /// 월 용돈 포인트
+  ///
+  /// In ko, this message translates to:
+  /// **'월 용돈'**
+  String get childcare_monthly_allowance;
+
+  /// 적금 잔액
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 잔액'**
+  String get childcare_savings_balance;
+
+  /// 적금 이자율
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 이자율'**
+  String get childcare_savings_interest_rate;
+
+  /// 포인트 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트'**
+  String get childcare_tab_points;
+
+  /// 보상 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'보상'**
+  String get childcare_tab_rewards;
+
+  /// 규칙 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙'**
+  String get childcare_tab_rules;
+
+  /// 히스토리 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'히스토리'**
+  String get childcare_tab_history;
+
+  /// 포인트 거래 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 지급/차감'**
+  String get childcare_add_transaction;
+
+  /// 보상 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'보상 추가'**
+  String get childcare_add_reward;
+
+  /// 규칙 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 추가'**
+  String get childcare_add_rule;
+
+  /// 적립 거래 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 적립'**
+  String get childcare_transaction_type_earn;
+
+  /// 사용 거래 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 사용'**
+  String get childcare_transaction_type_spend;
+
+  /// 페널티 거래 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 위반 차감'**
+  String get childcare_transaction_type_penalty;
+
+  /// 월 용돈 거래 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'월 용돈 지급'**
+  String get childcare_transaction_type_monthly;
+
+  /// 적금 입금 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 입금'**
+  String get childcare_transaction_type_savings_deposit;
+
+  /// 적금 출금 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 출금'**
+  String get childcare_transaction_type_savings_withdraw;
+
+  /// 이자 지급 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'이자 지급'**
+  String get childcare_transaction_type_interest;
+
+  /// 보상 포인트 비용
+  ///
+  /// In ko, this message translates to:
+  /// **'{points}포인트'**
+  String childcare_reward_points_cost(int points);
+
+  /// 규칙 위반 차감 포인트
+  ///
+  /// In ko, this message translates to:
+  /// **'차감 {penalty}포인트'**
+  String childcare_rule_penalty(int penalty);
+
+  /// 적금 입금 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 입금'**
+  String get childcare_savings_deposit;
+
+  /// 적금 출금 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 출금'**
+  String get childcare_savings_withdraw;
+
+  /// 계정 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 계정이 없습니다.\n계정을 추가해보세요.'**
+  String get childcare_empty_accounts;
+
+  /// 거래 내역 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'거래 내역이 없습니다.'**
+  String get childcare_empty_transactions;
+
+  /// 보상 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'보상 항목이 없습니다.\n보상을 추가해보세요.'**
+  String get childcare_empty_rewards;
+
+  /// 규칙 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙이 없습니다.\n규칙을 추가해보세요.'**
+  String get childcare_empty_rules;
+
+  /// 자녀 ID 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 ID'**
+  String get childcare_account_child_id;
+
+  /// 월 용돈 포인트 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월 용돈 포인트'**
+  String get childcare_account_monthly_allowance;
+
+  /// 이자율 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 이자율 (%)'**
+  String get childcare_account_savings_rate;
+
+  /// 거래 금액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 금액'**
+  String get childcare_transaction_amount;
+
+  /// 거래 설명 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'설명'**
+  String get childcare_transaction_description;
+
+  /// 거래 유형 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'거래 유형'**
+  String get childcare_transaction_type;
+
+  /// 보상 이름 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'보상 이름'**
+  String get childcare_reward_name;
+
+  /// 보상 설명 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'보상 설명 (선택)'**
+  String get childcare_reward_description;
+
+  /// 보상 포인트 비용 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 비용'**
+  String get childcare_reward_points;
+
+  /// 규칙 이름 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 이름'**
+  String get childcare_rule_name;
+
+  /// 규칙 설명 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 설명 (선택)'**
+  String get childcare_rule_description;
+
+  /// 차감 포인트 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'차감 포인트'**
+  String get childcare_rule_penalty_points;
+
+  /// 적금 금액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'금액'**
+  String get childcare_savings_amount;
+
+  /// 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하시겠습니까?'**
+  String get childcare_delete_confirm;
+
+  /// 그룹 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택해주세요'**
+  String get childcare_select_group;
+
+  /// 그룹 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹에 참여하면 육아포인트를 사용할 수 있습니다.'**
+  String get childcare_no_group;
 }
 
 class _AppLocalizationsDelegate

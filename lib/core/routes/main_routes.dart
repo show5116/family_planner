@@ -1,6 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/presentation/screens/home_screen.dart';
+import 'package:family_planner/features/main/child_points/presentation/screens/child_points_screen.dart';
+import 'package:family_planner/features/main/child_points/presentation/screens/childcare_account_form_screen.dart';
+import 'package:family_planner/features/main/child_points/presentation/screens/transaction_form_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_form_screen.dart';
@@ -221,6 +224,31 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return MemoFormScreen(memoId: id);
+      },
+    ),
+
+    // Child Points Routes (육아포인트)
+    GoRoute(
+      path: AppRoutes.childPoints,
+      name: 'childPoints',
+      builder: (context, state) => const ChildPointsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.childPointsAccountForm,
+      name: 'childPointsAccountForm',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final groupId = extra?['groupId'] as String? ?? '';
+        return ChildcareAccountFormScreen(groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.childPointsTransactionAdd,
+      name: 'childPointsTransactionAdd',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final accountId = extra?['accountId'] as String? ?? '';
+        return TransactionFormScreen(accountId: accountId);
       },
     ),
   ];

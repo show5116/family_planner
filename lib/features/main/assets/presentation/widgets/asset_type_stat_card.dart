@@ -27,7 +27,7 @@ class AssetTypeStatCard extends StatelessWidget {
           ),
         ),
         title: Text(accountTypeLabel(l10n, typeStat.type)),
-        subtitle: Text(l10n.assetAccountCount(typeStat.count)),
+        subtitle: Text(l10n.asset_account_count(typeStat.count)),
         trailing: Text(
           '₩${formatAssetAmount(typeStat.balance)}',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(

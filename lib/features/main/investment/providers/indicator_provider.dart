@@ -12,14 +12,25 @@ class Indicators extends _$Indicators {
   @override
   Future<List<IndicatorModel>> build() async {
     final repository = ref.watch(indicatorRepositoryProvider);
-    return repository.getIndicators();
+    final list = await repository.getIndicators();
+    return _sorted(list);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
-      () => ref.read(indicatorRepositoryProvider).getIndicators(),
-    );
+    state = await AsyncValue.guard(() async {
+      final list = await ref.read(indicatorRepositoryProvider).getIndicators();
+      return _sorted(list);
+    });
+  }
+
+  List<IndicatorModel> _sorted(List<IndicatorModel> list) {
+    final sorted = [...list];
+    sorted.sort((a, b) {
+      if (a.isBookmarked == b.isBookmarked) return 0;
+      return a.isBookmarked ? -1 : 1;
+    });
+    return sorted;
   }
 
   /// 즐겨찾기 토글 (로컬 상태 즉시 반영)
@@ -37,11 +48,11 @@ class Indicators extends _$Indicators {
           ? await repository.removeBookmark(symbol)
           : await repository.addBookmark(symbol);
 
-      state = AsyncValue.data(
-        current.map((e) => e.symbol == symbol ? updated : e).toList(),
-      );
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      final newList = current.map((e) => e.symbol == symbol ? updated : e).toList();
+      state = AsyncValue.data(_sorted(newList));
+    } catch (_) {
+      // 에러 시 이전 상태 복원 (state를 error로 만들지 않음)
+      state = AsyncValue.data(current);
     }
   }
 }

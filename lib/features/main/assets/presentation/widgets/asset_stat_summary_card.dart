@@ -30,7 +30,7 @@ class AssetStatSummaryCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
-                  l10n.assetAccountCount(stats.accountCount),
+                  l10n.asset_account_count(stats.accountCount),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.outline,
                       ),

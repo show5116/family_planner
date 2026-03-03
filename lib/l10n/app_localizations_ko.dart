@@ -2193,96 +2193,284 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get asset_title => '자산관리';
+
   @override
   String get asset_statistics => '통계';
+
   @override
   String get asset_no_group_selected => '그룹을 선택해주세요';
+
   @override
   String get asset_no_accounts => '등록된 계좌가 없습니다';
+
   @override
   String get asset_total_balance => '총 잔액';
+
   @override
   String get asset_total_principal => '총 원금';
+
   @override
   String get asset_total_profit => '총 수익금';
+
   @override
   String get asset_profit_rate => '수익률';
+
   @override
   String get asset_account_name => '계좌명';
+
   @override
   String get asset_account_name_hint => '예) 주택청약';
+
   @override
   String get asset_account_name_required => '계좌명을 입력해주세요';
+
   @override
   String get asset_institution => '금융기관';
+
   @override
   String get asset_institution_hint => '예) 국민은행';
+
   @override
   String get asset_institution_required => '금융기관명을 입력해주세요';
+
   @override
   String get asset_account_number => '계좌번호 (선택)';
+
   @override
   String get asset_account_number_hint => '예) 123-456-789';
+
   @override
   String get asset_account_type => '계좌 유형';
+
   @override
   String get asset_type_bank => '은행';
+
   @override
   String get asset_type_stock => '주식';
+
   @override
   String get asset_type_fund => '펀드';
+
   @override
   String get asset_type_insurance => '보험';
+
   @override
   String get asset_type_real_estate => '부동산';
+
   @override
   String get asset_type_cash => '현금';
+
   @override
   String get asset_type_other => '기타';
+
   @override
   String get asset_add_account => '계좌 추가';
+
   @override
   String get asset_edit_account => '계좌 수정';
+
   @override
   String get asset_delete_account => '계좌 삭제';
+
   @override
-  String get asset_delete_account_confirm => '이 계좌를 삭제하시겠습니까?\n관련된 모든 기록도 함께 삭제됩니다.';
+  String get asset_delete_account_confirm =>
+      '이 계좌를 삭제하시겠습니까?\n관련된 모든 기록도 함께 삭제됩니다.';
+
   @override
   String get asset_delete_success => '삭제되었습니다';
+
   @override
   String get asset_save_success => '저장되었습니다';
+
   @override
   String get asset_account_detail => '계좌 상세';
+
   @override
   String get asset_records => '자산 기록';
+
   @override
   String get asset_no_records => '기록이 없습니다';
+
   @override
   String get asset_add_record => '기록 추가';
+
   @override
   String get asset_record_date => '기록 날짜';
+
   @override
   String get asset_balance => '잔액';
+
   @override
   String get asset_principal => '원금';
+
   @override
   String get asset_profit => '수익금';
+
   @override
   String get asset_note => '메모 (선택)';
+
   @override
   String get asset_note_hint => '예) 이자 입금';
+
   @override
   String get asset_amount_hint => '금액을 입력하세요';
+
   @override
   String get asset_amount_required => '금액을 입력해주세요';
+
   @override
   String get asset_record_date_required => '기록 날짜를 선택해주세요';
+
   @override
   String get asset_record_save_success => '기록이 저장되었습니다';
+
   @override
   String get asset_statistics_title => '자산 통계';
+
   @override
   String get asset_by_type => '유형별 현황';
+
   @override
-  String assetAccountCount(int count) => '$count개 계좌';
+  String asset_account_count(int count) {
+    return '$count개 계좌';
+  }
+
+  @override
+  String get childcare_title => '육아포인트';
+
+  @override
+  String get childcare_accounts => '자녀 계정';
+
+  @override
+  String get childcare_add_account => '계정 추가';
+
+  @override
+  String get childcare_balance => '포인트 잔액';
+
+  @override
+  String get childcare_monthly_allowance => '월 용돈';
+
+  @override
+  String get childcare_savings_balance => '적금 잔액';
+
+  @override
+  String get childcare_savings_interest_rate => '적금 이자율';
+
+  @override
+  String get childcare_tab_points => '포인트';
+
+  @override
+  String get childcare_tab_rewards => '보상';
+
+  @override
+  String get childcare_tab_rules => '규칙';
+
+  @override
+  String get childcare_tab_history => '히스토리';
+
+  @override
+  String get childcare_add_transaction => '포인트 지급/차감';
+
+  @override
+  String get childcare_add_reward => '보상 추가';
+
+  @override
+  String get childcare_add_rule => '규칙 추가';
+
+  @override
+  String get childcare_transaction_type_earn => '포인트 적립';
+
+  @override
+  String get childcare_transaction_type_spend => '포인트 사용';
+
+  @override
+  String get childcare_transaction_type_penalty => '규칙 위반 차감';
+
+  @override
+  String get childcare_transaction_type_monthly => '월 용돈 지급';
+
+  @override
+  String get childcare_transaction_type_savings_deposit => '적금 입금';
+
+  @override
+  String get childcare_transaction_type_savings_withdraw => '적금 출금';
+
+  @override
+  String get childcare_transaction_type_interest => '이자 지급';
+
+  @override
+  String childcare_reward_points_cost(int points) {
+    return '$points포인트';
+  }
+
+  @override
+  String childcare_rule_penalty(int penalty) {
+    return '차감 $penalty포인트';
+  }
+
+  @override
+  String get childcare_savings_deposit => '적금 입금';
+
+  @override
+  String get childcare_savings_withdraw => '적금 출금';
+
+  @override
+  String get childcare_empty_accounts => '자녀 계정이 없습니다.\n계정을 추가해보세요.';
+
+  @override
+  String get childcare_empty_transactions => '거래 내역이 없습니다.';
+
+  @override
+  String get childcare_empty_rewards => '보상 항목이 없습니다.\n보상을 추가해보세요.';
+
+  @override
+  String get childcare_empty_rules => '규칙이 없습니다.\n규칙을 추가해보세요.';
+
+  @override
+  String get childcare_account_child_id => '자녀 ID';
+
+  @override
+  String get childcare_account_monthly_allowance => '월 용돈 포인트';
+
+  @override
+  String get childcare_account_savings_rate => '적금 이자율 (%)';
+
+  @override
+  String get childcare_transaction_amount => '포인트 금액';
+
+  @override
+  String get childcare_transaction_description => '설명';
+
+  @override
+  String get childcare_transaction_type => '거래 유형';
+
+  @override
+  String get childcare_reward_name => '보상 이름';
+
+  @override
+  String get childcare_reward_description => '보상 설명 (선택)';
+
+  @override
+  String get childcare_reward_points => '포인트 비용';
+
+  @override
+  String get childcare_rule_name => '규칙 이름';
+
+  @override
+  String get childcare_rule_description => '규칙 설명 (선택)';
+
+  @override
+  String get childcare_rule_penalty_points => '차감 포인트';
+
+  @override
+  String get childcare_savings_amount => '금액';
+
+  @override
+  String get childcare_delete_confirm => '삭제하시겠습니까?';
+
+  @override
+  String get childcare_select_group => '그룹을 선택해주세요';
+
+  @override
+  String get childcare_no_group => '그룹에 참여하면 육아포인트를 사용할 수 있습니다.';
 }

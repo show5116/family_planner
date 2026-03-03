@@ -2232,96 +2232,287 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get asset_title => 'Assets';
+
   @override
   String get asset_statistics => 'Statistics';
+
   @override
   String get asset_no_group_selected => 'Please select a group';
+
   @override
   String get asset_no_accounts => 'No accounts registered';
+
   @override
   String get asset_total_balance => 'Total Balance';
+
   @override
   String get asset_total_principal => 'Total Principal';
+
   @override
   String get asset_total_profit => 'Total Profit';
+
   @override
   String get asset_profit_rate => 'Return Rate';
+
   @override
   String get asset_account_name => 'Account Name';
+
   @override
   String get asset_account_name_hint => 'e.g., Main Savings';
+
   @override
   String get asset_account_name_required => 'Please enter account name';
+
   @override
   String get asset_institution => 'Institution';
+
   @override
   String get asset_institution_hint => 'e.g., Kookmin Bank';
+
   @override
   String get asset_institution_required => 'Please enter institution name';
+
   @override
   String get asset_account_number => 'Account Number (Optional)';
+
   @override
   String get asset_account_number_hint => 'e.g., 123-456-789';
+
   @override
   String get asset_account_type => 'Account Type';
+
   @override
   String get asset_type_bank => 'Bank';
+
   @override
   String get asset_type_stock => 'Stock';
+
   @override
   String get asset_type_fund => 'Fund';
+
   @override
   String get asset_type_insurance => 'Insurance';
+
   @override
   String get asset_type_real_estate => 'Real Estate';
+
   @override
   String get asset_type_cash => 'Cash';
+
   @override
   String get asset_type_other => 'Other';
+
   @override
   String get asset_add_account => 'Add Account';
+
   @override
   String get asset_edit_account => 'Edit Account';
+
   @override
   String get asset_delete_account => 'Delete Account';
+
   @override
-  String get asset_delete_account_confirm => 'Are you sure you want to delete this account?\nAll related records will also be deleted.';
+  String get asset_delete_account_confirm =>
+      'Are you sure you want to delete this account?\nAll related records will also be deleted.';
+
   @override
   String get asset_delete_success => 'Deleted successfully';
+
   @override
   String get asset_save_success => 'Saved successfully';
+
   @override
   String get asset_account_detail => 'Account Detail';
+
   @override
   String get asset_records => 'Records';
+
   @override
   String get asset_no_records => 'No records yet';
+
   @override
   String get asset_add_record => 'Add Record';
+
   @override
   String get asset_record_date => 'Record Date';
+
   @override
   String get asset_balance => 'Balance';
+
   @override
   String get asset_principal => 'Principal';
+
   @override
   String get asset_profit => 'Profit';
+
   @override
   String get asset_note => 'Note (Optional)';
+
   @override
   String get asset_note_hint => 'e.g., Interest received';
+
   @override
   String get asset_amount_hint => 'Enter amount';
+
   @override
   String get asset_amount_required => 'Please enter amount';
+
   @override
   String get asset_record_date_required => 'Please select record date';
+
   @override
   String get asset_record_save_success => 'Record saved';
+
   @override
   String get asset_statistics_title => 'Asset Statistics';
+
   @override
   String get asset_by_type => 'By Type';
+
   @override
-  String assetAccountCount(int count) => '$count accounts';
+  String asset_account_count(int count) {
+    return '$count accounts';
+  }
+
+  @override
+  String get childcare_title => 'Child Points';
+
+  @override
+  String get childcare_accounts => 'Child Accounts';
+
+  @override
+  String get childcare_add_account => 'Add Account';
+
+  @override
+  String get childcare_balance => 'Points Balance';
+
+  @override
+  String get childcare_monthly_allowance => 'Monthly Allowance';
+
+  @override
+  String get childcare_savings_balance => 'Savings Balance';
+
+  @override
+  String get childcare_savings_interest_rate => 'Interest Rate';
+
+  @override
+  String get childcare_tab_points => 'Points';
+
+  @override
+  String get childcare_tab_rewards => 'Rewards';
+
+  @override
+  String get childcare_tab_rules => 'Rules';
+
+  @override
+  String get childcare_tab_history => 'History';
+
+  @override
+  String get childcare_add_transaction => 'Give/Deduct Points';
+
+  @override
+  String get childcare_add_reward => 'Add Reward';
+
+  @override
+  String get childcare_add_rule => 'Add Rule';
+
+  @override
+  String get childcare_transaction_type_earn => 'Earn Points';
+
+  @override
+  String get childcare_transaction_type_spend => 'Spend Points';
+
+  @override
+  String get childcare_transaction_type_penalty => 'Rule Penalty';
+
+  @override
+  String get childcare_transaction_type_monthly => 'Monthly Allowance';
+
+  @override
+  String get childcare_transaction_type_savings_deposit => 'Savings Deposit';
+
+  @override
+  String get childcare_transaction_type_savings_withdraw => 'Savings Withdraw';
+
+  @override
+  String get childcare_transaction_type_interest => 'Interest Payment';
+
+  @override
+  String childcare_reward_points_cost(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String childcare_rule_penalty(int penalty) {
+    return '-$penalty pts';
+  }
+
+  @override
+  String get childcare_savings_deposit => 'Deposit';
+
+  @override
+  String get childcare_savings_withdraw => 'Withdraw';
+
+  @override
+  String get childcare_empty_accounts =>
+      'No child accounts.\nAdd an account to get started.';
+
+  @override
+  String get childcare_empty_transactions => 'No transactions yet.';
+
+  @override
+  String get childcare_empty_rewards =>
+      'No rewards yet.\nAdd a reward for your child.';
+
+  @override
+  String get childcare_empty_rules =>
+      'No rules yet.\nAdd rules to manage behavior.';
+
+  @override
+  String get childcare_account_child_id => 'Child User ID';
+
+  @override
+  String get childcare_account_monthly_allowance => 'Monthly Allowance (pts)';
+
+  @override
+  String get childcare_account_savings_rate => 'Savings Interest Rate (%)';
+
+  @override
+  String get childcare_transaction_amount => 'Amount';
+
+  @override
+  String get childcare_transaction_description => 'Description';
+
+  @override
+  String get childcare_transaction_type => 'Transaction Type';
+
+  @override
+  String get childcare_reward_name => 'Reward Name';
+
+  @override
+  String get childcare_reward_description => 'Description (optional)';
+
+  @override
+  String get childcare_reward_points => 'Points Cost';
+
+  @override
+  String get childcare_rule_name => 'Rule Name';
+
+  @override
+  String get childcare_rule_description => 'Description (optional)';
+
+  @override
+  String get childcare_rule_penalty_points => 'Penalty Points';
+
+  @override
+  String get childcare_savings_amount => 'Amount';
+
+  @override
+  String get childcare_delete_confirm => 'Are you sure you want to delete?';
+
+  @override
+  String get childcare_select_group => 'Please select a group';
+
+  @override
+  String get childcare_no_group => 'Join a group to use Child Points.';
 }

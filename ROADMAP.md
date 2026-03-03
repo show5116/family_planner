@@ -9,10 +9,10 @@
 ## 📊 Progress Overview
 
 - **완료**: 5/17 기능 (29%)
-- **진행 중**: 6/17 기능 (35%)
-- **미시작**: 6/17 기능 (35%)
+- **진행 중**: 7/17 기능 (41%)
+- **미시작**: 5/17 기능 (29%)
 
-**마지막 업데이트**: 2026-02-12
+**마지막 업데이트**: 2026-03-03
 
 ---
 
@@ -47,7 +47,7 @@
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
-| 육아 포인트 | ⬜ 시작 안함 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
+| 육아 포인트 | 🟨 진행 중 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
 | 미니게임 | ⬜ 시작 안함 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
 
 ### Phase 5: 개선 및 확장 (Enhancement & Expansion)
