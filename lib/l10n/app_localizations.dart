@@ -652,6 +652,12 @@ abstract class AppLocalizations {
   /// **'미니게임'**
   String get nav_miniGames;
 
+  /// No description provided for @nav_investmentIndicators.
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 지표'**
+  String get nav_investmentIndicators;
+
   /// No description provided for @home_greeting_morning.
   ///
   /// In ko, this message translates to:

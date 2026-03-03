@@ -34,7 +34,6 @@ class InvestmentSummaryWidget extends ConsumerWidget {
           }
           return Column(
             children: indicators
-                .take(3)
                 .map((indicator) => _IndicatorItem(indicator: indicator))
                 .toList(),
           );

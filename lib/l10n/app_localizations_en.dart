@@ -297,6 +297,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nav_miniGames => 'Mini Games';
 
   @override
+  String get nav_investmentIndicators => 'Investment Indicators';
+
+  @override
   String get home_greeting_morning => 'Good morning!';
 
   @override

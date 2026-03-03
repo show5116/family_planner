@@ -125,6 +125,12 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
       icon: Icons.games_outlined,
       selectedIcon: Icons.games,
     ),
+    'investmentIndicators': NavigationItem(
+      id: 'investmentIndicators',
+      label: '투자 지표',
+      icon: Icons.trending_up_outlined,
+      selectedIcon: Icons.trending_up,
+    ),
   };
 
   // 기본 중간 슬롯 (자산, 일정, 할일)

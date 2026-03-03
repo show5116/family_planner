@@ -23,6 +23,8 @@ class NavigationLabelHelper {
         return l10n.nav_memo;
       case 'miniGames':
         return l10n.nav_miniGames;
+      case 'investmentIndicators':
+        return l10n.nav_investmentIndicators;
       default:
         return id; // fallback
     }

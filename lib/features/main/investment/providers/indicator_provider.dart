@@ -33,7 +33,30 @@ class Indicators extends _$Indicators {
     return sorted;
   }
 
-  /// 즐겨찾기 토글 (로컬 상태 즉시 반영)
+  /// 즐겨찾기 순서 변경 (로컬 상태 즉시 반영 후 API 저장)
+  Future<void> reorderBookmarks(int oldIndex, int newIndex) async {
+    if (!state.hasValue) return;
+    final current = state.value!;
+
+    final bookmarked = current.where((e) => e.isBookmarked).toList();
+    final unbookmarked = current.where((e) => !e.isBookmarked).toList();
+
+    final reordered = [...bookmarked];
+    final item = reordered.removeAt(oldIndex);
+    reordered.insert(newIndex, item);
+
+    state = AsyncValue.data([...reordered, ...unbookmarked]);
+
+    try {
+      await ref.read(indicatorRepositoryProvider).reorderBookmarks(
+            reordered.map((e) => e.symbol).toList(),
+          );
+    } catch (_) {
+      state = AsyncValue.data(current);
+    }
+  }
+
+  /// 즐겨찾기 토글 후 목록 재조회
   Future<void> toggleBookmark(String symbol) async {
     if (!state.hasValue) return;
     final current = state.value!;
@@ -44,14 +67,14 @@ class Indicators extends _$Indicators {
     final repository = ref.read(indicatorRepositoryProvider);
 
     try {
-      final updated = isBookmarked
-          ? await repository.removeBookmark(symbol)
-          : await repository.addBookmark(symbol);
-
-      final newList = current.map((e) => e.symbol == symbol ? updated : e).toList();
-      state = AsyncValue.data(_sorted(newList));
+      if (isBookmarked) {
+        await repository.removeBookmark(symbol);
+      } else {
+        await repository.addBookmark(symbol);
+      }
+      final refreshed = await repository.getIndicators();
+      state = AsyncValue.data(_sorted(refreshed));
     } catch (_) {
-      // 에러 시 이전 상태 복원 (state를 error로 만들지 않음)
       state = AsyncValue.data(current);
     }
   }

@@ -137,6 +137,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         context.push(AppRoutes.memo);
       case 'childPoints':
         context.push(AppRoutes.childPoints);
+      case 'investmentIndicators':
+        context.push(AppRoutes.investmentIndicators);
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.common_comingSoon)),

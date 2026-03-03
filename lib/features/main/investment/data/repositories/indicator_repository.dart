@@ -97,4 +97,16 @@ class IndicatorRepository {
       throw Exception('즐겨찾기 해제 실패: ${e.message}');
     }
   }
+
+  /// 즐겨찾기 순서 변경
+  Future<void> reorderBookmarks(List<String> symbols) async {
+    try {
+      await _dio.patch(
+        '/indicators/bookmarks/reorder',
+        data: {'symbols': symbols},
+      );
+    } on DioException catch (e) {
+      throw Exception('즐겨찾기 순서 변경 실패: ${e.message}');
+    }
+  }
 }

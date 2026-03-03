@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 
@@ -36,28 +37,134 @@ class InvestmentIndicatorsScreen extends ConsumerWidget {
           }
           return RefreshIndicator(
             onRefresh: () => ref.read(indicatorsProvider.notifier).refresh(),
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-              itemCount: indicators.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                return _IndicatorTile(
-                  indicator: indicators[index],
-                  onTap: () => context.push(
-                    '/investment-indicators/${indicators[index].symbol}',
-                  ),
-                  onBookmarkToggle: () => ref
-                      .read(indicatorsProvider.notifier)
-                      .toggleBookmark(indicators[index].symbol),
-                );
-              },
-            ),
+            child: _IndicatorListBody(indicators: indicators),
           );
         },
       ),
+    );
+  }
+}
+
+class _IndicatorListBody extends ConsumerWidget {
+  const _IndicatorListBody({required this.indicators});
+
+  final List<IndicatorModel> indicators;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookmarked = indicators.where((e) => e.isBookmarked).toList();
+    final unbookmarked = indicators.where((e) => !e.isBookmarked).toList();
+
+    return CustomScrollView(
+      slivers: [
+        if (bookmarked.isNotEmpty) ...[
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSizes.spaceM,
+                AppSizes.spaceM,
+                AppSizes.spaceM,
+                AppSizes.spaceXS,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    size: 16,
+                    color: AppColors.investment,
+                  ),
+                  const SizedBox(width: AppSizes.spaceXS),
+                  Text(
+                    '즐겨찾기',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: AppColors.investment,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(width: AppSizes.spaceXS),
+                  Text(
+                    '(길게 눌러 순서 변경)',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ReorderableListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              buildDefaultDragHandles: false,
+              proxyDecorator: buildReorderableProxyDecorator,
+              itemCount: bookmarked.length,
+              onReorder: (oldIndex, newIndex) {
+                if (newIndex > oldIndex) newIndex -= 1;
+                ref
+                    .read(indicatorsProvider.notifier)
+                    .reorderBookmarks(oldIndex, newIndex);
+              },
+              itemBuilder: (context, index) {
+                final indicator = bookmarked[index];
+                return ReorderableDragStartListener(
+                  key: ValueKey(indicator.symbol),
+                  index: index,
+                  child: _IndicatorTile(
+                    indicator: indicator,
+                    showDragHandle: true,
+                    onTap: () => context.push(
+                      '/investment-indicators/${indicator.symbol}',
+                    ),
+                    onBookmarkToggle: () => ref
+                        .read(indicatorsProvider.notifier)
+                        .toggleBookmark(indicator.symbol),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (unbookmarked.isNotEmpty)
+            const SliverToBoxAdapter(child: Divider(height: 1)),
+        ],
+        if (unbookmarked.isNotEmpty) ...[
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSizes.spaceM,
+                AppSizes.spaceM,
+                AppSizes.spaceM,
+                AppSizes.spaceXS,
+              ),
+              child: Text(
+                '전체 지표',
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ),
+          SliverList.separated(
+            itemCount: unbookmarked.length,
+            separatorBuilder: (_, _) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final indicator = unbookmarked[index];
+              return _IndicatorTile(
+                indicator: indicator,
+                showDragHandle: false,
+                onTap: () => context.push(
+                  '/investment-indicators/${indicator.symbol}',
+                ),
+                onBookmarkToggle: () => ref
+                    .read(indicatorsProvider.notifier)
+                    .toggleBookmark(indicator.symbol),
+              );
+            },
+          ),
+        ],
+        const SliverPadding(padding: EdgeInsets.only(bottom: AppSizes.spaceM)),
+      ],
     );
   }
 }
@@ -94,11 +201,13 @@ class _ErrorBody extends StatelessWidget {
 class _IndicatorTile extends StatelessWidget {
   const _IndicatorTile({
     required this.indicator,
+    required this.showDragHandle,
     required this.onTap,
     required this.onBookmarkToggle,
   });
 
   final IndicatorModel indicator;
+  final bool showDragHandle;
   final VoidCallback onTap;
   final VoidCallback onBookmarkToggle;
 
@@ -111,10 +220,17 @@ class _IndicatorTile extends StatelessWidget {
 
     return ListTile(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.spaceS,
-        vertical: AppSizes.spaceXS,
+      contentPadding: EdgeInsets.only(
+        left: showDragHandle ? AppSizes.spaceXS : AppSizes.spaceS,
+        right: 0,
+        top: AppSizes.spaceXS,
+        bottom: AppSizes.spaceXS,
       ),
+      leading: showDragHandle
+          ? DragHandleIcon(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            )
+          : null,
       title: Row(
         children: [
           Text(
@@ -166,7 +282,7 @@ class _IndicatorTile extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: AppSizes.spaceS),
+          const SizedBox(width: AppSizes.spaceXS),
           IconButton(
             icon: Icon(
               indicator.isBookmarked ? Icons.star : Icons.star_border,
