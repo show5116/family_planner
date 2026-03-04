@@ -98,6 +98,21 @@ class IndicatorRepository {
     }
   }
 
+  /// [어드민] 과거 데이터 일괄 초기화
+  Future<InitHistoryResult> initHistory({int? days}) async {
+    try {
+      final response = await _dio.post(
+        '/indicators/admin/init-history',
+        queryParameters: {
+          if (days != null) 'days': days,
+        },
+      );
+      return InitHistoryResult.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw Exception('과거 데이터 초기화 실패: ${e.message}');
+    }
+  }
+
   /// 즐겨찾기 순서 변경
   Future<void> reorderBookmarks(List<String> symbols) async {
     try {

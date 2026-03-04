@@ -160,6 +160,10 @@ class _PriceSummaryCard extends StatelessWidget {
                     ),
               ),
             ],
+            if (indicator.spread != null) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              _SpreadBadge(spread: indicator.spread!),
+            ],
           ],
         ),
       ),
@@ -174,6 +178,45 @@ class _PriceSummaryCard extends StatelessWidget {
           );
     }
     return value.toStringAsFixed(2);
+  }
+}
+
+class _SpreadBadge extends StatelessWidget {
+  const _SpreadBadge({required this.spread});
+
+  final double spread;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPremium = spread >= 0;
+    final color = isPremium ? AppColors.error : AppColors.success;
+    final sign = isPremium ? '+' : '';
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+          ),
+          child: Text(
+            '이격률 $sign${spread.toStringAsFixed(2)}%',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ),
+        const SizedBox(width: AppSizes.spaceXS),
+        Text(
+          isPremium ? '국제 환산가 대비 프리미엄' : '국제 환산가 대비 디스카운트',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      ],
+    );
   }
 }
 
@@ -223,7 +266,7 @@ class _ChartSection extends StatelessWidget {
               if (history.history.isEmpty) {
                 return const Center(child: Text('데이터가 없습니다'));
               }
-              return _LineChart(history: history);
+              return _LineChart(history: history, selectedDays: selectedDays);
             },
           ),
         ),
@@ -271,9 +314,10 @@ class _DayChip extends StatelessWidget {
 }
 
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.history});
+  const _LineChart({required this.history, required this.selectedDays});
 
   final IndicatorHistoryModel history;
+  final int selectedDays;
 
   @override
   Widget build(BuildContext context) {
@@ -281,20 +325,39 @@ class _LineChart extends StatelessWidget {
     final prices = points.map((e) => e.price).toList();
     final minY = prices.reduce((a, b) => a < b ? a : b);
     final maxY = prices.reduce((a, b) => a > b ? a : b);
-    final padding = (maxY - minY) * 0.1;
+    final yPadding = (maxY - minY) * 0.1;
 
     final isPositive = prices.last >= prices.first;
     final lineColor = isPositive ? AppColors.success : AppColors.error;
 
-    final spots = List.generate(
-      points.length,
-      (i) => FlSpot(i.toDouble(), points[i].price),
-    );
+    // 날짜 기반 X축: 기간 끝(오늘)을 maxX, 기간 시작을 0으로 설정
+    final now = DateTime.now();
+    final startDate = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: selectedDays - 1));
+
+    final spots = points
+        .map((p) {
+          final dayOffset =
+              p.recordedAt.difference(startDate).inDays.toDouble();
+          return FlSpot(dayOffset, p.price);
+        })
+        .where((s) => s.x >= 0 && s.x <= (selectedDays - 1).toDouble())
+        .toList();
+
+    if (spots.isEmpty) {
+      return const Center(child: Text('데이터가 없습니다'));
+    }
+
+    final maxX = (selectedDays - 1).toDouble();
+    // X축 레이블 4개 균등 배치
+    final labelInterval = (maxX / 3).ceilToDouble();
 
     return LineChart(
       LineChartData(
-        minY: minY - padding,
-        maxY: maxY + padding,
+        minX: 0,
+        maxX: maxX,
+        minY: minY - yPadding,
+        maxY: maxY + yPadding,
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
@@ -321,11 +384,9 @@ class _LineChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 24,
-              interval: (spots.length / 4).ceilToDouble(),
+              interval: labelInterval,
               getTitlesWidget: (value, _) {
-                final idx = value.toInt();
-                if (idx < 0 || idx >= points.length) return const SizedBox();
-                final date = points[idx].recordedAt;
+                final date = startDate.add(Duration(days: value.toInt()));
                 return Text(
                   '${date.month}/${date.day}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -368,11 +429,10 @@ class _LineChart extends StatelessWidget {
           touchTooltipData: LineTouchTooltipData(
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                final idx = spot.x.toInt();
-                final date = points[idx].recordedAt;
+                final date = startDate.add(Duration(days: spot.x.toInt()));
                 return LineTooltipItem(
                   '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}\n${_formatCompact(spot.y)}',
-                  TextStyle(
+                  const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

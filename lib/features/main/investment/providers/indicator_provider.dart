@@ -56,7 +56,7 @@ class Indicators extends _$Indicators {
     }
   }
 
-  /// 즐겨찾기 토글 후 목록 재조회
+  /// 즐겨찾기 토글 (낙관적 즉시 반영 → API → 재조회 확정)
   Future<void> toggleBookmark(String symbol) async {
     if (!state.hasValue) return;
     final current = state.value!;
@@ -66,14 +66,24 @@ class Indicators extends _$Indicators {
     final isBookmarked = current[index].isBookmarked;
     final repository = ref.read(indicatorRepositoryProvider);
 
+    // 낙관적 업데이트: 즉시 UI 반영
+    final optimistic = current.map((e) {
+      if (e.symbol != symbol) return e;
+      return e.copyWith(isBookmarked: !isBookmarked);
+    }).toList();
+    state = AsyncValue.data(_sorted(optimistic));
+
     try {
       if (isBookmarked) {
         await repository.removeBookmark(symbol);
       } else {
         await repository.addBookmark(symbol);
       }
+      // 서버 기준으로 확정
       final refreshed = await repository.getIndicators();
       state = AsyncValue.data(_sorted(refreshed));
+      // 대시보드 즐겨찾기 위젯도 갱신
+      ref.read(bookmarkedIndicatorsProvider.notifier).refresh();
     } catch (_) {
       state = AsyncValue.data(current);
     }
@@ -89,6 +99,16 @@ Future<IndicatorHistoryModel> indicatorHistory(
 }) async {
   final repository = ref.watch(indicatorRepositoryProvider);
   return repository.getIndicatorHistory(symbol, days: days);
+}
+
+/// [어드민] 과거 데이터 일괄 초기화 Provider
+@riverpod
+Future<InitHistoryResult> initIndicatorHistory(
+  Ref ref, {
+  int? days,
+}) async {
+  final repository = ref.read(indicatorRepositoryProvider);
+  return repository.initHistory(days: days);
 }
 
 /// 즐겨찾기 지표 목록 Provider

@@ -11,6 +11,8 @@ class IndicatorModel {
   final double? changeRate;
   final DateTime? recordedAt;
   final bool isBookmarked;
+  // GOLD_KRW_SPOT 전용: 국제 환산가 대비 이격률 (%). 양수 = 프리미엄
+  final double? spread;
 
   const IndicatorModel({
     required this.symbol,
@@ -24,6 +26,7 @@ class IndicatorModel {
     this.changeRate,
     this.recordedAt,
     required this.isBookmarked,
+    this.spread,
   });
 
   factory IndicatorModel.fromJson(Map<String, dynamic> json) {
@@ -39,6 +42,7 @@ class IndicatorModel {
       changeRate: json['changeRate'] != null ? double.tryParse(json['changeRate'].toString()) : null,
       recordedAt: json['recordedAt'] != null ? DateTime.tryParse(json['recordedAt'] as String) : null,
       isBookmarked: json['isBookmarked'] as bool? ?? false,
+      spread: json['spread'] != null ? double.tryParse(json['spread'].toString()) : null,
     );
   }
 
@@ -55,6 +59,31 @@ class IndicatorModel {
       changeRate: changeRate,
       recordedAt: recordedAt,
       isBookmarked: isBookmarked ?? this.isBookmarked,
+      spread: spread,
+    );
+  }
+}
+
+/// 과거 데이터 초기화 결과 모델 (어드민 전용)
+class InitHistoryResult {
+  final int yahoo;
+  final int crypto;
+  final int bond;
+  final int? goldKrw;
+
+  const InitHistoryResult({
+    required this.yahoo,
+    required this.crypto,
+    required this.bond,
+    this.goldKrw,
+  });
+
+  factory InitHistoryResult.fromJson(Map<String, dynamic> json) {
+    return InitHistoryResult(
+      yahoo: json['yahoo'] as int? ?? 0,
+      crypto: json['crypto'] as int? ?? 0,
+      bond: json['bond'] as int? ?? 0,
+      goldKrw: json['goldKrw'] as int?,
     );
   }
 }

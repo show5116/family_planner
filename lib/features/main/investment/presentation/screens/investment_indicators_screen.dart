@@ -4,21 +4,37 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
+import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 
-class InvestmentIndicatorsScreen extends ConsumerWidget {
+class InvestmentIndicatorsScreen extends ConsumerStatefulWidget {
   const InvestmentIndicatorsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<InvestmentIndicatorsScreen> createState() =>
+      _InvestmentIndicatorsScreenState();
+}
+
+class _InvestmentIndicatorsScreenState
+    extends ConsumerState<InvestmentIndicatorsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final indicatorsAsync = ref.watch(indicatorsProvider);
+    final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('투자 지표'),
         actions: [
+          if (isAdmin)
+            IconButton(
+              icon: const Icon(Icons.history),
+              tooltip: '과거 데이터 초기화 (관리자)',
+              onPressed: () => _showInitHistoryDialog(),
+            ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.read(indicatorsProvider.notifier).refresh(),
@@ -40,6 +56,120 @@ class InvestmentIndicatorsScreen extends ConsumerWidget {
             child: _IndicatorListBody(indicators: indicators),
           );
         },
+      ),
+    );
+  }
+
+  Future<void> _showInitHistoryDialog() async {
+    final daysController = TextEditingController(text: '365');
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('과거 데이터 초기화'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: AppSizes.spaceM),
+            TextField(
+              controller: daysController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: '수집 일수 (1~3650)',
+                hintText: '365',
+                border: OutlineInputBorder(),
+                suffixText: '일',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('취소'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('초기화 실행'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final days = int.tryParse(daysController.text.trim());
+
+    try {
+      _showLoadingSnackBar();
+      final result = await ref
+          .read(indicatorRepositoryProvider)
+          .initHistory(days: days);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      _showResultDialog(result);
+      ref.read(indicatorsProvider.notifier).refresh();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('초기화 실패: $e'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
+  void _showLoadingSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+            ),
+            SizedBox(width: AppSizes.spaceM),
+            Text('과거 데이터를 수집 중입니다...'),
+          ],
+        ),
+        duration: Duration(minutes: 5),
+      ),
+    );
+  }
+
+  void _showResultDialog(InitHistoryResult result) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('초기화 완료'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _ResultRow(label: 'Yahoo (주가/환율/원자재)', count: result.yahoo),
+            _ResultRow(label: '암호화폐 (BTC/KRW)', count: result.crypto),
+            _ResultRow(label: '한국 채권', count: result.bond),
+            if (result.goldKrw != null)
+              _ResultRow(label: '국내 금값', count: result.goldKrw!),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('확인'),
+          ),
+        ],
       ),
     );
   }
@@ -165,6 +295,32 @@ class _IndicatorListBody extends ConsumerWidget {
         ],
         const SliverPadding(padding: EdgeInsets.only(bottom: AppSizes.spaceM)),
       ],
+    );
+  }
+}
+
+class _ResultRow extends StatelessWidget {
+  const _ResultRow({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          Text(
+            '$count건',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ],
+      ),
     );
   }
 }

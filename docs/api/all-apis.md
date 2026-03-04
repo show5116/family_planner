@@ -937,10 +937,9 @@
 ```json
 {
   "groupId": "uuid-1234", // 그룹 ID (string)
-  "name": "주택청약", // 계좌명 (string)
-  "accountNumber": "123-456-789", // 계좌번호 (string?)
-  "institution": "국민은행", // 금융기관명 (string)
-  "type": null // 계좌 유형 (AccountType)
+  "childUserId": "uuid-1234", // 자녀 사용자 ID (string)
+  "monthlyAllowance": 100, // 월별 용돈 포인트 (number)
+  "savingsInterestRate": 2 // 적금 이자율 (%) (number)
 }
 ```
 
@@ -1043,10 +1042,8 @@
 
 ```json
 {
-  "name": "주택청약", // 계좌명 (string?)
-  "accountNumber": "123-456-789", // 계좌번호 (string?)
-  "institution": "국민은행", // 금융기관명 (string?)
-  "type": null // 계좌 유형 (AccountType?)
+  "monthlyAllowance": 150, // 월별 용돈 포인트 (number?)
+  "savingsInterestRate": 3 // 적금 이자율 (%) (number?)
 }
 ```
 
@@ -3019,7 +3016,8 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "change": "30.22", // 변동액 (string | null)
   "changeRate": "1.19", // 변동률 (%) (string | null)
   "recordedAt": "2025-01-01T00:00:00Z", // 수집 시각 (Date | null)
-  "isBookmarked": false // 즐겨찾기 여부 (boolean)
+  "isBookmarked": false, // 즐겨찾기 여부 (boolean)
+  "spread": "1.23" // GOLD_KRW_SPOT 전용: 국제 환산가 대비 이격률 (%). 양수 = 현물가가 환산가보다 높음 (프리미엄) (string | null)
 }
 ```
 
@@ -3045,9 +3043,31 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "change": "30.22", // 변동액 (string | null)
   "changeRate": "1.19", // 변동률 (%) (string | null)
   "recordedAt": "2025-01-01T00:00:00Z", // 수집 시각 (Date | null)
-  "isBookmarked": false // 즐겨찾기 여부 (boolean)
+  "isBookmarked": false, // 즐겨찾기 여부 (boolean)
+  "spread": "1.23" // GOLD_KRW_SPOT 전용: 국제 환산가 대비 이격률 (%). 양수 = 현물가가 환산가보다 높음 (프리미엄) (string | null)
 }
 ```
+
+---
+
+### PATCH `indicators/bookmarks/reorder`
+
+**요약:** 즐겨찾기 순서 변경
+
+**설명:**
+즐겨찾기된 symbol 배열을 원하는 순서대로 전달하면 해당 순서로 저장됩니다.
+
+**Request Body:**
+
+```json
+{
+  "symbols": ["KOSPI", "BTC", "GOLD_USD"] // 즐겨찾기 symbol 배열 (순서대로) (string[])
+}
+```
+
+**Responses:**
+
+#### 200 - 즐겨찾기 순서 변경 성공
 
 ---
 
@@ -3075,7 +3095,8 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "change": "30.22", // 변동액 (string | null)
   "changeRate": "1.19", // 변동률 (%) (string | null)
   "recordedAt": "2025-01-01T00:00:00Z", // 수집 시각 (Date | null)
-  "isBookmarked": false // 즐겨찾기 여부 (boolean)
+  "isBookmarked": false, // 즐겨찾기 여부 (boolean)
+  "spread": "1.23" // GOLD_KRW_SPOT 전용: 국제 환산가 대비 이격률 (%). 양수 = 현물가가 환산가보다 높음 (프리미엄) (string | null)
 }
 ```
 
@@ -3140,7 +3161,8 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "change": "30.22", // 변동액 (string | null)
   "changeRate": "1.19", // 변동률 (%) (string | null)
   "recordedAt": "2025-01-01T00:00:00Z", // 수집 시각 (Date | null)
-  "isBookmarked": false // 즐겨찾기 여부 (boolean)
+  "isBookmarked": false, // 즐겨찾기 여부 (boolean)
+  "spread": "1.23" // GOLD_KRW_SPOT 전용: 국제 환산가 대비 이격률 (%). 양수 = 현물가가 환산가보다 높음 (프리미엄) (string | null)
 }
 ```
 
@@ -3172,7 +3194,8 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "change": "30.22", // 변동액 (string | null)
   "changeRate": "1.19", // 변동률 (%) (string | null)
   "recordedAt": "2025-01-01T00:00:00Z", // 수집 시각 (Date | null)
-  "isBookmarked": false // 즐겨찾기 여부 (boolean)
+  "isBookmarked": false, // 즐겨찾기 여부 (boolean)
+  "spread": "1.23" // GOLD_KRW_SPOT 전용: 국제 환산가 대비 이격률 (%). 양수 = 현물가가 환산가보다 높음 (프리미엄) (string | null)
 }
 ```
 
@@ -3203,8 +3226,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
 {
   "yahoo": 5400, // 저장된 Yahoo 시세 건수 (number)
   "crypto": 365, // 저장된 BTC/KRW 건수 (number)
-  "bond": 250, // 저장된 한국채 건수 (number)
-  "goldKrw": 360 // 저장된 국내 금값 건수 (number)
+  "bond": 250 // 저장된 한국채 건수 (number)
 }
 ```
 
