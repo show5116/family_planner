@@ -220,7 +220,7 @@ class _SpreadBadge extends StatelessWidget {
   }
 }
 
-class _ChartSection extends StatelessWidget {
+class _ChartSection extends StatefulWidget {
   const _ChartSection({
     required this.historyAsync,
     required this.selectedDays,
@@ -232,6 +232,22 @@ class _ChartSection extends StatelessWidget {
   final int selectedDays;
   final ValueChanged<int> onDaysChanged;
   final List<int> dayOptions;
+
+  @override
+  State<_ChartSection> createState() => _ChartSectionState();
+}
+
+class _ChartSectionState extends State<_ChartSection> {
+  // 드래그 범위 선택 (날짜 오프셋)
+  double? _dragStartX;
+  double? _dragEndX;
+
+  void _onRangeChanged(double? startX, double? endX) {
+    setState(() {
+      _dragStartX = startX;
+      _dragEndX = endX;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,11 +263,14 @@ class _ChartSection extends StatelessWidget {
                   ),
             ),
             const Spacer(),
-            ...dayOptions.map(
+            ...widget.dayOptions.map(
               (days) => _DayChip(
                 label: days >= 365 ? '1년' : '$days일',
-                selected: selectedDays == days,
-                onTap: () => onDaysChanged(days),
+                selected: widget.selectedDays == days,
+                onTap: () {
+                  _onRangeChanged(null, null);
+                  widget.onDaysChanged(days);
+                },
               ),
             ),
           ],
@@ -259,16 +278,37 @@ class _ChartSection extends StatelessWidget {
         const SizedBox(height: AppSizes.spaceM),
         SizedBox(
           height: 220,
-          child: historyAsync.when(
+          child: widget.historyAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, _) => const Center(child: Text('차트를 불러올 수 없습니다')),
             data: (history) {
               if (history.history.isEmpty) {
                 return const Center(child: Text('데이터가 없습니다'));
               }
-              return _LineChart(history: history, selectedDays: selectedDays);
+              return _LineChart(
+                history: history,
+                selectedDays: widget.selectedDays,
+                dragStartX: _dragStartX,
+                dragEndX: _dragEndX,
+                onRangeChanged: _onRangeChanged,
+              );
             },
           ),
+        ),
+        // 드래그 범위 등락률 표시
+        widget.historyAsync.maybeWhen(
+          data: (history) {
+            if (_dragStartX == null || _dragEndX == null) {
+              return const SizedBox(height: AppSizes.spaceM);
+            }
+            return _RangeSummaryBar(
+              history: history,
+              selectedDays: widget.selectedDays,
+              dragStartX: _dragStartX!,
+              dragEndX: _dragEndX!,
+            );
+          },
+          orElse: () => const SizedBox(height: AppSizes.spaceM),
         ),
       ],
     );
@@ -313,15 +353,32 @@ class _DayChip extends StatelessWidget {
   }
 }
 
-class _LineChart extends StatelessWidget {
-  const _LineChart({required this.history, required this.selectedDays});
+class _LineChart extends StatefulWidget {
+  const _LineChart({
+    required this.history,
+    required this.selectedDays,
+    required this.dragStartX,
+    required this.dragEndX,
+    required this.onRangeChanged,
+  });
 
   final IndicatorHistoryModel history;
   final int selectedDays;
+  final double? dragStartX;
+  final double? dragEndX;
+  final void Function(double? startX, double? endX) onRangeChanged;
+
+  @override
+  State<_LineChart> createState() => _LineChartState();
+}
+
+class _LineChartState extends State<_LineChart> {
+  // fl_chart가 터치를 처리하므로 여기서는 드래그 시작 X(chart 좌표)만 보관
+  double? _touchStartX;
 
   @override
   Widget build(BuildContext context) {
-    final points = history.history;
+    final points = widget.history.history;
     final prices = points.map((e) => e.price).toList();
     final minY = prices.reduce((a, b) => a < b ? a : b);
     final maxY = prices.reduce((a, b) => a > b ? a : b);
@@ -330,27 +387,46 @@ class _LineChart extends StatelessWidget {
     final isPositive = prices.last >= prices.first;
     final lineColor = isPositive ? AppColors.success : AppColors.error;
 
-    // 날짜 기반 X축: 기간 끝(오늘)을 maxX, 기간 시작을 0으로 설정
     final now = DateTime.now();
     final startDate = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: selectedDays - 1));
+        .subtract(Duration(days: widget.selectedDays - 1));
 
-    final spots = points
-        .map((p) {
-          final dayOffset =
-              p.recordedAt.difference(startDate).inDays.toDouble();
-          return FlSpot(dayOffset, p.price);
-        })
-        .where((s) => s.x >= 0 && s.x <= (selectedDays - 1).toDouble())
-        .toList();
+    // 날짜 오프셋으로 변환 후 중복 제거(같은 날 마지막 값 유지) + 정렬
+    final spotsMap = <int, double>{};
+    for (final p in points) {
+      final dayOffset = p.recordedAt.difference(startDate).inDays;
+      if (dayOffset >= 0 && dayOffset <= widget.selectedDays - 1) {
+        spotsMap[dayOffset] = p.price;
+      }
+    }
+    final spots = spotsMap.entries
+        .map((e) => FlSpot(e.key.toDouble(), e.value))
+        .toList()
+      ..sort((a, b) => a.x.compareTo(b.x));
 
     if (spots.isEmpty) {
       return const Center(child: Text('데이터가 없습니다'));
     }
 
-    final maxX = (selectedDays - 1).toDouble();
-    // X축 레이블 4개 균등 배치
+    final maxX = (widget.selectedDays - 1).toDouble();
     final labelInterval = (maxX / 3).ceilToDouble();
+    // 포인트가 적으면 곡선이 세모처럼 튀므로 직선 처리
+    final useCurve = spots.length >= 5;
+
+    // Y축 interval: 전체 Y 범위를 4등분하여 레이블 중복 방지
+    final yRange = (maxY + yPadding) - (minY - yPadding);
+    final yInterval = yRange > 0 ? yRange / 4 : 1.0;
+
+    // 선택 범위 강조 수직선
+    final rangeStart = widget.dragStartX;
+    final rangeEnd = widget.dragEndX;
+    final hasRange = rangeStart != null && rangeEnd != null;
+    final selLeft = hasRange
+        ? (rangeStart < rangeEnd ? rangeStart : rangeEnd)
+        : null;
+    final selRight = hasRange
+        ? (rangeStart < rangeEnd ? rangeEnd : rangeStart)
+        : null;
 
     return LineChart(
       LineChartData(
@@ -370,9 +446,10 @@ class _LineChart extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 52,
+              reservedSize: 64,
+              interval: yInterval,
               getTitlesWidget: (value, _) => Text(
-                _formatCompact(value),
+                _formatPrice(value),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontSize: 10,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -405,10 +482,49 @@ class _LineChart extends StatelessWidget {
           ),
         ),
         borderData: FlBorderData(show: false),
+        // 선택 범위 배경 + 수직선
+        extraLinesData: hasRange
+            ? ExtraLinesData(
+                verticalLines: [
+                  VerticalLine(
+                    x: selLeft!,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.7),
+                    strokeWidth: 1.5,
+                    dashArray: [4, 4],
+                  ),
+                  VerticalLine(
+                    x: selRight!,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.7),
+                    strokeWidth: 1.5,
+                    dashArray: [4, 4],
+                  ),
+                ],
+              )
+            : null,
+        rangeAnnotations: hasRange
+            ? RangeAnnotations(
+                verticalRangeAnnotations: [
+                  VerticalRangeAnnotation(
+                    x1: selLeft!,
+                    x2: selRight!,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.08),
+                  ),
+                ],
+              )
+            : null,
         lineBarsData: [
           LineChartBarData(
             spots: spots,
-            isCurved: true,
+            isCurved: useCurve,
             color: lineColor,
             barWidth: 2,
             dotData: const FlDotData(show: false),
@@ -426,12 +542,37 @@ class _LineChart extends StatelessWidget {
           ),
         ],
         lineTouchData: LineTouchData(
+          touchCallback: (event, response) {
+            final x = response?.lineBarSpots?.first.x;
+            if (x == null) return;
+
+            if (event is FlPanStartEvent) {
+              _touchStartX = x;
+              widget.onRangeChanged(x, x);
+            } else if (event is FlPanUpdateEvent) {
+              if (_touchStartX != null) {
+                widget.onRangeChanged(_touchStartX, x);
+              }
+            } else if (event is FlPanEndEvent ||
+                event is FlTapUpEvent ||
+                event is FlLongPressEnd) {
+              if (_touchStartX != null &&
+                  widget.dragEndX != null &&
+                  (widget.dragEndX! - _touchStartX!).abs() < 1) {
+                // 단순 탭 → 범위 해제
+                _touchStartX = null;
+                widget.onRangeChanged(null, null);
+              } else {
+                _touchStartX = null;
+              }
+            }
+          },
           touchTooltipData: LineTouchTooltipData(
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
                 final date = startDate.add(Duration(days: spot.x.toInt()));
                 return LineTooltipItem(
-                  '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}\n${_formatCompact(spot.y)}',
+                  '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}\n${_formatPrice(spot.y)}',
                   const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -446,9 +587,120 @@ class _LineChart extends StatelessWidget {
     );
   }
 
-  String _formatCompact(double value) {
-    if (value >= 1000000) return '${(value / 1000000).toStringAsFixed(1)}M';
-    if (value >= 1000) return '${(value / 1000).toStringAsFixed(1)}K';
-    return value.toStringAsFixed(1);
+  String _formatPrice(double value) {
+    if (value >= 1000) {
+      return value.toStringAsFixed(2).replaceAllMapped(
+            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+            (m) => '${m[1]},',
+          );
+    }
+    return value.toStringAsFixed(2);
+  }
+}
+
+/// 드래그 범위의 등락률 요약 바
+class _RangeSummaryBar extends StatelessWidget {
+  const _RangeSummaryBar({
+    required this.history,
+    required this.selectedDays,
+    required this.dragStartX,
+    required this.dragEndX,
+  });
+
+  final IndicatorHistoryModel history;
+  final int selectedDays;
+  final double dragStartX;
+  final double dragEndX;
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final startDate = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: selectedDays - 1));
+
+    final selLeft = dragStartX < dragEndX ? dragStartX : dragEndX;
+    final selRight = dragStartX < dragEndX ? dragEndX : dragStartX;
+
+    // 선택 범위에 포함된 포인트 수집
+    final inRange = history.history.where((p) {
+      final offset = p.recordedAt.difference(startDate).inDays.toDouble();
+      return offset >= selLeft - 0.5 && offset <= selRight + 0.5;
+    }).toList();
+
+    if (inRange.isEmpty) return const SizedBox(height: AppSizes.spaceM);
+
+    inRange.sort((a, b) => a.recordedAt.compareTo(b.recordedAt));
+    final fromPrice = inRange.first.price;
+    final toPrice = inRange.last.price;
+    final change = toPrice - fromPrice;
+    final changeRate = fromPrice != 0 ? (change / fromPrice) * 100 : 0.0;
+    final isPositive = change >= 0;
+    final color = isPositive ? AppColors.success : AppColors.error;
+
+    final fromDate = inRange.first.recordedAt;
+    final toDate = inRange.last.recordedAt;
+
+    String fmt(DateTime d) =>
+        '${d.month.toString().padLeft(2, '0')}/${d.day.toString().padLeft(2, '0')}';
+    String fmtPrice(double v) {
+      if (v >= 1000) {
+        return v.toStringAsFixed(2).replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (m) => '${m[1]},',
+            );
+      }
+      return v.toStringAsFixed(2);
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: AppSizes.spaceS),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceS,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+            size: 14,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${fmt(fromDate)} → ${fmt(toDate)}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
+          const Spacer(),
+          Text(
+            '${fmtPrice(fromPrice)} → ${fmtPrice(toPrice)}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+            ),
+            child: Text(
+              '${isPositive ? '+' : ''}${changeRate.toStringAsFixed(2)}%',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
