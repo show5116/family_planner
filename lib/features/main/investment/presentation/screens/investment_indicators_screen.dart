@@ -237,7 +237,7 @@ class _IndicatorListBody extends ConsumerWidget {
               },
               itemBuilder: (context, index) {
                 final indicator = bookmarked[index];
-                return ReorderableDragStartListener(
+                return ReorderableDelayedDragStartListener(
                   key: ValueKey(indicator.symbol),
                   index: index,
                   child: _IndicatorTile(
