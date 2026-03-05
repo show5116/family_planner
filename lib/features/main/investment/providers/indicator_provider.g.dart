@@ -175,7 +175,278 @@ class _IndicatorHistoryProviderElement
   int get days => (origin as IndicatorHistoryProvider).days;
 }
 
-String _$indicatorsHash() => r'e806b629a925e94a61d999bbb0dfdd1e89dd5710';
+String _$indicatorSparklineHash() =>
+    r'601c3dbb51129d13bf0d72e8e3b5abfe4d65ca6d';
+
+/// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+///
+/// Copied from [indicatorSparkline].
+@ProviderFor(indicatorSparkline)
+const indicatorSparklineProvider = IndicatorSparklineFamily();
+
+/// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+///
+/// Copied from [indicatorSparkline].
+class IndicatorSparklineFamily extends Family<AsyncValue<List<double>>> {
+  /// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+  ///
+  /// Copied from [indicatorSparkline].
+  const IndicatorSparklineFamily();
+
+  /// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+  ///
+  /// Copied from [indicatorSparkline].
+  IndicatorSparklineProvider call(String symbol) {
+    return IndicatorSparklineProvider(symbol);
+  }
+
+  @override
+  IndicatorSparklineProvider getProviderOverride(
+    covariant IndicatorSparklineProvider provider,
+  ) {
+    return call(provider.symbol);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'indicatorSparklineProvider';
+}
+
+/// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+///
+/// Copied from [indicatorSparkline].
+class IndicatorSparklineProvider
+    extends AutoDisposeFutureProvider<List<double>> {
+  /// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+  ///
+  /// Copied from [indicatorSparkline].
+  IndicatorSparklineProvider(String symbol)
+    : this._internal(
+        (ref) => indicatorSparkline(ref as IndicatorSparklineRef, symbol),
+        from: indicatorSparklineProvider,
+        name: r'indicatorSparklineProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$indicatorSparklineHash,
+        dependencies: IndicatorSparklineFamily._dependencies,
+        allTransitiveDependencies:
+            IndicatorSparklineFamily._allTransitiveDependencies,
+        symbol: symbol,
+      );
+
+  IndicatorSparklineProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.symbol,
+  }) : super.internal();
+
+  final String symbol;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<double>> Function(IndicatorSparklineRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: IndicatorSparklineProvider._internal(
+        (ref) => create(ref as IndicatorSparklineRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        symbol: symbol,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<double>> createElement() {
+    return _IndicatorSparklineProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is IndicatorSparklineProvider && other.symbol == symbol;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, symbol.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin IndicatorSparklineRef on AutoDisposeFutureProviderRef<List<double>> {
+  /// The parameter `symbol` of this provider.
+  String get symbol;
+}
+
+class _IndicatorSparklineProviderElement
+    extends AutoDisposeFutureProviderElement<List<double>>
+    with IndicatorSparklineRef {
+  _IndicatorSparklineProviderElement(super.provider);
+
+  @override
+  String get symbol => (origin as IndicatorSparklineProvider).symbol;
+}
+
+String _$initIndicatorHistoryHash() =>
+    r'c75848666f354a1d4a26aebe7a1d2a17463e29e9';
+
+/// [어드민] 과거 데이터 일괄 초기화 Provider
+///
+/// Copied from [initIndicatorHistory].
+@ProviderFor(initIndicatorHistory)
+const initIndicatorHistoryProvider = InitIndicatorHistoryFamily();
+
+/// [어드민] 과거 데이터 일괄 초기화 Provider
+///
+/// Copied from [initIndicatorHistory].
+class InitIndicatorHistoryFamily extends Family<AsyncValue<InitHistoryResult>> {
+  /// [어드민] 과거 데이터 일괄 초기화 Provider
+  ///
+  /// Copied from [initIndicatorHistory].
+  const InitIndicatorHistoryFamily();
+
+  /// [어드민] 과거 데이터 일괄 초기화 Provider
+  ///
+  /// Copied from [initIndicatorHistory].
+  InitIndicatorHistoryProvider call({int? days}) {
+    return InitIndicatorHistoryProvider(days: days);
+  }
+
+  @override
+  InitIndicatorHistoryProvider getProviderOverride(
+    covariant InitIndicatorHistoryProvider provider,
+  ) {
+    return call(days: provider.days);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'initIndicatorHistoryProvider';
+}
+
+/// [어드민] 과거 데이터 일괄 초기화 Provider
+///
+/// Copied from [initIndicatorHistory].
+class InitIndicatorHistoryProvider
+    extends AutoDisposeFutureProvider<InitHistoryResult> {
+  /// [어드민] 과거 데이터 일괄 초기화 Provider
+  ///
+  /// Copied from [initIndicatorHistory].
+  InitIndicatorHistoryProvider({int? days})
+    : this._internal(
+        (ref) =>
+            initIndicatorHistory(ref as InitIndicatorHistoryRef, days: days),
+        from: initIndicatorHistoryProvider,
+        name: r'initIndicatorHistoryProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$initIndicatorHistoryHash,
+        dependencies: InitIndicatorHistoryFamily._dependencies,
+        allTransitiveDependencies:
+            InitIndicatorHistoryFamily._allTransitiveDependencies,
+        days: days,
+      );
+
+  InitIndicatorHistoryProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.days,
+  }) : super.internal();
+
+  final int? days;
+
+  @override
+  Override overrideWith(
+    FutureOr<InitHistoryResult> Function(InitIndicatorHistoryRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: InitIndicatorHistoryProvider._internal(
+        (ref) => create(ref as InitIndicatorHistoryRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        days: days,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<InitHistoryResult> createElement() {
+    return _InitIndicatorHistoryProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InitIndicatorHistoryProvider && other.days == days;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, days.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin InitIndicatorHistoryRef
+    on AutoDisposeFutureProviderRef<InitHistoryResult> {
+  /// The parameter `days` of this provider.
+  int? get days;
+}
+
+class _InitIndicatorHistoryProviderElement
+    extends AutoDisposeFutureProviderElement<InitHistoryResult>
+    with InitIndicatorHistoryRef {
+  _InitIndicatorHistoryProviderElement(super.provider);
+
+  @override
+  int? get days => (origin as InitIndicatorHistoryProvider).days;
+}
+
+String _$indicatorsHash() => r'e4285660fdde937c26eaef0ac8ba99943949dd93';
 
 /// 전체 지표 목록 Provider
 ///

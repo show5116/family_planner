@@ -93,21 +93,43 @@ class IndicatorHistoryModel {
   final String symbol;
   final String nameKo;
   final List<IndicatorPricePoint> history;
+  /// GOLD_KRW_SPOT 전용: 이격률 시계열
+  final List<SpreadPoint> spreadHistory;
 
   const IndicatorHistoryModel({
     required this.symbol,
     required this.nameKo,
     required this.history,
+    this.spreadHistory = const [],
   });
 
   factory IndicatorHistoryModel.fromJson(Map<String, dynamic> json) {
     final historyJson = json['history'] as List<dynamic>? ?? [];
+    final spreadJson = json['spreadHistory'] as List<dynamic>? ?? [];
     return IndicatorHistoryModel(
       symbol: json['symbol'] as String,
       nameKo: json['nameKo'] as String,
       history: historyJson
           .map((e) => IndicatorPricePoint.fromJson(e as Map<String, dynamic>))
           .toList(),
+      spreadHistory: spreadJson
+          .map((e) => SpreadPoint.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+/// 이격률 포인트 (GOLD_KRW_SPOT 전용)
+class SpreadPoint {
+  final double spread;
+  final DateTime recordedAt;
+
+  const SpreadPoint({required this.spread, required this.recordedAt});
+
+  factory SpreadPoint.fromJson(Map<String, dynamic> json) {
+    return SpreadPoint(
+      spread: double.parse(json['spread'].toString()),
+      recordedAt: DateTime.parse(json['recordedAt'] as String),
     );
   }
 }

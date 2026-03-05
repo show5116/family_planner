@@ -6,8 +6,10 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/shared/widgets/sparkline_chart.dart';
 
 /// 투자 지표 요약 위젯 (대시보드용 - 즐겨찾기 목록 표시)
 class InvestmentSummaryWidget extends ConsumerWidget {
@@ -93,22 +95,24 @@ class _EmptyIndicators extends StatelessWidget {
   }
 }
 
-class _IndicatorItem extends StatelessWidget {
+class _IndicatorItem extends ConsumerWidget {
   const _IndicatorItem({required this.indicator});
 
   final IndicatorModel indicator;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final change = indicator.change;
     final changeRate = indicator.changeRate;
     final isPositive = (change ?? 0) >= 0;
     final changeColor = isPositive ? AppColors.success : AppColors.error;
+    final sparklineAsync = ref.watch(indicatorSparklineProvider(indicator.symbol));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
       child: Row(
         children: [
+          // 이름
           Expanded(
             flex: 2,
             child: Text(
@@ -116,20 +120,37 @@ class _IndicatorItem extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
+          // 스파크라인 (고정 너비)
+          SizedBox(
+            width: 60,
+            height: 32,
+            child: sparklineAsync.when(
+              data: (points) => SparklineChart(
+                points: points,
+                color: isPositive ? AppColors.success : AppColors.error,
+              ),
+              loading: () => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          // 가격 (수치·단위 두 줄 고정) + 변동
           Expanded(
             flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  indicator.price != null
-                      ? '${_formatNumber(indicator.price!)} ${indicator.unit}'
-                      : '-',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                const SizedBox(height: 4),
+                if (indicator.price != null)
+                  Text(
+                    '${formatIndicatorPrice(indicator.price!)} ${indicator.unit}',
+                    textAlign: TextAlign.right,
+                    softWrap: true,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  )
+                else
+                  Text('-', style: Theme.of(context).textTheme.bodyLarge),
                 if (change != null && changeRate != null)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -141,7 +162,7 @@ class _IndicatorItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        '${change.abs().toStringAsFixed(2)} (${changeRate.abs().toStringAsFixed(2)}%)',
+                        '${formatIndicatorChange(change)} (${changeRate.abs().toStringAsFixed(2)}%)',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: changeColor,
                               fontWeight: FontWeight.w600,
@@ -157,13 +178,4 @@ class _IndicatorItem extends StatelessWidget {
     );
   }
 
-  String _formatNumber(double value) {
-    if (value >= 1000) {
-      return value.toStringAsFixed(2).replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (m) => '${m[1]},',
-          );
-    }
-    return value.toStringAsFixed(2);
-  }
 }

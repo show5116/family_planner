@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
+import 'package:family_planner/shared/widgets/sparkline_chart.dart';
 
 class InvestmentIndicatorsScreen extends ConsumerStatefulWidget {
   const InvestmentIndicatorsScreen({super.key});
@@ -354,7 +356,7 @@ class _ErrorBody extends StatelessWidget {
   }
 }
 
-class _IndicatorTile extends StatelessWidget {
+class _IndicatorTile extends ConsumerWidget {
   const _IndicatorTile({
     required this.indicator,
     required this.showDragHandle,
@@ -368,98 +370,126 @@ class _IndicatorTile extends StatelessWidget {
   final VoidCallback onBookmarkToggle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final change = indicator.change;
     final changeRate = indicator.changeRate;
     final isPositive = (change ?? 0) >= 0;
     final changeColor = isPositive ? AppColors.success : AppColors.error;
+    final sparklineAsync = ref.watch(indicatorSparklineProvider(indicator.symbol));
 
-    return ListTile(
+    return InkWell(
       onTap: onTap,
-      contentPadding: EdgeInsets.only(
-        left: showDragHandle ? AppSizes.spaceXS : AppSizes.spaceS,
-        right: 0,
-        top: AppSizes.spaceXS,
-        bottom: AppSizes.spaceXS,
-      ),
-      leading: showDragHandle
-          ? DragHandleIcon(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            )
-          : null,
-      title: Row(
-        children: [
-          Text(
-            indicator.nameKo,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          Text(
-            indicator.symbol,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-        ],
-      ),
-      subtitle: change != null && changeRate != null
-          ? Row(
-              children: [
-                Icon(
-                  isPositive ? Icons.arrow_upward : Icons.arrow_downward,
-                  size: 12,
-                  color: changeColor,
-                ),
-                const SizedBox(width: 2),
-                Text(
-                  '${change.abs().toStringAsFixed(2)} (${changeRate.abs().toStringAsFixed(2)}%)',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: changeColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ],
-            )
-          : null,
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                indicator.price != null
-                    ? '${_formatNumber(indicator.price!)} ${indicator.unit}'
-                    : '-',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: showDragHandle ? AppSizes.spaceXS : AppSizes.spaceS,
+          right: AppSizes.spaceXS,
+          top: AppSizes.spaceS,
+          bottom: AppSizes.spaceS,
+        ),
+        child: Row(
+          children: [
+            // 드래그 핸들
+            if (showDragHandle)
+              DragHandleIcon(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-            ],
-          ),
-          const SizedBox(width: AppSizes.spaceXS),
-          IconButton(
-            icon: Icon(
-              indicator.isBookmarked ? Icons.star : Icons.star_border,
-              color: indicator.isBookmarked
-                  ? AppColors.investment
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+            // 이름 + 변동률 (남은 공간 모두 차지)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        indicator.nameKo,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Text(
+                        indicator.symbol,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
+                  if (change != null && changeRate != null)
+                    Row(
+                      children: [
+                        Icon(
+                          isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+                          size: 12,
+                          color: changeColor,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${formatIndicatorChange(change)} (${changeRate.abs().toStringAsFixed(2)}%)',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: changeColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
             ),
-            onPressed: onBookmarkToggle,
-          ),
-        ],
+            // 스파크라인 (항상 고정 위치)
+            SizedBox(
+              width: 64,
+              height: 36,
+              child: sparklineAsync.when(
+                data: (points) => SparklineChart(
+                  points: points,
+                  color: isPositive ? AppColors.success : AppColors.error,
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
+              ),
+            ),
+            const SizedBox(width: AppSizes.spaceM),
+            // 가격: 수치가 길면 자동으로 단위가 다음 줄로
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (indicator.price != null) ...[
+                  Text(
+                    '${formatIndicatorPrice(indicator.price!)} ${indicator.unit}',
+                    textAlign: TextAlign.right,
+                    softWrap: true,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ] else
+                  Text(
+                    '-',
+                    textAlign: TextAlign.right,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+              ],
+            ),
+            // 즐겨찾기 버튼 (고정 너비)
+            SizedBox(
+              width: 40,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  indicator.isBookmarked ? Icons.star : Icons.star_border,
+                  color: indicator.isBookmarked
+                      ? AppColors.investment
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                onPressed: onBookmarkToggle,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  String _formatNumber(double value) {
-    if (value >= 1000) {
-      return value.toStringAsFixed(2).replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (m) => '${m[1]},',
-          );
-    }
-    return value.toStringAsFixed(2);
-  }
 }
+

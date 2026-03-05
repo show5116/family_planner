@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 
@@ -66,6 +67,22 @@ class _IndicatorDetailScreenState
               onDaysChanged: (days) => setState(() => _selectedDays = days),
               dayOptions: _dayOptions,
             ),
+            // GOLD_KRW_SPOT 전용: 이격률 차트
+            historyAsync.maybeWhen(
+              data: (history) => history.spreadHistory.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: AppSizes.spaceL),
+                        _SpreadChartSection(
+                          history: history,
+                          selectedDays: _selectedDays,
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+              orElse: () => const SizedBox.shrink(),
+            ),
           ],
         ),
       ),
@@ -125,7 +142,7 @@ class _PriceSummaryCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    change.abs().toStringAsFixed(2),
+                    formatIndicatorChange(change),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: changeColor,
                           fontWeight: FontWeight.w600,
@@ -170,15 +187,7 @@ class _PriceSummaryCard extends StatelessWidget {
     );
   }
 
-  String _formatNumber(double value) {
-    if (value >= 1000) {
-      return value.toStringAsFixed(2).replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (m) => '${m[1]},',
-          );
-    }
-    return value.toStringAsFixed(2);
-  }
+  String _formatNumber(double value) => formatIndicatorPrice(value);
 }
 
 class _SpreadBadge extends StatelessWidget {
@@ -587,15 +596,7 @@ class _LineChartState extends State<_LineChart> {
     );
   }
 
-  String _formatPrice(double value) {
-    if (value >= 1000) {
-      return value.toStringAsFixed(2).replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (m) => '${m[1]},',
-          );
-    }
-    return value.toStringAsFixed(2);
-  }
+  String _formatPrice(double value) => formatIndicatorPrice(value);
 }
 
 /// 드래그 범위의 등락률 요약 바
@@ -642,15 +643,7 @@ class _RangeSummaryBar extends StatelessWidget {
 
     String fmt(DateTime d) =>
         '${d.month.toString().padLeft(2, '0')}/${d.day.toString().padLeft(2, '0')}';
-    String fmtPrice(double v) {
-      if (v >= 1000) {
-        return v.toStringAsFixed(2).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (m) => '${m[1]},',
-            );
-      }
-      return v.toStringAsFixed(2);
-    }
+    String fmtPrice(double v) => formatIndicatorPrice(v);
 
     return Container(
       margin: const EdgeInsets.only(top: AppSizes.spaceS),
@@ -701,6 +694,236 @@ class _RangeSummaryBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ── GOLD_KRW_SPOT 전용: 이격률 차트 ──────────────────────────────────────────
+
+class _SpreadChartSection extends StatelessWidget {
+  const _SpreadChartSection({
+    required this.history,
+    required this.selectedDays,
+  });
+
+  final IndicatorHistoryModel history;
+  final int selectedDays;
+
+  @override
+  Widget build(BuildContext context) {
+    final points = history.spreadHistory;
+    final now = DateTime.now();
+    final startDate = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: selectedDays - 1));
+
+    // 날짜 오프셋 변환 + 중복 제거(같은 날 마지막 값 유지)
+    final spotsMap = <int, double>{};
+    for (final p in points) {
+      final dayOffset = p.recordedAt.difference(startDate).inDays;
+      if (dayOffset >= 0 && dayOffset <= selectedDays - 1) {
+        spotsMap[dayOffset] = p.spread;
+      }
+    }
+    final spots = spotsMap.entries
+        .map((e) => FlSpot(e.key.toDouble(), e.value))
+        .toList()
+      ..sort((a, b) => a.x.compareTo(b.x));
+
+    if (spots.isEmpty) return const SizedBox.shrink();
+
+    final spreads = spots.map((s) => s.y).toList();
+    final minY = spreads.reduce((a, b) => a < b ? a : b);
+    final maxY = spreads.reduce((a, b) => a > b ? a : b);
+    final yPadding = ((maxY - minY) * 0.15).clamp(0.1, double.infinity);
+    final maxX = (selectedDays - 1).toDouble();
+    final labelInterval = (maxX / 3).ceilToDouble();
+    final yRange = (maxY + yPadding) - (minY - yPadding);
+    final yInterval = yRange > 0 ? yRange / 4 : 0.5;
+    final useCurve = spots.length >= 5;
+
+    // 최신 이격률 기준 색상
+    final latestSpread = spots.last.y;
+    final spreadColor = latestSpread >= 0 ? AppColors.error : AppColors.success;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '이격률 추이',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(
+              '(국제 환산가 대비)',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSizes.spaceXS),
+        // 현재 이격률 요약
+        _SpreadSummaryBadge(spread: latestSpread),
+        const SizedBox(height: AppSizes.spaceM),
+        SizedBox(
+          height: 180,
+          child: LineChart(
+            LineChartData(
+              minX: 0,
+              maxX: maxX,
+              minY: minY - yPadding,
+              maxY: maxY + yPadding,
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                getDrawingHorizontalLine: (_) => FlLine(
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.4),
+                  strokeWidth: 1,
+                ),
+              ),
+              // 0% 기준선
+              extraLinesData: ExtraLinesData(
+                horizontalLines: [
+                  HorizontalLine(
+                    y: 0,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withValues(alpha: 0.5),
+                    strokeWidth: 1,
+                    dashArray: [4, 4],
+                  ),
+                ],
+              ),
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 48,
+                    interval: yInterval,
+                    getTitlesWidget: (value, _) => Text(
+                      '${value.toStringAsFixed(1)}%',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 10,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 24,
+                    interval: labelInterval,
+                    getTitlesWidget: (value, _) {
+                      final date = startDate.add(Duration(days: value.toInt()));
+                      return Text(
+                        '${date.month}/${date.day}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 10,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                      );
+                    },
+                  ),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: spots,
+                  isCurved: useCurve,
+                  color: spreadColor,
+                  barWidth: 2,
+                  dotData: const FlDotData(show: false),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    gradient: LinearGradient(
+                      colors: [
+                        spreadColor.withValues(alpha: 0.15),
+                        spreadColor.withValues(alpha: 0.0),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ],
+              lineTouchData: LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipItems: (touchedSpots) {
+                    return touchedSpots.map((spot) {
+                      final date =
+                          startDate.add(Duration(days: spot.x.toInt()));
+                      final sign = spot.y >= 0 ? '+' : '';
+                      return LineTooltipItem(
+                        '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}\n$sign${spot.y.toStringAsFixed(2)}%',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SpreadSummaryBadge extends StatelessWidget {
+  const _SpreadSummaryBadge({required this.spread});
+
+  final double spread;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPremium = spread >= 0;
+    final color = isPremium ? AppColors.error : AppColors.success;
+    final sign = isPremium ? '+' : '';
+    final label = isPremium ? '프리미엄' : '디스카운트';
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+          ),
+          child: Text(
+            '$sign${spread.toStringAsFixed(2)}%',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        const SizedBox(width: AppSizes.spaceS),
+        Text(
+          '현재 국제 환산가 대비 $label',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      ],
     );
   }
 }

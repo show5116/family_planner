@@ -81,6 +81,9 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.white,
           tabs: [
             Tab(text: l10n.childcare_tab_points),
             Tab(text: l10n.childcare_tab_rewards),

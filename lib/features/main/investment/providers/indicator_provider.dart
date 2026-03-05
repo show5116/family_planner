@@ -101,6 +101,14 @@ Future<IndicatorHistoryModel> indicatorHistory(
   return repository.getIndicatorHistory(symbol, days: days);
 }
 
+/// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
+@riverpod
+Future<List<double>> indicatorSparkline(Ref ref, String symbol) async {
+  final repository = ref.watch(indicatorRepositoryProvider);
+  final history = await repository.getIndicatorHistory(symbol, days: 1);
+  return history.history.map((p) => p.price).toList();
+}
+
 /// [어드민] 과거 데이터 일괄 초기화 Provider
 @riverpod
 Future<InitHistoryResult> initIndicatorHistory(
