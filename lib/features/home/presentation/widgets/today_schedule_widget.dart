@@ -1,46 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 오늘의 일정 위젯
-class TodayScheduleWidget extends StatelessWidget {
+class TodayScheduleWidget extends ConsumerWidget {
   const TodayScheduleWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // 임시 데이터
-    final schedules = [
-      _Schedule('팀 회의', '10:00', Icons.work, Colors.blue),
-      _Schedule('점심 약속', '12:00', Icons.restaurant, Colors.orange),
-      _Schedule('운동', '18:00', Icons.fitness_center, Colors.green),
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tasksAsync = ref.watch(dashboardTodayTasksProvider);
 
     return DashboardCard(
       title: '오늘의 일정',
       icon: Icons.calendar_today,
       action: TextButton(
-        onPressed: () {},
+        onPressed: () => context.push(AppRoutes.calendar),
         child: const Text('전체보기'),
       ),
-      onTap: () {},
-      child: schedules.isEmpty
-          ? const _EmptyState()
-          : Column(
-              children: schedules
-                  .map((schedule) => _ScheduleItem(schedule: schedule))
-                  .toList(),
-            ),
+      onTap: () => context.push(AppRoutes.calendar),
+      child: tasksAsync.when(
+        loading: () => const Center(
+          child: Padding(
+            padding: EdgeInsets.all(AppSizes.spaceM),
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        error: (_, _) => const _EmptyState(),
+        data: (tasks) {
+          if (tasks.isEmpty) return const _EmptyState();
+          return Column(
+            children: tasks
+                .take(5)
+                .map((task) => _ScheduleItem(task: task))
+                .toList(),
+          );
+        },
+      ),
     );
   }
 }
 
 class _ScheduleItem extends StatelessWidget {
-  const _ScheduleItem({required this.schedule});
+  const _ScheduleItem({required this.task});
 
-  final _Schedule schedule;
+  final TaskModel task;
 
   @override
   Widget build(BuildContext context) {
+    final color = Color(task.colorValue);
+    final timeText = task.isAllDay
+        ? '종일'
+        : '${task.scheduledAt!.hour.toString().padLeft(2, '0')}:${task.scheduledAt!.minute.toString().padLeft(2, '0')}';
+
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
       child: Row(
@@ -49,14 +65,21 @@ class _ScheduleItem extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: schedule.color.withValues(alpha: 0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
             ),
-            child: Icon(
-              schedule.icon,
-              color: schedule.color,
-              size: AppSizes.iconMedium,
-            ),
+            child: task.category?.emoji != null
+                ? Center(
+                    child: Text(
+                      task.category!.emoji!,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  )
+                : Icon(
+                    Icons.event,
+                    color: color,
+                    size: AppSizes.iconMedium,
+                  ),
           ),
           const SizedBox(width: AppSizes.spaceM),
           Expanded(
@@ -64,12 +87,21 @@ class _ScheduleItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  schedule.title,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  task.title,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        decoration: task.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                        color: task.isCompleted
+                            ? Theme.of(context).colorScheme.onSurfaceVariant
+                            : null,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  schedule.time,
+                  timeText,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -111,13 +143,4 @@ class _EmptyState extends StatelessWidget {
       ),
     );
   }
-}
-
-class _Schedule {
-  final String title;
-  final String time;
-  final IconData icon;
-  final Color color;
-
-  _Schedule(this.title, this.time, this.icon, this.color);
 }

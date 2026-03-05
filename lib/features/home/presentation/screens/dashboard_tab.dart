@@ -5,6 +5,7 @@ import 'package:family_planner/features/home/presentation/widgets/today_schedule
 import 'package:family_planner/features/home/presentation/widgets/investment_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/todo_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/asset_summary_widget.dart';
+import 'package:family_planner/features/home/presentation/widgets/memo_summary_widget.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -61,7 +62,7 @@ class DashboardTab extends ConsumerWidget {
                 label: unreadCountAsync.when(
                   data: (count) => count > 0 ? Text('$count') : null,
                   loading: () => null,
-                  error: (_, __) => null,
+                  error: (_, _) => null,
                 ),
                 isLabelVisible: unreadCountAsync.maybeWhen(
                   data: (count) => count > 0,
@@ -207,6 +208,11 @@ class _DashboardGridState extends State<_DashboardGrid> {
         case 'assetSummary':
           if (_settings.showAssetSummary) {
             widget = const AssetSummaryWidget();
+          }
+          break;
+        case 'memoSummary':
+          if (_settings.showMemoSummary) {
+            widget = const MemoSummaryWidget();
           }
           break;
       }

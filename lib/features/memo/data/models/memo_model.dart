@@ -99,6 +99,7 @@ class MemoModel with _$MemoModel {
     MemoType? type,
     String? category,
     MemoVisibility? visibility,
+    @Default(false) bool isPinned,
     String? groupId,
     required MemoAuthor user,
     @Default([]) List<MemoTag> tags,

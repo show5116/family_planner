@@ -304,3 +304,49 @@ final checklistProvider = StateNotifierProvider.family<
     return ChecklistNotifier(repository, ref, memoId);
   },
 );
+
+// ── 핀 ──────────────────────────────────────────────────────────
+
+/// 핀된 메모 목록 Provider
+@riverpod
+Future<List<MemoModel>> pinnedMemos(Ref ref) async {
+  final repository = ref.watch(memoRepositoryProvider);
+  return repository.getPinnedMemos();
+}
+
+/// 핀 토글 Notifier
+class MemoPinNotifier extends StateNotifier<AsyncValue<void>> {
+  final MemoRepository _repository;
+  final Ref _ref;
+
+  MemoPinNotifier(this._repository, this._ref)
+      : super(const AsyncValue.data(null));
+
+  Future<MemoModel?> togglePin(String id) async {
+    state = const AsyncValue.loading();
+    try {
+      final updated = await _repository.togglePin(id);
+
+      // 핀 목록 갱신
+      _ref.invalidate(pinnedMemosProvider);
+
+      // 메모 목록에서 로컬 상태 업데이트
+      _ref.read(memoListProvider.notifier).afterUpdate(id, updated);
+
+      // 상세 Provider 무효화
+      _ref.invalidate(memoDetailProvider(id));
+
+      state = const AsyncValue.data(null);
+      return updated;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+}
+
+/// 핀 토글 Provider
+final memoPinProvider =
+    StateNotifierProvider<MemoPinNotifier, AsyncValue<void>>((ref) {
+  return MemoPinNotifier(ref.watch(memoRepositoryProvider), ref);
+});

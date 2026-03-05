@@ -4,6 +4,7 @@ class DashboardWidgetSettings {
   final bool showInvestmentSummary;
   final bool showTodoSummary;
   final bool showAssetSummary;
+  final bool showMemoSummary;
   final List<String> widgetOrder;
 
   const DashboardWidgetSettings({
@@ -11,11 +12,13 @@ class DashboardWidgetSettings {
     this.showInvestmentSummary = true,
     this.showTodoSummary = true,
     this.showAssetSummary = true,
+    this.showMemoSummary = false,
     this.widgetOrder = const [
       'todaySchedule',
       'investmentSummary',
       'todoSummary',
       'assetSummary',
+      'memoSummary',
     ],
   });
 
@@ -31,6 +34,7 @@ class DashboardWidgetSettings {
       showInvestmentSummary: json['showInvestmentSummary'] as bool? ?? true,
       showTodoSummary: json['showTodoSummary'] as bool? ?? true,
       showAssetSummary: json['showAssetSummary'] as bool? ?? true,
+      showMemoSummary: json['showMemoSummary'] as bool? ?? false,
       widgetOrder: (json['widgetOrder'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -39,6 +43,7 @@ class DashboardWidgetSettings {
             'investmentSummary',
             'todoSummary',
             'assetSummary',
+            'memoSummary',
           ],
     );
   }
@@ -50,6 +55,7 @@ class DashboardWidgetSettings {
       'showInvestmentSummary': showInvestmentSummary,
       'showTodoSummary': showTodoSummary,
       'showAssetSummary': showAssetSummary,
+      'showMemoSummary': showMemoSummary,
       'widgetOrder': widgetOrder,
     };
   }
@@ -60,6 +66,7 @@ class DashboardWidgetSettings {
     bool? showInvestmentSummary,
     bool? showTodoSummary,
     bool? showAssetSummary,
+    bool? showMemoSummary,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -67,6 +74,7 @@ class DashboardWidgetSettings {
       showInvestmentSummary: showInvestmentSummary ?? this.showInvestmentSummary,
       showTodoSummary: showTodoSummary ?? this.showTodoSummary,
       showAssetSummary: showAssetSummary ?? this.showAssetSummary,
+      showMemoSummary: showMemoSummary ?? this.showMemoSummary,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }

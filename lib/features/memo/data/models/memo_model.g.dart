@@ -79,6 +79,7 @@ _$MemoModelImpl _$$MemoModelImplFromJson(Map<String, dynamic> json) =>
         _$MemoVisibilityEnumMap,
         json['visibility'],
       ),
+      isPinned: json['isPinned'] as bool? ?? false,
       groupId: json['groupId'] as String?,
       user: MemoAuthor.fromJson(json['user'] as Map<String, dynamic>),
       tags:
@@ -109,6 +110,7 @@ Map<String, dynamic> _$$MemoModelImplToJson(_$MemoModelImpl instance) =>
       'type': _$MemoTypeEnumMap[instance.type],
       'category': instance.category,
       'visibility': _$MemoVisibilityEnumMap[instance.visibility],
+      'isPinned': instance.isPinned,
       'groupId': instance.groupId,
       'user': instance.user,
       'tags': instance.tags,

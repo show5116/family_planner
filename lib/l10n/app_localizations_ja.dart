@@ -419,6 +419,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get widgetSettings_assetSummaryDesc => '総資産と収益率を表示します';
 
   @override
+  String get widgetSettings_memoSummary => 'メモ概要';
+
+  @override
+  String get widgetSettings_memoSummaryDesc => '最近作成したメモを表示します';
+
+  @override
   String get themeSettings_title => 'テーマ設定';
 
   @override

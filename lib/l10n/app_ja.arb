@@ -157,6 +157,8 @@
   "widgetSettings_investmentSummaryDesc": "コスピ、ナスダック、為替レート情報を表示します",
   "widgetSettings_todoSummaryDesc": "進行中のタスクを表示します",
   "widgetSettings_assetSummaryDesc": "総資産と収益率を表示します",
+  "widgetSettings_memoSummary": "メモ概要",
+  "widgetSettings_memoSummaryDesc": "最近作成したメモを表示します",
 
   "themeSettings_title": "テーマ設定",
   "themeSettings_selectTheme": "テーマ選択",

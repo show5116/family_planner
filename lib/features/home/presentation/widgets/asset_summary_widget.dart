@@ -1,34 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/extensions.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/features/main/assets/data/models/account_model.dart';
+import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 자산 요약 위젯
-class AssetSummaryWidget extends StatelessWidget {
+class AssetSummaryWidget extends ConsumerWidget {
   const AssetSummaryWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // 임시 데이터
-    const totalAssets = 50000000;
-    const totalProfit = 2600000;
-    const profitRate = 5.2;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(dashboardAssetStatisticsProvider);
+
+    return statsAsync.when(
+      loading: () => DashboardCard(
+        title: '자산 현황',
+        icon: Icons.account_balance_wallet,
+        onTap: () {},
+        child: const Center(
+          child: Padding(
+            padding: EdgeInsets.all(AppSizes.spaceM),
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+      error: (_, _) => _buildCard(context, AssetStatisticsModel.empty()),
+      data: (stats) => _buildCard(context, stats),
+    );
+  }
+
+  Widget _buildCard(BuildContext context, AssetStatisticsModel stats) {
+    final isProfit = stats.totalProfit >= 0;
 
     return DashboardCard(
       title: '자산 현황',
       icon: Icons.account_balance_wallet,
       action: IconButton(
-        onPressed: () {},
+        onPressed: () => context.push(AppRoutes.assetStatistics),
         icon: const Icon(Icons.show_chart, size: AppSizes.iconMedium),
       ),
-      onTap: () {},
+      onTap: () => context.push(AppRoutes.assets),
       child: Column(
         children: [
-          // 총 자산
           _AssetRow(
             label: '총 자산',
-            value: totalAssets.toCurrency(),
+            value: stats.totalBalance.toCurrency(),
             valueStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -37,27 +59,26 @@ class AssetSummaryWidget extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceM),
           const Divider(),
           const SizedBox(height: AppSizes.spaceM),
-          // 수익금
           _AssetRow(
             label: '총 수익',
-            value: totalProfit.toCurrency(),
-            valueColor: AppColors.success,
+            value: stats.totalProfit.toCurrency(),
+            valueColor: isProfit ? AppColors.success : AppColors.error,
           ),
           const SizedBox(height: AppSizes.spaceS),
-          // 수익률
           _AssetRow(
             label: '수익률',
-            value: profitRate.toPercent(),
-            valueColor: AppColors.success,
+            value: stats.profitRate.toPercent(),
+            valueColor: isProfit ? AppColors.success : AppColors.error,
             trailing: Icon(
-              Icons.arrow_upward,
-              color: AppColors.success,
+              isProfit ? Icons.arrow_upward : Icons.arrow_downward,
+              color: isProfit ? AppColors.success : AppColors.error,
               size: AppSizes.iconMedium,
             ),
           ),
-          const SizedBox(height: AppSizes.spaceM),
-          // 자산 분포 (간단한 바)
-          _AssetDistribution(),
+          if (stats.byType.isNotEmpty) ...[
+            const SizedBox(height: AppSizes.spaceM),
+            _AssetDistribution(byType: stats.byType),
+          ],
         ],
       ),
     );
@@ -112,14 +133,63 @@ class _AssetRow extends StatelessWidget {
 }
 
 class _AssetDistribution extends StatelessWidget {
+  const _AssetDistribution({required this.byType});
+
+  final List<AccountTypeStatModel> byType;
+
+  static String _typeLabel(AccountType? type) {
+    switch (type) {
+      case AccountType.bank:
+        return '예금';
+      case AccountType.stock:
+        return '주식';
+      case AccountType.fund:
+        return '펀드';
+      case AccountType.insurance:
+        return '보험';
+      case AccountType.realEstate:
+        return '부동산';
+      case AccountType.cash:
+        return '현금';
+      default:
+        return '기타';
+    }
+  }
+
+  static Color _typeColor(AccountType? type) {
+    switch (type) {
+      case AccountType.bank:
+        return AppColors.primary;
+      case AccountType.stock:
+        return AppColors.investment;
+      case AccountType.fund:
+        return Colors.purple;
+      case AccountType.insurance:
+        return Colors.teal;
+      case AccountType.realEstate:
+        return Colors.brown;
+      case AccountType.cash:
+        return AppColors.success;
+      default:
+        return AppColors.secondary;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 임시 데이터 (비율)
-    final distribution = [
-      _AssetType('예금', 0.2, AppColors.primary),
-      _AssetType('주식', 0.6, AppColors.investment),
-      _AssetType('기타', 0.2, AppColors.secondary),
-    ];
+    final total = byType.fold<double>(0, (sum, t) => sum + t.balance);
+    if (total == 0) return const SizedBox.shrink();
+
+    final distribution = byType
+        .where((t) => t.balance > 0)
+        .map((t) => (
+              name: _typeLabel(t.type),
+              ratio: t.balance / total,
+              color: _typeColor(t.type),
+            ))
+        .toList();
+
+    if (distribution.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,21 +201,20 @@ class _AssetDistribution extends StatelessWidget {
               ),
         ),
         const SizedBox(height: AppSizes.spaceS),
-        // 바 차트
         Row(
           children: distribution
               .map(
                 (asset) => Expanded(
-                  flex: (asset.ratio * 100).toInt(),
+                  flex: (asset.ratio * 100).toInt().clamp(1, 100),
                   child: Container(
                     height: 8,
                     decoration: BoxDecoration(
                       color: asset.color,
                       borderRadius: BorderRadius.horizontal(
-                        left: distribution.first == asset
+                        left: distribution.first.name == asset.name
                             ? const Radius.circular(4)
                             : Radius.zero,
-                        right: distribution.last == asset
+                        right: distribution.last.name == asset.name
                             ? const Radius.circular(4)
                             : Radius.zero,
                       ),
@@ -156,12 +225,13 @@ class _AssetDistribution extends StatelessWidget {
               .toList(),
         ),
         const SizedBox(height: AppSizes.spaceS),
-        // 범례
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        Wrap(
+          spacing: AppSizes.spaceM,
+          runSpacing: AppSizes.spaceS,
           children: distribution
               .map(
                 (asset) => Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
                       width: 12,
@@ -184,12 +254,4 @@ class _AssetDistribution extends StatelessWidget {
       ],
     );
   }
-}
-
-class _AssetType {
-  final String name;
-  final double ratio;
-  final Color color;
-
-  _AssetType(this.name, this.ratio, this.color);
 }

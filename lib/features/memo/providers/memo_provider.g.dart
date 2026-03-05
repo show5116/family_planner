@@ -158,6 +158,25 @@ class _MemoDetailProviderElement
   String get id => (origin as MemoDetailProvider).id;
 }
 
+String _$pinnedMemosHash() => r'9ac758350b2d8b21192638aad02aad421973cd36';
+
+/// 핀된 메모 목록 Provider
+///
+/// Copied from [pinnedMemos].
+@ProviderFor(pinnedMemos)
+final pinnedMemosProvider = AutoDisposeFutureProvider<List<MemoModel>>.internal(
+  pinnedMemos,
+  name: r'pinnedMemosProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$pinnedMemosHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PinnedMemosRef = AutoDisposeFutureProviderRef<List<MemoModel>>;
 String _$memoListHash() => r'46ea715bc17c5bb34837a3bb1903b295b285c21e';
 
 /// 메모 목록 Provider (무한 스크롤 + 검색 지원)

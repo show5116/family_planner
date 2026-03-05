@@ -420,6 +420,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get widgetSettings_assetSummaryDesc => '총 자산과 수익률을 표시합니다';
 
   @override
+  String get widgetSettings_memoSummary => '메모 요약';
+
+  @override
+  String get widgetSettings_memoSummaryDesc => '최근 작성한 메모를 표시합니다';
+
+  @override
   String get themeSettings_title => '테마 설정';
 
   @override

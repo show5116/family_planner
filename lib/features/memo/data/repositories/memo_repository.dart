@@ -132,6 +132,43 @@ class MemoRepository {
     }
   }
 
+  // ── 핀 ──────────────────────────────────────────────────────────
+
+  /// 핀된 메모 목록 조회 (대시보드 위젯용)
+  Future<List<MemoModel>> getPinnedMemos() async {
+    try {
+      debugPrint('🔵 [MemoRepository] 핀된 메모 목록 조회');
+      final response = await _dio.get('/memos/pinned');
+      final data = response.data;
+      final list = data is List ? data : [data];
+      final result = list
+          .map((e) => MemoModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      debugPrint('✅ [MemoRepository] 핀된 메모 조회 성공: ${result.length}건');
+      return result;
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 핀된 메모 조회 실패: ${e.message}');
+      throw Exception('핀된 메모 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 메모 핀 토글 (핀 ↔ 핀 해제)
+  Future<MemoModel> togglePin(String id) async {
+    try {
+      debugPrint('🔵 [MemoRepository] 핀 토글: $id');
+      final response = await _dio.post('/memos/$id/pin');
+      final result = MemoModel.fromJson(response.data);
+      debugPrint('✅ [MemoRepository] 핀 토글 성공: isPinned=${result.isPinned}');
+      return result;
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 핀 토글 실패: ${e.message}');
+      if (e.response?.statusCode == 403) {
+        throw Exception('본인의 메모만 핀 설정할 수 있습니다');
+      }
+      throw Exception('핀 토글 실패: ${e.message}');
+    }
+  }
+
   // ── 체크리스트 ──────────────────────────────────────────────────
 
   /// 체크리스트 항목 추가

@@ -157,6 +157,8 @@
   "widgetSettings_investmentSummaryDesc": "Display KOSPI, NASDAQ, and exchange rate information",
   "widgetSettings_todoSummaryDesc": "Display in-progress tasks",
   "widgetSettings_assetSummaryDesc": "Display total assets and return rate",
+  "widgetSettings_memoSummary": "Memo Summary",
+  "widgetSettings_memoSummaryDesc": "Display recently written memos",
 
   "themeSettings_title": "Theme Settings",
   "themeSettings_selectTheme": "Select Theme",

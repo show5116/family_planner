@@ -433,6 +433,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Display total assets and return rate';
 
   @override
+  String get widgetSettings_memoSummary => 'Memo Summary';
+
+  @override
+  String get widgetSettings_memoSummaryDesc => 'Display recently written memos';
+
+  @override
   String get themeSettings_title => 'Theme Settings';
 
   @override

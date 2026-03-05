@@ -926,6 +926,7 @@ mixin _$MemoModel {
   MemoType? get type => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
   MemoVisibility? get visibility => throw _privateConstructorUsedError;
+  bool get isPinned => throw _privateConstructorUsedError;
   String? get groupId => throw _privateConstructorUsedError;
   MemoAuthor get user => throw _privateConstructorUsedError;
   List<MemoTag> get tags => throw _privateConstructorUsedError;
@@ -957,6 +958,7 @@ abstract class $MemoModelCopyWith<$Res> {
     MemoType? type,
     String? category,
     MemoVisibility? visibility,
+    bool isPinned,
     String? groupId,
     MemoAuthor user,
     List<MemoTag> tags,
@@ -991,6 +993,7 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
     Object? type = freezed,
     Object? category = freezed,
     Object? visibility = freezed,
+    Object? isPinned = null,
     Object? groupId = freezed,
     Object? user = null,
     Object? tags = null,
@@ -1029,6 +1032,10 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
                 ? _value.visibility
                 : visibility // ignore: cast_nullable_to_non_nullable
                       as MemoVisibility?,
+            isPinned: null == isPinned
+                ? _value.isPinned
+                : isPinned // ignore: cast_nullable_to_non_nullable
+                      as bool,
             groupId: freezed == groupId
                 ? _value.groupId
                 : groupId // ignore: cast_nullable_to_non_nullable
@@ -1090,6 +1097,7 @@ abstract class _$$MemoModelImplCopyWith<$Res>
     MemoType? type,
     String? category,
     MemoVisibility? visibility,
+    bool isPinned,
     String? groupId,
     MemoAuthor user,
     List<MemoTag> tags,
@@ -1124,6 +1132,7 @@ class __$$MemoModelImplCopyWithImpl<$Res>
     Object? type = freezed,
     Object? category = freezed,
     Object? visibility = freezed,
+    Object? isPinned = null,
     Object? groupId = freezed,
     Object? user = null,
     Object? tags = null,
@@ -1162,6 +1171,10 @@ class __$$MemoModelImplCopyWithImpl<$Res>
             ? _value.visibility
             : visibility // ignore: cast_nullable_to_non_nullable
                   as MemoVisibility?,
+        isPinned: null == isPinned
+            ? _value.isPinned
+            : isPinned // ignore: cast_nullable_to_non_nullable
+                  as bool,
         groupId: freezed == groupId
             ? _value.groupId
             : groupId // ignore: cast_nullable_to_non_nullable
@@ -1206,6 +1219,7 @@ class _$MemoModelImpl implements _MemoModel {
     this.type,
     this.category,
     this.visibility,
+    this.isPinned = false,
     this.groupId,
     required this.user,
     final List<MemoTag> tags = const [],
@@ -1235,6 +1249,9 @@ class _$MemoModelImpl implements _MemoModel {
   final String? category;
   @override
   final MemoVisibility? visibility;
+  @override
+  @JsonKey()
+  final bool isPinned;
   @override
   final String? groupId;
   @override
@@ -1273,7 +1290,7 @@ class _$MemoModelImpl implements _MemoModel {
 
   @override
   String toString() {
-    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, type: $type, category: $category, visibility: $visibility, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistItems: $checklistItems, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, type: $type, category: $category, visibility: $visibility, isPinned: $isPinned, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistItems: $checklistItems, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1290,6 +1307,8 @@ class _$MemoModelImpl implements _MemoModel {
                 other.category == category) &&
             (identical(other.visibility, visibility) ||
                 other.visibility == visibility) &&
+            (identical(other.isPinned, isPinned) ||
+                other.isPinned == isPinned) &&
             (identical(other.groupId, groupId) || other.groupId == groupId) &&
             (identical(other.user, user) || other.user == user) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
@@ -1318,6 +1337,7 @@ class _$MemoModelImpl implements _MemoModel {
     type,
     category,
     visibility,
+    isPinned,
     groupId,
     user,
     const DeepCollectionEquality().hash(_tags),
@@ -1350,6 +1370,7 @@ abstract class _MemoModel implements MemoModel {
     final MemoType? type,
     final String? category,
     final MemoVisibility? visibility,
+    final bool isPinned,
     final String? groupId,
     required final MemoAuthor user,
     final List<MemoTag> tags,
@@ -1376,6 +1397,8 @@ abstract class _MemoModel implements MemoModel {
   String? get category;
   @override
   MemoVisibility? get visibility;
+  @override
+  bool get isPinned;
   @override
   String? get groupId;
   @override

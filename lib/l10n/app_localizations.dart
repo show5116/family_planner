@@ -904,6 +904,18 @@ abstract class AppLocalizations {
   /// **'총 자산과 수익률을 표시합니다'**
   String get widgetSettings_assetSummaryDesc;
 
+  /// No description provided for @widgetSettings_memoSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 요약'**
+  String get widgetSettings_memoSummary;
+
+  /// No description provided for @widgetSettings_memoSummaryDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 작성한 메모를 표시합니다'**
+  String get widgetSettings_memoSummaryDesc;
+
   /// No description provided for @themeSettings_title.
   ///
   /// In ko, this message translates to:

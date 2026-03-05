@@ -76,6 +76,9 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
         case 'assetSummary':
           _settings = _settings.copyWith(showAssetSummary: value);
           break;
+        case 'memoSummary':
+          _settings = _settings.copyWith(showMemoSummary: value);
+          break;
       }
     });
     _saveSettings();
@@ -130,6 +133,13 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
           'title': l10n.widgetSettings_assetSummary,
           'description': l10n.widgetSettings_assetSummaryDesc,
           'enabled': _settings.showAssetSummary,
+        };
+      case 'memoSummary':
+        return {
+          'icon': Icons.note_outlined,
+          'title': l10n.widgetSettings_memoSummary,
+          'description': l10n.widgetSettings_memoSummaryDesc,
+          'enabled': _settings.showMemoSummary,
         };
       default:
         return {

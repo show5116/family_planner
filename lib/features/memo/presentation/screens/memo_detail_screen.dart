@@ -38,6 +38,24 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
       appBar: AppBar(
         title: Text(l10n.memo_detail),
         actions: [
+          memoAsync.whenData((memo) => memo).valueOrNull != null
+              ? IconButton(
+                  icon: Icon(
+                    memoAsync.value!.isPinned
+                        ? Icons.push_pin
+                        : Icons.push_pin_outlined,
+                    color: memoAsync.value!.isPinned
+                        ? AppColors.primary
+                        : null,
+                  ),
+                  tooltip: memoAsync.value!.isPinned ? '핀 해제' : '대시보드에 고정',
+                  onPressed: () async {
+                    await ref
+                        .read(memoPinProvider.notifier)
+                        .togglePin(widget.memoId);
+                  },
+                )
+              : const SizedBox.shrink(),
           _buildMenu(context, ref, l10n),
         ],
       ),
