@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 5/17 기능 (29%)
-- **진행 중**: 7/17 기능 (41%)
-- **미시작**: 5/17 기능 (29%)
+- **완료**: 7/17 기능 (41%)
+- **진행 중**: 6/17 기능 (35%)
+- **미시작**: 4/17 기능 (24%)
 
-**마지막 업데이트**: 2026-03-03
+**마지막 업데이트**: 2026-03-06
 
 ---
 
@@ -33,14 +33,14 @@
 | 메인화면 (대시보드) | 🟨 진행 중 | [02-dashboard.md](docs/features/02-dashboard.md) | P1 |
 | 일정 관리 | 🟨 진행 중 | [06-schedule.md](docs/features/06-schedule.md) | P1 |
 | ToDoList | 🟨 진행 중 | [07-todo.md](docs/features/07-todo.md) | P1 |
-| 메모 | ⬜ 시작 안함 | [09-memo.md](docs/features/09-memo.md) | P2 |
+| 메모 | ✅ 완료 | [09-memo.md](docs/features/09-memo.md) | P2 |
 
 ### Phase 3: 자산 및 금융 (Finance & Assets)
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
 | 자산관리 | ⬜ 시작 안함 | [03-assets.md](docs/features/03-assets.md) | P2 |
-| 투자지표 | ⬜ 시작 안함 | [04-investment.md](docs/features/04-investment.md) | P2 |
+| 투자지표 | ✅ 완료 | [04-investment.md](docs/features/04-investment.md) | P2 |
 | 가계관리 | ⬜ 시작 안함 | [05-household.md](docs/features/05-household.md) | P2 |
 
 ### Phase 4: 가족 기능 (Family Features)
@@ -71,7 +71,7 @@
 - [x] 프로젝트 기반 구조
 - [ ] 회원 인증 시스템 완성
 - [x] 그룹 관리 완성
-- [ ] 대시보드 데이터 연동
+- [x] 대시보드 데이터 연동
 - [ ] 일정 관리 기본 기능
 - [ ] ToDoList 기본 기능
 
@@ -93,6 +93,35 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-03-06
+- ✅ **투자지표 기능 완료** ([04-investment.md](docs/features/04-investment.md))
+  - 지표 목록/상세 화면, 스파크라인 미니 차트, 시계열 라인 차트 (fl_chart)
+  - 즐겨찾기 등록/해제/드래그 순서 변경 (낙관적 업데이트)
+  - 차트 드래그 범위 선택 → 기간 등락률 요약 바
+  - 금 현물 이격률 차트 (국제 환산가 대비 프리미엄/디스카운트)
+  - 대시보드 즐겨찾기 위젯 연동, 관리자 과거 데이터 초기화
+
+- ✅ **메모 기능 완료** ([09-memo.md](docs/features/09-memo.md))
+  - 체크리스트 타입 메모 생성 (type=CHECKLIST), 드래그 정렬 지원
+  - 체크리스트 항목 추가/수정/삭제/토글/전체 초기화
+  - 메모 상세 화면 체크리스트 뷰 (진행률 표시, 낙관적 업데이트)
+  - 메모 작성/수정 화면 체크리스트 에디터 (ReorderableListView)
+  - ChecklistNotifier Provider, Repository API 전체 연동
+  - 메모 카드 체크리스트 진행률 LinearProgressIndicator
+
+- 🟨 **대시보드 위젯 실제 데이터 연동** ([02-dashboard.md](docs/features/02-dashboard.md))
+  - 대시보드 전용 독립 provider 신규 생성 (`dashboard_provider.dart`) — 탭 간 상태 오염 해결
+  - 오늘의 일정: `dashboardTodayTasksProvider`로 오늘 날짜 범위 직접 조회
+  - 할일 요약: `dashboardTodoTasksProvider`로 할일 탭 UI 상태와 완전 독립
+  - 자산 현황: `dashboardAssetStatisticsProvider`로 자산 탭 그룹 상태 독립, `byType` 실제 분포 차트
+- 🟨 **메모 핀 기능 및 대시보드 위젯 추가** ([09-memo.md](docs/features/09-memo.md))
+  - `MemoModel`에 `isPinned` 필드 추가
+  - `GET /memos/pinned`, `POST /memos/:id/pin` API 연동
+  - `pinnedMemosProvider`, `MemoPinNotifier` 추가
+  - 메모 상세 화면 AppBar 핀 토글 버튼 추가
+  - 대시보드 고정 메모 위젯(`MemoSummaryWidget`) 신규 추가
+  - 위젯 설정 화면에 메모 요약 항목 추가 (기본값 비활성화)
 
 ### 2026-02-12
 - 🟨 **ToDoList 기능 진행 중** ([07-todo.md](docs/features/07-todo.md))
@@ -167,8 +196,9 @@
 - 🟨 **회원 가입 및 로그인** (~90% 완료)
   - 남은 작업: 애플 로그인, 소셜 로그인 백엔드 완성
 
-- 🟨 **메인화면 (대시보드)** (~50% 완료)
-  - 남은 작업: 위젯 데이터 연동, 새로고침, 순서 변경
+- 🟨 **메인화면 (대시보드)** (~80% 완료)
+  - 완료: 모든 위젯 실제 데이터 연동, 대시보드 전용 독립 provider, 메모 위젯 추가
+  - 남은 작업: 대시보드 전체 새로고침 연동, 이번 달 지출/육아포인트 위젯
 
 - 🟨 **다국어 지원** (~75% 완료)
   - 남은 작업: 대시보드 및 그룹 관리 화면 다국어 적용
