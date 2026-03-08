@@ -285,6 +285,26 @@ class _ChartSectionState extends State<_ChartSection> {
           ],
         ),
         const SizedBox(height: AppSizes.spaceM),
+        widget.historyAsync.maybeWhen(
+          data: (history) {
+            if (history.history.isEmpty) return const SizedBox.shrink();
+            final lastDate = history.history
+                .map((p) => p.recordedAt)
+                .reduce((a, b) => a.isAfter(b) ? a : b);
+            final today = DateTime.now();
+            final lastDateOnly =
+                DateTime(lastDate.year, lastDate.month, lastDate.day);
+            final todayOnly =
+                DateTime(today.year, today.month, today.day);
+            final daysDiff = todayOnly.difference(lastDateOnly).inDays;
+            if (daysDiff >= 1) {
+              return _MarketClosedBadge(lastDate: lastDateOnly);
+            }
+            return const SizedBox.shrink();
+          },
+          orElse: () => const SizedBox.shrink(),
+        ),
+        const SizedBox(height: AppSizes.spaceS),
         SizedBox(
           height: 220,
           child: widget.historyAsync.when(
@@ -417,7 +437,8 @@ class _LineChartState extends State<_LineChart> {
       return const Center(child: Text('데이터가 없습니다'));
     }
 
-    final maxX = (widget.selectedDays - 1).toDouble();
+    // maxX: 마지막 데이터 날짜 오프셋으로 고정 (휴장일 빈 공간 제거)
+    final maxX = spots.last.x;
     final labelInterval = (maxX / 3).ceilToDouble();
     // 포인트가 적으면 곡선이 세모처럼 튀므로 직선 처리
     final useCurve = spots.length >= 5;
@@ -735,7 +756,8 @@ class _SpreadChartSection extends StatelessWidget {
     final minY = spreads.reduce((a, b) => a < b ? a : b);
     final maxY = spreads.reduce((a, b) => a > b ? a : b);
     final yPadding = ((maxY - minY) * 0.15).clamp(0.1, double.infinity);
-    final maxX = (selectedDays - 1).toDouble();
+    // maxX: 마지막 데이터 날짜 오프셋으로 고정 (휴장일 빈 공간 제거)
+    final maxX = spots.last.x;
     final labelInterval = (maxX / 3).ceilToDouble();
     final yRange = (maxY + yPadding) - (minY - yPadding);
     final yInterval = yRange > 0 ? yRange / 4 : 0.5;
@@ -882,6 +904,34 @@ class _SpreadChartSection extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MarketClosedBadge extends StatelessWidget {
+  const _MarketClosedBadge({required this.lastDate});
+
+  final DateTime lastDate;
+
+  @override
+  Widget build(BuildContext context) {
+    final label =
+        '${lastDate.month.toString().padLeft(2, '0')}/${lastDate.day.toString().padLeft(2, '0')}';
+    return Row(
+      children: [
+        Icon(
+          Icons.access_time_rounded,
+          size: 13,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '휴장 중 · 마지막 거래일: $label',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
         ),
       ],
     );
