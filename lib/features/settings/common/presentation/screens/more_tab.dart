@@ -137,6 +137,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         context.push(AppRoutes.memo);
       case 'childPoints':
         context.push(AppRoutes.childPoints);
+      case 'miniGames':
+        context.push(AppRoutes.miniGames);
       case 'investmentIndicators':
         context.push(AppRoutes.investmentIndicators);
       default:

@@ -22,6 +22,9 @@ import 'package:family_planner/features/memo/presentation/screens/memo_form_scre
 import 'package:family_planner/features/main/investment/presentation/screens/indicator_detail_screen.dart';
 import 'package:family_planner/features/main/investment/presentation/screens/investment_indicators_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
+import 'package:family_planner/features/minigame/presentation/screens/mini_games_screen.dart';
+import 'package:family_planner/features/minigame/presentation/screens/ladder_game_screen.dart';
+import 'package:family_planner/features/minigame/presentation/screens/roulette_game_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -225,6 +228,23 @@ List<RouteBase> getMainRoutes() {
         final id = state.pathParameters['id']!;
         return MemoFormScreen(memoId: id);
       },
+    ),
+
+    // Mini Games Routes (미니게임)
+    GoRoute(
+      path: AppRoutes.miniGames,
+      name: 'miniGames',
+      builder: (context, state) => const MiniGamesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.ladderGame,
+      name: 'ladderGame',
+      builder: (context, state) => const LadderGameScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.rouletteGame,
+      name: 'rouletteGame',
+      builder: (context, state) => const RouletteGameScreen(),
     ),
 
     // Child Points Routes (육아포인트)
