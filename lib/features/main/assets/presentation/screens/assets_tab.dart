@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+
 /// 자산 관리 탭
 class AssetsTab extends StatelessWidget {
   const AssetsTab({super.key});
@@ -9,6 +11,7 @@ class AssetsTab extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('자산'),
+        actions: const [AiChatIconButton()],
       ),
       body: Center(
         child: Column(

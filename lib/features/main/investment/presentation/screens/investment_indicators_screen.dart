@@ -10,6 +10,7 @@ import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/shared/widgets/sparkline_chart.dart';
 
 class InvestmentIndicatorsScreen extends ConsumerStatefulWidget {
@@ -31,6 +32,7 @@ class _InvestmentIndicatorsScreenState
       appBar: AppBar(
         title: const Text('투자 지표'),
         actions: [
+          const AiChatIconButton(),
           if (isAdmin)
             IconButton(
               icon: const Icon(Icons.history),

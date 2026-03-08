@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
@@ -67,6 +68,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
           onPressed: () => context.pop(),
         ),
         actions: [
+          const AiChatIconButton(),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: l10n.common_search,

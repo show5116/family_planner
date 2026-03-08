@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -48,6 +49,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       appBar: AppBar(
         title: const CalendarGroupSelector(),
         actions: [
+          const AiChatIconButton(),
           IconButton(
             icon: const Icon(Icons.today),
             tooltip: l10n.schedule_today,

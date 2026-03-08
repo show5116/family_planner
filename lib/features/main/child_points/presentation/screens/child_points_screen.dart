@@ -14,6 +14,7 @@ import 'package:family_planner/features/main/child_points/providers/childcare_pr
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 
 /// 육아포인트 메인 화면
@@ -69,6 +70,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
           onPressed: () => context.pop(),
         ),
         actions: [
+          const AiChatIconButton(),
           if (selectedGroupId != null)
             IconButton(
               icon: const Icon(Icons.person_add_outlined),

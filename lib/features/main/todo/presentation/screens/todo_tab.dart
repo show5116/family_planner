@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_kanban_column.dart';
@@ -48,6 +49,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
       appBar: AppBar(
         title: const CalendarGroupSelector(),
         actions: [
+          const AiChatIconButton(),
           // 뷰 전환 버튼 (모바일에서는 숨김, 모아보기에서는 숨김)
           if (!isMobile && !isOverview)
             IconButton(

@@ -6,6 +6,7 @@ import 'package:family_planner/features/home/presentation/widgets/investment_sum
 import 'package:family_planner/features/home/presentation/widgets/todo_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/asset_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/memo_summary_widget.dart';
+import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -55,6 +56,7 @@ class DashboardTab extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Family Planner'),
         actions: [
+          const AiChatIconButton(),
           // 알림 아이콘 with 배지
           Builder(
             builder: (context) => IconButton(
