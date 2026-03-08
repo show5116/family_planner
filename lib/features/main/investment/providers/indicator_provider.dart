@@ -98,6 +98,35 @@ Future<IndicatorHistoryModel> indicatorHistory(
   int days = 30,
 }) async {
   final repository = ref.watch(indicatorRepositoryProvider);
+
+  // days=1: 주말/공휴일 대비 여유분(3일)으로 요청 후 마지막 거래일만 필터링
+  if (days == 1) {
+    final raw = await repository.getIndicatorHistory(symbol, days: 3);
+    if (raw.history.isEmpty) return raw;
+
+    final lastDate = raw.history
+        .map((p) => p.recordedAt)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+    final lastDay = DateTime(lastDate.year, lastDate.month, lastDate.day);
+
+    final filteredHistory = raw.history.where((p) {
+      final d = DateTime(p.recordedAt.year, p.recordedAt.month, p.recordedAt.day);
+      return d == lastDay;
+    }).toList();
+
+    final filteredSpread = raw.spreadHistory.where((p) {
+      final d = DateTime(p.recordedAt.year, p.recordedAt.month, p.recordedAt.day);
+      return d == lastDay;
+    }).toList();
+
+    return IndicatorHistoryModel(
+      symbol: raw.symbol,
+      nameKo: raw.nameKo,
+      history: filteredHistory,
+      spreadHistory: filteredSpread,
+    );
+  }
+
   return repository.getIndicatorHistory(symbol, days: days);
 }
 
@@ -105,8 +134,23 @@ Future<IndicatorHistoryModel> indicatorHistory(
 @riverpod
 Future<List<double>> indicatorSparkline(Ref ref, String symbol) async {
   final repository = ref.watch(indicatorRepositoryProvider);
-  final history = await repository.getIndicatorHistory(symbol, days: 1);
-  return history.history.map((p) => p.price).toList();
+  // days=3: 주말/공휴일에도 직전 거래일 데이터가 포함되도록 여유분 확보
+  final history = await repository.getIndicatorHistory(symbol, days: 3);
+  if (history.history.isEmpty) return [];
+
+  // 가장 최근 거래일 하루치만 필터링
+  final lastDate = history.history
+      .map((p) => p.recordedAt)
+      .reduce((a, b) => a.isAfter(b) ? a : b);
+  final lastDay = DateTime(lastDate.year, lastDate.month, lastDate.day);
+  return history.history
+      .where((p) {
+        final d = DateTime(
+            p.recordedAt.year, p.recordedAt.month, p.recordedAt.day);
+        return d == lastDay;
+      })
+      .map((p) => p.price)
+      .toList();
 }
 
 /// [어드민] 과거 데이터 일괄 초기화 Provider

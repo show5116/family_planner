@@ -22,7 +22,7 @@ class _IndicatorDetailScreenState
     extends ConsumerState<IndicatorDetailScreen> {
   int _selectedDays = 30;
 
-  static const _dayOptions = [7, 30, 90, 180, 365];
+  static const _dayOptions = [1, 7, 30, 90, 180, 365];
 
   @override
   Widget build(BuildContext context) {
@@ -416,36 +416,78 @@ class _LineChartState extends State<_LineChart> {
     final isPositive = prices.last >= prices.first;
     final lineColor = isPositive ? AppColors.success : AppColors.error;
 
-    final now = DateTime.now();
-    final startDate = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: widget.selectedDays - 1));
+    // Y축 interval: 전체 Y 범위를 4등분하여 레이블 중복 방지
+    final yRange = (maxY + yPadding) - (minY - yPadding);
+    final yInterval = yRange > 0 ? yRange / 4 : 1.0;
 
-    // 날짜 오프셋으로 변환 후 중복 제거(같은 날 마지막 값 유지) + 정렬
-    final spotsMap = <int, double>{};
-    for (final p in points) {
-      final dayOffset = p.recordedAt.difference(startDate).inDays;
-      if (dayOffset >= 0 && dayOffset <= widget.selectedDays - 1) {
-        spotsMap[dayOffset] = p.price;
+    final isOneDay = widget.selectedDays == 1;
+
+    // ── 1일 모드: 분(minute) 오프셋 기반 ──────────────────────────────────
+    // ── 다일 모드: 날짜(day) 오프셋 기반 ──────────────────────────────────
+    final List<FlSpot> spots;
+    final double maxX;
+    final double labelInterval;
+    String Function(double x) bottomLabel;
+    String Function(double x) tooltipLabel;
+
+    if (isOneDay) {
+      final startTime = points
+          .map((p) => p.recordedAt)
+          .reduce((a, b) => a.isBefore(b) ? a : b);
+      // 분 오프셋으로 변환, 같은 분은 마지막 값 유지
+      final spotsMap = <int, double>{};
+      for (final p in points) {
+        final minOffset = p.recordedAt.difference(startTime).inMinutes;
+        spotsMap[minOffset] = p.price;
       }
+      spots = spotsMap.entries
+          .map((e) => FlSpot(e.key.toDouble(), e.value))
+          .toList()
+        ..sort((a, b) => a.x.compareTo(b.x));
+      maxX = spots.isEmpty ? 1 : spots.last.x;
+      labelInterval = (maxX / 3).ceilToDouble().clamp(1, double.infinity);
+      bottomLabel = (x) {
+        final t = startTime.add(Duration(minutes: x.toInt()));
+        return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+      };
+      tooltipLabel = (x) {
+        final t = startTime.add(Duration(minutes: x.toInt()));
+        return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+      };
+    } else {
+      final now = DateTime.now();
+      final startDate = DateTime(now.year, now.month, now.day)
+          .subtract(Duration(days: widget.selectedDays - 1));
+      final spotsMap = <int, double>{};
+      for (final p in points) {
+        final dayOffset = p.recordedAt.difference(startDate).inDays;
+        if (dayOffset >= 0 && dayOffset <= widget.selectedDays - 1) {
+          spotsMap[dayOffset] = p.price;
+        }
+      }
+      spots = spotsMap.entries
+          .map((e) => FlSpot(e.key.toDouble(), e.value))
+          .toList()
+        ..sort((a, b) => a.x.compareTo(b.x));
+      // maxX: 마지막 데이터 날짜 오프셋으로 고정 (휴장일 빈 공간 제거)
+      maxX = spots.isEmpty ? (widget.selectedDays - 1).toDouble() : spots.last.x;
+      labelInterval = (maxX / 3).ceilToDouble().clamp(1, double.infinity);
+      bottomLabel = (x) {
+        final date = startDate.add(Duration(days: x.toInt()));
+        return '${date.month}/${date.day}';
+      };
+      tooltipLabel = (x) {
+        final date = startDate.add(Duration(days: x.toInt()));
+        return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
+      };
     }
-    final spots = spotsMap.entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value))
-        .toList()
-      ..sort((a, b) => a.x.compareTo(b.x));
 
     if (spots.isEmpty) {
       return const Center(child: Text('데이터가 없습니다'));
     }
 
-    // maxX: 마지막 데이터 날짜 오프셋으로 고정 (휴장일 빈 공간 제거)
-    final maxX = spots.last.x;
-    final labelInterval = (maxX / 3).ceilToDouble();
     // 포인트가 적으면 곡선이 세모처럼 튀므로 직선 처리
     final useCurve = spots.length >= 5;
-
-    // Y축 interval: 전체 Y 범위를 4등분하여 레이블 중복 방지
-    final yRange = (maxY + yPadding) - (minY - yPadding);
-    final yInterval = yRange > 0 ? yRange / 4 : 1.0;
 
     // 선택 범위 강조 수직선
     final rangeStart = widget.dragStartX;
@@ -492,16 +534,13 @@ class _LineChartState extends State<_LineChart> {
               showTitles: true,
               reservedSize: 24,
               interval: labelInterval,
-              getTitlesWidget: (value, _) {
-                final date = startDate.add(Duration(days: value.toInt()));
-                return Text(
-                  '${date.month}/${date.day}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                );
-              },
+              getTitlesWidget: (value, _) => Text(
+                bottomLabel(value),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 10,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
             ),
           ),
           topTitles: const AxisTitles(
@@ -600,9 +639,8 @@ class _LineChartState extends State<_LineChart> {
           touchTooltipData: LineTouchTooltipData(
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                final date = startDate.add(Duration(days: spot.x.toInt()));
                 return LineTooltipItem(
-                  '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}\n${_formatPrice(spot.y)}',
+                  '${tooltipLabel(spot.x)}\n${_formatPrice(spot.y)}',
                   const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
