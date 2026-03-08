@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
 import 'package:family_planner/features/minigame/data/repositories/minigame_repository.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 // ─── 사다리 데이터 ─────────────────────────────────────────────────────────────
 
@@ -189,6 +191,12 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final selectedGroup = selectedGroupId != null
+        ? groups.where((g) => g.id == selectedGroupId).firstOrNull
+        : null;
+
     return Scaffold(
       appBar: AppBar(title: const Text('사다리타기')),
       body: SingleChildScrollView(
@@ -196,8 +204,10 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (selectedGroup != null)
+              _GroupBanner(groupName: selectedGroup.name),
             if (_phase == _GamePhase.setup) ...[
-              _buildSetupSection(),
+              _buildSetupSection(selectedGroupId),
               const SizedBox(height: 20),
               FilledButton.icon(
                 onPressed: _canStart ? _buildLadder : null,
@@ -237,7 +247,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
     );
   }
 
-  Widget _buildSetupSection() {
+  Widget _buildSetupSection(String? groupId) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -257,6 +267,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                 label: '참여자',
                 controllers: _participantControllers,
                 hintPrefix: '참여자',
+                groupId: groupId,
                 onAdd: () => setState(
                     () => _participantControllers.add(TextEditingController())),
                 onRemove: (i) => setState(() {
@@ -264,6 +275,19 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                   _participantControllers.removeAt(i);
                 }),
                 onChanged: () => setState(() {}),
+                onAddFromGroup: (names) => setState(() {
+                  for (final name in names) {
+                    // 빈 텍스트박스가 있으면 먼저 채우기
+                    final emptyIdx = _participantControllers
+                        .indexWhere((c) => c.text.trim().isEmpty);
+                    if (emptyIdx != -1) {
+                      _participantControllers[emptyIdx].text = name;
+                    } else {
+                      _participantControllers
+                          .add(TextEditingController(text: name));
+                    }
+                  }
+                }),
               ),
             ),
             const SizedBox(width: 12),
@@ -819,27 +843,109 @@ class _OptionsEditor extends StatelessWidget {
   }
 }
 
+// ─── 그룹 배너 ────────────────────────────────────────────────────────────────
+
+class _GroupBanner extends StatelessWidget {
+  final String groupName;
+
+  const _GroupBanner({required this.groupName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.group,
+              size: 16,
+              color: Theme.of(context).colorScheme.onPrimaryContainer),
+          const SizedBox(width: 8),
+          Text(
+            groupName,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '그룹으로 플레이 중',
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onPrimaryContainer
+                  .withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ─── 참여자 편집기 ─────────────────────────────────────────────────────────────
 
-class _ListEditor extends StatelessWidget {
+class _ListEditor extends ConsumerWidget {
   final String label;
   final List<TextEditingController> controllers;
   final String hintPrefix;
+  final String? groupId;
   final VoidCallback onAdd;
   final void Function(int) onRemove;
   final VoidCallback onChanged;
+  final void Function(List<String> names)? onAddFromGroup;
 
   const _ListEditor({
     required this.label,
     required this.controllers,
     required this.hintPrefix,
+    this.groupId,
     required this.onAdd,
     required this.onRemove,
     required this.onChanged,
+    this.onAddFromGroup,
   });
 
+  Future<void> _showMemberPicker(BuildContext context, WidgetRef ref) async {
+    final membersAsync = ref.read(groupMembersProvider(groupId!));
+    final members = membersAsync.valueOrNull ?? [];
+
+    if (members.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('그룹 멤버를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')),
+      );
+      return;
+    }
+
+    final alreadyAdded =
+        controllers.map((c) => c.text.trim()).toSet();
+
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => _MemberPickerDialog(
+        members: members,
+        alreadyAdded: alreadyAdded,
+        onSelect: (names) {
+          onAddFromGroup?.call(names);
+        },
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // groupId가 있으면 미리 로딩
+    if (groupId != null) {
+      ref.watch(groupMembersProvider(groupId!));
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -874,13 +980,114 @@ class _ListEditor extends StatelessWidget {
             ),
           );
         }),
-        TextButton.icon(
-          onPressed: onAdd,
-          icon: const Icon(Icons.add, size: 16),
-          label: Text('$label 추가'),
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: TextButton.icon(
+                onPressed: onAdd,
+                icon: const Icon(Icons.edit, size: 16),
+                label: Text('$label 직접 추가'),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                ),
+              ),
+            ),
+            if (groupId != null && onAddFromGroup != null)
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: () => _showMemberPicker(context, ref),
+                  icon: const Icon(Icons.person_add, size: 16),
+                  label: const Text('멤버 선택'),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+// ─── 멤버 선택 다이얼로그 ──────────────────────────────────────────────────────
+
+class _MemberPickerDialog extends StatefulWidget {
+  final List<GroupMember> members;
+  final Set<String> alreadyAdded;
+  final void Function(List<String> names) onSelect;
+
+  const _MemberPickerDialog({
+    required this.members,
+    required this.alreadyAdded,
+    required this.onSelect,
+  });
+
+  @override
+  State<_MemberPickerDialog> createState() => _MemberPickerDialogState();
+}
+
+class _MemberPickerDialogState extends State<_MemberPickerDialog> {
+  final Set<String> _selected = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('그룹 멤버 선택'),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.members.length,
+          itemBuilder: (ctx, i) {
+            final member = widget.members[i];
+            final name = member.user?.name ?? '알 수 없음';
+            final isAlreadyAdded = widget.alreadyAdded.contains(name);
+            final isSelected = _selected.contains(name);
+
+            return CheckboxListTile(
+              value: isSelected || isAlreadyAdded,
+              onChanged: isAlreadyAdded
+                  ? null
+                  : (checked) {
+                      setState(() {
+                        if (checked == true) {
+                          _selected.add(name);
+                        } else {
+                          _selected.remove(name);
+                        }
+                      });
+                    },
+              title: Text(name),
+              subtitle: isAlreadyAdded
+                  ? const Text('이미 추가됨',
+                      style: TextStyle(fontSize: 11, color: Colors.grey))
+                  : null,
+              secondary: CircleAvatar(
+                radius: 16,
+                child: Text(
+                  name.isNotEmpty ? name[0] : '?',
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+              dense: true,
+            );
+          },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          onPressed: _selected.isEmpty
+              ? null
+              : () {
+                  widget.onSelect(_selected.toList());
+                  Navigator.pop(context);
+                },
+          child: Text('추가 (${_selected.length})'),
         ),
       ],
     );

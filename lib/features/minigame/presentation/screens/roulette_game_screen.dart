@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
 import 'package:family_planner/features/minigame/data/repositories/minigame_repository.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 // 룰렛 색상 팔레트
 const _kRouletteColors = [
@@ -83,6 +84,11 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
   @override
   Widget build(BuildContext context) {
     final items = _validItems;
+    final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final selectedGroup = selectedGroupId != null
+        ? groups.where((g) => g.id == selectedGroupId).firstOrNull
+        : null;
 
     return Scaffold(
       appBar: AppBar(title: const Text('룰렛')),
@@ -91,6 +97,8 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (selectedGroup != null)
+              _GroupBanner(groupName: selectedGroup.name),
             // 제목
             TextField(
               controller: _titleController,
@@ -420,4 +428,51 @@ class _RoulettePainter extends CustomPainter {
   @override
   bool shouldRepaint(_RoulettePainter oldDelegate) =>
       oldDelegate.items != items;
+}
+
+// ─── 그룹 배너 ────────────────────────────────────────────────────────────────
+
+class _GroupBanner extends StatelessWidget {
+  final String groupName;
+
+  const _GroupBanner({required this.groupName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.group,
+              size: 16,
+              color: Theme.of(context).colorScheme.onPrimaryContainer),
+          const SizedBox(width: 8),
+          Text(
+            groupName,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '그룹으로 플레이 중',
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onPrimaryContainer
+                  .withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
