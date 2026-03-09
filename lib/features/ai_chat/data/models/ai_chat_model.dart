@@ -7,10 +7,14 @@ class AiChatMessage {
   final String content;
   final DateTime createdAt;
 
+  /// true이면 새 대화 세션 시작 구분선을 메시지 위에 표시
+  final bool isSessionStart;
+
   const AiChatMessage({
     required this.role,
     required this.content,
     required this.createdAt,
+    this.isSessionStart = false,
   });
 
   factory AiChatMessage.user(String content) => AiChatMessage(
@@ -19,10 +23,12 @@ class AiChatMessage {
         createdAt: DateTime.now(),
       );
 
-  factory AiChatMessage.assistant(String content) => AiChatMessage(
+  factory AiChatMessage.assistant(String content, {bool isSessionStart = false}) =>
+      AiChatMessage(
         role: AiMessageRole.assistant,
         content: content,
         createdAt: DateTime.now(),
+        isSessionStart: isSessionStart,
       );
 }
 
@@ -40,7 +46,7 @@ class AiChatResponse {
 
   factory AiChatResponse.fromJson(Map<String, dynamic> json) {
     return AiChatResponse(
-      message: json['message'] as String? ?? '',
+      message: json['response'] as String? ?? json['message'] as String? ?? '',
       roomId: json['room_id'] as String? ?? '',
       agent: json['agent'] as String?,
     );

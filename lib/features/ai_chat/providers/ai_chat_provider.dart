@@ -32,12 +32,19 @@ class AiChat extends _$AiChat {
         ),
       );
 
-      // 처음 응답에서 room_id 저장
-      if (roomId == null && response.roomId.isNotEmpty) {
+      // room_id 변경 감지: TTL 만료로 새 세션이 시작된 경우
+      final isNewSession = roomId != null &&
+          response.roomId.isNotEmpty &&
+          response.roomId != roomId;
+
+      if (response.roomId.isNotEmpty) {
         ref.read(aiChatRoomIdProvider.notifier).state = response.roomId;
       }
 
-      state = [...state, AiChatMessage.assistant(response.message)];
+      state = [
+        ...state,
+        AiChatMessage.assistant(response.message, isSessionStart: isNewSession),
+      ];
     } catch (e) {
       state = [
         ...state,

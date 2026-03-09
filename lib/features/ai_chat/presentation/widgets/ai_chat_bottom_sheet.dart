@@ -86,7 +86,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
       initialChildSize: 0.75,
       minChildSize: 0.4,
       maxChildSize: 0.95,
-      builder: (context, scrollController) {
+      builder: (_, sc) {
         return Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -230,62 +230,88 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
     );
   }
 
-  Widget _buildMessageBubble(AiChatMessage message, ThemeData theme) {
-    final isUser = message.role == AiMessageRole.user;
-
+  Widget _buildSessionDivider(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (!isUser) ...[
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.auto_awesome,
-                color: AppColors.primary,
-                size: 16,
-              ),
-            ),
-            const SizedBox(width: 6),
-          ],
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-              decoration: BoxDecoration(
-                color: isUser
-                    ? AppColors.primary
-                    : theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(AppSizes.radiusMedium),
-                  topRight: const Radius.circular(AppSizes.radiusMedium),
-                  bottomLeft:
-                      Radius.circular(isUser ? AppSizes.radiusMedium : 4),
-                  bottomRight:
-                      Radius.circular(isUser ? 4 : AppSizes.radiusMedium),
-                ),
-              ),
-              child: Text(
-                message.content,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: isUser ? Colors.white : theme.colorScheme.onSurface,
-                ),
+          Expanded(child: Divider(color: theme.colorScheme.outlineVariant)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              '새 대화가 시작되었습니다',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ),
-          if (isUser) const SizedBox(width: 34),
+          Expanded(child: Divider(color: theme.colorScheme.outlineVariant)),
         ],
       ),
+    );
+  }
+
+  Widget _buildMessageBubble(AiChatMessage message, ThemeData theme) {
+    final isUser = message.role == AiMessageRole.user;
+
+    return Column(
+      children: [
+        if (message.isSessionStart) _buildSessionDivider(theme),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            mainAxisAlignment:
+                isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (!isUser) ...[
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    color: AppColors.primary,
+                    size: 16,
+                  ),
+                ),
+                const SizedBox(width: 6),
+              ],
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceM,
+                    vertical: AppSizes.spaceS,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isUser
+                        ? AppColors.primary
+                        : theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(AppSizes.radiusMedium),
+                      topRight: const Radius.circular(AppSizes.radiusMedium),
+                      bottomLeft:
+                          Radius.circular(isUser ? AppSizes.radiusMedium : 4),
+                      bottomRight:
+                          Radius.circular(isUser ? 4 : AppSizes.radiusMedium),
+                    ),
+                  ),
+                  child: Text(
+                    message.content,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: isUser ? Colors.white : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+              if (isUser) const SizedBox(width: 34),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
