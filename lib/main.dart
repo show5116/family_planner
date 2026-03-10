@@ -117,13 +117,14 @@ class MyApp extends ConsumerStatefulWidget {
   ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   double _lastValidHeight = 0.0;
   double _lastValidWidth = 0.0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     // API 에러 콜백 설정 (401, 500 제외한 에러만 표시)
     ApiClient.instance.onError = (String message) {
@@ -146,6 +147,39 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // 키보드 올라오거나 내려갈 때 (metrics 변화) 호출됨
+  @override
+  void didChangeMetrics() {
+    if (!kIsWeb) return;
+    final view = WidgetsBinding.instance.platformDispatcher.views.first;
+    final physicalHeight = view.physicalSize.height;
+    final dpr = view.devicePixelRatio;
+    final logicalHeight = physicalHeight / dpr;
+    final logicalWidth = view.physicalSize.width / dpr;
+
+    // 가로가 바뀌면(회전) 기준 초기화
+    if (logicalWidth != _lastValidWidth) {
+      setState(() {
+        _lastValidWidth = logicalWidth;
+        _lastValidHeight = logicalHeight;
+      });
+      return;
+    }
+
+    // 높이가 커졌을 때만(키보드 내려감) setState로 rebuild
+    if (logicalHeight > _lastValidHeight) {
+      setState(() {
+        _lastValidHeight = logicalHeight;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
@@ -159,51 +193,39 @@ class _MyAppState extends ConsumerState<MyApp> {
       // 테마 설정
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode, // Provider에서 관리되는 테마 모드 사용
+      themeMode: themeMode,
       // 라우팅 설정
       routerConfig: router,
 
       // 로케일 설정
-      locale: locale, // Provider에서 관리되는 언어 설정 (null이면 시스템 언어 사용)
+      locale: locale,
       supportedLocales: const [
         Locale('ko', 'KR'), // 한국어
         Locale('en', 'US'), // 영어
         Locale('ja', 'JP'), // 일본어
       ],
       localizationsDelegates: const [
-        AppLocalizations.delegate, // 앱 다국어
-        GlobalMaterialLocalizations.delegate, // Material 위젯 다국어
-        GlobalWidgetsLocalizations.delegate, // 일반 위젯 다국어
-        GlobalCupertinoLocalizations.delegate, // Cupertino 위젯 다국어
-        FlutterQuillLocalizations.delegate, // Flutter Quill 에디터 다국어
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
       ],
 
-      // 웹에서 스크롤 동작 개선
       builder: (context, child) {
         final mediaQuery = MediaQuery.of(context);
         if (kIsWeb) {
           final currentSize = mediaQuery.size;
 
-          // 1. 높이 캐싱 로직
-          // 가로(Width)가 변했다면(회전 등), 높이 기준도 초기화하고 새로 잡습니다.
-          if (currentSize.width != _lastValidWidth) {
-            _lastValidWidth = currentSize.width;
+          // 초기값 설정 (첫 빌드 시)
+          if (_lastValidHeight == 0.0) {
             _lastValidHeight = currentSize.height;
-          } else {
-            // 가로는 그대로인데, 높이가 더 커졌다면(키보드가 내려감) 최신 높이로 갱신
-            if (currentSize.height > _lastValidHeight) {
-              _lastValidHeight = currentSize.height;
-            }
-            // 높이가 작아졌다면(키보드가 올라옴)? -> _lastValidHeight를 그대로 유지 (갱신 X)
+            _lastValidWidth = currentSize.width;
           }
 
-          // 2. 강제 고정 MediaQuery 생성
-          // 현재 화면 높이가 줄어들었더라도(_lastValidHeight보다 작더라도)
-          // 우리는 무조건 '가장 컸던 높이(_lastValidHeight)'를 사용하라고 강제합니다.
           return MediaQuery(
             data: mediaQuery.copyWith(
               textScaler: TextScaler.noScaling,
-              // 키보드 영역 0으로 강제
               viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
               size: Size(
                 currentSize.width,
@@ -214,7 +236,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           );
         }
 
-        // 웹이 아니면 기본 로직
         return MediaQuery(
           data: mediaQuery.copyWith(textScaler: TextScaler.noScaling),
           child: child ?? const SizedBox(),
