@@ -60,6 +60,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(_isEditMode ? '질문 수정' : '질문 작성'),
       ),

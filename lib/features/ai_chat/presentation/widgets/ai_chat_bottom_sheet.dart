@@ -79,7 +79,6 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
   Widget build(BuildContext context) {
     final messages = ref.watch(aiChatProvider);
     final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
 
     return DraggableScrollableSheet(
       expand: false,
@@ -105,7 +104,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
                     : _buildMessageList(messages, theme),
               ),
               _buildSuggestedQuestions(theme),
-              _buildInputBar(theme, mediaQuery),
+              _buildInputBar(theme),
             ],
           ),
         );
@@ -400,13 +399,11 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
     );
   }
 
-  Widget _buildInputBar(ThemeData theme, MediaQueryData mediaQuery) {
+  Widget _buildInputBar(ThemeData theme) {
     return Container(
-      padding: EdgeInsets.fromLTRB(
-        AppSizes.spaceM,
-        AppSizes.spaceS,
-        AppSizes.spaceM,
-        AppSizes.spaceS + mediaQuery.viewInsets.bottom,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceS,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,

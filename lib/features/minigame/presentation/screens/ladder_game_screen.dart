@@ -198,6 +198,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
         : null;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('사다리타기')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

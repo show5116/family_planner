@@ -47,12 +47,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
         '${_recordDate.year}-${_recordDate.month.toString().padLeft(2, '0')}-${_recordDate.day.toString().padLeft(2, '0')}';
 
     return Padding(
-      padding: EdgeInsets.only(
-        left: AppSizes.spaceM,
-        right: AppSizes.spaceM,
-        top: AppSizes.spaceM,
-        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spaceM,
-      ),
+      padding: const EdgeInsets.all(AppSizes.spaceM),
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(

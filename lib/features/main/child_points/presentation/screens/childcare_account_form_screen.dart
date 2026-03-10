@@ -39,6 +39,7 @@ class _ChildcareAccountFormScreenState
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.childcare_add_account),
         leading: IconButton(

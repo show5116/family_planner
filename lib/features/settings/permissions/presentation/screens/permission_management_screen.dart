@@ -27,6 +27,7 @@ class _PermissionManagementScreenState
     final state = ref.watch(permissionManagementProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.permission_title),
         elevation: 0,

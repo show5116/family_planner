@@ -91,6 +91,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
         : null;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('룰렛')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

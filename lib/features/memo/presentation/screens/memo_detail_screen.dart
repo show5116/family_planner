@@ -35,6 +35,7 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
     final memoAsync = ref.watch(memoDetailProvider(widget.memoId));
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.memo_detail),
         actions: [

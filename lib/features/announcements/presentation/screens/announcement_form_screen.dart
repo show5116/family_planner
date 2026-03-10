@@ -85,6 +85,7 @@ class _AnnouncementFormScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(_isEditMode ? l10n.announcement_edit : l10n.announcement_create),
         actions: [

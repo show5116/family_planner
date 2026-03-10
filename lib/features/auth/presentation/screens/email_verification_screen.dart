@@ -7,6 +7,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/shared/widgets/scrollable_form_body.dart';
 
 /// 이메일 인증 화면
 class EmailVerificationScreen extends ConsumerStatefulWidget {
@@ -116,16 +117,13 @@ class _EmailVerificationScreenState
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('이메일 인증'), centerTitle: true),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsivePadding.getHorizontalPadding(context),
-              vertical: AppSizes.spaceM,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: Column(
+      body: ScrollableFormBody(
+        maxWidth: 500,
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsivePadding.getHorizontalPadding(context),
+          vertical: AppSizes.spaceM,
+        ),
+        child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -295,9 +293,6 @@ class _EmailVerificationScreenState
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

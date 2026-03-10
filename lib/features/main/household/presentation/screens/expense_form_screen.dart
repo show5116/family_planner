@@ -78,6 +78,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,6 +7,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
+import 'package:family_planner/shared/widgets/scrollable_form_body.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -210,16 +211,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text(screenTitle)),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: ResponsivePadding.getHorizontalPadding(context),
-                vertical: AppSizes.spaceM,
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 500),
-                child: Form(
+      body: ScrollableFormBody(
+        maxWidth: 500,
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsivePadding.getHorizontalPadding(context),
+          vertical: AppSizes.spaceM,
+        ),
+        child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -453,10 +451,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ],
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
+      ),
     );
   }
 }

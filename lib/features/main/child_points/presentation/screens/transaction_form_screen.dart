@@ -49,6 +49,7 @@ class _TransactionFormScreenState
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.childcare_add_transaction),
         leading: IconButton(

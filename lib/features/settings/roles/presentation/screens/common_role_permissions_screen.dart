@@ -59,6 +59,7 @@ class _CommonRolePermissionsScreenState
     _initializePermissions(role);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('${role.name} 권한 관리'),
         elevation: 0,
