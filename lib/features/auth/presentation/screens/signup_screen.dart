@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,14 +31,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
-
-  bool get _isMobileWeb {
-    return kIsWeb &&
-           (defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.iOS);
-  }
-
-  double? _initialScreenHeight;
 
   @override
   void dispose() {
@@ -101,26 +92,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    if (_isMobileWeb && _initialScreenHeight == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          _initialScreenHeight = MediaQuery.of(context).size.height;
-        });
-      });
-    }
-
-    final screenHeight = _isMobileWeb && _initialScreenHeight != null
-        ? _initialScreenHeight!
-        : MediaQuery.of(context).size.height;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AuthAppBar(title: l10n.auth_signup, showBackButton: true),
       body: SafeArea(
-        child: SizedBox(
-          height: screenHeight - MediaQuery.of(context).padding.top - kToolbarHeight,
-          child: Center(
-            child: SingleChildScrollView(
+        child: Center(
+          child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
                 horizontal: ResponsivePadding.getHorizontalPadding(context),
                 vertical: AppSizes.spaceM,
@@ -162,7 +139,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 
