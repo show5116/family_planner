@@ -172,14 +172,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // 키보드 올라오거나 내려갈 때 (metrics 변화) 호출됨
+  // 화면 회전 감지용
   @override
   void didChangeMetrics() {
     if (!kIsWeb) return;
     final view = WidgetsBinding.instance.platformDispatcher.views.first;
     final logicalWidth = view.physicalSize.width / view.devicePixelRatio;
 
-    // 가로가 바뀌면(회전) — visualViewport 기준으로 재초기화
+    // 가로가 바뀌면(회전)만 처리 — 키보드 높이 변화는 폴링에서 처리
     if (logicalWidth != _lastValidWidth) {
       final vvHeight = getVisualViewportHeight();
       setState(() {
@@ -187,11 +187,8 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         _lastValidHeight = vvHeight > 0 ? vvHeight : view.physicalSize.height / view.devicePixelRatio;
         _prevVvHeight = _lastValidHeight;
       });
-      return;
     }
-
-    // 높이 변화는 폴링(Timer.periodic)에서 처리하므로 rebuild만 트리거
-    setState(() {});
+    // 높이만 바뀐 경우(키보드) — setState 하지 않음, 폴링이 처리
   }
 
   @override
