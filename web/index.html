@@ -131,46 +131,42 @@
       window.addEventListener('keypress', patchEvent, true);
     })();
 
-    // Fix: Android keyboard dismiss leaves white blank area in Flutter Web
-    var _lastVvHeight = 0;
-    function resizeFlutterToViewport() {
-      var vvHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      var vvWidth  = window.visualViewport ? window.visualViewport.width  : window.innerWidth;
+    // Fix: keyboard (open/close) causes white blank area in Flutter Web.
+    // Strategy: lock flt-glass-pane to the full-screen height at all times.
+    // Flutter MediaQuery is handled by Dart-side polling in main.dart.
+    var _fullHeight = 0;
+    var _fullWidth  = 0;
 
-      document.documentElement.style.height = vvHeight + 'px';
-      document.body.style.height = vvHeight + 'px';
-      document.body.style.width  = vvWidth  + 'px';
+    function initFullSize() {
+      _fullHeight = window.innerHeight;
+      _fullWidth  = window.innerWidth;
+    }
+    initFullSize();
 
-      // Force Flutter canvas to match real viewport
+    function lockGlassPane() {
       var glassPane = document.querySelector('flt-glass-pane');
-      if (glassPane) {
-        glassPane.style.setProperty('height', vvHeight + 'px', 'important');
-        glassPane.style.setProperty('width',  vvWidth  + 'px', 'important');
+      if (glassPane && _fullHeight > 0) {
+        glassPane.style.setProperty('height', _fullHeight + 'px', 'important');
+        glassPane.style.setProperty('width',  _fullWidth  + 'px', 'important');
       }
-
-      // Notify Flutter engine when keyboard is dismissed (height increases)
-      // so that didChangeMetrics() fires and MediaQuery.size is recalculated.
-      if (vvHeight > _lastVvHeight) {
-        window.dispatchEvent(new Event('resize'));
-      }
-      _lastVvHeight = vvHeight;
+      document.documentElement.style.height = _fullHeight + 'px';
+      document.body.style.height = _fullHeight + 'px';
     }
 
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', resizeFlutterToViewport);
-      window.visualViewport.addEventListener('scroll', resizeFlutterToViewport);
-    }
-    window.addEventListener('resize', resizeFlutterToViewport);
-
-    // Fix: Android back button dismisses keyboard without firing any DOM event.
-    // Poll visualViewport height every 100ms to catch the change.
-    // Only active when viewport height is less than window height (keyboard is open).
-    setInterval(function() {
-      var vvHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      if (vvHeight !== _lastVvHeight) {
-        resizeFlutterToViewport();
+    // window resize = orientation change → update full size
+    window.addEventListener('resize', function() {
+      var newH = window.innerHeight;
+      var newW = window.innerWidth;
+      // Only update if this is an orientation change (large delta), not keyboard
+      if (Math.abs(newH - _fullHeight) > 100 && newW !== _fullWidth) {
+        _fullHeight = newH;
+        _fullWidth  = newW;
       }
-    }, 100);
+      lockGlassPane();
+    });
+
+    // Lock glass-pane continuously (every 100ms) so Flutter engine can't shrink it
+    setInterval(lockGlassPane, 100);
 
     // DEBUG: 화면 좌상단에 viewport 높이 실시간 표시 (확인 후 삭제)
     var _dbgEl = document.createElement('div');
