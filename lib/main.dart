@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,9 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+// Web-only: visualViewport height polling
+// ignore: avoid_web_libraries_in_flutter
+import 'viewport_stub.dart' if (dart.library.js_interop) 'viewport_web.dart';
 import 'package:family_planner/core/theme/app_theme.dart';
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
@@ -107,11 +112,29 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   double _lastValidHeight = 0.0;
   double _lastValidWidth = 0.0;
+  Timer? _viewportPollingTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    // Android 뒤로 버튼으로 키보드 닫힐 때 DOM 이벤트가 발생하지 않는 문제 해결.
+    // Dart에서 직접 visualViewport.height를 폴링하여 변화 감지 시 setState() 호출.
+    if (kIsWeb) {
+      _viewportPollingTimer = Timer.periodic(
+        const Duration(milliseconds: 100),
+        (_) {
+          final vvHeight = getVisualViewportHeight();
+          if (vvHeight <= 0) return;
+          if (vvHeight > _lastValidHeight && _lastValidHeight > 0) {
+            setState(() {
+              _lastValidHeight = vvHeight;
+            });
+          }
+        },
+      );
+    }
 
     // API 에러 콜백 설정 (401, 500 제외한 에러만 표시)
     ApiClient.instance.onError = (String message) {
@@ -135,6 +158,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _viewportPollingTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
