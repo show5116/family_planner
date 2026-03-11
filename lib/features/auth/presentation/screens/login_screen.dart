@@ -8,7 +8,6 @@ import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
-import 'package:family_planner/shared/widgets/scrollable_form_body.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_app_bar.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_link_row.dart';
@@ -144,44 +143,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const AuthAppBar(),
-      body: ScrollableFormBody(
-        maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsivePadding.getHorizontalPadding(context),
-          vertical: AppSizes.spaceM,
-        ),
-        child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AppLogo(size: Responsive.isMobile(context) ? 400 : 500),
-                      SizedBox(
-                        height: Responsive.isMobile(context)
-                            ? AppSizes.spaceS
-                            : AppSizes.spaceL,
-                      ),
-                      _buildEmailField(l10n),
-                      const SizedBox(height: AppSizes.spaceM),
-                      _buildPasswordField(l10n),
-                      const SizedBox(height: AppSizes.spaceS),
-                      _buildForgotPasswordLink(l10n),
-                      const SizedBox(height: AppSizes.spaceM),
-                      _buildLoginButton(l10n),
-                      const SizedBox(height: AppSizes.spaceL),
-                      AppDivider(text: l10n.auth_or),
-                      const SizedBox(height: AppSizes.spaceL),
-                      _buildSocialLoginButtons(l10n),
-                      const SizedBox(height: AppSizes.spaceXL),
-                      AuthLinkRow(
-                        text: l10n.auth_noAccount,
-                        linkText: l10n.auth_signup,
-                        onPressed: () => context.push(AppRoutes.signup),
-                      ),
-                    ],
-                  ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsivePadding.getHorizontalPadding(context),
+              vertical: AppSizes.spaceM,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppLogo(size: Responsive.isMobile(context) ? 400 : 500),
+                    SizedBox(
+                      height: Responsive.isMobile(context)
+                          ? AppSizes.spaceS
+                          : AppSizes.spaceL,
+                    ),
+                    _buildEmailField(l10n),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _buildPasswordField(l10n),
+                    const SizedBox(height: AppSizes.spaceS),
+                    _buildForgotPasswordLink(l10n),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _buildLoginButton(l10n),
+                    const SizedBox(height: AppSizes.spaceL),
+                    AppDivider(text: l10n.auth_or),
+                    const SizedBox(height: AppSizes.spaceL),
+                    _buildSocialLoginButtons(l10n),
+                    const SizedBox(height: AppSizes.spaceXL),
+                    AuthLinkRow(
+                      text: l10n.auth_noAccount,
+                      linkText: l10n.auth_signup,
+                      onPressed: () => context.push(AppRoutes.signup),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

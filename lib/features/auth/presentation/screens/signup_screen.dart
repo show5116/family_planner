@@ -9,7 +9,6 @@ import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/utils/validators.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
-import 'package:family_planner/shared/widgets/scrollable_form_body.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_app_bar.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_link_row.dart';
@@ -96,41 +95,49 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AuthAppBar(title: l10n.auth_signup, showBackButton: true),
-      body: ScrollableFormBody(
-        maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsivePadding.getHorizontalPadding(context),
-          vertical: AppSizes.spaceM,
-        ),
-        child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AppLogo(size: Responsive.isMobile(context) ? 120 : 150),
-                      SizedBox(
-                        height: Responsive.isMobile(context)
-                            ? AppSizes.spaceXL
-                            : AppSizes.spaceXXL,
-                      ),
-                      _buildNameField(l10n),
-                      const SizedBox(height: AppSizes.spaceM),
-                      _buildEmailField(l10n),
-                      const SizedBox(height: AppSizes.spaceM),
-                      _buildPasswordField(l10n),
-                      const SizedBox(height: AppSizes.spaceM),
-                      _buildConfirmPasswordField(l10n),
-                      const SizedBox(height: AppSizes.spaceXL),
-                      _buildSignupButton(l10n),
-                      const SizedBox(height: AppSizes.spaceXL),
-                      AuthLinkRow(
-                        text: '${l10n.auth_haveAccount} ',
-                        linkText: l10n.auth_login,
-                        onPressed: () => context.pop(),
-                      ),
-                    ],
-                  ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsivePadding.getHorizontalPadding(context),
+              vertical: AppSizes.spaceM,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: Responsive.isMobile(context) ? double.infinity : 500,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppLogo(size: Responsive.isMobile(context) ? 120 : 150),
+                    SizedBox(
+                      height: Responsive.isMobile(context)
+                          ? AppSizes.spaceXL
+                          : AppSizes.spaceXXL,
+                    ),
+                    _buildNameField(l10n),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _buildEmailField(l10n),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _buildPasswordField(l10n),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _buildConfirmPasswordField(l10n),
+                    const SizedBox(height: AppSizes.spaceXL),
+                    _buildSignupButton(l10n),
+                    const SizedBox(height: AppSizes.spaceXL),
+                    AuthLinkRow(
+                      text: '${l10n.auth_haveAccount} ',
+                      linkText: l10n.auth_login,
+                      onPressed: () => context.pop(),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
