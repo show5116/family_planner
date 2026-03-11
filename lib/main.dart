@@ -230,15 +230,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       builder: (context, child) {
         final mediaQuery = MediaQuery.of(context);
         if (kIsWeb) {
-          final currentSize = mediaQuery.size;
-
-          // 초기값 설정 (첫 빌드 시)
+          // vv 기준으로 초기화 (첫 빌드 시)
           if (_lastValidHeight == 0.0) {
-            _lastValidHeight = currentSize.height;
-            _lastValidWidth = currentSize.width;
+            final vvH = getVisualViewportHeight();
+            _lastValidHeight = vvH > 0 ? vvH : mediaQuery.size.height;
+            _lastValidWidth = mediaQuery.size.width;
+            _prevVvHeight = _lastValidHeight;
           }
 
-          final fixedHeight = _lastValidHeight > 0 ? _lastValidHeight : currentSize.height;
+          // mediaQuery.size는 Flutter 내부 값으로 한 박자 늦으므로 사용하지 않음.
+          // 항상 _lastValidHeight(vv 기준)를 사용.
+          final fixedHeight = _lastValidHeight;
+          final fixedWidth = mediaQuery.size.width;
 
           return Stack(
             children: [
@@ -246,11 +249,11 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                 data: mediaQuery.copyWith(
                   textScaler: TextScaler.noScaling,
                   viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-                  size: Size(currentSize.width, fixedHeight),
+                  size: Size(fixedWidth, fixedHeight),
                 ),
                 child: child ?? const SizedBox(),
               ),
-              // DEBUG 오버레이: Flutter 내부 값 표시
+              // DEBUG 오버레이
               Positioned(
                 top: 20,
                 left: 0,
@@ -259,7 +262,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                     color: Colors.black.withValues(alpha: 0.7),
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     child: Text(
-                      'mq:${currentSize.height.toInt()} fix:${fixedHeight.toInt()} lvh:${_lastValidHeight.toInt()}',
+                      'mq:${mediaQuery.size.height.toInt()} fix:${fixedHeight.toInt()} vv:${getVisualViewportHeight().toInt()}',
                       style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
                     ),
                   ),
