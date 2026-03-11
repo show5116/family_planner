@@ -245,16 +245,34 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             _lastValidWidth = currentSize.width;
           }
 
-          return MediaQuery(
-            data: mediaQuery.copyWith(
-              textScaler: TextScaler.noScaling,
-              viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-              size: Size(
-                currentSize.width,
-                _lastValidHeight > 0 ? _lastValidHeight : currentSize.height,
+          final fixedHeight = _lastValidHeight > 0 ? _lastValidHeight : currentSize.height;
+
+          return Stack(
+            children: [
+              MediaQuery(
+                data: mediaQuery.copyWith(
+                  textScaler: TextScaler.noScaling,
+                  viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
+                  size: Size(currentSize.width, fixedHeight),
+                ),
+                child: child ?? const SizedBox(),
               ),
-            ),
-            child: child ?? const SizedBox(),
+              // DEBUG 오버레이: Flutter 내부 값 표시
+              Positioned(
+                top: 20,
+                left: 0,
+                child: IgnorePointer(
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.7),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    child: Text(
+                      'mq:${currentSize.height.toInt()} fix:${fixedHeight.toInt()} lvh:${_lastValidHeight.toInt()}',
+                      style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           );
         }
 
