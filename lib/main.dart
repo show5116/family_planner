@@ -113,6 +113,8 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   double _lastValidHeight = 0.0;
   double _lastValidWidth = 0.0;
   Timer? _viewportPollingTimer;
+  // 폴링에서 이전 vvHeight를 추적 (키보드 올라옴 감지용)
+  double _prevVvHeight = 0.0;
 
   @override
   void initState() {
@@ -127,11 +129,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         (_) {
           final vvHeight = getVisualViewportHeight();
           if (vvHeight <= 0) return;
-          if (vvHeight > _lastValidHeight && _lastValidHeight > 0) {
-            setState(() {
-              _lastValidHeight = vvHeight;
-            });
+
+          // vvHeight가 이전보다 커졌을 때 = 키보드가 닫혔을 때
+          // _lastValidHeight를 실제 viewport 높이로 업데이트해서 MediaQuery 복원
+          if (_prevVvHeight > 0 && vvHeight != _prevVvHeight) {
+            debugPrint('📱 vvHeight 변화: $_prevVvHeight → $vvHeight, _lastValidHeight=$_lastValidHeight');
+            if (vvHeight > _prevVvHeight) {
+              setState(() {
+                _lastValidHeight = vvHeight;
+              });
+            }
           }
+          _prevVvHeight = vvHeight;
         },
       );
     }

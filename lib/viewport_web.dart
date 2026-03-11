@@ -1,12 +1,18 @@
 import 'dart:js_interop';
 
-@JS('window.visualViewport.height')
-external double? get _visualViewportHeight;
+@JS('window.visualViewport')
+external _VisualViewport? get _visualViewport;
 
 @JS('window.innerHeight')
 external double get _innerHeight;
 
+extension type _VisualViewport._(JSObject _) implements JSObject {
+  external double get height;
+}
+
 /// Returns the current visual viewport height (accounts for on-screen keyboard).
 double getVisualViewportHeight() {
-  return _visualViewportHeight ?? _innerHeight;
+  final vp = _visualViewport;
+  if (vp == null) return _innerHeight;
+  return vp.height;
 }
