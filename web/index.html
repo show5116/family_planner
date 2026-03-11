@@ -171,6 +171,16 @@
         resizeFlutterToViewport();
       }
     }, 100);
+
+    // DEBUG: 화면 좌상단에 viewport 높이 실시간 표시 (확인 후 삭제)
+    var _dbgEl = document.createElement('div');
+    _dbgEl.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;background:rgba(0,0,0,0.75);color:lime;font-size:12px;padding:3px 8px;pointer-events:none;font-family:monospace;';
+    document.body.appendChild(_dbgEl);
+    setInterval(function() {
+      var vv = window.visualViewport ? Math.round(window.visualViewport.height) : 'N/A';
+      var iH = Math.round(window.innerHeight);
+      _dbgEl.textContent = 'vv:' + vv + ' iH:' + iH;
+    }, 200);
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
