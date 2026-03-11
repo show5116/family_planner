@@ -235,20 +235,24 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             _prevVvHeight = _lastValidHeight;
           }
 
-          // mediaQuery.size는 Flutter 내부 값으로 한 박자 늦으므로 사용하지 않음.
-          // 항상 _lastValidHeight(vv 기준)를 사용.
           final fixedHeight = _lastValidHeight;
           final fixedWidth = mediaQuery.size.width;
 
           return Stack(
             children: [
-              MediaQuery(
-                data: mediaQuery.copyWith(
-                  textScaler: TextScaler.noScaling,
-                  viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-                  size: Size(fixedWidth, fixedHeight),
+              // SizedBox로 고정 높이 강제 적용 — MediaQuery.size 재정의만으로는
+              // Flutter 엔진의 physicalSize 기반 레이아웃을 막을 수 없음
+              SizedBox(
+                width: fixedWidth,
+                height: fixedHeight,
+                child: MediaQuery(
+                  data: mediaQuery.copyWith(
+                    textScaler: TextScaler.noScaling,
+                    viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
+                    size: Size(fixedWidth, fixedHeight),
+                  ),
+                  child: child ?? const SizedBox(),
                 ),
-                child: child ?? const SizedBox(),
               ),
               // DEBUG 오버레이
               Positioned(
