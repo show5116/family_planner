@@ -132,6 +132,7 @@
     })();
 
     // Fix: Android keyboard dismiss leaves white blank area in Flutter Web
+    var _lastVvHeight = 0;
     function resizeFlutterToViewport() {
       var vvHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
       var vvWidth  = window.visualViewport ? window.visualViewport.width  : window.innerWidth;
@@ -146,6 +147,13 @@
         glassPane.style.setProperty('height', vvHeight + 'px', 'important');
         glassPane.style.setProperty('width',  vvWidth  + 'px', 'important');
       }
+
+      // Notify Flutter engine when keyboard is dismissed (height increases)
+      // so that didChangeMetrics() fires and MediaQuery.size is recalculated.
+      if (vvHeight > _lastVvHeight) {
+        window.dispatchEvent(new Event('resize'));
+      }
+      _lastVvHeight = vvHeight;
     }
 
     if (window.visualViewport) {

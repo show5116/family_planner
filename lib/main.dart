@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -62,18 +61,6 @@ void main() async {
     await LocalNotificationService.initialize();
   } catch (e) {
     debugPrint('❌ Firebase 초기화 실패: $e');
-  }
-
-  // 웹에서 키보드 이벤트 경고 제거
-  // Flutter 웹에서 키보드 입력 시 발생하는 채널 버퍼 경고를 방지
-  if (kIsWeb) {
-    // 키보드 이벤트 채널의 버퍼 용량 증가
-    ServicesBinding.instance.channelBuffers.setListener('flutter/keyevent', (
-      data,
-      callback,
-    ) async {
-      callback(data);
-    });
   }
 
   // 웹에서 URL 해시(#) 제거 - 경로 기반 라우팅 사용
@@ -157,12 +144,10 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   void didChangeMetrics() {
     if (!kIsWeb) return;
     final view = WidgetsBinding.instance.platformDispatcher.views.first;
-    final physicalHeight = view.physicalSize.height;
-    final dpr = view.devicePixelRatio;
-    final logicalHeight = physicalHeight / dpr;
-    final logicalWidth = view.physicalSize.width / dpr;
+    final logicalHeight = view.physicalSize.height / view.devicePixelRatio;
+    final logicalWidth = view.physicalSize.width / view.devicePixelRatio;
 
-    // 가로가 바뀌면(회전) 기준 초기화
+    // 가로가 바뀌면(회전) 기준값도 새 높이로 초기화
     if (logicalWidth != _lastValidWidth) {
       setState(() {
         _lastValidWidth = logicalWidth;
@@ -171,11 +156,15 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       return;
     }
 
-    // 높이가 커졌을 때만(키보드 내려감) setState로 rebuild
     if (logicalHeight > _lastValidHeight) {
+      // 높이가 커졌을 때(키보드 내려감) — 기준값 업데이트 후 rebuild
       setState(() {
         _lastValidHeight = logicalHeight;
       });
+    } else if (logicalHeight < _lastValidHeight) {
+      // 높이가 줄었을 때(키보드 올라옴) — 기준값 유지한 채 rebuild만 강제
+      // builder에서 _lastValidHeight를 사용하므로 화면이 줄어들지 않음
+      setState(() {});
     }
   }
 
