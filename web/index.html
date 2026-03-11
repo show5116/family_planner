@@ -161,6 +161,16 @@
       window.visualViewport.addEventListener('scroll', resizeFlutterToViewport);
     }
     window.addEventListener('resize', resizeFlutterToViewport);
+
+    // Fix: Android back button keyboard dismiss doesn't always fire visualViewport resize.
+    // Listen for focusout on any input element and re-apply viewport size after a short delay
+    // to catch the case where the keyboard is dismissed via the back button.
+    document.addEventListener('focusout', function(e) {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        setTimeout(resizeFlutterToViewport, 100);
+        setTimeout(resizeFlutterToViewport, 300);
+      }
+    }, true);
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
