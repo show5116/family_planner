@@ -177,28 +177,21 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   void didChangeMetrics() {
     if (!kIsWeb) return;
     final view = WidgetsBinding.instance.platformDispatcher.views.first;
-    final logicalHeight = view.physicalSize.height / view.devicePixelRatio;
     final logicalWidth = view.physicalSize.width / view.devicePixelRatio;
 
-    // 가로가 바뀌면(회전) 기준값도 새 높이로 초기화
+    // 가로가 바뀌면(회전) — visualViewport 기준으로 재초기화
     if (logicalWidth != _lastValidWidth) {
+      final vvHeight = getVisualViewportHeight();
       setState(() {
         _lastValidWidth = logicalWidth;
-        _lastValidHeight = logicalHeight;
+        _lastValidHeight = vvHeight > 0 ? vvHeight : view.physicalSize.height / view.devicePixelRatio;
+        _prevVvHeight = _lastValidHeight;
       });
       return;
     }
 
-    if (logicalHeight > _lastValidHeight) {
-      // 높이가 커졌을 때(키보드 내려감) — 기준값 업데이트 후 rebuild
-      setState(() {
-        _lastValidHeight = logicalHeight;
-      });
-    } else if (logicalHeight < _lastValidHeight) {
-      // 높이가 줄었을 때(키보드 올라옴) — 기준값 유지한 채 rebuild만 강제
-      // builder에서 _lastValidHeight를 사용하므로 화면이 줄어들지 않음
-      setState(() {});
-    }
+    // 높이 변화는 폴링(Timer.periodic)에서 처리하므로 rebuild만 트리거
+    setState(() {});
   }
 
   @override
