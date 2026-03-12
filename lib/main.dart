@@ -130,15 +130,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
           final vvHeight = getVisualViewportHeight();
           if (vvHeight <= 0) return;
 
-          // vvHeight가 이전보다 커졌을 때 = 키보드가 닫혔을 때
-          // _lastValidHeight를 실제 viewport 높이로 업데이트해서 MediaQuery 복원
-          if (_prevVvHeight > 0 && vvHeight != _prevVvHeight) {
-            debugPrint('📱 vvHeight 변화: $_prevVvHeight → $vvHeight, _lastValidHeight=$_lastValidHeight');
-            if (vvHeight > _prevVvHeight) {
-              setState(() {
-                _lastValidHeight = vvHeight;
-              });
-            }
+          if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
+            // vvHeight가 증가 = 키보드가 닫혔음
+            // 1. 포커스 강제 해제 (키보드가 완전히 닫혔음을 Flutter에 알림)
+            FocusManager.instance.primaryFocus?.unfocus();
+            // 2. 높이 복원
+            setState(() {
+              _lastValidHeight = vvHeight;
+            });
           }
           _prevVvHeight = vvHeight;
         },
