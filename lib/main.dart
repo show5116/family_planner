@@ -132,8 +132,10 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
           if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
             // vvHeight가 증가 = 키보드가 닫혔음
-            // 포커스 강제 해제 → Flutter 엔진이 히트 테스트 영역을 즉시 재계산하도록
+            // 1. 포커스 강제 해제
             FocusManager.instance.primaryFocus?.unfocus();
+            // 2. resize 이벤트 발생 → Flutter 엔진이 physicalSize를 재계산
+            dispatchResizeEvent();
             setState(() {
               _lastValidHeight = vvHeight;
               _prevVvHeight = vvHeight;
