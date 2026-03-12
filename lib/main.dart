@@ -240,17 +240,13 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             _prevVvHeight = _lastValidHeight;
           }
 
-          // mq는 역전되므로 완전히 무시 — vv 폴링에서만 _lastValidHeight 관리
-          final fixedHeight = _lastValidHeight;
-          final fixedWidth = mediaQuery.size.width;
+          final vvNow = getVisualViewportHeight();
 
           return Stack(
             children: [
               MediaQuery(
                 data: mediaQuery.copyWith(
                   textScaler: TextScaler.noScaling,
-                  viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-                  size: Size(fixedWidth, fixedHeight),
                 ),
                 child: child ?? const SizedBox(),
               ),
@@ -263,7 +259,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                     color: Colors.black.withValues(alpha: 0.7),
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     child: Text(
-                      'mq:${mediaQuery.size.height.toInt()} fix:${fixedHeight.toInt()} vv:${getVisualViewportHeight().toInt()}',
+                      'mq:${mediaQuery.size.height.toInt()} vv:${vvNow.toInt()}',
                       style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
                     ),
                   ),
