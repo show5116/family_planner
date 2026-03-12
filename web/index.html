@@ -143,42 +143,28 @@
       window.addEventListener('keypress', patchEvent, true);
     })();
 
-    // Fix: keyboard (open/close) causes white blank area in Flutter Web.
-    // Strategy: lock flt-glass-pane to the full-screen height at all times.
-    // Flutter MediaQuery is handled by Dart-side polling in main.dart.
-    var _fullHeight = 0;
-    var _fullWidth  = 0;
+    // Fix: keyboard causes Flutter physicalSize to shrink on Android Chrome.
+    // Flutter engine reads window.innerHeight directly — override it to stay fixed.
+    var _fullHeight = window.innerHeight;
+    var _fullWidth  = window.innerWidth;
 
-    function initFullSize() {
-      _fullHeight = window.innerHeight;
-      _fullWidth  = window.innerWidth;
-    }
-    initFullSize();
-
-    function lockGlassPane() {
-      var glassPane = document.querySelector('flt-glass-pane');
-      if (glassPane && _fullHeight > 0) {
-        glassPane.style.setProperty('height', _fullHeight + 'px', 'important');
-        glassPane.style.setProperty('width',  _fullWidth  + 'px', 'important');
-      }
-      document.documentElement.style.height = _fullHeight + 'px';
-      document.body.style.height = _fullHeight + 'px';
-    }
+    // Override window.innerHeight so Flutter engine always sees the full height
+    Object.defineProperty(window, 'innerHeight', {
+      get: function() { return _fullHeight; },
+      configurable: true
+    });
 
     // window resize = orientation change → update full size
     window.addEventListener('resize', function() {
-      var newH = window.innerHeight;
-      var newW = window.innerWidth;
-      // Only update if this is an orientation change (large delta), not keyboard
-      if (Math.abs(newH - _fullHeight) > 100 && newW !== _fullWidth) {
-        _fullHeight = newH;
+      // Use screen dimensions to detect real orientation change vs keyboard
+      var realH = screen.height > screen.width ? screen.height : screen.width;
+      var newW = document.documentElement.clientWidth || window.outerWidth;
+      if (newW !== _fullWidth) {
+        // Orientation changed — update both dimensions
+        _fullHeight = document.documentElement.clientHeight;
         _fullWidth  = newW;
       }
-      lockGlassPane();
     });
-
-    // Lock glass-pane continuously (every 100ms) so Flutter engine can't shrink it
-    setInterval(lockGlassPane, 100);
 
     // DEBUG: 화면 좌상단에 viewport 높이 실시간 표시 (확인 후 삭제)
     var _dbgEl = document.createElement('div');
