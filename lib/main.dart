@@ -264,6 +264,17 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             _prevVvHeight = _lastValidHeight;
           }
 
+          // mq가 역전되는 특성 활용:
+          // mq가 크면(=키보드 올라온 상태) → _lastValidHeight 유지
+          // mq가 작으면(=키보드 닫힌 정상 상태) → mq 값으로 업데이트
+          final mqH = mediaQuery.size.height;
+          if (mqH > 0 && mqH < _lastValidHeight * 0.95) {
+            // 키보드가 닫힌 상태 — mq를 실제 화면 높이로 사용
+            _lastValidHeight = mqH;
+          } else if (mqH > _lastValidHeight) {
+            // 초기 로드 또는 화면이 더 커진 경우
+            _lastValidHeight = mqH;
+          }
           final fixedHeight = _lastValidHeight;
           final fixedWidth = mediaQuery.size.width;
 
