@@ -237,14 +237,15 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
           final fixedHeight = _lastValidHeight;
           final fixedWidth = mediaQuery.size.width;
 
-          return Stack(
-            children: [
-              // SizedBox로 고정 높이 강제 적용 — MediaQuery.size 재정의만으로는
-              // Flutter 엔진의 physicalSize 기반 레이아웃을 막을 수 없음
-              SizedBox(
-                width: fixedWidth,
-                height: fixedHeight,
-                child: MediaQuery(
+          return OverflowBox(
+            alignment: Alignment.topCenter,
+            minWidth: fixedWidth,
+            maxWidth: fixedWidth,
+            minHeight: fixedHeight,
+            maxHeight: fixedHeight,
+            child: Stack(
+              children: [
+                MediaQuery(
                   data: mediaQuery.copyWith(
                     textScaler: TextScaler.noScaling,
                     viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
@@ -252,23 +253,23 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
                   ),
                   child: child ?? const SizedBox(),
                 ),
-              ),
-              // DEBUG 오버레이
-              Positioned(
-                top: 20,
-                left: 0,
-                child: IgnorePointer(
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.7),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    child: Text(
-                      'mq:${mediaQuery.size.height.toInt()} fix:${fixedHeight.toInt()} vv:${getVisualViewportHeight().toInt()}',
-                      style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
+                // DEBUG 오버레이
+                Positioned(
+                  top: 20,
+                  left: 0,
+                  child: IgnorePointer(
+                    child: Container(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      child: Text(
+                        'mq:${mediaQuery.size.height.toInt()} fix:${fixedHeight.toInt()} vv:${getVisualViewportHeight().toInt()}',
+                        style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         }
 
