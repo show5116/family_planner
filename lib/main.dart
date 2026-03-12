@@ -237,40 +237,49 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
           final fixedHeight = _lastValidHeight;
           final fixedWidth = mediaQuery.size.width;
+          // mq.size.height가 fixedHeight보다 작을 때(키보드 올라온 상태 또는 역전 상태)
+          // OverflowBox로 레이아웃을 fixedHeight로 강제
+          final needsOverflow = mediaQuery.size.height < fixedHeight * 0.95;
 
-          return OverflowBox(
-            alignment: Alignment.topCenter,
-            minWidth: fixedWidth,
-            maxWidth: fixedWidth,
-            minHeight: fixedHeight,
-            maxHeight: fixedHeight,
-            child: Stack(
-              children: [
-                MediaQuery(
-                  data: mediaQuery.copyWith(
-                    textScaler: TextScaler.noScaling,
-                    viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-                    size: Size(fixedWidth, fixedHeight),
-                  ),
-                  child: child ?? const SizedBox(),
-                ),
-                // DEBUG 오버레이
-                Positioned(
-                  top: 20,
-                  left: 0,
-                  child: IgnorePointer(
-                    child: Container(
-                      color: Colors.black.withValues(alpha: 0.7),
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      child: Text(
-                        'mq:${mediaQuery.size.height.toInt()} fix:${fixedHeight.toInt()} vv:${getVisualViewportHeight().toInt()}',
-                        style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
-                      ),
+          Widget content = MediaQuery(
+            data: mediaQuery.copyWith(
+              textScaler: TextScaler.noScaling,
+              viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
+              size: Size(fixedWidth, fixedHeight),
+            ),
+            child: child ?? const SizedBox(),
+          );
+
+          if (needsOverflow) {
+            content = OverflowBox(
+              alignment: Alignment.topLeft,
+              minWidth: fixedWidth,
+              maxWidth: fixedWidth,
+              minHeight: fixedHeight,
+              maxHeight: fixedHeight,
+              child: content,
+            );
+          }
+
+          return Stack(
+            children: [
+              content,
+              // DEBUG 오버레이
+              Positioned(
+                top: 20,
+                left: 0,
+                child: IgnorePointer(
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.7),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    child: Text(
+                      'mq:${mediaQuery.size.height.toInt()} fix:${fixedHeight.toInt()} vv:${getVisualViewportHeight().toInt()}',
+                      style: const TextStyle(color: Colors.yellow, fontSize: 11, fontFamily: 'monospace'),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         }
 
