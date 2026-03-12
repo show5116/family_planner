@@ -237,34 +237,24 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
           final fixedHeight = _lastValidHeight;
           final fixedWidth = mediaQuery.size.width;
-          // vv(visualViewport)가 fixedHeight보다 작을 때 = 키보드가 올라와 있는 상태
-          // mq는 역전되어 있으므로 vv 기준으로 판단
-          final vvNow = getVisualViewportHeight();
-          final needsOverflow = vvNow > 0 && vvNow < fixedHeight * 0.95;
-
-          Widget content = MediaQuery(
-            data: mediaQuery.copyWith(
-              textScaler: TextScaler.noScaling,
-              viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-              size: Size(fixedWidth, fixedHeight),
-            ),
-            child: child ?? const SizedBox(),
-          );
-
-          if (needsOverflow) {
-            content = OverflowBox(
-              alignment: Alignment.topLeft,
-              minWidth: fixedWidth,
-              maxWidth: fixedWidth,
-              minHeight: fixedHeight,
-              maxHeight: fixedHeight,
-              child: content,
-            );
-          }
 
           return Stack(
             children: [
-              content,
+              OverflowBox(
+                alignment: Alignment.topLeft,
+                minWidth: fixedWidth,
+                maxWidth: fixedWidth,
+                minHeight: fixedHeight,
+                maxHeight: fixedHeight,
+                child: MediaQuery(
+                  data: mediaQuery.copyWith(
+                    textScaler: TextScaler.noScaling,
+                    viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
+                    size: Size(fixedWidth, fixedHeight),
+                  ),
+                  child: child ?? const SizedBox(),
+                ),
+              ),
               // DEBUG 오버레이
               Positioned(
                 top: 20,
