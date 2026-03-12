@@ -240,20 +240,13 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
           return Stack(
             children: [
-              OverflowBox(
-                alignment: Alignment.topLeft,
-                minWidth: fixedWidth,
-                maxWidth: fixedWidth,
-                minHeight: fixedHeight,
-                maxHeight: fixedHeight,
-                child: MediaQuery(
-                  data: mediaQuery.copyWith(
-                    textScaler: TextScaler.noScaling,
-                    viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
-                    size: Size(fixedWidth, fixedHeight),
-                  ),
-                  child: child ?? const SizedBox(),
+              MediaQuery(
+                data: mediaQuery.copyWith(
+                  textScaler: TextScaler.noScaling,
+                  viewInsets: mediaQuery.viewInsets.copyWith(bottom: 0),
+                  size: Size(fixedWidth, fixedHeight),
                 ),
+                child: child ?? const SizedBox(),
               ),
               // DEBUG 오버레이
               Positioned(

@@ -143,64 +143,7 @@
       window.addEventListener('keypress', patchEvent, true);
     })();
 
-    // Fix: keyboard causes Flutter physicalSize to shrink on Android Chrome.
-    // Flutter engine uses ResizeObserver on flt-glass-pane to detect size changes.
-    // Intercept ResizeObserver to filter out keyboard-caused height reductions.
-    var _fullHeight = window.innerHeight;
-    var _fullWidth  = window.innerWidth;
-
-    var _OriginalResizeObserver = window.ResizeObserver;
-    window.ResizeObserver = function(callback) {
-      var filteredCallback = function(entries, observer) {
-        var filtered = entries.map(function(entry) {
-          var h = entry.contentRect ? entry.contentRect.height : 0;
-          // If height decreased significantly (keyboard), report full height instead
-          if (h > 0 && h < _fullHeight * 0.9) {
-            // Create a fake entry with full height
-            var fakeRect = {
-              x: entry.contentRect.x,
-              y: entry.contentRect.y,
-              width: entry.contentRect.width,
-              height: _fullHeight,
-              top: entry.contentRect.top,
-              left: entry.contentRect.left,
-              bottom: _fullHeight,
-              right: entry.contentRect.right,
-            };
-            return {
-              target: entry.target,
-              contentRect: fakeRect,
-              borderBoxSize: entry.borderBoxSize,
-              contentBoxSize: entry.contentBoxSize,
-              devicePixelContentBoxSize: entry.devicePixelContentBoxSize,
-            };
-          }
-          return entry;
-        });
-        callback(filtered, observer);
-      };
-      return new _OriginalResizeObserver(filteredCallback);
-    };
-    window.ResizeObserver.prototype = _OriginalResizeObserver.prototype;
-
-    // Orientation change → update full size
-    window.addEventListener('resize', function() {
-      var newW = window.outerWidth;
-      if (Math.abs(newW - _fullWidth) > 50) {
-        _fullHeight = window.outerHeight || screen.availHeight;
-        _fullWidth  = newW;
-      }
-    });
-
-    // DEBUG: 화면 좌상단에 viewport 높이 실시간 표시 (확인 후 삭제)
-    var _dbgEl = document.createElement('div');
-    _dbgEl.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;background:rgba(0,0,0,0.75);color:lime;font-size:12px;padding:3px 8px;pointer-events:none;font-family:monospace;';
-    document.body.appendChild(_dbgEl);
-    setInterval(function() {
-      var vv = window.visualViewport ? Math.round(window.visualViewport.height) : 'N/A';
-      var iH = Math.round(window.innerHeight);
-      _dbgEl.textContent = 'vv:' + vv + ' iH:' + iH;
-    }, 200);
+    // (viewport fix removed — handled entirely by Dart-side polling in main.dart)
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
