@@ -196,15 +196,22 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       return;
     }
 
-    // mq 역전 현상: 키보드 닫힐 때 logicalHeight가 감소함
-    // logicalHeight < _lastValidHeight * 0.95 = 키보드 닫힌 직후 역전 상태
-    if (logicalHeight < _lastValidHeight * 0.95) {
-      // 즉시 unfocus + resize → Flutter 엔진이 physicalSize 재계산
-      FocusManager.instance.primaryFocus?.unfocus();
-      Future.microtask(() {
-        dispatchResizeEvent();
-        if (mounted) setState(() {});
-      });
+    // 키보드 상태 변화 감지
+    // viewInsets.bottom == 0 → 키보드가 완전히 내려간 상태
+    final bottomInset = view.viewInsets.bottom;
+    if (bottomInset == 0.0) {
+      // 키보드가 내려갔는데 포커스가 남아있으면 강제 해제
+      // → Flutter 엔진이 키보드 상태를 재평가하고 physicalSize 복원
+      if (FocusManager.instance.primaryFocus != null) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      }
+      // logicalHeight가 줄어든 역전 상태면 복원 트리거
+      if (logicalHeight < _lastValidHeight * 0.95) {
+        Future.delayed(const Duration(milliseconds: 50), () {
+          dispatchResizeEvent();
+          if (mounted) setState(() {});
+        });
+      }
     }
   }
 
