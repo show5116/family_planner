@@ -143,7 +143,21 @@
       window.addEventListener('keypress', patchEvent, true);
     })();
 
-    // (viewport fix removed — handled entirely by Dart-side polling in main.dart)
+    // visualViewport resize → blur hidden input + dispatch resize
+    if (window.visualViewport) {
+      var _vvResizeTimeout;
+      window.visualViewport.addEventListener('resize', function() {
+        clearTimeout(_vvResizeTimeout);
+        _vvResizeTimeout = setTimeout(function() {
+          window.dispatchEvent(new Event('resize'));
+          if (window.visualViewport.height >= window.innerHeight * 0.8) {
+            if (document.activeElement) {
+              document.activeElement.blur();
+            }
+          }
+        }, 100);
+      });
+    }
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
