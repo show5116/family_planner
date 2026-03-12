@@ -178,23 +178,34 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // 화면 회전 감지용
   @override
   void didChangeMetrics() {
     if (!kIsWeb) return;
     final view = WidgetsBinding.instance.platformDispatcher.views.first;
     final logicalWidth = view.physicalSize.width / view.devicePixelRatio;
+    final logicalHeight = view.physicalSize.height / view.devicePixelRatio;
 
-    // 가로가 바뀌면(회전)만 처리 — 키보드 높이 변화는 폴링에서 처리
     if (logicalWidth != _lastValidWidth) {
+      // 화면 회전
       final vvHeight = getVisualViewportHeight();
       setState(() {
         _lastValidWidth = logicalWidth;
-        _lastValidHeight = vvHeight > 0 ? vvHeight : view.physicalSize.height / view.devicePixelRatio;
+        _lastValidHeight = vvHeight > 0 ? vvHeight : logicalHeight;
         _prevVvHeight = _lastValidHeight;
       });
+      return;
     }
-    // 높이만 바뀐 경우(키보드) — setState 하지 않음, 폴링이 처리
+
+    // mq 역전 현상: 키보드 닫힐 때 logicalHeight가 감소함
+    // logicalHeight < _lastValidHeight * 0.95 = 키보드 닫힌 직후 역전 상태
+    if (logicalHeight < _lastValidHeight * 0.95) {
+      // 즉시 unfocus + resize → Flutter 엔진이 physicalSize 재계산
+      FocusManager.instance.primaryFocus?.unfocus();
+      Future.microtask(() {
+        dispatchResizeEvent();
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   @override
