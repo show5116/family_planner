@@ -25,6 +25,16 @@ void dispatchResizeEvent() {
   web.window.dispatchEvent(web.Event('resize'));
 }
 
+@JS('window.scrollTo')
+external void _windowScrollTo(int x, int y);
+
+/// 브라우저가 위로 끌어올린 캔버스를 강제로 맨 위로 되돌림
+void resetBrowserScroll() {
+  try {
+    _windowScrollTo(0, 0);
+  } catch (_) {}
+}
+
 /// Registers a listener on visualViewport resize event.
 /// Returns a function to remove the listener.
 void Function() addVisualViewportResizeListener(void Function(double height) onResize) {

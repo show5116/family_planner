@@ -125,6 +125,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
         if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
           // vvHeight 증가 = 키보드 닫힘
           FocusManager.instance.primaryFocus?.unfocus();
+          resetBrowserScroll();
           dispatchResizeEvent();
           if (mounted) setState(() { _lastValidHeight = vvHeight; });
         }

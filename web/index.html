@@ -43,22 +43,15 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
-    html {
-      /* 100dvh = dynamic viewport height, 키보드와 무관하게 초기 viewport 높이 유지 */
-      height: 100dvh;
+    html, body {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      margin: 0;
-      padding: 0;
+      height: 100%;
       overflow: hidden;
-    }
-
-    body {
-      height: 100dvh;
-      width: 100%;
-      margin: 0;
       padding: 0;
-      overflow: hidden;
-      /* iOS 터치 딜레이 및 스크롤 바운스 방지 */
+      margin: 0;
       touch-action: none;
       -ms-touch-action: none;
       -webkit-user-select: none;
