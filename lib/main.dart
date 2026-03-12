@@ -125,19 +125,20 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     // Dart에서 직접 visualViewport.height를 폴링하여 변화 감지 시 setState() 호출.
     if (kIsWeb) {
       _viewportPollingTimer = Timer.periodic(
-        const Duration(milliseconds: 100),
+        const Duration(milliseconds: 50),
         (_) {
           final vvHeight = getVisualViewportHeight();
           if (vvHeight <= 0) return;
 
           if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
             // vvHeight가 증가 = 키보드가 닫혔음
-            // 1. 포커스 강제 해제 (키보드가 완전히 닫혔음을 Flutter에 알림)
+            // 포커스 강제 해제 → Flutter 엔진이 히트 테스트 영역을 즉시 재계산하도록
             FocusManager.instance.primaryFocus?.unfocus();
-            // 2. 높이 복원
             setState(() {
               _lastValidHeight = vvHeight;
+              _prevVvHeight = vvHeight;
             });
+            return;
           }
           _prevVvHeight = vvHeight;
         },
