@@ -131,19 +131,24 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
           if (vvHeight <= 0) return;
 
           if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
-            // vvHeight가 증가 = 키보드가 닫혔음
-            // 1. 포커스 강제 해제
-            FocusManager.instance.primaryFocus?.unfocus();
+            // vvHeight 증가 = 키보드 닫힘
+            // mq가 역전된 채로 고착되므로, 포커스를 줬다가 즉시 해제하여
+            // Flutter 엔진이 키보드 사이클을 완성하고 physicalSize를 복원하도록 유도
             _prevVvHeight = vvHeight;
-            // 2. window.innerHeight 복원을 기다린 후 resize 이벤트 발생
-            Future.delayed(const Duration(milliseconds: 100), () {
+            final ctx = scaffoldMessengerKey.currentContext;
+            if (ctx != null) {
+              final focusNode = FocusNode();
+              FocusScope.of(ctx).requestFocus(focusNode);
+              Future.microtask(() {
+                focusNode.unfocus();
+                focusNode.dispose();
+                dispatchResizeEvent();
+                if (mounted) setState(() { _lastValidHeight = vvHeight; });
+              });
+            } else {
               dispatchResizeEvent();
-              if (mounted) {
-                setState(() {
-                  _lastValidHeight = vvHeight;
-                });
-              }
-            });
+              if (mounted) setState(() { _lastValidHeight = vvHeight; });
+            }
             return;
           }
           _prevVvHeight = vvHeight;
