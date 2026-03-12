@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -132,23 +133,11 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
           if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
             // vvHeight 증가 = 키보드 닫힘
-            // mq가 역전된 채로 고착되므로, 포커스를 줬다가 즉시 해제하여
-            // Flutter 엔진이 키보드 사이클을 완성하고 physicalSize를 복원하도록 유도
             _prevVvHeight = vvHeight;
-            final ctx = scaffoldMessengerKey.currentContext;
-            if (ctx != null) {
-              final focusNode = FocusNode();
-              FocusScope.of(ctx).requestFocus(focusNode);
-              Future.microtask(() {
-                focusNode.unfocus();
-                focusNode.dispose();
-                dispatchResizeEvent();
-                if (mounted) setState(() { _lastValidHeight = vvHeight; });
-              });
-            } else {
-              dispatchResizeEvent();
-              if (mounted) setState(() { _lastValidHeight = vvHeight; });
-            }
+            // SystemChrome으로 Flutter 엔진이 UI를 재측정하도록 강제
+            SystemChrome.restoreSystemUIOverlays();
+            dispatchResizeEvent();
+            if (mounted) setState(() { _lastValidHeight = vvHeight; });
             return;
           }
           _prevVvHeight = vvHeight;
@@ -264,17 +253,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             _prevVvHeight = _lastValidHeight;
           }
 
-          // mq가 역전되는 특성 활용:
-          // mq가 크면(=키보드 올라온 상태) → _lastValidHeight 유지
-          // mq가 작으면(=키보드 닫힌 정상 상태) → mq 값으로 업데이트
-          final mqH = mediaQuery.size.height;
-          if (mqH > 0 && mqH < _lastValidHeight * 0.95) {
-            // 키보드가 닫힌 상태 — mq를 실제 화면 높이로 사용
-            _lastValidHeight = mqH;
-          } else if (mqH > _lastValidHeight) {
-            // 초기 로드 또는 화면이 더 커진 경우
-            _lastValidHeight = mqH;
-          }
+          // mq는 역전되므로 완전히 무시 — vv 폴링에서만 _lastValidHeight 관리
           final fixedHeight = _lastValidHeight;
           final fixedWidth = mediaQuery.size.width;
 
