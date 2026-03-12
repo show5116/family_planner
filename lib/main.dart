@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -113,36 +110,26 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   double _lastValidHeight = 0.0;
   double _lastValidWidth = 0.0;
-  Timer? _viewportPollingTimer;
-  // 폴링에서 이전 vvHeight를 추적 (키보드 올라옴 감지용)
   double _prevVvHeight = 0.0;
+  void Function()? _removeViewportListener;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Android 뒤로 버튼으로 키보드 닫힐 때 DOM 이벤트가 발생하지 않는 문제 해결.
-    // Dart에서 직접 visualViewport.height를 폴링하여 변화 감지 시 setState() 호출.
     if (kIsWeb) {
-      _viewportPollingTimer = Timer.periodic(
-        const Duration(milliseconds: 50),
-        (_) {
-          final vvHeight = getVisualViewportHeight();
-          if (vvHeight <= 0) return;
-
-          if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
-            // vvHeight 증가 = 키보드 닫힘
-            _prevVvHeight = vvHeight;
-            // SystemChrome으로 Flutter 엔진이 UI를 재측정하도록 강제
-            SystemChrome.restoreSystemUIOverlays();
-            dispatchResizeEvent();
-            if (mounted) setState(() { _lastValidHeight = vvHeight; });
-            return;
-          }
-          _prevVvHeight = vvHeight;
-        },
-      );
+      // visualViewport resize 이벤트 리스너 (폴링보다 즉각적)
+      _removeViewportListener = addVisualViewportResizeListener((vvHeight) {
+        if (vvHeight <= 0) return;
+        if (_prevVvHeight > 0 && vvHeight > _prevVvHeight) {
+          // vvHeight 증가 = 키보드 닫힘
+          FocusManager.instance.primaryFocus?.unfocus();
+          dispatchResizeEvent();
+          if (mounted) setState(() { _lastValidHeight = vvHeight; });
+        }
+        _prevVvHeight = vvHeight;
+      });
     }
 
     // API 에러 콜백 설정 (401, 500 제외한 에러만 표시)
@@ -167,7 +154,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _viewportPollingTimer?.cancel();
+    _removeViewportListener?.call();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
