@@ -144,24 +144,50 @@
     })();
 
     // Fix: keyboard causes Flutter physicalSize to shrink on Android Chrome.
-    // Flutter engine reads window.innerHeight directly — override it to stay fixed.
+    // Flutter engine uses ResizeObserver on flt-glass-pane to detect size changes.
+    // Intercept ResizeObserver to filter out keyboard-caused height reductions.
     var _fullHeight = window.innerHeight;
     var _fullWidth  = window.innerWidth;
 
-    // Override window.innerHeight so Flutter engine always sees the full height
-    Object.defineProperty(window, 'innerHeight', {
-      get: function() { return _fullHeight; },
-      configurable: true
-    });
+    var _OriginalResizeObserver = window.ResizeObserver;
+    window.ResizeObserver = function(callback) {
+      var filteredCallback = function(entries, observer) {
+        var filtered = entries.map(function(entry) {
+          var h = entry.contentRect ? entry.contentRect.height : 0;
+          // If height decreased significantly (keyboard), report full height instead
+          if (h > 0 && h < _fullHeight * 0.9) {
+            // Create a fake entry with full height
+            var fakeRect = {
+              x: entry.contentRect.x,
+              y: entry.contentRect.y,
+              width: entry.contentRect.width,
+              height: _fullHeight,
+              top: entry.contentRect.top,
+              left: entry.contentRect.left,
+              bottom: _fullHeight,
+              right: entry.contentRect.right,
+            };
+            return {
+              target: entry.target,
+              contentRect: fakeRect,
+              borderBoxSize: entry.borderBoxSize,
+              contentBoxSize: entry.contentBoxSize,
+              devicePixelContentBoxSize: entry.devicePixelContentBoxSize,
+            };
+          }
+          return entry;
+        });
+        callback(filtered, observer);
+      };
+      return new _OriginalResizeObserver(filteredCallback);
+    };
+    window.ResizeObserver.prototype = _OriginalResizeObserver.prototype;
 
-    // window resize = orientation change → update full size
+    // Orientation change → update full size
     window.addEventListener('resize', function() {
-      // Use screen dimensions to detect real orientation change vs keyboard
-      var realH = screen.height > screen.width ? screen.height : screen.width;
-      var newW = document.documentElement.clientWidth || window.outerWidth;
-      if (newW !== _fullWidth) {
-        // Orientation changed — update both dimensions
-        _fullHeight = document.documentElement.clientHeight;
+      var newW = window.outerWidth;
+      if (Math.abs(newW - _fullWidth) > 50) {
+        _fullHeight = window.outerHeight || screen.availHeight;
         _fullWidth  = newW;
       }
     });
