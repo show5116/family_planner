@@ -23,7 +23,7 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> with WidgetsBindingObserver {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -31,26 +31,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with WidgetsBindingOb
   bool _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    final bottomInset = View.of(context).viewInsets.bottom;
-    if (bottomInset == 0.0) {
-      FocusManager.instance.primaryFocus?.unfocus();
-    }
   }
 
   Future<void> _handleLogin() async {
