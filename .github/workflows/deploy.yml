@@ -36,17 +36,17 @@ jobs:
         run: flutter pub get
 
       - name: Decode keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > $HOME/upload-keystore.jks
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_BASE64" | base64 -d > $HOME/upload-keystore.jks
 
       - name: Create key.properties
+        env:
+          STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          cat > android/key.properties <<EOF
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          keyAlias=upload
-          storeFile=$HOME/upload-keystore.jks
-          EOF
+          printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=upload\nstoreFile=%s/upload-keystore.jks\n' \
+            "$STORE_PASSWORD" "$KEY_PASSWORD" "$HOME" > android/key.properties
 
       - name: Build APK
         run: flutter build apk --release
