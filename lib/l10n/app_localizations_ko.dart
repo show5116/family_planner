@@ -426,6 +426,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get widgetSettings_memoSummaryDesc => '최근 작성한 메모를 표시합니다';
 
   @override
+  String get widgetSettings_weather => '날씨';
+
+  @override
+  String get widgetSettings_weatherDesc => '현재 위치의 날씨 정보를 표시합니다';
+
+  @override
   String get themeSettings_title => '테마 설정';
 
   @override

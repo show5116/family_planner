@@ -425,6 +425,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get widgetSettings_memoSummaryDesc => '最近作成したメモを表示します';
 
   @override
+  String get widgetSettings_weather => '天気';
+
+  @override
+  String get widgetSettings_weatherDesc => '現在地の天気情報を表示します';
+
+  @override
   String get themeSettings_title => 'テーマ設定';
 
   @override

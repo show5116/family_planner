@@ -79,6 +79,9 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
         case 'memoSummary':
           _settings = _settings.copyWith(showMemoSummary: value);
           break;
+        case 'weather':
+          _settings = _settings.copyWith(showWeather: value);
+          break;
       }
     });
     _saveSettings();
@@ -140,6 +143,13 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
           'title': l10n.widgetSettings_memoSummary,
           'description': l10n.widgetSettings_memoSummaryDesc,
           'enabled': _settings.showMemoSummary,
+        };
+      case 'weather':
+        return {
+          'icon': Icons.wb_sunny_outlined,
+          'title': l10n.widgetSettings_weather,
+          'description': l10n.widgetSettings_weatherDesc,
+          'enabled': _settings.showWeather,
         };
       default:
         return {

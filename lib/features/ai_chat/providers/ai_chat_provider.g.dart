@@ -6,7 +6,7 @@ part of 'ai_chat_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$aiChatHash() => r'4c9349432fb53e4e3c787ea34d041cc72b316666';
+String _$aiChatHash() => r'9e698b72bc19cc31443970e18345548fd3985a6f';
 
 /// 채팅 메시지 목록 + 전송 로직
 ///

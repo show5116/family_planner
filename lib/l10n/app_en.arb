@@ -159,6 +159,8 @@
   "widgetSettings_assetSummaryDesc": "Display total assets and return rate",
   "widgetSettings_memoSummary": "Memo Summary",
   "widgetSettings_memoSummaryDesc": "Display recently written memos",
+  "widgetSettings_weather": "Weather",
+  "widgetSettings_weatherDesc": "Display current location weather information",
 
   "themeSettings_title": "Theme Settings",
   "themeSettings_selectTheme": "Select Theme",

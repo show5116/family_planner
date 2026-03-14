@@ -6,7 +6,7 @@ part of 'indicator_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$indicatorHistoryHash() => r'5700d8c1dfe6ceaeff6405ab1fbefda2e6ba804d';
+String _$indicatorHistoryHash() => r'1c7aa0ac61cacdec30eb767aebf18b3a072f5ba1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -176,7 +176,7 @@ class _IndicatorHistoryProviderElement
 }
 
 String _$indicatorSparklineHash() =>
-    r'601c3dbb51129d13bf0d72e8e3b5abfe4d65ca6d';
+    r'c85e2cd8c300091a1c346707fcca9320c52418b7';
 
 /// 스파크라인용 당일 히스토리 Provider (symbol별, days=1)
 ///

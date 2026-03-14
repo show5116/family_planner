@@ -8,9 +8,9 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 7/17 기능 (41%)
-- **진행 중**: 6/17 기능 (35%)
-- **미시작**: 4/17 기능 (24%)
+- **완료**: 7/18 기능 (39%)
+- **진행 중**: 6/18 기능 (33%)
+- **미시작**: 5/18 기능 (28%)
 
 **마지막 업데이트**: 2026-03-06
 
@@ -60,6 +60,7 @@
 | 공지사항 | ✅ 완료 | [15-announcements.md](docs/features/15-announcements.md) | P1 |
 | Q&A (문의하기) | ✅ 완료 | [16-qna.md](docs/features/16-qna.md) | P1 |
 | 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
+| 날씨 기능 | ⬜ 시작 안함 | [17-weather.md](docs/features/17-weather.md) | P2 |
 
 **참고**: 설정 메뉴는 프로필 설정, 테마 설정, 홈 위젯 설정을 포함하며, 그룹 관리([12-groups.md](docs/features/12-groups.md))와 권한 관리는 별도 관리됩니다.
 

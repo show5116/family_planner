@@ -25,6 +25,7 @@ import 'package:family_planner/features/memo/presentation/screens/memo_list_scre
 import 'package:family_planner/features/minigame/presentation/screens/mini_games_screen.dart';
 import 'package:family_planner/features/minigame/presentation/screens/ladder_game_screen.dart';
 import 'package:family_planner/features/minigame/presentation/screens/roulette_game_screen.dart';
+import 'package:family_planner/features/weather/presentation/screens/weather_detail_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -245,6 +246,13 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.rouletteGame,
       name: 'rouletteGame',
       builder: (context, state) => const RouletteGameScreen(),
+    ),
+
+    // Weather Routes (날씨)
+    GoRoute(
+      path: AppRoutes.weather,
+      name: 'weather',
+      builder: (context, state) => const WeatherDetailScreen(),
     ),
 
     // Child Points Routes (육아포인트)

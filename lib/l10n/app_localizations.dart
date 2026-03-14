@@ -916,6 +916,18 @@ abstract class AppLocalizations {
   /// **'최근 작성한 메모를 표시합니다'**
   String get widgetSettings_memoSummaryDesc;
 
+  /// No description provided for @widgetSettings_weather.
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨'**
+  String get widgetSettings_weather;
+
+  /// No description provided for @widgetSettings_weatherDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 위치의 날씨 정보를 표시합니다'**
+  String get widgetSettings_weatherDesc;
+
   /// No description provided for @themeSettings_title.
   ///
   /// In ko, this message translates to:

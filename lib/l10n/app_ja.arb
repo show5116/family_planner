@@ -159,6 +159,8 @@
   "widgetSettings_assetSummaryDesc": "総資産と収益率を表示します",
   "widgetSettings_memoSummary": "メモ概要",
   "widgetSettings_memoSummaryDesc": "最近作成したメモを表示します",
+  "widgetSettings_weather": "天気",
+  "widgetSettings_weatherDesc": "現在地の天気情報を表示します",
 
   "themeSettings_title": "テーマ設定",
   "themeSettings_selectTheme": "テーマ選択",

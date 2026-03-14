@@ -6,6 +6,7 @@ import 'package:family_planner/features/home/presentation/widgets/investment_sum
 import 'package:family_planner/features/home/presentation/widgets/todo_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/asset_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/memo_summary_widget.dart';
+import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
@@ -215,6 +216,11 @@ class _DashboardGridState extends State<_DashboardGrid> {
         case 'memoSummary':
           if (_settings.showMemoSummary) {
             widget = const MemoSummaryWidget();
+          }
+          break;
+        case 'weather':
+          if (_settings.showWeather) {
+            widget = const WeatherWidget();
           }
           break;
       }

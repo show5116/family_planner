@@ -5,6 +5,7 @@ class DashboardWidgetSettings {
   final bool showTodoSummary;
   final bool showAssetSummary;
   final bool showMemoSummary;
+  final bool showWeather;
   final List<String> widgetOrder;
 
   const DashboardWidgetSettings({
@@ -13,7 +14,9 @@ class DashboardWidgetSettings {
     this.showTodoSummary = true,
     this.showAssetSummary = true,
     this.showMemoSummary = false,
+    this.showWeather = true,
     this.widgetOrder = const [
+      'weather',
       'todaySchedule',
       'investmentSummary',
       'todoSummary',
@@ -35,10 +38,12 @@ class DashboardWidgetSettings {
       showTodoSummary: json['showTodoSummary'] as bool? ?? true,
       showAssetSummary: json['showAssetSummary'] as bool? ?? true,
       showMemoSummary: json['showMemoSummary'] as bool? ?? false,
+      showWeather: json['showWeather'] as bool? ?? true,
       widgetOrder: (json['widgetOrder'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [
+            'weather',
             'todaySchedule',
             'investmentSummary',
             'todoSummary',
@@ -56,6 +61,7 @@ class DashboardWidgetSettings {
       'showTodoSummary': showTodoSummary,
       'showAssetSummary': showAssetSummary,
       'showMemoSummary': showMemoSummary,
+      'showWeather': showWeather,
       'widgetOrder': widgetOrder,
     };
   }
@@ -67,6 +73,7 @@ class DashboardWidgetSettings {
     bool? showTodoSummary,
     bool? showAssetSummary,
     bool? showMemoSummary,
+    bool? showWeather,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -75,6 +82,7 @@ class DashboardWidgetSettings {
       showTodoSummary: showTodoSummary ?? this.showTodoSummary,
       showAssetSummary: showAssetSummary ?? this.showAssetSummary,
       showMemoSummary: showMemoSummary ?? this.showMemoSummary,
+      showWeather: showWeather ?? this.showWeather,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }

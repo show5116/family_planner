@@ -159,6 +159,8 @@
   "widgetSettings_assetSummaryDesc": "총 자산과 수익률을 표시합니다",
   "widgetSettings_memoSummary": "메모 요약",
   "widgetSettings_memoSummaryDesc": "최근 작성한 메모를 표시합니다",
+  "widgetSettings_weather": "날씨",
+  "widgetSettings_weatherDesc": "현재 위치의 날씨 정보를 표시합니다",
 
   "themeSettings_title": "테마 설정",
   "themeSettings_selectTheme": "테마 선택",

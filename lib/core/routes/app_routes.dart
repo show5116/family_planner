@@ -69,6 +69,9 @@ class AppRoutes {
   static const String announcementCreate = '/announcements/create';
   static const String announcementEdit = '/announcements/:id/edit';
 
+  // Weather Routes
+  static const String weather = '/weather';
+
   // QnA Routes
   static const String questions = '/qna';
   static const String questionDetail = '/qna/questions/:id';
