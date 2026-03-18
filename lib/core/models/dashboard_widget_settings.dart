@@ -32,6 +32,26 @@ class DashboardWidgetSettings {
 
   /// JSON에서 변환
   factory DashboardWidgetSettings.fromJson(Map<String, dynamic> json) {
+    const allWidgets = [
+      'weather',
+      'todaySchedule',
+      'investmentSummary',
+      'todoSummary',
+      'assetSummary',
+      'memoSummary',
+    ];
+
+    final savedOrder = (json['widgetOrder'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList() ??
+        List<String>.from(allWidgets);
+
+    // 저장된 목록에 없는 신규 위젯을 뒤에 추가
+    final mergedOrder = [
+      ...savedOrder,
+      ...allWidgets.where((w) => !savedOrder.contains(w)),
+    ];
+
     return DashboardWidgetSettings(
       showTodaySchedule: json['showTodaySchedule'] as bool? ?? true,
       showInvestmentSummary: json['showInvestmentSummary'] as bool? ?? true,
@@ -39,17 +59,7 @@ class DashboardWidgetSettings {
       showAssetSummary: json['showAssetSummary'] as bool? ?? true,
       showMemoSummary: json['showMemoSummary'] as bool? ?? false,
       showWeather: json['showWeather'] as bool? ?? true,
-      widgetOrder: (json['widgetOrder'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [
-            'weather',
-            'todaySchedule',
-            'investmentSummary',
-            'todoSummary',
-            'assetSummary',
-            'memoSummary',
-          ],
+      widgetOrder: mergedOrder,
     );
   }
 
