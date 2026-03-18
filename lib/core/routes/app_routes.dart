@@ -72,6 +72,11 @@ class AppRoutes {
   // Weather Routes
   static const String weather = '/weather';
 
+  // Vote Routes
+  static const String votes = '/votes';
+  static const String voteCreate = '/votes/create';
+  static const String voteDetail = '/votes/:groupId/:voteId';
+
   // QnA Routes
   static const String questions = '/qna';
   static const String questionDetail = '/qna/questions/:id';

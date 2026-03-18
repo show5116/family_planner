@@ -26,6 +26,9 @@ import 'package:family_planner/features/minigame/presentation/screens/mini_games
 import 'package:family_planner/features/minigame/presentation/screens/ladder_game_screen.dart';
 import 'package:family_planner/features/minigame/presentation/screens/roulette_game_screen.dart';
 import 'package:family_planner/features/weather/presentation/screens/weather_detail_screen.dart';
+import 'package:family_planner/features/votes/presentation/screens/vote_list_screen.dart';
+import 'package:family_planner/features/votes/presentation/screens/vote_detail_screen.dart';
+import 'package:family_planner/features/votes/presentation/screens/vote_create_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -253,6 +256,27 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.weather,
       name: 'weather',
       builder: (context, state) => const WeatherDetailScreen(),
+    ),
+
+    // Vote Routes (투표)
+    GoRoute(
+      path: AppRoutes.votes,
+      name: 'votes',
+      builder: (context, state) => const VoteListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.voteCreate,
+      name: 'voteCreate',
+      builder: (context, state) => const VoteCreateScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.voteDetail,
+      name: 'voteDetail',
+      builder: (context, state) {
+        final groupId = state.pathParameters['groupId']!;
+        final voteId = state.pathParameters['voteId']!;
+        return VoteDetailScreen(groupId: groupId, voteId: voteId);
+      },
     ),
 
     // Child Points Routes (육아포인트)

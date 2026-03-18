@@ -87,6 +87,11 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                   },
                 );
               }),
+              MenuListTile(
+                icon: Icons.how_to_vote_outlined,
+                title: '투표',
+                onTap: () => context.push(AppRoutes.votes),
+              ),
               const Divider(),
               // 고정 메뉴: 공지사항, QnA
               MenuListTile(
