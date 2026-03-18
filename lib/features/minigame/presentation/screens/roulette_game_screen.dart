@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
@@ -20,6 +21,24 @@ const _kRouletteColors = [
   Color(0xFF3949AB),
 ];
 
+class _RouletteItem {
+  final TextEditingController nameController;
+  final TextEditingController weightController;
+
+  _RouletteItem({String name = '', int weight = 1})
+      : nameController = TextEditingController(text: name),
+        weightController = TextEditingController(text: weight.toString());
+
+  int get weight => int.tryParse(weightController.text.trim()) ?? 1;
+  String get name => nameController.text.trim();
+  bool get isValid => name.isNotEmpty;
+
+  void dispose() {
+    nameController.dispose();
+    weightController.dispose();
+  }
+}
+
 class RouletteGameScreen extends ConsumerStatefulWidget {
   const RouletteGameScreen({super.key});
 
@@ -30,16 +49,17 @@ class RouletteGameScreen extends ConsumerStatefulWidget {
 class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
     with SingleTickerProviderStateMixin {
   final _titleController = TextEditingController(text: '룰렛');
-  final List<TextEditingController> _itemControllers = [
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
+  final List<_RouletteItem> _items = [
+    _RouletteItem(),
+    _RouletteItem(),
+    _RouletteItem(),
   ];
 
   late AnimationController _spinController;
   late Animation<double> _spinAnim;
-  double _currentAngle = 0;
-  double _targetAngle = 0;
+  double _currentAngle = 0; // 현재 원판 각도 (누적)
+  double _spinStartAngle = 0; // 스핀 시작 시점의 각도
+  double _spinDelta = 0; // 이번 스핀에서 회전할 총 각도
   String? _winner;
   bool _spinning = false;
 
@@ -48,15 +68,15 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
     super.initState();
     _spinController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(milliseconds: 5000),
     );
     _spinAnim = CurvedAnimation(
       parent: _spinController,
-      curve: Curves.decelerate,
+      curve: _SpinCurve(),
     );
     _spinController.addListener(() {
       setState(() {
-        _currentAngle = _targetAngle * _spinAnim.value;
+        _currentAngle = _spinStartAngle + _spinDelta * _spinAnim.value;
       });
     });
     _spinController.addStatusListener((status) {
@@ -71,19 +91,19 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
   @override
   void dispose() {
     _titleController.dispose();
-    for (final c in _itemControllers) { c.dispose(); }
+    for (final item in _items) {
+      item.dispose();
+    }
     _spinController.dispose();
     super.dispose();
   }
 
-  List<String> get _validItems => _itemControllers
-      .map((c) => c.text.trim())
-      .where((s) => s.isNotEmpty)
-      .toList();
+  List<_RouletteItem> get _validItems =>
+      _items.where((item) => item.isValid).toList();
 
   @override
   Widget build(BuildContext context) {
-    final items = _validItems;
+    final validItems = _validItems;
     final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final selectedGroup = selectedGroupId != null
@@ -111,18 +131,17 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
             const SizedBox(height: 16),
             // 항목 편집
             _ItemsEditor(
-              controllers: _itemControllers,
-              onAdd: () => setState(
-                  () => _itemControllers.add(TextEditingController())),
+              items: _items,
+              onAdd: () => setState(() => _items.add(_RouletteItem())),
               onRemove: (i) => setState(() {
-                _itemControllers[i].dispose();
-                _itemControllers.removeAt(i);
+                _items[i].dispose();
+                _items.removeAt(i);
               }),
               onChanged: () => setState(() {}),
             ),
             const SizedBox(height: 20),
             // 룰렛 휠
-            if (items.length >= 2) ...[
+            if (validItems.length >= 2) ...[
               SizedBox(
                 height: 280,
                 child: Stack(
@@ -133,10 +152,10 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
                       angle: _currentAngle,
                       child: CustomPaint(
                         size: const Size(260, 260),
-                        painter: _RoulettePainter(items: items),
+                        painter: _RoulettePainter(items: validItems),
                       ),
                     ),
-                    // 중앙 포인터
+                    // 상단 포인터
                     const Positioned(
                       top: 0,
                       child: Icon(Icons.arrow_drop_down,
@@ -179,7 +198,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
-            // 결과 표시 + 저장
+            // 결과 표시
             if (_winner != null && !_spinning) ...[
               const SizedBox(height: 16),
               Card(
@@ -211,32 +230,60 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
   }
 
   void _spin() {
-    final items = _validItems;
-    if (items.length < 2 || _spinning) return;
+    final validItems = _validItems;
+    if (validItems.length < 2 || _spinning) return;
 
     final rng = Random();
-    final winnerIndex = rng.nextInt(items.length);
-    final sliceAngle = (2 * pi) / items.length;
 
-    // 당첨 칸이 상단 포인터(12시 방향)에 오도록 각도 계산
-    // 현재 각도를 기준으로 최소 5바퀴 + 보정
-    final baseRotations = (5 + rng.nextInt(3)) * 2 * pi;
-    final correction = -(winnerIndex * sliceAngle + sliceAngle / 2);
-    final totalRotation = baseRotations + correction - (_currentAngle % (2 * pi));
+    // 가중치 기반 당첨자 선택
+    final totalWeight = validItems.fold(0, (sum, item) => sum + item.weight);
+    final pick = rng.nextInt(totalWeight);
+    int cumulative = 0;
+    int winnerIndex = 0;
+    for (var i = 0; i < validItems.length; i++) {
+      cumulative += validItems[i].weight;
+      if (pick < cumulative) {
+        winnerIndex = i;
+        break;
+      }
+    }
+
+    // 당첨 칸 내 랜덤 위치 계산 (가장자리 10% 제외해서 극적으로 보이게)
+    final startAngle = _sliceStartAngle(validItems, winnerIndex);
+    final sliceAngle = (validItems[winnerIndex].weight / totalWeight) * 2 * pi;
+    final margin = sliceAngle * 0.1;
+    final randomOffset = margin + rng.nextDouble() * (sliceAngle - margin * 2);
+    final landAngle = startAngle + randomOffset;
+
+    final baseRotations = (6 + rng.nextInt(4)) * 2 * pi;
+    // landAngle이 12시(0rad)에 오도록 보정
+    final correction = -landAngle;
+    final totalRotation =
+        baseRotations + correction - (_currentAngle % (2 * pi));
 
     _winner = null;
     _spinning = true;
-    _targetAngle = _currentAngle + totalRotation;
+    _spinStartAngle = _currentAngle;
+    _spinDelta = totalRotation;
 
     _spinController.reset();
     _spinController.forward();
 
-    // 당첨자 미리 저장
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(milliseconds: 5000), () {
       if (mounted) {
-        setState(() => _winner = items[winnerIndex]);
+        setState(() => _winner = validItems[winnerIndex].name);
       }
     });
+  }
+
+  /// 인덱스 i 슬라이스의 시작 각도 (12시 기준, 반시계 0)
+  double _sliceStartAngle(List<_RouletteItem> items, int index) {
+    final total = items.fold(0, (sum, item) => sum + item.weight);
+    double angle = 0;
+    for (var i = 0; i < index; i++) {
+      angle += (items[i].weight / total) * 2 * pi;
+    }
+    return angle;
   }
 
   void _showWinnerDialog() {
@@ -264,19 +311,23 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
     final groupId = ref.read(minigameSelectedGroupIdProvider);
     if (groupId == null) return;
 
-    ref.read(minigameManagementProvider.notifier).saveResult(
-      SaveMinigameResultDto(
-        groupId: groupId,
-        gameType: MinigameType.roulette,
-        title: _titleController.text.trim(),
-        participants: [],
-        options: _validItems,
-        result: {'winner': _winner},
-      ),
-    ).then((saved) {
+    ref
+        .read(minigameManagementProvider.notifier)
+        .saveResult(
+          SaveMinigameResultDto(
+            groupId: groupId,
+            gameType: MinigameType.roulette,
+            title: _titleController.text.trim(),
+            participants: [],
+            options: _validItems.map((item) => item.name).toList(),
+            result: {'winner': _winner},
+          ),
+        )
+        .then((saved) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(saved != null ? '게임 결과가 저장되었습니다' : '저장 실패')),
+          SnackBar(
+              content: Text(saved != null ? '게임 결과가 저장되었습니다' : '저장 실패')),
         );
       }
     });
@@ -286,13 +337,13 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
 // ─── 항목 편집기 ──────────────────────────────────────────────────────────────
 
 class _ItemsEditor extends StatelessWidget {
-  final List<TextEditingController> controllers;
+  final List<_RouletteItem> items;
   final VoidCallback onAdd;
   final void Function(int) onRemove;
   final VoidCallback onChanged;
 
   const _ItemsEditor({
-    required this.controllers,
+    required this.items,
     required this.onAdd,
     required this.onRemove,
     required this.onChanged,
@@ -303,11 +354,30 @@ class _ItemsEditor extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text('항목',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        Row(
+          children: [
+            const Expanded(
+              child: Text('항목',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            ),
+            SizedBox(
+              width: 60,
+              child: Text(
+                '비율',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[600]),
+              ),
+            ),
+            if (items.length > 2) const SizedBox(width: 40),
+          ],
+        ),
         const SizedBox(height: 8),
-        ...controllers.asMap().entries.map((entry) {
+        ...items.asMap().entries.map((entry) {
           final i = entry.key;
+          final item = entry.value;
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Row(
@@ -323,7 +393,7 @@ class _ItemsEditor extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: entry.value,
+                    controller: item.nameController,
                     onChanged: (_) => onChanged(),
                     decoration: InputDecoration(
                       hintText: '항목 ${i + 1}',
@@ -333,12 +403,32 @@ class _ItemsEditor extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (controllers.length > 2)
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 60,
+                  child: TextField(
+                    controller: item.weightController,
+                    onChanged: (_) => onChanged(),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                    ),
+                  ),
+                ),
+                if (items.length > 2)
                   IconButton(
                     icon: const Icon(Icons.remove_circle_outline, size: 20),
                     onPressed: () => onRemove(i),
                     padding: EdgeInsets.zero,
-                  ),
+                  )
+                else
+                  const SizedBox(width: 40),
               ],
             ),
           );
@@ -359,7 +449,7 @@ class _ItemsEditor extends StatelessWidget {
 // ─── 룰렛 원판 Painter ────────────────────────────────────────────────────────
 
 class _RoulettePainter extends CustomPainter {
-  final List<String> items;
+  final List<_RouletteItem> items;
 
   _RoulettePainter({required this.items});
 
@@ -367,11 +457,13 @@ class _RoulettePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width, size.height) / 2;
-    final sliceAngle = (2 * pi) / items.length;
+    final totalWeight = items.fold(0, (sum, item) => sum + item.weight);
     final textPainter = TextPainter(textDirection: TextDirection.ltr);
 
+    double startAngle = -pi / 2; // 12시 방향부터 시작
+
     for (var i = 0; i < items.length; i++) {
-      final startAngle = i * sliceAngle - pi / 2;
+      final sliceAngle = (items[i].weight / totalWeight) * 2 * pi;
 
       // 부채꼴
       final paint = Paint()
@@ -403,7 +495,7 @@ class _RoulettePainter extends CustomPainter {
       canvas.translate(center.dx, center.dy);
       canvas.rotate(startAngle + sliceAngle / 2);
       textPainter.text = TextSpan(
-        text: items[i],
+        text: items[i].name,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 13,
@@ -416,6 +508,8 @@ class _RoulettePainter extends CustomPainter {
         Offset(radius * 0.35, -textPainter.height / 2),
       );
       canvas.restore();
+
+      startAngle += sliceAngle;
     }
 
     // 중앙 원
@@ -475,5 +569,21 @@ class _GroupBanner extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+// ─── 스핀 커브 ────────────────────────────────────────────────────────────────
+// 앞 60%: 선형 등속, 뒤 40%: 기울기 (1-u)^5 로 급감속
+// F(u) = 6/5 * (u - u^6/6), F(1)=1, F'(0)=1 → 연결 연속
+class _SpinCurve extends Curve {
+  @override
+  double transformInternal(double t) {
+    if (t < 0.6) {
+      return t;
+    } else {
+      final u = (t - 0.6) / 0.4;
+      final pos = (6 / 5) * (u - pow(u, 6) / 6);
+      return 0.6 + pos.toDouble() * 0.4;
+    }
   }
 }
