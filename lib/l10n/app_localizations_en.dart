@@ -1432,10 +1432,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_sharePrivate => 'Private';
 
   @override
-  String get schedule_shareFamily => 'Family';
-
-  @override
-  String get schedule_shareSpecific => 'Specific Members';
+  String get schedule_shareGroup => 'Specific Group';
 
   @override
   String get schedule_reminder => 'Reminder';
@@ -2062,9 +2059,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get memo_visibilityPrivate => 'Only Me';
-
-  @override
-  String get memo_visibilityFamily => 'Family';
 
   @override
   String get memo_visibilityGroup => 'Specific Group';

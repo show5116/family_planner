@@ -79,30 +79,6 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 카테고리
-                if (memo.category != null && memo.category!.isNotEmpty) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceS,
-                      vertical: AppSizes.spaceXS,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.radiusSmall),
-                    ),
-                    child: Text(
-                      memo.category!,
-                      style:
-                          Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-                ],
-
                 // 제목
                 Text(
                   memo.title,

@@ -76,6 +76,7 @@ class MemoTagInput extends StatefulWidget {
 class _MemoTagInputState extends State<MemoTagInput> {
   late List<String> _tags;
   final _controller = TextEditingController();
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -86,11 +87,12 @@ class _MemoTagInputState extends State<MemoTagInput> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   void _addTag() {
-    final text = _controller.text.trim();
+    final text = _controller.text.trim().replaceAll('#', '');
     if (text.isEmpty) return;
     if (_tags.contains(text)) return;
 
@@ -99,6 +101,7 @@ class _MemoTagInputState extends State<MemoTagInput> {
     });
     _controller.clear();
     widget.onChanged(_tags);
+    _focusNode.requestFocus();
   }
 
   void _removeTag(String tag) {
@@ -118,8 +121,9 @@ class _MemoTagInputState extends State<MemoTagInput> {
             Expanded(
               child: TextField(
                 controller: _controller,
+                focusNode: _focusNode,
                 decoration: InputDecoration(
-                  hintText: '#태그',
+                  hintText: '태그',
                   border: const OutlineInputBorder(),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: AppSizes.spaceM,
@@ -148,10 +152,11 @@ class _MemoTagInputState extends State<MemoTagInput> {
             children: _tags.map((tag) {
               return Chip(
                 label: Text(tag),
+                labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
                 deleteIcon: const Icon(Icons.close, size: AppSizes.iconSmall),
                 onDeleted: () => _removeTag(tag),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
               );
             }).toList(),
           ),

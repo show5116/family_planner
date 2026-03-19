@@ -924,7 +924,6 @@ mixin _$MemoModel {
   String get content => throw _privateConstructorUsedError;
   MemoFormat? get format => throw _privateConstructorUsedError;
   MemoType? get type => throw _privateConstructorUsedError;
-  String? get category => throw _privateConstructorUsedError;
   MemoVisibility? get visibility => throw _privateConstructorUsedError;
   bool get isPinned => throw _privateConstructorUsedError;
   String? get groupId => throw _privateConstructorUsedError;
@@ -956,7 +955,6 @@ abstract class $MemoModelCopyWith<$Res> {
     String content,
     MemoFormat? format,
     MemoType? type,
-    String? category,
     MemoVisibility? visibility,
     bool isPinned,
     String? groupId,
@@ -991,7 +989,6 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
     Object? content = null,
     Object? format = freezed,
     Object? type = freezed,
-    Object? category = freezed,
     Object? visibility = freezed,
     Object? isPinned = null,
     Object? groupId = freezed,
@@ -1024,10 +1021,6 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
                       as MemoType?,
-            category: freezed == category
-                ? _value.category
-                : category // ignore: cast_nullable_to_non_nullable
-                      as String?,
             visibility: freezed == visibility
                 ? _value.visibility
                 : visibility // ignore: cast_nullable_to_non_nullable
@@ -1095,7 +1088,6 @@ abstract class _$$MemoModelImplCopyWith<$Res>
     String content,
     MemoFormat? format,
     MemoType? type,
-    String? category,
     MemoVisibility? visibility,
     bool isPinned,
     String? groupId,
@@ -1130,7 +1122,6 @@ class __$$MemoModelImplCopyWithImpl<$Res>
     Object? content = null,
     Object? format = freezed,
     Object? type = freezed,
-    Object? category = freezed,
     Object? visibility = freezed,
     Object? isPinned = null,
     Object? groupId = freezed,
@@ -1163,10 +1154,6 @@ class __$$MemoModelImplCopyWithImpl<$Res>
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
                   as MemoType?,
-        category: freezed == category
-            ? _value.category
-            : category // ignore: cast_nullable_to_non_nullable
-                  as String?,
         visibility: freezed == visibility
             ? _value.visibility
             : visibility // ignore: cast_nullable_to_non_nullable
@@ -1217,7 +1204,6 @@ class _$MemoModelImpl implements _MemoModel {
     this.content = '',
     this.format,
     this.type,
-    this.category,
     this.visibility,
     this.isPinned = false,
     this.groupId,
@@ -1245,8 +1231,6 @@ class _$MemoModelImpl implements _MemoModel {
   final MemoFormat? format;
   @override
   final MemoType? type;
-  @override
-  final String? category;
   @override
   final MemoVisibility? visibility;
   @override
@@ -1290,7 +1274,7 @@ class _$MemoModelImpl implements _MemoModel {
 
   @override
   String toString() {
-    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, type: $type, category: $category, visibility: $visibility, isPinned: $isPinned, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistItems: $checklistItems, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, type: $type, visibility: $visibility, isPinned: $isPinned, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistItems: $checklistItems, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1303,8 +1287,6 @@ class _$MemoModelImpl implements _MemoModel {
             (identical(other.content, content) || other.content == content) &&
             (identical(other.format, format) || other.format == format) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
             (identical(other.visibility, visibility) ||
                 other.visibility == visibility) &&
             (identical(other.isPinned, isPinned) ||
@@ -1335,7 +1317,6 @@ class _$MemoModelImpl implements _MemoModel {
     content,
     format,
     type,
-    category,
     visibility,
     isPinned,
     groupId,
@@ -1368,7 +1349,6 @@ abstract class _MemoModel implements MemoModel {
     final String content,
     final MemoFormat? format,
     final MemoType? type,
-    final String? category,
     final MemoVisibility? visibility,
     final bool isPinned,
     final String? groupId,
@@ -1393,8 +1373,6 @@ abstract class _MemoModel implements MemoModel {
   MemoFormat? get format;
   @override
   MemoType? get type;
-  @override
-  String? get category;
   @override
   MemoVisibility? get visibility;
   @override

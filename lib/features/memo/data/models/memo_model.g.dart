@@ -74,7 +74,6 @@ _$MemoModelImpl _$$MemoModelImplFromJson(Map<String, dynamic> json) =>
       content: json['content'] as String? ?? '',
       format: $enumDecodeNullable(_$MemoFormatEnumMap, json['format']),
       type: $enumDecodeNullable(_$MemoTypeEnumMap, json['type']),
-      category: json['category'] as String?,
       visibility: $enumDecodeNullable(
         _$MemoVisibilityEnumMap,
         json['visibility'],
@@ -108,7 +107,6 @@ Map<String, dynamic> _$$MemoModelImplToJson(_$MemoModelImpl instance) =>
       'content': instance.content,
       'format': _$MemoFormatEnumMap[instance.format],
       'type': _$MemoTypeEnumMap[instance.type],
-      'category': instance.category,
       'visibility': _$MemoVisibilityEnumMap[instance.visibility],
       'isPinned': instance.isPinned,
       'groupId': instance.groupId,
@@ -133,7 +131,6 @@ const _$MemoTypeEnumMap = {
 
 const _$MemoVisibilityEnumMap = {
   MemoVisibility.private_: 'PRIVATE',
-  MemoVisibility.family: 'FAMILY',
   MemoVisibility.group: 'GROUP',
 };
 

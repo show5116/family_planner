@@ -3,9 +3,8 @@ class CreateMemoDto {
   final String title;
   final String content;
   final String? type;       // 'NOTE' | 'CHECKLIST'
-  final String? visibility; // 'PRIVATE' | 'FAMILY' | 'GROUP'
+  final String? visibility; // 'PRIVATE' | 'GROUP'
   final String? groupId;    // visibility=GROUP 일 때 필수
-  final String? category;
   final List<CreateMemoTagDto>? tags;
 
   CreateMemoDto({
@@ -14,7 +13,6 @@ class CreateMemoDto {
     this.type,
     this.visibility,
     this.groupId,
-    this.category,
     this.tags,
   });
 
@@ -25,7 +23,6 @@ class CreateMemoDto {
       if (type != null) 'type': type,
       if (visibility != null) 'visibility': visibility,
       if (groupId != null && groupId!.isNotEmpty) 'groupId': groupId,
-      if (category != null && category!.isNotEmpty) 'category': category,
       if (tags != null && tags!.isNotEmpty)
         'tags': tags!.map((e) => e.toJson()).toList(),
     };
@@ -66,9 +63,8 @@ class UpdateChecklistItemDto {
 class UpdateMemoDto {
   final String? title;
   final String? content;
-  final String? visibility; // 'PRIVATE' | 'FAMILY' | 'GROUP'
+  final String? visibility; // 'PRIVATE' | 'GROUP'
   final String? groupId;
-  final String? category;
   final List<CreateMemoTagDto>? tags;
 
   UpdateMemoDto({
@@ -76,7 +72,6 @@ class UpdateMemoDto {
     this.content,
     this.visibility,
     this.groupId,
-    this.category,
     this.tags,
   });
 
@@ -86,7 +81,6 @@ class UpdateMemoDto {
       if (content != null) 'content': content,
       if (visibility != null) 'visibility': visibility,
       if (groupId != null) 'groupId': groupId,
-      if (category != null) 'category': category,
       if (tags != null) 'tags': tags!.map((e) => e.toJson()).toList(),
     };
   }

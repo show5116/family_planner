@@ -1398,10 +1398,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_sharePrivate => '나만 보기';
 
   @override
-  String get schedule_shareFamily => '가족 전체';
-
-  @override
-  String get schedule_shareSpecific => '특정 멤버';
+  String get schedule_shareGroup => '특정 그룹';
 
   @override
   String get schedule_reminder => '알림';
@@ -2023,9 +2020,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get memo_visibilityPrivate => '나만 보기';
-
-  @override
-  String get memo_visibilityFamily => '가족 전체';
 
   @override
   String get memo_visibilityGroup => '특정 그룹';

@@ -20,13 +20,15 @@ class MemoRepository {
   /// 메모 목록 조회
   /// [page]: 페이지 번호 (기본값: 1)
   /// [limit]: 페이지당 개수 (기본값: 20)
-  /// [category]: 카테고리 필터
+  /// [visibility]: 공개 범위 필터 ('PRIVATE' | 'GROUP')
+  /// [groupId]: 그룹 ID 필터
   /// [tag]: 태그 이름 필터
   /// [search]: 검색어 (제목/내용)
   Future<MemoListResponse> getMemos({
     int page = 1,
     int limit = 20,
-    String? category,
+    String? visibility,
+    String? groupId,
     String? tag,
     String? search,
   }) async {
@@ -35,7 +37,8 @@ class MemoRepository {
       final response = await _dio.get('/memos', queryParameters: {
         'page': page,
         'limit': limit,
-        if (category != null && category.isNotEmpty) 'category': category,
+        if (visibility != null && visibility.isNotEmpty) 'visibility': visibility,
+        if (groupId != null && groupId.isNotEmpty) 'groupId': groupId,
         if (tag != null && tag.isNotEmpty) 'tag': tag,
         if (search != null && search.isNotEmpty) 'search': search,
       });

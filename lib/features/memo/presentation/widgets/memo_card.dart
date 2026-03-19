@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -6,10 +7,11 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 카드 위젯
-class MemoCard extends StatelessWidget {
+class MemoCard extends ConsumerWidget {
   final MemoModel memo;
 
   const MemoCard({
@@ -17,9 +19,10 @@ class MemoCard extends StatelessWidget {
     required this.memo,
   });
 
-  /// 마크다운 구조 제거 (미리보기용)
-  String _stripMarkdown(String markdown) {
-    return markdown
+  /// HTML 태그 및 마크다운 구조 제거 (미리보기용)
+  String _stripContent(String content) {
+    return content
+        .replaceAll(RegExp(r'<[^>]*>'), '')
         .replaceAll(RegExp(r'^#+\s+', multiLine: true), '')
         .replaceAll(RegExp(r'\*\*([^*]+)\*\*'), r'$1')
         .replaceAll(RegExp(r'__([^_]+)__'), r'$1')
@@ -38,8 +41,12 @@ class MemoCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dateFormat = DateFormat('yyyy.MM.dd');
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final groupName = memo.groupId != null
+        ? groups.where((g) => g.id == memo.groupId).firstOrNull?.name
+        : null;
 
     return Card(
       elevation: AppSizes.elevation1,
@@ -52,8 +59,8 @@ class MemoCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 헤더: 날짜 + 카테고리
-              _buildHeader(context, dateFormat),
+              // 헤더: 날짜 + 그룹
+              _buildHeader(context, dateFormat, groupName),
               const SizedBox(height: AppSizes.spaceS),
 
               // 제목
@@ -118,7 +125,7 @@ class MemoCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, DateFormat dateFormat) {
+  Widget _buildHeader(BuildContext context, DateFormat dateFormat, String? groupName) {
     return Row(
       children: [
         Icon(
@@ -137,24 +144,24 @@ class MemoCard extends StatelessWidget {
                 ),
           ),
         ),
-        if (memo.category != null && memo.category!.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceS,
-              vertical: 2,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-            ),
-            child: Text(
-              memo.category!,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-            ),
+        const SizedBox(width: AppSizes.spaceXS),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceS,
+            vertical: 2,
           ),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+          ),
+          child: Text(
+            groupName ?? '나만 보기',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+        ),
       ],
     );
   }
@@ -172,7 +179,7 @@ class MemoCard extends StatelessWidget {
 
   Widget _buildContentPreview(BuildContext context) {
     return Text(
-      _stripMarkdown(memo.content),
+      _stripContent(memo.content),
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AppColors.textSecondary,
           ),

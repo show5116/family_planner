@@ -15,7 +15,8 @@ class MemoList extends _$MemoList {
   bool _hasMore = true;
   List<MemoModel> _items = [];
   String? _searchQuery;
-  String? _categoryFilter;
+  String? _visibilityFilter;
+  String? _groupIdFilter;
 
   @override
   Future<List<MemoModel>> build() async {
@@ -29,7 +30,8 @@ class MemoList extends _$MemoList {
       page: page,
       limit: 20,
       search: _searchQuery,
-      category: _categoryFilter,
+      visibility: _visibilityFilter,
+      groupId: _groupIdFilter,
     );
 
     _hasMore = response.items.length >= 20;
@@ -72,9 +74,16 @@ class MemoList extends _$MemoList {
     await refresh();
   }
 
-  /// 카테고리 필터 설정
-  Future<void> setCategory(String? category) async {
-    _categoryFilter = category;
+  /// 공개 범위 필터 설정
+  Future<void> setVisibility(String? visibility) async {
+    _visibilityFilter = visibility;
+    _groupIdFilter = null;
+    await refresh();
+  }
+
+  /// 그룹 필터 설정
+  Future<void> setGroupId(String? groupId) async {
+    _groupIdFilter = groupId;
     await refresh();
   }
 
@@ -110,8 +119,11 @@ class MemoList extends _$MemoList {
   /// 현재 검색어
   String? get searchQuery => _searchQuery;
 
-  /// 현재 카테고리 필터
-  String? get categoryFilter => _categoryFilter;
+  /// 현재 공개 범위 필터
+  String? get visibilityFilter => _visibilityFilter;
+
+  /// 현재 그룹 ID 필터
+  String? get groupIdFilter => _groupIdFilter;
 }
 
 /// 특정 메모 상세 Provider

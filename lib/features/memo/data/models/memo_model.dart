@@ -41,8 +41,6 @@ class ChecklistItem with _$ChecklistItem {
 enum MemoVisibility {
   @JsonValue('PRIVATE')
   private_,
-  @JsonValue('FAMILY')
-  family,
   @JsonValue('GROUP')
   group;
 }
@@ -97,7 +95,6 @@ class MemoModel with _$MemoModel {
     @Default('') String content,
     MemoFormat? format,
     MemoType? type,
-    String? category,
     MemoVisibility? visibility,
     @Default(false) bool isPinned,
     String? groupId,

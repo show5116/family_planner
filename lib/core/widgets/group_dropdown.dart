@@ -22,6 +22,7 @@ class GroupDropdown extends StatelessWidget {
   final String? selectedGroupId;
   final ValueChanged<String?> onChanged;
   final GroupDropdownStyle style;
+  final bool showPersonalOption;
 
   const GroupDropdown({
     super.key,
@@ -29,6 +30,7 @@ class GroupDropdown extends StatelessWidget {
     required this.selectedGroupId,
     required this.onChanged,
     this.style = GroupDropdownStyle.form,
+    this.showPersonalOption = true,
   });
 
   @override
@@ -52,21 +54,23 @@ class GroupDropdown extends StatelessWidget {
     final items = <DropdownMenuItem<String?>>[];
 
     // 개인 옵션
-    items.add(
-      DropdownMenuItem<String?>(
-        value: null,
-        child: Row(
-          mainAxisSize: style == GroupDropdownStyle.appBar
-              ? MainAxisSize.min
-              : MainAxisSize.max,
-          children: [
-            const Icon(Icons.person, size: 20),
-            const SizedBox(width: AppSizes.spaceS),
-            Text(l10n.schedule_personal),
-          ],
+    if (showPersonalOption) {
+      items.add(
+        DropdownMenuItem<String?>(
+          value: null,
+          child: Row(
+            mainAxisSize: style == GroupDropdownStyle.appBar
+                ? MainAxisSize.min
+                : MainAxisSize.max,
+            children: [
+              const Icon(Icons.person, size: 20),
+              const SizedBox(width: AppSizes.spaceS),
+              Text(l10n.schedule_personal),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
 
     // 그룹 옵션들
     for (final group in groups) {

@@ -2812,17 +2812,11 @@ abstract class AppLocalizations {
   /// **'나만 보기'**
   String get schedule_sharePrivate;
 
-  /// No description provided for @schedule_shareFamily.
+  /// No description provided for @schedule_shareGroup.
   ///
   /// In ko, this message translates to:
-  /// **'가족 전체'**
-  String get schedule_shareFamily;
-
-  /// No description provided for @schedule_shareSpecific.
-  ///
-  /// In ko, this message translates to:
-  /// **'특정 멤버'**
-  String get schedule_shareSpecific;
+  /// **'특정 그룹'**
+  String get schedule_shareGroup;
 
   /// No description provided for @schedule_reminder.
   ///
@@ -4035,12 +4029,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'나만 보기'**
   String get memo_visibilityPrivate;
-
-  /// No description provided for @memo_visibilityFamily.
-  ///
-  /// In ko, this message translates to:
-  /// **'가족 전체'**
-  String get memo_visibilityFamily;
 
   /// No description provided for @memo_visibilityGroup.
   ///

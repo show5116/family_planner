@@ -7,6 +7,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
@@ -20,9 +21,14 @@ class MemoListScreen extends ConsumerStatefulWidget {
   ConsumerState<MemoListScreen> createState() => _MemoListScreenState();
 }
 
+// 필터 타입
+enum _MemoFilter { all, private, group }
+
 class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isSearching = false;
+  _MemoFilter _filter = _MemoFilter.all;
+  String? _selectedGroupId;
 
   @override
   void initState() {
@@ -53,6 +59,62 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
         ref.read(memoListProvider.notifier).setSearch(null);
       }
     });
+  }
+
+  void _applyFilter(_MemoFilter filter, {String? groupId}) {
+    setState(() {
+      _filter = filter;
+      _selectedGroupId = groupId;
+    });
+    final notifier = ref.read(memoListProvider.notifier);
+    switch (filter) {
+      case _MemoFilter.all:
+        notifier.setVisibility(null);
+      case _MemoFilter.private:
+        notifier.setVisibility('PRIVATE');
+      case _MemoFilter.group:
+        notifier.setGroupId(groupId);
+    }
+  }
+
+  Widget _buildFilterChips(BuildContext context) {
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceS,
+      ),
+      child: Row(
+        children: [
+          FilterChip(
+            label: const Text('전체'),
+            selected: _filter == _MemoFilter.all,
+            onSelected: (_) => _applyFilter(_MemoFilter.all),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          FilterChip(
+            label: const Text('나만 보기'),
+            selected: _filter == _MemoFilter.private,
+            onSelected: (_) => _applyFilter(_MemoFilter.private),
+          ),
+          ...groups.map((group) {
+            final isSelected =
+                _filter == _MemoFilter.group && _selectedGroupId == group.id;
+            return Padding(
+              padding: const EdgeInsets.only(left: AppSizes.spaceS),
+              child: FilterChip(
+                label: Text(group.name),
+                selected: isSelected,
+                onSelected: (_) =>
+                    _applyFilter(_MemoFilter.group, groupId: group.id),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 
   @override
@@ -91,6 +153,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
               },
               onClose: _toggleSearch,
             ),
+          _buildFilterChips(context),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () => ref.read(memoListProvider.notifier).refresh(),

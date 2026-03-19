@@ -32,7 +32,6 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  final _categoryController = TextEditingController();
   List<String> _tags = [];
   MemoType _memoType = MemoType.note;
   MemoVisibility _visibility = MemoVisibility.private_;
@@ -64,7 +63,6 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
         setState(() {
           _titleController.text = memo.title;
           _contentController.text = memo.content;
-          _categoryController.text = memo.category ?? '';
           _tags = memo.tags.map((t) => t.name).toList();
           _memoType = memo.type ?? MemoType.note;
           _visibility = memo.visibility ?? MemoVisibility.private_;
@@ -93,7 +91,6 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
-    _categoryController.dispose();
     _checklistInputController.dispose();
     super.dispose();
   }
@@ -106,202 +103,190 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(_isEditMode ? l10n.memo_edit : l10n.memo_create),
-        actions: [
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(AppSizes.spaceM),
-              child: SizedBox(
-                width: AppSizes.iconMedium,
-                height: AppSizes.iconMedium,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
-              child: FilledButton(
-                onPressed: _handleSubmit,
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                ),
-                child: Text(
-                    _isEditMode ? l10n.common_edit : l10n.common_create),
-              ),
-            ),
-        ],
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceL),
+        child: Column(
           children: [
-            // 제목 입력
-            TextFormField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: l10n.memo_title,
-                hintText: l10n.memo_titleHint,
-                border: const OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return l10n.memo_titleRequired;
-                }
-                if (value.trim().length < 2) {
-                  return l10n.memo_titleMinLength;
-                }
-                return null;
-              },
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: AppSizes.spaceL),
-
-            // 메모 유형 선택 (수정 모드에서는 변경 불가)
-            if (!_isEditMode) ...[
-              Text(
-                l10n.memo_typeSelect,
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-              SegmentedButton<MemoType>(
-                segments: [
-                  ButtonSegment(
-                    value: MemoType.note,
-                    label: Text(l10n.memo_typeNote),
-                    icon: const Icon(Icons.notes),
-                  ),
-                  ButtonSegment(
-                    value: MemoType.checklist,
-                    label: Text(l10n.memo_typeChecklist),
-                    icon: const Icon(Icons.checklist),
-                  ),
-                ],
-                selected: {_memoType},
-                onSelectionChanged: (selected) {
-                  setState(() {
-                    _memoType = selected.first;
-                  });
-                },
-              ),
-              const SizedBox(height: AppSizes.spaceL),
-            ],
-
-            // 공개 범위 선택
-            Text(
-              l10n.memo_visibility,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            SegmentedButton<MemoVisibility>(
-              segments: [
-                ButtonSegment(
-                  value: MemoVisibility.private_,
-                  label: Text(l10n.memo_visibilityPrivate),
-                  icon: const Icon(Icons.lock_outline),
-                ),
-                ButtonSegment(
-                  value: MemoVisibility.family,
-                  label: Text(l10n.memo_visibilityFamily),
-                  icon: const Icon(Icons.people_outline),
-                ),
-                ButtonSegment(
-                  value: MemoVisibility.group,
-                  label: Text(l10n.memo_visibilityGroup),
-                  icon: const Icon(Icons.group_outlined),
-                ),
-              ],
-              selected: {_visibility},
-              onSelectionChanged: (selected) {
-                setState(() {
-                  _visibility = selected.first;
-                  if (_visibility != MemoVisibility.group) {
-                    _selectedGroupId = null;
-                  }
-                });
-              },
-            ),
-
-            // 그룹 선택 (visibility=GROUP 일 때만 표시)
-            if (_visibility == MemoVisibility.group) ...[
-              const SizedBox(height: AppSizes.spaceM),
-              Text(
-                l10n.memo_groupSelect,
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-              ref.watch(myGroupsProvider).when(
-                data: (groups) => Card(
-                  elevation: 0,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.3),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceM,
-                      vertical: AppSizes.spaceS,
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(AppSizes.spaceL),
+                children: [
+                  // 제목 입력
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: InputDecoration(
+                      labelText: l10n.memo_title,
+                      hintText: l10n.memo_titleHint,
+                      border: const OutlineInputBorder(),
                     ),
-                    child: GroupDropdown(
-                      groups: groups,
-                      selectedGroupId: _selectedGroupId,
-                      onChanged: (value) {
-                        setState(() => _selectedGroupId = value);
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.memo_titleRequired;
+                      }
+                      if (value.trim().length < 2) {
+                        return l10n.memo_titleMinLength;
+                      }
+                      return null;
+                    },
+                    textInputAction: TextInputAction.next,
+                  ),
+                  const SizedBox(height: AppSizes.spaceL),
+
+                  // 메모 유형 선택 (수정 모드에서는 변경 불가)
+                  if (!_isEditMode) ...[
+                    Text(
+                      l10n.memo_typeSelect,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: AppSizes.spaceS),
+                    SegmentedButton<MemoType>(
+                      segments: [
+                        ButtonSegment(
+                          value: MemoType.note,
+                          label: Text(l10n.memo_typeNote),
+                          icon: const Icon(Icons.notes),
+                        ),
+                        ButtonSegment(
+                          value: MemoType.checklist,
+                          label: Text(l10n.memo_typeChecklist),
+                          icon: const Icon(Icons.checklist),
+                        ),
+                      ],
+                      selected: {_memoType},
+                      onSelectionChanged: (selected) {
+                        setState(() {
+                          _memoType = selected.first;
+                        });
                       },
-                      style: GroupDropdownStyle.form,
                     ),
+                    const SizedBox(height: AppSizes.spaceL),
+                  ],
+
+                  // 공개 범위 선택
+                  Text(
+                    l10n.memo_visibility,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  SegmentedButton<MemoVisibility>(
+                    segments: [
+                      ButtonSegment(
+                        value: MemoVisibility.private_,
+                        label: Text(l10n.memo_visibilityPrivate),
+                        icon: const Icon(Icons.lock_outline),
+                      ),
+                      ButtonSegment(
+                        value: MemoVisibility.group,
+                        label: Text(l10n.memo_visibilityGroup),
+                        icon: const Icon(Icons.group_outlined),
+                      ),
+                    ],
+                    selected: {_visibility},
+                    onSelectionChanged: (selected) {
+                      setState(() {
+                        _visibility = selected.first;
+                        if (_visibility != MemoVisibility.group) {
+                          _selectedGroupId = null;
+                        }
+                      });
+                    },
+                  ),
+
+                  // 그룹 선택 (visibility=GROUP 일 때만 표시)
+                  if (_visibility == MemoVisibility.group) ...[
+                    const SizedBox(height: AppSizes.spaceM),
+                    Text(
+                      l10n.memo_groupSelect,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: AppSizes.spaceS),
+                    ref.watch(myGroupsProvider).when(
+                      data: (groups) => Card(
+                        elevation: 0,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest
+                            .withValues(alpha: 0.3),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.spaceM,
+                            vertical: AppSizes.spaceS,
+                          ),
+                          child: GroupDropdown(
+                            groups: groups,
+                            selectedGroupId: _selectedGroupId,
+                            onChanged: (value) {
+                              setState(() => _selectedGroupId = value);
+                            },
+                            style: GroupDropdownStyle.form,
+                            showPersonalOption: false,
+                          ),
+                        ),
+                      ),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (_, _) => Text(l10n.common_error),
+                    ),
+                  ],
+                  const SizedBox(height: AppSizes.spaceL),
+
+                  // 태그 입력
+                  Text(
+                    l10n.memo_tags,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  MemoTagInput(
+                    initialTags: _tags,
+                    onChanged: (tags) {
+                      _tags = tags;
+                    },
+                  ),
+                  const SizedBox(height: AppSizes.spaceL),
+
+                  // 내용 영역: 유형에 따라 에디터 or 체크리스트
+                  if (_memoType == MemoType.note)
+                    RichTextEditor(
+                      controller: _contentController,
+                      labelText: l10n.memo_content,
+                      hintText: l10n.memo_contentHint,
+                      minLines: 15,
+                      maxLines: 30,
+                      imageUploadType: EditorImageType.memos,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return l10n.memo_contentRequired;
+                        }
+                        return null;
+                      },
+                    )
+                  else
+                    _buildChecklistEditor(l10n),
+                ],
+              ),
+            ),
+            // 하단 버튼
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.spaceL),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : FilledButton(
+                          onPressed: _handleSubmit,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Text(
+                            _isEditMode ? l10n.common_edit : l10n.common_create,
+                          ),
+                        ),
                 ),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (_, _) => Text(l10n.common_error),
-              ),
-            ],
-            const SizedBox(height: AppSizes.spaceL),
-
-            // 카테고리 입력
-            TextFormField(
-              controller: _categoryController,
-              decoration: InputDecoration(
-                labelText: l10n.memo_category,
-                hintText: l10n.memo_categoryHint,
-                border: const OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: AppSizes.spaceL),
-
-            // 태그 입력
-            Text(
-              l10n.memo_tags,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            MemoTagInput(
-              initialTags: _tags,
-              onChanged: (tags) {
-                _tags = tags;
-              },
-            ),
-            const SizedBox(height: AppSizes.spaceL),
-
-            // 내용 영역: 유형에 따라 에디터 or 체크리스트
-            if (_memoType == MemoType.note)
-              RichTextEditor(
-                controller: _contentController,
-                labelText: l10n.memo_content,
-                hintText: l10n.memo_contentHint,
-                minLines: 15,
-                maxLines: 30,
-                imageUploadType: EditorImageType.memos,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.memo_contentRequired;
-                  }
-                  return null;
-                },
-              )
-            else
-              _buildChecklistEditor(l10n),
           ],
         ),
       ),
@@ -420,7 +405,6 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
     try {
       final notifier = ref.read(memoManagementProvider.notifier);
       final tagDtos = _tags.map((name) => CreateMemoTagDto(name: name)).toList();
-      final category = _categoryController.text.trim();
 
       if (_isEditMode) {
         final dto = UpdateMemoDto(
@@ -428,7 +412,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           content: _memoType == MemoType.note
               ? _contentController.text.trim()
               : '',
-          category: category.isEmpty ? null : category,
+          visibility: _visibility == MemoVisibility.group ? 'GROUP' : 'PRIVATE',
+          groupId: _visibility == MemoVisibility.group ? _selectedGroupId : null,
           tags: tagDtos.isEmpty ? null : tagDtos,
         );
         final result = await notifier.updateMemo(widget.memoId!, dto);
@@ -451,7 +436,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
               ? _contentController.text.trim()
               : '',
           type: _memoType == MemoType.checklist ? 'CHECKLIST' : 'NOTE',
-          category: category.isEmpty ? null : category,
+          visibility: _visibility == MemoVisibility.group ? 'GROUP' : 'PRIVATE',
+          groupId: _visibility == MemoVisibility.group ? _selectedGroupId : null,
           tags: tagDtos.isEmpty ? null : tagDtos,
         );
         final result = await notifier.createMemo(dto);

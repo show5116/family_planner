@@ -1395,10 +1395,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_sharePrivate => '自分のみ';
 
   @override
-  String get schedule_shareFamily => '家族全員';
-
-  @override
-  String get schedule_shareSpecific => '特定のメンバー';
+  String get schedule_shareGroup => '特定グループ';
 
   @override
   String get schedule_reminder => 'リマインダー';
@@ -2020,9 +2017,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get memo_visibilityPrivate => '自分のみ';
-
-  @override
-  String get memo_visibilityFamily => '家族全員';
 
   @override
   String get memo_visibilityGroup => '特定グループ';
