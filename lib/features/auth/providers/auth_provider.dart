@@ -404,6 +404,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     String? phoneNumber,
     String? currentPassword,
     String? newPassword,
+    String? personalColor,
   }) async {
     state = state.copyWith(error: null);
 
@@ -413,6 +414,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         phoneNumber: phoneNumber,
         currentPassword: currentPassword,
         newPassword: newPassword,
+        personalColor: personalColor,
       );
 
       // 업데이트된 사용자 정보로 상태 업데이트

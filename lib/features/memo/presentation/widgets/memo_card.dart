@@ -5,9 +5,12 @@ import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 카드 위젯
@@ -44,9 +47,11 @@ class MemoCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dateFormat = DateFormat('yyyy.MM.dd');
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
-    final groupName = memo.groupId != null
-        ? groups.where((g) => g.id == memo.groupId).firstOrNull?.name
+    final matchedGroup = memo.groupId != null
+        ? groups.where((g) => g.id == memo.groupId).firstOrNull
         : null;
+    final userInfo = ref.watch(authProvider).user;
+    final myPersonalColor = GroupUtils.personalColor(userInfo?['personalColor'] as String?);
 
     return Card(
       elevation: AppSizes.elevation1,
@@ -60,7 +65,7 @@ class MemoCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 헤더: 날짜 + 그룹
-              _buildHeader(context, dateFormat, groupName),
+              _buildHeader(context, dateFormat, matchedGroup, myPersonalColor),
               const SizedBox(height: AppSizes.spaceS),
 
               // 제목
@@ -125,7 +130,11 @@ class MemoCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, DateFormat dateFormat, String? groupName) {
+  Widget _buildHeader(BuildContext context, DateFormat dateFormat, Group? group, Color personalColor) {
+    final badgeColor = group != null
+        ? GroupUtils.groupColor(group)
+        : personalColor;
+
     return Row(
       children: [
         Icon(
@@ -151,13 +160,13 @@ class MemoCard extends ConsumerWidget {
             vertical: 2,
           ),
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
+            color: badgeColor.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
           ),
           child: Text(
-            groupName ?? '나만 보기',
+            group?.name ?? '나만 보기',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.primary,
+                  color: badgeColor,
                   fontWeight: FontWeight.w500,
                 ),
           ),

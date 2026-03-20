@@ -79,6 +79,7 @@ class AuthService extends ApiServiceBase {
         profileImageUrl: user['profileImageUrl'] as String?,
         isAdmin: user['isAdmin'] as bool?,
         hasPassword: user['hasPassword'] as bool?,
+        personalColor: user['personalColor'] as String?,
       );
       debugPrint('User info saved successfully');
     } else {
@@ -91,6 +92,7 @@ class AuthService extends ApiServiceBase {
         profileImageUrl: data['profileImageUrl'] as String?,
         isAdmin: data['isAdmin'] as bool?,
         hasPassword: data['hasPassword'] as bool?,
+        personalColor: data['personalColor'] as String?,
       );
       debugPrint('User info saved from top-level fields');
     }
@@ -480,6 +482,7 @@ class AuthService extends ApiServiceBase {
     String? phoneNumber,
     String? currentPassword,
     String? newPassword,
+    String? personalColor,
   }) async {
     try {
       final requestData = <String, dynamic>{};
@@ -490,6 +493,7 @@ class AuthService extends ApiServiceBase {
         requestData['currentPassword'] = currentPassword;
       }
       if (newPassword != null) requestData['newPassword'] = newPassword;
+      if (personalColor != null) requestData['personalColor'] = personalColor;
 
       final response = await apiClient.patch(
         ApiConstants.updateProfile,

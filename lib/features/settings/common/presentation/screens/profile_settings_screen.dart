@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/color_picker.dart';
+import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 import 'package:family_planner/shared/widgets/scrollable_form_body.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
@@ -79,6 +81,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   bool _isPasswordChangeMode = false;
   bool _hasPassword = true; // 사용자가 비밀번호를 가지고 있는지 여부
   bool _isUploadingImage = false;
+  Color? _personalColor;
 
   @override
   void initState() {
@@ -104,6 +107,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
         _nameController.text = userInfo['name'] as String? ?? '';
         _phoneNumberController.text = userInfo['phoneNumber'] as String? ?? '';
         _hasPassword = userInfo['hasPassword'] as bool? ?? true;
+        _personalColor = GroupUtils.parseColor(userInfo['personalColor'] as String?);
       });
     }
   }
@@ -147,6 +151,9 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                 _isPasswordChangeMode && _newPasswordController.text.isNotEmpty
                 ? _newPasswordController.text
                 : null,
+            personalColor: _personalColor != null
+                ? GroupUtils.colorToHex(_personalColor!)
+                : null,
           );
 
       setState(() => _isLoading = false);
@@ -189,6 +196,54 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
         );
       }
     }
+  }
+
+  Widget _buildPersonalColorSection(BuildContext context) {
+    final displayColor = _personalColor ?? Colors.grey;
+    return Row(
+      children: [
+        Icon(Icons.palette_outlined, color: Colors.grey[600]),
+        const SizedBox(width: AppSizes.spaceS),
+        Expanded(
+          child: Text(
+            '개인 색상',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        GestureDetector(
+          onTap: () async {
+            final picked = await showColorPickerDialog(
+              context: context,
+              title: '개인 색상 선택',
+              initialColor: _personalColor,
+            );
+            if (picked != null) {
+              setState(() => _personalColor = picked);
+            }
+          },
+          child: Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: displayColor,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+              ),
+              if (_personalColor != null) ...[
+                const SizedBox(width: AppSizes.spaceXS),
+                GestureDetector(
+                  onTap: () => setState(() => _personalColor = null),
+                  child: Icon(Icons.close, size: AppSizes.iconSmall, color: Colors.grey[600]),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   /// 프로필 사진 업로드
@@ -366,6 +421,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                     keyboardType: TextInputType.phone,
                     inputFormatters: [PhoneNumberFormatter()],
                   ),
+                  const SizedBox(height: AppSizes.spaceM),
+
+                  // 개인 색상
+                  _buildPersonalColorSection(context),
                   const SizedBox(height: AppSizes.spaceL),
 
                   // 현재 비밀번호 (항상 표시, 필수)

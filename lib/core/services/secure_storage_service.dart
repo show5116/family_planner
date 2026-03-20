@@ -25,6 +25,7 @@ class SecureStorageService {
   static const String _userProfileImageUrlKey = 'user_profile_image_url';
   static const String _userIsAdminKey = 'user_is_admin';
   static const String _userHasPasswordKey = 'user_has_password';
+  static const String _userPersonalColorKey = 'user_personal_color';
 
   /// Access Token 저장
   Future<void> saveAccessToken(String token) async {
@@ -66,6 +67,7 @@ class SecureStorageService {
     String? profileImageUrl,
     bool? isAdmin,
     bool? hasPassword,
+    String? personalColor,
   }) async {
     debugPrint('=== Saving user info ===');
     debugPrint('Email: $email');
@@ -98,6 +100,9 @@ class SecureStorageService {
     if (hasPassword != null) {
       await _storage.write(key: _userHasPasswordKey, value: hasPassword.toString());
       debugPrint('HasPassword saved');
+    }
+    if (personalColor != null) {
+      await _storage.write(key: _userPersonalColorKey, value: personalColor);
     }
     debugPrint('=== User info save complete ===');
   }
@@ -151,6 +156,8 @@ class SecureStorageService {
     debugPrint('IsAdmin: $isAdmin');
     debugPrint('HasPassword: $hasPassword');
 
+    final personalColor = await _storage.read(key: _userPersonalColorKey);
+
     return {
       'email': email,
       'name': name,
@@ -158,6 +165,7 @@ class SecureStorageService {
       'profileImageUrl': profileImageUrl,
       'isAdmin': isAdmin,
       'hasPassword': hasPassword,
+      'personalColor': personalColor,
     };
   }
 
@@ -169,6 +177,7 @@ class SecureStorageService {
     await _storage.delete(key: _userProfileImageUrlKey);
     await _storage.delete(key: _userIsAdminKey);
     await _storage.delete(key: _userHasPasswordKey);
+    await _storage.delete(key: _userPersonalColorKey);
   }
 
   /// 모든 데이터 삭제

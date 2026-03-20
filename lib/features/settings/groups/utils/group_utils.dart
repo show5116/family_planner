@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 그룹 관련 유틸리티 함수
@@ -37,6 +38,19 @@ class GroupUtils {
     } catch (e) {
       return null;
     }
+  }
+
+  /// 그룹 색상 반환 (myColor → defaultColor → fallback 순)
+  static Color groupColor(Group group, {Color fallback = const Color(0xFF2196F3)}) {
+    return parseColor(group.myColor) ??
+        parseColor(group.defaultColor) ??
+        fallback;
+  }
+
+  /// 개인 색상 반환 (personalColor hex → fallback 순)
+  /// 그룹 색상과 동일한 방식으로 개인 메모/항목에 사용
+  static Color personalColor(String? personalColorHex, {Color fallback = const Color(0xFF9E9E9E)}) {
+    return parseColor(personalColorHex) ?? fallback;
   }
 
   /// 색상 변환 (Color -> hex string)
