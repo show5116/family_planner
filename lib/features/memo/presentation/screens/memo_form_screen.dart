@@ -39,7 +39,9 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
 
   // 체크리스트 항목 (작성 시 로컬 상태로 관리)
   final List<_ChecklistDraft> _checklistDrafts = [];
+  final List<TextEditingController> _draftControllers = [];
   final _checklistInputController = TextEditingController();
+  final _checklistFocusNode = FocusNode();
 
   bool _isLoading = false;
 
@@ -68,12 +70,17 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           _visibility = memo.visibility ?? MemoVisibility.private_;
           _selectedGroupId = memo.groupId;
           _checklistDrafts.clear();
+          for (final c in _draftControllers) {
+            c.dispose();
+          }
+          _draftControllers.clear();
           for (final item in memo.checklistItems) {
             _checklistDrafts.add(_ChecklistDraft(
               id: item.id,
               content: item.content,
               isChecked: item.isChecked,
             ));
+            _draftControllers.add(TextEditingController(text: item.content));
           }
         });
       },
@@ -92,6 +99,10 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
     _titleController.dispose();
     _contentController.dispose();
     _checklistInputController.dispose();
+    _checklistFocusNode.dispose();
+    for (final c in _draftControllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -325,20 +336,23 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
                 if (newIndex > oldIndex) newIndex--;
                 final item = _checklistDrafts.removeAt(oldIndex);
                 _checklistDrafts.insert(newIndex, item);
+                final ctrl = _draftControllers.removeAt(oldIndex);
+                _draftControllers.insert(newIndex, ctrl);
               });
             },
             itemBuilder: (context, index) {
               final draft = _checklistDrafts[index];
               return _ChecklistDraftTile(
                 key: ValueKey(draft.key),
-                draft: draft,
+                controller: _draftControllers[index],
                 onDelete: () {
                   setState(() {
                     _checklistDrafts.removeAt(index);
+                    _draftControllers.removeAt(index).dispose();
                   });
                 },
                 onChanged: (value) {
-                  draft.content = value;
+                  _checklistDrafts[index].content = value;
                 },
               );
             },
@@ -352,6 +366,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
             Expanded(
               child: TextField(
                 controller: _checklistInputController,
+                focusNode: _checklistFocusNode,
                 decoration: InputDecoration(
                   hintText: l10n.memo_checklistAddHint,
                   border: const OutlineInputBorder(),
@@ -382,8 +397,10 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
     if (text.isEmpty) return;
     setState(() {
       _checklistDrafts.add(_ChecklistDraft(content: text));
+      _draftControllers.add(TextEditingController(text: text));
     });
     _checklistInputController.clear();
+    _checklistFocusNode.requestFocus();
   }
 
   /// 등록/수정 처리
@@ -430,32 +447,33 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           );
         }
       } else {
+        final checklistDtos = _memoType == MemoType.checklist
+            ? _checklistDrafts
+                .asMap()
+                .entries
+                .map((e) => CreateChecklistItemDto(
+                      content: e.value.content,
+                      order: e.key,
+                    ))
+                .toList()
+            : null;
+
         final dto = CreateMemoDto(
           title: _titleController.text.trim(),
           content: _memoType == MemoType.note
               ? _contentController.text.trim()
-              : '',
+              : null,
           type: _memoType == MemoType.checklist ? 'CHECKLIST' : 'NOTE',
           visibility: _visibility == MemoVisibility.group ? 'GROUP' : 'PRIVATE',
           groupId: _visibility == MemoVisibility.group ? _selectedGroupId : null,
           tags: tagDtos.isEmpty ? null : tagDtos,
+          checklistItems: checklistDtos,
         );
         final result = await notifier.createMemo(dto);
 
         if (!mounted) return;
 
         if (result != null) {
-          // 체크리스트 항목 생성
-          if (_memoType == MemoType.checklist &&
-              _checklistDrafts.isNotEmpty) {
-            final checklistNotifier =
-                ref.read(checklistProvider(result.id).notifier);
-            for (var i = 0; i < _checklistDrafts.length; i++) {
-              await checklistNotifier.addItem(_checklistDrafts[i].content);
-            }
-          }
-
-          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.memo_createSuccess)),
           );
@@ -493,36 +511,17 @@ class _ChecklistDraft {
 }
 
 /// 체크리스트 드래프트 타일
-class _ChecklistDraftTile extends StatefulWidget {
-  final _ChecklistDraft draft;
+class _ChecklistDraftTile extends StatelessWidget {
+  final TextEditingController controller;
   final VoidCallback onDelete;
   final ValueChanged<String> onChanged;
 
   const _ChecklistDraftTile({
     super.key,
-    required this.draft,
+    required this.controller,
     required this.onDelete,
     required this.onChanged,
   });
-
-  @override
-  State<_ChecklistDraftTile> createState() => _ChecklistDraftTileState();
-}
-
-class _ChecklistDraftTileState extends State<_ChecklistDraftTile> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.draft.content);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -530,13 +529,13 @@ class _ChecklistDraftTileState extends State<_ChecklistDraftTile> {
       contentPadding: const EdgeInsets.only(left: AppSizes.spaceS),
       leading: const Icon(Icons.drag_handle, color: AppColors.textSecondary),
       title: TextField(
-        controller: _controller,
+        controller: controller,
         decoration: const InputDecoration(border: InputBorder.none),
-        onChanged: widget.onChanged,
+        onChanged: onChanged,
       ),
       trailing: IconButton(
         icon: const Icon(Icons.close, size: AppSizes.iconSmall),
-        onPressed: widget.onDelete,
+        onPressed: onDelete,
       ),
     );
   }

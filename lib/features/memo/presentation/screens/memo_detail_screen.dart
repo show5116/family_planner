@@ -243,15 +243,26 @@ class _ChecklistView extends ConsumerWidget {
                   ),
             ),
             const Spacer(),
-            if (items.any((i) => i.isChecked))
-              TextButton.icon(
-                onPressed: () => _confirmReset(context, notifier, l10n),
-                icon: const Icon(Icons.refresh, size: AppSizes.iconSmall),
-                label: Text(l10n.memo_checklistReset),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.textSecondary,
+            if (items.isNotEmpty) ...[
+              if (items.any((i) => !i.isChecked))
+                TextButton.icon(
+                  onPressed: () => notifier.toggleAll(checkAll: true),
+                  icon: const Icon(Icons.check_box, size: AppSizes.iconSmall),
+                  label: Text(l10n.memo_checklistSelectAll),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.textSecondary,
+                  ),
                 ),
-              ),
+              if (items.any((i) => i.isChecked))
+                TextButton.icon(
+                  onPressed: () => notifier.toggleAll(checkAll: false),
+                  icon: const Icon(Icons.refresh, size: AppSizes.iconSmall),
+                  label: Text(l10n.memo_checklistReset),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.textSecondary,
+                  ),
+                ),
+            ],
           ],
         ),
         const SizedBox(height: AppSizes.spaceS),
@@ -283,32 +294,6 @@ class _ChecklistView extends ConsumerWidget {
     );
   }
 
-  Future<void> _confirmReset(
-    BuildContext context,
-    ChecklistNotifier notifier,
-    AppLocalizations l10n,
-  ) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.memo_checklistReset),
-        content: Text(l10n.memo_checklistResetConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.common_cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.common_confirm),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      await notifier.resetAll();
-    }
-  }
 }
 
 /// 체크리스트 단일 항목 타일

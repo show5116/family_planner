@@ -1,30 +1,34 @@
 /// 메모 생성 DTO
 class CreateMemoDto {
   final String title;
-  final String content;
+  final String? content;
   final String? type;       // 'NOTE' | 'CHECKLIST'
   final String? visibility; // 'PRIVATE' | 'GROUP'
   final String? groupId;    // visibility=GROUP 일 때 필수
   final List<CreateMemoTagDto>? tags;
+  final List<CreateChecklistItemDto>? checklistItems;
 
   CreateMemoDto({
     required this.title,
-    required this.content,
+    this.content,
     this.type,
     this.visibility,
     this.groupId,
     this.tags,
+    this.checklistItems,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'content': content,
+      if (content != null && content!.isNotEmpty) 'content': content,
       if (type != null) 'type': type,
       if (visibility != null) 'visibility': visibility,
       if (groupId != null && groupId!.isNotEmpty) 'groupId': groupId,
       if (tags != null && tags!.isNotEmpty)
         'tags': tags!.map((e) => e.toJson()).toList(),
+      if (checklistItems != null && checklistItems!.isNotEmpty)
+        'checklistItems': checklistItems!.map((e) => e.toJson()).toList(),
     };
   }
 }

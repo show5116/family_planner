@@ -2088,10 +2088,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memo_checklistEmpty => 'No checklist items';
 
   @override
-  String get memo_checklistReset => 'Reset All';
+  String get memo_checklistReset => 'Uncheck All';
 
   @override
-  String get memo_checklistResetConfirm => 'Uncheck all items?';
+  String get memo_checklistSelectAll => 'Select All';
 
   @override
   String get memo_checklistDeleteItem => 'Delete Item';

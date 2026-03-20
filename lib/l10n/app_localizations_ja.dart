@@ -2046,10 +2046,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get memo_checklistEmpty => 'チェックリストの項目がありません';
 
   @override
-  String get memo_checklistReset => '全てリセット';
+  String get memo_checklistReset => '全て解除';
 
   @override
-  String get memo_checklistResetConfirm => '全ての項目のチェックを外しますか？';
+  String get memo_checklistSelectAll => '全て選択';
 
   @override
   String get memo_checklistDeleteItem => '項目を削除';

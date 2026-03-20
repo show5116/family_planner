@@ -4087,14 +4087,14 @@ abstract class AppLocalizations {
   /// No description provided for @memo_checklistReset.
   ///
   /// In ko, this message translates to:
-  /// **'전체 초기화'**
+  /// **'전체 해제'**
   String get memo_checklistReset;
 
-  /// No description provided for @memo_checklistResetConfirm.
+  /// No description provided for @memo_checklistSelectAll.
   ///
   /// In ko, this message translates to:
-  /// **'모든 항목의 체크를 해제하시겠습니까?'**
-  String get memo_checklistResetConfirm;
+  /// **'전체 선택'**
+  String get memo_checklistSelectAll;
 
   /// No description provided for @memo_checklistDeleteItem.
   ///

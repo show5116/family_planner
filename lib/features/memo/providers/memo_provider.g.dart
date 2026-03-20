@@ -6,7 +6,7 @@ part of 'memo_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$memoDetailHash() => r'0c1b3fc668fea7797fe241efc6a91b3790900e64';
+String _$memoTagsHash() => r'7154ba2f0be2b83f6e97b712b5e56d801d005a47';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -28,6 +28,154 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+/// 태그 목록 Provider
+/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+///
+/// Copied from [memoTags].
+@ProviderFor(memoTags)
+const memoTagsProvider = MemoTagsFamily();
+
+/// 태그 목록 Provider
+/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+///
+/// Copied from [memoTags].
+class MemoTagsFamily extends Family<AsyncValue<List<String>>> {
+  /// 태그 목록 Provider
+  /// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+  ///
+  /// Copied from [memoTags].
+  const MemoTagsFamily();
+
+  /// 태그 목록 Provider
+  /// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+  ///
+  /// Copied from [memoTags].
+  MemoTagsProvider call({String? groupId, bool? personal}) {
+    return MemoTagsProvider(groupId: groupId, personal: personal);
+  }
+
+  @override
+  MemoTagsProvider getProviderOverride(covariant MemoTagsProvider provider) {
+    return call(groupId: provider.groupId, personal: provider.personal);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'memoTagsProvider';
+}
+
+/// 태그 목록 Provider
+/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+///
+/// Copied from [memoTags].
+class MemoTagsProvider extends AutoDisposeFutureProvider<List<String>> {
+  /// 태그 목록 Provider
+  /// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+  ///
+  /// Copied from [memoTags].
+  MemoTagsProvider({String? groupId, bool? personal})
+    : this._internal(
+        (ref) =>
+            memoTags(ref as MemoTagsRef, groupId: groupId, personal: personal),
+        from: memoTagsProvider,
+        name: r'memoTagsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$memoTagsHash,
+        dependencies: MemoTagsFamily._dependencies,
+        allTransitiveDependencies: MemoTagsFamily._allTransitiveDependencies,
+        groupId: groupId,
+        personal: personal,
+      );
+
+  MemoTagsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+    required this.personal,
+  }) : super.internal();
+
+  final String? groupId;
+  final bool? personal;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<String>> Function(MemoTagsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: MemoTagsProvider._internal(
+        (ref) => create(ref as MemoTagsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+        personal: personal,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<String>> createElement() {
+    return _MemoTagsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MemoTagsProvider &&
+        other.groupId == groupId &&
+        other.personal == personal;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+    hash = _SystemHash.combine(hash, personal.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin MemoTagsRef on AutoDisposeFutureProviderRef<List<String>> {
+  /// The parameter `groupId` of this provider.
+  String? get groupId;
+
+  /// The parameter `personal` of this provider.
+  bool? get personal;
+}
+
+class _MemoTagsProviderElement
+    extends AutoDisposeFutureProviderElement<List<String>>
+    with MemoTagsRef {
+  _MemoTagsProviderElement(super.provider);
+
+  @override
+  String? get groupId => (origin as MemoTagsProvider).groupId;
+  @override
+  bool? get personal => (origin as MemoTagsProvider).personal;
+}
+
+String _$memoDetailHash() => r'0c1b3fc668fea7797fe241efc6a91b3790900e64';
 
 /// 특정 메모 상세 Provider
 ///
@@ -177,7 +325,7 @@ final pinnedMemosProvider = AutoDisposeFutureProvider<List<MemoModel>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PinnedMemosRef = AutoDisposeFutureProviderRef<List<MemoModel>>;
-String _$memoListHash() => r'e428500870c90dd3345b976ecd8f0d7b0c49ffcd';
+String _$memoListHash() => r'fc76c15855d1379acc5af0a8d36bb4b285a5a194';
 
 /// 메모 목록 Provider (무한 스크롤 + 검색 지원)
 ///

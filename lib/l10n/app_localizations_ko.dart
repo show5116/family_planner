@@ -2049,10 +2049,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get memo_checklistEmpty => '체크리스트 항목이 없습니다';
 
   @override
-  String get memo_checklistReset => '전체 초기화';
+  String get memo_checklistReset => '전체 해제';
 
   @override
-  String get memo_checklistResetConfirm => '모든 항목의 체크를 해제하시겠습니까?';
+  String get memo_checklistSelectAll => '전체 선택';
 
   @override
   String get memo_checklistDeleteItem => '항목 삭제';

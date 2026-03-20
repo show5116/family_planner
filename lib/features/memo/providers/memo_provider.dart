@@ -17,6 +17,7 @@ class MemoList extends _$MemoList {
   String? _searchQuery;
   String? _visibilityFilter;
   String? _groupIdFilter;
+  String? _tagFilter;
 
   @override
   Future<List<MemoModel>> build() async {
@@ -32,6 +33,7 @@ class MemoList extends _$MemoList {
       search: _searchQuery,
       visibility: _visibilityFilter,
       groupId: _groupIdFilter,
+      tag: _tagFilter,
     );
 
     _hasMore = response.items.length >= 20;
@@ -87,6 +89,15 @@ class MemoList extends _$MemoList {
     await refresh();
   }
 
+  /// 태그 필터 설정
+  Future<void> setTag(String? tag) async {
+    _tagFilter = tag;
+    await refresh();
+  }
+
+  /// 현재 태그 필터
+  String? get tagFilter => _tagFilter;
+
   /// 메모 작성 후 목록 갱신
   Future<void> afterCreate() async {
     await refresh();
@@ -126,6 +137,18 @@ class MemoList extends _$MemoList {
   String? get groupIdFilter => _groupIdFilter;
 }
 
+/// 태그 목록 Provider
+/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
+@riverpod
+Future<List<String>> memoTags(
+  Ref ref, {
+  String? groupId,
+  bool? personal,
+}) async {
+  final repository = ref.watch(memoRepositoryProvider);
+  return repository.getTags(groupId: groupId, personal: personal);
+}
+
 /// 특정 메모 상세 Provider
 @riverpod
 Future<MemoModel> memoDetail(
@@ -152,6 +175,9 @@ class MemoManagementNotifier extends StateNotifier<AsyncValue<void>> {
 
       // 목록 갱신
       await _ref.read(memoListProvider.notifier).afterCreate();
+
+      // 태그 목록 갱신
+      _ref.invalidate(memoTagsProvider);
 
       state = const AsyncValue.data(null);
       return memo;
@@ -217,6 +243,11 @@ class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
   final Ref _ref;
   final String memoId;
 
+  /// 개별 항목 요청 진행 중 ID 집합 (토글/삭제/수정 중복 방지)
+  final Set<String> _pendingItemIds = {};
+  /// 전체 작업(toggleAll, addItem) 진행 중 여부
+  bool _isBusy = false;
+
   ChecklistNotifier(this._repository, this._ref, this.memoId)
       : super(const AsyncValue.loading());
 
@@ -230,6 +261,8 @@ class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
 
   /// 항목 추가
   Future<void> addItem(String content) async {
+    if (_isBusy) return;
+    _isBusy = true;
     try {
       final dto = CreateChecklistItemDto(
         content: content,
@@ -240,11 +273,15 @@ class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
       _invalidateDetail();
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    } finally {
+      _isBusy = false;
     }
   }
 
   /// 항목 내용 수정
   Future<void> updateItem(String itemId, String content) async {
+    if (_pendingItemIds.contains(itemId)) return;
+    _pendingItemIds.add(itemId);
     try {
       final dto = UpdateChecklistItemDto(content: content);
       final updated =
@@ -255,11 +292,15 @@ class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
       _invalidateDetail();
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    } finally {
+      _pendingItemIds.remove(itemId);
     }
   }
 
   /// 항목 삭제
   Future<void> deleteItem(String itemId) async {
+    if (_pendingItemIds.contains(itemId)) return;
+    _pendingItemIds.add(itemId);
     try {
       await _repository.deleteChecklistItem(memoId, itemId);
       state = AsyncValue.data(
@@ -268,11 +309,15 @@ class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
       _invalidateDetail();
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    } finally {
+      _pendingItemIds.remove(itemId);
     }
   }
 
   /// 항목 체크/해제 토글
   Future<void> toggleItem(String itemId) async {
+    if (_pendingItemIds.contains(itemId) || _isBusy) return;
+    _pendingItemIds.add(itemId);
     // 낙관적 업데이트
     state = AsyncValue.data(
       _items
@@ -285,21 +330,36 @@ class ChecklistNotifier extends StateNotifier<AsyncValue<List<ChecklistItem>>> {
         _items.map((i) => i.id == itemId ? updated : i).toList(),
       );
       _invalidateDetail();
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
+    } catch (_) {
+      // 실패 시 낙관적 업데이트 롤백
+      state = AsyncValue.data(
+        _items
+            .map((i) => i.id == itemId ? i.copyWith(isChecked: !i.isChecked) : i)
+            .toList(),
+      );
+    } finally {
+      _pendingItemIds.remove(itemId);
     }
   }
 
-  /// 전체 체크 해제
-  Future<void> resetAll() async {
+  /// 전체 선택/해제
+  Future<void> toggleAll({required bool checkAll}) async {
+    if (_isBusy || _pendingItemIds.isNotEmpty) return;
+    _isBusy = true;
+    // 낙관적 업데이트
+    state = AsyncValue.data(
+      _items.map((i) => i.copyWith(isChecked: checkAll)).toList(),
+    );
     try {
-      await _repository.resetChecklist(memoId);
-      state = AsyncValue.data(
-        _items.map((i) => i.copyWith(isChecked: false)).toList(),
-      );
+      await _repository.toggleAllChecklist(memoId, checkAll: checkAll);
       _invalidateDetail();
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
+    } catch (_) {
+      // 실패 시 롤백
+      state = AsyncValue.data(
+        _items.map((i) => i.copyWith(isChecked: !checkAll)).toList(),
+      );
+    } finally {
+      _isBusy = false;
     }
   }
 

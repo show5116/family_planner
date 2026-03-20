@@ -13,6 +13,11 @@ import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+const _kTagChipLimit = 5;
+
+// 드롭다운 선택값: null=전체, 'PRIVATE'=나만 보기, 그 외=groupId
+typedef _DropdownValue = String?;
+
 /// 메모 목록 화면
 class MemoListScreen extends ConsumerStatefulWidget {
   const MemoListScreen({super.key});
@@ -21,14 +26,15 @@ class MemoListScreen extends ConsumerStatefulWidget {
   ConsumerState<MemoListScreen> createState() => _MemoListScreenState();
 }
 
-// 필터 타입
-enum _MemoFilter { all, private, group }
-
 class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isSearching = false;
-  _MemoFilter _filter = _MemoFilter.all;
-  String? _selectedGroupId;
+  bool _tagsExpanded = false;
+
+  // 드롭다운: null=전체, 'PRIVATE'=나만 보기, 그 외=groupId
+  _DropdownValue _dropdownValue;
+  // 태그 칩 선택값
+  String? _selectedTag;
 
   @override
   void initState() {
@@ -61,57 +67,115 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     });
   }
 
-  void _applyFilter(_MemoFilter filter, {String? groupId}) {
+  void _onDropdownChanged(_DropdownValue value) {
     setState(() {
-      _filter = filter;
-      _selectedGroupId = groupId;
+      _dropdownValue = value;
+      _selectedTag = null; // 드롭다운 바꾸면 태그 초기화
+      _tagsExpanded = false;
     });
     final notifier = ref.read(memoListProvider.notifier);
-    switch (filter) {
-      case _MemoFilter.all:
-        notifier.setVisibility(null);
-      case _MemoFilter.private:
-        notifier.setVisibility('PRIVATE');
-      case _MemoFilter.group:
-        notifier.setGroupId(groupId);
+    if (value == null) {
+      notifier.setVisibility(null);
+    } else if (value == 'PRIVATE') {
+      notifier.setVisibility('PRIVATE');
+    } else {
+      notifier.setGroupId(value);
     }
+    // 태그 필터도 초기화
+    notifier.setTag(null);
   }
 
-  Widget _buildFilterChips(BuildContext context) {
+  void _selectTag(String? tag) {
+    if (_selectedTag == tag) return;
+    setState(() => _selectedTag = tag);
+    ref.read(memoListProvider.notifier).setTag(tag);
+  }
+
+  Widget _buildDropdown(BuildContext context) {
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    final items = <DropdownMenuItem<_DropdownValue>>[
+      const DropdownMenuItem(value: null, child: Text('전체')),
+      const DropdownMenuItem(value: 'PRIVATE', child: Text('나만 보기')),
+      ...groups.map(
+        (g) => DropdownMenuItem(value: g.id, child: Text(g.name)),
+      ),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        AppSizes.spaceS,
+        AppSizes.spaceM,
+        0,
+      ),
+      child: DropdownButtonFormField<_DropdownValue>(
+        initialValue: _dropdownValue,
+        decoration: const InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
+          border: OutlineInputBorder(),
+        ),
+        items: items,
+        onChanged: _onDropdownChanged,
+      ),
+    );
+  }
+
+  FilterChip _chip({
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return FilterChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      visualDensity: VisualDensity.compact,
+      labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+    );
+  }
+
+  Widget _buildTagChips(List<String> tags) {
+    if (tags.isEmpty) return const SizedBox.shrink();
+
+    final showAll = _tagsExpanded || tags.length <= _kTagChipLimit;
+    final visibleTags = showAll ? tags : tags.take(_kTagChipLimit).toList();
+
+    return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSizes.spaceM,
-        vertical: AppSizes.spaceS,
+        vertical: AppSizes.spaceXS,
       ),
-      child: Row(
+      child: Wrap(
+        spacing: AppSizes.spaceS,
+        runSpacing: AppSizes.spaceXS,
         children: [
-          FilterChip(
-            label: const Text('전체'),
-            selected: _filter == _MemoFilter.all,
-            onSelected: (_) => _applyFilter(_MemoFilter.all),
+          _chip(
+            label: '전체',
+            selected: _selectedTag == null,
+            onTap: () => _selectTag(null),
           ),
-          const SizedBox(width: AppSizes.spaceS),
-          FilterChip(
-            label: const Text('나만 보기'),
-            selected: _filter == _MemoFilter.private,
-            onSelected: (_) => _applyFilter(_MemoFilter.private),
+          ...visibleTags.map(
+            (tag) => _chip(
+              label: tag,
+              selected: _selectedTag == tag,
+              onTap: () => _selectTag(tag),
+            ),
           ),
-          ...groups.map((group) {
-            final isSelected =
-                _filter == _MemoFilter.group && _selectedGroupId == group.id;
-            return Padding(
-              padding: const EdgeInsets.only(left: AppSizes.spaceS),
-              child: FilterChip(
-                label: Text(group.name),
-                selected: isSelected,
-                onSelected: (_) =>
-                    _applyFilter(_MemoFilter.group, groupId: group.id),
-              ),
-            );
-          }),
+          if (tags.length > _kTagChipLimit)
+            _chip(
+              label: _tagsExpanded
+                  ? '접기'
+                  : '+${tags.length - _kTagChipLimit}개 더',
+              selected: false,
+              onTap: () => setState(() => _tagsExpanded = !_tagsExpanded),
+            ),
         ],
       ),
     );
@@ -121,6 +185,16 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final memosAsync = ref.watch(memoListProvider);
+
+    // 드롭다운 선택에 따라 태그 API 파라미터 결정
+    final tagsAsync = ref.watch(
+      memoTagsProvider(
+        groupId: (_dropdownValue != null && _dropdownValue != 'PRIVATE')
+            ? _dropdownValue
+            : null,
+        personal: _dropdownValue == 'PRIVATE' ? true : null,
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -153,7 +227,8 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
               },
               onClose: _toggleSearch,
             ),
-          _buildFilterChips(context),
+          _buildDropdown(context),
+          _buildTagChips(tagsAsync.valueOrNull ?? []),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () => ref.read(memoListProvider.notifier).refresh(),

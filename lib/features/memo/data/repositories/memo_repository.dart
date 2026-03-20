@@ -63,6 +63,21 @@ class MemoRepository {
     }
   }
 
+  /// 태그 이름 목록 조회 (중복 제거)
+  Future<List<String>> getTags({String? groupId, bool? personal}) async {
+    try {
+      final response = await _dio.get('/memos/tags', queryParameters: {
+        if (groupId != null) 'groupId': groupId,
+        if (personal != null) 'personal': personal,
+      });
+      final data = response.data as Map<String, dynamic>;
+      return List<String>.from(data['tags'] as List);
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 태그 목록 조회 실패: ${e.message}');
+      throw Exception('태그 목록 조회 실패: ${e.message}');
+    }
+  }
+
   /// 메모 상세 조회
   Future<MemoModel> getMemoById(String id) async {
     try {
@@ -235,15 +250,18 @@ class MemoRepository {
     }
   }
 
-  /// 체크리스트 전체 체크 해제
-  Future<void> resetChecklist(String memoId) async {
+  /// 체크리스트 전체 선택/해제
+  Future<void> toggleAllChecklist(String memoId, {required bool checkAll}) async {
     try {
-      debugPrint('🔵 [MemoRepository] 체크리스트 전체 초기화: $memoId');
-      await _dio.post('/memos/$memoId/checklist/reset');
-      debugPrint('✅ [MemoRepository] 전체 초기화 성공');
+      debugPrint('🔵 [MemoRepository] 체크리스트 전체 ${checkAll ? '선택' : '해제'}: $memoId');
+      await _dio.post(
+        '/memos/$memoId/checklist/toggle-all',
+        queryParameters: {'checkAll': checkAll},
+      );
+      debugPrint('✅ [MemoRepository] 전체 ${checkAll ? '선택' : '해제'} 성공');
     } on DioException catch (e) {
-      debugPrint('❌ [MemoRepository] 전체 초기화 실패: ${e.message}');
-      throw Exception('체크리스트 초기화 실패: ${e.message}');
+      debugPrint('❌ [MemoRepository] 전체 토글 실패: ${e.message}');
+      throw Exception('체크리스트 전체 토글 실패: ${e.message}');
     }
   }
 }
