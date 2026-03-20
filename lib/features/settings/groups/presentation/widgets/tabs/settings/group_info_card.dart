@@ -5,6 +5,7 @@ import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 
 /// 그룹 정보 카드
@@ -92,7 +93,7 @@ class GroupInfoCard extends ConsumerWidget {
     );
 
     // 초기 색상 설정
-    Color? selectedColor = GroupUtils.parseColor(group.defaultColor);
+    Color? selectedColor = ColorUtils.parseColor(group.defaultColor);
 
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
@@ -167,7 +168,7 @@ class GroupInfoCard extends ConsumerWidget {
     // context.mounted 체크를 하지 않고 바로 API 호출
     try {
       final String? colorHex = result['color'] != null
-          ? GroupUtils.colorToHex(result['color'] as Color)
+          ? ColorUtils.colorToHex(result['color'] as Color)
           : null;
 
       await ref

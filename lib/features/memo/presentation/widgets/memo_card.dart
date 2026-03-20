@@ -8,9 +8,9 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
-import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 카드 위젯
@@ -51,7 +51,7 @@ class MemoCard extends ConsumerWidget {
         ? groups.where((g) => g.id == memo.groupId).firstOrNull
         : null;
     final userInfo = ref.watch(authProvider).user;
-    final myPersonalColor = GroupUtils.personalColor(userInfo?['personalColor'] as String?);
+    final myPersonalColor = ColorUtils.personalColor(userInfo?['personalColor'] as String?);
 
     return Card(
       elevation: AppSizes.elevation1,
@@ -132,7 +132,7 @@ class MemoCard extends ConsumerWidget {
 
   Widget _buildHeader(BuildContext context, DateFormat dateFormat, Group? group, Color personalColor) {
     final badgeColor = group != null
-        ? GroupUtils.groupColor(group)
+        ? ColorUtils.groupColor(group)
         : personalColor;
 
     return Row(

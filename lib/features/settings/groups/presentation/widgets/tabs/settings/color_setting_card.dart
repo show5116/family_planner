@@ -5,7 +5,7 @@ import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
-import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 
 /// 색상 설정 카드
 class ColorSettingCard extends StatelessWidget {
@@ -40,7 +40,7 @@ class ColorSettingCard extends StatelessWidget {
     );
 
     final Color displayColor =
-        GroupUtils.parseColor(displayColorHex) ?? Colors.blue;
+        ColorUtils.parseColor(displayColorHex) ?? Colors.blue;
     final bool hasCustomColor = membersAsync.when(
       data: (members) =>
           members.isNotEmpty && members.first.customColor != null,

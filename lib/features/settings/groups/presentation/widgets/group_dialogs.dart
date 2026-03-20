@@ -7,6 +7,7 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 
 /// 그룹 관련 다이얼로그 유틸리티
@@ -312,7 +313,7 @@ class GroupDialogs {
     );
 
     // 초기 색상 설정
-    Color? selectedColor = GroupUtils.parseColor(group.defaultColor);
+    Color? selectedColor = ColorUtils.parseColor(group.defaultColor);
 
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
@@ -387,7 +388,7 @@ class GroupDialogs {
     // context.mounted 체크를 하지 않고 바로 API 호출
     try {
       final String? colorHex = result['color'] != null
-          ? GroupUtils.colorToHex(result['color'] as Color)
+          ? ColorUtils.colorToHex(result['color'] as Color)
           : null;
 
       await ref

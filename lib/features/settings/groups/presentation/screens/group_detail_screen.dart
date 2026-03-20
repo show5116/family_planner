@@ -13,7 +13,7 @@ import 'package:family_planner/features/settings/groups/presentation/widgets/tab
 import 'package:family_planner/features/settings/groups/presentation/widgets/group_dialogs.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/role_management_dialogs.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/transfer_ownership_dialog.dart';
-import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
 
 /// 그룹 상세 화면
@@ -378,7 +378,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final l10n = AppLocalizations.of(context)!;
 
     try {
-      final colorHex = GroupUtils.colorToHex(color);
+      final colorHex = ColorUtils.colorToHex(color);
       debugPrint('Updating color to: $colorHex');
 
       await ref.read(groupNotifierProvider.notifier).updateMyColor(
