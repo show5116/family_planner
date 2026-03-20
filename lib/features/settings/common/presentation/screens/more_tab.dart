@@ -72,6 +72,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                   email: email,
                   profileImageUrl: profileImageUrl,
                   isAdmin: isAdmin,
+                  onTap: () => context.push(AppRoutes.profile),
                 ),
               ),
               // 하단 네비게이션에 표시되지 않는 메뉴들 (다국어 적용)

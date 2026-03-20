@@ -11,26 +11,34 @@ class UserProfileCard extends StatelessWidget {
     this.email,
     this.profileImageUrl,
     this.isAdmin = false,
+    this.onTap,
   });
 
   final String? name;
   final String? email;
   final String? profileImageUrl;
   final bool isAdmin;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            _buildProfileImage(context),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildProfileInfo(context),
-            ),
-          ],
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              _buildProfileImage(context),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildProfileInfo(context),
+              ),
+              if (onTap != null)
+                const Icon(Icons.chevron_right, color: Colors.grey),
+            ],
+          ),
         ),
       ),
     );

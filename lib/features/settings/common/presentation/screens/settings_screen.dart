@@ -262,7 +262,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
+    return InkWell(
+      onTap: () => context.push(AppRoutes.profile),
+      child: Container(
       padding: const EdgeInsets.all(AppSizes.spaceL),
       child: Row(
         children: [
@@ -358,6 +360,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             },
           ),
         ],
+      ),
       ),
     );
   }
