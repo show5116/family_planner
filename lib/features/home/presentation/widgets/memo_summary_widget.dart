@@ -53,13 +53,21 @@ class _MemoItem extends StatelessWidget {
 
   String _stripMarkdown(String text) {
     return text
+        .replaceAll(RegExp(r'<[^>]*>'), '')
         .replaceAll(RegExp(r'^#+\s+', multiLine: true), '')
         .replaceAll(RegExp(r'\*\*([^*]+)\*\*'), r'$1')
+        .replaceAll(RegExp(r'__([^_]+)__'), r'$1')
         .replaceAll(RegExp(r'\*([^*]+)\*'), r'$1')
+        .replaceAll(RegExp(r'_([^_]+)_'), r'$1')
+        .replaceAll(RegExp(r'\[([^\]]+)\]\([^)]+\)'), r'$1')
         .replaceAll(RegExp(r'```[^`]*```'), '')
         .replaceAll(RegExp(r'`([^`]+)`'), r'$1')
         .replaceAll(RegExp(r'^[\-\*\+]\s+', multiLine: true), '')
+        .replaceAll(RegExp(r'^\d+\.\s+', multiLine: true), '')
+        .replaceAll(RegExp(r'^>\s+', multiLine: true), '')
+        .replaceAll(RegExp(r'^[\-\*]{3,}$', multiLine: true), '')
         .replaceAll(RegExp(r'\n+'), ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
   }
 

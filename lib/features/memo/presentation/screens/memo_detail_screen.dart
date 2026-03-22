@@ -46,8 +46,8 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
                         ? Icons.push_pin
                         : Icons.push_pin_outlined,
                     color: memoAsync.value!.isPinned
-                        ? AppColors.primary
-                        : null,
+                        ? Colors.amber
+                        : Colors.white,
                   ),
                   tooltip: memoAsync.value!.isPinned ? '핀 해제' : '대시보드에 고정',
                   onPressed: () async {

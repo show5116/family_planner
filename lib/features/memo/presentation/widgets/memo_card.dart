@@ -8,6 +8,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -65,7 +66,7 @@ class MemoCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 헤더: 날짜 + 그룹
-              _buildHeader(context, dateFormat, matchedGroup, myPersonalColor),
+              _buildHeader(context, ref, dateFormat, matchedGroup, myPersonalColor),
               const SizedBox(height: AppSizes.spaceS),
 
               // 제목
@@ -130,7 +131,7 @@ class MemoCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, DateFormat dateFormat, Group? group, Color personalColor) {
+  Widget _buildHeader(BuildContext context, WidgetRef ref, DateFormat dateFormat, Group? group, Color personalColor) {
     final badgeColor = group != null
         ? ColorUtils.groupColor(group)
         : personalColor;
@@ -169,6 +170,15 @@ class MemoCard extends ConsumerWidget {
                   color: badgeColor,
                   fontWeight: FontWeight.w500,
                 ),
+          ),
+        ),
+        const SizedBox(width: AppSizes.spaceXS),
+        GestureDetector(
+          onTap: () => ref.read(memoPinProvider.notifier).togglePin(memo.id),
+          child: Icon(
+            memo.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+            size: AppSizes.iconSmall,
+            color: memo.isPinned ? AppColors.primary : AppColors.textSecondary,
           ),
         ),
       ],
