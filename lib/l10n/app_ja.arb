@@ -1086,5 +1086,7 @@
   "childcare_select_group": "グループを選択してください",
   "@childcare_select_group": { "description": "グループ選択案内" },
   "childcare_no_group": "グループに参加すると育児ポイントが使えます。",
-  "@childcare_no_group": { "description": "グループなしメッセージ" }
+  "@childcare_no_group": { "description": "グループなしメッセージ" },
+  "childcare_no_child": "子どもが登録されていません。\n右上のボタンから子どもを登録してください。",
+  "@childcare_no_child": { "description": "子どもプロフィールなしメッセージ" }
 }

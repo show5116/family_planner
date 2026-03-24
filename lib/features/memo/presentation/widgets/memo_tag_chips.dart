@@ -85,6 +85,16 @@ class _MemoTagInputState extends State<MemoTagInput> {
   }
 
   @override
+  void didUpdateWidget(MemoTagInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTags != widget.initialTags) {
+      setState(() {
+        _tags = List.from(widget.initialTags);
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();

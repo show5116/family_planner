@@ -36,7 +36,9 @@ class AppRoutes {
   static const String todoAdd = '/todo/add';
   static const String childPoints = '/child-points';
   static const String childPointsDetail = '/child-points/detail';
-  static const String childPointsAccountForm = '/child-points/accounts/create';
+  static const String childPointsChildProfileForm = '/child-points/children/create';
+  static const String childPointsAllowancePlan = '/child-points/allowance-plan';
+  static const String childPointsLinkUser = '/child-points/link-user';
   static const String childPointsTransactionAdd = '/child-points/transactions/add';
   static const String memo = '/memo';
   static const String memoAdd = '/memo/add';

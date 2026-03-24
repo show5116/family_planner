@@ -9,8 +9,8 @@ part 'childcare_provider.g.dart';
 /// 현재 선택된 그룹 ID (육아포인트용)
 final childcareSelectedGroupIdProvider = StateProvider<String?>((ref) => null);
 
-/// 현재 선택된 계정 ID
-final childcareSelectedAccountIdProvider = StateProvider<String?>((ref) => null);
+/// 현재 선택된 자녀 프로필 ID
+final childcareSelectedChildIdProvider = StateProvider<String?>((ref) => null);
 
 /// 조회 월 Provider (YYYY-MM)
 final childcareSelectedMonthProvider = StateProvider<String>((ref) {
@@ -18,9 +18,47 @@ final childcareSelectedMonthProvider = StateProvider<String>((ref) {
   return '${now.year}-${now.month.toString().padLeft(2, '0')}';
 });
 
-// ── 계정 목록 ─────────────────────────────────────────────────────────────────
+// ── 자녀 프로필 목록 ──────────────────────────────────────────────────────────
 
-/// 육아 계정 목록 Provider
+/// 자녀 프로필 목록 Provider
+@riverpod
+class ChildcareChildren extends _$ChildcareChildren {
+  @override
+  Future<List<ChildcareChild>> build() async {
+    final groupId = ref.watch(childcareSelectedGroupIdProvider);
+    if (groupId == null) return [];
+
+    final repository = ref.watch(childcareRepositoryProvider);
+    return repository.getChildren(groupId: groupId);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final groupId = ref.read(childcareSelectedGroupIdProvider);
+      if (groupId == null) return <ChildcareChild>[];
+      return ref
+          .read(childcareRepositoryProvider)
+          .getChildren(groupId: groupId);
+    });
+  }
+
+  void addChild(ChildcareChild child) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data([...state.value!, child]);
+  }
+
+  void updateChild(ChildcareChild child) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.map((c) => c.id == child.id ? child : c).toList(),
+    );
+  }
+}
+
+// ── 포인트 계정 (자녀 프로필 기준 조회) ──────────────────────────────────────
+
+/// 포인트 계정 목록 Provider (그룹 기준)
 @riverpod
 class ChildcareAccounts extends _$ChildcareAccounts {
   @override
@@ -37,13 +75,10 @@ class ChildcareAccounts extends _$ChildcareAccounts {
     state = await AsyncValue.guard(() async {
       final groupId = ref.read(childcareSelectedGroupIdProvider);
       if (groupId == null) return <ChildcareAccount>[];
-      return ref.read(childcareRepositoryProvider).getAccounts(groupId: groupId);
+      return ref
+          .read(childcareRepositoryProvider)
+          .getAccounts(groupId: groupId);
     });
-  }
-
-  void addAccount(ChildcareAccount account) {
-    if (!state.hasValue) return;
-    state = AsyncValue.data([...state.value!, account]);
   }
 
   void updateAccount(ChildcareAccount account) {
@@ -54,17 +89,72 @@ class ChildcareAccounts extends _$ChildcareAccounts {
   }
 }
 
-// ── 계정 상세 ─────────────────────────────────────────────────────────────────
+/// 현재 선택된 자녀의 포인트 계정 (childId 기반 매핑)
+final selectedChildAccountProvider = Provider<ChildcareAccount?>((ref) {
+  final childId = ref.watch(childcareSelectedChildIdProvider);
+  final accountsAsync = ref.watch(childcareAccountsProvider);
+  if (childId == null) return null;
+  return accountsAsync.maybeWhen(
+    data: (accounts) {
+      try {
+        return accounts.firstWhere((a) => a.childId == childId);
+      } catch (_) {
+        return null;
+      }
+    },
+    orElse: () => null,
+  );
+});
 
-/// 육아 계정 상세 Provider
-@riverpod
-Future<ChildcareAccount?> childcareAccountDetail(Ref ref) async {
-  final accountId = ref.watch(childcareSelectedAccountIdProvider);
-  if (accountId == null) return null;
+// ── 용돈 플랜 ─────────────────────────────────────────────────────────────────
 
-  final repository = ref.watch(childcareRepositoryProvider);
-  return repository.getAccount(accountId);
+class _AllowancePlanNotifier
+    extends StateNotifier<AsyncValue<AllowancePlan?>> {
+  final ChildcareRepository _repository;
+  final Ref _ref;
+
+  _AllowancePlanNotifier(this._repository, this._ref)
+      : super(const AsyncValue.loading()) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final childId = _ref.read(childcareSelectedChildIdProvider);
+    if (childId == null) {
+      state = const AsyncValue.data(null);
+      return;
+    }
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => _repository.getAllowancePlan(childId));
+  }
+
+  Future<void> refresh() => _load();
+
+  void setPlan(AllowancePlan plan) {
+    state = AsyncValue.data(plan);
+  }
 }
+
+/// 선택된 자녀의 용돈 플랜 Provider
+final childcareAllowancePlanProvider =
+    StateNotifierProvider<_AllowancePlanNotifier, AsyncValue<AllowancePlan?>>(
+        (ref) {
+  final repository = ref.watch(childcareRepositoryProvider);
+  final notifier = _AllowancePlanNotifier(repository, ref);
+  // 선택된 자녀가 바뀌면 자동 갱신
+  ref.listen(childcareSelectedChildIdProvider, (_, _) => notifier.refresh());
+  return notifier;
+});
+
+/// 용돈 플랜 히스토리 Provider
+final childcareAllowancePlanHistoryProvider =
+    FutureProvider<List<AllowancePlanHistory>>((ref) async {
+  final childId = ref.watch(childcareSelectedChildIdProvider);
+  if (childId == null) return [];
+  return ref
+      .watch(childcareRepositoryProvider)
+      .getAllowancePlanHistory(childId);
+});
 
 // ── 거래 내역 ─────────────────────────────────────────────────────────────────
 
@@ -73,23 +163,23 @@ Future<ChildcareAccount?> childcareAccountDetail(Ref ref) async {
 class ChildcareTransactions extends _$ChildcareTransactions {
   @override
   Future<List<ChildcareTransaction>> build() async {
-    final accountId = ref.watch(childcareSelectedAccountIdProvider);
+    final account = ref.watch(selectedChildAccountProvider);
     final month = ref.watch(childcareSelectedMonthProvider);
-    if (accountId == null) return [];
+    if (account == null) return [];
 
     final repository = ref.watch(childcareRepositoryProvider);
-    return repository.getTransactions(accountId, month: month);
+    return repository.getTransactions(account.id, month: month);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final accountId = ref.read(childcareSelectedAccountIdProvider);
+      final account = ref.read(selectedChildAccountProvider);
       final month = ref.read(childcareSelectedMonthProvider);
-      if (accountId == null) return <ChildcareTransaction>[];
+      if (account == null) return <ChildcareTransaction>[];
       return ref
           .read(childcareRepositoryProvider)
-          .getTransactions(accountId, month: month);
+          .getTransactions(account.id, month: month);
     });
   }
 
@@ -99,26 +189,26 @@ class ChildcareTransactions extends _$ChildcareTransactions {
   }
 }
 
-// ── 보상 ────────────────────────────────────────────────────────────────────
+// ── 보상 ─────────────────────────────────────────────────────────────────────
 
 /// 보상 목록 Provider
 @riverpod
 class ChildcareRewards extends _$ChildcareRewards {
   @override
   Future<List<ChildcareReward>> build() async {
-    final accountId = ref.watch(childcareSelectedAccountIdProvider);
-    if (accountId == null) return [];
+    final account = ref.watch(selectedChildAccountProvider);
+    if (account == null) return [];
 
     final repository = ref.watch(childcareRepositoryProvider);
-    return repository.getRewards(accountId);
+    return repository.getRewards(account.id);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final accountId = ref.read(childcareSelectedAccountIdProvider);
-      if (accountId == null) return <ChildcareReward>[];
-      return ref.read(childcareRepositoryProvider).getRewards(accountId);
+      final account = ref.read(selectedChildAccountProvider);
+      if (account == null) return <ChildcareReward>[];
+      return ref.read(childcareRepositoryProvider).getRewards(account.id);
     });
   }
 
@@ -140,26 +230,26 @@ class ChildcareRewards extends _$ChildcareRewards {
   }
 }
 
-// ── 규칙 ────────────────────────────────────────────────────────────────────
+// ── 규칙 ─────────────────────────────────────────────────────────────────────
 
 /// 규칙 목록 Provider
 @riverpod
 class ChildcareRules extends _$ChildcareRules {
   @override
   Future<List<ChildcareRule>> build() async {
-    final accountId = ref.watch(childcareSelectedAccountIdProvider);
-    if (accountId == null) return [];
+    final account = ref.watch(selectedChildAccountProvider);
+    if (account == null) return [];
 
     final repository = ref.watch(childcareRepositoryProvider);
-    return repository.getRules(accountId);
+    return repository.getRules(account.id);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final accountId = ref.read(childcareSelectedAccountIdProvider);
-      if (accountId == null) return <ChildcareRule>[];
-      return ref.read(childcareRepositoryProvider).getRules(accountId);
+      final account = ref.read(selectedChildAccountProvider);
+      if (account == null) return <ChildcareRule>[];
+      return ref.read(childcareRepositoryProvider).getRules(account.id);
     });
   }
 
@@ -181,7 +271,7 @@ class ChildcareRules extends _$ChildcareRules {
   }
 }
 
-// ── 관리 Notifier ──────────────────────────────────────────────────────────
+// ── 관리 Notifier ─────────────────────────────────────────────────────────────
 
 /// 육아 포인트 관리 Notifier (생성/수정/삭제)
 class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
@@ -191,14 +281,49 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
   ChildcareManagementNotifier(this._repository, this._ref)
       : super(const AsyncValue.data(null));
 
-  /// 계정 생성
-  Future<ChildcareAccount?> createAccount(CreateChildcareAccountDto dto) async {
+  /// 자녀 프로필 등록 (포인트 계정 자동 생성)
+  Future<ChildcareChild?> createChild(CreateChildProfileDto dto) async {
     state = const AsyncValue.loading();
     try {
-      final account = await _repository.createAccount(dto);
-      _ref.read(childcareAccountsProvider.notifier).addAccount(account);
+      final child = await _repository.createChild(dto);
+      _ref.read(childcareChildrenProvider.notifier).addChild(child);
+      // 계정 목록도 갱신 (자동 생성됨)
+      _ref.read(childcareAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
-      return account;
+      return child;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// 앱 계정 연동
+  Future<ChildcareChild?> linkUser(String childId) async {
+    state = const AsyncValue.loading();
+    try {
+      final child = await _repository.linkUser(childId);
+      _ref.read(childcareChildrenProvider.notifier).updateChild(child);
+      state = const AsyncValue.data(null);
+      return child;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// 용돈 플랜 설정 (생성 또는 수정)
+  Future<AllowancePlan?> upsertAllowancePlan(
+    String childId,
+    UpsertAllowancePlanDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final plan = await _repository.upsertAllowancePlan(childId, dto);
+      _ref.read(childcareAllowancePlanProvider.notifier).setPlan(plan);
+      // 히스토리 갱신
+      _ref.invalidate(childcareAllowancePlanHistoryProvider);
+      state = const AsyncValue.data(null);
+      return plan;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
@@ -214,8 +339,6 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final transaction = await _repository.addTransaction(accountId, dto);
       _ref.read(childcareTransactionsProvider.notifier).addTransaction(transaction);
-      // 계정 잔액 갱신
-      _ref.invalidate(childcareAccountDetailProvider);
       _ref.read(childcareAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
       return transaction;
@@ -226,7 +349,8 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
   }
 
   /// 보상 추가
-  Future<ChildcareReward?> addReward(String accountId, CreateRewardDto dto) async {
+  Future<ChildcareReward?> addReward(
+      String accountId, CreateRewardDto dto) async {
     state = const AsyncValue.loading();
     try {
       final reward = await _repository.addReward(accountId, dto);
@@ -326,7 +450,6 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final transaction = await _repository.savingsDeposit(accountId, dto);
       _ref.read(childcareTransactionsProvider.notifier).addTransaction(transaction);
-      _ref.invalidate(childcareAccountDetailProvider);
       _ref.read(childcareAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
       return transaction;
@@ -345,7 +468,6 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final transaction = await _repository.savingsWithdraw(accountId, dto);
       _ref.read(childcareTransactionsProvider.notifier).addTransaction(transaction);
-      _ref.invalidate(childcareAccountDetailProvider);
       _ref.read(childcareAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
       return transaction;

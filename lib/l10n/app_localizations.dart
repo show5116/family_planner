@@ -4935,6 +4935,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'그룹에 참여하면 육아포인트를 사용할 수 있습니다.'**
   String get childcare_no_group;
+
+  /// 자녀 프로필 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 자녀가 없습니다.\n오른쪽 상단 버튼으로 자녀를 등록해보세요.'**
+  String get childcare_no_child;
 }
 
 class _AppLocalizationsDelegate

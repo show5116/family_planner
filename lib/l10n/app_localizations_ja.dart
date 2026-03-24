@@ -2478,4 +2478,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get childcare_no_group => 'グループに参加すると育児ポイントが使えます。';
+
+  @override
+  String get childcare_no_child => '子どもが登録されていません。\n右上のボタンから子どもを登録してください。';
 }

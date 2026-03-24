@@ -61,6 +61,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
     final l10n = AppLocalizations.of(context)!;
     final groupsAsync = ref.watch(myGroupsProvider);
     final selectedGroupId = ref.watch(childcareSelectedGroupIdProvider);
+    final selectedChildId = ref.watch(childcareSelectedChildIdProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,12 +72,49 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
         ),
         actions: [
           const AiChatIconButton(),
+          // 자녀별 메뉴 (용돈 플랜, 계정 연동)
+          if (selectedChildId != null)
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert),
+              onSelected: (value) {
+                if (value == 'allowance') {
+                  context.push(
+                    AppRoutes.childPointsAllowancePlan,
+                    extra: {'childId': selectedChildId},
+                  );
+                } else if (value == 'link') {
+                  context.push(
+                    AppRoutes.childPointsLinkUser,
+                    extra: {'childId': selectedChildId},
+                  );
+                }
+              },
+              itemBuilder: (_) => [
+                const PopupMenuItem(
+                  value: 'allowance',
+                  child: ListTile(
+                    leading: Icon(Icons.monetization_on_outlined),
+                    title: Text('용돈 플랜 설정'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'link',
+                  child: ListTile(
+                    leading: Icon(Icons.link),
+                    title: Text('앱 계정 연동'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
+            ),
+          // 자녀 추가
           if (selectedGroupId != null)
             IconButton(
               icon: const Icon(Icons.person_add_outlined),
-              tooltip: l10n.childcare_add_account,
+              tooltip: '자녀 등록',
               onPressed: () => context.push(
-                AppRoutes.childPointsAccountForm,
+                AppRoutes.childPointsChildProfileForm,
                 extra: {'groupId': selectedGroupId},
               ),
             ),
@@ -96,7 +134,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       ),
       body: Column(
         children: [
-          _GroupAndAccountBar(
+          _GroupAndChildBar(
             groupsAsync: groupsAsync,
             selectedGroupId: selectedGroupId,
           ),
@@ -104,7 +142,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                _PointsTab(selectedGroupId: selectedGroupId),
+                _PointsTab(selectedChildId: selectedChildId),
                 _RewardsTab(),
                 _RulesTab(),
                 _HistoryTab(),
@@ -117,13 +155,13 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
   }
 }
 
-// ── 그룹 + 계정 선택 바 ──────────────────────────────────────────────────────
+// ── 그룹 + 자녀 선택 바 ──────────────────────────────────────────────────────
 
-class _GroupAndAccountBar extends ConsumerWidget {
+class _GroupAndChildBar extends ConsumerWidget {
   final AsyncValue<List<Group>> groupsAsync;
   final String? selectedGroupId;
 
-  const _GroupAndAccountBar({
+  const _GroupAndChildBar({
     required this.groupsAsync,
     required this.selectedGroupId,
   });
@@ -131,8 +169,8 @@ class _GroupAndAccountBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final accountsAsync = ref.watch(childcareAccountsProvider);
-    final selectedAccountId = ref.watch(childcareSelectedAccountIdProvider);
+    final childrenAsync = ref.watch(childcareChildrenProvider);
+    final selectedChildId = ref.watch(childcareSelectedChildIdProvider);
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -148,96 +186,103 @@ class _GroupAndAccountBar extends ConsumerWidget {
           ),
         ),
       ),
-      child: Column(
+      child: Row(
         children: [
           // 그룹 선택
-          Row(
-            children: [
-              const Icon(Icons.group, size: AppSizes.iconSmall),
-              const SizedBox(width: AppSizes.spaceS),
-              Expanded(
-                child: groupsAsync.when(
-                  data: (groups) {
-                    if (groups.isEmpty) {
-                      return Text(l10n.childcare_no_group,
-                          style: Theme.of(context).textTheme.bodySmall);
-                    }
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selectedGroupId ?? groups.first.id,
-                        isDense: true,
-                        items: groups
-                            .map<DropdownMenuItem<String>>(
-                              (g) => DropdownMenuItem<String>(
-                                value: g.id,
-                                child: Text(g.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          ref
-                              .read(childcareSelectedGroupIdProvider.notifier)
-                              .state = value;
-                          ref
-                              .read(
-                                  childcareSelectedAccountIdProvider.notifier)
-                              .state = null;
-                        },
-                      ),
-                    );
+          const Icon(Icons.group, size: AppSizes.iconSmall),
+          const SizedBox(width: AppSizes.spaceXS),
+          groupsAsync.when(
+            data: (groups) {
+              if (groups.isEmpty) {
+                return Text(l10n.childcare_no_group,
+                    style: Theme.of(context).textTheme.bodySmall);
+              }
+              return DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: selectedGroupId ?? groups.first.id,
+                  isDense: true,
+                  items: groups
+                      .map<DropdownMenuItem<String>>(
+                        (g) => DropdownMenuItem<String>(
+                          value: g.id,
+                          child: Text(g.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    ref
+                        .read(childcareSelectedGroupIdProvider.notifier)
+                        .state = value;
+                    ref
+                        .read(childcareSelectedChildIdProvider.notifier)
+                        .state = null;
                   },
-                  loading: () => const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                  error: (_, _) =>
-                      Text(l10n.childcare_select_group),
                 ),
-              ),
-            ],
+              );
+            },
+            loading: () => const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            error: (_, _) => Text(l10n.childcare_select_group),
           ),
-          // 계정(자녀) 선택
+          // 자녀 선택
           if (selectedGroupId != null)
-            accountsAsync.when(
-              data: (accounts) {
-                if (accounts.isEmpty) return const SizedBox.shrink();
+            childrenAsync.when(
+              data: (children) {
+                if (children.isEmpty) return const SizedBox.shrink();
 
-                // 계정 선택 초기화
-                if (selectedAccountId == null && accounts.isNotEmpty) {
+                if (selectedChildId == null && children.isNotEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ref
-                        .read(childcareSelectedAccountIdProvider.notifier)
-                        .state = accounts.first.id;
+                        .read(childcareSelectedChildIdProvider.notifier)
+                        .state = children.first.id;
                   });
                 }
 
                 return Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.child_care, size: AppSizes.iconSmall),
                     const SizedBox(width: AppSizes.spaceS),
-                    Expanded(
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedAccountId ?? accounts.first.id,
-                          isDense: true,
-                          items: accounts
-                              .map<DropdownMenuItem<String>>(
-                                (a) => DropdownMenuItem<String>(
-                                  value: a.id,
-                                  child: Text(
-                                    '자녀 (${a.childUserId.substring(0, 8)}...)',
+                    Container(
+                      width: 1,
+                      height: 16,
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    const Icon(Icons.child_care, size: AppSizes.iconSmall),
+                    const SizedBox(width: AppSizes.spaceXS),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedChildId ?? children.first.id,
+                        isDense: true,
+                        items: children.map<DropdownMenuItem<String>>((c) {
+                          return DropdownMenuItem<String>(
+                            value: c.id,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(c.name),
+                                if (c.userId != null) ...[
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    Icons.link,
+                                    size: 14,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary,
                                   ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            ref
-                                .read(
-                                    childcareSelectedAccountIdProvider.notifier)
-                                .state = value;
-                          },
-                        ),
+                                ],
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          ref
+                              .read(childcareSelectedChildIdProvider.notifier)
+                              .state = value;
+                        },
                       ),
                     ),
                   ],
@@ -255,58 +300,68 @@ class _GroupAndAccountBar extends ConsumerWidget {
 // ── 포인트 탭 ────────────────────────────────────────────────────────────────
 
 class _PointsTab extends ConsumerWidget {
-  final String? selectedGroupId;
+  final String? selectedChildId;
 
-  const _PointsTab({required this.selectedGroupId});
+  const _PointsTab({required this.selectedChildId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final selectedAccountId = ref.watch(childcareSelectedAccountIdProvider);
+    final account = ref.watch(selectedChildAccountProvider);
     final accountsAsync = ref.watch(childcareAccountsProvider);
+    final planAsync = ref.watch(childcareAllowancePlanProvider);
 
-    if (selectedGroupId == null) {
-      return Center(child: Text(l10n.childcare_select_group));
+    if (selectedChildId == null) {
+      return Center(child: Text(l10n.childcare_no_child));
     }
 
     return accountsAsync.when(
-      data: (accounts) {
-        if (accounts.isEmpty) {
+      data: (_) {
+        if (account == null) {
           return AppEmptyState(
             icon: Icons.child_care,
             message: l10n.childcare_empty_accounts,
           );
         }
 
-        final account = accounts.firstWhere(
-          (a) => a.id == selectedAccountId,
-          orElse: () => accounts.first,
+        final plan = planAsync.maybeWhen(
+          data: (p) => p,
+          orElse: () => null,
         );
 
         return RefreshIndicator(
-          onRefresh: () =>
-              ref.read(childcareAccountsProvider.notifier).refresh(),
+          onRefresh: () => ref.read(childcareAccountsProvider.notifier).refresh(),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            child: AccountSummaryCard(
-              account: account,
-              onAddTransaction: () => context.push(
-                AppRoutes.childPointsTransactionAdd,
-                extra: {'accountId': account.id},
-              ),
-              onDepositSavings: () => _showSavingsDialog(
-                context,
-                ref,
-                account,
-                isDeposit: true,
-              ),
-              onWithdrawSavings: () => _showSavingsDialog(
-                context,
-                ref,
-                account,
-                isDeposit: false,
-              ),
+            child: Column(
+              children: [
+                AccountSummaryCard(
+                  account: account,
+                  plan: plan,
+                  onAddTransaction: () => context.push(
+                    AppRoutes.childPointsTransactionAdd,
+                    extra: {'accountId': account.id},
+                  ),
+                  onDepositSavings: () => _showSavingsDialog(
+                    context,
+                    ref,
+                    account,
+                    isDeposit: true,
+                  ),
+                  onWithdrawSavings: () => _showSavingsDialog(
+                    context,
+                    ref,
+                    account,
+                    isDeposit: false,
+                  ),
+                ),
+                // 용돈 플랜 미설정 안내
+                if (plan == null) ...[
+                  const SizedBox(height: AppSizes.spaceM),
+                  _AllowancePlanBanner(childId: selectedChildId!),
+                ],
+              ],
             ),
           ),
         );
@@ -373,9 +428,30 @@ class _PointsTab extends ConsumerWidget {
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content:
-            Text(result != null ? '완료되었습니다' : '오류가 발생했습니다'),
+      SnackBar(content: Text(result != null ? '완료되었습니다' : '오류가 발생했습니다')),
+    );
+  }
+}
+
+/// 용돈 플랜 미설정 시 안내 배너
+class _AllowancePlanBanner extends StatelessWidget {
+  const _AllowancePlanBanner({required this.childId});
+
+  final String childId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: ListTile(
+        leading: const Icon(Icons.monetization_on_outlined),
+        title: const Text('용돈 플랜이 설정되지 않았습니다'),
+        subtitle: const Text('월 포인트, 지급일 등을 설정해보세요'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => context.push(
+          AppRoutes.childPointsAllowancePlan,
+          extra: {'childId': childId},
+        ),
       ),
     );
   }
@@ -389,11 +465,11 @@ class _RewardsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final selectedAccountId = ref.watch(childcareSelectedAccountIdProvider);
+    final account = ref.watch(selectedChildAccountProvider);
     final rewardsAsync = ref.watch(childcareRewardsProvider);
 
-    if (selectedAccountId == null) {
-      return Center(child: Text(l10n.childcare_select_group));
+    if (account == null) {
+      return Center(child: Text(l10n.childcare_no_child));
     }
 
     return Scaffold(
@@ -416,13 +492,13 @@ class _RewardsTab extends ConsumerWidget {
                 return RewardListItem(
                   reward: reward,
                   onEdit: () => _showRewardForm(context, ref,
-                      accountId: selectedAccountId, reward: reward),
+                      accountId: account.id, reward: reward),
                   onDelete: () =>
-                      _confirmDeleteReward(context, ref, selectedAccountId, reward),
+                      _confirmDeleteReward(context, ref, account.id, reward),
                   onToggleActive: () => ref
                       .read(childcareManagementProvider.notifier)
                       .updateReward(
-                        selectedAccountId,
+                        account.id,
                         reward.id,
                         UpdateRewardDto(isActive: !reward.isActive),
                       ),
@@ -435,8 +511,7 @@ class _RewardsTab extends ConsumerWidget {
         error: (_, _) => Center(child: Text(l10n.childcare_empty_rewards)),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            _showRewardForm(context, ref, accountId: selectedAccountId),
+        onPressed: () => _showRewardForm(context, ref, accountId: account.id),
         child: const Icon(Icons.add),
       ),
     );
@@ -476,8 +551,8 @@ class _RewardsTab extends ConsumerWidget {
             TextField(
               controller: pointsController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  labelText: '포인트 비용', suffixText: 'P'),
+              decoration:
+                  const InputDecoration(labelText: '포인트 비용', suffixText: 'P'),
             ),
           ],
         ),
@@ -512,14 +587,12 @@ class _RewardsTab extends ConsumerWidget {
       await notifier.updateReward(
           accountId,
           reward.id,
-          UpdateRewardDto(
-              name: name, description: desc, points: points));
+          UpdateRewardDto(name: name, description: desc, points: points));
     }
 
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('저장되었습니다')),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('저장되었습니다')));
   }
 
   Future<void> _confirmDeleteReward(
@@ -549,10 +622,9 @@ class _RewardsTab extends ConsumerWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    await ref.read(childcareManagementProvider.notifier).deleteReward(
-          accountId,
-          reward.id,
-        );
+    await ref
+        .read(childcareManagementProvider.notifier)
+        .deleteReward(accountId, reward.id);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('삭제되었습니다')));
@@ -567,11 +639,11 @@ class _RulesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final selectedAccountId = ref.watch(childcareSelectedAccountIdProvider);
+    final account = ref.watch(selectedChildAccountProvider);
     final rulesAsync = ref.watch(childcareRulesProvider);
 
-    if (selectedAccountId == null) {
-      return Center(child: Text(l10n.childcare_select_group));
+    if (account == null) {
+      return Center(child: Text(l10n.childcare_no_child));
     }
 
     return Scaffold(
@@ -594,18 +666,18 @@ class _RulesTab extends ConsumerWidget {
                 return RuleListItem(
                   rule: rule,
                   onEdit: () => _showRuleForm(context, ref,
-                      accountId: selectedAccountId, rule: rule),
+                      accountId: account.id, rule: rule),
                   onDelete: () =>
-                      _confirmDeleteRule(context, ref, selectedAccountId, rule),
+                      _confirmDeleteRule(context, ref, account.id, rule),
                   onToggleActive: () => ref
                       .read(childcareManagementProvider.notifier)
                       .updateRule(
-                        selectedAccountId,
+                        account.id,
                         rule.id,
                         UpdateRuleDto(isActive: !rule.isActive),
                       ),
-                  onApplyPenalty: () => _applyPenalty(
-                      context, ref, selectedAccountId, rule),
+                  onApplyPenalty: () =>
+                      _applyPenalty(context, ref, account.id, rule),
                 );
               },
             ),
@@ -615,8 +687,7 @@ class _RulesTab extends ConsumerWidget {
         error: (_, _) => Center(child: Text(l10n.childcare_empty_rules)),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            _showRuleForm(context, ref, accountId: selectedAccountId),
+        onPressed: () => _showRuleForm(context, ref, accountId: account.id),
         child: const Icon(Icons.add),
       ),
     );
@@ -656,8 +727,8 @@ class _RulesTab extends ConsumerWidget {
             TextField(
               controller: penaltyController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  labelText: '차감 포인트', suffixText: 'P'),
+              decoration:
+                  const InputDecoration(labelText: '차감 포인트', suffixText: 'P'),
             ),
           ],
         ),
@@ -710,7 +781,8 @@ class _RulesTab extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('규칙 위반 적용'),
-        content: Text('"${rule.name}" 위반으로 ${rule.penalty.toInt()}P를 차감합니다.'),
+        content:
+            Text('"${rule.name}" 위반으로 ${rule.penalty.toInt()}P를 차감합니다.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -784,12 +856,12 @@ class _HistoryTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final selectedAccountId = ref.watch(childcareSelectedAccountIdProvider);
+    final account = ref.watch(selectedChildAccountProvider);
     final selectedMonth = ref.watch(childcareSelectedMonthProvider);
     final transactionsAsync = ref.watch(childcareTransactionsProvider);
 
-    if (selectedAccountId == null) {
-      return Center(child: Text(l10n.childcare_select_group));
+    if (account == null) {
+      return Center(child: Text(l10n.childcare_no_child));
     }
 
     return Column(

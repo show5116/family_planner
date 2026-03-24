@@ -2,7 +2,9 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/presentation/screens/home_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/child_points_screen.dart';
-import 'package:family_planner/features/main/child_points/presentation/screens/childcare_account_form_screen.dart';
+import 'package:family_planner/features/main/child_points/presentation/screens/child_allowance_plan_screen.dart';
+import 'package:family_planner/features/main/child_points/presentation/screens/child_link_user_screen.dart';
+import 'package:family_planner/features/main/child_points/presentation/screens/child_profile_form_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/transaction_form_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart';
@@ -286,12 +288,30 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) => const ChildPointsScreen(),
     ),
     GoRoute(
-      path: AppRoutes.childPointsAccountForm,
-      name: 'childPointsAccountForm',
+      path: AppRoutes.childPointsChildProfileForm,
+      name: 'childPointsChildProfileForm',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
         final groupId = extra?['groupId'] as String? ?? '';
-        return ChildcareAccountFormScreen(groupId: groupId);
+        return ChildProfileFormScreen(groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.childPointsAllowancePlan,
+      name: 'childPointsAllowancePlan',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final childId = extra?['childId'] as String? ?? '';
+        return ChildAllowancePlanScreen(childId: childId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.childPointsLinkUser,
+      name: 'childPointsLinkUser',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final childId = extra?['childId'] as String? ?? '';
+        return ChildLinkUserScreen(childId: childId);
       },
     ),
     GoRoute(

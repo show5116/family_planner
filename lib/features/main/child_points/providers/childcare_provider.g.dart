@@ -6,31 +6,30 @@ part of 'childcare_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$childcareAccountDetailHash() =>
-    r'9fb277f221201957d2ec4d85d570a7f88303408b';
+String _$childcareChildrenHash() => r'f1346b2fa2f6ac3ee915d0fa7435b480d1edc690';
 
-/// 육아 계정 상세 Provider
+/// 자녀 프로필 목록 Provider
 ///
-/// Copied from [childcareAccountDetail].
-@ProviderFor(childcareAccountDetail)
-final childcareAccountDetailProvider =
-    AutoDisposeFutureProvider<ChildcareAccount?>.internal(
-      childcareAccountDetail,
-      name: r'childcareAccountDetailProvider',
+/// Copied from [ChildcareChildren].
+@ProviderFor(ChildcareChildren)
+final childcareChildrenProvider =
+    AutoDisposeAsyncNotifierProvider<
+      ChildcareChildren,
+      List<ChildcareChild>
+    >.internal(
+      ChildcareChildren.new,
+      name: r'childcareChildrenProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$childcareAccountDetailHash,
+          : _$childcareChildrenHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ChildcareAccountDetailRef =
-    AutoDisposeFutureProviderRef<ChildcareAccount?>;
-String _$childcareAccountsHash() => r'80a36117d3ead48b037557c53372a149c41a42c7';
+typedef _$ChildcareChildren = AutoDisposeAsyncNotifier<List<ChildcareChild>>;
+String _$childcareAccountsHash() => r'db333b291b8c3b085a7af0ad6fe9c0d7cc5c0bac';
 
-/// 육아 계정 목록 Provider
+/// 포인트 계정 목록 Provider (그룹 기준)
 ///
 /// Copied from [ChildcareAccounts].
 @ProviderFor(ChildcareAccounts)
@@ -50,7 +49,7 @@ final childcareAccountsProvider =
 
 typedef _$ChildcareAccounts = AutoDisposeAsyncNotifier<List<ChildcareAccount>>;
 String _$childcareTransactionsHash() =>
-    r'745c8ed8e6b51d730dcdafb0b13220ee4e3fd74c';
+    r'7514dc618efd932173558be4ed59a9435e3e5bce';
 
 /// 거래 내역 Provider
 ///
@@ -72,7 +71,7 @@ final childcareTransactionsProvider =
 
 typedef _$ChildcareTransactions =
     AutoDisposeAsyncNotifier<List<ChildcareTransaction>>;
-String _$childcareRewardsHash() => r'79a80f8495e035c3237eda1244faec96bad0ba5e';
+String _$childcareRewardsHash() => r'3fd285018e78191d6eb9d8b0bf5fda67c5885d6b';
 
 /// 보상 목록 Provider
 ///
@@ -93,7 +92,7 @@ final childcareRewardsProvider =
     );
 
 typedef _$ChildcareRewards = AutoDisposeAsyncNotifier<List<ChildcareReward>>;
-String _$childcareRulesHash() => r'4d4c7ffa8f38ff46c58362eb6bd89077e84b5310';
+String _$childcareRulesHash() => r'a10a4a8eba45a41f6ed63da6c859434f95c8831e';
 
 /// 규칙 목록 Provider
 ///

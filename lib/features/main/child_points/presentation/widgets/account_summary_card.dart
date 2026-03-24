@@ -9,12 +9,14 @@ class AccountSummaryCard extends StatelessWidget {
   const AccountSummaryCard({
     super.key,
     required this.account,
+    this.plan,
     this.onDepositSavings,
     this.onWithdrawSavings,
     this.onAddTransaction,
   });
 
   final ChildcareAccount account;
+  final AllowancePlan? plan;
   final VoidCallback? onDepositSavings;
   final VoidCallback? onWithdrawSavings;
   final VoidCallback? onAddTransaction;
@@ -42,16 +44,19 @@ class AccountSummaryCard extends StatelessWidget {
             const SizedBox(height: AppSizes.spaceS),
             const Divider(),
             const SizedBox(height: AppSizes.spaceS),
-            // 월 용돈
-            _buildBalanceRow(
-              context,
-              icon: Icons.calendar_month,
-              color: Colors.green,
-              label: l10n.childcare_monthly_allowance,
-              value: account.monthlyAllowance.toInt().toString(),
-              unit: 'P/월',
-            ),
-            const SizedBox(height: AppSizes.spaceS),
+            // 월 용돈 (용돈 플랜에서)
+            if (plan != null) ...[
+              _buildBalanceRow(
+                context,
+                icon: Icons.calendar_month,
+                color: Colors.green,
+                label: l10n.childcare_monthly_allowance,
+                value: plan!.monthlyPoints.toString(),
+                unit: 'P/월',
+                subtitle: '매월 ${plan!.payDay}일 · 1P=${plan!.pointToMoneyRatio}원',
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+            ],
             // 적금 잔액
             _buildBalanceRow(
               context,
@@ -60,7 +65,6 @@ class AccountSummaryCard extends StatelessWidget {
               label: l10n.childcare_savings_balance,
               value: account.savingsBalance.toInt().toString(),
               unit: 'P',
-              subtitle: '이자율 ${account.savingsInterestRate}%',
             ),
             const SizedBox(height: AppSizes.spaceM),
             // 액션 버튼들

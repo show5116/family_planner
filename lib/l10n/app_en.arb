@@ -1086,5 +1086,7 @@
   "childcare_select_group": "Please select a group",
   "@childcare_select_group": { "description": "Group selection prompt" },
   "childcare_no_group": "Join a group to use Child Points.",
-  "@childcare_no_group": { "description": "No group message" }
+  "@childcare_no_group": { "description": "No group message" },
+  "childcare_no_child": "No children registered.\nTap the button in the top right to add a child.",
+  "@childcare_no_child": { "description": "No child profile message" }
 }

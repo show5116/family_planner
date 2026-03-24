@@ -2482,4 +2482,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get childcare_no_group => '그룹에 참여하면 육아포인트를 사용할 수 있습니다.';
+
+  @override
+  String get childcare_no_child => '등록된 자녀가 없습니다.\n오른쪽 상단 버튼으로 자녀를 등록해보세요.';
 }

@@ -9,28 +9,60 @@ enum ChildcareTransactionType {
   penalty,
 }
 
-/// 육아 포인트 계정 모델
+/// 자녀 프로필 모델
+class ChildcareChild {
+  final String id;
+  final String groupId;
+  final String parentUserId;
+  final String name;
+  final DateTime birthDate;
+  final String? userId; // 연결된 앱 계정 ID (null 가능)
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const ChildcareChild({
+    required this.id,
+    required this.groupId,
+    required this.parentUserId,
+    required this.name,
+    required this.birthDate,
+    this.userId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory ChildcareChild.fromJson(Map<String, dynamic> json) {
+    return ChildcareChild(
+      id: json['id'] as String,
+      groupId: json['groupId'] as String,
+      parentUserId: json['parentUserId'] as String,
+      name: json['name'] as String,
+      birthDate: DateTime.parse(json['birthDate'] as String),
+      userId: json['userId'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
+  }
+}
+
+/// 육아 포인트 계정 모델 (자녀 프로필 등록 시 자동 생성)
 class ChildcareAccount {
   final String id;
   final String groupId;
-  final String childUserId;
+  final String childId;
   final String parentUserId;
   final double balance;
-  final double monthlyAllowance;
   final double savingsBalance;
-  final String savingsInterestRate;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const ChildcareAccount({
     required this.id,
     required this.groupId,
-    required this.childUserId,
+    required this.childId,
     required this.parentUserId,
     required this.balance,
-    required this.monthlyAllowance,
     required this.savingsBalance,
-    required this.savingsInterestRate,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -39,12 +71,10 @@ class ChildcareAccount {
     return ChildcareAccount(
       id: json['id'] as String,
       groupId: json['groupId'] as String,
-      childUserId: json['childUserId'] as String,
+      childId: json['childId'] as String,
       parentUserId: json['parentUserId'] as String,
       balance: double.parse(json['balance'].toString()),
-      monthlyAllowance: double.parse(json['monthlyAllowance'].toString()),
       savingsBalance: double.parse(json['savingsBalance'].toString()),
-      savingsInterestRate: json['savingsInterestRate'].toString(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -53,26 +83,95 @@ class ChildcareAccount {
   ChildcareAccount copyWith({
     String? id,
     String? groupId,
-    String? childUserId,
+    String? childId,
     String? parentUserId,
     double? balance,
-    double? monthlyAllowance,
     double? savingsBalance,
-    String? savingsInterestRate,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return ChildcareAccount(
       id: id ?? this.id,
       groupId: groupId ?? this.groupId,
-      childUserId: childUserId ?? this.childUserId,
+      childId: childId ?? this.childId,
       parentUserId: parentUserId ?? this.parentUserId,
       balance: balance ?? this.balance,
-      monthlyAllowance: monthlyAllowance ?? this.monthlyAllowance,
       savingsBalance: savingsBalance ?? this.savingsBalance,
-      savingsInterestRate: savingsInterestRate ?? this.savingsInterestRate,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+}
+
+/// 용돈 플랜 모델
+class AllowancePlan {
+  final String id;
+  final String childId;
+  final int monthlyPoints;
+  final int payDay; // 1~31
+  final int pointToMoneyRatio; // 1포인트 = N원
+  final DateTime? nextNegotiationDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const AllowancePlan({
+    required this.id,
+    required this.childId,
+    required this.monthlyPoints,
+    required this.payDay,
+    required this.pointToMoneyRatio,
+    this.nextNegotiationDate,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory AllowancePlan.fromJson(Map<String, dynamic> json) {
+    return AllowancePlan(
+      id: json['id'] as String,
+      childId: json['childId'] as String,
+      monthlyPoints: json['monthlyPoints'] as int,
+      payDay: json['payDay'] as int,
+      pointToMoneyRatio: json['pointToMoneyRatio'] as int,
+      nextNegotiationDate: json['nextNegotiationDate'] != null
+          ? DateTime.parse(json['nextNegotiationDate'] as String)
+          : null,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
+  }
+}
+
+/// 용돈 플랜 변경 히스토리 모델
+class AllowancePlanHistory {
+  final String id;
+  final String planId;
+  final int monthlyPoints;
+  final int payDay;
+  final int pointToMoneyRatio;
+  final DateTime? nextNegotiationDate;
+  final DateTime changedAt;
+
+  const AllowancePlanHistory({
+    required this.id,
+    required this.planId,
+    required this.monthlyPoints,
+    required this.payDay,
+    required this.pointToMoneyRatio,
+    this.nextNegotiationDate,
+    required this.changedAt,
+  });
+
+  factory AllowancePlanHistory.fromJson(Map<String, dynamic> json) {
+    return AllowancePlanHistory(
+      id: json['id'] as String,
+      planId: json['planId'] as String,
+      monthlyPoints: json['monthlyPoints'] as int,
+      payDay: json['payDay'] as int,
+      pointToMoneyRatio: json['pointToMoneyRatio'] as int,
+      nextNegotiationDate: json['nextNegotiationDate'] != null
+          ? DateTime.parse(json['nextNegotiationDate'] as String)
+          : null,
+      changedAt: DateTime.parse(json['changedAt'] as String),
     );
   }
 }

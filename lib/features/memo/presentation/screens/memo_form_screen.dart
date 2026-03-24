@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
+import 'package:family_planner/features/memo/data/repositories/memo_repository.dart';
 import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
@@ -40,6 +41,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
   // 체크리스트 항목 (작성 시 로컬 상태로 관리)
   final List<_ChecklistDraft> _checklistDrafts = [];
   final List<TextEditingController> _draftControllers = [];
+  // 수정 모드에서 원본 항목 (diff 비교용): {id: originalContent}
+  final Map<String, String> _originalChecklistItems = {};
   final _checklistInputController = TextEditingController();
   final _checklistFocusNode = FocusNode();
 
@@ -74,6 +77,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
             c.dispose();
           }
           _draftControllers.clear();
+          _originalChecklistItems.clear();
           for (final item in memo.checklistItems) {
             _checklistDrafts.add(_ChecklistDraft(
               id: item.id,
@@ -81,6 +85,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
               isChecked: item.isChecked,
             ));
             _draftControllers.add(TextEditingController(text: item.content));
+            _originalChecklistItems[item.id] = item.content;
           }
         });
       },
@@ -213,28 +218,38 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
                     ),
                     const SizedBox(height: AppSizes.spaceS),
                     ref.watch(myGroupsProvider).when(
-                      data: (groups) => Card(
-                        elevation: 0,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surfaceContainerHighest
-                            .withValues(alpha: 0.3),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSizes.spaceM,
-                            vertical: AppSizes.spaceS,
+                      data: (groups) {
+                        // groups 로드 후 선택된 그룹이 없으면 첫 번째 그룹 자동 선택
+                        if (_selectedGroupId == null && groups.isNotEmpty) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) {
+                              setState(() => _selectedGroupId = groups.first.id);
+                            }
+                          });
+                        }
+                        return Card(
+                          elevation: 0,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest
+                              .withValues(alpha: 0.3),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.spaceM,
+                              vertical: AppSizes.spaceS,
+                            ),
+                            child: GroupDropdown(
+                              groups: groups,
+                              selectedGroupId: _selectedGroupId,
+                              onChanged: (value) {
+                                setState(() => _selectedGroupId = value);
+                              },
+                              style: GroupDropdownStyle.form,
+                              showPersonalOption: false,
+                            ),
                           ),
-                          child: GroupDropdown(
-                            groups: groups,
-                            selectedGroupId: _selectedGroupId,
-                            onChanged: (value) {
-                              setState(() => _selectedGroupId = value);
-                            },
-                            style: GroupDropdownStyle.form,
-                            showPersonalOption: false,
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
                       error: (_, _) => Text(l10n.common_error),
@@ -330,6 +345,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           ReorderableListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            buildDefaultDragHandles: false,
             itemCount: _checklistDrafts.length,
             onReorder: (oldIndex, newIndex) {
               setState(() {
@@ -344,6 +360,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
               final draft = _checklistDrafts[index];
               return _ChecklistDraftTile(
                 key: ValueKey(draft.key),
+                index: index,
                 controller: _draftControllers[index],
                 onDelete: () {
                   setState(() {
@@ -433,6 +450,42 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           groupId: _visibility == MemoVisibility.group ? _selectedGroupId : null,
           tags: tagDtos.isEmpty ? null : tagDtos,
         );
+
+        // 체크리스트 diff 처리
+        if (_memoType == MemoType.checklist) {
+          final repository = ref.read(memoRepositoryProvider);
+          final memoId = widget.memoId!;
+          final currentIds = _checklistDrafts
+              .where((d) => d.id != null)
+              .map((d) => d.id!)
+              .toSet();
+
+          // 삭제: 원본에 있지만 현재 없는 항목
+          for (final originalId in _originalChecklistItems.keys) {
+            if (!currentIds.contains(originalId)) {
+              await repository.deleteChecklistItem(memoId, originalId);
+            }
+          }
+
+          for (int i = 0; i < _checklistDrafts.length; i++) {
+            final draft = _checklistDrafts[i];
+            if (draft.id == null) {
+              // 추가: id 없는 새 항목
+              await repository.addChecklistItem(
+                memoId,
+                CreateChecklistItemDto(content: draft.content, order: i),
+              );
+            } else if (_originalChecklistItems[draft.id] != draft.content) {
+              // 수정: 내용이 바뀐 항목
+              await repository.updateChecklistItem(
+                memoId,
+                draft.id!,
+                UpdateChecklistItemDto(content: draft.content, order: i),
+              );
+            }
+          }
+        }
+
         final result = await notifier.updateMemo(widget.memoId!, dto);
 
         if (!mounted) return;
@@ -512,12 +565,14 @@ class _ChecklistDraft {
 
 /// 체크리스트 드래프트 타일
 class _ChecklistDraftTile extends StatelessWidget {
+  final int index;
   final TextEditingController controller;
   final VoidCallback onDelete;
   final ValueChanged<String> onChanged;
 
   const _ChecklistDraftTile({
     super.key,
+    required this.index,
     required this.controller,
     required this.onDelete,
     required this.onChanged,
@@ -527,7 +582,10 @@ class _ChecklistDraftTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: AppSizes.spaceS),
-      leading: const Icon(Icons.drag_handle, color: AppColors.textSecondary),
+      leading: ReorderableDragStartListener(
+        index: index,
+        child: const Icon(Icons.drag_handle, color: AppColors.textSecondary),
+      ),
       title: TextField(
         controller: controller,
         decoration: const InputDecoration(border: InputBorder.none),

@@ -2525,4 +2525,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get childcare_no_group => 'Join a group to use Child Points.';
+
+  @override
+  String get childcare_no_child =>
+      'No children registered.\nTap the button in the top right to add a child.';
 }
