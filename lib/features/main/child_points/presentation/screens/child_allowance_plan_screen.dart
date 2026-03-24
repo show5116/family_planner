@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show FilteringTextInputFormatter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -61,6 +62,10 @@ class _ChildAllowancePlanScreenState
         ),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Theme.of(context).colorScheme.onPrimary,
+          unselectedLabelColor:
+              Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.6),
+          indicatorColor: Theme.of(context).colorScheme.onPrimary,
           tabs: const [
             Tab(text: '설정'),
             Tab(text: '변경 히스토리'),
@@ -149,6 +154,7 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
             TextFormField(
               controller: _monthlyPointsController,
               keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: const InputDecoration(
                 labelText: '월 지급 포인트',
                 hintText: '예: 100',
@@ -162,25 +168,32 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
               },
             ),
             const SizedBox(height: AppSizes.spaceM),
-            TextFormField(
-              controller: _payDayController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: '지급일',
-                hintText: '1~31',
-                prefixIcon: Icon(Icons.calendar_today_outlined),
-                suffixText: '일',
+            InkWell(
+              onTap: _selectPayDay,
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: '매달 지급일',
+                  prefixIcon: const Icon(Icons.calendar_today_outlined),
+                  suffixText: '일',
+                  helperText: int.tryParse(_payDayController.text) != null &&
+                          int.parse(_payDayController.text) > 28
+                      ? '해당 월에 선택한 날짜가 없으면 말일에 지급됩니다'
+                      : null,
+                  helperMaxLines: 2,
+                ),
+                child: Text(
+                  _payDayController.text.isNotEmpty
+                      ? '${_payDayController.text}일'
+                      : '날짜를 선택하세요',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
-              validator: (v) {
-                final n = int.tryParse(v?.trim() ?? '');
-                if (n == null || n < 1 || n > 31) return '1~31 사이의 숫자를 입력해주세요';
-                return null;
-              },
             ),
             const SizedBox(height: AppSizes.spaceM),
             TextFormField(
               controller: _ratioController,
               keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: const InputDecoration(
                 labelText: '1포인트 = N원',
                 hintText: '예: 10',
@@ -248,6 +261,17 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
         ),
       ),
     );
+  }
+
+  Future<void> _selectPayDay() async {
+    final current = int.tryParse(_payDayController.text) ?? 1;
+    final picked = await showModalBottomSheet<int>(
+      context: context,
+      builder: (_) => _DayPicker(initial: current),
+    );
+    if (picked != null) {
+      setState(() => _payDayController.text = picked.toString());
+    }
   }
 
   Future<void> _selectNegotiationDate() async {
@@ -418,6 +442,108 @@ class _HistoryTab extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (_, _) => const Center(child: Text('히스토리를 불러올 수 없습니다')),
+    );
+  }
+}
+
+// ── 매달 지급일 드럼 롤 Picker ─────────────────────────────────────────────────
+
+class _DayPicker extends StatefulWidget {
+  const _DayPicker({required this.initial});
+
+  final int initial;
+
+  @override
+  State<_DayPicker> createState() => _DayPickerState();
+}
+
+class _DayPickerState extends State<_DayPicker> {
+  late int _day;
+  late final FixedExtentScrollController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _day = widget.initial.clamp(1, 31);
+    _ctrl = FixedExtentScrollController(initialItem: _day - 1);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceM,
+              vertical: AppSizes.spaceS,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('취소'),
+                ),
+                Text(
+                  '매달 $_day일',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(_day),
+                  child: const Text('확인'),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          SizedBox(
+            height: 200,
+            child: ListWheelScrollView.useDelegate(
+              controller: _ctrl,
+              itemExtent: 44,
+              diameterRatio: 1.4,
+              physics: const FixedExtentScrollPhysics(),
+              onSelectedItemChanged: (i) => setState(() => _day = i + 1),
+              childDelegate: ListWheelChildBuilderDelegate(
+                childCount: 31,
+                builder: (context, index) {
+                  final isSelected = _day == index + 1;
+                  return GestureDetector(
+                    onTap: isSelected
+                        ? null
+                        : () => _ctrl.animateToItem(
+                              index,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOut,
+                            ),
+                    child: Center(
+                      child: Text(
+                        '${index + 1}일',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: isSelected ? colorScheme.primary : null,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

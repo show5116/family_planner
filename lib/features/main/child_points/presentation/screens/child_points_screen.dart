@@ -361,6 +361,15 @@ class _PointsTab extends ConsumerWidget {
                   const SizedBox(height: AppSizes.spaceM),
                   _AllowancePlanBanner(childId: selectedChildId!),
                 ],
+                // 연봉 협상일 알림
+                if (plan != null &&
+                    plan.nextNegotiationDate != null) ...[
+                  const SizedBox(height: AppSizes.spaceM),
+                  _NegotiationDateBanner(
+                    childId: selectedChildId!,
+                    negotiationDate: plan.nextNegotiationDate!,
+                  ),
+                ],
               ],
             ),
           ),
@@ -455,6 +464,58 @@ class _AllowancePlanBanner extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 연봉 협상일 알림 배너 (D-7 이내 또는 지난 경우)
+class _NegotiationDateBanner extends StatelessWidget {
+  const _NegotiationDateBanner({
+    required this.childId,
+    required this.negotiationDate,
+  });
+
+  final String childId;
+  final DateTime negotiationDate;
+
+  @override
+  Widget build(BuildContext context) {
+    final today = DateTime.now();
+    final diff = negotiationDate.difference(DateTime(today.year, today.month, today.day)).inDays;
+
+    final bool isOverdue = diff < 0;
+    final bool isUpcoming = diff >= 0 && diff <= 7;
+
+    if (!isOverdue && !isUpcoming) return const SizedBox.shrink();
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = isOverdue ? colorScheme.errorContainer : colorScheme.tertiaryContainer;
+    final onColor = isOverdue ? colorScheme.onErrorContainer : colorScheme.onTertiaryContainer;
+
+    final String title = isOverdue ? '연봉 협상일이 지났습니다' : '연봉 협상일이 다가오고 있습니다';
+    final String subtitle = isOverdue
+        ? '${-diff}일 전 (${_fmt(negotiationDate)})이었습니다. 용돈 플랜을 검토해보세요'
+        : diff == 0
+            ? '오늘이 연봉 협상일입니다! (${_fmt(negotiationDate)})'
+            : 'D-$diff · ${_fmt(negotiationDate)}';
+
+    return Card(
+      color: color,
+      child: ListTile(
+        leading: Icon(
+          isOverdue ? Icons.warning_amber_rounded : Icons.notifications_active_outlined,
+          color: onColor,
+        ),
+        title: Text(title, style: TextStyle(color: onColor, fontWeight: FontWeight.w600)),
+        subtitle: Text(subtitle, style: TextStyle(color: onColor)),
+        trailing: Icon(Icons.chevron_right, color: onColor),
+        onTap: () => context.push(
+          AppRoutes.childPointsAllowancePlan,
+          extra: {'childId': childId},
+        ),
+      ),
+    );
+  }
+
+  String _fmt(DateTime d) => '${d.year}.${d.month.toString().padLeft(2, '0')}.${d.day.toString().padLeft(2, '0')}';
 }
 
 // ── 보상 탭 ──────────────────────────────────────────────────────────────────
