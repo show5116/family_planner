@@ -51,6 +51,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     final isAdmin = isUserAdmin(_userInfo);
 
     // 하단 네비게이션에 표시되지 않는 메뉴 ID 가져오기
+    ref.watch(bottomNavigationSettingsProvider);
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
     final nonDisplayedMenuIds = notifier.nonDisplayedMenuIds;
     final availableItems = notifier.availableItems;
