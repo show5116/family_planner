@@ -68,13 +68,13 @@ class CreateTransactionDto {
       };
 }
 
-/// 보상 항목 생성 DTO
-class CreateRewardDto {
+/// 포인트 상점 아이템 생성 DTO
+class CreateShopItemDto {
   final String name;
   final String? description;
-  final double points;
+  final int points;
 
-  const CreateRewardDto({
+  const CreateShopItemDto({
     required this.name,
     this.description,
     required this.points,
@@ -87,14 +87,14 @@ class CreateRewardDto {
       };
 }
 
-/// 보상 항목 수정 DTO
-class UpdateRewardDto {
+/// 포인트 상점 아이템 수정 DTO
+class UpdateShopItemDto {
   final String? name;
   final String? description;
-  final double? points;
+  final int? points;
   final bool? isActive;
 
-  const UpdateRewardDto({
+  const UpdateShopItemDto({
     this.name,
     this.description,
     this.points,
@@ -113,18 +113,21 @@ class UpdateRewardDto {
 class CreateRuleDto {
   final String name;
   final String? description;
-  final double penalty;
+  final ChildcareRuleType type;
+  final int points;
 
   const CreateRuleDto({
     required this.name,
     this.description,
-    required this.penalty,
+    required this.type,
+    required this.points,
   });
 
   Map<String, dynamic> toJson() => {
         'name': name,
         if (description != null) 'description': description,
-        'penalty': penalty,
+        'type': childcareRuleTypeToString(type),
+        'points': points,
       };
 }
 
@@ -132,20 +135,23 @@ class CreateRuleDto {
 class UpdateRuleDto {
   final String? name;
   final String? description;
-  final double? penalty;
+  final ChildcareRuleType? type;
+  final int? points;
   final bool? isActive;
 
   const UpdateRuleDto({
     this.name,
     this.description,
-    this.penalty,
+    this.type,
+    this.points,
     this.isActive,
   });
 
   Map<String, dynamic> toJson() => {
         if (name != null) 'name': name,
         if (description != null) 'description': description,
-        if (penalty != null) 'penalty': penalty,
+        if (type != null) 'type': childcareRuleTypeToString(type!),
+        if (points != null) 'points': points,
         if (isActive != null) 'isActive': isActive,
       };
 }
@@ -350,69 +356,70 @@ class ChildcareRepository {
     }
   }
 
-  // ── 보상 ─────────────────────────────────────────────────────────────────
+  // ── 포인트 상점 ───────────────────────────────────────────────────────────
 
-  /// 보상 항목 목록 조회
-  Future<List<ChildcareReward>> getRewards(String accountId) async {
+  /// 상점 아이템 목록 조회
+  Future<List<ChildcareShopItem>> getShopItems(String accountId) async {
     try {
-      final response = await _dio.get('/childcare/accounts/$accountId/rewards');
+      final response =
+          await _dio.get('/childcare/accounts/$accountId/shop-items');
       final data = response.data;
       if (data is List) {
         return data
-            .map((e) => ChildcareReward.fromJson(e as Map<String, dynamic>))
+            .map((e) => ChildcareShopItem.fromJson(e as Map<String, dynamic>))
             .toList();
       }
       return [];
     } on DioException catch (e) {
-      debugPrint('❌ [ChildcareRepository] 보상 목록 조회 실패: ${e.message}');
-      throw Exception('보상 목록 조회 실패: ${e.message}');
+      debugPrint('❌ [ChildcareRepository] 상점 아이템 목록 조회 실패: ${e.message}');
+      throw Exception('상점 아이템 목록 조회 실패: ${e.message}');
     }
   }
 
-  /// 보상 항목 추가 (부모만 가능)
-  Future<ChildcareReward> addReward(
-      String accountId, CreateRewardDto dto) async {
+  /// 상점 아이템 추가 (부모만 가능)
+  Future<ChildcareShopItem> addShopItem(
+      String accountId, CreateShopItemDto dto) async {
     try {
       final response = await _dio.post(
-        '/childcare/accounts/$accountId/rewards',
+        '/childcare/accounts/$accountId/shop-items',
         data: dto.toJson(),
       );
-      return ChildcareReward.fromJson(response.data as Map<String, dynamic>);
+      return ChildcareShopItem.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      debugPrint('❌ [ChildcareRepository] 보상 추가 실패: ${e.message}');
-      throw Exception('보상 추가 실패: ${e.message}');
+      debugPrint('❌ [ChildcareRepository] 상점 아이템 추가 실패: ${e.message}');
+      throw Exception('상점 아이템 추가 실패: ${e.message}');
     }
   }
 
-  /// 보상 항목 수정 (부모만 가능)
-  Future<ChildcareReward> updateReward(
+  /// 상점 아이템 수정 (부모만 가능)
+  Future<ChildcareShopItem> updateShopItem(
     String accountId,
-    String rewardId,
-    UpdateRewardDto dto,
+    String itemId,
+    UpdateShopItemDto dto,
   ) async {
     try {
       final response = await _dio.patch(
-        '/childcare/accounts/$accountId/rewards/$rewardId',
+        '/childcare/accounts/$accountId/shop-items/$itemId',
         data: dto.toJson(),
       );
-      return ChildcareReward.fromJson(response.data as Map<String, dynamic>);
+      return ChildcareShopItem.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        throw Exception('보상 항목을 찾을 수 없습니다');
+        throw Exception('상점 아이템을 찾을 수 없습니다');
       }
-      throw Exception('보상 수정 실패: ${e.message}');
+      throw Exception('상점 아이템 수정 실패: ${e.message}');
     }
   }
 
-  /// 보상 항목 삭제 (부모만 가능)
-  Future<void> deleteReward(String accountId, String rewardId) async {
+  /// 상점 아이템 삭제 (부모만 가능)
+  Future<void> deleteShopItem(String accountId, String itemId) async {
     try {
-      await _dio.delete('/childcare/accounts/$accountId/rewards/$rewardId');
+      await _dio.delete('/childcare/accounts/$accountId/shop-items/$itemId');
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        throw Exception('보상 항목을 찾을 수 없습니다');
+        throw Exception('상점 아이템을 찾을 수 없습니다');
       }
-      throw Exception('보상 삭제 실패: ${e.message}');
+      throw Exception('상점 아이템 삭제 실패: ${e.message}');
     }
   }
 

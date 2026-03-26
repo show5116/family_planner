@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
-import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 규칙 항목 아이템
 class RuleListItem extends StatelessWidget {
@@ -23,21 +22,43 @@ class RuleListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
+
+    final (iconData, iconColor, bgColor, badgeColor, badgeText) =
+        switch (rule.type) {
+      ChildcareRuleType.plus => (
+          Icons.add_circle_outline,
+          Colors.green.shade700,
+          Colors.green.shade50,
+          Colors.green.shade700,
+          '+${rule.points}P',
+        ),
+      ChildcareRuleType.minus => (
+          Icons.remove_circle_outline,
+          colorScheme.error,
+          colorScheme.errorContainer,
+          colorScheme.error,
+          '-${rule.points}P',
+        ),
+      ChildcareRuleType.info => (
+          Icons.info_outline,
+          colorScheme.primary,
+          colorScheme.primaryContainer,
+          colorScheme.primary,
+          '일반',
+        ),
+    };
+
+    final activeIconColor =
+        rule.isActive ? iconColor : colorScheme.onSurfaceVariant;
+    final activeBgColor = rule.isActive
+        ? bgColor
+        : colorScheme.surfaceContainerHighest;
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: rule.isActive
-            ? colorScheme.errorContainer
-            : colorScheme.surfaceContainerHighest,
-        child: Icon(
-          Icons.rule_rounded,
-          color: rule.isActive
-              ? colorScheme.error
-              : colorScheme.onSurfaceVariant,
-          size: AppSizes.iconMedium,
-        ),
+        backgroundColor: activeBgColor,
+        child: Icon(iconData, color: activeIconColor, size: AppSizes.iconMedium),
       ),
       title: Text(
         rule.name,
@@ -57,23 +78,28 @@ class RuleListItem extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceS,
-              vertical: 4,
+          if (rule.type != ChildcareRuleType.info || rule.points > 0)
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceS,
+                vertical: 4,
+              ),
+              decoration: BoxDecoration(
+                color: rule.isActive
+                    ? bgColor
+                    : colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+              ),
+              child: Text(
+                badgeText,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: rule.isActive
+                          ? badgeColor
+                          : colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
-            decoration: BoxDecoration(
-              color: colorScheme.errorContainer,
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            ),
-            child: Text(
-              l10n.childcare_rule_penalty(rule.penalty.toInt()),
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.error,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
           if (onEdit != null || onDelete != null || onApplyPenalty != null) ...[
             const SizedBox(width: 4),
             PopupMenuButton<String>(
@@ -85,7 +111,10 @@ class RuleListItem extends StatelessWidget {
                 if (value == 'delete') onDelete?.call();
               },
               itemBuilder: (context) => [
-                if (onApplyPenalty != null && rule.isActive)
+                if (onApplyPenalty != null &&
+                    rule.isActive &&
+                    rule.type == ChildcareRuleType.minus &&
+                    rule.points > 0)
                   PopupMenuItem(
                     value: 'apply',
                     child: Text(

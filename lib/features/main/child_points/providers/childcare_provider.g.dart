@@ -71,27 +71,29 @@ final childcareTransactionsProvider =
 
 typedef _$ChildcareTransactions =
     AutoDisposeAsyncNotifier<List<ChildcareTransaction>>;
-String _$childcareRewardsHash() => r'3fd285018e78191d6eb9d8b0bf5fda67c5885d6b';
+String _$childcareShopItemsHash() =>
+    r'916a7b8203cf9c42aaf17c6a9d37a9fa98800159';
 
-/// 보상 목록 Provider
+/// 포인트 상점 아이템 목록 Provider
 ///
-/// Copied from [ChildcareRewards].
-@ProviderFor(ChildcareRewards)
-final childcareRewardsProvider =
+/// Copied from [ChildcareShopItems].
+@ProviderFor(ChildcareShopItems)
+final childcareShopItemsProvider =
     AutoDisposeAsyncNotifierProvider<
-      ChildcareRewards,
-      List<ChildcareReward>
+      ChildcareShopItems,
+      List<ChildcareShopItem>
     >.internal(
-      ChildcareRewards.new,
-      name: r'childcareRewardsProvider',
+      ChildcareShopItems.new,
+      name: r'childcareShopItemsProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$childcareRewardsHash,
+          : _$childcareShopItemsHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$ChildcareRewards = AutoDisposeAsyncNotifier<List<ChildcareReward>>;
+typedef _$ChildcareShopItems =
+    AutoDisposeAsyncNotifier<List<ChildcareShopItem>>;
 String _$childcareRulesHash() => r'a10a4a8eba45a41f6ed63da6c859434f95c8831e';
 
 /// 규칙 목록 Provider

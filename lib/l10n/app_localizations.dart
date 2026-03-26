@@ -4714,10 +4714,10 @@ abstract class AppLocalizations {
   /// **'포인트'**
   String get childcare_tab_points;
 
-  /// 보상 탭
+  /// 포인트 상점 탭
   ///
   /// In ko, this message translates to:
-  /// **'보상'**
+  /// **'포인트 상점'**
   String get childcare_tab_rewards;
 
   /// 규칙 탭

@@ -189,42 +189,42 @@ class ChildcareTransactions extends _$ChildcareTransactions {
   }
 }
 
-// ── 보상 ─────────────────────────────────────────────────────────────────────
+// ── 포인트 상점 ───────────────────────────────────────────────────────────────
 
-/// 보상 목록 Provider
+/// 포인트 상점 아이템 목록 Provider
 @riverpod
-class ChildcareRewards extends _$ChildcareRewards {
+class ChildcareShopItems extends _$ChildcareShopItems {
   @override
-  Future<List<ChildcareReward>> build() async {
+  Future<List<ChildcareShopItem>> build() async {
     final account = ref.watch(selectedChildAccountProvider);
     if (account == null) return [];
 
     final repository = ref.watch(childcareRepositoryProvider);
-    return repository.getRewards(account.id);
+    return repository.getShopItems(account.id);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(selectedChildAccountProvider);
-      if (account == null) return <ChildcareReward>[];
-      return ref.read(childcareRepositoryProvider).getRewards(account.id);
+      if (account == null) return <ChildcareShopItem>[];
+      return ref.read(childcareRepositoryProvider).getShopItems(account.id);
     });
   }
 
-  void addReward(ChildcareReward reward) {
+  void addItem(ChildcareShopItem item) {
     if (!state.hasValue) return;
-    state = AsyncValue.data([...state.value!, reward]);
+    state = AsyncValue.data([...state.value!, item]);
   }
 
-  void updateReward(ChildcareReward reward) {
+  void updateItem(ChildcareShopItem item) {
     if (!state.hasValue) return;
     state = AsyncValue.data(
-      state.value!.map((r) => r.id == reward.id ? reward : r).toList(),
+      state.value!.map((r) => r.id == item.id ? item : r).toList(),
     );
   }
 
-  void removeReward(String id) {
+  void removeItem(String id) {
     if (!state.hasValue) return;
     state = AsyncValue.data(state.value!.where((r) => r.id != id).toList());
   }
@@ -348,45 +348,45 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  /// 보상 추가
-  Future<ChildcareReward?> addReward(
-      String accountId, CreateRewardDto dto) async {
+  /// 상점 아이템 추가
+  Future<ChildcareShopItem?> addShopItem(
+      String accountId, CreateShopItemDto dto) async {
     state = const AsyncValue.loading();
     try {
-      final reward = await _repository.addReward(accountId, dto);
-      _ref.read(childcareRewardsProvider.notifier).addReward(reward);
+      final item = await _repository.addShopItem(accountId, dto);
+      _ref.read(childcareShopItemsProvider.notifier).addItem(item);
       state = const AsyncValue.data(null);
-      return reward;
+      return item;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
     }
   }
 
-  /// 보상 수정
-  Future<ChildcareReward?> updateReward(
+  /// 상점 아이템 수정
+  Future<ChildcareShopItem?> updateShopItem(
     String accountId,
-    String rewardId,
-    UpdateRewardDto dto,
+    String itemId,
+    UpdateShopItemDto dto,
   ) async {
     state = const AsyncValue.loading();
     try {
-      final reward = await _repository.updateReward(accountId, rewardId, dto);
-      _ref.read(childcareRewardsProvider.notifier).updateReward(reward);
+      final item = await _repository.updateShopItem(accountId, itemId, dto);
+      _ref.read(childcareShopItemsProvider.notifier).updateItem(item);
       state = const AsyncValue.data(null);
-      return reward;
+      return item;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
     }
   }
 
-  /// 보상 삭제
-  Future<bool> deleteReward(String accountId, String rewardId) async {
+  /// 상점 아이템 삭제
+  Future<bool> deleteShopItem(String accountId, String itemId) async {
     state = const AsyncValue.loading();
     try {
-      await _repository.deleteReward(accountId, rewardId);
-      _ref.read(childcareRewardsProvider.notifier).removeReward(rewardId);
+      await _repository.deleteShopItem(accountId, itemId);
+      _ref.read(childcareShopItemsProvider.notifier).removeItem(itemId);
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {

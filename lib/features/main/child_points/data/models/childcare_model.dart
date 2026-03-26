@@ -232,18 +232,18 @@ class ChildcareTransaction {
   }
 }
 
-/// 보상 항목 모델
-class ChildcareReward {
+/// 포인트 상점 아이템 모델 (구 보상)
+class ChildcareShopItem {
   final String id;
   final String accountId;
   final String name;
   final String? description;
-  final double points;
+  final int points;
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const ChildcareReward({
+  const ChildcareShopItem({
     required this.id,
     required this.accountId,
     required this.name,
@@ -254,30 +254,30 @@ class ChildcareReward {
     required this.updatedAt,
   });
 
-  factory ChildcareReward.fromJson(Map<String, dynamic> json) {
-    return ChildcareReward(
+  factory ChildcareShopItem.fromJson(Map<String, dynamic> json) {
+    return ChildcareShopItem(
       id: json['id'] as String,
       accountId: json['accountId'] as String,
       name: json['name'] as String,
       description: json['description'] as String?,
-      points: double.parse(json['points'].toString()),
+      points: (json['points'] as num).toInt(),
       isActive: (json['isActive'] as bool?) ?? true,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 
-  ChildcareReward copyWith({
+  ChildcareShopItem copyWith({
     String? id,
     String? accountId,
     String? name,
     String? description,
-    double? points,
+    int? points,
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return ChildcareReward(
+    return ChildcareShopItem(
       id: id ?? this.id,
       accountId: accountId ?? this.accountId,
       name: name ?? this.name,
@@ -290,13 +290,33 @@ class ChildcareReward {
   }
 }
 
+/// 규칙 유형
+enum ChildcareRuleType { plus, minus, info }
+
+ChildcareRuleType childcareRuleTypeFromString(String? value) {
+  switch (value) {
+    case 'PLUS': return ChildcareRuleType.plus;
+    case 'MINUS': return ChildcareRuleType.minus;
+    default: return ChildcareRuleType.info;
+  }
+}
+
+String childcareRuleTypeToString(ChildcareRuleType type) {
+  switch (type) {
+    case ChildcareRuleType.plus: return 'PLUS';
+    case ChildcareRuleType.minus: return 'MINUS';
+    case ChildcareRuleType.info: return 'INFO';
+  }
+}
+
 /// 규칙 모델
 class ChildcareRule {
   final String id;
   final String accountId;
   final String name;
   final String? description;
-  final double penalty;
+  final ChildcareRuleType type;
+  final int points;
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -306,7 +326,8 @@ class ChildcareRule {
     required this.accountId,
     required this.name,
     this.description,
-    required this.penalty,
+    required this.type,
+    required this.points,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
@@ -318,7 +339,8 @@ class ChildcareRule {
       accountId: json['accountId'] as String,
       name: json['name'] as String,
       description: json['description'] as String?,
-      penalty: double.parse(json['penalty'].toString()),
+      type: childcareRuleTypeFromString(json['type'] as String?),
+      points: (json['points'] as num?)?.toInt() ?? 0,
       isActive: (json['isActive'] as bool?) ?? true,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -330,7 +352,8 @@ class ChildcareRule {
     String? accountId,
     String? name,
     String? description,
-    double? penalty,
+    ChildcareRuleType? type,
+    int? points,
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -340,7 +363,8 @@ class ChildcareRule {
       accountId: accountId ?? this.accountId,
       name: name ?? this.name,
       description: description ?? this.description,
-      penalty: penalty ?? this.penalty,
+      type: type ?? this.type,
+      points: points ?? this.points,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
