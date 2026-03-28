@@ -6,9 +6,8 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 import 'package:family_planner/features/main/child_points/data/repositories/childcare_repository.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
-import 'package:family_planner/l10n/app_localizations.dart';
 
-/// 포인트 거래 추가 화면 (부모만)
+/// 보너스 포인트 지급 화면 (부모만)
 class TransactionFormScreen extends ConsumerStatefulWidget {
   const TransactionFormScreen({super.key, required this.accountId});
 
@@ -24,18 +23,7 @@ class _TransactionFormScreenState
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  ChildcareTransactionType _selectedType = ChildcareTransactionType.earn;
   bool _isSubmitting = false;
-
-  static const _earnTypes = [
-    ChildcareTransactionType.earn,
-    ChildcareTransactionType.monthlyAllowance,
-  ];
-
-  static const _deductTypes = [
-    ChildcareTransactionType.spend,
-    ChildcareTransactionType.penalty,
-  ];
 
   @override
   void dispose() {
@@ -46,12 +34,10 @@ class _TransactionFormScreenState
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(l10n.childcare_add_transaction),
+        title: const Text('보너스 지급'),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
@@ -62,50 +48,28 @@ class _TransactionFormScreenState
         child: ListView(
           padding: const EdgeInsets.all(AppSizes.spaceM),
           children: [
-            // 거래 유형 선택
-            Text(
-              l10n.childcare_transaction_type,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            // 적립/차감 유형 선택
-            RadioGroup<ChildcareTransactionType>(
-              groupValue: _selectedType,
-              onChanged: (v) => setState(() => _selectedType = v!),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: AppSizes.spaceS, top: AppSizes.spaceS),
-                    child: Text('적립',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.green,
-                            )),
-                  ),
-                  ..._earnTypes.map((type) =>
-                      RadioListTile<ChildcareTransactionType>(
-                        title: Text(_getTypeLabel(l10n, type)),
-                        value: type,
-                        dense: true,
-                        activeColor: Colors.green,
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: AppSizes.spaceS, top: AppSizes.spaceS),
-                    child: Text('차감',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.red,
-                            )),
-                  ),
-                  ..._deductTypes.map((type) =>
-                      RadioListTile<ChildcareTransactionType>(
-                        title: Text(_getTypeLabel(l10n, type)),
-                        value: type,
-                        dense: true,
-                        activeColor: Colors.red,
-                      )),
-                ],
+            // 안내 문구
+            Card(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.spaceM),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.card_giftcard_outlined,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Expanded(
+                      child: Text(
+                        '아이에게 보너스 포인트를 지급합니다.\n규칙이나 상점 외에 특별히 칭찬하고 싶을 때 사용하세요.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: AppSizes.spaceM),
@@ -113,15 +77,16 @@ class _TransactionFormScreenState
             TextFormField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: l10n.childcare_transaction_amount,
-                prefixIcon: const Icon(Icons.star_rounded),
+              autofocus: true,
+              decoration: const InputDecoration(
+                labelText: '지급 포인트',
+                prefixIcon: Icon(Icons.star_rounded),
                 suffixText: 'P',
               ),
               validator: (v) {
-                if (v == null || v.trim().isEmpty) return '금액을 입력해주세요';
+                if (v == null || v.trim().isEmpty) return '포인트를 입력해주세요';
                 final n = double.tryParse(v);
-                if (n == null || n <= 0) return '올바른 금액을 입력해주세요';
+                if (n == null || n <= 0) return '올바른 포인트를 입력해주세요';
                 return null;
               },
             ),
@@ -129,24 +94,25 @@ class _TransactionFormScreenState
             // 설명 입력
             TextFormField(
               controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: l10n.childcare_transaction_description,
-                hintText: '예: 심부름 완료',
-                prefixIcon: const Icon(Icons.notes),
+              decoration: const InputDecoration(
+                labelText: '지급 이유',
+                hintText: '예: 방 청소를 스스로 해서',
+                prefixIcon: Icon(Icons.notes),
               ),
               validator: (v) =>
-                  v == null || v.trim().isEmpty ? '설명을 입력해주세요' : null,
+                  v == null || v.trim().isEmpty ? '지급 이유를 입력해주세요' : null,
             ),
             const SizedBox(height: AppSizes.spaceXL),
-            FilledButton(
+            FilledButton.icon(
               onPressed: _isSubmitting ? null : _handleSubmit,
-              child: _isSubmitting
+              icon: _isSubmitting
                   ? const SizedBox(
-                      height: 20,
-                      width: 20,
+                      height: 18,
+                      width: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(l10n.childcare_add_transaction),
+                  : const Icon(Icons.card_giftcard_outlined),
+              label: const Text('보너스 지급'),
             ),
           ],
         ),
@@ -154,46 +120,28 @@ class _TransactionFormScreenState
     );
   }
 
-  String _getTypeLabel(AppLocalizations l10n, ChildcareTransactionType type) {
-    switch (type) {
-      case ChildcareTransactionType.earn:
-        return l10n.childcare_transaction_type_earn;
-      case ChildcareTransactionType.spend:
-        return l10n.childcare_transaction_type_spend;
-      case ChildcareTransactionType.penalty:
-        return l10n.childcare_transaction_type_penalty;
-      case ChildcareTransactionType.monthlyAllowance:
-        return l10n.childcare_transaction_type_monthly;
-      case ChildcareTransactionType.savingsDeposit:
-        return l10n.childcare_transaction_type_savings_deposit;
-      case ChildcareTransactionType.savingsWithdraw:
-        return l10n.childcare_transaction_type_savings_withdraw;
-      case ChildcareTransactionType.interestPayment:
-        return l10n.childcare_transaction_type_interest;
-    }
-  }
-
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
 
-    final dto = CreateTransactionDto(
-      type: _selectedType,
-      amount: double.parse(_amountController.text),
-      description: _descriptionController.text.trim(),
-    );
-
     final result = await ref
         .read(childcareManagementProvider.notifier)
-        .addTransaction(widget.accountId, dto);
+        .addTransaction(
+          widget.accountId,
+          CreateTransactionDto.direct(
+            type: ChildcareTransactionType.bonus,
+            amount: double.parse(_amountController.text),
+            description: _descriptionController.text.trim(),
+          ),
+        );
 
     if (!mounted) return;
     setState(() => _isSubmitting = false);
 
     if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('거래가 추가되었습니다')),
+        const SnackBar(content: Text('보너스가 지급되었습니다')),
       );
       context.pop();
     }

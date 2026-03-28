@@ -8,17 +8,17 @@ class RuleListItem extends StatelessWidget {
   const RuleListItem({
     super.key,
     required this.rule,
+    this.onApplyRule,
     this.onEdit,
     this.onDelete,
     this.onToggleActive,
-    this.onApplyPenalty,
   });
 
   final ChildcareRule rule;
+  final VoidCallback? onApplyRule;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onToggleActive;
-  final VoidCallback? onApplyPenalty;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class RuleListItem extends StatelessWidget {
       ChildcareRuleType.minus => (
           Icons.remove_circle_outline,
           colorScheme.error,
-          colorScheme.errorContainer,
+          colorScheme.error.withValues(alpha: 0.12),
           colorScheme.error,
           '-${rule.points}P',
         ),
@@ -51,14 +51,25 @@ class RuleListItem extends StatelessWidget {
 
     final activeIconColor =
         rule.isActive ? iconColor : colorScheme.onSurfaceVariant;
-    final activeBgColor = rule.isActive
-        ? bgColor
-        : colorScheme.surfaceContainerHighest;
+    final activeBgColor =
+        rule.isActive ? bgColor : colorScheme.surfaceContainerHighest;
+
+    // plus/minus 타입이고 활성화 상태이며 포인트가 있을 때만 탭 가능
+    final canApply = onApplyRule != null &&
+        rule.isActive &&
+        rule.type != ChildcareRuleType.info &&
+        rule.points > 0;
 
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: activeBgColor,
-        child: Icon(iconData, color: activeIconColor, size: AppSizes.iconMedium),
+      onTap: canApply ? onApplyRule : null,
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: activeBgColor,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(iconData, color: activeIconColor, size: AppSizes.iconSmall),
       ),
       title: Text(
         rule.name,
@@ -100,28 +111,16 @@ class RuleListItem extends StatelessWidget {
                     ),
               ),
             ),
-          if (onEdit != null || onDelete != null || onApplyPenalty != null) ...[
+          if (onEdit != null || onDelete != null || onToggleActive != null) ...[
             const SizedBox(width: 4),
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
               onSelected: (value) {
-                if (value == 'apply') onApplyPenalty?.call();
                 if (value == 'edit') onEdit?.call();
                 if (value == 'toggle') onToggleActive?.call();
                 if (value == 'delete') onDelete?.call();
               },
               itemBuilder: (context) => [
-                if (onApplyPenalty != null &&
-                    rule.isActive &&
-                    rule.type == ChildcareRuleType.minus &&
-                    rule.points > 0)
-                  PopupMenuItem(
-                    value: 'apply',
-                    child: Text(
-                      '규칙 위반 적용',
-                      style: TextStyle(color: colorScheme.error),
-                    ),
-                  ),
                 if (onEdit != null)
                   const PopupMenuItem(value: 'edit', child: Text('수정')),
                 if (onToggleActive != null)

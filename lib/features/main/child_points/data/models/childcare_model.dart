@@ -1,12 +1,14 @@
 /// 육아 포인트 거래 유형
 enum ChildcareTransactionType {
-  earn,
-  spend,
+  allowance,
+  reward,
+  bonus,
+  penalty,
+  purchase,
+  cashout,
   savingsDeposit,
   savingsWithdraw,
-  monthlyAllowance,
-  interestPayment,
-  penalty,
+  interest,
 }
 
 /// 자녀 프로필 모델
@@ -212,20 +214,24 @@ class ChildcareTransaction {
 
   static ChildcareTransactionType? _parseTransactionType(String value) {
     switch (value.toUpperCase()) {
-      case 'EARN':
-        return ChildcareTransactionType.earn;
-      case 'SPEND':
-        return ChildcareTransactionType.spend;
+      case 'ALLOWANCE':
+        return ChildcareTransactionType.allowance;
+      case 'REWARD':
+        return ChildcareTransactionType.reward;
+      case 'BONUS':
+        return ChildcareTransactionType.bonus;
+      case 'PENALTY':
+        return ChildcareTransactionType.penalty;
+      case 'PURCHASE':
+        return ChildcareTransactionType.purchase;
+      case 'CASHOUT':
+        return ChildcareTransactionType.cashout;
       case 'SAVINGS_DEPOSIT':
         return ChildcareTransactionType.savingsDeposit;
       case 'SAVINGS_WITHDRAW':
         return ChildcareTransactionType.savingsWithdraw;
-      case 'MONTHLY_ALLOWANCE':
-        return ChildcareTransactionType.monthlyAllowance;
-      case 'INTEREST_PAYMENT':
-        return ChildcareTransactionType.interestPayment;
-      case 'PENALTY':
-        return ChildcareTransactionType.penalty;
+      case 'INTEREST':
+        return ChildcareTransactionType.interest;
       default:
         return null;
     }
@@ -375,19 +381,23 @@ class ChildcareRule {
 /// ChildcareTransactionType → API 문자열 변환
 String childcareTransactionTypeToString(ChildcareTransactionType type) {
   switch (type) {
-    case ChildcareTransactionType.earn:
-      return 'EARN';
-    case ChildcareTransactionType.spend:
-      return 'SPEND';
+    case ChildcareTransactionType.allowance:
+      return 'ALLOWANCE';
+    case ChildcareTransactionType.reward:
+      return 'REWARD';
+    case ChildcareTransactionType.bonus:
+      return 'BONUS';
+    case ChildcareTransactionType.penalty:
+      return 'PENALTY';
+    case ChildcareTransactionType.purchase:
+      return 'PURCHASE';
+    case ChildcareTransactionType.cashout:
+      return 'CASHOUT';
     case ChildcareTransactionType.savingsDeposit:
       return 'SAVINGS_DEPOSIT';
     case ChildcareTransactionType.savingsWithdraw:
       return 'SAVINGS_WITHDRAW';
-    case ChildcareTransactionType.monthlyAllowance:
-      return 'MONTHLY_ALLOWANCE';
-    case ChildcareTransactionType.interestPayment:
-      return 'INTEREST_PAYMENT';
-    case ChildcareTransactionType.penalty:
-      return 'PENALTY';
+    case ChildcareTransactionType.interest:
+      return 'INTEREST';
   }
 }

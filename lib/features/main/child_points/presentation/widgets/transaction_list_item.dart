@@ -45,16 +45,17 @@ class TransactionListItem extends StatelessWidget {
 
   bool _isPositiveTransaction(ChildcareTransactionType? type) {
     switch (type) {
-      case ChildcareTransactionType.earn:
-      case ChildcareTransactionType.monthlyAllowance:
-      case ChildcareTransactionType.interestPayment:
-        return true;
-      case ChildcareTransactionType.spend:
-      case ChildcareTransactionType.savingsDeposit:
-      case ChildcareTransactionType.penalty:
-        return false;
+      case ChildcareTransactionType.reward:
+      case ChildcareTransactionType.bonus:
+      case ChildcareTransactionType.allowance:
+      case ChildcareTransactionType.interest:
       case ChildcareTransactionType.savingsWithdraw:
         return true;
+      case ChildcareTransactionType.penalty:
+      case ChildcareTransactionType.purchase:
+      case ChildcareTransactionType.cashout:
+      case ChildcareTransactionType.savingsDeposit:
+        return false;
       default:
         return true;
     }
@@ -62,19 +63,23 @@ class TransactionListItem extends StatelessWidget {
 
   IconData _getTransactionIcon(ChildcareTransactionType? type) {
     switch (type) {
-      case ChildcareTransactionType.earn:
+      case ChildcareTransactionType.reward:
         return Icons.add_circle_outline;
-      case ChildcareTransactionType.spend:
-        return Icons.remove_circle_outline;
-      case ChildcareTransactionType.monthlyAllowance:
+      case ChildcareTransactionType.bonus:
+        return Icons.card_giftcard_outlined;
+      case ChildcareTransactionType.allowance:
         return Icons.calendar_month;
       case ChildcareTransactionType.penalty:
         return Icons.warning_amber_rounded;
+      case ChildcareTransactionType.purchase:
+        return Icons.storefront_outlined;
+      case ChildcareTransactionType.cashout:
+        return Icons.payments_outlined;
       case ChildcareTransactionType.savingsDeposit:
         return Icons.savings_outlined;
       case ChildcareTransactionType.savingsWithdraw:
         return Icons.account_balance_wallet_outlined;
-      case ChildcareTransactionType.interestPayment:
+      case ChildcareTransactionType.interest:
         return Icons.trending_up;
       default:
         return Icons.swap_horiz;

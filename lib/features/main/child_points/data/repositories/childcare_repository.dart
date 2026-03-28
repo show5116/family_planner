@@ -50,22 +50,45 @@ class UpsertAllowancePlanDto {
 }
 
 /// 포인트 거래 추가 DTO
+///
+/// 방법 1 — 상점 아이템 적용: [shopItemId] 지정
+/// 방법 2 — 규칙 적용: [ruleId] 지정
+/// 방법 3 — 직접 입력: [type], [amount], [description] 지정
 class CreateTransactionDto {
-  final ChildcareTransactionType type;
-  final double amount;
-  final String description;
+  final String? shopItemId;
+  final String? ruleId;
+  final ChildcareTransactionType? type;
+  final double? amount;
+  final String? description;
 
-  const CreateTransactionDto({
-    required this.type,
-    required this.amount,
-    required this.description,
-  });
+  const CreateTransactionDto.byShopItem(this.shopItemId)
+      : ruleId = null,
+        type = null,
+        amount = null,
+        description = null;
 
-  Map<String, dynamic> toJson() => {
-        'type': childcareTransactionTypeToString(type),
-        'amount': amount,
-        'description': description,
-      };
+  const CreateTransactionDto.byRule(this.ruleId)
+      : shopItemId = null,
+        type = null,
+        amount = null,
+        description = null;
+
+  const CreateTransactionDto.direct({
+    required ChildcareTransactionType this.type,
+    required double this.amount,
+    required String this.description,
+  })  : shopItemId = null,
+        ruleId = null;
+
+  Map<String, dynamic> toJson() {
+    if (shopItemId != null) return {'shopItemId': shopItemId};
+    if (ruleId != null) return {'ruleId': ruleId};
+    return {
+      'type': childcareTransactionTypeToString(type!),
+      'amount': amount,
+      'description': description,
+    };
+  }
 }
 
 /// 포인트 상점 아이템 생성 DTO
@@ -411,6 +434,18 @@ class ChildcareRepository {
     }
   }
 
+  /// 상점 아이템 순서 변경 (부모만 가능)
+  Future<void> reorderShopItems(String accountId, List<String> ids) async {
+    try {
+      await _dio.patch(
+        '/childcare/accounts/$accountId/shop-items/reorder',
+        data: {'ids': ids},
+      );
+    } on DioException catch (e) {
+      throw Exception('상점 아이템 순서 변경 실패: ${e.message}');
+    }
+  }
+
   /// 상점 아이템 삭제 (부모만 가능)
   Future<void> deleteShopItem(String accountId, String itemId) async {
     try {
@@ -473,6 +508,18 @@ class ChildcareRepository {
         throw Exception('규칙을 찾을 수 없습니다');
       }
       throw Exception('규칙 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 규칙 순서 변경 (부모만 가능)
+  Future<void> reorderRules(String accountId, List<String> ids) async {
+    try {
+      await _dio.patch(
+        '/childcare/accounts/$accountId/rules/reorder',
+        data: {'ids': ids},
+      );
+    } on DioException catch (e) {
+      throw Exception('규칙 순서 변경 실패: ${e.message}');
     }
   }
 

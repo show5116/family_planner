@@ -8,12 +8,14 @@ class ShopItemListItem extends StatelessWidget {
   const ShopItemListItem({
     super.key,
     required this.item,
+    this.onUse,
     this.onEdit,
     this.onDelete,
     this.onToggleActive,
   });
 
   final ChildcareShopItem item;
+  final VoidCallback? onUse;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onToggleActive;
@@ -23,16 +25,22 @@ class ShopItemListItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: item.isActive
-            ? colorScheme.secondaryContainer
-            : colorScheme.surfaceContainerHighest,
+      onTap: item.isActive ? onUse : null,
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: item.isActive
+              ? colorScheme.secondaryContainer
+              : colorScheme.surfaceContainerHighest,
+          shape: BoxShape.circle,
+        ),
         child: Icon(
           Icons.storefront_outlined,
           color: item.isActive
               ? colorScheme.secondary
               : colorScheme.onSurfaceVariant,
-          size: AppSizes.iconMedium,
+          size: AppSizes.iconSmall,
         ),
       ),
       title: Text(

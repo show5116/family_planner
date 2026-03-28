@@ -228,6 +228,11 @@ class ChildcareShopItems extends _$ChildcareShopItems {
     if (!state.hasValue) return;
     state = AsyncValue.data(state.value!.where((r) => r.id != id).toList());
   }
+
+  void reorderItems(List<ChildcareShopItem> items) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(items);
+  }
 }
 
 // ── 규칙 ─────────────────────────────────────────────────────────────────────
@@ -268,6 +273,11 @@ class ChildcareRules extends _$ChildcareRules {
   void removeRule(String id) {
     if (!state.hasValue) return;
     state = AsyncValue.data(state.value!.where((r) => r.id != id).toList());
+  }
+
+  void reorderRules(List<ChildcareRule> rules) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(rules);
   }
 }
 
@@ -381,6 +391,20 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
+  /// 상점 아이템 순서 변경
+  Future<void> reorderShopItems(
+      String accountId, List<ChildcareShopItem> items) async {
+    // 낙관적 업데이트 — UI 즉시 반영
+    _ref.read(childcareShopItemsProvider.notifier).reorderItems(items);
+    try {
+      await _repository.reorderShopItems(
+          accountId, items.map((e) => e.id).toList());
+    } catch (_) {
+      // 실패 시 서버 데이터로 복구
+      _ref.read(childcareShopItemsProvider.notifier).refresh();
+    }
+  }
+
   /// 상점 아이템 삭제
   Future<bool> deleteShopItem(String accountId, String itemId) async {
     state = const AsyncValue.loading();
@@ -424,6 +448,18 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
+    }
+  }
+
+  /// 규칙 순서 변경
+  Future<void> reorderRules(
+      String accountId, List<ChildcareRule> rules) async {
+    _ref.read(childcareRulesProvider.notifier).reorderRules(rules);
+    try {
+      await _repository.reorderRules(
+          accountId, rules.map((e) => e.id).toList());
+    } catch (_) {
+      _ref.read(childcareRulesProvider.notifier).refresh();
     }
   }
 

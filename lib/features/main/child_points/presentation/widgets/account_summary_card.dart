@@ -13,6 +13,7 @@ class AccountSummaryCard extends StatelessWidget {
     this.onDepositSavings,
     this.onWithdrawSavings,
     this.onAddTransaction,
+    this.onCashout,
   });
 
   final ChildcareAccount account;
@@ -20,6 +21,7 @@ class AccountSummaryCard extends StatelessWidget {
   final VoidCallback? onDepositSavings;
   final VoidCallback? onWithdrawSavings;
   final VoidCallback? onAddTransaction;
+  final VoidCallback? onCashout;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,9 @@ class AccountSummaryCard extends StatelessWidget {
               label: l10n.childcare_balance,
               value: account.balance.toInt().toString(),
               unit: 'P',
+              subtitle: plan != null
+                  ? '≈ ${(account.balance * plan!.pointToMoneyRatio).toInt()}원'
+                  : null,
             ),
             const SizedBox(height: AppSizes.spaceS),
             const Divider(),
@@ -74,10 +79,18 @@ class AccountSummaryCard extends StatelessWidget {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: onAddTransaction,
-                      icon: const Icon(Icons.add, size: AppSizes.iconSmall),
-                      label: Text(l10n.childcare_add_transaction),
+                      icon: const Icon(Icons.card_giftcard_outlined, size: AppSizes.iconSmall),
+                      label: const Text('보너스 지급'),
                     ),
                   ),
+                if (onCashout != null) ...[
+                  const SizedBox(width: AppSizes.spaceS),
+                  OutlinedButton.icon(
+                    onPressed: onCashout,
+                    icon: const Icon(Icons.payments_outlined, size: AppSizes.iconSmall),
+                    label: const Text('현금화'),
+                  ),
+                ],
                 if (onDepositSavings != null) ...[
                   const SizedBox(width: AppSizes.spaceS),
                   OutlinedButton(
