@@ -208,15 +208,22 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
               },
             ),
             const SizedBox(height: AppSizes.spaceM),
-            InkWell(
-              onTap: _selectNegotiationDate,
-              child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: '다음 연봉 협상일 (선택)',
-                  prefixIcon: Icon(Icons.handshake_outlined),
-                ),
+            InputDecorator(
+              decoration: InputDecoration(
+                labelText: '다음 연봉 협상일 (선택)',
+                prefixIcon: const Icon(Icons.handshake_outlined),
+                suffixIcon: _nextNegotiationDate != null
+                    ? IconButton(
+                        icon: const Icon(Icons.close),
+                        iconSize: AppSizes.iconSmall,
+                        onPressed: () =>
+                            setState(() => _nextNegotiationDate = null),
+                      )
+                    : null,
+              ),
+              child: InkWell(
+                onTap: _selectNegotiationDate,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       _nextNegotiationDate != null
@@ -229,16 +236,6 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
                                 color: Theme.of(context).hintColor,
                               ),
                     ),
-                    if (_nextNegotiationDate != null)
-                      GestureDetector(
-                        onTap: () =>
-                            setState(() => _nextNegotiationDate = null),
-                        child: Icon(
-                          Icons.close,
-                          size: AppSizes.iconSmall,
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
                   ],
                 ),
               ),

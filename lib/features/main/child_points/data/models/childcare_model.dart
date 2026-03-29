@@ -378,6 +378,94 @@ class ChildcareRule {
   }
 }
 
+/// 적금 이자 유형
+enum SavingsInterestType { simple, compound }
+
+SavingsInterestType savingsInterestTypeFromString(String? value) {
+  switch (value) {
+    case 'COMPOUND':
+      return SavingsInterestType.compound;
+    default:
+      return SavingsInterestType.simple;
+  }
+}
+
+String savingsInterestTypeToString(SavingsInterestType type) {
+  switch (type) {
+    case SavingsInterestType.simple:
+      return 'SIMPLE';
+    case SavingsInterestType.compound:
+      return 'COMPOUND';
+  }
+}
+
+/// 적금 플랜 상태
+enum SavingsPlanStatus { active, matured, cancelled }
+
+SavingsPlanStatus savingsPlanStatusFromString(String? value) {
+  switch (value) {
+    case 'MATURED':
+      return SavingsPlanStatus.matured;
+    case 'CANCELLED':
+      return SavingsPlanStatus.cancelled;
+    default:
+      return SavingsPlanStatus.active;
+  }
+}
+
+/// 적금 플랜 모델
+class ChildcareSavingsPlan {
+  final String id;
+  final String accountId;
+  final int monthlyAmount;
+  final double interestRate;
+  final SavingsInterestType interestType;
+  final DateTime startDate;
+  final DateTime endDate;
+  final SavingsPlanStatus status;
+  final DateTime? maturedAt;
+  final DateTime? cancelledAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const ChildcareSavingsPlan({
+    required this.id,
+    required this.accountId,
+    required this.monthlyAmount,
+    required this.interestRate,
+    required this.interestType,
+    required this.startDate,
+    required this.endDate,
+    required this.status,
+    this.maturedAt,
+    this.cancelledAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory ChildcareSavingsPlan.fromJson(Map<String, dynamic> json) {
+    return ChildcareSavingsPlan(
+      id: json['id'] as String,
+      accountId: json['accountId'] as String,
+      monthlyAmount: (json['monthlyAmount'] as num).toInt(),
+      interestRate: double.parse(json['interestRate'].toString()),
+      interestType: savingsInterestTypeFromString(json['interestType'] as String?),
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      status: savingsPlanStatusFromString(json['status'] as String?),
+      maturedAt: json['maturedAt'] != null
+          ? DateTime.parse(json['maturedAt'] as String)
+          : null,
+      cancelledAt: json['cancelledAt'] != null
+          ? DateTime.parse(json['cancelledAt'] as String)
+          : null,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
+  }
+}
+
+
 /// ChildcareTransactionType → API 문자열 변환
 String childcareTransactionTypeToString(ChildcareTransactionType type) {
   switch (type) {

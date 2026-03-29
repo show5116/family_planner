@@ -281,6 +281,15 @@ class ChildcareRules extends _$ChildcareRules {
   }
 }
 
+// ── 적금 플랜 ─────────────────────────────────────────────────────────────────
+
+/// 적금 플랜 Provider (accountId 기반)
+final childcareSavingsPlanProvider =
+    FutureProvider.family<ChildcareSavingsPlan?, String>((ref, accountId) {
+  return ref.watch(childcareRepositoryProvider).getSavingsPlan(accountId);
+});
+
+
 // ── 관리 Notifier ─────────────────────────────────────────────────────────────
 
 /// 육아 포인트 관리 Notifier (생성/수정/삭제)
@@ -477,39 +486,36 @@ class ChildcareManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  /// 적금 입금
-  Future<ChildcareTransaction?> savingsDeposit(
+  /// 적금 플랜 생성
+  Future<ChildcareSavingsPlan?> createSavingsPlan(
     String accountId,
-    SavingsAmountDto dto,
+    CreateSavingsPlanDto dto,
   ) async {
     state = const AsyncValue.loading();
     try {
-      final transaction = await _repository.savingsDeposit(accountId, dto);
-      _ref.read(childcareTransactionsProvider.notifier).addTransaction(transaction);
+      final plan = await _repository.createSavingsPlan(accountId, dto);
+      _ref.invalidate(childcareSavingsPlanProvider(accountId));
       _ref.read(childcareAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
-      return transaction;
+      return plan;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
     }
   }
 
-  /// 적금 출금 (부모만)
-  Future<ChildcareTransaction?> savingsWithdraw(
-    String accountId,
-    SavingsAmountDto dto,
-  ) async {
+  /// 적금 플랜 중도 해지
+  Future<bool> cancelSavingsPlan(String accountId) async {
     state = const AsyncValue.loading();
     try {
-      final transaction = await _repository.savingsWithdraw(accountId, dto);
-      _ref.read(childcareTransactionsProvider.notifier).addTransaction(transaction);
+      await _repository.cancelSavingsPlan(accountId);
+      _ref.invalidate(childcareSavingsPlanProvider(accountId));
       _ref.read(childcareAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
-      return transaction;
+      return true;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return null;
+      return false;
     }
   }
 }

@@ -10,16 +10,12 @@ class AccountSummaryCard extends StatelessWidget {
     super.key,
     required this.account,
     this.plan,
-    this.onDepositSavings,
-    this.onWithdrawSavings,
     this.onAddTransaction,
     this.onCashout,
   });
 
   final ChildcareAccount account;
   final AllowancePlan? plan;
-  final VoidCallback? onDepositSavings;
-  final VoidCallback? onWithdrawSavings;
   final VoidCallback? onAddTransaction;
   final VoidCallback? onCashout;
 
@@ -89,13 +85,6 @@ class AccountSummaryCard extends StatelessWidget {
                     onPressed: onCashout,
                     icon: const Icon(Icons.payments_outlined, size: AppSizes.iconSmall),
                     label: const Text('현금화'),
-                  ),
-                ],
-                if (onDepositSavings != null) ...[
-                  const SizedBox(width: AppSizes.spaceS),
-                  OutlinedButton(
-                    onPressed: onDepositSavings,
-                    child: Text(l10n.childcare_savings_deposit),
                   ),
                 ],
               ],

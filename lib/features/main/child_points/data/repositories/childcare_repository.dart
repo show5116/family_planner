@@ -179,13 +179,29 @@ class UpdateRuleDto {
       };
 }
 
-/// 적금 입출금 DTO
-class SavingsAmountDto {
-  final double amount;
+/// 적금 플랜 생성 / 미리보기 공통 DTO
+class CreateSavingsPlanDto {
+  final int monthlyAmount;
+  final double interestRate;
+  final SavingsInterestType interestType;
+  final String startDate; // YYYY-MM-DD
+  final String endDate;   // YYYY-MM-DD
 
-  const SavingsAmountDto({required this.amount});
+  const CreateSavingsPlanDto({
+    required this.monthlyAmount,
+    required this.interestRate,
+    required this.interestType,
+    required this.startDate,
+    required this.endDate,
+  });
 
-  Map<String, dynamic> toJson() => {'amount': amount};
+  Map<String, dynamic> toJson() => {
+        'monthlyAmount': monthlyAmount,
+        'interestRate': interestRate,
+        'interestType': savingsInterestTypeToString(interestType),
+        'startDate': startDate,
+        'endDate': endDate,
+      };
 }
 
 // ─── Repository ─────────────────────────────────────────────────────────────
@@ -535,39 +551,60 @@ class ChildcareRepository {
     }
   }
 
-  // ── 적금 ─────────────────────────────────────────────────────────────────
+  // ── 적금 플랜 ─────────────────────────────────────────────────────────────
 
-  /// 적금 입금 (자녀 또는 부모)
-  Future<ChildcareTransaction> savingsDeposit(
-    String accountId,
-    SavingsAmountDto dto,
-  ) async {
+  /// 국고채 3년물 금리 조회 (적금 플랜 참고용)
+  Future<double?> getKr3yRate(String accountId) async {
     try {
-      final response = await _dio.post(
-        '/childcare/accounts/$accountId/savings/deposit',
-        data: dto.toJson(),
+      final response = await _dio.get(
+        '/childcare/accounts/$accountId/savings/kr3y-rate',
       );
-      return ChildcareTransaction.fromJson(response.data as Map<String, dynamic>);
+      final data = response.data as Map<String, dynamic>;
+      final raw = data['kr3yRate'];
+      return raw != null ? double.parse(raw.toString()) : null;
     } on DioException catch (e) {
-      debugPrint('❌ [ChildcareRepository] 적금 입금 실패: ${e.message}');
-      throw Exception('적금 입금 실패: ${e.message}');
+      debugPrint('❌ [ChildcareRepository] 국고채 금리 조회 실패: ${e.message}');
+      return null;
     }
   }
 
-  /// 적금 출금 (부모만 가능)
-  Future<ChildcareTransaction> savingsWithdraw(
+  /// 적금 플랜 생성 (부모만 가능)
+  Future<ChildcareSavingsPlan> createSavingsPlan(
     String accountId,
-    SavingsAmountDto dto,
+    CreateSavingsPlanDto dto,
   ) async {
     try {
       final response = await _dio.post(
-        '/childcare/accounts/$accountId/savings/withdraw',
+        '/childcare/accounts/$accountId/savings/plan',
         data: dto.toJson(),
       );
-      return ChildcareTransaction.fromJson(response.data as Map<String, dynamic>);
+      return ChildcareSavingsPlan.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      debugPrint('❌ [ChildcareRepository] 적금 출금 실패: ${e.message}');
-      throw Exception('적금 출금 실패: ${e.message}');
+      debugPrint('❌ [ChildcareRepository] 적금 플랜 생성 실패: ${e.message}');
+      throw Exception('적금 플랜 생성 실패: ${e.message}');
+    }
+  }
+
+  /// 적금 플랜 조회
+  Future<ChildcareSavingsPlan?> getSavingsPlan(String accountId) async {
+    try {
+      final response =
+          await _dio.get('/childcare/accounts/$accountId/savings/plan');
+      return ChildcareSavingsPlan.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) return null;
+      debugPrint('❌ [ChildcareRepository] 적금 플랜 조회 실패: ${e.message}');
+      throw Exception('적금 플랜 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 적금 플랜 중도 해지 (이자 없이 원금 반환)
+  Future<void> cancelSavingsPlan(String accountId) async {
+    try {
+      await _dio.delete('/childcare/accounts/$accountId/savings/plan');
+    } on DioException catch (e) {
+      debugPrint('❌ [ChildcareRepository] 적금 플랜 해지 실패: ${e.message}');
+      throw Exception('적금 플랜 해지 실패: ${e.message}');
     }
   }
 }
