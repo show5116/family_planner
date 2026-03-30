@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
+import 'package:family_planner/features/main/investment/data/models/market_briefing_model.dart';
 
 final indicatorRepositoryProvider = Provider<IndicatorRepository>((ref) {
   return IndicatorRepository();
@@ -110,6 +111,17 @@ class IndicatorRepository {
       return InitHistoryResult.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw Exception('과거 데이터 초기화 실패: ${e.message}');
+    }
+  }
+
+  /// AI 시황 브리핑 조회
+  Future<MarketBriefingModel> getMarketBriefing() async {
+    try {
+      final response = await _dio.get('/ai/market-briefing');
+      return MarketBriefingModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [IndicatorRepository] AI 시황 브리핑 조회 실패: ${e.message}');
+      throw Exception('AI 시황 브리핑 조회 실패: ${e.message}');
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
+import 'package:family_planner/features/main/investment/data/models/market_briefing_model.dart';
 import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
@@ -191,6 +192,7 @@ class _IndicatorListBody extends ConsumerWidget {
 
     return CustomScrollView(
       slivers: [
+        const SliverToBoxAdapter(child: _MarketBriefingSection()),
         if (bookmarked.isNotEmpty) ...[
           SliverToBoxAdapter(
             child: Padding(
@@ -353,6 +355,154 @@ class _ErrorBody extends StatelessWidget {
             child: const Text('다시 시도'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MarketBriefingSection extends ConsumerWidget {
+  const _MarketBriefingSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final briefingAsync = ref.watch(marketBriefingProvider);
+
+    return briefingAsync.when(
+      loading: () => const Padding(
+        padding: EdgeInsets.all(AppSizes.spaceM),
+        child: LinearProgressIndicator(),
+      ),
+      error: (error, _) => Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Text(
+          'AI 브리핑 오류: $error',
+          style: TextStyle(color: AppColors.error, fontSize: 12),
+        ),
+      ),
+      data: (briefing) {
+        final items = <(String, MarketBriefingItem)>[];
+        if (briefing.macro != null) items.add(('매크로', briefing.macro!));
+        if (briefing.domesticMarket != null) items.add(('국내 시장', briefing.domesticMarket!));
+        if (briefing.globalMarket != null) items.add(('글로벌 시장', briefing.globalMarket!));
+
+        if (items.isEmpty) return const SizedBox.shrink();
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceXS,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.auto_awesome, size: 16, color: AppColors.investment),
+                  const SizedBox(width: AppSizes.spaceXS),
+                  Text(
+                    'AI 시황 브리핑',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: AppColors.investment,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+              ...items.map((entry) => _BriefingCard(label: entry.$1, item: entry.$2)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BriefingCard extends StatefulWidget {
+  const _BriefingCard({required this.label, required this.item});
+
+  final String label;
+  final MarketBriefingItem item;
+
+  @override
+  State<_BriefingCard> createState() => _BriefingCardState();
+}
+
+class _BriefingCardState extends State<_BriefingCard> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final updatedAt = widget.item.updatedAt.toLocal();
+    final timeStr =
+        '${updatedAt.month}/${updatedAt.day} ${updatedAt.hour.toString().padLeft(2, '0')}:${updatedAt.minute.toString().padLeft(2, '0')}';
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSizes.spaceS),
+      child: InkWell(
+        onTap: () => setState(() => _expanded = !_expanded),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.spaceM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceS,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.investment.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      widget.label,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: AppColors.investment,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Expanded(
+                    child: Text(
+                      widget.item.title,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                      maxLines: _expanded ? null : 1,
+                      overflow: _expanded ? null : TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    _expanded ? Icons.expand_less : Icons.expand_more,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+              if (_expanded) ...[
+                const SizedBox(height: AppSizes.spaceS),
+                Text(
+                  widget.item.content,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: AppSizes.spaceXS),
+                Text(
+                  '업데이트: $timeStr',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

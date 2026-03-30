@@ -464,6 +464,27 @@ final indicatorsProvider =
     );
 
 typedef _$Indicators = AutoDisposeAsyncNotifier<List<IndicatorModel>>;
+String _$marketBriefingHash() => r'4c84bb77a22d1d88b295a4e56d8877d45b7c729a';
+
+/// AI 시황 브리핑 Provider
+///
+/// Copied from [MarketBriefing].
+@ProviderFor(MarketBriefing)
+final marketBriefingProvider =
+    AutoDisposeAsyncNotifierProvider<
+      MarketBriefing,
+      MarketBriefingModel
+    >.internal(
+      MarketBriefing.new,
+      name: r'marketBriefingProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$marketBriefingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$MarketBriefing = AutoDisposeAsyncNotifier<MarketBriefingModel>;
 String _$bookmarkedIndicatorsHash() =>
     r'fb6e7ae195e5ace747371649e423548546c55cb3';
 

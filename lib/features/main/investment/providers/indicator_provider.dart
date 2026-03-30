@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
+import 'package:family_planner/features/main/investment/data/models/market_briefing_model.dart';
 import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 
 part 'indicator_provider.g.dart';
@@ -161,6 +162,23 @@ Future<InitHistoryResult> initIndicatorHistory(
 }) async {
   final repository = ref.read(indicatorRepositoryProvider);
   return repository.initHistory(days: days);
+}
+
+/// AI 시황 브리핑 Provider
+@riverpod
+class MarketBriefing extends _$MarketBriefing {
+  @override
+  Future<MarketBriefingModel> build() async {
+    final repository = ref.watch(indicatorRepositoryProvider);
+    return repository.getMarketBriefing();
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () => ref.read(indicatorRepositoryProvider).getMarketBriefing(),
+    );
+  }
 }
 
 /// 즐겨찾기 지표 목록 Provider
