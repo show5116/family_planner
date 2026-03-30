@@ -368,11 +368,12 @@ class ChildcareRepository {
     }
   }
 
-  /// 거래 내역 조회
-  Future<List<ChildcareTransaction>> getTransactions(
+  /// 거래 내역 조회 (월별 또는 연도별)
+  Future<TransactionResult> getTransactions(
     String accountId, {
     ChildcareTransactionType? type,
-    String? month,
+    String? month, // YYYY-MM
+    String? year,  // YYYY
   }) async {
     try {
       final response = await _dio.get(
@@ -380,15 +381,14 @@ class ChildcareRepository {
         queryParameters: {
           if (type != null) 'type': childcareTransactionTypeToString(type),
           if (month != null) 'month': month,
+          if (year != null) 'year': year,
         },
       );
       final data = response.data;
-      if (data is List) {
-        return data
-            .map((e) => ChildcareTransaction.fromJson(e as Map<String, dynamic>))
-            .toList();
+      if (data is Map<String, dynamic>) {
+        return TransactionResult.fromJson(data);
       }
-      return [];
+      return TransactionResult(transactions: [], closingBalance: 0);
     } on DioException catch (e) {
       debugPrint('❌ [ChildcareRepository] 거래 내역 조회 실패: ${e.message}');
       throw Exception('거래 내역 조회 실패: ${e.message}');

@@ -49,16 +49,16 @@ final childcareAccountsProvider =
 
 typedef _$ChildcareAccounts = AutoDisposeAsyncNotifier<List<ChildcareAccount>>;
 String _$childcareTransactionsHash() =>
-    r'7514dc618efd932173558be4ed59a9435e3e5bce';
+    r'701a87090f5f4d156da9d92a82f22edf2da71370';
 
-/// 거래 내역 Provider
+/// 거래 내역 Provider (월별 또는 연도별)
 ///
 /// Copied from [ChildcareTransactions].
 @ProviderFor(ChildcareTransactions)
 final childcareTransactionsProvider =
     AutoDisposeAsyncNotifierProvider<
       ChildcareTransactions,
-      List<ChildcareTransaction>
+      TransactionResult
     >.internal(
       ChildcareTransactions.new,
       name: r'childcareTransactionsProvider',
@@ -69,10 +69,9 @@ final childcareTransactionsProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$ChildcareTransactions =
-    AutoDisposeAsyncNotifier<List<ChildcareTransaction>>;
+typedef _$ChildcareTransactions = AutoDisposeAsyncNotifier<TransactionResult>;
 String _$childcareShopItemsHash() =>
-    r'916a7b8203cf9c42aaf17c6a9d37a9fa98800159';
+    r'1822bfd3eca1e8be7687da8dcbf9ff16012fbb3d';
 
 /// 포인트 상점 아이템 목록 Provider
 ///
@@ -94,7 +93,7 @@ final childcareShopItemsProvider =
 
 typedef _$ChildcareShopItems =
     AutoDisposeAsyncNotifier<List<ChildcareShopItem>>;
-String _$childcareRulesHash() => r'a10a4a8eba45a41f6ed63da6c859434f95c8831e';
+String _$childcareRulesHash() => r'99a7f6abf9052ea2a2f25df599b247d4bc6d2e04';
 
 /// 규칙 목록 Provider
 ///

@@ -12,10 +12,21 @@ final childcareSelectedGroupIdProvider = StateProvider<String?>((ref) => null);
 /// 현재 선택된 자녀 프로필 ID
 final childcareSelectedChildIdProvider = StateProvider<String?>((ref) => null);
 
+/// 히스토리 조회 단위 (월별 / 연도별)
+enum HistoryViewMode { monthly, yearly }
+
+final childcareHistoryViewModeProvider =
+    StateProvider<HistoryViewMode>((ref) => HistoryViewMode.monthly);
+
 /// 조회 월 Provider (YYYY-MM)
 final childcareSelectedMonthProvider = StateProvider<String>((ref) {
   final now = DateTime.now();
   return '${now.year}-${now.month.toString().padLeft(2, '0')}';
+});
+
+/// 조회 연도 Provider (YYYY)
+final childcareSelectedYearProvider = StateProvider<String>((ref) {
+  return DateTime.now().year.toString();
 });
 
 // ── 자녀 프로필 목록 ──────────────────────────────────────────────────────────
@@ -158,34 +169,49 @@ final childcareAllowancePlanHistoryProvider =
 
 // ── 거래 내역 ─────────────────────────────────────────────────────────────────
 
-/// 거래 내역 Provider
+/// 거래 내역 Provider (월별 또는 연도별)
 @riverpod
 class ChildcareTransactions extends _$ChildcareTransactions {
   @override
-  Future<List<ChildcareTransaction>> build() async {
+  Future<TransactionResult> build() async {
     final account = ref.watch(selectedChildAccountProvider);
+    final mode = ref.watch(childcareHistoryViewModeProvider);
     final month = ref.watch(childcareSelectedMonthProvider);
-    if (account == null) return [];
-
+    final year = ref.watch(childcareSelectedYearProvider);
+    if (account == null) {
+      return TransactionResult(transactions: [], closingBalance: 0);
+    }
     final repository = ref.watch(childcareRepositoryProvider);
-    return repository.getTransactions(account.id, month: month);
+    return mode == HistoryViewMode.monthly
+        ? repository.getTransactions(account.id, month: month)
+        : repository.getTransactions(account.id, year: year);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(selectedChildAccountProvider);
+      final mode = ref.read(childcareHistoryViewModeProvider);
       final month = ref.read(childcareSelectedMonthProvider);
-      if (account == null) return <ChildcareTransaction>[];
-      return ref
-          .read(childcareRepositoryProvider)
-          .getTransactions(account.id, month: month);
+      final year = ref.read(childcareSelectedYearProvider);
+      if (account == null) {
+        return TransactionResult(transactions: [], closingBalance: 0);
+      }
+      return mode == HistoryViewMode.monthly
+          ? ref.read(childcareRepositoryProvider)
+              .getTransactions(account.id, month: month)
+          : ref.read(childcareRepositoryProvider)
+              .getTransactions(account.id, year: year);
     });
   }
 
   void addTransaction(ChildcareTransaction transaction) {
     if (!state.hasValue) return;
-    state = AsyncValue.data([transaction, ...state.value!]);
+    final current = state.value!;
+    state = AsyncValue.data(TransactionResult(
+      transactions: [transaction, ...current.transactions],
+      closingBalance: current.closingBalance + transaction.amount,
+    ));
   }
 }
 

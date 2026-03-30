@@ -178,6 +178,28 @@ class AllowancePlanHistory {
   }
 }
 
+/// 거래 내역 조회 응답 래퍼 (transactions + closingBalance)
+class TransactionResult {
+  final List<ChildcareTransaction> transactions;
+  final double closingBalance;
+
+  const TransactionResult({
+    required this.transactions,
+    required this.closingBalance,
+  });
+
+  factory TransactionResult.fromJson(Map<String, dynamic> json) {
+    final list = (json['transactions'] as List<dynamic>? ?? [])
+        .map((e) => ChildcareTransaction.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return TransactionResult(
+      transactions: list,
+      closingBalance: double.parse(
+          (json['closingBalance'] ?? 0).toString()),
+    );
+  }
+}
+
 /// 포인트 거래 내역 모델
 class ChildcareTransaction {
   final String id;

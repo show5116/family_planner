@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 7/19 기능 (37%)
-- **진행 중**: 6/19 기능 (32%)
+- **완료**: 8/19 기능 (42%)
+- **진행 중**: 5/19 기능 (26%)
 - **미시작**: 6/19 기능 (32%)
 
-**마지막 업데이트**: 2026-03-18
+**마지막 업데이트**: 2026-03-30
 
 ---
 
@@ -47,7 +47,7 @@
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
-| 육아 포인트 | 🟨 진행 중 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
+| 육아 포인트 | ✅ 완료 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
 | 미니게임 | ⬜ 시작 안함 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
 | 투표 | 🟨 진행 중 | [18-votes.md](docs/features/18-votes.md) | P2 |
 
@@ -83,7 +83,7 @@
 - [ ] 가계부 기능
 
 ### Milestone 3: Family Features (목표: Phase 4 완료)
-- [ ] 육아 포인트 시스템
+- [x] 육아 포인트 시스템
 - [ ] 미니게임 기능
 
 ### Milestone 4: Polish & Scale (목표: Phase 5 완료)
@@ -95,6 +95,16 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-03-30
+- ✅ **육아 포인트 기능 완료** ([08-childcare.md](docs/features/08-childcare.md))
+  - 적금 플랜 재설계: 생성/조회/해지 API 연동, 단리/복리 이자 미리보기 (로컬 계산)
+  - 국고채 3년물 금리 참고 helperText (GET /savings/kr3y-rate)
+  - TransactionResult 래퍼 도입 (closingBalance 포함)
+  - 히스토리 탭 시각화: 월별/연도별 토글, 잔액 라인 차트, 유형별 도넛 차트, 연간 막대 차트
+  - 규칙 탭 타입별 섹션(_RuleSection), 드래그 순서 변경 수정
+  - 용돈 플랜 협상일 X버튼 suffixIcon 방식으로 수정
+  - 상점 탭 드래그앤드롭 Material 래퍼 추가 (No Material 에러 수정)
 
 ### 2026-03-18
 - 🟨 **투표 기능 진행 중** ([18-votes.md](docs/features/18-votes.md))

@@ -16,7 +16,7 @@
 | ⬜ | 가계관리 | [05-household.md](docs/features/05-household.md) |
 | ⬜ | 일정관리 | [06-schedule.md](docs/features/06-schedule.md) |
 | ⬜ | ToDoList | [07-todo.md](docs/features/07-todo.md) |
-| ⬜ | 육아포인트 | [08-childcare.md](docs/features/08-childcare.md) |
+| ✅ | 육아포인트 | [08-childcare.md](docs/features/08-childcare.md) |
 | ✅ | 메모 | [09-memo.md](docs/features/09-memo.md) |
 | ⬜ | 미니게임 | [10-minigame.md](docs/features/10-minigame.md) |
 | 🟨 | 다국어 | [11-i18n.md](docs/features/11-i18n.md) |
