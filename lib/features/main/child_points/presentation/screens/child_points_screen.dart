@@ -64,10 +64,13 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.childcare_title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
+        leading: context.canPop()
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.pop(),
+              )
+            : null,
+        automaticallyImplyLeading: false,
         actions: [
           const AiChatIconButton(),
           if (selectedChildId != null)

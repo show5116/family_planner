@@ -199,10 +199,13 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.memo_title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
+        leading: context.canPop()
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.pop(),
+              )
+            : null,
+        automaticallyImplyLeading: false,
         actions: [
           const AiChatIconButton(),
           IconButton(
