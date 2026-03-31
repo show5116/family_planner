@@ -84,4 +84,11 @@ class AppRoutes {
   static const String questionDetail = '/qna/questions/:id';
   static const String questionCreate = '/qna/create';
   static const String questionEdit = '/qna/:id/edit';
+
+  // Savings Routes
+  static const String savings = '/savings';
+  static const String savingsDetail = '/savings/:id';
+  static const String savingsCreate = '/savings/create';
+  static const String savingsEdit = '/savings/:id/edit';
+  static const String savingsTransactions = '/savings/:id/transactions';
 }

@@ -94,6 +94,11 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                 title: '투표',
                 onTap: () => context.push(AppRoutes.votes),
               ),
+              MenuListTile(
+                icon: Icons.savings_outlined,
+                title: '적립금 관리',
+                onTap: () => context.push(AppRoutes.savings),
+              ),
               const Divider(),
               // 고정 메뉴: 공지사항, QnA
               MenuListTile(

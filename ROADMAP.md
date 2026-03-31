@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 8/19 기능 (42%)
-- **진행 중**: 5/19 기능 (26%)
-- **미시작**: 6/19 기능 (32%)
+- **완료**: 8/20 기능 (40%)
+- **진행 중**: 5/20 기능 (25%)
+- **미시작**: 7/20 기능 (35%)
 
-**마지막 업데이트**: 2026-03-30
+**마지막 업데이트**: 2026-03-31
 
 ---
 
@@ -42,6 +42,7 @@
 | 자산관리 | ⬜ 시작 안함 | [03-assets.md](docs/features/03-assets.md) | P2 |
 | 투자지표 | ✅ 완료 | [04-investment.md](docs/features/04-investment.md) | P2 |
 | 가계관리 | ⬜ 시작 안함 | [05-household.md](docs/features/05-household.md) | P2 |
+| 적립금 관리 | ⬜ 시작 안함 | [19-savings.md](docs/features/19-savings.md) | P2 |
 
 ### Phase 4: 가족 기능 (Family Features)
 

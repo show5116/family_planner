@@ -31,6 +31,11 @@ import 'package:family_planner/features/weather/presentation/screens/weather_det
 import 'package:family_planner/features/votes/presentation/screens/vote_list_screen.dart';
 import 'package:family_planner/features/votes/presentation/screens/vote_detail_screen.dart';
 import 'package:family_planner/features/votes/presentation/screens/vote_create_screen.dart';
+import 'package:family_planner/features/main/savings/presentation/screens/savings_list_screen.dart';
+import 'package:family_planner/features/main/savings/presentation/screens/savings_detail_screen.dart';
+import 'package:family_planner/features/main/savings/presentation/screens/savings_form_screen.dart';
+import 'package:family_planner/features/main/savings/presentation/screens/savings_transactions_screen.dart';
+import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -321,6 +326,49 @@ List<RouteBase> getMainRoutes() {
         final extra = state.extra as Map<String, dynamic>?;
         final accountId = extra?['accountId'] as String? ?? '';
         return TransactionFormScreen(accountId: accountId);
+      },
+    ),
+
+    // Savings Routes (적립금 관리)
+    GoRoute(
+      path: AppRoutes.savings,
+      name: 'savings',
+      builder: (context, state) => const SavingsListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.savingsCreate,
+      name: 'savingsCreate',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final groupId = extra?['groupId'] as String?;
+        return SavingsFormScreen(groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.savingsDetail,
+      name: 'savingsDetail',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return SavingsDetailScreen(goalId: id);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.savingsEdit,
+      name: 'savingsEdit',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final goal = extra?['goal'] as SavingsGoalModel?;
+        return SavingsFormScreen(goal: goal);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.savingsTransactions,
+      name: 'savingsTransactions',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        final extra = state.extra as Map<String, dynamic>?;
+        final goalName = extra?['goalName'] as String? ?? '';
+        return SavingsTransactionsScreen(goalId: id, goalName: goalName);
       },
     ),
   ];
