@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/weather/models/weather_model.dart';
+
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
@@ -84,11 +85,30 @@ class _WeatherContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          dateTimeText,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        Row(
+          children: [
+            if (weather.sidoName != null) ...[
+              Icon(
+                Icons.location_on_outlined,
+                size: AppSizes.iconSmall,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
+              const SizedBox(width: 2),
+              Text(
+                weather.sidoName!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+            ],
+            Text(
+              dateTimeText,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
         ),
         const SizedBox(height: AppSizes.spaceXS),
         Row(
@@ -142,6 +162,21 @@ class _WeatherContent extends StatelessWidget {
                       ],
                     ],
                   ),
+                  if (weather.pm10Grade != null || weather.pm25Grade != null) ...[
+                    const SizedBox(height: AppSizes.spaceXS),
+                    Row(
+                      children: [
+                        if (weather.pm10Grade != null) ...[
+                          _DustChip(label: '미세', grade: weather.pm10Grade!),
+                        ],
+                        if (weather.pm10Grade != null && weather.pm25Grade != null)
+                          const SizedBox(width: AppSizes.spaceM),
+                        if (weather.pm25Grade != null) ...[
+                          _DustChip(label: '초미세', grade: weather.pm25Grade!),
+                        ],
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -173,6 +208,51 @@ class _InfoChip extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DustChip extends StatelessWidget {
+  const _DustChip({required this.label, required this.grade});
+
+  final String label;
+  final int grade;
+
+  Color _gradeColor(BuildContext context) {
+    switch (grade) {
+      case 1:
+        return Colors.blue.shade400;
+      case 2:
+        return Colors.green.shade600;
+      case 3:
+        return Colors.orange.shade600;
+      case 4:
+        return Colors.red.shade600;
+      default:
+        return Theme.of(context).colorScheme.onSurfaceVariant;
+    }
+  }
+
+  String _gradeLabel() => DustGrade.fromCode(grade)?.label ?? '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.masks_outlined,
+          size: AppSizes.iconSmall,
+          color: _gradeColor(context),
+        ),
+        const SizedBox(width: 2),
+        Text(
+          '$label ${_gradeLabel()}',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: _gradeColor(context),
               ),
         ),
       ],

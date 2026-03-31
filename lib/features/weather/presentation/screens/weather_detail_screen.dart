@@ -8,6 +8,7 @@ import 'package:family_planner/features/weather/models/weather_model.dart';
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
 
+
 /// 날씨 상세 화면
 class WeatherDetailScreen extends ConsumerWidget {
   const WeatherDetailScreen({super.key});
@@ -108,6 +109,26 @@ class _CurrentWeatherCard extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
+            if (weather.sidoName != null) ...[
+              const SizedBox(height: AppSizes.spaceXS),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: AppSizes.iconSmall,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 2),
+                  Text(
+                    weather.sidoName!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: AppSizes.spaceM),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -154,6 +175,44 @@ class _CurrentWeatherCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (weather.pm10 != null || weather.pm25 != null) ...[
+              const SizedBox(height: AppSizes.spaceL),
+              const Divider(),
+              const SizedBox(height: AppSizes.spaceS),
+              Text(
+                '대기질',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (weather.pm10 != null)
+                    _DustStat(
+                      label: '미세먼지',
+                      value: '${weather.pm10}㎍/㎥',
+                      grade: weather.pm10Grade,
+                    ),
+                  if (weather.pm25 != null)
+                    _DustStat(
+                      label: '초미세먼지',
+                      value: '${weather.pm25}㎍/㎥',
+                      grade: weather.pm25Grade,
+                    ),
+                ],
+              ),
+              if (weather.sidoName != null) ...[
+                const SizedBox(height: AppSizes.spaceXS),
+                Text(
+                  '측정 기준: ${weather.sidoName}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ],
+            ],
           ],
         ),
       ),
@@ -179,6 +238,54 @@ class _DetailStat extends StatelessWidget {
         Icon(icon, size: AppSizes.iconLarge, color: Theme.of(context).colorScheme.primary),
         const SizedBox(height: AppSizes.spaceXS),
         Text(value, style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DustStat extends StatelessWidget {
+  const _DustStat({required this.label, required this.value, this.grade});
+
+  final String label;
+  final String value;
+  final int? grade;
+
+  Color _gradeColor(BuildContext context) {
+    switch (grade) {
+      case 1:
+        return Colors.blue.shade400;
+      case 2:
+        return Colors.green.shade600;
+      case 3:
+        return Colors.orange.shade600;
+      case 4:
+        return Colors.red.shade600;
+      default:
+        return Theme.of(context).colorScheme.onSurfaceVariant;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gradeLabel = DustGrade.fromCode(grade)?.label;
+    final color = _gradeColor(context);
+
+    return Column(
+      children: [
+        Icon(Icons.masks_outlined, size: AppSizes.iconLarge, color: color),
+        const SizedBox(height: AppSizes.spaceXS),
+        Text(value, style: Theme.of(context).textTheme.titleMedium),
+        if (gradeLabel != null)
+          Text(
+            gradeLabel,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+          ),
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(

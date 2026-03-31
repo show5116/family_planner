@@ -1,3 +1,20 @@
+/// 미세먼지 등급 (1=좋음, 2=보통, 3=나쁨, 4=매우나쁨)
+enum DustGrade {
+  good(1, '좋음'),
+  normal(2, '보통'),
+  bad(3, '나쁨'),
+  veryBad(4, '매우나쁨');
+
+  const DustGrade(this.code, this.label);
+  final int code;
+  final String label;
+
+  static DustGrade? fromCode(int? code) {
+    if (code == null) return null;
+    return DustGrade.values.firstWhere((e) => e.code == code, orElse: () => DustGrade.normal);
+  }
+}
+
 /// 현재 날씨 모델 (초단기실황)
 class WeatherModel {
   final int temperature;
@@ -8,6 +25,11 @@ class WeatherModel {
   final String weatherDescription;
   final String baseDate;
   final String baseTime;
+  final int? pm10;
+  final int? pm25;
+  final int? pm10Grade;
+  final int? pm25Grade;
+  final String? sidoName;
 
   const WeatherModel({
     required this.temperature,
@@ -18,6 +40,11 @@ class WeatherModel {
     required this.weatherDescription,
     required this.baseDate,
     required this.baseTime,
+    this.pm10,
+    this.pm25,
+    this.pm10Grade,
+    this.pm25Grade,
+    this.sidoName,
   });
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +57,11 @@ class WeatherModel {
       weatherDescription: json['weatherDescription'] as String,
       baseDate: json['baseDate'] as String,
       baseTime: json['baseTime'] as String,
+      pm10: json['pm10'] != null ? (json['pm10'] as num).toInt() : null,
+      pm25: json['pm25'] != null ? (json['pm25'] as num).toInt() : null,
+      pm10Grade: json['pm10Grade'] != null ? (json['pm10Grade'] as num).toInt() : null,
+      pm25Grade: json['pm25Grade'] != null ? (json['pm25Grade'] as num).toInt() : null,
+      sidoName: json['sidoName'] as String?,
     );
   }
 }
