@@ -6,10 +6,10 @@
 ---
 
 ## UI 구현
-- ✅ 자산 메인 화면 (AssetScreen) - 계좌 목록 + 요약 카드
+- ✅ 자산 메인 화면 (AssetScreen) - 계좌 목록 + 연동 저금통 목록 + 요약 카드
 - ✅ 계좌 추가/수정 폼 (AccountFormScreen)
 - ✅ 계좌 상세 화면 (AccountDetailScreen) + 기록 추가 바텀시트
-- ✅ 자산 통계 화면 (AssetStatisticsScreen) - 유형별 현황
+- ✅ 자산 통계 화면 (AssetStatisticsScreen) - 유형별 현황 + 저금통 합계
 - ⬜ 차트 시각화 (fl_chart)
 - ⬜ 가족 구성원별 자산 뷰 (userId 필터 UI)
 
@@ -17,6 +17,8 @@
 - ✅ 계좌 모델 (AccountModel) - `lib/features/main/assets/data/models/account_model.dart`
 - ✅ 자산 기록 모델 (AssetRecordModel) - `lib/features/main/assets/data/models/asset_record_model.dart`
 - ✅ 자산 통계 모델 (AssetStatisticsModel) - `lib/features/main/assets/data/models/asset_statistics_model.dart`
+  - `savingsTotal`: 자산 연동 저금통 합계
+  - `savingsGoals`: 연동 저금통 목록 (SavingsGoalSummaryModel)
 
 ## 기능 구현
 - ✅ 계좌 추가/수정/삭제
@@ -24,6 +26,8 @@
 - ✅ 계좌별 최신 잔액 및 수익률 표시
 - ✅ 전체 원금/수익금/수익률 통계 요약
 - ✅ 유형별 자산 현황
+- ✅ 저금통 연동 (includeInAssets=true 목표를 계좌 목록 하단에 표시, 탭으로 이동)
+- ✅ 자산 통계 화면 저금통 합계 표시
 - ⬜ 자산 내역 히스토리 차트 (fl_chart)
 - ⬜ 가족 구성원별 자산 현황 필터
 

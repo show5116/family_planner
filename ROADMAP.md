@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 8/20 기능 (40%)
+- **완료**: 10/20 기능 (50%)
 - **진행 중**: 5/20 기능 (25%)
-- **미시작**: 7/20 기능 (35%)
+- **미시작**: 5/20 기능 (25%)
 
-**마지막 업데이트**: 2026-03-31
+**마지막 업데이트**: 2026-04-02
 
 ---
 
@@ -39,10 +39,10 @@
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
-| 자산관리 | ⬜ 시작 안함 | [03-assets.md](docs/features/03-assets.md) | P2 |
+| 자산관리 | ✅ 완료 | [03-assets.md](docs/features/03-assets.md) | P2 |
 | 투자지표 | ✅ 완료 | [04-investment.md](docs/features/04-investment.md) | P2 |
 | 가계관리 | ⬜ 시작 안함 | [05-household.md](docs/features/05-household.md) | P2 |
-| 적립금 관리 | ⬜ 시작 안함 | [19-savings.md](docs/features/19-savings.md) | P2 |
+| 적립금 관리 | ✅ 완료 | [19-savings.md](docs/features/19-savings.md) | P2 |
 
 ### Phase 4: 가족 기능 (Family Features)
 
@@ -96,6 +96,19 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-04-02
+- ✅ **자산관리 기능 완료** ([03-assets.md](docs/features/03-assets.md))
+  - AssetStatisticsModel에 savingsTotal, savingsGoals 필드 추가 (API 완전 파싱)
+  - 자산 통계 화면에 저금통 합계 및 연동 저금통 목록 표시
+  - 자산 대시보드 계좌 목록 하단에 연동 저금통 섹션 추가 (탭으로 이동 가능)
+  - l10n 키 추가: asset_savings_total, asset_savings_goals (한/영/일)
+
+- ✅ **적립금 관리 기능 완료** ([19-savings.md](docs/features/19-savings.md))
+  - 목표 목록/상세/생성/수정/삭제 전체 구현
+  - 수동 입금/출금, 자동 적립 일시중지/재개
+  - 거래 내역 화면 (타입/월 필터, 무한 스크롤)
+  - includeInAssets 설정으로 자산 탭과 연동
 
 ### 2026-03-30
 - ✅ **육아 포인트 기능 완료** ([08-childcare.md](docs/features/08-childcare.md))
