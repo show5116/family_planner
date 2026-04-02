@@ -18,8 +18,6 @@ class SavingsListScreen extends ConsumerStatefulWidget {
 }
 
 class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
-  SavingsGoalStatus? _selectedStatus;
-
   @override
   void initState() {
     super.initState();
@@ -45,7 +43,7 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('적립금 관리'),
+        title: const Text('그룹 저금통'),
         actions: [
           if (selectedGroupId != null)
             IconButton(
@@ -61,24 +59,18 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
       ),
       body: Column(
         children: [
+          const _InfoBanner(),
           _GroupSelectorBar(
             groupsAsync: groupsAsync,
             selectedGroupId: selectedGroupId,
             onGroupChanged: (id) {
               ref.read(savingsSelectedGroupIdProvider.notifier).state = id;
-              setState(() => _selectedStatus = null);
             },
           ),
           if (selectedGroupId != null) ...[
-            _StatusFilterBar(
-              selectedStatus: _selectedStatus,
-              onStatusChanged: (status) =>
-                  setState(() => _selectedStatus = status),
-            ),
             Expanded(
               child: _GoalsList(
                 groupId: selectedGroupId,
-                selectedStatus: _selectedStatus,
               ),
             ),
           ] else
@@ -111,6 +103,77 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
               child: const Icon(Icons.add),
             )
           : null,
+    );
+  }
+}
+
+// ── 안내 배너 ─────────────────────────────────────────────────────────────────
+
+class _InfoBanner extends StatefulWidget {
+  const _InfoBanner();
+
+  @override
+  State<_InfoBanner> createState() => _InfoBannerState();
+}
+
+class _InfoBannerState extends State<_InfoBanner> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: () => setState(() => _expanded = !_expanded),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM,
+          vertical: AppSizes.spaceM,
+        ),
+        color: AppColors.investment.withAlpha(15),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.savings_outlined, color: AppColors.investment, size: 20),
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '그룹과 함께 목표를 정해 돈을 모아요',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.investment,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (_expanded) ...[
+                    const SizedBox(height: AppSizes.spaceXS),
+                    Text(
+                      '여행 경비, 비상금, 가전 구매 등 원하는 목표를 만들고 매달 자동으로 적립하거나 수동으로 입금할 수 있어요.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.investment.withAlpha(180),
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceXS),
+                    Text(
+                      '💡 가족 외에도 친구, 동료 등 그룹이라면 누구든 "계" 처럼 활용할 수 있어요.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.investment.withAlpha(180),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Icon(
+              _expanded ? Icons.expand_less : Icons.expand_more,
+              color: AppColors.investment,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -161,93 +224,12 @@ class _GroupSelectorBar extends StatelessWidget {
   }
 }
 
-// ── 상태 필터 칩 ──────────────────────────────────────────────────────────────
-
-class _StatusFilterBar extends StatelessWidget {
-  const _StatusFilterBar({
-    required this.selectedStatus,
-    required this.onStatusChanged,
-  });
-
-  final SavingsGoalStatus? selectedStatus;
-  final ValueChanged<SavingsGoalStatus?> onStatusChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.spaceM,
-        vertical: AppSizes.spaceXS,
-      ),
-      child: Row(
-        children: [
-          _FilterChip(
-            label: '전체',
-            selected: selectedStatus == null,
-            onTap: () => onStatusChanged(null),
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          _FilterChip(
-            label: '진행 중',
-            selected: selectedStatus == SavingsGoalStatus.active,
-            onTap: () => onStatusChanged(SavingsGoalStatus.active),
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          _FilterChip(
-            label: '일시 중지',
-            selected: selectedStatus == SavingsGoalStatus.paused,
-            onTap: () => onStatusChanged(SavingsGoalStatus.paused),
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          _FilterChip(
-            label: '완료',
-            selected: selectedStatus == SavingsGoalStatus.completed,
-            onTap: () => onStatusChanged(SavingsGoalStatus.completed),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      selectedColor: AppColors.investment.withAlpha(40),
-      checkmarkColor: AppColors.investment,
-      labelStyle: TextStyle(
-        color: selected ? AppColors.investment : AppColors.textSecondary,
-        fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-      ),
-    );
-  }
-}
-
 // ── 목표 목록 ─────────────────────────────────────────────────────────────────
 
 class _GoalsList extends ConsumerWidget {
-  const _GoalsList({
-    required this.groupId,
-    required this.selectedStatus,
-  });
+  const _GoalsList({required this.groupId});
 
   final String groupId;
-  final SavingsGoalStatus? selectedStatus;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -275,11 +257,7 @@ class _GoalsList extends ConsumerWidget {
         ),
       ),
       data: (goals) {
-        final filtered = selectedStatus == null
-            ? goals
-            : goals.where((g) => g.status == selectedStatus).toList();
-
-        if (filtered.isEmpty) {
+        if (goals.isEmpty) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -287,17 +265,17 @@ class _GoalsList extends ConsumerWidget {
                 const Icon(Icons.savings_outlined,
                     size: AppSizes.iconXLarge, color: AppColors.textSecondary),
                 const SizedBox(height: AppSizes.spaceM),
-                Text(
-                  selectedStatus == null
-                      ? '적립 목표가 없습니다\n+ 버튼을 눌러 목표를 추가하세요'
-                      : '해당 상태의 목표가 없습니다',
+                const Text(
+                  '저금통이 없습니다\n+ 버튼을 눌러 저금통을 추가하세요',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
               ],
             ),
           );
         }
+
+        final filtered = goals;
 
         return RefreshIndicator(
           onRefresh: () =>
@@ -311,18 +289,16 @@ class _GoalsList extends ConsumerWidget {
               return _GoalCard(
                 goal: filtered[index],
                 onTap: () async {
-                  final updated = await Navigator.push<SavingsGoalModel>(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) =>
                           SavingsDetailScreen(goalId: filtered[index].id),
                     ),
                   );
-                  if (updated != null) {
-                    ref
-                        .read(savingsGoalsProvider(groupId).notifier)
-                        .updateGoal(updated);
-                  }
+                  ref
+                      .read(savingsGoalsProvider(groupId).notifier)
+                      .refresh();
                 },
               );
             },
@@ -445,8 +421,6 @@ class _StatusBadge extends StatelessWidget {
         color = AppColors.success;
       case SavingsGoalStatus.paused:
         color = AppColors.warning;
-      case SavingsGoalStatus.completed:
-        color = AppColors.investment;
     }
 
     return Container(

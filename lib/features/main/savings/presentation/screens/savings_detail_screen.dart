@@ -214,8 +214,6 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
               () => ref.read(savingsRepositoryProvider).pauseGoal(goal.id)),
           onResume: () => _runAction(
               () => ref.read(savingsRepositoryProvider).resumeGoal(goal.id)),
-          onComplete: () => _runAction(
-              () => ref.read(savingsRepositoryProvider).completeGoal(goal.id)),
         ),
       ),
     );
@@ -232,7 +230,6 @@ class _DetailBody extends StatelessWidget {
     required this.onWithdraw,
     required this.onPause,
     required this.onResume,
-    required this.onComplete,
   });
 
   final SavingsGoalModel goal;
@@ -241,7 +238,6 @@ class _DetailBody extends StatelessWidget {
   final VoidCallback onWithdraw;
   final VoidCallback onPause;
   final VoidCallback onResume;
-  final VoidCallback onComplete;
 
   String _formatAmount(double amount) {
     final intAmount = amount.toInt();
@@ -254,7 +250,6 @@ class _DetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isCompleted = goal.status == SavingsGoalStatus.completed;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -283,6 +278,35 @@ class _DetailBody extends StatelessWidget {
                       _StatusBadge(status: goal.status),
                     ],
                   ),
+                  if (goal.isGoalReached == true) ...[
+                    const SizedBox(height: AppSizes.spaceS),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceS,
+                        vertical: AppSizes.spaceXS,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.investment.withAlpha(20),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                        border: Border.all(color: AppColors.investment.withAlpha(80)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, size: 14, color: AppColors.investment),
+                          const SizedBox(width: AppSizes.spaceXS),
+                          Text(
+                            '목표 금액 달성!',
+                            style: TextStyle(
+                              color: AppColors.investment,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   if (goal.targetAmount != null) ...[
                     const SizedBox(height: AppSizes.spaceXS),
                     Text(
@@ -373,19 +397,6 @@ class _DetailBody extends StatelessWidget {
                     ),
                   ),
                 ],
-                if (!isCompleted) ...[
-                  if (goal.status == SavingsGoalStatus.active && goal.autoDeposit)
-                    const SizedBox(width: AppSizes.spaceS),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: onComplete,
-                      icon: const Icon(Icons.check_circle_outline),
-                      label: const Text('완료 처리'),
-                      style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.success),
-                    ),
-                  ),
-                ],
               ],
             ),
             const SizedBox(height: AppSizes.spaceS),
@@ -394,7 +405,7 @@ class _DetailBody extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: isCompleted ? null : onDeposit,
+                    onPressed: onDeposit,
                     icon: const Icon(Icons.add),
                     label: const Text('입금'),
                     style: ElevatedButton.styleFrom(
@@ -406,7 +417,7 @@ class _DetailBody extends StatelessWidget {
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: isCompleted ? null : onWithdraw,
+                    onPressed: onWithdraw,
                     icon: const Icon(Icons.remove),
                     label: const Text('출금'),
                     style: ElevatedButton.styleFrom(
@@ -585,8 +596,6 @@ class _StatusBadge extends StatelessWidget {
         color = AppColors.success;
       case SavingsGoalStatus.paused:
         color = AppColors.warning;
-      case SavingsGoalStatus.completed:
-        color = AppColors.investment;
     }
 
     return Container(

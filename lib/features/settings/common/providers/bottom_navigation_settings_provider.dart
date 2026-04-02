@@ -131,6 +131,12 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
       icon: Icons.trending_up_outlined,
       selectedIcon: Icons.trending_up,
     ),
+    'savings': NavigationItem(
+      id: 'savings',
+      label: '그룹 저금통',
+      icon: Icons.savings_outlined,
+      selectedIcon: Icons.savings,
+    ),
   };
 
   // 기본 중간 슬롯 (자산, 일정, 할일)

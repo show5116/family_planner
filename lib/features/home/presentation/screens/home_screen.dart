@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/child_points/presentation/screens/c
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
 import 'package:family_planner/features/main/investment/presentation/screens/investment_indicators_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
+import 'package:family_planner/features/main/savings/presentation/screens/savings_list_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/more_tab.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -54,6 +55,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return Center(child: Text('${l10n.nav_miniGames} (${l10n.common_comingSoon})'));
       case 'investmentIndicators':
         return const InvestmentIndicatorsScreen();
+      case 'savings':
+        return const SavingsListScreen();
       case 'more':
         return const MoreTab();
       default:

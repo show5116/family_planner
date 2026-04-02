@@ -300,6 +300,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nav_investmentIndicators => 'Investment Indicators';
 
   @override
+  String get nav_savings => 'Group Piggy Bank';
+
+  @override
   String get home_greeting_morning => 'Good morning!';
 
   @override

@@ -293,6 +293,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nav_investmentIndicators => '투자 지표';
 
   @override
+  String get nav_savings => '그룹 저금통';
+
+  @override
   String get home_greeting_morning => '좋은 아침이에요!';
 
   @override

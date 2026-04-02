@@ -25,7 +25,9 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
   late final TextEditingController _descCtrl;
   late final TextEditingController _targetCtrl;
   late final TextEditingController _monthlyCtrl;
+  late final TextEditingController _depositDayCtrl;
   late bool _autoDeposit;
+  late bool _includeInAssets;
   bool _loading = false;
 
   bool get _isEdit => widget.goal != null;
@@ -43,6 +45,10 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
       text: g?.monthlyAmount != null ? g!.monthlyAmount!.toInt().toString() : '',
     );
     _autoDeposit = g?.autoDeposit ?? false;
+    _depositDayCtrl = TextEditingController(
+      text: (g?.depositDay ?? 1).toString(),
+    );
+    _includeInAssets = g?.includeInAssets ?? false;
   }
 
   @override
@@ -51,6 +57,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
     _descCtrl.dispose();
     _targetCtrl.dispose();
     _monthlyCtrl.dispose();
+    _depositDayCtrl.dispose();
     super.dispose();
   }
 
@@ -68,6 +75,9 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
       final monthly = _autoDeposit && _monthlyCtrl.text.trim().isNotEmpty
           ? double.tryParse(_monthlyCtrl.text.trim().replaceAll(',', ''))
           : null;
+      final depositDay = _autoDeposit
+          ? (int.tryParse(_depositDayCtrl.text.trim()) ?? 1).clamp(1, 31)
+          : 1;
 
       SavingsGoalModel result;
       if (_isEdit) {
@@ -78,6 +88,8 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
           targetAmount: target,
           autoDeposit: _autoDeposit,
           monthlyAmount: monthly,
+          depositDay: depositDay,
+          includeInAssets: _includeInAssets,
         );
       } else {
         result = await repo.createGoal(
@@ -87,6 +99,8 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
           targetAmount: target,
           autoDeposit: _autoDeposit,
           monthlyAmount: monthly,
+          depositDay: depositDay,
+          includeInAssets: _includeInAssets,
         );
       }
 
@@ -105,7 +119,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? '적립 목표 수정' : '적립 목표 추가'),
+        title: Text(_isEdit ? '저금통 수정' : '저금통 추가'),
       ),
       body: Form(
         key: _formKey,
@@ -144,6 +158,8 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
                 labelText: '목표 금액 (선택, 원)',
                 border: OutlineInputBorder(),
                 hintText: '예: 1000000',
+                helperText: '목표 금액을 지정하지 않으면 비상금·계처럼 계속 모아서 사용할 수 있어요.',
+                helperMaxLines: 2,
               ),
               keyboardType: TextInputType.number,
               validator: (v) {
@@ -169,31 +185,72 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
             ),
             const SizedBox(height: AppSizes.spaceM),
 
-            // 월 적립금 (autoDeposit=true 시만 표시)
+            // 월 적립금 + 적립일 (autoDeposit=true 시만 표시)
             AnimatedCrossFade(
-              firstChild: TextFormField(
-                controller: _monthlyCtrl,
-                decoration: const InputDecoration(
-                  labelText: '월 적립금 (원)',
-                  border: OutlineInputBorder(),
-                  hintText: '예: 100000',
+              firstChild: Padding(
+                padding: const EdgeInsets.only(top: AppSizes.spaceXS),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _monthlyCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '월 적립금 (원)',
+                        border: OutlineInputBorder(),
+                        hintText: '예: 100000',
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (v) {
+                        if (!_autoDeposit) return null;
+                        if (v == null || v.trim().isEmpty) return '월 적립금을 입력해 주세요';
+                        final parsed = double.tryParse(v.trim().replaceAll(',', ''));
+                        if (parsed == null || parsed <= 0) return '올바른 금액을 입력해 주세요';
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    TextFormField(
+                      controller: _depositDayCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '매달 적립일 (1~31일)',
+                        border: OutlineInputBorder(),
+                        hintText: '예: 25',
+                        helperText: '해당 월에 날짜가 없으면 말일에 자동 처리돼요.',
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (v) {
+                        if (!_autoDeposit) return null;
+                        final parsed = int.tryParse(v?.trim() ?? '');
+                        if (parsed == null || parsed < 1 || parsed > 31) {
+                          return '1~31 사이의 날짜를 입력해 주세요';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _submit(),
+                    ),
+                  ],
                 ),
-                keyboardType: TextInputType.number,
-                validator: (v) {
-                  if (!_autoDeposit) return null;
-                  if (v == null || v.trim().isEmpty) return '월 적립금을 입력해 주세요';
-                  final parsed = double.tryParse(v.trim().replaceAll(',', ''));
-                  if (parsed == null || parsed <= 0) return '올바른 금액을 입력해 주세요';
-                  return null;
-                },
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => _submit(),
               ),
               secondChild: const SizedBox.shrink(),
               crossFadeState: _autoDeposit
                   ? CrossFadeState.showFirst
                   : CrossFadeState.showSecond,
               duration: const Duration(milliseconds: 200),
+            ),
+
+            const SizedBox(height: AppSizes.spaceM),
+
+            // 자산 통계 연동
+            Card(
+              margin: EdgeInsets.zero,
+              child: SwitchListTile(
+                title: const Text('자산 통계에 포함'),
+                subtitle: const Text('자산 현황에서 적립금 잔액을 함께 확인할 수 있어요'),
+                value: _includeInAssets,
+                activeThumbColor: AppColors.investment,
+                onChanged: (v) => setState(() => _includeInAssets = v),
+              ),
             ),
 
             const SizedBox(height: AppSizes.spaceXL),
@@ -214,7 +271,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: Colors.white),
                       )
-                    : Text(_isEdit ? '수정 완료' : '목표 추가'),
+                    : Text(_isEdit ? '수정 완료' : '저금통 추가'),
               ),
             ),
           ],

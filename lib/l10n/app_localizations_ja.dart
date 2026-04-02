@@ -292,6 +292,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get nav_investmentIndicators => '投資指標';
 
   @override
+  String get nav_savings => 'グループ貯金箱';
+
+  @override
   String get home_greeting_morning => 'おはようございます！';
 
   @override

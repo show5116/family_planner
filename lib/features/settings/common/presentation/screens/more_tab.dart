@@ -94,11 +94,6 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                 title: '투표',
                 onTap: () => context.push(AppRoutes.votes),
               ),
-              MenuListTile(
-                icon: Icons.savings_outlined,
-                title: '적립금 관리',
-                onTap: () => context.push(AppRoutes.savings),
-              ),
               const Divider(),
               // 고정 메뉴: 공지사항, QnA
               MenuListTile(
@@ -155,6 +150,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         context.push(AppRoutes.assets);
       case 'investmentIndicators':
         context.push(AppRoutes.investmentIndicators);
+      case 'savings':
+        context.push(AppRoutes.savings);
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.common_comingSoon)),

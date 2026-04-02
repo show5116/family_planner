@@ -60,6 +60,8 @@ class SavingsRepository {
     double? targetAmount,
     bool autoDeposit = false,
     double? monthlyAmount,
+    int depositDay = 1,
+    bool includeInAssets = false,
   }) async {
     try {
       final response = await _dio.post('/savings', data: {
@@ -69,6 +71,8 @@ class SavingsRepository {
         if (targetAmount != null) 'targetAmount': targetAmount,
         'autoDeposit': autoDeposit,
         if (monthlyAmount != null) 'monthlyAmount': monthlyAmount,
+        'depositDay': depositDay,
+        'includeInAssets': includeInAssets,
       });
       return SavingsGoalModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -85,6 +89,8 @@ class SavingsRepository {
     double? targetAmount,
     bool? autoDeposit,
     double? monthlyAmount,
+    int? depositDay,
+    bool? includeInAssets,
   }) async {
     try {
       final response = await _dio.patch('/savings/$id', data: {
@@ -93,6 +99,8 @@ class SavingsRepository {
         if (targetAmount != null) 'targetAmount': targetAmount,
         if (autoDeposit != null) 'autoDeposit': autoDeposit,
         if (monthlyAmount != null) 'monthlyAmount': monthlyAmount,
+        if (depositDay != null) 'depositDay': depositDay,
+        if (includeInAssets != null) 'includeInAssets': includeInAssets,
       });
       return SavingsGoalModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -114,16 +122,6 @@ class SavingsRepository {
       }
       debugPrint('❌ [SavingsRepository] 적립 목표 삭제 실패: ${e.message}');
       throw Exception('적립 목표 삭제 실패: ${e.message}');
-    }
-  }
-
-  /// 적립 목표 수동 완료 처리
-  Future<void> completeGoal(String id) async {
-    try {
-      await _dio.post('/savings/$id/complete');
-    } on DioException catch (e) {
-      debugPrint('❌ [SavingsRepository] 적립 목표 완료 처리 실패: ${e.message}');
-      throw Exception('완료 처리 실패: ${e.message}');
     }
   }
 

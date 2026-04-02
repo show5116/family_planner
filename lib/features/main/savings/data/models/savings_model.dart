@@ -1,15 +1,12 @@
 /// 적립 목표 상태
 enum SavingsGoalStatus {
   active,
-  paused,
-  completed;
+  paused;
 
   static SavingsGoalStatus fromJson(String? value) {
     switch (value?.toUpperCase()) {
       case 'PAUSED':
         return SavingsGoalStatus.paused;
-      case 'COMPLETED':
-        return SavingsGoalStatus.completed;
       default:
         return SavingsGoalStatus.active;
     }
@@ -18,11 +15,9 @@ enum SavingsGoalStatus {
   String toDisplayString() {
     switch (this) {
       case SavingsGoalStatus.active:
-        return '진행 중';
+        return '적립 중';
       case SavingsGoalStatus.paused:
         return '일시 중지';
-      case SavingsGoalStatus.completed:
-        return '완료';
     }
   }
 }
@@ -77,8 +72,11 @@ class SavingsGoalModel {
   final double currentAmount;
   final bool autoDeposit;
   final double? monthlyAmount;
+  final int depositDay;
+  final bool includeInAssets;
   final SavingsGoalStatus status;
   final double achievementRate;
+  final bool? isGoalReached;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -91,8 +89,11 @@ class SavingsGoalModel {
     required this.currentAmount,
     required this.autoDeposit,
     this.monthlyAmount,
+    required this.depositDay,
+    required this.includeInAssets,
     required this.status,
     required this.achievementRate,
+    this.isGoalReached,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -111,8 +112,11 @@ class SavingsGoalModel {
       monthlyAmount: json['monthlyAmount'] != null
           ? double.parse(json['monthlyAmount'].toString())
           : null,
+      depositDay: (json['depositDay'] as num?)?.toInt() ?? 1,
+      includeInAssets: (json['includeInAssets'] as bool?) ?? false,
       status: SavingsGoalStatus.fromJson(json['status'] as String?),
       achievementRate: double.parse((json['achievementRate'] ?? 0).toString()),
+      isGoalReached: json['isGoalReached'] as bool?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -127,8 +131,11 @@ class SavingsGoalModel {
     double? currentAmount,
     bool? autoDeposit,
     double? monthlyAmount,
+    int? depositDay,
+    bool? includeInAssets,
     SavingsGoalStatus? status,
     double? achievementRate,
+    bool? isGoalReached,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -141,8 +148,11 @@ class SavingsGoalModel {
       currentAmount: currentAmount ?? this.currentAmount,
       autoDeposit: autoDeposit ?? this.autoDeposit,
       monthlyAmount: monthlyAmount ?? this.monthlyAmount,
+      depositDay: depositDay ?? this.depositDay,
+      includeInAssets: includeInAssets ?? this.includeInAssets,
       status: status ?? this.status,
       achievementRate: achievementRate ?? this.achievementRate,
+      isGoalReached: isGoalReached ?? this.isGoalReached,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

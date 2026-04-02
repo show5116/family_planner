@@ -658,6 +658,12 @@ abstract class AppLocalizations {
   /// **'투자 지표'**
   String get nav_investmentIndicators;
 
+  /// No description provided for @nav_savings.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 저금통'**
+  String get nav_savings;
+
   /// No description provided for @home_greeting_morning.
   ///
   /// In ko, this message translates to:
