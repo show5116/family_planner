@@ -1005,6 +1005,10 @@
       "count": { "type": "int" }
     }
   },
+  "asset_savings_total": "저금통 합계",
+  "@asset_savings_total": { "description": "자산 통계 - 저금통 합계 레이블" },
+  "asset_savings_goals": "연동된 저금통",
+  "@asset_savings_goals": { "description": "자산 통계 - 연동된 저금통 섹션 제목" },
 
   "childcare_title": "육아포인트",
   "@childcare_title": { "description": "육아포인트 메인 타이틀" },

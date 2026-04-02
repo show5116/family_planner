@@ -4672,6 +4672,18 @@ abstract class AppLocalizations {
   /// **'{count}개 계좌'**
   String asset_account_count(int count);
 
+  /// 자산 통계 - 저금통 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통 합계'**
+  String get asset_savings_total;
+
+  /// 자산 통계 - 연동된 저금통 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'연동된 저금통'**
+  String get asset_savings_goals;
+
   /// 육아포인트 메인 타이틀
   ///
   /// In ko, this message translates to:

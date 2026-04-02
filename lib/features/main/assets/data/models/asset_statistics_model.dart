@@ -21,6 +21,27 @@ class AccountTypeStatModel {
   }
 }
 
+/// 자산 연동 저금통 요약
+class SavingsGoalSummaryModel {
+  final String id;
+  final String name;
+  final double currentAmount;
+
+  const SavingsGoalSummaryModel({
+    required this.id,
+    required this.name,
+    required this.currentAmount,
+  });
+
+  factory SavingsGoalSummaryModel.fromJson(Map<String, dynamic> json) {
+    return SavingsGoalSummaryModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      currentAmount: double.parse(json['currentAmount'].toString()),
+    );
+  }
+}
+
 /// 자산 통계 모델
 class AssetStatisticsModel {
   final double totalBalance;
@@ -29,6 +50,8 @@ class AssetStatisticsModel {
   final double profitRate;
   final int accountCount;
   final List<AccountTypeStatModel> byType;
+  final double savingsTotal;
+  final List<SavingsGoalSummaryModel> savingsGoals;
 
   const AssetStatisticsModel({
     required this.totalBalance,
@@ -37,10 +60,13 @@ class AssetStatisticsModel {
     required this.profitRate,
     required this.accountCount,
     required this.byType,
+    this.savingsTotal = 0,
+    this.savingsGoals = const [],
   });
 
   factory AssetStatisticsModel.fromJson(Map<String, dynamic> json) {
     final byTypeData = json['byType'] as List<dynamic>? ?? [];
+    final savingsGoalsData = json['savingsGoals'] as List<dynamic>? ?? [];
     return AssetStatisticsModel(
       totalBalance: double.parse(json['totalBalance'].toString()),
       totalPrincipal: double.parse(json['totalPrincipal'].toString()),
@@ -49,6 +75,15 @@ class AssetStatisticsModel {
       accountCount: json['accountCount'] as int,
       byType: byTypeData
           .map((e) => AccountTypeStatModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      savingsTotal: json['savingsTotal'] != null
+          ? double.parse(json['savingsTotal'].toString())
+          : 0,
+      savingsGoals: savingsGoalsData
+          .map(
+            (e) =>
+                SavingsGoalSummaryModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
     );
   }

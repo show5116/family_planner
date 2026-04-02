@@ -72,6 +72,53 @@ class AssetStatSummaryCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (stats.savingsTotal > 0) ...[
+              const Divider(height: AppSizes.spaceL),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.asset_savings_total,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Text(
+                    '₩${formatAssetAmount(stats.savingsTotal)}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+              if (stats.savingsGoals.isNotEmpty) ...[
+                const SizedBox(height: AppSizes.spaceXS),
+                ...stats.savingsGoals.map(
+                  (goal) => Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          goal.name,
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                  ),
+                        ),
+                        Text(
+                          '₩${formatAssetAmount(goal.currentAmount)}',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ],
         ),
       ),

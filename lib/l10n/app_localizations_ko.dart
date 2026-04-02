@@ -2348,6 +2348,12 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get asset_savings_total => '저금통 합계';
+
+  @override
+  String get asset_savings_goals => '연동된 저금통';
+
+  @override
   String get childcare_title => '육아포인트';
 
   @override

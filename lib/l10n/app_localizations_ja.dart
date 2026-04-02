@@ -2344,6 +2344,12 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get asset_savings_total => '貯金箱合計';
+
+  @override
+  String get asset_savings_goals => '連動貯金箱';
+
+  @override
   String get childcare_title => '育児ポイント';
 
   @override

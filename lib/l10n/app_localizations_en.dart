@@ -2388,6 +2388,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get asset_savings_total => 'Savings Total';
+
+  @override
+  String get asset_savings_goals => 'Linked Savings';
+
+  @override
   String get childcare_title => 'Child Points';
 
   @override

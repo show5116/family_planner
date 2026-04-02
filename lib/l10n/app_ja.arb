@@ -991,6 +991,10 @@
       "count": { "type": "int" }
     }
   },
+  "asset_savings_total": "貯金箱合計",
+  "@asset_savings_total": { "description": "資産統計 - 貯金箱合計ラベル" },
+  "asset_savings_goals": "連動貯金箱",
+  "@asset_savings_goals": { "description": "資産統計 - 連動貯金箱セクションタイトル" },
 
   "childcare_title": "育児ポイント",
   "@childcare_title": { "description": "育児ポイントメインタイトル" },

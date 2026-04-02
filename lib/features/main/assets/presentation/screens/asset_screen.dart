@@ -8,6 +8,7 @@ import 'package:family_planner/features/main/assets/presentation/widgets/account
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_group_bar.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_summary_card.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
+import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -64,7 +65,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
           ),
           const AssetSummaryCard(),
           Expanded(
-            child: _AccountList(selectedGroupId: selectedGroupId),
+            child: _AssetList(selectedGroupId: selectedGroupId),
           ),
         ],
       ),
@@ -81,10 +82,10 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   }
 }
 
-class _AccountList extends ConsumerWidget {
+class _AssetList extends ConsumerWidget {
   final String? selectedGroupId;
 
-  const _AccountList({required this.selectedGroupId});
+  const _AssetList({required this.selectedGroupId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,10 +101,15 @@ class _AccountList extends ConsumerWidget {
     }
 
     final accountsAsync = ref.watch(assetAccountsProvider);
+    final statsAsync = ref.watch(assetStatisticsProvider);
+    final savingsGoals = statsAsync.valueOrNull?.savingsGoals ?? [];
 
     return accountsAsync.when(
       data: (accounts) {
-        if (accounts.isEmpty) {
+        final hasAccounts = accounts.isNotEmpty;
+        final hasSavings = savingsGoals.isNotEmpty;
+
+        if (!hasAccounts && !hasSavings) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -127,20 +133,70 @@ class _AccountList extends ConsumerWidget {
 
         return RefreshIndicator(
           onRefresh: () => ref.read(assetAccountsProvider.notifier).refresh(),
-          child: ListView.builder(
-            itemCount: accounts.length,
+          child: ListView(
             padding: const EdgeInsets.only(bottom: 80),
-            itemBuilder: (context, index) {
-              final account = accounts[index];
-              return AccountListItem(
-                account: account,
-                onTap: () => context.push(
-                  AppRoutes.assetAccountDetail,
-                  extra: account,
+            children: [
+              if (hasAccounts) ...[
+                ...accounts.map(
+                  (account) => AccountListItem(
+                    account: account,
+                    onTap: () => context.push(
+                      AppRoutes.assetAccountDetail,
+                      extra: account,
+                    ),
+                    onDelete: () =>
+                        _confirmDelete(context, ref, l10n, account),
+                  ),
                 ),
-                onDelete: () => _confirmDelete(context, ref, l10n, account),
-              );
-            },
+              ],
+              if (hasSavings) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSizes.spaceM,
+                    AppSizes.spaceM,
+                    AppSizes.spaceM,
+                    AppSizes.spaceXS,
+                  ),
+                  child: Text(
+                    l10n.asset_savings_goals,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                  ),
+                ),
+                ...savingsGoals.map(
+                  (goal) => Card(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceM,
+                      vertical: AppSizes.spaceXS,
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.tertiaryContainer,
+                        child: Icon(
+                          Icons.savings_outlined,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onTertiaryContainer,
+                        ),
+                      ),
+                      title: Text(goal.name),
+                      trailing: Text(
+                        '₩${formatAssetAmount(goal.currentAmount)}',
+                        style:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      ),
+                      onTap: () => context.push(
+                        '/savings/${goal.id}',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         );
       },
@@ -155,7 +211,8 @@ class _AccountList extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             ElevatedButton(
-              onPressed: () => ref.read(assetAccountsProvider.notifier).refresh(),
+              onPressed: () =>
+                  ref.read(assetAccountsProvider.notifier).refresh(),
               child: Text(l10n.common_retry),
             ),
           ],

@@ -991,6 +991,10 @@
       "count": { "type": "int" }
     }
   },
+  "asset_savings_total": "Savings Total",
+  "@asset_savings_total": { "description": "Asset statistics - savings total label" },
+  "asset_savings_goals": "Linked Savings",
+  "@asset_savings_goals": { "description": "Asset statistics - linked savings section title" },
 
   "childcare_title": "Child Points",
   "@childcare_title": { "description": "Child points main title" },
