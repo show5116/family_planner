@@ -4390,6 +4390,54 @@ abstract class AppLocalizations {
   /// **'미설정'**
   String get household_budget_not_set;
 
+  /// 이번 달 예산 탭 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 예산'**
+  String get household_budget_tab_monthly;
+
+  /// 매월 자동 예산 탭 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 자동 예산'**
+  String get household_budget_tab_template;
+
+  /// 예산 템플릿 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 1일에 템플릿 기반으로 예산이 자동 설정됩니다. 해당 월에 이미 예산이 있으면 건너뜁니다.'**
+  String get household_budget_template_info;
+
+  /// 예산 템플릿 저장 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 예산 템플릿이 설정되었습니다'**
+  String get household_budget_template_saved;
+
+  /// 예산 템플릿 삭제 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'템플릿 삭제'**
+  String get household_budget_template_delete_title;
+
+  /// 예산 템플릿 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'이 카테고리의 자동 예산 템플릿을 삭제하시겠습니까?'**
+  String get household_budget_template_delete_confirm;
+
+  /// 예산 템플릿 삭제 완료 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 예산 템플릿이 삭제되었습니다'**
+  String get household_budget_template_deleted;
+
+  /// 카테고리 예산 합계가 전체 예산 초과 경고
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 예산 합계(₩{sum})가 전체 예산(₩{total})을 초과합니다'**
+  String household_budget_category_sum_exceeds(String sum, String total);
+
   /// 자산관리 메인 제목
   ///
   /// In ko, this message translates to:

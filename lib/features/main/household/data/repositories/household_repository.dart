@@ -25,7 +25,7 @@ class HouseholdRepository {
       final response = await _dio.get('/household/expenses', queryParameters: {
         'groupId': groupId,
         if (month != null) 'month': month,
-        if (category != null) 'category': _categoryToString(category),
+        if (category != null) 'category': SetBudgetDto.categoryToString(category),
         if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod),
       });
 
@@ -145,7 +145,56 @@ class HouseholdRepository {
     }
   }
 
-  /// 예산 설정
+  /// 예산 템플릿 목록 조회
+  Future<List<BudgetTemplateModel>> getBudgetTemplates({
+    required String groupId,
+  }) async {
+    try {
+      final response = await _dio.get('/household/budget-templates', queryParameters: {
+        'groupId': groupId,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => BudgetTemplateModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 예산 템플릿 조회 실패: ${e.message}');
+      throw Exception('예산 템플릿 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 예산 템플릿 설정 (없으면 생성, 있으면 수정)
+  Future<BudgetTemplateModel> setBudgetTemplate(SetBudgetTemplateDto dto) async {
+    try {
+      final response = await _dio.post('/household/budget-templates', data: dto.toJson());
+      return BudgetTemplateModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 예산 템플릿 설정 실패: ${e.message}');
+      throw Exception('예산 템플릿 설정 실패: ${e.message}');
+    }
+  }
+
+  /// 카테고리별 예산 템플릿 삭제
+  Future<void> deleteBudgetTemplate({
+    required String groupId,
+    required ExpenseCategory category,
+  }) async {
+    try {
+      await _dio.delete(
+        '/household/budget-templates/${SetBudgetDto.categoryToString(category)}',
+        queryParameters: {'groupId': groupId},
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('예산 템플릿을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('접근 권한이 없습니다');
+      throw Exception('예산 템플릿 삭제 실패: ${e.message}');
+    }
+  }
+
+  /// 카테고리별 예산 설정
   Future<BudgetModel> setBudget(SetBudgetDto dto) async {
     try {
       final response = await _dio.post('/household/budgets', data: dto.toJson());
@@ -156,22 +205,81 @@ class HouseholdRepository {
     }
   }
 
-  String _categoryToString(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.transportation:
-        return 'TRANSPORTATION';
-      case ExpenseCategory.food:
-        return 'FOOD';
-      case ExpenseCategory.leisure:
-        return 'LEISURE';
-      case ExpenseCategory.living:
-        return 'LIVING';
-      case ExpenseCategory.medical:
-        return 'MEDICAL';
-      case ExpenseCategory.education:
-        return 'EDUCATION';
-      case ExpenseCategory.other:
-        return 'OTHER';
+  // ── 그룹 전체 예산 ──
+
+  /// 그룹 전체 예산 조회
+  Future<GroupBudgetModel?> getGroupBudget({
+    required String groupId,
+    required String month,
+  }) async {
+    try {
+      final response = await _dio.get('/household/group-budgets', queryParameters: {
+        'groupId': groupId,
+        'month': month,
+      });
+      final data = response.data;
+      if (data == null || data is! Map<String, dynamic>) return null;
+      return GroupBudgetModel.fromJson(data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) return null;
+      debugPrint('❌ [HouseholdRepository] 전체 예산 조회 실패: ${e.message}');
+      throw Exception('전체 예산 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 그룹 전체 예산 설정
+  Future<GroupBudgetModel> setGroupBudget(SetGroupBudgetDto dto) async {
+    try {
+      final response = await _dio.post('/household/group-budgets', data: dto.toJson());
+      return GroupBudgetModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 전체 예산 설정 실패: ${e.message}');
+      throw Exception('전체 예산 설정 실패: ${e.message}');
+    }
+  }
+
+  // ── 그룹 전체 예산 템플릿 ──
+
+  /// 그룹 전체 예산 템플릿 조회
+  Future<GroupBudgetTemplateModel?> getGroupBudgetTemplate({
+    required String groupId,
+  }) async {
+    try {
+      final response = await _dio.get('/household/group-budget-templates', queryParameters: {
+        'groupId': groupId,
+      });
+      final data = response.data;
+      if (data == null || data is! Map<String, dynamic>) return null;
+      return GroupBudgetTemplateModel.fromJson(data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) return null;
+      debugPrint('❌ [HouseholdRepository] 전체 예산 템플릿 조회 실패: ${e.message}');
+      throw Exception('전체 예산 템플릿 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 그룹 전체 예산 템플릿 설정
+  Future<GroupBudgetTemplateModel> setGroupBudgetTemplate(SetGroupBudgetTemplateDto dto) async {
+    try {
+      final response =
+          await _dio.post('/household/group-budget-templates', data: dto.toJson());
+      return GroupBudgetTemplateModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 전체 예산 템플릿 설정 실패: ${e.message}');
+      throw Exception('전체 예산 템플릿 설정 실패: ${e.message}');
+    }
+  }
+
+  /// 그룹 전체 예산 템플릿 삭제
+  Future<void> deleteGroupBudgetTemplate({required String groupId}) async {
+    try {
+      await _dio.delete('/household/group-budget-templates', queryParameters: {
+        'groupId': groupId,
+      });
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('전체 예산 템플릿을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('접근 권한이 없습니다');
+      throw Exception('전체 예산 템플릿 삭제 실패: ${e.message}');
     }
   }
 

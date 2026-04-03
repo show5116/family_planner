@@ -906,6 +906,28 @@
   "@household_budget_category_label": { "description": "카테고리별 예산 섹션 레이블" },
   "household_budget_not_set": "미설정",
   "@household_budget_not_set": { "description": "예산 미설정 상태 표시" },
+  "household_budget_tab_monthly": "이번 달 예산",
+  "@household_budget_tab_monthly": { "description": "이번 달 예산 탭 레이블" },
+  "household_budget_tab_template": "매월 자동 예산",
+  "@household_budget_tab_template": { "description": "매월 자동 예산 탭 레이블" },
+  "household_budget_template_info": "매월 1일에 템플릿 기반으로 예산이 자동 설정됩니다. 해당 월에 이미 예산이 있으면 건너뜁니다.",
+  "@household_budget_template_info": { "description": "예산 템플릿 안내 문구" },
+  "household_budget_template_saved": "자동 예산 템플릿이 설정되었습니다",
+  "@household_budget_template_saved": { "description": "예산 템플릿 저장 성공 메시지" },
+  "household_budget_template_delete_title": "템플릿 삭제",
+  "@household_budget_template_delete_title": { "description": "예산 템플릿 삭제 다이얼로그 제목" },
+  "household_budget_template_delete_confirm": "이 카테고리의 자동 예산 템플릿을 삭제하시겠습니까?",
+  "@household_budget_template_delete_confirm": { "description": "예산 템플릿 삭제 확인 메시지" },
+  "household_budget_template_deleted": "자동 예산 템플릿이 삭제되었습니다",
+  "@household_budget_template_deleted": { "description": "예산 템플릿 삭제 완료 메시지" },
+  "household_budget_category_sum_exceeds": "카테고리 예산 합계(₩{sum})가 전체 예산(₩{total})을 초과합니다",
+  "@household_budget_category_sum_exceeds": {
+    "description": "카테고리 예산 합계가 전체 예산 초과 경고",
+    "placeholders": {
+      "sum": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
 
   "asset_title": "자산관리",
   "@asset_title": { "description": "자산관리 메인 제목" },

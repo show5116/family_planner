@@ -2204,6 +2204,34 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_budget_not_set => '미설정';
 
   @override
+  String get household_budget_tab_monthly => '이번 달 예산';
+
+  @override
+  String get household_budget_tab_template => '매월 자동 예산';
+
+  @override
+  String get household_budget_template_info =>
+      '매월 1일에 템플릿 기반으로 예산이 자동 설정됩니다. 해당 월에 이미 예산이 있으면 건너뜁니다.';
+
+  @override
+  String get household_budget_template_saved => '자동 예산 템플릿이 설정되었습니다';
+
+  @override
+  String get household_budget_template_delete_title => '템플릿 삭제';
+
+  @override
+  String get household_budget_template_delete_confirm =>
+      '이 카테고리의 자동 예산 템플릿을 삭제하시겠습니까?';
+
+  @override
+  String get household_budget_template_deleted => '자동 예산 템플릿이 삭제되었습니다';
+
+  @override
+  String household_budget_category_sum_exceeds(String sum, String total) {
+    return '카테고리 예산 합계(₩$sum)가 전체 예산(₩$total)을 초과합니다';
+  }
+
+  @override
   String get asset_title => '자산관리';
 
   @override

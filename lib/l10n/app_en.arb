@@ -892,6 +892,28 @@
   "@household_budget_category_label": { "description": "Budget by category section label" },
   "household_budget_not_set": "Not set",
   "@household_budget_not_set": { "description": "Budget not set status" },
+  "household_budget_tab_monthly": "This Month",
+  "@household_budget_tab_monthly": { "description": "This month budget tab label" },
+  "household_budget_tab_template": "Auto Monthly",
+  "@household_budget_tab_template": { "description": "Auto monthly budget tab label" },
+  "household_budget_template_info": "Budget is automatically set on the 1st of each month based on the template. Existing budgets for that month will be skipped.",
+  "@household_budget_template_info": { "description": "Budget template info message" },
+  "household_budget_template_saved": "Auto budget template has been saved",
+  "@household_budget_template_saved": { "description": "Budget template saved message" },
+  "household_budget_template_delete_title": "Delete Template",
+  "@household_budget_template_delete_title": { "description": "Budget template delete dialog title" },
+  "household_budget_template_delete_confirm": "Are you sure you want to delete the auto budget template for this category?",
+  "@household_budget_template_delete_confirm": { "description": "Budget template delete confirm message" },
+  "household_budget_template_deleted": "Auto budget template has been deleted",
+  "@household_budget_template_deleted": { "description": "Budget template deleted message" },
+  "household_budget_category_sum_exceeds": "Category budget total (₩{sum}) exceeds the overall budget (₩{total})",
+  "@household_budget_category_sum_exceeds": {
+    "description": "Warning when category budget sum exceeds total budget",
+    "placeholders": {
+      "sum": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
 
   "asset_title": "Assets",
   "@asset_title": { "description": "Asset management main title" },

@@ -892,6 +892,28 @@
   "@household_budget_category_label": { "description": "カテゴリ別予算セクションラベル" },
   "household_budget_not_set": "未設定",
   "@household_budget_not_set": { "description": "予算未設定状態表示" },
+  "household_budget_tab_monthly": "今月の予算",
+  "@household_budget_tab_monthly": { "description": "今月の予算タブラベル" },
+  "household_budget_tab_template": "毎月自動予算",
+  "@household_budget_tab_template": { "description": "毎月自動予算タブラベル" },
+  "household_budget_template_info": "毎月1日にテンプレートに基づいて予算が自動設定されます。その月にすでに予算がある場合はスキップされます。",
+  "@household_budget_template_info": { "description": "予算テンプレート案内文" },
+  "household_budget_template_saved": "自動予算テンプレートが設定されました",
+  "@household_budget_template_saved": { "description": "予算テンプレート保存成功メッセージ" },
+  "household_budget_template_delete_title": "テンプレート削除",
+  "@household_budget_template_delete_title": { "description": "予算テンプレート削除ダイアログタイトル" },
+  "household_budget_template_delete_confirm": "このカテゴリの自動予算テンプレートを削除しますか？",
+  "@household_budget_template_delete_confirm": { "description": "予算テンプレート削除確認メッセージ" },
+  "household_budget_template_deleted": "自動予算テンプレートが削除されました",
+  "@household_budget_template_deleted": { "description": "予算テンプレート削除完了メッセージ" },
+  "household_budget_category_sum_exceeds": "カテゴリ予算の合計(₩{sum})が全体予算(₩{total})を超えています",
+  "@household_budget_category_sum_exceeds": {
+    "description": "カテゴリ予算合計が全体予算超過の警告",
+    "placeholders": {
+      "sum": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
 
   "asset_title": "資産管理",
   "@asset_title": { "description": "資産管理メインタイトル" },

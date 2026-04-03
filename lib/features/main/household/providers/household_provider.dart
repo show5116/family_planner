@@ -134,7 +134,17 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   }
 }
 
-/// 예산 목록 Provider
+/// 예산 템플릿 목록 Provider
+@riverpod
+Future<List<BudgetTemplateModel>> householdBudgetTemplates(Ref ref) async {
+  final groupId = ref.watch(householdSelectedGroupIdProvider);
+  if (groupId == null) return [];
+
+  final repository = ref.watch(householdRepositoryProvider);
+  return repository.getBudgetTemplates(groupId: groupId);
+}
+
+/// 카테고리별 예산 목록 Provider
 @riverpod
 Future<List<BudgetModel>> householdBudgets(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
@@ -144,6 +154,28 @@ Future<List<BudgetModel>> householdBudgets(Ref ref) async {
 
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getBudgets(groupId: groupId, month: month);
+}
+
+/// 그룹 전체 예산 Provider
+@riverpod
+Future<GroupBudgetModel?> householdGroupBudget(Ref ref) async {
+  final groupId = ref.watch(householdSelectedGroupIdProvider);
+  final month = ref.watch(householdSelectedMonthProvider);
+
+  if (groupId == null) return null;
+
+  final repository = ref.watch(householdRepositoryProvider);
+  return repository.getGroupBudget(groupId: groupId, month: month);
+}
+
+/// 그룹 전체 예산 템플릿 Provider
+@riverpod
+Future<GroupBudgetTemplateModel?> householdGroupBudgetTemplate(Ref ref) async {
+  final groupId = ref.watch(householdSelectedGroupIdProvider);
+  if (groupId == null) return null;
+
+  final repository = ref.watch(householdRepositoryProvider);
+  return repository.getGroupBudgetTemplate(groupId: groupId);
 }
 
 /// 지출 관리 Notifier (생성/수정/삭제)
@@ -207,6 +239,75 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
+    }
+  }
+
+  Future<BudgetTemplateModel?> setBudgetTemplate(SetBudgetTemplateDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final template = await _repository.setBudgetTemplate(dto);
+      _ref.invalidate(householdBudgetTemplatesProvider);
+      state = const AsyncValue.data(null);
+      return template;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<bool> deleteBudgetTemplate({
+    required String groupId,
+    required ExpenseCategory category,
+  }) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteBudgetTemplate(groupId: groupId, category: category);
+      _ref.invalidate(householdBudgetTemplatesProvider);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<GroupBudgetModel?> setGroupBudget(SetGroupBudgetDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final budget = await _repository.setGroupBudget(dto);
+      _ref.invalidate(householdGroupBudgetProvider);
+      _ref.invalidate(householdMonthlyStatisticsProvider);
+      state = const AsyncValue.data(null);
+      return budget;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<GroupBudgetTemplateModel?> setGroupBudgetTemplate(SetGroupBudgetTemplateDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final template = await _repository.setGroupBudgetTemplate(dto);
+      _ref.invalidate(householdGroupBudgetTemplateProvider);
+      state = const AsyncValue.data(null);
+      return template;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<bool> deleteGroupBudgetTemplate({required String groupId}) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteGroupBudgetTemplate(groupId: groupId);
+      _ref.invalidate(householdGroupBudgetTemplateProvider);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
     }
   }
 }

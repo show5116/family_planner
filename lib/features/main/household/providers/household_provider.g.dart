@@ -191,9 +191,31 @@ class _HouseholdYearlyStatisticsProviderElement
   String get year => (origin as HouseholdYearlyStatisticsProvider).year;
 }
 
+String _$householdBudgetTemplatesHash() =>
+    r'81876a64a3a4146ebe93855d029611a60bd78d73';
+
+/// 예산 템플릿 목록 Provider
+///
+/// Copied from [householdBudgetTemplates].
+@ProviderFor(householdBudgetTemplates)
+final householdBudgetTemplatesProvider =
+    AutoDisposeFutureProvider<List<BudgetTemplateModel>>.internal(
+      householdBudgetTemplates,
+      name: r'householdBudgetTemplatesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$householdBudgetTemplatesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HouseholdBudgetTemplatesRef =
+    AutoDisposeFutureProviderRef<List<BudgetTemplateModel>>;
 String _$householdBudgetsHash() => r'95f6ade3d310c67438bd66c888c5ae97c7781ab6';
 
-/// 예산 목록 Provider
+/// 카테고리별 예산 목록 Provider
 ///
 /// Copied from [householdBudgets].
 @ProviderFor(householdBudgets)
@@ -211,6 +233,50 @@ final householdBudgetsProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef HouseholdBudgetsRef = AutoDisposeFutureProviderRef<List<BudgetModel>>;
+String _$householdGroupBudgetHash() =>
+    r'820aaa5b5df64e89653546f7f8da8b63a6916682';
+
+/// 그룹 전체 예산 Provider
+///
+/// Copied from [householdGroupBudget].
+@ProviderFor(householdGroupBudget)
+final householdGroupBudgetProvider =
+    AutoDisposeFutureProvider<GroupBudgetModel?>.internal(
+      householdGroupBudget,
+      name: r'householdGroupBudgetProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$householdGroupBudgetHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HouseholdGroupBudgetRef =
+    AutoDisposeFutureProviderRef<GroupBudgetModel?>;
+String _$householdGroupBudgetTemplateHash() =>
+    r'a6b2115ef0f7d856cb9865ec496a67597ad3f463';
+
+/// 그룹 전체 예산 템플릿 Provider
+///
+/// Copied from [householdGroupBudgetTemplate].
+@ProviderFor(householdGroupBudgetTemplate)
+final householdGroupBudgetTemplateProvider =
+    AutoDisposeFutureProvider<GroupBudgetTemplateModel?>.internal(
+      householdGroupBudgetTemplate,
+      name: r'householdGroupBudgetTemplateProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$householdGroupBudgetTemplateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HouseholdGroupBudgetTemplateRef =
+    AutoDisposeFutureProviderRef<GroupBudgetTemplateModel?>;
 String _$householdExpensesHash() => r'8c40f095b53e03e2535eafb95d8a2f3b1cc66805';
 
 /// 지출 목록 Provider

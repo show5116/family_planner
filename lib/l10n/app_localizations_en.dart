@@ -2244,6 +2244,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_budget_not_set => 'Not set';
 
   @override
+  String get household_budget_tab_monthly => 'This Month';
+
+  @override
+  String get household_budget_tab_template => 'Auto Monthly';
+
+  @override
+  String get household_budget_template_info =>
+      'Budget is automatically set on the 1st of each month based on the template. Existing budgets for that month will be skipped.';
+
+  @override
+  String get household_budget_template_saved =>
+      'Auto budget template has been saved';
+
+  @override
+  String get household_budget_template_delete_title => 'Delete Template';
+
+  @override
+  String get household_budget_template_delete_confirm =>
+      'Are you sure you want to delete the auto budget template for this category?';
+
+  @override
+  String get household_budget_template_deleted =>
+      'Auto budget template has been deleted';
+
+  @override
+  String household_budget_category_sum_exceeds(String sum, String total) {
+    return 'Category budget total (₩$sum) exceeds the overall budget (₩$total)';
+  }
+
+  @override
   String get asset_title => 'Assets';
 
   @override

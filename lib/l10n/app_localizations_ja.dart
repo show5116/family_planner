@@ -2201,6 +2201,34 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_budget_not_set => '未設定';
 
   @override
+  String get household_budget_tab_monthly => '今月の予算';
+
+  @override
+  String get household_budget_tab_template => '毎月自動予算';
+
+  @override
+  String get household_budget_template_info =>
+      '毎月1日にテンプレートに基づいて予算が自動設定されます。その月にすでに予算がある場合はスキップされます。';
+
+  @override
+  String get household_budget_template_saved => '自動予算テンプレートが設定されました';
+
+  @override
+  String get household_budget_template_delete_title => 'テンプレート削除';
+
+  @override
+  String get household_budget_template_delete_confirm =>
+      'このカテゴリの自動予算テンプレートを削除しますか？';
+
+  @override
+  String get household_budget_template_deleted => '自動予算テンプレートが削除されました';
+
+  @override
+  String household_budget_category_sum_exceeds(String sum, String total) {
+    return 'カテゴリ予算の合計(₩$sum)が全体予算(₩$total)を超えています';
+  }
+
+  @override
   String get asset_title => '資産管理';
 
   @override
