@@ -238,3 +238,112 @@ class SetGroupBudgetTemplateDto {
     };
   }
 }
+
+// ─────────────────────────────────────────────
+// Bulk DTO
+// ─────────────────────────────────────────────
+
+/// 카테고리별 예산 항목 (bulk용)
+class CategoryBudgetItemDto {
+  final ExpenseCategory category;
+  final double amount;
+
+  const CategoryBudgetItemDto({required this.category, required this.amount});
+
+  Map<String, dynamic> toJson() => {
+        'category': SetBudgetDto.categoryToString(category),
+        'amount': amount,
+      };
+}
+
+/// 예산 일괄 설정 DTO (POST /household/budgets/bulk)
+class BulkSetBudgetDto {
+  final String groupId;
+  final String month; // YYYY-MM
+  final double? total;
+  final List<CategoryBudgetItemDto> categories;
+
+  const BulkSetBudgetDto({
+    required this.groupId,
+    required this.month,
+    this.total,
+    required this.categories,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        'month': month,
+        if (total != null) 'total': total,
+        'categories': categories.map((c) => c.toJson()).toList(),
+      };
+}
+
+/// 예산 일괄 설정 응답
+class BulkBudgetResult {
+  final GroupBudgetModel? total;
+  final List<BudgetModel> categories;
+
+  const BulkBudgetResult({this.total, required this.categories});
+
+  factory BulkBudgetResult.fromJson(Map<String, dynamic> json) {
+    return BulkBudgetResult(
+      total: json['total'] != null
+          ? GroupBudgetModel.fromJson(json['total'] as Map<String, dynamic>)
+          : null,
+      categories: (json['categories'] as List? ?? [])
+          .map((e) => BudgetModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+/// 카테고리별 예산 템플릿 항목 (bulk용)
+class CategoryTemplateItemDto {
+  final ExpenseCategory category;
+  final double amount;
+
+  const CategoryTemplateItemDto({required this.category, required this.amount});
+
+  Map<String, dynamic> toJson() => {
+        'category': SetBudgetDto.categoryToString(category),
+        'amount': amount,
+      };
+}
+
+/// 예산 템플릿 일괄 설정 DTO (POST /household/budget-templates/bulk)
+class BulkSetBudgetTemplateDto {
+  final String groupId;
+  final double? total;
+  final List<CategoryTemplateItemDto> categories;
+
+  const BulkSetBudgetTemplateDto({
+    required this.groupId,
+    this.total,
+    required this.categories,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        if (total != null) 'total': total,
+        'categories': categories.map((c) => c.toJson()).toList(),
+      };
+}
+
+/// 예산 템플릿 일괄 설정 응답
+class BulkBudgetTemplateResult {
+  final GroupBudgetTemplateModel? total;
+  final List<BudgetTemplateModel> categories;
+
+  const BulkBudgetTemplateResult({this.total, required this.categories});
+
+  factory BulkBudgetTemplateResult.fromJson(Map<String, dynamic> json) {
+    return BulkBudgetTemplateResult(
+      total: json['total'] != null
+          ? GroupBudgetTemplateModel.fromJson(json['total'] as Map<String, dynamic>)
+          : null,
+      categories: (json['categories'] as List? ?? [])
+          .map((e) => BudgetTemplateModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}

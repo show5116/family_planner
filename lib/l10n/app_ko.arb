@@ -928,6 +928,13 @@
       "total": { "type": "String" }
     }
   },
+  "household_budget_category_sum": "합계 ₩{amount}",
+  "@household_budget_category_sum": {
+    "description": "카테고리 예산 합계 표시",
+    "placeholders": {
+      "amount": { "type": "String", "example": "500,000" }
+    }
+  },
 
   "asset_title": "자산관리",
   "@asset_title": { "description": "자산관리 메인 제목" },

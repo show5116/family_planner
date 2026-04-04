@@ -914,6 +914,13 @@
       "total": { "type": "String" }
     }
   },
+  "household_budget_category_sum": "Total ₩{amount}",
+  "@household_budget_category_sum": {
+    "description": "Category budget sum display",
+    "placeholders": {
+      "amount": { "type": "String", "example": "500,000" }
+    }
+  },
 
   "asset_title": "Assets",
   "@asset_title": { "description": "Asset management main title" },

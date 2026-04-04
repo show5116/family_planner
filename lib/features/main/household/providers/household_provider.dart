@@ -228,6 +228,39 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
+  Future<BulkBudgetResult?> setBudgetBulk(BulkSetBudgetDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final result = await _repository.setBudgetBulk(dto);
+      _ref.invalidate(householdBudgetsProvider);
+      _ref.invalidate(householdGroupBudgetProvider);
+      _ref.invalidate(householdMonthlyStatisticsProvider);
+      state = const AsyncValue.data(null);
+      return result;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<BulkBudgetTemplateResult?> setBudgetTemplateBulk(BulkSetBudgetTemplateDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final result = await _repository.setBudgetTemplateBulk(dto);
+      _ref.invalidate(householdBudgetTemplatesProvider);
+      _ref.invalidate(householdGroupBudgetTemplateProvider);
+      // 이번 달 예산이 없을 경우 템플릿 기반으로 자동 생성될 수 있으므로 함께 갱신
+      _ref.invalidate(householdBudgetsProvider);
+      _ref.invalidate(householdGroupBudgetProvider);
+      _ref.invalidate(householdMonthlyStatisticsProvider);
+      state = const AsyncValue.data(null);
+      return result;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
   Future<BudgetModel?> setBudget(SetBudgetDto dto) async {
     state = const AsyncValue.loading();
     try {

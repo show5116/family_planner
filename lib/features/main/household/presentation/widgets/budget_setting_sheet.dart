@@ -131,17 +131,79 @@ class _BudgetSettingSheetState extends ConsumerState<BudgetSettingSheet>
 // 이번 달 예산 탭
 // ─────────────────────────────────────────────
 
-class _MonthlyBudgetTab extends ConsumerWidget {
+class _MonthlyBudgetTab extends ConsumerStatefulWidget {
   final ScrollController scrollController;
   const _MonthlyBudgetTab({required this.scrollController});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_MonthlyBudgetTab> createState() => _MonthlyBudgetTabState();
+}
+
+class _MonthlyBudgetTabState extends ConsumerState<_MonthlyBudgetTab> {
+  // 로컬 편집 상태: category → amount (null이면 미설정)
+  double? _totalAmount;
+  final Map<ExpenseCategory, double?> _categoryAmounts = {};
+  bool _initialized = false;
+
+  void _initFromData(GroupBudgetModel? groupBudget, List<BudgetModel> budgets) {
+    if (_initialized) return;
+    _totalAmount = groupBudget?.amount;
+    for (final cat in ExpenseCategory.values) {
+      try {
+        _categoryAmounts[cat] = budgets.firstWhere((b) => b.category == cat).amount;
+      } catch (_) {
+        _categoryAmounts[cat] = null;
+      }
+    }
+    _initialized = true;
+  }
+
+  double get _categorySum => _categoryAmounts.values
+      .where((v) => v != null && v > 0)
+      .fold(0, (sum, v) => sum + v!);
+
+  bool get _isExceeding =>
+      _totalAmount != null && _totalAmount! > 0 && _categorySum > _totalAmount!;
+
+  Future<void> _saveAll(BuildContext context, AppLocalizations l10n) async {
+    final groupId = ref.read(householdSelectedGroupIdProvider);
+    final month = ref.read(householdSelectedMonthProvider);
+    if (groupId == null) return;
+
+    final categories = _categoryAmounts.entries
+        .where((e) => e.value != null && e.value! > 0)
+        .map((e) => CategoryBudgetItemDto(category: e.key, amount: e.value!))
+        .toList();
+
+    final dto = BulkSetBudgetDto(
+      groupId: groupId,
+      month: month,
+      total: (_totalAmount != null && _totalAmount! > 0) ? _totalAmount : null,
+      categories: categories,
+    );
+
+    final result =
+        await ref.read(householdManagementProvider.notifier).setBudgetBulk(dto);
+
+    if (!context.mounted) return;
+    if (result != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.household_budget_saved)),
+      );
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.common_error)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final budgetsAsync = ref.watch(householdBudgetsProvider);
     final groupBudgetAsync = ref.watch(householdGroupBudgetProvider);
 
-    // 두 provider가 모두 로드될 때까지 대기
     if (budgetsAsync.isLoading || groupBudgetAsync.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -149,128 +211,91 @@ class _MonthlyBudgetTab extends ConsumerWidget {
       return _ErrorView(onRetry: () => ref.invalidate(householdBudgetsProvider));
     }
 
-    final budgets = budgetsAsync.value ?? [];
-    final groupBudget = groupBudgetAsync.value;
+    _initFromData(groupBudgetAsync.value, budgetsAsync.value ?? []);
 
-    final categorySum = budgets.fold<double>(0, (sum, b) => sum + b.amount);
-    final totalBudget = groupBudget?.amount;
-    final isExceeding = totalBudget != null && totalBudget > 0 && categorySum > totalBudget;
-
-    return ListView(
-      controller: scrollController,
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+    return Column(
       children: [
-        // 초과 경고 배너
-        if (isExceeding) ...[
-          Container(
+        Expanded(
+          child: ListView(
+            controller: widget.scrollController,
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.errorContainer,
-              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.warning_amber_rounded,
-                  size: 18,
-                  color: Theme.of(context).colorScheme.onErrorContainer,
-                ),
-                const SizedBox(width: AppSizes.spaceS),
-                Expanded(
-                  child: Text(
-                    l10n.household_budget_category_sum_exceeds(
-                      _formatAmount(categorySum),
-                      _formatAmount(totalBudget),
-                    ),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onErrorContainer,
+            children: [
+              // 초과 경고 배너
+              if (_isExceeding)
+                Container(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.warning_amber_rounded,
+                          size: 18,
+                          color: Theme.of(context).colorScheme.onErrorContainer),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Expanded(
+                        child: Text(
+                          l10n.household_budget_category_sum_exceeds(
+                            _formatAmount(_categorySum),
+                            _formatAmount(_totalAmount!),
+                          ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onErrorContainer,
+                              ),
                         ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              // 전체 예산
+              _SectionHeader(label: l10n.household_budget_total_label),
+              const SizedBox(height: AppSizes.spaceS),
+              _EditableBudgetItem(
+                icon: Icons.account_balance_wallet,
+                color: Theme.of(context).colorScheme.primary,
+                label: l10n.household_budget_total_label,
+                amount: _totalAmount,
+                onChanged: (v) => setState(() => _totalAmount = v),
+              ),
+              const SizedBox(height: AppSizes.spaceL),
+              // 카테고리별 예산
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _SectionHeader(label: l10n.household_budget_category_label),
+                  Text(
+                    l10n.household_budget_category_sum(_formatAmount(_categorySum)),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: _isExceeding
+                              ? Theme.of(context).colorScheme.error
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+              ...ExpenseCategory.values.map(
+                (cat) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+                  child: _EditableBudgetItem(
+                    icon: categoryIcon(cat),
+                    color: categoryColor(cat),
+                    label: categoryName(l10n, cat),
+                    amount: _categoryAmounts[cat],
+                    onChanged: (v) => setState(() => _categoryAmounts[cat] = v),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-        // 전체 예산
-        _SectionHeader(label: l10n.household_budget_total_label),
-        const SizedBox(height: AppSizes.spaceS),
-        _BudgetItem(
-          icon: Icons.account_balance_wallet,
-          color: Theme.of(context).colorScheme.primary,
-          label: l10n.household_budget_total_label,
-          currentAmount: groupBudget?.amount,
-          onSave: (amount) => _saveGroupBudget(ref, context, l10n, amount),
         ),
-        const SizedBox(height: AppSizes.spaceL),
-        // 카테고리별 예산
-        _SectionHeader(label: l10n.household_budget_category_label),
-        const SizedBox(height: AppSizes.spaceS),
-        ...ExpenseCategory.values.map(
-          (cat) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
-            child: _BudgetItem(
-              icon: categoryIcon(cat),
-              color: categoryColor(cat),
-              label: categoryName(l10n, cat),
-              currentAmount: _findAmount(budgets, cat),
-              onSave: (amount) => _saveBudget(ref, context, l10n, cat, amount),
-            ),
-          ),
-        ),
+        // 저장 버튼
+        _SaveButton(onPressed: () => _saveAll(context, l10n)),
       ],
     );
-  }
-
-  double? _findAmount(List<BudgetModel> budgets, ExpenseCategory category) {
-    try {
-      return budgets.firstWhere((b) => b.category == category).amount;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<void> _saveGroupBudget(
-    WidgetRef ref,
-    BuildContext context,
-    AppLocalizations l10n,
-    double amount,
-  ) async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    final month = ref.read(householdSelectedMonthProvider);
-    if (groupId == null) return;
-
-    await ref.read(householdManagementProvider.notifier).setGroupBudget(
-          SetGroupBudgetDto(groupId: groupId, amount: amount, month: month),
-        );
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.household_budget_saved)),
-      );
-    }
-  }
-
-  Future<void> _saveBudget(
-    WidgetRef ref,
-    BuildContext context,
-    AppLocalizations l10n,
-    ExpenseCategory category,
-    double amount,
-  ) async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    final month = ref.read(householdSelectedMonthProvider);
-    if (groupId == null) return;
-
-    await ref.read(householdManagementProvider.notifier).setBudget(
-          SetBudgetDto(groupId: groupId, category: category, amount: amount, month: month),
-        );
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.household_budget_saved)),
-      );
-    }
   }
 }
 
@@ -278,12 +303,73 @@ class _MonthlyBudgetTab extends ConsumerWidget {
 // 매월 자동 예산(템플릿) 탭
 // ─────────────────────────────────────────────
 
-class _TemplateTab extends ConsumerWidget {
+class _TemplateTab extends ConsumerStatefulWidget {
   final ScrollController scrollController;
   const _TemplateTab({required this.scrollController});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_TemplateTab> createState() => _TemplateTabState();
+}
+
+class _TemplateTabState extends ConsumerState<_TemplateTab> {
+  double? _totalAmount;
+  final Map<ExpenseCategory, double?> _categoryAmounts = {};
+  bool _initialized = false;
+
+  void _initFromData(
+      GroupBudgetTemplateModel? groupTemplate, List<BudgetTemplateModel> templates) {
+    if (_initialized) return;
+    _totalAmount = groupTemplate?.amount;
+    for (final cat in ExpenseCategory.values) {
+      try {
+        _categoryAmounts[cat] = templates.firstWhere((t) => t.category == cat).amount;
+      } catch (_) {
+        _categoryAmounts[cat] = null;
+      }
+    }
+    _initialized = true;
+  }
+
+  double get _categorySum => _categoryAmounts.values
+      .where((v) => v != null && v > 0)
+      .fold(0, (sum, v) => sum + v!);
+
+  bool get _isExceeding =>
+      _totalAmount != null && _totalAmount! > 0 && _categorySum > _totalAmount!;
+
+  Future<void> _saveAll(BuildContext context, AppLocalizations l10n) async {
+    final groupId = ref.read(householdSelectedGroupIdProvider);
+    if (groupId == null) return;
+
+    final categories = _categoryAmounts.entries
+        .where((e) => e.value != null && e.value! > 0)
+        .map((e) => CategoryTemplateItemDto(category: e.key, amount: e.value!))
+        .toList();
+
+    final dto = BulkSetBudgetTemplateDto(
+      groupId: groupId,
+      total: (_totalAmount != null && _totalAmount! > 0) ? _totalAmount : null,
+      categories: categories,
+    );
+
+    final result =
+        await ref.read(householdManagementProvider.notifier).setBudgetTemplateBulk(dto);
+
+    if (!context.mounted) return;
+    if (result != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.household_budget_template_saved)),
+      );
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.common_error)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final templatesAsync = ref.watch(householdBudgetTemplatesProvider);
     final groupTemplateAsync = ref.watch(householdGroupBudgetTemplateProvider);
@@ -295,186 +381,114 @@ class _TemplateTab extends ConsumerWidget {
       return _ErrorView(onRetry: () => ref.invalidate(householdBudgetTemplatesProvider));
     }
 
-    final templates = templatesAsync.value ?? [];
-    final groupTemplate = groupTemplateAsync.value;
+    _initFromData(groupTemplateAsync.value, templatesAsync.value ?? []);
 
-    return ListView(
-      controller: scrollController,
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+    return Column(
       children: [
-        // 안내 배너
-        Container(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          margin: const EdgeInsets.only(bottom: AppSizes.spaceL),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-          ),
-          child: Row(
+        Expanded(
+          child: ListView(
+            controller: widget.scrollController,
+            padding: const EdgeInsets.all(AppSizes.spaceM),
             children: [
-              Icon(
-                Icons.info_outline,
-                size: 18,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
-              const SizedBox(width: AppSizes.spaceS),
-              Expanded(
-                child: Text(
-                  l10n.household_budget_template_info,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+              // 안내 배너
+              Container(
+                padding: const EdgeInsets.all(AppSizes.spaceM),
+                margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Expanded(
+                      child: Text(
+                        l10n.household_budget_template_info,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSecondaryContainer,
+                            ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              // 초과 경고 배너
+              if (_isExceeding)
+                Container(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.warning_amber_rounded,
+                          size: 18,
+                          color: Theme.of(context).colorScheme.onErrorContainer),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Expanded(
+                        child: Text(
+                          l10n.household_budget_category_sum_exceeds(
+                            _formatAmount(_categorySum),
+                            _formatAmount(_totalAmount!),
+                          ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onErrorContainer,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              // 전체 예산 템플릿
+              _SectionHeader(label: l10n.household_budget_total_label),
+              const SizedBox(height: AppSizes.spaceS),
+              _EditableBudgetItem(
+                icon: Icons.account_balance_wallet,
+                color: Theme.of(context).colorScheme.primary,
+                label: l10n.household_budget_total_label,
+                amount: _totalAmount,
+                onChanged: (v) => setState(() => _totalAmount = v),
+              ),
+              const SizedBox(height: AppSizes.spaceL),
+              // 카테고리별 예산 템플릿
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _SectionHeader(label: l10n.household_budget_category_label),
+                  Text(
+                    l10n.household_budget_category_sum(_formatAmount(_categorySum)),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: _isExceeding
+                              ? Theme.of(context).colorScheme.error
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+              ...ExpenseCategory.values.map(
+                (cat) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+                  child: _EditableBudgetItem(
+                    icon: categoryIcon(cat),
+                    color: categoryColor(cat),
+                    label: categoryName(l10n, cat),
+                    amount: _categoryAmounts[cat],
+                    onChanged: (v) => setState(() => _categoryAmounts[cat] = v),
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        // 전체 예산 템플릿
-        _SectionHeader(label: l10n.household_budget_total_label),
-        const SizedBox(height: AppSizes.spaceS),
-        _BudgetItem(
-          icon: Icons.account_balance_wallet,
-          color: Theme.of(context).colorScheme.primary,
-          label: l10n.household_budget_total_label,
-          currentAmount: groupTemplate?.amount,
-          showDeleteButton: groupTemplate != null,
-          onSave: (amount) => _saveGroupTemplate(ref, context, l10n, amount),
-          onDelete: () => _deleteGroupTemplate(ref, context, l10n),
-        ),
-        const SizedBox(height: AppSizes.spaceL),
-        // 카테고리별 예산 템플릿
-        _SectionHeader(label: l10n.household_budget_category_label),
-        const SizedBox(height: AppSizes.spaceS),
-        ...ExpenseCategory.values.map(
-          (cat) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
-            child: _BudgetItem(
-              icon: categoryIcon(cat),
-              color: categoryColor(cat),
-              label: categoryName(l10n, cat),
-              currentAmount: _findTemplateAmount(templates, cat),
-              showDeleteButton: _findTemplateAmount(templates, cat) != null,
-              onSave: (amount) => _saveTemplate(ref, context, l10n, cat, amount),
-              onDelete: () => _deleteTemplate(ref, context, l10n, cat),
-            ),
-          ),
-        ),
+        _SaveButton(onPressed: () => _saveAll(context, l10n)),
       ],
-    );
-  }
-
-  double? _findTemplateAmount(List<BudgetTemplateModel> templates, ExpenseCategory category) {
-    try {
-      return templates.firstWhere((t) => t.category == category).amount;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<void> _saveGroupTemplate(
-    WidgetRef ref,
-    BuildContext context,
-    AppLocalizations l10n,
-    double amount,
-  ) async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    if (groupId == null) return;
-
-    await ref.read(householdManagementProvider.notifier).setGroupBudgetTemplate(
-          SetGroupBudgetTemplateDto(groupId: groupId, amount: amount),
-        );
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.household_budget_template_saved)),
-      );
-    }
-  }
-
-  Future<void> _deleteGroupTemplate(
-    WidgetRef ref,
-    BuildContext context,
-    AppLocalizations l10n,
-  ) async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    if (groupId == null) return;
-
-    final confirmed = await _showDeleteConfirmDialog(context, l10n);
-    if (confirmed != true) return;
-
-    await ref
-        .read(householdManagementProvider.notifier)
-        .deleteGroupBudgetTemplate(groupId: groupId);
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.household_budget_template_deleted)),
-      );
-    }
-  }
-
-  Future<void> _saveTemplate(
-    WidgetRef ref,
-    BuildContext context,
-    AppLocalizations l10n,
-    ExpenseCategory category,
-    double amount,
-  ) async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    if (groupId == null) return;
-
-    await ref.read(householdManagementProvider.notifier).setBudgetTemplate(
-          SetBudgetTemplateDto(groupId: groupId, category: category, amount: amount),
-        );
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.household_budget_template_saved)),
-      );
-    }
-  }
-
-  Future<void> _deleteTemplate(
-    WidgetRef ref,
-    BuildContext context,
-    AppLocalizations l10n,
-    ExpenseCategory category,
-  ) async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    if (groupId == null) return;
-
-    final confirmed = await _showDeleteConfirmDialog(context, l10n);
-    if (confirmed != true) return;
-
-    await ref.read(householdManagementProvider.notifier).deleteBudgetTemplate(
-          groupId: groupId,
-          category: category,
-        );
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.household_budget_template_deleted)),
-      );
-    }
-  }
-
-  Future<bool?> _showDeleteConfirmDialog(BuildContext context, AppLocalizations l10n) {
-    return showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.household_budget_template_delete_title),
-        content: Text(l10n.household_budget_template_delete_confirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.common_cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.common_delete),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -519,30 +533,51 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-/// 개별 예산/템플릿 항목
-class _BudgetItem extends StatelessWidget {
+/// 하단 저장 버튼
+class _SaveButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const _SaveButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM,
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: onPressed,
+            child: Text(AppLocalizations.of(context)!.common_save),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 인라인 편집 가능한 예산 항목 (탭으로 금액 입력 → setState로 즉시 반영)
+class _EditableBudgetItem extends StatelessWidget {
   final IconData icon;
   final Color color;
   final String label;
-  final double? currentAmount;
-  final bool showDeleteButton;
-  final Future<void> Function(double amount) onSave;
-  final VoidCallback? onDelete;
+  final double? amount;
+  final ValueChanged<double?> onChanged;
 
-  const _BudgetItem({
+  const _EditableBudgetItem({
     required this.icon,
     required this.color,
     required this.label,
-    required this.currentAmount,
-    required this.onSave,
-    this.showDeleteButton = false,
-    this.onDelete,
+    required this.amount,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final hasAmount = currentAmount != null && currentAmount! > 0;
+    final hasAmount = amount != null && amount! > 0;
 
     return Card(
       elevation: 0,
@@ -565,27 +600,16 @@ class _BudgetItem extends StatelessWidget {
         ),
         title: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text(
-          hasAmount ? '₩${_formatAmount(currentAmount!)}' : l10n.household_budget_not_set,
+          hasAmount ? '₩${_formatAmount(amount!)}' : l10n.household_budget_not_set,
           style: TextStyle(
             color: hasAmount
                 ? Theme.of(context).colorScheme.onSurface
                 : Theme.of(context).colorScheme.outline,
           ),
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showDeleteButton && onDelete != null)
-              IconButton(
-                icon: Icon(Icons.delete_outline,
-                    color: Theme.of(context).colorScheme.error),
-                onPressed: onDelete,
-              ),
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () => _showEditDialog(context, l10n),
-            ),
-          ],
+        trailing: IconButton(
+          icon: const Icon(Icons.edit_outlined),
+          onPressed: () => _showEditDialog(context, l10n),
         ),
       ),
     );
@@ -593,7 +617,7 @@ class _BudgetItem extends StatelessWidget {
 
   Future<void> _showEditDialog(BuildContext context, AppLocalizations l10n) async {
     final controller = TextEditingController(
-      text: currentAmount?.toInt().toString() ?? '',
+      text: amount?.toInt().toString() ?? '',
     );
 
     final confirmed = await showDialog<bool>(
@@ -627,10 +651,7 @@ class _BudgetItem extends StatelessWidget {
 
     if (confirmed != true || !context.mounted) return;
 
-    final amount = double.tryParse(controller.text);
-    if (amount == null || amount <= 0) return;
-
-    await onSave(amount);
+    final parsed = double.tryParse(controller.text);
+    onChanged(parsed != null && parsed > 0 ? parsed : null);
   }
-
 }

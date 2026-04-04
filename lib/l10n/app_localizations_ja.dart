@@ -2229,6 +2229,11 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String household_budget_category_sum(String amount) {
+    return '合計 ₩$amount';
+  }
+
+  @override
   String get asset_title => '資産管理';
 
   @override

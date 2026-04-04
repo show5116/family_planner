@@ -4438,6 +4438,12 @@ abstract class AppLocalizations {
   /// **'카테고리 예산 합계(₩{sum})가 전체 예산(₩{total})을 초과합니다'**
   String household_budget_category_sum_exceeds(String sum, String total);
 
+  /// 카테고리 예산 합계 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'합계 ₩{amount}'**
+  String household_budget_category_sum(String amount);
+
   /// 자산관리 메인 제목
   ///
   /// In ko, this message translates to:

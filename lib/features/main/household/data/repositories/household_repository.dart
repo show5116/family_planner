@@ -194,6 +194,29 @@ class HouseholdRepository {
     }
   }
 
+  /// 예산 일괄 설정 (전체 + 카테고리별)
+  Future<BulkBudgetResult> setBudgetBulk(BulkSetBudgetDto dto) async {
+    try {
+      final response = await _dio.post('/household/budgets/bulk', data: dto.toJson());
+      return BulkBudgetResult.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 예산 일괄 설정 실패: ${e.message}');
+      throw Exception('예산 일괄 설정 실패: ${e.message}');
+    }
+  }
+
+  /// 예산 템플릿 일괄 설정 (전체 + 카테고리별)
+  Future<BulkBudgetTemplateResult> setBudgetTemplateBulk(BulkSetBudgetTemplateDto dto) async {
+    try {
+      final response =
+          await _dio.post('/household/budget-templates/bulk', data: dto.toJson());
+      return BulkBudgetTemplateResult.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 예산 템플릿 일괄 설정 실패: ${e.message}');
+      throw Exception('예산 템플릿 일괄 설정 실패: ${e.message}');
+    }
+  }
+
   /// 카테고리별 예산 설정
   Future<BudgetModel> setBudget(SetBudgetDto dto) async {
     try {
