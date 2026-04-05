@@ -28,8 +28,8 @@ final householdMonthlyStatisticsProvider =
 // ignore: unused_element
 typedef HouseholdMonthlyStatisticsRef =
     AutoDisposeFutureProviderRef<MonthlyStatisticsModel>;
-String _$householdYearlyStatisticsHash() =>
-    r'2119a3c2848004c7a9e663eed631ba749b5ee23d';
+String _$householdMonthlyStatisticsByMonthHash() =>
+    r'b4d82dc25e0be8bf00c3e4e6e348c439580b788d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -51,6 +51,151 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+///
+/// Copied from [householdMonthlyStatisticsByMonth].
+@ProviderFor(householdMonthlyStatisticsByMonth)
+const householdMonthlyStatisticsByMonthProvider =
+    HouseholdMonthlyStatisticsByMonthFamily();
+
+/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+///
+/// Copied from [householdMonthlyStatisticsByMonth].
+class HouseholdMonthlyStatisticsByMonthFamily
+    extends Family<AsyncValue<MonthlyStatisticsModel>> {
+  /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+  ///
+  /// Copied from [householdMonthlyStatisticsByMonth].
+  const HouseholdMonthlyStatisticsByMonthFamily();
+
+  /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+  ///
+  /// Copied from [householdMonthlyStatisticsByMonth].
+  HouseholdMonthlyStatisticsByMonthProvider call(String month) {
+    return HouseholdMonthlyStatisticsByMonthProvider(month);
+  }
+
+  @override
+  HouseholdMonthlyStatisticsByMonthProvider getProviderOverride(
+    covariant HouseholdMonthlyStatisticsByMonthProvider provider,
+  ) {
+    return call(provider.month);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'householdMonthlyStatisticsByMonthProvider';
+}
+
+/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+///
+/// Copied from [householdMonthlyStatisticsByMonth].
+class HouseholdMonthlyStatisticsByMonthProvider
+    extends AutoDisposeFutureProvider<MonthlyStatisticsModel> {
+  /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+  ///
+  /// Copied from [householdMonthlyStatisticsByMonth].
+  HouseholdMonthlyStatisticsByMonthProvider(String month)
+    : this._internal(
+        (ref) => householdMonthlyStatisticsByMonth(
+          ref as HouseholdMonthlyStatisticsByMonthRef,
+          month,
+        ),
+        from: householdMonthlyStatisticsByMonthProvider,
+        name: r'householdMonthlyStatisticsByMonthProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$householdMonthlyStatisticsByMonthHash,
+        dependencies: HouseholdMonthlyStatisticsByMonthFamily._dependencies,
+        allTransitiveDependencies:
+            HouseholdMonthlyStatisticsByMonthFamily._allTransitiveDependencies,
+        month: month,
+      );
+
+  HouseholdMonthlyStatisticsByMonthProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.month,
+  }) : super.internal();
+
+  final String month;
+
+  @override
+  Override overrideWith(
+    FutureOr<MonthlyStatisticsModel> Function(
+      HouseholdMonthlyStatisticsByMonthRef provider,
+    )
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: HouseholdMonthlyStatisticsByMonthProvider._internal(
+        (ref) => create(ref as HouseholdMonthlyStatisticsByMonthRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        month: month,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<MonthlyStatisticsModel> createElement() {
+    return _HouseholdMonthlyStatisticsByMonthProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is HouseholdMonthlyStatisticsByMonthProvider &&
+        other.month == month;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, month.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin HouseholdMonthlyStatisticsByMonthRef
+    on AutoDisposeFutureProviderRef<MonthlyStatisticsModel> {
+  /// The parameter `month` of this provider.
+  String get month;
+}
+
+class _HouseholdMonthlyStatisticsByMonthProviderElement
+    extends AutoDisposeFutureProviderElement<MonthlyStatisticsModel>
+    with HouseholdMonthlyStatisticsByMonthRef {
+  _HouseholdMonthlyStatisticsByMonthProviderElement(super.provider);
+
+  @override
+  String get month =>
+      (origin as HouseholdMonthlyStatisticsByMonthProvider).month;
+}
+
+String _$householdYearlyStatisticsHash() =>
+    r'2119a3c2848004c7a9e663eed631ba749b5ee23d';
 
 /// 연간 통계 Provider
 ///

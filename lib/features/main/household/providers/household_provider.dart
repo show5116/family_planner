@@ -83,6 +83,25 @@ Future<MonthlyStatisticsModel> householdMonthlyStatistics(Ref ref) async {
   return repository.getMonthlyStatistics(groupId: groupId, month: month);
 }
 
+/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+@riverpod
+Future<MonthlyStatisticsModel> householdMonthlyStatisticsByMonth(
+    Ref ref, String month) async {
+  final groupId = ref.watch(householdSelectedGroupIdProvider);
+
+  if (groupId == null) {
+    return MonthlyStatisticsModel(
+      month: month,
+      totalExpense: 0,
+      totalBudget: 0,
+      categories: [],
+    );
+  }
+
+  final repository = ref.watch(householdRepositoryProvider);
+  return repository.getMonthlyStatistics(groupId: groupId, month: month);
+}
+
 /// 연간 통계 Provider
 @riverpod
 Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) async {

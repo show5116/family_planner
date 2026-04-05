@@ -1,21 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
-class HouseholdStatisticsScreen extends ConsumerWidget {
+class HouseholdStatisticsScreen extends ConsumerStatefulWidget {
   const HouseholdStatisticsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HouseholdStatisticsScreen> createState() =>
+      _HouseholdStatisticsScreenState();
+}
+
+class _HouseholdStatisticsScreenState
+    extends ConsumerState<HouseholdStatisticsScreen>
+    with SingleTickerProviderStateMixin {
+  late String _selectedMonth;
+  late int _selectedYear;
+  late TabController _tabController;
+  int _tabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedMonth = ref.read(householdSelectedMonthProvider);
+    _selectedYear = int.parse(_selectedMonth.split('-')[0]);
+    _tabController = TabController(length: 2, vsync: this)
+      ..addListener(() {
+        if (_tabController.indexIsChanging || _tabController.index != _tabIndex) {
+          setState(() => _tabIndex = _tabController.index);
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _changeMonth(int delta) {
+    final parts = _selectedMonth.split('-');
+    var year = int.parse(parts[0]);
+    var month = int.parse(parts[1]) + delta;
+    if (month > 12) {
+      month = 1;
+      year++;
+    } else if (month < 1) {
+      month = 12;
+      year--;
+    }
+    setState(() {
+      _selectedMonth = '$year-${month.toString().padLeft(2, '0')}';
+    });
+  }
+
+  void _changeYear(int delta) {
+    setState(() => _selectedYear += delta);
+  }
+
+  String _formatMonth(String month) {
+    final parts = month.split('-');
+    return '${parts[0]}년 ${int.parse(parts[1])}월';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final selectedMonth = ref.watch(householdSelectedMonthProvider);
-    final year = selectedMonth.split('-')[0];
     final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
     final groupsAsync = ref.watch(myGroupsProvider);
     final groupName = groupsAsync.whenOrNull(
@@ -25,9 +82,7 @@ class HouseholdStatisticsScreen extends ConsumerWidget {
           .firstOrNull,
     );
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,24 +97,65 @@ class HouseholdStatisticsScreen extends ConsumerWidget {
                 ),
             ],
           ),
-          bottom: TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white60,
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: l10n.household_monthly_statistics),
-              Tab(text: '연간 통계'),
-            ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(96),
+            child: Column(
+              children: [
+                // 월간 탭: 월 선택 / 연간 탭: 연도 선택
+                Container(
+                  color: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.chevron_left, color: Colors.white),
+                        visualDensity: VisualDensity.compact,
+                        onPressed: _tabIndex == 0
+                            ? () => _changeMonth(-1)
+                            : () => _changeYear(-1),
+                      ),
+                      Text(
+                        _tabIndex == 0
+                            ? _formatMonth(_selectedMonth)
+                            : '$_selectedYear년',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.chevron_right, color: Colors.white),
+                        visualDensity: VisualDensity.compact,
+                        onPressed: _tabIndex == 0
+                            ? () => _changeMonth(1)
+                            : () => _changeYear(1),
+                      ),
+                    ],
+                  ),
+                ),
+                TabBar(
+                  controller: _tabController,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.white60,
+                  indicatorColor: Colors.white,
+                  tabs: [
+                    Tab(text: l10n.household_monthly_statistics),
+                    Tab(text: '연간 통계'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
-            _MonthlyStatisticsTab(month: selectedMonth),
-            _YearlyStatisticsTab(year: year),
+            _MonthlyStatisticsTab(month: _selectedMonth),
+            _YearlyStatisticsTab(year: _selectedYear.toString()),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -72,10 +168,11 @@ class _MonthlyStatisticsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final statsAsync = ref.watch(householdMonthlyStatisticsProvider);
+    final statsAsync =
+        ref.watch(householdMonthlyStatisticsByMonthProvider(month));
 
     return statsAsync.when(
-      data: (stats) => _MonthlyStatisticsContent(stats: stats),
+      data: (stats) => _MonthlyStatisticsContent(stats: stats, month: month),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(
         child: Column(
@@ -96,8 +193,9 @@ class _MonthlyStatisticsTab extends ConsumerWidget {
 
 class _MonthlyStatisticsContent extends StatelessWidget {
   final MonthlyStatisticsModel stats;
+  final String month;
 
-  const _MonthlyStatisticsContent({required this.stats});
+  const _MonthlyStatisticsContent({required this.stats, required this.month});
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +218,7 @@ class _MonthlyStatisticsContent extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           ...stats.categories.map(
-            (cat) => _CategoryStatItem(stat: cat),
+            (cat) => _CategoryStatItem(stat: cat, month: month),
           ),
         ] else
           Center(
@@ -244,8 +342,9 @@ class _TotalSummaryCard extends StatelessWidget {
 
 class _CategoryStatItem extends StatelessWidget {
   final CategoryStatModel stat;
+  final String month;
 
-  const _CategoryStatItem({required this.stat});
+  const _CategoryStatItem({required this.stat, required this.month});
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +354,13 @@ class _CategoryStatItem extends StatelessWidget {
         ? (stat.total / stat.budget!).clamp(0.0, 1.0)
         : null;
 
-    return Padding(
+    return InkWell(
+      onTap: () => context.push(
+        AppRoutes.householdCategoryExpenses,
+        extra: {'category': stat.category, 'month': month},
+      ),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
       padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
       child: Row(
         children: [
@@ -323,6 +428,7 @@ class _CategoryStatItem extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 
