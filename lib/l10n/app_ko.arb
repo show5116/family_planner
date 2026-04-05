@@ -822,6 +822,8 @@
   "@household_expense": { "description": "지출" },
   "household_no_group_selected": "그룹을 선택해주세요",
   "@household_no_group_selected": { "description": "그룹 미선택 안내" },
+  "household_personal_mode": "개인",
+  "@household_personal_mode": { "description": "개인 모드 라벨" },
   "household_add_expense": "지출 추가",
   "@household_add_expense": { "description": "지출 추가 버튼" },
   "household_edit_expense": "지출 수정",

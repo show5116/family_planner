@@ -2117,6 +2117,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_no_group_selected => 'Please select a group';
 
   @override
+  String get household_personal_mode => 'Personal';
+
+  @override
   String get household_add_expense => 'Add Expense';
 
   @override

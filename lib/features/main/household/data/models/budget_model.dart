@@ -7,7 +7,7 @@ import 'package:family_planner/features/main/household/data/models/expense_model
 /// 카테고리별 예산 모델 (category 필수)
 class BudgetModel {
   final String id;
-  final String groupId;
+  final String? groupId; // 개인 모드에서는 null
   final ExpenseCategory category;
   final double amount;
   final DateTime month;
@@ -27,7 +27,7 @@ class BudgetModel {
   factory BudgetModel.fromJson(Map<String, dynamic> json) {
     return BudgetModel(
       id: json['id'] as String,
-      groupId: json['groupId'] as String,
+      groupId: json['groupId'] as String?,
       category: ExpenseModel.parseCategory(json['category'] as String),
       amount: double.parse(json['amount'].toString()),
       month: DateTime.parse(json['month'] as String),
@@ -39,13 +39,13 @@ class BudgetModel {
 
 /// 카테고리별 예산 설정 DTO
 class SetBudgetDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final ExpenseCategory category;
   final double amount;
   final String month; // YYYY-MM
 
   const SetBudgetDto({
-    required this.groupId,
+    this.groupId,
     required this.category,
     required this.amount,
     required this.month,
@@ -53,7 +53,7 @@ class SetBudgetDto {
 
   Map<String, dynamic> toJson() {
     return {
-      'groupId': groupId,
+      if (groupId != null) 'groupId': groupId,
       'category': categoryToString(category),
       'amount': amount,
       'month': month,
@@ -87,7 +87,7 @@ class SetBudgetDto {
 /// 카테고리별 예산 템플릿 모델 (매월 자동 적용)
 class BudgetTemplateModel {
   final String id;
-  final String groupId;
+  final String? groupId; // 개인 모드에서는 null
   final ExpenseCategory category;
   final double amount;
   final DateTime createdAt;
@@ -105,7 +105,7 @@ class BudgetTemplateModel {
   factory BudgetTemplateModel.fromJson(Map<String, dynamic> json) {
     return BudgetTemplateModel(
       id: json['id'] as String,
-      groupId: json['groupId'] as String,
+      groupId: json['groupId'] as String?,
       category: ExpenseModel.parseCategory(json['category'] as String),
       amount: double.parse(json['amount'].toString()),
       createdAt: DateTime.parse(json['createdAt'] as String),
@@ -116,19 +116,19 @@ class BudgetTemplateModel {
 
 /// 카테고리별 예산 템플릿 설정 DTO
 class SetBudgetTemplateDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final ExpenseCategory category;
   final double amount;
 
   const SetBudgetTemplateDto({
-    required this.groupId,
+    this.groupId,
     required this.category,
     required this.amount,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'groupId': groupId,
+      if (groupId != null) 'groupId': groupId,
       'category': SetBudgetDto.categoryToString(category),
       'amount': amount,
     };
@@ -142,7 +142,7 @@ class SetBudgetTemplateDto {
 /// 그룹 전체 예산 모델
 class GroupBudgetModel {
   final String id;
-  final String groupId;
+  final String? groupId; // 개인 모드에서는 null
   final double amount;
   final DateTime month;
   final DateTime createdAt;
@@ -160,7 +160,7 @@ class GroupBudgetModel {
   factory GroupBudgetModel.fromJson(Map<String, dynamic> json) {
     return GroupBudgetModel(
       id: json['id'] as String,
-      groupId: json['groupId'] as String,
+      groupId: json['groupId'] as String?,
       amount: double.parse(json['amount'].toString()),
       month: DateTime.parse(json['month'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
@@ -171,19 +171,19 @@ class GroupBudgetModel {
 
 /// 그룹 전체 예산 설정 DTO
 class SetGroupBudgetDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final double amount;
   final String month; // YYYY-MM
 
   const SetGroupBudgetDto({
-    required this.groupId,
+    this.groupId,
     required this.amount,
     required this.month,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'groupId': groupId,
+      if (groupId != null) 'groupId': groupId,
       'amount': amount,
       'month': month,
     };
@@ -197,7 +197,7 @@ class SetGroupBudgetDto {
 /// 그룹 전체 예산 템플릿 모델
 class GroupBudgetTemplateModel {
   final String id;
-  final String groupId;
+  final String? groupId; // 개인 모드에서는 null
   final double amount;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -213,7 +213,7 @@ class GroupBudgetTemplateModel {
   factory GroupBudgetTemplateModel.fromJson(Map<String, dynamic> json) {
     return GroupBudgetTemplateModel(
       id: json['id'] as String,
-      groupId: json['groupId'] as String,
+      groupId: json['groupId'] as String?,
       amount: double.parse(json['amount'].toString()),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -223,17 +223,17 @@ class GroupBudgetTemplateModel {
 
 /// 그룹 전체 예산 템플릿 설정 DTO
 class SetGroupBudgetTemplateDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final double amount;
 
   const SetGroupBudgetTemplateDto({
-    required this.groupId,
+    this.groupId,
     required this.amount,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'groupId': groupId,
+      if (groupId != null) 'groupId': groupId,
       'amount': amount,
     };
   }
@@ -258,20 +258,20 @@ class CategoryBudgetItemDto {
 
 /// 예산 일괄 설정 DTO (POST /household/budgets/bulk)
 class BulkSetBudgetDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final String month; // YYYY-MM
   final double? total;
   final List<CategoryBudgetItemDto> categories;
 
   const BulkSetBudgetDto({
-    required this.groupId,
+    this.groupId,
     required this.month,
     this.total,
     required this.categories,
   });
 
   Map<String, dynamic> toJson() => {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         'month': month,
         if (total != null) 'total': total,
         'categories': categories.map((c) => c.toJson()).toList(),
@@ -312,18 +312,18 @@ class CategoryTemplateItemDto {
 
 /// 예산 템플릿 일괄 설정 DTO (POST /household/budget-templates/bulk)
 class BulkSetBudgetTemplateDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final double? total;
   final List<CategoryTemplateItemDto> categories;
 
   const BulkSetBudgetTemplateDto({
-    required this.groupId,
+    this.groupId,
     this.total,
     required this.categories,
   });
 
   Map<String, dynamic> toJson() => {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         if (total != null) 'total': total,
         'categories': categories.map((c) => c.toJson()).toList(),
       };

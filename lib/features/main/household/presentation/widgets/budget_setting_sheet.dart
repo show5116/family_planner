@@ -168,7 +168,6 @@ class _MonthlyBudgetTabState extends ConsumerState<_MonthlyBudgetTab> {
   Future<void> _saveAll(BuildContext context, AppLocalizations l10n) async {
     final groupId = ref.read(householdSelectedGroupIdProvider);
     final month = ref.read(householdSelectedMonthProvider);
-    if (groupId == null) return;
 
     final categories = _categoryAmounts.entries
         .where((e) => e.value != null && e.value! > 0)
@@ -339,7 +338,6 @@ class _TemplateTabState extends ConsumerState<_TemplateTab> {
 
   Future<void> _saveAll(BuildContext context, AppLocalizations l10n) async {
     final groupId = ref.read(householdSelectedGroupIdProvider);
-    if (groupId == null) return;
 
     final categories = _categoryAmounts.entries
         .where((e) => e.value != null && e.value! > 0)

@@ -808,6 +808,8 @@
   "@household_expense": { "description": "支出" },
   "household_no_group_selected": "グループを選択してください",
   "@household_no_group_selected": { "description": "グループ未選択通知" },
+  "household_personal_mode": "個人",
+  "@household_personal_mode": { "description": "個人モードラベル" },
   "household_add_expense": "支出を追加",
   "@household_add_expense": { "description": "支出追加ボタン" },
   "household_edit_expense": "支出を編集",

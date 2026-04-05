@@ -2078,6 +2078,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_no_group_selected => '그룹을 선택해주세요';
 
   @override
+  String get household_personal_mode => '개인';
+
+  @override
   String get household_add_expense => '지출 추가';
 
   @override

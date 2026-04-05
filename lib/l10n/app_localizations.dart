@@ -4138,6 +4138,12 @@ abstract class AppLocalizations {
   /// **'그룹을 선택해주세요'**
   String get household_no_group_selected;
 
+  /// 개인 모드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'개인'**
+  String get household_personal_mode;
+
   /// 지출 추가 버튼
   ///
   /// In ko, this message translates to:

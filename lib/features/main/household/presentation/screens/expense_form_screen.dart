@@ -189,7 +189,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     } else {
       final groupId = widget.groupId ??
           ref.read(householdSelectedGroupIdProvider);
-      if (groupId == null) return;
 
       final dto = CreateExpenseDto(
         groupId: groupId,

@@ -808,6 +808,8 @@
   "@household_expense": { "description": "Expense" },
   "household_no_group_selected": "Please select a group",
   "@household_no_group_selected": { "description": "No group selected notice" },
+  "household_personal_mode": "Personal",
+  "@household_personal_mode": { "description": "Personal mode label" },
   "household_add_expense": "Add Expense",
   "@household_add_expense": { "description": "Add expense button" },
   "household_edit_expense": "Edit Expense",

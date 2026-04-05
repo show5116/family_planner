@@ -31,13 +31,9 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   }
 
   Future<void> _initGroupSelection() async {
-    final groupId = ref.read(householdSelectedGroupIdProvider);
-    if (groupId != null) return;
-
-    final groups = await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
-    if (groups.isNotEmpty && mounted) {
-      ref.read(householdSelectedGroupIdProvider.notifier).state = groups.first.id;
-    }
+    // 이미 선택된 상태(그룹 또는 개인)이면 유지
+    // 처음 진입 시에만 첫 그룹을 자동 선택 (개인 모드는 null)
+    // 별도 초기화 없이 null(개인 모드) 유지
   }
 
   @override
@@ -82,15 +78,13 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
           ),
         ],
       ),
-      floatingActionButton: selectedGroupId == null
-          ? null
-          : FloatingActionButton(
-              onPressed: () => context.push(
-                AppRoutes.householdAdd,
-                extra: {'groupId': selectedGroupId},
-              ),
-              child: const Icon(Icons.add),
-            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(
+          AppRoutes.householdAdd,
+          extra: {'groupId': selectedGroupId},
+        ),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
@@ -127,35 +121,47 @@ class _GroupAndMonthBar extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          // 그룹 드롭다운
+          // 그룹 드롭다운 (개인 모드 포함)
           Expanded(
             child: groupsAsync.when(
               data: (groups) {
-                if (groups.isEmpty) {
-                  return Text(
-                    l10n.household_no_group_selected,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  );
-                }
+                // 개인 항목 + 그룹 목록
+                const personalValue = '__personal__';
+                final currentValue = selectedGroupId ?? personalValue;
+                final items = <DropdownMenuItem<String>>[
+                  DropdownMenuItem<String>(
+                    value: personalValue,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.person, size: 16),
+                        const SizedBox(width: AppSizes.spaceXS),
+                        Text(l10n.household_personal_mode),
+                      ],
+                    ),
+                  ),
+                  ...groups.map<DropdownMenuItem<String>>(
+                    (g) => DropdownMenuItem<String>(
+                      value: g.id,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.group, size: 16),
+                          const SizedBox(width: AppSizes.spaceXS),
+                          Text(g.name),
+                        ],
+                      ),
+                    ),
+                  ),
+                ];
                 return DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: selectedGroupId ?? groups.first.id,
+                    value: currentValue,
                     isDense: true,
-                    items: groups
-                        .map<DropdownMenuItem<String>>((g) => DropdownMenuItem<String>(
-                              value: g.id,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.group, size: 16),
-                                  const SizedBox(width: AppSizes.spaceXS),
-                                  Text(g.name),
-                                ],
-                              ),
-                            ))
-                        .toList(),
+                    items: items,
                     onChanged: (value) {
-                      ref.read(householdSelectedGroupIdProvider.notifier).state = value;
+                      ref.read(householdSelectedGroupIdProvider.notifier).state =
+                          value == personalValue ? null : value;
                     },
                   ),
                 );

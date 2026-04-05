@@ -25,8 +25,6 @@ class HouseholdExpenses extends _$HouseholdExpenses {
     final groupId = ref.watch(householdSelectedGroupIdProvider);
     final month = ref.watch(householdSelectedMonthProvider);
 
-    if (groupId == null) return [];
-
     final repository = ref.watch(householdRepositoryProvider);
     return repository.getExpenses(groupId: groupId, month: month);
   }
@@ -36,7 +34,6 @@ class HouseholdExpenses extends _$HouseholdExpenses {
     state = await AsyncValue.guard(() async {
       final groupId = ref.read(householdSelectedGroupIdProvider);
       final month = ref.read(householdSelectedMonthProvider);
-      if (groupId == null) return <ExpenseModel>[];
       return ref.read(householdRepositoryProvider).getExpenses(
             groupId: groupId,
             month: month,
@@ -70,15 +67,6 @@ Future<MonthlyStatisticsModel> householdMonthlyStatistics(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
   final month = ref.watch(householdSelectedMonthProvider);
 
-  if (groupId == null) {
-    return MonthlyStatisticsModel(
-      month: month,
-      totalExpense: 0,
-      totalBudget: 0,
-      categories: [],
-    );
-  }
-
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getMonthlyStatistics(groupId: groupId, month: month);
 }
@@ -89,15 +77,6 @@ Future<MonthlyStatisticsModel> householdMonthlyStatisticsByMonth(
     Ref ref, String month) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
 
-  if (groupId == null) {
-    return MonthlyStatisticsModel(
-      month: month,
-      totalExpense: 0,
-      totalBudget: 0,
-      categories: [],
-    );
-  }
-
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getMonthlyStatistics(groupId: groupId, month: month);
 }
@@ -106,10 +85,6 @@ Future<MonthlyStatisticsModel> householdMonthlyStatisticsByMonth(
 @riverpod
 Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
-
-  if (groupId == null) {
-    return YearlyStatisticsModel(year: year, totalExpense: 0, months: []);
-  }
 
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getYearlyStatistics(groupId: groupId, year: year);
@@ -121,7 +96,6 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   @override
   Future<List<ExpenseModel>> build() async {
     final groupId = ref.watch(householdSelectedGroupIdProvider);
-    if (groupId == null) return [];
 
     final repository = ref.watch(householdRepositoryProvider);
     final all = await repository.getExpenses(groupId: groupId);
@@ -132,7 +106,6 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final groupId = ref.read(householdSelectedGroupIdProvider);
-      if (groupId == null) return <ExpenseModel>[];
       final all = await ref
           .read(householdRepositoryProvider)
           .getExpenses(groupId: groupId);
@@ -157,7 +130,6 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
 @riverpod
 Future<List<BudgetTemplateModel>> householdBudgetTemplates(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
-  if (groupId == null) return [];
 
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getBudgetTemplates(groupId: groupId);
@@ -169,8 +141,6 @@ Future<List<BudgetModel>> householdBudgets(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
   final month = ref.watch(householdSelectedMonthProvider);
 
-  if (groupId == null) return [];
-
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getBudgets(groupId: groupId, month: month);
 }
@@ -181,8 +151,6 @@ Future<GroupBudgetModel?> householdGroupBudget(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
   final month = ref.watch(householdSelectedMonthProvider);
 
-  if (groupId == null) return null;
-
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getGroupBudget(groupId: groupId, month: month);
 }
@@ -191,7 +159,6 @@ Future<GroupBudgetModel?> householdGroupBudget(Ref ref) async {
 @riverpod
 Future<GroupBudgetTemplateModel?> householdGroupBudgetTemplate(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
-  if (groupId == null) return null;
 
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getGroupBudgetTemplate(groupId: groupId);
@@ -308,7 +275,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
   }
 
   Future<bool> deleteBudgetTemplate({
-    required String groupId,
+    String? groupId,
     required ExpenseCategory category,
   }) async {
     state = const AsyncValue.loading();
@@ -350,7 +317,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<bool> deleteGroupBudgetTemplate({required String groupId}) async {
+  Future<bool> deleteGroupBudgetTemplate({String? groupId}) async {
     state = const AsyncValue.loading();
     try {
       await _repository.deleteGroupBudgetTemplate(groupId: groupId);

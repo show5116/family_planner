@@ -19,7 +19,7 @@ enum PaymentMethod {
 /// 지출 모델
 class ExpenseModel {
   final String id;
-  final String groupId;
+  final String? groupId; // 개인 모드에서는 null
   final String userId;
   final double amount;
   final ExpenseCategory? category;
@@ -32,7 +32,7 @@ class ExpenseModel {
 
   const ExpenseModel({
     required this.id,
-    required this.groupId,
+    this.groupId,
     required this.userId,
     required this.amount,
     this.category,
@@ -47,7 +47,7 @@ class ExpenseModel {
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
     return ExpenseModel(
       id: json['id'] as String,
-      groupId: json['groupId'] as String,
+      groupId: json['groupId'] as String?,
       userId: json['userId'] as String,
       amount: double.parse(json['amount'].toString()),
       category: json['category'] != null
@@ -127,7 +127,7 @@ class ExpenseModel {
 
 /// 지출 생성 DTO
 class CreateExpenseDto {
-  final String groupId;
+  final String? groupId; // null이면 개인 모드
   final double amount;
   final ExpenseCategory? category;
   final String date; // YYYY-MM-DD
@@ -136,7 +136,7 @@ class CreateExpenseDto {
   final bool? isRecurring;
 
   const CreateExpenseDto({
-    required this.groupId,
+    this.groupId,
     required this.amount,
     this.category,
     required this.date,
@@ -147,7 +147,7 @@ class CreateExpenseDto {
 
   Map<String, dynamic> toJson() {
     return {
-      'groupId': groupId,
+      if (groupId != null) 'groupId': groupId,
       'amount': amount,
       if (category != null) 'category': _categoryToString(category!),
       'date': date,

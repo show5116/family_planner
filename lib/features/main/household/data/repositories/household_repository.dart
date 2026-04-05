@@ -16,14 +16,14 @@ class HouseholdRepository {
 
   /// 지출 목록 조회
   Future<List<ExpenseModel>> getExpenses({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
     String? month, // YYYY-MM
     ExpenseCategory? category,
     PaymentMethod? paymentMethod,
   }) async {
     try {
       final response = await _dio.get('/household/expenses', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         if (month != null) 'month': month,
         if (category != null) 'category': SetBudgetDto.categoryToString(category),
         if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod),
@@ -90,12 +90,12 @@ class HouseholdRepository {
 
   /// 월간 통계 조회
   Future<MonthlyStatisticsModel> getMonthlyStatistics({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
     required String month, // YYYY-MM
   }) async {
     try {
       final response = await _dio.get('/household/statistics', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         'month': month,
       });
       return MonthlyStatisticsModel.fromJson(response.data as Map<String, dynamic>);
@@ -107,12 +107,12 @@ class HouseholdRepository {
 
   /// 연간 통계 조회
   Future<YearlyStatisticsModel> getYearlyStatistics({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
     required String year, // YYYY
   }) async {
     try {
       final response = await _dio.get('/household/statistics/yearly', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         'year': year,
       });
       return YearlyStatisticsModel.fromJson(response.data as Map<String, dynamic>);
@@ -124,12 +124,12 @@ class HouseholdRepository {
 
   /// 예산 목록 조회
   Future<List<BudgetModel>> getBudgets({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
     required String month, // YYYY-MM
   }) async {
     try {
       final response = await _dio.get('/household/budgets', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         'month': month,
       });
       final data = response.data;
@@ -147,11 +147,11 @@ class HouseholdRepository {
 
   /// 예산 템플릿 목록 조회
   Future<List<BudgetTemplateModel>> getBudgetTemplates({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
   }) async {
     try {
       final response = await _dio.get('/household/budget-templates', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
       });
       final data = response.data;
       if (data is List) {
@@ -179,13 +179,15 @@ class HouseholdRepository {
 
   /// 카테고리별 예산 템플릿 삭제
   Future<void> deleteBudgetTemplate({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
     required ExpenseCategory category,
   }) async {
     try {
       await _dio.delete(
         '/household/budget-templates/${SetBudgetDto.categoryToString(category)}',
-        queryParameters: {'groupId': groupId},
+        queryParameters: {
+          if (groupId != null) 'groupId': groupId,
+        },
       );
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) throw Exception('예산 템플릿을 찾을 수 없습니다');
@@ -232,12 +234,12 @@ class HouseholdRepository {
 
   /// 그룹 전체 예산 조회
   Future<GroupBudgetModel?> getGroupBudget({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
     required String month,
   }) async {
     try {
       final response = await _dio.get('/household/group-budgets', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
         'month': month,
       });
       final data = response.data;
@@ -265,11 +267,11 @@ class HouseholdRepository {
 
   /// 그룹 전체 예산 템플릿 조회
   Future<GroupBudgetTemplateModel?> getGroupBudgetTemplate({
-    required String groupId,
+    String? groupId, // null이면 개인 모드
   }) async {
     try {
       final response = await _dio.get('/household/group-budget-templates', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
       });
       final data = response.data;
       if (data == null || data is! Map<String, dynamic>) return null;
@@ -294,10 +296,10 @@ class HouseholdRepository {
   }
 
   /// 그룹 전체 예산 템플릿 삭제
-  Future<void> deleteGroupBudgetTemplate({required String groupId}) async {
+  Future<void> deleteGroupBudgetTemplate({String? groupId}) async {
     try {
       await _dio.delete('/household/group-budget-templates', queryParameters: {
-        'groupId': groupId,
+        if (groupId != null) 'groupId': groupId,
       });
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) throw Exception('전체 예산 템플릿을 찾을 수 없습니다');

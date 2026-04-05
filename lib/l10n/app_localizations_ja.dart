@@ -2075,6 +2075,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_no_group_selected => 'グループを選択してください';
 
   @override
+  String get household_personal_mode => '個人';
+
+  @override
   String get household_add_expense => '支出を追加';
 
   @override
