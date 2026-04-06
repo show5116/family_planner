@@ -620,13 +620,15 @@ class _EditableBudgetItem extends StatelessWidget {
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
         title: Text(label),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           autofocus: true,
+          onChanged: (_) => setDialogState(() {}),
           decoration: InputDecoration(
             prefixText: '₩ ',
             hintText: '0',
@@ -644,6 +646,7 @@ class _EditableBudgetItem extends StatelessWidget {
             child: Text(l10n.common_save),
           ),
         ],
+      ),
       ),
     );
 

@@ -328,15 +328,6 @@ class _ExpenseList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
-    if (selectedGroupId == null) {
-      return Center(
-        child: Text(
-          l10n.household_no_group_selected,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      );
-    }
-
     final expensesAsync = ref.watch(householdExpensesProvider);
 
     return expensesAsync.when(

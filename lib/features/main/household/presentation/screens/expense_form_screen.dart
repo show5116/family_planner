@@ -220,7 +220,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 }
 
 // 금액 입력
-class _AmountField extends StatelessWidget {
+class _AmountField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
@@ -234,20 +234,39 @@ class _AmountField extends StatelessWidget {
   });
 
   @override
+  State<_AmountField> createState() => _AmountFieldState();
+}
+
+class _AmountFieldState extends State<_AmountField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  void _onChanged() => setState(() {});
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
+        labelText: widget.label,
+        hintText: widget.hint,
         prefixText: '₩ ',
         border: const OutlineInputBorder(),
       ),
       validator: (v) {
-        if (v == null || v.trim().isEmpty) return errorText;
-        if (double.tryParse(v) == null) return errorText;
+        if (v == null || v.trim().isEmpty) return widget.errorText;
+        if (double.tryParse(v) == null) return widget.errorText;
         return null;
       },
     );
