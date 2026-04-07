@@ -4780,6 +4780,24 @@ abstract class AppLocalizations {
   /// **'현재 잔액'**
   String get asset_current_balance;
 
+  /// 중복 날짜 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'해당 날짜에 이미 기록이 존재합니다'**
+  String get asset_duplicate_date_error;
+
+  /// 기록 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 삭제'**
+  String get asset_delete_record;
+
+  /// 기록 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 기록을 삭제하시겠습니까?'**
+  String get asset_delete_record_confirm;
+
   /// 육아포인트 메인 타이틀
   ///
   /// In ko, this message translates to:

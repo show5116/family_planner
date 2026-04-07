@@ -1038,6 +1038,12 @@
   "@asset_additional_principal_hint": { "description": "追加元金ヒント" },
   "asset_current_balance": "現在残高",
   "@asset_current_balance": { "description": "自動計算 - 現在残高ラベル" },
+  "asset_duplicate_date_error": "この日付にはすでに記録が存在します",
+  "@asset_duplicate_date_error": { "description": "重複日付エラーメッセージ" },
+  "asset_delete_record": "記録削除",
+  "@asset_delete_record": { "description": "記録削除ボタン" },
+  "asset_delete_record_confirm": "この記録を削除しますか？",
+  "@asset_delete_record_confirm": { "description": "記録削除確認" },
 
   "childcare_title": "育児ポイント",
   "@childcare_title": { "description": "育児ポイントメインタイトル" },

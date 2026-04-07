@@ -2404,6 +2404,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_current_balance => '現在残高';
 
   @override
+  String get asset_duplicate_date_error => 'この日付にはすでに記録が存在します';
+
+  @override
+  String get asset_delete_record => '記録削除';
+
+  @override
+  String get asset_delete_record_confirm => 'この記録を削除しますか？';
+
+  @override
   String get childcare_title => '育児ポイント';
 
   @override

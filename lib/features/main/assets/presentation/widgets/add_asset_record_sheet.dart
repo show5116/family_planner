@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
+import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart'
+    show DuplicateRecordDateException;
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -31,6 +33,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
   final _noteController = TextEditingController();
   late DateTime _recordDate;
   RecordInputMode _inputMode = RecordInputMode.manual;
+  bool _duplicateDateError = false;
 
   @override
   void initState() {
@@ -85,11 +88,25 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                     firstDate: DateTime(2000),
                     lastDate: DateTime.now(),
                   );
-                  if (picked != null) setState(() => _recordDate = picked);
+                  if (picked != null) {
+                    setState(() {
+                      _recordDate = picked;
+                      _duplicateDateError = false;
+                    });
+                  }
                 },
                 icon: const Icon(Icons.calendar_today, size: 16),
                 label: Text('${l10n.asset_record_date}: $dateStr'),
               ),
+              if (_duplicateDateError) ...[
+                const SizedBox(height: AppSizes.spaceXS),
+                Text(
+                  l10n.asset_duplicate_date_error,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                ),
+              ],
               const SizedBox(height: AppSizes.spaceM),
 
               // 입력 방식 선택
@@ -249,22 +266,27 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       );
     }
 
-    final result = await ref.read(assetManagementProvider.notifier).createRecord(
-          widget.accountId,
-          dto,
+    try {
+      final result = await ref.read(assetManagementProvider.notifier).createRecord(
+            widget.accountId,
+            dto,
+          );
+
+      if (!mounted) return;
+
+      if (result != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.asset_record_save_success)),
         );
-
-    if (!mounted) return;
-
-    if (result != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.asset_record_save_success)),
-      );
-      Navigator.of(context).pop();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.common_error)),
-      );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.common_error)),
+        );
+      }
+    } on DuplicateRecordDateException {
+      if (!mounted) return;
+      setState(() => _duplicateDateError = true);
     }
   }
 }

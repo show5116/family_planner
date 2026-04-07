@@ -64,11 +64,8 @@ class AssetAccounts extends _$AssetAccounts {
 /// 자산 기록 Provider
 @riverpod
 class AssetRecords extends _$AssetRecords {
-  late String accountId;
-
   @override
   Future<List<AssetRecordModel>> build(String accountId) async {
-    this.accountId = accountId;
     final repository = ref.watch(assetRepositoryProvider);
     return repository.getAssetRecords(accountId);
   }
@@ -85,6 +82,13 @@ class AssetRecords extends _$AssetRecords {
     final updated = [record, ...state.value!]
       ..sort((a, b) => b.recordDate.compareTo(a.recordDate));
     state = AsyncValue.data(updated);
+  }
+
+  void removeRecord(String recordId) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.where((r) => r.id != recordId).toList(),
+    );
   }
 }
 
@@ -163,9 +167,27 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
       _ref.read(assetAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
       return record;
+    } on DuplicateRecordDateException {
+      state = const AsyncValue.data(null);
+      rethrow;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
+    }
+  }
+
+  Future<bool> deleteRecord(String accountId, String recordId) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteAssetRecord(accountId, recordId);
+      _ref.read(assetRecordsProvider(accountId).notifier).removeRecord(recordId);
+      _ref.invalidate(assetStatisticsProvider);
+      _ref.read(assetAccountsProvider.notifier).refresh();
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
     }
   }
 }

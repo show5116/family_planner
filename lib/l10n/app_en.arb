@@ -1038,6 +1038,12 @@
   "@asset_additional_principal_hint": { "description": "Additional principal hint" },
   "asset_current_balance": "Current Balance",
   "@asset_current_balance": { "description": "Auto calc - current balance label" },
+  "asset_duplicate_date_error": "A record already exists for this date",
+  "@asset_duplicate_date_error": { "description": "Duplicate date error message" },
+  "asset_delete_record": "Delete Record",
+  "@asset_delete_record": { "description": "Delete record button" },
+  "asset_delete_record_confirm": "Are you sure you want to delete this record?",
+  "@asset_delete_record_confirm": { "description": "Delete record confirm" },
 
   "childcare_title": "Child Points",
   "@childcare_title": { "description": "Child points main title" },

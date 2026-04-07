@@ -2408,6 +2408,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_current_balance => '현재 잔액';
 
   @override
+  String get asset_duplicate_date_error => '해당 날짜에 이미 기록이 존재합니다';
+
+  @override
+  String get asset_delete_record => '기록 삭제';
+
+  @override
+  String get asset_delete_record_confirm => '이 기록을 삭제하시겠습니까?';
+
+  @override
   String get childcare_title => '육아포인트';
 
   @override

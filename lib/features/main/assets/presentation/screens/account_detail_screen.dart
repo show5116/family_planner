@@ -19,6 +19,12 @@ class AccountDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    // 기록 추가/삭제 후 latestBalance, profitRate 즉시 반영
+    final accountsAsync = ref.watch(assetAccountsProvider);
+    final currentAccount = accountsAsync.valueOrNull
+            ?.where((a) => a.id == account.id)
+            .firstOrNull ??
+        account;
     final recordsAsync = ref.watch(assetRecordsProvider(account.id));
 
     return Scaffold(
@@ -37,7 +43,7 @@ class AccountDetailScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          AccountInfoCard(account: account),
+          AccountInfoCard(account: currentAccount),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSizes.spaceM,

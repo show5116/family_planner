@@ -2451,6 +2451,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_current_balance => 'Current Balance';
 
   @override
+  String get asset_duplicate_date_error =>
+      'A record already exists for this date';
+
+  @override
+  String get asset_delete_record => 'Delete Record';
+
+  @override
+  String get asset_delete_record_confirm =>
+      'Are you sure you want to delete this record?';
+
+  @override
   String get childcare_title => 'Child Points';
 
   @override
