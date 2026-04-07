@@ -7,7 +7,7 @@ part of 'household_provider.dart';
 // **************************************************************************
 
 String _$householdMonthlyStatisticsHash() =>
-    r'6f8be5ac7b66884bf5afac7646084399d7b3f9e0';
+    r'38d304031590a264517371d6ad26a8ad5f85c415';
 
 /// 월간 통계 Provider
 ///
@@ -29,7 +29,7 @@ final householdMonthlyStatisticsProvider =
 typedef HouseholdMonthlyStatisticsRef =
     AutoDisposeFutureProviderRef<MonthlyStatisticsModel>;
 String _$householdMonthlyStatisticsByMonthHash() =>
-    r'b4d82dc25e0be8bf00c3e4e6e348c439580b788d';
+    r'6bd96dc44e6861072eb5549a3bcacf5c9a5a0fe8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -195,7 +195,7 @@ class _HouseholdMonthlyStatisticsByMonthProviderElement
 }
 
 String _$householdYearlyStatisticsHash() =>
-    r'2119a3c2848004c7a9e663eed631ba749b5ee23d';
+    r'e73f42783aa6f8534930e7be1e6277c0b66e0b3e';
 
 /// 연간 통계 Provider
 ///
@@ -337,7 +337,7 @@ class _HouseholdYearlyStatisticsProviderElement
 }
 
 String _$householdBudgetTemplatesHash() =>
-    r'81876a64a3a4146ebe93855d029611a60bd78d73';
+    r'a72c6d4b63154792c599024da65de36969012315';
 
 /// 예산 템플릿 목록 Provider
 ///
@@ -358,7 +358,7 @@ final householdBudgetTemplatesProvider =
 // ignore: unused_element
 typedef HouseholdBudgetTemplatesRef =
     AutoDisposeFutureProviderRef<List<BudgetTemplateModel>>;
-String _$householdBudgetsHash() => r'95f6ade3d310c67438bd66c888c5ae97c7781ab6';
+String _$householdBudgetsHash() => r'3a902a1686e5bc97fe834b6e437492b664158e86';
 
 /// 카테고리별 예산 목록 Provider
 ///
@@ -379,7 +379,7 @@ final householdBudgetsProvider =
 // ignore: unused_element
 typedef HouseholdBudgetsRef = AutoDisposeFutureProviderRef<List<BudgetModel>>;
 String _$householdGroupBudgetHash() =>
-    r'820aaa5b5df64e89653546f7f8da8b63a6916682';
+    r'd66dd9c9c5f2138ba453679e40eda915453ddefa';
 
 /// 그룹 전체 예산 Provider
 ///
@@ -401,7 +401,7 @@ final householdGroupBudgetProvider =
 typedef HouseholdGroupBudgetRef =
     AutoDisposeFutureProviderRef<GroupBudgetModel?>;
 String _$householdGroupBudgetTemplateHash() =>
-    r'a6b2115ef0f7d856cb9865ec496a67597ad3f463';
+    r'ccc9debee4245bbfbc36a70a72fae1c90ad2908c';
 
 /// 그룹 전체 예산 템플릿 Provider
 ///
@@ -422,7 +422,7 @@ final householdGroupBudgetTemplateProvider =
 // ignore: unused_element
 typedef HouseholdGroupBudgetTemplateRef =
     AutoDisposeFutureProviderRef<GroupBudgetTemplateModel?>;
-String _$householdExpensesHash() => r'8c40f095b53e03e2535eafb95d8a2f3b1cc66805';
+String _$householdExpensesHash() => r'5bbed8b4cb0e2764f022d998bac655b8f8d687e0';
 
 /// 지출 목록 Provider
 ///
@@ -444,7 +444,7 @@ final householdExpensesProvider =
 
 typedef _$HouseholdExpenses = AutoDisposeAsyncNotifier<List<ExpenseModel>>;
 String _$householdRecurringExpensesHash() =>
-    r'a5e3c97ebc95a05afa1dec1612a0263f811ef157';
+    r'c94c847cef1a0fde81e20ffd02210d4b621d9791';
 
 /// 고정 지출 목록 Provider (isRecurring=true)
 ///

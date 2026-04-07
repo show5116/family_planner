@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
+import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 
 part 'asset_provider.g.dart';
@@ -102,6 +103,39 @@ Future<AssetStatisticsModel> assetStatistics(Ref ref) async {
 
   final repository = ref.watch(assetRepositoryProvider);
   return repository.getAssetStatistics(groupId: groupId, userId: userId);
+}
+
+/// 그룹 자산 추이 Provider
+@riverpod
+Future<List<AssetTrendPoint>> groupAssetTrend(
+  Ref ref, {
+  required TrendPeriod period,
+  String? year,
+}) async {
+  final groupId = ref.watch(assetSelectedGroupIdProvider);
+  if (groupId == null) return [];
+  final repository = ref.watch(assetRepositoryProvider);
+  return repository.getGroupAssetTrend(
+    groupId: groupId,
+    period: period,
+    year: year,
+  );
+}
+
+/// 계좌별 자산 추이 Provider
+@riverpod
+Future<List<AssetTrendPoint>> accountAssetTrend(
+  Ref ref,
+  String accountId, {
+  required TrendPeriod period,
+  String? year,
+}) async {
+  final repository = ref.watch(assetRepositoryProvider);
+  return repository.getAccountAssetTrend(
+    accountId: accountId,
+    period: period,
+    year: year,
+  );
 }
 
 /// 자산 관리 Notifier (생성/수정/삭제)

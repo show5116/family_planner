@@ -2386,6 +2386,29 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_savings_goals => '連動貯金箱';
 
   @override
+  String get asset_trend => '資産推移';
+
+  @override
+  String get asset_trend_monthly => '月別';
+
+  @override
+  String get asset_trend_yearly => '年別';
+
+  @override
+  String get asset_trend_balance => '残高';
+
+  @override
+  String get asset_trend_profit_rate => '利回り';
+
+  @override
+  String get asset_trend_no_data => '表示するデータがありません';
+
+  @override
+  String asset_trend_year_label(String year) {
+    return '$year年';
+  }
+
+  @override
   String get asset_input_mode => '入力方式';
 
   @override

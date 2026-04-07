@@ -2390,6 +2390,29 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_savings_goals => '연동된 저금통';
 
   @override
+  String get asset_trend => '자산 추이';
+
+  @override
+  String get asset_trend_monthly => '월별';
+
+  @override
+  String get asset_trend_yearly => '연도별';
+
+  @override
+  String get asset_trend_balance => '잔액';
+
+  @override
+  String get asset_trend_profit_rate => '수익률';
+
+  @override
+  String get asset_trend_no_data => '표시할 데이터가 없습니다';
+
+  @override
+  String asset_trend_year_label(String year) {
+    return '$year년';
+  }
+
+  @override
   String get asset_input_mode => '입력 방식';
 
   @override

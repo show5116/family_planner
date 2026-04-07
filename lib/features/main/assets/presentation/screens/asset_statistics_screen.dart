@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_stat_summary_card.dart';
+import 'package:family_planner/features/main/assets/presentation/widgets/asset_trend_chart.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_type_stat_card.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -36,7 +37,20 @@ class AssetStatisticsScreen extends ConsumerWidget {
               ...stats.byType.map(
                 (typeStat) => AssetTypeStatCard(typeStat: typeStat),
               ),
+              const SizedBox(height: AppSizes.spaceM),
             ],
+            Text(
+              l10n.asset_trend,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            AssetTrendChart(
+              trendBuilder: (period, year) => ref.watch(
+                groupAssetTrendProvider(period: period, year: year),
+              ),
+            ),
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),

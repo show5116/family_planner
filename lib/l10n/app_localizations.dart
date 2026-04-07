@@ -4744,6 +4744,48 @@ abstract class AppLocalizations {
   /// **'연동된 저금통'**
   String get asset_savings_goals;
 
+  /// 자산 추이 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 추이'**
+  String get asset_trend;
+
+  /// 월별 추이
+  ///
+  /// In ko, this message translates to:
+  /// **'월별'**
+  String get asset_trend_monthly;
+
+  /// 연도별 추이
+  ///
+  /// In ko, this message translates to:
+  /// **'연도별'**
+  String get asset_trend_yearly;
+
+  /// 추이 차트 - 잔액 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액'**
+  String get asset_trend_balance;
+
+  /// 추이 차트 - 수익률 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'수익률'**
+  String get asset_trend_profit_rate;
+
+  /// 추이 데이터 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'표시할 데이터가 없습니다'**
+  String get asset_trend_no_data;
+
+  /// 연도 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년'**
+  String asset_trend_year_label(String year);
+
   /// 자산 기록 입력 방식 레이블
   ///
   /// In ko, this message translates to:

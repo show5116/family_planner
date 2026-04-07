@@ -2432,6 +2432,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_savings_goals => 'Linked Savings';
 
   @override
+  String get asset_trend => 'Asset Trend';
+
+  @override
+  String get asset_trend_monthly => 'Monthly';
+
+  @override
+  String get asset_trend_yearly => 'Yearly';
+
+  @override
+  String get asset_trend_balance => 'Balance';
+
+  @override
+  String get asset_trend_profit_rate => 'Return Rate';
+
+  @override
+  String get asset_trend_no_data => 'No data available';
+
+  @override
+  String asset_trend_year_label(String year) {
+    return '$year';
+  }
+
+  @override
   String get asset_input_mode => 'Input Mode';
 
   @override

@@ -6,6 +6,7 @@ import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
+import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
 
 class DuplicateRecordDateException implements Exception {}
 
@@ -130,6 +131,58 @@ class AssetRepository {
       if (e.response?.statusCode == 404) throw Exception('계좌 또는 기록을 찾을 수 없습니다');
       if (e.response?.statusCode == 403) throw Exception('본인의 계좌 기록만 삭제할 수 있습니다');
       throw Exception('자산 기록 삭제 실패: ${e.message}');
+    }
+  }
+
+  /// 그룹 전체 자산 추이 조회
+  Future<List<AssetTrendPoint>> getGroupAssetTrend({
+    required String groupId,
+    required TrendPeriod period,
+    String? year,
+  }) async {
+    try {
+      final response = await _dio.get('/assets/statistics/trend', queryParameters: {
+        'groupId': groupId,
+        'period': period.name,
+        if (year != null) 'year': year,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => AssetTrendPoint.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [AssetRepository] 그룹 자산 추이 조회 실패: ${e.message}');
+      throw Exception('자산 추이 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 계좌별 자산 추이 조회
+  Future<List<AssetTrendPoint>> getAccountAssetTrend({
+    required String accountId,
+    required TrendPeriod period,
+    String? year,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/assets/accounts/$accountId/statistics/trend',
+        queryParameters: {
+          'period': period.name,
+          if (year != null) 'year': year,
+        },
+      );
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => AssetTrendPoint.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [AssetRepository] 계좌 자산 추이 조회 실패: ${e.message}');
+      throw Exception('계좌 자산 추이 조회 실패: ${e.message}');
     }
   }
 
