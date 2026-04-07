@@ -2386,6 +2386,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_savings_goals => '連動貯金箱';
 
   @override
+  String get asset_input_mode => '入力方式';
+
+  @override
+  String get asset_input_mode_manual => '直接入力';
+
+  @override
+  String get asset_input_mode_auto => '自動計算';
+
+  @override
+  String get asset_additional_principal => '追加元金';
+
+  @override
+  String get asset_additional_principal_hint => '初回記録の場合は初期元金全額を入力してください';
+
+  @override
+  String get asset_current_balance => '現在残高';
+
+  @override
   String get childcare_title => '育児ポイント';
 
   @override

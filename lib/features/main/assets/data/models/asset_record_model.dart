@@ -34,28 +34,42 @@ class AssetRecordModel {
   }
 }
 
+/// 자산 기록 입력 방식
+enum RecordInputMode { manual, auto }
+
 /// 자산 기록 생성 DTO
 class CreateAssetRecordDto {
   final String recordDate; // YYYY-MM-DD
-  final double balance;
-  final double principal;
-  final double profit;
+  final RecordInputMode inputMode;
+  // manual 필드
+  final double? balance;
+  final double? principal;
+  final double? profit;
+  // auto 필드
+  final double? currentBalance;
+  final double? additionalPrincipal;
   final String? note;
 
   const CreateAssetRecordDto({
     required this.recordDate,
-    required this.balance,
-    required this.principal,
-    required this.profit,
+    required this.inputMode,
+    this.balance,
+    this.principal,
+    this.profit,
+    this.currentBalance,
+    this.additionalPrincipal,
     this.note,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'recordDate': recordDate,
-      'balance': balance,
-      'principal': principal,
-      'profit': profit,
+      'inputMode': inputMode.name,
+      if (balance != null) 'balance': balance,
+      if (principal != null) 'principal': principal,
+      if (profit != null) 'profit': profit,
+      if (currentBalance != null) 'currentBalance': currentBalance,
+      if (additionalPrincipal != null) 'additionalPrincipal': additionalPrincipal,
       if (note != null) 'note': note,
     };
   }

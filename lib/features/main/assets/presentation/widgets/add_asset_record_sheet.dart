@@ -18,11 +18,19 @@ class AddAssetRecordSheet extends ConsumerStatefulWidget {
 
 class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
   final _formKey = GlobalKey<FormState>();
+
+  // manual
   final _balanceController = TextEditingController();
   final _principalController = TextEditingController();
   final _profitController = TextEditingController();
+
+  // auto
+  final _currentBalanceController = TextEditingController();
+  final _additionalPrincipalController = TextEditingController();
+
   final _noteController = TextEditingController();
   late DateTime _recordDate;
+  RecordInputMode _inputMode = RecordInputMode.manual;
 
   @override
   void initState() {
@@ -35,6 +43,8 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
     _balanceController.dispose();
     _principalController.dispose();
     _profitController.dispose();
+    _currentBalanceController.dispose();
+    _additionalPrincipalController.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -47,7 +57,12 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
         '${_recordDate.year}-${_recordDate.month.toString().padLeft(2, '0')}-${_recordDate.day.toString().padLeft(2, '0')}';
 
     return Padding(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceM,
+        right: AppSizes.spaceM,
+        top: AppSizes.spaceM,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spaceM,
+      ),
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -77,50 +92,27 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
               ),
               const SizedBox(height: AppSizes.spaceM),
 
-              // 잔액
-              TextFormField(
-                controller: _balanceController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: l10n.asset_balance,
-                  hintText: l10n.asset_amount_hint,
-                  prefixText: '₩ ',
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
+              // 입력 방식 선택
+              Text(l10n.asset_input_mode, style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: AppSizes.spaceXS),
+              SegmentedButton<RecordInputMode>(
+                segments: [
+                  ButtonSegment(
+                    value: RecordInputMode.manual,
+                    label: Text(l10n.asset_input_mode_manual),
+                  ),
+                  ButtonSegment(
+                    value: RecordInputMode.auto,
+                    label: Text(l10n.asset_input_mode_auto),
+                  ),
+                ],
+                selected: {_inputMode},
+                onSelectionChanged: (s) => setState(() => _inputMode = s.first),
               ),
-              const SizedBox(height: AppSizes.spaceS),
+              const SizedBox(height: AppSizes.spaceM),
 
-              // 원금
-              TextFormField(
-                controller: _principalController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: l10n.asset_principal,
-                  hintText: l10n.asset_amount_hint,
-                  prefixText: '₩ ',
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-
-              // 수익금
-              TextFormField(
-                controller: _profitController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: l10n.asset_profit,
-                  hintText: l10n.asset_amount_hint,
-                  prefixText: '₩ ',
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
-              ),
-              const SizedBox(height: AppSizes.spaceS),
+              if (_inputMode == RecordInputMode.manual) ..._buildManualFields(l10n),
+              if (_inputMode == RecordInputMode.auto) ..._buildAutoFields(l10n),
 
               // 메모
               TextFormField(
@@ -153,26 +145,113 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
     );
   }
 
+  List<Widget> _buildManualFields(AppLocalizations l10n) {
+    return [
+      TextFormField(
+        controller: _balanceController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: l10n.asset_balance,
+          hintText: l10n.asset_amount_hint,
+          prefixText: '₩ ',
+          border: const OutlineInputBorder(),
+        ),
+        validator: (v) =>
+            (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
+      ),
+      const SizedBox(height: AppSizes.spaceS),
+      TextFormField(
+        controller: _principalController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: l10n.asset_principal,
+          hintText: l10n.asset_amount_hint,
+          prefixText: '₩ ',
+          border: const OutlineInputBorder(),
+        ),
+        validator: (v) =>
+            (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
+      ),
+      const SizedBox(height: AppSizes.spaceS),
+      TextFormField(
+        controller: _profitController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: l10n.asset_profit,
+          hintText: l10n.asset_amount_hint,
+          prefixText: '₩ ',
+          border: const OutlineInputBorder(),
+        ),
+        validator: (v) =>
+            (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
+      ),
+      const SizedBox(height: AppSizes.spaceS),
+    ];
+  }
+
+  List<Widget> _buildAutoFields(AppLocalizations l10n) {
+    return [
+      TextFormField(
+        controller: _additionalPrincipalController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: l10n.asset_additional_principal,
+          hintText: l10n.asset_amount_hint,
+          prefixText: '₩ ',
+          border: const OutlineInputBorder(),
+          helperText: l10n.asset_additional_principal_hint,
+        ),
+        validator: (v) =>
+            (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
+      ),
+      const SizedBox(height: AppSizes.spaceS),
+      TextFormField(
+        controller: _currentBalanceController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: l10n.asset_current_balance,
+          hintText: l10n.asset_amount_hint,
+          prefixText: '₩ ',
+          border: const OutlineInputBorder(),
+        ),
+        validator: (v) =>
+            (v == null || v.trim().isEmpty) ? l10n.asset_amount_required : null,
+      ),
+      const SizedBox(height: AppSizes.spaceS),
+    ];
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
     final l10n = AppLocalizations.of(context)!;
-    final balance = double.tryParse(_balanceController.text.trim()) ?? 0;
-    final principal = double.tryParse(_principalController.text.trim()) ?? 0;
-    final profit = double.tryParse(_profitController.text.trim()) ?? 0;
     final note = _noteController.text.trim();
     final dateStr =
         '${_recordDate.year}-${_recordDate.month.toString().padLeft(2, '0')}-${_recordDate.day.toString().padLeft(2, '0')}';
 
+    final CreateAssetRecordDto dto;
+    if (_inputMode == RecordInputMode.manual) {
+      dto = CreateAssetRecordDto(
+        recordDate: dateStr,
+        inputMode: RecordInputMode.manual,
+        balance: double.tryParse(_balanceController.text.trim()) ?? 0,
+        principal: double.tryParse(_principalController.text.trim()) ?? 0,
+        profit: double.tryParse(_profitController.text.trim()) ?? 0,
+        note: note.isEmpty ? null : note,
+      );
+    } else {
+      dto = CreateAssetRecordDto(
+        recordDate: dateStr,
+        inputMode: RecordInputMode.auto,
+        currentBalance: double.tryParse(_currentBalanceController.text.trim()) ?? 0,
+        additionalPrincipal: double.tryParse(_additionalPrincipalController.text.trim()) ?? 0,
+        note: note.isEmpty ? null : note,
+      );
+    }
+
     final result = await ref.read(assetManagementProvider.notifier).createRecord(
           widget.accountId,
-          CreateAssetRecordDto(
-            recordDate: dateStr,
-            balance: balance,
-            principal: principal,
-            profit: profit,
-            note: note.isEmpty ? null : note,
-          ),
+          dto,
         );
 
     if (!mounted) return;

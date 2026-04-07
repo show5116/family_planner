@@ -4744,6 +4744,42 @@ abstract class AppLocalizations {
   /// **'연동된 저금통'**
   String get asset_savings_goals;
 
+  /// 자산 기록 입력 방식 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'입력 방식'**
+  String get asset_input_mode;
+
+  /// 직접 입력 방식
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 입력'**
+  String get asset_input_mode_manual;
+
+  /// 자동 계산 방식
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 계산'**
+  String get asset_input_mode_auto;
+
+  /// 자동 계산 - 추가 원금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'추가 원금'**
+  String get asset_additional_principal;
+
+  /// 추가 원금 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'첫 기록이면 초기 원금 전체를 입력하세요'**
+  String get asset_additional_principal_hint;
+
+  /// 자동 계산 - 현재 잔액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 잔액'**
+  String get asset_current_balance;
+
   /// 육아포인트 메인 타이틀
   ///
   /// In ko, this message translates to:

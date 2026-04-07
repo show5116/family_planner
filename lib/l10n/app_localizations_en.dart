@@ -2432,6 +2432,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_savings_goals => 'Linked Savings';
 
   @override
+  String get asset_input_mode => 'Input Mode';
+
+  @override
+  String get asset_input_mode_manual => 'Manual';
+
+  @override
+  String get asset_input_mode_auto => 'Auto Calculate';
+
+  @override
+  String get asset_additional_principal => 'Additional Principal';
+
+  @override
+  String get asset_additional_principal_hint =>
+      'Enter the full initial principal for the first record';
+
+  @override
+  String get asset_current_balance => 'Current Balance';
+
+  @override
   String get childcare_title => 'Child Points';
 
   @override
