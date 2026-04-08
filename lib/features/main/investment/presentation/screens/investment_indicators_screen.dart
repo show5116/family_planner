@@ -595,6 +595,7 @@ class _IndicatorTile extends ConsumerWidget {
                 data: (points) => SparklineChart(
                   points: points,
                   color: isPositive ? AppColors.success : AppColors.error,
+                  prevPrice: indicator.prevPrice,
                 ),
                 loading: () => const SizedBox.shrink(),
                 error: (_, _) => const SizedBox.shrink(),

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,6 +68,7 @@ class _IndicatorDetailScreenState
               selectedDays: _selectedDays,
               onDaysChanged: (days) => setState(() => _selectedDays = days),
               dayOptions: _dayOptions,
+              indicator: indicator,
             ),
             // GOLD_KRW_SPOT 전용: 이격률 차트
             historyAsync.maybeWhen(
@@ -235,12 +238,14 @@ class _ChartSection extends StatefulWidget {
     required this.selectedDays,
     required this.onDaysChanged,
     required this.dayOptions,
+    this.indicator,
   });
 
   final AsyncValue<IndicatorHistoryModel> historyAsync;
   final int selectedDays;
   final ValueChanged<int> onDaysChanged;
   final List<int> dayOptions;
+  final IndicatorModel? indicator;
 
   @override
   State<_ChartSection> createState() => _ChartSectionState();
@@ -317,6 +322,7 @@ class _ChartSectionState extends State<_ChartSection> {
               return _LineChart(
                 history: history,
                 selectedDays: widget.selectedDays,
+                prevPrice: widget.indicator?.prevPrice,
                 dragStartX: _dragStartX,
                 dragEndX: _dragEndX,
                 onRangeChanged: _onRangeChanged,
@@ -386,6 +392,7 @@ class _LineChart extends StatefulWidget {
   const _LineChart({
     required this.history,
     required this.selectedDays,
+    this.prevPrice,
     required this.dragStartX,
     required this.dragEndX,
     required this.onRangeChanged,
@@ -393,6 +400,7 @@ class _LineChart extends StatefulWidget {
 
   final IndicatorHistoryModel history;
   final int selectedDays;
+  final double? prevPrice;
   final double? dragStartX;
   final double? dragEndX;
   final void Function(double? startX, double? endX) onRangeChanged;
@@ -409,18 +417,34 @@ class _LineChartState extends State<_LineChart> {
   Widget build(BuildContext context) {
     final points = widget.history.history;
     final prices = points.map((e) => e.price).toList();
-    final minY = prices.reduce((a, b) => a < b ? a : b);
-    final maxY = prices.reduce((a, b) => a > b ? a : b);
-    final yPadding = (maxY - minY) * 0.1;
+    final dataMin = prices.reduce((a, b) => a < b ? a : b);
+    final dataMax = prices.reduce((a, b) => a > b ? a : b);
+
+    // 1일 모드이고 prevPrice가 있으면 전일 종가 기준으로 Y축 범위 고정
+    // → 변동폭이 작으면 선이 평평하게, 크면 가파르게 보임
+    final double minY;
+    final double maxY;
+    final isOneDay = widget.selectedDays == 1;
+    if (isOneDay && widget.prevPrice != null) {
+      final ref = widget.prevPrice!;
+      // ref 기준으로 데이터가 얼마나 벗어나는지 계산 후 패딩 추가
+      final distFromRef = math.max((dataMax - ref).abs(), (dataMin - ref).abs());
+      // 최소 0.5% 범위 보장, 실제 변동폭을 항상 포함
+      final halfRange = math.max(distFromRef * 1.1, ref * 0.005);
+      minY = ref - halfRange;
+      maxY = ref + halfRange;
+    } else {
+      final yPadding = (dataMax - dataMin) * 0.1;
+      minY = dataMin - yPadding;
+      maxY = dataMax + yPadding;
+    }
 
     final isPositive = prices.last >= prices.first;
     final lineColor = isPositive ? AppColors.success : AppColors.error;
 
     // Y축 interval: 전체 Y 범위를 4등분하여 레이블 중복 방지
-    final yRange = (maxY + yPadding) - (minY - yPadding);
+    final yRange = maxY - minY;
     final yInterval = yRange > 0 ? yRange / 4 : 1.0;
-
-    final isOneDay = widget.selectedDays == 1;
 
     // ── 1일 모드: 분(minute) 오프셋 기반 ──────────────────────────────────
     // ── 다일 모드: 날짜(day) 오프셋 기반 ──────────────────────────────────
@@ -447,38 +471,35 @@ class _LineChartState extends State<_LineChart> {
       maxX = spots.isEmpty ? 1 : spots.last.x;
       labelInterval = (maxX / 3).ceilToDouble().clamp(1, double.infinity);
       bottomLabel = (x) {
-        final t = startTime.add(Duration(minutes: x.toInt()));
+        final t = startTime.add(Duration(minutes: x.toInt())).toLocal();
         return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
       };
       tooltipLabel = (x) {
-        final t = startTime.add(Duration(minutes: x.toInt()));
+        final t = startTime.add(Duration(minutes: x.toInt())).toLocal();
         return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
       };
     } else {
-      final now = DateTime.now();
-      final startDate = DateTime(now.year, now.month, now.day)
-          .subtract(Duration(days: widget.selectedDays - 1));
-      final spotsMap = <int, double>{};
-      for (final p in points) {
-        final dayOffset = p.recordedAt.difference(startDate).inDays;
-        if (dayOffset >= 0 && dayOffset <= widget.selectedDays - 1) {
-          spotsMap[dayOffset] = p.price;
-        }
-      }
-      spots = spotsMap.entries
-          .map((e) => FlSpot(e.key.toDouble(), e.value))
+      // 다일 모드: 분 오프셋 기반 (5분봉 데이터가 하루에 여러 포인트이므로 inDays 불가)
+      final startTime = points
+          .map((p) => p.recordedAt)
+          .reduce((a, b) => a.isBefore(b) ? a : b);
+      spots = points
+          .map((p) => FlSpot(
+                p.recordedAt.difference(startTime).inMinutes.toDouble(),
+                p.price,
+              ))
           .toList()
         ..sort((a, b) => a.x.compareTo(b.x));
-      // maxX: 마지막 데이터 날짜 오프셋으로 고정 (휴장일 빈 공간 제거)
-      maxX = spots.isEmpty ? (widget.selectedDays - 1).toDouble() : spots.last.x;
+      maxX = spots.isEmpty ? 1 : spots.last.x;
+      // 날짜 경계(자정)를 분 오프셋으로 계산하여 레이블로 사용
       labelInterval = (maxX / 3).ceilToDouble().clamp(1, double.infinity);
       bottomLabel = (x) {
-        final date = startDate.add(Duration(days: x.toInt()));
-        return '${date.month}/${date.day}';
+        final t = startTime.add(Duration(minutes: x.toInt())).toLocal();
+        return '${t.month}/${t.day}';
       };
       tooltipLabel = (x) {
-        final date = startDate.add(Duration(days: x.toInt()));
-        return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
+        final t = startTime.add(Duration(minutes: x.toInt())).toLocal();
+        return '${t.year}.${t.month.toString().padLeft(2, '0')}.${t.day.toString().padLeft(2, '0')} ${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
       };
     }
 
@@ -504,8 +525,8 @@ class _LineChartState extends State<_LineChart> {
       LineChartData(
         minX: 0,
         maxX: maxX,
-        minY: minY - yPadding,
-        maxY: maxY + yPadding,
+        minY: minY,
+        maxY: maxY,
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
@@ -674,16 +695,15 @@ class _RangeSummaryBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final startDate = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: selectedDays - 1));
-
     final selLeft = dragStartX < dragEndX ? dragStartX : dragEndX;
     final selRight = dragStartX < dragEndX ? dragEndX : dragStartX;
 
-    // 선택 범위에 포함된 포인트 수집
+    // 선택 범위에 포함된 포인트 수집 (분 오프셋 기반)
+    final startTime = history.history
+        .map((p) => p.recordedAt)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
     final inRange = history.history.where((p) {
-      final offset = p.recordedAt.difference(startDate).inDays.toDouble();
+      final offset = p.recordedAt.difference(startTime).inMinutes.toDouble();
       return offset >= selLeft - 0.5 && offset <= selRight + 0.5;
     }).toList();
 
@@ -771,20 +791,17 @@ class _SpreadChartSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final points = history.spreadHistory;
-    final now = DateTime.now();
-    final startDate = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: selectedDays - 1));
+    if (points.isEmpty) return const SizedBox.shrink();
 
-    // 날짜 오프셋 변환 + 중복 제거(같은 날 마지막 값 유지)
-    final spotsMap = <int, double>{};
-    for (final p in points) {
-      final dayOffset = p.recordedAt.difference(startDate).inDays;
-      if (dayOffset >= 0 && dayOffset <= selectedDays - 1) {
-        spotsMap[dayOffset] = p.spread;
-      }
-    }
-    final spots = spotsMap.entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value))
+    // 분 오프셋 기반 변환
+    final startTime = points
+        .map((p) => p.recordedAt)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    final spots = points
+        .map((p) => FlSpot(
+              p.recordedAt.difference(startTime).inMinutes.toDouble(),
+              p.spread,
+            ))
         .toList()
       ..sort((a, b) => a.x.compareTo(b.x));
 
@@ -880,7 +897,7 @@ class _SpreadChartSection extends StatelessWidget {
                     reservedSize: 24,
                     interval: labelInterval,
                     getTitlesWidget: (value, _) {
-                      final date = startDate.add(Duration(days: value.toInt()));
+                      final date = startTime.add(Duration(minutes: value.toInt())).toLocal();
                       return Text(
                         '${date.month}/${date.day}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -926,7 +943,7 @@ class _SpreadChartSection extends StatelessWidget {
                   getTooltipItems: (touchedSpots) {
                     return touchedSpots.map((spot) {
                       final date =
-                          startDate.add(Duration(days: spot.x.toInt()));
+                          startTime.add(Duration(minutes: spot.x.toInt())).toLocal();
                       final sign = spot.y >= 0 ? '+' : '';
                       return LineTooltipItem(
                         '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}\n$sign${spot.y.toStringAsFixed(2)}%',

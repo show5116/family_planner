@@ -100,25 +100,37 @@ Future<IndicatorHistoryModel> indicatorHistory(
 }) async {
   final repository = ref.watch(indicatorRepositoryProvider);
 
-  // days=1: 주말/공휴일 대비 여유분(3일)으로 요청 후 마지막 거래일만 필터링
+  // days=1: 주말/공휴일 대비 여유분(3일)으로 요청 후 마지막 거래일만 필터링 (KST 기준)
   if (days == 1) {
     final raw = await repository.getIndicatorHistory(symbol, days: 3);
     if (raw.history.isEmpty) return raw;
 
-    final lastDate = raw.history
+    DateTime kstDate(DateTime dt) {
+      final kst = dt.toUtc().add(const Duration(hours: 9));
+      return DateTime(kst.year, kst.month, kst.day);
+    }
+
+    bool isMarketHour(DateTime dt) {
+      final kst = dt.toUtc().add(const Duration(hours: 9));
+      return kst.hour >= 9 && kst.hour < 16;
+    }
+
+    // 장 시간(09:00~16:00 KST) 데이터가 있는 마지막 날을 기준으로 필터링
+    // (장 마감 후 새벽에 종가가 다시 기록되어 날짜가 넘어가는 케이스 방지)
+    final marketPoints = raw.history.where((p) => isMarketHour(p.recordedAt));
+    final basePoints = marketPoints.isNotEmpty ? marketPoints : raw.history;
+    final lastDate = basePoints
         .map((p) => p.recordedAt)
         .reduce((a, b) => a.isAfter(b) ? a : b);
-    final lastDay = DateTime(lastDate.year, lastDate.month, lastDate.day);
+    final lastDay = kstDate(lastDate);
 
-    final filteredHistory = raw.history.where((p) {
-      final d = DateTime(p.recordedAt.year, p.recordedAt.month, p.recordedAt.day);
-      return d == lastDay;
-    }).toList();
+    final filteredHistory = raw.history
+        .where((p) => kstDate(p.recordedAt) == lastDay)
+        .toList();
 
-    final filteredSpread = raw.spreadHistory.where((p) {
-      final d = DateTime(p.recordedAt.year, p.recordedAt.month, p.recordedAt.day);
-      return d == lastDay;
-    }).toList();
+    final filteredSpread = raw.spreadHistory
+        .where((p) => kstDate(p.recordedAt) == lastDay)
+        .toList();
 
     return IndicatorHistoryModel(
       symbol: raw.symbol,
@@ -139,19 +151,37 @@ Future<List<double>> indicatorSparkline(Ref ref, String symbol) async {
   final history = await repository.getIndicatorHistory(symbol, days: 3);
   if (history.history.isEmpty) return [];
 
-  // 가장 최근 거래일 하루치만 필터링
-  final lastDate = history.history
+  // 가장 최근 거래일 하루치만 필터링 (KST 기준: UTC+9)
+  DateTime kstDate(DateTime dt) {
+    final kst = dt.toUtc().add(const Duration(hours: 9));
+    return DateTime(kst.year, kst.month, kst.day);
+  }
+
+  bool isMarketHour(DateTime dt) {
+    final kst = dt.toUtc().add(const Duration(hours: 9));
+    return kst.hour >= 9 && kst.hour < 16;
+  }
+
+  // 장 시간 데이터 기준으로 마지막 날을 결정 (새벽 종가 재기록으로 날짜 넘어가는 케이스 방지)
+  final marketPoints = history.history.where((p) => isMarketHour(p.recordedAt));
+  final basePoints = marketPoints.isNotEmpty ? marketPoints : history.history;
+  final lastDate = basePoints
       .map((p) => p.recordedAt)
       .reduce((a, b) => a.isAfter(b) ? a : b);
-  final lastDay = DateTime(lastDate.year, lastDate.month, lastDate.day);
-  return history.history
-      .where((p) {
-        final d = DateTime(
-            p.recordedAt.year, p.recordedAt.month, p.recordedAt.day);
-        return d == lastDay;
-      })
+  final lastDay = kstDate(lastDate);
+  final dayPoints = history.history
+      .where((p) => kstDate(p.recordedAt) == lastDay)
       .map((p) => p.price)
       .toList();
+
+  if (dayPoints.isEmpty) return [];
+  final deduped = <double>[dayPoints.first];
+  for (var i = 1; i < dayPoints.length; i++) {
+    if (dayPoints[i] != dayPoints[i - 1]) {
+      deduped.add(dayPoints[i]);
+    }
+  }
+  return deduped;
 }
 
 /// [어드민] 과거 데이터 일괄 초기화 Provider
