@@ -12,7 +12,20 @@
           "package_name": "com.example.family_planner"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "324185071750-pjrvo4rbrvk7gfmidiaqof102lfcsp23.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.family_planner",
+            "certificate_hash": "4226160573e3685748d8407b62dd641dab5ffb90"
+          }
+        },
+        {
+          "client_id": "324185071750-78gonhb873sobeondd0pcg5f0rvv7btc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBPDft6dRmO3FvgLGo-Uo6YspnWNYXmR5c"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324185071750-78gonhb873sobeondd0pcg5f0rvv7btc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "324185071750-cre8occ9vpv3ih6isep9bgti3ld0inav.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.familyPlanner"
+              }
+            }
+          ]
         }
       }
     }

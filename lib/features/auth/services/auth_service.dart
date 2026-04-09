@@ -140,7 +140,7 @@ class AuthService extends ApiServiceBase {
   /// 소셜 로그인 정리
   Future<void> _cleanupSocialLogin() async {
     try {
-      await signOutGoogle();
+      await signOutGoogle().timeout(const Duration(seconds: 5));
       debugPrint('Google sign out completed');
     } catch (e) {
       debugPrint('Google sign out failed: $e');
@@ -149,7 +149,7 @@ class AuthService extends ApiServiceBase {
     try {
       if (!kIsWeb) {
         // 카카오 로그아웃은 모바일에서만 (웹에서는 SDK 미사용)
-        await signOutKakao();
+        await signOutKakao().timeout(const Duration(seconds: 5));
         debugPrint('Kakao logout completed');
       }
     } catch (e) {
@@ -296,28 +296,24 @@ class AuthService extends ApiServiceBase {
   /// 백엔드 엔드포인트가 없어 임시로 GET /auth/google/callback 사용 중
   Future<Map<String, dynamic>> loginWithGoogle() async {
     try {
-      // 1. Google Sign-In SDK로 로그인하여 토큰 획득
+      // 1. Google Sign-In SDK로 로그인하여 ID Token 획득
       final tokens = await _googleAuthService.signIn();
-      final accessToken = tokens['accessToken'];
+      final idToken = tokens['idToken'];
 
-      if (accessToken == null || accessToken.isEmpty) {
-        throw Exception('Google Access Token을 가져올 수 없습니다');
+      if (idToken == null || idToken.isEmpty) {
+        throw Exception('Google ID Token을 가져올 수 없습니다');
       }
 
-      // 2. [임시] Access Token을 백엔드로 전송
-      // TODO: 백엔드에 POST /auth/google/token 엔드포인트 추가 후 다음과 같이 수정:
-      // final response = await apiClient.post(
-      //   '/auth/google/token',
-      //   data: {
-      //     'accessToken': tokens['accessToken'],
-      //     'idToken': tokens['idToken'],
-      //   },
-      // );
-      final response = await apiClient.get(
-        '${ApiConstants.googleCallback}?access_token=$accessToken',
+      debugPrint('idToken: $idToken');
+
+      // 2. ID Token을 백엔드로 전송
+      final response = await apiClient.post(
+        ApiConstants.googleMobileLogin,
+        data: {'idToken': idToken},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
+      debugPrint('Google mobile login response: $data');
 
       // 3. 토큰 저장
       await _saveTokens(data);

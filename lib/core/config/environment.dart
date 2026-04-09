@@ -72,6 +72,13 @@ class EnvironmentConfig {
     return dotenv.get('GOOGLE_WEB_CLIENT_ID', fallback: '');
   }
 
+  /// Google OAuth 서버(웹) 클라이언트 ID - Android/iOS에서 idToken 발급에 필요
+  /// google-services.json의 client_type: 3 클라이언트 ID
+  static String? get googleServerClientId {
+    final value = dotenv.get('GOOGLE_SERVER_CLIENT_ID', fallback: '');
+    return value.isEmpty ? null : value;
+  }
+
   /// Google OAuth Android 클라이언트 ID (선택사항)
   /// android/app/src/main/res/values/strings.xml에서도 설정 필요
   static String? get googleAndroidClientId {

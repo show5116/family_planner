@@ -70,7 +70,10 @@ class FcmToken extends _$FcmToken {
   /// 토큰 삭제
   Future<void> deleteToken() async {
     try {
-      final currentToken = await future;
+      final currentToken = await future.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => null,
+      );
       if (currentToken == null) {
         debugPrint('삭제할 FCM 토큰이 없습니다');
         return;

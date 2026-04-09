@@ -12,12 +12,14 @@ class GoogleAuthService {
   // 웹에서는 clientId를 명시적으로 설정해야 함
   late final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
-    // 웹 플랫폼에서는 clientId 필수, 모바일에서는 선택사항
+    // 웹: clientId 필수 / iOS: clientId 필요 / Android: google-services.json에서 자동 설정
     clientId: kIsWeb
         ? EnvironmentConfig.googleWebClientId
-        : (defaultTargetPlatform == TargetPlatform.android
-            ? EnvironmentConfig.googleAndroidClientId
-            : EnvironmentConfig.googleIosClientId),
+        : (defaultTargetPlatform == TargetPlatform.iOS
+            ? EnvironmentConfig.googleIosClientId
+            : null),
+    // Android/iOS에서 idToken을 받기 위해 웹 클라이언트 ID 필요
+    serverClientId: kIsWeb ? null : EnvironmentConfig.googleServerClientId,
   );
 
   /// 구글 로그인 (SDK 방식 - 모바일 전용)
@@ -49,6 +51,8 @@ class GoogleAuthService {
         'idToken': googleAuth.idToken ?? '',
       };
     } catch (e) {
+      debugPrint('Google signIn error type: ${e.runtimeType}');
+      debugPrint('Google signIn error: $e');
       // 로그인 실패 시 구글 로그아웃
       await signOut();
       rethrow;

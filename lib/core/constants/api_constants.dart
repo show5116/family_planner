@@ -21,6 +21,7 @@ class ApiConstants {
   // Social Login Endpoints
   static const String googleLogin = '/auth/google';
   static const String googleCallback = '/auth/google/callback';
+  static const String googleMobileLogin = '/auth/google/mobile';
   static const String kakaoLogin = '/auth/kakao';
   static const String kakaoCallback = '/auth/kakao/callback';
 
