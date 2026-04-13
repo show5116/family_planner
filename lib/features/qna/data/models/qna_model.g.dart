@@ -124,10 +124,13 @@ _$QuestionListItemImpl _$$QuestionListItemImplFromJson(
 ) => _$QuestionListItemImpl(
   id: json['id'] as String,
   title: json['title'] as String,
-  content: json['content'] as String,
-  category: $enumDecode(_$QuestionCategoryEnumMap, json['category']),
-  status: $enumDecode(_$QuestionStatusEnumMap, json['status']),
-  visibility: $enumDecode(_$QuestionVisibilityEnumMap, json['visibility']),
+  content: json['content'] as String?,
+  category: $enumDecodeNullable(_$QuestionCategoryEnumMap, json['category']),
+  status: $enumDecodeNullable(_$QuestionStatusEnumMap, json['status']),
+  visibility: $enumDecodeNullable(
+    _$QuestionVisibilityEnumMap,
+    json['visibility'],
+  ),
   answerCount: (json['answerCount'] as num).toInt(),
   user: json['user'] == null
       ? null
@@ -142,9 +145,9 @@ Map<String, dynamic> _$$QuestionListItemImplToJson(
   'id': instance.id,
   'title': instance.title,
   'content': instance.content,
-  'category': _$QuestionCategoryEnumMap[instance.category]!,
-  'status': _$QuestionStatusEnumMap[instance.status]!,
-  'visibility': _$QuestionVisibilityEnumMap[instance.visibility]!,
+  'category': _$QuestionCategoryEnumMap[instance.category],
+  'status': _$QuestionStatusEnumMap[instance.status],
+  'visibility': _$QuestionVisibilityEnumMap[instance.visibility],
   'answerCount': instance.answerCount,
   'user': instance.user,
   'createdAt': instance.createdAt.toIso8601String(),

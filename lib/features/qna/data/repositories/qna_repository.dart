@@ -40,7 +40,6 @@ class QnaRepository {
       });
 
       debugPrint('✅ [QnaRepository] 질문 목록 조회 성공');
-      debugPrint('📦 [QnaRepository] 응답 데이터: ${response.data}');
       return QuestionListResponse.fromJson(response.data);
     } on DioException catch (e) {
       debugPrint('❌ [QnaRepository] 질문 목록 조회 실패: ${e.message}');

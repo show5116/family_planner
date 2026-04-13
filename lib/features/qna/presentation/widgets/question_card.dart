@@ -56,7 +56,7 @@ class QuestionCard extends ConsumerWidget {
 
               // 내용 미리보기
               Text(
-                stripHtmlTags(question.content),
+                stripHtmlTags(question.content ?? ''),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -93,27 +93,30 @@ class _QuestionCardHeader extends StatelessWidget {
     return Row(
       children: [
         // 카테고리
-        StatusBadge(
-          icon: question.category.icon,
-          label: question.category.displayName,
-          color: question.category.color,
-        ),
-        const SizedBox(width: AppSizes.spaceS),
+        if (question.category != null) ...[
+          StatusBadge(
+            icon: question.category!.icon,
+            label: question.category!.displayName,
+            color: question.category!.color,
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+        ],
 
         // 상태
-        StatusBadge(
-          icon: question.status.icon,
-          label: question.status.displayName,
-          color: question.status.color,
-        ),
+        if (question.status != null)
+          StatusBadge(
+            icon: question.status!.icon,
+            label: question.status!.displayName,
+            color: question.status!.color,
+          ),
 
         // 공개여부 (내 질문에만 표시)
-        if (showVisibility) ...[
+        if (showVisibility && question.visibility != null) ...[
           const SizedBox(width: AppSizes.spaceS),
           Icon(
-            question.visibility.icon,
+            question.visibility!.icon,
             size: AppSizes.iconSmall,
-            color: question.visibility.color,
+            color: question.visibility!.color,
           ),
         ],
 

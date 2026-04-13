@@ -1123,10 +1123,10 @@ QuestionListItem _$QuestionListItemFromJson(Map<String, dynamic> json) {
 mixin _$QuestionListItem {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get content => throw _privateConstructorUsedError;
-  QuestionCategory get category => throw _privateConstructorUsedError;
-  QuestionStatus get status => throw _privateConstructorUsedError;
-  QuestionVisibility get visibility => throw _privateConstructorUsedError;
+  String? get content => throw _privateConstructorUsedError;
+  QuestionCategory? get category => throw _privateConstructorUsedError;
+  QuestionStatus? get status => throw _privateConstructorUsedError;
+  QuestionVisibility? get visibility => throw _privateConstructorUsedError;
   int get answerCount => throw _privateConstructorUsedError;
   QuestionUser? get user => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -1152,10 +1152,10 @@ abstract class $QuestionListItemCopyWith<$Res> {
   $Res call({
     String id,
     String title,
-    String content,
-    QuestionCategory category,
-    QuestionStatus status,
-    QuestionVisibility visibility,
+    String? content,
+    QuestionCategory? category,
+    QuestionStatus? status,
+    QuestionVisibility? visibility,
     int answerCount,
     QuestionUser? user,
     DateTime createdAt,
@@ -1182,10 +1182,10 @@ class _$QuestionListItemCopyWithImpl<$Res, $Val extends QuestionListItem>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? content = null,
-    Object? category = null,
-    Object? status = null,
-    Object? visibility = null,
+    Object? content = freezed,
+    Object? category = freezed,
+    Object? status = freezed,
+    Object? visibility = freezed,
     Object? answerCount = null,
     Object? user = freezed,
     Object? createdAt = null,
@@ -1201,22 +1201,22 @@ class _$QuestionListItemCopyWithImpl<$Res, $Val extends QuestionListItem>
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
                       as String,
-            content: null == content
+            content: freezed == content
                 ? _value.content
                 : content // ignore: cast_nullable_to_non_nullable
-                      as String,
-            category: null == category
+                      as String?,
+            category: freezed == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
-                      as QuestionCategory,
-            status: null == status
+                      as QuestionCategory?,
+            status: freezed == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
-                      as QuestionStatus,
-            visibility: null == visibility
+                      as QuestionStatus?,
+            visibility: freezed == visibility
                 ? _value.visibility
                 : visibility // ignore: cast_nullable_to_non_nullable
-                      as QuestionVisibility,
+                      as QuestionVisibility?,
             answerCount: null == answerCount
                 ? _value.answerCount
                 : answerCount // ignore: cast_nullable_to_non_nullable
@@ -1265,10 +1265,10 @@ abstract class _$$QuestionListItemImplCopyWith<$Res>
   $Res call({
     String id,
     String title,
-    String content,
-    QuestionCategory category,
-    QuestionStatus status,
-    QuestionVisibility visibility,
+    String? content,
+    QuestionCategory? category,
+    QuestionStatus? status,
+    QuestionVisibility? visibility,
     int answerCount,
     QuestionUser? user,
     DateTime createdAt,
@@ -1295,10 +1295,10 @@ class __$$QuestionListItemImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? content = null,
-    Object? category = null,
-    Object? status = null,
-    Object? visibility = null,
+    Object? content = freezed,
+    Object? category = freezed,
+    Object? status = freezed,
+    Object? visibility = freezed,
     Object? answerCount = null,
     Object? user = freezed,
     Object? createdAt = null,
@@ -1314,22 +1314,22 @@ class __$$QuestionListItemImplCopyWithImpl<$Res>
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
                   as String,
-        content: null == content
+        content: freezed == content
             ? _value.content
             : content // ignore: cast_nullable_to_non_nullable
-                  as String,
-        category: null == category
+                  as String?,
+        category: freezed == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
-                  as QuestionCategory,
-        status: null == status
+                  as QuestionCategory?,
+        status: freezed == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
-                  as QuestionStatus,
-        visibility: null == visibility
+                  as QuestionStatus?,
+        visibility: freezed == visibility
             ? _value.visibility
             : visibility // ignore: cast_nullable_to_non_nullable
-                  as QuestionVisibility,
+                  as QuestionVisibility?,
         answerCount: null == answerCount
             ? _value.answerCount
             : answerCount // ignore: cast_nullable_to_non_nullable
@@ -1357,10 +1357,10 @@ class _$QuestionListItemImpl implements _QuestionListItem {
   const _$QuestionListItemImpl({
     required this.id,
     required this.title,
-    required this.content,
-    required this.category,
-    required this.status,
-    required this.visibility,
+    this.content,
+    this.category,
+    this.status,
+    this.visibility,
     required this.answerCount,
     this.user,
     required this.createdAt,
@@ -1375,13 +1375,13 @@ class _$QuestionListItemImpl implements _QuestionListItem {
   @override
   final String title;
   @override
-  final String content;
+  final String? content;
   @override
-  final QuestionCategory category;
+  final QuestionCategory? category;
   @override
-  final QuestionStatus status;
+  final QuestionStatus? status;
   @override
-  final QuestionVisibility visibility;
+  final QuestionVisibility? visibility;
   @override
   final int answerCount;
   @override
@@ -1455,10 +1455,10 @@ abstract class _QuestionListItem implements QuestionListItem {
   const factory _QuestionListItem({
     required final String id,
     required final String title,
-    required final String content,
-    required final QuestionCategory category,
-    required final QuestionStatus status,
-    required final QuestionVisibility visibility,
+    final String? content,
+    final QuestionCategory? category,
+    final QuestionStatus? status,
+    final QuestionVisibility? visibility,
     required final int answerCount,
     final QuestionUser? user,
     required final DateTime createdAt,
@@ -1473,13 +1473,13 @@ abstract class _QuestionListItem implements QuestionListItem {
   @override
   String get title;
   @override
-  String get content;
+  String? get content;
   @override
-  QuestionCategory get category;
+  QuestionCategory? get category;
   @override
-  QuestionStatus get status;
+  QuestionStatus? get status;
   @override
-  QuestionVisibility get visibility;
+  QuestionVisibility? get visibility;
   @override
   int get answerCount;
   @override
