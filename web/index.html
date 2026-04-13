@@ -19,7 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="가족과 함께하는 일상 관리 플래너 - 일정, 할일, 자산, 가계부를 한 곳에서">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 
   <!-- Google Sign-In Configuration -->
   <!-- TODO: Google Cloud Console에서 OAuth 2.0 클라이언트 ID를 발급받아 아래 YOUR_GOOGLE_WEB_CLIENT_ID를 교체하세요 -->
@@ -59,10 +59,20 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* iOS Safari 텍스트 필드 복사/붙여넣기 허용 */
+    input, textarea, [contenteditable] {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+      touch-action: auto !important;
+    }
+
     flt-glass-pane {
       /* Flutter 캔버스를 키보드와 무관하게 전체 높이로 고정 */
       height: 100dvh !important;
       width: 100% !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
     }
 
     /* iOS 폰트 크기 자동 조절 방지 */
@@ -134,6 +144,34 @@
       window.addEventListener('keydown', patchEvent, true);
       window.addEventListener('keyup', patchEvent, true);
       window.addEventListener('keypress', patchEvent, true);
+    })();
+
+    // iOS Safari 키보드 팝업 시 화면 밀림 방지
+    (function() {
+      if (!window.visualViewport) return;
+
+      var glassPane = null;
+
+      function fixViewport() {
+        // flt-glass-pane이 아직 없으면 body 높이를 visualViewport 기준으로 고정
+        var h = window.visualViewport.height;
+        var offsetTop = window.visualViewport.offsetTop;
+
+        document.body.style.height = h + 'px';
+        document.body.style.top = offsetTop + 'px';
+
+        // flt-glass-pane도 함께 고정
+        if (!glassPane) {
+          glassPane = document.querySelector('flt-glass-pane');
+        }
+        if (glassPane) {
+          glassPane.style.height = h + 'px';
+          glassPane.style.top = offsetTop + 'px';
+        }
+      }
+
+      window.visualViewport.addEventListener('resize', fixViewport);
+      window.visualViewport.addEventListener('scroll', fixViewport);
     })();
 
   </script>
