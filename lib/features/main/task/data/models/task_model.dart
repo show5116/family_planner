@@ -289,7 +289,7 @@ class CreateTaskDto with _$CreateTaskDto {
     String? location,
     TaskType? type,
     TaskPriority? priority,
-    required String categoryId,
+    String? categoryId,
     String? groupId,
     String? scheduledAt,
     String? dueAt,

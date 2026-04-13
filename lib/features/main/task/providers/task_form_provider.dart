@@ -202,7 +202,7 @@ class TaskFormState with _$TaskFormState {
       location: location.trim().isEmpty ? null : location.trim(),
       type: taskType,
       priority: priority,
-      categoryId: selectedCategory!.id,
+      categoryId: selectedCategory?.id,
       groupId: groupId,
       scheduledAt: scheduledDateTime.toIso8601String(),
       dueAt: dueDateTime?.toIso8601String(),
@@ -234,7 +234,6 @@ class TaskFormState with _$TaskFormState {
   /// - 반환값: null이면 유효, 문자열이면 에러 코드
   String? validate() {
     if (title.trim().isEmpty) return 'title_required';
-    if (selectedCategory == null) return 'category_required';
     return null;
   }
 }

@@ -2830,7 +2830,7 @@ mixin _$CreateTaskDto {
   String? get location => throw _privateConstructorUsedError;
   TaskType? get type => throw _privateConstructorUsedError;
   TaskPriority? get priority => throw _privateConstructorUsedError;
-  String get categoryId => throw _privateConstructorUsedError;
+  String? get categoryId => throw _privateConstructorUsedError;
   String? get groupId => throw _privateConstructorUsedError;
   String? get scheduledAt => throw _privateConstructorUsedError;
   String? get dueAt => throw _privateConstructorUsedError;
@@ -2861,7 +2861,7 @@ abstract class $CreateTaskDtoCopyWith<$Res> {
     String? location,
     TaskType? type,
     TaskPriority? priority,
-    String categoryId,
+    String? categoryId,
     String? groupId,
     String? scheduledAt,
     String? dueAt,
@@ -2893,7 +2893,7 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
     Object? location = freezed,
     Object? type = freezed,
     Object? priority = freezed,
-    Object? categoryId = null,
+    Object? categoryId = freezed,
     Object? groupId = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
@@ -2923,10 +2923,10 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
                 ? _value.priority
                 : priority // ignore: cast_nullable_to_non_nullable
                       as TaskPriority?,
-            categoryId: null == categoryId
+            categoryId: freezed == categoryId
                 ? _value.categoryId
                 : categoryId // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             groupId: freezed == groupId
                 ? _value.groupId
                 : groupId // ignore: cast_nullable_to_non_nullable
@@ -2986,7 +2986,7 @@ abstract class _$$CreateTaskDtoImplCopyWith<$Res>
     String? location,
     TaskType? type,
     TaskPriority? priority,
-    String categoryId,
+    String? categoryId,
     String? groupId,
     String? scheduledAt,
     String? dueAt,
@@ -3018,7 +3018,7 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
     Object? location = freezed,
     Object? type = freezed,
     Object? priority = freezed,
-    Object? categoryId = null,
+    Object? categoryId = freezed,
     Object? groupId = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
@@ -3048,10 +3048,10 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
             ? _value.priority
             : priority // ignore: cast_nullable_to_non_nullable
                   as TaskPriority?,
-        categoryId: null == categoryId
+        categoryId: freezed == categoryId
             ? _value.categoryId
             : categoryId // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         groupId: freezed == groupId
             ? _value.groupId
             : groupId // ignore: cast_nullable_to_non_nullable
@@ -3090,7 +3090,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
     this.location,
     this.type,
     this.priority,
-    required this.categoryId,
+    this.categoryId,
     this.groupId,
     this.scheduledAt,
     this.dueAt,
@@ -3114,7 +3114,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
   @override
   final TaskPriority? priority;
   @override
-  final String categoryId;
+  final String? categoryId;
   @override
   final String? groupId;
   @override
@@ -3218,7 +3218,7 @@ abstract class _CreateTaskDto implements CreateTaskDto {
     final String? location,
     final TaskType? type,
     final TaskPriority? priority,
-    required final String categoryId,
+    final String? categoryId,
     final String? groupId,
     final String? scheduledAt,
     final String? dueAt,
@@ -3241,7 +3241,7 @@ abstract class _CreateTaskDto implements CreateTaskDto {
   @override
   TaskPriority? get priority;
   @override
-  String get categoryId;
+  String? get categoryId;
   @override
   String? get groupId;
   @override

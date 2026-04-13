@@ -248,7 +248,7 @@ _$CreateTaskDtoImpl _$$CreateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       location: json['location'] as String?,
       type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
-      categoryId: json['categoryId'] as String,
+      categoryId: json['categoryId'] as String?,
       groupId: json['groupId'] as String?,
       scheduledAt: json['scheduledAt'] as String?,
       dueAt: json['dueAt'] as String?,

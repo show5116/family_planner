@@ -147,7 +147,6 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     if (validationError != null) {
       final message = switch (validationError) {
         'title_required' => l10n.schedule_titleRequired,
-        'category_required' => l10n.category_name,
         _ => validationError,
       };
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
