@@ -197,7 +197,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_signupNameMinLengthError => '이름은 2자 이상이어야 합니다';
 
   @override
-  String get auth_signupPasswordHelperText => '최소 6자 이상';
+  String get auth_signupPasswordHelperText => '최소 8자 이상';
 
   @override
   String get auth_signupConfirmPasswordLabel => '비밀번호 확인';

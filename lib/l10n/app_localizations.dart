@@ -475,7 +475,7 @@ abstract class AppLocalizations {
   /// No description provided for @auth_signupPasswordHelperText.
   ///
   /// In ko, this message translates to:
-  /// **'최소 6자 이상'**
+  /// **'최소 8자 이상'**
   String get auth_signupPasswordHelperText;
 
   /// No description provided for @auth_signupConfirmPasswordLabel.

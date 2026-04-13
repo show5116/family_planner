@@ -196,7 +196,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_signupNameMinLengthError => '名前は2文字以上である必要があります';
 
   @override
-  String get auth_signupPasswordHelperText => '最低6文字以上';
+  String get auth_signupPasswordHelperText => '最低8文字以上';
 
   @override
   String get auth_signupConfirmPasswordLabel => 'パスワード確認';

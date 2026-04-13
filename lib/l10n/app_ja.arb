@@ -78,7 +78,7 @@
   "auth_signupEmailVerificationMessage": "登録が完了しました。メールを確認してください。",
   "auth_signupNameLabel": "名前",
   "auth_signupNameMinLengthError": "名前は2文字以上である必要があります",
-  "auth_signupPasswordHelperText": "最低6文字以上",
+  "auth_signupPasswordHelperText": "最低8文字以上",
   "auth_signupConfirmPasswordLabel": "パスワード確認",
   "auth_signupConfirmPasswordError": "パスワードをもう一度入力してください",
   "auth_signupButton": "登録",

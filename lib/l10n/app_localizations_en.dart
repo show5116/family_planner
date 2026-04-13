@@ -200,7 +200,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Name must be at least 2 characters';
 
   @override
-  String get auth_signupPasswordHelperText => 'At least 6 characters';
+  String get auth_signupPasswordHelperText => 'At least 8 characters';
 
   @override
   String get auth_signupConfirmPasswordLabel => 'Confirm Password';

@@ -78,7 +78,7 @@
   "auth_signupEmailVerificationMessage": "Sign up successful. Please check your email.",
   "auth_signupNameLabel": "Name",
   "auth_signupNameMinLengthError": "Name must be at least 2 characters",
-  "auth_signupPasswordHelperText": "At least 6 characters",
+  "auth_signupPasswordHelperText": "At least 8 characters",
   "auth_signupConfirmPasswordLabel": "Confirm Password",
   "auth_signupConfirmPasswordError": "Please confirm your password",
   "auth_signupButton": "Sign up",
