@@ -212,11 +212,11 @@ class AuthService extends ApiServiceBase {
   }
 
   /// 이메일 인증
-  Future<Map<String, dynamic>> verifyEmail({required String code}) async {
+  Future<Map<String, dynamic>> verifyEmail({required String email, required String code}) async {
     try {
       final response = await apiClient.post(
         ApiConstants.verifyEmail,
-        data: {'code': code},
+        data: {'email': email, 'code': code},
       );
 
       return handleResponse<Map<String, dynamic>>(response);

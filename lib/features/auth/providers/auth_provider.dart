@@ -113,11 +113,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   /// 이메일 인증
-  Future<void> verifyEmail({required String code}) async {
+  Future<void> verifyEmail({required String email, required String code}) async {
     state = state.copyWith(error: null);
 
     try {
-      await _authService.verifyEmail(code: code);
+      await _authService.verifyEmail(email: email, code: code);
 
       state = const AuthState();
     } catch (e) {

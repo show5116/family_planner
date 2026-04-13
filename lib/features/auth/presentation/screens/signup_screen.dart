@@ -59,10 +59,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       if (!mounted) return;
 
-      context.push(
-        AppRoutes.emailVerification,
-        extra: _emailController.text.trim(),
-      );
+      final email = Uri.encodeComponent(_emailController.text.trim());
+      context.push('${AppRoutes.emailVerification}?email=$email');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

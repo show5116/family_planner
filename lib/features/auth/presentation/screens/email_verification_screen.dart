@@ -50,7 +50,7 @@ class _EmailVerificationScreenState
     try {
       await ref
           .read(authProvider.notifier)
-          .verifyEmail(code: _codeController.text.trim());
+          .verifyEmail(email: widget.email, code: _codeController.text.trim());
 
       if (!mounted) return;
 
