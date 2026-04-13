@@ -4,7 +4,7 @@ import 'package:family_planner/features/main/task/providers/task_form_provider.d
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 제목 입력 필드 위젯
-class TitleField extends StatelessWidget {
+class TitleField extends StatefulWidget {
   final TextEditingController controller;
   final TaskFormNotifier formNotifier;
 
@@ -15,11 +15,32 @@ class TitleField extends StatelessWidget {
   });
 
   @override
+  State<TitleField> createState() => _TitleFieldState();
+}
+
+class _TitleFieldState extends State<TitleField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  void _onChanged() {
+    widget.formNotifier.setTitle(widget.controller.text);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: l10n.schedule_title,
         hintText: l10n.schedule_titleHint,
@@ -28,7 +49,6 @@ class TitleField extends StatelessWidget {
       ),
       textInputAction: TextInputAction.next,
       maxLength: 100,
-      onChanged: formNotifier.setTitle,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return l10n.schedule_titleRequired;
@@ -40,7 +60,7 @@ class TitleField extends StatelessWidget {
 }
 
 /// 장소 입력 필드 위젯
-class LocationField extends StatelessWidget {
+class LocationField extends StatefulWidget {
   final TextEditingController controller;
   final TaskFormNotifier formNotifier;
 
@@ -51,11 +71,32 @@ class LocationField extends StatelessWidget {
   });
 
   @override
+  State<LocationField> createState() => _LocationFieldState();
+}
+
+class _LocationFieldState extends State<LocationField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  void _onChanged() {
+    widget.formNotifier.setLocation(widget.controller.text);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: l10n.schedule_location,
         hintText: l10n.schedule_locationHint,
@@ -63,13 +104,12 @@ class LocationField extends StatelessWidget {
         prefixIcon: const Icon(Icons.location_on_outlined),
       ),
       textInputAction: TextInputAction.next,
-      onChanged: formNotifier.setLocation,
     );
   }
 }
 
 /// 설명 입력 필드 위젯
-class DescriptionField extends StatelessWidget {
+class DescriptionField extends StatefulWidget {
   final TextEditingController controller;
   final TaskFormNotifier formNotifier;
 
@@ -80,11 +120,32 @@ class DescriptionField extends StatelessWidget {
   });
 
   @override
+  State<DescriptionField> createState() => _DescriptionFieldState();
+}
+
+class _DescriptionFieldState extends State<DescriptionField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  void _onChanged() {
+    widget.formNotifier.setDescription(widget.controller.text);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return TextFormField(
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: l10n.schedule_description,
         hintText: l10n.schedule_descriptionHint,
@@ -93,7 +154,6 @@ class DescriptionField extends StatelessWidget {
       ),
       maxLines: 4,
       textInputAction: TextInputAction.done,
-      onChanged: formNotifier.setDescription,
     );
   }
 }
