@@ -6,7 +6,7 @@ part of 'fcm_token_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fcmTokenHash() => r'97f0f2f28d267b77de5d089f7a330f73eb5060f1';
+String _$fcmTokenHash() => r'2b0fcf38ebc24868a397657d9128e72589e885f4';
 
 /// FCM 토큰 Provider
 ///

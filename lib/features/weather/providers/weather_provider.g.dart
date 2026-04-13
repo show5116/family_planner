@@ -6,7 +6,7 @@ part of 'weather_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$locationHash() => r'864b1de1fac83a013b71b30eff442a1f639d30d0';
+String _$locationHash() => r'0707026c13308626421262c3f994c15190cb5839';
 
 /// 위치 조회 (웹: Geolocation API, 비웹: 서울 기본값)
 ///

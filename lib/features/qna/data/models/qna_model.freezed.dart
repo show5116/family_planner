@@ -950,9 +950,9 @@ class _$QuestionModelImpl implements _QuestionModel {
     required this.id,
     required this.title,
     required this.content,
-    required this.category,
-    required this.status,
-    required this.visibility,
+    this.category = QuestionCategory.etc,
+    this.status = QuestionStatus.pending,
+    this.visibility = QuestionVisibility.public,
     this.user,
     final List<Attachment>? attachments,
     final List<AnswerModel> answers = const [],
@@ -971,10 +971,13 @@ class _$QuestionModelImpl implements _QuestionModel {
   @override
   final String content;
   @override
+  @JsonKey()
   final QuestionCategory category;
   @override
+  @JsonKey()
   final QuestionStatus status;
   @override
+  @JsonKey()
   final QuestionVisibility visibility;
   @override
   final QuestionUser? user;
@@ -1068,9 +1071,9 @@ abstract class _QuestionModel implements QuestionModel {
     required final String id,
     required final String title,
     required final String content,
-    required final QuestionCategory category,
-    required final QuestionStatus status,
-    required final QuestionVisibility visibility,
+    final QuestionCategory category,
+    final QuestionStatus status,
+    final QuestionVisibility visibility,
     final QuestionUser? user,
     final List<Attachment>? attachments,
     final List<AnswerModel> answers,

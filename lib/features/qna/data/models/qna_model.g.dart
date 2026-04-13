@@ -57,9 +57,18 @@ _$QuestionModelImpl _$$QuestionModelImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       content: json['content'] as String,
-      category: $enumDecode(_$QuestionCategoryEnumMap, json['category']),
-      status: $enumDecode(_$QuestionStatusEnumMap, json['status']),
-      visibility: $enumDecode(_$QuestionVisibilityEnumMap, json['visibility']),
+      category:
+          $enumDecodeNullable(_$QuestionCategoryEnumMap, json['category']) ??
+          QuestionCategory.etc,
+      status:
+          $enumDecodeNullable(_$QuestionStatusEnumMap, json['status']) ??
+          QuestionStatus.pending,
+      visibility:
+          $enumDecodeNullable(
+            _$QuestionVisibilityEnumMap,
+            json['visibility'],
+          ) ??
+          QuestionVisibility.public,
       user: json['user'] == null
           ? null
           : QuestionUser.fromJson(json['user'] as Map<String, dynamic>),
