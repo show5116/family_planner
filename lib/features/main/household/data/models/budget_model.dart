@@ -28,7 +28,9 @@ class BudgetModel {
     return BudgetModel(
       id: json['id'] as String,
       groupId: json['groupId'] as String?,
-      category: ExpenseModel.parseCategory(json['category'] as String),
+      category: json['category'] != null
+          ? ExpenseModel.parseCategory(json['category'] as String)
+          : ExpenseCategory.other,
       amount: double.parse(json['amount'].toString()),
       month: DateTime.parse(json['month'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
@@ -106,7 +108,9 @@ class BudgetTemplateModel {
     return BudgetTemplateModel(
       id: json['id'] as String,
       groupId: json['groupId'] as String?,
-      category: ExpenseModel.parseCategory(json['category'] as String),
+      category: json['category'] != null
+          ? ExpenseModel.parseCategory(json['category'] as String)
+          : ExpenseCategory.other,
       amount: double.parse(json['amount'].toString()),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),

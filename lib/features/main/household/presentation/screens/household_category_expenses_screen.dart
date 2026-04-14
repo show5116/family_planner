@@ -13,17 +13,18 @@ import 'package:family_planner/l10n/app_localizations.dart';
 /// 카테고리 + 월 기준 지출 목록 Provider
 final _categoryExpensesProvider = FutureProvider.family<
     List<ExpenseModel>,
-    ({String? groupId, String month, ExpenseCategory category})>((ref, args) {
+    ({String? groupId, String month, ExpenseCategory? category})>((ref, args) {
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getExpenses(
     groupId: args.groupId,
     month: args.month,
     category: args.category,
+    filterNullCategory: args.category == null,
   );
 });
 
 class HouseholdCategoryExpensesScreen extends ConsumerWidget {
-  final ExpenseCategory category;
+  final ExpenseCategory? category;
   final String month;
 
   const HouseholdCategoryExpensesScreen({
@@ -90,7 +91,7 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
 class _ExpenseList extends ConsumerWidget {
   final String? groupId;
   final String month;
-  final ExpenseCategory category;
+  final ExpenseCategory? category;
 
   const _ExpenseList({
     required this.groupId,

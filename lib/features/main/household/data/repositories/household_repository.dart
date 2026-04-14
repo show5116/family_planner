@@ -19,13 +19,15 @@ class HouseholdRepository {
     String? groupId, // null이면 개인 모드
     String? month, // YYYY-MM
     ExpenseCategory? category,
+    bool? filterNullCategory, // true이면 category=NONE으로 조회
     PaymentMethod? paymentMethod,
   }) async {
     try {
       final response = await _dio.get('/household/expenses', queryParameters: {
         if (groupId != null) 'groupId': groupId,
         if (month != null) 'month': month,
-        if (category != null) 'category': SetBudgetDto.categoryToString(category),
+        if (filterNullCategory == true) 'category': 'NONE'
+        else if (category != null) 'category': SetBudgetDto.categoryToString(category),
         if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod),
       });
 

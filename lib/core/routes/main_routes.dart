@@ -219,7 +219,7 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>;
         return HouseholdCategoryExpensesScreen(
-          category: extra['category'] as ExpenseCategory,
+          category: extra['category'] as ExpenseCategory?,
           month: extra['month'] as String,
         );
       },
