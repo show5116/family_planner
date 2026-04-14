@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 설정 메인 화면
@@ -236,13 +237,47 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             icon: Icons.help_outline,
             title: l10n.settings_helpTitle,
             subtitle: l10n.settings_helpSubtitle,
-            onTap: () {
-              // TODO: 도움말 화면으로 이동
-            },
+            onTap: () => _showOnboardingResetDialog(),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _showOnboardingResetDialog() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.replay_outlined),
+            SizedBox(width: 8),
+            Text('튜토리얼 다시 보기'),
+          ],
+        ),
+        content: const Text(
+          '앱 소개 슬라이드와 각 기능의 안내를\n처음부터 다시 볼 수 있습니다.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('취소'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('다시 보기'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      final messenger = ScaffoldMessenger.of(context);
+      await OnboardingService.resetAll();
+      messenger.showSnackBar(
+        const SnackBar(content: Text('다음 앱 실행 시 튜토리얼이 표시됩니다.')),
+      );
+    }
   }
 
   Widget _buildUserProfile() {

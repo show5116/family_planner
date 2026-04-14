@@ -10,6 +10,9 @@ import 'package:family_planner/features/settings/common/providers/bottom_navigat
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/navigation_label_helper.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 /// 더보기 탭
 ///
@@ -27,10 +30,57 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   Map<String, dynamic>? _userInfo;
   bool _isLoggingOut = false;
 
+  final _groupManagementKey = GlobalKey();
+  final _settingsKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  Future<void> _showCoachMark() async {
+    await FeatureCoachMark.show(
+      context: context,
+      featureKey: CoachMarkKeys.more,
+      targets: [
+        TargetFocus(
+          identify: 'more_group',
+          keyTarget: _groupManagementKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '그룹 관리',
+                description: '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.',
+                icon: Icons.group_outlined,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'more_settings',
+          keyTarget: _settingsKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '설정',
+                description: '테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.',
+                icon: Icons.settings,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Future<void> _loadUserInfo() async {
@@ -78,6 +128,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
               ),
               // 그룹 관리 (상단 고정)
               MenuListTile(
+                key: _groupManagementKey,
                 icon: Icons.group_outlined,
                 title: l10n.settings_groupManagementTitle,
                 onTap: () => context.push(AppRoutes.groupManagement),
@@ -116,6 +167,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
               const Divider(),
               // 고정 메뉴: 설정, 로그아웃
               MenuListTile(
+                key: _settingsKey,
                 icon: Icons.settings,
                 title: l10n.settings_title,
                 onTap: () => context.push(AppRoutes.settings),

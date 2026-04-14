@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_kanban_column.dart';
@@ -32,6 +35,57 @@ class TodoTab extends ConsumerStatefulWidget {
 }
 
 class _TodoTabState extends ConsumerState<TodoTab> {
+  final _fabKey = GlobalKey();
+  final _weekBarKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  Future<void> _showCoachMark() async {
+    await FeatureCoachMark.show(
+      context: context,
+      featureKey: CoachMarkKeys.todo,
+      targets: [
+        TargetFocus(
+          identify: 'todo_week_bar',
+          keyTarget: _weekBarKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '날짜별 할 일',
+                description: '날짜를 탭해 해당 날의 할 일을 확인하고\n그룹원과 역할을 나눠 보세요.',
+                icon: Icons.date_range,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'todo_fab',
+          keyTarget: _fabKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '할 일 추가',
+                description: '새로운 할 일을 추가하고\n담당자와 마감일을 지정해보세요.',
+                icon: Icons.add_task,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -124,7 +178,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
 
             // 날짜별 보기 모드일 때만 주간 바 + 날짜 헤더 표시
             if (!isOverview) ...[
-              const TodoWeekBar(),
+              TodoWeekBar(key: _weekBarKey),
               const Divider(height: 1),
               _SelectedDateHeader(selectedDate: selectedDate, l10n: l10n),
             ],
@@ -151,6 +205,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
       floatingActionButton: ref.watch(todoSearchQueryProvider) != null
           ? null
           : FloatingActionButton(
+              key: _fabKey,
               heroTag: 'todo_fab',
               onPressed: () {
                 context.push('/todo/add');

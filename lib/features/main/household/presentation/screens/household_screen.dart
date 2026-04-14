@@ -9,9 +9,12 @@ import 'package:family_planner/features/main/household/data/models/expense_model
 import 'package:family_planner/features/main/household/presentation/widgets/budget_setting_sheet.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HouseholdScreen extends ConsumerStatefulWidget {
   const HouseholdScreen({super.key});
@@ -21,19 +24,37 @@ class HouseholdScreen extends ConsumerStatefulWidget {
 }
 
 class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
+  final _fabKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
-    // 그룹 목록 로드 후 첫 번째 그룹 자동 선택
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initGroupSelection();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
-  Future<void> _initGroupSelection() async {
-    // 이미 선택된 상태(그룹 또는 개인)이면 유지
-    // 처음 진입 시에만 첫 그룹을 자동 선택 (개인 모드는 null)
-    // 별도 초기화 없이 null(개인 모드) 유지
+  Future<void> _showCoachMark() async {
+    await FeatureCoachMark.show(
+      context: context,
+      featureKey: CoachMarkKeys.household,
+      targets: [
+        TargetFocus(
+          identify: 'household_fab',
+          keyTarget: _fabKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '지출/수입 추가',
+                description: '새 지출이나 수입을 기록하세요.\n그룹별 가계부와 카테고리 통계를 확인할 수 있어요.',
+                icon: Icons.add,
+                color: Colors.orange,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -79,6 +100,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        key: _fabKey,
         onPressed: () => context.push(
           AppRoutes.householdAdd,
           extra: {'groupId': selectedGroupId},

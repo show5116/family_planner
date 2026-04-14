@@ -10,6 +10,8 @@ import 'package:family_planner/core/routes/admin_routes.dart';
 import 'package:family_planner/core/routes/announcement_routes.dart';
 import 'package:family_planner/core/routes/qna_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/onboarding/providers/onboarding_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// GoRouter Provider
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -20,12 +22,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
   ref.listen<AuthState>(authProvider, (previous, next) {
     if (previous?.isAuthenticated != next.isAuthenticated) {
+      // 로그인 성공 시 온보딩 완료 여부 로드
+      if (next.isAuthenticated == true) {
+        ref.read(onboardingProvider.notifier).load();
+      }
       notifier.value++;
     }
   });
 
+  // 온보딩 상태 변화 시에도 redirect 재실행
+  ref.listen<bool?>(onboardingProvider, (_, _) {
+    notifier.value++;
+  });
+
   return GoRouter(
-    initialLocation: AppRoutes.splash, // 스플래시 화면을 기본 위치로 설정
+    initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
     refreshListenable: notifier,
     navigatorKey: AppRouter.navigatorKey,
@@ -35,6 +46,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       // Auth Routes (인증 관련)
       ...getAuthRoutes(),
+
+      // Onboarding Route
+      GoRoute(
+        path: AppRoutes.onboarding,
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
 
       // Main Routes (메인 기능)
       ...getMainRoutes(),

@@ -6,7 +6,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // 분리된 위젯 import
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_view.dart';
@@ -28,10 +31,54 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  final _fabKey = GlobalKey();
+  final _calendarKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _selectedDay = DateTime.now();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  Future<void> _showCoachMark() async {
+    await FeatureCoachMark.show(
+      context: context,
+      featureKey: CoachMarkKeys.calendar,
+      targets: [
+        TargetFocus(
+          identify: 'calendar_view',
+          keyTarget: _calendarKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '공유 캘린더',
+                description: '그룹 구성원의 일정을 한눈에 볼 수 있어요.\n날짜를 탭해 해당 날의 일정을 확인하세요.',
+                icon: Icons.calendar_month,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'calendar_fab',
+          keyTarget: _fabKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '일정 추가',
+                description: '버튼을 눌러 새 일정을 만드세요.\n그룹원과 함께하는 일정도 등록할 수 있어요.',
+                icon: Icons.add,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -107,6 +154,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
           ] else ...[
             // 월간 캘린더
             CalendarView(
+              key: _calendarKey,
               tasksAsync: tasksAsync,
               focusedDay: _focusedDay,
               selectedDay: _selectedDay,
@@ -128,6 +176,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       floatingActionButton: ref.watch(calendarSearchQueryProvider) != null
           ? null
           : FloatingActionButton(
+              key: _fabKey,
               heroTag: 'calendar_fab',
               onPressed: () {
                 context.push('/calendar/add', extra: selectedDate);

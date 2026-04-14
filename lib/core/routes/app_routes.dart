@@ -2,6 +2,9 @@
 class AppRoutes {
   AppRoutes._(); // Private constructor
 
+  // Onboarding Routes
+  static const String onboarding = '/onboarding';
+
   // Auth Routes
   static const String splash = '/splash';
   static const String login = '/login';

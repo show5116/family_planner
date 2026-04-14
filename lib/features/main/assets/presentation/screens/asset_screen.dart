@@ -9,10 +9,14 @@ import 'package:family_planner/features/main/assets/presentation/widgets/asset_g
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_summary_card.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
+import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class AssetScreen extends ConsumerStatefulWidget {
   const AssetScreen({super.key});
@@ -22,11 +26,15 @@ class AssetScreen extends ConsumerStatefulWidget {
 }
 
 class _AssetScreenState extends ConsumerState<AssetScreen> {
+  final _fabKey = GlobalKey();
+  final _groupBarKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initGroupSelection();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initGroupSelection();
+      await _showCoachMark();
     });
   }
 
@@ -38,6 +46,48 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     if (groups.isNotEmpty && mounted) {
       ref.read(assetSelectedGroupIdProvider.notifier).state = groups.first.id;
     }
+  }
+
+  Future<void> _showCoachMark() async {
+    await FeatureCoachMark.show(
+      context: context,
+      featureKey: CoachMarkKeys.assets,
+      targets: [
+        TargetFocus(
+          identify: 'asset_group_bar',
+          keyTarget: _groupBarKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '그룹별 자산 관리',
+                description: '그룹을 선택해 구성원의 자산을 함께 관리하세요.\n계좌, 적금, 투자 현황을 한눈에 볼 수 있어요.',
+                icon: Icons.account_balance_wallet,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'asset_fab',
+          keyTarget: _fabKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '계좌 추가',
+                description: '새 계좌나 자산 항목을 추가하세요.\n잔액 변화를 기록해 자산 추이를 확인할 수 있어요.',
+                icon: Icons.add,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -60,6 +110,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
       body: Column(
         children: [
           AssetGroupBar(
+            key: _groupBarKey,
             groupsAsync: groupsAsync,
             selectedGroupId: selectedGroupId,
           ),
@@ -72,6 +123,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
       floatingActionButton: selectedGroupId == null
           ? null
           : FloatingActionButton(
+              key: _fabKey,
               onPressed: () => context.push(
                 AppRoutes.assetAccountAdd,
                 extra: {'groupId': selectedGroupId},

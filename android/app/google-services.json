@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "324185071750-ufrj7937pissdblfqvfjna7cnofu92m7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.family_planner",
+            "certificate_hash": "0e5618fb8124fda0b94143b2a50ff1c061698eb5"
+          }
+        },
+        {
           "client_id": "324185071750-78gonhb873sobeondd0pcg5f0rvv7btc.apps.googleusercontent.com",
           "client_type": 3
         }
