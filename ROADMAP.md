@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 10/20 기능 (50%)
-- **진행 중**: 5/20 기능 (25%)
-- **미시작**: 5/20 기능 (25%)
+- **완료**: 11/21 기능 (52%)
+- **진행 중**: 5/21 기능 (24%)
+- **미시작**: 5/21 기능 (24%)
 
-**마지막 업데이트**: 2026-04-02
+**마지막 업데이트**: 2026-04-14
 
 ---
 
@@ -61,6 +61,7 @@
 | 알림 시스템 | 🟨 진행 중 | [14-notification.md](docs/features/14-notification.md) | P1 |
 | 공지사항 | ✅ 완료 | [15-announcements.md](docs/features/15-announcements.md) | P1 |
 | Q&A (문의하기) | ✅ 완료 | [16-qna.md](docs/features/16-qna.md) | P1 |
+| 온보딩 & 튜토리얼 | ✅ 완료 | [20-onboarding.md](docs/features/20-onboarding.md) | P1 |
 | 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
 | 날씨 기능 | ⬜ 시작 안함 | [17-weather.md](docs/features/17-weather.md) | P2 |
 
@@ -96,6 +97,15 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-04-14
+- ✅ **온보딩 & 튜토리얼** ([20-onboarding.md](docs/features/20-onboarding.md))
+  - 최초 로그인 시 5장 슬라이드 온보딩 (실제 앱 UI 미리보기 포함)
+  - 그룹(가족·연인·친구·팀), 캘린더, 할일, 가계부, 기타 기능 소개
+  - 기능별 코치마크: 캘린더, 할일, 그룹관리, 가계부, 자산, 더보기 탭
+  - SharedPreferences 기반 완료 여부 관리 (슬라이드/코치마크 각각)
+  - 설정 → 도움말에서 튜토리얼 다시 보기 지원
+  - 더보기 탭 상단에 그룹 관리 메뉴 이동 (설정에서 제거)
 
 ### 2026-04-02
 - ✅ **자산관리 기능 완료** ([03-assets.md](docs/features/03-assets.md))

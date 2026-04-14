@@ -11,7 +11,7 @@
 | ✅ | 프로젝트 초기 설정 | [00-setup.md](docs/features/00-setup.md) |
 | 🟨 | 회원 가입 및 로그인 | [01-auth.md](docs/features/01-auth.md) |
 | 🟨 | 메인화면 (대시보드) | [02-dashboard.md](docs/features/02-dashboard.md) |
-| ⬜ | 자산관리 | [03-assets.md](docs/features/03-assets.md) |
+| ✅ | 자산관리 | [03-assets.md](docs/features/03-assets.md) |
 | ✅ | 투자지표 | [04-investment.md](docs/features/04-investment.md) |
 | ⬜ | 가계관리 | [05-household.md](docs/features/05-household.md) |
 | ⬜ | 일정관리 | [06-schedule.md](docs/features/06-schedule.md) |
@@ -25,6 +25,11 @@
 | ⬜ | 공통 기능 | [13-common.md](docs/features/13-common.md) |
 | 🟨 | 알림 | [14-notification.md](docs/features/14-notification.md) |
 | ✅ | 공지사항 | [15-announcements.md](docs/features/15-announcements.md) |
+| ✅ | Q&A (문의하기) | [16-qna.md](docs/features/16-qna.md) |
+| ⬜ | 날씨 | [17-weather.md](docs/features/17-weather.md) |
+| 🟨 | 투표 | [18-votes.md](docs/features/18-votes.md) |
+| ✅ | 적립금 관리 | [19-savings.md](docs/features/19-savings.md) |
+| ✅ | 온보딩 & 튜토리얼 | [20-onboarding.md](docs/features/20-onboarding.md) |
 
 ---
 
