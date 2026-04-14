@@ -76,6 +76,13 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                   onTap: () => context.push(AppRoutes.profile),
                 ),
               ),
+              // 그룹 관리 (상단 고정)
+              MenuListTile(
+                icon: Icons.group_outlined,
+                title: l10n.settings_groupManagementTitle,
+                onTap: () => context.push(AppRoutes.groupManagement),
+              ),
+              const Divider(),
               // 하단 네비게이션에 표시되지 않는 메뉴들 (다국어 적용)
               ...nonDisplayedMenuIds.map((menuId) {
                 final item = availableItems[menuId];

@@ -173,16 +173,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               }
             },
           ),
-          _buildSettingTile(
-            context,
-            icon: Icons.group_outlined,
-            title: l10n.settings_groupManagementTitle,
-            subtitle: l10n.settings_groupManagementSubtitle,
-            onTap: () {
-              // TODO: 그룹 관리 화면으로 이동
-              context.push(AppRoutes.groupManagement);
-            },
-          ),
           const Divider(),
 
           // 알림 설정 섹션
