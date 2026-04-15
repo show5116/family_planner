@@ -11,12 +11,14 @@ class ResponsiveNavigation extends StatelessWidget {
     required this.onDestinationSelected,
     required this.destinations,
     required this.body,
+    this.bottomNavKey,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final List<NavigationDestination> destinations;
   final Widget body;
+  final GlobalKey? bottomNavKey;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class ResponsiveNavigation extends StatelessWidget {
       return Scaffold(
         body: body,
         bottomNavigationBar: NavigationBar(
+          key: bottomNavKey,
           selectedIndex: selectedIndex,
           onDestinationSelected: onDestinationSelected,
           destinations: destinations,

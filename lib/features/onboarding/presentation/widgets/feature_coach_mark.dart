@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
@@ -19,6 +21,8 @@ class FeatureCoachMark {
     required BuildContext context,
     required String featureKey,
     required List<TargetFocus> targets,
+    Function(TargetFocus)? onClickTarget,
+    FutureOr<void> Function(TargetFocus)? beforeFocus,
   }) async {
     final completed = await OnboardingService.isCoachMarkCompleted(featureKey);
     if (completed || !context.mounted) return;
@@ -45,6 +49,8 @@ class FeatureCoachMark {
         OnboardingService.completeCoachMark(featureKey);
         return true;
       },
+      onClickTarget: onClickTarget,
+      beforeFocus: beforeFocus,
       paddingFocus: 8,
       focusAnimationDuration: const Duration(milliseconds: 300),
       pulseAnimationDuration: const Duration(milliseconds: 800),

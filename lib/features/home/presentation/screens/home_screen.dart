@@ -11,9 +11,12 @@ import 'package:family_planner/features/main/investment/presentation/screens/inv
 import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_list_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/more_tab.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/navigation_label_helper.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 /// 메인 홈 화면
 ///
@@ -32,6 +35,164 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   // 방문한 탭 ID를 추적 (Lazy Loading용)
   final Set<String> _visitedTabs = {'home'}; // 홈은 기본으로 방문
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  Future<void> _showCoachMark() async {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // 설정에서 표시할 네비게이션 아이템 가져오기 (코치마크 위치 계산용)
+    final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
+    final displayedItems = notifier.displayedItems;
+    final itemCount = displayedItems.length;
+
+    // 네비게이션 바 높이 (Material 3 기본값)
+    const navBarHeight = 80.0;
+    final navBarTop = screenHeight - navBarHeight;
+    final itemWidth = screenWidth / itemCount;
+
+    // "더보기" 탭 위치 (마지막 아이템)
+    final moreTabOffset = Offset(itemWidth * (itemCount - 1), navBarTop);
+
+    // 더보기 탭 인덱스
+    final moreTabIndex = displayedItems.indexWhere((item) => item.id == 'more');
+
+    await FeatureCoachMark.show(
+      context: context,
+      featureKey: CoachMarkKeys.home,
+      onClickTarget: (target) {
+        // 더보기 탭 클릭 시 실제 더보기 탭으로 이동
+        if (target.identify == 'home_more' && moreTabIndex >= 0 && mounted) {
+          setState(() {
+            _selectedIndex = moreTabIndex;
+            _visitedTabs.add('more');
+          });
+        }
+      },
+      targets: [
+        TargetFocus(
+          identify: 'home_more',
+          targetPosition: TargetPosition(
+            Size(itemWidth, navBarHeight),
+            moreTabOffset,
+          ),
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => _buildMoreTabCoachContent(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// 더보기 탭 코치마크 콘텐츠 — 3가지 안내를 한 번에 표시
+  Widget _buildMoreTabCoachContent() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '더보기 탭에서 시작하세요',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildCoachItem(
+            icon: Icons.group_outlined,
+            color: Colors.blue,
+            title: '그룹 관리',
+            description: '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.',
+          ),
+          const SizedBox(height: 10),
+          _buildCoachItem(
+            icon: Icons.widgets_outlined,
+            color: Colors.purple,
+            title: '대시보드 위젯 커스터마이징',
+            description: '설정 → 홈 위젯 설정에서\n원하는 위젯만 골라 대시보드를 꾸미세요.',
+          ),
+          const SizedBox(height: 10),
+          _buildCoachItem(
+            icon: Icons.navigation_outlined,
+            color: Colors.orange,
+            title: '하단 탭 커스터마이징',
+            description: '설정 → 하단 네비게이션 설정에서\n자주 쓰는 메뉴로 자유롭게 바꾸세요.',
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              const Icon(Icons.touch_app, color: Colors.white54, size: 14),
+              const SizedBox(width: 4),
+              const Text(
+                '탭을 눌러 더보기로 이동',
+                style: TextStyle(color: Colors.white54, fontSize: 12),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCoachItem({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 16),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                description,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 12,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   // 각 탭 ID에 해당하는 화면 매핑
   Widget _getScreenForId(String id, AppLocalizations l10n) {
@@ -129,6 +290,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  /// 탭 콘텐츠 빌드
+  Widget _buildTabContent(String id, AppLocalizations l10n) {
+    return _getScreenForId(id, l10n);
+  }
+
   /// Lazy Loading 방식의 탭 body 빌드
   /// 방문한 탭만 빌드하고, 이미 빌드된 탭은 Offstage로 숨겨서 상태 유지
   Widget _buildLazyBody(List<NavigationItem> displayedItems, AppLocalizations l10n) {
@@ -148,7 +314,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           offstage: !isSelected,
           child: TickerMode(
             enabled: isSelected, // 비활성 탭의 애니메이션 중지
-            child: _getScreenForId(item.id, l10n),
+            child: _buildTabContent(item.id, l10n),
           ),
         );
       }),

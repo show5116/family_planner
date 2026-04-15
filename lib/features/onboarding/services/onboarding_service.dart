@@ -45,6 +45,7 @@ class OnboardingService {
 class CoachMarkKeys {
   CoachMarkKeys._();
 
+  static const String home = 'home';
   static const String calendar = 'calendar';
   static const String todo = 'todo';
   static const String groupManagement = 'group_management';

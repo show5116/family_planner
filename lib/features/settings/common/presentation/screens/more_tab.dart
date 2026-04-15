@@ -32,12 +32,19 @@ class _MoreTabState extends ConsumerState<MoreTab> {
 
   final _groupManagementKey = GlobalKey();
   final _settingsKey = GlobalKey();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _showCoachMark() async {
@@ -80,6 +87,22 @@ class _MoreTabState extends ConsumerState<MoreTab> {
           ],
         ),
       ],
+      beforeFocus: (target) async {
+        // 설정 항목 하이라이트 전에 스크롤하여 화면에 표시
+        if (target.identify == 'more_settings') {
+          final ctx = _settingsKey.currentContext;
+          if (ctx != null) {
+            await Scrollable.ensureVisible(
+              ctx,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+              alignment: 0.5, // 화면 중앙에 위치
+            );
+            // 스크롤 완료 후 레이아웃 안정화 대기
+            await Future.delayed(const Duration(milliseconds: 100));
+          }
+        }
+      },
     );
   }
 
