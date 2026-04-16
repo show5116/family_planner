@@ -4,8 +4,8 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 
 /// 색상 선택 위젯
 ///
-/// 미리 정의된 18가지 색상 팔레트에서 색상을 선택하거나,
-/// RGB 값을 직접 입력하거나, 색상 팔레트를 열어서 자유롭게 선택할 수 있는 위젯입니다.
+/// 기본 10가지 색상만 표시하고, "더 보기" 버튼을 누르면
+/// 전체 팔레트 + RGB 입력 + 고급 팔레트가 펼쳐집니다.
 ///
 /// Example:
 /// ```dart
@@ -14,8 +14,6 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 ///   onColorSelected: (color) {
 ///     print('Selected color: $color');
 ///   },
-///   showRgbInput: true,
-///   showAdvancedPicker: true,
 /// )
 /// ```
 class ColorPicker extends StatefulWidget {
@@ -34,12 +32,6 @@ class ColorPicker extends StatefulWidget {
   /// 사용 가능한 색상 목록 (기본값: 미리 정의된 18가지 색상)
   final List<Color>? availableColors;
 
-  /// RGB 입력 필드 표시 여부 (기본값: true)
-  final bool showRgbInput;
-
-  /// 고급 색상 팔레트 버튼 표시 여부 (기본값: true)
-  final bool showAdvancedPicker;
-
   const ColorPicker({
     super.key,
     this.selectedColor,
@@ -47,30 +39,48 @@ class ColorPicker extends StatefulWidget {
     this.colorButtonSize = 40,
     this.spacing = AppSizes.spaceS,
     this.availableColors,
-    this.showRgbInput = true,
-    this.showAdvancedPicker = true,
   });
 
-  /// 기본 색상 팔레트
+  /// 기본으로 보이는 10가지 색상
   static const List<Color> defaultColors = [
-    Colors.red,
-    Colors.pink,
-    Colors.purple,
-    Colors.deepPurple,
-    Colors.indigo,
-    Colors.blue,
-    Colors.lightBlue,
-    Colors.cyan,
-    Colors.teal,
-    Colors.green,
-    Colors.lightGreen,
-    Colors.lime,
-    Colors.yellow,
-    Colors.amber,
-    Colors.orange,
-    Colors.deepOrange,
-    Colors.brown,
-    Colors.grey,
+    Color(0xFFEF4444), // red
+    Color(0xFFF97316), // orange
+    Color(0xFFEAB308), // yellow
+    Color(0xFF22C55E), // green
+    Color(0xFF14B8A6), // teal
+    Color(0xFF3B82F6), // blue
+    Color(0xFF6366F1), // indigo
+    Color(0xFFA855F7), // purple
+    Color(0xFFEC4899), // pink
+    Color(0xFF78716C), // stone
+  ];
+
+  /// 확장 시 추가로 보이는 색상 (전체 팔레트)
+  static const List<Color> extendedColors = [
+    Color(0xFFEF4444), // red
+    Color(0xFFDC2626), // red-dark
+    Color(0xFFF97316), // orange
+    Color(0xFFEA580C), // orange-dark
+    Color(0xFFEAB308), // yellow
+    Color(0xFFCA8A04), // yellow-dark
+    Color(0xFF22C55E), // green
+    Color(0xFF16A34A), // green-dark
+    Color(0xFF14B8A6), // teal
+    Color(0xFF0D9488), // teal-dark
+    Color(0xFF06B6D4), // cyan
+    Color(0xFF0891B2), // cyan-dark
+    Color(0xFF3B82F6), // blue
+    Color(0xFF2563EB), // blue-dark
+    Color(0xFF6366F1), // indigo
+    Color(0xFF4F46E5), // indigo-dark
+    Color(0xFFA855F7), // purple
+    Color(0xFF9333EA), // purple-dark
+    Color(0xFFEC4899), // pink
+    Color(0xFFDB2777), // pink-dark
+    Color(0xFF78716C), // stone
+    Color(0xFF44403C), // stone-dark
+    Color(0xFF94A3B8), // slate
+    Color(0xFF64748B), // slate-dark
   ];
 
   @override
@@ -78,6 +88,8 @@ class ColorPicker extends StatefulWidget {
 }
 
 class _ColorPickerState extends State<ColorPicker> {
+  bool _isExpanded = false;
+
   late TextEditingController _rController;
   late TextEditingController _gController;
   late TextEditingController _bController;
@@ -86,19 +98,18 @@ class _ColorPickerState extends State<ColorPicker> {
   void initState() {
     super.initState();
     final color = widget.selectedColor ?? Colors.blue;
-    _rController = TextEditingController(text: _getColorComponent(color.r).toString());
-    _gController = TextEditingController(text: _getColorComponent(color.g).toString());
-    _bController = TextEditingController(text: _getColorComponent(color.b).toString());
+    _rController = TextEditingController(text: _toInt(color.r).toString());
+    _gController = TextEditingController(text: _toInt(color.g).toString());
+    _bController = TextEditingController(text: _toInt(color.b).toString());
   }
 
-  int _getColorComponent(double value) {
-    return (value * 255.0).round().clamp(0, 255);
-  }
+  int _toInt(double value) => (value * 255.0).round().clamp(0, 255);
 
   @override
   void didUpdateWidget(ColorPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selectedColor != oldWidget.selectedColor && widget.selectedColor != null) {
+    if (widget.selectedColor != oldWidget.selectedColor &&
+        widget.selectedColor != null) {
       _updateRgbControllers(widget.selectedColor!);
     }
   }
@@ -112,16 +123,20 @@ class _ColorPickerState extends State<ColorPicker> {
   }
 
   void _updateRgbControllers(Color color) {
-    _rController.text = _getColorComponent(color.r).toString();
-    _gController.text = _getColorComponent(color.g).toString();
-    _bController.text = _getColorComponent(color.b).toString();
+    _rController.text = _toInt(color.r).toString();
+    _gController.text = _toInt(color.g).toString();
+    _bController.text = _toInt(color.b).toString();
+  }
+
+  void _onColorTap(Color color) {
+    widget.onColorSelected(color);
+    _updateRgbControllers(color);
   }
 
   void _onRgbChanged() {
     final r = int.tryParse(_rController.text) ?? 0;
     final g = int.tryParse(_gController.text) ?? 0;
     final b = int.tryParse(_bController.text) ?? 0;
-
     if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
       widget.onColorSelected(Color.fromARGB(255, r, g, b));
     }
@@ -134,7 +149,6 @@ class _ColorPickerState extends State<ColorPicker> {
         initialColor: widget.selectedColor ?? Colors.blue,
       ),
     );
-
     if (pickedColor != null) {
       widget.onColorSelected(pickedColor);
       _updateRgbControllers(pickedColor);
@@ -143,83 +157,101 @@ class _ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = widget.availableColors ?? ColorPicker.defaultColors;
+    final baseColors = widget.availableColors ?? ColorPicker.defaultColors;
+    final allColors = widget.availableColors ?? ColorPicker.extendedColors;
     final currentColor = widget.selectedColor ?? Colors.blue;
+    final displayColors = _isExpanded ? allColors : baseColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // 현재 선택된 색상 미리보기
-        Container(
-          width: double.infinity,
-          height: 60,
-          decoration: BoxDecoration(
-            color: currentColor,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[300]!, width: 2),
-          ),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                'RGB(${_getColorComponent(currentColor.r)}, ${_getColorComponent(currentColor.g)}, ${_getColorComponent(currentColor.b)})',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSizes.spaceM),
-
-        // 기본 색상 팔레트
+        // 기본/확장 색상 팔레트
         Wrap(
           spacing: widget.spacing,
           runSpacing: widget.spacing,
-          children: colors.map((color) {
-            final isSelected = widget.selectedColor == color;
-            return InkWell(
-              onTap: () {
-                widget.onColorSelected(color);
-                _updateRgbControllers(color);
-              },
-              child: Container(
-                width: widget.colorButtonSize,
-                height: widget.colorButtonSize,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: isSelected
-                      ? Border.all(color: Colors.black, width: 3)
-                      : Border.all(color: Colors.grey[300]!),
+          children: [
+            ...displayColors.map((color) {
+              final isSelected = widget.selectedColor == color;
+              return InkWell(
+                onTap: () => _onColorTap(color),
+                borderRadius: BorderRadius.circular(widget.colorButtonSize),
+                child: Container(
+                  width: widget.colorButtonSize,
+                  height: widget.colorButtonSize,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: isSelected
+                        ? Border.all(color: Colors.black, width: 3)
+                        : Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: isSelected
+                      ? const Icon(Icons.check, color: Colors.white, size: 20)
+                      : null,
+                ),
+              );
+            }),
+            // 더 보기 / 접기 버튼
+            if (widget.availableColors == null)
+              InkWell(
+                onTap: () => setState(() => _isExpanded = !_isExpanded),
+                borderRadius: BorderRadius.circular(widget.colorButtonSize),
+                child: Container(
+                  width: widget.colorButtonSize,
+                  height: widget.colorButtonSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey[400]!),
+                    color: Colors.grey[100],
+                  ),
+                  child: Icon(
+                    _isExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: Colors.grey[600],
+                    size: 20,
+                  ),
                 ),
               ),
-            );
-          }).toList(),
+          ],
         ),
 
-        // RGB 입력 필드
-        if (widget.showRgbInput) ...[
+        // 확장 시 추가 UI
+        if (_isExpanded) ...[
           const SizedBox(height: AppSizes.spaceM),
-          const Divider(),
-          const SizedBox(height: AppSizes.spaceS),
-          Text(
-            'RGB 값 입력',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Colors.grey[600],
+
+          // 현재 선택된 색상 미리보기
+          Container(
+            width: double.infinity,
+            height: 52,
+            decoration: BoxDecoration(
+              color: currentColor,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!, width: 2),
+            ),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceM,
+                  vertical: AppSizes.spaceXS,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.55),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'RGB(${_toInt(currentColor.r)}, ${_toInt(currentColor.g)}, ${_toInt(currentColor.b)})',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: AppSizes.spaceS),
+          const SizedBox(height: AppSizes.spaceM),
+
+          // RGB 입력 필드
           Row(
             children: [
               Expanded(
@@ -250,11 +282,9 @@ class _ColorPickerState extends State<ColorPicker> {
               ),
             ],
           ),
-        ],
-
-        // 고급 색상 팔레트 버튼
-        if (widget.showAdvancedPicker) ...[
           const SizedBox(height: AppSizes.spaceM),
+
+          // 고급 색상 팔레트 버튼
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
@@ -313,32 +343,26 @@ class _RgbValueFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.isEmpty) {
-      return newValue;
-    }
-
+    if (newValue.text.isEmpty) return newValue;
     final int? value = int.tryParse(newValue.text);
-    if (value == null || value > 255) {
-      return oldValue;
-    }
-
+    if (value == null || value > 255) return oldValue;
     return newValue;
   }
 }
 
-/// 고급 색상 선택 다이얼로그
+/// 고급 색상 선택 다이얼로그 (HSV 슬라이더)
 class _AdvancedColorPickerDialog extends StatefulWidget {
   final Color initialColor;
 
-  const _AdvancedColorPickerDialog({
-    required this.initialColor,
-  });
+  const _AdvancedColorPickerDialog({required this.initialColor});
 
   @override
-  State<_AdvancedColorPickerDialog> createState() => _AdvancedColorPickerDialogState();
+  State<_AdvancedColorPickerDialog> createState() =>
+      _AdvancedColorPickerDialogState();
 }
 
-class _AdvancedColorPickerDialogState extends State<_AdvancedColorPickerDialog> {
+class _AdvancedColorPickerDialogState
+    extends State<_AdvancedColorPickerDialog> {
   late Color _selectedColor;
   late double _hue;
   late double _saturation;
@@ -356,9 +380,12 @@ class _AdvancedColorPickerDialogState extends State<_AdvancedColorPickerDialog> 
 
   void _updateColor() {
     setState(() {
-      _selectedColor = HSVColor.fromAHSV(1.0, _hue, _saturation, _value).toColor();
+      _selectedColor =
+          HSVColor.fromAHSV(1.0, _hue, _saturation, _value).toColor();
     });
   }
+
+  int _toInt(double v) => (v * 255).round().clamp(0, 255);
 
   @override
   Widget build(BuildContext context) {
@@ -369,10 +396,9 @@ class _AdvancedColorPickerDialogState extends State<_AdvancedColorPickerDialog> 
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 선택된 색상 미리보기
             Container(
               width: double.infinity,
-              height: 60,
+              height: 56,
               decoration: BoxDecoration(
                 color: _selectedColor,
                 borderRadius: BorderRadius.circular(8),
@@ -380,35 +406,27 @@ class _AdvancedColorPickerDialogState extends State<_AdvancedColorPickerDialog> 
               ),
             ),
             const SizedBox(height: AppSizes.spaceM),
-
-            // 색조(Hue) 슬라이더
             _ColorSlider(
               label: '색조',
               value: _hue,
               max: 360,
-              onChanged: (value) {
-                setState(() {
-                  _hue = value;
-                  _updateColor();
-                });
+              onChanged: (v) {
+                _hue = v;
+                _updateColor();
               },
               gradientColors: List.generate(
                 7,
-                (index) => HSVColor.fromAHSV(1.0, index * 60.0, 1.0, 1.0).toColor(),
+                (i) => HSVColor.fromAHSV(1.0, i * 60.0, 1.0, 1.0).toColor(),
               ),
             ),
             const SizedBox(height: AppSizes.spaceS),
-
-            // 채도(Saturation) 슬라이더
             _ColorSlider(
               label: '채도',
               value: _saturation,
               max: 1.0,
-              onChanged: (value) {
-                setState(() {
-                  _saturation = value;
-                  _updateColor();
-                });
+              onChanged: (v) {
+                _saturation = v;
+                _updateColor();
               },
               gradientColors: [
                 HSVColor.fromAHSV(1.0, _hue, 0.0, _value).toColor(),
@@ -416,27 +434,20 @@ class _AdvancedColorPickerDialogState extends State<_AdvancedColorPickerDialog> 
               ],
             ),
             const SizedBox(height: AppSizes.spaceS),
-
-            // 명도(Value) 슬라이더
             _ColorSlider(
               label: '명도',
               value: _value,
               max: 1.0,
-              onChanged: (value) {
-                setState(() {
-                  _value = value;
-                  _updateColor();
-                });
+              onChanged: (v) {
+                _value = v;
+                _updateColor();
               },
               gradientColors: [
                 Colors.black,
                 HSVColor.fromAHSV(1.0, _hue, _saturation, 1.0).toColor(),
               ],
             ),
-
             const SizedBox(height: AppSizes.spaceM),
-
-            // RGB 값 표시
             Container(
               padding: const EdgeInsets.all(AppSizes.spaceS),
               decoration: BoxDecoration(
@@ -446,9 +457,9 @@ class _AdvancedColorPickerDialogState extends State<_AdvancedColorPickerDialog> 
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _RgbDisplay('R', (_selectedColor.r * 255.0).round().clamp(0, 255)),
-                  _RgbDisplay('G', (_selectedColor.g * 255.0).round().clamp(0, 255)),
-                  _RgbDisplay('B', (_selectedColor.b * 255.0).round().clamp(0, 255)),
+                  _RgbDisplay('R', _toInt(_selectedColor.r)),
+                  _RgbDisplay('G', _toInt(_selectedColor.g)),
+                  _RgbDisplay('B', _toInt(_selectedColor.b)),
                 ],
               ),
             ),
@@ -526,29 +537,18 @@ class _RgbDisplay extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
-        Text(
-          value.toString(),
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(value.toString(), style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }
 }
 
 /// 색상 선택 다이얼로그를 표시하는 헬퍼 함수
-///
-/// [context]: BuildContext
-/// [title]: 다이얼로그 제목
-/// [initialColor]: 초기 선택 색상
-/// [confirmText]: 확인 버튼 텍스트 (기본값: '저장')
-/// [cancelText]: 취소 버튼 텍스트 (기본값: '취소')
-/// [availableColors]: 사용 가능한 색상 목록 (기본값: ColorPicker.defaultColors)
-///
-/// Returns: 선택된 색상 또는 null (취소된 경우)
 Future<Color?> showColorPickerDialog({
   required BuildContext context,
   required String title,
@@ -567,9 +567,7 @@ Future<Color?> showColorPickerDialog({
         content: ColorPicker(
           selectedColor: selectedColor,
           onColorSelected: (color) {
-            setState(() {
-              selectedColor = color;
-            });
+            setState(() => selectedColor = color);
           },
           availableColors: availableColors,
         ),

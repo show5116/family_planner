@@ -76,8 +76,7 @@ class GroupRoleCreateDialog {
                               selectedColor = color;
                             });
                           },
-                          showRgbInput: false,
-                          showAdvancedPicker: false,
+
                         ),
                         const SizedBox(height: AppSizes.spaceM),
                         const Text(
@@ -280,8 +279,7 @@ class GroupRoleEditDialog {
                             selectedColor = color;
                           });
                         },
-                        showRgbInput: false,
-                        showAdvancedPicker: false,
+
                       ),
                       const SizedBox(height: AppSizes.spaceM),
                       const Text(

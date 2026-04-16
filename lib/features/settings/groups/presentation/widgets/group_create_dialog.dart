@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
@@ -12,7 +13,7 @@ class GroupCreateDialog {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
-    String selectedColor = '#6366F1'; // 기본 색상
+    Color selectedColor = const Color(0xFF6366F1); // 기본 색상
 
     showDialog(
       context: context,
@@ -59,9 +60,12 @@ class GroupCreateDialog {
                       ),
                     ),
                     const SizedBox(height: AppSizes.spaceS),
-                    _buildColorPicker(selectedColor, (color) {
-                      setState(() => selectedColor = color);
-                    }),
+                    ColorPicker(
+                      selectedColor: selectedColor,
+                      onColorSelected: (color) {
+                        setState(() => selectedColor = color);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -91,42 +95,6 @@ class GroupCreateDialog {
     );
   }
 
-  static Widget _buildColorPicker(
-    String selectedColor,
-    ValueChanged<String> onColorSelected,
-  ) {
-    const colors = [
-      '#EF4444', // red
-      '#EC4899', // pink
-      '#A855F7', // purple
-      '#6366F1', // indigo
-      '#14B8A6', // teal
-      '#10B981', // green
-      '#F97316', // orange
-      '#78350F', // brown
-    ];
-
-    return Wrap(
-      spacing: AppSizes.spaceS,
-      children: colors.map((color) {
-        return InkWell(
-          onTap: () => onColorSelected(color),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Color(int.parse(color.substring(1), radix: 16) + 0xFF000000),
-              shape: BoxShape.circle,
-              border: selectedColor == color
-                  ? Border.all(color: Colors.black, width: 3)
-                  : null,
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
   static Future<void> _handleCreate(
     BuildContext dialogContext,
     BuildContext context,
@@ -135,16 +103,21 @@ class GroupCreateDialog {
     GlobalKey<FormState> formKey,
     TextEditingController nameController,
     TextEditingController descriptionController,
-    String selectedColor,
+    Color selectedColor,
   ) async {
     if (formKey.currentState!.validate()) {
+      final r = (selectedColor.r * 255).round();
+      final g = (selectedColor.g * 255).round();
+      final b = (selectedColor.b * 255).round();
+      final hexColor =
+          '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
       try {
         await ref.read(groupNotifierProvider.notifier).createGroup(
               name: nameController.text,
               description: descriptionController.text.isEmpty
                   ? null
                   : descriptionController.text,
-              defaultColor: selectedColor,
+              defaultColor: hexColor,
             );
 
         if (dialogContext.mounted) {

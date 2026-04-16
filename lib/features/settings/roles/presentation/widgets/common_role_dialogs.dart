@@ -66,8 +66,7 @@ class CommonRoleCreateDialog {
                         selectedColor = color;
                       });
                     },
-                    showRgbInput: false,
-                    showAdvancedPicker: false,
+
                   ),
                 ],
               ),
@@ -183,8 +182,7 @@ class CommonRoleEditDialog {
                         selectedColor = color;
                       });
                     },
-                    showRgbInput: false,
-                    showAdvancedPicker: false,
+
                   ),
                 ],
               ),
