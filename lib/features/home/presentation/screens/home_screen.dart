@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
 import 'package:family_planner/features/home/presentation/screens/dashboard_tab.dart';
-import 'package:family_planner/features/main/assets/presentation/screens/assets_tab.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
 import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/todo/presentation/screens/todo_tab.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/child_points_screen.dart';
@@ -200,7 +200,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       case 'home':
         return DashboardTab(key: ValueKey(_dashboardRefreshKey));
       case 'assets':
-        return const AssetsTab();
+        return const AssetScreen();
       case 'calendar':
         return const CalendarTab();
       case 'todo':
