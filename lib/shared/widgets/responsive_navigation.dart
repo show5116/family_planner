@@ -24,8 +24,20 @@ class ResponsiveNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     // 모바일: Bottom Navigation
     if (Responsive.isMobile(context)) {
+      // 내부 Scaffold들이 시스템 네비게이션 바 영역을 중복 처리하지 않도록
+      // body 영역의 MediaQuery에서 bottom padding을 제거합니다.
+      // (외부 Scaffold의 NavigationBar가 시스템 인셋을 이미 처리함)
+      final mediaQuery = MediaQuery.of(context);
+      final adjustedBody = MediaQuery(
+        data: mediaQuery.copyWith(
+          padding: mediaQuery.padding.copyWith(bottom: 0),
+          viewPadding: mediaQuery.viewPadding.copyWith(bottom: 0),
+        ),
+        child: body,
+      );
+
       return Scaffold(
-        body: body,
+        body: adjustedBody,
         bottomNavigationBar: NavigationBar(
           key: bottomNavKey,
           selectedIndex: selectedIndex,
