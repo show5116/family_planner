@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
@@ -15,6 +16,8 @@ import 'package:family_planner/features/settings/groups/presentation/widgets/rol
 import 'package:family_planner/features/settings/groups/presentation/widgets/transfer_ownership_dialog.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 
 /// 그룹 상세 화면
 class GroupDetailScreen extends ConsumerStatefulWidget {
@@ -33,6 +36,10 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+
+  // 그룹장 여부 — 데이터 로드 후 세팅
+  bool? _isOwner;
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +53,115 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  /// 그룹 데이터가 처음 로드된 뒤 1회 코치마크 실행
+  void _maybeShowCoachMark(bool isOwner) {
+    if (_isOwner != null) return; // 이미 실행됨
+    _isOwner = isOwner;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark(isOwner));
+  }
+
+  Future<void> _showCoachMark(bool isOwner) async {
+    final featureKey = CoachMarkKeys.groupDetail(widget.groupId);
+
+    // 탭 위치 계산
+    // AppBar(56) + StatusBar 높이만큼 아래에 TabBar가 위치
+    final screenWidth = MediaQuery.of(context).size.width;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    const appBarHeight = kToolbarHeight; // 56
+    const tabBarHeight = kToolbarHeight; // AppTabBar.preferredSize
+    final tabTop = statusBarHeight + appBarHeight;
+    final tabWidth = screenWidth / 3; // 탭 3개
+
+    // 설정 탭(인덱스 1), 역할 탭(인덱스 2) 위치
+    TargetFocus settingsTabTarget(String title, String description, IconData icon, Color color) {
+      return TargetFocus(
+        identify: 'group_settings_tab',
+        targetPosition: TargetPosition(
+          Size(tabWidth, tabBarHeight),
+          Offset(tabWidth * 1, tabTop),
+        ),
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: title,
+              description: description,
+              icon: icon,
+              color: color,
+            ),
+          ),
+        ],
+      );
+    }
+
+    if (isOwner) {
+      await FeatureCoachMark.show(
+        context: context,
+        featureKey: featureKey,
+        onClickTarget: (target) {
+          if (!mounted) return;
+          if (target.identify == 'group_settings_tab') {
+            _tabController.animateTo(1);
+          } else if (target.identify == 'group_roles_tab') {
+            _tabController.animateTo(2);
+          }
+        },
+        targets: [
+          // 1. 설정 탭 — 초대 안내
+          settingsTabTarget(
+            '멤버를 초대해보세요',
+            '설정 탭에서 초대 코드를 공유하거나\n이메일로 직접 멤버를 초대할 수 있어요.\n\n탭을 눌러 설정으로 이동하세요.',
+            Icons.person_add_outlined,
+            Colors.blue,
+          ),
+          // 2. 역할 탭 — 권한 관리 안내
+          TargetFocus(
+            identify: 'group_roles_tab',
+            targetPosition: TargetPosition(
+              Size(tabWidth, tabBarHeight),
+              Offset(tabWidth * 2, tabTop),
+            ),
+            shape: ShapeLightFocus.RRect,
+            radius: 8,
+            contents: [
+              TargetContent(
+                align: ContentAlign.bottom,
+                builder: (_, _) => FeatureCoachMark.buildContent(
+                  title: '역할로 권한을 관리하세요',
+                  description: '역할 탭에서 새로운 역할을 만들고\n멤버별 권한을 세밀하게 설정할 수 있어요.\n\n탭을 눌러 역할 관리로 이동하세요.',
+                  icon: Icons.manage_accounts_outlined,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      // 그룹원: 설정 탭의 색상 설정 안내
+      await FeatureCoachMark.show(
+        context: context,
+        featureKey: featureKey,
+        onClickTarget: (target) {
+          if (!mounted) return;
+          if (target.identify == 'group_settings_tab') {
+            _tabController.animateTo(1);
+          }
+        },
+        targets: [
+          settingsTabTarget(
+            '나만의 그룹 색상을 설정하세요',
+            '설정 탭에서 이 그룹의 색상을 지정할 수 있어요.\n설정한 색상은 일정 등 다양한 메뉴에서\n이 그룹의 항목을 구분하는 데 사용돼요.\n\n탭을 눌러 설정으로 이동하세요.',
+            Icons.palette_outlined,
+            Colors.purple,
+          ),
+        ],
+      );
+    }
   }
 
   @override
@@ -71,6 +187,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       data: (group) {
         // Group 객체의 myRole을 사용하여 권한 확인
         final isOwner = group.myRole?.name == 'OWNER';
+        _maybeShowCoachMark(isOwner);
         final canManage = isOwner || group.myRole?.name == 'ADMIN';
         final canInvite = group.hasPermission('INVITE_MEMBER');
         final canManageRole = group.hasPermission('MANAGE_ROLE');

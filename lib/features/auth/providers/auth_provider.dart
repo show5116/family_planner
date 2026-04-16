@@ -20,6 +20,12 @@ class AuthState {
   final Map<String, dynamic>? user;
   final String? error;
 
+  /// 현재 로그인한 사용자 ID
+  /// 응답 구조가 { "user": { "id": "..." } } 또는 { "id": "..." } 두 가지 케이스 대응
+  String? get userId =>
+      (user?['user'] as Map<String, dynamic>?)?['id']?.toString() ??
+      user?['id']?.toString();
+
   AuthState copyWith({
     bool? isAuthenticated,
     Map<String, dynamic>? user,

@@ -96,21 +96,17 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
       proxyDecorator: buildReorderableProxyDecorator,
       onReorder: (oldIndex, newIndex) {
-        // groupId가 null인 항목은 재정렬 불가
-        final role = displayRoles[oldIndex];
-        if (role.groupId == null) return;
+        if (newIndex > oldIndex) newIndex -= 1;
+
+        // 이동 대상(oldIndex)이나 목적지(newIndex) 중 하나라도 고정 항목이면 무시
+        final movingRole = displayRoles[oldIndex];
+        final targetRole = displayRoles[newIndex];
+        if (movingRole.groupId == null || targetRole.groupId == null) return;
 
         setState(() {
-          // 처음 변경 시 복사본 생성
           _reorderedRoles ??= List.from(displayRoles);
-
-          if (newIndex > oldIndex) {
-            newIndex -= 1;
-          }
           final item = _reorderedRoles!.removeAt(oldIndex);
           _reorderedRoles!.insert(newIndex, item);
-
-          // 변경사항 표시
           _hasChanges = true;
         });
       },
@@ -128,34 +124,15 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       ),
       itemBuilder: (context, index) {
         final role = displayRoles[index];
-
-        // 드래그 가능 조건:
-        // 1. MANAGE_ROLE 권한 있음
-        // 2. groupId가 null이 아님 (그룹별 커스텀 역할만)
-        final isDraggable = widget.canManageRole && role.groupId != null;
-
-        return isDraggable
-            ? ReorderableDragStartListener(
-                key: ValueKey(role.id),
-                index: index,
-                child: RoleCard(
-                  role: role,
-                  hasCustomDefaultRole: hasCustomDefaultRole,
-                  isOwner: widget.isOwner,
-                  canManageRole: widget.canManageRole,
-                  onTap: () => _handleRoleTap(context, l10n, role),
-                ),
-              )
-            : Container(
-                key: ValueKey(role.id),
-                child: RoleCard(
-                  role: role,
-                  hasCustomDefaultRole: hasCustomDefaultRole,
-                  isOwner: widget.isOwner,
-                  canManageRole: widget.canManageRole,
-                  onTap: () => _handleRoleTap(context, l10n, role),
-                ),
-              );
+        return RoleCard(
+          key: ValueKey(role.id),
+          role: role,
+          index: index,
+          hasCustomDefaultRole: hasCustomDefaultRole,
+          isOwner: widget.isOwner,
+          canManageRole: widget.canManageRole,
+          onTap: () => _handleRoleTap(context, l10n, role),
+        );
       },
     );
   }
@@ -200,13 +177,19 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     AppLocalizations l10n,
     Role role,
   ) {
-    // MANAGE_ROLE 권한이 있으면 옵션 표시 (편집/삭제)
+    // 고정 역할(groupId == null)은 조회만 가능 — 운영자 전용 수정 항목
+    if (role.groupId == null) {
+      GroupRoleViewDialog.show(context, ref, l10n, role);
+      return;
+    }
+
+    // 커스텀 역할 + MANAGE_ROLE 권한이 있으면 편집/삭제 옵션 표시
     if (widget.canManageRole) {
       _showRoleOptions(context, l10n, role);
       return;
     }
 
-    // 권한이 없는 경우, 모든 역할 조회 가능
+    // 권한이 없는 경우 조회만
     GroupRoleViewDialog.show(context, ref, l10n, role);
   }
 

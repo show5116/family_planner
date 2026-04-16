@@ -8,6 +8,7 @@ import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 /// 역할 카드
 class RoleCard extends StatelessWidget {
   final Role role;
+  final int index;
   final bool hasCustomDefaultRole;
   final bool isOwner;
   final bool canManageRole;
@@ -16,6 +17,7 @@ class RoleCard extends StatelessWidget {
   const RoleCard({
     super.key,
     required this.role,
+    required this.index,
     required this.hasCustomDefaultRole,
     required this.isOwner,
     required this.canManageRole,
@@ -44,8 +46,12 @@ class RoleCard extends StatelessWidget {
           child: Row(
             children: [
               // MANAGE_ROLE 권한이 있고 그룹별 커스텀 역할인 경우만 드래그 핸들 표시
+              // 핸들 영역만 드래그 리스너로 감싸서 카드 전체 클릭과 분리
               if (showDragHandle) ...[
-                const DragHandleIcon(),
+                ReorderableDragStartListener(
+                  index: index,
+                  child: const DragHandleIcon(),
+                ),
                 const SizedBox(width: AppSizes.spaceM),
               ],
               CircleAvatar(

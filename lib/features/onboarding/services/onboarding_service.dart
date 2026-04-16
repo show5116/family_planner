@@ -52,4 +52,7 @@ class CoachMarkKeys {
   static const String household = 'household';
   static const String assets = 'assets';
   static const String more = 'more';
+
+  /// 그룹 상세 코치마크 키 — 그룹별로 독립적으로 관리
+  static String groupDetail(String groupId) => 'group_detail_$groupId';
 }

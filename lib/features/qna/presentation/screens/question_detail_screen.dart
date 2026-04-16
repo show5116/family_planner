@@ -46,7 +46,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
   Widget build(BuildContext context) {
     final questionAsync = ref.watch(questionDetailProvider(widget.questionId));
     final authState = ref.watch(authProvider);
-    final currentUserId = authState.user?['id']?.toString();
+    final currentUserId = authState.userId;
     final isAdmin = ref.watch(isAdminProvider);
 
     return Scaffold(

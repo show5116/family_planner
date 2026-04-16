@@ -50,7 +50,7 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
-    final currentUserId = authState.user?['id']?.toString();
+    final currentUserId = authState.userId;
 
     // Group 객체의 myRole을 사용하여 권한 확인
     final canInvite = widget.group.hasPermission('INVITE_MEMBER');
