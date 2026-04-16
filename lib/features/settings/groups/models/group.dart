@@ -1,5 +1,4 @@
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
-import 'package:flutter/rendering.dart';
 
 /// 그룹 모델
 class Group {
@@ -28,16 +27,9 @@ class Group {
   });
 
   factory Group.fromJson(Map<String, dynamic> json) {
-    debugPrint('[Group.fromJson] Parsing JSON: $json');
-    debugPrint('[Group.fromJson] myRole field: ${json['myRole']}');
-    debugPrint('[Group.fromJson] myRole type: ${json['myRole'].runtimeType}');
-
     final parsedMyRole = json['myRole'] != null
         ? Role.fromJson(json['myRole'] as Map<String, dynamic>)
         : null;
-
-    debugPrint('[Group.fromJson] Parsed myRole: $parsedMyRole');
-    debugPrint('[Group.fromJson] Parsed myRole.permissions: ${parsedMyRole?.permissions}');
 
     return Group(
       id: json['id'] as String,
@@ -96,8 +88,6 @@ class Group {
 
   /// 현재 사용자가 특정 권한을 가지고 있는지 확인
   bool hasPermission(String permission) {
-    debugPrint(myRole.toString());
-    debugPrint(myRole?.permissions.toString());
     return myRole?.hasPermission(permission) ?? false;
   }
 }

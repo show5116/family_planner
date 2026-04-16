@@ -17,81 +17,97 @@ class GroupCreateDialog {
 
     showDialog(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(l10n.group_createGroup),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: l10n.group_groupName,
-                        border: const OutlineInputBorder(),
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        bool isLoading = false;
+
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: Text(l10n.group_createGroup),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: nameController,
+                        enabled: !isLoading,
+                        decoration: InputDecoration(
+                          labelText: l10n.group_groupName,
+                          border: const OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.group_groupNameRequired;
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return l10n.group_groupNameRequired;
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-                    TextFormField(
-                      controller: descriptionController,
-                      decoration: InputDecoration(
-                        labelText: l10n.group_groupDescription,
-                        border: const OutlineInputBorder(),
+                      const SizedBox(height: AppSizes.spaceM),
+                      TextFormField(
+                        controller: descriptionController,
+                        enabled: !isLoading,
+                        decoration: InputDecoration(
+                          labelText: l10n.group_groupDescription,
+                          border: const OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
                       ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-                    // 색상 선택
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        l10n.group_defaultColor,
-                        style: Theme.of(context).textTheme.titleSmall,
+                      const SizedBox(height: AppSizes.spaceM),
+                      // 색상 선택
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          l10n.group_defaultColor,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSizes.spaceS),
-                    ColorPicker(
-                      selectedColor: selectedColor,
-                      onColorSelected: (color) {
-                        setState(() => selectedColor = color);
-                      },
-                    ),
-                  ],
+                      const SizedBox(height: AppSizes.spaceS),
+                      ColorPicker(
+                        selectedColor: selectedColor,
+                        onColorSelected: (color) {
+                          if (!isLoading) setState(() => selectedColor = color);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(l10n.group_cancel),
-            ),
-            ElevatedButton(
-              onPressed: () => _handleCreate(
-                dialogContext,
-                context,
-                ref,
-                l10n,
-                formKey,
-                nameController,
-                descriptionController,
-                selectedColor,
+            actions: [
+              TextButton(
+                onPressed: isLoading ? null : () => Navigator.pop(dialogContext),
+                child: Text(l10n.group_cancel),
               ),
-              child: Text(l10n.group_create),
-            ),
-          ],
-        ),
-      ),
+              ElevatedButton(
+                onPressed: isLoading
+                    ? null
+                    : () => _handleCreate(
+                          dialogContext,
+                          context,
+                          ref,
+                          l10n,
+                          formKey,
+                          nameController,
+                          descriptionController,
+                          selectedColor,
+                          (loading) => setState(() => isLoading = loading),
+                        ),
+                child: isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(l10n.group_create),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -104,6 +120,7 @@ class GroupCreateDialog {
     TextEditingController nameController,
     TextEditingController descriptionController,
     Color selectedColor,
+    void Function(bool) setLoading,
   ) async {
     if (formKey.currentState!.validate()) {
       final r = (selectedColor.r * 255).round();
@@ -111,6 +128,7 @@ class GroupCreateDialog {
       final b = (selectedColor.b * 255).round();
       final hexColor =
           '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
+      setLoading(true);
       try {
         await ref.read(groupNotifierProvider.notifier).createGroup(
               name: nameController.text,
@@ -128,6 +146,7 @@ class GroupCreateDialog {
         }
       } catch (e) {
         if (dialogContext.mounted) {
+          setLoading(false);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('오류: ${e.toString()}')),
           );

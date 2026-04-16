@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 
 /// 그룹 멤버 모델
 class GroupMember {
@@ -142,7 +141,7 @@ class Role {
         return permissionsData.map((e) => e.toString()).toList();
       }
 
-      // String인 경우
+      // String인 경우 (백엔드가 JSON 문자열로 내려보내는 경우)
       if (permissionsData is String) {
         // JSON 문자열인 경우 (예: "[\"MANAGE_ROLE\",\"INVITE_MEMBER\"]")
         if (permissionsData.trim().startsWith('[')) {
@@ -150,7 +149,6 @@ class Role {
             final decoded = jsonDecode(permissionsData) as List;
             return decoded.map((e) => e.toString()).toList();
           } catch (e) {
-            debugPrint('[Role.parsePermissions] JSON decode error: $e');
             return [];
           }
         }

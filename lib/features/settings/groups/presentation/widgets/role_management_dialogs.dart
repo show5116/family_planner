@@ -542,11 +542,13 @@ class GroupRoleViewDialog {
                       children: [
                         Icon(Icons.star, size: 16, color: Colors.blue[700]),
                         const SizedBox(width: AppSizes.spaceS),
-                        Text(
-                          '기본 역할 (새 멤버 가입 시 자동 부여)',
-                          style: TextStyle(
-                            color: Colors.blue[700],
-                            fontWeight: FontWeight.bold,
+                        Flexible(
+                          child: Text(
+                            '기본 역할 (새 멤버 가입 시 자동 부여)',
+                            style: TextStyle(
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

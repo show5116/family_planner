@@ -17,16 +17,13 @@ final myGroupsProvider = FutureProvider<List<Group>>((ref) async {
 });
 
 /// 특정 그룹 상세 Provider
-/// 그룹 목록에서 해당 그룹을 찾아서 반환 (myRole 포함 보장)
+/// myGroupsProvider에서 해당 그룹을 찾아 반환 (myRole.permissions 포함 보장)
 final groupDetailProvider = FutureProvider.family<Group, String>((ref, groupId) async {
-  // 먼저 그룹 목록에서 찾기 (myRole 포함됨)
-  final groupsAsync = await ref.watch(myGroupsProvider.future);
-  final group = groupsAsync.firstWhere(
+  final groups = await ref.watch(myGroupsProvider.future);
+  return groups.firstWhere(
     (g) => g.id == groupId,
     orElse: () => throw Exception('그룹을 찾을 수 없습니다'),
   );
-
-  return group;
 });
 
 /// 그룹 멤버 목록 Provider
@@ -85,7 +82,8 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
         defaultColor: defaultColor,
       );
 
-      // 그룹 목록 새로고침
+      // 그룹 목록 새로고침 (groupDetailProvider가 의존하는 myGroupsProvider도 함께 갱신)
+      _ref.invalidate(myGroupsProvider);
       await loadGroups();
 
       return newGroup;
