@@ -5,6 +5,12 @@ import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/notification/providers/fcm_token_provider.dart';
+import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
+import 'package:family_planner/features/main/household/providers/household_provider.dart';
+import 'package:family_planner/features/main/savings/providers/savings_provider.dart';
+import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
+import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
+import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
 
 /// 인증 상태
 class AuthState {
@@ -174,6 +180,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
       _ref.invalidate(groupNotifierProvider);
     }
     // family provider들은 자동으로 무효화됨 (부모 provider가 무효화되면)
+
+    // 피처별 선택된 그룹 ID 초기화 (이전 계정의 groupId가 남지 않도록)
+    _ref.read(assetSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(householdSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(savingsSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(childcareSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(voteSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(minigameSelectedGroupIdProvider.notifier).state = null;
   }
 
   /// FCM 토큰 등록 (로그인 성공 후)
