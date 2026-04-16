@@ -253,16 +253,14 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
         final widgetName = _settings.widgetOrder[index];
         final widgetInfo = _getWidgetInfo(widgetName, context);
 
-        return ReorderableDragStartListener(
+        return _buildReorderableWidgetTile(
           key: ValueKey(widgetName),
           index: index,
-          child: _buildReorderableWidgetTile(
-            widgetName: widgetName,
-            icon: widgetInfo['icon'] as IconData,
-            title: widgetInfo['title'] as String,
-            description: widgetInfo['description'] as String,
-            enabled: widgetInfo['enabled'] as bool,
-          ),
+          widgetName: widgetName,
+          icon: widgetInfo['icon'] as IconData,
+          title: widgetInfo['title'] as String,
+          description: widgetInfo['description'] as String,
+          enabled: widgetInfo['enabled'] as bool,
         );
       },
     );
@@ -270,6 +268,8 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
 
   /// 드래그 가능한 위젯 타일 빌드
   Widget _buildReorderableWidgetTile({
+    required Key key,
+    required int index,
     required String widgetName,
     required IconData icon,
     required String title,
@@ -277,6 +277,7 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
     required bool enabled,
   }) {
     return Card(
+      key: key,
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -285,14 +286,17 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
         ),
         child: Row(
           children: [
-            // 드래그 핸들
-            MouseRegion(
-              cursor: SystemMouseCursors.grab,
-              child: Padding(
-                padding: const EdgeInsets.only(right: AppSizes.spaceM),
-                child: Icon(
-                  Icons.drag_handle,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+            // 드래그 핸들 (핸들 영역만 드래그 가능)
+            ReorderableDragStartListener(
+              index: index,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.grab,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: AppSizes.spaceM),
+                  child: Icon(
+                    Icons.drag_handle,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ),
