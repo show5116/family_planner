@@ -40,6 +40,10 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   // 그룹장 여부 — 데이터 로드 후 세팅
   bool? _isOwner;
 
+  // 코치마크용 GlobalKey
+  final _inviteCodeKey = GlobalKey();
+  final _fabKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -102,23 +106,52 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       await FeatureCoachMark.show(
         context: context,
         featureKey: featureKey,
-        onClickTarget: (target) {
+        onClickTarget: (target) async {
           if (!mounted) return;
           if (target.identify == 'group_settings_tab') {
             _tabController.animateTo(1);
+            // 설정 탭 렌더링 완료까지 대기 — 다음 타겟(초대 코드 카드)의 key가 유효해야 함
+            await Future.delayed(const Duration(milliseconds: 600));
           } else if (target.identify == 'group_roles_tab') {
             _tabController.animateTo(2);
+            await Future.delayed(const Duration(milliseconds: 500));
+          }
+        },
+        beforeFocus: (target) async {
+          if (!mounted) return;
+          // FAB 하이라이트 전 — 역할 탭으로 이동 후 대기
+          if (target.identify == 'group_role_fab') {
+            _tabController.animateTo(2);
+            await Future.delayed(const Duration(milliseconds: 500));
           }
         },
         targets: [
-          // 1. 설정 탭 — 초대 안내
+          // 1. 설정 탭 — 초대 안내 (클릭 시 설정 탭으로 이동)
           settingsTabTarget(
             '멤버를 초대해보세요',
             '설정 탭에서 초대 코드를 공유하거나\n이메일로 직접 멤버를 초대할 수 있어요.\n\n탭을 눌러 설정으로 이동하세요.',
             Icons.person_add_outlined,
             Colors.blue,
           ),
-          // 2. 역할 탭 — 권한 관리 안내
+          // 2. 초대 코드 카드 — 설정 탭이 이미 활성화된 상태에서 하이라이트
+          TargetFocus(
+            identify: 'group_invite_code',
+            keyTarget: _inviteCodeKey,
+            shape: ShapeLightFocus.RRect,
+            radius: 12,
+            contents: [
+              TargetContent(
+                align: ContentAlign.bottom,
+                builder: (_, _) => FeatureCoachMark.buildContent(
+                  title: '초대 코드로 멤버 초대',
+                  description: '코드를 복사해 공유하거나\n이메일로 직접 초대장을 보낼 수 있어요.',
+                  icon: Icons.vpn_key_outlined,
+                  color: Colors.blue,
+                ),
+              ),
+            ],
+          ),
+          // 3. 역할 탭 — 권한 관리 안내 (클릭 시 역할 탭으로 이동)
           TargetFocus(
             identify: 'group_roles_tab',
             targetPosition: TargetPosition(
@@ -134,6 +167,24 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
                   title: '역할로 권한을 관리하세요',
                   description: '역할 탭에서 새로운 역할을 만들고\n멤버별 권한을 세밀하게 설정할 수 있어요.\n\n탭을 눌러 역할 관리로 이동하세요.',
                   icon: Icons.manage_accounts_outlined,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ),
+          // 4. 역할 추가 FAB
+          TargetFocus(
+            identify: 'group_role_fab',
+            keyTarget: _fabKey,
+            shape: ShapeLightFocus.RRect,
+            radius: 16,
+            contents: [
+              TargetContent(
+                align: ContentAlign.top,
+                builder: (_, _) => FeatureCoachMark.buildContent(
+                  title: '새 역할 만들기',
+                  description: '버튼을 눌러 역할을 만들고\n이름, 색상, 권한을 자유롭게 설정하세요.',
+                  icon: Icons.add_circle_outline,
                   color: Colors.orange,
                 ),
               ),
@@ -397,6 +448,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       group: group,
       membersAsync: membersAsync,
       canManage: canManage,
+      inviteCodeKey: _inviteCodeKey,
       onRegenerateCode: () => GroupDialogs.showRegenerateCodeDialog(
         context,
         ref,
@@ -476,6 +528,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     } else if (tabIndex == 2 && canManageRole) {
       // 역할 탭 - 역할 추가 버튼
       return FloatingActionButton.extended(
+        key: _fabKey,
         onPressed: () => GroupRoleCreateDialog.show(
           context,
           ref,

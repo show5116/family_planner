@@ -21,7 +21,7 @@ class FeatureCoachMark {
     required BuildContext context,
     required String featureKey,
     required List<TargetFocus> targets,
-    Function(TargetFocus)? onClickTarget,
+    FutureOr<void> Function(TargetFocus)? onClickTarget,
     FutureOr<void> Function(TargetFocus)? beforeFocus,
   }) async {
     final completed = await OnboardingService.isCoachMarkCompleted(featureKey);

@@ -18,6 +18,7 @@ class SettingsTab extends ConsumerWidget {
   final VoidCallback? onInviteByEmail;
   final Function(Color color) onColorChange;
   final VoidCallback onResetColor;
+  final GlobalKey? inviteCodeKey;
 
   const SettingsTab({
     super.key,
@@ -28,6 +29,7 @@ class SettingsTab extends ConsumerWidget {
     this.onInviteByEmail,
     required this.onColorChange,
     required this.onResetColor,
+    this.inviteCodeKey,
   });
 
   @override
@@ -45,6 +47,7 @@ class SettingsTab extends ConsumerWidget {
         const SizedBox(height: AppSizes.spaceM),
         if (canInviteMember) ...[
           InviteCodeCard(
+            key: inviteCodeKey,
             group: group,
             canManage: canManage,
             onRegenerateCode: onRegenerateCode,
