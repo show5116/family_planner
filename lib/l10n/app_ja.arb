@@ -1075,7 +1075,7 @@
   "@childcare_savings_interest_rate": { "description": "貯金利子率" },
   "childcare_tab_points": "ポイント",
   "@childcare_tab_points": { "description": "ポイントタブ" },
-  "childcare_tab_rewards": "ポイントショップ",
+  "childcare_tab_rewards": "ショップ",
   "@childcare_tab_rewards": { "description": "ポイントショップタブ" },
   "childcare_tab_rules": "ルール",
   "@childcare_tab_rules": { "description": "ルールタブ" },

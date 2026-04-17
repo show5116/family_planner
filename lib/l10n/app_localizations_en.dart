@@ -2509,7 +2509,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get childcare_tab_points => 'Points';
 
   @override
-  String get childcare_tab_rewards => 'Point Shop';
+  String get childcare_tab_rewards => 'Shop';
 
   @override
   String get childcare_tab_rules => 'Rules';

@@ -4891,7 +4891,7 @@ abstract class AppLocalizations {
   /// 포인트 상점 탭
   ///
   /// In ko, this message translates to:
-  /// **'포인트 상점'**
+  /// **'상점'**
   String get childcare_tab_rewards;
 
   /// 규칙 탭

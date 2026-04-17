@@ -2464,7 +2464,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get childcare_tab_points => '포인트';
 
   @override
-  String get childcare_tab_rewards => '포인트 상점';
+  String get childcare_tab_rewards => '상점';
 
   @override
   String get childcare_tab_rules => '규칙';

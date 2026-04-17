@@ -1075,7 +1075,7 @@
   "@childcare_savings_interest_rate": { "description": "Savings interest rate" },
   "childcare_tab_points": "Points",
   "@childcare_tab_points": { "description": "Points tab" },
-  "childcare_tab_rewards": "Point Shop",
+  "childcare_tab_rewards": "Shop",
   "@childcare_tab_rewards": { "description": "Point shop tab" },
   "childcare_tab_rules": "Rules",
   "@childcare_tab_rules": { "description": "Rules tab" },
