@@ -211,11 +211,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// 토큰 검증
   Future<bool> verifyToken() async {
-    try {
-      return await _authService.verifyToken();
-    } catch (e) {
-      return false;
-    }
+    return await _authService.verifyToken();
   }
 
   /// 자동 로그인 (저장된 토큰으로)
@@ -232,10 +228,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
         return;
       }
 
-      // 토큰 검증
-      bool isValid = await verifyToken();
+      // 토큰 검증 + 사용자 정보를 한 번의 auth/me 호출로 처리
+      Map<String, dynamic>? user = await _authService.verifyTokenAndGetUser();
 
-      if (!isValid) {
+      if (user == null) {
+        // 토큰 만료 시 갱신 후 재시도
         try {
           // 플랫폼별 RefreshToken 처리
           // - 웹: HTTP Only Cookie로 전송 (null 전달)
@@ -246,30 +243,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
           await _authService.refreshToken(refreshToken);
 
-          // 갱신 성공! 다시 유효하다고 판단
-          isValid = true;
+          // 갱신 성공 후 사용자 정보 재조회
+          user = await _authService.verifyTokenAndGetUser();
         } catch (refreshError) {
           // 갱신마저 실패했다면 그때 진짜 로그아웃 처리
-          isValid = false;
+          user = null;
         }
       }
 
       await _ensureMinimumSplashDuration(startTime);
 
-      if (isValid) {
-        // 유효하면(또는 갱신 성공하면) 사용자 정보 가져오기
-        try {
-          final user = await _authService.getUserInfo();
-          state = state.copyWith(isAuthenticated: true, user: user);
+      if (user != null) {
+        state = state.copyWith(isAuthenticated: true, user: user);
 
-          // 자동 로그인 성공 시 FCM 토큰 등록
-          await _registerFcmToken();
-        } catch (e) {
-          state = state.copyWith(isAuthenticated: true);
-
-          // 실패해도 토큰은 등록 시도
-          await _registerFcmToken();
-        }
+        // 자동 로그인 성공 시 FCM 토큰 등록
+        await _registerFcmToken();
       } else {
         // 최종 실패 시 토큰 삭제 및 로그아웃
         await _authService.apiClient.clearTokens();

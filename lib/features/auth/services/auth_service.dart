@@ -145,17 +145,31 @@ class AuthService extends ApiServiceBase {
     }
   }
 
-  /// 토큰 검증
+  /// 토큰 검증 및 사용자 정보 반환
+  ///
+  /// 토큰이 만료된 경우 ApiClient의 인터셉터가 자동으로 갱신을 시도합니다.
+  /// 성공 시 사용자 정보를 반환하고, 실패 시 null을 반환합니다.
+  /// auth/me 중복 호출을 방지하기 위해 검증과 사용자 정보 조회를 한 번에 처리합니다.
+  Future<Map<String, dynamic>?> verifyTokenAndGetUser() async {
+    try {
+      final response = await apiClient.get(ApiConstants.verifyToken);
+      if (response.statusCode == 200) {
+        final data = handleResponse<Map<String, dynamic>>(response);
+        await _saveUserInfoFromResponse(data);
+        return data;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 토큰 검증 (bool 반환 - 하위 호환용)
   ///
   /// 토큰이 만료된 경우 ApiClient의 인터셉터가 자동으로 갱신을 시도합니다.
   /// 갱신이 성공하면 true, 실패하면 false를 반환합니다.
   Future<bool> verifyToken() async {
-    try {
-      final response = await apiClient.get(ApiConstants.verifyToken);
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+    return await verifyTokenAndGetUser() != null;
   }
 
   /// 토큰 갱신
