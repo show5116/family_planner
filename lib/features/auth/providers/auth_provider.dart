@@ -49,23 +49,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(this._authService, this._ref) : super(const AuthState()) {
     // 401 에러 시 자동 로그아웃 콜백 설정
     _authService.apiClient.onUnauthorized = _handleUnauthorized;
-    debugPrint('=== AuthNotifier: onUnauthorized callback registered ===');
 
     // OAuth 콜백 스트림 구독 (웹 전용)
     // 웹에서 OAuth URL 방식 로그인 시 콜백 처리를 위함
     // 모바일은 SDK 방식을 사용하므로 불필요
     if (kIsWeb) {
-      debugPrint('=== AuthNotifier initialized (Web) ===');
-      debugPrint('Setting up OAuth callback stream listener...');
       _oauthSubscription = _authService.oauthCallbackStream.listen((result) {
-        debugPrint('=== OAuth Callback Received in AuthNotifier ===');
-        debugPrint('Success: ${result.isSuccess}');
         if (result.isSuccess) {
-          debugPrint('Handling OAuth success...');
           // 토큰 저장 완료, 사용자 정보 가져오기
           _handleOAuthSuccess();
         } else {
-          debugPrint('OAuth error: ${result.error}');
           // 에러 처리
           state = state.copyWith(error: result.error);
         }
@@ -199,18 +192,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// FCM 토큰 등록 (로그인 성공 후)
   Future<void> _registerFcmToken() async {
     try {
-      debugPrint('🟢 [AuthProvider] _registerFcmToken 시작');
-
-      // FCM 토큰 notifier의 refreshToken 메서드를 직접 호출하여 백엔드에 등록
       final fcmTokenNotifier = _ref.read(fcmTokenProvider.notifier);
-      debugPrint('  - FcmTokenProvider notifier 가져옴, refreshToken() 호출...');
-
       await fcmTokenNotifier.refreshToken();
-
-      debugPrint('✅ [AuthProvider] FCM 토큰 등록 완료');
-    } catch (e, stackTrace) {
-      debugPrint('❌ [AuthProvider] FCM 토큰 등록 실패: $e');
-      debugPrint('StackTrace: $stackTrace');
+    } catch (e) {
       // 토큰 등록 실패는 로그인 자체를 막지 않음
     }
   }
@@ -220,9 +204,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final fcmTokenNotifier = _ref.read(fcmTokenProvider.notifier);
       await fcmTokenNotifier.deleteToken();
-      debugPrint('FCM 토큰 삭제 완료');
     } catch (e) {
-      debugPrint('FCM 토큰 삭제 실패: $e');
       // 토큰 삭제 실패는 로그아웃 자체를 막지 않음
     }
   }
@@ -254,7 +236,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       bool isValid = await verifyToken();
 
       if (!isValid) {
-        debugPrint('토큰 검증 실패(만료 가능성) → 토큰 갱신 시도');
         try {
           // 플랫폼별 RefreshToken 처리
           // - 웹: HTTP Only Cookie로 전송 (null 전달)
@@ -284,7 +265,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
           // 자동 로그인 성공 시 FCM 토큰 등록
           await _registerFcmToken();
         } catch (e) {
-          debugPrint('사용자 정보 가져오기 실패: $e');
           state = state.copyWith(isAuthenticated: true);
 
           // 실패해도 토큰은 등록 시도
@@ -292,7 +272,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
         }
       } else {
         // 최종 실패 시 토큰 삭제 및 로그아웃
-        debugPrint('최종 인증 실패 → 토큰 삭제');
         await _authService.apiClient.clearTokens();
         state = const AuthState(isAuthenticated: false);
       }

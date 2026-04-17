@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// 보안 스토리지 서비스
@@ -69,42 +68,27 @@ class SecureStorageService {
     bool? hasPassword,
     String? personalColor,
   }) async {
-    debugPrint('=== Saving user info ===');
-    debugPrint('Email: $email');
-    debugPrint('Name: $name');
-    debugPrint('PhoneNumber: $phoneNumber');
-    debugPrint('ProfileImageUrl: $profileImageUrl');
-    debugPrint('IsAdmin: $isAdmin');
-    debugPrint('HasPassword: $hasPassword');
-
     if (email != null) {
       await _storage.write(key: _userEmailKey, value: email);
-      debugPrint('Email saved');
     }
     if (name != null) {
       await _storage.write(key: _userNameKey, value: name);
-      debugPrint('Name saved');
     }
     if (phoneNumber != null) {
       await _storage.write(key: _userPhoneNumberKey, value: phoneNumber);
-      debugPrint('PhoneNumber saved');
     }
     if (profileImageUrl != null) {
       await _storage.write(key: _userProfileImageUrlKey, value: profileImageUrl);
-      debugPrint('ProfileImageUrl saved');
     }
     if (isAdmin != null) {
       await _storage.write(key: _userIsAdminKey, value: isAdmin.toString());
-      debugPrint('IsAdmin saved');
     }
     if (hasPassword != null) {
       await _storage.write(key: _userHasPasswordKey, value: hasPassword.toString());
-      debugPrint('HasPassword saved');
     }
     if (personalColor != null) {
       await _storage.write(key: _userPersonalColorKey, value: personalColor);
     }
-    debugPrint('=== User info save complete ===');
   }
 
   /// 사용자 이메일 가져오기
@@ -147,14 +131,6 @@ class SecureStorageService {
     final profileImageUrl = await getUserProfileImageUrl();
     final isAdmin = await getUserIsAdmin();
     final hasPassword = await getUserHasPassword();
-
-    debugPrint('=== Reading user info ===');
-    debugPrint('Email: $email');
-    debugPrint('Name: $name');
-    debugPrint('PhoneNumber: $phoneNumber');
-    debugPrint('ProfileImageUrl: $profileImageUrl');
-    debugPrint('IsAdmin: $isAdmin');
-    debugPrint('HasPassword: $hasPassword');
 
     final personalColor = await _storage.read(key: _userPersonalColorKey);
 

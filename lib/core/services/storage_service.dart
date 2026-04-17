@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'package:family_planner/core/services/api_service_base.dart';
@@ -61,8 +60,6 @@ class StorageService extends ApiServiceBase {
     required EditorImageType type,
   }) async {
     try {
-      debugPrint('🔵 [StorageService] 에디터 이미지 업로드 - type: ${type.name}, fileName: $fileName');
-
       // 파일 확장자로 MIME 타입 결정
       final mimeType = _getMimeType(fileName);
 
@@ -84,10 +81,8 @@ class StorageService extends ApiServiceBase {
       final data = handleResponse<Map<String, dynamic>>(response);
       final result = EditorImageUploadResponse.fromJson(data);
 
-      debugPrint('✅ [StorageService] 이미지 업로드 완료 - url: ${result.url}');
       return result;
     } catch (e) {
-      debugPrint('❌ [StorageService] 이미지 업로드 실패: $e');
       throw handleError(e);
     }
   }

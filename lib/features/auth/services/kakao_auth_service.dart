@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 /// Kakao 인증 서비스
@@ -28,7 +27,6 @@ class KakaoAuthService {
         try {
           token = await UserApi.instance.loginWithKakaoTalk();
         } catch (e) {
-          debugPrint('카카오톡 로그인 실패: $e');
           // 카카오톡 로그인 실패 시 카카오 계정으로 로그인
           token = await UserApi.instance.loginWithKakaoAccount();
         }
@@ -51,7 +49,7 @@ class KakaoAuthService {
     try {
       await UserApi.instance.logout();
     } catch (e) {
-      debugPrint('Kakao logout failed: $e');
+      // 로그아웃 실패 무시
     }
   }
 
@@ -60,7 +58,6 @@ class KakaoAuthService {
     try {
       await UserApi.instance.unlink();
     } catch (e) {
-      debugPrint('Kakao unlink failed: $e');
       rethrow;
     }
   }
@@ -70,7 +67,6 @@ class KakaoAuthService {
     try {
       return await UserApi.instance.me();
     } catch (e) {
-      debugPrint('Failed to get Kakao user info: $e');
       return null;
     }
   }

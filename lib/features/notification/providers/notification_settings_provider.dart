@@ -86,7 +86,6 @@ class NotificationSettings extends _$NotificationSettings {
         await repository.updateSetting(category: 'SYSTEM', enabled: systemEnabled);
       }
 
-      debugPrint('알림 설정 백엔드 동기화 완료');
     } catch (e) {
       debugPrint('알림 설정 백엔드 동기화 실패: $e');
     }

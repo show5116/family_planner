@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:family_planner/core/routes/app_router.dart';
@@ -37,9 +35,8 @@ class LocalNotificationService {
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
 
-      debugPrint('로컬 알림 초기화 완료');
     } catch (e) {
-      debugPrint('로컬 알림 초기화 실패: $e');
+      // 초기화 실패 무시
     }
   }
 
@@ -83,62 +80,39 @@ class LocalNotificationService {
         payload: payload,
       );
 
-      debugPrint('로컬 알림 표시: $title');
     } catch (e) {
-      debugPrint('로컬 알림 표시 실패: $e');
+      // 알림 표시 실패 무시
     }
   }
 
   /// 알림 탭 처리
   static void _onNotificationTapped(NotificationResponse response) {
-    debugPrint('알림 탭: ${response.payload}');
-
     if (response.payload != null) {
       try {
         final data = jsonDecode(response.payload!);
-        debugPrint('알림 데이터: $data');
-
-        // TODO: GoRouter를 사용하여 해당 화면으로 이동
         _navigateToScreen(data);
       } catch (e) {
-        debugPrint('알림 데이터 파싱 실패: $e');
+        // 데이터 파싱 실패 무시
       }
     }
   }
 
   /// 알림 데이터에 따라 화면 이동
   static void _navigateToScreen(Map<String, dynamic> data) {
-    debugPrint('화면 이동 데이터: $data');
-
-    // GoRouter의 navigatorKey를 통해 context 획득
     final context = AppRouter.navigatorKey.currentContext;
-    if (context == null) {
-      debugPrint('화면 이동 실패: context가 null입니다');
-      return;
-    }
+    if (context == null) return;
 
-    // 카테고리 정보로 화면 이동
     final category = data['category'] as String?;
-    final navigated = NotificationNavigationService.navigateByData(
-      context,
-      category,
-      data,
-    );
-
-    if (!navigated) {
-      debugPrint('화면 이동 실패: 유효하지 않은 데이터');
-    }
+    NotificationNavigationService.navigateByData(context, category, data);
   }
 
   /// 모든 알림 취소
   static Future<void> cancelAll() async {
     await _notifications.cancelAll();
-    debugPrint('모든 알림 취소');
   }
 
   /// 특정 알림 취소
   static Future<void> cancel(int id) async {
     await _notifications.cancel(id);
-    debugPrint('알림 취소: $id');
   }
 }

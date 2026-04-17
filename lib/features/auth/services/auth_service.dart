@@ -64,14 +64,9 @@ class AuthService extends ApiServiceBase {
 
   /// API 응답에서 사용자 정보 추출 및 저장
   Future<void> _saveUserInfoFromResponse(Map<String, dynamic> data) async {
-    debugPrint('=== _saveUserInfoFromResponse ===');
-    debugPrint('Response data: $data');
-
-    // 응답 데이터 구조 확인
     final user = data['user'] as Map<String, dynamic>?;
 
     if (user != null) {
-      debugPrint('User data found: $user');
       await _storage.saveUserInfo(
         email: user['email'] as String?,
         name: user['name'] as String?,
@@ -81,10 +76,8 @@ class AuthService extends ApiServiceBase {
         hasPassword: user['hasPassword'] as bool?,
         personalColor: user['personalColor'] as String?,
       );
-      debugPrint('User info saved successfully');
     } else {
       // user 키가 없는 경우, 최상위 레벨에서 직접 추출 시도
-      debugPrint('No "user" key found, trying top-level fields');
       await _storage.saveUserInfo(
         email: data['email'] as String?,
         name: data['name'] as String?,
@@ -94,7 +87,6 @@ class AuthService extends ApiServiceBase {
         hasPassword: data['hasPassword'] as bool?,
         personalColor: data['personalColor'] as String?,
       );
-      debugPrint('User info saved from top-level fields');
     }
   }
 
@@ -125,7 +117,6 @@ class AuthService extends ApiServiceBase {
       await apiClient.post(ApiConstants.logout);
     } catch (e) {
       // 로그아웃 실패해도 로컬 토큰은 삭제
-      debugPrint('Logout API failed: $e');
     } finally {
       // 소셜 로그인 SDK 로그아웃
       await _cleanupSocialLogin();
@@ -133,7 +124,6 @@ class AuthService extends ApiServiceBase {
       // 로컬 토큰 및 사용자 정보 삭제
       await apiClient.clearTokens();
       await _storage.clearUserInfo();
-      debugPrint('Local tokens and user info cleared');
     }
   }
 
@@ -141,19 +131,17 @@ class AuthService extends ApiServiceBase {
   Future<void> _cleanupSocialLogin() async {
     try {
       await signOutGoogle().timeout(const Duration(seconds: 5));
-      debugPrint('Google sign out completed');
     } catch (e) {
-      debugPrint('Google sign out failed: $e');
+      // 소셜 로그아웃 실패 무시
     }
 
     try {
       if (!kIsWeb) {
         // 카카오 로그아웃은 모바일에서만 (웹에서는 SDK 미사용)
         await signOutKakao().timeout(const Duration(seconds: 5));
-        debugPrint('Kakao logout completed');
       }
     } catch (e) {
-      debugPrint('Kakao logout failed: $e');
+      // 소셜 로그아웃 실패 무시
     }
   }
 
@@ -163,14 +151,9 @@ class AuthService extends ApiServiceBase {
   /// 갱신이 성공하면 true, 실패하면 false를 반환합니다.
   Future<bool> verifyToken() async {
     try {
-      debugPrint('=== verifyToken 시작 ===');
       final response = await apiClient.get(ApiConstants.verifyToken);
-      final isValid = response.statusCode == 200;
-      debugPrint('토큰 검증 결과: $isValid');
-      return isValid;
+      return response.statusCode == 200;
     } catch (e) {
-      // ApiClient 인터셉터가 토큰 갱신을 시도했지만 실패한 경우
-      debugPrint('토큰 검증 실패: $e');
       return false;
     }
   }
@@ -304,8 +287,6 @@ class AuthService extends ApiServiceBase {
         throw Exception('Google ID Token을 가져올 수 없습니다');
       }
 
-      debugPrint('idToken: $idToken');
-
       // 2. ID Token을 백엔드로 전송
       final response = await apiClient.post(
         ApiConstants.googleMobileLogin,
@@ -313,7 +294,6 @@ class AuthService extends ApiServiceBase {
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
-      debugPrint('Google mobile login response: $data');
 
       // 3. 토큰 저장
       await _saveTokens(data);
@@ -412,7 +392,6 @@ class AuthService extends ApiServiceBase {
       // 웹: AccessToken은 저장, RefreshToken은 쿠키로 관리
       if (tokens['accessToken'] != null) {
         await apiClient.saveAccessToken(tokens['accessToken']!);
-        debugPrint('Web OAuth: AccessToken saved, RefreshToken via cookie');
       }
 
       return tokens;
@@ -435,7 +414,6 @@ class AuthService extends ApiServiceBase {
       // 웹: AccessToken은 저장, RefreshToken은 쿠키로 관리
       if (tokens['accessToken'] != null) {
         await apiClient.saveAccessToken(tokens['accessToken']!);
-        debugPrint('Web OAuth: AccessToken saved, RefreshToken via cookie');
       }
 
       return tokens;

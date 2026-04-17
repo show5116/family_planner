@@ -38,9 +38,6 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
 
     // 팝업인 경우 즉시 메시지 전송하고 종료
     if (kIsWeb && OAuthPopupHelper.isPopup()) {
-      debugPrint('=== OAuthCallbackScreen: Popup detected (initState) ===');
-      debugPrint('Sending message to parent and closing popup...');
-
       // 웹 팝업: accessToken만 전송 (refreshToken은 쿠키로 관리)
       final message = <String, String>{
         'accessToken': widget.accessToken,
@@ -62,13 +59,6 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
 
   Future<void> _processCallback() async {
     try {
-      debugPrint('=== OAuthCallbackScreen: Processing callback (not popup) ===');
-      debugPrint('Platform: ${kIsWeb ? "Web" : "Mobile"}');
-      debugPrint('RefreshToken in query: ${widget.refreshToken != null}');
-
-      // 팝업이 아닌 경우 (일반 페이지 리다이렉트): 기존 로직 실행
-      debugPrint('Not a popup, processing callback normally');
-
       // AuthNotifier의 공개 메서드를 통해 OAuth 콜백 처리
       // 웹: accessToken만 전달 (refreshToken은 쿠키로 관리)
       // 모바일: accessToken, refreshToken 모두 전달
@@ -77,18 +67,13 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
         refreshToken: widget.refreshToken,
       );
 
-      debugPrint('OAuth callback processed, waiting for navigation...');
-
-      // 홈으로 이동
       if (mounted) {
         await Future.delayed(const Duration(milliseconds: 500));
         if (mounted) {
-          debugPrint('Navigating to home...');
           context.go(AppRoutes.home);
         }
       }
     } catch (e) {
-      debugPrint('Error in _processCallback: $e');
       setState(() {
         _isProcessing = false;
         _error = e.toString();

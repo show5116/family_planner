@@ -51,8 +51,6 @@ class GoogleAuthService {
         'idToken': googleAuth.idToken ?? '',
       };
     } catch (e) {
-      debugPrint('Google signIn error type: ${e.runtimeType}');
-      debugPrint('Google signIn error: $e');
       // 로그인 실패 시 구글 로그아웃
       await signOut();
       rethrow;
@@ -64,7 +62,7 @@ class GoogleAuthService {
     try {
       await _googleSignIn.signOut();
     } catch (e) {
-      debugPrint('Google sign out failed: $e');
+      // 로그아웃 실패 무시
     }
   }
 
@@ -78,7 +76,6 @@ class GoogleAuthService {
     try {
       return await _googleSignIn.signInSilently();
     } catch (e) {
-      debugPrint('Silent sign-in failed: $e');
       return null;
     }
   }

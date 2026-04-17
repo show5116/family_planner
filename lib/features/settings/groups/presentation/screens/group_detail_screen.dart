@@ -549,7 +549,6 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
 
     try {
       final colorHex = ColorUtils.colorToHex(color);
-      debugPrint('Updating color to: $colorHex');
 
       await ref.read(groupNotifierProvider.notifier).updateMyColor(
         widget.groupId,
@@ -561,10 +560,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
           SnackBar(content: Text(l10n.group_updateSuccess)),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Error updating color: $e');
-      debugPrint('Stack trace: $stackTrace');
-
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -589,10 +585,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
           const SnackBar(content: Text('그룹 기본 색상으로 초기화되었습니다')),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Error resetting color: $e');
-      debugPrint('Stack trace: $stackTrace');
-
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

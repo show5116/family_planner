@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
@@ -21,13 +20,6 @@ class QnaService {
   QnaService(this._repository);
 
   /// 질문 목록 조회
-  ///
-  /// [filter]: 'public' (공개 질문), 'my' (내 질문), 'all' (모든 질문 - ADMIN 전용)
-  /// [page]: 페이지 번호 (1부터 시작)
-  /// [limit]: 페이지당 항목 수
-  /// [status]: 상태 필터
-  /// [category]: 카테고리 필터
-  /// [search]: 검색어
   Future<QuestionListResponse> getQuestions({
     String? filter,
     int page = 1,
@@ -36,9 +28,7 @@ class QnaService {
     QuestionCategory? category,
     String? search,
   }) async {
-    debugPrint('🔵 [QnaService] 질문 목록 조회 - filter: $filter, page: $page');
-
-    final response = await _repository.getQuestions(
+    return await _repository.getQuestions(
       filter: filter,
       page: page,
       limit: limit,
@@ -46,97 +36,48 @@ class QnaService {
       category: category,
       search: search,
     );
-
-    debugPrint('✅ [QnaService] 질문 ${response.data.length}개 조회 완료');
-    return response;
   }
 
   /// 질문 상세 조회
   Future<QuestionModel> getQuestionById(String id) async {
-    debugPrint('🔵 [QnaService] 질문 상세 조회 - id: $id');
-
-    final question = await _repository.getQuestionById(id);
-
-    debugPrint('✅ [QnaService] 질문 조회 완료: ${question.title}');
-    return question;
+    return await _repository.getQuestionById(id);
   }
 
   /// 질문 작성
-  ///
-  /// 새 질문을 작성합니다.
-  /// 작성된 질문은 기본적으로 PENDING 상태입니다.
   Future<QuestionModel> createQuestion(CreateQuestionDto dto) async {
-    debugPrint('🔵 [QnaService] 질문 작성 - title: ${dto.title}');
-
-    // 제목/내용 유효성 검사
     _validateQuestionContent(dto.title, dto.content);
-
-    final question = await _repository.createQuestion(dto);
-
-    debugPrint('✅ [QnaService] 질문 작성 완료 - id: ${question.id}');
-    return question;
+    return await _repository.createQuestion(dto);
   }
 
   /// 질문 수정
-  ///
-  /// PENDING 상태의 질문만 수정 가능합니다.
   Future<QuestionModel> updateQuestion(String id, CreateQuestionDto dto) async {
-    debugPrint('🔵 [QnaService] 질문 수정 - id: $id');
-
-    // 제목/내용 유효성 검사
     _validateQuestionContent(dto.title, dto.content);
-
-    final question = await _repository.updateQuestion(id, dto);
-
-    debugPrint('✅ [QnaService] 질문 수정 완료');
-    return question;
+    return await _repository.updateQuestion(id, dto);
   }
 
   /// 질문 삭제
   Future<void> deleteQuestion(String id) async {
-    debugPrint('🔵 [QnaService] 질문 삭제 - id: $id');
-
     await _repository.deleteQuestion(id);
-
-    debugPrint('✅ [QnaService] 질문 삭제 완료');
   }
 
   /// 질문 해결완료 처리
   Future<void> resolveQuestion(String id) async {
-    debugPrint('🔵 [QnaService] 질문 해결완료 - id: $id');
-
     await _repository.resolveQuestion(id);
-
-    debugPrint('✅ [QnaService] 질문 해결완료 완료');
   }
 
   /// 답변 작성 (ADMIN 전용)
   Future<AnswerModel> createAnswer(String questionId, CreateAnswerDto dto) async {
-    debugPrint('🔵 [QnaService] 답변 작성 - questionId: $questionId');
-
-    final answer = await _repository.createAnswer(questionId, dto);
-
-    debugPrint('✅ [QnaService] 답변 작성 완료 - id: ${answer.id}');
-    return answer;
+    return await _repository.createAnswer(questionId, dto);
   }
 
   /// 답변 수정 (ADMIN 전용)
   Future<AnswerModel> updateAnswer(String questionId, String answerId, CreateAnswerDto dto) async {
-    debugPrint('🔵 [QnaService] 답변 수정 - answerId: $answerId');
-
-    final answer = await _repository.updateAnswer(questionId, answerId, dto);
-
-    debugPrint('✅ [QnaService] 답변 수정 완료');
-    return answer;
+    return await _repository.updateAnswer(questionId, answerId, dto);
   }
 
   /// 답변 삭제 (ADMIN 전용)
   Future<void> deleteAnswer(String questionId, String answerId) async {
-    debugPrint('🔵 [QnaService] 답변 삭제 - answerId: $answerId');
-
     await _repository.deleteAnswer(questionId, answerId);
-
-    debugPrint('✅ [QnaService] 답변 삭제 완료');
   }
 
   /// 질문 내용 유효성 검사

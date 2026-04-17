@@ -184,17 +184,14 @@ class PermissionCreateDialog {
     String? description,
     String category,
   ) async {
-    debugPrint('Creating permission...');
     try {
       final notifier = ref.read(permissionManagementProvider.notifier);
-      debugPrint('Calling API: createPermission');
       final createdPermission = await notifier.createPermission(
         code: code,
         name: name,
         description: description,
         category: category,
       );
-      debugPrint('Permission created: ${createdPermission.id}');
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -204,9 +201,7 @@ class PermissionCreateDialog {
           ),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Create permission error: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -227,7 +222,6 @@ class PermissionEditDialog {
     AppLocalizations l10n,
     Permission permission,
   ) async {
-    debugPrint('Opening edit dialog for permission: ${permission.id}');
     final nameController = TextEditingController(text: permission.name);
     final descriptionController = TextEditingController(
       text: permission.description ?? '',
@@ -346,17 +340,14 @@ class PermissionEditDialog {
     String? description,
     bool isActive,
   ) async {
-    debugPrint('Updating permission: ${permission.id}');
     try {
       final notifier = ref.read(permissionManagementProvider.notifier);
-      debugPrint('Calling API: updatePermission');
       final updatedPermission = await notifier.updatePermission(
         permission.id,
         name: name,
         description: description,
         isActive: isActive,
       );
-      debugPrint('Permission updated: ${updatedPermission.id}');
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -366,9 +357,7 @@ class PermissionEditDialog {
           ),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Update permission error: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -389,7 +378,6 @@ class PermissionDeleteDialog {
     AppLocalizations l10n,
     Permission permission,
   ) async {
-    debugPrint('Opening delete dialog for permission: ${permission.id}');
 
     await showDialog(
       context: context,
@@ -415,14 +403,12 @@ class PermissionDeleteDialog {
         actions: [
           TextButton(
             onPressed: () {
-              debugPrint('Cancel button pressed in delete dialog');
               Navigator.pop(dialogContext);
             },
             child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () async {
-              debugPrint('Soft delete button pressed');
               Navigator.pop(dialogContext);
               await _performDelete(context, ref, l10n, permission, false);
             },
@@ -430,7 +416,6 @@ class PermissionDeleteDialog {
           ),
           TextButton(
             onPressed: () async {
-              debugPrint('Hard delete button pressed');
               Navigator.pop(dialogContext);
               await _performDelete(context, ref, l10n, permission, true);
             },
@@ -449,22 +434,16 @@ class PermissionDeleteDialog {
     Permission permission,
     bool isHardDelete,
   ) async {
-    debugPrint('Deleting permission: ${permission.id} (hard: $isHardDelete)');
     final notifier = ref.read(permissionManagementProvider.notifier);
 
     bool success;
     try {
       if (isHardDelete) {
-        debugPrint('Calling API: hardDeletePermission');
         success = await notifier.hardDeletePermission(permission.id);
       } else {
-        debugPrint('Calling API: deletePermission');
         success = await notifier.deletePermission(permission.id);
       }
-      debugPrint('Delete result: $success');
-    } catch (e, stackTrace) {
-      debugPrint('Delete permission error: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
       success = false;
     }
 
@@ -491,7 +470,6 @@ class PermissionDetailDialog {
     AppLocalizations l10n,
     Permission permission,
   ) async {
-    debugPrint('Opening permission detail dialog for: ${permission.id}');
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -529,7 +507,6 @@ class PermissionDetailDialog {
           ),
           TextButton.icon(
             onPressed: () {
-              debugPrint('Edit button pressed for permission: ${permission.id}');
               Navigator.pop(context);
               PermissionEditDialog.show(context, ref, l10n, permission);
             },
@@ -538,8 +515,6 @@ class PermissionDetailDialog {
           ),
           TextButton.icon(
             onPressed: () {
-              debugPrint(
-                  'Delete button pressed for permission: ${permission.id}');
               Navigator.pop(context);
               PermissionDeleteDialog.show(context, ref, l10n, permission);
             },

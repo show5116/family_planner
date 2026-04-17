@@ -115,12 +115,8 @@ class ApiClient {
 
             // /auth/refresh 요청 자체가 실패한 경우 재시도하지 않음 (무한 루프 방지)
             if (requestPath.contains('/auth/refresh')) {
-              debugPrint('Refresh token request failed - clearing tokens');
               await clearTokens();
-
-              // 로그아웃 콜백 호출
               if (onUnauthorized != null) {
-                debugPrint('Calling onUnauthorized callback');
                 onUnauthorized!();
               }
               return handler.next(error);
@@ -128,15 +124,12 @@ class ApiClient {
 
             // /auth/login 요청이 실패한 경우 refresh 시도하지 않음 (잘못된 자격 증명)
             if (requestPath.contains('/auth/login')) {
-              debugPrint('Login request failed with 401 - invalid credentials');
               return handler.next(error);
             }
 
             // Refresh Token으로 재시도
-            debugPrint('Attempting token refresh...');
             final refreshed = await _refreshToken();
             if (refreshed) {
-              debugPrint('Token refresh successful - retrying original request');
               // 원래 요청 재시도
               final options = error.requestOptions;
 
@@ -146,10 +139,6 @@ class ApiClient {
                 options.headers['Authorization'] = 'Bearer $token';
                 // retry 플래그를 설정하여 onRequest에서 토큰을 다시 설정하지 않도록 함
                 options.extra['retry_with_new_token'] = true;
-                debugPrint('Updated Authorization header with new AccessToken');
-                debugPrint('Token value: ${token.substring(0, 20)}...');
-              } else {
-                debugPrint('Warning: New access token is null');
               }
 
               try {
@@ -157,17 +146,12 @@ class ApiClient {
                 final response = await _dio.fetch(options);
                 return handler.resolve(response);
               } catch (e) {
-                debugPrint('Retry request failed: $e');
                 return handler.reject(error);
               }
             } else {
               // Refresh 실패 시 토큰 삭제 및 로그아웃 콜백 호출
-              debugPrint('Token refresh failed - clearing tokens and triggering logout');
               await clearTokens();
-
-              // 로그아웃 콜백 호출 (로그인 화면으로 리다이렉트)
               if (onUnauthorized != null) {
-                debugPrint('Calling onUnauthorized callback');
                 onUnauthorized!();
               }
             }
@@ -249,7 +233,6 @@ class ApiClient {
   Future<bool> _refreshToken() async {
     // 이미 토큰 갱신이 진행 중이면 해당 Future를 재사용
     if (_refreshTokenFuture != null) {
-      debugPrint('Token refresh already in progress, waiting...');
       return await _refreshTokenFuture!;
     }
 
@@ -268,9 +251,6 @@ class ApiClient {
   /// 실제 토큰 갱신 로직
   Future<bool> _performRefreshToken() async {
     try {
-      debugPrint('Sending refresh token request...');
-      debugPrint('Platform: ${kIsWeb ? "Web (RefreshToken via Cookie)" : "Mobile (RefreshToken via Body)"}');
-
       Response response;
 
       if (kIsWeb) {
@@ -284,17 +264,12 @@ class ApiClient {
             extra: {
               'withCredentials': true, // 쿠키 자동 전송 (RefreshToken)
             },
-            // validateStatus를 설정하지 않으면 Dio가 200-299만 성공으로 간주
-            // 401 등은 자동으로 DioException이 되어 catch 블록으로 이동
           ),
         );
       } else {
         // 모바일: refreshToken을 body에 담아 전송
         final refreshToken = await _getRefreshToken();
-        if (refreshToken == null) {
-          debugPrint('No refresh token available');
-          return false;
-        }
+        if (refreshToken == null) return false;
 
         response = await _dio.post(
           '/auth/refresh',
@@ -307,59 +282,33 @@ class ApiClient {
         );
       }
 
-      debugPrint('Refresh token response status: ${response.statusCode}');
-      debugPrint('Refresh token response data: ${response.data}');
-
       // 200-299 상태 코드는 성공 (Dio 기본 동작)
       if (response.statusCode != null &&
           response.statusCode! >= 200 &&
           response.statusCode! < 300) {
 
-        // 응답 데이터가 없거나 accessToken이 없으면 실패
-        if (response.data == null) {
-          debugPrint('Refresh token response has no data');
-          return false;
-        }
+        if (response.data == null) return false;
 
         // 모든 플랫폼에서 새 AccessToken 저장
         final newAccessToken = response.data['accessToken'] as String?;
-        debugPrint('New access token: ${newAccessToken != null ? "present (${newAccessToken.length} chars)" : "null"}');
-
-        if (newAccessToken == null || newAccessToken.isEmpty) {
-          debugPrint('No access token in refresh response');
-          return false;
-        }
+        if (newAccessToken == null || newAccessToken.isEmpty) return false;
 
         await saveAccessToken(newAccessToken);
-        debugPrint('New access token saved to storage');
 
         // RefreshToken 처리
-        if (kIsWeb) {
-          // 웹: RefreshToken은 HTTP Only Cookie로 관리 (백엔드에서 자동 설정)
-          debugPrint('Web: RefreshToken managed via HTTP Only Cookie');
-        } else {
+        if (!kIsWeb) {
           // 모바일: RefreshToken을 Storage에 저장
           final newRefreshToken = response.data['refreshToken'] as String?;
-          debugPrint('New refresh token: ${newRefreshToken != null ? "present (${newRefreshToken.length} chars)" : "null"}');
-
           if (newRefreshToken != null && newRefreshToken.isNotEmpty) {
             await saveRefreshToken(newRefreshToken);
-            debugPrint('Mobile: New refresh token saved to storage');
           }
         }
 
         return true;
       }
 
-      debugPrint('Unexpected refresh token response status: ${response.statusCode}');
       return false;
     } catch (e) {
-      debugPrint('Token refresh failed: $e');
-      if (e is DioException) {
-        debugPrint('DioException type: ${e.type}');
-        debugPrint('Response status: ${e.response?.statusCode}');
-        debugPrint('Response data: ${e.response?.data}');
-      }
       return false;
     }
   }
@@ -367,7 +316,6 @@ class ApiClient {
   /// 모든 토큰 삭제 (로그아웃 시)
   Future<void> clearTokens() async {
     await _secureStorage.clearTokens();
-    debugPrint('All tokens cleared from SecureStorage');
   }
 
   /// 토큰 존재 여부 확인

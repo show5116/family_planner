@@ -174,7 +174,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           try {
             await ref.read(authServiceProvider).getUserInfo();
           } catch (e) {
-            debugPrint('Failed to update user info: $e');
+            // 사용자 정보 업데이트 실패 무시
           }
           if (mounted) {
             context.pop();

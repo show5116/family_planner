@@ -172,10 +172,8 @@ class GroupRoleCreateDialog {
     bool isDefaultRole,
     String? color,
   ) async {
-    debugPrint('Creating group role...');
     try {
       final notifier = ref.read(groupNotifierProvider.notifier);
-      debugPrint('Calling API: createGroupRole');
       final createdRole = await notifier.createGroupRole(
         groupId,
         name: name,
@@ -183,7 +181,6 @@ class GroupRoleCreateDialog {
         isDefaultRole: isDefaultRole,
         color: color,
       );
-      debugPrint('Role created: ${createdRole.id}');
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -193,9 +190,7 @@ class GroupRoleCreateDialog {
           ),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Create role error: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -217,7 +212,6 @@ class GroupRoleEditDialog {
     String groupId,
     Role role,
   ) async {
-    debugPrint('Opening edit dialog for role: ${role.id}');
     final nameController = TextEditingController(text: role.name);
     bool isDefaultRole = role.isDefaultRole;
     List<String> selectedPermissions = List.from(role.permissions);
@@ -375,10 +369,8 @@ class GroupRoleEditDialog {
     bool isDefaultRole,
     String? color,
   ) async {
-    debugPrint('Updating role: $roleId');
     try {
       final notifier = ref.read(groupNotifierProvider.notifier);
-      debugPrint('Calling API: updateGroupRole');
       final updatedRole = await notifier.updateGroupRole(
         groupId,
         roleId,
@@ -387,7 +379,6 @@ class GroupRoleEditDialog {
         isDefaultRole: isDefaultRole,
         color: color,
       );
-      debugPrint('Role updated: ${updatedRole.id}');
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -397,9 +388,7 @@ class GroupRoleEditDialog {
           ),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Update role error: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -421,7 +410,6 @@ class GroupRoleDeleteDialog {
     String groupId,
     Role role,
   ) async {
-    debugPrint('Opening delete dialog for role: ${role.id}');
 
     await showDialog(
       context: context,
@@ -442,14 +430,12 @@ class GroupRoleDeleteDialog {
         actions: [
           TextButton(
             onPressed: () {
-              debugPrint('Cancel button pressed in delete dialog');
               Navigator.pop(dialogContext);
             },
             child: Text(l10n.common_cancel),
           ),
           ElevatedButton(
             onPressed: () async {
-              debugPrint('Delete button pressed');
               Navigator.pop(dialogContext);
               await _performDelete(context, ref, l10n, groupId, role);
             },
@@ -471,12 +457,9 @@ class GroupRoleDeleteDialog {
     String groupId,
     Role role,
   ) async {
-    debugPrint('Deleting role: ${role.id}');
     try {
       final notifier = ref.read(groupNotifierProvider.notifier);
-      debugPrint('Calling API: deleteGroupRole');
       await notifier.deleteGroupRole(groupId, role.id);
-      debugPrint('Role deleted');
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -486,9 +469,7 @@ class GroupRoleDeleteDialog {
           ),
         );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Delete role error: $e');
-      debugPrint('Stack trace: $stackTrace');
+    } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

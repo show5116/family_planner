@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
@@ -23,22 +22,11 @@ class NotificationRepository {
     required String platform,
   }) async {
     try {
-      debugPrint('🔵 [NotificationRepository] FCM 토큰 등록 API 호출 시작');
-      debugPrint('  - URL: /notifications/token');
-      debugPrint('  - Platform: $platform');
-      debugPrint('  - Token: ${fcmToken.substring(0, 20)}...');
-
-      final response = await _dio.post('/notifications/token', data: {
+      await _dio.post('/notifications/token', data: {
         'token': fcmToken,
         'platform': platform,
       });
-
-      debugPrint('✅ [NotificationRepository] FCM 토큰 등록 성공: ${response.statusCode}');
     } on DioException catch (e) {
-      debugPrint('❌ [NotificationRepository] FCM 토큰 등록 실패');
-      debugPrint('  - Status: ${e.response?.statusCode}');
-      debugPrint('  - Message: ${e.message}');
-      debugPrint('  - Response: ${e.response?.data}');
       throw Exception('FCM 토큰 등록 실패: ${e.message}');
     }
   }

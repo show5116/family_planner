@@ -31,24 +31,18 @@ class OAuthCallbackHandler {
 
     // 1. 앱이 실행 중일 때 받은 Deep Link 처리
     _appLinks.uriLinkStream.listen(
-      (uri) {
-        debugPrint('Deep Link received: $uri');
-        _handleDeepLink(uri);
-      },
-      onError: (err) {
-        debugPrint('Deep Link error: $err');
-      },
+      (uri) => _handleDeepLink(uri),
+      onError: (_) {},
     );
 
     // 2. 앱이 종료된 상태에서 Deep Link로 실행된 경우 처리
     try {
       final initialUri = await _appLinks.getInitialLink();
       if (initialUri != null) {
-        debugPrint('Initial Deep Link: $initialUri');
         _handleDeepLink(initialUri);
       }
     } catch (e) {
-      debugPrint('Failed to get initial link: $e');
+      // 초기 링크 조회 실패 무시
     }
   }
 
@@ -81,15 +75,9 @@ class OAuthCallbackHandler {
     required String refreshToken,
   }) async {
     try {
-      debugPrint('=== OAuth Callback Handler ===');
-      debugPrint('Access Token: ${accessToken.substring(0, 20)}...');
-      debugPrint('Refresh Token: ${refreshToken.substring(0, 20)}...');
-
       // 1. 토큰 저장 (ApiClient를 통해 SecureStorage에 저장)
       await _apiClient.saveAccessToken(accessToken);
       await _apiClient.saveRefreshToken(refreshToken);
-
-      debugPrint('OAuth tokens saved successfully');
 
       // 2. 성공 알림
       _callbackController.add(
@@ -98,9 +86,7 @@ class OAuthCallbackHandler {
           refreshToken: refreshToken,
         ),
       );
-      debugPrint('OAuth success event sent to stream');
     } catch (e) {
-      debugPrint('Failed to save OAuth tokens: $e');
       _callbackController.add(
         OAuthCallbackResult.error(e.toString()),
       );

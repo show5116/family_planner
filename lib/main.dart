@@ -29,7 +29,6 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<Scaffol
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  debugPrint('백그라운드 메시지 수신: ${message.messageId}');
 }
 
 void main() async {
@@ -37,17 +36,14 @@ void main() async {
 
   try {
     await dotenv.load(fileName: '.env');
-    debugPrint('✅ 환경 변수 로드 완료');
   } catch (e) {
-    debugPrint('⚠️ 환경 변수 로드 실패: $e');
-    debugPrint('⚠️ .env 파일이 없거나 읽을 수 없습니다. 기본값을 사용합니다.');
+    // .env 파일이 없거나 읽을 수 없는 경우 기본값 사용
   }
 
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    debugPrint('✅ Firebase 초기화 완료');
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await FirebaseMessagingService.initialize();
     await LocalNotificationService.initialize();
@@ -70,10 +66,6 @@ void main() async {
     EnvironmentConfig.setEnvironment(Environment.development);
   }
 
-  if (kDebugMode) {
-    print('🚀 Environment: ${EnvironmentConfig.currentEnvironment}');
-    print('🌐 API Base URL: ${EnvironmentConfig.apiBaseUrl}');
-  }
 
   runApp(
     const ProviderScope(child: MyApp()),
