@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
@@ -8,12 +9,40 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+const _kCalendarGroupIdsKey = 'calendar_selected_group_ids';
+const _kCalendarAllGroupsKey = 'calendar_all_groups_selected';
+const _kCalendarIncludePersonalKey = 'calendar_include_personal';
+
 /// 캘린더 AppBar용 그룹 필터 + 카테고리 필터
-class CalendarGroupSelector extends ConsumerWidget {
+class CalendarGroupSelector extends ConsumerStatefulWidget {
   const CalendarGroupSelector({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CalendarGroupSelector> createState() => _CalendarGroupSelectorState();
+}
+
+class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadSavedFilter());
+  }
+
+  Future<void> _loadSavedFilter() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isAllGroups = prefs.getBool(_kCalendarAllGroupsKey) ?? true;
+    final savedGroupIds = prefs.getStringList(_kCalendarGroupIdsKey);
+    final includePersonal = prefs.getBool(_kCalendarIncludePersonalKey) ?? true;
+
+    if (!mounted) return;
+
+    ref.read(selectedGroupIdsProvider.notifier).state =
+        isAllGroups ? null : (savedGroupIds ?? []);
+    ref.read(includePersonalProvider.notifier).state = includePersonal;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final selectedGroupIds = ref.watch(selectedGroupIdsProvider);
     final includePersonal = ref.watch(includePersonalProvider);
@@ -34,7 +63,7 @@ class CalendarGroupSelector extends ConsumerWidget {
           children: [
             // 그룹 필터 버튼
             InkWell(
-              onTap: () => _showGroupFilterDialog(context, ref, groups),
+              onTap: () => _showGroupFilterDialog(context, groups),
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -60,7 +89,7 @@ class CalendarGroupSelector extends ConsumerWidget {
 
             // 카테고리 필터 버튼
             InkWell(
-              onTap: () => _showCategoryFilterDialog(context, ref, groups),
+              onTap: () => _showCategoryFilterDialog(context, groups),
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -105,20 +134,20 @@ class CalendarGroupSelector extends ConsumerWidget {
 
   String _buildGroupDisplayText(
     AppLocalizations l10n,
-    List<String> selectedGroupIds,
+    List<String>? selectedGroupIds,
     bool includePersonal,
     List<Group> groups,
   ) {
-    final int selectedCount = selectedGroupIds.length + (includePersonal ? 1 : 0);
-
-    // 전체 선택 (개인 + 모든 그룹)
-    if (includePersonal && selectedGroupIds.length == groups.length) {
+    // null = 전체 선택
+    if (selectedGroupIds == null) {
       return l10n.common_all;
     }
 
+    final int selectedCount = selectedGroupIds.length + (includePersonal ? 1 : 0);
+
     // 아무것도 선택 안됨
-    if (!includePersonal && selectedGroupIds.isEmpty) {
-      return l10n.common_all;
+    if (selectedCount == 0) {
+      return l10n.schedule_personal;
     }
 
     // 하나만 선택됨
@@ -137,9 +166,11 @@ class CalendarGroupSelector extends ConsumerWidget {
     String firstName;
     if (includePersonal) {
       firstName = l10n.schedule_personal;
-    } else {
+    } else if (selectedGroupIds.isNotEmpty) {
       final matchingGroups = groups.where((g) => g.id == selectedGroupIds.first);
       firstName = matchingGroups.isNotEmpty ? matchingGroups.first.name : '';
+    } else {
+      firstName = '';
     }
 
     return '$firstName 외 ${selectedCount - 1}개';
@@ -147,7 +178,6 @@ class CalendarGroupSelector extends ConsumerWidget {
 
   void _showGroupFilterDialog(
     BuildContext context,
-    WidgetRef ref,
     List<Group> groups,
   ) {
     showModalBottomSheet(
@@ -162,7 +192,6 @@ class CalendarGroupSelector extends ConsumerWidget {
 
   void _showCategoryFilterDialog(
     BuildContext context,
-    WidgetRef ref,
     List<Group> groups,
   ) {
     showModalBottomSheet(
@@ -187,14 +216,54 @@ class _GroupFilterSheet extends ConsumerStatefulWidget {
 }
 
 class _GroupFilterSheetState extends ConsumerState<_GroupFilterSheet> {
-  late List<String> _selectedGroupIds;
+  /// null = 전체 선택, [] = 그룹 전부 해제
+  late List<String>? _selectedGroupIds;
   late bool _includePersonal;
 
   @override
   void initState() {
     super.initState();
-    _selectedGroupIds = List.from(ref.read(selectedGroupIdsProvider));
+    final current = ref.read(selectedGroupIdsProvider);
+    _selectedGroupIds = current == null ? null : List<String>.from(current);
     _includePersonal = ref.read(includePersonalProvider);
+  }
+
+  bool _isAllGroups() => _selectedGroupIds == null;
+
+  void _toggleAllGroups() {
+    setState(() {
+      if (_selectedGroupIds == null) {
+        _selectedGroupIds = [];
+      } else {
+        _selectedGroupIds = null;
+      }
+    });
+  }
+
+  void _toggleGroup(String groupId) {
+    setState(() {
+      if (_selectedGroupIds == null) {
+        _selectedGroupIds = widget.groups
+            .map((g) => g.id)
+            .where((id) => id != groupId)
+            .toList();
+      } else if (_selectedGroupIds!.contains(groupId)) {
+        _selectedGroupIds!.remove(groupId);
+        if (_selectedGroupIds!.length == widget.groups.length) {
+          _selectedGroupIds = null;
+        }
+      } else {
+        _selectedGroupIds!.add(groupId);
+        if (_selectedGroupIds!.length == widget.groups.length) {
+          _selectedGroupIds = null;
+        }
+      }
+    });
+  }
+
+  bool _isGroupSelected(String groupId) {
+    if (_selectedGroupIds == null) return true;
+    return _selectedGroupIds!.contains(groupId);
   }
 
   @override
@@ -246,20 +315,19 @@ class _GroupFilterSheetState extends ConsumerState<_GroupFilterSheet> {
 
             if (widget.groups.isNotEmpty) ...[
               const Divider(),
+              // 전체 그룹 토글
+              CheckboxListTile(
+                value: _isAllGroups(),
+                onChanged: (_) => _toggleAllGroups(),
+                title: Text(l10n.common_all),
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+              ),
               // 그룹 목록
               ...widget.groups.map((group) {
-                final isSelected = _selectedGroupIds.contains(group.id);
                 return CheckboxListTile(
-                  value: isSelected,
-                  onChanged: (value) {
-                    setState(() {
-                      if (value == true) {
-                        _selectedGroupIds.add(group.id);
-                      } else {
-                        _selectedGroupIds.remove(group.id);
-                      }
-                    });
-                  },
+                  value: _isGroupSelected(group.id),
+                  onChanged: (_) => _toggleGroup(group.id),
                   title: Row(
                     children: [
                       Icon(
@@ -298,10 +366,21 @@ class _GroupFilterSheetState extends ConsumerState<_GroupFilterSheet> {
     );
   }
 
-  void _applyFilter() {
+  Future<void> _applyFilter() async {
     ref.read(selectedGroupIdsProvider.notifier).state = _selectedGroupIds;
     ref.read(includePersonalProvider.notifier).state = _includePersonal;
-    Navigator.pop(context);
+
+    final prefs = await SharedPreferences.getInstance();
+    if (_selectedGroupIds == null) {
+      await prefs.setBool(_kCalendarAllGroupsKey, true);
+      await prefs.remove(_kCalendarGroupIdsKey);
+    } else {
+      await prefs.setBool(_kCalendarAllGroupsKey, false);
+      await prefs.setStringList(_kCalendarGroupIdsKey, _selectedGroupIds!);
+    }
+    await prefs.setBool(_kCalendarIncludePersonalKey, _includePersonal);
+
+    if (mounted) Navigator.pop(context);
   }
 
   Color? _parseColor(String? colorHex) {

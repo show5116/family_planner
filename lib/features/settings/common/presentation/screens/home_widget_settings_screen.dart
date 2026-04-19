@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 /// 홈 위젯 설정 화면
 class HomeWidgetSettingsScreen extends StatefulWidget {
@@ -58,6 +59,22 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
         ),
       );
     }
+  }
+
+  /// 일정 뷰 모드 변경
+  void _changeScheduleViewMode(ScheduleViewMode mode) {
+    setState(() {
+      _settings = _settings.copyWith(scheduleViewMode: mode);
+    });
+    _saveSettings();
+  }
+
+  /// 할일 뷰 모드 변경
+  void _changeTodoViewMode(ScheduleViewMode mode) {
+    setState(() {
+      _settings = _settings.copyWith(todoViewMode: mode);
+    });
+    _saveSettings();
   }
 
   /// 위젯 표시/숨김 토글
@@ -276,6 +293,9 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
     required String description,
     required bool enabled,
   }) {
+    final isSchedule = widgetName == 'todaySchedule';
+    final isTodo = widgetName == 'todoSummary';
+
     return Card(
       key: key,
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -284,60 +304,93 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
           horizontal: AppSizes.spaceM,
           vertical: AppSizes.spaceS,
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // 드래그 핸들 (핸들 영역만 드래그 가능)
-            ReorderableDragStartListener(
-              index: index,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.grab,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: AppSizes.spaceM),
-                  child: Icon(
-                    Icons.drag_handle,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+            Row(
+              children: [
+                // 드래그 핸들
+                ReorderableDragStartListener(
+                  index: index,
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.grab,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: AppSizes.spaceM),
+                      child: Icon(
+                        Icons.drag_handle,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            // 아이콘
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-              ),
-              child: Icon(
-                icon,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: AppSizes.spaceM),
-            // 제목 및 설명
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleMedium,
+                // 아이콘
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: Theme.of(context).textTheme.bodySmall,
+                  child: Icon(
+                    icon,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
+                ),
+                const SizedBox(width: AppSizes.spaceM),
+                // 제목 및 설명
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSizes.spaceL),
+                // Switch
+                Switch(
+                  value: enabled,
+                  onChanged: (value) => _toggleWidget(widgetName, value),
+                ),
+              ],
+            ),
+            // 일정 위젯 전용: 기간 선택 SegmentedButton
+            if (isSchedule && enabled) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              SegmentedButton<ScheduleViewMode>(
+                segments: const [
+                  ButtonSegment(value: ScheduleViewMode.today, label: Text('오늘')),
+                  ButtonSegment(value: ScheduleViewMode.week, label: Text('금주')),
+                  ButtonSegment(value: ScheduleViewMode.month, label: Text('이번달')),
                 ],
+                selected: {_settings.scheduleViewMode},
+                onSelectionChanged: (selected) =>
+                    _changeScheduleViewMode(selected.first),
               ),
-            ),
-            const SizedBox(width: AppSizes.spaceL),
-            // Switch
-            Switch(
-              value: enabled,
-              onChanged: (value) => _toggleWidget(widgetName, value),
-            ),
+            ],
+            // 할일 위젯 전용: 기간 선택 SegmentedButton
+            if (isTodo && enabled) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              SegmentedButton<ScheduleViewMode>(
+                segments: const [
+                  ButtonSegment(value: ScheduleViewMode.today, label: Text('오늘')),
+                  ButtonSegment(value: ScheduleViewMode.week, label: Text('금주')),
+                  ButtonSegment(value: ScheduleViewMode.month, label: Text('이번달')),
+                ],
+                selected: {_settings.todoViewMode},
+                onSelectionChanged: (selected) =>
+                    _changeTodoViewMode(selected.first),
+              ),
+            ],
           ],
         ),
       ),

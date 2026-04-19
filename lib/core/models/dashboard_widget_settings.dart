@@ -1,3 +1,5 @@
+enum ScheduleViewMode { today, week, month }
+
 /// 대시보드 위젯 설정 모델
 class DashboardWidgetSettings {
   final bool showTodaySchedule;
@@ -7,6 +9,14 @@ class DashboardWidgetSettings {
   final bool showMemoSummary;
   final bool showWeather;
   final List<String> widgetOrder;
+  // 일정 위젯 필터
+  final ScheduleViewMode scheduleViewMode;
+  final List<String>? scheduleSelectedGroupIds; // null = 전체 그룹
+  final bool scheduleIncludePersonal;
+  // 할일 위젯 필터
+  final ScheduleViewMode todoViewMode;
+  final List<String>? todoSelectedGroupIds; // null = 전체 그룹
+  final bool todoIncludePersonal;
 
   const DashboardWidgetSettings({
     this.showTodaySchedule = true,
@@ -15,6 +25,12 @@ class DashboardWidgetSettings {
     this.showAssetSummary = true,
     this.showMemoSummary = false,
     this.showWeather = true,
+    this.scheduleViewMode = ScheduleViewMode.today,
+    this.scheduleSelectedGroupIds,
+    this.scheduleIncludePersonal = true,
+    this.todoViewMode = ScheduleViewMode.today,
+    this.todoSelectedGroupIds,
+    this.todoIncludePersonal = true,
     this.widgetOrder = const [
       'weather',
       'todaySchedule',
@@ -25,12 +41,10 @@ class DashboardWidgetSettings {
     ],
   });
 
-  /// 기본 설정 (모든 위젯 표시)
   factory DashboardWidgetSettings.defaultSettings() {
     return const DashboardWidgetSettings();
   }
 
-  /// JSON에서 변환
   factory DashboardWidgetSettings.fromJson(Map<String, dynamic> json) {
     const allWidgets = [
       'weather',
@@ -46,11 +60,24 @@ class DashboardWidgetSettings {
             .toList() ??
         List<String>.from(allWidgets);
 
-    // 저장된 목록에 없는 신규 위젯을 뒤에 추가
     final mergedOrder = [
       ...savedOrder,
       ...allWidgets.where((w) => !savedOrder.contains(w)),
     ];
+
+    ScheduleViewMode parseMode(String key) {
+      final str = json[key] as String? ?? 'today';
+      return ScheduleViewMode.values.firstWhere(
+        (e) => e.name == str,
+        orElse: () => ScheduleViewMode.today,
+      );
+    }
+
+    List<String>? parseGroupIds(String key) {
+      final raw = json[key];
+      if (raw == null) return null;
+      return (raw as List<dynamic>).map((e) => e as String).toList();
+    }
 
     return DashboardWidgetSettings(
       showTodaySchedule: json['showTodaySchedule'] as bool? ?? true,
@@ -59,11 +86,16 @@ class DashboardWidgetSettings {
       showAssetSummary: json['showAssetSummary'] as bool? ?? true,
       showMemoSummary: json['showMemoSummary'] as bool? ?? false,
       showWeather: json['showWeather'] as bool? ?? true,
+      scheduleViewMode: parseMode('scheduleViewMode'),
+      scheduleSelectedGroupIds: parseGroupIds('scheduleSelectedGroupIds'),
+      scheduleIncludePersonal: json['scheduleIncludePersonal'] as bool? ?? true,
+      todoViewMode: parseMode('todoViewMode'),
+      todoSelectedGroupIds: parseGroupIds('todoSelectedGroupIds'),
+      todoIncludePersonal: json['todoIncludePersonal'] as bool? ?? true,
       widgetOrder: mergedOrder,
     );
   }
 
-  /// JSON으로 변환
   Map<String, dynamic> toJson() {
     return {
       'showTodaySchedule': showTodaySchedule,
@@ -72,11 +104,16 @@ class DashboardWidgetSettings {
       'showAssetSummary': showAssetSummary,
       'showMemoSummary': showMemoSummary,
       'showWeather': showWeather,
+      'scheduleViewMode': scheduleViewMode.name,
+      'scheduleSelectedGroupIds': scheduleSelectedGroupIds,
+      'scheduleIncludePersonal': scheduleIncludePersonal,
+      'todoViewMode': todoViewMode.name,
+      'todoSelectedGroupIds': todoSelectedGroupIds,
+      'todoIncludePersonal': todoIncludePersonal,
       'widgetOrder': widgetOrder,
     };
   }
 
-  /// 복사 생성자
   DashboardWidgetSettings copyWith({
     bool? showTodaySchedule,
     bool? showInvestmentSummary,
@@ -84,6 +121,12 @@ class DashboardWidgetSettings {
     bool? showAssetSummary,
     bool? showMemoSummary,
     bool? showWeather,
+    ScheduleViewMode? scheduleViewMode,
+    Object? scheduleSelectedGroupIds = _sentinel,
+    bool? scheduleIncludePersonal,
+    ScheduleViewMode? todoViewMode,
+    Object? todoSelectedGroupIds = _sentinel,
+    bool? todoIncludePersonal,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -93,7 +136,19 @@ class DashboardWidgetSettings {
       showAssetSummary: showAssetSummary ?? this.showAssetSummary,
       showMemoSummary: showMemoSummary ?? this.showMemoSummary,
       showWeather: showWeather ?? this.showWeather,
+      scheduleViewMode: scheduleViewMode ?? this.scheduleViewMode,
+      scheduleSelectedGroupIds: scheduleSelectedGroupIds == _sentinel
+          ? this.scheduleSelectedGroupIds
+          : scheduleSelectedGroupIds as List<String>?,
+      scheduleIncludePersonal: scheduleIncludePersonal ?? this.scheduleIncludePersonal,
+      todoViewMode: todoViewMode ?? this.todoViewMode,
+      todoSelectedGroupIds: todoSelectedGroupIds == _sentinel
+          ? this.todoSelectedGroupIds
+          : todoSelectedGroupIds as List<String>?,
+      todoIncludePersonal: todoIncludePersonal ?? this.todoIncludePersonal,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }
 }
+
+const Object _sentinel = Object();

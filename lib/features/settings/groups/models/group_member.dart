@@ -29,7 +29,7 @@ class GroupMember {
       userId: json['userId'] as String,
       roleId: json['roleId'] as String,
       customColor: json['customColor'] as String?,
-      joinedAt: DateTime.parse(json['joinedAt'] as String),
+      joinedAt: DateTime.parse(json['joinedAt'] as String).toLocal(),
       user: json['user'] != null
           ? User.fromJson(json['user'] as Map<String, dynamic>)
           : null,

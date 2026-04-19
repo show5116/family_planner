@@ -161,15 +161,126 @@ class TaskParticipantModel with _$TaskParticipantModel {
 }
 
 /// Task 모델 (일정/할일 통합)
-@freezed
-class TaskModel with _$TaskModel {
-  const TaskModel._();
+class TaskModel {
+  final String id;
+  final String userId;
+  final String? groupId;
+  final String title;
+  final String? description;
+  final String? location;
+  final TaskType? type;
+  final TaskPriority? priority;
+  final CategoryModel? category;
+  final DateTime? scheduledAt;
+  final DateTime? dueAt;
+  final int? daysUntilDue;
+  final TaskStatus status;
+  final DateTime? completedAt;
+  final RecurringModel? recurring;
+  final List<TaskParticipantModel> participants;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  const factory TaskModel({
-    required String id,
-    required String userId,
+  const TaskModel({
+    required this.id,
+    required this.userId,
+    this.groupId,
+    required this.title,
+    this.description,
+    this.location,
+    this.type,
+    this.priority,
+    this.category,
+    this.scheduledAt,
+    this.dueAt,
+    this.daysUntilDue,
+    this.status = TaskStatus.pending,
+    this.completedAt,
+    this.recurring,
+    this.participants = const [],
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory TaskModel.fromJson(Map<String, dynamic> json) {
+    final rawScheduledAt = json['scheduledAt'] != null
+        ? DateTime.parse(json['scheduledAt'] as String)
+        : null;
+    // UTC 자정(00:00:00)이면 종일 — scheduledAt을 null로 저장
+    final isAllDayEvent = rawScheduledAt == null ||
+        (rawScheduledAt.hour == 0 &&
+            rawScheduledAt.minute == 0 &&
+            rawScheduledAt.second == 0);
+
+    TaskType? parseType(dynamic v) {
+      if (v == null) return null;
+      switch (v as String) {
+        case 'CALENDAR_ONLY': return TaskType.calendarOnly;
+        case 'TODO_LINKED': return TaskType.todoLinked;
+        default: return null;
+      }
+    }
+
+    TaskPriority? parsePriority(dynamic v) {
+      if (v == null) return null;
+      switch (v as String) {
+        case 'LOW': return TaskPriority.low;
+        case 'MEDIUM': return TaskPriority.medium;
+        case 'HIGH': return TaskPriority.high;
+        case 'URGENT': return TaskPriority.urgent;
+        default: return null;
+      }
+    }
+
+    TaskStatus parseStatus(dynamic v) {
+      if (v == null) return TaskStatus.pending;
+      switch (v as String) {
+        case 'IN_PROGRESS': return TaskStatus.inProgress;
+        case 'COMPLETED': return TaskStatus.completed;
+        case 'HOLD': return TaskStatus.hold;
+        case 'DROP': return TaskStatus.drop;
+        case 'FAILED': return TaskStatus.failed;
+        default: return TaskStatus.pending;
+      }
+    }
+
+    return TaskModel(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      groupId: json['groupId'] as String?,
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      location: json['location'] as String?,
+      type: parseType(json['type']),
+      priority: parsePriority(json['priority']),
+      category: json['category'] != null
+          ? CategoryModel.fromJson(json['category'] as Map<String, dynamic>)
+          : null,
+      scheduledAt: isAllDayEvent ? null : rawScheduledAt.toLocal(),
+      dueAt: json['dueAt'] != null
+          ? DateTime.parse(json['dueAt'] as String).toLocal()
+          : null,
+      daysUntilDue: json['daysUntilDue'] as int?,
+      status: parseStatus(json['status']),
+      completedAt: json['completedAt'] != null
+          ? DateTime.parse(json['completedAt'] as String).toLocal()
+          : null,
+      recurring: json['recurring'] != null
+          ? RecurringModel.fromJson(json['recurring'] as Map<String, dynamic>)
+          : null,
+      participants: (json['participants'] as List<dynamic>? ?? [])
+          .map((e) => TaskParticipantModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
+
+  TaskModel copyWith({
+    String? id,
+    String? userId,
     String? groupId,
-    required String title,
+    String? title,
     String? description,
     String? location,
     TaskType? type,
@@ -178,49 +289,48 @@ class TaskModel with _$TaskModel {
     DateTime? scheduledAt,
     DateTime? dueAt,
     int? daysUntilDue,
-    @Default(TaskStatus.pending) TaskStatus status,
+    TaskStatus? status,
     DateTime? completedAt,
     RecurringModel? recurring,
-    @Default([]) List<TaskParticipantModel> participants,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) = _TaskModel;
-
-  factory TaskModel.fromJson(Map<String, dynamic> json) =>
-      _$TaskModelFromJson(json);
+    List<TaskParticipantModel>? participants,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return TaskModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      groupId: groupId ?? this.groupId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      location: location ?? this.location,
+      type: type ?? this.type,
+      priority: priority ?? this.priority,
+      category: category ?? this.category,
+      scheduledAt: scheduledAt ?? this.scheduledAt,
+      dueAt: dueAt ?? this.dueAt,
+      daysUntilDue: daysUntilDue ?? this.daysUntilDue,
+      status: status ?? this.status,
+      completedAt: completedAt ?? this.completedAt,
+      recurring: recurring ?? this.recurring,
+      participants: participants ?? this.participants,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   /// 카테고리 색상 (hex to int)
   int get colorValue {
-    if (category?.color == null) return 0xFF2196F3; // 기본 파란색
+    if (category?.color == null) return 0xFF2196F3;
     final hex = category!.color!.replaceFirst('#', '');
     return int.parse('FF$hex', radix: 16);
   }
 
-  /// 종일 일정 여부 (시간 정보가 없으면 종일로 간주)
-  bool get isAllDay {
-    if (scheduledAt == null) return true;
-    // 시간이 00:00:00이면 종일로 간주
-    return scheduledAt!.hour == 0 &&
-        scheduledAt!.minute == 0 &&
-        scheduledAt!.second == 0;
-  }
-
-  /// 완료 여부 (status가 completed인 경우)
+  bool get isAllDay => scheduledAt == null;
   bool get isCompleted => status == TaskStatus.completed;
-
-  /// 진행 중 여부
   bool get isInProgress => status == TaskStatus.inProgress;
-
-  /// 보류 여부
   bool get isHold => status == TaskStatus.hold;
-
-  /// 드롭 여부
   bool get isDrop => status == TaskStatus.drop;
-
-  /// 실패 여부
   bool get isFailed => status == TaskStatus.failed;
-
-  /// 대기 중 여부
   bool get isPending => status == TaskStatus.pending;
 }
 
@@ -255,15 +365,27 @@ class TaskDetailModel with _$TaskDetailModel {
 }
 
 /// Task 목록 응답 모델
-@freezed
-class TaskListResponse with _$TaskListResponse {
-  const factory TaskListResponse({
-    @Default([]) List<TaskModel> data,
-    required PaginationMeta meta,
-  }) = _TaskListResponse;
+class TaskListResponse {
+  final List<TaskModel> data;
+  final PaginationMeta meta;
 
-  factory TaskListResponse.fromJson(Map<String, dynamic> json) =>
-      _$TaskListResponseFromJson(json);
+  const TaskListResponse({this.data = const [], required this.meta});
+
+  factory TaskListResponse.fromJson(Map<String, dynamic> json) {
+    return TaskListResponse(
+      data: (json['data'] as List<dynamic>? ?? [])
+          .map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      meta: PaginationMeta.fromJson(json['meta'] as Map<String, dynamic>),
+    );
+  }
+
+  TaskListResponse copyWith({List<TaskModel>? data, PaginationMeta? meta}) {
+    return TaskListResponse(
+      data: data ?? this.data,
+      meta: meta ?? this.meta,
+    );
+  }
 }
 
 /// 페이지네이션 메타

@@ -53,14 +53,14 @@ class ExpenseModel {
       category: json['category'] != null
           ? ExpenseModel.parseCategory(json['category'] as String)
           : null,
-      date: DateTime.parse(json['date'] as String),
+      date: DateTime.parse(json['date'] as String).toLocal(),
       description: json['description'] as String?,
       paymentMethod: json['paymentMethod'] != null
           ? _parsePaymentMethod(json['paymentMethod'] as String)
           : null,
       isRecurring: (json['isRecurring'] as bool?) ?? false,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 

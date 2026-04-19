@@ -78,7 +78,7 @@ class MinigameResult {
       options: (json['options'] as List).cast<String>(),
       result: json['result'] as Map<String, dynamic>,
       createdBy: json['createdBy'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 

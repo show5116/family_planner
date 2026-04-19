@@ -111,7 +111,6 @@ abstract class $TaskFormStateCopyWith<$Res> {
   });
 
   $CategoryModelCopyWith<$Res>? get selectedCategory;
-  $TaskModelCopyWith<$Res>? get editingTask;
 }
 
 /// @nodoc
@@ -310,20 +309,6 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
       return _then(_value.copyWith(selectedCategory: value) as $Val);
     });
   }
-
-  /// Create a copy of TaskFormState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $TaskModelCopyWith<$Res>? get editingTask {
-    if (_value.editingTask == null) {
-      return null;
-    }
-
-    return $TaskModelCopyWith<$Res>(_value.editingTask!, (value) {
-      return _then(_value.copyWith(editingTask: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -372,8 +357,6 @@ abstract class _$$TaskFormStateImplCopyWith<$Res>
 
   @override
   $CategoryModelCopyWith<$Res>? get selectedCategory;
-  @override
-  $TaskModelCopyWith<$Res>? get editingTask;
 }
 
 /// @nodoc

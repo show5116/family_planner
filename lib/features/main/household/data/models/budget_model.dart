@@ -32,9 +32,9 @@ class BudgetModel {
           ? ExpenseModel.parseCategory(json['category'] as String)
           : ExpenseCategory.other,
       amount: double.parse(json['amount'].toString()),
-      month: DateTime.parse(json['month'] as String),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      month: DateTime.parse(json['month'] as String).toLocal(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }
@@ -112,8 +112,8 @@ class BudgetTemplateModel {
           ? ExpenseModel.parseCategory(json['category'] as String)
           : ExpenseCategory.other,
       amount: double.parse(json['amount'].toString()),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }
@@ -166,9 +166,9 @@ class GroupBudgetModel {
       id: json['id'] as String,
       groupId: json['groupId'] as String?,
       amount: double.parse(json['amount'].toString()),
-      month: DateTime.parse(json['month'] as String),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      month: DateTime.parse(json['month'] as String).toLocal(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }
@@ -219,8 +219,8 @@ class GroupBudgetTemplateModel {
       id: json['id'] as String,
       groupId: json['groupId'] as String?,
       amount: double.parse(json['amount'].toString()),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }

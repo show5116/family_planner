@@ -89,20 +89,54 @@ class AnnouncementModel with _$AnnouncementModel {
     required DateTime updatedAt,
   }) = _AnnouncementModel;
 
-  factory AnnouncementModel.fromJson(Map<String, dynamic> json) =>
-      _$AnnouncementModelFromJson(json);
+  factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
+    AnnouncementCategory? parseCategory(String? v) {
+      if (v == null) return null;
+      switch (v.toLowerCase()) {
+        case 'announcement': return AnnouncementCategory.announcement;
+        case 'event': return AnnouncementCategory.event;
+        case 'update': return AnnouncementCategory.update;
+        default: return null;
+      }
+    }
+
+    return AnnouncementModel(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      content: json['content'] as String,
+      category: parseCategory(json['category'] as String?),
+      isPinned: json['isPinned'] as bool? ?? false,
+      author: AnnouncementAuthor.fromJson(json['author'] as Map<String, dynamic>),
+      isRead: json['isRead'] as bool? ?? false,
+      readCount: json['readCount'] as int? ?? 0,
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
 }
 
 /// 공지사항 목록 응답 모델
-@freezed
-class AnnouncementListResponse with _$AnnouncementListResponse {
-  const factory AnnouncementListResponse({
-    @Default([]) List<AnnouncementModel> items,
-    @Default(0) int total,
-    @Default(1) int page,
-    @Default(20) int limit,
-  }) = _AnnouncementListResponse;
+class AnnouncementListResponse {
+  final List<AnnouncementModel> items;
+  final int total;
+  final int page;
+  final int limit;
 
-  factory AnnouncementListResponse.fromJson(Map<String, dynamic> json) =>
-      _$AnnouncementListResponseFromJson(json);
+  const AnnouncementListResponse({
+    this.items = const [],
+    this.total = 0,
+    this.page = 1,
+    this.limit = 20,
+  });
+
+  factory AnnouncementListResponse.fromJson(Map<String, dynamic> json) {
+    return AnnouncementListResponse(
+      items: (json['items'] as List<dynamic>? ?? [])
+          .map((e) => AnnouncementModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      total: json['total'] as int? ?? 0,
+      page: json['page'] as int? ?? 1,
+      limit: json['limit'] as int? ?? 20,
+    );
+  }
 }

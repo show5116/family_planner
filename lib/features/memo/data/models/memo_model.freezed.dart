@@ -15,10 +15,6 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-ChecklistItem _$ChecklistItemFromJson(Map<String, dynamic> json) {
-  return _ChecklistItem.fromJson(json);
-}
-
 /// @nodoc
 mixin _$ChecklistItem {
   String get id => throw _privateConstructorUsedError;
@@ -27,9 +23,6 @@ mixin _$ChecklistItem {
   int get order => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this ChecklistItem to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of ChecklistItem
   /// with the given fields replaced by the non-null parameter values.
@@ -181,7 +174,7 @@ class __$$ChecklistItemImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$ChecklistItemImpl implements _ChecklistItem {
   const _$ChecklistItemImpl({
     required this.id,
@@ -191,9 +184,6 @@ class _$ChecklistItemImpl implements _ChecklistItem {
     required this.createdAt,
     required this.updatedAt,
   });
-
-  factory _$ChecklistItemImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ChecklistItemImplFromJson(json);
 
   @override
   final String id;
@@ -229,7 +219,6 @@ class _$ChecklistItemImpl implements _ChecklistItem {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -248,11 +237,6 @@ class _$ChecklistItemImpl implements _ChecklistItem {
   @pragma('vm:prefer-inline')
   _$$ChecklistItemImplCopyWith<_$ChecklistItemImpl> get copyWith =>
       __$$ChecklistItemImplCopyWithImpl<_$ChecklistItemImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ChecklistItemImplToJson(this);
-  }
 }
 
 abstract class _ChecklistItem implements ChecklistItem {
@@ -264,9 +248,6 @@ abstract class _ChecklistItem implements ChecklistItem {
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$ChecklistItemImpl;
-
-  factory _ChecklistItem.fromJson(Map<String, dynamic> json) =
-      _$ChecklistItemImpl.fromJson;
 
   @override
   String get id;
@@ -635,10 +616,6 @@ abstract class _MemoTag implements MemoTag {
       throw _privateConstructorUsedError;
 }
 
-MemoAttachment _$MemoAttachmentFromJson(Map<String, dynamic> json) {
-  return _MemoAttachment.fromJson(json);
-}
-
 /// @nodoc
 mixin _$MemoAttachment {
   String get id => throw _privateConstructorUsedError;
@@ -647,9 +624,6 @@ mixin _$MemoAttachment {
   int get fileSize => throw _privateConstructorUsedError;
   String get mimeType => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
-
-  /// Serializes this MemoAttachment to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of MemoAttachment
   /// with the given fields replaced by the non-null parameter values.
@@ -801,7 +775,7 @@ class __$$MemoAttachmentImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$MemoAttachmentImpl implements _MemoAttachment {
   const _$MemoAttachmentImpl({
     required this.id,
@@ -811,9 +785,6 @@ class _$MemoAttachmentImpl implements _MemoAttachment {
     required this.mimeType,
     required this.createdAt,
   });
-
-  factory _$MemoAttachmentImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MemoAttachmentImplFromJson(json);
 
   @override
   final String id;
@@ -850,7 +821,6 @@ class _$MemoAttachmentImpl implements _MemoAttachment {
                 other.createdAt == createdAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -872,11 +842,6 @@ class _$MemoAttachmentImpl implements _MemoAttachment {
         this,
         _$identity,
       );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MemoAttachmentImplToJson(this);
-  }
 }
 
 abstract class _MemoAttachment implements MemoAttachment {
@@ -888,9 +853,6 @@ abstract class _MemoAttachment implements MemoAttachment {
     required final String mimeType,
     required final DateTime createdAt,
   }) = _$MemoAttachmentImpl;
-
-  factory _MemoAttachment.fromJson(Map<String, dynamic> json) =
-      _$MemoAttachmentImpl.fromJson;
 
   @override
   String get id;
@@ -913,10 +875,6 @@ abstract class _MemoAttachment implements MemoAttachment {
       throw _privateConstructorUsedError;
 }
 
-MemoModel _$MemoModelFromJson(Map<String, dynamic> json) {
-  return _MemoModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$MemoModel {
   String get id => throw _privateConstructorUsedError;
@@ -933,9 +891,6 @@ mixin _$MemoModel {
   List<ChecklistItem> get checklistItems => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this MemoModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of MemoModel
   /// with the given fields replaced by the non-null parameter values.
@@ -1196,7 +1151,7 @@ class __$$MemoModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$MemoModelImpl implements _MemoModel {
   const _$MemoModelImpl({
     required this.id,
@@ -1216,9 +1171,6 @@ class _$MemoModelImpl implements _MemoModel {
   }) : _tags = tags,
        _attachments = attachments,
        _checklistItems = checklistItems;
-
-  factory _$MemoModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MemoModelImplFromJson(json);
 
   @override
   final String id;
@@ -1308,7 +1260,6 @@ class _$MemoModelImpl implements _MemoModel {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -1335,11 +1286,6 @@ class _$MemoModelImpl implements _MemoModel {
   @pragma('vm:prefer-inline')
   _$$MemoModelImplCopyWith<_$MemoModelImpl> get copyWith =>
       __$$MemoModelImplCopyWithImpl<_$MemoModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MemoModelImplToJson(this);
-  }
 }
 
 abstract class _MemoModel implements MemoModel {
@@ -1359,9 +1305,6 @@ abstract class _MemoModel implements MemoModel {
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$MemoModelImpl;
-
-  factory _MemoModel.fromJson(Map<String, dynamic> json) =
-      _$MemoModelImpl.fromJson;
 
   @override
   String get id;
@@ -1397,270 +1340,5 @@ abstract class _MemoModel implements MemoModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MemoModelImplCopyWith<_$MemoModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-MemoListResponse _$MemoListResponseFromJson(Map<String, dynamic> json) {
-  return _MemoListResponse.fromJson(json);
-}
-
-/// @nodoc
-mixin _$MemoListResponse {
-  List<MemoModel> get items => throw _privateConstructorUsedError;
-  int get total => throw _privateConstructorUsedError;
-  int get page => throw _privateConstructorUsedError;
-  int get limit => throw _privateConstructorUsedError;
-  int get totalPages => throw _privateConstructorUsedError;
-
-  /// Serializes this MemoListResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of MemoListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $MemoListResponseCopyWith<MemoListResponse> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MemoListResponseCopyWith<$Res> {
-  factory $MemoListResponseCopyWith(
-    MemoListResponse value,
-    $Res Function(MemoListResponse) then,
-  ) = _$MemoListResponseCopyWithImpl<$Res, MemoListResponse>;
-  @useResult
-  $Res call({
-    List<MemoModel> items,
-    int total,
-    int page,
-    int limit,
-    int totalPages,
-  });
-}
-
-/// @nodoc
-class _$MemoListResponseCopyWithImpl<$Res, $Val extends MemoListResponse>
-    implements $MemoListResponseCopyWith<$Res> {
-  _$MemoListResponseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of MemoListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? items = null,
-    Object? total = null,
-    Object? page = null,
-    Object? limit = null,
-    Object? totalPages = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            items: null == items
-                ? _value.items
-                : items // ignore: cast_nullable_to_non_nullable
-                      as List<MemoModel>,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
-            page: null == page
-                ? _value.page
-                : page // ignore: cast_nullable_to_non_nullable
-                      as int,
-            limit: null == limit
-                ? _value.limit
-                : limit // ignore: cast_nullable_to_non_nullable
-                      as int,
-            totalPages: null == totalPages
-                ? _value.totalPages
-                : totalPages // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
-  }
-}
-
-/// @nodoc
-abstract class _$$MemoListResponseImplCopyWith<$Res>
-    implements $MemoListResponseCopyWith<$Res> {
-  factory _$$MemoListResponseImplCopyWith(
-    _$MemoListResponseImpl value,
-    $Res Function(_$MemoListResponseImpl) then,
-  ) = __$$MemoListResponseImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    List<MemoModel> items,
-    int total,
-    int page,
-    int limit,
-    int totalPages,
-  });
-}
-
-/// @nodoc
-class __$$MemoListResponseImplCopyWithImpl<$Res>
-    extends _$MemoListResponseCopyWithImpl<$Res, _$MemoListResponseImpl>
-    implements _$$MemoListResponseImplCopyWith<$Res> {
-  __$$MemoListResponseImplCopyWithImpl(
-    _$MemoListResponseImpl _value,
-    $Res Function(_$MemoListResponseImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of MemoListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? items = null,
-    Object? total = null,
-    Object? page = null,
-    Object? limit = null,
-    Object? totalPages = null,
-  }) {
-    return _then(
-      _$MemoListResponseImpl(
-        items: null == items
-            ? _value._items
-            : items // ignore: cast_nullable_to_non_nullable
-                  as List<MemoModel>,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
-        page: null == page
-            ? _value.page
-            : page // ignore: cast_nullable_to_non_nullable
-                  as int,
-        limit: null == limit
-            ? _value.limit
-            : limit // ignore: cast_nullable_to_non_nullable
-                  as int,
-        totalPages: null == totalPages
-            ? _value.totalPages
-            : totalPages // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$MemoListResponseImpl implements _MemoListResponse {
-  const _$MemoListResponseImpl({
-    final List<MemoModel> items = const [],
-    this.total = 0,
-    this.page = 1,
-    this.limit = 20,
-    this.totalPages = 0,
-  }) : _items = items;
-
-  factory _$MemoListResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MemoListResponseImplFromJson(json);
-
-  final List<MemoModel> _items;
-  @override
-  @JsonKey()
-  List<MemoModel> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
-  }
-
-  @override
-  @JsonKey()
-  final int total;
-  @override
-  @JsonKey()
-  final int page;
-  @override
-  @JsonKey()
-  final int limit;
-  @override
-  @JsonKey()
-  final int totalPages;
-
-  @override
-  String toString() {
-    return 'MemoListResponse(items: $items, total: $total, page: $page, limit: $limit, totalPages: $totalPages)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MemoListResponseImpl &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.total, total) || other.total == total) &&
-            (identical(other.page, page) || other.page == page) &&
-            (identical(other.limit, limit) || other.limit == limit) &&
-            (identical(other.totalPages, totalPages) ||
-                other.totalPages == totalPages));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_items),
-    total,
-    page,
-    limit,
-    totalPages,
-  );
-
-  /// Create a copy of MemoListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MemoListResponseImplCopyWith<_$MemoListResponseImpl> get copyWith =>
-      __$$MemoListResponseImplCopyWithImpl<_$MemoListResponseImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MemoListResponseImplToJson(this);
-  }
-}
-
-abstract class _MemoListResponse implements MemoListResponse {
-  const factory _MemoListResponse({
-    final List<MemoModel> items,
-    final int total,
-    final int page,
-    final int limit,
-    final int totalPages,
-  }) = _$MemoListResponseImpl;
-
-  factory _MemoListResponse.fromJson(Map<String, dynamic> json) =
-      _$MemoListResponseImpl.fromJson;
-
-  @override
-  List<MemoModel> get items;
-  @override
-  int get total;
-  @override
-  int get page;
-  @override
-  int get limit;
-  @override
-  int get totalPages;
-
-  /// Create a copy of MemoListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MemoListResponseImplCopyWith<_$MemoListResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

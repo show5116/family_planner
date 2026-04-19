@@ -40,7 +40,7 @@ class IndicatorModel {
       prevPrice: json['prevPrice'] != null ? double.tryParse(json['prevPrice'].toString()) : null,
       change: json['change'] != null ? double.tryParse(json['change'].toString()) : null,
       changeRate: json['changeRate'] != null ? double.tryParse(json['changeRate'].toString()) : null,
-      recordedAt: json['recordedAt'] != null ? DateTime.tryParse(json['recordedAt'] as String) : null,
+      recordedAt: json['recordedAt'] != null ? DateTime.tryParse(json['recordedAt'] as String)?.toLocal() : null,
       isBookmarked: json['isBookmarked'] as bool? ?? false,
       spread: json['spread'] != null ? double.tryParse(json['spread'].toString()) : null,
     );
@@ -129,7 +129,7 @@ class SpreadPoint {
   factory SpreadPoint.fromJson(Map<String, dynamic> json) {
     return SpreadPoint(
       spread: double.parse(json['spread'].toString()),
-      recordedAt: DateTime.parse(json['recordedAt'] as String),
+      recordedAt: DateTime.parse(json['recordedAt'] as String).toLocal(),
     );
   }
 }
@@ -147,7 +147,7 @@ class IndicatorPricePoint {
   factory IndicatorPricePoint.fromJson(Map<String, dynamic> json) {
     return IndicatorPricePoint(
       price: double.parse(json['price'].toString()),
-      recordedAt: DateTime.parse(json['recordedAt'] as String),
+      recordedAt: DateTime.parse(json['recordedAt'] as String).toLocal(),
     );
   }
 }

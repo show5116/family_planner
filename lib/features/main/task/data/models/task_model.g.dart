@@ -129,101 +129,6 @@ Map<String, dynamic> _$$TaskParticipantModelImplToJson(
   'createdAt': instance.createdAt.toIso8601String(),
 };
 
-_$TaskModelImpl _$$TaskModelImplFromJson(
-  Map<String, dynamic> json,
-) => _$TaskModelImpl(
-  id: json['id'] as String,
-  userId: json['userId'] as String,
-  groupId: json['groupId'] as String?,
-  title: json['title'] as String,
-  description: json['description'] as String?,
-  location: json['location'] as String?,
-  type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
-  priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
-  category: json['category'] == null
-      ? null
-      : CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
-  scheduledAt: json['scheduledAt'] == null
-      ? null
-      : DateTime.parse(json['scheduledAt'] as String),
-  dueAt: json['dueAt'] == null ? null : DateTime.parse(json['dueAt'] as String),
-  daysUntilDue: (json['daysUntilDue'] as num?)?.toInt(),
-  status:
-      $enumDecodeNullable(_$TaskStatusEnumMap, json['status']) ??
-      TaskStatus.pending,
-  completedAt: json['completedAt'] == null
-      ? null
-      : DateTime.parse(json['completedAt'] as String),
-  recurring: json['recurring'] == null
-      ? null
-      : RecurringModel.fromJson(json['recurring'] as Map<String, dynamic>),
-  participants:
-      (json['participants'] as List<dynamic>?)
-          ?.map((e) => TaskParticipantModel.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const [],
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
-);
-
-Map<String, dynamic> _$$TaskModelImplToJson(_$TaskModelImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'groupId': instance.groupId,
-      'title': instance.title,
-      'description': instance.description,
-      'location': instance.location,
-      'type': _$TaskTypeEnumMap[instance.type],
-      'priority': _$TaskPriorityEnumMap[instance.priority],
-      'category': instance.category,
-      'scheduledAt': instance.scheduledAt?.toIso8601String(),
-      'dueAt': instance.dueAt?.toIso8601String(),
-      'daysUntilDue': instance.daysUntilDue,
-      'status': _$TaskStatusEnumMap[instance.status]!,
-      'completedAt': instance.completedAt?.toIso8601String(),
-      'recurring': instance.recurring,
-      'participants': instance.participants,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
-    };
-
-const _$TaskTypeEnumMap = {
-  TaskType.calendarOnly: 'CALENDAR_ONLY',
-  TaskType.todoLinked: 'TODO_LINKED',
-};
-
-const _$TaskPriorityEnumMap = {
-  TaskPriority.low: 'LOW',
-  TaskPriority.medium: 'MEDIUM',
-  TaskPriority.high: 'HIGH',
-  TaskPriority.urgent: 'URGENT',
-};
-
-const _$TaskStatusEnumMap = {
-  TaskStatus.pending: 'PENDING',
-  TaskStatus.inProgress: 'IN_PROGRESS',
-  TaskStatus.completed: 'COMPLETED',
-  TaskStatus.hold: 'HOLD',
-  TaskStatus.drop: 'DROP',
-  TaskStatus.failed: 'FAILED',
-};
-
-_$TaskListResponseImpl _$$TaskListResponseImplFromJson(
-  Map<String, dynamic> json,
-) => _$TaskListResponseImpl(
-  data:
-      (json['data'] as List<dynamic>?)
-          ?.map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const [],
-  meta: PaginationMeta.fromJson(json['meta'] as Map<String, dynamic>),
-);
-
-Map<String, dynamic> _$$TaskListResponseImplToJson(
-  _$TaskListResponseImpl instance,
-) => <String, dynamic>{'data': instance.data, 'meta': instance.meta};
-
 _$PaginationMetaImpl _$$PaginationMetaImplFromJson(Map<String, dynamic> json) =>
     _$PaginationMetaImpl(
       page: (json['page'] as num?)?.toInt() ?? 1,
@@ -280,6 +185,18 @@ Map<String, dynamic> _$$CreateTaskDtoImplToJson(_$CreateTaskDtoImpl instance) =>
       'reminders': instance.reminders,
       'participantIds': instance.participantIds,
     };
+
+const _$TaskTypeEnumMap = {
+  TaskType.calendarOnly: 'CALENDAR_ONLY',
+  TaskType.todoLinked: 'TODO_LINKED',
+};
+
+const _$TaskPriorityEnumMap = {
+  TaskPriority.low: 'LOW',
+  TaskPriority.medium: 'MEDIUM',
+  TaskPriority.high: 'HIGH',
+  TaskPriority.urgent: 'URGENT',
+};
 
 _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
     _$UpdateTaskDtoImpl(

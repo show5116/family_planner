@@ -31,10 +31,10 @@ class Permission {
       category: json['category'] as String,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
+          ? DateTime.parse(json['createdAt'] as String).toLocal()
           : null,
       updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
+          ? DateTime.parse(json['updatedAt'] as String).toLocal()
           : null,
     );
   }

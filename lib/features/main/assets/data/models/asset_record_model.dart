@@ -24,12 +24,12 @@ class AssetRecordModel {
     return AssetRecordModel(
       id: json['id'] as String,
       accountId: json['accountId'] as String,
-      recordDate: DateTime.parse(json['recordDate'] as String),
+      recordDate: DateTime.parse(json['recordDate'] as String).toLocal(),
       balance: double.parse(json['balance'].toString()),
       principal: double.parse(json['principal'].toString()),
       profit: double.parse(json['profit'].toString()),
       note: json['note'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 }

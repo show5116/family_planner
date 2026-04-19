@@ -1,25 +1,124 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:family_planner/core/constants/app_colors.dart';
-import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/features/home/presentation/widgets/schedule_filter_sheet.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
-/// 할일 요약 위젯
-class TodoSummaryWidget extends ConsumerWidget {
-  const TodoSummaryWidget({super.key});
+const _prefKey = 'dashboard_widget_settings';
+
+/// 할일 요약 위젯 (오늘 / 금주 / 이번달, 그룹 필터 지원)
+class TodoSummaryWidget extends ConsumerStatefulWidget {
+  const TodoSummaryWidget({
+    super.key,
+    this.viewMode = ScheduleViewMode.today,
+    this.initialSelectedGroupIds,
+    this.initialIncludePersonal = true,
+  });
+
+  final ScheduleViewMode viewMode;
+  final List<String>? initialSelectedGroupIds;
+  final bool initialIncludePersonal;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final todosAsync = ref.watch(dashboardTodoTasksProvider);
+  ConsumerState<TodoSummaryWidget> createState() => _TodoSummaryWidgetState();
+}
+
+class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
+  late List<String>? _selectedGroupIds;
+  late bool _includePersonal;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGroupIds = widget.initialSelectedGroupIds;
+    _includePersonal = widget.initialIncludePersonal;
+  }
+
+  String _title() {
+    switch (widget.viewMode) {
+      case ScheduleViewMode.today:
+        return '오늘의 할일';
+      case ScheduleViewMode.week:
+        return '금주 할일';
+      case ScheduleViewMode.month:
+        return '이번달 할일';
+    }
+  }
+
+  String _emptyMessage() {
+    switch (widget.viewMode) {
+      case ScheduleViewMode.today:
+        return '오늘 할일이 없습니다';
+      case ScheduleViewMode.week:
+        return '이번 주 할일이 없습니다';
+      case ScheduleViewMode.month:
+        return '이번 달 할일이 없습니다';
+    }
+  }
+
+  Future<void> _saveFilter() async {
+    final prefs = await SharedPreferences.getInstance();
+    final settingsJson = prefs.getString(_prefKey);
+    final Map<String, dynamic> map = settingsJson != null
+        ? json.decode(settingsJson) as Map<String, dynamic>
+        : {};
+    map['todoSelectedGroupIds'] = _selectedGroupIds;
+    map['todoIncludePersonal'] = _includePersonal;
+    await prefs.setString(_prefKey, json.encode(map));
+  }
+
+  Future<void> _showFilterSheet() async {
+    final groups = ref.read(myGroupsProvider).valueOrNull ?? [];
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radiusMedium),
+        ),
+      ),
+      builder: (context) => ScheduleFilterSheet(
+        groups: groups,
+        selectedGroupIds: _selectedGroupIds,
+        includePersonal: _includePersonal,
+        onApply: (selectedGroupIds, includePersonal) {
+          setState(() {
+            _selectedGroupIds = selectedGroupIds;
+            _includePersonal = includePersonal;
+          });
+          _saveFilter();
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasGroups = (ref.watch(myGroupsProvider).valueOrNull ?? []).isNotEmpty;
+    final todosAsync = ref.watch(
+      dashboardTodoTasksProvider(
+        mode: widget.viewMode,
+        selectedGroupIds: _selectedGroupIds,
+        includePersonal: _includePersonal,
+      ),
+    );
+
+    final hasActiveFilter = _selectedGroupIds != null || !_includePersonal;
 
     return todosAsync.when(
       loading: () => DashboardCard(
-        title: '오늘의 할일',
+        title: _title(),
         icon: Icons.check_box,
         onTap: () {},
         child: const Center(
@@ -29,20 +128,28 @@ class TodoSummaryWidget extends ConsumerWidget {
           ),
         ),
       ),
-      error: (_, _) => _buildCard(context, ref, []),
-      data: (todos) => _buildCard(context, ref, todos),
+      error: (_, _) => _buildCard(context, [], hasGroups, hasActiveFilter),
+      data: (todos) => _buildCard(context, todos, hasGroups, hasActiveFilter),
     );
   }
 
-  Widget _buildCard(BuildContext context, WidgetRef ref, List<TaskModel> todos) {
+  Widget _buildCard(
+    BuildContext context,
+    List<TaskModel> todos,
+    bool hasGroups,
+    bool hasActiveFilter,
+  ) {
     final completedCount = todos.where((t) => t.isCompleted).length;
     final totalCount = todos.length;
 
     return DashboardCard(
-      title: '오늘의 할일',
+      title: _title(),
       icon: Icons.check_box,
-      action: totalCount > 0
-          ? Chip(
+      action: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (totalCount > 0)
+            Chip(
               label: Text(
                 '$completedCount/$totalCount',
                 style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
@@ -50,11 +157,29 @@ class TodoSummaryWidget extends ConsumerWidget {
               backgroundColor: AppColors.primaryLight,
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
-            )
-          : null,
-      onTap: () => context.push(AppRoutes.todo),
+            ),
+          if (hasGroups)
+            IconButton(
+              iconSize: 20,
+              visualDensity: VisualDensity.compact,
+              tooltip: '할일 필터',
+              icon: Badge(
+                isLabelVisible: hasActiveFilter,
+                smallSize: 7,
+                child: Icon(
+                  Icons.tune,
+                  color: hasActiveFilter
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              onPressed: _showFilterSheet,
+            ),
+        ],
+      ),
+      onTap: () => ref.read(homeTabNavigationProvider.notifier).state = 'todo',
       child: todos.isEmpty
-          ? const _EmptyState()
+          ? _EmptyState(message: _emptyMessage())
           : Column(
               children: todos
                   .take(5)
@@ -65,14 +190,23 @@ class TodoSummaryWidget extends ConsumerWidget {
   }
 }
 
-class _TodoItem extends StatelessWidget {
+class _TodoItem extends StatefulWidget {
   const _TodoItem({required this.todo, required this.ref});
 
   final TaskModel todo;
   final WidgetRef ref;
 
   @override
+  State<_TodoItem> createState() => _TodoItemState();
+}
+
+class _TodoItemState extends State<_TodoItem> {
+  bool _loading = false;
+
+  @override
   Widget build(BuildContext context) {
+    final todo = widget.todo;
+    final ref = widget.ref;
     final priorityColor = _getPriorityColor(todo.priority);
     final priorityLabel = _getPriorityLabel(todo.priority);
 
@@ -80,16 +214,28 @@ class _TodoItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
       child: Row(
         children: [
+          if (_loading)
+            const SizedBox(
+              width: 36,
+              height: 36,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            )
+          else
           Checkbox(
             value: todo.isCompleted,
-            onChanged: (value) {
-              if (todo.scheduledAt == null) return;
-              ref.read(taskManagementProvider.notifier).toggleComplete(
+            onChanged: (value) async {
+              setState(() => _loading = true);
+              final taskDate = todo.scheduledAt ?? todo.dueAt ?? DateTime.now();
+              await ref.read(taskManagementProvider.notifier).toggleComplete(
                     todo.id,
                     value ?? false,
-                    todo.scheduledAt!,
+                    taskDate,
                   );
               ref.invalidate(dashboardTodoTasksProvider);
+              if (mounted) setState(() => _loading = false);
             },
             visualDensity: VisualDensity.compact,
           ),
@@ -161,8 +307,11 @@ class _TodoItem extends StatelessWidget {
   }
 }
 
+
 class _EmptyState extends StatelessWidget {
-  const _EmptyState();
+  const _EmptyState({required this.message});
+
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +325,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '오늘 할일이 없습니다',
+            message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

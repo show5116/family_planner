@@ -15,10 +15,6 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NotificationModel _$NotificationModelFromJson(Map<String, dynamic> json) {
-  return _NotificationModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$NotificationModel {
   String get id => throw _privateConstructorUsedError;
@@ -30,9 +26,6 @@ mixin _$NotificationModel {
   bool get isRead => throw _privateConstructorUsedError;
   DateTime get sentAt => throw _privateConstructorUsedError;
   DateTime? get readAt => throw _privateConstructorUsedError;
-
-  /// Serializes this NotificationModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationModel
   /// with the given fields replaced by the non-null parameter values.
@@ -220,7 +213,7 @@ class __$$NotificationModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$NotificationModelImpl implements _NotificationModel {
   const _$NotificationModelImpl({
     required this.id,
@@ -233,9 +226,6 @@ class _$NotificationModelImpl implements _NotificationModel {
     required this.sentAt,
     this.readAt,
   }) : _data = data;
-
-  factory _$NotificationModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$NotificationModelImplFromJson(json);
 
   @override
   final String id;
@@ -287,7 +277,6 @@ class _$NotificationModelImpl implements _NotificationModel {
             (identical(other.readAt, readAt) || other.readAt == readAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -312,11 +301,6 @@ class _$NotificationModelImpl implements _NotificationModel {
         this,
         _$identity,
       );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$NotificationModelImplToJson(this);
-  }
 }
 
 abstract class _NotificationModel implements NotificationModel {
@@ -331,9 +315,6 @@ abstract class _NotificationModel implements NotificationModel {
     required final DateTime sentAt,
     final DateTime? readAt,
   }) = _$NotificationModelImpl;
-
-  factory _NotificationModel.fromJson(Map<String, dynamic> json) =
-      _$NotificationModelImpl.fromJson;
 
   @override
   String get id;

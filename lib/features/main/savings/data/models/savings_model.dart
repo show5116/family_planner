@@ -117,8 +117,8 @@ class SavingsGoalModel {
       status: SavingsGoalStatus.fromJson(json['status'] as String?),
       achievementRate: double.parse((json['achievementRate'] ?? 0).toString()),
       isGoalReached: json['isGoalReached'] as bool?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 
@@ -184,7 +184,7 @@ class SavingsTransactionModel {
       type: SavingsType.fromJson(json['type'] as String?),
       amount: double.parse((json['amount'] ?? 0).toString()),
       description: json['description'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 }

@@ -94,13 +94,13 @@ class VoteModel {
       isMultiple: json['isMultiple'] as bool,
       isAnonymous: json['isAnonymous'] as bool,
       endsAt: json['endsAt'] != null
-          ? DateTime.parse(json['endsAt'] as String)
+          ? DateTime.parse(json['endsAt'] as String).toLocal()
           : null,
       isOngoing: json['isOngoing'] as bool,
       totalVoters: json['totalVoters'] as int,
       hasVoted: json['hasVoted'] as bool,
       creatorName: json['creatorName'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       options: (json['options'] as List)
           .map((e) => VoteOptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),

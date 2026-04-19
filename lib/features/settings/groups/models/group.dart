@@ -36,12 +36,12 @@ class Group {
       name: json['name'] as String,
       description: json['description'] as String?,
       inviteCode: json['inviteCode'] as String,
-      inviteCodeExpiresAt: DateTime.parse(json['inviteCodeExpiresAt'] as String),
+      inviteCodeExpiresAt: DateTime.parse(json['inviteCodeExpiresAt'] as String).toLocal(),
       defaultColor: json['defaultColor'] as String?,
       myColor: json['myColor'] as String?,
       myRole: parsedMyRole,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 

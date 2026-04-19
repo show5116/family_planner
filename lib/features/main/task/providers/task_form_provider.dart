@@ -204,8 +204,8 @@ class TaskFormState with _$TaskFormState {
       priority: priority,
       categoryId: selectedCategory?.id,
       groupId: groupId,
-      scheduledAt: scheduledDateTime.toIso8601String(),
-      dueAt: dueDateTime?.toIso8601String(),
+      scheduledAt: scheduledDateTime.toUtc().toIso8601String(),
+      dueAt: dueDateTime?.toUtc().toIso8601String(),
       recurring: recurringDto,
       reminders: remindersDto,
       participantIds: groupId != null && selectedParticipantIds.isNotEmpty
@@ -222,8 +222,8 @@ class TaskFormState with _$TaskFormState {
       location: location.trim().isEmpty ? null : location.trim(),
       type: taskType,
       priority: priority,
-      scheduledAt: scheduledDateTime.toIso8601String(),
-      dueAt: dueDateTime?.toIso8601String(),
+      scheduledAt: scheduledDateTime.toUtc().toIso8601String(),
+      dueAt: dueDateTime?.toUtc().toIso8601String(),
       participantIds: groupId != null && selectedParticipantIds.isNotEmpty
           ? selectedParticipantIds
           : null,

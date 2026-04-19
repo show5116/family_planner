@@ -195,7 +195,11 @@ class _DashboardGridState extends State<_DashboardGrid> {
       switch (widgetType) {
         case 'todaySchedule':
           if (_settings.showTodaySchedule) {
-            widget = const TodayScheduleWidget();
+            widget = TodayScheduleWidget(
+              viewMode: _settings.scheduleViewMode,
+              initialSelectedGroupIds: _settings.scheduleSelectedGroupIds,
+              initialIncludePersonal: _settings.scheduleIncludePersonal,
+            );
           }
           break;
         case 'investmentSummary':
@@ -205,7 +209,11 @@ class _DashboardGridState extends State<_DashboardGrid> {
           break;
         case 'todoSummary':
           if (_settings.showTodoSummary) {
-            widget = const TodoSummaryWidget();
+            widget = TodoSummaryWidget(
+              viewMode: _settings.todoViewMode,
+              initialSelectedGroupIds: _settings.todoSelectedGroupIds,
+              initialIncludePersonal: _settings.todoIncludePersonal,
+            );
           }
           break;
         case 'assetSummary':

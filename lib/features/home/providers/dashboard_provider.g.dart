@@ -7,47 +7,384 @@ part of 'dashboard_provider.dart';
 // **************************************************************************
 
 String _$dashboardTodayTasksHash() =>
-    r'f8559c53ea2176665bfd4d45c04c66914c82c4d2';
+    r'0c7adb5ba6cd3bac97e74f74b3a49604979f9069';
 
-/// 오늘의 일정 (대시보드 전용) - 그룹 상태와 무관하게 오늘 날짜 기준 조회
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
 ///
 /// Copied from [dashboardTodayTasks].
 @ProviderFor(dashboardTodayTasks)
-final dashboardTodayTasksProvider =
-    AutoDisposeFutureProvider<List<TaskModel>>.internal(
-      dashboardTodayTasks,
-      name: r'dashboardTodayTasksProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dashboardTodayTasksHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+const dashboardTodayTasksProvider = DashboardTodayTasksFamily();
+
+/// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+///
+/// Copied from [dashboardTodayTasks].
+class DashboardTodayTasksFamily extends Family<AsyncValue<List<TaskModel>>> {
+  /// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+  ///
+  /// Copied from [dashboardTodayTasks].
+  const DashboardTodayTasksFamily();
+
+  /// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+  ///
+  /// Copied from [dashboardTodayTasks].
+  DashboardTodayTasksProvider call({
+    ScheduleViewMode mode = ScheduleViewMode.today,
+    List<String>? selectedGroupIds,
+    bool includePersonal = true,
+  }) {
+    return DashboardTodayTasksProvider(
+      mode: mode,
+      selectedGroupIds: selectedGroupIds,
+      includePersonal: includePersonal,
     );
+  }
+
+  @override
+  DashboardTodayTasksProvider getProviderOverride(
+    covariant DashboardTodayTasksProvider provider,
+  ) {
+    return call(
+      mode: provider.mode,
+      selectedGroupIds: provider.selectedGroupIds,
+      includePersonal: provider.includePersonal,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dashboardTodayTasksProvider';
+}
+
+/// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+///
+/// Copied from [dashboardTodayTasks].
+class DashboardTodayTasksProvider
+    extends AutoDisposeFutureProvider<List<TaskModel>> {
+  /// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+  ///
+  /// Copied from [dashboardTodayTasks].
+  DashboardTodayTasksProvider({
+    ScheduleViewMode mode = ScheduleViewMode.today,
+    List<String>? selectedGroupIds,
+    bool includePersonal = true,
+  }) : this._internal(
+         (ref) => dashboardTodayTasks(
+           ref as DashboardTodayTasksRef,
+           mode: mode,
+           selectedGroupIds: selectedGroupIds,
+           includePersonal: includePersonal,
+         ),
+         from: dashboardTodayTasksProvider,
+         name: r'dashboardTodayTasksProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$dashboardTodayTasksHash,
+         dependencies: DashboardTodayTasksFamily._dependencies,
+         allTransitiveDependencies:
+             DashboardTodayTasksFamily._allTransitiveDependencies,
+         mode: mode,
+         selectedGroupIds: selectedGroupIds,
+         includePersonal: includePersonal,
+       );
+
+  DashboardTodayTasksProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.mode,
+    required this.selectedGroupIds,
+    required this.includePersonal,
+  }) : super.internal();
+
+  final ScheduleViewMode mode;
+  final List<String>? selectedGroupIds;
+  final bool includePersonal;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<TaskModel>> Function(DashboardTodayTasksRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DashboardTodayTasksProvider._internal(
+        (ref) => create(ref as DashboardTodayTasksRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        mode: mode,
+        selectedGroupIds: selectedGroupIds,
+        includePersonal: includePersonal,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<TaskModel>> createElement() {
+    return _DashboardTodayTasksProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardTodayTasksProvider &&
+        other.mode == mode &&
+        other.selectedGroupIds == selectedGroupIds &&
+        other.includePersonal == includePersonal;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, mode.hashCode);
+    hash = _SystemHash.combine(hash, selectedGroupIds.hashCode);
+    hash = _SystemHash.combine(hash, includePersonal.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DashboardTodayTasksRef = AutoDisposeFutureProviderRef<List<TaskModel>>;
-String _$dashboardTodoTasksHash() =>
-    r'8983a4973687219561e0fcf03b4d637beadcb72a';
+mixin DashboardTodayTasksRef on AutoDisposeFutureProviderRef<List<TaskModel>> {
+  /// The parameter `mode` of this provider.
+  ScheduleViewMode get mode;
 
-/// 대시보드 할일 요약 (대시보드 전용) - 할일 탭 UI 상태와 완전히 독립
+  /// The parameter `selectedGroupIds` of this provider.
+  List<String>? get selectedGroupIds;
+
+  /// The parameter `includePersonal` of this provider.
+  bool get includePersonal;
+}
+
+class _DashboardTodayTasksProviderElement
+    extends AutoDisposeFutureProviderElement<List<TaskModel>>
+    with DashboardTodayTasksRef {
+  _DashboardTodayTasksProviderElement(super.provider);
+
+  @override
+  ScheduleViewMode get mode => (origin as DashboardTodayTasksProvider).mode;
+  @override
+  List<String>? get selectedGroupIds =>
+      (origin as DashboardTodayTasksProvider).selectedGroupIds;
+  @override
+  bool get includePersonal =>
+      (origin as DashboardTodayTasksProvider).includePersonal;
+}
+
+String _$dashboardTodoTasksHash() =>
+    r'dd51e32c681cd475af6f3efaeeffb74fe287e8bf';
+
+/// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
 ///
 /// Copied from [dashboardTodoTasks].
 @ProviderFor(dashboardTodoTasks)
-final dashboardTodoTasksProvider =
-    AutoDisposeFutureProvider<List<TaskModel>>.internal(
-      dashboardTodoTasks,
-      name: r'dashboardTodoTasksProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dashboardTodoTasksHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+const dashboardTodoTasksProvider = DashboardTodoTasksFamily();
+
+/// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+///
+/// Copied from [dashboardTodoTasks].
+class DashboardTodoTasksFamily extends Family<AsyncValue<List<TaskModel>>> {
+  /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+  ///
+  /// Copied from [dashboardTodoTasks].
+  const DashboardTodoTasksFamily();
+
+  /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+  ///
+  /// Copied from [dashboardTodoTasks].
+  DashboardTodoTasksProvider call({
+    ScheduleViewMode mode = ScheduleViewMode.today,
+    List<String>? selectedGroupIds,
+    bool includePersonal = true,
+  }) {
+    return DashboardTodoTasksProvider(
+      mode: mode,
+      selectedGroupIds: selectedGroupIds,
+      includePersonal: includePersonal,
     );
+  }
+
+  @override
+  DashboardTodoTasksProvider getProviderOverride(
+    covariant DashboardTodoTasksProvider provider,
+  ) {
+    return call(
+      mode: provider.mode,
+      selectedGroupIds: provider.selectedGroupIds,
+      includePersonal: provider.includePersonal,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dashboardTodoTasksProvider';
+}
+
+/// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+///
+/// Copied from [dashboardTodoTasks].
+class DashboardTodoTasksProvider
+    extends AutoDisposeFutureProvider<List<TaskModel>> {
+  /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
+  ///
+  /// Copied from [dashboardTodoTasks].
+  DashboardTodoTasksProvider({
+    ScheduleViewMode mode = ScheduleViewMode.today,
+    List<String>? selectedGroupIds,
+    bool includePersonal = true,
+  }) : this._internal(
+         (ref) => dashboardTodoTasks(
+           ref as DashboardTodoTasksRef,
+           mode: mode,
+           selectedGroupIds: selectedGroupIds,
+           includePersonal: includePersonal,
+         ),
+         from: dashboardTodoTasksProvider,
+         name: r'dashboardTodoTasksProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$dashboardTodoTasksHash,
+         dependencies: DashboardTodoTasksFamily._dependencies,
+         allTransitiveDependencies:
+             DashboardTodoTasksFamily._allTransitiveDependencies,
+         mode: mode,
+         selectedGroupIds: selectedGroupIds,
+         includePersonal: includePersonal,
+       );
+
+  DashboardTodoTasksProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.mode,
+    required this.selectedGroupIds,
+    required this.includePersonal,
+  }) : super.internal();
+
+  final ScheduleViewMode mode;
+  final List<String>? selectedGroupIds;
+  final bool includePersonal;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<TaskModel>> Function(DashboardTodoTasksRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DashboardTodoTasksProvider._internal(
+        (ref) => create(ref as DashboardTodoTasksRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        mode: mode,
+        selectedGroupIds: selectedGroupIds,
+        includePersonal: includePersonal,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<TaskModel>> createElement() {
+    return _DashboardTodoTasksProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardTodoTasksProvider &&
+        other.mode == mode &&
+        other.selectedGroupIds == selectedGroupIds &&
+        other.includePersonal == includePersonal;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, mode.hashCode);
+    hash = _SystemHash.combine(hash, selectedGroupIds.hashCode);
+    hash = _SystemHash.combine(hash, includePersonal.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DashboardTodoTasksRef = AutoDisposeFutureProviderRef<List<TaskModel>>;
+mixin DashboardTodoTasksRef on AutoDisposeFutureProviderRef<List<TaskModel>> {
+  /// The parameter `mode` of this provider.
+  ScheduleViewMode get mode;
+
+  /// The parameter `selectedGroupIds` of this provider.
+  List<String>? get selectedGroupIds;
+
+  /// The parameter `includePersonal` of this provider.
+  bool get includePersonal;
+}
+
+class _DashboardTodoTasksProviderElement
+    extends AutoDisposeFutureProviderElement<List<TaskModel>>
+    with DashboardTodoTasksRef {
+  _DashboardTodoTasksProviderElement(super.provider);
+
+  @override
+  ScheduleViewMode get mode => (origin as DashboardTodoTasksProvider).mode;
+  @override
+  List<String>? get selectedGroupIds =>
+      (origin as DashboardTodoTasksProvider).selectedGroupIds;
+  @override
+  bool get includePersonal =>
+      (origin as DashboardTodoTasksProvider).includePersonal;
+}
+
 String _$dashboardAssetStatisticsHash() =>
     r'1b9944d269d6f43ce0a5ee8ff3ea2c7c1a3e923e';
 

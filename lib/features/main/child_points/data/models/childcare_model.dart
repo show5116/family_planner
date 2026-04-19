@@ -39,10 +39,10 @@ class ChildcareChild {
       groupId: json['groupId'] as String,
       parentUserId: json['parentUserId'] as String,
       name: json['name'] as String,
-      birthDate: DateTime.parse(json['birthDate'] as String),
+      birthDate: DateTime.parse(json['birthDate'] as String).toLocal(),
       userId: json['userId'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }
@@ -77,8 +77,8 @@ class ChildcareAccount {
       parentUserId: json['parentUserId'] as String,
       balance: double.parse(json['balance'].toString()),
       savingsBalance: double.parse(json['savingsBalance'].toString()),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 
@@ -135,10 +135,10 @@ class AllowancePlan {
       payDay: json['payDay'] as int,
       pointToMoneyRatio: json['pointToMoneyRatio'] as int,
       nextNegotiationDate: json['nextNegotiationDate'] != null
-          ? DateTime.parse(json['nextNegotiationDate'] as String)
+          ? DateTime.parse(json['nextNegotiationDate'] as String).toLocal()
           : null,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }
@@ -171,9 +171,9 @@ class AllowancePlanHistory {
       payDay: json['payDay'] as int,
       pointToMoneyRatio: json['pointToMoneyRatio'] as int,
       nextNegotiationDate: json['nextNegotiationDate'] != null
-          ? DateTime.parse(json['nextNegotiationDate'] as String)
+          ? DateTime.parse(json['nextNegotiationDate'] as String).toLocal()
           : null,
-      changedAt: DateTime.parse(json['changedAt'] as String),
+      changedAt: DateTime.parse(json['changedAt'] as String).toLocal(),
     );
   }
 }
@@ -230,7 +230,7 @@ class ChildcareTransaction {
       amount: double.parse(json['amount'].toString()),
       description: json['description'] as String? ?? '',
       createdBy: json['createdBy'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
 
@@ -290,8 +290,8 @@ class ChildcareShopItem {
       description: json['description'] as String?,
       points: (json['points'] as num).toInt(),
       isActive: (json['isActive'] as bool?) ?? true,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 
@@ -370,8 +370,8 @@ class ChildcareRule {
       type: childcareRuleTypeFromString(json['type'] as String?),
       points: (json['points'] as num?)?.toInt() ?? 0,
       isActive: (json['isActive'] as bool?) ?? true,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 
@@ -472,17 +472,17 @@ class ChildcareSavingsPlan {
       monthlyAmount: (json['monthlyAmount'] as num).toInt(),
       interestRate: double.parse(json['interestRate'].toString()),
       interestType: savingsInterestTypeFromString(json['interestType'] as String?),
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
+      startDate: DateTime.parse(json['startDate'] as String).toLocal(),
+      endDate: DateTime.parse(json['endDate'] as String).toLocal(),
       status: savingsPlanStatusFromString(json['status'] as String?),
       maturedAt: json['maturedAt'] != null
-          ? DateTime.parse(json['maturedAt'] as String)
+          ? DateTime.parse(json['maturedAt'] as String).toLocal()
           : null,
       cancelledAt: json['cancelledAt'] != null
-          ? DateTime.parse(json['cancelledAt'] as String)
+          ? DateTime.parse(json['cancelledAt'] as String).toLocal()
           : null,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
   }
 }

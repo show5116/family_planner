@@ -370,10 +370,6 @@ abstract class _QuestionUser implements QuestionUser {
       throw _privateConstructorUsedError;
 }
 
-AnswerModel _$AnswerModelFromJson(Map<String, dynamic> json) {
-  return _AnswerModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$AnswerModel {
   String get id => throw _privateConstructorUsedError;
@@ -383,9 +379,6 @@ mixin _$AnswerModel {
   List<Attachment>? get attachments => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this AnswerModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of AnswerModel
   /// with the given fields replaced by the non-null parameter values.
@@ -568,7 +561,7 @@ class __$$AnswerModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$AnswerModelImpl implements _AnswerModel {
   const _$AnswerModelImpl({
     required this.id,
@@ -579,9 +572,6 @@ class _$AnswerModelImpl implements _AnswerModel {
     required this.createdAt,
     required this.updatedAt,
   }) : _attachments = attachments;
-
-  factory _$AnswerModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AnswerModelImplFromJson(json);
 
   @override
   final String id;
@@ -630,7 +620,6 @@ class _$AnswerModelImpl implements _AnswerModel {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -650,11 +639,6 @@ class _$AnswerModelImpl implements _AnswerModel {
   @pragma('vm:prefer-inline')
   _$$AnswerModelImplCopyWith<_$AnswerModelImpl> get copyWith =>
       __$$AnswerModelImplCopyWithImpl<_$AnswerModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AnswerModelImplToJson(this);
-  }
 }
 
 abstract class _AnswerModel implements AnswerModel {
@@ -667,9 +651,6 @@ abstract class _AnswerModel implements AnswerModel {
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$AnswerModelImpl;
-
-  factory _AnswerModel.fromJson(Map<String, dynamic> json) =
-      _$AnswerModelImpl.fromJson;
 
   @override
   String get id;
@@ -694,10 +675,6 @@ abstract class _AnswerModel implements AnswerModel {
       throw _privateConstructorUsedError;
 }
 
-QuestionModel _$QuestionModelFromJson(Map<String, dynamic> json) {
-  return _QuestionModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$QuestionModel {
   String get id => throw _privateConstructorUsedError;
@@ -711,9 +688,6 @@ mixin _$QuestionModel {
   List<AnswerModel> get answers => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this QuestionModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of QuestionModel
   /// with the given fields replaced by the non-null parameter values.
@@ -944,7 +918,7 @@ class __$$QuestionModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$QuestionModelImpl implements _QuestionModel {
   const _$QuestionModelImpl({
     required this.id,
@@ -960,9 +934,6 @@ class _$QuestionModelImpl implements _QuestionModel {
     required this.updatedAt,
   }) : _attachments = attachments,
        _answers = answers;
-
-  factory _$QuestionModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$QuestionModelImplFromJson(json);
 
   @override
   final String id;
@@ -1035,7 +1006,6 @@ class _$QuestionModelImpl implements _QuestionModel {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -1059,11 +1029,6 @@ class _$QuestionModelImpl implements _QuestionModel {
   @pragma('vm:prefer-inline')
   _$$QuestionModelImplCopyWith<_$QuestionModelImpl> get copyWith =>
       __$$QuestionModelImplCopyWithImpl<_$QuestionModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$QuestionModelImplToJson(this);
-  }
 }
 
 abstract class _QuestionModel implements QuestionModel {
@@ -1080,9 +1045,6 @@ abstract class _QuestionModel implements QuestionModel {
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$QuestionModelImpl;
-
-  factory _QuestionModel.fromJson(Map<String, dynamic> json) =
-      _$QuestionModelImpl.fromJson;
 
   @override
   String get id;
@@ -1115,10 +1077,6 @@ abstract class _QuestionModel implements QuestionModel {
       throw _privateConstructorUsedError;
 }
 
-QuestionListItem _$QuestionListItemFromJson(Map<String, dynamic> json) {
-  return _QuestionListItem.fromJson(json);
-}
-
 /// @nodoc
 mixin _$QuestionListItem {
   String get id => throw _privateConstructorUsedError;
@@ -1131,9 +1089,6 @@ mixin _$QuestionListItem {
   QuestionUser? get user => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this QuestionListItem to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of QuestionListItem
   /// with the given fields replaced by the non-null parameter values.
@@ -1352,7 +1307,7 @@ class __$$QuestionListItemImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$QuestionListItemImpl implements _QuestionListItem {
   const _$QuestionListItemImpl({
     required this.id,
@@ -1366,9 +1321,6 @@ class _$QuestionListItemImpl implements _QuestionListItem {
     required this.createdAt,
     required this.updatedAt,
   });
-
-  factory _$QuestionListItemImpl.fromJson(Map<String, dynamic> json) =>
-      _$$QuestionListItemImplFromJson(json);
 
   @override
   final String id;
@@ -1418,7 +1370,6 @@ class _$QuestionListItemImpl implements _QuestionListItem {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -1444,11 +1395,6 @@ class _$QuestionListItemImpl implements _QuestionListItem {
         this,
         _$identity,
       );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$QuestionListItemImplToJson(this);
-  }
 }
 
 abstract class _QuestionListItem implements QuestionListItem {
@@ -1464,9 +1410,6 @@ abstract class _QuestionListItem implements QuestionListItem {
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$QuestionListItemImpl;
-
-  factory _QuestionListItem.fromJson(Map<String, dynamic> json) =
-      _$QuestionListItemImpl.fromJson;
 
   @override
   String get id;
@@ -1712,209 +1655,6 @@ abstract class _PaginationMeta implements PaginationMeta {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PaginationMetaImplCopyWith<_$PaginationMetaImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-QuestionListResponse _$QuestionListResponseFromJson(Map<String, dynamic> json) {
-  return _QuestionListResponse.fromJson(json);
-}
-
-/// @nodoc
-mixin _$QuestionListResponse {
-  List<QuestionListItem> get data => throw _privateConstructorUsedError;
-  PaginationMeta get meta => throw _privateConstructorUsedError;
-
-  /// Serializes this QuestionListResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of QuestionListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $QuestionListResponseCopyWith<QuestionListResponse> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $QuestionListResponseCopyWith<$Res> {
-  factory $QuestionListResponseCopyWith(
-    QuestionListResponse value,
-    $Res Function(QuestionListResponse) then,
-  ) = _$QuestionListResponseCopyWithImpl<$Res, QuestionListResponse>;
-  @useResult
-  $Res call({List<QuestionListItem> data, PaginationMeta meta});
-
-  $PaginationMetaCopyWith<$Res> get meta;
-}
-
-/// @nodoc
-class _$QuestionListResponseCopyWithImpl<
-  $Res,
-  $Val extends QuestionListResponse
->
-    implements $QuestionListResponseCopyWith<$Res> {
-  _$QuestionListResponseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of QuestionListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? data = null, Object? meta = null}) {
-    return _then(
-      _value.copyWith(
-            data: null == data
-                ? _value.data
-                : data // ignore: cast_nullable_to_non_nullable
-                      as List<QuestionListItem>,
-            meta: null == meta
-                ? _value.meta
-                : meta // ignore: cast_nullable_to_non_nullable
-                      as PaginationMeta,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of QuestionListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $PaginationMetaCopyWith<$Res> get meta {
-    return $PaginationMetaCopyWith<$Res>(_value.meta, (value) {
-      return _then(_value.copyWith(meta: value) as $Val);
-    });
-  }
-}
-
-/// @nodoc
-abstract class _$$QuestionListResponseImplCopyWith<$Res>
-    implements $QuestionListResponseCopyWith<$Res> {
-  factory _$$QuestionListResponseImplCopyWith(
-    _$QuestionListResponseImpl value,
-    $Res Function(_$QuestionListResponseImpl) then,
-  ) = __$$QuestionListResponseImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<QuestionListItem> data, PaginationMeta meta});
-
-  @override
-  $PaginationMetaCopyWith<$Res> get meta;
-}
-
-/// @nodoc
-class __$$QuestionListResponseImplCopyWithImpl<$Res>
-    extends _$QuestionListResponseCopyWithImpl<$Res, _$QuestionListResponseImpl>
-    implements _$$QuestionListResponseImplCopyWith<$Res> {
-  __$$QuestionListResponseImplCopyWithImpl(
-    _$QuestionListResponseImpl _value,
-    $Res Function(_$QuestionListResponseImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of QuestionListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? data = null, Object? meta = null}) {
-    return _then(
-      _$QuestionListResponseImpl(
-        data: null == data
-            ? _value._data
-            : data // ignore: cast_nullable_to_non_nullable
-                  as List<QuestionListItem>,
-        meta: null == meta
-            ? _value.meta
-            : meta // ignore: cast_nullable_to_non_nullable
-                  as PaginationMeta,
-      ),
-    );
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$QuestionListResponseImpl implements _QuestionListResponse {
-  const _$QuestionListResponseImpl({
-    required final List<QuestionListItem> data,
-    required this.meta,
-  }) : _data = data;
-
-  factory _$QuestionListResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$QuestionListResponseImplFromJson(json);
-
-  final List<QuestionListItem> _data;
-  @override
-  List<QuestionListItem> get data {
-    if (_data is EqualUnmodifiableListView) return _data;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_data);
-  }
-
-  @override
-  final PaginationMeta meta;
-
-  @override
-  String toString() {
-    return 'QuestionListResponse(data: $data, meta: $meta)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$QuestionListResponseImpl &&
-            const DeepCollectionEquality().equals(other._data, _data) &&
-            (identical(other.meta, meta) || other.meta == meta));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_data),
-    meta,
-  );
-
-  /// Create a copy of QuestionListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$QuestionListResponseImplCopyWith<_$QuestionListResponseImpl>
-  get copyWith =>
-      __$$QuestionListResponseImplCopyWithImpl<_$QuestionListResponseImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$QuestionListResponseImplToJson(this);
-  }
-}
-
-abstract class _QuestionListResponse implements QuestionListResponse {
-  const factory _QuestionListResponse({
-    required final List<QuestionListItem> data,
-    required final PaginationMeta meta,
-  }) = _$QuestionListResponseImpl;
-
-  factory _QuestionListResponse.fromJson(Map<String, dynamic> json) =
-      _$QuestionListResponseImpl.fromJson;
-
-  @override
-  List<QuestionListItem> get data;
-  @override
-  PaginationMeta get meta;
-
-  /// Create a copy of QuestionListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$QuestionListResponseImplCopyWith<_$QuestionListResponseImpl>
-  get copyWith => throw _privateConstructorUsedError;
 }
 
 QnaStatistics _$QnaStatisticsFromJson(Map<String, dynamic> json) {

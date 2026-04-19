@@ -75,8 +75,21 @@ class AnswerModel with _$AnswerModel {
     required DateTime updatedAt,
   }) = _AnswerModel;
 
-  factory AnswerModel.fromJson(Map<String, dynamic> json) =>
-      _$AnswerModelFromJson(json);
+  factory AnswerModel.fromJson(Map<String, dynamic> json) {
+    return AnswerModel(
+      id: json['id'] as String,
+      content: json['content'] as String,
+      adminId: json['adminId'] as String?,
+      admin: json['admin'] != null
+          ? QuestionUser.fromJson(json['admin'] as Map<String, dynamic>)
+          : null,
+      attachments: (json['attachments'] as List<dynamic>?)
+          ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
 }
 
 /// 질문 상세 모델 (상세 조회, 작성, 수정, 해결시 사용)
@@ -96,8 +109,50 @@ class QuestionModel with _$QuestionModel {
     required DateTime updatedAt,
   }) = _QuestionModel;
 
-  factory QuestionModel.fromJson(Map<String, dynamic> json) =>
-      _$QuestionModelFromJson(json);
+  factory QuestionModel.fromJson(Map<String, dynamic> json) {
+    QuestionCategory parseCategory(String? v) {
+      switch (v) {
+        case 'BUG': return QuestionCategory.bug;
+        case 'FEATURE': return QuestionCategory.feature;
+        case 'USAGE': return QuestionCategory.usage;
+        case 'ACCOUNT': return QuestionCategory.account;
+        case 'PAYMENT': return QuestionCategory.payment;
+        default: return QuestionCategory.etc;
+      }
+    }
+
+    QuestionStatus parseStatus(String? v) {
+      switch (v) {
+        case 'ANSWERED': return QuestionStatus.answered;
+        case 'RESOLVED': return QuestionStatus.resolved;
+        default: return QuestionStatus.pending;
+      }
+    }
+
+    QuestionVisibility parseVisibility(String? v) {
+      return v == 'PRIVATE' ? QuestionVisibility.private : QuestionVisibility.public;
+    }
+
+    return QuestionModel(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      content: json['content'] as String,
+      category: parseCategory(json['category'] as String?),
+      status: parseStatus(json['status'] as String?),
+      visibility: parseVisibility(json['visibility'] as String?),
+      user: json['user'] != null
+          ? QuestionUser.fromJson(json['user'] as Map<String, dynamic>)
+          : null,
+      attachments: (json['attachments'] as List<dynamic>?)
+          ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      answers: (json['answers'] as List<dynamic>? ?? [])
+          .map((e) => AnswerModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
 }
 
 /// 질문 목록 항목 모델 (목록 조회시 사용)
@@ -116,8 +171,51 @@ class QuestionListItem with _$QuestionListItem {
     required DateTime updatedAt,
   }) = _QuestionListItem;
 
-  factory QuestionListItem.fromJson(Map<String, dynamic> json) =>
-      _$QuestionListItemFromJson(json);
+  factory QuestionListItem.fromJson(Map<String, dynamic> json) {
+    QuestionCategory? parseCategory(String? v) {
+      switch (v) {
+        case 'BUG': return QuestionCategory.bug;
+        case 'FEATURE': return QuestionCategory.feature;
+        case 'USAGE': return QuestionCategory.usage;
+        case 'ACCOUNT': return QuestionCategory.account;
+        case 'PAYMENT': return QuestionCategory.payment;
+        case 'ETC': return QuestionCategory.etc;
+        default: return null;
+      }
+    }
+
+    QuestionStatus? parseStatus(String? v) {
+      switch (v) {
+        case 'PENDING': return QuestionStatus.pending;
+        case 'ANSWERED': return QuestionStatus.answered;
+        case 'RESOLVED': return QuestionStatus.resolved;
+        default: return null;
+      }
+    }
+
+    QuestionVisibility? parseVisibility(String? v) {
+      switch (v) {
+        case 'PUBLIC': return QuestionVisibility.public;
+        case 'PRIVATE': return QuestionVisibility.private;
+        default: return null;
+      }
+    }
+
+    return QuestionListItem(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      content: json['content'] as String?,
+      category: parseCategory(json['category'] as String?),
+      status: parseStatus(json['status'] as String?),
+      visibility: parseVisibility(json['visibility'] as String?),
+      answerCount: json['answerCount'] as int,
+      user: json['user'] != null
+          ? QuestionUser.fromJson(json['user'] as Map<String, dynamic>)
+          : null,
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
 }
 
 /// 페이지네이션 메타 정보
@@ -135,15 +233,20 @@ class PaginationMeta with _$PaginationMeta {
 }
 
 /// 질문 목록 응답 모델
-@freezed
-class QuestionListResponse with _$QuestionListResponse {
-  const factory QuestionListResponse({
-    required List<QuestionListItem> data,
-    required PaginationMeta meta,
-  }) = _QuestionListResponse;
+class QuestionListResponse {
+  final List<QuestionListItem> data;
+  final PaginationMeta meta;
 
-  factory QuestionListResponse.fromJson(Map<String, dynamic> json) =>
-      _$QuestionListResponseFromJson(json);
+  const QuestionListResponse({this.data = const [], required this.meta});
+
+  factory QuestionListResponse.fromJson(Map<String, dynamic> json) {
+    return QuestionListResponse(
+      data: (json['data'] as List<dynamic>? ?? [])
+          .map((e) => QuestionListItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      meta: PaginationMeta.fromJson(json['meta'] as Map<String, dynamic>),
+    );
+  }
 }
 
 /// QnA 통계 모델 (관리자용)

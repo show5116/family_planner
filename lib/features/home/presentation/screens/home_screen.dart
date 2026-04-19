@@ -14,6 +14,7 @@ import 'package:family_planner/features/settings/common/presentation/screens/mor
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/navigation_label_helper.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -41,6 +42,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _handleTabNavigation(String? tabId, List<NavigationItem> displayedItems) {
+    if (tabId == null) return;
+    final index = displayedItems.indexWhere((item) => item.id == tabId);
+    if (index >= 0) {
+      setState(() {
+        _selectedIndex = index;
+        _visitedTabs.add(tabId);
+      });
+    }
+    // 요청 소비
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(homeTabNavigationProvider.notifier).state = null;
+      }
+    });
   }
 
   Future<void> _showCoachMark() async {
@@ -249,6 +272,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // 설정에서 표시할 네비게이션 아이템 가져오기
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
     final displayedItems = notifier.displayedItems;
+
+    // 탭 전환 요청 처리
+    final tabNavRequest = ref.watch(homeTabNavigationProvider);
+    if (tabNavRequest != null) {
+      _handleTabNavigation(tabNavRequest, displayedItems);
+    }
 
     // NavigationDestination 리스트 생성 (다국어 적용)
     final destinations = displayedItems.map((item) {

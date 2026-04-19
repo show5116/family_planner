@@ -95,6 +95,11 @@ class _TodoTabState extends ConsumerState<TodoTab> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
+    final dateTasksAsync = ref.watch(todoSelectedDateTasksProvider);
+    final overviewAsync = ref.watch(todoOverviewTasksProvider);
+    final isLoading = (dateTasksAsync.isLoading && dateTasksAsync.hasValue) ||
+        (overviewAsync.isLoading && overviewAsync.hasValue);
+
     // 모바일에서는 항상 리스트 뷰 사용
     final effectiveViewType = isMobile ? TodoViewType.list : viewType;
     final isOverview = viewMode == TodoViewMode.overview;
@@ -102,6 +107,12 @@ class _TodoTabState extends ConsumerState<TodoTab> {
     return Scaffold(
       appBar: AppBar(
         title: const CalendarGroupSelector(),
+        bottom: isLoading
+            ? const PreferredSize(
+                preferredSize: Size.fromHeight(2),
+                child: LinearProgressIndicator(),
+              )
+            : null,
         actions: [
           const AiChatIconButton(),
           // 뷰 전환 버튼 (모바일에서는 숨김, 모아보기에서는 숨김)
@@ -279,33 +290,43 @@ class _DateViewContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDateTasksAsync = ref.watch(todoSelectedDateTasksProvider);
+    final todoAsync = ref.watch(todoTasksProvider(page: 1));
+    final isRefreshing = todoAsync.isLoading && todoAsync.hasValue;
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(todoTasksProvider(page: 1));
-      },
-      child: selectedDateTasksAsync.when(
-        data: (tasks) {
-          if (tasks.isEmpty) {
-            return _EmptyState(l10n: l10n);
-          }
-
-          return effectiveViewType == TodoViewType.kanban
-              ? _KanbanView(tasks: tasks)
-              : _ListView(tasks: tasks);
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => _ErrorState(
-          error: error.toString(),
-          onRetry: () {
-            ref.invalidate(todoTasksProvider(page: 1));
-          },
-          l10n: l10n,
+    return Column(
+      children: [
+        Expanded(
+          child: isRefreshing
+              ? const Center(child: CircularProgressIndicator())
+              : RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(todoTasksProvider(page: 1));
+            },
+            child: selectedDateTasksAsync.when(
+              data: (tasks) {
+                if (tasks.isEmpty) {
+                  return _EmptyState(l10n: l10n);
+                }
+                return effectiveViewType == TodoViewType.kanban
+                    ? _KanbanView(tasks: tasks)
+                    : _ListView(tasks: tasks);
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => _ErrorState(
+                error: error.toString(),
+                onRetry: () {
+                  ref.invalidate(todoTasksProvider(page: 1));
+                },
+                l10n: l10n,
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
+
 
 /// 모아 보기 헤더 (완료 포함 체크박스)
 class _OverviewHeader extends ConsumerWidget {

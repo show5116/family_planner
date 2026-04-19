@@ -13,7 +13,7 @@ class MarketBriefingItem {
     return MarketBriefingItem(
       title: json['title'] as String,
       content: json['content'] as String,
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      updatedAt: DateTime.parse(json['updated_at'] as String).toLocal(),
     );
   }
 }

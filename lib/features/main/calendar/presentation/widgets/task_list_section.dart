@@ -22,6 +22,9 @@ class TaskListSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final tasksAsync = ref.watch(selectedDateTasksProvider);
+    final focusedMonth = ref.watch(focusedMonthProvider);
+    final monthlyAsync = ref.watch(monthlyTasksProvider(focusedMonth.year, focusedMonth.month));
+    final isRefreshing = monthlyAsync.isLoading && monthlyAsync.hasValue;
     final dateFormat =
         DateFormat.yMMMMd(Localizations.localeOf(context).toString());
     final timeFormat =
@@ -38,17 +41,17 @@ class TaskListSection extends ConsumerWidget {
 
         // Task 목록
         Expanded(
-          child: tasksAsync.when(
+          child: isRefreshing
+              ? const Center(child: CircularProgressIndicator())
+              : tasksAsync.when(
             data: (tasks) {
               if (tasks.isEmpty) {
                 return _EmptyState(message: l10n.home_noSchedule);
               }
-
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
                 itemCount: tasks.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: AppSizes.spaceS),
+                separatorBuilder: (_, _) => const SizedBox(height: AppSizes.spaceS),
                 itemBuilder: (context, index) {
                   final task = tasks[index];
                   return TaskListItem(
@@ -82,7 +85,7 @@ class TaskListSection extends ConsumerWidget {
               },
             ),
           ),
-        ),
+        ),  // Expanded
       ],
     );
   }

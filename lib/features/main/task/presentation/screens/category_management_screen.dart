@@ -88,6 +88,16 @@ class CategoryManagementScreen extends ConsumerWidget {
     if (result != null && context.mounted) {
       final notifier = ref.read(categoryManagementProvider.notifier);
 
+      // 로딩 다이얼로그 표시
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const PopScope(
+          canPop: false,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
+
       if (category != null) {
         // 수정
         final updated = await notifier.updateCategory(
@@ -99,6 +109,7 @@ class CategoryManagementScreen extends ConsumerWidget {
         );
 
         if (context.mounted) {
+          Navigator.pop(context); // 로딩 다이얼로그 닫기
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(updated != null
@@ -118,6 +129,7 @@ class CategoryManagementScreen extends ConsumerWidget {
         );
 
         if (context.mounted) {
+          Navigator.pop(context); // 로딩 다이얼로그 닫기
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(created != null

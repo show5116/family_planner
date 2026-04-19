@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_model.freezed.dart';
-part 'notification_model.g.dart';
 
 /// 알림 카테고리
 enum NotificationCategory {
@@ -36,6 +35,31 @@ class NotificationModel with _$NotificationModel {
     DateTime? readAt,
   }) = _NotificationModel;
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) =>
-      _$NotificationModelFromJson(json);
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    NotificationCategory parseCategory(String? v) {
+      switch (v) {
+        case 'SCHEDULE': return NotificationCategory.schedule;
+        case 'TODO': return NotificationCategory.todo;
+        case 'HOUSEHOLD': return NotificationCategory.household;
+        case 'ASSET': return NotificationCategory.asset;
+        case 'CHILDCARE': return NotificationCategory.childcare;
+        case 'GROUP': return NotificationCategory.group;
+        default: return NotificationCategory.system;
+      }
+    }
+
+    return NotificationModel(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      category: parseCategory(json['category'] as String?),
+      title: json['title'] as String,
+      body: json['body'] as String,
+      data: json['data'] as Map<String, dynamic>?,
+      isRead: json['isRead'] as bool? ?? false,
+      sentAt: DateTime.parse(json['sentAt'] as String).toLocal(),
+      readAt: json['readAt'] != null
+          ? DateTime.parse(json['readAt'] as String).toLocal()
+          : null,
+    );
+  }
 }

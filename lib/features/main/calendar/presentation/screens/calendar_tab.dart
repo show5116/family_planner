@@ -92,9 +92,17 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       monthlyTasksProvider(focusedMonth.year, focusedMonth.month),
     );
 
+    final isLoading = tasksAsync.isLoading && tasksAsync.hasValue;
+
     return Scaffold(
       appBar: AppBar(
         title: const CalendarGroupSelector(),
+        bottom: isLoading
+            ? const PreferredSize(
+                preferredSize: Size.fromHeight(2),
+                child: LinearProgressIndicator(),
+              )
+            : null,
         actions: [
           const AiChatIconButton(),
           IconButton(

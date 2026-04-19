@@ -24,26 +24,15 @@ class TaskListItem extends StatelessWidget {
   /// 기간 일정 여부 (시작일과 종료일이 다른 경우)
   bool get _hasDateRange {
     if (task.scheduledAt == null || task.dueAt == null) return false;
-    final startDate = DateTime(
-      task.scheduledAt!.year,
-      task.scheduledAt!.month,
-      task.scheduledAt!.day,
-    );
-    final endDate = DateTime(
-      task.dueAt!.year,
-      task.dueAt!.month,
-      task.dueAt!.day,
-    );
+    final startDate = DateTime(task.scheduledAt!.year, task.scheduledAt!.month, task.scheduledAt!.day);
+    final endDate = DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day);
     return startDate != endDate;
   }
 
   /// 시간/기간 표시 문자열
   String _getTimeDisplay(AppLocalizations l10n) {
     if (_hasDateRange) {
-      // 기간 일정: "1/15 ~ 1/20" 형식
-      final startDate = task.scheduledAt!;
-      final endDate = task.dueAt!;
-      return '${startDate.month}/${startDate.day} ~ ${endDate.month}/${endDate.day}';
+      return '${task.scheduledAt!.month}/${task.scheduledAt!.day} ~ ${task.dueAt!.month}/${task.dueAt!.day}';
     } else if (task.isAllDay) {
       return l10n.schedule_allDay;
     } else if (task.scheduledAt != null) {

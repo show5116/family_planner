@@ -87,8 +87,8 @@ class AccountModel {
       accountNumber: json['accountNumber'] as String?,
       institution: json['institution'] as String,
       type: parseAccountType(json['type'] as String?),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
       latestBalance: json['latestBalance'] != null
           ? double.tryParse(json['latestBalance'].toString())
           : null,

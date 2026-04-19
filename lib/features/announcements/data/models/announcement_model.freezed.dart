@@ -373,10 +373,6 @@ abstract class _AnnouncementAuthor implements AnnouncementAuthor {
       throw _privateConstructorUsedError;
 }
 
-AnnouncementModel _$AnnouncementModelFromJson(Map<String, dynamic> json) {
-  return _AnnouncementModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$AnnouncementModel {
   String get id => throw _privateConstructorUsedError;
@@ -390,9 +386,6 @@ mixin _$AnnouncementModel {
   int get readCount => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this AnnouncementModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of AnnouncementModel
   /// with the given fields replaced by the non-null parameter values.
@@ -607,7 +600,7 @@ class __$$AnnouncementModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$AnnouncementModelImpl implements _AnnouncementModel {
   const _$AnnouncementModelImpl({
     required this.id,
@@ -621,9 +614,6 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
     required this.createdAt,
     required this.updatedAt,
   });
-
-  factory _$AnnouncementModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AnnouncementModelImplFromJson(json);
 
   @override
   final String id;
@@ -677,7 +667,6 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -703,11 +692,6 @@ class _$AnnouncementModelImpl implements _AnnouncementModel {
         this,
         _$identity,
       );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AnnouncementModelImplToJson(this);
-  }
 }
 
 abstract class _AnnouncementModel implements AnnouncementModel {
@@ -723,9 +707,6 @@ abstract class _AnnouncementModel implements AnnouncementModel {
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$AnnouncementModelImpl;
-
-  factory _AnnouncementModel.fromJson(Map<String, dynamic> json) =
-      _$AnnouncementModelImpl.fromJson;
 
   @override
   String get id;
@@ -755,245 +736,4 @@ abstract class _AnnouncementModel implements AnnouncementModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AnnouncementModelImplCopyWith<_$AnnouncementModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-AnnouncementListResponse _$AnnouncementListResponseFromJson(
-  Map<String, dynamic> json,
-) {
-  return _AnnouncementListResponse.fromJson(json);
-}
-
-/// @nodoc
-mixin _$AnnouncementListResponse {
-  List<AnnouncementModel> get items => throw _privateConstructorUsedError;
-  int get total => throw _privateConstructorUsedError;
-  int get page => throw _privateConstructorUsedError;
-  int get limit => throw _privateConstructorUsedError;
-
-  /// Serializes this AnnouncementListResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AnnouncementListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AnnouncementListResponseCopyWith<AnnouncementListResponse> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AnnouncementListResponseCopyWith<$Res> {
-  factory $AnnouncementListResponseCopyWith(
-    AnnouncementListResponse value,
-    $Res Function(AnnouncementListResponse) then,
-  ) = _$AnnouncementListResponseCopyWithImpl<$Res, AnnouncementListResponse>;
-  @useResult
-  $Res call({List<AnnouncementModel> items, int total, int page, int limit});
-}
-
-/// @nodoc
-class _$AnnouncementListResponseCopyWithImpl<
-  $Res,
-  $Val extends AnnouncementListResponse
->
-    implements $AnnouncementListResponseCopyWith<$Res> {
-  _$AnnouncementListResponseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of AnnouncementListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? items = null,
-    Object? total = null,
-    Object? page = null,
-    Object? limit = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            items: null == items
-                ? _value.items
-                : items // ignore: cast_nullable_to_non_nullable
-                      as List<AnnouncementModel>,
-            total: null == total
-                ? _value.total
-                : total // ignore: cast_nullable_to_non_nullable
-                      as int,
-            page: null == page
-                ? _value.page
-                : page // ignore: cast_nullable_to_non_nullable
-                      as int,
-            limit: null == limit
-                ? _value.limit
-                : limit // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
-  }
-}
-
-/// @nodoc
-abstract class _$$AnnouncementListResponseImplCopyWith<$Res>
-    implements $AnnouncementListResponseCopyWith<$Res> {
-  factory _$$AnnouncementListResponseImplCopyWith(
-    _$AnnouncementListResponseImpl value,
-    $Res Function(_$AnnouncementListResponseImpl) then,
-  ) = __$$AnnouncementListResponseImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<AnnouncementModel> items, int total, int page, int limit});
-}
-
-/// @nodoc
-class __$$AnnouncementListResponseImplCopyWithImpl<$Res>
-    extends
-        _$AnnouncementListResponseCopyWithImpl<
-          $Res,
-          _$AnnouncementListResponseImpl
-        >
-    implements _$$AnnouncementListResponseImplCopyWith<$Res> {
-  __$$AnnouncementListResponseImplCopyWithImpl(
-    _$AnnouncementListResponseImpl _value,
-    $Res Function(_$AnnouncementListResponseImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of AnnouncementListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? items = null,
-    Object? total = null,
-    Object? page = null,
-    Object? limit = null,
-  }) {
-    return _then(
-      _$AnnouncementListResponseImpl(
-        items: null == items
-            ? _value._items
-            : items // ignore: cast_nullable_to_non_nullable
-                  as List<AnnouncementModel>,
-        total: null == total
-            ? _value.total
-            : total // ignore: cast_nullable_to_non_nullable
-                  as int,
-        page: null == page
-            ? _value.page
-            : page // ignore: cast_nullable_to_non_nullable
-                  as int,
-        limit: null == limit
-            ? _value.limit
-            : limit // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$AnnouncementListResponseImpl implements _AnnouncementListResponse {
-  const _$AnnouncementListResponseImpl({
-    final List<AnnouncementModel> items = const [],
-    this.total = 0,
-    this.page = 1,
-    this.limit = 20,
-  }) : _items = items;
-
-  factory _$AnnouncementListResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AnnouncementListResponseImplFromJson(json);
-
-  final List<AnnouncementModel> _items;
-  @override
-  @JsonKey()
-  List<AnnouncementModel> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
-  }
-
-  @override
-  @JsonKey()
-  final int total;
-  @override
-  @JsonKey()
-  final int page;
-  @override
-  @JsonKey()
-  final int limit;
-
-  @override
-  String toString() {
-    return 'AnnouncementListResponse(items: $items, total: $total, page: $page, limit: $limit)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AnnouncementListResponseImpl &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.total, total) || other.total == total) &&
-            (identical(other.page, page) || other.page == page) &&
-            (identical(other.limit, limit) || other.limit == limit));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_items),
-    total,
-    page,
-    limit,
-  );
-
-  /// Create a copy of AnnouncementListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AnnouncementListResponseImplCopyWith<_$AnnouncementListResponseImpl>
-  get copyWith =>
-      __$$AnnouncementListResponseImplCopyWithImpl<
-        _$AnnouncementListResponseImpl
-      >(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AnnouncementListResponseImplToJson(this);
-  }
-}
-
-abstract class _AnnouncementListResponse implements AnnouncementListResponse {
-  const factory _AnnouncementListResponse({
-    final List<AnnouncementModel> items,
-    final int total,
-    final int page,
-    final int limit,
-  }) = _$AnnouncementListResponseImpl;
-
-  factory _AnnouncementListResponse.fromJson(Map<String, dynamic> json) =
-      _$AnnouncementListResponseImpl.fromJson;
-
-  @override
-  List<AnnouncementModel> get items;
-  @override
-  int get total;
-  @override
-  int get page;
-  @override
-  int get limit;
-
-  /// Create a copy of AnnouncementListResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AnnouncementListResponseImplCopyWith<_$AnnouncementListResponseImpl>
-  get copyWith => throw _privateConstructorUsedError;
 }
