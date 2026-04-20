@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 할일 목록 아이템 위젯
-class TodoListItem extends StatelessWidget {
+class TodoListItem extends ConsumerWidget {
   final TaskModel task;
   final VoidCallback onTap;
   final void Function(TaskStatus status) onStatusChange;
@@ -19,8 +23,14 @@ class TodoListItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final color = Color(task.colorValue);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final personalHex = ref.watch(authProvider).user?['personalColor'] as String?;
+    final color = ColorUtils.taskColor(
+      groupId: task.groupId,
+      groups: groups,
+      personalColorHex: personalHex,
+    );
 
     return Card(
       elevation: AppSizes.elevation1,

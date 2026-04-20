@@ -92,7 +92,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       monthlyTasksProvider(focusedMonth.year, focusedMonth.month),
     );
 
-    final isLoading = tasksAsync.isLoading && tasksAsync.hasValue;
+    final isLoading = tasksAsync.isLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -148,39 +148,39 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // 검색바 (검색 모드일 때 표시)
-          if (ref.watch(calendarSearchActiveProvider))
-            const CalendarSearchBar(),
+      body: ref.watch(calendarSearchQueryProvider) != null
+          ? Column(
+              children: [
+                if (ref.watch(calendarSearchActiveProvider))
+                  const CalendarSearchBar(),
+                const Expanded(child: CalendarSearchResults()),
+              ],
+            )
+          : CustomScrollView(
+              slivers: [
+                if (ref.watch(calendarSearchActiveProvider))
+                  const SliverToBoxAdapter(child: CalendarSearchBar()),
 
-          // 검색 쿼리가 있으면 검색 결과, 아니면 캘린더 뷰
-          if (ref.watch(calendarSearchQueryProvider) != null) ...[
-            const Expanded(
-              child: CalendarSearchResults(),
-            ),
-          ] else ...[
-            // 월간 캘린더
-            CalendarView(
-              key: _calendarKey,
-              tasksAsync: tasksAsync,
-              focusedDay: _focusedDay,
-              selectedDay: _selectedDay,
-              calendarFormat: _calendarFormat,
-              onDaySelected: _onDaySelected,
-              onPageChanged: _onPageChanged,
-              onFormatChanged: _onFormatChanged,
-            ),
+                // 월간 캘린더
+                SliverToBoxAdapter(
+                  child: CalendarView(
+                    key: _calendarKey,
+                    tasksAsync: tasksAsync,
+                    focusedDay: _focusedDay,
+                    selectedDay: _selectedDay,
+                    calendarFormat: _calendarFormat,
+                    onDaySelected: _onDaySelected,
+                    onPageChanged: _onPageChanged,
+                    onFormatChanged: _onFormatChanged,
+                  ),
+                ),
 
-            const Divider(height: 1),
+                const SliverToBoxAdapter(child: Divider(height: 1)),
 
-            // 선택된 날짜 일정 목록
-            Expanded(
-              child: TaskListSection(selectedDate: selectedDate),
+                // 선택된 날짜 일정 목록
+                SliverTaskListSection(selectedDate: selectedDate),
+              ],
             ),
-          ],
-        ],
-      ),
       floatingActionButton: ref.watch(calendarSearchQueryProvider) != null
           ? null
           : FloatingActionButton(

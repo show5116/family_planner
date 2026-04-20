@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 칸반 보드용 할일 카드 위젯
-class TodoCard extends StatelessWidget {
+class TodoCard extends ConsumerWidget {
   final TaskModel task;
   final VoidCallback onTap;
   final void Function(TaskStatus status)? onStatusChange;
@@ -19,9 +23,15 @@ class TodoCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final color = Color(task.colorValue);
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final personalHex = ref.watch(authProvider).user?['personalColor'] as String?;
+    final color = ColorUtils.taskColor(
+      groupId: task.groupId,
+      groups: groups,
+      personalColorHex: personalHex,
+    );
 
     return Card(
       elevation: AppSizes.elevation2,

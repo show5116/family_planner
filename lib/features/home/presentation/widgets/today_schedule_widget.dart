@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/home/presentation/widgets/schedule_filter_sheet.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
@@ -169,15 +171,21 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
   }
 }
 
-class _ScheduleItem extends StatelessWidget {
+class _ScheduleItem extends ConsumerWidget {
   const _ScheduleItem({required this.task, this.showDate = false});
 
   final TaskModel task;
   final bool showDate;
 
   @override
-  Widget build(BuildContext context) {
-    final color = Color(task.colorValue);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final personalHex = ref.watch(authProvider).user?['personalColor'] as String?;
+    final color = ColorUtils.taskColor(
+      groupId: task.groupId,
+      groups: groups,
+      personalColorHex: personalHex,
+    );
     String timeText;
     if (task.isAllDay) {
       timeText = '종일';

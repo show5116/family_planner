@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
@@ -333,7 +334,7 @@ class _GroupFilterSheetState extends ConsumerState<_GroupFilterSheet> {
                       Icon(
                         Icons.group,
                         size: 20,
-                        color: _parseColor(group.defaultColor),
+                        color: ColorUtils.parseColor(group.defaultColor),
                       ),
                       const SizedBox(width: AppSizes.spaceS),
                       Expanded(
@@ -383,12 +384,6 @@ class _GroupFilterSheetState extends ConsumerState<_GroupFilterSheet> {
     if (mounted) Navigator.pop(context);
   }
 
-  Color? _parseColor(String? colorHex) {
-    if (colorHex == null) return null;
-    return Color(
-      int.parse('FF${colorHex.replaceFirst('#', '')}', radix: 16),
-    );
-  }
 }
 
 /// 카테고리 필터 바텀 시트 (그룹별 표시)
@@ -530,7 +525,7 @@ class _CategoryFilterSheetState extends ConsumerState<_CategoryFilterSheet> {
                                   theme,
                                   group.name,
                                   Icons.group,
-                                  _parseColor(group.defaultColor),
+                                  ColorUtils.parseColor(group.defaultColor),
                                 ),
                                 ...groupCats.map(
                                   (category) => _buildCategoryTile(category),
@@ -618,7 +613,7 @@ class _CategoryFilterSheetState extends ConsumerState<_CategoryFilterSheet> {
             Icon(
               Icons.label,
               size: 20,
-              color: _parseColor(category.color),
+              color: ColorUtils.parseColor(category.color),
             ),
             const SizedBox(width: AppSizes.spaceS),
           ],
@@ -641,10 +636,4 @@ class _CategoryFilterSheetState extends ConsumerState<_CategoryFilterSheet> {
     Navigator.pop(context);
   }
 
-  Color? _parseColor(String? colorHex) {
-    if (colorHex == null) return null;
-    return Color(
-      int.parse('FF${colorHex.replaceFirst('#', '')}', radix: 16),
-    );
-  }
 }

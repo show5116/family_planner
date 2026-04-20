@@ -6,6 +6,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 멀티데이 이벤트의 위치
 enum MultiDayPosition {
@@ -67,6 +70,20 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     if (targetDate == startDate) return MultiDayPosition.start;
     if (targetDate == endDate) return MultiDayPosition.end;
     return MultiDayPosition.middle;
+  }
+
+  String? get _personalColorHex {
+    final user = ref.watch(authProvider).user;
+    return (user?['personalColor'] ?? user?['user']?['personalColor']) as String?;
+  }
+
+  Color _taskColor(TaskModel task) {
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    return ColorUtils.taskColor(
+      groupId: task.groupId,
+      groups: groups,
+      personalColorHex: _personalColorHex,
+    );
   }
 
   @override
@@ -280,7 +297,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
               // 멀티데이 이벤트 바
               ...multiDayEvents.take(2).map((task) {
                 final position = _getMultiDayPosition(task, date);
-                final color = Color(task.colorValue);
+                final color = _taskColor(task);
                 return _buildMultiDayBar(position, color);
               }),
               // 단일 이벤트 마커
@@ -293,7 +310,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                       height: 6,
                       margin: const EdgeInsets.symmetric(horizontal: 0.5),
                       decoration: BoxDecoration(
-                        color: Color(task.colorValue),
+                        color: _taskColor(task),
                         shape: BoxShape.circle,
                       ),
                     );

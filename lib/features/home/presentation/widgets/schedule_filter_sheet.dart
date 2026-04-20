@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 
 /// 일정/할일 위젯 공통 필터 바텀시트
@@ -73,15 +74,6 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
     return _selectedGroupIds!.contains(groupId);
   }
 
-  Color _parseColor(String? hex) {
-    if (hex == null) return Colors.grey;
-    try {
-      return Color(int.parse(hex.replaceFirst('#', '0xFF')));
-    } catch (_) {
-      return Colors.grey;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -142,8 +134,7 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
                   secondary: group.myColor != null || group.defaultColor != null
                       ? CircleAvatar(
                           radius: 8,
-                          backgroundColor:
-                              _parseColor(group.myColor ?? group.defaultColor),
+                          backgroundColor: ColorUtils.groupColor(group),
                         )
                       : null,
                 )),
