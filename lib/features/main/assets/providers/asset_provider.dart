@@ -5,6 +5,7 @@ import 'package:family_planner/features/main/assets/data/models/account_model.da
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 
 part 'asset_provider.g.dart';
@@ -152,6 +153,7 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final account = await _repository.createAccount(dto);
       _ref.read(assetAccountsProvider.notifier).addAccount(account);
       _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
       state = const AsyncValue.data(null);
       return account;
     } catch (e, st) {
@@ -166,6 +168,7 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final account = await _repository.updateAccount(id, dto);
       _ref.read(assetAccountsProvider.notifier).updateAccount(account);
       _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
       state = const AsyncValue.data(null);
       return account;
     } catch (e, st) {
@@ -180,6 +183,7 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
       await _repository.deleteAccount(id);
       _ref.read(assetAccountsProvider.notifier).removeAccount(id);
       _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
@@ -197,6 +201,9 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final record = await _repository.createAssetRecord(accountId, dto);
       _ref.read(assetRecordsProvider(accountId).notifier).addRecord(record);
       _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
+      _ref.invalidate(groupAssetTrendProvider);
+      _ref.invalidate(accountAssetTrendProvider);
       // 계좌 목록도 갱신 (latestBalance 업데이트)
       _ref.read(assetAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
@@ -216,6 +223,9 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
       await _repository.deleteAssetRecord(accountId, recordId);
       _ref.read(assetRecordsProvider(accountId).notifier).removeRecord(recordId);
       _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
+      _ref.invalidate(groupAssetTrendProvider);
+      _ref.invalidate(accountAssetTrendProvider);
       _ref.read(assetAccountsProvider.notifier).refresh();
       state = const AsyncValue.data(null);
       return true;
