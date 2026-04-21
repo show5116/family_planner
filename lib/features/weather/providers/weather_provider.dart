@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,6 +22,9 @@ class LatLon {
 /// 위치 조회 (웹: Geolocation API, 비웹: 서울 기본값)
 @riverpod
 Future<LatLon> location(Ref ref) async {
+  final link = ref.keepAlive();
+  Timer(const Duration(hours: 1), link.close);
+
   if (kIsWeb) {
     return getWebLocation();
   }
@@ -29,6 +34,9 @@ Future<LatLon> location(Ref ref) async {
 /// 현재 날씨 Provider
 @riverpod
 Future<WeatherModel> weather(Ref ref) async {
+  final link = ref.keepAlive();
+  Timer(const Duration(minutes: 30), link.close);
+
   final LatLon latLon = await ref.watch(locationProvider.future);
   final repository = ref.watch(weatherRepositoryProvider);
   return repository.getCurrentWeather(lat: latLon.lat, lon: latLon.lon);
@@ -37,6 +45,9 @@ Future<WeatherModel> weather(Ref ref) async {
 /// 단기예보 Provider
 @riverpod
 Future<WeatherForecastModel> weatherForecast(Ref ref) async {
+  final link = ref.keepAlive();
+  Timer(const Duration(minutes: 30), link.close);
+
   final LatLon latLon = await ref.watch(locationProvider.future);
   final repository = ref.watch(weatherRepositoryProvider);
   return repository.getForecast(lat: latLon.lat, lon: latLon.lon);

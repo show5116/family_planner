@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -212,10 +214,15 @@ class MarketBriefing extends _$MarketBriefing {
 }
 
 /// 즐겨찾기 지표 목록 Provider
-@riverpod
+@Riverpod(keepAlive: true)
 class BookmarkedIndicators extends _$BookmarkedIndicators {
+  Timer? _cacheTimer;
+
   @override
   Future<List<IndicatorModel>> build() async {
+    _cacheTimer?.cancel();
+    _cacheTimer = Timer(const Duration(minutes: 5), () => ref.invalidateSelf());
+
     final repository = ref.watch(indicatorRepositoryProvider);
     return repository.getBookmarkedIndicators();
   }

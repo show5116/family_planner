@@ -11,11 +11,9 @@ import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_ico
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
-import 'package:family_planner/core/models/dashboard_widget_settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 /// 대시보드 탭
 class DashboardTab extends ConsumerWidget {
@@ -139,40 +137,10 @@ class DashboardTab extends ConsumerWidget {
 }
 
 /// 대시보드 그리드 위젯
-class _DashboardGrid extends StatefulWidget {
+class _DashboardGrid extends ConsumerWidget {
   @override
-  State<_DashboardGrid> createState() => _DashboardGridState();
-}
-
-class _DashboardGridState extends State<_DashboardGrid> {
-  DashboardWidgetSettings _settings = DashboardWidgetSettings.defaultSettings();
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final settingsJson = prefs.getString('dashboard_widget_settings');
-
-    setState(() {
-      if (settingsJson != null) {
-        _settings = DashboardWidgetSettings.fromJson(
-          json.decode(settingsJson) as Map<String, dynamic>,
-        );
-      }
-      _isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(dashboardWidgetSettingsProvider);
 
     // 화면 크기에 따른 카드 너비 계산
     final screenWidth = MediaQuery.of(context).size.width;
@@ -189,45 +157,45 @@ class _DashboardGridState extends State<_DashboardGrid> {
     final List<Widget> activeWidgets = [];
 
     // 순서대로 위젯 추가
-    for (final widgetType in _settings.widgetOrder) {
+    for (final widgetType in settings.widgetOrder) {
       Widget? widget;
 
       switch (widgetType) {
         case 'todaySchedule':
-          if (_settings.showTodaySchedule) {
+          if (settings.showTodaySchedule) {
             widget = TodayScheduleWidget(
-              viewMode: _settings.scheduleViewMode,
-              initialSelectedGroupIds: _settings.scheduleSelectedGroupIds,
-              initialIncludePersonal: _settings.scheduleIncludePersonal,
+              viewMode: settings.scheduleViewMode,
+              initialSelectedGroupIds: settings.scheduleSelectedGroupIds,
+              initialIncludePersonal: settings.scheduleIncludePersonal,
             );
           }
           break;
         case 'investmentSummary':
-          if (_settings.showInvestmentSummary) {
+          if (settings.showInvestmentSummary) {
             widget = const InvestmentSummaryWidget();
           }
           break;
         case 'todoSummary':
-          if (_settings.showTodoSummary) {
+          if (settings.showTodoSummary) {
             widget = TodoSummaryWidget(
-              viewMode: _settings.todoViewMode,
-              initialSelectedGroupIds: _settings.todoSelectedGroupIds,
-              initialIncludePersonal: _settings.todoIncludePersonal,
+              viewMode: settings.todoViewMode,
+              initialSelectedGroupIds: settings.todoSelectedGroupIds,
+              initialIncludePersonal: settings.todoIncludePersonal,
             );
           }
           break;
         case 'assetSummary':
-          if (_settings.showAssetSummary) {
+          if (settings.showAssetSummary) {
             widget = const AssetSummaryWidget();
           }
           break;
         case 'memoSummary':
-          if (_settings.showMemoSummary) {
+          if (settings.showMemoSummary) {
             widget = const MemoSummaryWidget();
           }
           break;
         case 'weather':
-          if (_settings.showWeather) {
+          if (settings.showWeather) {
             widget = const WeatherWidget();
           }
           break;

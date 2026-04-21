@@ -6,7 +6,7 @@ part of 'weather_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$locationHash() => r'0707026c13308626421262c3f994c15190cb5839';
+String _$locationHash() => r'2f1634f4904ed26b40ab3b2f6726b7b12518434c';
 
 /// 위치 조회 (웹: Geolocation API, 비웹: 서울 기본값)
 ///
@@ -25,7 +25,7 @@ final locationProvider = AutoDisposeFutureProvider<LatLon>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LocationRef = AutoDisposeFutureProviderRef<LatLon>;
-String _$weatherHash() => r'3e3ad170175a384241a88f59352a07adf1eebad0';
+String _$weatherHash() => r'168b0ced0916864f14478af383a4f0505bf1988d';
 
 /// 현재 날씨 Provider
 ///
@@ -44,7 +44,7 @@ final weatherProvider = AutoDisposeFutureProvider<WeatherModel>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef WeatherRef = AutoDisposeFutureProviderRef<WeatherModel>;
-String _$weatherForecastHash() => r'1a7ba7f7732eae92d9a29c81adf843bd779961cf';
+String _$weatherForecastHash() => r'3423985ed329a49c36c30e75a0350b297fab21bf';
 
 /// 단기예보 Provider
 ///

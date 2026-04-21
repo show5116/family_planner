@@ -486,17 +486,14 @@ final marketBriefingProvider =
 
 typedef _$MarketBriefing = AutoDisposeAsyncNotifier<MarketBriefingModel>;
 String _$bookmarkedIndicatorsHash() =>
-    r'fb6e7ae195e5ace747371649e423548546c55cb3';
+    r'd5aea6a36a8323ef81e08b1d0e32db8f58e0184c';
 
 /// 즐겨찾기 지표 목록 Provider
 ///
 /// Copied from [BookmarkedIndicators].
 @ProviderFor(BookmarkedIndicators)
 final bookmarkedIndicatorsProvider =
-    AutoDisposeAsyncNotifierProvider<
-      BookmarkedIndicators,
-      List<IndicatorModel>
-    >.internal(
+    AsyncNotifierProvider<BookmarkedIndicators, List<IndicatorModel>>.internal(
       BookmarkedIndicators.new,
       name: r'bookmarkedIndicatorsProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -506,6 +503,6 @@ final bookmarkedIndicatorsProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$BookmarkedIndicators = AutoDisposeAsyncNotifier<List<IndicatorModel>>;
+typedef _$BookmarkedIndicators = AsyncNotifier<List<IndicatorModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,54 +1,51 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// 홈 위젯 설정 화면
-class HomeWidgetSettingsScreen extends StatefulWidget {
+class HomeWidgetSettingsScreen extends ConsumerWidget {
   const HomeWidgetSettingsScreen({super.key});
 
   @override
-  State<HomeWidgetSettingsScreen> createState() => _HomeWidgetSettingsScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(dashboardWidgetSettingsProvider);
+    return _HomeWidgetSettingsBody(settings: settings);
+  }
 }
 
-class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
+class _HomeWidgetSettingsBody extends ConsumerStatefulWidget {
+  const _HomeWidgetSettingsBody({required this.settings});
+  final DashboardWidgetSettings settings;
+
+  @override
+  ConsumerState<_HomeWidgetSettingsBody> createState() =>
+      _HomeWidgetSettingsBodyState();
+}
+
+class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody> {
   late DashboardWidgetSettings _settings;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadSettings();
+    _settings = widget.settings;
   }
 
-  /// 설정 불러오기
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final settingsJson = prefs.getString('dashboard_widget_settings');
-
-    setState(() {
-      if (settingsJson != null) {
-        _settings = DashboardWidgetSettings.fromJson(
-          json.decode(settingsJson) as Map<String, dynamic>,
-        );
-      } else {
-        _settings = DashboardWidgetSettings.defaultSettings();
-      }
-      _isLoading = false;
-    });
+  @override
+  void didUpdateWidget(_HomeWidgetSettingsBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.settings != widget.settings) {
+      _settings = widget.settings;
+    }
   }
 
   /// 설정 저장
   Future<void> _saveSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-      'dashboard_widget_settings',
-      json.encode(_settings.toJson()),
-    );
+    await ref.read(dashboardWidgetSettingsProvider.notifier).update(_settings);
 
     if (mounted) {
       final l10n = AppLocalizations.of(context)!;
@@ -181,14 +178,6 @@ class _HomeWidgetSettingsScreenState extends State<HomeWidgetSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(

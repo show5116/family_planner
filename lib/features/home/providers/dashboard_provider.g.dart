@@ -7,7 +7,7 @@ part of 'dashboard_provider.dart';
 // **************************************************************************
 
 String _$dashboardTodayTasksHash() =>
-    r'af82804a0520b25b3924d3be9f8dfd03da3a99dc';
+    r'a5dcd9a8029c5b91b8be8b94b61d5e92d357713a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -207,7 +207,7 @@ class _DashboardTodayTasksProviderElement
 }
 
 String _$dashboardTodoTasksHash() =>
-    r'860e8df7e10a1d867ed2f56fc785d0e4001a4ee3';
+    r'0a3822b4c1321fa74b9c71c3ae6d4a5f09626cd4';
 
 /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
 ///
@@ -386,7 +386,7 @@ class _DashboardTodoTasksProviderElement
 }
 
 String _$dashboardAssetStatisticsHash() =>
-    r'1b9944d269d6f43ce0a5ee8ff3ea2c7c1a3e923e';
+    r'78d741c9bdc65621e737891a354d4ae4924fcac0';
 
 /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
 ///

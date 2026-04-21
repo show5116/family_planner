@@ -32,7 +32,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
-  int _dashboardRefreshKey = 0;
 
   // 방문한 탭 ID를 추적 (Lazy Loading용)
   final Set<String> _visitedTabs = {'home'}; // 홈은 기본으로 방문
@@ -221,7 +220,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _getScreenForId(String id, AppLocalizations l10n) {
     switch (id) {
       case 'home':
-        return DashboardTab(key: ValueKey(_dashboardRefreshKey));
+        return const DashboardTab();
       case 'assets':
         return const AssetScreen();
       case 'calendar':
@@ -244,22 +243,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       case 'more':
         return const MoreTab();
       default:
-        return DashboardTab(key: ValueKey(_dashboardRefreshKey));
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // 화면이 다시 보일 때마다 현재 탭이 홈이면 새로고침
-    final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
-    final displayedItems = notifier.displayedItems;
-
-    if (_selectedIndex < displayedItems.length &&
-        displayedItems[_selectedIndex].id == 'home') {
-      setState(() {
-        _dashboardRefreshKey++;
-      });
+        return const DashboardTab();
     }
   }
 
@@ -308,10 +292,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (index < displayedItems.length) {
             _visitedTabs.add(displayedItems[index].id);
           }
-          // 홈 탭으로 전환할 때 새로고침
-          if (index < displayedItems.length && displayedItems[index].id == 'home') {
-            _dashboardRefreshKey++;
-          }
+
         });
       },
       destinations: destinations,

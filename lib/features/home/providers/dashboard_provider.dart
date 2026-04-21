@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,6 +19,8 @@ part 'dashboard_provider.g.dart';
 /// null: 요청 없음, String: 이동할 탭 ID (예: 'calendar', 'todo')
 final homeTabNavigationProvider = StateProvider<String?>((ref) => null);
 
+const _dashboardCacheDuration = Duration(minutes: 5);
+
 /// 대시보드 일정 (대시보드 전용) - 모드/그룹 필터에 따라 조회
 @riverpod
 Future<List<TaskModel>> dashboardTodayTasks(
@@ -26,6 +30,8 @@ Future<List<TaskModel>> dashboardTodayTasks(
   List<String>? selectedGroupIds,
   bool includePersonal = true,
 }) async {
+  final link = ref.keepAlive();
+  Timer(_dashboardCacheDuration, link.close);
   final now = DateTime.now();
   late final DateTime startDate;
   late final DateTime endDate;
@@ -91,6 +97,8 @@ Future<List<TaskModel>> dashboardTodoTasks(
   List<String>? selectedGroupIds,
   bool includePersonal = true,
 }) async {
+  final link = ref.keepAlive();
+  Timer(_dashboardCacheDuration, link.close);
   final now = DateTime.now();
   late final DateTime startDate;
   late final DateTime endDate;
@@ -143,6 +151,8 @@ Future<List<TaskModel>> dashboardTodoTasks(
 /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
 @riverpod
 Future<AssetStatisticsModel> dashboardAssetStatistics(Ref ref) async {
+  final link = ref.keepAlive();
+  Timer(_dashboardCacheDuration, link.close);
   final groupsAsync = await ref.watch(myGroupsProvider.future);
 
   if (groupsAsync.isEmpty) return AssetStatisticsModel.empty();

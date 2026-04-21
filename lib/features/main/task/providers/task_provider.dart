@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/data/repositories/task_repository.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -704,6 +705,11 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
   TaskManagementNotifier(this._repository, this._ref)
       : super(const AsyncValue.data(null));
 
+  void _invalidateDashboard() {
+    _ref.invalidate(dashboardTodayTasksProvider);
+    _ref.invalidate(dashboardTodoTasksProvider);
+  }
+
   /// Task 생성
   Future<TaskModel?> createTask(CreateTaskDto dto) async {
     state = const AsyncValue.loading();
@@ -720,6 +726,7 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
             .addTask(task);
       }
 
+      _invalidateDashboard();
       state = const AsyncValue.data(null);
       return task;
     } catch (e, st) {
@@ -762,6 +769,7 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
       // 상세 Provider 무효화
       _ref.invalidate(taskDetailProvider(id));
 
+      _invalidateDashboard();
       state = const AsyncValue.data(null);
       return task;
     } catch (e, st) {
@@ -784,6 +792,7 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
       // 상세 Provider 무효화
       _ref.invalidate(taskDetailProvider(id));
 
+      _invalidateDashboard();
       state = const AsyncValue.data(null);
       return task;
     } catch (e, st) {
@@ -819,6 +828,7 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
       // 상세 Provider 무효화
       _ref.invalidate(taskDetailProvider(id));
 
+      _invalidateDashboard();
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
