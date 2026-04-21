@@ -409,7 +409,7 @@ class _CategoryFilterSheetState extends ConsumerState<_CategoryFilterSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final categoriesAsync = ref.watch(categoriesProvider());
+    final categoriesAsync = ref.watch(allGroupsCategoriesProvider);
 
     return SafeArea(
       child: ConstrainedBox(

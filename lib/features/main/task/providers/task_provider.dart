@@ -538,6 +538,26 @@ Future<List<CategoryModel>> categories(Ref ref, {String? groupId}) async {
   return await repository.getCategories(groupId: groupId);
 }
 
+/// 모든 그룹 + 개인 카테고리를 합쳐서 반환하는 Provider
+/// 중복 id 제거 후 반환
+@riverpod
+Future<List<CategoryModel>> allGroupsCategories(Ref ref) async {
+  final repository = ref.watch(taskRepositoryProvider);
+  final groups = await ref.watch(myGroupsProvider.future);
+
+  final futures = [
+    repository.getCategories(groupId: null), // 개인
+    ...groups.map((g) => repository.getCategories(groupId: g.id)),
+  ];
+
+  final results = await Future.wait(futures);
+  final seen = <String>{};
+  return results
+      .expand((list) => list)
+      .where((c) => seen.add(c.id))
+      .toList();
+}
+
 /// 현재 선택된 그룹의 카테고리 목록 Provider
 @riverpod
 Future<List<CategoryModel>> selectedGroupCategories(Ref ref) async {

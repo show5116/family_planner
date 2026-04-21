@@ -538,6 +538,29 @@ class _CategoriesProviderElement
   String? get groupId => (origin as CategoriesProvider).groupId;
 }
 
+String _$allGroupsCategoriesHash() =>
+    r'01e93cfcb8cc40293368d041104a01183ea1078a';
+
+/// 모든 그룹 + 개인 카테고리를 합쳐서 반환하는 Provider
+/// 중복 id 제거 후 반환
+///
+/// Copied from [allGroupsCategories].
+@ProviderFor(allGroupsCategories)
+final allGroupsCategoriesProvider =
+    AutoDisposeFutureProvider<List<CategoryModel>>.internal(
+      allGroupsCategories,
+      name: r'allGroupsCategoriesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$allGroupsCategoriesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AllGroupsCategoriesRef =
+    AutoDisposeFutureProviderRef<List<CategoryModel>>;
 String _$selectedGroupCategoriesHash() =>
     r'477219df0000b5fed9e4134e78e4cfa8613ad75d';
 
