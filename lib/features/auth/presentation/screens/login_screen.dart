@@ -117,24 +117,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> _handleKakaoLogin() async {
-    final l10n = AppLocalizations.of(context)!;
-    setState(() => _isLoading = true);
-
-    try {
-      await ref.read(authProvider.notifier).loginWithKakao();
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${l10n.auth_kakaoLoginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
+  // Future<void> _handleKakaoLogin() async {
+  //   final l10n = AppLocalizations.of(context)!;
+  //   setState(() => _isLoading = true);
+  //
+  //   try {
+  //     await ref.read(authProvider.notifier).loginWithKakao();
+  //   } catch (e) {
+  //     if (mounted) setState(() => _isLoading = false);
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('${l10n.auth_kakaoLoginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -293,25 +293,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           label: l10n.auth_continueWithGoogle,
           onPressed: _isLoading ? null : _handleGoogleLogin,
         ),
-        const SizedBox(height: AppSizes.spaceM),
-        SocialLoginButton(
-          icon: Icons.chat_bubble_outline,
-          label: l10n.auth_continueWithKakao,
-          backgroundColor: const Color(0xFFFEE500),
-          textColor: Colors.black87,
-          onPressed: _isLoading ? null : _handleKakaoLogin,
-        ),
-        const SizedBox(height: AppSizes.spaceM),
-        SocialLoginButton(
-          icon: Icons.apple,
-          label: l10n.auth_continueWithApple,
-          backgroundColor: Colors.black,
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.common_comingSoon)),
-            );
-          },
-        ),
+        // 카카오/애플 로그인은 사업자 등록 후 활성화 예정
+        // const SizedBox(height: AppSizes.spaceM),
+        // SocialLoginButton(
+        //   icon: Icons.chat_bubble_outline,
+        //   label: l10n.auth_continueWithKakao,
+        //   backgroundColor: const Color(0xFFFEE500),
+        //   textColor: Colors.black87,
+        //   onPressed: _isLoading ? null : _handleKakaoLogin,
+        // ),
+        // const SizedBox(height: AppSizes.spaceM),
+        // SocialLoginButton(
+        //   icon: Icons.apple,
+        //   label: l10n.auth_continueWithApple,
+        //   backgroundColor: Colors.black,
+        //   onPressed: () {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(content: Text(l10n.common_comingSoon)),
+        //     );
+        //   },
+        // ),
       ],
     );
   }
