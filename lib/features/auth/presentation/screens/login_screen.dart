@@ -148,7 +148,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
               horizontal: ResponsivePadding.getHorizontalPadding(context),
-              vertical: AppSizes.spaceM,
+              vertical: AppSizes.spaceXS,
             ),
             child: ConstrainedBox(
               constraints: BoxConstraints(
@@ -160,12 +160,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppLogo(size: Responsive.isMobile(context) ? 400 : 500),
-                    SizedBox(
-                      height: Responsive.isMobile(context)
-                          ? AppSizes.spaceS
-                          : AppSizes.spaceL,
-                    ),
+                    AppLogo(size: Responsive.isMobile(context) ? 220 : 260),
+                    const SizedBox(height: AppSizes.spaceM),
                     _buildEmailField(l10n),
                     const SizedBox(height: AppSizes.spaceM),
                     _buildPasswordField(l10n),
