@@ -77,8 +77,6 @@ Future<List<TaskModel>> dashboardTodayTasks(
 
   return result
     ..sort((a, b) {
-      if (a.isAllDay && !b.isAllDay) return 1;
-      if (!a.isAllDay && b.isAllDay) return -1;
       if (a.scheduledAt == null) return 1;
       if (b.scheduledAt == null) return -1;
       return a.scheduledAt!.compareTo(b.scheduledAt!);

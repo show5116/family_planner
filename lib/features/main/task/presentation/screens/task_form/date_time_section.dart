@@ -39,19 +39,17 @@ class DateTimeSection extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
             ),
 
-            if (!formState.isAllDay) ...[
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.access_time),
-                title: Text(l10n.schedule_startTime),
-                subtitle: Text(formState.startTime != null
-                    ? timeFormat.format(DateTime(2000, 1, 1, formState.startTime!.hour, formState.startTime!.minute))
-                    : '-'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => _selectTime(context, isStart: true),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ],
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.access_time),
+              title: Text(l10n.schedule_startTime),
+              subtitle: Text(formState.startTime != null
+                  ? timeFormat.format(DateTime(2000, 1, 1, formState.startTime!.hour, formState.startTime!.minute))
+                  : '-'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => _selectTime(context, isStart: true),
+              contentPadding: EdgeInsets.zero,
+            ),
 
             const Divider(),
 
@@ -74,19 +72,17 @@ class DateTimeSection extends StatelessWidget {
                 onTap: () => _selectDate(context, isStart: false),
                 contentPadding: EdgeInsets.zero,
               ),
-              if (!formState.isAllDay) ...[
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.access_time_filled),
-                  title: Text(l10n.schedule_dueTime),
-                  subtitle: Text(formState.dueTime != null
-                      ? timeFormat.format(DateTime(2000, 1, 1, formState.dueTime!.hour, formState.dueTime!.minute))
-                      : '-'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _selectTime(context, isStart: false),
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ],
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.access_time_filled),
+                title: Text(l10n.schedule_dueTime),
+                subtitle: Text(formState.dueTime != null
+                    ? timeFormat.format(DateTime(2000, 1, 1, formState.dueTime!.hour, formState.dueTime!.minute))
+                    : '-'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _selectTime(context, isStart: false),
+                contentPadding: EdgeInsets.zero,
+              ),
             ],
           ],
         ),
@@ -128,30 +124,3 @@ class DateTimeSection extends StatelessWidget {
   }
 }
 
-/// 종일 스위치 위젯
-class AllDaySwitch extends StatelessWidget {
-  final TaskFormState formState;
-  final TaskFormNotifier formNotifier;
-
-  const AllDaySwitch({
-    super.key,
-    required this.formState,
-    required this.formNotifier,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: SwitchListTile(
-        title: Text(l10n.schedule_allDay),
-        secondary: const Icon(Icons.wb_sunny_outlined),
-        value: formState.isAllDay,
-        onChanged: formNotifier.setIsAllDay,
-      ),
-    );
-  }
-}

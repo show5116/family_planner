@@ -26,7 +26,6 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
   final _descriptionController = TextEditingController();
 
   String? _selectedEmoji;
-  Color _selectedColor = AppColors.primary;
 
   bool get _isEditMode => widget.category != null;
 
@@ -38,11 +37,6 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       _nameController.text = category.name;
       _descriptionController.text = category.description ?? '';
       _selectedEmoji = category.emoji;
-      if (category.color != null) {
-        _selectedColor = Color(
-          int.parse('FF${category.color!.replaceFirst('#', '')}', radix: 16),
-        );
-      }
     }
   }
 
@@ -83,22 +77,9 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
               // 이모지 선택
               _EmojiSelector(
                 selectedEmoji: _selectedEmoji,
-                selectedColor: _selectedColor,
                 onEmojiSelected: (emoji) {
                   setState(() {
                     _selectedEmoji = _selectedEmoji == emoji ? null : emoji;
-                  });
-                },
-                l10n: l10n,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 색상 선택
-              _ColorSelector(
-                selectedColor: _selectedColor,
-                onColorSelected: (color) {
-                  setState(() {
-                    _selectedColor = color;
                   });
                 },
                 l10n: l10n,
@@ -125,16 +106,12 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
       return;
     }
 
-    final colorHex =
-        '#${_selectedColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
-
     Navigator.pop(context, {
       'name': _nameController.text.trim(),
       'description': _descriptionController.text.trim().isEmpty
           ? null
           : _descriptionController.text.trim(),
       'emoji': _selectedEmoji,
-      'color': colorHex,
     });
   }
 }
@@ -197,13 +174,11 @@ class _DescriptionField extends StatelessWidget {
 /// 이모지 선택 위젯
 class _EmojiSelector extends StatelessWidget {
   final String? selectedEmoji;
-  final Color selectedColor;
   final ValueChanged<String> onEmojiSelected;
   final AppLocalizations l10n;
 
   const _EmojiSelector({
     required this.selectedEmoji,
-    required this.selectedColor,
     required this.onEmojiSelected,
     required this.l10n,
   });
@@ -236,10 +211,10 @@ class _EmojiSelector extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? selectedColor.withValues(alpha: 0.2)
+                      ? AppColors.primary.withValues(alpha: 0.2)
                       : Colors.transparent,
                   border: Border.all(
-                    color: isSelected ? selectedColor : AppColors.divider,
+                    color: isSelected ? AppColors.primary : AppColors.divider,
                     width: isSelected ? 2 : 1,
                   ),
                   borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
@@ -247,78 +222,6 @@ class _EmojiSelector extends StatelessWidget {
                 child: Center(
                   child: Text(emoji, style: const TextStyle(fontSize: 20)),
                 ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-}
-
-/// 색상 선택 위젯
-class _ColorSelector extends StatelessWidget {
-  final Color selectedColor;
-  final ValueChanged<Color> onColorSelected;
-  final AppLocalizations l10n;
-
-  const _ColorSelector({
-    required this.selectedColor,
-    required this.onColorSelected,
-    required this.l10n,
-  });
-
-  // 미리 정의된 색상 목록
-  static const List<Color> _colorOptions = [
-    Color(0xFF3B82F6), // Blue
-    Color(0xFF10B981), // Green
-    Color(0xFFF59E0B), // Amber
-    Color(0xFFEF4444), // Red
-    Color(0xFF8B5CF6), // Purple
-    Color(0xFFEC4899), // Pink
-    Color(0xFF06B6D4), // Cyan
-    Color(0xFF6366F1), // Indigo
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.category_color,
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
-        const SizedBox(height: AppSizes.spaceS),
-        Wrap(
-          spacing: AppSizes.spaceS,
-          runSpacing: AppSizes.spaceS,
-          children: _colorOptions.map((color) {
-            final isSelected = selectedColor.toARGB32() == color.toARGB32();
-            return GestureDetector(
-              onTap: () => onColorSelected(color),
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: isSelected
-                      ? Border.all(color: Colors.white, width: 3)
-                      : null,
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: color.withValues(alpha: 0.5),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : null,
-                ),
-                child: isSelected
-                    ? const Icon(Icons.check, color: Colors.white, size: 20)
-                    : null,
               ),
             );
           }).toList(),

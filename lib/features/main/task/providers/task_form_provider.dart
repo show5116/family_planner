@@ -43,7 +43,6 @@ class TaskFormState with _$TaskFormState {
     DateTime? dueDate,
     TimeOfDay? startTime,
     TimeOfDay? dueTime,
-    @Default(true) bool isAllDay,
     @Default(false) bool hasDueDate,
 
     // 일정 속성
@@ -91,40 +90,25 @@ class TaskFormState with _$TaskFormState {
 
   // ============ DTO 변환 로직 (캡슐화) ============
 
-  /// 시작 DateTime 계산 (정오 전략 적용)
-  /// - 종일 일정: 정오(12:00)로 설정하여 타임존 안전성 확보
-  /// - 시간 지정: 사용자 선택 시간 사용
   DateTime get scheduledDateTime {
-    if (isAllDay) {
-      // 정오(Noon) 전략: 타임존 변환 시에도 날짜가 바뀌지 않도록 12:00 사용
-      return DateTime(startDate.year, startDate.month, startDate.day, 12, 0, 0);
-    } else {
-      return DateTime(
-        startDate.year,
-        startDate.month,
-        startDate.day,
-        startTime?.hour ?? 9,
-        startTime?.minute ?? 0,
-      );
-    }
+    return DateTime(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+      startTime?.hour ?? 9,
+      startTime?.minute ?? 0,
+    );
   }
 
-  /// 마감 DateTime 계산 (정오 전략 적용)
   DateTime? get dueDateTime {
     if (!hasDueDate || dueDate == null) return null;
-
-    if (isAllDay) {
-      // 종일 일정의 마감일도 정오로 설정
-      return DateTime(dueDate!.year, dueDate!.month, dueDate!.day, 12, 0, 0);
-    } else {
-      return DateTime(
-        dueDate!.year,
-        dueDate!.month,
-        dueDate!.day,
-        dueTime?.hour ?? 18,
-        dueTime?.minute ?? 0,
-      );
-    }
+    return DateTime(
+      dueDate!.year,
+      dueDate!.month,
+      dueDate!.day,
+      dueTime?.hour ?? 18,
+      dueTime?.minute ?? 0,
+    );
   }
 
   /// 반복 규칙 DTO 생성
@@ -268,10 +252,9 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   TaskFormState _initFromTask(TaskModel task, String? taskId) {
     TimeOfDay? startTime;
     TimeOfDay? dueTime;
-    bool isAllDay = task.isAllDay;
     DateTime startDate = task.scheduledAt ?? DateTime.now();
 
-    if (task.scheduledAt != null && !isAllDay) {
+    if (task.scheduledAt != null) {
       startTime = TimeOfDay.fromDateTime(task.scheduledAt!);
     }
 
@@ -280,9 +263,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     if (task.dueAt != null) {
       hasDueDate = true;
       dueDate = task.dueAt;
-      if (!isAllDay) {
-        dueTime = TimeOfDay.fromDateTime(task.dueAt!);
-      }
+      dueTime = TimeOfDay.fromDateTime(task.dueAt!);
     }
 
     // 반복 설정 파싱
@@ -378,7 +359,6 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       dueDate: dueDate,
       startTime: startTime,
       dueTime: dueTime,
-      isAllDay: isAllDay,
       hasDueDate: hasDueDate,
       taskType: task.type ?? TaskType.calendarOnly,
       priority: task.priority ?? TaskPriority.medium,
@@ -434,14 +414,6 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   }
 
   // ============ 날짜/시간 업데이트 ============
-
-  void setIsAllDay(bool value) {
-    state = state.copyWith(
-      isAllDay: value,
-      startTime: value ? null : state.startTime,
-      dueTime: value ? null : state.dueTime,
-    );
-  }
 
   void setStartDate(DateTime value) {
     DateTime? newDueDate = state.dueDate;

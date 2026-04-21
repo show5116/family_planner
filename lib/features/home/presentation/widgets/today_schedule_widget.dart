@@ -187,8 +187,8 @@ class _ScheduleItem extends ConsumerWidget {
       personalColorHex: personalHex,
     );
     String timeText;
-    if (task.isAllDay) {
-      timeText = '종일';
+    if (task.scheduledAt == null) {
+      timeText = '-';
     } else {
       final dt = task.scheduledAt!;
       final hhmm =

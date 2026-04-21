@@ -206,11 +206,6 @@ class TaskModel {
     final rawScheduledAt = json['scheduledAt'] != null
         ? DateTime.parse(json['scheduledAt'] as String)
         : null;
-    // UTC 자정(00:00:00)이면 종일 — scheduledAt을 null로 저장
-    final isAllDayEvent = rawScheduledAt == null ||
-        (rawScheduledAt.hour == 0 &&
-            rawScheduledAt.minute == 0 &&
-            rawScheduledAt.second == 0);
 
     TaskType? parseType(dynamic v) {
       if (v == null) return null;
@@ -256,7 +251,7 @@ class TaskModel {
       category: json['category'] != null
           ? CategoryModel.fromJson(json['category'] as Map<String, dynamic>)
           : null,
-      scheduledAt: isAllDayEvent ? null : rawScheduledAt.toLocal(),
+      scheduledAt: rawScheduledAt?.toLocal(),
       dueAt: json['dueAt'] != null
           ? DateTime.parse(json['dueAt'] as String).toLocal()
           : null,
@@ -325,7 +320,6 @@ class TaskModel {
     return int.parse('FF$hex', radix: 16);
   }
 
-  bool get isAllDay => scheduledAt == null;
   bool get isCompleted => status == TaskStatus.completed;
   bool get isInProgress => status == TaskStatus.inProgress;
   bool get isHold => status == TaskStatus.hold;

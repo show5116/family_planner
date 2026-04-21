@@ -25,7 +25,6 @@ mixin _$TaskFormState {
   DateTime? get dueDate => throw _privateConstructorUsedError;
   TimeOfDay? get startTime => throw _privateConstructorUsedError;
   TimeOfDay? get dueTime => throw _privateConstructorUsedError;
-  bool get isAllDay => throw _privateConstructorUsedError;
   bool get hasDueDate => throw _privateConstructorUsedError; // 일정 속성
   TaskType get taskType => throw _privateConstructorUsedError;
   TaskPriority get priority => throw _privateConstructorUsedError;
@@ -83,7 +82,6 @@ abstract class $TaskFormStateCopyWith<$Res> {
     DateTime? dueDate,
     TimeOfDay? startTime,
     TimeOfDay? dueTime,
-    bool isAllDay,
     bool hasDueDate,
     TaskType taskType,
     TaskPriority priority,
@@ -135,7 +133,6 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
     Object? dueDate = freezed,
     Object? startTime = freezed,
     Object? dueTime = freezed,
-    Object? isAllDay = null,
     Object? hasDueDate = null,
     Object? taskType = null,
     Object? priority = null,
@@ -191,10 +188,6 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
                 ? _value.dueTime
                 : dueTime // ignore: cast_nullable_to_non_nullable
                       as TimeOfDay?,
-            isAllDay: null == isAllDay
-                ? _value.isAllDay
-                : isAllDay // ignore: cast_nullable_to_non_nullable
-                      as bool,
             hasDueDate: null == hasDueDate
                 ? _value.hasDueDate
                 : hasDueDate // ignore: cast_nullable_to_non_nullable
@@ -328,7 +321,6 @@ abstract class _$$TaskFormStateImplCopyWith<$Res>
     DateTime? dueDate,
     TimeOfDay? startTime,
     TimeOfDay? dueTime,
-    bool isAllDay,
     bool hasDueDate,
     TaskType taskType,
     TaskPriority priority,
@@ -380,7 +372,6 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
     Object? dueDate = freezed,
     Object? startTime = freezed,
     Object? dueTime = freezed,
-    Object? isAllDay = null,
     Object? hasDueDate = null,
     Object? taskType = null,
     Object? priority = null,
@@ -436,10 +427,6 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
             ? _value.dueTime
             : dueTime // ignore: cast_nullable_to_non_nullable
                   as TimeOfDay?,
-        isAllDay: null == isAllDay
-            ? _value.isAllDay
-            : isAllDay // ignore: cast_nullable_to_non_nullable
-                  as bool,
         hasDueDate: null == hasDueDate
             ? _value.hasDueDate
             : hasDueDate // ignore: cast_nullable_to_non_nullable
@@ -552,7 +539,6 @@ class _$TaskFormStateImpl extends _TaskFormState {
     this.dueDate,
     this.startTime,
     this.dueTime,
-    this.isAllDay = true,
     this.hasDueDate = false,
     this.taskType = TaskType.calendarOnly,
     this.priority = TaskPriority.medium,
@@ -601,9 +587,6 @@ class _$TaskFormStateImpl extends _TaskFormState {
   final TimeOfDay? startTime;
   @override
   final TimeOfDay? dueTime;
-  @override
-  @JsonKey()
-  final bool isAllDay;
   @override
   @JsonKey()
   final bool hasDueDate;
@@ -717,7 +700,7 @@ class _$TaskFormStateImpl extends _TaskFormState {
 
   @override
   String toString() {
-    return 'TaskFormState(title: $title, description: $description, location: $location, startDate: $startDate, dueDate: $dueDate, startTime: $startTime, dueTime: $dueTime, isAllDay: $isAllDay, hasDueDate: $hasDueDate, taskType: $taskType, priority: $priority, recurringType: $recurringType, recurringInterval: $recurringInterval, recurringEndType: $recurringEndType, recurringEndDate: $recurringEndDate, recurringCount: $recurringCount, recurringDaysOfWeek: $recurringDaysOfWeek, monthlyType: $monthlyType, monthlyDayOfMonth: $monthlyDayOfMonth, monthlyWeekOfMonth: $monthlyWeekOfMonth, monthlyDayOfWeek: $monthlyDayOfWeek, yearlyType: $yearlyType, yearlyMonth: $yearlyMonth, yearlyDayOfMonth: $yearlyDayOfMonth, yearlyWeekOfMonth: $yearlyWeekOfMonth, yearlyDayOfWeek: $yearlyDayOfWeek, selectedReminders: $selectedReminders, selectedCategory: $selectedCategory, selectedParticipantIds: $selectedParticipantIds, isSubmitting: $isSubmitting, editingTask: $editingTask, editingTaskId: $editingTaskId)';
+    return 'TaskFormState(title: $title, description: $description, location: $location, startDate: $startDate, dueDate: $dueDate, startTime: $startTime, dueTime: $dueTime, hasDueDate: $hasDueDate, taskType: $taskType, priority: $priority, recurringType: $recurringType, recurringInterval: $recurringInterval, recurringEndType: $recurringEndType, recurringEndDate: $recurringEndDate, recurringCount: $recurringCount, recurringDaysOfWeek: $recurringDaysOfWeek, monthlyType: $monthlyType, monthlyDayOfMonth: $monthlyDayOfMonth, monthlyWeekOfMonth: $monthlyWeekOfMonth, monthlyDayOfWeek: $monthlyDayOfWeek, yearlyType: $yearlyType, yearlyMonth: $yearlyMonth, yearlyDayOfMonth: $yearlyDayOfMonth, yearlyWeekOfMonth: $yearlyWeekOfMonth, yearlyDayOfWeek: $yearlyDayOfWeek, selectedReminders: $selectedReminders, selectedCategory: $selectedCategory, selectedParticipantIds: $selectedParticipantIds, isSubmitting: $isSubmitting, editingTask: $editingTask, editingTaskId: $editingTaskId)';
   }
 
   @override
@@ -736,8 +719,6 @@ class _$TaskFormStateImpl extends _TaskFormState {
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.dueTime, dueTime) || other.dueTime == dueTime) &&
-            (identical(other.isAllDay, isAllDay) ||
-                other.isAllDay == isAllDay) &&
             (identical(other.hasDueDate, hasDueDate) ||
                 other.hasDueDate == hasDueDate) &&
             (identical(other.taskType, taskType) ||
@@ -804,7 +785,6 @@ class _$TaskFormStateImpl extends _TaskFormState {
     dueDate,
     startTime,
     dueTime,
-    isAllDay,
     hasDueDate,
     taskType,
     priority,
@@ -849,7 +829,6 @@ abstract class _TaskFormState extends TaskFormState {
     final DateTime? dueDate,
     final TimeOfDay? startTime,
     final TimeOfDay? dueTime,
-    final bool isAllDay,
     final bool hasDueDate,
     final TaskType taskType,
     final TaskPriority priority,
@@ -892,8 +871,6 @@ abstract class _TaskFormState extends TaskFormState {
   TimeOfDay? get startTime;
   @override
   TimeOfDay? get dueTime;
-  @override
-  bool get isAllDay;
   @override
   bool get hasDueDate; // 일정 속성
   @override

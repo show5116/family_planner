@@ -113,9 +113,6 @@ class _CategoryChips extends StatelessWidget {
       runSpacing: AppSizes.spaceS,
       children: categories.map((category) {
         final isSelected = formState.selectedCategory?.id == category.id;
-        final color = category.color != null
-            ? Color(int.parse('FF${category.color!.replaceFirst('#', '')}', radix: 16))
-            : AppColors.primary;
 
         return ChoiceChip(
           label: Row(
@@ -129,12 +126,14 @@ class _CategoryChips extends StatelessWidget {
             ],
           ),
           selected: isSelected,
-          onSelected: (selected) {
-            if (selected) formNotifier.setSelectedCategory(category);
+          onSelected: (_) {
+            if (isSelected) {
+              formNotifier.setSelectedCategory(null);
+            } else {
+              formNotifier.setSelectedCategory(category);
+            }
           },
-          selectedColor: color.withValues(alpha: 0.3),
           labelStyle: TextStyle(
-            color: isSelected ? color : null,
             fontWeight: isSelected ? FontWeight.bold : null,
           ),
         );

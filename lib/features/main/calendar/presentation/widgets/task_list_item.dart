@@ -37,8 +37,6 @@ class TaskListItem extends ConsumerWidget {
   String _getTimeDisplay(AppLocalizations l10n) {
     if (_hasDateRange) {
       return '${task.scheduledAt!.month}/${task.scheduledAt!.day} ~ ${task.dueAt!.month}/${task.dueAt!.day}';
-    } else if (task.isAllDay) {
-      return l10n.schedule_allDay;
     } else if (task.scheduledAt != null) {
       return timeFormat.format(task.scheduledAt!);
     }
@@ -197,9 +195,7 @@ class _TaskInfo extends StatelessWidget {
             Icon(
               hasDateRange
                   ? Icons.date_range
-                  : task.isAllDay
-                      ? Icons.wb_sunny_outlined
-                      : Icons.access_time,
+                  : Icons.access_time,
               size: AppSizes.iconSmall,
               color: AppColors.textSecondary,
             ),

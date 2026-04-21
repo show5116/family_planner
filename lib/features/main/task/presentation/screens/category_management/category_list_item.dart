@@ -20,18 +20,11 @@ class CategoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = category.color != null
-        ? Color(int.parse('FF${category.color!.replaceFirst('#', '')}', radix: 16))
-        : AppColors.primary;
-
     return Card(
       elevation: AppSizes.elevation1,
       margin: EdgeInsets.zero,
       child: ListTile(
-        leading: _CategoryIcon(
-          emoji: category.emoji,
-          color: color,
-        ),
+        leading: _CategoryIcon(emoji: category.emoji),
         title: Text(
           category.name,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -45,11 +38,7 @@ class CategoryListItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )
             : null,
-        trailing: _CategoryTrailing(
-          color: color,
-          onEdit: onEdit,
-          onDelete: onDelete,
-        ),
+        trailing: _CategoryTrailing(onEdit: onEdit, onDelete: onDelete),
       ),
     );
   }
@@ -58,12 +47,8 @@ class CategoryListItem extends StatelessWidget {
 /// 카테고리 아이콘
 class _CategoryIcon extends StatelessWidget {
   final String? emoji;
-  final Color color;
 
-  const _CategoryIcon({
-    required this.emoji,
-    required this.color,
-  });
+  const _CategoryIcon({required this.emoji});
 
   @override
   Widget build(BuildContext context) {
@@ -71,26 +56,24 @@ class _CategoryIcon extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
       ),
       child: Center(
         child: emoji != null
             ? Text(emoji!, style: const TextStyle(fontSize: 24))
-            : Icon(Icons.category, color: color),
+            : const Icon(Icons.category),
       ),
     );
   }
 }
 
-/// 카테고리 트레일링 (색상 표시 + 메뉴)
+/// 카테고리 트레일링 (메뉴)
 class _CategoryTrailing extends StatelessWidget {
-  final Color color;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const _CategoryTrailing({
-    required this.color,
     required this.onEdit,
     required this.onDelete,
   });
@@ -99,20 +82,7 @@ class _CategoryTrailing extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // 색상 표시
-        Container(
-          width: 16,
-          height: 16,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(width: AppSizes.spaceS),
-        PopupMenuButton<String>(
+    return PopupMenuButton<String>(
           onSelected: (value) {
             if (value == 'edit') {
               onEdit();
@@ -142,8 +112,6 @@ class _CategoryTrailing extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ],
-    );
+        );
   }
 }

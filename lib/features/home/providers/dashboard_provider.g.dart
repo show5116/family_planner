@@ -7,7 +7,7 @@ part of 'dashboard_provider.dart';
 // **************************************************************************
 
 String _$dashboardTodayTasksHash() =>
-    r'0c7adb5ba6cd3bac97e74f74b3a49604979f9069';
+    r'af82804a0520b25b3924d3be9f8dfd03da3a99dc';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -207,7 +207,7 @@ class _DashboardTodayTasksProviderElement
 }
 
 String _$dashboardTodoTasksHash() =>
-    r'dd51e32c681cd475af6f3efaeeffb74fe287e8bf';
+    r'860e8df7e10a1d867ed2f56fc785d0e4001a4ee3';
 
 /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
 ///

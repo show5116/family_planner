@@ -105,7 +105,6 @@ class CategoryManagementScreen extends ConsumerWidget {
           name: result['name'] as String,
           description: result['description'] as String?,
           emoji: result['emoji'] as String?,
-          color: result['color'] as String?,
         );
 
         if (context.mounted) {
@@ -125,7 +124,6 @@ class CategoryManagementScreen extends ConsumerWidget {
           name: result['name'] as String,
           description: result['description'] as String?,
           emoji: result['emoji'] as String?,
-          color: result['color'] as String?,
         );
 
         if (context.mounted) {

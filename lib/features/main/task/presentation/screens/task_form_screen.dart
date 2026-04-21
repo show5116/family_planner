@@ -102,8 +102,6 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               const SizedBox(height: AppSizes.spaceL),
               TitleField(controller: _titleController, formNotifier: formNotifier),
               const SizedBox(height: AppSizes.spaceL),
-              AllDaySwitch(formState: formState, formNotifier: formNotifier),
-              const SizedBox(height: AppSizes.spaceM),
               DateTimeSection(formState: formState, formNotifier: formNotifier),
               const SizedBox(height: AppSizes.spaceL),
               CategorySection(formState: formState, formNotifier: formNotifier),
