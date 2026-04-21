@@ -224,10 +224,10 @@ class _ScheduleItem extends ConsumerWidget {
                 Text(
                   task.title,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        decoration: task.isCompleted
+                        decoration: task.type == TaskType.todoLinked && task.isCompleted
                             ? TextDecoration.lineThrough
                             : null,
-                        color: task.isCompleted
+                        color: task.type == TaskType.todoLinked && task.isCompleted
                             ? Theme.of(context).colorScheme.onSurfaceVariant
                             : null,
                       ),

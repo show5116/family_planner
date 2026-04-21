@@ -64,13 +64,15 @@ class TaskListItem extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSizes.spaceM),
           child: Row(
             children: [
-              // 완료 체크박스
-              _CompletionCheckbox(
-                isCompleted: task.isCompleted,
-                color: color,
-                onTap: onToggleComplete,
-              ),
-              const SizedBox(width: AppSizes.spaceM),
+              // 할일 연동 타입만 완료 체크박스 표시
+              if (task.type == TaskType.todoLinked) ...[
+                _CompletionCheckbox(
+                  isCompleted: task.isCompleted,
+                  color: color,
+                  onTap: onToggleComplete,
+                ),
+                const SizedBox(width: AppSizes.spaceM),
+              ],
 
               // 색상 표시 바
               _ColorBar(color: color),
