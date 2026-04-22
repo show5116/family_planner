@@ -140,7 +140,9 @@ class DashboardTab extends ConsumerWidget {
 class _DashboardGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(dashboardWidgetSettingsProvider);
+    final settingsAsync = ref.watch(dashboardWidgetSettingsProvider);
+    final settings = settingsAsync.valueOrNull;
+    if (settings == null) return const SizedBox.shrink();
 
     // 화면 크기에 따른 카드 너비 계산
     final screenWidth = MediaQuery.of(context).size.width;
@@ -186,12 +188,17 @@ class _DashboardGrid extends ConsumerWidget {
           break;
         case 'assetSummary':
           if (settings.showAssetSummary) {
-            widget = const AssetSummaryWidget();
+            widget = AssetSummaryWidget(
+              initialSelectedGroupId: settings.assetSelectedGroupId,
+            );
           }
           break;
         case 'memoSummary':
           if (settings.showMemoSummary) {
-            widget = const MemoSummaryWidget();
+            widget = MemoSummaryWidget(
+              initialSelectedGroupId: settings.memoSelectedGroupId,
+              initialPersonalOnly: settings.memoPersonalOnly,
+            );
           }
           break;
         case 'weather':

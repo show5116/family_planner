@@ -3,20 +3,76 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/extensions.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 자산 요약 위젯
-class AssetSummaryWidget extends ConsumerWidget {
-  const AssetSummaryWidget({super.key});
+class AssetSummaryWidget extends ConsumerStatefulWidget {
+  const AssetSummaryWidget({
+    super.key,
+    this.initialSelectedGroupId,
+  });
+
+  final String? initialSelectedGroupId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync = ref.watch(dashboardAssetStatisticsProvider);
+  ConsumerState<AssetSummaryWidget> createState() => _AssetSummaryWidgetState();
+}
+
+class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
+  String? _selectedGroupId;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGroupId = widget.initialSelectedGroupId;
+  }
+
+  Future<void> _saveFilter() async {
+    final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
+    if (current == null) return;
+    await ref.read(dashboardWidgetSettingsProvider.notifier).save(
+          current.copyWith(assetSelectedGroupId: _selectedGroupId),
+        );
+  }
+
+  Future<void> _showGroupPicker(List<Group> groups) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radiusMedium),
+        ),
+      ),
+      builder: (context) => _AssetGroupPickerSheet(
+        groups: groups,
+        selectedGroupId: _selectedGroupId,
+        onApply: (groupId) {
+          setState(() => _selectedGroupId = groupId);
+          _saveFilter();
+          Navigator.pop(context);
+        },
+      ),
+
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    final statsAsync = ref.watch(
+      dashboardAssetStatisticsProvider(selectedGroupId: _selectedGroupId),
+    );
+
+    final hasActiveFilter = _selectedGroupId != null;
 
     return statsAsync.when(
       loading: () => DashboardCard(
@@ -30,20 +86,48 @@ class AssetSummaryWidget extends ConsumerWidget {
           ),
         ),
       ),
-      error: (_, _) => _buildCard(context, AssetStatisticsModel.empty()),
-      data: (stats) => _buildCard(context, stats),
+      error: (e, _) => _buildCard(context, groups, AssetStatisticsModel.empty(), hasActiveFilter),
+      data: (stats) => _buildCard(context, groups, stats, hasActiveFilter),
     );
   }
 
-  Widget _buildCard(BuildContext context, AssetStatisticsModel stats) {
+  Widget _buildCard(BuildContext context, List<Group> groups, AssetStatisticsModel stats, bool hasActiveFilter) {
     final isProfit = stats.totalProfit >= 0;
 
+    String title = '자산 현황';
+    if (_selectedGroupId != null && groups.isNotEmpty) {
+      final group = groups.where((g) => g.id == _selectedGroupId).firstOrNull;
+      if (group != null) title = '${group.name} 자산';
+    }
+
     return DashboardCard(
-      title: '자산 현황',
+      title: title,
       icon: Icons.account_balance_wallet,
-      action: IconButton(
-        onPressed: () => context.push(AppRoutes.assetStatistics),
-        icon: const Icon(Icons.show_chart, size: AppSizes.iconMedium),
+      action: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (groups.isNotEmpty)
+            IconButton(
+              iconSize: 20,
+              visualDensity: VisualDensity.compact,
+              tooltip: '그룹 선택',
+              icon: Badge(
+                isLabelVisible: hasActiveFilter,
+                smallSize: 7,
+                child: Icon(
+                  Icons.tune,
+                  color: hasActiveFilter
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              onPressed: () => _showGroupPicker(groups),
+            ),
+          IconButton(
+            onPressed: () => context.push(AppRoutes.assetStatistics),
+            icon: const Icon(Icons.show_chart, size: AppSizes.iconMedium),
+          ),
+        ],
       ),
       onTap: () => context.push(AppRoutes.assets),
       child: Column(
@@ -79,6 +163,88 @@ class AssetSummaryWidget extends ConsumerWidget {
             const SizedBox(height: AppSizes.spaceM),
             _AssetDistribution(byType: stats.byType),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 자산 위젯 그룹 선택 바텀시트
+class _AssetGroupPickerSheet extends StatefulWidget {
+  const _AssetGroupPickerSheet({
+    required this.groups,
+    required this.selectedGroupId,
+    required this.onApply,
+  });
+
+  final List<Group> groups;
+  final String? selectedGroupId;
+  final void Function(String groupId) onApply;
+
+  @override
+  State<_AssetGroupPickerSheet> createState() => _AssetGroupPickerSheetState();
+}
+
+class _AssetGroupPickerSheetState extends State<_AssetGroupPickerSheet> {
+  late String _selectedGroupId;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGroupId = widget.selectedGroupId ?? widget.groups.first.id;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: AppSizes.spaceM),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
+            ),
+            child: Text('그룹 선택', style: Theme.of(context).textTheme.titleLarge),
+          ),
+          const Divider(),
+          RadioGroup<String>(
+            groupValue: _selectedGroupId,
+            onChanged: (v) => setState(() => _selectedGroupId = v!),
+            child: Column(
+              children: widget.groups
+                  .map((group) => RadioListTile<String>(
+                        title: Text(group.name),
+                        value: group.id,
+                      ))
+                  .toList(),
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.spaceL, 0, AppSizes.spaceL, AppSizes.spaceL,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => widget.onApply(_selectedGroupId),
+                child: const Text('적용'),
+              ),
+            ),
+          ),
         ],
       ),
     );

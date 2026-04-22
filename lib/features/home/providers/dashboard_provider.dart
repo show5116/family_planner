@@ -149,22 +149,36 @@ Future<List<TaskModel>> dashboardTodoTasks(
 }
 
 /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
 @riverpod
-Future<AssetStatisticsModel> dashboardAssetStatistics(Ref ref) async {
+Future<AssetStatisticsModel> dashboardAssetStatistics(
+  Ref ref, {
+  String? selectedGroupId,
+}) async {
   final link = ref.keepAlive();
   Timer(_dashboardCacheDuration, link.close);
-  final groupsAsync = await ref.watch(myGroupsProvider.future);
+  final groups = await ref.watch(myGroupsProvider.future);
 
-  if (groupsAsync.isEmpty) return AssetStatisticsModel.empty();
+  if (groups.isEmpty) return AssetStatisticsModel.empty();
 
-  final firstGroupId = groupsAsync.first.id;
+  final groupId = selectedGroupId ?? groups.first.id;
   final repository = ref.watch(assetRepositoryProvider);
 
-  return repository.getAssetStatistics(groupId: firstGroupId);
+  return repository.getAssetStatistics(groupId: groupId);
 }
 
 /// 대시보드 메모 요약 - 핀된 메모 목록 위임
+///
+/// [selectedGroupId] null = 전체 그룹
 @riverpod
-Future<List<MemoModel>> dashboardMemos(Ref ref) {
-  return ref.watch(pinnedMemosProvider.future);
+Future<List<MemoModel>> dashboardMemos(
+  Ref ref, {
+  String? selectedGroupId,
+  bool personalOnly = false,
+}) {
+  return ref.watch(pinnedMemosProvider(
+    groupId: personalOnly ? null : selectedGroupId,
+    personal: personalOnly ? true : null,
+  ).future);
 }

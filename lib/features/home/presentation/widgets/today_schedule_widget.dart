@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/home/presentation/widgets/schedule_filter_sheet.dart';
@@ -13,8 +11,6 @@ import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
-
-const _prefKey = 'dashboard_widget_settings';
 
 /// 일정 위젯 (오늘 / 금주 / 이번달, 그룹 필터 지원)
 class TodayScheduleWidget extends ConsumerStatefulWidget {
@@ -67,14 +63,14 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
   }
 
   Future<void> _saveFilter() async {
-    final prefs = await SharedPreferences.getInstance();
-    final settingsJson = prefs.getString(_prefKey);
-    final Map<String, dynamic> map = settingsJson != null
-        ? json.decode(settingsJson) as Map<String, dynamic>
-        : {};
-    map['scheduleSelectedGroupIds'] = _selectedGroupIds;
-    map['scheduleIncludePersonal'] = _includePersonal;
-    await prefs.setString(_prefKey, json.encode(map));
+    final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
+    if (current == null) return;
+    await ref.read(dashboardWidgetSettingsProvider.notifier).save(
+          current.copyWith(
+            scheduleSelectedGroupIds: _selectedGroupIds,
+            scheduleIncludePersonal: _includePersonal,
+          ),
+        );
   }
 
   Future<void> _showFilterSheet() async {

@@ -173,14 +173,7 @@ class MemoCard extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: AppSizes.spaceXS),
-        GestureDetector(
-          onTap: () => ref.read(memoPinProvider.notifier).togglePin(memo.id),
-          child: Icon(
-            memo.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
-            size: AppSizes.iconSmall,
-            color: memo.isPinned ? AppColors.primary : AppColors.textSecondary,
-          ),
-        ),
+        _PinButton(memoId: memo.id, isPinned: memo.isPinned),
       ],
     );
   }
@@ -213,6 +206,44 @@ class MemoCard extends ConsumerWidget {
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: AppColors.textSecondary,
           ),
+    );
+  }
+}
+
+class _PinButton extends ConsumerWidget {
+  const _PinButton({required this.memoId, required this.isPinned});
+
+  final String memoId;
+  final bool isPinned;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pinState = ref.watch(memoPinProvider);
+    final isLoading = pinState.isLoading;
+
+    ref.listen(memoPinProvider, (_, next) {
+      if (next.hasError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('핀 설정에 실패했습니다')),
+        );
+      }
+    });
+
+    if (isLoading) {
+      return const SizedBox(
+        width: AppSizes.iconSmall,
+        height: AppSizes.iconSmall,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
+    }
+
+    return GestureDetector(
+      onTap: () => ref.read(memoPinProvider.notifier).togglePin(memoId),
+      child: Icon(
+        isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+        size: AppSizes.iconSmall,
+        color: isPinned ? AppColors.primary : AppColors.textSecondary,
+      ),
     );
   }
 }

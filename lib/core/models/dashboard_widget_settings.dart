@@ -17,6 +17,11 @@ class DashboardWidgetSettings {
   final ScheduleViewMode todoViewMode;
   final List<String>? todoSelectedGroupIds; // null = 전체 그룹
   final bool todoIncludePersonal;
+  // 자산 위젯 필터
+  final String? assetSelectedGroupId; // null = 첫 번째 그룹
+  // 메모 위젯 필터
+  final String? memoSelectedGroupId; // null = 전체 그룹
+  final bool memoPersonalOnly;
 
   const DashboardWidgetSettings({
     this.showTodaySchedule = true,
@@ -31,6 +36,9 @@ class DashboardWidgetSettings {
     this.todoViewMode = ScheduleViewMode.today,
     this.todoSelectedGroupIds,
     this.todoIncludePersonal = true,
+    this.assetSelectedGroupId,
+    this.memoSelectedGroupId,
+    this.memoPersonalOnly = false,
     this.widgetOrder = const [
       'weather',
       'todaySchedule',
@@ -92,6 +100,9 @@ class DashboardWidgetSettings {
       todoViewMode: parseMode('todoViewMode'),
       todoSelectedGroupIds: parseGroupIds('todoSelectedGroupIds'),
       todoIncludePersonal: json['todoIncludePersonal'] as bool? ?? true,
+      assetSelectedGroupId: json['assetSelectedGroupId'] as String?,
+      memoSelectedGroupId: json['memoSelectedGroupId'] as String?,
+      memoPersonalOnly: json['memoPersonalOnly'] as bool? ?? false,
       widgetOrder: mergedOrder,
     );
   }
@@ -110,6 +121,9 @@ class DashboardWidgetSettings {
       'todoViewMode': todoViewMode.name,
       'todoSelectedGroupIds': todoSelectedGroupIds,
       'todoIncludePersonal': todoIncludePersonal,
+      'assetSelectedGroupId': assetSelectedGroupId,
+      'memoSelectedGroupId': memoSelectedGroupId,
+      'memoPersonalOnly': memoPersonalOnly,
       'widgetOrder': widgetOrder,
     };
   }
@@ -127,6 +141,9 @@ class DashboardWidgetSettings {
     ScheduleViewMode? todoViewMode,
     Object? todoSelectedGroupIds = _sentinel,
     bool? todoIncludePersonal,
+    Object? assetSelectedGroupId = _sentinel,
+    Object? memoSelectedGroupId = _sentinel,
+    bool? memoPersonalOnly,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -146,6 +163,13 @@ class DashboardWidgetSettings {
           ? this.todoSelectedGroupIds
           : todoSelectedGroupIds as List<String>?,
       todoIncludePersonal: todoIncludePersonal ?? this.todoIncludePersonal,
+      assetSelectedGroupId: assetSelectedGroupId == _sentinel
+          ? this.assetSelectedGroupId
+          : assetSelectedGroupId as String?,
+      memoSelectedGroupId: memoSelectedGroupId == _sentinel
+          ? this.memoSelectedGroupId
+          : memoSelectedGroupId as String?,
+      memoPersonalOnly: memoPersonalOnly ?? this.memoPersonalOnly,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }

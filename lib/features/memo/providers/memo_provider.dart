@@ -86,6 +86,7 @@ class MemoList extends _$MemoList {
   /// 그룹 필터 설정
   Future<void> setGroupId(String? groupId) async {
     _groupIdFilter = groupId;
+    _visibilityFilter = null;
     await refresh();
   }
 
@@ -381,9 +382,13 @@ final checklistProvider = StateNotifierProvider.family<
 
 /// 핀된 메모 목록 Provider
 @riverpod
-Future<List<MemoModel>> pinnedMemos(Ref ref) async {
+Future<List<MemoModel>> pinnedMemos(
+  Ref ref, {
+  String? groupId,
+  bool? personal,
+}) async {
   final repository = ref.watch(memoRepositoryProvider);
-  return repository.getPinnedMemos();
+  return repository.getPinnedMemos(groupId: groupId, personal: personal);
 }
 
 /// 핀 토글 Notifier

@@ -133,9 +133,15 @@ class MemoRepository {
   // ── 핀 ──────────────────────────────────────────────────────────
 
   /// 핀된 메모 목록 조회 (대시보드 위젯용)
-  Future<List<MemoModel>> getPinnedMemos() async {
+  Future<List<MemoModel>> getPinnedMemos({
+    String? groupId,
+    bool? personal,
+  }) async {
     try {
-      final response = await _dio.get('/memos/pinned');
+      final response = await _dio.get('/memos/pinned', queryParameters: {
+        if (groupId != null) 'groupId': groupId,
+        if (personal != null) 'personal': personal,
+      });
       final data = response.data;
       final list = data is List ? data : [data];
       return list

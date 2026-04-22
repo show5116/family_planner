@@ -306,26 +306,154 @@ class _MemoDetailProviderElement
   String get id => (origin as MemoDetailProvider).id;
 }
 
-String _$pinnedMemosHash() => r'9ac758350b2d8b21192638aad02aad421973cd36';
+String _$pinnedMemosHash() => r'6df659f574252cd1ef2109008cf68a8d33d18c4d';
 
 /// 핀된 메모 목록 Provider
 ///
 /// Copied from [pinnedMemos].
 @ProviderFor(pinnedMemos)
-final pinnedMemosProvider = AutoDisposeFutureProvider<List<MemoModel>>.internal(
-  pinnedMemos,
-  name: r'pinnedMemosProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pinnedMemosHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const pinnedMemosProvider = PinnedMemosFamily();
+
+/// 핀된 메모 목록 Provider
+///
+/// Copied from [pinnedMemos].
+class PinnedMemosFamily extends Family<AsyncValue<List<MemoModel>>> {
+  /// 핀된 메모 목록 Provider
+  ///
+  /// Copied from [pinnedMemos].
+  const PinnedMemosFamily();
+
+  /// 핀된 메모 목록 Provider
+  ///
+  /// Copied from [pinnedMemos].
+  PinnedMemosProvider call({String? groupId, bool? personal}) {
+    return PinnedMemosProvider(groupId: groupId, personal: personal);
+  }
+
+  @override
+  PinnedMemosProvider getProviderOverride(
+    covariant PinnedMemosProvider provider,
+  ) {
+    return call(groupId: provider.groupId, personal: provider.personal);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'pinnedMemosProvider';
+}
+
+/// 핀된 메모 목록 Provider
+///
+/// Copied from [pinnedMemos].
+class PinnedMemosProvider extends AutoDisposeFutureProvider<List<MemoModel>> {
+  /// 핀된 메모 목록 Provider
+  ///
+  /// Copied from [pinnedMemos].
+  PinnedMemosProvider({String? groupId, bool? personal})
+    : this._internal(
+        (ref) => pinnedMemos(
+          ref as PinnedMemosRef,
+          groupId: groupId,
+          personal: personal,
+        ),
+        from: pinnedMemosProvider,
+        name: r'pinnedMemosProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$pinnedMemosHash,
+        dependencies: PinnedMemosFamily._dependencies,
+        allTransitiveDependencies: PinnedMemosFamily._allTransitiveDependencies,
+        groupId: groupId,
+        personal: personal,
+      );
+
+  PinnedMemosProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+    required this.personal,
+  }) : super.internal();
+
+  final String? groupId;
+  final bool? personal;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<MemoModel>> Function(PinnedMemosRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: PinnedMemosProvider._internal(
+        (ref) => create(ref as PinnedMemosRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+        personal: personal,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<MemoModel>> createElement() {
+    return _PinnedMemosProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PinnedMemosProvider &&
+        other.groupId == groupId &&
+        other.personal == personal;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+    hash = _SystemHash.combine(hash, personal.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef PinnedMemosRef = AutoDisposeFutureProviderRef<List<MemoModel>>;
-String _$memoListHash() => r'fc76c15855d1379acc5af0a8d36bb4b285a5a194';
+mixin PinnedMemosRef on AutoDisposeFutureProviderRef<List<MemoModel>> {
+  /// The parameter `groupId` of this provider.
+  String? get groupId;
+
+  /// The parameter `personal` of this provider.
+  bool? get personal;
+}
+
+class _PinnedMemosProviderElement
+    extends AutoDisposeFutureProviderElement<List<MemoModel>>
+    with PinnedMemosRef {
+  _PinnedMemosProviderElement(super.provider);
+
+  @override
+  String? get groupId => (origin as PinnedMemosProvider).groupId;
+  @override
+  bool? get personal => (origin as PinnedMemosProvider).personal;
+}
+
+String _$memoListHash() => r'1855d2a1c7bbc4a87baaac7dee6f81efc50025b0';
 
 /// 메모 목록 Provider (무한 스크롤 + 검색 지원)
 ///

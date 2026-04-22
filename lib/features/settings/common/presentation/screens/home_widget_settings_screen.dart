@@ -12,7 +12,8 @@ class HomeWidgetSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(dashboardWidgetSettingsProvider);
+    final settings = ref.watch(dashboardWidgetSettingsProvider).valueOrNull;
+    if (settings == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
     return _HomeWidgetSettingsBody(settings: settings);
   }
 }
@@ -45,7 +46,7 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
 
   /// 설정 저장
   Future<void> _saveSettings() async {
-    await ref.read(dashboardWidgetSettingsProvider.notifier).update(_settings);
+    await ref.read(dashboardWidgetSettingsProvider.notifier).save(_settings);
 
     if (mounted) {
       final l10n = AppLocalizations.of(context)!;

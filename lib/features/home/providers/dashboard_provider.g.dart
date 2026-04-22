@@ -386,46 +386,331 @@ class _DashboardTodoTasksProviderElement
 }
 
 String _$dashboardAssetStatisticsHash() =>
-    r'78d741c9bdc65621e737891a354d4ae4924fcac0';
+    r'4fccd6bd6109d42c7c1ec7ba78a800abf8edb301';
 
 /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
 ///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+///
 /// Copied from [dashboardAssetStatistics].
 @ProviderFor(dashboardAssetStatistics)
-final dashboardAssetStatisticsProvider =
-    AutoDisposeFutureProvider<AssetStatisticsModel>.internal(
-      dashboardAssetStatistics,
-      name: r'dashboardAssetStatisticsProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dashboardAssetStatisticsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+const dashboardAssetStatisticsProvider = DashboardAssetStatisticsFamily();
+
+/// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+///
+/// Copied from [dashboardAssetStatistics].
+class DashboardAssetStatisticsFamily
+    extends Family<AsyncValue<AssetStatisticsModel>> {
+  /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
+  ///
+  /// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+  ///
+  /// Copied from [dashboardAssetStatistics].
+  const DashboardAssetStatisticsFamily();
+
+  /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
+  ///
+  /// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+  ///
+  /// Copied from [dashboardAssetStatistics].
+  DashboardAssetStatisticsProvider call({String? selectedGroupId}) {
+    return DashboardAssetStatisticsProvider(selectedGroupId: selectedGroupId);
+  }
+
+  @override
+  DashboardAssetStatisticsProvider getProviderOverride(
+    covariant DashboardAssetStatisticsProvider provider,
+  ) {
+    return call(selectedGroupId: provider.selectedGroupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dashboardAssetStatisticsProvider';
+}
+
+/// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+///
+/// Copied from [dashboardAssetStatistics].
+class DashboardAssetStatisticsProvider
+    extends AutoDisposeFutureProvider<AssetStatisticsModel> {
+  /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
+  ///
+  /// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+  ///
+  /// Copied from [dashboardAssetStatistics].
+  DashboardAssetStatisticsProvider({String? selectedGroupId})
+    : this._internal(
+        (ref) => dashboardAssetStatistics(
+          ref as DashboardAssetStatisticsRef,
+          selectedGroupId: selectedGroupId,
+        ),
+        from: dashboardAssetStatisticsProvider,
+        name: r'dashboardAssetStatisticsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$dashboardAssetStatisticsHash,
+        dependencies: DashboardAssetStatisticsFamily._dependencies,
+        allTransitiveDependencies:
+            DashboardAssetStatisticsFamily._allTransitiveDependencies,
+        selectedGroupId: selectedGroupId,
+      );
+
+  DashboardAssetStatisticsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.selectedGroupId,
+  }) : super.internal();
+
+  final String? selectedGroupId;
+
+  @override
+  Override overrideWith(
+    FutureOr<AssetStatisticsModel> Function(
+      DashboardAssetStatisticsRef provider,
+    )
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DashboardAssetStatisticsProvider._internal(
+        (ref) => create(ref as DashboardAssetStatisticsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        selectedGroupId: selectedGroupId,
+      ),
     );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<AssetStatisticsModel> createElement() {
+    return _DashboardAssetStatisticsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardAssetStatisticsProvider &&
+        other.selectedGroupId == selectedGroupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, selectedGroupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DashboardAssetStatisticsRef =
-    AutoDisposeFutureProviderRef<AssetStatisticsModel>;
-String _$dashboardMemosHash() => r'70952519d520b7df6315fb598899f69eca20b68f';
+mixin DashboardAssetStatisticsRef
+    on AutoDisposeFutureProviderRef<AssetStatisticsModel> {
+  /// The parameter `selectedGroupId` of this provider.
+  String? get selectedGroupId;
+}
+
+class _DashboardAssetStatisticsProviderElement
+    extends AutoDisposeFutureProviderElement<AssetStatisticsModel>
+    with DashboardAssetStatisticsRef {
+  _DashboardAssetStatisticsProviderElement(super.provider);
+
+  @override
+  String? get selectedGroupId =>
+      (origin as DashboardAssetStatisticsProvider).selectedGroupId;
+}
+
+String _$dashboardMemosHash() => r'286363aaa844785258f55027272858bb57a6e839';
 
 /// 대시보드 메모 요약 - 핀된 메모 목록 위임
 ///
+/// [selectedGroupId] null = 전체 그룹
+///
 /// Copied from [dashboardMemos].
 @ProviderFor(dashboardMemos)
-final dashboardMemosProvider =
-    AutoDisposeFutureProvider<List<MemoModel>>.internal(
-      dashboardMemos,
-      name: r'dashboardMemosProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dashboardMemosHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+const dashboardMemosProvider = DashboardMemosFamily();
+
+/// 대시보드 메모 요약 - 핀된 메모 목록 위임
+///
+/// [selectedGroupId] null = 전체 그룹
+///
+/// Copied from [dashboardMemos].
+class DashboardMemosFamily extends Family<AsyncValue<List<MemoModel>>> {
+  /// 대시보드 메모 요약 - 핀된 메모 목록 위임
+  ///
+  /// [selectedGroupId] null = 전체 그룹
+  ///
+  /// Copied from [dashboardMemos].
+  const DashboardMemosFamily();
+
+  /// 대시보드 메모 요약 - 핀된 메모 목록 위임
+  ///
+  /// [selectedGroupId] null = 전체 그룹
+  ///
+  /// Copied from [dashboardMemos].
+  DashboardMemosProvider call({
+    String? selectedGroupId,
+    bool personalOnly = false,
+  }) {
+    return DashboardMemosProvider(
+      selectedGroupId: selectedGroupId,
+      personalOnly: personalOnly,
     );
+  }
+
+  @override
+  DashboardMemosProvider getProviderOverride(
+    covariant DashboardMemosProvider provider,
+  ) {
+    return call(
+      selectedGroupId: provider.selectedGroupId,
+      personalOnly: provider.personalOnly,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dashboardMemosProvider';
+}
+
+/// 대시보드 메모 요약 - 핀된 메모 목록 위임
+///
+/// [selectedGroupId] null = 전체 그룹
+///
+/// Copied from [dashboardMemos].
+class DashboardMemosProvider
+    extends AutoDisposeFutureProvider<List<MemoModel>> {
+  /// 대시보드 메모 요약 - 핀된 메모 목록 위임
+  ///
+  /// [selectedGroupId] null = 전체 그룹
+  ///
+  /// Copied from [dashboardMemos].
+  DashboardMemosProvider({String? selectedGroupId, bool personalOnly = false})
+    : this._internal(
+        (ref) => dashboardMemos(
+          ref as DashboardMemosRef,
+          selectedGroupId: selectedGroupId,
+          personalOnly: personalOnly,
+        ),
+        from: dashboardMemosProvider,
+        name: r'dashboardMemosProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$dashboardMemosHash,
+        dependencies: DashboardMemosFamily._dependencies,
+        allTransitiveDependencies:
+            DashboardMemosFamily._allTransitiveDependencies,
+        selectedGroupId: selectedGroupId,
+        personalOnly: personalOnly,
+      );
+
+  DashboardMemosProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.selectedGroupId,
+    required this.personalOnly,
+  }) : super.internal();
+
+  final String? selectedGroupId;
+  final bool personalOnly;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<MemoModel>> Function(DashboardMemosRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DashboardMemosProvider._internal(
+        (ref) => create(ref as DashboardMemosRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        selectedGroupId: selectedGroupId,
+        personalOnly: personalOnly,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<MemoModel>> createElement() {
+    return _DashboardMemosProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardMemosProvider &&
+        other.selectedGroupId == selectedGroupId &&
+        other.personalOnly == personalOnly;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, selectedGroupId.hashCode);
+    hash = _SystemHash.combine(hash, personalOnly.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DashboardMemosRef = AutoDisposeFutureProviderRef<List<MemoModel>>;
+mixin DashboardMemosRef on AutoDisposeFutureProviderRef<List<MemoModel>> {
+  /// The parameter `selectedGroupId` of this provider.
+  String? get selectedGroupId;
+
+  /// The parameter `personalOnly` of this provider.
+  bool get personalOnly;
+}
+
+class _DashboardMemosProviderElement
+    extends AutoDisposeFutureProviderElement<List<MemoModel>>
+    with DashboardMemosRef {
+  _DashboardMemosProviderElement(super.provider);
+
+  @override
+  String? get selectedGroupId =>
+      (origin as DashboardMemosProvider).selectedGroupId;
+  @override
+  bool get personalOnly => (origin as DashboardMemosProvider).personalOnly;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

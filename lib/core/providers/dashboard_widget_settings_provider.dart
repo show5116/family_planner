@@ -7,31 +7,28 @@ import 'package:family_planner/core/models/dashboard_widget_settings.dart';
 
 const _prefsKey = 'dashboard_widget_settings';
 
-class DashboardWidgetSettingsNotifier extends Notifier<DashboardWidgetSettings> {
+class DashboardWidgetSettingsNotifier
+    extends AsyncNotifier<DashboardWidgetSettings> {
   @override
-  DashboardWidgetSettings build() {
-    _load();
-    return DashboardWidgetSettings.defaultSettings();
-  }
-
-  Future<void> _load() async {
+  Future<DashboardWidgetSettings> build() async {
     final prefs = await SharedPreferences.getInstance();
     final json = prefs.getString(_prefsKey);
     if (json != null) {
-      state = DashboardWidgetSettings.fromJson(
+      return DashboardWidgetSettings.fromJson(
         jsonDecode(json) as Map<String, dynamic>,
       );
     }
+    return DashboardWidgetSettings.defaultSettings();
   }
 
-  Future<void> update(DashboardWidgetSettings settings) async {
-    state = settings;
+  Future<void> save(DashboardWidgetSettings settings) async {
+    state = AsyncData(settings);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefsKey, jsonEncode(settings.toJson()));
   }
 }
 
-final dashboardWidgetSettingsProvider =
-    NotifierProvider<DashboardWidgetSettingsNotifier, DashboardWidgetSettings>(
+final dashboardWidgetSettingsProvider = AsyncNotifierProvider<
+    DashboardWidgetSettingsNotifier, DashboardWidgetSettings>(
   DashboardWidgetSettingsNotifier.new,
 );
