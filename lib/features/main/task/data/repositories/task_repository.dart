@@ -72,9 +72,17 @@ class TaskRepository {
     bool includePersonal = true,
     List<String>? categoryIds,
   }) async {
-    // 해당 월의 첫날과 마지막날
-    final startDate = DateTime(year, month, 1);
-    final endDate = DateTime(year, month + 1, 0, 23, 59, 59);
+    // 캘린더에 실제 표시되는 범위 (일요일 시작 기준)
+    // 해당 월 1일의 직전 일요일 ~ 마지막 날의 다음 토요일
+    final firstOfMonth = DateTime(year, month, 1);
+    final lastOfMonth = DateTime(year, month + 1, 0);
+    final startDayOffset = firstOfMonth.weekday % 7; // 일=0, 월=1, ..., 토=6
+    final endDayOffset = 6 - (lastOfMonth.weekday % 7);
+    final startDate = firstOfMonth.subtract(Duration(days: startDayOffset));
+    final endDate = DateTime(
+      lastOfMonth.year, lastOfMonth.month,
+      lastOfMonth.day + endDayOffset, 23, 59, 59,
+    );
 
     final response = await getTasks(
       view: 'calendar',
