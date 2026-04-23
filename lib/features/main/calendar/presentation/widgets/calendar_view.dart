@@ -44,6 +44,73 @@ class CalendarView extends ConsumerStatefulWidget {
 }
 
 class _CalendarViewState extends ConsumerState<CalendarView> {
+  /// 멀티데이 이벤트 슬롯 맵: 날짜별로 각 이벤트가 몇 번째 row에 그려질지 사전 계산
+  /// key: 날짜(날짜만), value: {taskId: rowIndex}
+  Map<DateTime, Map<String, int>> _multiDaySlotMap = {};
+
+  @override
+  void didUpdateWidget(CalendarView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 데이터가 바뀌거나 로딩 완료 시 슬롯 맵 재계산
+    if (oldWidget.tasksAsync != widget.tasksAsync) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _buildSlotMap());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _buildSlotMap());
+  }
+
+  void _buildSlotMap() {
+    final tasks = widget.tasksAsync.valueOrNull ?? [];
+    final multiDay = tasks.where((t) {
+      if (t.scheduledAt == null || t.dueAt == null) return false;
+      final s = DateTime(t.scheduledAt!.year, t.scheduledAt!.month, t.scheduledAt!.day);
+      final e = DateTime(t.dueAt!.year, t.dueAt!.month, t.dueAt!.day);
+      return s != e;
+    }).toList()
+      ..sort((a, b) => a.scheduledAt!.compareTo(b.scheduledAt!));
+
+    // 날짜 범위별로 슬롯 할당 (greedy interval scheduling)
+    // slots[rowIndex] = 해당 row의 마지막 end 날짜
+    final slotEnds = <DateTime>[];
+    final taskSlot = <String, int>{};
+
+    for (final task in multiDay) {
+      final start = DateTime(task.scheduledAt!.year, task.scheduledAt!.month, task.scheduledAt!.day);
+      final end = DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day);
+      int slot = -1;
+      for (int i = 0; i < slotEnds.length; i++) {
+        if (!start.isBefore(slotEnds[i].add(const Duration(days: 1)))) {
+          slot = i;
+          slotEnds[i] = end;
+          break;
+        }
+      }
+      if (slot == -1) {
+        slot = slotEnds.length;
+        slotEnds.add(end);
+      }
+      taskSlot[task.id] = slot;
+    }
+
+    // 날짜별 슬롯 맵 구성
+    final map = <DateTime, Map<String, int>>{};
+    for (final task in multiDay) {
+      final start = DateTime(task.scheduledAt!.year, task.scheduledAt!.month, task.scheduledAt!.day);
+      final end = DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day);
+      final slot = taskSlot[task.id]!;
+      for (var d = start; !d.isAfter(end); d = d.add(const Duration(days: 1))) {
+        final key = DateTime(d.year, d.month, d.day);
+        map.putIfAbsent(key, () => {})[task.id] = slot;
+      }
+    }
+
+    setState(() => _multiDaySlotMap = map);
+  }
+
   /// 멀티데이 이벤트의 위치를 반환 (start, middle, end, single)
   MultiDayPosition _getMultiDayPosition(TaskModel task, DateTime date) {
     if (task.scheduledAt == null) return MultiDayPosition.single;
@@ -201,6 +268,8 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       markersMaxCount: 3,
       markerSize: 6,
       markerMargin: const EdgeInsets.symmetric(horizontal: 0.5),
+      // 멀티데이 바가 셀 경계를 넘어 인접 셀과 이어질 수 있도록 클리핑 해제
+      canMarkersOverflow: true,
     );
   }
 
@@ -274,6 +343,9 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       markerBuilder: (context, date, events) {
         if (events.isEmpty) return null;
 
+        final dateKey = DateTime(date.year, date.month, date.day);
+        final slotMap = _multiDaySlotMap[dateKey] ?? {};
+
         // 멀티데이 이벤트와 단일 이벤트 분리
         final multiDayEvents = <TaskModel>[];
         final singleDayEvents = <TaskModel>[];
@@ -287,34 +359,65 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
           }
         }
 
+        // 슬롯 번호 → task 맵 구성 (최대 2슬롯)
+        final slotToTask = <int, TaskModel>{};
+        for (final task in multiDayEvents) {
+          final slot = slotMap[task.id];
+          if (slot != null && slot < 2) {
+            slotToTask[slot] = task;
+          }
+        }
+        // 각 슬롯을 개별 Positioned로 배치 — 절대 위치 고정으로 날짜 간 높이 일치
+        const barHeight = 4.0;
+        const barVerticalMargin = 1.0;
+        const barSlotHeight = barHeight + barVerticalMargin * 2;
+
+        final bars = <Widget>[
+          for (int slot = 0; slot < 2; slot++)
+            if (slotToTask.containsKey(slot))
+              Positioned(
+                left: 0,
+                right: 0,
+                // slot 0은 bottom 기준 위쪽, slot 1은 바로 아래
+                bottom: 1 + (1 - slot) * barSlotHeight,
+                child: _buildMultiDayBar(
+                  _getMultiDayPosition(slotToTask[slot]!, date),
+                  _taskColor(slotToTask[slot]!),
+                ),
+              ),
+        ];
+
+        // 멀티데이 바가 없으면 단일 마커만
+        if (bars.isEmpty && singleDayEvents.isEmpty) return null;
+
         return Positioned(
           left: 0,
           right: 0,
-          bottom: 1,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          bottom: 0,
+          top: 0,
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              // 멀티데이 이벤트 바
-              ...multiDayEvents.take(2).map((task) {
-                final position = _getMultiDayPosition(task, date);
-                final color = _taskColor(task);
-                return _buildMultiDayBar(position, color);
-              }),
-              // 단일 이벤트 마커
+              ...bars,
               if (singleDayEvents.isNotEmpty)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: singleDayEvents.take(3).map((task) {
-                    return Container(
-                      width: 6,
-                      height: 6,
-                      margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                      decoration: BoxDecoration(
-                        color: _taskColor(task),
-                        shape: BoxShape.circle,
-                      ),
-                    );
-                  }).toList(),
+                Positioned(
+                  bottom: 1,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: singleDayEvents.take(3).map((task) {
+                      return Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.symmetric(horizontal: 0.5),
+                        decoration: BoxDecoration(
+                          color: _taskColor(task),
+                          shape: BoxShape.circle,
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
             ],
           ),
@@ -353,45 +456,50 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     const barHeight = 4.0;
     const verticalMargin = 1.0;
 
-    BorderRadius borderRadius;
-    EdgeInsets margin;
-
     switch (position) {
       case MultiDayPosition.start:
-        borderRadius = const BorderRadius.only(
-          topLeft: Radius.circular(barHeight / 2),
-          bottomLeft: Radius.circular(barHeight / 2),
+        return Container(
+          height: barHeight,
+          margin: const EdgeInsets.only(
+              left: 4, right: 0, top: verticalMargin, bottom: verticalMargin),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(barHeight / 2),
+              bottomLeft: Radius.circular(barHeight / 2),
+            ),
+          ),
         );
-        margin = const EdgeInsets.only(
-            left: 4, right: 0, top: verticalMargin, bottom: verticalMargin);
-        break;
       case MultiDayPosition.middle:
-        borderRadius = BorderRadius.zero;
-        margin = const EdgeInsets.only(
-            left: 0, right: 0, top: verticalMargin, bottom: verticalMargin);
-        break;
-      case MultiDayPosition.end:
-        borderRadius = const BorderRadius.only(
-          topRight: Radius.circular(barHeight / 2),
-          bottomRight: Radius.circular(barHeight / 2),
+        return Container(
+          height: barHeight,
+          margin: const EdgeInsets.only(
+              left: 0, right: 0, top: verticalMargin, bottom: verticalMargin),
+          decoration: BoxDecoration(color: color),
         );
-        margin = const EdgeInsets.only(
-            left: 0, right: 4, top: verticalMargin, bottom: verticalMargin);
-        break;
+      case MultiDayPosition.end:
+        return Container(
+          height: barHeight,
+          margin: const EdgeInsets.only(
+              left: 0, right: 4, top: verticalMargin, bottom: verticalMargin),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(barHeight / 2),
+              bottomRight: Radius.circular(barHeight / 2),
+            ),
+          ),
+        );
       case MultiDayPosition.single:
-        borderRadius = BorderRadius.circular(barHeight / 2);
-        margin = const EdgeInsets.symmetric(
-            horizontal: 4, vertical: verticalMargin);
-        break;
+        return Container(
+          height: barHeight,
+          margin: const EdgeInsets.symmetric(
+              horizontal: 4, vertical: verticalMargin),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(barHeight / 2),
+          ),
+        );
     }
-
-    return Container(
-      height: barHeight,
-      margin: margin,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: borderRadius,
-      ),
-    );
   }
 }
