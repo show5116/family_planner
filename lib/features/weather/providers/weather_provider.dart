@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,16 +18,13 @@ class LatLon {
   const LatLon({required this.lat, required this.lon});
 }
 
-/// 위치 조회 (웹: Geolocation API, 비웹: 서울 기본값)
+/// 위치 조회 (웹: Geolocation API, 모바일/데스크톱: GPS)
 @riverpod
 Future<LatLon> location(Ref ref) async {
   final link = ref.keepAlive();
   Timer(const Duration(hours: 1), link.close);
 
-  if (kIsWeb) {
-    return getWebLocation();
-  }
-  return const LatLon(lat: 37.5665, lon: 126.9780);
+  return getWebLocation();
 }
 
 /// 현재 날씨 Provider

@@ -92,6 +92,9 @@ dependencies:
   json_annotation: ^4.9.0
   web: ^1.1.1
 
+  # Location
+  geolocator: ^13.0.4
+
   # Environment Variables
   flutter_dotenv: ^5.2.1
 
