@@ -406,17 +406,31 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                   right: 0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: singleDayEvents.take(3).map((task) {
-                      return Container(
-                        width: 6,
-                        height: 6,
-                        margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                        decoration: BoxDecoration(
-                          color: _taskColor(task),
-                          shape: BoxShape.circle,
+                    children: [
+                      // 최대 2개 점 표시
+                      ...singleDayEvents.take(2).map((task) => Container(
+                            width: 6,
+                            height: 6,
+                            margin: const EdgeInsets.symmetric(horizontal: 0.5),
+                            decoration: BoxDecoration(
+                              color: _taskColor(task),
+                              shape: BoxShape.circle,
+                            ),
+                          )),
+                      // 3개 이상이면 나머지 개수를 숫자로 표시
+                      if (singleDayEvents.length > 2)
+                        Container(
+                          margin: const EdgeInsets.only(left: 1),
+                          child: Text(
+                            '+${singleDayEvents.length - 2}',
+                            style: const TextStyle(
+                              fontSize: 7,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ),
-                      );
-                    }).toList(),
+                    ],
                   ),
                 ),
             ],
