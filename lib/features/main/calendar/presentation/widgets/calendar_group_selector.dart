@@ -184,6 +184,7 @@ class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusLarge)),
       ),
@@ -198,6 +199,7 @@ class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusLarge)),
       ),

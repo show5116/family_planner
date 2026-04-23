@@ -114,12 +114,14 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          children: [
-            _AmountField(
+      body: SafeArea(
+        top: false,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            children: [
+              _AmountField(
               controller: _amountController,
               label: l10n.household_amount,
               hint: l10n.household_amount_hint,
@@ -156,6 +158,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
               label: l10n.household_recurring,
             ),
           ],
+          ),
         ),
       ),
     );

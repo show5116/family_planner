@@ -77,12 +77,15 @@ class _CommonRolePermissionsScreenState
             ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildHeader(context, role),
-          const Divider(height: 1),
-          Expanded(child: _buildPermissionsList(context, permissionsState)),
-        ],
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            _buildHeader(context, role),
+            const Divider(height: 1),
+            Expanded(child: _buildPermissionsList(context, permissionsState)),
+          ],
+        ),
       ),
     );
   }

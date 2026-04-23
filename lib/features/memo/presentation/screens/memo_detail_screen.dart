@@ -74,70 +74,73 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
 
           final dateFormat = DateFormat('yyyy.MM.dd HH:mm');
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.spaceL),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 제목
-                Text(
-                  memo.title,
-                  style:
-                      Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                ),
-                const SizedBox(height: AppSizes.spaceS),
+          return SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSizes.spaceL),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 제목
+                  Text(
+                    memo.title,
+                    style:
+                        Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
 
-                // 메타 정보
-                Row(
-                  children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: AppSizes.iconSmall,
-                      color: AppColors.textSecondary,
-                    ),
-                    const SizedBox(width: AppSizes.spaceXS),
-                    Text(
-                      memo.user.name,
-                      style:
-                          Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                    ),
-                    const SizedBox(width: AppSizes.spaceM),
-                    Icon(
-                      Icons.access_time,
-                      size: AppSizes.iconSmall,
-                      color: AppColors.textSecondary,
-                    ),
-                    const SizedBox(width: AppSizes.spaceXS),
-                    Text(
-                      dateFormat.format(memo.updatedAt),
-                      style:
-                          Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                    ),
+                  // 메타 정보
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.person_outline,
+                        size: AppSizes.iconSmall,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: AppSizes.spaceXS),
+                      Text(
+                        memo.user.name,
+                        style:
+                            Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                      ),
+                      const SizedBox(width: AppSizes.spaceM),
+                      Icon(
+                        Icons.access_time,
+                        size: AppSizes.iconSmall,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: AppSizes.spaceXS),
+                      Text(
+                        dateFormat.format(memo.updatedAt),
+                        style:
+                            Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                      ),
+                    ],
+                  ),
+
+                  // 태그
+                  if (memo.tags.isNotEmpty) ...[
+                    const SizedBox(height: AppSizes.spaceM),
+                    MemoTagChips(tags: memo.tags),
                   ],
-                ),
 
-                // 태그
-                if (memo.tags.isNotEmpty) ...[
-                  const SizedBox(height: AppSizes.spaceM),
-                  MemoTagChips(tags: memo.tags),
+                  const SizedBox(height: AppSizes.spaceL),
+                  const Divider(),
+                  const SizedBox(height: AppSizes.spaceL),
+
+                  // 내용: 타입에 따라 분기
+                  if (memo.type == MemoType.checklist)
+                    _ChecklistView(memoId: widget.memoId)
+                  else
+                    RichTextViewer(content: memo.content),
                 ],
-
-                const SizedBox(height: AppSizes.spaceL),
-                const Divider(),
-                const SizedBox(height: AppSizes.spaceL),
-
-                // 내용: 타입에 따라 분기
-                if (memo.type == MemoType.checklist)
-                  _ChecklistView(memoId: widget.memoId)
-                else
-                  RichTextViewer(content: memo.content),
-              ],
+              ),
             ),
           );
         },

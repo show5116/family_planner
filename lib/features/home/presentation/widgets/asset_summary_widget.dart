@@ -47,6 +47,7 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppSizes.radiusMedium),

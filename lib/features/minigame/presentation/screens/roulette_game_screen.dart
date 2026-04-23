@@ -113,117 +113,120 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('룰렛')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (selectedGroup != null)
-              _GroupBanner(groupName: selectedGroup.name),
-            // 제목
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: '게임 제목',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // 항목 편집
-            _ItemsEditor(
-              items: _items,
-              onAdd: () => setState(() => _items.add(_RouletteItem())),
-              onRemove: (i) => setState(() {
-                _items[i].dispose();
-                _items.removeAt(i);
-              }),
-              onChanged: () => setState(() {}),
-            ),
-            const SizedBox(height: 20),
-            // 룰렛 휠
-            if (validItems.length >= 2) ...[
-              SizedBox(
-                height: 280,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // 룰렛 원판
-                    Transform.rotate(
-                      angle: _currentAngle,
-                      child: CustomPaint(
-                        size: const Size(260, 260),
-                        painter: _RoulettePainter(items: validItems),
-                      ),
-                    ),
-                    // 상단 포인터
-                    const Positioned(
-                      top: 0,
-                      child: Icon(Icons.arrow_drop_down,
-                          size: 40, color: Colors.black87),
-                    ),
-                    // 중앙 버튼
-                    GestureDetector(
-                      onTap: _spinning ? null : _spin,
-                      child: Container(
-                        width: 56,
-                        height: 56,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(blurRadius: 4, color: Colors.black26),
-                          ],
-                        ),
-                        child: Icon(
-                          _spinning ? Icons.hourglass_top : Icons.play_arrow,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ],
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (selectedGroup != null)
+                _GroupBanner(groupName: selectedGroup.name),
+              // 제목
+              TextField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: '게임 제목',
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: _spinning ? null : _spin,
-                icon: const Icon(Icons.refresh),
-                label: const Text('돌리기'),
+              // 항목 편집
+              _ItemsEditor(
+                items: _items,
+                onAdd: () => setState(() => _items.add(_RouletteItem())),
+                onRemove: (i) => setState(() {
+                  _items[i].dispose();
+                  _items.removeAt(i);
+                }),
+                onChanged: () => setState(() {}),
               ),
-            ] else
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  '항목을 2개 이상 입력해주세요',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-            // 결과 표시
-            if (_winner != null && !_spinning) ...[
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
+              const SizedBox(height: 20),
+              // 룰렛 휠
+              if (validItems.length >= 2) ...[
+                SizedBox(
+                  height: 280,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      const Text('결과',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500)),
-                      const SizedBox(height: 8),
-                      Text(
-                        _winner!,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
+                      // 룰렛 원판
+                      Transform.rotate(
+                        angle: _currentAngle,
+                        child: CustomPaint(
+                          size: const Size(260, 260),
+                          painter: _RoulettePainter(items: validItems),
+                        ),
+                      ),
+                      // 상단 포인터
+                      const Positioned(
+                        top: 0,
+                        child: Icon(Icons.arrow_drop_down,
+                            size: 40, color: Colors.black87),
+                      ),
+                      // 중앙 버튼
+                      GestureDetector(
+                        onTap: _spinning ? null : _spin,
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(blurRadius: 4, color: Colors.black26),
+                            ],
+                          ),
+                          child: Icon(
+                            _spinning ? Icons.hourglass_top : Icons.play_arrow,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: _spinning ? null : _spin,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('돌리기'),
+                ),
+              ] else
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Text(
+                    '항목을 2개 이상 입력해주세요',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              // 결과 표시
+              if (_winner != null && !_spinning) ...[
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const Text('결과',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500)),
+                        const SizedBox(height: 8),
+                        Text(
+                          _winner!,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

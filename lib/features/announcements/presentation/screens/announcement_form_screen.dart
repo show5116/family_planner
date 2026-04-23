@@ -112,10 +112,12 @@ class _AnnouncementFormScreenState
             ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceL),
+      body: SafeArea(
+        top: false,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceL),
           children: [
             // 고정 여부 스위치
             Card(
@@ -214,6 +216,7 @@ class _AnnouncementFormScreenState
               },
             ),
           ],
+          ),
         ),
       ),
     );

@@ -54,10 +54,12 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
       appBar: AppBar(
         title: Text(_isEdit ? l10n.asset_edit_account : l10n.asset_add_account),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
+      body: SafeArea(
+        top: false,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
           children: [
             // 계좌명
             TextFormField(
@@ -152,6 +154,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                   : Text(l10n.common_save),
             ),
           ],
+          ),
         ),
       ),
     );

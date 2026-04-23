@@ -294,6 +294,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
             ),
             // 하단 버튼
             SafeArea(
+              top: false,
               child: Padding(
                 padding: const EdgeInsets.all(AppSizes.spaceL),
                 child: SizedBox(

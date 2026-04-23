@@ -43,11 +43,13 @@ class _TransactionFormScreenState
           onPressed: () => context.pop(),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          children: [
+      body: SafeArea(
+        top: false,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            children: [
             // 안내 문구
             Card(
               color: Theme.of(context).colorScheme.primaryContainer,
@@ -115,6 +117,7 @@ class _TransactionFormScreenState
               label: const Text('보너스 지급'),
             ),
           ],
+          ),
         ),
       ),
     );

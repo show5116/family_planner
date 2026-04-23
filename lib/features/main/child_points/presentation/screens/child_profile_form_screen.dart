@@ -42,54 +42,57 @@ class _ChildProfileFormScreenState
           onPressed: () => context.pop(),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          children: [
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: '자녀 이름',
-                hintText: '예: 김민준',
-                prefixIcon: Icon(Icons.person),
-              ),
-              validator: (v) =>
-                  v == null || v.trim().isEmpty ? '자녀 이름을 입력해주세요' : null,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            InkWell(
-              onTap: _selectBirthDate,
-              child: InputDecorator(
+      body: SafeArea(
+        top: false,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            children: [
+              TextFormField(
+                controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: '생년월일',
-                  prefixIcon: Icon(Icons.cake),
+                  labelText: '자녀 이름',
+                  hintText: '예: 김민준',
+                  prefixIcon: Icon(Icons.person),
                 ),
-                child: Text(
-                  _selectedBirthDate != null
-                      ? DateFormat('yyyy-MM-dd').format(_selectedBirthDate!)
-                      : '날짜를 선택하세요',
-                  style: _selectedBirthDate != null
-                      ? Theme.of(context).textTheme.bodyMedium
-                      : Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Theme.of(context).hintColor),
+                validator: (v) =>
+                    v == null || v.trim().isEmpty ? '자녀 이름을 입력해주세요' : null,
+              ),
+              const SizedBox(height: AppSizes.spaceM),
+              InkWell(
+                onTap: _selectBirthDate,
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: '생년월일',
+                    prefixIcon: Icon(Icons.cake),
+                  ),
+                  child: Text(
+                    _selectedBirthDate != null
+                        ? DateFormat('yyyy-MM-dd').format(_selectedBirthDate!)
+                        : '날짜를 선택하세요',
+                    style: _selectedBirthDate != null
+                        ? Theme.of(context).textTheme.bodyMedium
+                        : Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Theme.of(context).hintColor),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: AppSizes.spaceXL),
-            FilledButton(
-              onPressed: _isSubmitting ? null : _handleSubmit,
-              child: _isSubmitting
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('자녀 프로필 등록'),
-            ),
-          ],
+              const SizedBox(height: AppSizes.spaceXL),
+              FilledButton(
+                onPressed: _isSubmitting ? null : _handleSubmit,
+                child: _isSubmitting
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('자녀 프로필 등록'),
+              ),
+            ],
+          ),
         ),
       ),
     );

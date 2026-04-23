@@ -200,49 +200,52 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('사다리타기')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (selectedGroup != null)
-              _GroupBanner(groupName: selectedGroup.name),
-            if (_phase == _GamePhase.setup) ...[
-              _buildSetupSection(selectedGroupId),
-              const SizedBox(height: 20),
-              FilledButton.icon(
-                onPressed: _canStart ? _buildLadder : null,
-                icon: const Icon(Icons.play_arrow),
-                label: const Text('사다리 생성'),
-              ),
-            ],
-            if (_phase != _GamePhase.setup && _ladderData != null) ...[
-              _buildLadderSection(),
-              const SizedBox(height: 12),
-              if (_phase == _GamePhase.playing) ...[
-                Text(
-                  '참여자 이름을 눌러 사다리를 타세요!',
-                  style: Theme.of(context).textTheme.bodySmall,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  onPressed: _animatingCol != null ? null : _skipAll,
-                  icon: const Icon(Icons.fast_forward, size: 18),
-                  label: const Text('전체 스킵'),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (selectedGroup != null)
+                _GroupBanner(groupName: selectedGroup.name),
+              if (_phase == _GamePhase.setup) ...[
+                _buildSetupSection(selectedGroupId),
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: _canStart ? _buildLadder : null,
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('사다리 생성'),
                 ),
               ],
-              if (_phase == _GamePhase.done) ...[
-                const SizedBox(height: 4),
-                _buildResultCard(),
+              if (_phase != _GamePhase.setup && _ladderData != null) ...[
+                _buildLadderSection(),
+                const SizedBox(height: 12),
+                if (_phase == _GamePhase.playing) ...[
+                  Text(
+                    '참여자 이름을 눌러 사다리를 타세요!',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: _animatingCol != null ? null : _skipAll,
+                    icon: const Icon(Icons.fast_forward, size: 18),
+                    label: const Text('전체 스킵'),
+                  ),
+                ],
+                if (_phase == _GamePhase.done) ...[
+                  const SizedBox(height: 4),
+                  _buildResultCard(),
+                ],
+                const SizedBox(height: 12),
+                OutlinedButton(
+                  onPressed: _animatingCol != null ? null : _reset,
+                  child: const Text('다시 설정'),
+                ),
               ],
-              const SizedBox(height: 12),
-              OutlinedButton(
-                onPressed: _animatingCol != null ? null : _reset,
-                child: const Text('다시 설정'),
-              ),
             ],
-          ],
+          ),
         ),
       ),
     );

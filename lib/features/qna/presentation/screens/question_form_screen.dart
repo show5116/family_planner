@@ -64,73 +64,76 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
       appBar: AppBar(
         title: Text(_isEditMode ? '질문 수정' : '질문 작성'),
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSizes.spaceL),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 안내 메시지
-              if (!_isEditMode) ...[
-                _buildInfoCard(),
+      body: SafeArea(
+        top: false,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSizes.spaceL),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 안내 메시지
+                if (!_isEditMode) ...[
+                  _buildInfoCard(),
+                  const SizedBox(height: AppSizes.spaceL),
+                ],
+
+                // 카테고리 선택
+                _buildCategorySection(),
                 const SizedBox(height: AppSizes.spaceL),
-              ],
 
-              // 카테고리 선택
-              _buildCategorySection(),
-              const SizedBox(height: AppSizes.spaceL),
+                // 공개/비공개 선택
+                _buildVisibilitySection(),
+                const SizedBox(height: AppSizes.spaceL),
 
-              // 공개/비공개 선택
-              _buildVisibilitySection(),
-              const SizedBox(height: AppSizes.spaceL),
+                // 제목 입력
+                _buildTitleField(),
+                const SizedBox(height: AppSizes.spaceL),
 
-              // 제목 입력
-              _buildTitleField(),
-              const SizedBox(height: AppSizes.spaceL),
+                // 내용 입력 (리치 텍스트 에디터 - 간소화 모드)
+                RichTextEditor(
+                  controller: _contentController,
+                  labelText: '내용',
+                  hintText: '질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.',
+                  minLines: 15,
+                  maxLines: 30,
+                  simpleMode: true,
+                  imageUploadType: EditorImageType.qna,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return '내용을 입력해주세요';
+                    }
+                    if (value.trim().length < 10) {
+                      return '내용은 10자 이상 입력해주세요';
+                    }
+                    if (value.length > 5000) {
+                      return '내용은 5000자를 초과할 수 없습니다';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: AppSizes.spaceXL),
 
-              // 내용 입력 (리치 텍스트 에디터 - 간소화 모드)
-              RichTextEditor(
-                controller: _contentController,
-                labelText: '내용',
-                hintText: '질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.',
-                minLines: 15,
-                maxLines: 30,
-                simpleMode: true,
-                imageUploadType: EditorImageType.qna,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return '내용을 입력해주세요';
-                  }
-                  if (value.trim().length < 10) {
-                    return '내용은 10자 이상 입력해주세요';
-                  }
-                  if (value.length > 5000) {
-                    return '내용은 5000자를 초과할 수 없습니다';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: AppSizes.spaceXL),
-
-              // 제출 버튼
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _handleSubmit,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.spaceM),
-                    child: Text(
-                      _isEditMode ? '수정 완료' : '질문 등록',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                // 제출 버튼
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _handleSubmit,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSizes.spaceM),
+                      child: Text(
+                        _isEditMode ? '수정 완료' : '질문 등록',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

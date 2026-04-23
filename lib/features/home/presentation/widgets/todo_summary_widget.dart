@@ -78,6 +78,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppSizes.radiusMedium),

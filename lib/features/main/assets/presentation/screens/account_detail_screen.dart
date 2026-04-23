@@ -164,6 +164,7 @@ class AccountDetailScreen extends ConsumerWidget {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       builder: (ctx) => AddAssetRecordSheet(accountId: account.id),
     );
   }

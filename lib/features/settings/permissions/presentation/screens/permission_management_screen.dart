@@ -32,30 +32,33 @@ class _PermissionManagementScreenState
         title: Text(l10n.permission_title),
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          // 검색 및 필터 영역
-          Padding(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
-            child: Column(
-              children: [
-                _buildSearchField(context, ref, l10n),
-                const SizedBox(height: AppSizes.spaceM),
-                _buildCategoryFilter(context, ref, l10n, state),
-              ],
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            // 검색 및 필터 영역
+            Padding(
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              child: Column(
+                children: [
+                  _buildSearchField(context, ref, l10n),
+                  const SizedBox(height: AppSizes.spaceM),
+                  _buildCategoryFilter(context, ref, l10n, state),
+                ],
+              ),
             ),
-          ),
-          // 저장 버튼 (변경사항이 있을 때만 표시)
-          if (_hasChanges)
-            ReorderChangesBar(
-              onSave: _saveSortOrder,
-              onCancel: _cancelReorder,
+            // 저장 버튼 (변경사항이 있을 때만 표시)
+            if (_hasChanges)
+              ReorderChangesBar(
+                onSave: _saveSortOrder,
+                onCancel: _cancelReorder,
+              ),
+            // 권한 목록
+            Expanded(
+              child: _buildPermissionList(context, ref, l10n, state),
             ),
-          // 권한 목록
-          Expanded(
-            child: _buildPermissionList(context, ref, l10n, state),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => PermissionCreateDialog.show(context, ref, l10n),
