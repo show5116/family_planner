@@ -154,14 +154,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await _deleteFcmToken();
 
       await _authService.logout();
-
+    } catch (e) {
+      // 백엔드 로그아웃 실패(Token Not Found 등)여도 로컬 정리는 완료됨
+    } finally {
       // 그룹 관련 provider 초기화 (로그아웃 시에는 상태만 비움, 다시 fetch 안함)
       _invalidateGroupProviders(clearOnly: true);
 
       state = const AuthState(isAuthenticated: false);
-    } catch (e) {
-      state = state.copyWith(error: e.toString());
-      rethrow;
     }
   }
 

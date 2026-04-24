@@ -127,6 +127,11 @@ class ApiClient {
               return handler.next(error);
             }
 
+            // /auth/logout 요청이 실패한 경우 refresh 시도하지 않음 (이미 로그아웃 중)
+            if (requestPath.contains('/auth/logout')) {
+              return handler.next(error);
+            }
+
             // Refresh Token으로 재시도
             final refreshed = await _refreshToken();
             if (refreshed) {
