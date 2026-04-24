@@ -189,6 +189,7 @@ Map<String, dynamic> _$$CreateTaskDtoImplToJson(_$CreateTaskDtoImpl instance) =>
 const _$TaskTypeEnumMap = {
   TaskType.calendarOnly: 'CALENDAR_ONLY',
   TaskType.todoLinked: 'TODO_LINKED',
+  TaskType.todoOnly: 'TODO_ONLY',
 };
 
 const _$TaskPriorityEnumMap = {

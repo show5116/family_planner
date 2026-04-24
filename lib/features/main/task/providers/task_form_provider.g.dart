@@ -6,7 +6,7 @@ part of 'task_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$taskFormNotifierHash() => r'0dc3fdba1d12c653ae97bba885883ed7f0f95218';
+String _$taskFormNotifierHash() => r'68691e698ec16889bfbf2102c901dceb7e31bce9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,8 +34,14 @@ abstract class _$TaskFormNotifier
   late final String? taskId;
   late final TaskModel? task;
   late final DateTime? initialDate;
+  late final TaskType? initialTaskType;
 
-  TaskFormState build({String? taskId, TaskModel? task, DateTime? initialDate});
+  TaskFormState build({
+    String? taskId,
+    TaskModel? task,
+    DateTime? initialDate,
+    TaskType? initialTaskType,
+  });
 }
 
 /// Task Form Notifier
@@ -68,11 +74,13 @@ class TaskFormNotifierFamily extends Family<TaskFormState> {
     String? taskId,
     TaskModel? task,
     DateTime? initialDate,
+    TaskType? initialTaskType,
   }) {
     return TaskFormNotifierProvider(
       taskId: taskId,
       task: task,
       initialDate: initialDate,
+      initialTaskType: initialTaskType,
     );
   }
 
@@ -84,6 +92,7 @@ class TaskFormNotifierFamily extends Family<TaskFormState> {
       taskId: provider.taskId,
       task: provider.task,
       initialDate: provider.initialDate,
+      initialTaskType: provider.initialTaskType,
     );
   }
 
@@ -118,11 +127,13 @@ class TaskFormNotifierProvider
     String? taskId,
     TaskModel? task,
     DateTime? initialDate,
+    TaskType? initialTaskType,
   }) : this._internal(
          () => TaskFormNotifier()
            ..taskId = taskId
            ..task = task
-           ..initialDate = initialDate,
+           ..initialDate = initialDate
+           ..initialTaskType = initialTaskType,
          from: taskFormNotifierProvider,
          name: r'taskFormNotifierProvider',
          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -134,6 +145,7 @@ class TaskFormNotifierProvider
          taskId: taskId,
          task: task,
          initialDate: initialDate,
+         initialTaskType: initialTaskType,
        );
 
   TaskFormNotifierProvider._internal(
@@ -146,15 +158,22 @@ class TaskFormNotifierProvider
     required this.taskId,
     required this.task,
     required this.initialDate,
+    required this.initialTaskType,
   }) : super.internal();
 
   final String? taskId;
   final TaskModel? task;
   final DateTime? initialDate;
+  final TaskType? initialTaskType;
 
   @override
   TaskFormState runNotifierBuild(covariant TaskFormNotifier notifier) {
-    return notifier.build(taskId: taskId, task: task, initialDate: initialDate);
+    return notifier.build(
+      taskId: taskId,
+      task: task,
+      initialDate: initialDate,
+      initialTaskType: initialTaskType,
+    );
   }
 
   @override
@@ -165,7 +184,8 @@ class TaskFormNotifierProvider
         () => create()
           ..taskId = taskId
           ..task = task
-          ..initialDate = initialDate,
+          ..initialDate = initialDate
+          ..initialTaskType = initialTaskType,
         from: from,
         name: null,
         dependencies: null,
@@ -174,6 +194,7 @@ class TaskFormNotifierProvider
         taskId: taskId,
         task: task,
         initialDate: initialDate,
+        initialTaskType: initialTaskType,
       ),
     );
   }
@@ -189,7 +210,8 @@ class TaskFormNotifierProvider
     return other is TaskFormNotifierProvider &&
         other.taskId == taskId &&
         other.task == task &&
-        other.initialDate == initialDate;
+        other.initialDate == initialDate &&
+        other.initialTaskType == initialTaskType;
   }
 
   @override
@@ -198,6 +220,7 @@ class TaskFormNotifierProvider
     hash = _SystemHash.combine(hash, taskId.hashCode);
     hash = _SystemHash.combine(hash, task.hashCode);
     hash = _SystemHash.combine(hash, initialDate.hashCode);
+    hash = _SystemHash.combine(hash, initialTaskType.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -214,6 +237,9 @@ mixin TaskFormNotifierRef on AutoDisposeNotifierProviderRef<TaskFormState> {
 
   /// The parameter `initialDate` of this provider.
   DateTime? get initialDate;
+
+  /// The parameter `initialTaskType` of this provider.
+  TaskType? get initialTaskType;
 }
 
 class _TaskFormNotifierProviderElement
@@ -227,6 +253,9 @@ class _TaskFormNotifierProviderElement
   TaskModel? get task => (origin as TaskFormNotifierProvider).task;
   @override
   DateTime? get initialDate => (origin as TaskFormNotifierProvider).initialDate;
+  @override
+  TaskType? get initialTaskType =>
+      (origin as TaskFormNotifierProvider).initialTaskType;
 }
 
 // ignore_for_file: type=lint

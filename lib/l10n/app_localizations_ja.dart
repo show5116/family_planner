@@ -1464,6 +1464,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get schedule_taskTypeTodoLinkedDesc => 'カレンダーとToDoリストの両方に表示されます';
 
   @override
+  String get schedule_taskTypeTodoOnly => 'ToDoのみ';
+
+  @override
+  String get schedule_taskTypeTodoOnlyDesc => 'ToDoリストにのみ表示（カレンダー除外）';
+
+  @override
   String get schedule_priority => '優先度';
 
   @override

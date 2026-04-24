@@ -567,6 +567,8 @@
   "schedule_taskTypeCalendarOnlyDesc": "Shown only on calendar",
   "schedule_taskTypeTodoLinked": "Todo Linked",
   "schedule_taskTypeTodoLinkedDesc": "Shown on both calendar and todo list",
+  "schedule_taskTypeTodoOnly": "Todo Only",
+  "schedule_taskTypeTodoOnlyDesc": "Show in todo list only (not in calendar)",
   "schedule_priority": "Priority",
   "schedule_priorityLow": "Low",
   "schedule_priorityMedium": "Medium",

@@ -232,6 +232,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     String? taskId,
     TaskModel? task,
     DateTime? initialDate,
+    TaskType? initialTaskType,
   }) {
     final startDate = initialDate ?? DateTime.now();
 
@@ -243,6 +244,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     // 신규 작성 모드
     return TaskFormState(
       startDate: startDate,
+      taskType: initialTaskType ?? TaskType.calendarOnly,
       editingTaskId: taskId,
       editingTask: task,
     );

@@ -26,12 +26,14 @@ class TaskFormScreen extends ConsumerStatefulWidget {
   final String? taskId;
   final TaskModel? task;
   final DateTime? initialDate;
+  final TaskType? initialTaskType;
 
   const TaskFormScreen({
     super.key,
     this.taskId,
     this.task,
     this.initialDate,
+    this.initialTaskType,
   });
 
   @override
@@ -71,11 +73,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       taskId: widget.taskId,
       task: widget.task,
       initialDate: widget.initialDate,
+      initialTaskType: widget.initialTaskType,
     ));
     final formNotifier = ref.read(taskFormNotifierProvider(
       taskId: widget.taskId,
       task: widget.task,
       initialDate: widget.initialDate,
+      initialTaskType: widget.initialTaskType,
     ).notifier);
 
     return Scaffold(

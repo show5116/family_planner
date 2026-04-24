@@ -2950,6 +2950,18 @@ abstract class AppLocalizations {
   /// **'캘린더와 할일 목록에 모두 표시됩니다'**
   String get schedule_taskTypeTodoLinkedDesc;
 
+  /// No description provided for @schedule_taskTypeTodoOnly.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 전용'**
+  String get schedule_taskTypeTodoOnly;
+
+  /// No description provided for @schedule_taskTypeTodoOnlyDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 목록에만 표시 (캘린더 제외)'**
+  String get schedule_taskTypeTodoOnlyDesc;
+
   /// No description provided for @schedule_priority.
   ///
   /// In ko, this message translates to:

@@ -567,6 +567,8 @@
   "schedule_taskTypeCalendarOnlyDesc": "カレンダーにのみ表示されます",
   "schedule_taskTypeTodoLinked": "ToDo連動",
   "schedule_taskTypeTodoLinkedDesc": "カレンダーとToDoリストの両方に表示されます",
+  "schedule_taskTypeTodoOnly": "ToDoのみ",
+  "schedule_taskTypeTodoOnlyDesc": "ToDoリストにのみ表示（カレンダー除外）",
   "schedule_priority": "優先度",
   "schedule_priorityLow": "低",
   "schedule_priorityMedium": "中",

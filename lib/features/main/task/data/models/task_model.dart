@@ -9,6 +9,8 @@ enum TaskType {
   calendarOnly, // 단순 일정 (캘린더에만 표시)
   @JsonValue('TODO_LINKED')
   todoLinked, // 할일 연동 (캘린더 + 할일 목록에 표시)
+  @JsonValue('TODO_ONLY')
+  todoOnly, // 할일 전용 (할일 목록에만 표시, 캘린더 제외)
 }
 
 /// Task 우선순위
@@ -212,6 +214,7 @@ class TaskModel {
       switch (v as String) {
         case 'CALENDAR_ONLY': return TaskType.calendarOnly;
         case 'TODO_LINKED': return TaskType.todoLinked;
+        case 'TODO_ONLY': return TaskType.todoOnly;
         default: return null;
       }
     }

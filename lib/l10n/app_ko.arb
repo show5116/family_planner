@@ -567,6 +567,8 @@
   "schedule_taskTypeCalendarOnlyDesc": "캘린더에만 표시됩니다",
   "schedule_taskTypeTodoLinked": "할일 연동",
   "schedule_taskTypeTodoLinkedDesc": "캘린더와 할일 목록에 모두 표시됩니다",
+  "schedule_taskTypeTodoOnly": "할일 전용",
+  "schedule_taskTypeTodoOnlyDesc": "할일 목록에만 표시 (캘린더 제외)",
   "schedule_priority": "우선순위",
   "schedule_priorityLow": "낮음",
   "schedule_priorityMedium": "보통",

@@ -60,6 +60,20 @@ class TaskTypeSection extends StatelessWidget {
                 },
                 secondary: const Icon(Icons.checklist),
               ),
+              const Divider(height: 1),
+              RadioListTile<TaskType>(
+                title: Text(l10n.schedule_taskTypeTodoOnly),
+                subtitle: Text(
+                  l10n.schedule_taskTypeTodoOnlyDesc,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                ),
+                value: TaskType.todoOnly,
+                groupValue: formState.taskType,
+                onChanged: (value) {
+                  if (value != null) formNotifier.setTaskType(value);
+                },
+                secondary: const Icon(Icons.task_alt),
+              ),
             ],
           ),
         ),

@@ -145,8 +145,13 @@ List<RouteBase> getMainRoutes() {
         DateTime? initialDate;
         if (extra is DateTime) {
           initialDate = extra;
+        } else if (extra is Map<String, dynamic>) {
+          initialDate = extra['initialDate'] as DateTime?;
         }
-        return TaskFormScreen(initialDate: initialDate);
+        return TaskFormScreen(
+          initialDate: initialDate,
+          initialTaskType: TaskType.todoOnly,
+        );
       },
     ),
     GoRoute(

@@ -193,7 +193,6 @@ Future<List<TaskModel>> todoSearchResults(Ref ref) async {
 
   final response = await repository.getTasks(
     view: 'todo',
-    type: TaskType.todoLinked,
     search: searchQuery.trim(),
     groupIds: groupIds,
     includePersonal: includePersonal,
@@ -213,8 +212,9 @@ Future<List<TaskModel>> selectedDateTasks(Ref ref) async {
 
   return tasksAsync.maybeWhen(
     data: (tasks) {
-      // 선택된 날짜에 해당하는 Task만 필터링
+      // 선택된 날짜에 해당하는 Task만 필터링 (TODO_ONLY는 캘린더에서 제외)
       return tasks.where((task) {
+        if (task.type == TaskType.todoOnly) return false;
         if (task.scheduledAt == null) return false;
 
         final taskDate = DateTime(
@@ -255,6 +255,7 @@ Map<DateTime, int> taskCountByDate(Ref ref, int year, int month) {
       final Map<DateTime, int> countMap = {};
 
       for (final task in tasks) {
+        if (task.type == TaskType.todoOnly) continue;
         if (task.scheduledAt == null) continue;
 
         final startDate = DateTime(
@@ -310,7 +311,6 @@ class TodoTasks extends _$TodoTasks {
 
     final response = await repository.getTasks(
       view: 'todo',
-      type: TaskType.todoLinked,
       groupIds: groupIds,
       includePersonal: includePersonal,
       priority: priorityFilter,
@@ -349,7 +349,6 @@ class TodoTasks extends _$TodoTasks {
 
       final response = await repository.getTasks(
         view: 'todo',
-        type: TaskType.todoLinked,
         groupIds: groupIds,
         includePersonal: includePersonal,
         priority: priorityFilter,
@@ -430,7 +429,6 @@ class TodoOverviewTasks extends _$TodoOverviewTasks {
 
     final response = await repository.getTasks(
       view: 'todo',
-      type: TaskType.todoLinked,
       groupIds: groupIds,
       includePersonal: includePersonal,
       priority: priorityFilter,

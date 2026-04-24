@@ -1467,6 +1467,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get schedule_taskTypeTodoLinkedDesc => '캘린더와 할일 목록에 모두 표시됩니다';
 
   @override
+  String get schedule_taskTypeTodoOnly => '할일 전용';
+
+  @override
+  String get schedule_taskTypeTodoOnlyDesc => '할일 목록에만 표시 (캘린더 제외)';
+
+  @override
   String get schedule_priority => '우선순위';
 
   @override

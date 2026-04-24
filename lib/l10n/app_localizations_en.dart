@@ -1502,6 +1502,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Shown on both calendar and todo list';
 
   @override
+  String get schedule_taskTypeTodoOnly => 'Todo Only';
+
+  @override
+  String get schedule_taskTypeTodoOnlyDesc =>
+      'Show in todo list only (not in calendar)';
+
+  @override
   String get schedule_priority => 'Priority';
 
   @override

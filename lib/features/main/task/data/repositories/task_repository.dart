@@ -319,6 +319,8 @@ class TaskRepository {
         return 'CALENDAR_ONLY';
       case TaskType.todoLinked:
         return 'TODO_LINKED';
+      case TaskType.todoOnly:
+        return 'TODO_ONLY';
     }
   }
 
