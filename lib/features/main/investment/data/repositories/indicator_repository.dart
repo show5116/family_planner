@@ -10,13 +10,19 @@ final indicatorRepositoryProvider = Provider<IndicatorRepository>((ref) {
   return IndicatorRepository();
 });
 
+// 외부 API(시세 데이터)를 집계하는 특성상 응답이 30초 이상 걸릴 수 있어 별도 타임아웃 적용
+Options get _indicatorOptions => Options(
+      receiveTimeout: const Duration(minutes: 2),
+      sendTimeout: const Duration(minutes: 2),
+    );
+
 class IndicatorRepository {
   final Dio _dio = ApiClient.instance.dio;
 
   /// 전체 지표 목록 + 최신 시세
   Future<List<IndicatorModel>> getIndicators() async {
     try {
-      final response = await _dio.get('/indicators');
+      final response = await _dio.get('/indicators', options: _indicatorOptions);
       final data = response.data;
       if (data is List) {
         return data
@@ -33,7 +39,7 @@ class IndicatorRepository {
   /// 즐겨찾기 목록 + 최신 시세
   Future<List<IndicatorModel>> getBookmarkedIndicators() async {
     try {
-      final response = await _dio.get('/indicators/bookmarks');
+      final response = await _dio.get('/indicators/bookmarks', options: _indicatorOptions);
       final data = response.data;
       if (data is List) {
         return data
@@ -50,7 +56,7 @@ class IndicatorRepository {
   /// 지표 상세 + 최신 시세
   Future<IndicatorModel> getIndicator(String symbol) async {
     try {
-      final response = await _dio.get('/indicators/$symbol');
+      final response = await _dio.get('/indicators/$symbol', options: _indicatorOptions);
       return IndicatorModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) throw Exception('지표를 찾을 수 없습니다');
@@ -69,6 +75,7 @@ class IndicatorRepository {
         queryParameters: {
           if (days != null) 'days': days,
         },
+        options: _indicatorOptions,
       );
       return IndicatorHistoryModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -117,7 +124,7 @@ class IndicatorRepository {
   /// AI 시황 브리핑 조회
   Future<MarketBriefingModel> getMarketBriefing() async {
     try {
-      final response = await _dio.get('/ai/market-briefing');
+      final response = await _dio.get('/ai/market-briefing', options: _indicatorOptions);
       return MarketBriefingModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       debugPrint('❌ [IndicatorRepository] AI 시황 브리핑 조회 실패: ${e.message}');
