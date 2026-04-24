@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -50,7 +50,6 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
     final managementState = ref.watch(assetManagementProvider);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(_isEdit ? l10n.asset_edit_account : l10n.asset_add_account),
       ),
