@@ -146,7 +146,10 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                   email: email,
                   profileImageUrl: profileImageUrl,
                   isAdmin: isAdmin,
-                  onTap: () => context.push(AppRoutes.profile),
+                  onTap: () async {
+                    await context.push(AppRoutes.profile);
+                    if (mounted) _loadUserInfo();
+                  },
                 ),
               ),
               // 그룹 관리 (상단 고정)

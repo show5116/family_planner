@@ -169,7 +169,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               } else {
                 // 프로필 설정 화면으로 이동
                 if (mounted) {
-                  context.push(AppRoutes.profile);
+                  await context.push(AppRoutes.profile);
+                  if (mounted) _loadUserInfo();
                 }
               }
             },
@@ -288,7 +289,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final l10n = AppLocalizations.of(context)!;
 
     return InkWell(
-      onTap: () => context.push(AppRoutes.profile),
+      onTap: () async {
+        await context.push(AppRoutes.profile);
+        if (mounted) _loadUserInfo();
+      },
       child: Container(
       padding: const EdgeInsets.all(AppSizes.spaceL),
       child: Row(
