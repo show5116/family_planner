@@ -39,9 +39,13 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
   final isSplashPage = currentLocation == AppRoutes.splash;
   final isOnboardingPage = currentLocation == AppRoutes.onboarding;
 
-  // [CASE 1] 인증 로딩 중 (Splash 유지)
+  // [CASE 1] 인증 로딩 중
+  // 웹에서 새로고침 시 현재 URL을 보존하기 위해 splash 페이지가 아니면 현재 위치 유지.
+  // redirect는 인증 완료 후 authProvider 변경 시 다시 실행된다.
   if (isAuthenticated == null) {
-    return isSplashPage ? null : AppRoutes.splash;
+    if (isSplashPage) return null;
+    // auth 페이지(로그인 등)는 splash로, 그 외 보호된 페이지는 현재 위치 유지
+    return isAuthPage ? AppRoutes.splash : null;
   }
 
   // [CASE 2] 로그인 상태 (Authenticated)
