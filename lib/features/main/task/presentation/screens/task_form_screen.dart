@@ -45,6 +45,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
+  final _titleFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -61,6 +62,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _titleFocusNode.dispose();
     super.dispose();
   }
 
@@ -105,7 +107,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               children: [
                 GroupSelector(formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
-                TitleField(controller: _titleController, formNotifier: formNotifier),
+                TitleField(controller: _titleController, formNotifier: formNotifier, focusNode: _titleFocusNode),
                 const SizedBox(height: AppSizes.spaceL),
                 DateTimeSection(formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
@@ -145,10 +147,16 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     String? groupId,
     AppLocalizations l10n,
   ) async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      _titleFocusNode.requestFocus();
+      return;
+    }
 
     final validationError = formState.validate();
     if (validationError != null) {
+      if (validationError == 'title_required') {
+        _titleFocusNode.requestFocus();
+      }
       final message = switch (validationError) {
         'title_required' => l10n.schedule_titleRequired,
         _ => validationError,

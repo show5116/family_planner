@@ -7,11 +7,13 @@ import 'package:family_planner/l10n/app_localizations.dart';
 class TitleField extends StatefulWidget {
   final TextEditingController controller;
   final TaskFormNotifier formNotifier;
+  final FocusNode? focusNode;
 
   const TitleField({
     super.key,
     required this.controller,
     required this.formNotifier,
+    this.focusNode,
   });
 
   @override
@@ -41,6 +43,7 @@ class _TitleFieldState extends State<TitleField> {
 
     return TextFormField(
       controller: widget.controller,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
         labelText: l10n.schedule_title,
         hintText: l10n.schedule_titleHint,
