@@ -211,6 +211,9 @@ _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       participantIds: (json['participantIds'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      reminders: (json['reminders'] as List<dynamic>?)
+          ?.map((e) => TaskReminderDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$UpdateTaskDtoImplToJson(_$UpdateTaskDtoImpl instance) =>
@@ -223,6 +226,7 @@ Map<String, dynamic> _$$UpdateTaskDtoImplToJson(_$UpdateTaskDtoImpl instance) =>
       'scheduledAt': instance.scheduledAt,
       'dueAt': instance.dueAt,
       'participantIds': instance.participantIds,
+      'reminders': instance.reminders,
     };
 
 _$RecurringRuleDtoImpl _$$RecurringRuleDtoImplFromJson(

@@ -48,7 +48,7 @@ final todoSearchResultsProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TodoSearchResultsRef = AutoDisposeFutureProviderRef<List<TaskModel>>;
-String _$selectedDateTasksHash() => r'467c6c95bc14110e97e3263b46029ce35d671a94';
+String _$selectedDateTasksHash() => r'f335b0d8abb73fe93ed5fe21fbfac4592107b3bd';
 
 /// 선택된 날짜의 Task Provider
 ///
@@ -68,7 +68,7 @@ final selectedDateTasksProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SelectedDateTasksRef = AutoDisposeFutureProviderRef<List<TaskModel>>;
-String _$taskCountByDateHash() => r'8eaaf1623e16e7279e6b9a50988bd816f704e28d';
+String _$taskCountByDateHash() => r'7504e888f3734044fd9d9adac620a51eac715821';
 
 /// Copied from Dart SDK
 class _SystemHash {

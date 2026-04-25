@@ -55,6 +55,33 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       _descriptionController.text = widget.task!.description ?? '';
       _locationController.text = widget.task!.location ?? '';
     }
+    // 수정 모드일 때 상세 API로 reminders 로드
+    if (widget.taskId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _loadReminders());
+    }
+  }
+
+  Future<void> _loadReminders() async {
+    final taskId = widget.taskId;
+    if (taskId == null) return;
+    try {
+      final detail = await ref.read(taskDetailProvider(taskId).future);
+      if (!mounted) return;
+      final reminders = detail.reminders
+          .map((r) => r.offsetMinutes)
+          .toSet()
+          .toList()
+        ..sort();
+      final notifier = ref.read(taskFormNotifierProvider(
+        taskId: widget.taskId,
+        task: widget.task,
+        initialDate: widget.initialDate,
+        initialTaskType: widget.initialTaskType,
+      ).notifier);
+      for (final minutes in reminders) {
+        notifier.addReminder(minutes);
+      }
+    } catch (_) {}
   }
 
   @override

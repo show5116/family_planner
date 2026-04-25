@@ -2481,6 +2481,7 @@ mixin _$UpdateTaskDto {
   String? get scheduledAt => throw _privateConstructorUsedError;
   String? get dueAt => throw _privateConstructorUsedError;
   List<String>? get participantIds => throw _privateConstructorUsedError;
+  List<TaskReminderDto>? get reminders => throw _privateConstructorUsedError;
 
   /// Serializes this UpdateTaskDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2508,6 +2509,7 @@ abstract class $UpdateTaskDtoCopyWith<$Res> {
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
+    List<TaskReminderDto>? reminders,
   });
 }
 
@@ -2534,6 +2536,7 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? participantIds = freezed,
+    Object? reminders = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -2569,6 +2572,10 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
                 ? _value.participantIds
                 : participantIds // ignore: cast_nullable_to_non_nullable
                       as List<String>?,
+            reminders: freezed == reminders
+                ? _value.reminders
+                : reminders // ignore: cast_nullable_to_non_nullable
+                      as List<TaskReminderDto>?,
           )
           as $Val,
     );
@@ -2593,6 +2600,7 @@ abstract class _$$UpdateTaskDtoImplCopyWith<$Res>
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
+    List<TaskReminderDto>? reminders,
   });
 }
 
@@ -2618,6 +2626,7 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? participantIds = freezed,
+    Object? reminders = freezed,
   }) {
     return _then(
       _$UpdateTaskDtoImpl(
@@ -2653,6 +2662,10 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
             ? _value._participantIds
             : participantIds // ignore: cast_nullable_to_non_nullable
                   as List<String>?,
+        reminders: freezed == reminders
+            ? _value._reminders
+            : reminders // ignore: cast_nullable_to_non_nullable
+                  as List<TaskReminderDto>?,
       ),
     );
   }
@@ -2670,7 +2683,9 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     this.scheduledAt,
     this.dueAt,
     final List<String>? participantIds,
-  }) : _participantIds = participantIds;
+    final List<TaskReminderDto>? reminders,
+  }) : _participantIds = participantIds,
+       _reminders = reminders;
 
   factory _$UpdateTaskDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$UpdateTaskDtoImplFromJson(json);
@@ -2699,9 +2714,19 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<TaskReminderDto>? _reminders;
+  @override
+  List<TaskReminderDto>? get reminders {
+    final value = _reminders;
+    if (value == null) return null;
+    if (_reminders is EqualUnmodifiableListView) return _reminders;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds)';
+    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds, reminders: $reminders)';
   }
 
   @override
@@ -2723,6 +2748,10 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
             const DeepCollectionEquality().equals(
               other._participantIds,
               _participantIds,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._reminders,
+              _reminders,
             ));
   }
 
@@ -2738,6 +2767,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     scheduledAt,
     dueAt,
     const DeepCollectionEquality().hash(_participantIds),
+    const DeepCollectionEquality().hash(_reminders),
   );
 
   /// Create a copy of UpdateTaskDto
@@ -2764,6 +2794,7 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
     final String? scheduledAt,
     final String? dueAt,
     final List<String>? participantIds,
+    final List<TaskReminderDto>? reminders,
   }) = _$UpdateTaskDtoImpl;
 
   factory _UpdateTaskDto.fromJson(Map<String, dynamic> json) =
@@ -2785,6 +2816,8 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
   String? get dueAt;
   @override
   List<String>? get participantIds;
+  @override
+  List<TaskReminderDto>? get reminders;
 
   /// Create a copy of UpdateTaskDto
   /// with the given fields replaced by the non-null parameter values.

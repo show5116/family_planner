@@ -211,6 +211,7 @@ class TaskFormState with _$TaskFormState {
       participantIds: groupId != null && selectedParticipantIds.isNotEmpty
           ? selectedParticipantIds
           : null,
+      reminders: remindersDto ?? [],
     );
   }
 

@@ -823,8 +823,8 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
           .read(monthlyTasksProvider(taskDate.year, taskDate.month).notifier)
           .removeTask(id);
 
-      // 상세 Provider 무효화
-      _ref.invalidate(taskDetailProvider(id));
+      // 상세 Provider는 invalidate 하지 않음 — 삭제 후 화면이 pop되므로
+      // invalidate 시 자동 재조회가 발생해 404 에러가 나는 것을 방지
 
       _invalidateDashboard();
       state = const AsyncValue.data(null);

@@ -433,6 +433,7 @@ class UpdateTaskDto with _$UpdateTaskDto {
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
+    List<TaskReminderDto>? reminders,
   }) = _UpdateTaskDto;
 
   factory UpdateTaskDto.fromJson(Map<String, dynamic> json) =>
