@@ -103,6 +103,18 @@ class NotificationSettingsSection extends ConsumerWidget {
               ),
               const Divider(height: 1),
               NotificationToggleItem(
+                icon: Icons.wallet_outlined,
+                title: '적금 알림',
+                subtitle: '적금 목표 및 납입 관련 알림을 받습니다',
+                value: settings.savingsEnabled,
+                onChanged: (value) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .updateSetting(savingsEnabled: value);
+                },
+              ),
+              const Divider(height: 1),
+              NotificationToggleItem(
                 icon: Icons.campaign_outlined,
                 title: '시스템 알림',
                 subtitle: '중요한 시스템 알림을 받습니다',

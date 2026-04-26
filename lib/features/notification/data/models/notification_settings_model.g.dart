@@ -15,6 +15,7 @@ _$NotificationSettingsModelImpl _$$NotificationSettingsModelImplFromJson(
   assetEnabled: json['assetEnabled'] as bool? ?? true,
   childcareEnabled: json['childcareEnabled'] as bool? ?? true,
   groupEnabled: json['groupEnabled'] as bool? ?? true,
+  savingsEnabled: json['savingsEnabled'] as bool? ?? true,
   systemEnabled: json['systemEnabled'] as bool? ?? true,
 );
 
@@ -27,5 +28,6 @@ Map<String, dynamic> _$$NotificationSettingsModelImplToJson(
   'assetEnabled': instance.assetEnabled,
   'childcareEnabled': instance.childcareEnabled,
   'groupEnabled': instance.groupEnabled,
+  'savingsEnabled': instance.savingsEnabled,
   'systemEnabled': instance.systemEnabled,
 };

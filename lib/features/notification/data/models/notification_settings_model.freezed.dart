@@ -29,6 +29,7 @@ mixin _$NotificationSettingsModel {
   bool get assetEnabled => throw _privateConstructorUsedError;
   bool get childcareEnabled => throw _privateConstructorUsedError;
   bool get groupEnabled => throw _privateConstructorUsedError;
+  bool get savingsEnabled => throw _privateConstructorUsedError;
   bool get systemEnabled => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsModel to a JSON map.
@@ -55,6 +56,7 @@ abstract class $NotificationSettingsModelCopyWith<$Res> {
     bool assetEnabled,
     bool childcareEnabled,
     bool groupEnabled,
+    bool savingsEnabled,
     bool systemEnabled,
   });
 }
@@ -83,6 +85,7 @@ class _$NotificationSettingsModelCopyWithImpl<
     Object? assetEnabled = null,
     Object? childcareEnabled = null,
     Object? groupEnabled = null,
+    Object? savingsEnabled = null,
     Object? systemEnabled = null,
   }) {
     return _then(
@@ -111,6 +114,10 @@ class _$NotificationSettingsModelCopyWithImpl<
                 ? _value.groupEnabled
                 : groupEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
+            savingsEnabled: null == savingsEnabled
+                ? _value.savingsEnabled
+                : savingsEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
             systemEnabled: null == systemEnabled
                 ? _value.systemEnabled
                 : systemEnabled // ignore: cast_nullable_to_non_nullable
@@ -137,6 +144,7 @@ abstract class _$$NotificationSettingsModelImplCopyWith<$Res>
     bool assetEnabled,
     bool childcareEnabled,
     bool groupEnabled,
+    bool savingsEnabled,
     bool systemEnabled,
   });
 }
@@ -165,6 +173,7 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
     Object? assetEnabled = null,
     Object? childcareEnabled = null,
     Object? groupEnabled = null,
+    Object? savingsEnabled = null,
     Object? systemEnabled = null,
   }) {
     return _then(
@@ -193,6 +202,10 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
             ? _value.groupEnabled
             : groupEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
+        savingsEnabled: null == savingsEnabled
+            ? _value.savingsEnabled
+            : savingsEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
         systemEnabled: null == systemEnabled
             ? _value.systemEnabled
             : systemEnabled // ignore: cast_nullable_to_non_nullable
@@ -212,6 +225,7 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     this.assetEnabled = true,
     this.childcareEnabled = true,
     this.groupEnabled = true,
+    this.savingsEnabled = true,
     this.systemEnabled = true,
   });
 
@@ -238,11 +252,14 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
   final bool groupEnabled;
   @override
   @JsonKey()
+  final bool savingsEnabled;
+  @override
+  @JsonKey()
   final bool systemEnabled;
 
   @override
   String toString() {
-    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, systemEnabled: $systemEnabled)';
+    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, savingsEnabled: $savingsEnabled, systemEnabled: $systemEnabled)';
   }
 
   @override
@@ -262,6 +279,8 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
                 other.childcareEnabled == childcareEnabled) &&
             (identical(other.groupEnabled, groupEnabled) ||
                 other.groupEnabled == groupEnabled) &&
+            (identical(other.savingsEnabled, savingsEnabled) ||
+                other.savingsEnabled == savingsEnabled) &&
             (identical(other.systemEnabled, systemEnabled) ||
                 other.systemEnabled == systemEnabled));
   }
@@ -276,6 +295,7 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     assetEnabled,
     childcareEnabled,
     groupEnabled,
+    savingsEnabled,
     systemEnabled,
   );
 
@@ -304,6 +324,7 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
     final bool assetEnabled,
     final bool childcareEnabled,
     final bool groupEnabled,
+    final bool savingsEnabled,
     final bool systemEnabled,
   }) = _$NotificationSettingsModelImpl;
 
@@ -322,6 +343,8 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
   bool get childcareEnabled;
   @override
   bool get groupEnabled;
+  @override
+  bool get savingsEnabled;
   @override
   bool get systemEnabled;
 

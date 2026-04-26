@@ -43,6 +43,7 @@ class NotificationSettings extends _$NotificationSettings {
     bool? assetEnabled,
     bool? childcareEnabled,
     bool? groupEnabled,
+    bool? savingsEnabled,
     bool? systemEnabled,
   }) async {
     final current = await future;
@@ -53,6 +54,7 @@ class NotificationSettings extends _$NotificationSettings {
       assetEnabled: assetEnabled ?? current.assetEnabled,
       childcareEnabled: childcareEnabled ?? current.childcareEnabled,
       groupEnabled: groupEnabled ?? current.groupEnabled,
+      savingsEnabled: savingsEnabled ?? current.savingsEnabled,
       systemEnabled: systemEnabled ?? current.systemEnabled,
     );
 
@@ -63,7 +65,6 @@ class NotificationSettings extends _$NotificationSettings {
     try {
       final repository = ref.read(notificationRepositoryProvider);
 
-      // 변경된 카테고리만 백엔드에 전송
       if (scheduleEnabled != null) {
         await repository.updateSetting(category: 'SCHEDULE', enabled: scheduleEnabled);
       }
@@ -81,6 +82,9 @@ class NotificationSettings extends _$NotificationSettings {
       }
       if (groupEnabled != null) {
         await repository.updateSetting(category: 'GROUP', enabled: groupEnabled);
+      }
+      if (savingsEnabled != null) {
+        await repository.updateSetting(category: 'SAVINGS', enabled: savingsEnabled);
       }
       if (systemEnabled != null) {
         await repository.updateSetting(category: 'SYSTEM', enabled: systemEnabled);

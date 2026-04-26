@@ -13,6 +13,7 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     @Default(true) bool assetEnabled,
     @Default(true) bool childcareEnabled,
     @Default(true) bool groupEnabled,
+    @Default(true) bool savingsEnabled,
     @Default(true) bool systemEnabled,
   }) = _NotificationSettingsModel;
 
