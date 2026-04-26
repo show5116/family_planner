@@ -5,6 +5,7 @@ import 'package:family_planner/features/main/assets/data/models/account_model.da
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
+import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 
@@ -139,6 +140,37 @@ Future<List<AssetTrendPoint>> accountAssetTrend(
   );
 }
 
+/// 출금 기록 Provider
+@riverpod
+class AssetWithdrawals extends _$AssetWithdrawals {
+  @override
+  Future<List<WithdrawalModel>> build(String accountId) async {
+    final repository = ref.watch(assetRepositoryProvider);
+    return repository.getWithdrawals(accountId);
+  }
+
+  Future<void> refresh(String accountId) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () => ref.read(assetRepositoryProvider).getWithdrawals(accountId),
+    );
+  }
+
+  void addWithdrawal(WithdrawalModel withdrawal) {
+    if (!state.hasValue) return;
+    final updated = [withdrawal, ...state.value!]
+      ..sort((a, b) => b.withdrawalDate.compareTo(a.withdrawalDate));
+    state = AsyncValue.data(updated);
+  }
+
+  void removeWithdrawal(String id) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.where((w) => w.id != id).toList(),
+    );
+  }
+}
+
 /// 자산 관리 Notifier (생성/수정/삭제)
 class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
   final AssetRepository _repository;
@@ -222,6 +254,44 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       await _repository.deleteAssetRecord(accountId, recordId);
       _ref.read(assetRecordsProvider(accountId).notifier).removeRecord(recordId);
+      _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
+      _ref.invalidate(groupAssetTrendProvider);
+      _ref.invalidate(accountAssetTrendProvider);
+      _ref.read(assetAccountsProvider.notifier).refresh();
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<WithdrawalModel?> createWithdrawal(
+    String accountId,
+    CreateWithdrawalDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final withdrawal = await _repository.createWithdrawal(accountId, dto);
+      _ref.invalidate(assetStatisticsProvider);
+      _ref.invalidate(dashboardAssetStatisticsProvider);
+      _ref.invalidate(groupAssetTrendProvider);
+      _ref.invalidate(accountAssetTrendProvider);
+      _ref.read(assetAccountsProvider.notifier).refresh();
+      state = const AsyncValue.data(null);
+      return withdrawal;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<bool> deleteWithdrawal(String accountId, String withdrawalId) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteWithdrawal(accountId, withdrawalId);
+      _ref.invalidate(assetWithdrawalsProvider(accountId));
       _ref.invalidate(assetStatisticsProvider);
       _ref.invalidate(dashboardAssetStatisticsProvider);
       _ref.invalidate(groupAssetTrendProvider);

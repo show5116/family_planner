@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -7,6 +8,37 @@ import 'package:family_planner/features/main/assets/data/repositories/asset_repo
     show DuplicateRecordDateException;
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+
+/// 천 단위 콤마를 자동으로 표시하는 TextInputFormatter
+class _ThousandsFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digits = newValue.text.replaceAll(',', '');
+    if (digits.isEmpty) return newValue.copyWith(text: '');
+
+    final number = int.tryParse(digits);
+    if (number == null) return oldValue;
+
+    final formatted = _formatWithComma(number);
+    return newValue.copyWith(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+
+  String _formatWithComma(int value) {
+    final str = value.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buffer.write(',');
+      buffer.write(str[i]);
+    }
+    return buffer.toString();
+  }
+}
 
 /// 자산 기록 추가 바텀시트
 class AddAssetRecordSheet extends ConsumerStatefulWidget {
@@ -167,6 +199,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _balanceController,
         keyboardType: TextInputType.number,
+        inputFormatters: [_ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_balance,
           hintText: l10n.asset_amount_hint,
@@ -180,6 +213,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _principalController,
         keyboardType: TextInputType.number,
+        inputFormatters: [_ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_principal,
           hintText: l10n.asset_amount_hint,
@@ -193,6 +227,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _profitController,
         keyboardType: TextInputType.number,
+        inputFormatters: [_ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_profit,
           hintText: l10n.asset_amount_hint,
@@ -211,6 +246,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _additionalPrincipalController,
         keyboardType: TextInputType.number,
+        inputFormatters: [_ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_additional_principal,
           hintText: l10n.asset_amount_hint,
@@ -225,6 +261,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _currentBalanceController,
         keyboardType: TextInputType.number,
+        inputFormatters: [_ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_current_balance,
           hintText: l10n.asset_amount_hint,
@@ -251,17 +288,17 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       dto = CreateAssetRecordDto(
         recordDate: dateStr,
         inputMode: RecordInputMode.manual,
-        balance: double.tryParse(_balanceController.text.trim()) ?? 0,
-        principal: double.tryParse(_principalController.text.trim()) ?? 0,
-        profit: double.tryParse(_profitController.text.trim()) ?? 0,
+        balance: double.tryParse(_balanceController.text.replaceAll(',', '')) ?? 0,
+        principal: double.tryParse(_principalController.text.replaceAll(',', '')) ?? 0,
+        profit: double.tryParse(_profitController.text.replaceAll(',', '')) ?? 0,
         note: note.isEmpty ? null : note,
       );
     } else {
       dto = CreateAssetRecordDto(
         recordDate: dateStr,
         inputMode: RecordInputMode.auto,
-        currentBalance: double.tryParse(_currentBalanceController.text.trim()) ?? 0,
-        additionalPrincipal: double.tryParse(_additionalPrincipalController.text.trim()) ?? 0,
+        currentBalance: double.tryParse(_currentBalanceController.text.replaceAll(',', '')) ?? 0,
+        additionalPrincipal: double.tryParse(_additionalPrincipalController.text.replaceAll(',', '')) ?? 0,
         note: note.isEmpty ? null : note,
       );
     }
