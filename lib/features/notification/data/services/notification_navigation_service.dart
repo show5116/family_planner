@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 
 /// 알림 클릭 시 화면 이동을 처리하는 서비스
 ///
 /// 백엔드에서 알림 전송 시 data 필드에 다음 키를 포함해야 합니다:
-/// - schedule: { "scheduleId": "uuid" }
+/// - schedule: { "scheduleId": "uuid", "scheduledAt": "2024-01-15T09:00:00Z" }
 /// - todo: { "todoId": "uuid" }
 /// - household: { "householdId": "uuid" }
 /// - asset: { "assetId": "uuid" }
 /// - childcare: { "childId": "uuid" }
 /// - group: { "groupId": "uuid" }
+/// - savings: { "savingsId": "uuid" }
 /// - system (공지사항): { "announcementId": "uuid" }
 /// - system (QnA): { "questionId": "uuid" }
 class NotificationNavigationService {
@@ -78,12 +82,15 @@ class NotificationNavigationService {
       case NotificationCategory.group:
         return _navigateToGroup(context, data);
 
+      case NotificationCategory.savings:
+        return _navigateToSavings(context, data);
+
       case NotificationCategory.system:
         return _navigateToSystem(context, data);
     }
   }
 
-  /// 일정 상세 화면으로 이동
+  /// 일정 화면으로 이동 (캘린더 탭, 해당 날짜 선택)
   static bool _navigateToSchedule(
     BuildContext context,
     Map<String, dynamic> data,
@@ -91,11 +98,26 @@ class NotificationNavigationService {
     final scheduleId = data['scheduleId'] as String?;
     if (scheduleId == null) return false;
 
-    context.push('${AppRoutes.calendarDetail}?id=$scheduleId');
+    // scheduledAt이 있으면 해당 날짜로 캘린더 이동
+    final scheduledAtStr = data['scheduledAt'] as String?;
+    if (scheduledAtStr != null) {
+      try {
+        final date = DateTime.parse(scheduledAtStr).toLocal();
+        final container = ProviderScope.containerOf(context, listen: false);
+        container.read(selectedDateProvider.notifier).state = date;
+        container.read(focusedMonthProvider.notifier).state = date;
+      } catch (_) {}
+    }
+
+    context.go(AppRoutes.home);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final container = ProviderScope.containerOf(context, listen: false);
+      container.read(homeTabNavigationProvider.notifier).state = 'calendar';
+    });
     return true;
   }
 
-  /// 할 일 상세 화면으로 이동
+  /// 할 일 화면으로 이동 (할일 탭)
   static bool _navigateToTodo(
     BuildContext context,
     Map<String, dynamic> data,
@@ -103,7 +125,11 @@ class NotificationNavigationService {
     final todoId = data['todoId'] as String?;
     if (todoId == null) return false;
 
-    context.push('${AppRoutes.todoDetail}?id=$todoId');
+    context.go(AppRoutes.home);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final container = ProviderScope.containerOf(context, listen: false);
+      container.read(homeTabNavigationProvider.notifier).state = 'todo';
+    });
     return true;
   }
 
@@ -140,6 +166,18 @@ class NotificationNavigationService {
     if (childId == null) return false;
 
     context.push('${AppRoutes.childPointsDetail}?id=$childId');
+    return true;
+  }
+
+  /// 적금 상세 화면으로 이동
+  static bool _navigateToSavings(
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) {
+    final savingsId = data['savingsId'] as String?;
+    if (savingsId == null) return false;
+
+    context.push(AppRoutes.savingsDetail.replaceFirst(':id', savingsId));
     return true;
   }
 

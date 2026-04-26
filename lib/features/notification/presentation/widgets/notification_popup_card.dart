@@ -126,29 +126,26 @@ class NotificationPopupCard extends ConsumerWidget {
     WidgetRef ref,
     NotificationModel notification,
   ) async {
-    try {
-      // 팝업 닫기
-      Navigator.of(context).pop();
+    // 팝업을 닫으면 ref/context가 무효화되므로 미리 캡처
+    final rootContext = Navigator.of(context, rootNavigator: true).context;
+    final repository = ref.read(notificationRepositoryProvider);
+    final unreadNotifier = ref.read(unreadNotificationsProvider.notifier);
+    final unreadCountNotifier = ref.read(unreadCountProvider.notifier);
 
-      // 읽음 처리
-      final repository = ref.read(notificationRepositoryProvider);
-      await repository.markAsRead(notification.id);
+    // UI 상태 즉시 업데이트 (팝업 닫기 전)
+    unreadNotifier.markAsRead(notification.id);
+    unreadCountNotifier.decrementCount();
 
-      // Provider 상태 업데이트
-      ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
-      ref.read(unreadCountProvider.notifier).decrementCount();
-
-      // 상세 화면으로 이동 (data에 따라 다른 화면으로)
-      if (context.mounted && notification.data != null) {
-        _navigateToDetail(context, notification);
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('알림 처리 실패: $e')),
-        );
-      }
+    // 팝업 닫기 + 화면 이동
+    Navigator.of(context).pop();
+    if (rootContext.mounted && notification.data != null) {
+      _navigateToDetail(rootContext, notification);
     }
+
+    // API 호출은 백그라운드에서
+    try {
+      await repository.markAsRead(notification.id);
+    } catch (_) {}
   }
 
   /// 읽음 처리만 (화면 이동 없음)
@@ -374,6 +371,8 @@ class _NotificationPopupItem extends StatelessWidget {
         return Icons.child_care_outlined;
       case NotificationCategory.group:
         return Icons.group_outlined;
+      case NotificationCategory.savings:
+        return Icons.wallet_outlined;
       case NotificationCategory.system:
         return Icons.campaign_outlined;
     }
@@ -394,6 +393,8 @@ class _NotificationPopupItem extends StatelessWidget {
         return Colors.pink;
       case NotificationCategory.group:
         return Colors.teal;
+      case NotificationCategory.savings:
+        return Colors.indigo;
       case NotificationCategory.system:
         return Colors.red;
     }

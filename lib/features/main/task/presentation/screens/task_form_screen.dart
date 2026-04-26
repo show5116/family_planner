@@ -55,18 +55,20 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       _descriptionController.text = widget.task!.description ?? '';
       _locationController.text = widget.task!.location ?? '';
     }
-    // 수정 모드일 때 상세 API로 reminders 로드
+    // 수정 모드일 때 상세 API로 task 데이터 + reminders 로드
     if (widget.taskId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _loadReminders());
+      WidgetsBinding.instance.addPostFrameCallback((_) => _loadDetail());
     }
   }
 
-  Future<void> _loadReminders() async {
+  Future<void> _loadDetail() async {
     final taskId = widget.taskId;
     if (taskId == null) return;
     try {
       final detail = await ref.read(taskDetailProvider(taskId).future);
       if (!mounted) return;
+
+      // reminders 적용
       final reminders = detail.reminders
           .map((r) => r.offsetMinutes)
           .toSet()

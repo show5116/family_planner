@@ -174,6 +174,8 @@ class NotificationHistoryItem extends StatelessWidget {
         return Icons.child_care_outlined;
       case NotificationCategory.group:
         return Icons.group_outlined;
+      case NotificationCategory.savings:
+        return Icons.wallet_outlined;
       case NotificationCategory.system:
         return Icons.campaign_outlined;
     }
@@ -194,6 +196,8 @@ class NotificationHistoryItem extends StatelessWidget {
         return Colors.pink;
       case NotificationCategory.group:
         return Colors.teal;
+      case NotificationCategory.savings:
+        return Colors.indigo;
       case NotificationCategory.system:
         return Colors.red;
     }

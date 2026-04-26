@@ -16,6 +16,8 @@ enum NotificationCategory {
   childcare, // 육아
   @JsonValue('GROUP')
   group, // 그룹
+  @JsonValue('SAVINGS')
+  savings, // 적금/저축
   @JsonValue('SYSTEM')
   system, // 시스템
 }
@@ -44,6 +46,7 @@ class NotificationModel with _$NotificationModel {
         case 'ASSET': return NotificationCategory.asset;
         case 'CHILDCARE': return NotificationCategory.childcare;
         case 'GROUP': return NotificationCategory.group;
+        case 'SAVINGS': return NotificationCategory.savings;
         default: return NotificationCategory.system;
       }
     }

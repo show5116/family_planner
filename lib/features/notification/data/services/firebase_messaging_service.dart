@@ -3,12 +3,17 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
+import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/firebase_options.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
+import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
 
 /// Firebase Cloud Messaging 서비스
 class FirebaseMessagingService {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+  // 앱 종료 상태에서 탭한 메시지 — 앱 초기화 완료 후 처리
+  static Map<String, dynamic>? _pendingNavigationData;
 
   /// Firebase Messaging 초기화
   static Future<void> initialize() async {
@@ -36,14 +41,25 @@ class FirebaseMessagingService {
       FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
 
       // 앱이 종료된 상태에서 알림을 탭하여 앱을 열었을 때
+      // navigatorKey.currentContext가 아직 없으므로 pending으로 저장
       final initialMessage = await _messaging.getInitialMessage();
       if (initialMessage != null) {
-        _handleMessageOpenedApp(initialMessage);
+        _pendingNavigationData = initialMessage.data;
       }
 
     } catch (e) {
       debugPrint('Firebase Messaging 초기화 실패: $e');
     }
+  }
+
+  /// 앱 초기화 완료 후 pending 알림 처리
+  ///
+  /// 홈 화면이 준비된 시점(HomeScreen initState의 postFrameCallback)에서 호출
+  static void handlePendingNavigation() {
+    final data = _pendingNavigationData;
+    if (data == null) return;
+    _pendingNavigationData = null;
+    _navigateToScreen(data);
   }
 
   /// FCM 토큰 가져오기
@@ -73,7 +89,7 @@ class FirebaseMessagingService {
 
   /// 포그라운드 메시지 처리
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    // 로컬 알림으로 표시
+    // 로컬 알림으로 표시 (탭 시 LocalNotificationService._onNotificationTapped가 처리)
     await LocalNotificationService.show(
       id: message.messageId.hashCode,
       title: message.notification?.title ?? '',
@@ -84,16 +100,16 @@ class FirebaseMessagingService {
 
   /// 백그라운드에서 알림을 탭하여 앱을 열었을 때 처리
   static Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
-    // TODO: 알림 데이터에 따라 해당 화면으로 이동
     _navigateToScreen(message.data);
   }
 
   /// 알림 데이터에 따라 화면 이동
   static void _navigateToScreen(Map<String, dynamic> data) {
-    // TODO: GoRouter를 사용하여 화면 이동 구현
-    // switch (data['type']) {
-    //   case 'schedule': ...
-    // }
+    final context = AppRouter.navigatorKey.currentContext;
+    if (context == null) return;
+
+    final category = data['category'] as String?;
+    NotificationNavigationService.navigateByData(context, category, data);
   }
 }
 
