@@ -26,7 +26,7 @@ final assetStatisticsProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AssetStatisticsRef = AutoDisposeFutureProviderRef<AssetStatisticsModel>;
-String _$groupAssetTrendHash() => r'962d356a2f73fd298da4e561e76562260bf662cd';
+String _$groupAssetTrendHash() => r'5c62c58a6febd953116563856db6da2d478f4478';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -50,32 +50,48 @@ class _SystemHash {
 }
 
 /// 그룹 자산 추이 Provider
+/// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
 ///
 /// Copied from [groupAssetTrend].
 @ProviderFor(groupAssetTrend)
 const groupAssetTrendProvider = GroupAssetTrendFamily();
 
 /// 그룹 자산 추이 Provider
+/// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
 ///
 /// Copied from [groupAssetTrend].
 class GroupAssetTrendFamily extends Family<AsyncValue<List<AssetTrendPoint>>> {
   /// 그룹 자산 추이 Provider
+  /// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
   ///
   /// Copied from [groupAssetTrend].
   const GroupAssetTrendFamily();
 
   /// 그룹 자산 추이 Provider
+  /// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
   ///
   /// Copied from [groupAssetTrend].
-  GroupAssetTrendProvider call({required TrendPeriod period, String? year}) {
-    return GroupAssetTrendProvider(period: period, year: year);
+  GroupAssetTrendProvider call({
+    required TrendPeriod period,
+    String? year,
+    String? accountIdsJoined,
+  }) {
+    return GroupAssetTrendProvider(
+      period: period,
+      year: year,
+      accountIdsJoined: accountIdsJoined,
+    );
   }
 
   @override
   GroupAssetTrendProvider getProviderOverride(
     covariant GroupAssetTrendProvider provider,
   ) {
-    return call(period: provider.period, year: provider.year);
+    return call(
+      period: provider.period,
+      year: provider.year,
+      accountIdsJoined: provider.accountIdsJoined,
+    );
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -94,31 +110,38 @@ class GroupAssetTrendFamily extends Family<AsyncValue<List<AssetTrendPoint>>> {
 }
 
 /// 그룹 자산 추이 Provider
+/// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
 ///
 /// Copied from [groupAssetTrend].
 class GroupAssetTrendProvider
     extends AutoDisposeFutureProvider<List<AssetTrendPoint>> {
   /// 그룹 자산 추이 Provider
+  /// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
   ///
   /// Copied from [groupAssetTrend].
-  GroupAssetTrendProvider({required TrendPeriod period, String? year})
-    : this._internal(
-        (ref) => groupAssetTrend(
-          ref as GroupAssetTrendRef,
-          period: period,
-          year: year,
-        ),
-        from: groupAssetTrendProvider,
-        name: r'groupAssetTrendProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$groupAssetTrendHash,
-        dependencies: GroupAssetTrendFamily._dependencies,
-        allTransitiveDependencies:
-            GroupAssetTrendFamily._allTransitiveDependencies,
-        period: period,
-        year: year,
-      );
+  GroupAssetTrendProvider({
+    required TrendPeriod period,
+    String? year,
+    String? accountIdsJoined,
+  }) : this._internal(
+         (ref) => groupAssetTrend(
+           ref as GroupAssetTrendRef,
+           period: period,
+           year: year,
+           accountIdsJoined: accountIdsJoined,
+         ),
+         from: groupAssetTrendProvider,
+         name: r'groupAssetTrendProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$groupAssetTrendHash,
+         dependencies: GroupAssetTrendFamily._dependencies,
+         allTransitiveDependencies:
+             GroupAssetTrendFamily._allTransitiveDependencies,
+         period: period,
+         year: year,
+         accountIdsJoined: accountIdsJoined,
+       );
 
   GroupAssetTrendProvider._internal(
     super._createNotifier, {
@@ -129,10 +152,12 @@ class GroupAssetTrendProvider
     required super.from,
     required this.period,
     required this.year,
+    required this.accountIdsJoined,
   }) : super.internal();
 
   final TrendPeriod period;
   final String? year;
+  final String? accountIdsJoined;
 
   @override
   Override overrideWith(
@@ -150,6 +175,7 @@ class GroupAssetTrendProvider
         debugGetCreateSourceHash: null,
         period: period,
         year: year,
+        accountIdsJoined: accountIdsJoined,
       ),
     );
   }
@@ -163,7 +189,8 @@ class GroupAssetTrendProvider
   bool operator ==(Object other) {
     return other is GroupAssetTrendProvider &&
         other.period == period &&
-        other.year == year;
+        other.year == year &&
+        other.accountIdsJoined == accountIdsJoined;
   }
 
   @override
@@ -171,6 +198,7 @@ class GroupAssetTrendProvider
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, period.hashCode);
     hash = _SystemHash.combine(hash, year.hashCode);
+    hash = _SystemHash.combine(hash, accountIdsJoined.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -185,6 +213,9 @@ mixin GroupAssetTrendRef
 
   /// The parameter `year` of this provider.
   String? get year;
+
+  /// The parameter `accountIdsJoined` of this provider.
+  String? get accountIdsJoined;
 }
 
 class _GroupAssetTrendProviderElement
@@ -196,6 +227,9 @@ class _GroupAssetTrendProviderElement
   TrendPeriod get period => (origin as GroupAssetTrendProvider).period;
   @override
   String? get year => (origin as GroupAssetTrendProvider).year;
+  @override
+  String? get accountIdsJoined =>
+      (origin as GroupAssetTrendProvider).accountIdsJoined;
 }
 
 String _$accountAssetTrendHash() => r'ad67eae8c4bf5426dc9418cec9defa9d6b695daa';
@@ -547,6 +581,164 @@ class _AssetRecordsProviderElement
 
   @override
   String get accountId => (origin as AssetRecordsProvider).accountId;
+}
+
+String _$assetWithdrawalsHash() => r'898148909b1ee35648c030d56380a5044f537bf3';
+
+abstract class _$AssetWithdrawals
+    extends BuildlessAutoDisposeAsyncNotifier<List<WithdrawalModel>> {
+  late final String accountId;
+
+  FutureOr<List<WithdrawalModel>> build(String accountId);
+}
+
+/// 출금 기록 Provider
+///
+/// Copied from [AssetWithdrawals].
+@ProviderFor(AssetWithdrawals)
+const assetWithdrawalsProvider = AssetWithdrawalsFamily();
+
+/// 출금 기록 Provider
+///
+/// Copied from [AssetWithdrawals].
+class AssetWithdrawalsFamily extends Family<AsyncValue<List<WithdrawalModel>>> {
+  /// 출금 기록 Provider
+  ///
+  /// Copied from [AssetWithdrawals].
+  const AssetWithdrawalsFamily();
+
+  /// 출금 기록 Provider
+  ///
+  /// Copied from [AssetWithdrawals].
+  AssetWithdrawalsProvider call(String accountId) {
+    return AssetWithdrawalsProvider(accountId);
+  }
+
+  @override
+  AssetWithdrawalsProvider getProviderOverride(
+    covariant AssetWithdrawalsProvider provider,
+  ) {
+    return call(provider.accountId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'assetWithdrawalsProvider';
+}
+
+/// 출금 기록 Provider
+///
+/// Copied from [AssetWithdrawals].
+class AssetWithdrawalsProvider
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          AssetWithdrawals,
+          List<WithdrawalModel>
+        > {
+  /// 출금 기록 Provider
+  ///
+  /// Copied from [AssetWithdrawals].
+  AssetWithdrawalsProvider(String accountId)
+    : this._internal(
+        () => AssetWithdrawals()..accountId = accountId,
+        from: assetWithdrawalsProvider,
+        name: r'assetWithdrawalsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$assetWithdrawalsHash,
+        dependencies: AssetWithdrawalsFamily._dependencies,
+        allTransitiveDependencies:
+            AssetWithdrawalsFamily._allTransitiveDependencies,
+        accountId: accountId,
+      );
+
+  AssetWithdrawalsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.accountId,
+  }) : super.internal();
+
+  final String accountId;
+
+  @override
+  FutureOr<List<WithdrawalModel>> runNotifierBuild(
+    covariant AssetWithdrawals notifier,
+  ) {
+    return notifier.build(accountId);
+  }
+
+  @override
+  Override overrideWith(AssetWithdrawals Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: AssetWithdrawalsProvider._internal(
+        () => create()..accountId = accountId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        accountId: accountId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<
+    AssetWithdrawals,
+    List<WithdrawalModel>
+  >
+  createElement() {
+    return _AssetWithdrawalsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AssetWithdrawalsProvider && other.accountId == accountId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, accountId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin AssetWithdrawalsRef
+    on AutoDisposeAsyncNotifierProviderRef<List<WithdrawalModel>> {
+  /// The parameter `accountId` of this provider.
+  String get accountId;
+}
+
+class _AssetWithdrawalsProviderElement
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          AssetWithdrawals,
+          List<WithdrawalModel>
+        >
+    with AssetWithdrawalsRef {
+  _AssetWithdrawalsProviderElement(super.provider);
+
+  @override
+  String get accountId => (origin as AssetWithdrawalsProvider).accountId;
 }
 
 // ignore_for_file: type=lint

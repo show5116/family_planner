@@ -17,6 +17,9 @@ final assetSelectedGroupIdProvider = StateProvider<String?>((ref) => null);
 /// 선택된 멤버 필터 (null = 전체)
 final assetSelectedUserIdProvider = StateProvider<String?>((ref) => null);
 
+/// 통계 화면 - 선택된 계좌 ID 목록 (빈 Set = 전체)
+final assetStatSelectedAccountIdsProvider = StateProvider<Set<String>>((ref) => {});
+
 /// 계좌 목록 Provider
 @riverpod
 class AssetAccounts extends _$AssetAccounts {
@@ -108,19 +111,23 @@ Future<AssetStatisticsModel> assetStatistics(Ref ref) async {
 }
 
 /// 그룹 자산 추이 Provider
+/// [accountIdsJoined]: 콤마 구분 계좌 ID 문자열 (null = 전체)
 @riverpod
 Future<List<AssetTrendPoint>> groupAssetTrend(
   Ref ref, {
   required TrendPeriod period,
   String? year,
+  String? accountIdsJoined,
 }) async {
   final groupId = ref.watch(assetSelectedGroupIdProvider);
   if (groupId == null) return [];
   final repository = ref.watch(assetRepositoryProvider);
+  final accountIds = accountIdsJoined?.split(',').where((s) => s.isNotEmpty).toList();
   return repository.getGroupAssetTrend(
     groupId: groupId,
     period: period,
     year: year,
+    accountIds: accountIds,
   );
 }
 

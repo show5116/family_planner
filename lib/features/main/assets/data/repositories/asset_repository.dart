@@ -186,12 +186,15 @@ class AssetRepository {
     required String groupId,
     required TrendPeriod period,
     String? year,
+    List<String>? accountIds,
   }) async {
     try {
       final response = await _dio.get('/assets/statistics/trend', queryParameters: {
         'groupId': groupId,
         'period': period.name,
         if (year != null) 'year': year,
+        if (accountIds != null && accountIds.isNotEmpty)
+          'accountIds': accountIds.join(','),
       });
       final data = response.data;
       if (data is List) {

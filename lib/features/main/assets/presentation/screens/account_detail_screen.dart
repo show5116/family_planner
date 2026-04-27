@@ -5,12 +5,44 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
+import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_info_card.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/add_asset_record_sheet.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_record_list_item.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_trend_chart.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+
+/// 알림 등 ID만 있을 때 계좌를 조회 후 상세 화면으로 진입하는 래퍼
+class AccountDetailByIdScreen extends ConsumerWidget {
+  final String accountId;
+
+  const AccountDetailByIdScreen({super.key, required this.accountId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final repo = ref.read(assetRepositoryProvider);
+
+    return FutureBuilder<AccountModel>(
+      future: repo.getAccountById(accountId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text(l10n.common_error)),
+          );
+        }
+        return AccountDetailScreen(account: snapshot.data!);
+      },
+    );
+  }
+}
 
 class AccountDetailScreen extends ConsumerWidget {
   final AccountModel account;

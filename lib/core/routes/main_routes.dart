@@ -7,7 +7,8 @@ import 'package:family_planner/features/main/child_points/presentation/screens/c
 import 'package:family_planner/features/main/child_points/presentation/screens/child_profile_form_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/transaction_form_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
-import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart'
+    show AccountDetailByIdScreen, AccountDetailScreen;
 import 'package:family_planner/features/main/assets/presentation/screens/account_form_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/asset_statistics_screen.dart';
@@ -95,6 +96,14 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final account = state.extra as AccountModel;
         return AccountDetailScreen(account: account);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.assetDetail,
+      name: 'assetDetail',
+      builder: (context, state) {
+        final id = state.uri.queryParameters['id']!;
+        return AccountDetailByIdScreen(accountId: id);
       },
     ),
     GoRoute(

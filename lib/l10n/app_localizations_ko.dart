@@ -66,6 +66,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_all => '전체';
 
   @override
+  String get common_apply => '적용';
+
+  @override
   String get auth_login => '로그인';
 
   @override
@@ -2408,7 +2411,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_trend_balance => '잔액';
 
   @override
-  String get asset_trend_profit_rate => '수익률';
+  String get asset_trend_profit_rate => '누적 수익률';
+
+  @override
+  String get asset_trend_period_return => '기간 수익률';
 
   @override
   String get asset_trend_no_data => '표시할 데이터가 없습니다';
@@ -2444,6 +2450,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get asset_delete_record_confirm => '이 기록을 삭제하시겠습니까?';
+
+  @override
+  String get asset_stat_account_filter => '계좌 필터';
+
+  @override
+  String get asset_stat_filter_all => '전체';
+
+  @override
+  String get asset_trend_principal => '원금';
+
+  @override
+  String get asset_trend_profit => '수익금';
 
   @override
   String get childcare_title => '육아포인트';

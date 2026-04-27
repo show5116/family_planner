@@ -66,6 +66,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_all => 'All';
 
   @override
+  String get common_apply => 'Apply';
+
+  @override
   String get auth_login => 'Log in';
 
   @override
@@ -2451,7 +2454,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_trend_balance => 'Balance';
 
   @override
-  String get asset_trend_profit_rate => 'Return Rate';
+  String get asset_trend_profit_rate => 'Cumulative Return';
+
+  @override
+  String get asset_trend_period_return => 'Period Return';
 
   @override
   String get asset_trend_no_data => 'No data available';
@@ -2490,6 +2496,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get asset_delete_record_confirm =>
       'Are you sure you want to delete this record?';
+
+  @override
+  String get asset_stat_account_filter => 'Account Filter';
+
+  @override
+  String get asset_stat_filter_all => 'All';
+
+  @override
+  String get asset_trend_principal => 'Principal';
+
+  @override
+  String get asset_trend_profit => 'Profit';
 
   @override
   String get childcare_title => 'Child Points';

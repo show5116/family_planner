@@ -214,6 +214,12 @@ abstract class AppLocalizations {
   /// **'전체'**
   String get common_all;
 
+  /// 적용 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'적용'**
+  String get common_apply;
+
   /// No description provided for @auth_login.
   ///
   /// In ko, this message translates to:
@@ -4780,11 +4786,17 @@ abstract class AppLocalizations {
   /// **'잔액'**
   String get asset_trend_balance;
 
-  /// 추이 차트 - 수익률 탭
+  /// 추이 차트 - 누적 수익률 탭
   ///
   /// In ko, this message translates to:
-  /// **'수익률'**
+  /// **'누적 수익률'**
   String get asset_trend_profit_rate;
+
+  /// 추이 차트 - 기간별 수익률 탭 (전월/전년 대비)
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 수익률'**
+  String get asset_trend_period_return;
 
   /// 추이 데이터 없음
   ///
@@ -4851,6 +4863,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'이 기록을 삭제하시겠습니까?'**
   String get asset_delete_record_confirm;
+
+  /// 통계 화면 계좌 필터 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 필터'**
+  String get asset_stat_account_filter;
+
+  /// 통계 화면 전체 선택 칩
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get asset_stat_filter_all;
+
+  /// 추이 차트 - 원금 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'원금'**
+  String get asset_trend_principal;
+
+  /// 추이 차트 - 수익금 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'수익금'**
+  String get asset_trend_profit;
 
   /// 육아포인트 메인 타이틀
   ///
