@@ -10,10 +10,12 @@ import 'package:family_planner/features/settings/groups/presentation/screens/gro
 /// 그룹 카드 위젯
 class GroupCard extends ConsumerWidget {
   final Group group;
+  final bool isLast;
 
   const GroupCard({
     super.key,
     required this.group,
+    this.isLast = false,
   });
 
   @override
@@ -21,9 +23,13 @@ class GroupCard extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final groupColor = _parseGroupColor();
+    final canInvite = group.hasPermission('INVITE_MEMBER');
+    final isExpired = DateTime.now().isAfter(group.inviteCodeExpiresAt);
 
     return Card(
-      margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+      margin: EdgeInsets.only(
+        bottom: isLast ? 96 : AppSizes.spaceM, // FAB 높이만큼 마지막 카드에 여백
+      ),
       child: InkWell(
         onTap: () => _navigateToDetail(context),
         borderRadius: BorderRadius.circular(12),
@@ -35,8 +41,10 @@ class GroupCard extends ConsumerWidget {
               _buildHeader(theme, groupColor),
               if (group.description != null && group.description!.isNotEmpty)
                 _buildDescription(theme),
-              const SizedBox(height: AppSizes.spaceM),
-              _buildInviteCodeRow(context, l10n),
+              if (canInvite) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                _buildInviteCodeRow(context, l10n, isExpired),
+              ],
             ],
           ),
         ),
@@ -111,20 +119,32 @@ class GroupCard extends ConsumerWidget {
   }
 
   /// 초대 코드 행
-  Widget _buildInviteCodeRow(BuildContext context, AppLocalizations l10n) {
+  Widget _buildInviteCodeRow(BuildContext context, AppLocalizations l10n, bool isExpired) {
     return Row(
       children: [
         const Spacer(),
-        TextButton.icon(
-          onPressed: () {
-            Clipboard.setData(ClipboardData(text: group.inviteCode));
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.group_codeCopied)),
-            );
-          },
-          icon: const Icon(Icons.copy, size: 16),
-          label: Text(group.inviteCode),
-        ),
+        if (isExpired)
+          Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, size: 14, color: Colors.orange[700]),
+              const SizedBox(width: 4),
+              Text(
+                '초대 코드 만료됨',
+                style: TextStyle(fontSize: 12, color: Colors.orange[700]),
+              ),
+            ],
+          )
+        else
+          TextButton.icon(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: group.inviteCode));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.group_codeCopied)),
+              );
+            },
+            icon: const Icon(Icons.copy, size: 16),
+            label: Text(group.inviteCode),
+          ),
       ],
     );
   }

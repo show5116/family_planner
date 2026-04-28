@@ -107,7 +107,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                   itemCount: groups.length,
                   itemBuilder: (context, index) {
                     final group = groups[index];
-                    return GroupCard(group: group);
+                    return GroupCard(group: group, isLast: index == groups.length - 1);
                   },
                 ),
               ),
