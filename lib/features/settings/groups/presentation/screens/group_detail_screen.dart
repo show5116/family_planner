@@ -51,6 +51,12 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     _tabController.addListener(() {
       setState(() {}); // 탭 변경 시 FAB 업데이트
     });
+
+    // 화면 진입 시마다 멤버/가입요청 데이터를 새로 조회
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.invalidate(groupMembersProvider(widget.groupId));
+      ref.invalidate(groupJoinRequestsProvider(widget.groupId));
+    });
   }
 
   @override
