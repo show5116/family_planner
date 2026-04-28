@@ -55,7 +55,8 @@ class _NotificationHistoryScreenState
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.deleteNotification(notificationId);
-      ref.invalidate(notificationHistoryProvider);
+
+      ref.read(notificationHistoryProvider.notifier).removeLocally(notificationId);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -76,7 +77,8 @@ class _NotificationHistoryScreenState
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notification.id);
-      ref.invalidate(notificationHistoryProvider);
+
+      ref.read(notificationHistoryProvider.notifier).markReadLocally(notification.id);
 
       if (mounted) {
         NotificationNavigationService.navigateToDetail(context, notification);
@@ -98,7 +100,7 @@ class _NotificationHistoryScreenState
 
       ref.read(unreadCountProvider.notifier).decrementCount();
       ref.read(unreadNotificationsProvider.notifier).markAsRead(notification.id);
-      ref.invalidate(notificationHistoryProvider);
+      ref.read(notificationHistoryProvider.notifier).markReadLocally(notification.id);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -12,6 +12,7 @@ class NotificationHistory extends _$NotificationHistory {
   int _currentPage = 1;
   final int _limit = 20;
   bool _hasMore = true;
+  bool _isLoadingMore = false;
 
   @override
   Future<List<NotificationModel>> build() async {
@@ -43,12 +44,13 @@ class NotificationHistory extends _$NotificationHistory {
 
   /// 다음 페이지 로드
   Future<void> loadMore() async {
-    if (!_hasMore) return;
+    if (!_hasMore || _isLoadingMore) return;
 
-    final currentList = await future;
+    final currentList = state.valueOrNull;
+    if (currentList == null) return;
+
+    _isLoadingMore = true;
     _currentPage++;
-
-    state = const AsyncValue.loading();
 
     try {
       final repository = ref.read(notificationRepositoryProvider);
@@ -66,7 +68,9 @@ class NotificationHistory extends _$NotificationHistory {
       state = AsyncValue.data([...currentList, ...newNotifications]);
     } catch (e) {
       debugPrint('알림 히스토리 추가 로드 실패: $e');
-      state = AsyncValue.error(e, StackTrace.current);
+      _currentPage--;
+    } finally {
+      _isLoadingMore = false;
     }
   }
 
@@ -84,19 +88,28 @@ class NotificationHistory extends _$NotificationHistory {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notificationId);
 
-      // 로컬 상태 업데이트
-      final currentList = await future;
-      final updatedList = currentList.map((notification) {
-        if (notification.id == notificationId) {
-          return notification.copyWith(isRead: true);
-        }
-        return notification;
-      }).toList();
-
-      state = AsyncValue.data(updatedList);
+      markReadLocally(notificationId);
     } catch (e) {
       debugPrint('알림 읽음 처리 실패: $e');
     }
+  }
+
+  /// 로컬 읽음 상태 업데이트 (스크롤 위치 유지)
+  void markReadLocally(String notificationId) {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    state = AsyncValue.data(
+      current.map((n) => n.id == notificationId ? n.copyWith(isRead: true) : n).toList(),
+    );
+  }
+
+  /// 로컬 삭제 (스크롤 위치 유지)
+  void removeLocally(String notificationId) {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    state = AsyncValue.data(
+      current.where((n) => n.id != notificationId).toList(),
+    );
   }
 
   /// 더 불러올 데이터가 있는지 여부
