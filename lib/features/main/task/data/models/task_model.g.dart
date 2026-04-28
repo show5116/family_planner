@@ -206,6 +206,7 @@ _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       location: json['location'] as String?,
       type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
+      categoryId: json['categoryId'] as String?,
       scheduledAt: json['scheduledAt'] as String?,
       dueAt: json['dueAt'] as String?,
       participantIds: (json['participantIds'] as List<dynamic>?)
@@ -223,6 +224,7 @@ Map<String, dynamic> _$$UpdateTaskDtoImplToJson(_$UpdateTaskDtoImpl instance) =>
       'location': instance.location,
       'type': _$TaskTypeEnumMap[instance.type],
       'priority': _$TaskPriorityEnumMap[instance.priority],
+      'categoryId': instance.categoryId,
       'scheduledAt': instance.scheduledAt,
       'dueAt': instance.dueAt,
       'participantIds': instance.participantIds,

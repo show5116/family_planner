@@ -206,6 +206,7 @@ class TaskFormState with _$TaskFormState {
       location: location.trim().isEmpty ? null : location.trim(),
       type: taskType,
       priority: priority,
+      categoryId: selectedCategory?.id,
       scheduledAt: scheduledDateTime.toUtc().toIso8601String(),
       dueAt: dueDateTime?.toUtc().toIso8601String(),
       participantIds: groupId != null && selectedParticipantIds.isNotEmpty
@@ -617,7 +618,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   }
 
   /// Task 수정
-  Future<void> updateTask(String? groupId) async {
+  Future<void> updateTask(String? groupId, {String? updateScope}) async {
     if (state.editingTaskId == null) return;
 
     state = state.copyWith(isSubmitting: true);
@@ -626,6 +627,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       await ref.read(taskManagementProvider.notifier).updateTask(
             state.editingTaskId!,
             dto,
+            updateScope: updateScope,
             originalDate: state.editingTask?.scheduledAt,
           );
     } finally {
@@ -634,7 +636,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   }
 
   /// Task 삭제
-  Future<void> deleteTask() async {
+  Future<void> deleteTask({String? deleteScope}) async {
     if (state.editingTaskId == null || state.editingTask == null) return;
 
     state = state.copyWith(isSubmitting: true);
@@ -642,6 +644,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       await ref.read(taskManagementProvider.notifier).deleteTask(
             state.editingTaskId!,
             state.editingTask!.scheduledAt ?? DateTime.now(),
+            deleteScope: deleteScope,
           );
     } finally {
       state = state.copyWith(isSubmitting: false);

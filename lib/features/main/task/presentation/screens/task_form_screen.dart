@@ -47,6 +47,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   final _locationController = TextEditingController();
   final _titleFocusNode = FocusNode();
 
+  String? _previousGroupId;
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +57,17 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       _descriptionController.text = widget.task!.description ?? '';
       _locationController.text = widget.task!.location ?? '';
     }
-    // 수정 모드일 때 상세 API로 task 데이터 + reminders 로드
-    if (widget.taskId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _loadDetail());
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _previousGroupId = ref.read(selectedGroupIdProvider);
+      // 수정 모드: task의 groupId로 초기화
+      if (widget.task != null) {
+        ref.read(selectedGroupIdProvider.notifier).state = widget.task!.groupId;
+      }
+      // 상세 API 로드 (reminders + groupId 재확인)
+      if (widget.taskId != null) {
+        _loadDetail();
+      }
+    });
   }
 
   Future<void> _loadDetail() async {
@@ -67,6 +76,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     try {
       final detail = await ref.read(taskDetailProvider(taskId).future);
       if (!mounted) return;
+
+      // task의 groupId로 그룹 선택 초기화
+      ref.read(selectedGroupIdProvider.notifier).state = detail.task.groupId;
 
       // reminders 적용
       final reminders = detail.reminders
@@ -88,6 +100,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 
   @override
   void dispose() {
+    // 이전 그룹 선택 상태 복구
+    ref.read(selectedGroupIdProvider.notifier).state = _previousGroupId;
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
@@ -120,7 +134,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           if (formState.isEditMode)
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => _handleDelete(formNotifier, l10n),
+              onPressed: () => _handleDelete(formNotifier, formState, l10n),
               tooltip: l10n.schedule_delete,
             ),
         ],
@@ -150,7 +164,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                   ParticipantsSection(groupId: selectedGroupId, formState: formState, formNotifier: formNotifier),
                   const SizedBox(height: AppSizes.spaceL),
                 ],
-                RecurringSection(formState: formState, formNotifier: formNotifier),
+                RecurringSection(formState: formState, formNotifier: formNotifier, readOnly: formState.isEditMode),
                 const SizedBox(height: AppSizes.spaceL),
                 ReminderSection(formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
@@ -196,7 +210,12 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 
     try {
       if (formState.isEditMode) {
-        await formNotifier.updateTask(groupId);
+        String? updateScope;
+        if (formState.editingTask?.recurring != null) {
+          updateScope = await _showRecurringUpdateDialog(l10n);
+          if (updateScope == null) return; // 취소
+        }
+        await formNotifier.updateTask(groupId, updateScope: updateScope);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_updateSuccess)));
           context.pop();
@@ -220,37 +239,136 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     }
   }
 
-  Future<void> _handleDelete(TaskFormNotifier formNotifier, AppLocalizations l10n) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.schedule_deleteDialogTitle),
-        content: Text(l10n.schedule_deleteDialogMessage),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.common_cancel)),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: Text(l10n.common_delete),
-          ),
-        ],
-      ),
-    );
+  Future<void> _handleDelete(TaskFormNotifier formNotifier, TaskFormState formState, AppLocalizations l10n) async {
+    final isRecurring = formState.editingTask?.recurring != null;
 
-    if (confirmed == true && mounted) {
-      try {
-        await formNotifier.deleteTask();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_deleteSuccess)));
-          context.pop();
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.schedule_deleteError}: $e'), backgroundColor: AppColors.error),
-          );
-        }
+    String? deleteScope;
+
+    if (isRecurring) {
+      deleteScope = await _showRecurringDeleteDialog(l10n);
+      if (deleteScope == null) return; // 취소
+    } else {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.schedule_deleteDialogTitle),
+          content: Text(l10n.schedule_deleteDialogMessage),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.common_cancel)),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              child: Text(l10n.common_delete),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+    }
+
+    if (!mounted) return;
+    try {
+      await formNotifier.deleteTask(deleteScope: deleteScope);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_deleteSuccess)));
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.schedule_deleteError}: $e'), backgroundColor: AppColors.error),
+        );
       }
     }
+  }
+
+  Future<String?> _showRecurringUpdateDialog(AppLocalizations l10n) async {
+    String selected = 'current';
+
+    return showDialog<String>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('반복 일정을 수정하시겠습니까?'),
+          content: RadioGroup<String>(
+            groupValue: selected,
+            onChanged: (v) => setState(() => selected = v!),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<String>(
+                  title: Text('이 일정만 수정'),
+                  value: 'current',
+                  contentPadding: EdgeInsets.zero,
+                ),
+                RadioListTile<String>(
+                  title: Text('이 일정 및 이후 일정 모두 수정'),
+                  value: 'future',
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: Text(l10n.common_cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, selected),
+              child: Text(l10n.common_edit),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<String?> _showRecurringDeleteDialog(AppLocalizations l10n) async {
+    String selected = 'current';
+
+    return showDialog<String>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('이 반복 일정을 삭제하시겠습니까?'),
+          content: RadioGroup<String>(
+            groupValue: selected,
+            onChanged: (v) => setState(() => selected = v!),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<String>(
+                  title: Text('이 일정만 삭제'),
+                  value: 'current',
+                  contentPadding: EdgeInsets.zero,
+                ),
+                RadioListTile<String>(
+                  title: Text('이 일정 및 이후 일정 모두 삭제'),
+                  value: 'future',
+                  contentPadding: EdgeInsets.zero,
+                ),
+                RadioListTile<String>(
+                  title: Text('모든 반복 일정 삭제'),
+                  value: 'all',
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: Text(l10n.common_cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, selected),
+              style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              child: Text(l10n.common_delete),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

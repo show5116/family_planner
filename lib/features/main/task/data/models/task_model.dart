@@ -430,6 +430,7 @@ class UpdateTaskDto with _$UpdateTaskDto {
     String? location,
     TaskType? type,
     TaskPriority? priority,
+    String? categoryId,
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,

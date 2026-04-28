@@ -7,7 +7,7 @@ part of 'notification_history_provider.dart';
 // **************************************************************************
 
 String _$notificationHistoryHash() =>
-    r'cb68b099dde3089234e5eaed9054caa4f36f2ebf';
+    r'447b70a7b0023a989adfa960adf50dbe6606c44a';
 
 /// 알림 히스토리 Provider
 ///

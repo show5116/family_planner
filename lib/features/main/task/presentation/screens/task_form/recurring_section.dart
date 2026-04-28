@@ -9,26 +9,84 @@ import 'package:family_planner/l10n/app_localizations.dart';
 class RecurringSection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const RecurringSection({
     super.key,
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
+
+  String _recurringLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (formState.recurringType == null) return l10n.schedule_recurrenceNone;
+    switch (formState.recurringType!) {
+      case RecurringRuleType.daily:
+        return formState.recurringInterval == 1
+            ? l10n.schedule_recurrenceDaily
+            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalDay}마다';
+      case RecurringRuleType.weekly:
+        return formState.recurringInterval == 1
+            ? l10n.schedule_recurrenceWeekly
+            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalWeek}마다';
+      case RecurringRuleType.monthly:
+        return formState.recurringInterval == 1
+            ? l10n.schedule_recurrenceMonthly
+            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalMonth}마다';
+      case RecurringRuleType.yearly:
+        return formState.recurringInterval == 1
+            ? l10n.schedule_recurrenceYearly
+            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalYear}마다';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    if (readOnly) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.schedule_recurrence,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          Card(
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: AppSizes.spaceM),
+              child: Row(
+                children: [
+                  Icon(Icons.repeat, size: 18, color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Text(_recurringLabel(context), style: Theme.of(context).textTheme.bodyMedium),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.schedule_recurrence,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Text(
+              l10n.schedule_recurrence,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 4),
+            _RecurringInfoButton(),
+          ],
         ),
         const SizedBox(height: AppSizes.spaceM),
 
@@ -79,6 +137,73 @@ class RecurringSection extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+class _RecurringInfoButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.help_outline, size: 18),
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(),
+      visualDensity: VisualDensity.compact,
+      color: Theme.of(context).colorScheme.outline,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('반복 일정 안내'),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('반복 일정은 아래 기준으로 자동 생성됩니다.'),
+                SizedBox(height: 12),
+                _InfoRow(label: '매일 / 매주', value: '3개월치 사전 생성'),
+                SizedBox(height: 8),
+                Text('월 단위', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 4),
+                _InfoRow(label: '매월 (1개월마다)', value: '3개월치'),
+                _InfoRow(label: '격월 (2개월마다)', value: '6개월치'),
+                _InfoRow(label: '3개월마다', value: '9개월치'),
+                SizedBox(height: 8),
+                Text('연 단위', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 4),
+                _InfoRow(label: '매년 (1년마다)', value: '13개월치'),
+                _InfoRow(label: '2년마다', value: '25개월치'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('확인'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Row(
+        children: [
+          Text('· $label  ', style: Theme.of(context).textTheme.bodySmall),
+          Text(value, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)),
+        ],
+      ),
     );
   }
 }

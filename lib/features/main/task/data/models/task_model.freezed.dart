@@ -2478,6 +2478,7 @@ mixin _$UpdateTaskDto {
   String? get location => throw _privateConstructorUsedError;
   TaskType? get type => throw _privateConstructorUsedError;
   TaskPriority? get priority => throw _privateConstructorUsedError;
+  String? get categoryId => throw _privateConstructorUsedError;
   String? get scheduledAt => throw _privateConstructorUsedError;
   String? get dueAt => throw _privateConstructorUsedError;
   List<String>? get participantIds => throw _privateConstructorUsedError;
@@ -2506,6 +2507,7 @@ abstract class $UpdateTaskDtoCopyWith<$Res> {
     String? location,
     TaskType? type,
     TaskPriority? priority,
+    String? categoryId,
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
@@ -2533,6 +2535,7 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
     Object? location = freezed,
     Object? type = freezed,
     Object? priority = freezed,
+    Object? categoryId = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? participantIds = freezed,
@@ -2560,6 +2563,10 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
                 ? _value.priority
                 : priority // ignore: cast_nullable_to_non_nullable
                       as TaskPriority?,
+            categoryId: freezed == categoryId
+                ? _value.categoryId
+                : categoryId // ignore: cast_nullable_to_non_nullable
+                      as String?,
             scheduledAt: freezed == scheduledAt
                 ? _value.scheduledAt
                 : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -2597,6 +2604,7 @@ abstract class _$$UpdateTaskDtoImplCopyWith<$Res>
     String? location,
     TaskType? type,
     TaskPriority? priority,
+    String? categoryId,
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
@@ -2623,6 +2631,7 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
     Object? location = freezed,
     Object? type = freezed,
     Object? priority = freezed,
+    Object? categoryId = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? participantIds = freezed,
@@ -2650,6 +2659,10 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
             ? _value.priority
             : priority // ignore: cast_nullable_to_non_nullable
                   as TaskPriority?,
+        categoryId: freezed == categoryId
+            ? _value.categoryId
+            : categoryId // ignore: cast_nullable_to_non_nullable
+                  as String?,
         scheduledAt: freezed == scheduledAt
             ? _value.scheduledAt
             : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -2680,6 +2693,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     this.location,
     this.type,
     this.priority,
+    this.categoryId,
     this.scheduledAt,
     this.dueAt,
     final List<String>? participantIds,
@@ -2700,6 +2714,8 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
   final TaskType? type;
   @override
   final TaskPriority? priority;
+  @override
+  final String? categoryId;
   @override
   final String? scheduledAt;
   @override
@@ -2726,7 +2742,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
 
   @override
   String toString() {
-    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds, reminders: $reminders)';
+    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds, reminders: $reminders)';
   }
 
   @override
@@ -2742,6 +2758,8 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.priority, priority) ||
                 other.priority == priority) &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId) &&
             (identical(other.scheduledAt, scheduledAt) ||
                 other.scheduledAt == scheduledAt) &&
             (identical(other.dueAt, dueAt) || other.dueAt == dueAt) &&
@@ -2764,6 +2782,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     location,
     type,
     priority,
+    categoryId,
     scheduledAt,
     dueAt,
     const DeepCollectionEquality().hash(_participantIds),
@@ -2791,6 +2810,7 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
     final String? location,
     final TaskType? type,
     final TaskPriority? priority,
+    final String? categoryId,
     final String? scheduledAt,
     final String? dueAt,
     final List<String>? participantIds,
@@ -2810,6 +2830,8 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
   TaskType? get type;
   @override
   TaskPriority? get priority;
+  @override
+  String? get categoryId;
   @override
   String? get scheduledAt;
   @override
