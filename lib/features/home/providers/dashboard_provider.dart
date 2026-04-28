@@ -132,7 +132,6 @@ Future<List<TaskModel>> dashboardTodoTasks(
 
   final response = await repository.getTasks(
     view: 'todo',
-    type: TaskType.todoLinked,
     includePersonal: includePersonal,
     groupIds: groupIdsToSend,
     startDate: startDate,
