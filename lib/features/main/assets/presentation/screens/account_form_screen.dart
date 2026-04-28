@@ -21,7 +21,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _institutionController;
   late final TextEditingController _accountNumberController;
-  AccountType? _selectedType;
+  AccountType _selectedType = AccountType.other;
 
   bool get _isEdit => widget.account != null;
 
@@ -33,7 +33,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
         TextEditingController(text: widget.account?.institution ?? '');
     _accountNumberController =
         TextEditingController(text: widget.account?.accountNumber ?? '');
-    _selectedType = widget.account?.type;
+    _selectedType = widget.account?.type ?? AccountType.other;
   }
 
   @override
@@ -98,7 +98,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
             const SizedBox(height: AppSizes.spaceM),
 
             // 계좌 유형
-            DropdownButtonFormField<AccountType?>(
+            DropdownButtonFormField<AccountType>(
               initialValue: _selectedType,
               decoration: InputDecoration(
                 labelText: l10n.asset_account_type,
@@ -106,7 +106,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
               ),
               items: [
                 DropdownMenuItem(
-                  value: null,
+                  value: AccountType.other,
                   child: Text(l10n.asset_type_other),
                 ),
                 DropdownMenuItem(
@@ -134,7 +134,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                   child: Text(l10n.asset_type_cash),
                 ),
               ],
-              onChanged: (v) => setState(() => _selectedType = v),
+              onChanged: (v) => setState(() => _selectedType = v ?? AccountType.other),
             ),
             const SizedBox(height: AppSizes.spaceL),
 

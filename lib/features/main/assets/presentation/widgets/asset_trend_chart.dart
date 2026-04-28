@@ -204,9 +204,24 @@ class _TrendLineChart extends StatefulWidget {
 }
 
 class _TrendLineChartState extends State<_TrendLineChart> {
-  // 드래그 비교: 첫 번째로 터치한 인덱스 고정, 두 번째는 이동 중인 인덱스
+  // 드래그 비교: 처음 누른 인덱스(고정) / 현재 드래그 인덱스(이동)
   int? _anchorIdx;
   int? _dragIdx;
+  final _chartKey = GlobalKey();
+
+  // 픽셀 x 좌표 → 데이터 인덱스 변환
+  // fl_chart는 좌측 axis 영역(reservedSize=56)을 제외한 나머지가 실제 차트 영역
+  static const double _leftReserved = 56.0;
+
+  int _xToIndex(double localX) {
+    final box = _chartKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) return 0;
+    final chartWidth = box.size.width - _leftReserved;
+    final n = widget.points.length;
+    if (n <= 1) return 0;
+    final ratio = ((localX - _leftReserved) / chartWidth).clamp(0.0, 1.0);
+    return (ratio * (n - 1)).round().clamp(0, n - 1);
+  }
 
   /// 기간별 수익률: (이번 잔액 - 전 잔액) / 전 잔액 × 100
   List<double> _periodReturns(List<AssetTrendPoint> pts) {
@@ -255,22 +270,19 @@ class _TrendLineChartState extends State<_TrendLineChart> {
     final maxY = rawValues.reduce((a, b) => a > b ? a : b);
     final range = maxY - minY;
 
-    // 1번 수정: 변동폭이 작을 때 Y축 범위를 최솟값 기준 비율로 확보
     final double yPadding;
     if (range < 1e-9) {
-      // 값이 모두 같은 경우
       yPadding = maxY.abs() * 0.1 + 1;
     } else if (_isPercent) {
       yPadding = range * 0.3;
     } else {
-      // 변동폭이 최솟값의 5% 미만이면 최솟값 기준 5%를 padding으로 사용
       final minBased = minY.abs() * 0.05;
       yPadding = (range * 0.2).clamp(minBased, double.infinity);
     }
     final chartMinY = minY - yPadding;
     final chartMaxY = maxY + yPadding;
 
-    // 드래그 중 보조선 (anchorIdx)
+    // 앵커(드래그 시작) 보조선
     final extraLines = <VerticalLine>[];
     if (_anchorIdx != null && _dragIdx != null && _anchorIdx != _dragIdx) {
       extraLines.add(VerticalLine(
@@ -281,12 +293,40 @@ class _TrendLineChartState extends State<_TrendLineChart> {
       ));
     }
 
-    return LineChart(
+    // handleBuiltInTouches: false 일 때 툴팁을 강제 표시하려면
+    // showingTooltipIndicators + LineChartBarData.showingIndicators 둘 다 필요
+    final barData = LineChartBarData(
+      spots: spots,
+      isCurved: false,
+      color: colorScheme.primary,
+      barWidth: 2.5,
+      dotData: FlDotData(
+        show: pts.length <= 12,
+        getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
+          radius: 3,
+          color: colorScheme.primary,
+          strokeWidth: 1.5,
+          strokeColor: colorScheme.surface,
+        ),
+      ),
+      belowBarData: BarAreaData(
+        show: true,
+        color: colorScheme.primary.withValues(alpha: 0.08),
+      ),
+      showingIndicators: _dragIdx != null ? [_dragIdx!] : [],
+    );
+
+    final showingTooltips = _dragIdx != null
+        ? [ShowingTooltipIndicators([LineBarSpot(barData, 0, spots[_dragIdx!])])]
+        : <ShowingTooltipIndicators>[];
+
+    final chart = LineChart(
       LineChartData(
         minY: chartMinY,
         maxY: chartMaxY,
         clipData: const FlClipData.all(),
         extraLinesData: ExtraLinesData(verticalLines: extraLines),
+        showingTooltipIndicators: showingTooltips,
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
@@ -347,75 +387,39 @@ class _TrendLineChartState extends State<_TrendLineChart> {
             ),
           ),
         ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            // 2번 수정: 직선 연결
-            isCurved: false,
-            color: colorScheme.primary,
-            barWidth: 2.5,
-            dotData: FlDotData(
-              show: pts.length <= 12,
-              getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
-                radius: 3,
-                color: colorScheme.primary,
-                strokeWidth: 1.5,
-                strokeColor: colorScheme.surface,
-              ),
-            ),
-            belowBarData: BarAreaData(
-              show: true,
-              color: colorScheme.primary.withValues(alpha: 0.08),
-            ),
-          ),
-        ],
-        // 3번 수정: 드래그로 두 점 비교
+        lineBarsData: [barData],
         lineTouchData: LineTouchData(
-          handleBuiltInTouches: true,
-          touchCallback: (event, response) {
-            final idx = response?.lineBarSpots?.first.x.toInt();
-            setState(() {
-              if (event is FlTapDownEvent || event is FlPanStartEvent) {
-                _anchorIdx = idx;
-                _dragIdx = idx;
-              } else if (event is FlPanUpdateEvent || event is FlPanCancelEvent) {
-                _dragIdx = idx;
-              } else if (event is FlTapUpEvent || event is FlPanEndEvent) {
-                // 터치 끝나면 초기화
-                _anchorIdx = null;
-                _dragIdx = null;
-              }
-            });
-          },
+          handleBuiltInTouches: false,
           touchTooltipData: LineTouchTooltipData(
             getTooltipColor: (_) => colorScheme.surfaceContainerHigh,
             fitInsideHorizontally: true,
             fitInsideVertically: true,
             getTooltipItems: (touchedSpots) => touchedSpots.map((s) {
               final idx = s.x.toInt();
+              if (idx < 0 || idx >= pts.length) return null;
               final p = pts[idx];
               final val = _valueAt(idx);
 
-              // 드래그 비교 모드
-              if (_anchorIdx != null && _dragIdx != null &&
-                  _anchorIdx != _dragIdx && idx == _dragIdx) {
+              if (_anchorIdx != null && _dragIdx != null && _anchorIdx != _dragIdx) {
                 final anchorVal = _valueAt(_anchorIdx!);
                 final diff = val - anchorVal;
                 final sign = diff >= 0 ? '+' : '';
                 final diffStr = _isPercent
                     ? '$sign${diff.toStringAsFixed(2)}%'
                     : '$sign${formatAssetAmount(diff)}원';
+                final diffColor = diff >= 0 ? Colors.green : Colors.red;
                 return LineTooltipItem(
-                  '${p.period}\n${_formatValue(val)}\n$diffStr',
+                  '${p.period}\n${_formatValue(val)}\n',
                   Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                   children: [
                     TextSpan(
-                      text: '',
+                      text: diffStr,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: diff >= 0 ? Colors.green : Colors.red,
+                            color: diffColor,
+                            fontWeight: FontWeight.bold,
                           ),
                     ),
                   ],
@@ -433,6 +437,40 @@ class _TrendLineChartState extends State<_TrendLineChart> {
           ),
         ),
       ),
+    );
+
+    return GestureDetector(
+      key: _chartKey,
+      onPanStart: (d) {
+        setState(() {
+          _anchorIdx = _xToIndex(d.localPosition.dx);
+          _dragIdx = _anchorIdx;
+        });
+      },
+      onPanUpdate: (d) {
+        setState(() {
+          _dragIdx = _xToIndex(d.localPosition.dx);
+        });
+      },
+      onPanEnd: (_) {
+        setState(() {
+          _anchorIdx = null;
+          _dragIdx = null;
+        });
+      },
+      onTapDown: (d) {
+        setState(() {
+          _anchorIdx = _xToIndex(d.localPosition.dx);
+          _dragIdx = _anchorIdx;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _anchorIdx = null;
+          _dragIdx = null;
+        });
+      },
+      child: chart,
     );
   }
 
