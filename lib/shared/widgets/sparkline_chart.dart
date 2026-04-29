@@ -16,6 +16,7 @@ class SparklineChart extends StatelessWidget {
     this.width = 60,
     this.height = 32,
     this.strokeWidth = 1.5,
+    this.showBaseline = true,
   });
 
   final List<double> points;
@@ -24,6 +25,7 @@ class SparklineChart extends StatelessWidget {
   final double width;
   final double height;
   final double strokeWidth;
+  final bool showBaseline;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class SparklineChart extends StatelessWidget {
                 color: color,
                 strokeWidth: strokeWidth,
                 prevPrice: prevPrice,
+                showBaseline: showBaseline,
               ),
             )
           : const SizedBox.shrink(),
@@ -50,12 +53,14 @@ class _SparklinePainter extends CustomPainter {
     required this.color,
     required this.strokeWidth,
     this.prevPrice,
+    this.showBaseline = true,
   });
 
   final List<double> points;
   final Color color;
   final double strokeWidth;
   final double? prevPrice;
+  final bool showBaseline;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -64,6 +69,7 @@ class _SparklinePainter extends CustomPainter {
 
     final double minY;
     final double maxY;
+    final double baselineValue;
 
     if (prevPrice != null) {
       final ref = prevPrice!;
@@ -71,9 +77,11 @@ class _SparklinePainter extends CustomPainter {
       final halfRange = math.max(distFromRef * 1.1, ref * 0.005);
       minY = ref - halfRange;
       maxY = ref + halfRange;
+      baselineValue = ref;
     } else {
       minY = dataMin;
       maxY = dataMax;
+      baselineValue = (dataMin + dataMax) / 2;
     }
 
     final rangeY = maxY - minY;
@@ -82,6 +90,26 @@ class _SparklinePainter extends CustomPainter {
     double toY(double v) => rangeY == 0
         ? size.height / 2
         : size.height - (v - minY) / rangeY * size.height;
+
+    if (showBaseline) {
+      final baselineY = toY(baselineValue);
+      final baselinePaint = Paint()
+        ..color = color.withValues(alpha: 0.5)
+        ..strokeWidth = 0.8
+        ..style = PaintingStyle.stroke;
+
+      const dashWidth = 3.0;
+      const dashGap = 3.0;
+      double x = 0;
+      while (x < size.width) {
+        canvas.drawLine(
+          Offset(x, baselineY),
+          Offset(math.min(x + dashWidth, size.width), baselineY),
+          baselinePaint,
+        );
+        x += dashWidth + dashGap;
+      }
+    }
 
     final path = Path()..moveTo(toX(0), toY(points[0]));
     for (var i = 1; i < points.length; i++) {
@@ -104,5 +132,6 @@ class _SparklinePainter extends CustomPainter {
       old.points != points ||
       old.color != color ||
       old.strokeWidth != strokeWidth ||
-      old.prevPrice != prevPrice;
+      old.prevPrice != prevPrice ||
+      old.showBaseline != showBaseline;
 }
