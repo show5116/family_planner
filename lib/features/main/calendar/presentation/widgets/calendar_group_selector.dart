@@ -76,9 +76,16 @@ class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
                   children: [
                     const Icon(Icons.people_outline, size: 18),
                     const SizedBox(width: AppSizes.spaceXS),
-                    Text(
-                      groupDisplayText,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.3,
+                      ),
+                      child: Text(
+                        groupDisplayText,
+                        style: Theme.of(context).textTheme.titleMedium,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     ),
                     const Icon(Icons.arrow_drop_down, size: 20),
                   ],

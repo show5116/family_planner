@@ -54,7 +54,7 @@ Future<List<TaskModel>> dashboardTodayTasks(
     return [];
   }
 
-  final allGroups = await ref.watch(myGroupsProvider.future);
+  final allGroups = await ref.read(myGroupsProvider.future);
   final repository = ref.watch(taskRepositoryProvider);
 
   // null = 전체 선택 → 내 모든 그룹 ID 전달
@@ -121,7 +121,7 @@ Future<List<TaskModel>> dashboardTodoTasks(
     return [];
   }
 
-  final allGroups = await ref.watch(myGroupsProvider.future);
+  final allGroups = await ref.read(myGroupsProvider.future);
   final repository = ref.watch(taskRepositoryProvider);
 
   final groupIdsToSend = selectedGroupIds == null
@@ -157,7 +157,7 @@ Future<AssetStatisticsModel> dashboardAssetStatistics(
 }) async {
   final link = ref.keepAlive();
   Timer(_dashboardCacheDuration, link.close);
-  final groups = await ref.watch(myGroupsProvider.future);
+  final groups = await ref.read(myGroupsProvider.future);
 
   if (groups.isEmpty) return AssetStatisticsModel.empty();
 

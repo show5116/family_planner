@@ -76,7 +76,7 @@ final todoSelectedDateProvider = StateProvider<DateTime>((ref) {
 /// null(전체) → 모든 그룹 ID 반환, [](해제) → null 반환(개인만), 값 있음 → 그대로 반환
 Future<List<String>?> _resolveGroupIds(Ref ref, List<String>? selected) async {
   if (selected == null) {
-    final allGroups = await ref.watch(myGroupsProvider.future);
+    final allGroups = await ref.read(myGroupsProvider.future);
     return allGroups.map((g) => g.id).toList();
   }
   if (selected.isEmpty) return null;
@@ -542,7 +542,7 @@ Future<List<CategoryModel>> categories(Ref ref, {String? groupId}) async {
 @riverpod
 Future<List<CategoryModel>> allGroupsCategories(Ref ref) async {
   final repository = ref.watch(taskRepositoryProvider);
-  final groups = await ref.watch(myGroupsProvider.future);
+  final groups = await ref.read(myGroupsProvider.future);
 
   final futures = [
     repository.getCategories(groupId: null), // 개인
