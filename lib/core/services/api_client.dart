@@ -34,6 +34,9 @@ class ApiClient {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+        // 304 Not Modified를 포함한 3xx를 정상 응답으로 처리
+        // Dio 기본값은 200-299만 허용하여 304가 onError로 떨어지고 무한 재호출됨
+        validateStatus: (status) => status != null && status < 400,
         // 웹 환경에서 쿠키 자동 전송 활성화 (RefreshToken용)
         extra: {
           'withCredentials': kIsWeb,

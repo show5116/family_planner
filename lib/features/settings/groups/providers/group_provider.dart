@@ -131,6 +131,17 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
     }
   }
 
+  /// 내 그룹 목록 순서 변경
+  Future<void> updateMyGroupOrder(List<String> groupIds) async {
+    try {
+      await _groupService.updateMyGroupOrder(groupIds);
+      _ref.invalidate(myGroupsProvider);
+      await loadGroups();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// 초대 코드로 그룹 가입
   Future<Map<String, dynamic>> joinGroup(String inviteCode) async {
     try {

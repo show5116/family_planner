@@ -394,6 +394,19 @@ class GroupService {
     }
   }
 
+  /// 내 그룹 목록 순서 변경
+  /// PATCH /groups/my-order
+  Future<void> updateMyGroupOrder(List<String> groupIds) async {
+    try {
+      await _apiClient.patch(
+        '/groups/my-order',
+        data: {'groupIds': groupIds},
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// 그룹장 권한 양도
   /// POST /groups/:id/transfer-ownership
   /// newOwnerId: 새로운 OWNER가 될 사용자 ID

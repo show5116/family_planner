@@ -73,14 +73,27 @@ final todoSelectedDateProvider = StateProvider<DateTime>((ref) {
   return DateTime(now.year, now.month, now.day);
 });
 
-/// null(전체) → 모든 그룹 ID 반환, [](해제) → null 반환(개인만), 값 있음 → 그대로 반환
-Future<List<String>?> _resolveGroupIds(Ref ref, List<String>? selected) async {
-  if (selected == null) {
-    final allGroups = await ref.read(myGroupsProvider.future);
-    return allGroups.map((g) => g.id).toList();
+/// selectedGroupIds(필터)를 API 파라미터용 문자열 키로 변환하는 파생 Provider
+/// List 대신 String을 반환해 Riverpod의 == 비교가 올바르게 동작하도록 함
+/// - null(전체): 모든 그룹 ID를 정렬 후 쉼표 연결
+/// - [](전부 해제): '' (빈 문자열, 개인만)
+/// - 값 있음: 정렬 후 쉼표 연결
+final _resolvedGroupIdsKeyProvider = Provider<String>((ref) {
+  final selected = ref.watch(selectedGroupIdsProvider);
+  if (selected != null) {
+    if (selected.isEmpty) return '';
+    final sorted = [...selected]..sort();
+    return sorted.join(',');
   }
-  if (selected.isEmpty) return null;
-  return selected;
+  final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+  final ids = groups.map((g) => g.id).toList()..sort();
+  return ids.join(',');
+});
+
+/// _resolvedGroupIdsKeyProvider의 키를 실제 groupIds 목록으로 복원
+List<String>? _keyToGroupIds(String key) {
+  if (key.isEmpty) return null;
+  return key.split(',');
 }
 
 /// 월간 Task Provider (캘린더 뷰용) - 그룹/카테고리 필터 지원
@@ -89,10 +102,9 @@ class MonthlyTasks extends _$MonthlyTasks {
   @override
   Future<List<TaskModel>> build(int year, int month) async {
     final repository = ref.watch(taskRepositoryProvider);
-    final selectedGroupIds = ref.watch(selectedGroupIdsProvider);
+    final groupIds = _keyToGroupIds(ref.watch(_resolvedGroupIdsKeyProvider));
     final includePersonal = ref.watch(includePersonalProvider);
     final categoryIds = ref.watch(selectedCategoryIdsProvider);
-    final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
     return await repository.getCalendarTasks(
       year: year,
       month: month,
@@ -107,10 +119,9 @@ class MonthlyTasks extends _$MonthlyTasks {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final repository = ref.read(taskRepositoryProvider);
-      final selectedGroupIds = ref.read(selectedGroupIdsProvider);
+      final groupIds = _keyToGroupIds(ref.read(_resolvedGroupIdsKeyProvider));
       final includePersonal = ref.read(includePersonalProvider);
       final categoryIds = ref.read(selectedCategoryIdsProvider);
-      final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
       return await repository.getCalendarTasks(
         year: year,
         month: month,
@@ -161,10 +172,9 @@ Future<List<TaskModel>> calendarSearchResults(Ref ref) async {
   }
 
   final repository = ref.watch(taskRepositoryProvider);
-  final selectedGroupIds = ref.watch(selectedGroupIdsProvider);
+  final groupIds = _keyToGroupIds(ref.watch(_resolvedGroupIdsKeyProvider));
   final includePersonal = ref.watch(includePersonalProvider);
   final categoryIds = ref.watch(selectedCategoryIdsProvider);
-  final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
 
   final response = await repository.getTasks(
     view: 'calendar',
@@ -187,9 +197,8 @@ Future<List<TaskModel>> todoSearchResults(Ref ref) async {
   }
 
   final repository = ref.watch(taskRepositoryProvider);
-  final selectedGroupIds = ref.watch(selectedGroupIdsProvider);
+  final groupIds = _keyToGroupIds(ref.watch(_resolvedGroupIdsKeyProvider));
   final includePersonal = ref.watch(includePersonalProvider);
-  final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
 
   final response = await repository.getTasks(
     view: 'todo',
@@ -299,12 +308,11 @@ class TodoTasks extends _$TodoTasks {
   @override
   Future<TaskListResponse> build({int page = 1}) async {
     final repository = ref.watch(taskRepositoryProvider);
-    final selectedGroupIds = ref.watch(selectedGroupIdsProvider);
+    final groupIds = _keyToGroupIds(ref.watch(_resolvedGroupIdsKeyProvider));
     final includePersonal = ref.watch(includePersonalProvider);
     final showCompleted = ref.watch(showCompletedTodosProvider);
     final priorityFilter = ref.watch(todoFilterPriorityProvider);
     final weekStart = ref.watch(todoSelectedWeekStartProvider);
-    final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
 
     final startDate = weekStart;
     final endDate = DateTime(weekStart.year, weekStart.month, weekStart.day + 6, 23, 59, 59);
@@ -337,12 +345,11 @@ class TodoTasks extends _$TodoTasks {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final repository = ref.read(taskRepositoryProvider);
-      final selectedGroupIds = ref.read(selectedGroupIdsProvider);
+      final groupIds = _keyToGroupIds(ref.read(_resolvedGroupIdsKeyProvider));
       final includePersonal = ref.read(includePersonalProvider);
       final showCompleted = ref.read(showCompletedTodosProvider);
       final priorityFilter = ref.read(todoFilterPriorityProvider);
       final weekStart = ref.read(todoSelectedWeekStartProvider);
-      final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
 
       final startDate = weekStart;
       final endDate = DateTime(weekStart.year, weekStart.month, weekStart.day + 6, 23, 59, 59);
@@ -421,11 +428,10 @@ class TodoOverviewTasks extends _$TodoOverviewTasks {
   @override
   Future<TaskListResponse> build() async {
     final repository = ref.watch(taskRepositoryProvider);
-    final selectedGroupIds = ref.watch(selectedGroupIdsProvider);
+    final groupIds = _keyToGroupIds(ref.watch(_resolvedGroupIdsKeyProvider));
     final includePersonal = ref.watch(includePersonalProvider);
     final showCompleted = ref.watch(showCompletedTodosProvider);
     final priorityFilter = ref.watch(todoFilterPriorityProvider);
-    final groupIds = await _resolveGroupIds(ref, selectedGroupIds);
 
     final response = await repository.getTasks(
       view: 'todo',

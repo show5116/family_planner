@@ -63,32 +63,31 @@ class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // 그룹 필터 버튼
-            InkWell(
-              onTap: () => _showGroupFilterDialog(context, groups),
-              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.spaceS,
-                  vertical: AppSizes.spaceXS,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.people_outline, size: 18),
-                    const SizedBox(width: AppSizes.spaceXS),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.3,
+            Flexible(
+              child: InkWell(
+                onTap: () => _showGroupFilterDialog(context, groups),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceS,
+                    vertical: AppSizes.spaceXS,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.people_outline, size: 18),
+                      const SizedBox(width: AppSizes.spaceXS),
+                      Flexible(
+                        child: Text(
+                          groupDisplayText,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
-                      child: Text(
-                        groupDisplayText,
-                        style: Theme.of(context).textTheme.titleMedium,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    const Icon(Icons.arrow_drop_down, size: 20),
-                  ],
+                      const Icon(Icons.arrow_drop_down, size: 20),
+                    ],
+                  ),
                 ),
               ),
             ),
