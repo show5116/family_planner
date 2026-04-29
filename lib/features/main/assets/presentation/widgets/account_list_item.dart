@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -10,12 +11,14 @@ class AccountListItem extends StatelessWidget {
   final AccountModel account;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+  final bool showDragHandle;
 
   const AccountListItem({
     super.key,
     required this.account,
     required this.onTap,
     required this.onDelete,
+    this.showDragHandle = false,
   });
 
   @override
@@ -62,28 +65,34 @@ class AccountListItem extends StatelessWidget {
                   ),
               ],
             ),
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'delete') onDelete();
-              },
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete_outline,
-                          color: Theme.of(context).colorScheme.error, size: 18),
-                      const SizedBox(width: AppSizes.spaceS),
-                      Text(
-                        l10n.common_delete,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.error),
-                      ),
-                    ],
+            if (showDragHandle)
+              DragHandleIcon(
+                color: Theme.of(context).colorScheme.outline,
+              )
+            else
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'delete') onDelete();
+                },
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline,
+                            color: Theme.of(context).colorScheme.error,
+                            size: 18),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Text(
+                          l10n.common_delete,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
         onTap: onTap,

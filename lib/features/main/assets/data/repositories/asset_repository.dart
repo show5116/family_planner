@@ -77,6 +77,22 @@ class AssetRepository {
     }
   }
 
+  /// 계좌 순서 변경
+  Future<void> reorderAccounts({
+    required String groupId,
+    required List<String> accountIds,
+  }) async {
+    try {
+      await _dio.patch('/assets/accounts/reorder', data: {
+        'groupId': groupId,
+        'accountIds': accountIds,
+      });
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 403) throw Exception('해당 그룹의 멤버가 아닙니다');
+      throw Exception('계좌 순서 변경 실패: ${e.message}');
+    }
+  }
+
   /// 계좌 삭제
   Future<void> deleteAccount(String id) async {
     try {

@@ -65,6 +65,11 @@ class AssetAccounts extends _$AssetAccounts {
       state.value!.where((a) => a.id != id).toList(),
     );
   }
+
+  void reorderAccounts(List<AccountModel> reordered) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(reordered);
+  }
 }
 
 /// 자산 기록 Provider
@@ -185,6 +190,23 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
 
   AssetManagementNotifier(this._repository, this._ref)
       : super(const AsyncValue.data(null));
+
+  Future<bool> reorderAccounts({
+    required String groupId,
+    required List<AccountModel> reordered,
+  }) async {
+    state = const AsyncValue.loading();
+    try {
+      final ids = reordered.map((a) => a.id).toList();
+      await _repository.reorderAccounts(groupId: groupId, accountIds: ids);
+      _ref.read(assetAccountsProvider.notifier).reorderAccounts(reordered);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
 
   Future<AccountModel?> createAccount(CreateAccountDto dto) async {
     state = const AsyncValue.loading();

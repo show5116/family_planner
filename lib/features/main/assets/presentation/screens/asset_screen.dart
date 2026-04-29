@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_list_item.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_group_bar.dart';
@@ -134,16 +135,24 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   }
 }
 
-class _AssetList extends ConsumerWidget {
+class _AssetList extends ConsumerStatefulWidget {
   final String? selectedGroupId;
 
   const _AssetList({required this.selectedGroupId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_AssetList> createState() => _AssetListState();
+}
+
+class _AssetListState extends ConsumerState<_AssetList> {
+  List<AccountModel>? _reorderedAccounts;
+  bool _hasChanges = false;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    if (selectedGroupId == null) {
+    if (widget.selectedGroupId == null) {
       return Center(
         child: Text(
           l10n.asset_no_group_selected,
@@ -156,8 +165,22 @@ class _AssetList extends ConsumerWidget {
     final statsAsync = ref.watch(assetStatisticsProvider);
     final savingsGoals = statsAsync.valueOrNull?.savingsGoals ?? [];
 
+    // 서버에서 새 목록이 오면 로컬 reorder 상태 초기화
+    ref.listen(assetAccountsProvider, (previous, next) {
+      final prevIds = previous?.valueOrNull?.map((a) => a.id).toList() ?? [];
+      final nextIds = next.valueOrNull?.map((a) => a.id).toList() ?? [];
+      if (prevIds.length != nextIds.length ||
+          !prevIds.every((id) => nextIds.contains(id))) {
+        setState(() {
+          _reorderedAccounts = null;
+          _hasChanges = false;
+        });
+      }
+    });
+
     return accountsAsync.when(
       data: (accounts) {
+        final displayAccounts = _reorderedAccounts ?? accounts;
         final hasAccounts = accounts.isNotEmpty;
         final hasSavings = savingsGoals.isNotEmpty;
 
@@ -183,73 +206,120 @@ class _AssetList extends ConsumerWidget {
           );
         }
 
-        return RefreshIndicator(
-          onRefresh: () => ref.read(assetAccountsProvider.notifier).refresh(),
-          child: ListView(
-            padding: const EdgeInsets.only(bottom: 80),
-            children: [
-              if (hasAccounts) ...[
-                ...accounts.map(
-                  (account) => AccountListItem(
-                    account: account,
-                    onTap: () => context.push(
-                      AppRoutes.assetAccountDetail,
-                      extra: account,
-                    ),
-                    onDelete: () =>
-                        _confirmDelete(context, ref, l10n, account),
-                  ),
-                ),
-              ],
-              if (hasSavings) ...[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSizes.spaceM,
-                    AppSizes.spaceM,
-                    AppSizes.spaceM,
-                    AppSizes.spaceXS,
-                  ),
-                  child: Text(
-                    l10n.asset_savings_goals,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                  ),
-                ),
-                ...savingsGoals.map(
-                  (goal) => Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceM,
-                      vertical: AppSizes.spaceXS,
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.tertiaryContainer,
-                        child: Icon(
-                          Icons.savings_outlined,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onTertiaryContainer,
-                        ),
+        return Column(
+          children: [
+            if (_hasChanges)
+              ReorderChangesBar(
+                onSave: _saveReorder,
+                onCancel: _cancelReorder,
+              ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () =>
+                    ref.read(assetAccountsProvider.notifier).refresh(),
+                child: CustomScrollView(
+                  slivers: [
+                    if (hasAccounts)
+                      SliverReorderableList(
+                        itemCount: displayAccounts.length,
+                        proxyDecorator: buildReorderableProxyDecorator,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) newIndex -= 1;
+                          setState(() {
+                            _reorderedAccounts ??= List.from(displayAccounts);
+                            final item =
+                                _reorderedAccounts!.removeAt(oldIndex);
+                            _reorderedAccounts!.insert(newIndex, item);
+                            _hasChanges = true;
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          final account = displayAccounts[index];
+                          return ReorderableDragStartListener(
+                            key: ValueKey(account.id),
+                            index: index,
+                            child: AccountListItem(
+                              account: account,
+                              showDragHandle: true,
+                              onTap: () => context.push(
+                                AppRoutes.assetAccountDetail,
+                                extra: account,
+                              ),
+                              onDelete: () => _confirmDelete(
+                                  context, ref, l10n, account),
+                            ),
+                          );
+                        },
                       ),
-                      title: Text(goal.name),
-                      trailing: Text(
-                        '₩${formatAssetAmount(goal.currentAmount)}',
-                        style:
-                            Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
+                    if (hasSavings) ...[
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSizes.spaceM,
+                            AppSizes.spaceM,
+                            AppSizes.spaceM,
+                            AppSizes.spaceXS,
+                          ),
+                          child: Text(
+                            l10n.asset_savings_goals,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.outline,
                                 ),
+                          ),
+                        ),
                       ),
-                      onTap: () => context.push(
-                        '/savings/${goal.id}',
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final goal = savingsGoals[index];
+                            return Card(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.spaceM,
+                                vertical: AppSizes.spaceXS,
+                              ),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryContainer,
+                                  child: Icon(
+                                    Icons.savings_outlined,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiaryContainer,
+                                  ),
+                                ),
+                                title: Text(goal.name),
+                                trailing: Text(
+                                  '₩${formatAssetAmount(goal.currentAmount)}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                onTap: () =>
+                                    context.push('/savings/${goal.id}'),
+                              ),
+                            );
+                          },
+                          childCount: savingsGoals.length,
+                        ),
                       ),
+                    ],
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: 80),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ],
-          ),
+              ),
+            ),
+          ],
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -271,6 +341,46 @@ class _AssetList extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _cancelReorder() async {
+    final confirmed = await showReorderCancelDialog(context);
+    if (confirmed && mounted) {
+      setState(() {
+        _reorderedAccounts = null;
+        _hasChanges = false;
+      });
+    }
+  }
+
+  Future<void> _saveReorder() async {
+    if (_reorderedAccounts == null) return;
+    final groupId = widget.selectedGroupId;
+    if (groupId == null) return;
+
+    final confirm = await showReorderSaveDialog(context);
+    if (!confirm || !mounted) return;
+
+    final success = await ref
+        .read(assetManagementProvider.notifier)
+        .reorderAccounts(groupId: groupId, reordered: _reorderedAccounts!);
+
+    if (!mounted) return;
+    if (success) {
+      setState(() {
+        _reorderedAccounts = null;
+        _hasChanges = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('계좌 순서가 저장되었습니다')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text(AppLocalizations.of(context)!.common_error)),
+      );
+    }
   }
 
   Future<void> _confirmDelete(
