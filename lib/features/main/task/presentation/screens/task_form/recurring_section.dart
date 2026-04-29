@@ -18,59 +18,9 @@ class RecurringSection extends StatelessWidget {
     this.readOnly = false,
   });
 
-  String _recurringLabel(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    if (formState.recurringType == null) return l10n.schedule_recurrenceNone;
-    switch (formState.recurringType!) {
-      case RecurringRuleType.daily:
-        return formState.recurringInterval == 1
-            ? l10n.schedule_recurrenceDaily
-            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalDay}마다';
-      case RecurringRuleType.weekly:
-        return formState.recurringInterval == 1
-            ? l10n.schedule_recurrenceWeekly
-            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalWeek}마다';
-      case RecurringRuleType.monthly:
-        return formState.recurringInterval == 1
-            ? l10n.schedule_recurrenceMonthly
-            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalMonth}마다';
-      case RecurringRuleType.yearly:
-        return formState.recurringInterval == 1
-            ? l10n.schedule_recurrenceYearly
-            : '${formState.recurringInterval}${l10n.schedule_recurringIntervalYear}마다';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    if (readOnly) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.schedule_recurrence,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: AppSizes.spaceS),
-          Card(
-            elevation: 0,
-            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: AppSizes.spaceM),
-              child: Row(
-                children: [
-                  Icon(Icons.repeat, size: 18, color: Theme.of(context).colorScheme.outline),
-                  const SizedBox(width: AppSizes.spaceS),
-                  Text(_recurringLabel(context), style: Theme.of(context).textTheme.bodyMedium),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,46 +45,18 @@ class RecurringSection extends StatelessWidget {
           spacing: AppSizes.spaceS,
           runSpacing: AppSizes.spaceS,
           children: [
-            _RecurringChip(
-              label: l10n.schedule_recurrenceNone,
-              type: null,
-              formState: formState,
-              formNotifier: formNotifier,
-            ),
-            _RecurringChip(
-              label: l10n.schedule_recurrenceDaily,
-              type: RecurringRuleType.daily,
-              formState: formState,
-              formNotifier: formNotifier,
-            ),
-            _RecurringChip(
-              label: l10n.schedule_recurrenceWeekly,
-              type: RecurringRuleType.weekly,
-              formState: formState,
-              formNotifier: formNotifier,
-            ),
-            _RecurringChip(
-              label: l10n.schedule_recurrenceMonthly,
-              type: RecurringRuleType.monthly,
-              formState: formState,
-              formNotifier: formNotifier,
-            ),
-            _RecurringChip(
-              label: l10n.schedule_recurrenceYearly,
-              type: RecurringRuleType.yearly,
-              formState: formState,
-              formNotifier: formNotifier,
-            ),
+            _RecurringChip(label: l10n.schedule_recurrenceNone, type: null, formState: formState, formNotifier: formNotifier, readOnly: readOnly),
+            _RecurringChip(label: l10n.schedule_recurrenceDaily, type: RecurringRuleType.daily, formState: formState, formNotifier: formNotifier, readOnly: readOnly),
+            _RecurringChip(label: l10n.schedule_recurrenceWeekly, type: RecurringRuleType.weekly, formState: formState, formNotifier: formNotifier, readOnly: readOnly),
+            _RecurringChip(label: l10n.schedule_recurrenceMonthly, type: RecurringRuleType.monthly, formState: formState, formNotifier: formNotifier, readOnly: readOnly),
+            _RecurringChip(label: l10n.schedule_recurrenceYearly, type: RecurringRuleType.yearly, formState: formState, formNotifier: formNotifier, readOnly: readOnly),
           ],
         ),
 
         // 반복 상세 설정 (반복 유형이 선택된 경우에만 표시)
         if (formState.recurringType != null) ...[
           const SizedBox(height: AppSizes.spaceL),
-          _RecurringDetailSection(
-            formState: formState,
-            formNotifier: formNotifier,
-          ),
+          _RecurringDetailSection(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
         ],
       ],
     );
@@ -213,12 +135,14 @@ class _RecurringChip extends StatelessWidget {
   final RecurringRuleType? type;
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _RecurringChip({
     required this.label,
     required this.type,
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -226,7 +150,7 @@ class _RecurringChip extends StatelessWidget {
     return ChoiceChip(
       label: Text(label),
       selected: formState.recurringType == type,
-      onSelected: (selected) {
+      onSelected: readOnly ? null : (selected) {
         if (selected) formNotifier.setRecurringType(type);
       },
     );
@@ -237,10 +161,12 @@ class _RecurringChip extends StatelessWidget {
 class _RecurringDetailSection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _RecurringDetailSection({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -256,24 +182,11 @@ class _RecurringDetailSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 반복 간격 설정
-          _IntervalSection(
-            formState: formState,
-            formNotifier: formNotifier,
-          ),
-
+          _IntervalSection(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
           const SizedBox(height: AppSizes.spaceM),
-
-          // 타입별 추가 설정
           _buildTypeSpecificSection(context),
-
           const SizedBox(height: AppSizes.spaceM),
-
-          // 종료 조건 설정
-          _EndConditionSection(
-            formState: formState,
-            formNotifier: formNotifier,
-          ),
+          _EndConditionSection(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
         ],
       ),
     );
@@ -282,20 +195,11 @@ class _RecurringDetailSection extends StatelessWidget {
   Widget _buildTypeSpecificSection(BuildContext context) {
     switch (formState.recurringType) {
       case RecurringRuleType.weekly:
-        return _WeeklySection(
-          formState: formState,
-          formNotifier: formNotifier,
-        );
+        return _WeeklySection(formState: formState, formNotifier: formNotifier, readOnly: readOnly);
       case RecurringRuleType.monthly:
-        return _MonthlySection(
-          formState: formState,
-          formNotifier: formNotifier,
-        );
+        return _MonthlySection(formState: formState, formNotifier: formNotifier, readOnly: readOnly);
       case RecurringRuleType.yearly:
-        return _YearlySection(
-          formState: formState,
-          formNotifier: formNotifier,
-        );
+        return _YearlySection(formState: formState, formNotifier: formNotifier, readOnly: readOnly);
       default:
         return const SizedBox.shrink();
     }
@@ -306,10 +210,12 @@ class _RecurringDetailSection extends StatelessWidget {
 class _IntervalSection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _IntervalSection({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -337,30 +243,21 @@ class _IntervalSection extends StatelessWidget {
 
     return Row(
       children: [
-        Text(
-          l10n.schedule_recurringEvery,
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(l10n.schedule_recurringEvery, style: theme.textTheme.bodyMedium),
         const SizedBox(width: AppSizes.spaceS),
         SizedBox(
           width: 60,
           child: TextField(
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            controller: TextEditingController(
-              text: formState.recurringInterval.toString(),
-            ),
+            readOnly: readOnly,
+            controller: TextEditingController(text: formState.recurringInterval.toString()),
             decoration: InputDecoration(
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceS,
-                vertical: AppSizes.spaceS,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS, vertical: AppSizes.spaceS),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusSmall)),
             ),
-            onChanged: (value) {
+            onChanged: readOnly ? null : (value) {
               final interval = int.tryParse(value);
               if (interval != null && interval > 0) {
                 formNotifier.setRecurringInterval(interval);
@@ -369,10 +266,7 @@ class _IntervalSection extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSizes.spaceS),
-        Text(
-          unitLabel,
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(unitLabel, style: theme.textTheme.bodyMedium),
       ],
     );
   }
@@ -382,10 +276,12 @@ class _IntervalSection extends StatelessWidget {
 class _WeeklySection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _WeeklySection({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -408,9 +304,7 @@ class _WeeklySection extends StatelessWidget {
       children: [
         Text(
           l10n.schedule_recurringDaysOfWeek,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: AppSizes.spaceS),
         Wrap(
@@ -421,7 +315,7 @@ class _WeeklySection extends StatelessWidget {
             return FilterChip(
               label: Text(dayLabels[index]),
               selected: isSelected,
-              onSelected: (_) => formNotifier.toggleDayOfWeek(index),
+              onSelected: readOnly ? null : (_) => formNotifier.toggleDayOfWeek(index),
               visualDensity: VisualDensity.compact,
             );
           }),
@@ -435,10 +329,12 @@ class _WeeklySection extends StatelessWidget {
 class _MonthlySection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _MonthlySection({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -451,43 +347,22 @@ class _MonthlySection extends StatelessWidget {
       children: [
         Text(
           l10n.schedule_recurringMonthlyType,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: AppSizes.spaceS),
-
-        // 월간 반복 타입 선택
         SegmentedButton<MonthlyType>(
           segments: [
-            ButtonSegment(
-              value: MonthlyType.dayOfMonth,
-              label: Text(l10n.schedule_recurringMonthlyDayOfMonth),
-            ),
-            ButtonSegment(
-              value: MonthlyType.weekOfMonth,
-              label: Text(l10n.schedule_recurringMonthlyWeekOfMonth),
-            ),
+            ButtonSegment(value: MonthlyType.dayOfMonth, label: Text(l10n.schedule_recurringMonthlyDayOfMonth)),
+            ButtonSegment(value: MonthlyType.weekOfMonth, label: Text(l10n.schedule_recurringMonthlyWeekOfMonth)),
           ],
           selected: {formState.monthlyType},
-          onSelectionChanged: (selection) {
-            formNotifier.setMonthlyType(selection.first);
-          },
+          onSelectionChanged: readOnly ? null : (selection) => formNotifier.setMonthlyType(selection.first),
         ),
-
         const SizedBox(height: AppSizes.spaceS),
-
-        // 타입별 상세 설정
         if (formState.monthlyType == MonthlyType.dayOfMonth)
-          _MonthlyDayPicker(
-            formState: formState,
-            formNotifier: formNotifier,
-          )
+          _MonthlyDayPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly)
         else
-          _MonthlyWeekPicker(
-            formState: formState,
-            formNotifier: formNotifier,
-          ),
+          _MonthlyWeekPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
       ],
     );
   }
@@ -497,10 +372,12 @@ class _MonthlySection extends StatelessWidget {
 class _MonthlyDayPicker extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _MonthlyDayPicker({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -514,15 +391,8 @@ class _MonthlyDayPicker extends StatelessWidget {
         const SizedBox(width: AppSizes.spaceS),
         DropdownButton<int>(
           value: formState.monthlyDayOfMonth,
-          items: List.generate(31, (i) => i + 1).map((day) {
-            return DropdownMenuItem(
-              value: day,
-              child: Text('$day'),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setMonthlyDayOfMonth(value);
-          },
+          items: List.generate(31, (i) => i + 1).map((day) => DropdownMenuItem(value: day, child: Text('$day'))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyDayOfMonth(value); },
         ),
         const SizedBox(width: AppSizes.spaceS),
         Text(l10n.schedule_recurringDay, style: theme.textTheme.bodyMedium),
@@ -535,10 +405,12 @@ class _MonthlyDayPicker extends StatelessWidget {
 class _MonthlyWeekPicker extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _MonthlyWeekPicker({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -546,23 +418,8 @@ class _MonthlyWeekPicker extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final weekLabels = [
-      l10n.schedule_recurringWeek1,
-      l10n.schedule_recurringWeek2,
-      l10n.schedule_recurringWeek3,
-      l10n.schedule_recurringWeek4,
-      l10n.schedule_recurringWeekLast,
-    ];
-
-    final dayLabels = [
-      l10n.schedule_daySunday,
-      l10n.schedule_dayMonday,
-      l10n.schedule_dayTuesday,
-      l10n.schedule_dayWednesday,
-      l10n.schedule_dayThursday,
-      l10n.schedule_dayFriday,
-      l10n.schedule_daySaturday,
-    ];
+    final weekLabels = [l10n.schedule_recurringWeek1, l10n.schedule_recurringWeek2, l10n.schedule_recurringWeek3, l10n.schedule_recurringWeek4, l10n.schedule_recurringWeekLast];
+    final dayLabels = [l10n.schedule_daySunday, l10n.schedule_dayMonday, l10n.schedule_dayTuesday, l10n.schedule_dayWednesday, l10n.schedule_dayThursday, l10n.schedule_dayFriday, l10n.schedule_daySaturday];
 
     return Row(
       children: [
@@ -570,28 +427,14 @@ class _MonthlyWeekPicker extends StatelessWidget {
         const SizedBox(width: AppSizes.spaceS),
         DropdownButton<int>(
           value: formState.monthlyWeekOfMonth,
-          items: List.generate(5, (i) => i + 1).map((week) {
-            return DropdownMenuItem(
-              value: week,
-              child: Text(weekLabels[week - 1]),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setMonthlyWeekOfMonth(value);
-          },
+          items: List.generate(5, (i) => i + 1).map((week) => DropdownMenuItem(value: week, child: Text(weekLabels[week - 1]))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyWeekOfMonth(value); },
         ),
         const SizedBox(width: AppSizes.spaceS),
         DropdownButton<int>(
           value: formState.monthlyDayOfWeek,
-          items: List.generate(7, (i) => i).map((day) {
-            return DropdownMenuItem(
-              value: day,
-              child: Text(dayLabels[day]),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setMonthlyDayOfWeek(value);
-          },
+          items: List.generate(7, (i) => i).map((day) => DropdownMenuItem(value: day, child: Text(dayLabels[day]))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyDayOfWeek(value); },
         ),
       ],
     );
@@ -602,10 +445,12 @@ class _MonthlyWeekPicker extends StatelessWidget {
 class _YearlySection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _YearlySection({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -618,43 +463,22 @@ class _YearlySection extends StatelessWidget {
       children: [
         Text(
           l10n.schedule_recurringYearlyType,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: AppSizes.spaceS),
-
-        // 연간 반복 타입 선택
         SegmentedButton<YearlyType>(
           segments: [
-            ButtonSegment(
-              value: YearlyType.dayOfMonth,
-              label: Text(l10n.schedule_recurringYearlyDayOfMonth),
-            ),
-            ButtonSegment(
-              value: YearlyType.weekOfMonth,
-              label: Text(l10n.schedule_recurringYearlyWeekOfMonth),
-            ),
+            ButtonSegment(value: YearlyType.dayOfMonth, label: Text(l10n.schedule_recurringYearlyDayOfMonth)),
+            ButtonSegment(value: YearlyType.weekOfMonth, label: Text(l10n.schedule_recurringYearlyWeekOfMonth)),
           ],
           selected: {formState.yearlyType},
-          onSelectionChanged: (selection) {
-            formNotifier.setYearlyType(selection.first);
-          },
+          onSelectionChanged: readOnly ? null : (selection) => formNotifier.setYearlyType(selection.first),
         ),
-
         const SizedBox(height: AppSizes.spaceS),
-
-        // 타입별 상세 설정
         if (formState.yearlyType == YearlyType.dayOfMonth)
-          _YearlyDayPicker(
-            formState: formState,
-            formNotifier: formNotifier,
-          )
+          _YearlyDayPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly)
         else
-          _YearlyWeekPicker(
-            formState: formState,
-            formNotifier: formNotifier,
-          ),
+          _YearlyWeekPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
       ],
     );
   }
@@ -664,10 +488,12 @@ class _YearlySection extends StatelessWidget {
 class _YearlyDayPicker extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _YearlyDayPicker({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -675,20 +501,7 @@ class _YearlyDayPicker extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final monthLabels = [
-      l10n.schedule_month1,
-      l10n.schedule_month2,
-      l10n.schedule_month3,
-      l10n.schedule_month4,
-      l10n.schedule_month5,
-      l10n.schedule_month6,
-      l10n.schedule_month7,
-      l10n.schedule_month8,
-      l10n.schedule_month9,
-      l10n.schedule_month10,
-      l10n.schedule_month11,
-      l10n.schedule_month12,
-    ];
+    final monthLabels = [l10n.schedule_month1, l10n.schedule_month2, l10n.schedule_month3, l10n.schedule_month4, l10n.schedule_month5, l10n.schedule_month6, l10n.schedule_month7, l10n.schedule_month8, l10n.schedule_month9, l10n.schedule_month10, l10n.schedule_month11, l10n.schedule_month12];
 
     return Row(
       children: [
@@ -696,28 +509,14 @@ class _YearlyDayPicker extends StatelessWidget {
         const SizedBox(width: AppSizes.spaceS),
         DropdownButton<int>(
           value: formState.yearlyMonth,
-          items: List.generate(12, (i) => i + 1).map((month) {
-            return DropdownMenuItem(
-              value: month,
-              child: Text(monthLabels[month - 1]),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setYearlyMonth(value);
-          },
+          items: List.generate(12, (i) => i + 1).map((month) => DropdownMenuItem(value: month, child: Text(monthLabels[month - 1]))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyMonth(value); },
         ),
         const SizedBox(width: AppSizes.spaceS),
         DropdownButton<int>(
           value: formState.yearlyDayOfMonth,
-          items: List.generate(31, (i) => i + 1).map((day) {
-            return DropdownMenuItem(
-              value: day,
-              child: Text('$day'),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setYearlyDayOfMonth(value);
-          },
+          items: List.generate(31, (i) => i + 1).map((day) => DropdownMenuItem(value: day, child: Text('$day'))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfMonth(value); },
         ),
         const SizedBox(width: AppSizes.spaceS),
         Text(l10n.schedule_recurringDay, style: theme.textTheme.bodyMedium),
@@ -730,10 +529,12 @@ class _YearlyDayPicker extends StatelessWidget {
 class _YearlyWeekPicker extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _YearlyWeekPicker({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -741,38 +542,9 @@ class _YearlyWeekPicker extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final monthLabels = [
-      l10n.schedule_month1,
-      l10n.schedule_month2,
-      l10n.schedule_month3,
-      l10n.schedule_month4,
-      l10n.schedule_month5,
-      l10n.schedule_month6,
-      l10n.schedule_month7,
-      l10n.schedule_month8,
-      l10n.schedule_month9,
-      l10n.schedule_month10,
-      l10n.schedule_month11,
-      l10n.schedule_month12,
-    ];
-
-    final weekLabels = [
-      l10n.schedule_recurringWeek1,
-      l10n.schedule_recurringWeek2,
-      l10n.schedule_recurringWeek3,
-      l10n.schedule_recurringWeek4,
-      l10n.schedule_recurringWeekLast,
-    ];
-
-    final dayLabels = [
-      l10n.schedule_daySunday,
-      l10n.schedule_dayMonday,
-      l10n.schedule_dayTuesday,
-      l10n.schedule_dayWednesday,
-      l10n.schedule_dayThursday,
-      l10n.schedule_dayFriday,
-      l10n.schedule_daySaturday,
-    ];
+    final monthLabels = [l10n.schedule_month1, l10n.schedule_month2, l10n.schedule_month3, l10n.schedule_month4, l10n.schedule_month5, l10n.schedule_month6, l10n.schedule_month7, l10n.schedule_month8, l10n.schedule_month9, l10n.schedule_month10, l10n.schedule_month11, l10n.schedule_month12];
+    final weekLabels = [l10n.schedule_recurringWeek1, l10n.schedule_recurringWeek2, l10n.schedule_recurringWeek3, l10n.schedule_recurringWeek4, l10n.schedule_recurringWeekLast];
+    final dayLabels = [l10n.schedule_daySunday, l10n.schedule_dayMonday, l10n.schedule_dayTuesday, l10n.schedule_dayWednesday, l10n.schedule_dayThursday, l10n.schedule_dayFriday, l10n.schedule_daySaturday];
 
     return Wrap(
       spacing: AppSizes.spaceS,
@@ -782,39 +554,18 @@ class _YearlyWeekPicker extends StatelessWidget {
         Text(l10n.schedule_recurringYearlyEveryYear, style: theme.textTheme.bodyMedium),
         DropdownButton<int>(
           value: formState.yearlyMonth,
-          items: List.generate(12, (i) => i + 1).map((month) {
-            return DropdownMenuItem(
-              value: month,
-              child: Text(monthLabels[month - 1]),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setYearlyMonth(value);
-          },
+          items: List.generate(12, (i) => i + 1).map((month) => DropdownMenuItem(value: month, child: Text(monthLabels[month - 1]))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyMonth(value); },
         ),
         DropdownButton<int>(
           value: formState.yearlyWeekOfMonth,
-          items: List.generate(5, (i) => i + 1).map((week) {
-            return DropdownMenuItem(
-              value: week,
-              child: Text(weekLabels[week - 1]),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setYearlyWeekOfMonth(value);
-          },
+          items: List.generate(5, (i) => i + 1).map((week) => DropdownMenuItem(value: week, child: Text(weekLabels[week - 1]))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyWeekOfMonth(value); },
         ),
         DropdownButton<int>(
           value: formState.yearlyDayOfWeek,
-          items: List.generate(7, (i) => i).map((day) {
-            return DropdownMenuItem(
-              value: day,
-              child: Text(dayLabels[day]),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) formNotifier.setYearlyDayOfWeek(value);
-          },
+          items: List.generate(7, (i) => i).map((day) => DropdownMenuItem(value: day, child: Text(dayLabels[day]))).toList(),
+          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfWeek(value); },
         ),
       ],
     );
@@ -825,10 +576,12 @@ class _YearlyWeekPicker extends StatelessWidget {
 class _EndConditionSection extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _EndConditionSection({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -841,13 +594,9 @@ class _EndConditionSection extends StatelessWidget {
       children: [
         Text(
           l10n.schedule_recurringEndCondition,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: AppSizes.spaceS),
-
-        // 종료 조건 선택
         Wrap(
           spacing: AppSizes.spaceS,
           runSpacing: AppSizes.spaceS,
@@ -855,37 +604,25 @@ class _EndConditionSection extends StatelessWidget {
             ChoiceChip(
               label: Text(l10n.schedule_recurringEndNever),
               selected: formState.recurringEndType == RecurringEndType.never,
-              onSelected: (_) =>
-                  formNotifier.setRecurringEndType(RecurringEndType.never),
+              onSelected: readOnly ? null : (_) => formNotifier.setRecurringEndType(RecurringEndType.never),
             ),
             ChoiceChip(
               label: Text(l10n.schedule_recurringEndDate),
               selected: formState.recurringEndType == RecurringEndType.date,
-              onSelected: (_) =>
-                  formNotifier.setRecurringEndType(RecurringEndType.date),
+              onSelected: readOnly ? null : (_) => formNotifier.setRecurringEndType(RecurringEndType.date),
             ),
             ChoiceChip(
               label: Text(l10n.schedule_recurringEndCount),
               selected: formState.recurringEndType == RecurringEndType.count,
-              onSelected: (_) =>
-                  formNotifier.setRecurringEndType(RecurringEndType.count),
+              onSelected: readOnly ? null : (_) => formNotifier.setRecurringEndType(RecurringEndType.count),
             ),
           ],
         ),
-
         const SizedBox(height: AppSizes.spaceS),
-
-        // 종료 조건별 상세 설정
         if (formState.recurringEndType == RecurringEndType.date)
-          _EndDatePicker(
-            formState: formState,
-            formNotifier: formNotifier,
-          )
+          _EndDatePicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly)
         else if (formState.recurringEndType == RecurringEndType.count)
-          _EndCountPicker(
-            formState: formState,
-            formNotifier: formNotifier,
-          ),
+          _EndCountPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
       ],
     );
   }
@@ -895,10 +632,12 @@ class _EndConditionSection extends StatelessWidget {
 class _EndDatePicker extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _EndDatePicker({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -908,7 +647,7 @@ class _EndDatePicker extends StatelessWidget {
     final endDate = formState.recurringEndDate ?? formState.startDate.add(const Duration(days: 30));
 
     return InkWell(
-      onTap: () async {
+      onTap: readOnly ? null : () async {
         final date = await showDatePicker(
           context: context,
           initialDate: endDate,
@@ -920,10 +659,7 @@ class _EndDatePicker extends StatelessWidget {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceM,
-          vertical: AppSizes.spaceS,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
         decoration: BoxDecoration(
           border: Border.all(color: theme.colorScheme.outline),
           borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
@@ -933,10 +669,7 @@ class _EndDatePicker extends StatelessWidget {
           children: [
             Icon(Icons.calendar_today, size: 18, color: theme.colorScheme.primary),
             const SizedBox(width: AppSizes.spaceS),
-            Text(
-              '${endDate.year}/${endDate.month}/${endDate.day}',
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text('${endDate.year}/${endDate.month}/${endDate.day}', style: theme.textTheme.bodyMedium),
           ],
         ),
       ),
@@ -948,10 +681,12 @@ class _EndDatePicker extends StatelessWidget {
 class _EndCountPicker extends StatelessWidget {
   final TaskFormState formState;
   final TaskFormNotifier formNotifier;
+  final bool readOnly;
 
   const _EndCountPicker({
     required this.formState,
     required this.formNotifier,
+    this.readOnly = false,
   });
 
   @override
@@ -966,20 +701,14 @@ class _EndCountPicker extends StatelessWidget {
           child: TextField(
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            controller: TextEditingController(
-              text: formState.recurringCount.toString(),
-            ),
+            readOnly: readOnly,
+            controller: TextEditingController(text: formState.recurringCount.toString()),
             decoration: InputDecoration(
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceS,
-                vertical: AppSizes.spaceS,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS, vertical: AppSizes.spaceS),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusSmall)),
             ),
-            onChanged: (value) {
+            onChanged: readOnly ? null : (value) {
               final count = int.tryParse(value);
               if (count != null && count > 0) {
                 formNotifier.setRecurringCount(count);
@@ -988,10 +717,7 @@ class _EndCountPicker extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSizes.spaceS),
-        Text(
-          l10n.schedule_recurringCountTimes,
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(l10n.schedule_recurringCountTimes, style: theme.textTheme.bodyMedium),
       ],
     );
   }
