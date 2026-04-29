@@ -4,6 +4,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 
 /// 그룹 삭제 카드
 class DeleteGroupCard extends ConsumerWidget {
@@ -94,6 +95,7 @@ class DeleteGroupCard extends ConsumerWidget {
     if (confirmed == true && context.mounted) {
       try {
         await ref.read(groupNotifierProvider.notifier).deleteGroup(group.id);
+        GroupUtils.clearGroupFromFilters(ref, group.id);
         if (context.mounted) {
           Navigator.pop(context); // 그룹 상세 화면 닫기
           ScaffoldMessenger.of(

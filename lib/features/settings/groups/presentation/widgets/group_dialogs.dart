@@ -446,6 +446,7 @@ class GroupDialogs {
     if (confirmed == true && context.mounted) {
       try {
         await ref.read(groupNotifierProvider.notifier).deleteGroup(groupId);
+        GroupUtils.clearGroupFromFilters(ref, groupId);
         if (context.mounted) {
           Navigator.pop(context); // 그룹 상세 화면 닫기
           ScaffoldMessenger.of(
@@ -492,6 +493,7 @@ class GroupDialogs {
     if (confirmed == true && context.mounted) {
       try {
         await ref.read(groupNotifierProvider.notifier).leaveGroup(groupId);
+        GroupUtils.clearGroupFromFilters(ref, groupId);
         if (context.mounted) {
           Navigator.pop(context); // 그룹 상세 화면 닫기
           ScaffoldMessenger.of(
