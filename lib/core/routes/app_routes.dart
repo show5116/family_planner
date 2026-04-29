@@ -59,6 +59,7 @@ class AppRoutes {
   static const String profile = '/settings/profile';
   static const String groupManagement = '/settings/groups';
   static const String groupDetail = '/settings/groups/:id';
+  static const String groupMyJoinRequests = '/settings/groups/my-join-requests';
   static const String notifications = '/settings/notifications';
   static const String notificationHistory = '/settings/notifications/history';
   static const String theme = '/settings/theme';

@@ -44,6 +44,12 @@ final groupJoinRequestsProvider = FutureProvider.family<List<JoinRequest>, Strin
   return await groupService.getJoinRequests(groupId, status: 'PENDING');
 });
 
+/// 내 그룹 가입 신청 목록 Provider
+final myJoinRequestsProvider = FutureProvider<List<MyJoinRequest>>((ref) async {
+  final groupService = ref.watch(groupServiceProvider);
+  return await groupService.getMyJoinRequests();
+});
+
 /// 그룹 관리 상태 관리 NotifierProvider
 class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
   final GroupService _groupService;

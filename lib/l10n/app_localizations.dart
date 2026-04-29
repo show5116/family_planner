@@ -2002,6 +2002,48 @@ abstract class AppLocalizations {
   /// **'새로운 그룹을 생성하거나\n초대 코드로 그룹에 참여하세요'**
   String get group_noGroupsDescription;
 
+  /// No description provided for @group_myJoinRequests.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 가입 신청 목록'**
+  String get group_myJoinRequests;
+
+  /// No description provided for @group_noJoinRequests.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 신청 내역이 없습니다'**
+  String get group_noJoinRequests;
+
+  /// No description provided for @group_joinRequestStatusAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get group_joinRequestStatusAll;
+
+  /// No description provided for @group_joinRequestStatusPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'대기중'**
+  String get group_joinRequestStatusPending;
+
+  /// No description provided for @group_joinRequestStatusDone.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리완료'**
+  String get group_joinRequestStatusDone;
+
+  /// No description provided for @group_joinRequestAccepted.
+  ///
+  /// In ko, this message translates to:
+  /// **'승인됨'**
+  String get group_joinRequestAccepted;
+
+  /// No description provided for @group_joinRequestRejected.
+  ///
+  /// In ko, this message translates to:
+  /// **'거부됨'**
+  String get group_joinRequestRejected;
+
   /// No description provided for @error_network.
   ///
   /// In ko, this message translates to:

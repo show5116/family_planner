@@ -8,6 +8,8 @@ import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/group_card.dart';
@@ -104,13 +106,19 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
       appBar: AppBar(
         title: Text(l10n.group_title),
         actions: [
-          if (!_hasChanges)
+          if (!_hasChanges) ...[
+            IconButton(
+              icon: const Icon(Icons.assignment_outlined),
+              tooltip: l10n.group_myJoinRequests,
+              onPressed: () => context.push(AppRoutes.groupMyJoinRequests),
+            ),
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
                 ref.read(groupNotifierProvider.notifier).loadGroups();
               },
             ),
+          ],
         ],
       ),
       body: groupsAsyncValue.when(

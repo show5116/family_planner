@@ -385,6 +385,14 @@
   "group_noGroups": "参加中のグループがありません",
   "group_noGroupsDescription": "新しいグループを作成するか\n招待コードでグループに参加してください",
 
+  "group_myJoinRequests": "参加申請リスト",
+  "group_noJoinRequests": "参加申請履歴がありません",
+  "group_joinRequestStatusAll": "すべて",
+  "group_joinRequestStatusPending": "保留中",
+  "group_joinRequestStatusDone": "処理済み",
+  "group_joinRequestAccepted": "承認済み",
+  "group_joinRequestRejected": "拒否済み",
+
   "error_network": "ネットワーク接続を確認してください",
   "error_server": "サーバーエラーが発生しました",
   "error_unknown": "不明なエラーが発生しました",

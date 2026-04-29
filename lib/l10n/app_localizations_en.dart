@@ -1013,6 +1013,27 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create a new group or\njoin one with an invite code';
 
   @override
+  String get group_myJoinRequests => 'My Join Requests';
+
+  @override
+  String get group_noJoinRequests => 'No join requests found';
+
+  @override
+  String get group_joinRequestStatusAll => 'All';
+
+  @override
+  String get group_joinRequestStatusPending => 'Pending';
+
+  @override
+  String get group_joinRequestStatusDone => 'Done';
+
+  @override
+  String get group_joinRequestAccepted => 'Accepted';
+
+  @override
+  String get group_joinRequestRejected => 'Rejected';
+
+  @override
   String get error_network => 'Please check your network connection';
 
   @override

@@ -983,6 +983,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_noGroupsDescription => '新しいグループを作成するか\n招待コードでグループに参加してください';
 
   @override
+  String get group_myJoinRequests => '参加申請リスト';
+
+  @override
+  String get group_noJoinRequests => '参加申請履歴がありません';
+
+  @override
+  String get group_joinRequestStatusAll => 'すべて';
+
+  @override
+  String get group_joinRequestStatusPending => '保留中';
+
+  @override
+  String get group_joinRequestStatusDone => '処理済み';
+
+  @override
+  String get group_joinRequestAccepted => '承認済み';
+
+  @override
+  String get group_joinRequestRejected => '拒否済み';
+
+  @override
   String get error_network => 'ネットワーク接続を確認してください';
 
   @override

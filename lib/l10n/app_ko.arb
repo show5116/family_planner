@@ -385,6 +385,14 @@
   "group_noGroups": "참여 중인 그룹이 없습니다",
   "group_noGroupsDescription": "새로운 그룹을 생성하거나\n초대 코드로 그룹에 참여하세요",
 
+  "group_myJoinRequests": "내 가입 신청 목록",
+  "group_noJoinRequests": "가입 신청 내역이 없습니다",
+  "group_joinRequestStatusAll": "전체",
+  "group_joinRequestStatusPending": "대기중",
+  "group_joinRequestStatusDone": "처리완료",
+  "group_joinRequestAccepted": "승인됨",
+  "group_joinRequestRejected": "거부됨",
+
   "error_network": "네트워크 연결을 확인해주세요",
   "error_server": "서버 오류가 발생했습니다",
   "error_unknown": "알 수 없는 오류가 발생했습니다",

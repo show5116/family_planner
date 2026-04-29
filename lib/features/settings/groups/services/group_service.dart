@@ -296,6 +296,21 @@ class GroupService {
     }
   }
 
+  /// 내 그룹 가입 신청 목록 조회
+  /// GET /groups/my-join-requests
+  Future<List<MyJoinRequest>> getMyJoinRequests({String? status}) async {
+    try {
+      final response = await _apiClient.get(
+        '/groups/my-join-requests',
+        queryParameters: status != null ? {'status': status} : null,
+      );
+      final List<dynamic> data = response.data as List<dynamic>;
+      return data.map((json) => MyJoinRequest.fromJson(json)).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// 그룹 가입 요청 목록 조회
   /// GET /groups/:id/join-requests
   /// status 쿼리 파라미터로 필터링 가능 (PENDING, ACCEPTED, REJECTED)

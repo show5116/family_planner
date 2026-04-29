@@ -985,6 +985,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_noGroupsDescription => '새로운 그룹을 생성하거나\n초대 코드로 그룹에 참여하세요';
 
   @override
+  String get group_myJoinRequests => '내 가입 신청 목록';
+
+  @override
+  String get group_noJoinRequests => '가입 신청 내역이 없습니다';
+
+  @override
+  String get group_joinRequestStatusAll => '전체';
+
+  @override
+  String get group_joinRequestStatusPending => '대기중';
+
+  @override
+  String get group_joinRequestStatusDone => '처리완료';
+
+  @override
+  String get group_joinRequestAccepted => '승인됨';
+
+  @override
+  String get group_joinRequestRejected => '거부됨';
+
+  @override
   String get error_network => '네트워크 연결을 확인해주세요';
 
   @override

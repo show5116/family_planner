@@ -385,6 +385,14 @@
   "group_noGroups": "No groups yet",
   "group_noGroupsDescription": "Create a new group or\njoin one with an invite code",
 
+  "group_myJoinRequests": "My Join Requests",
+  "group_noJoinRequests": "No join requests found",
+  "group_joinRequestStatusAll": "All",
+  "group_joinRequestStatusPending": "Pending",
+  "group_joinRequestStatusDone": "Done",
+  "group_joinRequestAccepted": "Accepted",
+  "group_joinRequestRejected": "Rejected",
+
   "error_network": "Please check your network connection",
   "error_server": "Server error occurred",
   "error_unknown": "An unknown error occurred",
