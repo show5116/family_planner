@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+
+const _kChildcareGroupIdKey = 'childcare_selected_group_id';
+const _kChildcareChildIdKey = 'childcare_selected_child_id';
 
 /// 그룹 + 자녀 선택 바
 class GroupAndChildBar extends ConsumerWidget {
@@ -67,6 +71,14 @@ class GroupAndChildBar extends ConsumerWidget {
                     ref
                         .read(childcareSelectedChildIdProvider.notifier)
                         .state = null;
+                    SharedPreferences.getInstance().then((prefs) {
+                      if (value == null) {
+                        prefs.remove(_kChildcareGroupIdKey);
+                      } else {
+                        prefs.setString(_kChildcareGroupIdKey, value);
+                      }
+                      prefs.remove(_kChildcareChildIdKey);
+                    });
                   },
                 ),
               );
@@ -133,6 +145,13 @@ class GroupAndChildBar extends ConsumerWidget {
                           ref
                               .read(childcareSelectedChildIdProvider.notifier)
                               .state = value;
+                          SharedPreferences.getInstance().then((prefs) {
+                            if (value == null) {
+                              prefs.remove(_kChildcareChildIdKey);
+                            } else {
+                              prefs.setString(_kChildcareChildIdKey, value);
+                            }
+                          });
                         },
                       ),
                     ),

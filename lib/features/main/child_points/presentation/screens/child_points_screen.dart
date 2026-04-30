@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/history_tab.dart';
@@ -23,6 +24,9 @@ class ChildPointsScreen extends ConsumerStatefulWidget {
   ConsumerState<ChildPointsScreen> createState() => _ChildPointsScreenState();
 }
 
+const _kChildcareGroupIdKey = 'childcare_selected_group_id';
+const _kChildcareChildIdKey = 'childcare_selected_child_id';
+
 class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -43,9 +47,19 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
   }
 
   Future<void> _initGroupSelection() async {
-    final groupId = ref.read(childcareSelectedGroupIdProvider);
-    if (groupId != null) return;
+    final prefs = await SharedPreferences.getInstance();
+    final savedGroupId = prefs.getString(_kChildcareGroupIdKey);
+    final savedChildId = prefs.getString(_kChildcareChildIdKey);
 
+    if (!mounted) return;
+
+    if (savedGroupId != null) {
+      ref.read(childcareSelectedGroupIdProvider.notifier).state = savedGroupId;
+      ref.read(childcareSelectedChildIdProvider.notifier).state = savedChildId;
+      return;
+    }
+
+    // 저장된 값 없으면 첫 번째 그룹 자동 선택
     final groups =
         await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
     if (groups.isNotEmpty && mounted) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
@@ -23,13 +24,25 @@ class HouseholdScreen extends ConsumerStatefulWidget {
   ConsumerState<HouseholdScreen> createState() => _HouseholdScreenState();
 }
 
+const _kHouseholdGroupIdKey = 'household_selected_group_id';
+
 class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   final _fabKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _loadSavedGroupFilter();
+      _showCoachMark();
+    });
+  }
+
+  Future<void> _loadSavedGroupFilter() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedGroupId = prefs.getString(_kHouseholdGroupIdKey);
+    if (!mounted) return;
+    ref.read(householdSelectedGroupIdProvider.notifier).state = savedGroupId;
   }
 
   Future<void> _showCoachMark() async {
@@ -182,8 +195,15 @@ class _GroupAndMonthBar extends ConsumerWidget {
                     isDense: true,
                     items: items,
                     onChanged: (value) {
-                      ref.read(householdSelectedGroupIdProvider.notifier).state =
-                          value == personalValue ? null : value;
+                      final groupId = value == personalValue ? null : value;
+                      ref.read(householdSelectedGroupIdProvider.notifier).state = groupId;
+                      SharedPreferences.getInstance().then((prefs) {
+                        if (groupId == null) {
+                          prefs.remove(_kHouseholdGroupIdKey);
+                        } else {
+                          prefs.setString(_kHouseholdGroupIdKey, groupId);
+                        }
+                      });
                     },
                   ),
                 );
