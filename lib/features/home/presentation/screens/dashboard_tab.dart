@@ -6,6 +6,7 @@ import 'package:family_planner/features/home/presentation/widgets/investment_sum
 import 'package:family_planner/features/home/presentation/widgets/todo_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/asset_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/memo_summary_widget.dart';
+import 'package:family_planner/features/home/presentation/widgets/childcare_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/household_summary_widget.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
@@ -212,6 +213,13 @@ class _DashboardGrid extends ConsumerWidget {
         case 'weather':
           if (settings.showWeather) {
             widget = const WeatherWidget();
+          }
+          break;
+        case 'childcareSummary':
+          if (settings.showChildcareSummary) {
+            widget = ChildcareSummaryWidget(
+              initialSelectedGroupId: settings.childcareSelectedGroupId,
+            );
           }
           break;
       }

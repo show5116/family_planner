@@ -97,6 +97,9 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
         case 'householdSummary':
           _settings = _settings.copyWith(showHouseholdSummary: value);
           break;
+        case 'childcareSummary':
+          _settings = _settings.copyWith(showChildcareSummary: value);
+          break;
         case 'weather':
           _settings = _settings.copyWith(showWeather: value);
           break;
@@ -168,6 +171,13 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
           'title': '가계 현황',
           'description': '이번 달 지출 요약 및 예산 달성률',
           'enabled': _settings.showHouseholdSummary,
+        };
+      case 'childcareSummary':
+        return {
+          'icon': Icons.child_care,
+          'title': '육아 포인트',
+          'description': '자녀별 포인트 잔액 현황',
+          'enabled': _settings.showChildcareSummary,
         };
       case 'weather':
         return {

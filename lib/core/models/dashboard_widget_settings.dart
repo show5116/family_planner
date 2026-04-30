@@ -25,6 +25,9 @@ class DashboardWidgetSettings {
   final bool memoPersonalOnly;
   // 가계관리 위젯 필터
   final String? householdSelectedGroupId; // null = 첫 번째 그룹
+  // 육아포인트 위젯
+  final bool showChildcareSummary;
+  final String? childcareSelectedGroupId; // null = 첫 번째 그룹
 
   const DashboardWidgetSettings({
     this.showTodaySchedule = true,
@@ -34,6 +37,8 @@ class DashboardWidgetSettings {
     this.showMemoSummary = false,
     this.showWeather = true,
     this.showHouseholdSummary = false,
+    this.showChildcareSummary = false,
+    this.childcareSelectedGroupId,
     this.scheduleViewMode = ScheduleViewMode.today,
     this.scheduleSelectedGroupIds,
     this.scheduleIncludePersonal = true,
@@ -52,6 +57,7 @@ class DashboardWidgetSettings {
       'assetSummary',
       'memoSummary',
       'householdSummary',
+      'childcareSummary',
     ],
   });
 
@@ -68,6 +74,7 @@ class DashboardWidgetSettings {
       'assetSummary',
       'memoSummary',
       'householdSummary',
+      'childcareSummary',
     ];
 
     final savedOrder = (json['widgetOrder'] as List<dynamic>?)
@@ -102,6 +109,8 @@ class DashboardWidgetSettings {
       showMemoSummary: json['showMemoSummary'] as bool? ?? false,
       showWeather: json['showWeather'] as bool? ?? true,
       showHouseholdSummary: json['showHouseholdSummary'] as bool? ?? false,
+      showChildcareSummary: json['showChildcareSummary'] as bool? ?? false,
+      childcareSelectedGroupId: json['childcareSelectedGroupId'] as String?,
       scheduleViewMode: parseMode('scheduleViewMode'),
       scheduleSelectedGroupIds: parseGroupIds('scheduleSelectedGroupIds'),
       scheduleIncludePersonal: json['scheduleIncludePersonal'] as bool? ?? true,
@@ -125,6 +134,8 @@ class DashboardWidgetSettings {
       'showMemoSummary': showMemoSummary,
       'showWeather': showWeather,
       'showHouseholdSummary': showHouseholdSummary,
+      'showChildcareSummary': showChildcareSummary,
+      'childcareSelectedGroupId': childcareSelectedGroupId,
       'scheduleViewMode': scheduleViewMode.name,
       'scheduleSelectedGroupIds': scheduleSelectedGroupIds,
       'scheduleIncludePersonal': scheduleIncludePersonal,
@@ -157,6 +168,8 @@ class DashboardWidgetSettings {
     Object? memoSelectedGroupId = _sentinel,
     bool? memoPersonalOnly,
     Object? householdSelectedGroupId = _sentinel,
+    bool? showChildcareSummary,
+    Object? childcareSelectedGroupId = _sentinel,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -167,6 +180,7 @@ class DashboardWidgetSettings {
       showMemoSummary: showMemoSummary ?? this.showMemoSummary,
       showWeather: showWeather ?? this.showWeather,
       showHouseholdSummary: showHouseholdSummary ?? this.showHouseholdSummary,
+      showChildcareSummary: showChildcareSummary ?? this.showChildcareSummary,
       scheduleViewMode: scheduleViewMode ?? this.scheduleViewMode,
       scheduleSelectedGroupIds: scheduleSelectedGroupIds == _sentinel
           ? this.scheduleSelectedGroupIds
@@ -187,6 +201,9 @@ class DashboardWidgetSettings {
       householdSelectedGroupId: householdSelectedGroupId == _sentinel
           ? this.householdSelectedGroupId
           : householdSelectedGroupId as String?,
+      childcareSelectedGroupId: childcareSelectedGroupId == _sentinel
+          ? this.childcareSelectedGroupId
+          : childcareSelectedGroupId as String?,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }
