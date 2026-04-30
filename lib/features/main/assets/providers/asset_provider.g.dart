@@ -407,7 +407,7 @@ class _AccountAssetTrendProviderElement
   String? get year => (origin as AccountAssetTrendProvider).year;
 }
 
-String _$assetAccountsHash() => r'9a52b94d6ee8dd733db83b3bb8fe1bb86fe0d69c';
+String _$assetAccountsHash() => r'99eedb5c4f2c7086cdc0dbdc99481fe8d2b91124';
 
 /// 계좌 목록 Provider
 ///

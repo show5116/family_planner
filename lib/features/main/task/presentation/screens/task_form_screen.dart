@@ -148,7 +148,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GroupSelector(formNotifier: formNotifier),
+                GroupSelector(formNotifier: formNotifier, isReadOnly: formState.isEditMode),
                 const SizedBox(height: AppSizes.spaceL),
                 TitleField(controller: _titleController, formNotifier: formNotifier, focusNode: _titleFocusNode),
                 const SizedBox(height: AppSizes.spaceL),

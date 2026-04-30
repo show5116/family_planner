@@ -8,6 +8,7 @@ class DashboardWidgetSettings {
   final bool showAssetSummary;
   final bool showMemoSummary;
   final bool showWeather;
+  final bool showHouseholdSummary;
   final List<String> widgetOrder;
   // 일정 위젯 필터
   final ScheduleViewMode scheduleViewMode;
@@ -22,6 +23,8 @@ class DashboardWidgetSettings {
   // 메모 위젯 필터
   final String? memoSelectedGroupId; // null = 전체 그룹
   final bool memoPersonalOnly;
+  // 가계관리 위젯 필터
+  final String? householdSelectedGroupId; // null = 첫 번째 그룹
 
   const DashboardWidgetSettings({
     this.showTodaySchedule = true,
@@ -30,6 +33,7 @@ class DashboardWidgetSettings {
     this.showAssetSummary = true,
     this.showMemoSummary = false,
     this.showWeather = true,
+    this.showHouseholdSummary = false,
     this.scheduleViewMode = ScheduleViewMode.today,
     this.scheduleSelectedGroupIds,
     this.scheduleIncludePersonal = true,
@@ -39,6 +43,7 @@ class DashboardWidgetSettings {
     this.assetSelectedGroupId,
     this.memoSelectedGroupId,
     this.memoPersonalOnly = false,
+    this.householdSelectedGroupId,
     this.widgetOrder = const [
       'weather',
       'todaySchedule',
@@ -46,6 +51,7 @@ class DashboardWidgetSettings {
       'todoSummary',
       'assetSummary',
       'memoSummary',
+      'householdSummary',
     ],
   });
 
@@ -61,6 +67,7 @@ class DashboardWidgetSettings {
       'todoSummary',
       'assetSummary',
       'memoSummary',
+      'householdSummary',
     ];
 
     final savedOrder = (json['widgetOrder'] as List<dynamic>?)
@@ -94,6 +101,7 @@ class DashboardWidgetSettings {
       showAssetSummary: json['showAssetSummary'] as bool? ?? true,
       showMemoSummary: json['showMemoSummary'] as bool? ?? false,
       showWeather: json['showWeather'] as bool? ?? true,
+      showHouseholdSummary: json['showHouseholdSummary'] as bool? ?? false,
       scheduleViewMode: parseMode('scheduleViewMode'),
       scheduleSelectedGroupIds: parseGroupIds('scheduleSelectedGroupIds'),
       scheduleIncludePersonal: json['scheduleIncludePersonal'] as bool? ?? true,
@@ -103,6 +111,7 @@ class DashboardWidgetSettings {
       assetSelectedGroupId: json['assetSelectedGroupId'] as String?,
       memoSelectedGroupId: json['memoSelectedGroupId'] as String?,
       memoPersonalOnly: json['memoPersonalOnly'] as bool? ?? false,
+      householdSelectedGroupId: json['householdSelectedGroupId'] as String?,
       widgetOrder: mergedOrder,
     );
   }
@@ -115,6 +124,7 @@ class DashboardWidgetSettings {
       'showAssetSummary': showAssetSummary,
       'showMemoSummary': showMemoSummary,
       'showWeather': showWeather,
+      'showHouseholdSummary': showHouseholdSummary,
       'scheduleViewMode': scheduleViewMode.name,
       'scheduleSelectedGroupIds': scheduleSelectedGroupIds,
       'scheduleIncludePersonal': scheduleIncludePersonal,
@@ -124,6 +134,7 @@ class DashboardWidgetSettings {
       'assetSelectedGroupId': assetSelectedGroupId,
       'memoSelectedGroupId': memoSelectedGroupId,
       'memoPersonalOnly': memoPersonalOnly,
+      'householdSelectedGroupId': householdSelectedGroupId,
       'widgetOrder': widgetOrder,
     };
   }
@@ -135,6 +146,7 @@ class DashboardWidgetSettings {
     bool? showAssetSummary,
     bool? showMemoSummary,
     bool? showWeather,
+    bool? showHouseholdSummary,
     ScheduleViewMode? scheduleViewMode,
     Object? scheduleSelectedGroupIds = _sentinel,
     bool? scheduleIncludePersonal,
@@ -144,6 +156,7 @@ class DashboardWidgetSettings {
     Object? assetSelectedGroupId = _sentinel,
     Object? memoSelectedGroupId = _sentinel,
     bool? memoPersonalOnly,
+    Object? householdSelectedGroupId = _sentinel,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -153,6 +166,7 @@ class DashboardWidgetSettings {
       showAssetSummary: showAssetSummary ?? this.showAssetSummary,
       showMemoSummary: showMemoSummary ?? this.showMemoSummary,
       showWeather: showWeather ?? this.showWeather,
+      showHouseholdSummary: showHouseholdSummary ?? this.showHouseholdSummary,
       scheduleViewMode: scheduleViewMode ?? this.scheduleViewMode,
       scheduleSelectedGroupIds: scheduleSelectedGroupIds == _sentinel
           ? this.scheduleSelectedGroupIds
@@ -170,6 +184,9 @@ class DashboardWidgetSettings {
           ? this.memoSelectedGroupId
           : memoSelectedGroupId as String?,
       memoPersonalOnly: memoPersonalOnly ?? this.memoPersonalOnly,
+      householdSelectedGroupId: householdSelectedGroupId == _sentinel
+          ? this.householdSelectedGroupId
+          : householdSelectedGroupId as String?,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }

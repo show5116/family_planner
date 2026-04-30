@@ -7,7 +7,7 @@ part of 'dashboard_provider.dart';
 // **************************************************************************
 
 String _$dashboardTodayTasksHash() =>
-    r'a5dcd9a8029c5b91b8be8b94b61d5e92d357713a';
+    r'd631af80acaff887ee2dad7348a349560a4c1a4b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -207,7 +207,7 @@ class _DashboardTodayTasksProviderElement
 }
 
 String _$dashboardTodoTasksHash() =>
-    r'850a553c9e7f4cf8dd0f97a2dae9430f4e8f738b';
+    r'acbbfcc36f1eb47116288ae2a53b394f06a13408';
 
 /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회
 ///
@@ -386,7 +386,7 @@ class _DashboardTodoTasksProviderElement
 }
 
 String _$dashboardAssetStatisticsHash() =>
-    r'4fccd6bd6109d42c7c1ec7ba78a800abf8edb301';
+    r'238612e9f0069ffe2cb24614969100c6a8f786bf';
 
 /// 대시보드 자산 통계 (대시보드 전용) - 자산 탭 그룹 선택 상태와 독립
 ///
@@ -539,6 +539,199 @@ class _DashboardAssetStatisticsProviderElement
   @override
   String? get selectedGroupId =>
       (origin as DashboardAssetStatisticsProvider).selectedGroupId;
+}
+
+String _$dashboardHouseholdStatisticsHash() =>
+    r'8f5e220a4f7f76ff205b69be43fe632b3cf66ad8';
+
+/// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+///
+/// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+/// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+/// [selectedGroupId] 값 있음 = 해당 그룹 조회
+///
+/// Copied from [dashboardHouseholdStatistics].
+@ProviderFor(dashboardHouseholdStatistics)
+const dashboardHouseholdStatisticsProvider =
+    DashboardHouseholdStatisticsFamily();
+
+/// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+///
+/// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+/// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+/// [selectedGroupId] 값 있음 = 해당 그룹 조회
+///
+/// Copied from [dashboardHouseholdStatistics].
+class DashboardHouseholdStatisticsFamily
+    extends Family<AsyncValue<MonthlyStatisticsModel>> {
+  /// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+  ///
+  /// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+  /// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+  /// [selectedGroupId] 값 있음 = 해당 그룹 조회
+  ///
+  /// Copied from [dashboardHouseholdStatistics].
+  const DashboardHouseholdStatisticsFamily();
+
+  /// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+  ///
+  /// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+  /// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+  /// [selectedGroupId] 값 있음 = 해당 그룹 조회
+  ///
+  /// Copied from [dashboardHouseholdStatistics].
+  DashboardHouseholdStatisticsProvider call({
+    String? selectedGroupId,
+    bool useFirstGroup = true,
+  }) {
+    return DashboardHouseholdStatisticsProvider(
+      selectedGroupId: selectedGroupId,
+      useFirstGroup: useFirstGroup,
+    );
+  }
+
+  @override
+  DashboardHouseholdStatisticsProvider getProviderOverride(
+    covariant DashboardHouseholdStatisticsProvider provider,
+  ) {
+    return call(
+      selectedGroupId: provider.selectedGroupId,
+      useFirstGroup: provider.useFirstGroup,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dashboardHouseholdStatisticsProvider';
+}
+
+/// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+///
+/// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+/// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+/// [selectedGroupId] 값 있음 = 해당 그룹 조회
+///
+/// Copied from [dashboardHouseholdStatistics].
+class DashboardHouseholdStatisticsProvider
+    extends AutoDisposeFutureProvider<MonthlyStatisticsModel> {
+  /// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+  ///
+  /// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+  /// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+  /// [selectedGroupId] 값 있음 = 해당 그룹 조회
+  ///
+  /// Copied from [dashboardHouseholdStatistics].
+  DashboardHouseholdStatisticsProvider({
+    String? selectedGroupId,
+    bool useFirstGroup = true,
+  }) : this._internal(
+         (ref) => dashboardHouseholdStatistics(
+           ref as DashboardHouseholdStatisticsRef,
+           selectedGroupId: selectedGroupId,
+           useFirstGroup: useFirstGroup,
+         ),
+         from: dashboardHouseholdStatisticsProvider,
+         name: r'dashboardHouseholdStatisticsProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$dashboardHouseholdStatisticsHash,
+         dependencies: DashboardHouseholdStatisticsFamily._dependencies,
+         allTransitiveDependencies:
+             DashboardHouseholdStatisticsFamily._allTransitiveDependencies,
+         selectedGroupId: selectedGroupId,
+         useFirstGroup: useFirstGroup,
+       );
+
+  DashboardHouseholdStatisticsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.selectedGroupId,
+    required this.useFirstGroup,
+  }) : super.internal();
+
+  final String? selectedGroupId;
+  final bool useFirstGroup;
+
+  @override
+  Override overrideWith(
+    FutureOr<MonthlyStatisticsModel> Function(
+      DashboardHouseholdStatisticsRef provider,
+    )
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DashboardHouseholdStatisticsProvider._internal(
+        (ref) => create(ref as DashboardHouseholdStatisticsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        selectedGroupId: selectedGroupId,
+        useFirstGroup: useFirstGroup,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<MonthlyStatisticsModel> createElement() {
+    return _DashboardHouseholdStatisticsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardHouseholdStatisticsProvider &&
+        other.selectedGroupId == selectedGroupId &&
+        other.useFirstGroup == useFirstGroup;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, selectedGroupId.hashCode);
+    hash = _SystemHash.combine(hash, useFirstGroup.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin DashboardHouseholdStatisticsRef
+    on AutoDisposeFutureProviderRef<MonthlyStatisticsModel> {
+  /// The parameter `selectedGroupId` of this provider.
+  String? get selectedGroupId;
+
+  /// The parameter `useFirstGroup` of this provider.
+  bool get useFirstGroup;
+}
+
+class _DashboardHouseholdStatisticsProviderElement
+    extends AutoDisposeFutureProviderElement<MonthlyStatisticsModel>
+    with DashboardHouseholdStatisticsRef {
+  _DashboardHouseholdStatisticsProviderElement(super.provider);
+
+  @override
+  String? get selectedGroupId =>
+      (origin as DashboardHouseholdStatisticsProvider).selectedGroupId;
+  @override
+  bool get useFirstGroup =>
+      (origin as DashboardHouseholdStatisticsProvider).useFirstGroup;
 }
 
 String _$dashboardMemosHash() => r'286363aaa844785258f55027272858bb57a6e839';

@@ -6,6 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
+import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
+import 'package:family_planner/features/main/household/data/repositories/household_repository.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/data/repositories/task_repository.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
@@ -165,6 +167,33 @@ Future<AssetStatisticsModel> dashboardAssetStatistics(
   final repository = ref.watch(assetRepositoryProvider);
 
   return repository.getAssetStatistics(groupId: groupId);
+}
+
+/// 대시보드 가계관리 월간 통계 (대시보드 전용) - 가계 탭 상태와 독립
+///
+/// [selectedGroupId] null + [useFirstGroup] true = 첫 번째 그룹 자동 선택
+/// [selectedGroupId] null + [useFirstGroup] false = 개인 모드 (groupId 없이 조회)
+/// [selectedGroupId] 값 있음 = 해당 그룹 조회
+@riverpod
+Future<MonthlyStatisticsModel> dashboardHouseholdStatistics(
+  Ref ref, {
+  String? selectedGroupId,
+  bool useFirstGroup = true,
+}) async {
+  final link = ref.keepAlive();
+  Timer(_dashboardCacheDuration, link.close);
+
+  final now = DateTime.now();
+  final month = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+  final repository = ref.watch(householdRepositoryProvider);
+
+  String? groupId = selectedGroupId;
+  if (groupId == null && useFirstGroup) {
+    final groups = await ref.read(myGroupsProvider.future);
+    groupId = groups.isNotEmpty ? groups.first.id : null;
+  }
+
+  return repository.getMonthlyStatistics(groupId: groupId, month: month);
 }
 
 /// 대시보드 메모 요약 - 핀된 메모 목록 위임
