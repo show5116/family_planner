@@ -276,15 +276,24 @@ class _ChartSectionState extends State<_ChartSection> {
                     fontWeight: FontWeight.w600,
                   ),
             ),
-            const Spacer(),
-            ...widget.dayOptions.map(
-              (days) => _DayChip(
-                label: days >= 365 ? '1년' : '$days일',
-                selected: widget.selectedDays == days,
-                onTap: () {
-                  _onRangeChanged(null, null);
-                  widget.onDaysChanged(days);
-                },
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: widget.dayOptions
+                    .map(
+                      (days) => Flexible(
+                        child: _DayChip(
+                          label: days >= 365 ? '1년' : '$days일',
+                          selected: widget.selectedDays == days,
+                          onTap: () {
+                            _onRangeChanged(null, null);
+                            widget.onDaysChanged(days);
+                          },
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ],
@@ -367,7 +376,7 @@ class _DayChip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(left: AppSizes.spaceXS),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
         decoration: BoxDecoration(
           color: selected
               ? AppColors.investment

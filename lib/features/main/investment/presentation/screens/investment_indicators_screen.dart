@@ -553,16 +553,22 @@ class _IndicatorTile extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        indicator.nameKo,
-                        style: Theme.of(context).textTheme.titleSmall,
+                      Flexible(
+                        child: Text(
+                          indicator.nameKo,
+                          style: Theme.of(context).textTheme.titleSmall,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       const SizedBox(width: AppSizes.spaceS),
-                      Text(
-                        indicator.symbol,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                      Flexible(
+                        child: Text(
+                          indicator.symbol,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
@@ -575,12 +581,15 @@ class _IndicatorTile extends ConsumerWidget {
                           color: changeColor,
                         ),
                         const SizedBox(width: 2),
-                        Text(
-                          '${formatIndicatorChange(change)} (${changeRate.abs().toStringAsFixed(2)}%)',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: changeColor,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        Flexible(
+                          child: Text(
+                            '${formatIndicatorChange(change)} (${changeRate.abs().toStringAsFixed(2)}%)',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: changeColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -602,27 +611,31 @@ class _IndicatorTile extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: AppSizes.spaceM),
-            // 가격: 수치가 길면 자동으로 단위가 다음 줄로
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (indicator.price != null) ...[
-                  Text(
-                    '${formatIndicatorPrice(indicator.price!)} ${indicator.unit}',
-                    textAlign: TextAlign.right,
-                    softWrap: true,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                ] else
-                  Text(
-                    '-',
-                    textAlign: TextAlign.right,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-              ],
+            // 가격 (고정 너비로 overflow 방지)
+            SizedBox(
+              width: 88,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (indicator.price != null)
+                    Text(
+                      '${formatIndicatorPrice(indicator.price!)} ${indicator.unit}',
+                      textAlign: TextAlign.right,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    )
+                  else
+                    Text(
+                      '-',
+                      textAlign: TextAlign.right,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                ],
+              ),
             ),
             // 즐겨찾기 버튼 (고정 너비)
             SizedBox(
