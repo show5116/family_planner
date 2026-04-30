@@ -158,7 +158,14 @@ class GroupAndChildBar extends ConsumerWidget {
                   ],
                 );
               },
-              loading: () => const SizedBox.shrink(),
+              loading: () => const Padding(
+                padding: EdgeInsets.only(left: AppSizes.spaceS),
+                child: SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
               error: (_, _) => const SizedBox.shrink(),
             ),
         ],

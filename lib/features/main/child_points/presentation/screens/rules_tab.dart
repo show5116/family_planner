@@ -19,7 +19,12 @@ class RulesTab extends ConsumerWidget {
     final rulesAsync = ref.watch(childcareRulesProvider);
 
     if (account == null) {
-      return Center(child: Text(l10n.childcare_no_child));
+      final childrenAsync = ref.watch(childcareChildrenProvider);
+      return childrenAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => Center(child: Text(l10n.childcare_no_child)),
+        data: (_) => Center(child: Text(l10n.childcare_no_child)),
+      );
     }
 
     return Scaffold(

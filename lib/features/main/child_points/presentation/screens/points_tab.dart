@@ -28,7 +28,12 @@ class PointsTab extends ConsumerWidget {
     final planAsync = ref.watch(childcareAllowancePlanProvider);
 
     if (selectedChildId == null) {
-      return Center(child: Text(l10n.childcare_no_child));
+      final childrenAsync = ref.watch(childcareChildrenProvider);
+      return childrenAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => Center(child: Text(l10n.childcare_no_child)),
+        data: (_) => Center(child: Text(l10n.childcare_no_child)),
+      );
     }
 
     return accountsAsync.when(
