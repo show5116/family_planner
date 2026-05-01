@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 
@@ -165,7 +166,9 @@ class NotificationNavigationService {
     final childId = data['childId'] as String?;
     if (childId == null) return false;
 
-    context.push('${AppRoutes.childPointsDetail}?id=$childId');
+    final container = ProviderScope.containerOf(context, listen: false);
+    container.read(childcareSelectedChildIdProvider.notifier).state = childId;
+    context.push(AppRoutes.childPoints);
     return true;
   }
 

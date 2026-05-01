@@ -6,6 +6,7 @@ import 'package:family_planner/features/settings/common/presentation/screens/hom
 import 'package:family_planner/features/settings/common/presentation/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/language_settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/profile_settings_screen.dart';
+import 'package:family_planner/features/settings/groups/presentation/screens/group_detail_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/group_list_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/my_join_requests_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_settings_screen.dart';
@@ -57,6 +58,14 @@ List<RouteBase> getSettingsRoutes() {
       path: AppRoutes.groupManagement,
       name: 'groupManagement',
       builder: (context, state) => const GroupListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.groupDetail,
+      name: 'groupDetail',
+      builder: (context, state) {
+        final groupId = state.pathParameters['id']!;
+        return GroupDetailScreen(groupId: groupId);
+      },
     ),
     GoRoute(
       path: AppRoutes.groupMyJoinRequests,
