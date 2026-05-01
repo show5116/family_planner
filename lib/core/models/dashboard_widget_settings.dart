@@ -1,5 +1,7 @@
 enum ScheduleViewMode { today, week, month }
 
+enum HouseholdWidgetViewMode { budget, category }
+
 /// 대시보드 위젯 설정 모델
 class DashboardWidgetSettings {
   final bool showTodaySchedule;
@@ -25,6 +27,7 @@ class DashboardWidgetSettings {
   final bool memoPersonalOnly;
   // 가계관리 위젯 필터
   final String? householdSelectedGroupId; // null = 첫 번째 그룹
+  final HouseholdWidgetViewMode householdViewMode;
   // 육아포인트 위젯
   final bool showChildcareSummary;
   final String? childcareSelectedGroupId; // null = 첫 번째 그룹
@@ -49,6 +52,7 @@ class DashboardWidgetSettings {
     this.memoSelectedGroupId,
     this.memoPersonalOnly = false,
     this.householdSelectedGroupId,
+    this.householdViewMode = HouseholdWidgetViewMode.budget,
     this.widgetOrder = const [
       'weather',
       'todaySchedule',
@@ -121,6 +125,10 @@ class DashboardWidgetSettings {
       memoSelectedGroupId: json['memoSelectedGroupId'] as String?,
       memoPersonalOnly: json['memoPersonalOnly'] as bool? ?? false,
       householdSelectedGroupId: json['householdSelectedGroupId'] as String?,
+      householdViewMode: HouseholdWidgetViewMode.values.firstWhere(
+        (e) => e.name == (json['householdViewMode'] as String? ?? ''),
+        orElse: () => HouseholdWidgetViewMode.budget,
+      ),
       widgetOrder: mergedOrder,
     );
   }
@@ -146,6 +154,7 @@ class DashboardWidgetSettings {
       'memoSelectedGroupId': memoSelectedGroupId,
       'memoPersonalOnly': memoPersonalOnly,
       'householdSelectedGroupId': householdSelectedGroupId,
+      'householdViewMode': householdViewMode.name,
       'widgetOrder': widgetOrder,
     };
   }
@@ -168,6 +177,7 @@ class DashboardWidgetSettings {
     Object? memoSelectedGroupId = _sentinel,
     bool? memoPersonalOnly,
     Object? householdSelectedGroupId = _sentinel,
+    HouseholdWidgetViewMode? householdViewMode,
     bool? showChildcareSummary,
     Object? childcareSelectedGroupId = _sentinel,
     List<String>? widgetOrder,
@@ -201,6 +211,7 @@ class DashboardWidgetSettings {
       householdSelectedGroupId: householdSelectedGroupId == _sentinel
           ? this.householdSelectedGroupId
           : householdSelectedGroupId as String?,
+      householdViewMode: householdViewMode ?? this.householdViewMode,
       childcareSelectedGroupId: childcareSelectedGroupId == _sentinel
           ? this.childcareSelectedGroupId
           : childcareSelectedGroupId as String?,

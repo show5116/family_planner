@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/widgets/reorderable_widgets.dart' show buildReorderableProxyDecorator;
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -305,6 +306,7 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
   }) {
     final isSchedule = widgetName == 'todaySchedule';
     final isTodo = widgetName == 'todoSummary';
+    final isHousehold = widgetName == 'householdSummary';
 
     return Card(
       key: key,
@@ -399,6 +401,33 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
                 selected: {_settings.todoViewMode},
                 onSelectionChanged: (selected) =>
                     _changeTodoViewMode(selected.first),
+              ),
+            ],
+            // 가계관리 위젯 전용: 보기 모드 선택
+            if (isHousehold && enabled) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              SegmentedButton<HouseholdWidgetViewMode>(
+                segments: const [
+                  ButtonSegment(
+                    value: HouseholdWidgetViewMode.budget,
+                    label: Text('전체 예산 보기'),
+                    icon: Icon(Icons.account_balance_wallet_outlined),
+                  ),
+                  ButtonSegment(
+                    value: HouseholdWidgetViewMode.category,
+                    label: Text('카테고리별 보기'),
+                    icon: Icon(Icons.bar_chart),
+                  ),
+                ],
+                selected: {_settings.householdViewMode},
+                onSelectionChanged: (selected) {
+                  setState(() {
+                    _settings = _settings.copyWith(
+                      householdViewMode: selected.first,
+                    );
+                  });
+                  _saveSettings();
+                },
               ),
             ],
           ],

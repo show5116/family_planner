@@ -207,6 +207,7 @@ class _DashboardGrid extends ConsumerWidget {
           if (settings.showHouseholdSummary) {
             widget = HouseholdSummaryWidget(
               initialSelectedGroupId: settings.householdSelectedGroupId,
+              viewMode: settings.householdViewMode,
             );
           }
           break;

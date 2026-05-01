@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/extensions.dart';
+import 'package:family_planner/core/models/dashboard_widget_settings.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
@@ -20,9 +21,11 @@ class HouseholdSummaryWidget extends ConsumerStatefulWidget {
   const HouseholdSummaryWidget({
     super.key,
     this.initialSelectedGroupId,
+    this.viewMode = HouseholdWidgetViewMode.budget,
   });
 
   final String? initialSelectedGroupId;
+  final HouseholdWidgetViewMode viewMode;
 
   @override
   ConsumerState<HouseholdSummaryWidget> createState() => _HouseholdSummaryWidgetState();
@@ -187,9 +190,9 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                   color: isOverBudget ? AppColors.error : AppColors.primary,
                 ),
           ),
-          if (hasBudget) ...[
+          // budget 모드: 전체 예산 소진율 바
+          if (widget.viewMode == HouseholdWidgetViewMode.budget && hasBudget) ...[
             const SizedBox(height: AppSizes.spaceS),
-            // 예산 소진율 바
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
@@ -224,7 +227,9 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
               ],
             ),
           ],
-          if (stats.categories.isNotEmpty) ...[
+          // category 모드: 카테고리별 지출 + 예산 소진율
+          if (widget.viewMode == HouseholdWidgetViewMode.category &&
+              stats.categories.isNotEmpty) ...[
             const SizedBox(height: AppSizes.spaceM),
             const Divider(),
             const SizedBox(height: AppSizes.spaceS),
@@ -374,9 +379,10 @@ class _CategoryDistribution extends StatelessWidget {
   Widget build(BuildContext context) {
     final sorted = [...categories]
       ..sort((a, b) => b.total.compareTo(a.total));
-    final top = sorted.take(4).toList();
-    final total = top.fold<double>(0, (sum, c) => sum + c.total);
-    if (total == 0) return const SizedBox.shrink();
+    final top = sorted.toList();
+    if (top.isEmpty || top.fold<double>(0, (s, c) => s + c.total) == 0) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,46 +395,79 @@ class _CategoryDistribution extends StatelessWidget {
         ),
         const SizedBox(height: AppSizes.spaceS),
         ...top.map((cat) {
-          final ratio = cat.total / total;
           final color = _categoryColor(cat.category);
+          final hasBudget = cat.budget != null && cat.budget! > 0;
+          // 예산이 있으면 예산 대비 소진율, 없으면 카테고리 내 상대 비율
+          final barValue = hasBudget
+              ? (cat.budgetRatio ?? 0).clamp(0.0, 1.0)
+              : (cat.total /
+                      top.fold<double>(0, (s, c) => s + c.total))
+                  .clamp(0.0, 1.0);
+          final isOverBudget = hasBudget && cat.total > cat.budget!;
+          final barColor = isOverBudget ? AppColors.error : color;
+
           return Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
-            child: Row(
+            padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-                ),
-                const SizedBox(width: AppSizes.spaceS),
-                Text(
-                  _categoryLabel(cat.category),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const Spacer(),
-                Expanded(
-                  flex: 3,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: LinearProgressIndicator(
-                      value: ratio,
-                      minHeight: 6,
-                      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                      valueColor: AlwaysStoppedAnimation<Color>(color),
+                Row(
+                  children: [
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                      ),
                     ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Text(
+                      _categoryLabel(cat.category),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const Spacer(),
+                    Text(
+                      cat.total.toCurrency(),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isOverBudget ? AppColors.error : null,
+                          ),
+                    ),
+                    if (hasBudget) ...[
+                      Text(
+                        ' / ${cat.budget!.toCurrency()}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 4),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: LinearProgressIndicator(
+                    value: barValue,
+                    minHeight: 6,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation<Color>(barColor),
                   ),
                 ),
-                const SizedBox(width: AppSizes.spaceS),
-                SizedBox(
-                  width: 60,
-                  child: Text(
-                    cat.total.toCurrency(),
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
+                if (hasBudget) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    isOverBudget
+                        ? '${(cat.total - cat.budget!).toCurrency()} 초과'
+                        : '${(barValue * 100).toInt()}% 사용',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: isOverBudget
+                              ? AppColors.error
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
-                ),
+                ],
               ],
             ),
           );

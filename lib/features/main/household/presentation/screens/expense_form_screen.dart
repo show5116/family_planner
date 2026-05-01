@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
@@ -44,7 +45,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     super.initState();
     if (_isEditMode) {
       final e = widget.expense!;
-      _amountController.text = e.amount.toInt().toString();
+      _amountController.text = NumberFormat('#,###').format(e.amount.toInt());
       _descriptionController.text = e.description ?? '';
       _selectedDate = e.date;
       _selectedCategory = e.category;
@@ -240,6 +241,8 @@ class _AmountField extends StatefulWidget {
 }
 
 class _AmountFieldState extends State<_AmountField> {
+  final _formatter = NumberFormat('#,###');
+
   @override
   void initState() {
     super.initState();
@@ -259,7 +262,10 @@ class _AmountFieldState extends State<_AmountField> {
     return TextFormField(
       controller: widget.controller,
       keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        _ThousandsSeparatorFormatter(_formatter),
+      ],
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
@@ -268,9 +274,33 @@ class _AmountFieldState extends State<_AmountField> {
       ),
       validator: (v) {
         if (v == null || v.trim().isEmpty) return widget.errorText;
-        if (double.tryParse(v) == null) return widget.errorText;
+        final raw = v.replaceAll(',', '');
+        if (double.tryParse(raw) == null) return widget.errorText;
         return null;
       },
+    );
+  }
+}
+
+class _ThousandsSeparatorFormatter extends TextInputFormatter {
+  final NumberFormat _formatter;
+
+  _ThousandsSeparatorFormatter(this._formatter);
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final number = int.tryParse(newValue.text.replaceAll(',', ''));
+    if (number == null) return oldValue;
+
+    final formatted = _formatter.format(number);
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
