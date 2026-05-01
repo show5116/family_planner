@@ -120,13 +120,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
     final now = DateTime.now();
     final monthLabel = '${now.month}월';
 
-    String title = '가계 현황';
-    if (_isPersonal) {
-      title = '개인 가계';
-    } else if (_selectedGroupId != null && groups.isNotEmpty) {
-      final group = groups.where((g) => g.id == _selectedGroupId).firstOrNull;
-      if (group != null) title = '${group.name} 가계';
-    }
+    const title = '가계 현황';
 
     final hasBudget = stats.totalBudget > 0;
     final budgetRatio = hasBudget ? (stats.totalExpense / stats.totalBudget).clamp(0.0, 1.0) : null;

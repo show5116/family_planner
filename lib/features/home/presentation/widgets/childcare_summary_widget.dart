@@ -101,12 +101,7 @@ class _ChildcareSummaryWidgetState
     final accountsAsync = ref.watch(childcareAccountsProvider);
 
     final hasFilter = _selectedGroupId != null;
-    String title = '육아 포인트';
-    if (_selectedGroupId != null && groups.isNotEmpty) {
-      final group =
-          groups.where((g) => g.id == _selectedGroupId).firstOrNull;
-      if (group != null) title = '${group.name} 포인트';
-    }
+    const title = '육아 포인트';
 
     return DashboardCard(
       title: title,

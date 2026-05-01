@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
@@ -178,6 +179,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final expense = await _repository.createExpense(dto);
       _ref.read(householdExpensesProvider.notifier).addExpense(expense);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return expense;
     } catch (e, st) {
@@ -192,6 +194,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final expense = await _repository.updateExpense(id, dto);
       _ref.read(householdExpensesProvider.notifier).updateExpense(expense);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return expense;
     } catch (e, st) {
@@ -206,6 +209,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       await _repository.deleteExpense(id);
       _ref.read(householdExpensesProvider.notifier).removeExpense(id);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
@@ -221,6 +225,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       _ref.invalidate(householdBudgetsProvider);
       _ref.invalidate(householdGroupBudgetProvider);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return result;
     } catch (e, st) {
@@ -239,6 +244,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       _ref.invalidate(householdBudgetsProvider);
       _ref.invalidate(householdGroupBudgetProvider);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return result;
     } catch (e, st) {
@@ -253,6 +259,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final budget = await _repository.setBudget(dto);
       _ref.invalidate(householdBudgetsProvider);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return budget;
     } catch (e, st) {
@@ -296,6 +303,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final budget = await _repository.setGroupBudget(dto);
       _ref.invalidate(householdGroupBudgetProvider);
       _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       state = const AsyncValue.data(null);
       return budget;
     } catch (e, st) {
