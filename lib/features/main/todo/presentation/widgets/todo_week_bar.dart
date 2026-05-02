@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/features/main/task/providers/holiday_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -170,7 +171,7 @@ class TodoWeekBar extends ConsumerWidget {
 }
 
 /// 요일 칩
-class _DayChip extends StatelessWidget {
+class _DayChip extends ConsumerWidget {
   final DateTime date;
   final bool isToday;
   final bool isSelected;
@@ -188,7 +189,7 @@ class _DayChip extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dayNames = [
       l10n.schedule_dayMon,
       l10n.schedule_dayTue,
@@ -199,11 +200,16 @@ class _DayChip extends StatelessWidget {
       l10n.schedule_daySun,
     ];
 
+    final isHoliday = ref
+            .watch(holidayForDateProvider(date))
+            .valueOrNull !=
+        null;
     final isSunday = date.weekday == DateTime.sunday;
     final isSaturday = date.weekday == DateTime.saturday;
+    final isRed = isSunday || isHoliday;
 
     Color dayColor;
-    if (isSunday) {
+    if (isRed) {
       dayColor = AppColors.error;
     } else if (isSaturday) {
       dayColor = AppColors.primary;
@@ -247,7 +253,9 @@ class _DayChip extends StatelessWidget {
                     ? Colors.white
                     : isToday
                         ? AppColors.primary
-                        : AppColors.textPrimary,
+                        : isRed
+                            ? AppColors.error.withValues(alpha: 0.8)
+                            : AppColors.textPrimary,
                 fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
               ),
             ),

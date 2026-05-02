@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/features/main/task/providers/holiday_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/task_list_item.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -186,8 +187,8 @@ class TaskListSection extends ConsumerWidget {
   }
 }
 
-/// 날짜 헤더
-class _DateHeader extends StatelessWidget {
+/// 날짜 헤더 (공휴일 이름 표시 포함)
+class _DateHeader extends ConsumerWidget {
   final DateTime date;
   final DateFormat dateFormat;
 
@@ -197,7 +198,10 @@ class _DateHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final holidayAsync = ref.watch(holidayForDateProvider(date));
+    final holiday = holidayAsync.valueOrNull;
+
     return Padding(
       padding: const EdgeInsets.all(AppSizes.spaceM),
       child: Row(
@@ -214,6 +218,26 @@ class _DateHeader extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
+          if (holiday != null) ...[
+            const SizedBox(width: AppSizes.spaceS),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceS,
+                vertical: 2,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Text(
+                holiday.name,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ],
         ],
       ),
     );

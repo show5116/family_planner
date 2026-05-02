@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
+import 'package:family_planner/features/main/task/providers/holiday_provider.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -333,12 +334,18 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
           ),
         );
       },
-      // 기본 날짜 빌더 (토요일 파란색, 일요일 빨간색)
+      // 기본 날짜 빌더
       defaultBuilder: (context, date, focusedDay) {
         return _buildDayCell(date, isOutside: false);
       },
       outsideBuilder: (context, date, focusedDay) {
         return _buildDayCell(date, isOutside: true);
+      },
+      todayBuilder: (context, date, focusedDay) {
+        return _buildDayCell(date, isOutside: false, isToday: true);
+      },
+      selectedBuilder: (context, date, focusedDay) {
+        return _buildDayCell(date, isOutside: false, isSelected: true);
       },
       markerBuilder: (context, date, events) {
         if (events.isEmpty) return null;
@@ -440,13 +447,35 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     );
   }
 
-  /// 날짜 셀 빌더 (토요일 파란색, 일요일 빨간색)
-  Widget _buildDayCell(DateTime date, {required bool isOutside}) {
+  bool _isHoliday(DateTime date) {
+    final holidayMap = ref
+        .watch(holidayMapForMonthProvider(date.year, date.month))
+        .valueOrNull;
+    if (holidayMap == null) return false;
+    final key =
+        '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    return holidayMap.containsKey(key);
+  }
+
+  /// 날짜 셀 빌더 (토요일 파란색, 일요일/공휴일 빨간색)
+  Widget _buildDayCell(
+    DateTime date, {
+    required bool isOutside,
+    bool isSelected = false,
+    bool isToday = false,
+  }) {
+    final holiday = _isHoliday(date);
     Color textColor;
 
-    if (isOutside) {
-      textColor = AppColors.textSecondary.withValues(alpha: 0.5);
-    } else if (date.weekday == DateTime.sunday) {
+    if (isSelected) {
+      textColor = Colors.white;
+    } else if (isOutside) {
+      textColor = (holiday || date.weekday == DateTime.sunday)
+          ? AppColors.error.withValues(alpha: 0.3)
+          : date.weekday == DateTime.saturday
+              ? AppColors.primary.withValues(alpha: 0.3)
+              : AppColors.textSecondary.withValues(alpha: 0.5);
+    } else if (holiday || date.weekday == DateTime.sunday) {
       textColor = AppColors.error.withValues(alpha: 0.8);
     } else if (date.weekday == DateTime.saturday) {
       textColor = AppColors.primary;
@@ -454,15 +483,40 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       textColor = Theme.of(context).colorScheme.onSurface;
     }
 
-    return Center(
-      child: Text(
-        '${date.day}',
-        style: TextStyle(
-          color: textColor,
-          fontSize: 14,
-        ),
+    Widget dayText = Text(
+      '${date.day}',
+      style: TextStyle(
+        color: isToday && !isSelected ? AppColors.primary : textColor,
+        fontSize: 14,
+        fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
       ),
     );
+
+    if (isSelected) {
+      return Container(
+        margin: const EdgeInsets.all(4),
+        decoration: const BoxDecoration(
+          color: AppColors.primary,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: dayText,
+      );
+    }
+
+    if (isToday) {
+      return Container(
+        margin: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.3),
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: dayText,
+      );
+    }
+
+    return Center(child: dayText);
   }
 
   /// 멀티데이 이벤트 바 빌더
