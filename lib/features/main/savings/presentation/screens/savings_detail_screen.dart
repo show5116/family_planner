@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_form_screen.dart';
@@ -28,6 +29,7 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
       await action();
       if (mounted) {
         ref.read(savingsGoalDetailProvider(widget.goalId).notifier).refresh();
+        ref.invalidate(dashboardSavingsProvider);
       }
     } catch (e) {
       if (mounted) {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
 
@@ -104,7 +105,10 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
         );
       }
 
-      if (mounted) Navigator.pop(context, result);
+      if (mounted) {
+        ref.invalidate(dashboardSavingsProvider);
+        Navigator.pop(context, result);
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)

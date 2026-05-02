@@ -905,5 +905,158 @@ class _DashboardMemosProviderElement
   bool get personalOnly => (origin as DashboardMemosProvider).personalOnly;
 }
 
+String _$dashboardSavingsHash() => r'62856f0c466054581b9a53dbacba035a0d917b8b';
+
+/// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+///
+/// Copied from [dashboardSavings].
+@ProviderFor(dashboardSavings)
+const dashboardSavingsProvider = DashboardSavingsFamily();
+
+/// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+///
+/// Copied from [dashboardSavings].
+class DashboardSavingsFamily
+    extends Family<AsyncValue<List<SavingsGoalModel>>> {
+  /// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+  ///
+  /// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+  ///
+  /// Copied from [dashboardSavings].
+  const DashboardSavingsFamily();
+
+  /// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+  ///
+  /// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+  ///
+  /// Copied from [dashboardSavings].
+  DashboardSavingsProvider call({String? selectedGroupId}) {
+    return DashboardSavingsProvider(selectedGroupId: selectedGroupId);
+  }
+
+  @override
+  DashboardSavingsProvider getProviderOverride(
+    covariant DashboardSavingsProvider provider,
+  ) {
+    return call(selectedGroupId: provider.selectedGroupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dashboardSavingsProvider';
+}
+
+/// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+///
+/// Copied from [dashboardSavings].
+class DashboardSavingsProvider
+    extends AutoDisposeFutureProvider<List<SavingsGoalModel>> {
+  /// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+  ///
+  /// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+  ///
+  /// Copied from [dashboardSavings].
+  DashboardSavingsProvider({String? selectedGroupId})
+    : this._internal(
+        (ref) => dashboardSavings(
+          ref as DashboardSavingsRef,
+          selectedGroupId: selectedGroupId,
+        ),
+        from: dashboardSavingsProvider,
+        name: r'dashboardSavingsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$dashboardSavingsHash,
+        dependencies: DashboardSavingsFamily._dependencies,
+        allTransitiveDependencies:
+            DashboardSavingsFamily._allTransitiveDependencies,
+        selectedGroupId: selectedGroupId,
+      );
+
+  DashboardSavingsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.selectedGroupId,
+  }) : super.internal();
+
+  final String? selectedGroupId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<SavingsGoalModel>> Function(DashboardSavingsRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DashboardSavingsProvider._internal(
+        (ref) => create(ref as DashboardSavingsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        selectedGroupId: selectedGroupId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<SavingsGoalModel>> createElement() {
+    return _DashboardSavingsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardSavingsProvider &&
+        other.selectedGroupId == selectedGroupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, selectedGroupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin DashboardSavingsRef
+    on AutoDisposeFutureProviderRef<List<SavingsGoalModel>> {
+  /// The parameter `selectedGroupId` of this provider.
+  String? get selectedGroupId;
+}
+
+class _DashboardSavingsProviderElement
+    extends AutoDisposeFutureProviderElement<List<SavingsGoalModel>>
+    with DashboardSavingsRef {
+  _DashboardSavingsProviderElement(super.provider);
+
+  @override
+  String? get selectedGroupId =>
+      (origin as DashboardSavingsProvider).selectedGroupId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

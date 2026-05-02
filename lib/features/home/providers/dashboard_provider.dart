@@ -8,6 +8,8 @@ import 'package:family_planner/features/main/assets/data/models/asset_statistics
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/data/repositories/household_repository.dart';
+import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
+import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/data/repositories/task_repository.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
@@ -209,4 +211,21 @@ Future<List<MemoModel>> dashboardMemos(
     groupId: personalOnly ? null : selectedGroupId,
     personal: personalOnly ? true : null,
   ).future);
+}
+
+/// 대시보드 저금통 목록 (대시보드 전용) - 저금통 탭 상태와 독립
+///
+/// [selectedGroupId] null = 첫 번째 그룹 자동 선택
+@riverpod
+Future<List<SavingsGoalModel>> dashboardSavings(
+  Ref ref, {
+  String? selectedGroupId,
+}) async {
+  final link = ref.keepAlive();
+  Timer(_dashboardCacheDuration, link.close);
+  final groups = await ref.read(myGroupsProvider.future);
+  if (groups.isEmpty) return [];
+  final groupId = selectedGroupId ?? groups.first.id;
+  final repository = ref.watch(savingsRepositoryProvider);
+  return repository.getGoals(groupId);
 }
