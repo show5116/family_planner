@@ -465,8 +465,8 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     bool isToday = false,
   }) {
     final holiday = _isHoliday(date);
-    Color textColor;
 
+    Color textColor;
     if (isSelected) {
       textColor = Colors.white;
     } else if (isOutside) {
@@ -483,40 +483,48 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       textColor = Theme.of(context).colorScheme.onSurface;
     }
 
-    Widget dayText = Text(
+    final dayNumColor = isToday && !isSelected ? AppColors.primary : textColor;
+
+    Widget dayContent = Text(
       '${date.day}',
       style: TextStyle(
-        color: isToday && !isSelected ? AppColors.primary : textColor,
-        fontSize: 14,
+        color: dayNumColor,
+        fontSize: 13,
         fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
       ),
     );
 
     if (isSelected) {
-      return Container(
-        margin: const EdgeInsets.all(4),
-        decoration: const BoxDecoration(
-          color: AppColors.primary,
-          shape: BoxShape.circle,
+      return Center(
+        child: Container(
+          width: 34,
+          height: 34,
+          decoration: const BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: dayContent,
         ),
-        alignment: Alignment.center,
-        child: dayText,
       );
     }
 
     if (isToday) {
-      return Container(
-        margin: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.3),
-          shape: BoxShape.circle,
+      return Center(
+        child: Container(
+          width: 34,
+          height: 34,
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.3),
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: dayContent,
         ),
-        alignment: Alignment.center,
-        child: dayText,
       );
     }
 
-    return Center(child: dayText);
+    return Center(child: dayContent);
   }
 
   /// 멀티데이 이벤트 바 빌더

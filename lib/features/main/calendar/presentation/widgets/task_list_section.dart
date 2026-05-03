@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/services/lunar_service.dart';
 import 'package:family_planner/features/main/task/providers/holiday_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/task_list_item.dart';
@@ -201,6 +202,7 @@ class _DateHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final holidayAsync = ref.watch(holidayForDateProvider(date));
     final holiday = holidayAsync.valueOrNull;
+    final lunarLabel = LunarService.lunarLabel(date);
 
     return Padding(
       padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -218,6 +220,15 @@ class _DateHeader extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
           ),
+          if (lunarLabel != null) ...[
+            const SizedBox(width: AppSizes.spaceS),
+            Text(
+              '음력 $lunarLabel',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
           if (holiday != null) ...[
             const SizedBox(width: AppSizes.spaceS),
             Container(

@@ -469,19 +469,34 @@ class _YearlySection extends StatelessWidget {
           style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: AppSizes.spaceS),
-        SegmentedButton<YearlyType>(
-          segments: [
-            ButtonSegment(value: YearlyType.dayOfMonth, label: Text(l10n.schedule_recurringYearlyDayOfMonth)),
-            ButtonSegment(value: YearlyType.weekOfMonth, label: Text(l10n.schedule_recurringYearlyWeekOfMonth)),
+        Wrap(
+          spacing: AppSizes.spaceS,
+          runSpacing: AppSizes.spaceS,
+          children: [
+            ChoiceChip(
+              label: Text(l10n.schedule_recurringYearlyDayOfMonth),
+              selected: formState.yearlyType == YearlyType.dayOfMonth,
+              onSelected: readOnly ? null : (_) => formNotifier.setYearlyType(YearlyType.dayOfMonth),
+            ),
+            ChoiceChip(
+              label: Text(l10n.schedule_recurringYearlyWeekOfMonth),
+              selected: formState.yearlyType == YearlyType.weekOfMonth,
+              onSelected: readOnly ? null : (_) => formNotifier.setYearlyType(YearlyType.weekOfMonth),
+            ),
+            ChoiceChip(
+              label: const Text('음력'),
+              selected: formState.yearlyType == YearlyType.lunar,
+              onSelected: readOnly ? null : (_) => formNotifier.setYearlyType(YearlyType.lunar),
+            ),
           ],
-          selected: {formState.yearlyType},
-          onSelectionChanged: readOnly ? null : (selection) => formNotifier.setYearlyType(selection.first),
         ),
         const SizedBox(height: AppSizes.spaceS),
         if (formState.yearlyType == YearlyType.dayOfMonth)
           _YearlyDayPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly)
+        else if (formState.yearlyType == YearlyType.weekOfMonth)
+          _YearlyWeekPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly)
         else
-          _YearlyWeekPicker(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
+          _YearlyLunarPickerButton(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
       ],
     );
   }
@@ -571,6 +586,219 @@ class _YearlyWeekPicker extends StatelessWidget {
           onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfWeek(value); },
         ),
       ],
+    );
+  }
+}
+
+/// 연간 - 음력 날짜 선택 버튼 (탭 시 바텀시트)
+class _YearlyLunarPickerButton extends StatelessWidget {
+  final TaskFormState formState;
+  final TaskFormNotifier formNotifier;
+  final bool readOnly;
+
+  const _YearlyLunarPickerButton({
+    required this.formState,
+    required this.formNotifier,
+    this.readOnly = false,
+  });
+
+  String get _label {
+    final prefix = formState.lunarIsLeap ? '윤' : '';
+    return '음력 $prefix${formState.lunarMonth}월 ${formState.lunarDay}일';
+  }
+
+  void _showPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => _LunarPickerSheet(
+        initialMonth: formState.lunarMonth,
+        initialDay: formState.lunarDay,
+        initialIsLeap: formState.lunarIsLeap,
+        onChanged: ({required int month, required int day, required bool isLeap}) {
+          formNotifier.setLunarMonth(month);
+          formNotifier.setLunarDay(day);
+          formNotifier.setLunarIsLeap(isLeap);
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return InkWell(
+      onTap: readOnly ? null : () => _showPicker(context),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM,
+          vertical: AppSizes.spaceS,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(color: theme.colorScheme.outline),
+          borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.calendar_month_outlined, size: 18, color: theme.colorScheme.primary),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(_label, style: theme.textTheme.bodyMedium),
+            const SizedBox(width: AppSizes.spaceS),
+            Icon(Icons.arrow_drop_down, size: 18, color: theme.colorScheme.onSurfaceVariant),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 음력 날짜 선택 바텀시트
+class _LunarPickerSheet extends StatefulWidget {
+  final int initialMonth;
+  final int initialDay;
+  final bool initialIsLeap;
+  final void Function({required int month, required int day, required bool isLeap}) onChanged;
+
+  const _LunarPickerSheet({
+    required this.initialMonth,
+    required this.initialDay,
+    required this.initialIsLeap,
+    required this.onChanged,
+  });
+
+  @override
+  State<_LunarPickerSheet> createState() => _LunarPickerSheetState();
+}
+
+class _LunarPickerSheetState extends State<_LunarPickerSheet> {
+  late int _month;
+  late int _day;
+  late bool _isLeap;
+
+  @override
+  void initState() {
+    super.initState();
+    _month = widget.initialMonth;
+    _day = widget.initialDay;
+    _isLeap = widget.initialIsLeap;
+  }
+
+  void _apply() {
+    widget.onChanged(month: _month, day: _day, isLeap: _isLeap);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceL,
+        right: AppSizes.spaceL,
+        top: AppSizes.spaceL,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spaceL,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 핸들
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceL),
+          Text(
+            '음력 날짜 선택',
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: AppSizes.spaceL),
+          // 월 선택
+          Text('월', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          const SizedBox(height: AppSizes.spaceXS),
+          SizedBox(
+            height: 44,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: 12,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSizes.spaceXS),
+              itemBuilder: (_, i) {
+                final m = i + 1;
+                final selected = _month == m;
+                return ChoiceChip(
+                  label: Text('$m월'),
+                  selected: selected,
+                  visualDensity: VisualDensity.compact,
+                  onSelected: (_) => setState(() => _month = m),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          // 일 선택
+          Text('일', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          const SizedBox(height: AppSizes.spaceXS),
+          SizedBox(
+            height: 44,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: 30,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSizes.spaceXS),
+              itemBuilder: (_, i) {
+                final d = i + 1;
+                final selected = _day == d;
+                return ChoiceChip(
+                  label: Text('$d일'),
+                  selected: selected,
+                  visualDensity: VisualDensity.compact,
+                  onSelected: (_) => setState(() => _day = d),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          // 윤달
+          Row(
+            children: [
+              Checkbox(
+                value: _isLeap,
+                onChanged: (v) => setState(() => _isLeap = v ?? false),
+              ),
+              Text('윤달', style: theme.textTheme.bodyMedium),
+              const SizedBox(width: AppSizes.spaceS),
+              Flexible(
+                child: Text(
+                  '윤달이 없는 해에는 해당 달의 같은 날로 처리됩니다',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceL),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: _apply,
+              child: const Text('확인'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

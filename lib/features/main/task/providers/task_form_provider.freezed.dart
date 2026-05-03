@@ -49,6 +49,10 @@ mixin _$TaskFormState {
   int get yearlyDayOfMonth => throw _privateConstructorUsedError; // 1-31
   int get yearlyWeekOfMonth => throw _privateConstructorUsedError; // 1-5
   int get yearlyDayOfWeek => throw _privateConstructorUsedError; // 0-6
+  // 연간 음력 설정
+  int get lunarMonth => throw _privateConstructorUsedError; // 1-12
+  int get lunarDay => throw _privateConstructorUsedError; // 1-30
+  bool get lunarIsLeap => throw _privateConstructorUsedError; // 윤달 여부
   // 반복 skip 설정
   bool get skipWeekends => throw _privateConstructorUsedError;
   bool get skipHolidays => throw _privateConstructorUsedError;
@@ -104,6 +108,9 @@ abstract class $TaskFormStateCopyWith<$Res> {
     int yearlyDayOfMonth,
     int yearlyWeekOfMonth,
     int yearlyDayOfWeek,
+    int lunarMonth,
+    int lunarDay,
+    bool lunarIsLeap,
     bool skipWeekends,
     bool skipHolidays,
     SkipBehavior? skipBehavior,
@@ -158,6 +165,9 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
     Object? yearlyDayOfMonth = null,
     Object? yearlyWeekOfMonth = null,
     Object? yearlyDayOfWeek = null,
+    Object? lunarMonth = null,
+    Object? lunarDay = null,
+    Object? lunarIsLeap = null,
     Object? skipWeekends = null,
     Object? skipHolidays = null,
     Object? skipBehavior = freezed,
@@ -270,6 +280,18 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
                 ? _value.yearlyDayOfWeek
                 : yearlyDayOfWeek // ignore: cast_nullable_to_non_nullable
                       as int,
+            lunarMonth: null == lunarMonth
+                ? _value.lunarMonth
+                : lunarMonth // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lunarDay: null == lunarDay
+                ? _value.lunarDay
+                : lunarDay // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lunarIsLeap: null == lunarIsLeap
+                ? _value.lunarIsLeap
+                : lunarIsLeap // ignore: cast_nullable_to_non_nullable
+                      as bool,
             skipWeekends: null == skipWeekends
                 ? _value.skipWeekends
                 : skipWeekends // ignore: cast_nullable_to_non_nullable
@@ -361,6 +383,9 @@ abstract class _$$TaskFormStateImplCopyWith<$Res>
     int yearlyDayOfMonth,
     int yearlyWeekOfMonth,
     int yearlyDayOfWeek,
+    int lunarMonth,
+    int lunarDay,
+    bool lunarIsLeap,
     bool skipWeekends,
     bool skipHolidays,
     SkipBehavior? skipBehavior,
@@ -415,6 +440,9 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
     Object? yearlyDayOfMonth = null,
     Object? yearlyWeekOfMonth = null,
     Object? yearlyDayOfWeek = null,
+    Object? lunarMonth = null,
+    Object? lunarDay = null,
+    Object? lunarIsLeap = null,
     Object? skipWeekends = null,
     Object? skipHolidays = null,
     Object? skipBehavior = freezed,
@@ -527,6 +555,18 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
             ? _value.yearlyDayOfWeek
             : yearlyDayOfWeek // ignore: cast_nullable_to_non_nullable
                   as int,
+        lunarMonth: null == lunarMonth
+            ? _value.lunarMonth
+            : lunarMonth // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lunarDay: null == lunarDay
+            ? _value.lunarDay
+            : lunarDay // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lunarIsLeap: null == lunarIsLeap
+            ? _value.lunarIsLeap
+            : lunarIsLeap // ignore: cast_nullable_to_non_nullable
+                  as bool,
         skipWeekends: null == skipWeekends
             ? _value.skipWeekends
             : skipWeekends // ignore: cast_nullable_to_non_nullable
@@ -597,6 +637,9 @@ class _$TaskFormStateImpl extends _TaskFormState {
     this.yearlyDayOfMonth = 1,
     this.yearlyWeekOfMonth = 1,
     this.yearlyDayOfWeek = 1,
+    this.lunarMonth = 1,
+    this.lunarDay = 1,
+    this.lunarIsLeap = false,
     this.skipWeekends = false,
     this.skipHolidays = false,
     this.skipBehavior,
@@ -703,6 +746,19 @@ class _$TaskFormStateImpl extends _TaskFormState {
   @JsonKey()
   final int yearlyDayOfWeek;
   // 0-6
+  // 연간 음력 설정
+  @override
+  @JsonKey()
+  final int lunarMonth;
+  // 1-12
+  @override
+  @JsonKey()
+  final int lunarDay;
+  // 1-30
+  @override
+  @JsonKey()
+  final bool lunarIsLeap;
+  // 윤달 여부
   // 반복 skip 설정
   @override
   @JsonKey()
@@ -751,7 +807,7 @@ class _$TaskFormStateImpl extends _TaskFormState {
 
   @override
   String toString() {
-    return 'TaskFormState(title: $title, description: $description, location: $location, startDate: $startDate, dueDate: $dueDate, startTime: $startTime, dueTime: $dueTime, hasDueDate: $hasDueDate, taskType: $taskType, priority: $priority, recurringType: $recurringType, recurringInterval: $recurringInterval, recurringEndType: $recurringEndType, recurringEndDate: $recurringEndDate, recurringCount: $recurringCount, recurringDaysOfWeek: $recurringDaysOfWeek, monthlyType: $monthlyType, monthlyDayOfMonth: $monthlyDayOfMonth, monthlyWeekOfMonth: $monthlyWeekOfMonth, monthlyDayOfWeek: $monthlyDayOfWeek, yearlyType: $yearlyType, yearlyMonth: $yearlyMonth, yearlyDayOfMonth: $yearlyDayOfMonth, yearlyWeekOfMonth: $yearlyWeekOfMonth, yearlyDayOfWeek: $yearlyDayOfWeek, skipWeekends: $skipWeekends, skipHolidays: $skipHolidays, skipBehavior: $skipBehavior, selectedReminders: $selectedReminders, selectedCategory: $selectedCategory, selectedParticipantIds: $selectedParticipantIds, isSubmitting: $isSubmitting, editingTask: $editingTask, editingTaskId: $editingTaskId)';
+    return 'TaskFormState(title: $title, description: $description, location: $location, startDate: $startDate, dueDate: $dueDate, startTime: $startTime, dueTime: $dueTime, hasDueDate: $hasDueDate, taskType: $taskType, priority: $priority, recurringType: $recurringType, recurringInterval: $recurringInterval, recurringEndType: $recurringEndType, recurringEndDate: $recurringEndDate, recurringCount: $recurringCount, recurringDaysOfWeek: $recurringDaysOfWeek, monthlyType: $monthlyType, monthlyDayOfMonth: $monthlyDayOfMonth, monthlyWeekOfMonth: $monthlyWeekOfMonth, monthlyDayOfWeek: $monthlyDayOfWeek, yearlyType: $yearlyType, yearlyMonth: $yearlyMonth, yearlyDayOfMonth: $yearlyDayOfMonth, yearlyWeekOfMonth: $yearlyWeekOfMonth, yearlyDayOfWeek: $yearlyDayOfWeek, lunarMonth: $lunarMonth, lunarDay: $lunarDay, lunarIsLeap: $lunarIsLeap, skipWeekends: $skipWeekends, skipHolidays: $skipHolidays, skipBehavior: $skipBehavior, selectedReminders: $selectedReminders, selectedCategory: $selectedCategory, selectedParticipantIds: $selectedParticipantIds, isSubmitting: $isSubmitting, editingTask: $editingTask, editingTaskId: $editingTaskId)';
   }
 
   @override
@@ -808,6 +864,12 @@ class _$TaskFormStateImpl extends _TaskFormState {
                 other.yearlyWeekOfMonth == yearlyWeekOfMonth) &&
             (identical(other.yearlyDayOfWeek, yearlyDayOfWeek) ||
                 other.yearlyDayOfWeek == yearlyDayOfWeek) &&
+            (identical(other.lunarMonth, lunarMonth) ||
+                other.lunarMonth == lunarMonth) &&
+            (identical(other.lunarDay, lunarDay) ||
+                other.lunarDay == lunarDay) &&
+            (identical(other.lunarIsLeap, lunarIsLeap) ||
+                other.lunarIsLeap == lunarIsLeap) &&
             (identical(other.skipWeekends, skipWeekends) ||
                 other.skipWeekends == skipWeekends) &&
             (identical(other.skipHolidays, skipHolidays) ||
@@ -860,6 +922,9 @@ class _$TaskFormStateImpl extends _TaskFormState {
     yearlyDayOfMonth,
     yearlyWeekOfMonth,
     yearlyDayOfWeek,
+    lunarMonth,
+    lunarDay,
+    lunarIsLeap,
     skipWeekends,
     skipHolidays,
     skipBehavior,
@@ -907,6 +972,9 @@ abstract class _TaskFormState extends TaskFormState {
     final int yearlyDayOfMonth,
     final int yearlyWeekOfMonth,
     final int yearlyDayOfWeek,
+    final int lunarMonth,
+    final int lunarDay,
+    final bool lunarIsLeap,
     final bool skipWeekends,
     final bool skipHolidays,
     final SkipBehavior? skipBehavior,
@@ -970,6 +1038,13 @@ abstract class _TaskFormState extends TaskFormState {
   int get yearlyWeekOfMonth; // 1-5
   @override
   int get yearlyDayOfWeek; // 0-6
+  // 연간 음력 설정
+  @override
+  int get lunarMonth; // 1-12
+  @override
+  int get lunarDay; // 1-30
+  @override
+  bool get lunarIsLeap; // 윤달 여부
   // 반복 skip 설정
   @override
   bool get skipWeekends;

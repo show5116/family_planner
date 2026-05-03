@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'package:family_planner/core/services/lunar_service.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 
@@ -23,8 +24,9 @@ enum MonthlyType {
 
 /// 연간 반복 타입
 enum YearlyType {
-  dayOfMonth, // 매년 N월 N일
-  weekOfMonth, // 매년 N월 N째 주 X요일
+  dayOfMonth, // 매년 N월 N일 (양력)
+  weekOfMonth, // 매년 N월 N째 주 X요일 (양력)
+  lunar, // 매년 음력 N월 N일
 }
 
 /// Task Form 상태 모델
@@ -65,6 +67,11 @@ class TaskFormState with _$TaskFormState {
     @Default(1) int yearlyDayOfMonth, // 1-31
     @Default(1) int yearlyWeekOfMonth, // 1-5
     @Default(1) int yearlyDayOfWeek, // 0-6
+
+    // 연간 음력 설정
+    @Default(1) int lunarMonth, // 1-12
+    @Default(1) int lunarDay, // 1-30
+    @Default(false) bool lunarIsLeap, // 윤달 여부
 
     // 반복 skip 설정
     @Default(false) bool skipWeekends,
@@ -153,14 +160,22 @@ class TaskFormState with _$TaskFormState {
         }
         break;
       case RecurringRuleType.yearly:
-        config['month'] = yearlyMonth;
-        config['yearlyType'] =
-            yearlyType == YearlyType.dayOfMonth ? 'dayOfMonth' : 'weekOfMonth';
-        if (yearlyType == YearlyType.dayOfMonth) {
-          config['dayOfMonth'] = yearlyDayOfMonth;
+        if (yearlyType == YearlyType.lunar) {
+          // 음력: yearlyType은 dayOfMonth로 고정, lunarMonth/lunarDay/isLeapMonth 추가
+          config['yearlyType'] = 'dayOfMonth';
+          config['lunarMonth'] = lunarMonth;
+          config['lunarDay'] = lunarDay;
+          config['isLeapMonth'] = lunarIsLeap;
         } else {
-          config['weekOfMonth'] = yearlyWeekOfMonth;
-          config['dayOfWeek'] = yearlyDayOfWeek;
+          config['month'] = yearlyMonth;
+          config['yearlyType'] =
+              yearlyType == YearlyType.dayOfMonth ? 'dayOfMonth' : 'weekOfMonth';
+          if (yearlyType == YearlyType.dayOfMonth) {
+            config['dayOfMonth'] = yearlyDayOfMonth;
+          } else {
+            config['weekOfMonth'] = yearlyWeekOfMonth;
+            config['dayOfWeek'] = yearlyDayOfWeek;
+          }
         }
         break;
     }
@@ -295,6 +310,12 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     int yearlyWeekOfMonth = ((startDate.day - 1) ~/ 7) + 1;
     int yearlyDayOfWeek = startDate.weekday % 7;
 
+    // 음력 초기값: 시작일의 음력 날짜
+    final initLunar = LunarService.solarToLunar(startDate);
+    int lunarMonth = initLunar?.month ?? startDate.month;
+    int lunarDay = initLunar?.day ?? startDate.day;
+    bool lunarIsLeap = initLunar?.isLeap ?? false;
+
     bool skipWeekends = false;
     bool skipHolidays = false;
     SkipBehavior? skipBehavior;
@@ -365,6 +386,15 @@ class TaskFormNotifier extends _$TaskFormNotifier {
           yearlyDayOfWeek = (config['dayOfWeek'] as num).toInt();
         }
 
+        // Yearly 음력 설정: lunarMonth 필드가 있으면 음력 반복
+        if (recurringType == RecurringRuleType.yearly &&
+            config['lunarMonth'] != null) {
+          yearlyType = YearlyType.lunar;
+          lunarMonth = (config['lunarMonth'] as num).toInt();
+          lunarDay = (config['lunarDay'] as num?)?.toInt() ?? lunarDay;
+          lunarIsLeap = config['isLeapMonth'] as bool? ?? false;
+        }
+
         // Skip 설정
         skipWeekends = config['skipWeekends'] as bool? ?? false;
         skipHolidays = config['skipHolidays'] as bool? ?? false;
@@ -403,6 +433,9 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       yearlyDayOfMonth: yearlyDayOfMonth,
       yearlyWeekOfMonth: yearlyWeekOfMonth,
       yearlyDayOfWeek: yearlyDayOfWeek,
+      lunarMonth: lunarMonth,
+      lunarDay: lunarDay,
+      lunarIsLeap: lunarIsLeap,
       skipWeekends: skipWeekends,
       skipHolidays: skipHolidays,
       skipBehavior: skipBehavior,
@@ -578,7 +611,18 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   }
 
   void setYearlyType(YearlyType value) {
-    state = state.copyWith(yearlyType: value);
+    if (value == YearlyType.lunar && state.yearlyType != YearlyType.lunar) {
+      // 음력 탭으로 처음 진입할 때 현재 startDate의 음력 날짜로 초기화
+      final lunar = LunarService.solarToLunar(state.startDate);
+      state = state.copyWith(
+        yearlyType: value,
+        lunarMonth: lunar?.month ?? state.startDate.month,
+        lunarDay: lunar?.day ?? state.startDate.day,
+        lunarIsLeap: lunar?.isLeap ?? false,
+      );
+    } else {
+      state = state.copyWith(yearlyType: value);
+    }
   }
 
   void setYearlyMonth(int value) {
@@ -595,6 +639,18 @@ class TaskFormNotifier extends _$TaskFormNotifier {
 
   void setYearlyDayOfWeek(int value) {
     state = state.copyWith(yearlyDayOfWeek: value.clamp(0, 6));
+  }
+
+  void setLunarMonth(int value) {
+    state = state.copyWith(lunarMonth: value.clamp(1, 12));
+  }
+
+  void setLunarDay(int value) {
+    state = state.copyWith(lunarDay: value.clamp(1, 30));
+  }
+
+  void setLunarIsLeap(bool value) {
+    state = state.copyWith(lunarIsLeap: value);
   }
 
   // ============ 카테고리 ============
