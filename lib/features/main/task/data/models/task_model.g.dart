@@ -240,6 +240,12 @@ _$RecurringRuleDtoImpl _$$RecurringRuleDtoImplFromJson(
     _$RecurringGenerationTypeEnumMap,
     json['generationType'],
   ),
+  skipWeekends: json['skipWeekends'] as bool? ?? false,
+  skipHolidays: json['skipHolidays'] as bool? ?? false,
+  skipBehavior: $enumDecodeNullable(
+    _$SkipBehaviorEnumMap,
+    json['skipBehavior'],
+  ),
 );
 
 Map<String, dynamic> _$$RecurringRuleDtoImplToJson(
@@ -248,6 +254,9 @@ Map<String, dynamic> _$$RecurringRuleDtoImplToJson(
   'ruleType': _$RecurringRuleTypeEnumMap[instance.ruleType]!,
   'ruleConfig': instance.ruleConfig,
   'generationType': _$RecurringGenerationTypeEnumMap[instance.generationType],
+  'skipWeekends': instance.skipWeekends,
+  'skipHolidays': instance.skipHolidays,
+  'skipBehavior': _$SkipBehaviorEnumMap[instance.skipBehavior],
 };
 
 const _$RecurringRuleTypeEnumMap = {
@@ -260,6 +269,11 @@ const _$RecurringRuleTypeEnumMap = {
 const _$RecurringGenerationTypeEnumMap = {
   RecurringGenerationType.autoScheduler: 'AUTO_SCHEDULER',
   RecurringGenerationType.manual: 'MANUAL',
+};
+
+const _$SkipBehaviorEnumMap = {
+  SkipBehavior.skip: 'SKIP',
+  SkipBehavior.moveToNextWeekday: 'MOVE_TO_NEXT_WEEKDAY',
 };
 
 _$TaskReminderDtoImpl _$$TaskReminderDtoImplFromJson(

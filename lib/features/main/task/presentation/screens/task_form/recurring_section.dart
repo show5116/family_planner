@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_form_provider.dart';
@@ -187,6 +188,8 @@ class _RecurringDetailSection extends StatelessWidget {
           _buildTypeSpecificSection(context),
           const SizedBox(height: AppSizes.spaceM),
           _EndConditionSection(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
+          const SizedBox(height: AppSizes.spaceM),
+          _SkipSection(formState: formState, formNotifier: formNotifier, readOnly: readOnly),
         ],
       ),
     );
@@ -673,6 +676,113 @@ class _EndDatePicker extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 주말/공휴일 건너뜀 설정
+class _SkipSection extends StatelessWidget {
+  final TaskFormState formState;
+  final TaskFormNotifier formNotifier;
+  final bool readOnly;
+
+  const _SkipSection({
+    required this.formState,
+    required this.formNotifier,
+    this.readOnly = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final hasSkip = formState.skipWeekends || formState.skipHolidays;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '건너뜀 설정',
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        Row(
+          children: [
+            _SkipChip(
+              label: '주말',
+              icon: Icons.weekend_outlined,
+              selected: formState.skipWeekends,
+              readOnly: readOnly,
+              onTap: () => formNotifier.setSkipWeekends(!formState.skipWeekends),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+            _SkipChip(
+              label: '공휴일',
+              icon: Icons.celebration_outlined,
+              selected: formState.skipHolidays,
+              readOnly: readOnly,
+              onTap: () => formNotifier.setSkipHolidays(!formState.skipHolidays),
+            ),
+          ],
+        ),
+        if (hasSkip) ...[
+          const SizedBox(height: AppSizes.spaceS),
+          Text(
+            '건너뛸 때',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+          SegmentedButton<SkipBehavior>(
+            segments: const [
+              ButtonSegment(
+                value: SkipBehavior.skip,
+                label: Text('건너뜀'),
+                icon: Icon(Icons.skip_next_outlined),
+              ),
+              ButtonSegment(
+                value: SkipBehavior.moveToNextWeekday,
+                label: Text('다음 평일로'),
+                icon: Icon(Icons.arrow_forward_outlined),
+              ),
+            ],
+            selected: {formState.skipBehavior ?? SkipBehavior.skip},
+            onSelectionChanged: readOnly
+                ? null
+                : (selection) => formNotifier.setSkipBehavior(selection.first),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _SkipChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final bool readOnly;
+  final VoidCallback onTap;
+
+  const _SkipChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.readOnly,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Text(label),
+      avatar: Icon(
+        icon,
+        size: 16,
+        color: selected ? AppColors.primary : null,
+      ),
+      selected: selected,
+      onSelected: readOnly ? null : (_) => onTap(),
     );
   }
 }

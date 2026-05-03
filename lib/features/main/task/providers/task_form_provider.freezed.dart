@@ -49,7 +49,11 @@ mixin _$TaskFormState {
   int get yearlyDayOfMonth => throw _privateConstructorUsedError; // 1-31
   int get yearlyWeekOfMonth => throw _privateConstructorUsedError; // 1-5
   int get yearlyDayOfWeek => throw _privateConstructorUsedError; // 0-6
-  // 알림 (분 단위)
+  // 반복 skip 설정
+  bool get skipWeekends => throw _privateConstructorUsedError;
+  bool get skipHolidays => throw _privateConstructorUsedError;
+  SkipBehavior? get skipBehavior =>
+      throw _privateConstructorUsedError; // 알림 (분 단위)
   List<int> get selectedReminders =>
       throw _privateConstructorUsedError; // 카테고리 (Provider에서 로드된 목록에서 선택)
   CategoryModel? get selectedCategory =>
@@ -100,6 +104,9 @@ abstract class $TaskFormStateCopyWith<$Res> {
     int yearlyDayOfMonth,
     int yearlyWeekOfMonth,
     int yearlyDayOfWeek,
+    bool skipWeekends,
+    bool skipHolidays,
+    SkipBehavior? skipBehavior,
     List<int> selectedReminders,
     CategoryModel? selectedCategory,
     List<String> selectedParticipantIds,
@@ -151,6 +158,9 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
     Object? yearlyDayOfMonth = null,
     Object? yearlyWeekOfMonth = null,
     Object? yearlyDayOfWeek = null,
+    Object? skipWeekends = null,
+    Object? skipHolidays = null,
+    Object? skipBehavior = freezed,
     Object? selectedReminders = null,
     Object? selectedCategory = freezed,
     Object? selectedParticipantIds = null,
@@ -260,6 +270,18 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
                 ? _value.yearlyDayOfWeek
                 : yearlyDayOfWeek // ignore: cast_nullable_to_non_nullable
                       as int,
+            skipWeekends: null == skipWeekends
+                ? _value.skipWeekends
+                : skipWeekends // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            skipHolidays: null == skipHolidays
+                ? _value.skipHolidays
+                : skipHolidays // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            skipBehavior: freezed == skipBehavior
+                ? _value.skipBehavior
+                : skipBehavior // ignore: cast_nullable_to_non_nullable
+                      as SkipBehavior?,
             selectedReminders: null == selectedReminders
                 ? _value.selectedReminders
                 : selectedReminders // ignore: cast_nullable_to_non_nullable
@@ -339,6 +361,9 @@ abstract class _$$TaskFormStateImplCopyWith<$Res>
     int yearlyDayOfMonth,
     int yearlyWeekOfMonth,
     int yearlyDayOfWeek,
+    bool skipWeekends,
+    bool skipHolidays,
+    SkipBehavior? skipBehavior,
     List<int> selectedReminders,
     CategoryModel? selectedCategory,
     List<String> selectedParticipantIds,
@@ -390,6 +415,9 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
     Object? yearlyDayOfMonth = null,
     Object? yearlyWeekOfMonth = null,
     Object? yearlyDayOfWeek = null,
+    Object? skipWeekends = null,
+    Object? skipHolidays = null,
+    Object? skipBehavior = freezed,
     Object? selectedReminders = null,
     Object? selectedCategory = freezed,
     Object? selectedParticipantIds = null,
@@ -499,6 +527,18 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
             ? _value.yearlyDayOfWeek
             : yearlyDayOfWeek // ignore: cast_nullable_to_non_nullable
                   as int,
+        skipWeekends: null == skipWeekends
+            ? _value.skipWeekends
+            : skipWeekends // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        skipHolidays: null == skipHolidays
+            ? _value.skipHolidays
+            : skipHolidays // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        skipBehavior: freezed == skipBehavior
+            ? _value.skipBehavior
+            : skipBehavior // ignore: cast_nullable_to_non_nullable
+                  as SkipBehavior?,
         selectedReminders: null == selectedReminders
             ? _value._selectedReminders
             : selectedReminders // ignore: cast_nullable_to_non_nullable
@@ -557,6 +597,9 @@ class _$TaskFormStateImpl extends _TaskFormState {
     this.yearlyDayOfMonth = 1,
     this.yearlyWeekOfMonth = 1,
     this.yearlyDayOfWeek = 1,
+    this.skipWeekends = false,
+    this.skipHolidays = false,
+    this.skipBehavior,
     final List<int> selectedReminders = const [],
     this.selectedCategory,
     final List<String> selectedParticipantIds = const [],
@@ -660,9 +703,17 @@ class _$TaskFormStateImpl extends _TaskFormState {
   @JsonKey()
   final int yearlyDayOfWeek;
   // 0-6
+  // 반복 skip 설정
+  @override
+  @JsonKey()
+  final bool skipWeekends;
+  @override
+  @JsonKey()
+  final bool skipHolidays;
+  @override
+  final SkipBehavior? skipBehavior;
   // 알림 (분 단위)
   final List<int> _selectedReminders;
-  // 0-6
   // 알림 (분 단위)
   @override
   @JsonKey()
@@ -700,7 +751,7 @@ class _$TaskFormStateImpl extends _TaskFormState {
 
   @override
   String toString() {
-    return 'TaskFormState(title: $title, description: $description, location: $location, startDate: $startDate, dueDate: $dueDate, startTime: $startTime, dueTime: $dueTime, hasDueDate: $hasDueDate, taskType: $taskType, priority: $priority, recurringType: $recurringType, recurringInterval: $recurringInterval, recurringEndType: $recurringEndType, recurringEndDate: $recurringEndDate, recurringCount: $recurringCount, recurringDaysOfWeek: $recurringDaysOfWeek, monthlyType: $monthlyType, monthlyDayOfMonth: $monthlyDayOfMonth, monthlyWeekOfMonth: $monthlyWeekOfMonth, monthlyDayOfWeek: $monthlyDayOfWeek, yearlyType: $yearlyType, yearlyMonth: $yearlyMonth, yearlyDayOfMonth: $yearlyDayOfMonth, yearlyWeekOfMonth: $yearlyWeekOfMonth, yearlyDayOfWeek: $yearlyDayOfWeek, selectedReminders: $selectedReminders, selectedCategory: $selectedCategory, selectedParticipantIds: $selectedParticipantIds, isSubmitting: $isSubmitting, editingTask: $editingTask, editingTaskId: $editingTaskId)';
+    return 'TaskFormState(title: $title, description: $description, location: $location, startDate: $startDate, dueDate: $dueDate, startTime: $startTime, dueTime: $dueTime, hasDueDate: $hasDueDate, taskType: $taskType, priority: $priority, recurringType: $recurringType, recurringInterval: $recurringInterval, recurringEndType: $recurringEndType, recurringEndDate: $recurringEndDate, recurringCount: $recurringCount, recurringDaysOfWeek: $recurringDaysOfWeek, monthlyType: $monthlyType, monthlyDayOfMonth: $monthlyDayOfMonth, monthlyWeekOfMonth: $monthlyWeekOfMonth, monthlyDayOfWeek: $monthlyDayOfWeek, yearlyType: $yearlyType, yearlyMonth: $yearlyMonth, yearlyDayOfMonth: $yearlyDayOfMonth, yearlyWeekOfMonth: $yearlyWeekOfMonth, yearlyDayOfWeek: $yearlyDayOfWeek, skipWeekends: $skipWeekends, skipHolidays: $skipHolidays, skipBehavior: $skipBehavior, selectedReminders: $selectedReminders, selectedCategory: $selectedCategory, selectedParticipantIds: $selectedParticipantIds, isSubmitting: $isSubmitting, editingTask: $editingTask, editingTaskId: $editingTaskId)';
   }
 
   @override
@@ -757,6 +808,12 @@ class _$TaskFormStateImpl extends _TaskFormState {
                 other.yearlyWeekOfMonth == yearlyWeekOfMonth) &&
             (identical(other.yearlyDayOfWeek, yearlyDayOfWeek) ||
                 other.yearlyDayOfWeek == yearlyDayOfWeek) &&
+            (identical(other.skipWeekends, skipWeekends) ||
+                other.skipWeekends == skipWeekends) &&
+            (identical(other.skipHolidays, skipHolidays) ||
+                other.skipHolidays == skipHolidays) &&
+            (identical(other.skipBehavior, skipBehavior) ||
+                other.skipBehavior == skipBehavior) &&
             const DeepCollectionEquality().equals(
               other._selectedReminders,
               _selectedReminders,
@@ -803,6 +860,9 @@ class _$TaskFormStateImpl extends _TaskFormState {
     yearlyDayOfMonth,
     yearlyWeekOfMonth,
     yearlyDayOfWeek,
+    skipWeekends,
+    skipHolidays,
+    skipBehavior,
     const DeepCollectionEquality().hash(_selectedReminders),
     selectedCategory,
     const DeepCollectionEquality().hash(_selectedParticipantIds),
@@ -847,6 +907,9 @@ abstract class _TaskFormState extends TaskFormState {
     final int yearlyDayOfMonth,
     final int yearlyWeekOfMonth,
     final int yearlyDayOfWeek,
+    final bool skipWeekends,
+    final bool skipHolidays,
+    final SkipBehavior? skipBehavior,
     final List<int> selectedReminders,
     final CategoryModel? selectedCategory,
     final List<String> selectedParticipantIds,
@@ -907,7 +970,13 @@ abstract class _TaskFormState extends TaskFormState {
   int get yearlyWeekOfMonth; // 1-5
   @override
   int get yearlyDayOfWeek; // 0-6
-  // 알림 (분 단위)
+  // 반복 skip 설정
+  @override
+  bool get skipWeekends;
+  @override
+  bool get skipHolidays;
+  @override
+  SkipBehavior? get skipBehavior; // 알림 (분 단위)
   @override
   List<int> get selectedReminders; // 카테고리 (Provider에서 로드된 목록에서 선택)
   @override

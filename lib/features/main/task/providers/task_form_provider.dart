@@ -66,6 +66,11 @@ class TaskFormState with _$TaskFormState {
     @Default(1) int yearlyWeekOfMonth, // 1-5
     @Default(1) int yearlyDayOfWeek, // 0-6
 
+    // 반복 skip 설정
+    @Default(false) bool skipWeekends,
+    @Default(false) bool skipHolidays,
+    SkipBehavior? skipBehavior,
+
     // 알림 (분 단위)
     @Default([]) List<int> selectedReminders,
 
@@ -164,6 +169,9 @@ class TaskFormState with _$TaskFormState {
       ruleType: recurringType!,
       ruleConfig: config,
       generationType: RecurringGenerationType.autoScheduler,
+      skipWeekends: skipWeekends,
+      skipHolidays: skipHolidays,
+      skipBehavior: (skipWeekends || skipHolidays) ? (skipBehavior ?? SkipBehavior.skip) : null,
     );
   }
 
@@ -287,6 +295,10 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     int yearlyWeekOfMonth = ((startDate.day - 1) ~/ 7) + 1;
     int yearlyDayOfWeek = startDate.weekday % 7;
 
+    bool skipWeekends = false;
+    bool skipHolidays = false;
+    SkipBehavior? skipBehavior;
+
     if (task.recurring != null) {
       recurringType = _parseRecurringType(task.recurring!.ruleType);
       final config = task.recurring!.ruleConfig;
@@ -352,6 +364,16 @@ class TaskFormNotifier extends _$TaskFormNotifier {
         if (config['dayOfWeek'] != null && recurringType == RecurringRuleType.yearly) {
           yearlyDayOfWeek = (config['dayOfWeek'] as num).toInt();
         }
+
+        // Skip 설정
+        skipWeekends = config['skipWeekends'] as bool? ?? false;
+        skipHolidays = config['skipHolidays'] as bool? ?? false;
+        final skipBehaviorStr = config['skipBehavior'] as String?;
+        if (skipBehaviorStr == 'MOVE_TO_NEXT_WEEKDAY') {
+          skipBehavior = SkipBehavior.moveToNextWeekday;
+        } else if (skipBehaviorStr == 'SKIP') {
+          skipBehavior = SkipBehavior.skip;
+        }
       }
     }
 
@@ -381,6 +403,9 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       yearlyDayOfMonth: yearlyDayOfMonth,
       yearlyWeekOfMonth: yearlyWeekOfMonth,
       yearlyDayOfWeek: yearlyDayOfWeek,
+      skipWeekends: skipWeekends,
+      skipHolidays: skipHolidays,
+      skipBehavior: skipBehavior,
       selectedCategory: task.category,
       selectedParticipantIds: task.participants.map((p) => p.userId).toList(),
       editingTask: task,
@@ -474,10 +499,35 @@ class TaskFormNotifier extends _$TaskFormNotifier {
         yearlyDayOfMonth: state.startDate.day,
         yearlyWeekOfMonth: ((state.startDate.day - 1) ~/ 7) + 1,
         yearlyDayOfWeek: weekday,
+        skipWeekends: false,
+        skipHolidays: false,
+        skipBehavior: null,
       );
     } else {
       state = state.copyWith(recurringType: value);
     }
+  }
+
+  void setSkipWeekends(bool value) {
+    state = state.copyWith(
+      skipWeekends: value,
+      skipBehavior: (value || state.skipHolidays)
+          ? (state.skipBehavior ?? SkipBehavior.skip)
+          : null,
+    );
+  }
+
+  void setSkipHolidays(bool value) {
+    state = state.copyWith(
+      skipHolidays: value,
+      skipBehavior: (state.skipWeekends || value)
+          ? (state.skipBehavior ?? SkipBehavior.skip)
+          : null,
+    );
+  }
+
+  void setSkipBehavior(SkipBehavior value) {
+    state = state.copyWith(skipBehavior: value);
   }
 
   // ============ 반복 상세 설정 ============

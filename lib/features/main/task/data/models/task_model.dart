@@ -441,6 +441,14 @@ class UpdateTaskDto with _$UpdateTaskDto {
       _$UpdateTaskDtoFromJson(json);
 }
 
+/// 공휴일/주말 건너뜀 동작
+enum SkipBehavior {
+  @JsonValue('SKIP')
+  skip, // 해당 날짜 건너뜀
+  @JsonValue('MOVE_TO_NEXT_WEEKDAY')
+  moveToNextWeekday, // 다음 평일로 이동
+}
+
 /// 반복 규칙 DTO
 @freezed
 class RecurringRuleDto with _$RecurringRuleDto {
@@ -448,6 +456,9 @@ class RecurringRuleDto with _$RecurringRuleDto {
     required RecurringRuleType ruleType,
     Map<String, dynamic>? ruleConfig,
     RecurringGenerationType? generationType,
+    @Default(false) bool skipWeekends,
+    @Default(false) bool skipHolidays,
+    SkipBehavior? skipBehavior,
   }) = _RecurringRuleDto;
 
   factory RecurringRuleDto.fromJson(Map<String, dynamic> json) =>

@@ -2859,6 +2859,9 @@ mixin _$RecurringRuleDto {
   Map<String, dynamic>? get ruleConfig => throw _privateConstructorUsedError;
   RecurringGenerationType? get generationType =>
       throw _privateConstructorUsedError;
+  bool get skipWeekends => throw _privateConstructorUsedError;
+  bool get skipHolidays => throw _privateConstructorUsedError;
+  SkipBehavior? get skipBehavior => throw _privateConstructorUsedError;
 
   /// Serializes this RecurringRuleDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2881,6 +2884,9 @@ abstract class $RecurringRuleDtoCopyWith<$Res> {
     RecurringRuleType ruleType,
     Map<String, dynamic>? ruleConfig,
     RecurringGenerationType? generationType,
+    bool skipWeekends,
+    bool skipHolidays,
+    SkipBehavior? skipBehavior,
   });
 }
 
@@ -2902,6 +2908,9 @@ class _$RecurringRuleDtoCopyWithImpl<$Res, $Val extends RecurringRuleDto>
     Object? ruleType = null,
     Object? ruleConfig = freezed,
     Object? generationType = freezed,
+    Object? skipWeekends = null,
+    Object? skipHolidays = null,
+    Object? skipBehavior = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -2917,6 +2926,18 @@ class _$RecurringRuleDtoCopyWithImpl<$Res, $Val extends RecurringRuleDto>
                 ? _value.generationType
                 : generationType // ignore: cast_nullable_to_non_nullable
                       as RecurringGenerationType?,
+            skipWeekends: null == skipWeekends
+                ? _value.skipWeekends
+                : skipWeekends // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            skipHolidays: null == skipHolidays
+                ? _value.skipHolidays
+                : skipHolidays // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            skipBehavior: freezed == skipBehavior
+                ? _value.skipBehavior
+                : skipBehavior // ignore: cast_nullable_to_non_nullable
+                      as SkipBehavior?,
           )
           as $Val,
     );
@@ -2936,6 +2957,9 @@ abstract class _$$RecurringRuleDtoImplCopyWith<$Res>
     RecurringRuleType ruleType,
     Map<String, dynamic>? ruleConfig,
     RecurringGenerationType? generationType,
+    bool skipWeekends,
+    bool skipHolidays,
+    SkipBehavior? skipBehavior,
   });
 }
 
@@ -2956,6 +2980,9 @@ class __$$RecurringRuleDtoImplCopyWithImpl<$Res>
     Object? ruleType = null,
     Object? ruleConfig = freezed,
     Object? generationType = freezed,
+    Object? skipWeekends = null,
+    Object? skipHolidays = null,
+    Object? skipBehavior = freezed,
   }) {
     return _then(
       _$RecurringRuleDtoImpl(
@@ -2971,6 +2998,18 @@ class __$$RecurringRuleDtoImplCopyWithImpl<$Res>
             ? _value.generationType
             : generationType // ignore: cast_nullable_to_non_nullable
                   as RecurringGenerationType?,
+        skipWeekends: null == skipWeekends
+            ? _value.skipWeekends
+            : skipWeekends // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        skipHolidays: null == skipHolidays
+            ? _value.skipHolidays
+            : skipHolidays // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        skipBehavior: freezed == skipBehavior
+            ? _value.skipBehavior
+            : skipBehavior // ignore: cast_nullable_to_non_nullable
+                  as SkipBehavior?,
       ),
     );
   }
@@ -2983,6 +3022,9 @@ class _$RecurringRuleDtoImpl implements _RecurringRuleDto {
     required this.ruleType,
     final Map<String, dynamic>? ruleConfig,
     this.generationType,
+    this.skipWeekends = false,
+    this.skipHolidays = false,
+    this.skipBehavior,
   }) : _ruleConfig = ruleConfig;
 
   factory _$RecurringRuleDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -3002,10 +3044,18 @@ class _$RecurringRuleDtoImpl implements _RecurringRuleDto {
 
   @override
   final RecurringGenerationType? generationType;
+  @override
+  @JsonKey()
+  final bool skipWeekends;
+  @override
+  @JsonKey()
+  final bool skipHolidays;
+  @override
+  final SkipBehavior? skipBehavior;
 
   @override
   String toString() {
-    return 'RecurringRuleDto(ruleType: $ruleType, ruleConfig: $ruleConfig, generationType: $generationType)';
+    return 'RecurringRuleDto(ruleType: $ruleType, ruleConfig: $ruleConfig, generationType: $generationType, skipWeekends: $skipWeekends, skipHolidays: $skipHolidays, skipBehavior: $skipBehavior)';
   }
 
   @override
@@ -3020,7 +3070,13 @@ class _$RecurringRuleDtoImpl implements _RecurringRuleDto {
               _ruleConfig,
             ) &&
             (identical(other.generationType, generationType) ||
-                other.generationType == generationType));
+                other.generationType == generationType) &&
+            (identical(other.skipWeekends, skipWeekends) ||
+                other.skipWeekends == skipWeekends) &&
+            (identical(other.skipHolidays, skipHolidays) ||
+                other.skipHolidays == skipHolidays) &&
+            (identical(other.skipBehavior, skipBehavior) ||
+                other.skipBehavior == skipBehavior));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3030,6 +3086,9 @@ class _$RecurringRuleDtoImpl implements _RecurringRuleDto {
     ruleType,
     const DeepCollectionEquality().hash(_ruleConfig),
     generationType,
+    skipWeekends,
+    skipHolidays,
+    skipBehavior,
   );
 
   /// Create a copy of RecurringRuleDto
@@ -3054,6 +3113,9 @@ abstract class _RecurringRuleDto implements RecurringRuleDto {
     required final RecurringRuleType ruleType,
     final Map<String, dynamic>? ruleConfig,
     final RecurringGenerationType? generationType,
+    final bool skipWeekends,
+    final bool skipHolidays,
+    final SkipBehavior? skipBehavior,
   }) = _$RecurringRuleDtoImpl;
 
   factory _RecurringRuleDto.fromJson(Map<String, dynamic> json) =
@@ -3065,6 +3127,12 @@ abstract class _RecurringRuleDto implements RecurringRuleDto {
   Map<String, dynamic>? get ruleConfig;
   @override
   RecurringGenerationType? get generationType;
+  @override
+  bool get skipWeekends;
+  @override
+  bool get skipHolidays;
+  @override
+  SkipBehavior? get skipBehavior;
 
   /// Create a copy of RecurringRuleDto
   /// with the given fields replaced by the non-null parameter values.

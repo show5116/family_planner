@@ -720,14 +720,24 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final task = await _repository.createTask(dto);
 
-      // 해당 월의 Task 목록에 추가
       if (task.scheduledAt != null) {
-        _ref
-            .read(monthlyTasksProvider(
-              task.scheduledAt!.year,
-              task.scheduledAt!.month,
-            ).notifier)
-            .addTask(task);
+        final year = task.scheduledAt!.year;
+        final month = task.scheduledAt!.month;
+
+        if (dto.recurring != null) {
+          // 반복 일정: 백엔드가 여러 날짜에 일정을 생성하므로 서버에서 재조회
+          await _ref
+              .read(monthlyTasksProvider(year, month).notifier)
+              .refresh();
+          _ref.invalidate(todoTasksProvider());
+          _ref.invalidate(todoOverviewTasksProvider);
+        } else {
+          // 단건: 로컬 상태에 바로 추가
+          _ref
+              .read(monthlyTasksProvider(year, month).notifier)
+              .addTask(task);
+          _ref.read(todoTasksProvider().notifier).addTask(task);
+        }
       }
 
       _invalidateDashboard();
@@ -750,29 +760,41 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final task = await _repository.updateTask(id, dto, updateScope: updateScope);
 
-      // 해당 월의 Task 목록 갱신
-      if (task.scheduledAt != null) {
-        _ref
-            .read(monthlyTasksProvider(
-              task.scheduledAt!.year,
-              task.scheduledAt!.month,
-            ).notifier)
-            .updateTask(task);
+      // future/all scope: 해당 월 이후 변경이 반영된 캐시를 모두 무효화
+      final isMultiScope = updateScope == 'future' || updateScope == 'all';
+
+      if (isMultiScope) {
+        final baseDate = task.scheduledAt ?? originalDate;
+        if (baseDate != null) {
+          _ref.invalidate(monthlyTasksProvider(baseDate.year, baseDate.month));
+        }
+        _ref.invalidate(todoTasksProvider());
+        _ref.invalidate(todoOverviewTasksProvider);
+      } else {
+        // 단건 수정: 로컬 상태 직접 갱신
+        if (task.scheduledAt != null) {
+          _ref
+              .read(monthlyTasksProvider(
+                task.scheduledAt!.year,
+                task.scheduledAt!.month,
+              ).notifier)
+              .updateTask(task);
+        }
+
+        // 이전 월과 달라진 경우 이전 월에서 제거
+        if (originalDate != null &&
+            task.scheduledAt != null &&
+            (originalDate.year != task.scheduledAt!.year ||
+                originalDate.month != task.scheduledAt!.month)) {
+          _ref
+              .read(monthlyTasksProvider(originalDate.year, originalDate.month).notifier)
+              .removeTask(id);
+        }
+
+        _ref.read(todoTasksProvider().notifier).updateTask(task);
       }
 
-      // 이전 월과 다른 경우 이전 월에서 제거
-      if (originalDate != null &&
-          task.scheduledAt != null &&
-          (originalDate.year != task.scheduledAt!.year ||
-              originalDate.month != task.scheduledAt!.month)) {
-        _ref
-            .read(monthlyTasksProvider(originalDate.year, originalDate.month).notifier)
-            .removeTask(id);
-      }
-
-      // 상세 Provider 무효화
       _ref.invalidate(taskDetailProvider(id));
-
       _invalidateDashboard();
       state = const AsyncValue.data(null);
       return task;
@@ -824,10 +846,20 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       await _repository.deleteTask(id, deleteScope: deleteScope);
 
-      // 해당 월의 Task 목록에서 제거
-      _ref
-          .read(monthlyTasksProvider(taskDate.year, taskDate.month).notifier)
-          .removeTask(id);
+      // future/all scope: 해당 월 이후의 캐시를 무효화해 서버에서 재조회
+      final isMultiScope = deleteScope == 'future' || deleteScope == 'all';
+
+      if (isMultiScope) {
+        _ref.invalidate(monthlyTasksProvider(taskDate.year, taskDate.month));
+        _ref.invalidate(todoTasksProvider());
+        _ref.invalidate(todoOverviewTasksProvider);
+      } else {
+        // 단건 삭제: 로컬 상태에서 바로 제거
+        _ref
+            .read(monthlyTasksProvider(taskDate.year, taskDate.month).notifier)
+            .removeTask(id);
+        _ref.read(todoTasksProvider().notifier).removeTask(id);
+      }
 
       // 상세 Provider는 invalidate 하지 않음 — 삭제 후 화면이 pop되므로
       // invalidate 시 자동 재조회가 발생해 404 에러가 나는 것을 방지
