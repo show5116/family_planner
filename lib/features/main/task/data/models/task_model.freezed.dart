@@ -2031,7 +2031,7 @@ CreateTaskDto _$CreateTaskDtoFromJson(Map<String, dynamic> json) {
 mixin _$CreateTaskDto {
   String get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  String? get location => throw _privateConstructorUsedError;
+  TaskLocation? get location => throw _privateConstructorUsedError;
   TaskType? get type => throw _privateConstructorUsedError;
   TaskPriority? get priority => throw _privateConstructorUsedError;
   String? get categoryId => throw _privateConstructorUsedError;
@@ -2062,7 +2062,7 @@ abstract class $CreateTaskDtoCopyWith<$Res> {
   $Res call({
     String title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
@@ -2118,7 +2118,7 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
             location: freezed == location
                 ? _value.location
                 : location // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as TaskLocation?,
             type: freezed == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
@@ -2187,7 +2187,7 @@ abstract class _$$CreateTaskDtoImplCopyWith<$Res>
   $Res call({
     String title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
@@ -2243,7 +2243,7 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
         location: freezed == location
             ? _value.location
             : location // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as TaskLocation?,
         type: freezed == type
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
@@ -2312,7 +2312,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
   @override
   final String? description;
   @override
-  final String? location;
+  final TaskLocation? location;
   @override
   final TaskType? type;
   @override
@@ -2419,7 +2419,7 @@ abstract class _CreateTaskDto implements CreateTaskDto {
   const factory _CreateTaskDto({
     required final String title,
     final String? description,
-    final String? location,
+    final TaskLocation? location,
     final TaskType? type,
     final TaskPriority? priority,
     final String? categoryId,
@@ -2439,7 +2439,7 @@ abstract class _CreateTaskDto implements CreateTaskDto {
   @override
   String? get description;
   @override
-  String? get location;
+  TaskLocation? get location;
   @override
   TaskType? get type;
   @override
@@ -2475,7 +2475,7 @@ UpdateTaskDto _$UpdateTaskDtoFromJson(Map<String, dynamic> json) {
 mixin _$UpdateTaskDto {
   String? get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  String? get location => throw _privateConstructorUsedError;
+  TaskLocation? get location => throw _privateConstructorUsedError;
   TaskType? get type => throw _privateConstructorUsedError;
   TaskPriority? get priority => throw _privateConstructorUsedError;
   String? get categoryId => throw _privateConstructorUsedError;
@@ -2504,7 +2504,7 @@ abstract class $UpdateTaskDtoCopyWith<$Res> {
   $Res call({
     String? title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
@@ -2554,7 +2554,7 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
             location: freezed == location
                 ? _value.location
                 : location // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as TaskLocation?,
             type: freezed == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
@@ -2601,7 +2601,7 @@ abstract class _$$UpdateTaskDtoImplCopyWith<$Res>
   $Res call({
     String? title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
@@ -2650,7 +2650,7 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
         location: freezed == location
             ? _value.location
             : location // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as TaskLocation?,
         type: freezed == type
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
@@ -2709,7 +2709,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
   @override
   final String? description;
   @override
-  final String? location;
+  final TaskLocation? location;
   @override
   final TaskType? type;
   @override
@@ -2807,7 +2807,7 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
   const factory _UpdateTaskDto({
     final String? title,
     final String? description,
-    final String? location,
+    final TaskLocation? location,
     final TaskType? type,
     final TaskPriority? priority,
     final String? categoryId,
@@ -2825,7 +2825,7 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
   @override
   String? get description;
   @override
-  String? get location;
+  TaskLocation? get location;
   @override
   TaskType? get type;
   @override

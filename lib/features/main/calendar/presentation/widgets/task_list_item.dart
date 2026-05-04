@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
+import 'package:family_planner/core/widgets/location_map_view.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -219,28 +220,33 @@ class _TaskInfo extends StatelessWidget {
           ],
         ),
 
-        // 장소 (있는 경우)
-        if (task.location != null && task.location!.isNotEmpty) ...[
+        // 장소 (있는 경우) — 탭 시 지도 바텀시트
+        if (task.location != null) ...[
           const SizedBox(height: AppSizes.spaceXS),
-          Row(
-            children: [
-              Icon(
-                Icons.location_on_outlined,
-                size: AppSizes.iconSmall,
-                color: AppColors.textSecondary,
-              ),
-              const SizedBox(width: AppSizes.spaceXS),
-              Expanded(
-                child: Text(
-                  task.location!,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          InkWell(
+            onTap: () => showLocationMapBottomSheet(context, task.location!),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.location_on_outlined,
+                  size: AppSizes.iconSmall,
+                  color: AppColors.primary,
                 ),
-              ),
-            ],
+                const SizedBox(width: AppSizes.spaceXS),
+                Expanded(
+                  child: Text(
+                    task.location!.name,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ],

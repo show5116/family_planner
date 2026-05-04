@@ -93,14 +93,18 @@ class EnvironmentConfig {
     return value.isEmpty ? null : value;
   }
 
-  /// Kakao Native App Key
-  /// Kakao Developers에서 발급: https://developers.kakao.com
+  /// Kakao Native App Key (Android/iOS 로그인용)
   static String get kakaoNativeAppKey {
-    return dotenv.get('KAKAO_NATIVE_APP_KEY', fallback: 'YOUR_KAKAO_NATIVE_APP_KEY');
+    return dotenv.get('KAKAO_NATIVE_APP_KEY', fallback: '');
   }
 
-  /// Kakao JavaScript App Key (웹용)
+  /// Kakao JavaScript App Key (웹 로그인 / 지도 JS SDK용)
   static String get kakaoJavaScriptAppKey {
     return dotenv.get('KAKAO_JAVASCRIPT_APP_KEY', fallback: '');
+  }
+
+  /// Kakao REST API Key (서버 API 호출용 — 장소 검색 등)
+  static String get kakaoRestApiKey {
+    return dotenv.get('KAKAO_REST_API_KEY', fallback: '');
   }
 }

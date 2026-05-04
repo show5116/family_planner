@@ -94,6 +94,7 @@ dependencies:
 
   # Location
   geolocator: ^13.0.4
+  kakao_map_plugin: ^0.4.0
 
   # Environment Variables
   flutter_dotenv: ^5.2.1

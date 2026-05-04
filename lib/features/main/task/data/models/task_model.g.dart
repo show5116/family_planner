@@ -150,7 +150,9 @@ _$CreateTaskDtoImpl _$$CreateTaskDtoImplFromJson(Map<String, dynamic> json) =>
     _$CreateTaskDtoImpl(
       title: json['title'] as String,
       description: json['description'] as String?,
-      location: json['location'] as String?,
+      location: json['location'] == null
+          ? null
+          : TaskLocation.fromJson(json['location'] as Map<String, dynamic>),
       type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
       categoryId: json['categoryId'] as String?,
@@ -203,7 +205,9 @@ _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
     _$UpdateTaskDtoImpl(
       title: json['title'] as String?,
       description: json['description'] as String?,
-      location: json['location'] as String?,
+      location: json['location'] == null
+          ? null
+          : TaskLocation.fromJson(json['location'] as Map<String, dynamic>),
       type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
       categoryId: json['categoryId'] as String?,

@@ -44,7 +44,6 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _locationController = TextEditingController();
   final _titleFocusNode = FocusNode();
 
   String? _previousGroupId;
@@ -55,7 +54,6 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     if (widget.task != null) {
       _titleController.text = widget.task!.title;
       _descriptionController.text = widget.task!.description ?? '';
-      _locationController.text = widget.task!.location ?? '';
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _previousGroupId = ref.read(selectedGroupIdProvider);
@@ -104,7 +102,6 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     ref.read(selectedGroupIdProvider.notifier).state = _previousGroupId;
     _titleController.dispose();
     _descriptionController.dispose();
-    _locationController.dispose();
     _titleFocusNode.dispose();
     super.dispose();
   }
@@ -168,7 +165,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                 const SizedBox(height: AppSizes.spaceL),
                 ReminderSection(formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
-                LocationField(controller: _locationController, formNotifier: formNotifier),
+                LocationField(location: formState.location, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
                 DescriptionField(controller: _descriptionController, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceXL),

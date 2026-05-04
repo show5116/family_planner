@@ -169,7 +169,7 @@ class TaskModel {
   final String? groupId;
   final String title;
   final String? description;
-  final String? location;
+  final TaskLocation? location;
   final TaskType? type;
   final TaskPriority? priority;
   final CategoryModel? category;
@@ -248,7 +248,9 @@ class TaskModel {
       groupId: json['groupId'] as String?,
       title: json['title'] as String,
       description: json['description'] as String?,
-      location: json['location'] as String?,
+      location: json['location'] != null
+          ? TaskLocation.fromJson(json['location'] as Map<String, dynamic>)
+          : null,
       type: parseType(json['type']),
       priority: parsePriority(json['priority']),
       category: json['category'] != null
@@ -280,7 +282,7 @@ class TaskModel {
     String? groupId,
     String? title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     CategoryModel? category,
@@ -361,6 +363,49 @@ class TaskDetailModel with _$TaskDetailModel {
   }
 }
 
+/// 장소 정보 모델 (카카오 장소 검색 결과)
+class TaskLocation {
+  final String name;
+  final String address;
+  final double lat;
+  final double lng;
+
+  const TaskLocation({
+    required this.name,
+    required this.address,
+    required this.lat,
+    required this.lng,
+  });
+
+  factory TaskLocation.fromJson(Map<String, dynamic> json) {
+    return TaskLocation(
+      name: json['name'] as String,
+      address: json['address'] as String,
+      lat: (json['lat'] as num).toDouble(),
+      lng: (json['lng'] as num).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'address': address,
+    'lat': lat,
+    'lng': lng,
+  };
+
+  TaskLocation copyWith({String? name, String? address, double? lat, double? lng}) {
+    return TaskLocation(
+      name: name ?? this.name,
+      address: address ?? this.address,
+      lat: lat ?? this.lat,
+      lng: lng ?? this.lng,
+    );
+  }
+
+  @override
+  String toString() => '$name ($address)';
+}
+
 /// Task 목록 응답 모델
 class TaskListResponse {
   final List<TaskModel> data;
@@ -405,7 +450,7 @@ class CreateTaskDto with _$CreateTaskDto {
   const factory CreateTaskDto({
     required String title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
@@ -427,7 +472,7 @@ class UpdateTaskDto with _$UpdateTaskDto {
   const factory UpdateTaskDto({
     String? title,
     String? description,
-    String? location,
+    TaskLocation? location,
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,

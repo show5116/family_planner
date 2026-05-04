@@ -8,6 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:family_planner/core/theme/app_theme.dart';
 
 import 'package:family_planner/core/theme/theme_provider.dart';
@@ -59,6 +60,8 @@ void main() async {
     nativeAppKey: EnvironmentConfig.kakaoNativeAppKey,
     javaScriptAppKey: EnvironmentConfig.kakaoJavaScriptAppKey,
   );
+
+  AuthRepository.initialize(appKey: EnvironmentConfig.kakaoJavaScriptAppKey);
 
   if (kReleaseMode) {
     EnvironmentConfig.setEnvironment(Environment.production);

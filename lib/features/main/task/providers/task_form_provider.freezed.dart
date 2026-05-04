@@ -20,7 +20,7 @@ mixin _$TaskFormState {
   // 기본 정보
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  String get location => throw _privateConstructorUsedError; // 날짜/시간
+  TaskLocation? get location => throw _privateConstructorUsedError; // 날짜/시간
   DateTime get startDate => throw _privateConstructorUsedError;
   DateTime? get dueDate => throw _privateConstructorUsedError;
   TimeOfDay? get startTime => throw _privateConstructorUsedError;
@@ -85,7 +85,7 @@ abstract class $TaskFormStateCopyWith<$Res> {
   $Res call({
     String title,
     String description,
-    String location,
+    TaskLocation? location,
     DateTime startDate,
     DateTime? dueDate,
     TimeOfDay? startTime,
@@ -142,7 +142,7 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
   $Res call({
     Object? title = null,
     Object? description = null,
-    Object? location = null,
+    Object? location = freezed,
     Object? startDate = null,
     Object? dueDate = freezed,
     Object? startTime = freezed,
@@ -188,10 +188,10 @@ class _$TaskFormStateCopyWithImpl<$Res, $Val extends TaskFormState>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String,
-            location: null == location
+            location: freezed == location
                 ? _value.location
                 : location // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as TaskLocation?,
             startDate: null == startDate
                 ? _value.startDate
                 : startDate // ignore: cast_nullable_to_non_nullable
@@ -360,7 +360,7 @@ abstract class _$$TaskFormStateImplCopyWith<$Res>
   $Res call({
     String title,
     String description,
-    String location,
+    TaskLocation? location,
     DateTime startDate,
     DateTime? dueDate,
     TimeOfDay? startTime,
@@ -417,7 +417,7 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
   $Res call({
     Object? title = null,
     Object? description = null,
-    Object? location = null,
+    Object? location = freezed,
     Object? startDate = null,
     Object? dueDate = freezed,
     Object? startTime = freezed,
@@ -463,10 +463,10 @@ class __$$TaskFormStateImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String,
-        location: null == location
+        location: freezed == location
             ? _value.location
             : location // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as TaskLocation?,
         startDate: null == startDate
             ? _value.startDate
             : startDate // ignore: cast_nullable_to_non_nullable
@@ -614,7 +614,7 @@ class _$TaskFormStateImpl extends _TaskFormState {
   const _$TaskFormStateImpl({
     this.title = '',
     this.description = '',
-    this.location = '',
+    this.location,
     required this.startDate,
     this.dueDate,
     this.startTime,
@@ -662,8 +662,7 @@ class _$TaskFormStateImpl extends _TaskFormState {
   @JsonKey()
   final String description;
   @override
-  @JsonKey()
-  final String location;
+  final TaskLocation? location;
   // 날짜/시간
   @override
   final DateTime startDate;
@@ -949,7 +948,7 @@ abstract class _TaskFormState extends TaskFormState {
   const factory _TaskFormState({
     final String title,
     final String description,
-    final String location,
+    final TaskLocation? location,
     required final DateTime startDate,
     final DateTime? dueDate,
     final TimeOfDay? startTime,
@@ -993,7 +992,7 @@ abstract class _TaskFormState extends TaskFormState {
   @override
   String get description;
   @override
-  String get location; // 날짜/시간
+  TaskLocation? get location; // 날짜/시간
   @override
   DateTime get startDate;
   @override

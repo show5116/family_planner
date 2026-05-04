@@ -38,7 +38,7 @@ class TaskFormState with _$TaskFormState {
     // 기본 정보
     @Default('') String title,
     @Default('') String description,
-    @Default('') String location,
+    TaskLocation? location,
 
     // 날짜/시간
     required DateTime startDate,
@@ -206,7 +206,7 @@ class TaskFormState with _$TaskFormState {
     return CreateTaskDto(
       title: title.trim(),
       description: description.trim().isEmpty ? null : description.trim(),
-      location: location.trim().isEmpty ? null : location.trim(),
+      location: location,
       type: taskType,
       priority: priority,
       categoryId: selectedCategory?.id,
@@ -226,7 +226,7 @@ class TaskFormState with _$TaskFormState {
     return UpdateTaskDto(
       title: title.trim(),
       description: description.trim().isEmpty ? null : description.trim(),
-      location: location.trim().isEmpty ? null : location.trim(),
+      location: location,
       type: taskType,
       priority: priority,
       categoryId: selectedCategory?.id,
@@ -410,7 +410,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     return TaskFormState(
       title: task.title,
       description: task.description ?? '',
-      location: task.location ?? '',
+      location: task.location,
       startDate: startDate,
       dueDate: dueDate,
       startTime: startTime,
@@ -471,7 +471,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     state = state.copyWith(description: value);
   }
 
-  void setLocation(String value) {
+  void setLocation(TaskLocation? value) {
     state = state.copyWith(location: value);
   }
 
