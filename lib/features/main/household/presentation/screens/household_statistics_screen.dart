@@ -350,8 +350,8 @@ class _CategoryStatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final color = categoryColor(stat.category);
-    final ratio = stat.budget != null && stat.budget! > 0
-        ? (stat.total / stat.budget!).clamp(0.0, 1.0)
+    final ratio = stat.budgetRatio != null && stat.budget != null && stat.budget! > 0
+        ? (stat.budgetRatio! / 100.0).clamp(0.0, 1.0)
         : null;
 
     return InkWell(

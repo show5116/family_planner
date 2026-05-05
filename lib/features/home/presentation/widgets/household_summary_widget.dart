@@ -9,6 +9,7 @@ import 'package:family_planner/core/utils/extensions.dart';
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -154,7 +155,15 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
               onPressed: () => _showGroupPicker(groups),
             ),
           IconButton(
-            onPressed: () => context.push(AppRoutes.householdStatistics),
+            onPressed: () {
+              // 대시보드에서 선택한 그룹을 통계 화면에 동기화
+              final effectiveGroupId = _isPersonal
+                  ? null
+                  : (_selectedGroupId ?? (groups.isNotEmpty ? groups.first.id : null));
+              ref.read(householdSelectedGroupIdProvider.notifier).state =
+                  effectiveGroupId;
+              context.push(AppRoutes.householdStatistics);
+            },
             icon: const Icon(Icons.bar_chart, size: AppSizes.iconMedium),
           ),
         ],
@@ -396,13 +405,10 @@ class _CategoryDistribution extends StatelessWidget {
         const SizedBox(height: AppSizes.spaceS),
         ...top.map((cat) {
           final color = _categoryColor(cat.category);
-          final hasBudget = cat.budget != null && cat.budget! > 0;
-          // 예산이 있으면 예산 대비 소진율, 없으면 카테고리 내 상대 비율
+          final hasBudget = cat.budget != null && cat.budget! > 0 && cat.budgetRatio != null;
           final barValue = hasBudget
-              ? (cat.budgetRatio ?? 0).clamp(0.0, 1.0)
-              : (cat.total /
-                      top.fold<double>(0, (s, c) => s + c.total))
-                  .clamp(0.0, 1.0);
+              ? (cat.budgetRatio! / 100.0).clamp(0.0, 1.0)
+              : null;
           final isOverBudget = hasBudget && cat.total > cat.budget!;
           final barColor = isOverBudget ? AppColors.error : color;
 
@@ -444,18 +450,18 @@ class _CategoryDistribution extends StatelessWidget {
                     ],
                   ],
                 ),
-                const SizedBox(height: 4),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(2),
-                  child: LinearProgressIndicator(
-                    value: barValue,
-                    minHeight: 6,
-                    backgroundColor:
-                        Theme.of(context).colorScheme.surfaceContainerHighest,
-                    valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                if (barValue != null) ...[
+                  const SizedBox(height: 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: LinearProgressIndicator(
+                      value: barValue,
+                      minHeight: 6,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                    ),
                   ),
-                ),
-                if (hasBudget) ...[
                   const SizedBox(height: 2),
                   Text(
                     isOverBudget
