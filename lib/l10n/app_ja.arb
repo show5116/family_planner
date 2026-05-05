@@ -866,6 +866,8 @@
   "@household_category_education": { "description": "カテゴリ: 教育費" },
   "household_category_clothing": "被服費",
   "@household_category_clothing": { "description": "カテゴリ: 被服費" },
+  "household_category_allowance": "お小遣い",
+  "@household_category_allowance": { "description": "カテゴリ: お小遣い" },
   "household_category_other": "その他",
   "@household_category_other": { "description": "カテゴリ: その他" },
   "household_payment_cash": "現金",

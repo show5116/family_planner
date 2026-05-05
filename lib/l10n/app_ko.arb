@@ -880,6 +880,8 @@
   "@household_category_education": { "description": "카테고리: 교육비" },
   "household_category_clothing": "의류비",
   "@household_category_clothing": { "description": "카테고리: 의류비" },
+  "household_category_allowance": "용돈",
+  "@household_category_allowance": { "description": "카테고리: 용돈" },
   "household_category_other": "기타",
   "@household_category_other": { "description": "카테고리: 기타" },
   "household_payment_cash": "현금",

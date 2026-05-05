@@ -2218,6 +2218,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_category_clothing => 'Clothing';
 
   @override
+  String get household_category_allowance => 'Allowance';
+
+  @override
   String get household_category_other => 'Other';
 
   @override

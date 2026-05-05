@@ -19,6 +19,8 @@ IconData categoryIcon(ExpenseCategory? category) {
       return Icons.local_hospital;
     case ExpenseCategory.education:
       return Icons.school;
+    case ExpenseCategory.allowance:
+      return Icons.wallet;
     case ExpenseCategory.other:
     case null:
       return Icons.category;
@@ -40,6 +42,8 @@ Color categoryColor(ExpenseCategory? category) {
       return Colors.red;
     case ExpenseCategory.education:
       return Colors.indigo;
+    case ExpenseCategory.allowance:
+      return Colors.teal;
     case ExpenseCategory.other:
     case null:
       return Colors.grey;
@@ -61,6 +65,8 @@ String categoryName(AppLocalizations l10n, ExpenseCategory? category) {
       return l10n.household_category_health;
     case ExpenseCategory.education:
       return l10n.household_category_education;
+    case ExpenseCategory.allowance:
+      return l10n.household_category_allowance;
     case ExpenseCategory.other:
     case null:
       return l10n.household_category_other;

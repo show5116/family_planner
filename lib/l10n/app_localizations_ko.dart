@@ -2177,6 +2177,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_category_clothing => '의류비';
 
   @override
+  String get household_category_allowance => '용돈';
+
+  @override
   String get household_category_other => '기타';
 
   @override

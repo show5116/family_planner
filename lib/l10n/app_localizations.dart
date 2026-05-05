@@ -4336,6 +4336,12 @@ abstract class AppLocalizations {
   /// **'의류비'**
   String get household_category_clothing;
 
+  /// 카테고리: 용돈
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈'**
+  String get household_category_allowance;
+
   /// 카테고리: 기타
   ///
   /// In ko, this message translates to:

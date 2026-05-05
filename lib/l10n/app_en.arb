@@ -866,6 +866,8 @@
   "@household_category_education": { "description": "Category: Education" },
   "household_category_clothing": "Clothing",
   "@household_category_clothing": { "description": "Category: Clothing" },
+  "household_category_allowance": "Allowance",
+  "@household_category_allowance": { "description": "Category: Allowance" },
   "household_category_other": "Other",
   "@household_category_other": { "description": "Category: Other" },
   "household_payment_cash": "Cash",

@@ -76,6 +76,8 @@ class SetBudgetDto {
         return 'MEDICAL';
       case ExpenseCategory.education:
         return 'EDUCATION';
+      case ExpenseCategory.allowance:
+        return 'ALLOWANCE';
       case ExpenseCategory.other:
         return 'OTHER';
     }

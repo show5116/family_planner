@@ -360,6 +360,8 @@ class _CategoryDistribution extends StatelessWidget {
         return '의료';
       case ExpenseCategory.education:
         return '교육';
+      case ExpenseCategory.allowance:
+        return '용돈';
       default:
         return '기타';
     }
@@ -379,6 +381,8 @@ class _CategoryDistribution extends StatelessWidget {
         return Colors.red;
       case ExpenseCategory.education:
         return Colors.orange;
+      case ExpenseCategory.allowance:
+        return Colors.teal;
       default:
         return AppColors.secondary;
     }

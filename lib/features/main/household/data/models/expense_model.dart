@@ -6,6 +6,7 @@ enum ExpenseCategory {
   living,
   medical,
   education,
+  allowance,
   other,
 }
 
@@ -78,6 +79,8 @@ class ExpenseModel {
         return ExpenseCategory.medical;
       case 'EDUCATION':
         return ExpenseCategory.education;
+      case 'ALLOWANCE':
+        return ExpenseCategory.allowance;
       default:
         return ExpenseCategory.other;
     }
@@ -203,6 +206,8 @@ String _categoryToString(ExpenseCategory category) {
       return 'MEDICAL';
     case ExpenseCategory.education:
       return 'EDUCATION';
+    case ExpenseCategory.allowance:
+      return 'ALLOWANCE';
     case ExpenseCategory.other:
       return 'OTHER';
   }

@@ -2174,6 +2174,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_category_clothing => '被服費';
 
   @override
+  String get household_category_allowance => 'お小遣い';
+
+  @override
   String get household_category_other => 'その他';
 
   @override
