@@ -18,12 +18,12 @@ class LatLon {
   const LatLon({required this.lat, required this.lon});
 }
 
+/// 마지막 날씨 조회 시각 (앱 재개 시 만료 여부 판단에 사용)
+DateTime? _lastWeatherFetch;
+
 /// 위치 조회 (웹: Geolocation API, 모바일/데스크톱: GPS)
 @riverpod
 Future<LatLon> location(Ref ref) async {
-  final link = ref.keepAlive();
-  Timer(const Duration(hours: 1), link.close);
-
   return getWebLocation();
 }
 
@@ -31,7 +31,9 @@ Future<LatLon> location(Ref ref) async {
 @riverpod
 Future<WeatherModel> weather(Ref ref) async {
   final link = ref.keepAlive();
-  Timer(const Duration(minutes: 30), link.close);
+  _lastWeatherFetch = DateTime.now();
+  final timer = Timer(const Duration(minutes: 30), link.close);
+  ref.onDispose(timer.cancel);
 
   final LatLon latLon = await ref.watch(locationProvider.future);
   final repository = ref.watch(weatherRepositoryProvider);
@@ -42,9 +44,16 @@ Future<WeatherModel> weather(Ref ref) async {
 @riverpod
 Future<WeatherForecastModel> weatherForecast(Ref ref) async {
   final link = ref.keepAlive();
-  Timer(const Duration(minutes: 30), link.close);
+  final timer = Timer(const Duration(minutes: 30), link.close);
+  ref.onDispose(timer.cancel);
 
   final LatLon latLon = await ref.watch(locationProvider.future);
   final repository = ref.watch(weatherRepositoryProvider);
   return repository.getForecast(lat: latLon.lat, lon: latLon.lon);
+}
+
+/// 날씨 캐시가 만료되었는지 확인 (30분 기준)
+bool isWeatherCacheExpired() {
+  if (_lastWeatherFetch == null) return true;
+  return DateTime.now().difference(_lastWeatherFetch!) > const Duration(minutes: 30);
 }

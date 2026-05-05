@@ -40,19 +40,62 @@ class WeatherHelper {
 }
 
 /// 대시보드용 날씨 콤팩트 위젯
-class WeatherWidget extends ConsumerWidget {
+class WeatherWidget extends ConsumerStatefulWidget {
   const WeatherWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WeatherWidget> createState() => _WeatherWidgetState();
+}
+
+class _WeatherWidgetState extends ConsumerState<WeatherWidget>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && isWeatherCacheExpired()) {
+      ref.invalidate(locationProvider);
+      ref.invalidate(weatherProvider);
+    }
+  }
+
+  void _refresh() {
+    ref.invalidate(locationProvider);
+    ref.invalidate(weatherProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
 
     return DashboardCard(
       title: '오늘 날씨',
       icon: Icons.wb_sunny_outlined,
-      action: TextButton(
-        onPressed: () => context.push(AppRoutes.weather),
-        child: const Text('자세히'),
+      action: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            iconSize: AppSizes.iconMedium,
+            visualDensity: VisualDensity.compact,
+            tooltip: '날씨 새로고침',
+            onPressed: _refresh,
+          ),
+          TextButton(
+            onPressed: () => context.push(AppRoutes.weather),
+            child: const Text('자세히'),
+          ),
+        ],
       ),
       onTap: () => context.push(AppRoutes.weather),
       child: weatherAsync.when(
