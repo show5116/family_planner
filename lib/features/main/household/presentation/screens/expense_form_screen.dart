@@ -334,12 +334,8 @@ class _CategorySelector extends StatelessWidget {
           value: selected,
           isExpanded: true,
           isDense: true,
-          hint: Text(l10n.household_category_other),
+          hint: Text(l10n.household_category),
           items: [
-            DropdownMenuItem(
-              value: null,
-              child: Text(l10n.household_category_other),
-            ),
             ...ExpenseCategory.values.map(
               (c) => DropdownMenuItem(
                 value: c,
