@@ -235,19 +235,17 @@ class _AssetListState extends ConsumerState<_AssetList> {
                         },
                         itemBuilder: (context, index) {
                           final account = displayAccounts[index];
-                          return ReorderableDragStartListener(
+                          return AccountListItem(
                             key: ValueKey(account.id),
-                            index: index,
-                            child: AccountListItem(
-                              account: account,
-                              showDragHandle: true,
-                              onTap: () => context.push(
-                                AppRoutes.assetAccountDetail,
-                                extra: account,
-                              ),
-                              onDelete: () => _confirmDelete(
-                                  context, ref, l10n, account),
+                            account: account,
+                            showDragHandle: true,
+                            dragIndex: index,
+                            onTap: () => context.push(
+                              AppRoutes.assetAccountDetail,
+                              extra: account,
                             ),
+                            onDelete: () => _confirmDelete(
+                                context, ref, l10n, account),
                           );
                         },
                       ),

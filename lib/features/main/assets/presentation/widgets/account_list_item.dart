@@ -12,6 +12,7 @@ class AccountListItem extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;
   final bool showDragHandle;
+  final int? dragIndex;
 
   const AccountListItem({
     super.key,
@@ -19,6 +20,7 @@ class AccountListItem extends StatelessWidget {
     required this.onTap,
     required this.onDelete,
     this.showDragHandle = false,
+    this.dragIndex,
   });
 
   @override
@@ -65,9 +67,12 @@ class AccountListItem extends StatelessWidget {
                   ),
               ],
             ),
-            if (showDragHandle)
-              DragHandleIcon(
-                color: Theme.of(context).colorScheme.outline,
+            if (showDragHandle && dragIndex != null)
+              ReorderableDragStartListener(
+                index: dragIndex!,
+                child: DragHandleIcon(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               )
             else
               PopupMenuButton<String>(
