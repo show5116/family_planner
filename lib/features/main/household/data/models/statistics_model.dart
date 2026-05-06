@@ -36,13 +36,19 @@ class CategoryStatModel {
 /// 월간 통계 모델
 class MonthlyStatisticsModel {
   final String month;
+  final double totalIncome;
   final double totalExpense;
+  final double balance;
   final double totalBudget;
   final List<CategoryStatModel> categories;
 
+  bool get hasIncome => totalIncome > 0;
+
   const MonthlyStatisticsModel({
     required this.month,
+    this.totalIncome = 0,
     required this.totalExpense,
+    this.balance = 0,
     required this.totalBudget,
     required this.categories,
   });
@@ -51,7 +57,13 @@ class MonthlyStatisticsModel {
     final categoriesJson = json['categories'] as List<dynamic>? ?? [];
     return MonthlyStatisticsModel(
       month: json['month'] as String,
+      totalIncome: json['totalIncome'] != null
+          ? double.parse(json['totalIncome'].toString())
+          : 0,
       totalExpense: double.parse(json['totalExpense'].toString()),
+      balance: json['balance'] != null
+          ? double.parse(json['balance'].toString())
+          : 0,
       totalBudget: double.parse(json['totalBudget'].toString()),
       categories: categoriesJson
           .map((e) => CategoryStatModel.fromJson(e as Map<String, dynamic>))
@@ -63,19 +75,31 @@ class MonthlyStatisticsModel {
 /// 월별 합계 (연간 통계용)
 class MonthlyTotalModel {
   final String month;
-  final double total;
+  final double totalIncome;
+  final double totalExpense;
+  final double balance;
   final int count;
+
+  bool get hasIncome => totalIncome > 0;
 
   const MonthlyTotalModel({
     required this.month,
-    required this.total,
+    this.totalIncome = 0,
+    required this.totalExpense,
+    this.balance = 0,
     required this.count,
   });
 
   factory MonthlyTotalModel.fromJson(Map<String, dynamic> json) {
     return MonthlyTotalModel(
       month: json['month'] as String,
-      total: double.parse(json['total'].toString()),
+      totalIncome: json['totalIncome'] != null
+          ? double.parse(json['totalIncome'].toString())
+          : 0,
+      totalExpense: double.parse(json['totalExpense'].toString()),
+      balance: json['balance'] != null
+          ? double.parse(json['balance'].toString())
+          : 0,
       count: json['count'] as int,
     );
   }
@@ -84,12 +108,18 @@ class MonthlyTotalModel {
 /// 연간 통계 모델
 class YearlyStatisticsModel {
   final String year;
+  final double totalIncome;
   final double totalExpense;
+  final double balance;
   final List<MonthlyTotalModel> months;
+
+  bool get hasIncome => totalIncome > 0;
 
   const YearlyStatisticsModel({
     required this.year,
+    this.totalIncome = 0,
     required this.totalExpense,
+    this.balance = 0,
     required this.months,
   });
 
@@ -97,7 +127,13 @@ class YearlyStatisticsModel {
     final monthsJson = json['months'] as List<dynamic>? ?? [];
     return YearlyStatisticsModel(
       year: json['year'] as String,
+      totalIncome: json['totalIncome'] != null
+          ? double.parse(json['totalIncome'].toString())
+          : 0,
       totalExpense: double.parse(json['totalExpense'].toString()),
+      balance: json['balance'] != null
+          ? double.parse(json['balance'].toString())
+          : 0,
       months: monthsJson
           .map((e) => MonthlyTotalModel.fromJson(e as Map<String, dynamic>))
           .toList(),

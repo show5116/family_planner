@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
@@ -208,6 +209,19 @@ class _MonthlyStatisticsContent extends StatelessWidget {
         _TotalSummaryCard(stats: stats),
         const SizedBox(height: AppSizes.spaceM),
 
+        // 입금 요약 (입금 데이터가 있을 때)
+        if (stats.hasIncome) ...[
+          Text(
+            l10n.household_income,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          _IncomeSummaryItem(totalIncome: stats.totalIncome, month: month),
+          const SizedBox(height: AppSizes.spaceM),
+        ],
+
         // 카테고리별 분석
         if (stats.categories.isNotEmpty) ...[
           Text(
@@ -220,7 +234,7 @@ class _MonthlyStatisticsContent extends StatelessWidget {
           ...stats.categories.map(
             (cat) => _CategoryStatItem(stat: cat, month: month),
           ),
-        ] else
+        ] else if (!stats.hasIncome)
           Center(
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.spaceXL),
@@ -262,44 +276,96 @@ class _TotalSummaryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.household_total_expense,
-                      style: Theme.of(context).textTheme.bodySmall,
+            // 입금이 있으면 입금·지출·잔액 3열, 없으면 지출·예산 2열
+            if (stats.hasIncome)
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l10n.household_total_income, style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          '+₩${_fmt(stats.totalIncome)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '₩${_fmt(stats.totalExpense)}',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(l10n.household_total_expense, style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          '₩${_fmt(stats.totalExpense)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                if (stats.totalBudget > 0)
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(l10n.household_balance, style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          '₩${_fmt(stats.balance)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: stats.balance >= 0 ? Colors.green : Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            else
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10n.household_total_budget,
+                        l10n.household_total_expense,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       Text(
-                        '₩${_fmt(stats.totalBudget)}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        '₩${_fmt(stats.totalExpense)}',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.error,
                             ),
                       ),
                     ],
                   ),
-              ],
-            ),
-            if (stats.totalBudget > 0) ...[
+                  if (stats.totalBudget > 0)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          l10n.household_total_budget,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '₩${_fmt(stats.totalBudget)}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            if (!stats.hasIncome && stats.totalBudget > 0) ...[
               const SizedBox(height: AppSizes.spaceM),
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
@@ -444,6 +510,78 @@ class _CategoryStatItem extends StatelessWidget {
   }
 }
 
+class _IncomeSummaryItem extends StatelessWidget {
+  final double totalIncome;
+  final String month;
+
+  const _IncomeSummaryItem({required this.totalIncome, required this.month});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => context.push(
+        AppRoutes.householdCategoryExpenses,
+        extra: {'category': null, 'month': month, 'type': TransactionType.income},
+      ),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: const Icon(Icons.arrow_downward, color: Colors.green, size: 18),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.household_income,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  Text(
+                    '+₩${_fmt(totalIncome)}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSizes.spaceXS),
+            Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
+    final i = amount.toInt();
+    final s = i.toString();
+    final buf = StringBuffer();
+    for (var j = 0; j < s.length; j++) {
+      if (j > 0 && (s.length - j) % 3 == 0) buf.write(',');
+      buf.write(s[j]);
+    }
+    return buf.toString();
+  }
+}
+
 // 연간 통계 탭
 class _YearlyStatisticsTab extends ConsumerWidget {
   final String year;
@@ -486,7 +624,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
     final maxMonthly = stats.months.isEmpty
         ? 1.0
         : stats.months
-            .map((m) => m.total)
+            .map((m) => m.totalExpense)
             .reduce((a, b) => a > b ? a : b)
             .clamp(1.0, double.infinity);
 
@@ -504,21 +642,71 @@ class _YearlyStatisticsContent extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${stats.year}년 총 지출',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                Text(
-                  '₩${_fmt(stats.totalExpense)}',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              child: stats.hasIncome
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${stats.year}년 총 입금', style: Theme.of(context).textTheme.bodySmall),
+                              Text(
+                                '+₩${_fmt(stats.totalIncome)}',
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('${stats.year}년 총 지출', style: Theme.of(context).textTheme.bodySmall),
+                              Text(
+                                '₩${_fmt(stats.totalExpense)}',
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).colorScheme.error,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text('잔액', style: Theme.of(context).textTheme.bodySmall),
+                              Text(
+                                '₩${_fmt(stats.balance)}',
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: stats.balance >= 0 ? Colors.green : Theme.of(context).colorScheme.error,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${stats.year}년 총 지출', style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          '₩${_fmt(stats.totalExpense)}',
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ),
@@ -566,7 +754,7 @@ class _MonthBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ratio = maxAmount > 0 ? (monthData.total / maxAmount).clamp(0.0, 1.0) : 0.0;
+    final ratio = maxAmount > 0 ? (monthData.totalExpense / maxAmount).clamp(0.0, 1.0) : 0.0;
     final month = monthData.month.split('-')[1];
 
     return Padding(
@@ -596,7 +784,7 @@ class _MonthBarItem extends StatelessWidget {
           SizedBox(
             width: 80,
             child: Text(
-              '₩${_fmt(monthData.total)}',
+              '₩${_fmt(monthData.totalExpense)}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

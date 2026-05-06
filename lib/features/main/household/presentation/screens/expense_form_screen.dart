@@ -34,6 +34,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   final _descriptionController = TextEditingController();
 
   late DateTime _selectedDate;
+  TransactionType _transactionType = TransactionType.expense;
   ExpenseCategory? _selectedCategory;
   PaymentMethod? _selectedPaymentMethod;
   bool _isRecurring = false;
@@ -48,6 +49,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       _amountController.text = NumberFormat('#,###').format(e.amount.toInt());
       _descriptionController.text = e.description ?? '';
       _selectedDate = e.date;
+      _transactionType = e.type;
       _selectedCategory = e.category;
       _selectedPaymentMethod = e.paymentMethod;
       _isRecurring = e.isRecurring;
@@ -83,7 +85,13 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_isEditMode ? l10n.household_edit_expense : l10n.household_add_expense),
+            Text(_isEditMode
+                ? (_transactionType == TransactionType.income
+                    ? l10n.household_income
+                    : l10n.household_expense)
+                : (_transactionType == TransactionType.income
+                    ? l10n.household_income
+                    : l10n.household_add_expense)),
             if (groupName != null)
               Text(
                 groupName,
@@ -121,43 +129,61 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           child: ListView(
             padding: const EdgeInsets.all(AppSizes.spaceM),
             children: [
+              _TypeToggle(
+                value: _transactionType,
+                onChanged: (v) => setState(() {
+                  _transactionType = v;
+                  if (v == TransactionType.income) {
+                    _selectedCategory = null;
+                    _selectedPaymentMethod = null;
+                    _isRecurring = false;
+                  }
+                }),
+                incomeLabel: l10n.household_income,
+                expenseLabel: l10n.household_expense,
+              ),
+              const SizedBox(height: AppSizes.spaceM),
               _AmountField(
-              controller: _amountController,
-              label: l10n.household_amount,
-              hint: l10n.household_amount_hint,
-              errorText: l10n.household_amount_required,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            _CategorySelector(
-              selected: _selectedCategory,
-              onChanged: (v) => setState(() => _selectedCategory = v),
-              label: l10n.household_category,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            _PaymentMethodSelector(
-              selected: _selectedPaymentMethod,
-              onChanged: (v) => setState(() => _selectedPaymentMethod = v),
-              label: l10n.household_payment_method,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            _DateSelector(
-              selectedDate: _selectedDate,
-              onChanged: (v) => setState(() => _selectedDate = v),
-              label: l10n.household_date,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            _DescriptionField(
-              controller: _descriptionController,
-              label: l10n.household_description,
-              hint: l10n.household_description_hint,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            _RecurringToggle(
-              value: _isRecurring,
-              onChanged: (v) => setState(() => _isRecurring = v),
-              label: l10n.household_recurring,
-            ),
-          ],
+                controller: _amountController,
+                label: l10n.household_amount,
+                hint: l10n.household_amount_hint,
+                errorText: l10n.household_amount_required,
+              ),
+              if (_transactionType == TransactionType.expense) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                _CategorySelector(
+                  selected: _selectedCategory,
+                  onChanged: (v) => setState(() => _selectedCategory = v),
+                  label: l10n.household_category,
+                ),
+                const SizedBox(height: AppSizes.spaceM),
+                _PaymentMethodSelector(
+                  selected: _selectedPaymentMethod,
+                  onChanged: (v) => setState(() => _selectedPaymentMethod = v),
+                  label: l10n.household_payment_method,
+                ),
+              ],
+              const SizedBox(height: AppSizes.spaceM),
+              _DateSelector(
+                selectedDate: _selectedDate,
+                onChanged: (v) => setState(() => _selectedDate = v),
+                label: l10n.household_date,
+              ),
+              const SizedBox(height: AppSizes.spaceM),
+              _DescriptionField(
+                controller: _descriptionController,
+                label: l10n.household_description,
+                hint: l10n.household_description_hint,
+              ),
+              if (_transactionType == TransactionType.expense) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                _RecurringToggle(
+                  value: _isRecurring,
+                  onChanged: (v) => setState(() => _isRecurring = v),
+                  label: l10n.household_recurring,
+                ),
+              ],
+            ],
           ),
         ),
       ),
@@ -176,14 +202,15 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
     if (_isEditMode) {
       final dto = UpdateExpenseDto(
+        type: _transactionType,
         amount: amount,
-        category: _selectedCategory,
+        category: _transactionType == TransactionType.income ? null : _selectedCategory,
         date: dateStr,
         description: _descriptionController.text.trim().isEmpty
             ? null
             : _descriptionController.text.trim(),
-        paymentMethod: _selectedPaymentMethod,
-        isRecurring: _isRecurring,
+        paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
+        isRecurring: _transactionType == TransactionType.income ? false : _isRecurring,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)
@@ -195,14 +222,15 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
       final dto = CreateExpenseDto(
         groupId: groupId,
+        type: _transactionType,
         amount: amount,
-        category: _selectedCategory,
+        category: _transactionType == TransactionType.income ? null : _selectedCategory,
         date: dateStr,
         description: _descriptionController.text.trim().isEmpty
             ? null
             : _descriptionController.text.trim(),
-        paymentMethod: _selectedPaymentMethod,
-        isRecurring: _isRecurring,
+        paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
+        isRecurring: _transactionType == TransactionType.income ? false : _isRecurring,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)
@@ -466,6 +494,50 @@ class _DescriptionField extends StatelessWidget {
         border: const OutlineInputBorder(),
       ),
       maxLines: 2,
+    );
+  }
+}
+
+// 거래 유형 토글 (입금 / 지출)
+class _TypeToggle extends StatelessWidget {
+  final TransactionType value;
+  final ValueChanged<TransactionType> onChanged;
+  final String incomeLabel;
+  final String expenseLabel;
+
+  const _TypeToggle({
+    required this.value,
+    required this.onChanged,
+    required this.incomeLabel,
+    required this.expenseLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<TransactionType>(
+      segments: [
+        ButtonSegment(
+          value: TransactionType.expense,
+          label: Text(expenseLabel),
+          icon: const Icon(Icons.arrow_upward),
+        ),
+        ButtonSegment(
+          value: TransactionType.income,
+          label: Text(incomeLabel),
+          icon: const Icon(Icons.arrow_downward),
+        ),
+      ],
+      selected: {value},
+      onSelectionChanged: (s) => onChanged(s.first),
+      style: ButtonStyle(
+        iconColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            final isIncome = value == TransactionType.income;
+            return isIncome ? Colors.green : Theme.of(context).colorScheme.error;
+          }
+          return null;
+        }),
+      ),
     );
   }
 }

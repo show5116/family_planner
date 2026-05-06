@@ -282,29 +282,71 @@ class _MonthlySummaryCard extends ConsumerWidget {
           color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: _SummaryItem(
-                label: l10n.household_total_expense,
-                amount: stats.totalExpense,
-                color: Theme.of(context).colorScheme.error,
+        child: stats.hasIncome
+            ? Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _SummaryItem(
+                          label: l10n.household_total_income,
+                          amount: stats.totalIncome,
+                          color: Colors.green,
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+                      ),
+                      Expanded(
+                        child: _SummaryItem(
+                          label: l10n.household_total_expense,
+                          amount: stats.totalExpense,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+                      ),
+                      Expanded(
+                        child: _SummaryItem(
+                          label: l10n.household_balance,
+                          amount: stats.balance,
+                          color: stats.balance >= 0
+                              ? Colors.green
+                              : Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    child: _SummaryItem(
+                      label: l10n.household_total_expense,
+                      amount: stats.totalExpense,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    height: 40,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+                  ),
+                  Expanded(
+                    child: _SummaryItem(
+                      label: l10n.household_total_budget,
+                      amount: stats.totalBudget,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Container(
-              width: 1,
-              height: 40,
-              color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
-            ),
-            Expanded(
-              child: _SummaryItem(
-                label: l10n.household_total_budget,
-                amount: stats.totalBudget,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-          ],
-        ),
       ),
       loading: () => const Padding(
         padding: EdgeInsets.all(AppSizes.spaceM),

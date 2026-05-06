@@ -2182,7 +2182,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_recurring => 'Fixed Expense';
 
   @override
+  String get household_total_income => 'Total Income';
+
+  @override
   String get household_total_expense => 'Total Expense';
+
+  @override
+  String get household_balance => 'Balance';
+
+  @override
+  String get household_income => 'Income';
+
+  @override
+  String get household_type => 'Type';
 
   @override
   String get household_total_budget => 'Total Budget';
@@ -2219,6 +2231,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get household_category_allowance => 'Allowance';
+
+  @override
+  String get household_category_celebration => 'Celebration';
+
+  @override
+  String get household_category_asset_transfer => 'Asset Transfer';
+
+  @override
+  String get household_category_childcare => 'Childcare';
 
   @override
   String get household_category_other => 'Other';

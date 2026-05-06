@@ -21,6 +21,12 @@ IconData categoryIcon(ExpenseCategory? category) {
       return Icons.school;
     case ExpenseCategory.allowance:
       return Icons.wallet;
+    case ExpenseCategory.celebration:
+      return Icons.celebration;
+    case ExpenseCategory.assetTransfer:
+      return Icons.swap_horiz;
+    case ExpenseCategory.childcare:
+      return Icons.child_care;
     case ExpenseCategory.other:
     case null:
       return Icons.category;
@@ -44,6 +50,12 @@ Color categoryColor(ExpenseCategory? category) {
       return Colors.indigo;
     case ExpenseCategory.allowance:
       return Colors.teal;
+    case ExpenseCategory.celebration:
+      return Colors.pink;
+    case ExpenseCategory.assetTransfer:
+      return Colors.blueGrey;
+    case ExpenseCategory.childcare:
+      return Colors.lightBlue;
     case ExpenseCategory.other:
     case null:
       return Colors.grey;
@@ -67,6 +79,12 @@ String categoryName(AppLocalizations l10n, ExpenseCategory? category) {
       return l10n.household_category_education;
     case ExpenseCategory.allowance:
       return l10n.household_category_allowance;
+    case ExpenseCategory.celebration:
+      return l10n.household_category_celebration;
+    case ExpenseCategory.assetTransfer:
+      return l10n.household_category_asset_transfer;
+    case ExpenseCategory.childcare:
+      return l10n.household_category_childcare;
     case ExpenseCategory.other:
     case null:
       return l10n.household_category_other;
@@ -103,7 +121,12 @@ class ExpenseListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final color = categoryColor(expense.category);
+    final isIncome = expense.type == TransactionType.income;
+    final color = isIncome ? Colors.green : categoryColor(expense.category);
+    final icon = isIncome ? Icons.arrow_downward : categoryIcon(expense.category);
+    final label = isIncome ? l10n.household_income : categoryName(l10n, expense.category);
+    final amountPrefix = isIncome ? '+₩' : '₩';
+    final amountColor = isIncome ? Colors.green : Theme.of(context).colorScheme.error;
 
     return Card(
       elevation: 0,
@@ -135,11 +158,7 @@ class ExpenseListItem extends StatelessWidget {
                   color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                 ),
-                child: Icon(
-                  categoryIcon(expense.category),
-                  color: color,
-                  size: 20,
-                ),
+                child: Icon(icon, color: color, size: 20),
               ),
               const SizedBox(width: AppSizes.spaceM),
               Expanded(
@@ -149,7 +168,7 @@ class ExpenseListItem extends StatelessWidget {
                     Text(
                       expense.description?.isNotEmpty == true
                           ? expense.description!
-                          : categoryName(l10n, expense.category),
+                          : label,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -160,22 +179,19 @@ class ExpenseListItem extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          categoryName(l10n, expense.category),
+                          label,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: color,
                               ),
                         ),
-                        if (expense.paymentMethod != null) ...[
-                          Text(
-                            ' · ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
+                        if (!isIncome && expense.paymentMethod != null) ...[
+                          Text(' · ', style: Theme.of(context).textTheme.bodySmall),
                           Text(
                             paymentMethodName(l10n, expense.paymentMethod),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
-                        if (expense.isRecurring) ...[
+                        if (!isIncome && expense.isRecurring) ...[
                           const SizedBox(width: AppSizes.spaceXS),
                           Icon(
                             Icons.repeat,
@@ -192,10 +208,10 @@ class ExpenseListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '₩${_formatAmount(expense.amount)}',
+                    '$amountPrefix${_formatAmount(expense.amount)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.error,
+                          color: amountColor,
                         ),
                   ),
                   Text(

@@ -21,6 +21,7 @@ class HouseholdRepository {
     ExpenseCategory? category,
     bool? filterNullCategory, // true이면 category=NONE으로 조회
     PaymentMethod? paymentMethod,
+    TransactionType? type,
   }) async {
     try {
       final response = await _dio.get('/household/expenses', queryParameters: {
@@ -29,6 +30,7 @@ class HouseholdRepository {
         if (filterNullCategory == true) 'category': 'NONE'
         else if (category != null) 'category': SetBudgetDto.categoryToString(category),
         if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod),
+        if (type != null) 'type': type == TransactionType.income ? 'INCOME' : 'EXPENSE',
       });
 
       final data = response.data;

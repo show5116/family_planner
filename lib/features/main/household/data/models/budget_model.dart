@@ -78,6 +78,12 @@ class SetBudgetDto {
         return 'EDUCATION';
       case ExpenseCategory.allowance:
         return 'ALLOWANCE';
+      case ExpenseCategory.celebration:
+        return 'CELEBRATION';
+      case ExpenseCategory.assetTransfer:
+        return 'ASSET_TRANSFER';
+      case ExpenseCategory.childcare:
+        return 'CHILDCARE';
       case ExpenseCategory.other:
         return 'OTHER';
     }

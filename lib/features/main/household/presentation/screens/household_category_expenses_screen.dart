@@ -10,36 +10,50 @@ import 'package:family_planner/features/main/household/presentation/widgets/expe
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
-/// 카테고리 + 월 기준 지출 목록 Provider
+/// 카테고리 + 월 + 거래유형 기준 목록 Provider
 final _categoryExpensesProvider = FutureProvider.family<
     List<ExpenseModel>,
-    ({String? groupId, String month, ExpenseCategory? category})>((ref, args) {
+    ({String? groupId, String month, ExpenseCategory? category, TransactionType? type})>((ref, args) {
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getExpenses(
     groupId: args.groupId,
     month: args.month,
     category: args.category,
-    filterNullCategory: args.category == null,
+    filterNullCategory: args.category == null && args.type != TransactionType.income,
+    type: args.type,
   );
 });
 
 class HouseholdCategoryExpensesScreen extends ConsumerWidget {
   final ExpenseCategory? category;
   final String month;
+  final TransactionType? type;
 
   const HouseholdCategoryExpensesScreen({
     super.key,
     required this.category,
     required this.month,
+    this.type,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final groupId = ref.watch(householdSelectedGroupIdProvider);
-    final color = categoryColor(category);
-    final icon = categoryIcon(category);
-    final label = categoryName(l10n, category);
+    final isIncome = type == TransactionType.income;
+
+    final Color color;
+    final IconData icon;
+    final String label;
+    if (isIncome) {
+      color = Colors.green;
+      icon = Icons.arrow_downward;
+      label = l10n.household_income;
+    } else {
+      color = categoryColor(category);
+      icon = categoryIcon(category);
+      label = categoryName(l10n, category);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -78,6 +92,8 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
         groupId: groupId,
         month: month,
         category: category,
+        type: type,
+        isIncome: isIncome,
       ),
     );
   }
@@ -92,17 +108,21 @@ class _ExpenseList extends ConsumerWidget {
   final String? groupId;
   final String month;
   final ExpenseCategory? category;
+  final TransactionType? type;
+  final bool isIncome;
 
   const _ExpenseList({
     required this.groupId,
     required this.month,
     required this.category,
+    required this.type,
+    required this.isIncome,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final args = (groupId: groupId, month: month, category: category);
+    final args = (groupId: groupId, month: month, category: category, type: type);
     final expensesAsync = ref.watch(_categoryExpensesProvider(args));
 
     return expensesAsync.when(
@@ -131,6 +151,10 @@ class _ExpenseList extends ConsumerWidget {
 
         final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
         final total = sorted.fold<double>(0, (sum, e) => sum + e.amount);
+        final prefix = isIncome ? '+₩' : '₩';
+        final totalColor = isIncome
+            ? Colors.green
+            : Theme.of(context).colorScheme.error;
 
         return Column(
           children: [
@@ -142,9 +166,10 @@ class _ExpenseList extends ConsumerWidget {
               ),
               color: Theme.of(context).colorScheme.surfaceContainerLow,
               child: Text(
-                '총 ${sorted.length}건 · ₩${_fmt(total)}',
+                '총 ${sorted.length}건 · $prefix${_fmt(total)}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
+                      color: totalColor,
                     ),
               ),
             ),

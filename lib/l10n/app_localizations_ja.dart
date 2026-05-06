@@ -2138,7 +2138,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_recurring => '固定費';
 
   @override
+  String get household_total_income => '総収入';
+
+  @override
   String get household_total_expense => '総支出';
+
+  @override
+  String get household_balance => '残高';
+
+  @override
+  String get household_income => '収入';
+
+  @override
+  String get household_type => '種別';
 
   @override
   String get household_total_budget => '総予算';
@@ -2175,6 +2187,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get household_category_allowance => 'お小遣い';
+
+  @override
+  String get household_category_celebration => '冠婚葬祭費';
+
+  @override
+  String get household_category_asset_transfer => '資産移動';
+
+  @override
+  String get household_category_childcare => '育児費';
 
   @override
   String get household_category_other => 'その他';

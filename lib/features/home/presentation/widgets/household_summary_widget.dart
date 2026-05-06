@@ -172,7 +172,74 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 이번 달 지출 헤더
+          // 입금이 있을 때: 입금 / 지출 / 잔액 3열 요약
+          if (stats.hasIncome) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$monthLabel 입금',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                      Text(
+                        '+${stats.totalIncome.toCurrency()}',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '$monthLabel 지출',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                      Text(
+                        stats.totalExpense.toCurrency(),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.error,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '잔액',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                      Text(
+                        stats.balance.toCurrency(),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: stats.balance >= 0 ? Colors.green : AppColors.error,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+          // 입금 없을 때: 기존 지출 헤더
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -199,8 +266,9 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                   color: isOverBudget ? AppColors.error : AppColors.primary,
                 ),
           ),
-          // budget 모드: 전체 예산 소진율 바
-          if (widget.viewMode == HouseholdWidgetViewMode.budget && hasBudget) ...[
+          ],
+          // budget 모드: 전체 예산 소진율 바 (입금 없을 때만)
+          if (!stats.hasIncome && widget.viewMode == HouseholdWidgetViewMode.budget && hasBudget) ...[
             const SizedBox(height: AppSizes.spaceS),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -362,6 +430,12 @@ class _CategoryDistribution extends StatelessWidget {
         return '교육';
       case ExpenseCategory.allowance:
         return '용돈';
+      case ExpenseCategory.celebration:
+        return '경조사비';
+      case ExpenseCategory.assetTransfer:
+        return '자산이동';
+      case ExpenseCategory.childcare:
+        return '육아비';
       default:
         return '기타';
     }
@@ -383,6 +457,12 @@ class _CategoryDistribution extends StatelessWidget {
         return Colors.orange;
       case ExpenseCategory.allowance:
         return Colors.teal;
+      case ExpenseCategory.celebration:
+        return Colors.pink;
+      case ExpenseCategory.assetTransfer:
+        return Colors.blueGrey;
+      case ExpenseCategory.childcare:
+        return Colors.lightBlue;
       default:
         return AppColors.secondary;
     }

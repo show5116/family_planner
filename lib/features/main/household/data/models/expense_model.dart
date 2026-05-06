@@ -1,3 +1,9 @@
+/// 거래 유형
+enum TransactionType {
+  income,
+  expense,
+}
+
 /// 지출 카테고리
 enum ExpenseCategory {
   transportation,
@@ -7,6 +13,9 @@ enum ExpenseCategory {
   medical,
   education,
   allowance,
+  celebration,
+  assetTransfer,
+  childcare,
   other,
 }
 
@@ -22,6 +31,7 @@ class ExpenseModel {
   final String id;
   final String? groupId; // 개인 모드에서는 null
   final String userId;
+  final TransactionType type;
   final double amount;
   final ExpenseCategory? category;
   final DateTime date;
@@ -35,6 +45,7 @@ class ExpenseModel {
     required this.id,
     this.groupId,
     required this.userId,
+    this.type = TransactionType.expense,
     required this.amount,
     this.category,
     required this.date,
@@ -50,6 +61,7 @@ class ExpenseModel {
       id: json['id'] as String,
       groupId: json['groupId'] as String?,
       userId: json['userId'] as String,
+      type: json['type'] == 'INCOME' ? TransactionType.income : TransactionType.expense,
       amount: double.parse(json['amount'].toString()),
       category: json['category'] != null
           ? ExpenseModel.parseCategory(json['category'] as String)
@@ -81,6 +93,12 @@ class ExpenseModel {
         return ExpenseCategory.education;
       case 'ALLOWANCE':
         return ExpenseCategory.allowance;
+      case 'CELEBRATION':
+        return ExpenseCategory.celebration;
+      case 'ASSET_TRANSFER':
+        return ExpenseCategory.assetTransfer;
+      case 'CHILDCARE':
+        return ExpenseCategory.childcare;
       default:
         return ExpenseCategory.other;
     }
@@ -103,6 +121,7 @@ class ExpenseModel {
     String? id,
     String? groupId,
     String? userId,
+    TransactionType? type,
     double? amount,
     ExpenseCategory? category,
     DateTime? date,
@@ -116,6 +135,7 @@ class ExpenseModel {
       id: id ?? this.id,
       groupId: groupId ?? this.groupId,
       userId: userId ?? this.userId,
+      type: type ?? this.type,
       amount: amount ?? this.amount,
       category: category ?? this.category,
       date: date ?? this.date,
@@ -131,6 +151,7 @@ class ExpenseModel {
 /// 지출 생성 DTO
 class CreateExpenseDto {
   final String? groupId; // null이면 개인 모드
+  final TransactionType type;
   final double amount;
   final ExpenseCategory? category;
   final String date; // YYYY-MM-DD
@@ -140,6 +161,7 @@ class CreateExpenseDto {
 
   const CreateExpenseDto({
     this.groupId,
+    this.type = TransactionType.expense,
     required this.amount,
     this.category,
     required this.date,
@@ -151,6 +173,7 @@ class CreateExpenseDto {
   Map<String, dynamic> toJson() {
     return {
       if (groupId != null) 'groupId': groupId,
+      'type': _transactionTypeToString(type),
       'amount': amount,
       if (category != null) 'category': _categoryToString(category!),
       'date': date,
@@ -163,6 +186,7 @@ class CreateExpenseDto {
 
 /// 지출 수정 DTO
 class UpdateExpenseDto {
+  final TransactionType? type;
   final double? amount;
   final ExpenseCategory? category;
   final String? date;
@@ -171,6 +195,7 @@ class UpdateExpenseDto {
   final bool? isRecurring;
 
   const UpdateExpenseDto({
+    this.type,
     this.amount,
     this.category,
     this.date,
@@ -181,6 +206,7 @@ class UpdateExpenseDto {
 
   Map<String, dynamic> toJson() {
     return {
+      if (type != null) 'type': _transactionTypeToString(type!),
       if (amount != null) 'amount': amount,
       if (category != null) 'category': _categoryToString(category!),
       if (date != null) 'date': date,
@@ -188,6 +214,16 @@ class UpdateExpenseDto {
       if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod!),
       if (isRecurring != null) 'isRecurring': isRecurring,
     };
+  }
+}
+
+/// TransactionType → API 문자열 변환
+String _transactionTypeToString(TransactionType type) {
+  switch (type) {
+    case TransactionType.income:
+      return 'INCOME';
+    case TransactionType.expense:
+      return 'EXPENSE';
   }
 }
 
@@ -208,6 +244,12 @@ String _categoryToString(ExpenseCategory category) {
       return 'EDUCATION';
     case ExpenseCategory.allowance:
       return 'ALLOWANCE';
+    case ExpenseCategory.celebration:
+      return 'CELEBRATION';
+    case ExpenseCategory.assetTransfer:
+      return 'ASSET_TRANSFER';
+    case ExpenseCategory.childcare:
+      return 'CHILDCARE';
     case ExpenseCategory.other:
       return 'OTHER';
   }

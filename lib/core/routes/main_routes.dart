@@ -235,6 +235,7 @@ List<RouteBase> getMainRoutes() {
         return HouseholdCategoryExpensesScreen(
           category: extra['category'] as ExpenseCategory?,
           month: extra['month'] as String,
+          type: extra['type'] as TransactionType?,
         );
       },
     ),

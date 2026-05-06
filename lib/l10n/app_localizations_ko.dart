@@ -2141,7 +2141,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_recurring => '고정 지출';
 
   @override
+  String get household_total_income => '총 입금';
+
+  @override
   String get household_total_expense => '총 지출';
+
+  @override
+  String get household_balance => '잔액';
+
+  @override
+  String get household_income => '입금';
+
+  @override
+  String get household_type => '유형';
 
   @override
   String get household_total_budget => '총 예산';
@@ -2178,6 +2190,15 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get household_category_allowance => '용돈';
+
+  @override
+  String get household_category_celebration => '경조사비';
+
+  @override
+  String get household_category_asset_transfer => '자산이동';
+
+  @override
+  String get household_category_childcare => '육아비';
 
   @override
   String get household_category_other => '기타';

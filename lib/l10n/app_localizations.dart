@@ -4186,7 +4186,7 @@ abstract class AppLocalizations {
   /// **'가계부'**
   String get household_title;
 
-  /// 지출
+  /// 지출 유형 레이블
   ///
   /// In ko, this message translates to:
   /// **'지출'**
@@ -4264,11 +4264,35 @@ abstract class AppLocalizations {
   /// **'고정 지출'**
   String get household_recurring;
 
+  /// 총 입금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 입금'**
+  String get household_total_income;
+
   /// 총 지출 레이블
   ///
   /// In ko, this message translates to:
   /// **'총 지출'**
   String get household_total_expense;
+
+  /// 잔액 (입금 - 지출)
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액'**
+  String get household_balance;
+
+  /// 입금 유형 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'입금'**
+  String get household_income;
+
+  /// 거래 유형 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'유형'**
+  String get household_type;
 
   /// 총 예산 레이블
   ///
@@ -4341,6 +4365,24 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'용돈'**
   String get household_category_allowance;
+
+  /// 카테고리: 경조사비
+  ///
+  /// In ko, this message translates to:
+  /// **'경조사비'**
+  String get household_category_celebration;
+
+  /// 카테고리: 자산이동
+  ///
+  /// In ko, this message translates to:
+  /// **'자산이동'**
+  String get household_category_asset_transfer;
+
+  /// 카테고리: 육아비
+  ///
+  /// In ko, this message translates to:
+  /// **'육아비'**
+  String get household_category_childcare;
 
   /// 카테고리: 기타
   ///
