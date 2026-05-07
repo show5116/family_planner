@@ -60,17 +60,17 @@ List<RouteBase> getSettingsRoutes() {
       builder: (context, state) => const GroupListScreen(),
     ),
     GoRoute(
+      path: AppRoutes.groupMyJoinRequests,
+      name: 'groupMyJoinRequests',
+      builder: (context, state) => const MyJoinRequestsScreen(),
+    ),
+    GoRoute(
       path: AppRoutes.groupDetail,
       name: 'groupDetail',
       builder: (context, state) {
         final groupId = state.pathParameters['id']!;
         return GroupDetailScreen(groupId: groupId);
       },
-    ),
-    GoRoute(
-      path: AppRoutes.groupMyJoinRequests,
-      name: 'groupMyJoinRequests',
-      builder: (context, state) => const MyJoinRequestsScreen(),
     ),
     GoRoute(
       path: AppRoutes.notifications,
