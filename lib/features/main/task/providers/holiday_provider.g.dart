@@ -29,28 +29,16 @@ class _SystemHash {
   }
 }
 
-/// 특정 연월의 공휴일 목록 Provider
-/// 캐시 우선 조회, 만료 시 백그라운드 재검증
-///
-/// Copied from [holidays].
+/// See also [holidays].
 @ProviderFor(holidays)
 const holidaysProvider = HolidaysFamily();
 
-/// 특정 연월의 공휴일 목록 Provider
-/// 캐시 우선 조회, 만료 시 백그라운드 재검증
-///
-/// Copied from [holidays].
+/// See also [holidays].
 class HolidaysFamily extends Family<AsyncValue<List<HolidayModel>>> {
-  /// 특정 연월의 공휴일 목록 Provider
-  /// 캐시 우선 조회, 만료 시 백그라운드 재검증
-  ///
-  /// Copied from [holidays].
+  /// See also [holidays].
   const HolidaysFamily();
 
-  /// 특정 연월의 공휴일 목록 Provider
-  /// 캐시 우선 조회, 만료 시 백그라운드 재검증
-  ///
-  /// Copied from [holidays].
+  /// See also [holidays].
   HolidaysProvider call(int year, int month) {
     return HolidaysProvider(year, month);
   }
@@ -75,15 +63,9 @@ class HolidaysFamily extends Family<AsyncValue<List<HolidayModel>>> {
   String? get name => r'holidaysProvider';
 }
 
-/// 특정 연월의 공휴일 목록 Provider
-/// 캐시 우선 조회, 만료 시 백그라운드 재검증
-///
-/// Copied from [holidays].
+/// See also [holidays].
 class HolidaysProvider extends AutoDisposeFutureProvider<List<HolidayModel>> {
-  /// 특정 연월의 공휴일 목록 Provider
-  /// 캐시 우선 조회, 만료 시 백그라운드 재검증
-  ///
-  /// Copied from [holidays].
+  /// See also [holidays].
   HolidaysProvider(int year, int month)
     : this._internal(
         (ref) => holidays(ref as HolidaysRef, year, month),
@@ -174,30 +156,150 @@ class _HolidaysProviderElement
   int get month => (origin as HolidaysProvider).month;
 }
 
+String _$specialDaysHash() => r'36803c1331f46b87f98201269a06d58de2fff484';
+
+/// See also [specialDays].
+@ProviderFor(specialDays)
+const specialDaysProvider = SpecialDaysFamily();
+
+/// See also [specialDays].
+class SpecialDaysFamily extends Family<AsyncValue<List<SpecialDayModel>>> {
+  /// See also [specialDays].
+  const SpecialDaysFamily();
+
+  /// See also [specialDays].
+  SpecialDaysProvider call(int year, int month) {
+    return SpecialDaysProvider(year, month);
+  }
+
+  @override
+  SpecialDaysProvider getProviderOverride(
+    covariant SpecialDaysProvider provider,
+  ) {
+    return call(provider.year, provider.month);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'specialDaysProvider';
+}
+
+/// See also [specialDays].
+class SpecialDaysProvider
+    extends AutoDisposeFutureProvider<List<SpecialDayModel>> {
+  /// See also [specialDays].
+  SpecialDaysProvider(int year, int month)
+    : this._internal(
+        (ref) => specialDays(ref as SpecialDaysRef, year, month),
+        from: specialDaysProvider,
+        name: r'specialDaysProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$specialDaysHash,
+        dependencies: SpecialDaysFamily._dependencies,
+        allTransitiveDependencies: SpecialDaysFamily._allTransitiveDependencies,
+        year: year,
+        month: month,
+      );
+
+  SpecialDaysProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.year,
+    required this.month,
+  }) : super.internal();
+
+  final int year;
+  final int month;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<SpecialDayModel>> Function(SpecialDaysRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SpecialDaysProvider._internal(
+        (ref) => create(ref as SpecialDaysRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        year: year,
+        month: month,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<SpecialDayModel>> createElement() {
+    return _SpecialDaysProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SpecialDaysProvider &&
+        other.year == year &&
+        other.month == month;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, year.hashCode);
+    hash = _SystemHash.combine(hash, month.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin SpecialDaysRef on AutoDisposeFutureProviderRef<List<SpecialDayModel>> {
+  /// The parameter `year` of this provider.
+  int get year;
+
+  /// The parameter `month` of this provider.
+  int get month;
+}
+
+class _SpecialDaysProviderElement
+    extends AutoDisposeFutureProviderElement<List<SpecialDayModel>>
+    with SpecialDaysRef {
+  _SpecialDaysProviderElement(super.provider);
+
+  @override
+  int get year => (origin as SpecialDaysProvider).year;
+  @override
+  int get month => (origin as SpecialDaysProvider).month;
+}
+
 String _$holidayForDateHash() => r'0deb452af28ca622ebeee4e62c5deb8ff28b6403';
 
-/// 특정 날짜가 공휴일인지 확인하는 Provider
-/// date 형식: 'YYYY-MM-DD'
-///
-/// Copied from [holidayForDate].
+/// See also [holidayForDate].
 @ProviderFor(holidayForDate)
 const holidayForDateProvider = HolidayForDateFamily();
 
-/// 특정 날짜가 공휴일인지 확인하는 Provider
-/// date 형식: 'YYYY-MM-DD'
-///
-/// Copied from [holidayForDate].
+/// See also [holidayForDate].
 class HolidayForDateFamily extends Family<AsyncValue<HolidayModel?>> {
-  /// 특정 날짜가 공휴일인지 확인하는 Provider
-  /// date 형식: 'YYYY-MM-DD'
-  ///
-  /// Copied from [holidayForDate].
+  /// See also [holidayForDate].
   const HolidayForDateFamily();
 
-  /// 특정 날짜가 공휴일인지 확인하는 Provider
-  /// date 형식: 'YYYY-MM-DD'
-  ///
-  /// Copied from [holidayForDate].
+  /// See also [holidayForDate].
   HolidayForDateProvider call(DateTime date) {
     return HolidayForDateProvider(date);
   }
@@ -224,16 +326,10 @@ class HolidayForDateFamily extends Family<AsyncValue<HolidayModel?>> {
   String? get name => r'holidayForDateProvider';
 }
 
-/// 특정 날짜가 공휴일인지 확인하는 Provider
-/// date 형식: 'YYYY-MM-DD'
-///
-/// Copied from [holidayForDate].
+/// See also [holidayForDate].
 class HolidayForDateProvider
     extends AutoDisposeProvider<AsyncValue<HolidayModel?>> {
-  /// 특정 날짜가 공휴일인지 확인하는 Provider
-  /// date 형식: 'YYYY-MM-DD'
-  ///
-  /// Copied from [holidayForDate].
+  /// See also [holidayForDate].
   HolidayForDateProvider(DateTime date)
     : this._internal(
         (ref) => holidayForDate(ref as HolidayForDateRef, date),
@@ -316,29 +412,17 @@ class _HolidayForDateProviderElement
 String _$holidayMapForMonthHash() =>
     r'da3c86c96bb3fd8bf9b5cda8ec2039b58df92eca';
 
-/// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-/// 캘린더 렌더링 시 O(1) 조회용
-///
-/// Copied from [holidayMapForMonth].
+/// See also [holidayMapForMonth].
 @ProviderFor(holidayMapForMonth)
 const holidayMapForMonthProvider = HolidayMapForMonthFamily();
 
-/// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-/// 캘린더 렌더링 시 O(1) 조회용
-///
-/// Copied from [holidayMapForMonth].
+/// See also [holidayMapForMonth].
 class HolidayMapForMonthFamily
     extends Family<AsyncValue<Map<String, HolidayModel>>> {
-  /// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-  /// 캘린더 렌더링 시 O(1) 조회용
-  ///
-  /// Copied from [holidayMapForMonth].
+  /// See also [holidayMapForMonth].
   const HolidayMapForMonthFamily();
 
-  /// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-  /// 캘린더 렌더링 시 O(1) 조회용
-  ///
-  /// Copied from [holidayMapForMonth].
+  /// See also [holidayMapForMonth].
   HolidayMapForMonthProvider call(int year, int month) {
     return HolidayMapForMonthProvider(year, month);
   }
@@ -365,16 +449,10 @@ class HolidayMapForMonthFamily
   String? get name => r'holidayMapForMonthProvider';
 }
 
-/// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-/// 캘린더 렌더링 시 O(1) 조회용
-///
-/// Copied from [holidayMapForMonth].
+/// See also [holidayMapForMonth].
 class HolidayMapForMonthProvider
     extends AutoDisposeProvider<AsyncValue<Map<String, HolidayModel>>> {
-  /// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-  /// 캘린더 렌더링 시 O(1) 조회용
-  ///
-  /// Copied from [holidayMapForMonth].
+  /// See also [holidayMapForMonth].
   HolidayMapForMonthProvider(int year, int month)
     : this._internal(
         (ref) => holidayMapForMonth(ref as HolidayMapForMonthRef, year, month),
@@ -469,6 +547,147 @@ class _HolidayMapForMonthProviderElement
   int get year => (origin as HolidayMapForMonthProvider).year;
   @override
   int get month => (origin as HolidayMapForMonthProvider).month;
+}
+
+String _$specialDayMapForMonthHash() =>
+    r'e5e4f60e91aeefe8aff8fae7505569530c34a69d';
+
+/// See also [specialDayMapForMonth].
+@ProviderFor(specialDayMapForMonth)
+const specialDayMapForMonthProvider = SpecialDayMapForMonthFamily();
+
+/// See also [specialDayMapForMonth].
+class SpecialDayMapForMonthFamily
+    extends Family<AsyncValue<Map<String, SpecialDayModel>>> {
+  /// See also [specialDayMapForMonth].
+  const SpecialDayMapForMonthFamily();
+
+  /// See also [specialDayMapForMonth].
+  SpecialDayMapForMonthProvider call(int year, int month) {
+    return SpecialDayMapForMonthProvider(year, month);
+  }
+
+  @override
+  SpecialDayMapForMonthProvider getProviderOverride(
+    covariant SpecialDayMapForMonthProvider provider,
+  ) {
+    return call(provider.year, provider.month);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'specialDayMapForMonthProvider';
+}
+
+/// See also [specialDayMapForMonth].
+class SpecialDayMapForMonthProvider
+    extends AutoDisposeProvider<AsyncValue<Map<String, SpecialDayModel>>> {
+  /// See also [specialDayMapForMonth].
+  SpecialDayMapForMonthProvider(int year, int month)
+    : this._internal(
+        (ref) =>
+            specialDayMapForMonth(ref as SpecialDayMapForMonthRef, year, month),
+        from: specialDayMapForMonthProvider,
+        name: r'specialDayMapForMonthProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$specialDayMapForMonthHash,
+        dependencies: SpecialDayMapForMonthFamily._dependencies,
+        allTransitiveDependencies:
+            SpecialDayMapForMonthFamily._allTransitiveDependencies,
+        year: year,
+        month: month,
+      );
+
+  SpecialDayMapForMonthProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.year,
+    required this.month,
+  }) : super.internal();
+
+  final int year;
+  final int month;
+
+  @override
+  Override overrideWith(
+    AsyncValue<Map<String, SpecialDayModel>> Function(
+      SpecialDayMapForMonthRef provider,
+    )
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SpecialDayMapForMonthProvider._internal(
+        (ref) => create(ref as SpecialDayMapForMonthRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        year: year,
+        month: month,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<AsyncValue<Map<String, SpecialDayModel>>>
+  createElement() {
+    return _SpecialDayMapForMonthProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SpecialDayMapForMonthProvider &&
+        other.year == year &&
+        other.month == month;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, year.hashCode);
+    hash = _SystemHash.combine(hash, month.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin SpecialDayMapForMonthRef
+    on AutoDisposeProviderRef<AsyncValue<Map<String, SpecialDayModel>>> {
+  /// The parameter `year` of this provider.
+  int get year;
+
+  /// The parameter `month` of this provider.
+  int get month;
+}
+
+class _SpecialDayMapForMonthProviderElement
+    extends AutoDisposeProviderElement<AsyncValue<Map<String, SpecialDayModel>>>
+    with SpecialDayMapForMonthRef {
+  _SpecialDayMapForMonthProviderElement(super.provider);
+
+  @override
+  int get year => (origin as SpecialDayMapForMonthProvider).year;
+  @override
+  int get month => (origin as SpecialDayMapForMonthProvider).month;
 }
 
 // ignore_for_file: type=lint

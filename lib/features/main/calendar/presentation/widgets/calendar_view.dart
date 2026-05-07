@@ -447,17 +447,26 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     );
   }
 
+  String _dateKey(DateTime date) =>
+      '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
   bool _isHoliday(DateTime date) {
     final holidayMap = ref
         .watch(holidayMapForMonthProvider(date.year, date.month))
         .valueOrNull;
     if (holidayMap == null) return false;
-    final key =
-        '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-    return holidayMap.containsKey(key);
+    return holidayMap.containsKey(_dateKey(date));
   }
 
-  /// 날짜 셀 빌더 (토요일 파란색, 일요일/공휴일 빨간색)
+  bool _isSpecialDay(DateTime date) {
+    final specialDayMap = ref
+        .watch(specialDayMapForMonthProvider(date.year, date.month))
+        .valueOrNull;
+    if (specialDayMap == null) return false;
+    return specialDayMap.containsKey(_dateKey(date));
+  }
+
+  /// 날짜 셀 빌더 (토요일 파란색, 일요일/공휴일 빨간색, 특별한 날 주황색)
   Widget _buildDayCell(
     DateTime date, {
     required bool isOutside,
@@ -465,18 +474,25 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     bool isToday = false,
   }) {
     final holiday = _isHoliday(date);
+    final specialDay = !holiday && _isSpecialDay(date);
 
     Color textColor;
     if (isSelected) {
       textColor = Colors.white;
     } else if (isOutside) {
-      textColor = (holiday || date.weekday == DateTime.sunday)
-          ? AppColors.error.withValues(alpha: 0.3)
-          : date.weekday == DateTime.saturday
-              ? AppColors.primary.withValues(alpha: 0.3)
-              : AppColors.textSecondary.withValues(alpha: 0.5);
+      if (holiday || date.weekday == DateTime.sunday) {
+        textColor = AppColors.error.withValues(alpha: 0.3);
+      } else if (specialDay) {
+        textColor = Colors.orange.withValues(alpha: 0.3);
+      } else if (date.weekday == DateTime.saturday) {
+        textColor = AppColors.primary.withValues(alpha: 0.3);
+      } else {
+        textColor = AppColors.textSecondary.withValues(alpha: 0.5);
+      }
     } else if (holiday || date.weekday == DateTime.sunday) {
       textColor = AppColors.error.withValues(alpha: 0.8);
+    } else if (specialDay) {
+      textColor = Colors.orange.withValues(alpha: 0.9);
     } else if (date.weekday == DateTime.saturday) {
       textColor = AppColors.primary;
     } else {

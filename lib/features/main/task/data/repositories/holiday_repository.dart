@@ -38,6 +38,24 @@ class HolidayRepository {
     return _fetchAndCache(year, month, prefs);
   }
 
+  /// 특별한 날 조회 (캐시 우선, 만료 시 재검증)
+  Future<List<SpecialDayModel>> getSpecialDays(int year, int month) async {
+    final prefs = await SharedPreferences.getInstance();
+    final cached = _loadFromCache(prefs, year, month);
+
+    if (cached != null) {
+      final isExpired = _isCacheExpired(prefs, year, month, cached);
+      if (!isExpired) return cached.specialDays;
+
+      _fetchAndCache(year, month, prefs);
+      return cached.specialDays;
+    }
+
+    await _fetchAndCache(year, month, prefs);
+    final updated = _loadFromCache(prefs, year, month);
+    return updated?.specialDays ?? [];
+  }
+
   /// 캐시 강제 무효화 (특정 월)
   Future<void> invalidateCache(int year, int month) async {
     final prefs = await SharedPreferences.getInstance();

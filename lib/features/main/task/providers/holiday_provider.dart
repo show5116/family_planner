@@ -6,16 +6,18 @@ import 'package:family_planner/features/main/task/data/repositories/holiday_repo
 
 part 'holiday_provider.g.dart';
 
-/// 특정 연월의 공휴일 목록 Provider
-/// 캐시 우선 조회, 만료 시 백그라운드 재검증
 @riverpod
 Future<List<HolidayModel>> holidays(Ref ref, int year, int month) async {
   final repository = ref.watch(holidayRepositoryProvider);
   return repository.getHolidays(year, month);
 }
 
-/// 특정 날짜가 공휴일인지 확인하는 Provider
-/// date 형식: 'YYYY-MM-DD'
+@riverpod
+Future<List<SpecialDayModel>> specialDays(Ref ref, int year, int month) async {
+  final repository = ref.watch(holidayRepositoryProvider);
+  return repository.getSpecialDays(year, month);
+}
+
 @riverpod
 AsyncValue<HolidayModel?> holidayForDate(Ref ref, DateTime date) {
   final year = date.year;
@@ -28,8 +30,6 @@ AsyncValue<HolidayModel?> holidayForDate(Ref ref, DateTime date) {
       );
 }
 
-/// 특정 연월의 공휴일을 날짜 문자열 기준 Map으로 제공하는 Provider
-/// 캘린더 렌더링 시 O(1) 조회용
 @riverpod
 AsyncValue<Map<String, HolidayModel>> holidayMapForMonth(
   Ref ref,
@@ -38,5 +38,16 @@ AsyncValue<Map<String, HolidayModel>> holidayMapForMonth(
 ) {
   return ref.watch(holidaysProvider(year, month)).whenData(
         (holidays) => {for (final h in holidays) h.date: h},
+      );
+}
+
+@riverpod
+AsyncValue<Map<String, SpecialDayModel>> specialDayMapForMonth(
+  Ref ref,
+  int year,
+  int month,
+) {
+  return ref.watch(specialDaysProvider(year, month)).whenData(
+        (days) => {for (final d in days) d.date: d},
       );
 }

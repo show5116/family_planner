@@ -6,7 +6,7 @@ part of 'task_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$taskFormNotifierHash() => r'963e17cdb80c66278463b3016c4c487adf25fe84';
+String _$taskFormNotifierHash() => r'13796b6793fac468c70dad0122f02724ce815cb1';
 
 /// Copied from Dart SDK
 class _SystemHash {
