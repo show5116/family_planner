@@ -57,7 +57,12 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
+        padding: EdgeInsets.only(
+          left: AppSizes.spaceM,
+          right: AppSizes.spaceM,
+          top: AppSizes.spaceM,
+          bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+        ),
         children: [
           // 안내 메시지
           Container(

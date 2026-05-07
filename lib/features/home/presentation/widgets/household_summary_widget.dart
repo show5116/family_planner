@@ -346,8 +346,9 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
 
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: mq.viewInsets.bottom + mq.padding.bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

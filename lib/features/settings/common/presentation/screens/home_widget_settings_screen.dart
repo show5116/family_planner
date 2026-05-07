@@ -216,7 +216,12 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
         title: Text(l10n.settings_homeWidgets),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
+        padding: EdgeInsets.only(
+          left: AppSizes.spaceM,
+          right: AppSizes.spaceM,
+          top: AppSizes.spaceM,
+          bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+        ),
         children: [
           // 안내 텍스트
           Card(

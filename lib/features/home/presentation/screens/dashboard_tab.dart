@@ -131,8 +131,10 @@ class DashboardTab extends ConsumerWidget {
           ),
         ),
         // 하단 여백
-        const SliverToBoxAdapter(
-          child: SizedBox(height: AppSizes.spaceXL),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: AppSizes.spaceXL + MediaQuery.paddingOf(context).bottom,
+          ),
         ),
       ],
     );
