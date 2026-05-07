@@ -299,7 +299,11 @@ class _IndicatorListBody extends ConsumerWidget {
             },
           ),
         ],
-        const SliverPadding(padding: EdgeInsets.only(bottom: AppSizes.spaceM)),
+        SliverPadding(
+          padding: EdgeInsets.only(
+            bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+          ),
+        ),
       ],
     );
   }

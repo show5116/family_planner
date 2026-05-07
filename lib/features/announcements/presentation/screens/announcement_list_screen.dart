@@ -87,7 +87,12 @@ class _AnnouncementListScreenState
 
                   return ListView.separated(
                     controller: _scrollController,
-                    padding: const EdgeInsets.all(AppSizes.spaceM),
+                    padding: EdgeInsets.only(
+                      left: AppSizes.spaceM,
+                      right: AppSizes.spaceM,
+                      top: AppSizes.spaceM,
+                      bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+                    ),
                     itemCount: announcements.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: AppSizes.spaceM),

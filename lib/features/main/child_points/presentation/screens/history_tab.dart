@@ -111,6 +111,9 @@ class HistoryTab extends ConsumerWidget {
                 onRefresh: () =>
                     ref.read(childcareTransactionsProvider.notifier).refresh(),
                 child: ListView(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.paddingOf(context).bottom,
+                  ),
                   children: [
                     if (mode == HistoryViewMode.monthly) ...[
                       _MonthlySummaryCard(transactions: transactions),

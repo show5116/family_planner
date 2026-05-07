@@ -121,7 +121,12 @@ class _MembersTabState extends ConsumerState<MembersTab> {
         });
 
         return ListView.builder(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
+          padding: EdgeInsets.only(
+            left: AppSizes.spaceM,
+            right: AppSizes.spaceM,
+            top: AppSizes.spaceM,
+            bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom + 80,
+          ),
           itemCount: sortedMembers.length,
           itemBuilder: (context, index) {
             final member = sortedMembers[index];
@@ -158,7 +163,12 @@ class _MembersTabState extends ConsumerState<MembersTab> {
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
+          padding: EdgeInsets.only(
+            left: AppSizes.spaceM,
+            right: AppSizes.spaceM,
+            top: AppSizes.spaceM,
+            bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom + 80,
+          ),
           itemCount: requests.length,
           itemBuilder: (context, index) {
             final request = requests[index];

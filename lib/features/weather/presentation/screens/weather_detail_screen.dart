@@ -44,7 +44,12 @@ class WeatherDetailScreen extends ConsumerWidget {
           ]);
         },
         child: ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
+          padding: EdgeInsets.only(
+            left: AppSizes.spaceM,
+            right: AppSizes.spaceM,
+            top: AppSizes.spaceM,
+            bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+          ),
           children: [
             // 현재 날씨 섹션
             weatherAsync.when(

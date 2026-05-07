@@ -55,7 +55,12 @@ class PointsTab extends ConsumerWidget {
               ref.read(childcareAccountsProvider.notifier).refresh(),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(AppSizes.spaceM),
+            padding: EdgeInsets.only(
+              left: AppSizes.spaceM,
+              right: AppSizes.spaceM,
+              top: AppSizes.spaceM,
+              bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+            ),
             child: Column(
               children: [
                 AccountSummaryCard(

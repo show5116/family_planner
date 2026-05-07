@@ -203,7 +203,12 @@ class _MonthlyStatisticsContent extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return ListView(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceM,
+        right: AppSizes.spaceM,
+        top: AppSizes.spaceM,
+        bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+      ),
       children: [
         // 총합 카드
         _TotalSummaryCard(stats: stats),
@@ -629,7 +634,12 @@ class _YearlyStatisticsContent extends StatelessWidget {
             .clamp(1.0, double.infinity);
 
     return ListView(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceM,
+        right: AppSizes.spaceM,
+        top: AppSizes.spaceM,
+        bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+      ),
       children: [
         // 연간 합계
         Card(

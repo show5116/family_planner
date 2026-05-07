@@ -119,7 +119,12 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
+          padding: EdgeInsets.only(
+            left: AppSizes.spaceM,
+            right: AppSizes.spaceM,
+            top: AppSizes.spaceM,
+            bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

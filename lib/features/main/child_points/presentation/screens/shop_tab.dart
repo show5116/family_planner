@@ -85,6 +85,11 @@ class ShopTab extends ConsumerWidget {
                     );
                   },
                 ),
+                SliverPadding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.paddingOf(context).bottom + 80,
+                  ),
+                ),
               ],
             ),
           );

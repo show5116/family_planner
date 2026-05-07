@@ -242,7 +242,12 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen>
                   },
                   child: ListView.separated(
                     controller: _scrollController,
-                    padding: const EdgeInsets.all(AppSizes.spaceM),
+                    padding: EdgeInsets.only(
+                      left: AppSizes.spaceM,
+                      right: AppSizes.spaceM,
+                      top: AppSizes.spaceM,
+                      bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom + 80,
+                    ),
                     itemCount: questions.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: AppSizes.spaceM),

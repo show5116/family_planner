@@ -41,7 +41,12 @@ class SettingsTab extends ConsumerWidget {
     final isOwner = group.myRole?.name == 'OWNER';
 
     return ListView(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceM,
+        right: AppSizes.spaceM,
+        top: AppSizes.spaceM,
+        bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+      ),
       children: [
         GroupInfoCard(group: group, canUpdate: canUpdateGroup),
         const SizedBox(height: AppSizes.spaceM),

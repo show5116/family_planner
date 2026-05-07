@@ -44,6 +44,9 @@ class RulesTab extends ConsumerWidget {
             onRefresh: () =>
                 ref.read(childcareRulesProvider.notifier).refresh(),
             child: ListView(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.paddingOf(context).bottom + 80,
+              ),
               children: [
                 const RulesGuide(hasRules: true),
                 if (plusRules.isNotEmpty)

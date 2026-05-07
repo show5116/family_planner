@@ -91,7 +91,12 @@ class _RolesTabState extends ConsumerState<RolesTab> {
 
     // 항상 ReorderableListView 사용 (드래그 앤 드롭 항상 가능)
     return ReorderableListView.builder(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceM,
+        right: AppSizes.spaceM,
+        top: AppSizes.spaceM,
+        bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom + 80,
+      ),
       itemCount: displayRoles.length,
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
       proxyDecorator: buildReorderableProxyDecorator,
