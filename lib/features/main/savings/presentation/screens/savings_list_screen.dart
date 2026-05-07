@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -7,8 +8,46 @@ import 'package:family_planner/features/main/savings/data/models/savings_model.d
 import 'package:family_planner/features/main/savings/presentation/screens/savings_detail_screen.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_form_screen.dart';
 import 'package:family_planner/features/main/savings/providers/savings_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+
+// 온보딩용 가짜 저금통 데이터
+final _demoGoals = [
+  SavingsGoalModel(
+    id: '__demo_1__',
+    groupId: '__demo__',
+    name: '제주도 여행',
+    description: '올해 여름 가족 여행 목표',
+    targetAmount: 1500000,
+    currentAmount: 870000,
+    autoDeposit: true,
+    monthlyAmount: 150000,
+    depositDay: 25,
+    includeInAssets: false,
+    status: SavingsGoalStatus.active,
+    achievementRate: 58.0,
+    createdAt: DateTime(2025, 1, 1),
+    updatedAt: DateTime(2025, 5, 1),
+  ),
+  SavingsGoalModel(
+    id: '__demo_2__',
+    groupId: '__demo__',
+    name: '비상금',
+    description: null,
+    targetAmount: 3000000,
+    currentAmount: 1200000,
+    autoDeposit: false,
+    monthlyAmount: null,
+    depositDay: 1,
+    includeInAssets: false,
+    status: SavingsGoalStatus.active,
+    achievementRate: 40.0,
+    createdAt: DateTime(2025, 1, 1),
+    updatedAt: DateTime(2025, 5, 1),
+  ),
+];
 
 class SavingsListScreen extends ConsumerStatefulWidget {
   const SavingsListScreen({super.key});
@@ -18,12 +57,24 @@ class SavingsListScreen extends ConsumerStatefulWidget {
 }
 
 class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
+  // ValueNotifier: setState 없이 가짜 데이터 on/off — 코치마크 콜백 내 setState 충돌 방지
+  final _onboardingGoals = ValueNotifier<List<SavingsGoalModel>?>( null);
+  final _firstCardKey = GlobalKey();
+  final _fabKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initGroupSelection();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initGroupSelection();
+      await _maybeStartOnboarding();
     });
+  }
+
+  @override
+  void dispose() {
+    _onboardingGoals.dispose();
+    super.dispose();
   }
 
   Future<void> _initGroupSelection() async {
@@ -36,73 +87,161 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
     }
   }
 
+  Future<void> _maybeStartOnboarding() async {
+    final completed =
+        await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.savings);
+    if (completed || !mounted) return;
+
+    _onboardingGoals.value = _demoGoals;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  void _goToDemo() {
+    if (!mounted) return;
+    _onboardingGoals.value = null;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SavingsDetailScreen.demo(demoGoal: _demoGoals.first),
+      ),
+    );
+  }
+
+  Future<void> _showCoachMark() async {
+    if (!mounted) return;
+    TutorialCoachMark(
+      targets: [
+        TargetFocus(
+          identify: 'savings_card_info',
+          keyTarget: _firstCardKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '저금통',
+                description: '목표 이름, 현재 적립금, 달성률을 한눈에 확인할 수 있어요.\n자동 적립을 켜두면 매달 자동으로 입금돼요.',
+                icon: Icons.savings_outlined,
+                color: AppColors.investment,
+              ),
+            ),
+          ],
+        ),
+      ],
+      colorShadow: AppColors.textPrimary,
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(
+              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      // 카드 탭 또는 1단계 완료(onFinish) → 상세 화면으로 이동
+      onClickTarget: (_) => _goToDemo(),
+      onFinish: _goToDemo,
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.savings);
+        _onboardingGoals.value = null;
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final groupsAsync = ref.watch(myGroupsProvider);
     final selectedGroupId = ref.watch(savingsSelectedGroupIdProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('그룹 저금통'),
-        actions: [
-          if (selectedGroupId != null)
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              tooltip: '새로고침',
-              onPressed: () {
-                ref
-                    .read(savingsGoalsProvider(selectedGroupId).notifier)
-                    .refresh();
-              },
-            ),
-        ],
-      ),
-      body: Column(
-        children: [
-          const _InfoBanner(),
-          _GroupSelectorBar(
-            groupsAsync: groupsAsync,
-            selectedGroupId: selectedGroupId,
-            onGroupChanged: (id) {
-              ref.read(savingsSelectedGroupIdProvider.notifier).state = id;
-            },
-          ),
-          if (selectedGroupId != null) ...[
-            Expanded(
-              child: _GoalsList(
-                groupId: selectedGroupId,
-              ),
-            ),
-          ] else
-            const Expanded(
-              child: Center(
-                child: Text(
-                  '그룹을 선택해 주세요',
-                  style: TextStyle(color: AppColors.textSecondary),
+    return ValueListenableBuilder<List<SavingsGoalModel>?>(
+      valueListenable: _onboardingGoals,
+      builder: (context, demoGoals, _) {
+        final isOnboarding = demoGoals != null;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('그룹 저금통'),
+            actions: [
+              if (selectedGroupId != null && !isOnboarding)
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: '새로고침',
+                  onPressed: () {
+                    ref
+                        .read(savingsGoalsProvider(selectedGroupId).notifier)
+                        .refresh();
+                  },
                 ),
-              ),
-            ),
-        ],
-      ),
-      floatingActionButton: selectedGroupId != null
-          ? FloatingActionButton(
-              onPressed: () async {
-                final created = await Navigator.push<SavingsGoalModel>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        SavingsFormScreen(groupId: selectedGroupId),
+            ],
+          ),
+          body: Column(
+            children: [
+              const _InfoBanner(),
+              if (!isOnboarding)
+                _GroupSelectorBar(
+                  groupsAsync: groupsAsync,
+                  selectedGroupId: selectedGroupId,
+                  onGroupChanged: (id) {
+                    ref.read(savingsSelectedGroupIdProvider.notifier).state = id;
+                  },
+                ),
+              if (isOnboarding)
+                Expanded(
+                  child: _OnboardingGoalsList(
+                    goals: demoGoals,
+                    firstCardKey: _firstCardKey,
                   ),
-                );
-                if (created != null) {
-                  ref
-                      .read(savingsGoalsProvider(selectedGroupId).notifier)
-                      .addGoal(created);
-                }
-              },
-              child: const Icon(Icons.add),
-            )
-          : null,
+                )
+              else if (selectedGroupId != null)
+                Expanded(child: _GoalsList(groupId: selectedGroupId))
+              else
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      '그룹을 선택해 주세요',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          floatingActionButton: (isOnboarding || selectedGroupId != null)
+              ? FloatingActionButton(
+                  key: _fabKey,
+                  onPressed: isOnboarding
+                      ? null
+                      : () async {
+                          final created = await Navigator.push<SavingsGoalModel>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  SavingsFormScreen(groupId: selectedGroupId!),
+                            ),
+                          );
+                          if (created != null) {
+                            ref
+                                .read(savingsGoalsProvider(selectedGroupId!)
+                                    .notifier)
+                                .addGoal(created);
+                          }
+                        },
+                  child: const Icon(Icons.add),
+                )
+              : null,
+        );
+      },
     );
   }
 }
@@ -312,7 +451,7 @@ class _GoalsList extends ConsumerWidget {
 // ── 목표 카드 ─────────────────────────────────────────────────────────────────
 
 class _GoalCard extends StatelessWidget {
-  const _GoalCard({required this.goal, required this.onTap});
+  const _GoalCard({super.key, required this.goal, required this.onTap});
 
   final SavingsGoalModel goal;
   final VoidCallback onTap;
@@ -403,6 +542,34 @@ class _GoalCard extends StatelessWidget {
         .toString()
         .replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]},');
     return '$formatted원';
+  }
+}
+
+// ── 온보딩 전용 목록 (가짜 데이터, 탭 불가) ──────────────────────────────────
+
+class _OnboardingGoalsList extends StatelessWidget {
+  const _OnboardingGoalsList({
+    required this.goals,
+    required this.firstCardKey,
+  });
+
+  final List<SavingsGoalModel> goals;
+  final GlobalKey firstCardKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      itemCount: goals.length,
+      separatorBuilder: (_, _) => const SizedBox(height: AppSizes.spaceS),
+      itemBuilder: (context, index) {
+        return _GoalCard(
+          key: index == 0 ? firstCardKey : null,
+          goal: goals[index],
+          onTap: () {},
+        );
+      },
+    );
   }
 }
 

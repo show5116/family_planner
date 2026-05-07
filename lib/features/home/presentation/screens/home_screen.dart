@@ -70,8 +70,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _showCoachMark() async {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final mq = MediaQuery.of(context);
+    final screenWidth = mq.size.width;
+    final screenHeight = mq.size.height;
+    // 안드로이드 시스템 바(제스처 바 등) 높이를 제외해야 실제 네비게이션 바 위치와 일치
+    final bottomPadding = mq.padding.bottom;
 
     // 설정에서 표시할 네비게이션 아이템 가져오기 (코치마크 위치 계산용)
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
@@ -80,7 +83,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // 네비게이션 바 높이 (Material 3 기본값)
     const navBarHeight = 80.0;
-    final navBarTop = screenHeight - navBarHeight;
+    final navBarTop = screenHeight - navBarHeight - bottomPadding;
     final itemWidth = screenWidth / itemCount;
 
     // "더보기" 탭 위치 (마지막 아이템)
@@ -92,6 +95,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.home,
+      alignSkip: Alignment.topRight,
       onClickTarget: (target) {
         // 더보기 탭 클릭 시 실제 더보기 탭으로 이동
         if (target.identify == 'home_more' && moreTabIndex >= 0 && mounted) {

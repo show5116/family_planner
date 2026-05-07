@@ -28,6 +28,9 @@ const _kHouseholdGroupIdKey = 'household_selected_group_id';
 
 class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   final _fabKey = GlobalKey();
+  final _budgetKey = GlobalKey();
+  final _recurringKey = GlobalKey();
+  final _statisticsKey = GlobalKey();
 
   @override
   void initState() {
@@ -46,10 +49,60 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   }
 
   Future<void> _showCoachMark() async {
-    await FeatureCoachMark.show(
-      context: context,
-      featureKey: CoachMarkKeys.household,
+    final completed =
+        await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
+    if (completed || !mounted) return;
+
+    TutorialCoachMark(
       targets: [
+        TargetFocus(
+          identify: 'household_budget',
+          keyTarget: _budgetKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '예산 설정',
+                description: '월별 예산을 설정하면 지출 현황과\n남은 예산을 한눈에 확인할 수 있어요.',
+                icon: Icons.account_balance_wallet_outlined,
+                color: Colors.teal,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'household_recurring',
+          keyTarget: _recurringKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '고정 지출',
+                description: '월세, 구독료 등 매달 반복되는 지출을\n등록하면 자동으로 기록해 드려요.',
+                icon: Icons.repeat,
+                color: Colors.indigo,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'household_statistics',
+          keyTarget: _statisticsKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '통계',
+                description: '카테고리별 지출 비율과 월별 추이를\n차트로 확인할 수 있어요.',
+                icon: Icons.bar_chart,
+                color: Colors.purple,
+              ),
+            ),
+          ],
+        ),
         TargetFocus(
           identify: 'household_fab',
           keyTarget: _fabKey,
@@ -59,7 +112,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
                 title: '지출/수입 추가',
-                description: '새 지출이나 수입을 기록하세요.\n그룹별 가계부와 카테고리 통계를 확인할 수 있어요.',
+                description: '새 지출이나 수입을 기록하세요.\n그룹별로 나눠서 관리할 수 있어요.',
                 icon: Icons.add,
                 color: Colors.orange,
               ),
@@ -67,7 +120,32 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
           ],
         ),
       ],
-    );
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.bottomLeft,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(
+              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.household),
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.household);
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
   }
 
   @override
@@ -83,16 +161,19 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         actions: [
           const AiChatIconButton(),
           IconButton(
+            key: _budgetKey,
             icon: const Icon(Icons.account_balance_wallet_outlined),
             tooltip: l10n.household_budget_set,
             onPressed: () => showBudgetSettingSheet(context),
           ),
           IconButton(
+            key: _recurringKey,
             icon: const Icon(Icons.repeat),
             tooltip: l10n.household_recurring_expenses,
             onPressed: () => context.push(AppRoutes.householdRecurring),
           ),
           IconButton(
+            key: _statisticsKey,
             icon: const Icon(Icons.bar_chart),
             tooltip: l10n.household_statistics,
             onPressed: () => context.push(AppRoutes.householdStatistics),

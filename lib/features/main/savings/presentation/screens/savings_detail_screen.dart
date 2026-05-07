@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -9,11 +10,23 @@ import 'package:family_planner/features/main/savings/data/repositories/savings_r
 import 'package:family_planner/features/main/savings/presentation/screens/savings_form_screen.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_transactions_screen.dart';
 import 'package:family_planner/features/main/savings/providers/savings_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+
 
 class SavingsDetailScreen extends ConsumerStatefulWidget {
-  const SavingsDetailScreen({super.key, required this.goalId});
+  /// 실제 저금통 상세 — goalId로 API 조회
+  const SavingsDetailScreen({super.key, required this.goalId})
+      : demoGoal = null;
+
+  /// 온보딩 전용 — API 없이 demoGoal을 직접 렌더링
+  const SavingsDetailScreen.demo({super.key, required SavingsGoalModel this.demoGoal})
+      : goalId = '__demo__';
 
   final String goalId;
+  final SavingsGoalModel? demoGoal;
+
+  bool get isDemo => demoGoal != null;
 
   @override
   ConsumerState<SavingsDetailScreen> createState() =>
@@ -22,6 +35,89 @@ class SavingsDetailScreen extends ConsumerStatefulWidget {
 
 class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
   bool _actionLoading = false;
+
+  // 온보딩 코치마크용 키
+  final _headerCardKey = GlobalKey();
+  final _depositButtonKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isDemo) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showDemoCoachMark());
+    }
+  }
+
+  Future<void> _showDemoCoachMark() async {
+    if (!mounted) return;
+    TutorialCoachMark(
+      targets: [
+        TargetFocus(
+          identify: 'detail_header',
+          keyTarget: _headerCardKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '적립 현황',
+                description: '현재 적립금과 목표 금액,\n달성률을 상세하게 확인할 수 있어요.\n자동 적립 중일 때는 적립 상태도 표시돼요.',
+                icon: Icons.savings_outlined,
+                color: AppColors.investment,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'detail_deposit',
+          keyTarget: _depositButtonKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '입금 / 출금',
+                description: '언제든지 직접 입금하거나 출금할 수 있어요.\n자동 적립과 함께 활용하면 더욱 편리해요.',
+                icon: Icons.swap_vert,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+      ],
+      colorShadow: AppColors.textPrimary,
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      onFinish: _completeDemoOnboarding,
+      onSkip: () {
+        _completeDemoOnboarding();
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
+  }
+
+  void _completeDemoOnboarding() {
+    OnboardingService.completeCoachMark(CoachMarkKeys.savings);
+    if (mounted) Navigator.pop(context);
+  }
 
   Future<void> _runAction(Future<void> Function() action) async {
     setState(() => _actionLoading = true);
@@ -147,6 +243,26 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 온보딩 demo 모드: API 없이 가짜 데이터로 렌더링
+    if (widget.isDemo) {
+      final goal = widget.demoGoal!;
+      return Scaffold(
+        appBar: AppBar(title: Text(goal.name)),
+        body: _DetailBody(
+          goal: goal,
+          actionLoading: false,
+          headerCardKey: _headerCardKey,
+          depositButtonKey: _depositButtonKey,
+          isDemo: true,
+          onDeposit: () {},
+          onWithdraw: () {},
+          onPause: () {},
+          onResume: () {},
+        ),
+      );
+    }
+
+    // 일반 모드: API 조회
     final goalAsync = ref.watch(savingsGoalDetailProvider(widget.goalId));
 
     return Scaffold(
@@ -232,6 +348,9 @@ class _DetailBody extends StatelessWidget {
     required this.onWithdraw,
     required this.onPause,
     required this.onResume,
+    this.headerCardKey,
+    this.depositButtonKey,
+    this.isDemo = false,
   });
 
   final SavingsGoalModel goal;
@@ -240,6 +359,9 @@ class _DetailBody extends StatelessWidget {
   final VoidCallback onWithdraw;
   final VoidCallback onPause;
   final VoidCallback onResume;
+  final GlobalKey? headerCardKey;
+  final GlobalKey? depositButtonKey;
+  final bool isDemo;
 
   String _formatAmount(double amount) {
     final intAmount = amount.toInt();
@@ -260,6 +382,7 @@ class _DetailBody extends StatelessWidget {
         children: [
           // 헤더 카드
           Card(
+            key: headerCardKey,
             elevation: AppSizes.elevation1,
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.spaceL),
@@ -404,6 +527,7 @@ class _DetailBody extends StatelessWidget {
             const SizedBox(height: AppSizes.spaceS),
             // 입금 / 출금
             Row(
+              key: depositButtonKey,
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
@@ -432,10 +556,10 @@ class _DetailBody extends StatelessWidget {
             ),
           ],
 
-          const SizedBox(height: AppSizes.spaceL),
-
-          // 최근 내역
-          _RecentTransactions(goalId: goal.id, goalName: goal.name),
+          if (!isDemo) ...[
+            const SizedBox(height: AppSizes.spaceL),
+            _RecentTransactions(goalId: goal.id, goalName: goal.name),
+          ],
         ],
       ),
     );

@@ -23,6 +23,7 @@ class FeatureCoachMark {
     required List<TargetFocus> targets,
     FutureOr<void> Function(TargetFocus)? onClickTarget,
     FutureOr<void> Function(TargetFocus)? beforeFocus,
+    AlignmentGeometry alignSkip = Alignment.topRight,
   }) async {
     final completed = await OnboardingService.isCoachMarkCompleted(featureKey);
     if (completed || !context.mounted) return;
@@ -32,6 +33,7 @@ class FeatureCoachMark {
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
+      alignSkip: alignSkip,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
