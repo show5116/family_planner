@@ -17,6 +17,7 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 /// ```
 class FeatureCoachMark {
   /// 해당 기능의 코치마크를 처음 진입 시 1회만 표시
+  /// [forceShow]가 true면 완료 여부와 관계없이 즉시 표시
   static Future<void> show({
     required BuildContext context,
     required String featureKey,
@@ -24,9 +25,13 @@ class FeatureCoachMark {
     FutureOr<void> Function(TargetFocus)? onClickTarget,
     FutureOr<void> Function(TargetFocus)? beforeFocus,
     AlignmentGeometry alignSkip = Alignment.topRight,
+    bool forceShow = false,
   }) async {
-    final completed = await OnboardingService.isCoachMarkCompleted(featureKey);
-    if (completed || !context.mounted) return;
+    if (!forceShow) {
+      final completed = await OnboardingService.isCoachMarkCompleted(featureKey);
+      if (completed || !context.mounted) return;
+    }
+    if (!context.mounted) return;
 
     TutorialCoachMark(
       targets: targets,

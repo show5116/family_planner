@@ -69,6 +69,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  void _replayHomeOnboarding() {
+    OnboardingService.resetCoachMark(CoachMarkKeys.home).then((_) {
+      if (mounted) _showCoachMark();
+    });
+  }
+
   Future<void> _showCoachMark() async {
     final mq = MediaQuery.of(context);
     final screenWidth = mq.size.width;
@@ -228,7 +234,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _getScreenForId(String id, AppLocalizations l10n) {
     switch (id) {
       case 'home':
-        return const DashboardTab();
+        return DashboardTab(onReplayOnboarding: _replayHomeOnboarding);
       case 'assets':
         return const AssetScreen();
       case 'calendar':

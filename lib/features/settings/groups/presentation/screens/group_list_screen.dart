@@ -41,10 +41,13 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
-  Future<void> _showCoachMark() async {
+  void _replayOnboarding() => _showCoachMark(force: true);
+
+  Future<void> _showCoachMark({bool force = false}) async {
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.groupManagement,
+      forceShow: force,
       alignSkip: Alignment.bottomLeft,
       targets: [
         TargetFocus(
@@ -138,8 +141,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                 ref.read(groupNotifierProvider.notifier).loadGroups();
               },
             ),
-            const AppBarMoreMenu(
-              coachMarkKey: CoachMarkKeys.groupManagement,
+            AppBarMoreMenu(
+              onReplayOnboarding: _replayOnboarding,
               guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%95%B1%EC%9D%98-%ED%95%B5%EC%8B%AC-%EA%B7%B8%EB%A3%B9-%EC%83%9D%EC%84%B1-%EB%B0%8F-%EB%A9%A4%EB%B2%84-%EC%B4%88%EB%8C%80%ED%95%98%EA%B8%B0-1%ED%8E%B8',
             ),
           ],

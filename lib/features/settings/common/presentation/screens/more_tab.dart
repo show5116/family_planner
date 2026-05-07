@@ -48,10 +48,13 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     super.dispose();
   }
 
-  Future<void> _showCoachMark() async {
+  void _replayOnboarding() => _showCoachMark(force: true);
+
+  Future<void> _showCoachMark({bool force = false}) async {
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.more,
+      forceShow: force,
       targets: [
         TargetFocus(
           identify: 'more_group',
@@ -135,8 +138,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         Scaffold(
           appBar: AppBar(
             title: Text(l10n.nav_more),
-            actions: const [
-              AppBarMoreMenu(coachMarkKey: CoachMarkKeys.more),
+            actions: [
+              AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
             ],
           ),
           body: ListView(

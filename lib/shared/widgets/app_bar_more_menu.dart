@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_bottom_sheet.dart';
-import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 
 /// 공통 AppBar 더보기 메뉴
 ///
@@ -13,13 +12,13 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 class AppBarMoreMenu extends StatelessWidget {
   const AppBarMoreMenu({
     super.key,
-    this.coachMarkKey,
+    this.onReplayOnboarding,
     this.extraItems = const [],
     this.guideUrl = _defaultGuideUrl,
   });
 
-  /// 해당 화면의 온보딩 키 (null이면 "온보딩 다시보기" 미표시)
-  final String? coachMarkKey;
+  /// 눌렸을 때 튜토리얼을 즉시 재실행하는 콜백 (null이면 메뉴 항목 미표시)
+  final VoidCallback? onReplayOnboarding;
 
   /// 화면별 추가 메뉴 항목 (AI·도움말 위에 표시)
   final List<MoreMenuItem> extraItems;
@@ -68,8 +67,8 @@ class AppBarMoreMenu extends StatelessWidget {
           ),
         ),
 
-        // 온보딩 다시보기 (키가 있을 때만)
-        if (coachMarkKey != null)
+        // 튜토리얼 다시 보기 (콜백이 있을 때만)
+        if (onReplayOnboarding != null)
           const PopupMenuItem<_MenuAction>(
             value: _MenuAction.replayOnboarding,
             child: _MenuRow(icon: Icons.help_outline, label: '튜토리얼 다시 보기'),
@@ -89,17 +88,7 @@ class AppBarMoreMenu extends StatelessWidget {
       case _MenuActionType.aiChat:
         if (context.mounted) AiChatBottomSheet.show(context);
       case _MenuActionType.replayOnboarding:
-        if (coachMarkKey != null) {
-          await OnboardingService.resetCoachMark(coachMarkKey!);
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('다음 화면 진입 시 온보딩이 다시 표시됩니다.'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          }
-        }
+        onReplayOnboarding?.call();
       case _MenuActionType.guide:
         final uri = Uri.parse(guideUrl);
         if (await canLaunchUrl(uri)) {

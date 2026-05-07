@@ -48,10 +48,15 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     ref.read(householdSelectedGroupIdProvider.notifier).state = savedGroupId;
   }
 
-  Future<void> _showCoachMark() async {
-    final completed =
-        await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
-    if (completed || !mounted) return;
+  void _replayOnboarding() => _showCoachMark(force: true);
+
+  Future<void> _showCoachMark({bool force = false}) async {
+    if (!force) {
+      final completed =
+          await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
+      if (completed || !mounted) return;
+    }
+    if (!mounted) return;
 
     TutorialCoachMark(
       targets: [
@@ -177,7 +182,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             tooltip: l10n.household_statistics,
             onPressed: () => context.push(AppRoutes.householdStatistics),
           ),
-          const AppBarMoreMenu(coachMarkKey: CoachMarkKeys.household),
+          AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
         ],
       ),
       body: Column(

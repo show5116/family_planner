@@ -44,10 +44,13 @@ class _TodoTabState extends ConsumerState<TodoTab> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
-  Future<void> _showCoachMark() async {
+  void _replayOnboarding() => _showCoachMark(force: true);
+
+  Future<void> _showCoachMark({bool force = false}) async {
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.todo,
+      forceShow: force,
       targets: [
         TargetFocus(
           identify: 'todo_week_bar',
@@ -150,7 +153,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
             },
           ),
           AppBarMoreMenu(
-            coachMarkKey: CoachMarkKeys.todo,
+            onReplayOnboarding: _replayOnboarding,
             extraItems: [
               MoreMenuItem(
                 id: 'categories',

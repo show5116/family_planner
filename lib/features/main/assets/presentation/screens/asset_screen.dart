@@ -78,7 +78,16 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   Future<void> _maybeStartOnboarding() async {
     final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.assets);
     if (completed || !mounted) return;
+    _startDemo();
+  }
 
+  void _replayOnboarding() {
+    OnboardingService.resetCoachMark(CoachMarkKeys.assets).then((_) {
+      if (mounted) _startDemo();
+    });
+  }
+
+  void _startDemo() {
     _showDemo.value = true;
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
@@ -168,7 +177,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                   onPressed: () => context.push(AppRoutes.assetStatistics),
                 ),
               if (!isDemo)
-                const AppBarMoreMenu(coachMarkKey: CoachMarkKeys.assets),
+                AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
             ],
           ),
           body: Column(

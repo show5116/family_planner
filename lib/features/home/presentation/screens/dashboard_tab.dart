@@ -11,7 +11,6 @@ import 'package:family_planner/features/home/presentation/widgets/household_summ
 import 'package:family_planner/features/home/presentation/widgets/savings_summary_widget.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
-import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -21,7 +20,9 @@ import 'package:family_planner/core/utils/responsive.dart';
 
 /// 대시보드 탭
 class DashboardTab extends ConsumerWidget {
-  const DashboardTab({super.key});
+  const DashboardTab({super.key, this.onReplayOnboarding});
+
+  final VoidCallback? onReplayOnboarding;
 
   /// 알림 팝업 표시
   void _showNotificationPopup(BuildContext context) {
@@ -59,10 +60,6 @@ class DashboardTab extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Family Planner'),
         actions: [
-          const AppBarMoreMenu(
-            coachMarkKey: CoachMarkKeys.home,
-            guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EB%82%98%EB%A7%8C%EC%9D%98-%EB%A7%9E%EC%B6%A4%ED%98%95-%EB%AA%A8%EC%9E%84-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-%ED%99%88-%EC%9C%84%EC%A0%AF-%EC%84%A0%EC%A0%95-%EB%B0%A9%EB%B2%95',
-          ),
           // 알림 아이콘 with 배지
           Builder(
             builder: (context) => IconButton(
@@ -81,6 +78,10 @@ class DashboardTab extends ConsumerWidget {
               onPressed: () => _showNotificationPopup(context),
               tooltip: '알림',
             ),
+          ),
+          AppBarMoreMenu(
+            onReplayOnboarding: onReplayOnboarding,
+            guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EB%82%98%EB%A7%8C%EC%9D%98-%EB%A7%9E%EC%B6%A4%ED%98%95-%EB%AA%A8%EC%9E%84-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-%ED%99%88-%EC%9C%84%EC%A0%AF-%EC%84%A4%EC%A0%95-%EB%B0%A9%EB%B2%95',
           ),
         ],
       ),

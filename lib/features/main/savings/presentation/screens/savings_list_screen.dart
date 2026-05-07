@@ -92,7 +92,16 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
     final completed =
         await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.savings);
     if (completed || !mounted) return;
+    _startDemo();
+  }
 
+  void _replayOnboarding() {
+    OnboardingService.resetCoachMark(CoachMarkKeys.savings).then((_) {
+      if (mounted) _startDemo();
+    });
+  }
+
+  void _startDemo() {
     _onboardingGoals.value = _demoGoals;
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
@@ -185,7 +194,7 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
                         .refresh();
                   },
                 ),
-              const AppBarMoreMenu(coachMarkKey: CoachMarkKeys.savings),
+              AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
             ],
           ),
           body: Column(

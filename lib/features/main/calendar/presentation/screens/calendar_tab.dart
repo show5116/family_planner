@@ -40,10 +40,13 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
-  Future<void> _showCoachMark() async {
+  void _replayOnboarding() => _showCoachMark(force: true);
+
+  Future<void> _showCoachMark({bool force = false}) async {
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.calendar,
+      forceShow: force,
       targets: [
         TargetFocus(
           identify: 'calendar_view',
@@ -126,7 +129,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             },
           ),
           AppBarMoreMenu(
-            coachMarkKey: CoachMarkKeys.calendar,
+            onReplayOnboarding: _replayOnboarding,
             extraItems: [
               MoreMenuItem(
                 id: 'categories',
