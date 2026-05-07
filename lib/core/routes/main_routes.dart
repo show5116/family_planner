@@ -18,9 +18,11 @@ import 'package:family_planner/features/main/household/presentation/screens/hous
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_category_expenses_screen.dart';
+import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
+import 'package:family_planner/features/main/todo/presentation/screens/todo_tab.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
 import 'package:family_planner/features/main/investment/presentation/screens/indicator_detail_screen.dart';
@@ -114,6 +116,11 @@ List<RouteBase> getMainRoutes() {
 
     // Calendar Routes
     GoRoute(
+      path: AppRoutes.calendar,
+      name: 'calendar',
+      builder: (context, state) => const CalendarTab(),
+    ),
+    GoRoute(
       path: AppRoutes.calendarAdd,
       name: 'calendarAdd',
       builder: (context, state) {
@@ -146,6 +153,11 @@ List<RouteBase> getMainRoutes() {
     ),
 
     // Todo Routes
+    GoRoute(
+      path: AppRoutes.todo,
+      name: 'todo',
+      builder: (context, state) => const TodoTab(),
+    ),
     GoRoute(
       path: AppRoutes.todoAdd,
       name: 'todoAdd',
