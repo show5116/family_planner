@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/budget_setting_sheet.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
@@ -159,7 +159,6 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
       appBar: AppBar(
         title: Text(l10n.household_title),
         actions: [
-          const AiChatIconButton(),
           IconButton(
             key: _budgetKey,
             icon: const Icon(Icons.account_balance_wallet_outlined),
@@ -178,6 +177,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             tooltip: l10n.household_statistics,
             onPressed: () => context.push(AppRoutes.householdStatistics),
           ),
+          const AppBarMoreMenu(coachMarkKey: CoachMarkKeys.household),
         ],
       ),
       body: Column(

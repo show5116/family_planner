@@ -29,6 +29,12 @@ class OnboardingService {
     await prefs.setBool('$_coachMarkPrefix$featureKey', true);
   }
 
+  /// 특정 기능의 코치마크 초기화 (온보딩 다시보기)
+  static Future<void> resetCoachMark(String featureKey) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('$_coachMarkPrefix$featureKey');
+  }
+
   /// 개발/테스트용: 모든 온보딩 상태 초기화
   static Future<void> resetAll() async {
     final prefs = await SharedPreferences.getInstance();

@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
@@ -104,7 +103,6 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
               )
             : null,
         actions: [
-          const AiChatIconButton(),
           IconButton(
             icon: const Icon(Icons.today),
             tooltip: l10n.schedule_today,
@@ -127,22 +125,14 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
               }
             },
           ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'categories') {
-                context.push('/calendar/categories');
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'categories',
-                child: Row(
-                  children: [
-                    const Icon(Icons.category_outlined, size: 20),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Text(l10n.category_management),
-                  ],
-                ),
+          AppBarMoreMenu(
+            coachMarkKey: CoachMarkKeys.calendar,
+            extraItems: [
+              MoreMenuItem(
+                id: 'categories',
+                icon: Icons.category_outlined,
+                label: l10n.category_management,
+                onTap: (ctx) => ctx.push('/calendar/categories'),
               ),
             ],
           ),

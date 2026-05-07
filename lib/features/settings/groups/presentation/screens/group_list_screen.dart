@@ -15,6 +15,7 @@ import 'package:family_planner/features/settings/groups/providers/group_provider
 import 'package:family_planner/features/settings/groups/presentation/widgets/group_card.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/group_create_dialog.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/group_join_dialog.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 
@@ -29,6 +30,7 @@ class GroupListScreen extends ConsumerStatefulWidget {
 class _GroupListScreenState extends ConsumerState<GroupListScreen> {
   final _createFabKey = GlobalKey();
   final _joinFabKey = GlobalKey();
+  final _myRequestsKey = GlobalKey();
 
   List<Group>? _reorderedGroups;
   bool _hasChanges = false;
@@ -43,6 +45,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.groupManagement,
+      alignSkip: Alignment.bottomLeft,
       targets: [
         TargetFocus(
           identify: 'group_create_fab',
@@ -78,6 +81,22 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
             ),
           ],
         ),
+        TargetFocus(
+          identify: 'group_my_requests',
+          keyTarget: _myRequestsKey,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '신청 내역',
+                description: '내가 참여 신청한 그룹 목록을 확인하고\n수락 여부를 여기서 확인할 수 있어요.',
+                icon: Icons.assignment_outlined,
+                color: Colors.orange,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -108,6 +127,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
         actions: [
           if (!_hasChanges) ...[
             IconButton(
+              key: _myRequestsKey,
               icon: const Icon(Icons.assignment_outlined),
               tooltip: l10n.group_myJoinRequests,
               onPressed: () => context.push(AppRoutes.groupMyJoinRequests),
@@ -117,6 +137,10 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
               onPressed: () {
                 ref.read(groupNotifierProvider.notifier).loadGroups();
               },
+            ),
+            const AppBarMoreMenu(
+              coachMarkKey: CoachMarkKeys.groupManagement,
+              guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%95%B1%EC%9D%98-%ED%95%B5%EC%8B%AC-%EA%B7%B8%EB%A3%B9-%EC%83%9D%EC%84%B1-%EB%B0%8F-%EB%A9%A4%EB%B2%84-%EC%B4%88%EB%8C%80%ED%95%98%EA%B8%B0-1%ED%8E%B8',
             ),
           ],
         ],

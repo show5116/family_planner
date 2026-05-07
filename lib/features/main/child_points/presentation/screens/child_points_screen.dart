@@ -14,7 +14,7 @@ import 'package:family_planner/features/main/child_points/providers/childcare_pr
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
 /// 육아포인트 메인 화면
 class ChildPointsScreen extends ConsumerStatefulWidget {
@@ -86,42 +86,6 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             : null,
         automaticallyImplyLeading: false,
         actions: [
-          const AiChatIconButton(),
-          if (selectedChildId != null)
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (value) {
-                if (value == 'allowance') {
-                  context.push(
-                    AppRoutes.childPointsAllowancePlan,
-                    extra: {'childId': selectedChildId},
-                  );
-                } else if (value == 'link') {
-                  context.push(
-                    AppRoutes.childPointsLinkUser,
-                    extra: {'childId': selectedChildId},
-                  );
-                }
-              },
-              itemBuilder: (_) => [
-                const PopupMenuItem(
-                  value: 'allowance',
-                  child: ListTile(
-                    leading: Icon(Icons.monetization_on_outlined),
-                    title: Text('용돈 플랜 설정'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 'link',
-                  child: ListTile(
-                    leading: Icon(Icons.link),
-                    title: Text('앱 계정 연동'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-              ],
-            ),
           if (selectedGroupId != null)
             IconButton(
               icon: const Icon(Icons.person_add_outlined),
@@ -131,6 +95,30 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
                 extra: {'groupId': selectedGroupId},
               ),
             ),
+          AppBarMoreMenu(
+            extraItems: [
+              if (selectedChildId != null) ...[
+                MoreMenuItem(
+                  id: 'allowance',
+                  icon: Icons.monetization_on_outlined,
+                  label: '용돈 플랜 설정',
+                  onTap: (ctx) => ctx.push(
+                    AppRoutes.childPointsAllowancePlan,
+                    extra: {'childId': selectedChildId},
+                  ),
+                ),
+                MoreMenuItem(
+                  id: 'link',
+                  icon: Icons.link,
+                  label: '앱 계정 연동',
+                  onTap: (ctx) => ctx.push(
+                    AppRoutes.childPointsLinkUser,
+                    extra: {'childId': selectedChildId},
+                  ),
+                ),
+              ],
+            ],
+          ),
         ],
         bottom: TabBar(
           controller: _tabController,

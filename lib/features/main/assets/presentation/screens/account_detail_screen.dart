@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
@@ -11,6 +13,8 @@ import 'package:family_planner/features/main/assets/presentation/widgets/account
 import 'package:family_planner/features/main/assets/presentation/widgets/add_asset_record_sheet.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_record_list_item.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_trend_chart.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 알림 등 ID만 있을 때 계좌를 조회 후 상세 화면으로 진입하는 래퍼
@@ -44,15 +48,159 @@ class AccountDetailByIdScreen extends ConsumerWidget {
   }
 }
 
-class AccountDetailScreen extends ConsumerWidget {
+class AccountDetailScreen extends ConsumerStatefulWidget {
   final AccountModel account;
+  final bool isDemo;
 
-  const AccountDetailScreen({super.key, required this.account});
+  const AccountDetailScreen({super.key, required this.account, this.isDemo = false});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AccountDetailScreen> createState() => _AccountDetailScreenState();
+}
+
+class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
+  final _infoCardKey = GlobalKey();
+  final _addRecordKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isDemo) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showDemoCoachMark());
+    }
+  }
+
+  Future<void> _showDemoCoachMark() async {
+    if (!mounted) return;
+    TutorialCoachMark(
+      targets: [
+        TargetFocus(
+          identify: 'asset_info_card',
+          keyTarget: _infoCardKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '계좌 상세 정보',
+                description: '최신 잔액, 수익률, 금융기관 정보를\n한눈에 확인할 수 있어요.',
+                icon: Icons.account_balance_outlined,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'asset_add_record',
+          keyTarget: _addRecordKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '잔액 기록',
+                description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.',
+                icon: Icons.add_chart,
+                color: Colors.teal,
+              ),
+            ),
+          ],
+        ),
+      ],
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      onFinish: _completeDemoOnboarding,
+      onSkip: () {
+        _completeDemoOnboarding();
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
+  }
+
+  void _completeDemoOnboarding() {
+    OnboardingService.completeCoachMark(CoachMarkKeys.assets);
+    if (mounted) Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    // 기록 추가/삭제 후 latestBalance, profitRate 즉시 반영
+    final account = widget.account;
+
+    // demo 모드: API 호출 없이 가짜 데이터만 렌더링
+    if (widget.isDemo) {
+      return Scaffold(
+        appBar: AppBar(title: Text(account.name)),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: AccountInfoCard(key: _infoCardKey, account: account),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM,
+                ),
+                child: Row(
+                  key: _addRecordKey,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.asset_records,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    TextButton.icon(
+                      onPressed: null,
+                      icon: const Icon(Icons.add, size: 18),
+                      label: Text(l10n.asset_add_record),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXL),
+                child: Column(
+                  children: [
+                    Icon(Icons.receipt_long_outlined, size: 48,
+                        color: Theme.of(context).colorScheme.outline),
+                    const SizedBox(height: AppSizes.spaceS),
+                    Text(l10n.asset_no_records,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.outline)),
+                  ],
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 80)),
+          ],
+        ),
+      );
+    }
+
+    // 일반 모드: API 조회
     final accountsAsync = ref.watch(assetAccountsProvider);
     final currentAccount = accountsAsync.valueOrNull
             ?.where((a) => a.id == account.id)
@@ -76,19 +224,13 @@ class AccountDetailScreen extends ConsumerWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          // 계좌 정보 카드
           SliverToBoxAdapter(
             child: AccountInfoCard(account: currentAccount),
           ),
-
-          // 추이 차트
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                AppSizes.spaceM,
-                AppSizes.spaceS,
-                AppSizes.spaceM,
-                AppSizes.spaceM,
+                AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,19 +244,13 @@ class AccountDetailScreen extends ConsumerWidget {
                   const SizedBox(height: AppSizes.spaceS),
                   AssetTrendChart(
                     trendBuilder: (period, year) => ref.watch(
-                      accountAssetTrendProvider(
-                        account.id,
-                        period: period,
-                        year: year,
-                      ),
+                      accountAssetTrendProvider(account.id, period: period, year: year),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-
-          // 기록 헤더
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -139,8 +275,6 @@ class AccountDetailScreen extends ConsumerWidget {
               ),
             ),
           ),
-
-          // 기록 목록
           recordsAsync.when(
             data: (records) {
               if (records.isEmpty) {
@@ -149,18 +283,12 @@ class AccountDetailScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXL),
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.receipt_long_outlined,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
+                        Icon(Icons.receipt_long_outlined, size: 48,
+                            color: Theme.of(context).colorScheme.outline),
                         const SizedBox(height: AppSizes.spaceS),
-                        Text(
-                          l10n.asset_no_records,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-                        ),
+                        Text(l10n.asset_no_records,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.outline)),
                       ],
                     ),
                   ),
@@ -180,8 +308,6 @@ class AccountDetailScreen extends ConsumerWidget {
               child: Center(child: Text(l10n.common_error)),
             ),
           ),
-
-          // 하단 여백 (FAB 가리지 않도록)
           const SliverToBoxAdapter(child: SizedBox(height: 80)),
         ],
       ),
@@ -197,7 +323,7 @@ class AccountDetailScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (ctx) => AddAssetRecordSheet(accountId: account.id),
+      builder: (ctx) => AddAssetRecordSheet(accountId: widget.account.id),
     );
   }
 }

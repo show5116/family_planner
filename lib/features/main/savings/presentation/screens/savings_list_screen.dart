@@ -10,6 +10,7 @@ import 'package:family_planner/features/main/savings/presentation/screens/saving
 import 'package:family_planner/features/main/savings/providers/savings_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
@@ -184,6 +185,7 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
                         .refresh();
                   },
                 ),
+              const AppBarMoreMenu(coachMarkKey: CoachMarkKeys.savings),
             ],
           ),
           body: Column(

@@ -12,6 +12,7 @@ import 'package:family_planner/core/utils/navigation_label_helper.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 /// 더보기 탭
@@ -134,6 +135,9 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         Scaffold(
           appBar: AppBar(
             title: Text(l10n.nav_more),
+            actions: const [
+              AppBarMoreMenu(coachMarkKey: CoachMarkKeys.more),
+            ],
           ),
           body: ListView(
             children: [

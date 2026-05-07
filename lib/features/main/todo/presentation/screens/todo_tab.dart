@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -114,7 +114,6 @@ class _TodoTabState extends ConsumerState<TodoTab> {
               )
             : null,
         actions: [
-          const AiChatIconButton(),
           // 뷰 전환 버튼 (모바일에서는 숨김, 모아보기에서는 숨김)
           if (!isMobile && !isOverview)
             IconButton(
@@ -150,22 +149,14 @@ class _TodoTabState extends ConsumerState<TodoTab> {
               }
             },
           ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'categories') {
-                context.push('/calendar/categories');
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'categories',
-                child: Row(
-                  children: [
-                    const Icon(Icons.category_outlined, size: 20),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Text(l10n.category_management),
-                  ],
-                ),
+          AppBarMoreMenu(
+            coachMarkKey: CoachMarkKeys.todo,
+            extraItems: [
+              MoreMenuItem(
+                id: 'categories',
+                icon: Icons.category_outlined,
+                label: l10n.category_management,
+                onTap: (ctx) => ctx.push('/calendar/categories'),
               ),
             ],
           ),

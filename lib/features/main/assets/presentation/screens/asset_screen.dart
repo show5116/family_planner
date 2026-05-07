@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
+import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_list_item.dart';
+
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_group_bar.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_summary_card.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
@@ -13,11 +15,27 @@ import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+
+// 온보딩용 가짜 계좌 데이터
+final _demoAccount = AccountModel(
+  id: '__demo_asset__',
+  groupId: '__demo__',
+  userId: '__demo__',
+  name: '국민은행 적금',
+  accountNumber: '****-****-1234',
+  institution: '국민은행',
+  type: AccountType.bank,
+  createdAt: DateTime(2025, 1, 1),
+  updatedAt: DateTime(2025, 5, 1),
+  latestBalance: 3500000,
+  profitRate: 3.2,
+);
 
 class AssetScreen extends ConsumerStatefulWidget {
   const AssetScreen({super.key});
@@ -29,66 +47,105 @@ class AssetScreen extends ConsumerStatefulWidget {
 class _AssetScreenState extends ConsumerState<AssetScreen> {
   final _fabKey = GlobalKey();
   final _groupBarKey = GlobalKey();
+  final _demoCardKey = GlobalKey();
+  // ValueNotifier: setState 없이 온보딩 on/off — 코치마크 콜백 내 build 충돌 방지
+  final _showDemo = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _initGroupSelection();
-      await _showCoachMark();
+      await _maybeStartOnboarding();
     });
+  }
+
+  @override
+  void dispose() {
+    _showDemo.dispose();
+    super.dispose();
   }
 
   Future<void> _initGroupSelection() async {
     final groupId = ref.read(assetSelectedGroupIdProvider);
     if (groupId != null) return;
-
     final groups = await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
     if (groups.isNotEmpty && mounted) {
       ref.read(assetSelectedGroupIdProvider.notifier).state = groups.first.id;
     }
   }
 
+  Future<void> _maybeStartOnboarding() async {
+    final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.assets);
+    if (completed || !mounted) return;
+
+    _showDemo.value = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  void _goToDemo() {
+    if (!mounted) return;
+    _showDemo.value = false;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AccountDetailScreen(
+          account: _demoAccount,
+          isDemo: true,
+        ),
+      ),
+    );
+  }
+
   Future<void> _showCoachMark() async {
-    await FeatureCoachMark.show(
-      context: context,
-      featureKey: CoachMarkKeys.assets,
+    if (!mounted) return;
+    TutorialCoachMark(
       targets: [
         TargetFocus(
-          identify: 'asset_group_bar',
-          keyTarget: _groupBarKey,
+          identify: 'asset_card',
+          keyTarget: _demoCardKey,
           shape: ShapeLightFocus.RRect,
-          radius: 8,
+          radius: 12,
           contents: [
             TargetContent(
               align: ContentAlign.bottom,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '그룹별 자산 관리',
-                description: '그룹을 선택해 구성원의 자산을 함께 관리하세요.\n계좌, 적금, 투자 현황을 한눈에 볼 수 있어요.',
-                icon: Icons.account_balance_wallet,
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'asset_fab',
-          keyTarget: _fabKey,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '계좌 추가',
-                description: '새 계좌나 자산 항목을 추가하세요.\n잔액 변화를 기록해 자산 추이를 확인할 수 있어요.',
-                icon: Icons.add,
+                title: '계좌 카드',
+                description: '계좌명, 금융기관, 최신 잔액과\n수익률을 한눈에 확인할 수 있어요.',
+                icon: Icons.account_balance_outlined,
                 color: AppColors.primary,
               ),
             ),
           ],
         ),
       ],
-    );
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      onClickTarget: (_) => _goToDemo(),
+      onFinish: _goToDemo,
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.assets);
+        _showDemo.value = false;
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
   }
 
   @override
@@ -97,40 +154,66 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     final groupsAsync = ref.watch(myGroupsProvider);
     final selectedGroupId = ref.watch(assetSelectedGroupIdProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.asset_title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.bar_chart),
-            tooltip: l10n.asset_statistics,
-            onPressed: () => context.push(AppRoutes.assetStatistics),
+    return ValueListenableBuilder<bool>(
+      valueListenable: _showDemo,
+      builder: (context, isDemo, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.asset_title),
+            actions: [
+              if (!isDemo)
+                IconButton(
+                  icon: const Icon(Icons.bar_chart),
+                  tooltip: l10n.asset_statistics,
+                  onPressed: () => context.push(AppRoutes.assetStatistics),
+                ),
+              if (!isDemo)
+                const AppBarMoreMenu(coachMarkKey: CoachMarkKeys.assets),
+            ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          AssetGroupBar(
-            key: _groupBarKey,
-            groupsAsync: groupsAsync,
-            selectedGroupId: selectedGroupId,
+          body: Column(
+            children: [
+              if (!isDemo)
+                AssetGroupBar(
+                  key: _groupBarKey,
+                  groupsAsync: groupsAsync,
+                  selectedGroupId: selectedGroupId,
+                ),
+              if (!isDemo) const AssetSummaryCard(),
+              if (isDemo)
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(AppSizes.spaceM),
+                    children: [
+                      AccountListItem(
+                        key: _demoCardKey,
+                        account: _demoAccount,
+                        showDragHandle: false,
+                        dragIndex: 0,
+                        onTap: _goToDemo,
+                        onDelete: () {},
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Expanded(
+                  child: _AssetList(selectedGroupId: selectedGroupId),
+                ),
+            ],
           ),
-          const AssetSummaryCard(),
-          Expanded(
-            child: _AssetList(selectedGroupId: selectedGroupId),
-          ),
-        ],
-      ),
-      floatingActionButton: selectedGroupId == null
-          ? null
-          : FloatingActionButton(
-              key: _fabKey,
-              onPressed: () => context.push(
-                AppRoutes.assetAccountAdd,
-                extra: {'groupId': selectedGroupId},
-              ),
-              child: const Icon(Icons.add),
-            ),
+          floatingActionButton: (!isDemo && selectedGroupId != null)
+              ? FloatingActionButton(
+                  key: _fabKey,
+                  onPressed: () => context.push(
+                    AppRoutes.assetAccountAdd,
+                    extra: {'groupId': selectedGroupId},
+                  ),
+                  child: const Icon(Icons.add),
+                )
+              : null,
+        );
+      },
     );
   }
 }

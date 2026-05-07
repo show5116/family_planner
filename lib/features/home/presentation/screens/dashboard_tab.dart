@@ -10,7 +10,8 @@ import 'package:family_planner/features/home/presentation/widgets/childcare_summ
 import 'package:family_planner/features/home/presentation/widgets/household_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/savings_summary_widget.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -58,7 +59,10 @@ class DashboardTab extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Family Planner'),
         actions: [
-          const AiChatIconButton(),
+          const AppBarMoreMenu(
+            coachMarkKey: CoachMarkKeys.home,
+            guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EB%82%98%EB%A7%8C%EC%9D%98-%EB%A7%9E%EC%B6%A4%ED%98%95-%EB%AA%A8%EC%9E%84-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-%ED%99%88-%EC%9C%84%EC%A0%AF-%EC%84%A0%EC%A0%95-%EB%B0%A9%EB%B2%95',
+          ),
           // 알림 아이콘 with 배지
           Builder(
             builder: (context) => IconButton(
