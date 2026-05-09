@@ -328,20 +328,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       });
     }
 
-    return ResponsiveNavigation(
-      selectedIndex: _selectedIndex,
-      onDestinationSelected: (index) {
-        setState(() {
-          _selectedIndex = index;
-          // 방문한 탭으로 기록
-          if (index < displayedItems.length) {
-            _visitedTabs.add(displayedItems[index].id);
-          }
-
-        });
+    return PopScope(
+      canPop: _selectedIndex == 0,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _selectedIndex != 0) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+        }
       },
-      destinations: destinations,
-      body: _buildLazyBody(displayedItems, l10n),
+      child: ResponsiveNavigation(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            _selectedIndex = index;
+            if (index < displayedItems.length) {
+              _visitedTabs.add(displayedItems[index].id);
+            }
+          });
+        },
+        destinations: destinations,
+        body: _buildLazyBody(displayedItems, l10n),
+      ),
     );
   }
 
