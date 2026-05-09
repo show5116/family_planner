@@ -16,13 +16,55 @@ import 'package:family_planner/shared/widgets/app_empty_state.dart';
 
 /// 포인트 탭 — 잔액 요약, 용돈 플랜 배너, 협상일 배너
 class PointsTab extends ConsumerWidget {
-  const PointsTab({super.key, required this.selectedChildId});
+  const PointsTab({
+    super.key,
+    required this.selectedChildId,
+    this.demoAccount,
+    this.demoPlan,
+    this.demoSavingsPlan,
+    this.demoAccountCardKey,
+    this.demoSavingsPlanKey,
+  });
 
   final String? selectedChildId;
+  final ChildcareAccount? demoAccount;
+  final AllowancePlan? demoPlan;
+  final ChildcareSavingsPlan? demoSavingsPlan;
+  final GlobalKey? demoAccountCardKey;
+  final GlobalKey? demoSavingsPlanKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+
+    // 데모 모드: 샘플 데이터 직접 렌더링
+    if (demoAccount != null) {
+      return SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: AppSizes.spaceM,
+          right: AppSizes.spaceM,
+          top: AppSizes.spaceM,
+          bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+        ),
+        child: Column(
+          children: [
+            AccountSummaryCard(
+              key: demoAccountCardKey,
+              account: demoAccount!,
+              plan: demoPlan,
+            ),
+            const SizedBox(height: AppSizes.spaceM),
+            if (demoSavingsPlan != null)
+              _DemoSavingsPlanCard(
+                key: demoSavingsPlanKey,
+                plan: demoSavingsPlan!,
+                account: demoAccount!,
+              ),
+          ],
+        ),
+      );
+    }
+
     final account = ref.watch(selectedChildAccountProvider);
     final accountsAsync = ref.watch(childcareAccountsProvider);
     final planAsync = ref.watch(childcareAllowancePlanProvider);
@@ -195,6 +237,72 @@ class PointsTab extends ConsumerWidget {
     );
   }
 
+}
+
+// ── 데모용 적금 플랜 카드 ──────────────────────────────────────────────────────
+
+class _DemoSavingsPlanCard extends StatelessWidget {
+  const _DemoSavingsPlanCard({super.key, required this.plan, required this.account});
+
+  final ChildcareSavingsPlan plan;
+  final ChildcareAccount account;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final fmt = DateFormat('yyyy.MM.dd');
+    final interestLabel =
+        plan.interestType == SavingsInterestType.simple ? '단리' : '복리';
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.savings_rounded, color: colorScheme.tertiary, size: 20),
+                const SizedBox(width: AppSizes.spaceS),
+                Text('적금 플랜',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceS, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: colorScheme.tertiary.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text('진행 중',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: colorScheme.tertiary,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            const Divider(height: 1),
+            const SizedBox(height: AppSizes.spaceS),
+            _InfoRow(label: '월 납입액', value: '${plan.monthlyAmount}P'),
+            _InfoRow(
+                label: '이자율',
+                value: '${plan.interestRate}% ($interestLabel)'),
+            _InfoRow(
+                label: '기간',
+                value:
+                    '${fmt.format(plan.startDate)} ~ ${fmt.format(plan.endDate)}'),
+            _InfoRow(
+                label: '적금 잔액',
+                value: '${account.savingsBalance.toInt()}P'),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // ── 적금 플랜 섹션 ────────────────────────────────────────────────────────────

@@ -10,11 +10,37 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 규칙 탭
 class RulesTab extends ConsumerWidget {
-  const RulesTab({super.key});
+  const RulesTab({super.key, this.demoRules});
+
+  final List<ChildcareRule>? demoRules;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+
+    // 데모 모드: 샘플 규칙 렌더링
+    if (demoRules != null) {
+      final plusRules =
+          demoRules!.where((r) => r.type == ChildcareRuleType.plus).toList();
+      final minusRules =
+          demoRules!.where((r) => r.type == ChildcareRuleType.minus).toList();
+      final infoRules =
+          demoRules!.where((r) => r.type == ChildcareRuleType.info).toList();
+      return Scaffold(
+        body: ListView(
+          children: [
+            const RulesGuide(hasRules: true),
+            if (plusRules.isNotEmpty)
+              _DemoRuleSection(type: ChildcareRuleType.plus, rules: plusRules),
+            if (minusRules.isNotEmpty)
+              _DemoRuleSection(type: ChildcareRuleType.minus, rules: minusRules),
+            if (infoRules.isNotEmpty)
+              _DemoRuleSection(type: ChildcareRuleType.info, rules: infoRules),
+          ],
+        ),
+      );
+    }
+
     final account = ref.watch(selectedChildAccountProvider);
     final rulesAsync = ref.watch(childcareRulesProvider);
 
@@ -383,6 +409,85 @@ List<ChildcareRule> _mergeReordered(
 
 extension<T> on T {
   R let<R>(R Function(T) block) => block(this);
+}
+
+// ── 데모용 규칙 섹션 ──────────────────────────────────────────────────────────
+
+class _DemoRuleSection extends StatelessWidget {
+  const _DemoRuleSection({required this.type, required this.rules});
+
+  final ChildcareRuleType type;
+  final List<ChildcareRule> rules;
+
+  (String, IconData, Color) _typeInfo(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    switch (type) {
+      case ChildcareRuleType.plus:
+        return ('+ 포인트 규칙', Icons.add_circle_outline, Colors.green.shade700);
+      case ChildcareRuleType.minus:
+        return ('- 포인트 규칙', Icons.remove_circle_outline, cs.error);
+      case ChildcareRuleType.info:
+        return ('일반 규칙', Icons.info_outline, cs.primary);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final (label, icon, color) = _typeInfo(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 18, color: color),
+              const SizedBox(width: AppSizes.spaceS),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${rules.length}',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(height: 1, color: colorScheme.outlineVariant),
+        ...rules.map(
+          (rule) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RuleListItem(rule: rule),
+              const Divider(height: 1),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 // ── 규칙 안내 카드 ────────────────────────────────────────────────────────────

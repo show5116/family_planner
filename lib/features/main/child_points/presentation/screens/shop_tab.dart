@@ -10,11 +10,34 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 포인트 상점 탭
 class ShopTab extends ConsumerWidget {
-  const ShopTab({super.key});
+  const ShopTab({super.key, this.demoItems});
+
+  final List<ChildcareShopItem>? demoItems;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+
+    // 데모 모드: 샘플 아이템 렌더링
+    if (demoItems != null) {
+      return Scaffold(
+        body: ListView(
+          children: [
+            const ShopGuide(hasItems: true),
+            ...demoItems!.map(
+              (item) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ShopItemListItem(item: item),
+                  const Divider(height: 1),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final account = ref.watch(selectedChildAccountProvider);
     final shopAsync = ref.watch(childcareShopItemsProvider);
 
