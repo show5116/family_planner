@@ -106,13 +106,25 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     );
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   Future<void> _showCoachMark() async {
     if (!mounted) return;
+    final cardPos = _keyToPosition(_demoCardKey);
     TutorialCoachMark(
       targets: [
         TargetFocus(
           identify: 'asset_card',
-          keyTarget: _demoCardKey,
+          targetPosition: cardPos,
+          keyTarget: cardPos == null ? _demoCardKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 12,
           contents: [

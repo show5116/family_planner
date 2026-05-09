@@ -10,8 +10,9 @@ import 'package:family_planner/l10n/app_localizations.dart';
 /// 자산 기록 목록 아이템
 class AssetRecordListItem extends ConsumerWidget {
   final AssetRecordModel record;
+  final bool isDemo;
 
-  const AssetRecordListItem({super.key, required this.record});
+  const AssetRecordListItem({super.key, required this.record, this.isDemo = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,14 +48,15 @@ class AssetRecordListItem extends ConsumerWidget {
                           ),
                     ),
                     const SizedBox(width: AppSizes.spaceXS),
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline, size: 18),
-                      color: Theme.of(context).colorScheme.error,
-                      tooltip: l10n.asset_delete_record,
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      onPressed: () => _confirmDelete(context, ref, l10n),
-                    ),
+                    if (!isDemo)
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, size: 18),
+                        color: Theme.of(context).colorScheme.error,
+                        tooltip: l10n.asset_delete_record,
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.zero,
+                        onPressed: () => _confirmDelete(context, ref, l10n),
+                      ),
                   ],
                 ),
               ],

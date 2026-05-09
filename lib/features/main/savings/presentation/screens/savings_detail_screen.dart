@@ -48,13 +48,26 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
     }
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   Future<void> _showDemoCoachMark() async {
     if (!mounted) return;
+    final headerPos = _keyToPosition(_headerCardKey);
+    final depositPos = _keyToPosition(_depositButtonKey);
     TutorialCoachMark(
       targets: [
         TargetFocus(
           identify: 'detail_header',
-          keyTarget: _headerCardKey,
+          targetPosition: headerPos,
+          keyTarget: headerPos == null ? _headerCardKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 12,
           contents: [
@@ -71,7 +84,8 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
         ),
         TargetFocus(
           identify: 'detail_deposit',
-          keyTarget: _depositButtonKey,
+          targetPosition: depositPos,
+          keyTarget: depositPos == null ? _depositButtonKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 12,
           contents: [

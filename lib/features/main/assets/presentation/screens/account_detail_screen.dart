@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
+import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_info_card.dart';
@@ -48,6 +49,39 @@ class AccountDetailByIdScreen extends ConsumerWidget {
   }
 }
 
+// 온보딩용 가짜 잔액 기록
+final _demoRecords = [
+  AssetRecordModel(
+    id: '__demo_r1__',
+    accountId: '__demo_asset__',
+    recordDate: DateTime(2025, 3, 1),
+    balance: 3000000,
+    principal: 3000000,
+    profit: 0,
+    createdAt: DateTime(2025, 3, 1),
+  ),
+  AssetRecordModel(
+    id: '__demo_r2__',
+    accountId: '__demo_asset__',
+    recordDate: DateTime(2025, 4, 1),
+    balance: 3250000,
+    principal: 3200000,
+    profit: 50000,
+    note: '이자 입금',
+    createdAt: DateTime(2025, 4, 1),
+  ),
+  AssetRecordModel(
+    id: '__demo_r3__',
+    accountId: '__demo_asset__',
+    recordDate: DateTime(2025, 5, 1),
+    balance: 3500000,
+    principal: 3400000,
+    profit: 100000,
+    note: '이자 입금',
+    createdAt: DateTime(2025, 5, 1),
+  ),
+];
+
 class AccountDetailScreen extends ConsumerStatefulWidget {
   final AccountModel account;
   final bool isDemo;
@@ -70,13 +104,26 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     }
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   Future<void> _showDemoCoachMark() async {
     if (!mounted) return;
+    final infoPos = _keyToPosition(_infoCardKey);
+    final recordPos = _keyToPosition(_addRecordKey);
     TutorialCoachMark(
       targets: [
         TargetFocus(
           identify: 'asset_info_card',
-          keyTarget: _infoCardKey,
+          targetPosition: infoPos,
+          keyTarget: infoPos == null ? _infoCardKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 12,
           contents: [
@@ -93,7 +140,8 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
         ),
         TargetFocus(
           identify: 'asset_add_record',
-          keyTarget: _addRecordKey,
+          targetPosition: recordPos,
+          keyTarget: recordPos == null ? _addRecordKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 12,
           contents: [
@@ -179,19 +227,13 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXL),
-                child: Column(
-                  children: [
-                    Icon(Icons.receipt_long_outlined, size: 48,
-                        color: Theme.of(context).colorScheme.outline),
-                    const SizedBox(height: AppSizes.spaceS),
-                    Text(l10n.asset_no_records,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.outline)),
-                  ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => AssetRecordListItem(
+                  record: _demoRecords[index],
+                  isDemo: true,
                 ),
+                childCount: _demoRecords.length,
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 80)),
