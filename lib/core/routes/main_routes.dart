@@ -126,10 +126,14 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final extra = state.extra;
         DateTime? initialDate;
+        bool isOnboarding = false;
         if (extra is DateTime) {
           initialDate = extra;
+        } else if (extra is Map<String, dynamic>) {
+          initialDate = extra['date'] as DateTime?;
+          isOnboarding = extra['isOnboarding'] as bool? ?? false;
         }
-        return TaskFormScreen(initialDate: initialDate);
+        return TaskFormScreen(initialDate: initialDate, isOnboarding: isOnboarding);
       },
     ),
     GoRoute(

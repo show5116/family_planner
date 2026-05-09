@@ -26,6 +26,43 @@ final todoViewTypeProvider = StateProvider<TodoViewType>((ref) => TodoViewType.k
 /// 모아 보기 섹션 타입
 enum _OverviewSection { overdue, today, tomorrow, thisWeek, nextWeek, later, noDueDate }
 
+// 온보딩용 샘플 할일 데이터
+final _todoOnboardingTasks = [
+  TaskModel(
+    id: '__demo_todo_1__',
+    userId: '__demo__',
+    title: '장보기 목록 작성',
+    description: '이번 주 필요한 식재료 정리',
+    status: TaskStatus.pending,
+    priority: TaskPriority.medium,
+    scheduledAt: DateTime.now(),
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  ),
+  TaskModel(
+    id: '__demo_todo_2__',
+    userId: '__demo__',
+    title: '가족 여행 계획',
+    description: '여름 휴가 일정 및 숙소 예약',
+    status: TaskStatus.inProgress,
+    priority: TaskPriority.high,
+    scheduledAt: DateTime.now(),
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  ),
+  TaskModel(
+    id: '__demo_todo_3__',
+    userId: '__demo__',
+    title: '월간 가계부 정리',
+    description: '지난달 수입·지출 확인',
+    status: TaskStatus.completed,
+    priority: TaskPriority.low,
+    scheduledAt: DateTime.now(),
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  ),
+];
+
 /// 할일 관리 탭
 class TodoTab extends ConsumerStatefulWidget {
   const TodoTab({super.key});
@@ -37,14 +74,43 @@ class TodoTab extends ConsumerStatefulWidget {
 class _TodoTabState extends ConsumerState<TodoTab> {
   final _fabKey = GlobalKey();
   final _weekBarKey = GlobalKey();
+  final _demoItemKey = GlobalKey();
+
+  // 샘플 데이터 on/off — setState 없이 관리
+  final _onboardingTasks = ValueNotifier<List<TaskModel>?>(null);
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeStartOnboarding());
+  }
+
+  @override
+  void dispose() {
+    _onboardingTasks.dispose();
+    super.dispose();
+  }
+
+  Future<void> _maybeStartOnboarding() async {
+    final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.todo);
+    if (completed || !mounted) return;
+    _startDemo();
+  }
+
+  void _replayOnboarding() {
+    OnboardingService.resetCoachMark(CoachMarkKeys.todo).then((_) {
+      if (mounted) _startDemo();
+    });
+  }
+
+  void _startDemo() {
+    _onboardingTasks.value = _todoOnboardingTasks;
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
-  void _replayOnboarding() => _showCoachMark(force: true);
+  void _endDemo() {
+    _onboardingTasks.value = null;
+  }
 
   TargetPosition? _keyToPosition(GlobalKey key) {
     final ctx = key.currentContext;
@@ -56,13 +122,13 @@ class _TodoTabState extends ConsumerState<TodoTab> {
     return TargetPosition(box.size, offset);
   }
 
-  Future<void> _showCoachMark({bool force = false}) async {
+  Future<void> _showCoachMark() async {
+    if (!mounted) return;
     final weekBarPos = _keyToPosition(_weekBarKey);
+    final demoItemPos = _keyToPosition(_demoItemKey);
     final fabPos = _keyToPosition(_fabKey);
-    await FeatureCoachMark.show(
-      context: context,
-      featureKey: CoachMarkKeys.todo,
-      forceShow: force,
+
+    TutorialCoachMark(
       targets: [
         TargetFocus(
           identify: 'todo_week_bar',
@@ -78,6 +144,24 @@ class _TodoTabState extends ConsumerState<TodoTab> {
                 description: '날짜를 탭해 해당 날의 할 일을 확인하고\n그룹원과 역할을 나눠 보세요.',
                 icon: Icons.date_range,
                 color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'todo_demo_item',
+          targetPosition: demoItemPos,
+          keyTarget: demoItemPos == null ? _demoItemKey : null,
+          shape: ShapeLightFocus.RRect,
+          radius: 12,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '상태 변경',
+                description: '왼쪽 아이콘을 탭하면 할 일의 상태를\n대기 · 진행 중 · 완료 등으로 바꿀 수 있어요.',
+                icon: Icons.swap_horiz,
+                color: AppColors.primary,
               ),
             ),
           ],
@@ -100,7 +184,35 @@ class _TodoTabState extends ConsumerState<TodoTab> {
           ],
         ),
       ],
-    );
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      onFinish: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.todo);
+        _endDemo();
+      },
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.todo);
+        _endDemo();
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
   }
 
   @override
@@ -121,117 +233,122 @@ class _TodoTabState extends ConsumerState<TodoTab> {
     final effectiveViewType = isMobile ? TodoViewType.list : viewType;
     final isOverview = viewMode == TodoViewMode.overview;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const CalendarGroupSelector(),
-        bottom: isLoading
-            ? const PreferredSize(
-                preferredSize: Size.fromHeight(2),
-                child: LinearProgressIndicator(),
-              )
-            : null,
-        actions: [
-          // 뷰 전환 버튼 (모바일에서는 숨김, 모아보기에서는 숨김)
-          if (!isMobile && !isOverview)
-            IconButton(
-              icon: Icon(
-                viewType == TodoViewType.kanban
-                    ? Icons.view_list
-                    : Icons.view_kanban,
-              ),
-              tooltip: viewType == TodoViewType.kanban
-                  ? l10n.todo_viewList
-                  : l10n.todo_viewKanban,
-              onPressed: () {
-                ref.read(todoViewTypeProvider.notifier).state =
+    return ValueListenableBuilder<List<TaskModel>?>(
+      valueListenable: _onboardingTasks,
+      builder: (context, demoTasks, _) {
+        final isDemo = demoTasks != null;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const CalendarGroupSelector(),
+            bottom: (!isDemo && isLoading)
+                ? const PreferredSize(
+                    preferredSize: Size.fromHeight(2),
+                    child: LinearProgressIndicator(),
+                  )
+                : null,
+            actions: [
+              // 뷰 전환 버튼 (모바일에서는 숨김, 모아보기에서는 숨김, 데모 중에는 숨김)
+              if (!isMobile && !isOverview && !isDemo)
+                IconButton(
+                  icon: Icon(
                     viewType == TodoViewType.kanban
-                        ? TodoViewType.list
-                        : TodoViewType.kanban;
-              },
-            ),
-          IconButton(
-            icon: Icon(
-              ref.watch(todoSearchActiveProvider)
-                  ? Icons.search_off
-                  : Icons.search,
-            ),
-            tooltip: l10n.common_search,
-            onPressed: () {
-              final isActive = ref.read(todoSearchActiveProvider);
-              if (isActive) {
-                ref.read(todoSearchQueryProvider.notifier).state = null;
-                ref.read(todoSearchActiveProvider.notifier).state = false;
-              } else {
-                ref.read(todoSearchActiveProvider.notifier).state = true;
-              }
-            },
-          ),
-          AppBarMoreMenu(
-            onReplayOnboarding: _replayOnboarding,
-            extraItems: [
-              MoreMenuItem(
-                id: 'categories',
-                icon: Icons.category_outlined,
-                label: l10n.category_management,
-                onTap: (ctx) => ctx.push('/calendar/categories'),
+                        ? Icons.view_list
+                        : Icons.view_kanban,
+                  ),
+                  tooltip: viewType == TodoViewType.kanban
+                      ? l10n.todo_viewList
+                      : l10n.todo_viewKanban,
+                  onPressed: () {
+                    ref.read(todoViewTypeProvider.notifier).state =
+                        viewType == TodoViewType.kanban
+                            ? TodoViewType.list
+                            : TodoViewType.kanban;
+                  },
+                ),
+              if (!isDemo)
+                IconButton(
+                  icon: Icon(
+                    ref.watch(todoSearchActiveProvider)
+                        ? Icons.search_off
+                        : Icons.search,
+                  ),
+                  tooltip: l10n.common_search,
+                  onPressed: () {
+                    final isActive = ref.read(todoSearchActiveProvider);
+                    if (isActive) {
+                      ref.read(todoSearchQueryProvider.notifier).state = null;
+                      ref.read(todoSearchActiveProvider.notifier).state = false;
+                    } else {
+                      ref.read(todoSearchActiveProvider.notifier).state = true;
+                    }
+                  },
+                ),
+              AppBarMoreMenu(
+                onReplayOnboarding: _replayOnboarding,
+                extraItems: [
+                  MoreMenuItem(
+                    id: 'categories',
+                    icon: Icons.category_outlined,
+                    label: l10n.category_management,
+                    onTap: (ctx) => ctx.push('/calendar/categories'),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // 검색바 (검색 모드일 때 표시)
-          if (ref.watch(todoSearchActiveProvider))
-            const _TodoSearchBar(),
+          body: Column(
+            children: [
+              if (!isDemo && ref.watch(todoSearchActiveProvider))
+                const _TodoSearchBar(),
 
-          // 검색 쿼리가 있으면 검색 결과, 아니면 기존 뷰
-          if (ref.watch(todoSearchQueryProvider) != null) ...[
-            const Expanded(
-              child: _TodoSearchResults(),
-            ),
-          ] else ...[
-            // 뷰 모드 전환 (날짜별 보기 / 모아 보기)
-            _ViewModeToggle(viewMode: viewMode, l10n: l10n),
-            const Divider(height: 1),
+              if (!isDemo && ref.watch(todoSearchQueryProvider) != null) ...[
+                const Expanded(child: _TodoSearchResults()),
+              ] else ...[
+                _ViewModeToggle(viewMode: viewMode, l10n: l10n),
+                const Divider(height: 1),
 
-            // 날짜별 보기 모드일 때만 주간 바 + 날짜 헤더 표시
-            if (!isOverview) ...[
-              TodoWeekBar(key: _weekBarKey),
-              const Divider(height: 1),
-              _SelectedDateHeader(selectedDate: selectedDate, l10n: l10n),
-            ],
+                if (!isOverview) ...[
+                  TodoWeekBar(key: _weekBarKey),
+                  const Divider(height: 1),
+                  _SelectedDateHeader(selectedDate: selectedDate, l10n: l10n),
+                ],
 
-            // 모아 보기일 때 완료 포함 헤더
-            if (isOverview)
-              _OverviewHeader(l10n: l10n),
+                if (isOverview) _OverviewHeader(l10n: l10n),
 
-            // 필터/정렬 바
-            const _FilterSortBar(),
+                const _FilterSortBar(),
 
-            // 할일 목록
-            Expanded(
-              child: isOverview
-                  ? const _OverviewListView()
-                  : _DateViewContent(
-                      effectiveViewType: effectiveViewType,
-                      l10n: l10n,
+                // 데모 모드: 샘플 목록 표시
+                if (isDemo)
+                  Expanded(
+                    child: _DemoListView(
+                      tasks: demoTasks,
+                      firstItemKey: _demoItemKey,
                     ),
-            ),
-          ],
-        ],
-      ),
-      floatingActionButton: ref.watch(todoSearchQueryProvider) != null
-          ? null
-          : FloatingActionButton(
-              key: _fabKey,
-              heroTag: 'todo_fab',
-              onPressed: () {
-                context.push('/todo/add');
-              },
-              tooltip: l10n.todo_add,
-              child: const Icon(Icons.add),
-            ),
+                  )
+                else
+                  Expanded(
+                    child: isOverview
+                        ? const _OverviewListView()
+                        : _DateViewContent(
+                            effectiveViewType: effectiveViewType,
+                            l10n: l10n,
+                          ),
+                  ),
+              ],
+            ],
+          ),
+          floatingActionButton: (isDemo || ref.watch(todoSearchQueryProvider) == null)
+              ? FloatingActionButton(
+                  key: _fabKey,
+                  heroTag: 'todo_fab',
+                  onPressed: isDemo ? null : () => context.push('/todo/add'),
+                  tooltip: l10n.todo_add,
+                  child: const Icon(Icons.add),
+                )
+              : null,
+        );
+      },
     );
   }
 }
@@ -1001,6 +1118,31 @@ class _SelectedDateHeader extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// 온보딩 데모 목록 (샘플 데이터, 탭/상태변경 비활성)
+class _DemoListView extends StatelessWidget {
+  final List<TaskModel> tasks;
+  final GlobalKey firstItemKey;
+
+  const _DemoListView({required this.tasks, required this.firstItemKey});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      itemCount: tasks.length,
+      separatorBuilder: (_, _) => const SizedBox(height: AppSizes.spaceS),
+      itemBuilder: (context, index) {
+        return TodoListItem(
+          key: index == 0 ? firstItemKey : null,
+          task: tasks[index],
+          onTap: () {},
+          onStatusChange: (_) {},
+        );
+      },
     );
   }
 }

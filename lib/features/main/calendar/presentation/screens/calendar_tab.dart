@@ -42,15 +42,36 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
   void _replayOnboarding() => _showCoachMark(force: true);
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   Future<void> _showCoachMark({bool force = false}) async {
+    final calendarPos = _keyToPosition(_calendarKey);
+    final fabPos = _keyToPosition(_fabKey);
+
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.calendar,
       forceShow: force,
+      onClickTarget: (target) {
+        if (!mounted) return;
+        if (target.identify == 'calendar_fab') {
+          final selectedDate = ref.read(selectedDateProvider);
+          context.push('/calendar/add', extra: {'date': selectedDate, 'isOnboarding': true});
+        }
+      },
       targets: [
         TargetFocus(
           identify: 'calendar_view',
-          keyTarget: _calendarKey,
+          targetPosition: calendarPos,
+          keyTarget: calendarPos == null ? _calendarKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 8,
           contents: [
@@ -66,14 +87,15 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
         ),
         TargetFocus(
           identify: 'calendar_fab',
-          keyTarget: _fabKey,
+          targetPosition: fabPos,
+          keyTarget: fabPos == null ? _fabKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
                 title: '일정 추가',
-                description: '버튼을 눌러 새 일정을 만드세요.\n그룹원과 함께하는 일정도 등록할 수 있어요.',
+                description: '버튼을 눌러 새 일정을 만드세요.\n눌러서 생성 화면을 살펴보세요.',
                 icon: Icons.add,
               ),
             ),

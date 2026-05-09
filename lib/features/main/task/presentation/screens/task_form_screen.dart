@@ -7,7 +7,10 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_form_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // 분리된 위젯 import
 import 'package:family_planner/features/main/task/presentation/screens/task_form/group_selector.dart';
@@ -27,6 +30,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
   final TaskModel? task;
   final DateTime? initialDate;
   final TaskType? initialTaskType;
+  final bool isOnboarding;
 
   const TaskFormScreen({
     super.key,
@@ -34,6 +38,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
     this.task,
     this.initialDate,
     this.initialTaskType,
+    this.isOnboarding = false,
   });
 
   @override
@@ -45,6 +50,11 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _titleFocusNode = FocusNode();
+
+  final _titleFieldKey = GlobalKey();
+  final _dateTimeKey = GlobalKey();
+  final _taskTypeKey = GlobalKey();
+  final _participantsKey = GlobalKey();
 
   String? _previousGroupId;
 
@@ -64,6 +74,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       // 상세 API 로드 (reminders + groupId 재확인)
       if (widget.taskId != null) {
         _loadDetail();
+      }
+      if (widget.isOnboarding) {
+        _showCoachMark();
       }
     });
   }
@@ -94,6 +107,135 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         notifier.addReminder(minutes);
       }
     } catch (_) {}
+  }
+
+  Future<void> _scrollToKey(GlobalKey key) async {
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+    await Scrollable.ensureVisible(
+      ctx,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      alignment: 0.3,
+    );
+    await Future.delayed(const Duration(milliseconds: 150));
+  }
+
+  Future<void> _showCoachMark() async {
+    if (!mounted) return;
+
+    final selectedGroupId = ref.read(selectedGroupIdProvider);
+    final targets = [
+      TargetFocus(
+        identify: 'form_title',
+        keyTarget: _titleFieldKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '일정 제목',
+              description: '일정의 이름을 입력하세요.\n짧고 명확하게 적을수록 좋아요.',
+              icon: Icons.title,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'form_datetime',
+        keyTarget: _dateTimeKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '날짜 & 시간',
+              description: '일정 시작일과 종료일,\n시간을 지정할 수 있어요.',
+              icon: Icons.schedule,
+              color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'form_task_type',
+        keyTarget: _taskTypeKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '일정 유형',
+              description: '일반 일정, 할 일, 또는 둘 다로\n유형을 선택할 수 있어요.',
+              icon: Icons.category_outlined,
+              color: Colors.orange,
+            ),
+          ),
+        ],
+      ),
+      if (selectedGroupId != null)
+        TargetFocus(
+          identify: 'form_participants',
+          keyTarget: _participantsKey,
+          shape: ShapeLightFocus.RRect,
+          radius: 8,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '참가자',
+                description: '그룹원을 이 일정에 초대할 수 있어요.\n참가자에게 알림이 전송돼요.',
+                icon: Icons.group_outlined,
+                color: Colors.purple,
+              ),
+            ),
+          ],
+        ),
+    ];
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ),
+      onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.calendarForm),
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.calendarForm);
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      beforeFocus: (target) async {
+        switch (target.identify) {
+          case 'form_title':
+            await _scrollToKey(_titleFieldKey);
+          case 'form_datetime':
+            await _scrollToKey(_dateTimeKey);
+          case 'form_task_type':
+            await _scrollToKey(_taskTypeKey);
+          case 'form_participants':
+            await _scrollToKey(_participantsKey);
+        }
+      },
+    ).show(context: context);
   }
 
   @override
@@ -147,18 +289,18 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               children: [
                 GroupSelector(formNotifier: formNotifier, isReadOnly: formState.isEditMode),
                 const SizedBox(height: AppSizes.spaceL),
-                TitleField(controller: _titleController, formNotifier: formNotifier, focusNode: _titleFocusNode),
+                TitleField(key: _titleFieldKey, controller: _titleController, formNotifier: formNotifier, focusNode: _titleFocusNode),
                 const SizedBox(height: AppSizes.spaceL),
-                DateTimeSection(formState: formState, formNotifier: formNotifier),
+                DateTimeSection(key: _dateTimeKey, formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
                 CategorySection(formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
-                TaskTypeSection(formState: formState, formNotifier: formNotifier),
+                TaskTypeSection(key: _taskTypeKey, formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
                 PrioritySection(formState: formState, formNotifier: formNotifier),
                 const SizedBox(height: AppSizes.spaceL),
                 if (selectedGroupId != null) ...[
-                  ParticipantsSection(groupId: selectedGroupId, formState: formState, formNotifier: formNotifier),
+                  ParticipantsSection(key: _participantsKey, groupId: selectedGroupId, formState: formState, formNotifier: formNotifier),
                   const SizedBox(height: AppSizes.spaceL),
                 ],
                 RecurringSection(formState: formState, formNotifier: formNotifier, readOnly: formState.isEditMode),

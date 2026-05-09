@@ -53,6 +53,7 @@ class CoachMarkKeys {
 
   static const String home = 'home';
   static const String calendar = 'calendar';
+  static const String calendarForm = 'calendar_form';
   static const String todo = 'todo';
   static const String groupManagement = 'group_management';
   static const String household = 'household';
