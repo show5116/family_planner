@@ -6,10 +6,10 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -88,7 +88,6 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   bool _isDemo = false;
   final _noteCardKey = GlobalKey();
   final _checklistCardKey = GlobalKey();
-  final _addButtonKey = GlobalKey();
 
   @override
   void initState() {
@@ -405,17 +404,10 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
             : null,
         automaticallyImplyLeading: false,
         actions: [
-          const AiChatIconButton(),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: l10n.common_search,
             onPressed: _toggleSearch,
-          ),
-          IconButton(
-            key: _addButtonKey,
-            icon: const Icon(Icons.add),
-            tooltip: l10n.memo_create,
-            onPressed: () => context.push(AppRoutes.memoAdd),
           ),
           AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
         ],
@@ -469,6 +461,13 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
           ),
         ],
       ),
+      floatingActionButton: _isDemo
+          ? null
+          : FloatingActionButton(
+              onPressed: () => context.push(AppRoutes.memoAdd),
+              tooltip: l10n.memo_create,
+              child: const Icon(Icons.add),
+            ),
     );
   }
 
