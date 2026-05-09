@@ -62,45 +62,48 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
     if (!mounted) return;
     final headerPos = _keyToPosition(_headerCardKey);
     final depositPos = _keyToPosition(_depositButtonKey);
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'detail_header',
+        targetPosition: headerPos,
+        keyTarget: headerPos == null ? _headerCardKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '적립 현황',
+              description: '현재 적립금과 목표 금액,\n달성률을 상세하게 확인할 수 있어요.\n자동 적립 중일 때는 적립 상태도 표시돼요.',
+              icon: Icons.savings_outlined,
+              color: AppColors.investment,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'detail_deposit',
+        targetPosition: depositPos,
+        keyTarget: depositPos == null ? _depositButtonKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '입금 / 출금',
+              description: '언제든지 직접 입금하거나 출금할 수 있어요.\n자동 적립과 함께 활용하면 더욱 편리해요.',
+              icon: Icons.swap_vert,
+              color: Colors.green,
+            ),
+          ),
+        ],
+      ),
+    ];
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
     TutorialCoachMark(
-      targets: [
-        TargetFocus(
-          identify: 'detail_header',
-          targetPosition: headerPos,
-          keyTarget: headerPos == null ? _headerCardKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '적립 현황',
-                description: '현재 적립금과 목표 금액,\n달성률을 상세하게 확인할 수 있어요.\n자동 적립 중일 때는 적립 상태도 표시돼요.',
-                icon: Icons.savings_outlined,
-                color: AppColors.investment,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'detail_deposit',
-          targetPosition: depositPos,
-          keyTarget: depositPos == null ? _depositButtonKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '입금 / 출금',
-                description: '언제든지 직접 입금하거나 출금할 수 있어요.\n자동 적립과 함께 활용하면 더욱 편리해요.',
-                icon: Icons.swap_vert,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-      ],
+      targets: targets,
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

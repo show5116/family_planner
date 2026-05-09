@@ -118,45 +118,48 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     if (!mounted) return;
     final infoPos = _keyToPosition(_infoCardKey);
     final recordPos = _keyToPosition(_addRecordKey);
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'asset_info_card',
+        targetPosition: infoPos,
+        keyTarget: infoPos == null ? _infoCardKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '계좌 상세 정보',
+              description: '최신 잔액, 수익률, 금융기관 정보를\n한눈에 확인할 수 있어요.',
+              icon: Icons.account_balance_outlined,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'asset_add_record',
+        targetPosition: recordPos,
+        keyTarget: recordPos == null ? _addRecordKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '잔액 기록',
+              description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.',
+              icon: Icons.add_chart,
+              color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+    ];
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
     TutorialCoachMark(
-      targets: [
-        TargetFocus(
-          identify: 'asset_info_card',
-          targetPosition: infoPos,
-          keyTarget: infoPos == null ? _infoCardKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '계좌 상세 정보',
-                description: '최신 잔액, 수익률, 금융기관 정보를\n한눈에 확인할 수 있어요.',
-                icon: Icons.account_balance_outlined,
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'asset_add_record',
-          targetPosition: recordPos,
-          keyTarget: recordPos == null ? _addRecordKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '잔액 기록',
-                description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.',
-                icon: Icons.add_chart,
-                color: Colors.teal,
-              ),
-            ),
-          ],
-        ),
-      ],
+      targets: targets,
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

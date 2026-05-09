@@ -119,27 +119,30 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   Future<void> _showCoachMark() async {
     if (!mounted) return;
     final cardPos = _keyToPosition(_demoCardKey);
-    TutorialCoachMark(
-      targets: [
-        TargetFocus(
-          identify: 'asset_card',
-          targetPosition: cardPos,
-          keyTarget: cardPos == null ? _demoCardKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '계좌 카드',
-                description: '계좌명, 금융기관, 최신 잔액과\n수익률을 한눈에 확인할 수 있어요.',
-                icon: Icons.account_balance_outlined,
-                color: AppColors.primary,
-              ),
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'asset_card',
+        targetPosition: cardPos,
+        keyTarget: cardPos == null ? _demoCardKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '계좌 카드',
+              description: '계좌명, 금융기관, 최신 잔액과\n수익률을 한눈에 확인할 수 있어요.',
+              icon: Icons.account_balance_outlined,
+              color: AppColors.primary,
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
+    ];
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+    TutorialCoachMark(
+      targets: targets,
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

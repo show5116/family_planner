@@ -128,62 +128,67 @@ class _TodoTabState extends ConsumerState<TodoTab> {
     final demoItemPos = _keyToPosition(_demoItemKey);
     final fabPos = _keyToPosition(_fabKey);
 
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'todo_week_bar',
+        targetPosition: weekBarPos,
+        keyTarget: weekBarPos == null ? _weekBarKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '날짜별 할 일',
+              description: '날짜를 탭해 해당 날의 할 일을 확인하고\n그룹원과 역할을 나눠 보세요.',
+              icon: Icons.date_range,
+              color: Colors.green,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'todo_demo_item',
+        targetPosition: demoItemPos,
+        keyTarget: demoItemPos == null ? _demoItemKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '상태 변경',
+              description: '왼쪽 아이콘을 탭하면 할 일의 상태를\n대기 · 진행 중 · 완료 등으로 바꿀 수 있어요.',
+              icon: Icons.swap_horiz,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'todo_fab',
+        targetPosition: fabPos,
+        keyTarget: fabPos == null ? _fabKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '할 일 추가',
+              description: '새로운 할 일을 추가하고\n담당자와 마감일을 지정해보세요.',
+              icon: Icons.add_task,
+              color: Colors.green,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+
     TutorialCoachMark(
-      targets: [
-        TargetFocus(
-          identify: 'todo_week_bar',
-          targetPosition: weekBarPos,
-          keyTarget: weekBarPos == null ? _weekBarKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '날짜별 할 일',
-                description: '날짜를 탭해 해당 날의 할 일을 확인하고\n그룹원과 역할을 나눠 보세요.',
-                icon: Icons.date_range,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'todo_demo_item',
-          targetPosition: demoItemPos,
-          keyTarget: demoItemPos == null ? _demoItemKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '상태 변경',
-                description: '왼쪽 아이콘을 탭하면 할 일의 상태를\n대기 · 진행 중 · 완료 등으로 바꿀 수 있어요.',
-                icon: Icons.swap_horiz,
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'todo_fab',
-          targetPosition: fabPos,
-          keyTarget: fabPos == null ? _fabKey : null,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '할 일 추가',
-                description: '새로운 할 일을 추가하고\n담당자와 마감일을 지정해보세요.',
-                icon: Icons.add_task,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-      ],
+      targets: targets,
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

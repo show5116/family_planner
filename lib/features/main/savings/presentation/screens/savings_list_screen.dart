@@ -130,27 +130,30 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
   Future<void> _showCoachMark() async {
     if (!mounted) return;
     final firstCardPos = _keyToPosition(_firstCardKey);
-    TutorialCoachMark(
-      targets: [
-        TargetFocus(
-          identify: 'savings_card_info',
-          targetPosition: firstCardPos,
-          keyTarget: firstCardPos == null ? _firstCardKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '저금통',
-                description: '목표 이름, 현재 적립금, 달성률을 한눈에 확인할 수 있어요.\n자동 적립을 켜두면 매달 자동으로 입금돼요.',
-                icon: Icons.savings_outlined,
-                color: AppColors.investment,
-              ),
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'savings_card_info',
+        targetPosition: firstCardPos,
+        keyTarget: firstCardPos == null ? _firstCardKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '저금통',
+              description: '목표 이름, 현재 적립금, 달성률을 한눈에 확인할 수 있어요.\n자동 적립을 켜두면 매달 자동으로 입금돼요.',
+              icon: Icons.savings_outlined,
+              color: AppColors.investment,
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
+    ];
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+    TutorialCoachMark(
+      targets: targets,
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

@@ -33,6 +33,9 @@ class FeatureCoachMark {
     }
     if (!context.mounted) return;
 
+    await waitForTargets(targets, context);
+    if (!context.mounted) return;
+
     TutorialCoachMark(
       targets: targets,
       colorShadow: AppColors.textPrimary,
@@ -62,6 +65,22 @@ class FeatureCoachMark {
       focusAnimationDuration: const Duration(milliseconds: 300),
       pulseAnimationDuration: const Duration(milliseconds: 800),
     ).show(context: context);
+  }
+
+  /// keyTarget 기반 타겟이 모두 렌더링될 때까지 대기 (최대 2초, 200ms 간격)
+  static Future<void> waitForTargets(
+    List<TargetFocus> targets,
+    BuildContext context,
+  ) async {
+    for (var i = 0; i < 10; i++) {
+      final allReady = targets.every((t) {
+        if (t.targetPosition != null) return true;
+        return t.keyTarget?.currentContext != null;
+      });
+      if (allReady) return;
+      await Future.delayed(const Duration(milliseconds: 200));
+      if (!context.mounted) return;
+    }
   }
 
   /// 코치마크 말풍선 콘텐츠 빌더

@@ -73,77 +73,80 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     final statisticsPos = _keyToPosition(_statisticsKey);
     final fabPos = _keyToPosition(_fabKey);
 
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'household_budget',
+        targetPosition: budgetPos,
+        keyTarget: budgetPos == null ? _budgetKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '예산 설정',
+              description: '월별 예산을 설정하면 지출 현황과\n남은 예산을 한눈에 확인할 수 있어요.',
+              icon: Icons.account_balance_wallet_outlined,
+              color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'household_recurring',
+        targetPosition: recurringPos,
+        keyTarget: recurringPos == null ? _recurringKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '고정 지출',
+              description: '월세, 구독료 등 매달 반복되는 지출을\n등록하면 자동으로 기록해 드려요.',
+              icon: Icons.repeat,
+              color: Colors.indigo,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'household_statistics',
+        targetPosition: statisticsPos,
+        keyTarget: statisticsPos == null ? _statisticsKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '통계',
+              description: '카테고리별 지출 비율과 월별 추이를\n차트로 확인할 수 있어요.',
+              icon: Icons.bar_chart,
+              color: Colors.purple,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'household_fab',
+        targetPosition: fabPos,
+        keyTarget: fabPos == null ? _fabKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '지출/수입 추가',
+              description: '새 지출이나 수입을 기록하세요.\n그룹별로 나눠서 관리할 수 있어요.',
+              icon: Icons.add,
+              color: Colors.orange,
+            ),
+          ),
+        ],
+      ),
+    ];
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
     TutorialCoachMark(
-      targets: [
-        TargetFocus(
-          identify: 'household_budget',
-          targetPosition: budgetPos,
-          keyTarget: budgetPos == null ? _budgetKey : null,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '예산 설정',
-                description: '월별 예산을 설정하면 지출 현황과\n남은 예산을 한눈에 확인할 수 있어요.',
-                icon: Icons.account_balance_wallet_outlined,
-                color: Colors.teal,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'household_recurring',
-          targetPosition: recurringPos,
-          keyTarget: recurringPos == null ? _recurringKey : null,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '고정 지출',
-                description: '월세, 구독료 등 매달 반복되는 지출을\n등록하면 자동으로 기록해 드려요.',
-                icon: Icons.repeat,
-                color: Colors.indigo,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'household_statistics',
-          targetPosition: statisticsPos,
-          keyTarget: statisticsPos == null ? _statisticsKey : null,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '통계',
-                description: '카테고리별 지출 비율과 월별 추이를\n차트로 확인할 수 있어요.',
-                icon: Icons.bar_chart,
-                color: Colors.purple,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'household_fab',
-          targetPosition: fabPos,
-          keyTarget: fabPos == null ? _fabKey : null,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '지출/수입 추가',
-                description: '새 지출이나 수입을 기록하세요.\n그룹별로 나눠서 관리할 수 있어요.',
-                icon: Icons.add,
-                color: Colors.orange,
-              ),
-            ),
-          ],
-        ),
-      ],
+      targets: targets,
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

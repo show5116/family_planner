@@ -197,6 +197,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         ),
     ];
 
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+
     TutorialCoachMark(
       targets: targets,
       colorShadow: const Color(0xFF212121),
