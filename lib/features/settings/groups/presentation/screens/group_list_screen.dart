@@ -41,9 +41,23 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   void _replayOnboarding() => _showCoachMark(force: true);
 
   Future<void> _showCoachMark({bool force = false}) async {
+    final createFabPos = _keyToPosition(_createFabKey);
+    final joinFabPos = _keyToPosition(_joinFabKey);
+    final myRequestsPos = _keyToPosition(_myRequestsKey);
+
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.groupManagement,
@@ -52,7 +66,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
       targets: [
         TargetFocus(
           identify: 'group_create_fab',
-          keyTarget: _createFabKey,
+          targetPosition: createFabPos,
+          keyTarget: createFabPos == null ? _createFabKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 28,
           contents: [
@@ -69,7 +84,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
         ),
         TargetFocus(
           identify: 'group_join_fab',
-          keyTarget: _joinFabKey,
+          targetPosition: joinFabPos,
+          keyTarget: joinFabPos == null ? _joinFabKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 28,
           contents: [
@@ -86,7 +102,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
         ),
         TargetFocus(
           identify: 'group_my_requests',
-          keyTarget: _myRequestsKey,
+          targetPosition: myRequestsPos,
+          keyTarget: myRequestsPos == null ? _myRequestsKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(

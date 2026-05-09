@@ -65,6 +65,16 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     super.dispose();
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   /// 그룹 데이터가 처음 로드된 뒤 1회 코치마크 실행
   void _maybeShowCoachMark(bool isOwner) {
     if (_isOwner != null) return; // 이미 실행됨
@@ -139,10 +149,11 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
             Icons.person_add_outlined,
             Colors.blue,
           ),
-          // 2. 초대 코드 카드 — 설정 탭이 이미 활성화된 상태에서 하이라이트
+          // 2. 초대 코드 카드 — 설정 탭 전환 후 _keyToPosition으로 정확한 좌표 계산
           TargetFocus(
             identify: 'group_invite_code',
-            keyTarget: _inviteCodeKey,
+            targetPosition: _keyToPosition(_inviteCodeKey),
+            keyTarget: _keyToPosition(_inviteCodeKey) == null ? _inviteCodeKey : null,
             shape: ShapeLightFocus.RRect,
             radius: 12,
             contents: [
@@ -178,10 +189,11 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
               ),
             ],
           ),
-          // 4. 역할 추가 FAB
+          // 4. 역할 추가 FAB — beforeFocus에서 탭 전환 후 _keyToPosition으로 좌표 계산
           TargetFocus(
             identify: 'group_role_fab',
-            keyTarget: _fabKey,
+            targetPosition: _keyToPosition(_fabKey),
+            keyTarget: _keyToPosition(_fabKey) == null ? _fabKey : null,
             shape: ShapeLightFocus.RRect,
             radius: 16,
             contents: [

@@ -157,7 +157,9 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
         ),
       ),
       onClickTarget: (_) => _goToDemo(),
-      onFinish: _goToDemo,
+      onFinish: () {
+        // onClickTarget 으로 이미 이동했으므로 중복 실행 방지
+      },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.assets);
         _showDemo.value = false;

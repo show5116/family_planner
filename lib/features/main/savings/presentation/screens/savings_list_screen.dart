@@ -101,6 +101,16 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
     });
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   void _startDemo() {
     _onboardingGoals.value = _demoGoals;
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
@@ -119,11 +129,13 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
 
   Future<void> _showCoachMark() async {
     if (!mounted) return;
+    final firstCardPos = _keyToPosition(_firstCardKey);
     TutorialCoachMark(
       targets: [
         TargetFocus(
           identify: 'savings_card_info',
-          keyTarget: _firstCardKey,
+          targetPosition: firstCardPos,
+          keyTarget: firstCardPos == null ? _firstCardKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 12,
           contents: [
@@ -156,9 +168,10 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
               color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
-      // 카드 탭 또는 1단계 완료(onFinish) → 상세 화면으로 이동
       onClickTarget: (_) => _goToDemo(),
-      onFinish: _goToDemo,
+      onFinish: () {
+        // onClickTarget 으로 이미 이동했으므로 중복 실행 방지
+      },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.savings);
         _onboardingGoals.value = null;

@@ -46,7 +46,19 @@ class _TodoTabState extends ConsumerState<TodoTab> {
 
   void _replayOnboarding() => _showCoachMark(force: true);
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   Future<void> _showCoachMark({bool force = false}) async {
+    final weekBarPos = _keyToPosition(_weekBarKey);
+    final fabPos = _keyToPosition(_fabKey);
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.todo,
@@ -54,7 +66,8 @@ class _TodoTabState extends ConsumerState<TodoTab> {
       targets: [
         TargetFocus(
           identify: 'todo_week_bar',
-          keyTarget: _weekBarKey,
+          targetPosition: weekBarPos,
+          keyTarget: weekBarPos == null ? _weekBarKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 8,
           contents: [
@@ -71,7 +84,8 @@ class _TodoTabState extends ConsumerState<TodoTab> {
         ),
         TargetFocus(
           identify: 'todo_fab',
-          keyTarget: _fabKey,
+          targetPosition: fabPos,
+          keyTarget: fabPos == null ? _fabKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(

@@ -146,7 +146,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           radius: 12,
           contents: [
             TargetContent(
-              align: ContentAlign.bottom,
+              align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
                 title: '잔액 기록',
                 description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.',
@@ -209,7 +209,6 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                   AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM,
                 ),
                 child: Row(
-                  key: _addRecordKey,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -219,6 +218,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                           ),
                     ),
                     TextButton.icon(
+                      key: _addRecordKey,
                       onPressed: null,
                       icon: const Icon(Icons.add, size: 18),
                       label: Text(l10n.asset_add_record),

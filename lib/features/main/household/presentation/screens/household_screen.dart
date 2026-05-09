@@ -48,6 +48,16 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     ref.read(householdSelectedGroupIdProvider.notifier).state = savedGroupId;
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   void _replayOnboarding() => _showCoachMark(force: true);
 
   Future<void> _showCoachMark({bool force = false}) async {
@@ -58,11 +68,17 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     }
     if (!mounted) return;
 
+    final budgetPos = _keyToPosition(_budgetKey);
+    final recurringPos = _keyToPosition(_recurringKey);
+    final statisticsPos = _keyToPosition(_statisticsKey);
+    final fabPos = _keyToPosition(_fabKey);
+
     TutorialCoachMark(
       targets: [
         TargetFocus(
           identify: 'household_budget',
-          keyTarget: _budgetKey,
+          targetPosition: budgetPos,
+          keyTarget: budgetPos == null ? _budgetKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(
@@ -78,7 +94,8 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         ),
         TargetFocus(
           identify: 'household_recurring',
-          keyTarget: _recurringKey,
+          targetPosition: recurringPos,
+          keyTarget: recurringPos == null ? _recurringKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(
@@ -94,7 +111,8 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         ),
         TargetFocus(
           identify: 'household_statistics',
-          keyTarget: _statisticsKey,
+          targetPosition: statisticsPos,
+          keyTarget: statisticsPos == null ? _statisticsKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(
@@ -110,7 +128,8 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         ),
         TargetFocus(
           identify: 'household_fab',
-          keyTarget: _fabKey,
+          targetPosition: fabPos,
+          keyTarget: fabPos == null ? _fabKey : null,
           shape: ShapeLightFocus.Circle,
           contents: [
             TargetContent(

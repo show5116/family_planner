@@ -48,9 +48,21 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     super.dispose();
   }
 
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
   void _replayOnboarding() => _showCoachMark(force: true);
 
   Future<void> _showCoachMark({bool force = false}) async {
+    final groupPos = _keyToPosition(_groupManagementKey);
+
     await FeatureCoachMark.show(
       context: context,
       featureKey: CoachMarkKeys.more,
@@ -58,7 +70,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
       targets: [
         TargetFocus(
           identify: 'more_group',
-          keyTarget: _groupManagementKey,
+          targetPosition: groupPos,
+          keyTarget: groupPos == null ? _groupManagementKey : null,
           shape: ShapeLightFocus.RRect,
           radius: 8,
           contents: [
@@ -75,6 +88,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         ),
         TargetFocus(
           identify: 'more_settings',
+          targetPosition: null, // beforeFocus 스크롤 후 재계산
           keyTarget: _settingsKey,
           shape: ShapeLightFocus.RRect,
           radius: 8,
@@ -100,7 +114,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
               ctx,
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeInOut,
-              alignment: 0.5, // 화면 중앙에 위치
+              alignment: 0.5,
             );
             // 스크롤 완료 후 레이아웃 안정화 대기
             await Future.delayed(const Duration(milliseconds: 100));
