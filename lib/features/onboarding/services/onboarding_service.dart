@@ -61,6 +61,7 @@ class CoachMarkKeys {
   static const String more = 'more';
   static const String savings = 'savings';
   static const String childPoints = 'child_points';
+  static const String memo = 'memo';
 
   /// 그룹 상세 코치마크 키 — 그룹별로 독립적으로 관리
   static String groupDetail(String groupId) => 'group_detail_$groupId';

@@ -17,10 +17,12 @@ import 'package:family_planner/l10n/app_localizations.dart';
 /// 메모 카드 위젯
 class MemoCard extends ConsumerWidget {
   final MemoModel memo;
+  final bool isDemo;
 
   const MemoCard({
     super.key,
     required this.memo,
+    this.isDemo = false,
   });
 
   /// HTML 태그 및 마크다운 구조 제거 (미리보기용)
@@ -58,7 +60,7 @@ class MemoCard extends ConsumerWidget {
       elevation: AppSizes.elevation1,
       surfaceTintColor: Colors.transparent,
       child: InkWell(
-        onTap: () => context.push('/memo/${memo.id}'),
+        onTap: isDemo ? null : () => context.push('/memo/${memo.id}'),
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.spaceM),
