@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
 import 'package:family_planner/features/home/presentation/screens/dashboard_tab.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
@@ -10,6 +12,7 @@ import 'package:family_planner/features/main/household/presentation/screens/hous
 import 'package:family_planner/features/main/investment/presentation/screens/investment_indicators_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_list_screen.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_list_screen.dart';
+import 'package:family_planner/features/minigame/presentation/screens/mini_games_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/more_tab.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
@@ -60,6 +63,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _selectedIndex = index;
         _visitedTabs.add(tabId);
       });
+    } else {
+      // 하단 네비게이션에 없는 탭은 push로 이동
+      final route = _routeForTabId(tabId);
+      if (route != null) context.push(route);
     }
     // 요청 소비
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -67,6 +74,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ref.read(homeTabNavigationProvider.notifier).state = null;
       }
     });
+  }
+
+  String? _routeForTabId(String tabId) {
+    switch (tabId) {
+      case 'calendar':
+        return AppRoutes.calendar;
+      case 'todo':
+        return AppRoutes.todo;
+      case 'assets':
+        return AppRoutes.assets;
+      case 'household':
+        return AppRoutes.household;
+      case 'childPoints':
+        return AppRoutes.childPoints;
+      case 'memo':
+        return AppRoutes.memo;
+      case 'miniGames':
+        return AppRoutes.miniGames;
+      case 'investmentIndicators':
+        return AppRoutes.investmentIndicators;
+      case 'savings':
+        return AppRoutes.savings;
+      default:
+        return null;
+    }
   }
 
   void _replayHomeOnboarding() {
@@ -248,8 +280,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       case 'memo':
         return const MemoListScreen();
       case 'miniGames':
-        // TODO: 미니게임 탭 구현
-        return Center(child: Text('${l10n.nav_miniGames} (${l10n.common_comingSoon})'));
+        return const MiniGamesScreen();
       case 'investmentIndicators':
         return const InvestmentIndicatorsScreen();
       case 'savings':
