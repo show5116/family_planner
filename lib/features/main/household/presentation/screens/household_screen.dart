@@ -546,23 +546,29 @@ class _ExpenseList extends ConsumerWidget {
           );
         }
 
-        // 날짜 내림차순 정렬
+        // 날짜 내림차순 정렬 후 일 단위 그룹핑
         final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
+        final grouped = <String, List<ExpenseModel>>{};
+        for (final e in sorted) {
+          final key =
+              '${e.date.year}-${e.date.month.toString().padLeft(2, '0')}-${e.date.day.toString().padLeft(2, '0')}';
+          grouped.putIfAbsent(key, () => []).add(e);
+        }
+        final dateKeys = grouped.keys.toList();
 
         return RefreshIndicator(
           onRefresh: () => ref.read(householdExpensesProvider.notifier).refresh(),
           child: ListView.builder(
-            itemCount: sorted.length,
+            itemCount: dateKeys.length,
             padding: const EdgeInsets.only(bottom: 80),
             itemBuilder: (context, index) {
-              final expense = sorted[index];
-              return ExpenseListItem(
-                expense: expense,
-                onTap: () => context.push(
-                  AppRoutes.householdDetail,
-                  extra: expense,
-                ),
-                onDelete: () => _confirmDelete(context, ref, l10n, expense),
+              final dateKey = dateKeys[index];
+              final dayExpenses = grouped[dateKey]!;
+              return _DayGroup(
+                dateKey: dateKey,
+                expenses: dayExpenses,
+                onTap: (e) => context.push(AppRoutes.householdDetail, extra: e),
+                onDelete: (e) => _confirmDelete(context, ref, l10n, e),
               );
             },
           ),
@@ -628,5 +634,108 @@ class _ExpenseList extends ConsumerWidget {
         content: Text(success ? l10n.household_delete_success : l10n.common_error),
       ),
     );
+  }
+}
+
+// 일 단위 그룹 헤더 + 거래 목록
+class _DayGroup extends StatelessWidget {
+  final String dateKey; // 'YYYY-MM-DD'
+  final List<ExpenseModel> expenses;
+  final void Function(ExpenseModel) onTap;
+  final void Function(ExpenseModel) onDelete;
+
+  const _DayGroup({
+    required this.dateKey,
+    required this.expenses,
+    required this.onTap,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final parts = dateKey.split('-');
+    final month = int.parse(parts[1]);
+    final day = int.parse(parts[2]);
+
+    double totalIncome = 0;
+    double totalExpense = 0;
+    for (final e in expenses) {
+      if (e.type == TransactionType.income) {
+        totalIncome += e.amount;
+      } else {
+        totalExpense += e.amount;
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 날짜 헤더 + 일별 요약
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceXS,
+          ),
+          child: Row(
+            children: [
+              Text(
+                '$month월 $day일',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const Spacer(),
+              if (totalIncome > 0)
+                Text(
+                  '+₩${_fmt(totalIncome)}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              if (totalIncome > 0 && totalExpense > 0)
+                Text(
+                  '  ',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              if (totalExpense > 0)
+                Text(
+                  '-₩${_fmt(totalExpense)}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+            ],
+          ),
+        ),
+        Divider(
+          height: 1,
+          thickness: 0.5,
+          indent: AppSizes.spaceM,
+          endIndent: AppSizes.spaceM,
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ),
+        ...expenses.map(
+          (e) => ExpenseListItem(
+            expense: e,
+            onTap: () => onTap(e),
+            onDelete: () => onDelete(e),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
   }
 }
