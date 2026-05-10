@@ -214,7 +214,7 @@ class _DayChip extends ConsumerWidget {
     } else if (isSaturday) {
       dayColor = AppColors.primary;
     } else {
-      dayColor = AppColors.textSecondary;
+      dayColor = Theme.of(context).colorScheme.onSurfaceVariant;
     }
 
     return GestureDetector(
@@ -255,7 +255,7 @@ class _DayChip extends ConsumerWidget {
                         ? AppColors.primary
                         : isRed
                             ? AppColors.error.withValues(alpha: 0.8)
-                            : AppColors.textPrimary,
+                            : Theme.of(context).colorScheme.onSurface,
                 fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
               ),
             ),
