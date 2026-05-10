@@ -45,6 +45,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_loading => '読み込み中...';
 
   @override
+  String get common_optional => '任意';
+
+  @override
   String get common_error => 'エラー';
 
   @override
@@ -2360,7 +2363,46 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_type_cash => '現金';
 
   @override
+  String get asset_type_gold => '現物金';
+
+  @override
   String get asset_type_other => 'その他';
+
+  @override
+  String get asset_gold_gram_weight => '保有重量';
+
+  @override
+  String get asset_gold_gram_weight_hint => '例: 37.5';
+
+  @override
+  String get asset_gold_unit_gram => 'g (グラム)';
+
+  @override
+  String get asset_gold_unit_don => '돈（韓国単位）';
+
+  @override
+  String get asset_gold_don_hint => '例: 10';
+
+  @override
+  String get asset_gold_gram_converted => 'g換算';
+
+  @override
+  String get asset_gold_estimated_principal => '予想元金';
+
+  @override
+  String get asset_gold_gram_weight_required => '保有重量を入力してください';
+
+  @override
+  String get asset_gold_gram_weight_invalid => '有効な数値を入力してください';
+
+  @override
+  String get asset_gold_current_price_label => '現在の金相場';
+
+  @override
+  String get asset_gold_price_loading => '金相場を取得中…';
+
+  @override
+  String get asset_gold_price_error => '金相場を取得できません';
 
   @override
   String get asset_add_account => '口座追加';
@@ -2385,6 +2427,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get asset_records => '資産記録';
+
+  @override
+  String get asset_gold_record_info_title => '金口座の自動管理について';
+
+  @override
+  String get asset_gold_record_info_body =>
+      'この口座は現物金口座で、以下のように自動管理されます。\n\n• 記録追加時、現在の金現物相場（GOLD_KRW_SPOT）を基に 保有重量 × 相場 = 残高 が自動計算されます。\n\n• 毎月1日、最新の金現物相場を反映して残高・利益・利益率が自動更新されます。\n\n• 元金は手動で変更できます。変更しない場合は最初の記録時に計算された値が維持されます。';
 
   @override
   String get asset_no_records => '記録がありません';

@@ -172,6 +172,12 @@ abstract class AppLocalizations {
   /// **'로딩 중...'**
   String get common_loading;
 
+  /// 선택 항목 표시 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'선택'**
+  String get common_optional;
+
   /// No description provided for @common_error.
   ///
   /// In ko, this message translates to:
@@ -4696,11 +4702,89 @@ abstract class AppLocalizations {
   /// **'현금'**
   String get asset_type_cash;
 
+  /// 계좌 유형: 실물 금
+  ///
+  /// In ko, this message translates to:
+  /// **'실물 금'**
+  String get asset_type_gold;
+
   /// 계좌 유형: 기타
   ///
   /// In ko, this message translates to:
   /// **'기타'**
   String get asset_type_other;
+
+  /// 금 보유 중량 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'보유 중량'**
+  String get asset_gold_gram_weight;
+
+  /// 금 보유 그램 수 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 37.5'**
+  String get asset_gold_gram_weight_hint;
+
+  /// 금 중량 단위: 그램
+  ///
+  /// In ko, this message translates to:
+  /// **'g (그램)'**
+  String get asset_gold_unit_gram;
+
+  /// 금 중량 단위: 돈
+  ///
+  /// In ko, this message translates to:
+  /// **'돈'**
+  String get asset_gold_unit_don;
+
+  /// 금 돈 수 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 10'**
+  String get asset_gold_don_hint;
+
+  /// 돈 → 그램 환산 표시 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'g 환산'**
+  String get asset_gold_gram_converted;
+
+  /// 금 예상 원금 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 원금'**
+  String get asset_gold_estimated_principal;
+
+  /// 금 중량 필수 오류 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'보유 중량을 입력해 주세요'**
+  String get asset_gold_gram_weight_required;
+
+  /// 금 중량 형식 오류 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'유효한 숫자를 입력해 주세요'**
+  String get asset_gold_gram_weight_invalid;
+
+  /// 금 시세 조회 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 금 시세'**
+  String get asset_gold_current_price_label;
+
+  /// 금 시세 로딩 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'금 시세 조회 중…'**
+  String get asset_gold_price_loading;
+
+  /// 금 시세 오류 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'금 시세를 불러올 수 없습니다'**
+  String get asset_gold_price_error;
 
   /// 계좌 추가 제목
   ///
@@ -4749,6 +4833,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'자산 기록'**
   String get asset_records;
+
+  /// 금 계좌 안내 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'금 계좌 자동 관리 안내'**
+  String get asset_gold_record_info_title;
+
+  /// 금 계좌 안내 다이얼로그 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'이 계좌는 실물 금(現物金) 계좌로, 아래와 같이 자동 관리됩니다.\n\n• 기록 추가 시 현재 금 현물 시세(GOLD_KRW_SPOT)를 기준으로 보유 중량 × 시세 = 잔액이 자동 계산됩니다.\n\n• 매달 1일, 최신 금 현물 시세를 반영하여 잔액·수익금·수익률이 자동으로 갱신됩니다.\n\n• 원금은 직접 수정할 수 있으며, 수정하지 않으면 처음 기록 시 계산된 값이 유지됩니다.'**
+  String get asset_gold_record_info_body;
 
   /// 기록 없음 안내
   ///

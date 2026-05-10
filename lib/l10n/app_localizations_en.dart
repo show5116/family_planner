@@ -45,6 +45,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_loading => 'Loading...';
 
   @override
+  String get common_optional => 'Optional';
+
+  @override
   String get common_error => 'Error';
 
   @override
@@ -2406,7 +2409,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_type_cash => 'Cash';
 
   @override
+  String get asset_type_gold => 'Physical Gold';
+
+  @override
   String get asset_type_other => 'Other';
+
+  @override
+  String get asset_gold_gram_weight => 'Weight';
+
+  @override
+  String get asset_gold_gram_weight_hint => 'e.g. 37.5';
+
+  @override
+  String get asset_gold_unit_gram => 'g (gram)';
+
+  @override
+  String get asset_gold_unit_don => 'don';
+
+  @override
+  String get asset_gold_don_hint => 'e.g. 10';
+
+  @override
+  String get asset_gold_gram_converted => 'g equiv.';
+
+  @override
+  String get asset_gold_estimated_principal => 'Est. Principal';
+
+  @override
+  String get asset_gold_gram_weight_required => 'Please enter the weight';
+
+  @override
+  String get asset_gold_gram_weight_invalid => 'Please enter a valid number';
+
+  @override
+  String get asset_gold_current_price_label => 'Current Gold Price';
+
+  @override
+  String get asset_gold_price_loading => 'Fetching gold price…';
+
+  @override
+  String get asset_gold_price_error => 'Unable to load gold price';
 
   @override
   String get asset_add_account => 'Add Account';
@@ -2432,6 +2474,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get asset_records => 'Records';
+
+  @override
+  String get asset_gold_record_info_title => 'About Gold Account';
+
+  @override
+  String get asset_gold_record_info_body =>
+      'This is a physical gold account managed automatically:\n\n• When you add a record, the balance is calculated as weight × current GOLD_KRW_SPOT price.\n\n• On the 1st of every month, the balance, profit, and profit rate are automatically updated using the latest gold spot price.\n\n• You can manually adjust the principal; otherwise, the value calculated at the first record is retained.';
 
   @override
   String get asset_no_records => 'No records yet';

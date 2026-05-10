@@ -35,6 +35,8 @@ IconData accountTypeIcon(AccountType? type) {
       return Icons.home;
     case AccountType.cash:
       return Icons.payments;
+    case AccountType.gold:
+      return Icons.diamond;
     default:
       return Icons.savings;
   }
@@ -55,6 +57,8 @@ String accountTypeLabel(AppLocalizations l10n, AccountType? type) {
       return l10n.asset_type_real_estate;
     case AccountType.cash:
       return l10n.asset_type_cash;
+    case AccountType.gold:
+      return l10n.asset_type_gold;
     default:
       return l10n.asset_type_other;
   }

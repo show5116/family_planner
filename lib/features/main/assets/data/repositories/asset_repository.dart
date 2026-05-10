@@ -252,6 +252,23 @@ class AssetRepository {
     }
   }
 
+  /// 금 현물가 조회 (원/g) — GOLD 계좌 생성 시 원금 임시값 계산용
+  Future<double> getGoldCurrentPrice() async {
+    try {
+      final response = await _dio.get('/assets/gold/current-price');
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        final raw = data['pricePerGram'] ?? data['price'] ?? data['value'];
+        if (raw != null) return double.parse(raw.toString());
+      }
+      if (data is num) return data.toDouble();
+      throw Exception('금 시세 파싱 실패');
+    } on DioException catch (e) {
+      debugPrint('❌ [AssetRepository] 금 현물가 조회 실패: ${e.message}');
+      throw Exception('금 현물가 조회 실패: ${e.message}');
+    }
+  }
+
   /// 자산 통계 조회
   Future<AssetStatisticsModel> getAssetStatistics({
     required String groupId,

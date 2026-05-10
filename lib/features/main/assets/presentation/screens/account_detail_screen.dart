@@ -305,11 +305,25 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    l10n.asset_records,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      Text(
+                        l10n.asset_records,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      if (account.type == AccountType.gold) ...[
+                        const SizedBox(width: 2),
+                        IconButton(
+                          icon: const Icon(Icons.help_outline, size: 18),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: l10n.asset_gold_record_info_title,
+                          onPressed: () => _showGoldInfoDialog(context, l10n),
                         ),
+                      ],
+                    ],
                   ),
                   TextButton.icon(
                     onPressed: () => _showAddRecordSheet(context),
@@ -363,12 +377,31 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     );
   }
 
+  void _showGoldInfoDialog(BuildContext context, AppLocalizations l10n) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        icon: const Icon(Icons.diamond_outlined),
+        title: Text(l10n.asset_gold_record_info_title),
+        content: SingleChildScrollView(
+          child: Text(l10n.asset_gold_record_info_body),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.common_ok),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _showAddRecordSheet(BuildContext context) async {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (ctx) => AddAssetRecordSheet(accountId: widget.account.id),
+      builder: (ctx) => AddAssetRecordSheet(account: widget.account),
     );
   }
 }

@@ -1,9 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
+import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 class AccountFormScreen extends ConsumerStatefulWidget {
@@ -59,100 +60,74 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
           key: _formKey,
           child: ListView(
             padding: const EdgeInsets.all(AppSizes.spaceM),
-          children: [
-            // 계좌명
-            TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: l10n.asset_account_name,
-                hintText: l10n.asset_account_name_hint,
-                border: const OutlineInputBorder(),
+            children: [
+              // 계좌명
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: l10n.asset_account_name,
+                  hintText: l10n.asset_account_name_hint,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? l10n.asset_account_name_required : null,
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? l10n.asset_account_name_required : null,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
+              const SizedBox(height: AppSizes.spaceM),
 
-            // 금융기관
-            TextFormField(
-              controller: _institutionController,
-              decoration: InputDecoration(
-                labelText: l10n.asset_institution,
-                hintText: l10n.asset_institution_hint,
-                border: const OutlineInputBorder(),
+              // 금융기관 (선택)
+              TextFormField(
+                controller: _institutionController,
+                decoration: InputDecoration(
+                  labelText: '${l10n.asset_institution} (${l10n.common_optional})',
+                  hintText: l10n.asset_institution_hint,
+                  border: const OutlineInputBorder(),
+                ),
               ),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? l10n.asset_institution_required : null,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
+              const SizedBox(height: AppSizes.spaceM),
 
-            // 계좌번호 (선택)
-            TextFormField(
-              controller: _accountNumberController,
-              decoration: InputDecoration(
-                labelText: l10n.asset_account_number,
-                hintText: l10n.asset_account_number_hint,
-                border: const OutlineInputBorder(),
+              // 계좌번호 (선택)
+              TextFormField(
+                controller: _accountNumberController,
+                decoration: InputDecoration(
+                  labelText: l10n.asset_account_number,
+                  hintText: l10n.asset_account_number_hint,
+                  border: const OutlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: AppSizes.spaceM),
+              const SizedBox(height: AppSizes.spaceM),
 
-            // 계좌 유형
-            DropdownButtonFormField<AccountType>(
-              initialValue: _selectedType,
-              decoration: InputDecoration(
-                labelText: l10n.asset_account_type,
-                border: const OutlineInputBorder(),
+              // 계좌 유형
+              DropdownButtonFormField<AccountType>(
+                initialValue: _selectedType,
+                decoration: InputDecoration(
+                  labelText: l10n.asset_account_type,
+                  border: const OutlineInputBorder(),
+                ),
+                items: AccountType.values
+                    .map((t) => DropdownMenuItem(
+                          value: t,
+                          child: Text(accountTypeLabel(l10n, t)),
+                        ))
+                    .toList(),
+                onChanged: (v) => setState(() => _selectedType = v ?? AccountType.other),
               ),
-              items: [
-                DropdownMenuItem(
-                  value: AccountType.other,
-                  child: Text(l10n.asset_type_other),
-                ),
-                DropdownMenuItem(
-                  value: AccountType.bank,
-                  child: Text(l10n.asset_type_bank),
-                ),
-                DropdownMenuItem(
-                  value: AccountType.stock,
-                  child: Text(l10n.asset_type_stock),
-                ),
-                DropdownMenuItem(
-                  value: AccountType.fund,
-                  child: Text(l10n.asset_type_fund),
-                ),
-                DropdownMenuItem(
-                  value: AccountType.insurance,
-                  child: Text(l10n.asset_type_insurance),
-                ),
-                DropdownMenuItem(
-                  value: AccountType.realEstate,
-                  child: Text(l10n.asset_type_real_estate),
-                ),
-                DropdownMenuItem(
-                  value: AccountType.cash,
-                  child: Text(l10n.asset_type_cash),
-                ),
-              ],
-              onChanged: (v) => setState(() => _selectedType = v ?? AccountType.other),
-            ),
-            const SizedBox(height: AppSizes.spaceL),
+              const SizedBox(height: AppSizes.spaceL),
 
-            // 저장 버튼
-            ElevatedButton(
-              onPressed: managementState.isLoading ? null : _submit,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(48),
+              // 저장 버튼
+              ElevatedButton(
+                onPressed: managementState.isLoading ? null : _submit,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                child: managementState.isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(l10n.common_save),
               ),
-              child: managementState.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(l10n.common_save),
-            ),
-          ],
+            ],
           ),
         ),
       ),
@@ -164,7 +139,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
 
     final l10n = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
-    final institution = _institutionController.text.trim();
+    final institutionRaw = _institutionController.text.trim();
+    final institution = institutionRaw.isEmpty ? null : institutionRaw;
     final accountNumber = _accountNumberController.text.trim();
 
     AccountModel? result;

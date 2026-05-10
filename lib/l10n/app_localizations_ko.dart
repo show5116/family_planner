@@ -45,6 +45,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_loading => '로딩 중...';
 
   @override
+  String get common_optional => '선택';
+
+  @override
   String get common_error => '오류';
 
   @override
@@ -2363,7 +2366,46 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_type_cash => '현금';
 
   @override
+  String get asset_type_gold => '실물 금';
+
+  @override
   String get asset_type_other => '기타';
+
+  @override
+  String get asset_gold_gram_weight => '보유 중량';
+
+  @override
+  String get asset_gold_gram_weight_hint => '예: 37.5';
+
+  @override
+  String get asset_gold_unit_gram => 'g (그램)';
+
+  @override
+  String get asset_gold_unit_don => '돈';
+
+  @override
+  String get asset_gold_don_hint => '예: 10';
+
+  @override
+  String get asset_gold_gram_converted => 'g 환산';
+
+  @override
+  String get asset_gold_estimated_principal => '예상 원금';
+
+  @override
+  String get asset_gold_gram_weight_required => '보유 중량을 입력해 주세요';
+
+  @override
+  String get asset_gold_gram_weight_invalid => '유효한 숫자를 입력해 주세요';
+
+  @override
+  String get asset_gold_current_price_label => '현재 금 시세';
+
+  @override
+  String get asset_gold_price_loading => '금 시세 조회 중…';
+
+  @override
+  String get asset_gold_price_error => '금 시세를 불러올 수 없습니다';
 
   @override
   String get asset_add_account => '계좌 추가';
@@ -2389,6 +2431,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get asset_records => '자산 기록';
+
+  @override
+  String get asset_gold_record_info_title => '금 계좌 자동 관리 안내';
+
+  @override
+  String get asset_gold_record_info_body =>
+      '이 계좌는 실물 금(現物金) 계좌로, 아래와 같이 자동 관리됩니다.\n\n• 기록 추가 시 현재 금 현물 시세(GOLD_KRW_SPOT)를 기준으로 보유 중량 × 시세 = 잔액이 자동 계산됩니다.\n\n• 매달 1일, 최신 금 현물 시세를 반영하여 잔액·수익금·수익률이 자동으로 갱신됩니다.\n\n• 원금은 직접 수정할 수 있으며, 수정하지 않으면 처음 기록 시 계산된 값이 유지됩니다.';
 
   @override
   String get asset_no_records => '기록이 없습니다';

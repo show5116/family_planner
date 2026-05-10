@@ -27,12 +27,13 @@ class AccountInfoCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                account.institution,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-              ),
+              if (account.institution != null)
+                Text(
+                  account.institution!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                ),
               if (account.accountNumber != null) ...[
                 const SizedBox(width: AppSizes.spaceS),
                 Text(

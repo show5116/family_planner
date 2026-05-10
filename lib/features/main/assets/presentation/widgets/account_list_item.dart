@@ -41,7 +41,7 @@ class AccountListItem extends StatelessWidget {
           ),
         ),
         title: Text(account.name),
-        subtitle: Text(account.institution),
+        subtitle: account.institution != null ? Text(account.institution!) : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

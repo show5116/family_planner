@@ -6,6 +6,7 @@ enum AccountType {
   insurance,
   realEstate,
   cash,
+  gold,
   other,
 }
 
@@ -24,6 +25,8 @@ String accountTypeToString(AccountType type) {
       return 'REAL_ESTATE';
     case AccountType.cash:
       return 'CASH';
+    case AccountType.gold:
+      return 'GOLD';
     case AccountType.other:
       return 'OTHER';
   }
@@ -45,6 +48,8 @@ AccountType? parseAccountType(String? value) {
       return AccountType.realEstate;
     case 'CASH':
       return AccountType.cash;
+    case 'GOLD':
+      return AccountType.gold;
     default:
       return AccountType.other;
   }
@@ -57,8 +62,9 @@ class AccountModel {
   final String userId;
   final String name;
   final String? accountNumber;
-  final String institution;
+  final String? institution;
   final AccountType? type;
+  final double? gramWeight;
   final DateTime createdAt;
   final DateTime updatedAt;
   final double? latestBalance;
@@ -70,8 +76,9 @@ class AccountModel {
     required this.userId,
     required this.name,
     this.accountNumber,
-    required this.institution,
+    this.institution,
     this.type,
+    this.gramWeight,
     required this.createdAt,
     required this.updatedAt,
     this.latestBalance,
@@ -85,8 +92,11 @@ class AccountModel {
       userId: json['userId'] as String,
       name: json['name'] as String,
       accountNumber: json['accountNumber'] as String?,
-      institution: json['institution'] as String,
+      institution: json['institution'] as String?,
       type: parseAccountType(json['type'] as String?),
+      gramWeight: json['gramWeight'] != null
+          ? double.tryParse(json['gramWeight'].toString())
+          : null,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
       latestBalance: json['latestBalance'] != null
@@ -106,6 +116,7 @@ class AccountModel {
     String? accountNumber,
     String? institution,
     AccountType? type,
+    double? gramWeight,
     DateTime? createdAt,
     DateTime? updatedAt,
     double? latestBalance,
@@ -119,6 +130,7 @@ class AccountModel {
       accountNumber: accountNumber ?? this.accountNumber,
       institution: institution ?? this.institution,
       type: type ?? this.type,
+      gramWeight: gramWeight ?? this.gramWeight,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       latestBalance: latestBalance ?? this.latestBalance,
@@ -132,15 +144,17 @@ class CreateAccountDto {
   final String groupId;
   final String name;
   final String? accountNumber;
-  final String institution;
+  final String? institution;
   final AccountType? type;
+  final double? gramWeight;
 
   const CreateAccountDto({
     required this.groupId,
     required this.name,
     this.accountNumber,
-    required this.institution,
+    this.institution,
     this.type,
+    this.gramWeight,
   });
 
   Map<String, dynamic> toJson() {
@@ -148,8 +162,9 @@ class CreateAccountDto {
       'groupId': groupId,
       'name': name,
       if (accountNumber != null) 'accountNumber': accountNumber,
-      'institution': institution,
+      if (institution != null) 'institution': institution,
       if (type != null) 'type': accountTypeToString(type!),
+      if (gramWeight != null) 'gramWeight': gramWeight,
     };
   }
 }
@@ -160,12 +175,14 @@ class UpdateAccountDto {
   final String? accountNumber;
   final String? institution;
   final AccountType? type;
+  final double? gramWeight;
 
   const UpdateAccountDto({
     this.name,
     this.accountNumber,
     this.institution,
     this.type,
+    this.gramWeight,
   });
 
   Map<String, dynamic> toJson() {
@@ -174,6 +191,7 @@ class UpdateAccountDto {
       if (accountNumber != null) 'accountNumber': accountNumber,
       if (institution != null) 'institution': institution,
       if (type != null) 'type': accountTypeToString(type!),
+      if (gramWeight != null) 'gramWeight': gramWeight,
     };
   }
 }
