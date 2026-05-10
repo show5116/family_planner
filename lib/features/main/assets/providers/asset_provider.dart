@@ -5,6 +5,7 @@ import 'package:family_planner/features/main/assets/data/models/account_model.da
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
+import 'package:family_planner/features/main/assets/data/models/holding_model.dart';
 import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
@@ -342,3 +343,78 @@ final assetManagementProvider =
     ref,
   );
 });
+
+/// 종목(포트폴리오 비중) Provider
+class HoldingsNotifier extends StateNotifier<AsyncValue<List<HoldingModel>>> {
+  final AssetRepository _repository;
+  final String _accountId;
+
+  HoldingsNotifier(this._repository, this._accountId)
+      : super(const AsyncValue.loading()) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => _repository.getHoldings(_accountId));
+  }
+
+  Future<void> refresh() => _load();
+
+  Future<HoldingModel?> create(CreateHoldingDto dto) async {
+    try {
+      final holding = await _repository.createHolding(_accountId, dto);
+      if (state.hasValue) {
+        state = AsyncValue.data([...state.value!, holding]);
+      }
+      return holding;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<HoldingModel?> update(String holdingId, UpdateHoldingDto dto) async {
+    try {
+      final updated = await _repository.updateHolding(_accountId, holdingId, dto);
+      if (state.hasValue) {
+        state = AsyncValue.data(
+          state.value!.map((h) => h.id == holdingId ? updated : h).toList(),
+        );
+      }
+      return updated;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> delete(String holdingId) async {
+    await _repository.deleteHolding(_accountId, holdingId);
+    if (state.hasValue) {
+      state = AsyncValue.data(
+        state.value!.where((h) => h.id != holdingId).toList(),
+      );
+    }
+  }
+
+  Future<void> reorder(List<HoldingModel> reordered) async {
+    final prev = state.valueOrNull;
+    state = AsyncValue.data(reordered);
+    try {
+      await _repository.reorderHoldings(
+        _accountId,
+        reordered.map((h) => h.id).toList(),
+      );
+    } catch (_) {
+      if (prev != null) state = AsyncValue.data(prev);
+      rethrow;
+    }
+  }
+}
+
+final holdingsProvider = StateNotifierProvider.family<
+    HoldingsNotifier, AsyncValue<List<HoldingModel>>, String>(
+  (ref, accountId) => HoldingsNotifier(
+    ref.watch(assetRepositoryProvider),
+    accountId,
+  ),
+);

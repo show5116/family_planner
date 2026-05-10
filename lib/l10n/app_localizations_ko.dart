@@ -2430,6 +2430,57 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_records => '자산 기록';
 
   @override
+  String get asset_holdings => '포트폴리오 비중';
+
+  @override
+  String get asset_holdings_empty => '등록된 종목이 없습니다';
+
+  @override
+  String get asset_holding_add => '종목 추가';
+
+  @override
+  String get asset_holding_edit => '종목 수정';
+
+  @override
+  String get asset_holding_delete => '종목 삭제';
+
+  @override
+  String get asset_holding_name => '종목명';
+
+  @override
+  String get asset_holding_name_hint => '예: 나스닥 ETF';
+
+  @override
+  String get asset_holding_name_required => '종목명을 입력해 주세요';
+
+  @override
+  String get asset_holding_ticker => '티커 (선택)';
+
+  @override
+  String get asset_holding_ticker_hint => '예: QQQ';
+
+  @override
+  String get asset_holding_ratio => '비율 (%)';
+
+  @override
+  String get asset_holding_ratio_hint => '예: 40';
+
+  @override
+  String get asset_holding_ratio_required => '비율을 입력해 주세요';
+
+  @override
+  String get asset_holding_ratio_invalid => '0.01 ~ 100 사이의 숫자를 입력해 주세요';
+
+  @override
+  String get asset_holding_ratio_exceeded => '비율 합계가 100%를 초과합니다';
+
+  @override
+  String get asset_holding_delete_confirm => '이 종목을 삭제하시겠습니까?';
+
+  @override
+  String get asset_holding_total_ratio => '합계';
+
+  @override
   String get asset_gold_record_info_title => '금 계좌 자동 관리 안내';
 
   @override

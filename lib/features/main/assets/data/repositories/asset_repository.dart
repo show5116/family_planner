@@ -7,6 +7,7 @@ import 'package:family_planner/features/main/assets/data/models/account_model.da
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
+import 'package:family_planner/features/main/assets/data/models/holding_model.dart';
 import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 
 class DuplicateRecordDateException implements Exception {}
@@ -249,6 +250,80 @@ class AssetRepository {
     } on DioException catch (e) {
       debugPrint('❌ [AssetRepository] 계좌 자산 추이 조회 실패: ${e.message}');
       throw Exception('계좌 자산 추이 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 종목(포트폴리오 비중) 목록 조회
+  Future<List<HoldingModel>> getHoldings(String accountId) async {
+    try {
+      final response = await _dio.get('/assets/accounts/$accountId/holdings');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => HoldingModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [AssetRepository] 종목 목록 조회 실패: ${e.message}');
+      throw Exception('종목 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 추가
+  Future<HoldingModel> createHolding(String accountId, CreateHoldingDto dto) async {
+    try {
+      final response = await _dio.post(
+        '/assets/accounts/$accountId/holdings',
+        data: dto.toJson(),
+      );
+      return HoldingModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) throw Exception('비율 합계가 100%를 초과합니다');
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌에만 종목을 추가할 수 있습니다');
+      throw Exception('종목 추가 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 수정
+  Future<HoldingModel> updateHolding(
+    String accountId,
+    String holdingId,
+    UpdateHoldingDto dto,
+  ) async {
+    try {
+      final response = await _dio.patch(
+        '/assets/accounts/$accountId/holdings/$holdingId',
+        data: dto.toJson(),
+      );
+      return HoldingModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) throw Exception('비율 합계가 100%를 초과합니다');
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌 종목만 수정할 수 있습니다');
+      throw Exception('종목 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 삭제
+  Future<void> deleteHolding(String accountId, String holdingId) async {
+    try {
+      await _dio.delete('/assets/accounts/$accountId/holdings/$holdingId');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌 종목만 삭제할 수 있습니다');
+      throw Exception('종목 삭제 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 순서 변경
+  Future<void> reorderHoldings(String accountId, List<String> holdingIds) async {
+    try {
+      await _dio.patch(
+        '/assets/accounts/$accountId/holdings/reorder',
+        data: {'holdingIds': holdingIds},
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌 종목만 순서 변경할 수 있습니다');
+      throw Exception('종목 순서 변경 실패: ${e.message}');
     }
   }
 

@@ -14,6 +14,7 @@ import 'package:family_planner/features/main/assets/presentation/widgets/account
 import 'package:family_planner/features/main/assets/presentation/widgets/add_asset_record_sheet.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_record_list_item.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_trend_chart.dart';
+import 'package:family_planner/features/main/assets/presentation/widgets/holdings_section.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -295,6 +296,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 ],
               ),
             ),
+          ),
+          SliverToBoxAdapter(
+            child: HoldingsSection(accountId: account.id),
           ),
           SliverToBoxAdapter(
             child: Padding(

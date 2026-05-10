@@ -412,15 +412,183 @@
 
 ---
 
+### GET `assets/accounts/:id/holdings`
+
+**요약:** 계좌 종목 목록 조회
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Responses:**
+
+#### 200 - 종목 목록 조회 성공
+
+```json
+{
+  "id": "uuid-1234", // 종목 ID (string)
+  "accountId": "uuid-5678", // 계좌 ID (string)
+  "name": "나스닥 ETF", // 종목/자산명 (string)
+  "ticker": "QQQ", // 티커 심볼 (string | null)
+  "ratio": "40.50", // 비율 (%) (string)
+  "sortOrder": 0, // 정렬 순서 (number)
+  "createdAt": "2025-01-01T00:00:00Z", // 생성일시 (Date)
+  "updatedAt": "2025-01-01T00:00:00Z" // 수정일시 (Date)
+}
+```
+
+#### 404 - 계좌를 찾을 수 없습니다
+
+#### 403 - 해당 그룹의 멤버가 아닙니다
+
+---
+
+### POST `assets/accounts/:id/holdings`
+
+**요약:** 계좌 종목 추가 (비율 합계 100% 초과 불가)
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Request Body:**
+
+```json
+{
+  "name": "나스닥 ETF", // 종목/자산명 (string)
+  "ticker": "QQQ", // 티커 심볼 (선택) (string?)
+  "ratio": 40 // 비율 (%, 0.01~100) (number)
+}
+```
+
+**Responses:**
+
+#### 201 - 종목 추가 성공
+
+```json
+{
+  "id": "uuid-1234", // 종목 ID (string)
+  "accountId": "uuid-5678", // 계좌 ID (string)
+  "name": "나스닥 ETF", // 종목/자산명 (string)
+  "ticker": "QQQ", // 티커 심볼 (string | null)
+  "ratio": "40.50", // 비율 (%) (string)
+  "sortOrder": 0, // 정렬 순서 (number)
+  "createdAt": "2025-01-01T00:00:00Z", // 생성일시 (Date)
+  "updatedAt": "2025-01-01T00:00:00Z" // 수정일시 (Date)
+}
+```
+
+#### 404 - 계좌를 찾을 수 없습니다
+
+#### 403 - 본인의 계좌에만 종목을 추가할 수 있습니다
+
+---
+
+### PATCH `assets/accounts/:id/holdings/reorder`
+
+**요약:** 계좌 종목 순서 변경
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Request Body:**
+
+```json
+{
+  "holdingIds": ["uuid-1", "uuid-2", "uuid-3"] // 정렬 순서대로 나열한 holding ID 목록 (string[])
+}
+```
+
+**Responses:**
+
+#### 200 - 종목 순서 변경 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
+}
+```
+
+#### 404 - 계좌를 찾을 수 없습니다
+
+#### 403 - 본인의 계좌 종목만 순서 변경할 수 있습니다
+
+---
+
+### PATCH `assets/accounts/:id/holdings/:holdingId`
+
+**요약:** 계좌 종목 수정
+
+**Path Parameters:**
+
+- `id` (`string`)
+- `holdingId` (`string`)
+
+**Request Body:**
+
+```json
+{
+  "name": "나스닥 ETF", // 종목/자산명 (string?)
+  "ticker": "QQQ", // 티커 심볼 (string?)
+  "ratio": 40 // 비율 (%, 0.01~100) (number?)
+}
+```
+
+**Responses:**
+
+#### 200 - 종목 수정 성공
+
+```json
+{
+  "id": "uuid-1234", // 종목 ID (string)
+  "accountId": "uuid-5678", // 계좌 ID (string)
+  "name": "나스닥 ETF", // 종목/자산명 (string)
+  "ticker": "QQQ", // 티커 심볼 (string | null)
+  "ratio": "40.50", // 비율 (%) (string)
+  "sortOrder": 0, // 정렬 순서 (number)
+  "createdAt": "2025-01-01T00:00:00Z", // 생성일시 (Date)
+  "updatedAt": "2025-01-01T00:00:00Z" // 수정일시 (Date)
+}
+```
+
+#### 404 - 종목을 찾을 수 없습니다
+
+#### 403 - 본인의 계좌 종목만 수정할 수 있습니다
+
+---
+
+### DELETE `assets/accounts/:id/holdings/:holdingId`
+
+**요약:** 계좌 종목 삭제
+
+**Path Parameters:**
+
+- `id` (`string`)
+- `holdingId` (`string`)
+
+**Responses:**
+
+#### 200 - 종목 삭제 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
+}
+```
+
+#### 404 - 종목을 찾을 수 없습니다
+
+#### 403 - 본인의 계좌 종목만 삭제할 수 있습니다
+
+---
+
 ### GET `assets/gold/current-price`
 
 **요약:** 현재 금 현물가 조회 (원/g)
 
 **설명:**
-GOLD 타입 계좌 생성 시 원금
-
-
- 임시값 계산용. GOLD_KRW_SPOT 지표의 최신 시세를 반환합니다.
+GOLD 타입 계좌 생성 시 원금 임시값 계산용. GOLD_KRW_SPOT 지표의 최신 시세를 반환합니다.
 
 **Responses:**
 
@@ -461,7 +629,16 @@ GOLD 타입 계좌 생성 시 원금
       "name": "비상금", // 적립 목표 이름 (string)
       "currentAmount": "2000000.00" // 현재 잔액 (string)
     }
-  ] // 자산 연동 적립금 목록 (SavingsGoalSummaryDto[])
+  ], // 자산 연동 적립금 목록 (SavingsGoalSummaryDto[])
+  "byHolding": [
+    {
+      "name": "나스닥 ETF", // 종목/자산명 (string)
+      "ticker": "QQQ", // 티커 심볼 (string | null)
+      "ratio": "40.50", // 계좌 내 비율 (%) (string)
+      "estimatedAmount": "2000000.00", // 추정 금액 (계좌 잔액 × 비율) (string)
+      "globalRatio": "4.00" // 전체 자산 대비 비율 (%) (string)
+    }
+  ] // 전체 자산 기준 종목별 통계 (HoldingStatDto[])
 }
 ```
 

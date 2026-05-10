@@ -2426,6 +2426,57 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_records => '資産記録';
 
   @override
+  String get asset_holdings => 'ポートフォリオ比率';
+
+  @override
+  String get asset_holdings_empty => '登録された銘柄がありません';
+
+  @override
+  String get asset_holding_add => '銘柄追加';
+
+  @override
+  String get asset_holding_edit => '銘柄編集';
+
+  @override
+  String get asset_holding_delete => '銘柄削除';
+
+  @override
+  String get asset_holding_name => '銘柄名';
+
+  @override
+  String get asset_holding_name_hint => '例: ナスダックETF';
+
+  @override
+  String get asset_holding_name_required => '銘柄名を入力してください';
+
+  @override
+  String get asset_holding_ticker => 'ティッカー（任意）';
+
+  @override
+  String get asset_holding_ticker_hint => '例: QQQ';
+
+  @override
+  String get asset_holding_ratio => '比率 (%)';
+
+  @override
+  String get asset_holding_ratio_hint => '例: 40';
+
+  @override
+  String get asset_holding_ratio_required => '比率を入力してください';
+
+  @override
+  String get asset_holding_ratio_invalid => '0.01〜100の数値を入力してください';
+
+  @override
+  String get asset_holding_ratio_exceeded => '比率の合計が100%を超えます';
+
+  @override
+  String get asset_holding_delete_confirm => 'この銘柄を削除しますか？';
+
+  @override
+  String get asset_holding_total_ratio => '合計';
+
+  @override
   String get asset_gold_record_info_title => '金口座の自動管理について';
 
   @override

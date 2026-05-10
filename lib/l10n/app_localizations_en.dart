@@ -2473,6 +2473,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_records => 'Records';
 
   @override
+  String get asset_holdings => 'Portfolio Allocation';
+
+  @override
+  String get asset_holdings_empty => 'No holdings registered';
+
+  @override
+  String get asset_holding_add => 'Add Holding';
+
+  @override
+  String get asset_holding_edit => 'Edit Holding';
+
+  @override
+  String get asset_holding_delete => 'Delete Holding';
+
+  @override
+  String get asset_holding_name => 'Name';
+
+  @override
+  String get asset_holding_name_hint => 'e.g. NASDAQ ETF';
+
+  @override
+  String get asset_holding_name_required => 'Please enter a name';
+
+  @override
+  String get asset_holding_ticker => 'Ticker (optional)';
+
+  @override
+  String get asset_holding_ticker_hint => 'e.g. QQQ';
+
+  @override
+  String get asset_holding_ratio => 'Ratio (%)';
+
+  @override
+  String get asset_holding_ratio_hint => 'e.g. 40';
+
+  @override
+  String get asset_holding_ratio_required => 'Please enter a ratio';
+
+  @override
+  String get asset_holding_ratio_invalid =>
+      'Enter a number between 0.01 and 100';
+
+  @override
+  String get asset_holding_ratio_exceeded => 'Total ratio exceeds 100%';
+
+  @override
+  String get asset_holding_delete_confirm => 'Delete this holding?';
+
+  @override
+  String get asset_holding_total_ratio => 'Total';
+
+  @override
   String get asset_gold_record_info_title => 'About Gold Account';
 
   @override

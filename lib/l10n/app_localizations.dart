@@ -4828,6 +4828,108 @@ abstract class AppLocalizations {
   /// **'자산 기록'**
   String get asset_records;
 
+  /// 포트폴리오 비중 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'포트폴리오 비중'**
+  String get asset_holdings;
+
+  /// 종목 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 종목이 없습니다'**
+  String get asset_holdings_empty;
+
+  /// 종목 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 추가'**
+  String get asset_holding_add;
+
+  /// 종목 수정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 수정'**
+  String get asset_holding_edit;
+
+  /// 종목 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 삭제'**
+  String get asset_holding_delete;
+
+  /// 종목명 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'종목명'**
+  String get asset_holding_name;
+
+  /// 종목명 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 나스닥 ETF'**
+  String get asset_holding_name_hint;
+
+  /// 종목명 필수 오류
+  ///
+  /// In ko, this message translates to:
+  /// **'종목명을 입력해 주세요'**
+  String get asset_holding_name_required;
+
+  /// 티커 심볼 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'티커 (선택)'**
+  String get asset_holding_ticker;
+
+  /// 티커 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: QQQ'**
+  String get asset_holding_ticker_hint;
+
+  /// 비율 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'비율 (%)'**
+  String get asset_holding_ratio;
+
+  /// 비율 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 40'**
+  String get asset_holding_ratio_hint;
+
+  /// 비율 필수 오류
+  ///
+  /// In ko, this message translates to:
+  /// **'비율을 입력해 주세요'**
+  String get asset_holding_ratio_required;
+
+  /// 비율 범위 오류
+  ///
+  /// In ko, this message translates to:
+  /// **'0.01 ~ 100 사이의 숫자를 입력해 주세요'**
+  String get asset_holding_ratio_invalid;
+
+  /// 비율 초과 오류
+  ///
+  /// In ko, this message translates to:
+  /// **'비율 합계가 100%를 초과합니다'**
+  String get asset_holding_ratio_exceeded;
+
+  /// 종목 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'이 종목을 삭제하시겠습니까?'**
+  String get asset_holding_delete_confirm;
+
+  /// 비율 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'합계'**
+  String get asset_holding_total_ratio;
+
   /// 금 계좌 안내 다이얼로그 제목
   ///
   /// In ko, this message translates to:
