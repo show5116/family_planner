@@ -65,6 +65,7 @@ class CoachMarkKeys {
   static const String miniGames = 'mini_games';
   static const String miniGamesLadder = 'mini_games_ladder';
   static const String miniGamesRoulette = 'mini_games_roulette';
+  static const String investmentIndicators = 'investment_indicators';
 
   /// 그룹 상세 코치마크 키 — 그룹별로 독립적으로 관리
   static String groupDetail(String groupId) => 'group_detail_$groupId';

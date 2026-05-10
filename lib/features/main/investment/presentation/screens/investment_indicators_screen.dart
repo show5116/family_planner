@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -11,7 +12,9 @@ import 'package:family_planner/features/main/investment/data/models/indicator_mo
 import 'package:family_planner/features/main/investment/data/models/market_briefing_model.dart';
 import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
-import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/sparkline_chart.dart';
 
 class InvestmentIndicatorsScreen extends ConsumerStatefulWidget {
@@ -24,16 +27,135 @@ class InvestmentIndicatorsScreen extends ConsumerStatefulWidget {
 
 class _InvestmentIndicatorsScreenState
     extends ConsumerState<InvestmentIndicatorsScreen> {
+  final _firstTileKey = GlobalKey();
+  final _bookmarkKey = GlobalKey();
+
+  bool _coachMarkScheduled = false;
+  bool _coachMarkStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowCoachMark());
+  }
+
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
+  Future<void> _maybeShowCoachMark() async {
+    final completed = await OnboardingService.isCoachMarkCompleted(
+        CoachMarkKeys.investmentIndicators);
+    if (!mounted || completed) return;
+    // 데이터 로드 후 키가 붙을 때까지 기다림
+    _coachMarkScheduled = true;
+  }
+
+  void _tryStartCoachMarkAfterLoad({required bool briefingReady}) {
+    if (!_coachMarkScheduled || _coachMarkStarted || !briefingReady) return;
+    _coachMarkScheduled = false;
+    _coachMarkStarted = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  Future<void> _showCoachMark() async {
+    if (!mounted) return;
+
+    final tilePos = _keyToPosition(_firstTileKey);
+    final bookmarkPos = _keyToPosition(_bookmarkKey);
+
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'indicator_list',
+        targetPosition: tilePos,
+        keyTarget: tilePos == null ? _firstTileKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '투자 지표',
+              description: '주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.',
+              icon: Icons.show_chart,
+              color: AppColors.investment,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'indicator_bookmark',
+        targetPosition: bookmarkPos,
+        keyTarget: bookmarkPos == null ? _bookmarkKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '즐겨찾기',
+              description: '별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.',
+              icon: Icons.star_outline,
+              color: Colors.amber,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: _skipWidget,
+      onFinish: () => OnboardingService.completeCoachMark(
+          CoachMarkKeys.investmentIndicators),
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.investmentIndicators);
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
+  }
+
+  Widget get _skipWidget => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(
+              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final indicatorsAsync = ref.watch(indicatorsProvider);
+    final briefingAsync = ref.watch(marketBriefingProvider);
     final isAdmin = ref.watch(isAdminProvider);
+    final briefingReady = briefingAsync.hasValue;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('투자 지표'),
         actions: [
-          const AiChatIconButton(),
           if (isAdmin)
             IconButton(
               icon: const Icon(Icons.history),
@@ -43,6 +165,13 @@ class _InvestmentIndicatorsScreenState
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.read(indicatorsProvider.notifier).refresh(),
+          ),
+          AppBarMoreMenu(
+            onReplayOnboarding: () {
+              OnboardingService.resetCoachMark(
+                  CoachMarkKeys.investmentIndicators);
+              _showCoachMark();
+            },
           ),
         ],
       ),
@@ -56,9 +185,14 @@ class _InvestmentIndicatorsScreenState
           if (indicators.isEmpty) {
             return const Center(child: Text('지표 데이터가 없습니다'));
           }
+          _tryStartCoachMarkAfterLoad(briefingReady: briefingReady);
           return RefreshIndicator(
             onRefresh: () => ref.read(indicatorsProvider.notifier).refresh(),
-            child: _IndicatorListBody(indicators: indicators),
+            child: _IndicatorListBody(
+              indicators: indicators,
+              firstTileKey: _firstTileKey,
+              bookmarkKey: _bookmarkKey,
+            ),
           );
         },
       ),
@@ -181,14 +315,22 @@ class _InvestmentIndicatorsScreenState
 }
 
 class _IndicatorListBody extends ConsumerWidget {
-  const _IndicatorListBody({required this.indicators});
+  const _IndicatorListBody({
+    required this.indicators,
+    this.firstTileKey,
+    this.bookmarkKey,
+  });
 
   final List<IndicatorModel> indicators;
+  final GlobalKey? firstTileKey;
+  final GlobalKey? bookmarkKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookmarked = indicators.where((e) => e.isBookmarked).toList();
     final unbookmarked = indicators.where((e) => !e.isBookmarked).toList();
+    // 튜토리얼 키: 즐겨찾기가 있으면 첫 즐겨찾기 타일, 없으면 첫 전체 타일에 배정
+    final assignFirstTileKey = bookmarked.isEmpty;
 
     return CustomScrollView(
       slivers: [
@@ -247,6 +389,8 @@ class _IndicatorListBody extends ConsumerWidget {
                   key: ValueKey(indicator.symbol),
                   index: index,
                   child: _IndicatorTile(
+                    tileKey: index == 0 ? firstTileKey : null,
+                    bookmarkKey: index == 0 ? bookmarkKey : null,
                     indicator: indicator,
                     showDragHandle: true,
                     onTap: () => context.push(
@@ -287,6 +431,8 @@ class _IndicatorListBody extends ConsumerWidget {
             itemBuilder: (context, index) {
               final indicator = unbookmarked[index];
               return _IndicatorTile(
+                tileKey: (index == 0 && assignFirstTileKey) ? firstTileKey : null,
+                bookmarkKey: (index == 0 && assignFirstTileKey) ? bookmarkKey : null,
                 indicator: indicator,
                 showDragHandle: false,
                 onTap: () => context.push(
@@ -514,12 +660,16 @@ class _BriefingCardState extends State<_BriefingCard> {
 
 class _IndicatorTile extends ConsumerWidget {
   const _IndicatorTile({
+    this.tileKey,
+    this.bookmarkKey,
     required this.indicator,
     required this.showDragHandle,
     required this.onTap,
     required this.onBookmarkToggle,
   });
 
+  final GlobalKey? tileKey;
+  final GlobalKey? bookmarkKey;
   final IndicatorModel indicator;
   final bool showDragHandle;
   final VoidCallback onTap;
@@ -534,6 +684,7 @@ class _IndicatorTile extends ConsumerWidget {
     final sparklineAsync = ref.watch(indicatorSparklineProvider(indicator.symbol));
 
     return InkWell(
+      key: tileKey,
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.only(
@@ -643,6 +794,7 @@ class _IndicatorTile extends ConsumerWidget {
             ),
             // 즐겨찾기 버튼 (고정 너비)
             SizedBox(
+              key: bookmarkKey,
               width: 40,
               child: IconButton(
                 padding: EdgeInsets.zero,
