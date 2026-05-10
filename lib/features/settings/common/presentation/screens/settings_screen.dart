@@ -211,6 +211,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                 context.push(AppRoutes.commonRoleManagement);
               },
             ),
+            _buildSettingTile(
+              context,
+              icon: Icons.people_outlined,
+              title: '사용자 관리',
+              subtitle: '사용자 목록 조회 및 구독 정보 수정',
+              onTap: () {
+                context.push(AppRoutes.adminUserManagement);
+              },
+            ),
             const Divider(),
           ],
 

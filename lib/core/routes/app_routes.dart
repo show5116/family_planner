@@ -69,6 +69,8 @@ class AppRoutes {
   static const String permissionManagement = '/settings/permissions';
   static const String commonRoleManagement = '/settings/common-roles';
   static const String commonRolePermissions = '/settings/common-roles/:id/permissions';
+  static const String adminUserManagement = '/settings/admin/users';
+  static const String adminUserDetail = '/settings/admin/users/:userId';
 
   // Announcement Routes
   static const String announcements = '/announcements';

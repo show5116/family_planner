@@ -23,6 +23,7 @@ import 'package:family_planner/features/main/task/presentation/screens/task_form
 import 'package:family_planner/features/main/task/presentation/screens/task_form/reminder_section.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form/text_input_fields.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form/submit_button.dart';
+import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
 /// 일정 추가/수정 화면
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -45,7 +46,8 @@ class TaskFormScreen extends ConsumerStatefulWidget {
   ConsumerState<TaskFormScreen> createState() => _TaskFormScreenState();
 }
 
-class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
+class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
+    with InterstitialAdMixin {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -360,13 +362,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         await formNotifier.updateTask(groupId, updateScope: updateScope);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_updateSuccess)));
-          context.pop();
+          showInterstitialThenNavigate(() { if (mounted) context.pop(); });
         }
       } else {
         await formNotifier.createTask(groupId);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_createSuccess)));
-          context.pop();
+          showInterstitialThenNavigate(() { if (mounted) context.pop(); });
         }
       }
     } catch (e) {

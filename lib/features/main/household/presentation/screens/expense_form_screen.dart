@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/household/presentation/widgets/expe
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   /// null이면 추가 모드, non-null이면 수정 모드
@@ -28,7 +29,8 @@ class ExpenseFormScreen extends ConsumerStatefulWidget {
   ConsumerState<ExpenseFormScreen> createState() => _ExpenseFormScreenState();
 }
 
-class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
+class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
+    with InterstitialAdMixin {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -246,7 +248,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       ),
     );
 
-    if (success) Navigator.of(context).pop();
+    if (success) showInterstitialThenNavigate(() { if (mounted) Navigator.of(context).pop(); });
   }
 }
 

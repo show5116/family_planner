@@ -14,6 +14,7 @@ import 'package:family_planner/core/widgets/group_dropdown.dart';
 import 'package:family_planner/shared/widgets/editor/rich_text_editor.dart';
 import 'package:family_planner/core/services/storage_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
 /// 메모 작성/수정 화면
 class MemoFormScreen extends ConsumerStatefulWidget {
@@ -29,7 +30,8 @@ class MemoFormScreen extends ConsumerStatefulWidget {
   ConsumerState<MemoFormScreen> createState() => _MemoFormScreenState();
 }
 
-class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
+class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
+    with InterstitialAdMixin {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
@@ -493,7 +495,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.memo_updateSuccess)),
           );
-          context.pop();
+          showInterstitialThenNavigate(() { if (mounted) context.pop(); });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.memo_updateError)),
@@ -530,7 +532,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.memo_createSuccess)),
           );
-          context.pop();
+          showInterstitialThenNavigate(() { if (mounted) context.pop(); });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.memo_createError)),

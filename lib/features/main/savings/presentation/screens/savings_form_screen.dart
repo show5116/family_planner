@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
+import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
 class SavingsFormScreen extends ConsumerStatefulWidget {
   const SavingsFormScreen({super.key, this.groupId, this.goal});
@@ -20,7 +21,8 @@ class SavingsFormScreen extends ConsumerStatefulWidget {
   ConsumerState<SavingsFormScreen> createState() => _SavingsFormScreenState();
 }
 
-class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
+class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
+    with InterstitialAdMixin {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameCtrl;
   late final TextEditingController _descCtrl;
@@ -107,7 +109,9 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen> {
 
       if (mounted) {
         ref.invalidate(dashboardSavingsProvider);
-        Navigator.pop(context, result);
+        showInterstitialThenNavigate(() {
+          if (mounted) Navigator.pop(context, result);
+        });
       }
     } catch (e) {
       if (mounted) {

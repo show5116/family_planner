@@ -21,6 +21,8 @@ import 'package:family_planner/features/auth/services/oauth_callback_handler.dar
 import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/services/ad_service.dart';
+import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'firebase_options.dart';
 
 /// 전역 ScaffoldMessenger Key
@@ -55,6 +57,8 @@ void main() async {
   if (kIsWeb) {
     usePathUrlStrategy();
   }
+
+  await AdService.initialize();
 
   KakaoSdk.init(
     nativeAppKey: EnvironmentConfig.kakaoNativeAppKey,
@@ -100,6 +104,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).checkAuthStatus();
+      ref.read(subscriptionProvider.notifier).refresh();
       if (kIsWeb) {
         OAuthCallbackHandler().initDeepLinkListener();
       }

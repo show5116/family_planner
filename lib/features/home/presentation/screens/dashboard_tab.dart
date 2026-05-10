@@ -17,6 +17,8 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
+import 'package:family_planner/core/providers/subscription_provider.dart';
+import 'package:family_planner/shared/widgets/banner_ad_widget.dart';
 
 /// 대시보드 탭
 class DashboardTab extends ConsumerWidget {
@@ -154,6 +156,8 @@ class _DashboardGrid extends ConsumerWidget {
     final settings = settingsAsync.valueOrNull;
     if (settings == null) return const SizedBox.shrink();
 
+    final showAds = ref.watch(showAdsProvider);
+
     // 화면 크기에 따른 카드 너비 계산
     final screenWidth = MediaQuery.of(context).size.width;
     final maxWidth = Responsive.isDesktop(context) ? 1200.0 : screenWidth;
@@ -243,6 +247,16 @@ class _DashboardGrid extends ConsumerWidget {
       if (widget != null) {
         activeWidgets.add(SizedBox(width: cardWidth, child: widget));
       }
+    }
+
+    // 배너 광고: 2번째 위젯 뒤 삽입, 위젯이 2개 미만이면 맨 아래
+    if (showAds && activeWidgets.isNotEmpty) {
+      final bannerWidget = SizedBox(
+        width: availableWidth,
+        child: const Center(child: BannerAdWidget()),
+      );
+      final insertIndex = activeWidgets.length >= 2 ? 2 : activeWidgets.length;
+      activeWidgets.insert(insertIndex, bannerWidget);
     }
 
     // 활성화된 위젯이 없으면 안내 메시지 표시

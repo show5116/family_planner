@@ -6,6 +6,7 @@ import 'package:family_planner/features/main/assets/data/models/account_model.da
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
 class AccountFormScreen extends ConsumerStatefulWidget {
   final String? groupId;
@@ -17,7 +18,8 @@ class AccountFormScreen extends ConsumerStatefulWidget {
   ConsumerState<AccountFormScreen> createState() => _AccountFormScreenState();
 }
 
-class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
+class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
+    with InterstitialAdMixin {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _institutionController;
@@ -177,7 +179,9 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.asset_save_success)),
       );
-      Navigator.of(context).pop(result);
+      showInterstitialThenNavigate(() {
+        if (mounted) Navigator.of(context).pop(result);
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.common_error)),
