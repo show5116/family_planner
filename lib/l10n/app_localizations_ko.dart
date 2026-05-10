@@ -2348,7 +2348,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_account_type => '계좌 유형';
 
   @override
-  String get asset_type_bank => '은행';
+  String get asset_type_savings => '적금';
+
+  @override
+  String get asset_type_deposit => '예금';
 
   @override
   String get asset_type_stock => '주식';
@@ -2357,13 +2360,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_type_fund => '펀드';
 
   @override
-  String get asset_type_insurance => '보험';
-
-  @override
   String get asset_type_real_estate => '부동산';
-
-  @override
-  String get asset_type_cash => '현금';
 
   @override
   String get asset_type_gold => '실물 금';

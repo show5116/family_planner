@@ -23,40 +23,36 @@ Color profitColor(BuildContext context, double value) {
 /// AccountType → 아이콘
 IconData accountTypeIcon(AccountType? type) {
   switch (type) {
-    case AccountType.bank:
+    case AccountType.savings:
+      return Icons.savings;
+    case AccountType.deposit:
       return Icons.account_balance;
     case AccountType.stock:
       return Icons.trending_up;
     case AccountType.fund:
       return Icons.bar_chart;
-    case AccountType.insurance:
-      return Icons.health_and_safety;
     case AccountType.realEstate:
       return Icons.home;
-    case AccountType.cash:
-      return Icons.payments;
     case AccountType.gold:
       return Icons.diamond;
     default:
-      return Icons.savings;
+      return Icons.account_balance_wallet;
   }
 }
 
 /// AccountType → 다국어 레이블
 String accountTypeLabel(AppLocalizations l10n, AccountType? type) {
   switch (type) {
-    case AccountType.bank:
-      return l10n.asset_type_bank;
+    case AccountType.savings:
+      return l10n.asset_type_savings;
+    case AccountType.deposit:
+      return l10n.asset_type_deposit;
     case AccountType.stock:
       return l10n.asset_type_stock;
     case AccountType.fund:
       return l10n.asset_type_fund;
-    case AccountType.insurance:
-      return l10n.asset_type_insurance;
     case AccountType.realEstate:
       return l10n.asset_type_real_estate;
-    case AccountType.cash:
-      return l10n.asset_type_cash;
     case AccountType.gold:
       return l10n.asset_type_gold;
     default:

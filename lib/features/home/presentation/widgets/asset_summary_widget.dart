@@ -307,18 +307,18 @@ class _AssetDistribution extends StatelessWidget {
 
   static String _typeLabel(AccountType? type) {
     switch (type) {
-      case AccountType.bank:
+      case AccountType.savings:
+        return '적금';
+      case AccountType.deposit:
         return '예금';
       case AccountType.stock:
         return '주식';
       case AccountType.fund:
         return '펀드';
-      case AccountType.insurance:
-        return '보험';
       case AccountType.realEstate:
         return '부동산';
-      case AccountType.cash:
-        return '현금';
+      case AccountType.gold:
+        return '실물 금';
       default:
         return '기타';
     }
@@ -326,18 +326,18 @@ class _AssetDistribution extends StatelessWidget {
 
   static Color _typeColor(AccountType? type) {
     switch (type) {
-      case AccountType.bank:
+      case AccountType.savings:
         return AppColors.primary;
+      case AccountType.deposit:
+        return Colors.indigo;
       case AccountType.stock:
         return AppColors.investment;
       case AccountType.fund:
         return Colors.purple;
-      case AccountType.insurance:
-        return Colors.teal;
       case AccountType.realEstate:
         return Colors.brown;
-      case AccountType.cash:
-        return AppColors.success;
+      case AccountType.gold:
+        return Colors.amber;
       default:
         return AppColors.secondary;
     }

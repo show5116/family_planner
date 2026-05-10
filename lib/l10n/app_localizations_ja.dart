@@ -2345,7 +2345,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_account_type => '口座種別';
 
   @override
-  String get asset_type_bank => '銀行';
+  String get asset_type_savings => '積立';
+
+  @override
+  String get asset_type_deposit => '預金';
 
   @override
   String get asset_type_stock => '株式';
@@ -2354,13 +2357,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_type_fund => 'ファンド';
 
   @override
-  String get asset_type_insurance => '保険';
-
-  @override
   String get asset_type_real_estate => '不動産';
-
-  @override
-  String get asset_type_cash => '現金';
 
   @override
   String get asset_type_gold => '現物金';

@@ -4666,11 +4666,17 @@ abstract class AppLocalizations {
   /// **'계좌 유형'**
   String get asset_account_type;
 
-  /// 계좌 유형: 은행
+  /// 계좌 유형: 적금
   ///
   /// In ko, this message translates to:
-  /// **'은행'**
-  String get asset_type_bank;
+  /// **'적금'**
+  String get asset_type_savings;
+
+  /// 계좌 유형: 예금
+  ///
+  /// In ko, this message translates to:
+  /// **'예금'**
+  String get asset_type_deposit;
 
   /// 계좌 유형: 주식
   ///
@@ -4684,23 +4690,11 @@ abstract class AppLocalizations {
   /// **'펀드'**
   String get asset_type_fund;
 
-  /// 계좌 유형: 보험
-  ///
-  /// In ko, this message translates to:
-  /// **'보험'**
-  String get asset_type_insurance;
-
   /// 계좌 유형: 부동산
   ///
   /// In ko, this message translates to:
   /// **'부동산'**
   String get asset_type_real_estate;
-
-  /// 계좌 유형: 현금
-  ///
-  /// In ko, this message translates to:
-  /// **'현금'**
-  String get asset_type_cash;
 
   /// 계좌 유형: 실물 금
   ///

@@ -2391,7 +2391,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_account_type => 'Account Type';
 
   @override
-  String get asset_type_bank => 'Bank';
+  String get asset_type_savings => 'Savings';
+
+  @override
+  String get asset_type_deposit => 'Deposit';
 
   @override
   String get asset_type_stock => 'Stock';
@@ -2400,13 +2403,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_type_fund => 'Fund';
 
   @override
-  String get asset_type_insurance => 'Insurance';
-
-  @override
   String get asset_type_real_estate => 'Real Estate';
-
-  @override
-  String get asset_type_cash => 'Cash';
 
   @override
   String get asset_type_gold => 'Physical Gold';

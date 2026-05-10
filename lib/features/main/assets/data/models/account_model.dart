@@ -1,11 +1,10 @@
 /// 계좌 유형
 enum AccountType {
-  bank,
+  savings,
+  deposit,
   stock,
   fund,
-  insurance,
   realEstate,
-  cash,
   gold,
   other,
 }
@@ -13,18 +12,16 @@ enum AccountType {
 /// AccountType → API 문자열 변환
 String accountTypeToString(AccountType type) {
   switch (type) {
-    case AccountType.bank:
-      return 'BANK';
+    case AccountType.savings:
+      return 'SAVINGS';
+    case AccountType.deposit:
+      return 'DEPOSIT';
     case AccountType.stock:
       return 'STOCK';
     case AccountType.fund:
       return 'FUND';
-    case AccountType.insurance:
-      return 'INSURANCE';
     case AccountType.realEstate:
       return 'REAL_ESTATE';
-    case AccountType.cash:
-      return 'CASH';
     case AccountType.gold:
       return 'GOLD';
     case AccountType.other:
@@ -36,18 +33,16 @@ String accountTypeToString(AccountType type) {
 AccountType? parseAccountType(String? value) {
   if (value == null) return null;
   switch (value) {
-    case 'BANK':
-      return AccountType.bank;
+    case 'SAVINGS':
+      return AccountType.savings;
+    case 'DEPOSIT':
+      return AccountType.deposit;
     case 'STOCK':
       return AccountType.stock;
     case 'FUND':
       return AccountType.fund;
-    case 'INSURANCE':
-      return AccountType.insurance;
     case 'REAL_ESTATE':
       return AccountType.realEstate;
-    case 'CASH':
-      return AccountType.cash;
     case 'GOLD':
       return AccountType.gold;
     default:

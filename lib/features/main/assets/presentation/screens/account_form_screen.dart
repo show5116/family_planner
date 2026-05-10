@@ -22,7 +22,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _institutionController;
   late final TextEditingController _accountNumberController;
-  AccountType _selectedType = AccountType.other;
+  AccountType _selectedType = AccountType.savings;
 
   bool get _isEdit => widget.account != null;
 
@@ -34,7 +34,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
         TextEditingController(text: widget.account?.institution ?? '');
     _accountNumberController =
         TextEditingController(text: widget.account?.accountNumber ?? '');
-    _selectedType = widget.account?.type ?? AccountType.other;
+    _selectedType = widget.account?.type ?? AccountType.savings;
   }
 
   @override
@@ -109,7 +109,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                           child: Text(accountTypeLabel(l10n, t)),
                         ))
                     .toList(),
-                onChanged: (v) => setState(() => _selectedType = v ?? AccountType.other),
+                onChanged: (v) => setState(() => _selectedType = v ?? AccountType.savings),
               ),
               const SizedBox(height: AppSizes.spaceL),
 

@@ -30,7 +30,7 @@ final _demoAccount = AccountModel(
   name: '국민은행 적금',
   accountNumber: '****-****-1234',
   institution: '국민은행',
-  type: AccountType.bank,
+  type: AccountType.savings,
   createdAt: DateTime(2025, 1, 1),
   updatedAt: DateTime(2025, 5, 1),
   latestBalance: 3500000,
