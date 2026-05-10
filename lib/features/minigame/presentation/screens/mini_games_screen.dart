@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
 class MiniGamesScreen extends ConsumerStatefulWidget {
   const MiniGamesScreen({super.key});
@@ -15,8 +19,142 @@ class MiniGamesScreen extends ConsumerStatefulWidget {
 }
 
 class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
-  // 그룹을 자동 선택하지 않음 — 사용자가 직접 선택
+  final _ladderCardKey = GlobalKey();
+  final _rouletteCardKey = GlobalKey();
+  final _groupDropdownKey = GlobalKey();
+  final _historyKey = GlobalKey();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeStartOnboarding());
+  }
+
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
+  Future<void> _maybeStartOnboarding() async {
+    final completed =
+        await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.miniGames);
+    if (!mounted || completed) return;
+    _showCoachMark();
+  }
+
+  Future<void> _showCoachMark() async {
+    if (!mounted) return;
+
+    final ladderPos = _keyToPosition(_ladderCardKey);
+    final roulettePos = _keyToPosition(_rouletteCardKey);
+    final groupPos = _keyToPosition(_groupDropdownKey);
+    final historyPos = _keyToPosition(_historyKey);
+
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'game_cards',
+        targetPosition: ladderPos != null && roulettePos != null
+            ? TargetPosition(
+                Size(
+                  (roulettePos.offset.dx +
+                          roulettePos.size.width) -
+                      ladderPos.offset.dx,
+                  ladderPos.size.height,
+                ),
+                ladderPos.offset,
+              )
+            : null,
+        keyTarget: ladderPos == null ? _ladderCardKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '미니게임',
+              description: '사다리타기와 룰렛 게임을 즐길 수 있어요.\n공정한 결정이 필요할 때 활용해보세요!',
+              icon: Icons.casino_outlined,
+              color: Colors.indigo,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'group_dropdown',
+        targetPosition: groupPos,
+        keyTarget: groupPos == null ? _groupDropdownKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '그룹 선택',
+              description: '그룹을 선택하면 게임 결과가\n자동으로 저장돼요.\n그룹 멤버 누구나 이력을 확인할 수 있어요.',
+              icon: Icons.group_outlined,
+              color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'history_section',
+        targetPosition: historyPos,
+        keyTarget: historyPos == null ? _historyKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '게임 이력',
+              description: '지금까지 진행한 게임 결과를\n이곳에서 확인할 수 있어요.\n누가 어떤 결과를 받았는지 투명하게 공개됩니다.',
+              icon: Icons.history,
+              color: Colors.orange,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: _skipWidget,
+      onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.miniGames),
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.miniGames);
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
+  }
+
+  Widget get _skipWidget => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +165,14 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('미니게임'),
+        actions: [
+          AppBarMoreMenu(
+            onReplayOnboarding: () {
+              OnboardingService.resetCoachMark(CoachMarkKeys.miniGames);
+              _showCoachMark();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -37,6 +183,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               children: [
                 Expanded(
                   child: _GameCard(
+                    key: _ladderCardKey,
                     icon: Icons.view_week,
                     title: '사다리타기',
                     color: Colors.indigo,
@@ -46,6 +193,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _GameCard(
+                    key: _rouletteCardKey,
                     icon: Icons.circle_outlined,
                     title: '룰렛',
                     color: Colors.orange,
@@ -55,12 +203,13 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               ],
             ),
           ),
-          // 그룹 선택 (없음 포함)
+          // 그룹 선택
           if (groups.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: DropdownButtonFormField<String?>(
-                key: ValueKey(selectedGroupId),
+                key: _groupDropdownKey,
+                // key: ValueKey(selectedGroupId), // 튜토리얼용 GlobalKey 우선
                 initialValue: selectedGroupId,
                 decoration: const InputDecoration(
                   labelText: '그룹 선택 (이력 저장 시 필요)',
@@ -78,15 +227,15 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
                       DropdownMenuItem(value: g.id, child: Text(g.name))),
                 ],
                 onChanged: (value) {
-                  ref.read(minigameSelectedGroupIdProvider.notifier).state =
-                      value;
+                  ref.read(minigameSelectedGroupIdProvider.notifier).state = value;
                 },
               ),
             ),
           const SizedBox(height: 8),
-          // 이력 섹션 (그룹 선택 시에만)
+          // 이력 섹션 (그룹 선택 시)
           if (selectedGroupId != null) ...[
             Padding(
+              key: _historyKey,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,12 +273,22 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               ),
             ),
           ] else
-            const Expanded(
+            Expanded(
               child: Center(
-                child: Text(
-                  '그룹을 선택하면\n게임 이력이 자동 저장됩니다',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.history,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.outline),
+                    const SizedBox(height: 8),
+                    Text(
+                      '그룹을 선택하면\n게임 이력이 자동 저장됩니다',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -177,6 +336,7 @@ class _GameCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const _GameCard({
+    super.key,
     required this.icon,
     required this.title,
     required this.color,

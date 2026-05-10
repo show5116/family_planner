@@ -2,12 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
 import 'package:family_planner/features/minigame/data/repositories/minigame_repository.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
 // ─── 사다리 데이터 ─────────────────────────────────────────────────────────────
 
@@ -123,9 +127,15 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
 
   _GamePhase _phase = _GamePhase.setup;
 
+  // 튜토리얼 키
+  final _participantsKey = GlobalKey();
+  final _optionsKey = GlobalKey();
+  final _startButtonKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowCoachMark());
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
@@ -160,6 +170,123 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
     _animController.dispose();
     super.dispose();
   }
+
+  // ── 튜토리얼 ──────────────────────────────────────────────────────────────
+
+  TargetPosition? _keyToPosition(GlobalKey key) {
+    final ctx = key.currentContext;
+    if (ctx == null) return null;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return null;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    return TargetPosition(box.size, offset);
+  }
+
+  Future<void> _maybeShowCoachMark() async {
+    final completed = await OnboardingService.isCoachMarkCompleted(
+        CoachMarkKeys.miniGamesLadder);
+    if (!mounted || completed) return;
+    _showCoachMark();
+  }
+
+  Future<void> _showCoachMark() async {
+    if (!mounted) return;
+    final participantsPos = _keyToPosition(_participantsKey);
+    final optionsPos = _keyToPosition(_optionsKey);
+    final startPos = _keyToPosition(_startButtonKey);
+
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'ladder_participants',
+        targetPosition: participantsPos,
+        keyTarget: participantsPos == null ? _participantsKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '참여자 입력',
+              description: '사다리를 탈 참여자 이름을 입력해요.\n그룹 멤버 불러오기 버튼으로\n한 번에 추가할 수도 있어요.',
+              icon: Icons.people_outline,
+              color: Colors.indigo,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'ladder_options',
+        targetPosition: optionsPos,
+        keyTarget: optionsPos == null ? _optionsKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '결과 항목 입력',
+              description: '당첨될 결과 항목과 수량을 입력해요.\n수량의 합이 참여자 수와 같아야\n사다리를 생성할 수 있어요.',
+              icon: Icons.list_alt_outlined,
+              color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'ladder_start',
+        targetPosition: startPos,
+        keyTarget: startPos == null ? _startButtonKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '사다리 생성',
+              description: '버튼을 누르면 사다리가 생성돼요.\n참여자 이름을 탭하면 경로가 애니메이션으로\n표시되고 결과가 공개됩니다.',
+              icon: Icons.play_arrow,
+              color: Colors.orange,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    await FeatureCoachMark.waitForTargets(targets, context);
+    if (!mounted) return;
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: const Color(0xFF212121),
+      opacityShadow: 0.85,
+      textSkip: '건너뛰기',
+      alignSkip: Alignment.topRight,
+      skipWidget: _skipWidget,
+      onFinish: () =>
+          OnboardingService.completeCoachMark(CoachMarkKeys.miniGamesLadder),
+      onSkip: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.miniGamesLadder);
+        return true;
+      },
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+    ).show(context: context);
+  }
+
+  Widget get _skipWidget => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: const Text(
+          '건너뛰기',
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      );
 
   List<String> get _participants => _participantControllers
       .map((c) => c.text.trim())
@@ -199,7 +326,17 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: const Text('사다리타기')),
+      appBar: AppBar(
+        title: const Text('사다리타기'),
+        actions: [
+          AppBarMoreMenu(
+            onReplayOnboarding: () {
+              OnboardingService.resetCoachMark(CoachMarkKeys.miniGamesLadder);
+              _showCoachMark();
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -213,6 +350,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                 _buildSetupSection(selectedGroupId),
                 const SizedBox(height: 20),
                 FilledButton.icon(
+                  key: _startButtonKey,
                   onPressed: _canStart ? _buildLadder : null,
                   icon: const Icon(Icons.play_arrow),
                   label: const Text('사다리 생성'),
@@ -268,6 +406,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
           children: [
             Expanded(
               child: _ListEditor(
+                key: _participantsKey,
                 label: '참여자',
                 controllers: _participantControllers,
                 hintPrefix: '참여자',
@@ -297,6 +436,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
             const SizedBox(width: 12),
             Expanded(
               child: _OptionsEditor(
+                key: _optionsKey,
                 controllers: _optionControllers,
                 countControllers: _optionCountControllers,
                 participantCount: _participants.length,
@@ -750,6 +890,7 @@ class _OptionsEditor extends StatelessWidget {
   final VoidCallback onChanged;
 
   const _OptionsEditor({
+    super.key,
     required this.controllers,
     required this.countControllers,
     required this.participantCount,
@@ -907,6 +1048,7 @@ class _ListEditor extends ConsumerWidget {
   final void Function(List<String> names)? onAddFromGroup;
 
   const _ListEditor({
+    super.key,
     required this.label,
     required this.controllers,
     required this.hintPrefix,
