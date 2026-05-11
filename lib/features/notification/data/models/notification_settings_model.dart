@@ -15,6 +15,9 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     @Default(true) bool groupEnabled,
     @Default(true) bool savingsEnabled,
     @Default(true) bool systemEnabled,
+    @Default(true) bool weatherEnabled,
+    // 날씨 알림을 받을 시간 (시 단위, 기본 오전 7시)
+    @Default(7) int weatherAlertHour,
   }) = _NotificationSettingsModel;
 
   factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>

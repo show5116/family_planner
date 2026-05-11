@@ -70,15 +70,17 @@ class NotificationRepository {
   Future<void> updateSetting({
     required String category,
     required bool enabled,
+    int? weatherAlertHour,
   }) async {
     try {
-      await _dio.put(
-        '/notifications/settings',
-        data: {
-          'category': category,
-          'enabled': enabled,
-        },
-      );
+      final data = <String, dynamic>{
+        'category': category,
+        'enabled': enabled,
+      };
+      if (weatherAlertHour != null) {
+        data['weatherAlertHour'] = weatherAlertHour;
+      }
+      await _dio.put('/notifications/settings', data: data);
     } on DioException catch (e) {
       throw Exception('알림 설정 저장 실패: ${e.message}');
     }

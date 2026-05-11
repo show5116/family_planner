@@ -45,6 +45,8 @@ class NotificationSettings extends _$NotificationSettings {
     bool? groupEnabled,
     bool? savingsEnabled,
     bool? systemEnabled,
+    bool? weatherEnabled,
+    int? weatherAlertHour,
   }) async {
     final current = await future;
     final updated = current.copyWith(
@@ -56,6 +58,8 @@ class NotificationSettings extends _$NotificationSettings {
       groupEnabled: groupEnabled ?? current.groupEnabled,
       savingsEnabled: savingsEnabled ?? current.savingsEnabled,
       systemEnabled: systemEnabled ?? current.systemEnabled,
+      weatherEnabled: weatherEnabled ?? current.weatherEnabled,
+      weatherAlertHour: weatherAlertHour ?? current.weatherAlertHour,
     );
 
     // 로컬 저장
@@ -88,6 +92,14 @@ class NotificationSettings extends _$NotificationSettings {
       }
       if (systemEnabled != null) {
         await repository.updateSetting(category: 'SYSTEM', enabled: systemEnabled);
+      }
+      // weatherEnabled 또는 weatherAlertHour 변경 시 WEATHER 카테고리로 전송
+      if (weatherEnabled != null || weatherAlertHour != null) {
+        await repository.updateSetting(
+          category: 'WEATHER',
+          enabled: weatherEnabled ?? current.weatherEnabled,
+          weatherAlertHour: weatherAlertHour,
+        );
       }
 
     } catch (e) {

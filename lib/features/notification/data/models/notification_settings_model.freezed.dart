@@ -31,6 +31,9 @@ mixin _$NotificationSettingsModel {
   bool get groupEnabled => throw _privateConstructorUsedError;
   bool get savingsEnabled => throw _privateConstructorUsedError;
   bool get systemEnabled => throw _privateConstructorUsedError;
+  bool get weatherEnabled =>
+      throw _privateConstructorUsedError; // 날씨 알림을 받을 시간 (시 단위, 기본 오전 7시)
+  int get weatherAlertHour => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,6 +61,8 @@ abstract class $NotificationSettingsModelCopyWith<$Res> {
     bool groupEnabled,
     bool savingsEnabled,
     bool systemEnabled,
+    bool weatherEnabled,
+    int weatherAlertHour,
   });
 }
 
@@ -87,6 +92,8 @@ class _$NotificationSettingsModelCopyWithImpl<
     Object? groupEnabled = null,
     Object? savingsEnabled = null,
     Object? systemEnabled = null,
+    Object? weatherEnabled = null,
+    Object? weatherAlertHour = null,
   }) {
     return _then(
       _value.copyWith(
@@ -122,6 +129,14 @@ class _$NotificationSettingsModelCopyWithImpl<
                 ? _value.systemEnabled
                 : systemEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
+            weatherEnabled: null == weatherEnabled
+                ? _value.weatherEnabled
+                : weatherEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            weatherAlertHour: null == weatherAlertHour
+                ? _value.weatherAlertHour
+                : weatherAlertHour // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -146,6 +161,8 @@ abstract class _$$NotificationSettingsModelImplCopyWith<$Res>
     bool groupEnabled,
     bool savingsEnabled,
     bool systemEnabled,
+    bool weatherEnabled,
+    int weatherAlertHour,
   });
 }
 
@@ -175,6 +192,8 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
     Object? groupEnabled = null,
     Object? savingsEnabled = null,
     Object? systemEnabled = null,
+    Object? weatherEnabled = null,
+    Object? weatherAlertHour = null,
   }) {
     return _then(
       _$NotificationSettingsModelImpl(
@@ -210,6 +229,14 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
             ? _value.systemEnabled
             : systemEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
+        weatherEnabled: null == weatherEnabled
+            ? _value.weatherEnabled
+            : weatherEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        weatherAlertHour: null == weatherAlertHour
+            ? _value.weatherAlertHour
+            : weatherAlertHour // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -227,6 +254,8 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     this.groupEnabled = true,
     this.savingsEnabled = true,
     this.systemEnabled = true,
+    this.weatherEnabled = true,
+    this.weatherAlertHour = 7,
   });
 
   factory _$NotificationSettingsModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -256,10 +285,17 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
   @override
   @JsonKey()
   final bool systemEnabled;
+  @override
+  @JsonKey()
+  final bool weatherEnabled;
+  // 날씨 알림을 받을 시간 (시 단위, 기본 오전 7시)
+  @override
+  @JsonKey()
+  final int weatherAlertHour;
 
   @override
   String toString() {
-    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, savingsEnabled: $savingsEnabled, systemEnabled: $systemEnabled)';
+    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, savingsEnabled: $savingsEnabled, systemEnabled: $systemEnabled, weatherEnabled: $weatherEnabled, weatherAlertHour: $weatherAlertHour)';
   }
 
   @override
@@ -282,7 +318,11 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
             (identical(other.savingsEnabled, savingsEnabled) ||
                 other.savingsEnabled == savingsEnabled) &&
             (identical(other.systemEnabled, systemEnabled) ||
-                other.systemEnabled == systemEnabled));
+                other.systemEnabled == systemEnabled) &&
+            (identical(other.weatherEnabled, weatherEnabled) ||
+                other.weatherEnabled == weatherEnabled) &&
+            (identical(other.weatherAlertHour, weatherAlertHour) ||
+                other.weatherAlertHour == weatherAlertHour));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,6 +337,8 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     groupEnabled,
     savingsEnabled,
     systemEnabled,
+    weatherEnabled,
+    weatherAlertHour,
   );
 
   /// Create a copy of NotificationSettingsModel
@@ -326,6 +368,8 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
     final bool groupEnabled,
     final bool savingsEnabled,
     final bool systemEnabled,
+    final bool weatherEnabled,
+    final int weatherAlertHour,
   }) = _$NotificationSettingsModelImpl;
 
   factory _NotificationSettingsModel.fromJson(Map<String, dynamic> json) =
@@ -347,6 +391,10 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
   bool get savingsEnabled;
   @override
   bool get systemEnabled;
+  @override
+  bool get weatherEnabled; // 날씨 알림을 받을 시간 (시 단위, 기본 오전 7시)
+  @override
+  int get weatherAlertHour;
 
   /// Create a copy of NotificationSettingsModel
   /// with the given fields replaced by the non-null parameter values.

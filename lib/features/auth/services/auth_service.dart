@@ -538,4 +538,17 @@ class AuthService extends ApiServiceBase {
       throw handleError(e);
     }
   }
+
+  /// 날씨 알림용 위치 업데이트
+  Future<void> updateLocation({required double lat, required double lon}) async {
+    try {
+      await apiClient.put(
+        ApiConstants.updateLocation,
+        data: {'lat': lat, 'lon': lon},
+      );
+    } catch (e) {
+      // 위치 저장 실패는 조용히 무시 (알림 핵심 기능 아님)
+      debugPrint('⚠️ [AuthService] 위치 업데이트 실패: $e');
+    }
+  }
 }

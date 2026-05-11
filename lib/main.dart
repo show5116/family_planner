@@ -17,8 +17,10 @@ import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
+import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
+import 'package:family_planner/features/weather/providers/weather_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/services/ad_service.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
@@ -107,7 +109,18 @@ class _MyAppState extends ConsumerState<MyApp> {
       if (kIsWeb) {
         OAuthCallbackHandler().initDeepLinkListener();
       }
+      _updateUserLocation();
     });
+  }
+
+  /// GPS 위치를 서버에 저장 (날씨 알림 크론잡에서 사용)
+  Future<void> _updateUserLocation() async {
+    try {
+      final latLon = await ref.read(locationProvider.future);
+      await AuthService().updateLocation(lat: latLon.lat, lon: latLon.lon);
+    } catch (_) {
+      // 위치 권한 거부 등 실패 시 조용히 무시
+    }
   }
 
   @override

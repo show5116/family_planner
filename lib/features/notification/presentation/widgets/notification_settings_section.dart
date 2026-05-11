@@ -6,6 +6,39 @@ import 'package:family_planner/features/notification/data/models/notification_se
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_toggle_item.dart';
 
+/// 날씨 알림 시간 선택 타일
+class _WeatherAlertTimeTile extends StatelessWidget {
+  final int hour;
+  final ValueChanged<int> onChanged;
+
+  const _WeatherAlertTimeTile({required this.hour, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.access_time, color: Theme.of(context).colorScheme.primary),
+      title: const Text('날씨 알림 시간'),
+      subtitle: Text(
+        '앱 실행 시 설정 시간이 되면 알림을 보냅니다',
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+      ),
+      trailing: DropdownButton<int>(
+        value: hour,
+        underline: const SizedBox.shrink(),
+        items: List.generate(17, (i) => i + 5).map((h) {
+          final label = h < 12 ? '오전 $h시' : (h == 12 ? '낮 12시' : '오후 ${h - 12}시');
+          return DropdownMenuItem(value: h, child: Text(label));
+        }).toList(),
+        onChanged: (v) { if (v != null) onChanged(v); },
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceXS,
+      ),
+    );
+  }
+}
+
 /// 알림 설정 섹션 위젯
 class NotificationSettingsSection extends ConsumerWidget {
   final NotificationSettingsModel settings;
@@ -125,6 +158,29 @@ class NotificationSettingsSection extends ConsumerWidget {
                       .updateSetting(systemEnabled: value);
                 },
               ),
+              const Divider(height: 1),
+              NotificationToggleItem(
+                icon: Icons.wb_cloudy_outlined,
+                title: '날씨 알림',
+                subtitle: '비·눈 예보 또는 큰 기온 변화 시 알립니다',
+                value: settings.weatherEnabled,
+                onChanged: (value) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .updateSetting(weatherEnabled: value);
+                },
+              ),
+              if (settings.weatherEnabled) ...[
+                const Divider(height: 1),
+                _WeatherAlertTimeTile(
+                  hour: settings.weatherAlertHour,
+                  onChanged: (hour) {
+                    ref
+                        .read(notificationSettingsProvider.notifier)
+                        .updateSetting(weatherAlertHour: hour);
+                  },
+                ),
+              ],
             ],
           ),
         ),
