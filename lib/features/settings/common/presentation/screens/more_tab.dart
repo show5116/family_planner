@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/shared/widgets/user_profile_card.dart';
 import 'package:family_planner/shared/widgets/menu_list_tile.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
@@ -27,8 +26,6 @@ class MoreTab extends ConsumerStatefulWidget {
 }
 
 class _MoreTabState extends ConsumerState<MoreTab> {
-  final _storage = SecureStorageService();
-  Map<String, dynamic>? _userInfo;
   bool _isLoggingOut = false;
 
   final _groupManagementKey = GlobalKey();
@@ -38,7 +35,6 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
@@ -123,22 +119,14 @@ class _MoreTabState extends ConsumerState<MoreTab> {
     );
   }
 
-  Future<void> _loadUserInfo() async {
-    final userInfo = await _storage.getUserInfo();
-    if (mounted) {
-      setState(() {
-        _userInfo = userInfo;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final email = _userInfo?['email'] as String?;
-    final name = _userInfo?['name'] as String?;
-    final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
-    final isAdmin = isUserAdmin(_userInfo);
+    final userInfo = ref.watch(authProvider).user;
+    final email = userInfo?['email'] as String?;
+    final name = userInfo?['name'] as String?;
+    final profileImageUrl = userInfo?['profileImageUrl'] as String?;
+    final isAdmin = isUserAdmin(userInfo);
 
     // 하단 네비게이션에 표시되지 않는 메뉴 ID 가져오기
     ref.watch(bottomNavigationSettingsProvider);
@@ -166,10 +154,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                   email: email,
                   profileImageUrl: profileImageUrl,
                   isAdmin: isAdmin,
-                  onTap: () async {
-                    await context.push(AppRoutes.profile);
-                    if (mounted) _loadUserInfo();
-                  },
+                  onTap: () => context.push(AppRoutes.profile),
                 ),
               ),
               // 그룹 관리 (상단 고정)

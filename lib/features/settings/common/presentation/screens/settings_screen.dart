@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
-import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -18,41 +16,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends ConsumerState<SettingsScreen>
-    with WidgetsBindingObserver {
-  final _storage = SecureStorageService();
-  Map<String, dynamic>? _userInfo;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _loadUserInfo();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // 앱이 다시 활성화될 때 사용자 정보 재로드
-    if (state == AppLifecycleState.resumed) {
-      _loadUserInfo();
-    }
-  }
-
-  Future<void> _loadUserInfo() async {
-    final userInfo = await _storage.getUserInfo();
-    if (mounted) {
-      setState(() {
-        _userInfo = userInfo;
-      });
-    }
-  }
-
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   /// 비밀번호 설정 안내 다이얼로그
   Future<void> _showPasswordSetupGuideDialog() async {
     final l10n = AppLocalizations.of(context)!;
@@ -102,8 +66,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     );
 
     if (shouldSetupPassword == true && mounted) {
-      // 비밀번호 설정 화면으로 이동 (setup=true 파라미터 및 이메일 전달)
-      final email = _userInfo?['email'] as String? ?? '';
+      final email = ref.read(authProvider).user?['email'] as String? ?? '';
       context.push('${AppRoutes.forgotPassword}?setup=true&email=${Uri.encodeComponent(email)}');
     }
   }
@@ -111,6 +74,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final userInfo = ref.watch(authProvider).user;
+    final isAdmin = userInfo?['isAdmin'] as bool? ?? false;
+    final hasPassword = userInfo?['hasPassword'] as bool? ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -118,9 +84,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
       ),
       body: ListView(
         children: [
-          // 사용자 프로필 섹션
-          _buildUserProfile(),
-          const Divider(),
           // 화면 설정 섹션
           _buildSectionHeader(context, l10n.settings_screenSettings),
           _buildSettingTile(
@@ -161,17 +124,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
             title: l10n.settings_profileTitle,
             subtitle: l10n.settings_profileSubtitle,
             onTap: () async {
-              final hasPassword = _userInfo?['hasPassword'] as bool? ?? false;
-
               if (!hasPassword && mounted) {
-                // 비밀번호가 없는 사용자 (소셜 로그인만 사용한 경우)
                 await _showPasswordSetupGuideDialog();
               } else {
-                // 프로필 설정 화면으로 이동
-                if (mounted) {
-                  await context.push(AppRoutes.profile);
-                  if (mounted) _loadUserInfo();
-                }
+                if (mounted) context.push(AppRoutes.profile);
               }
             },
           ),
@@ -191,7 +147,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           const Divider(),
 
           // 운영자 전용 섹션 (관리자만 표시)
-          if (_userInfo?['isAdmin'] as bool? ?? false) ...[
+          if (isAdmin) ...[
             _buildSectionHeader(context, l10n.settings_adminMenu),
             _buildSettingTile(
               context,
@@ -288,119 +244,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
         const SnackBar(content: Text('다음 앱 실행 시 튜토리얼이 표시됩니다.')),
       );
     }
-  }
-
-  Widget _buildUserProfile() {
-    final email = _userInfo?['email'] as String?;
-    final name = _userInfo?['name'] as String?;
-    final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
-    final isAdmin = _userInfo?['isAdmin'] as bool? ?? false;
-    final l10n = AppLocalizations.of(context)!;
-
-    return InkWell(
-      onTap: () async {
-        await context.push(AppRoutes.profile);
-        if (mounted) _loadUserInfo();
-      },
-      child: Container(
-      padding: const EdgeInsets.all(AppSizes.spaceL),
-      child: Row(
-        children: [
-          // 프로필 이미지
-          profileImageUrl != null && profileImageUrl.isNotEmpty
-              ? CircleAvatar(
-                  radius: 40,
-                  backgroundImage: CachedNetworkImageProvider(profileImageUrl),
-                )
-              : CircleAvatar(
-                  radius: 40,
-                  child: Icon(
-                    Icons.person,
-                    size: 40,
-                    color: Colors.grey[400],
-                  ),
-                ),
-          const SizedBox(width: AppSizes.spaceM),
-          // 사용자 정보
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      name ?? l10n.settings_user,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    if (isAdmin) ...[
-                      const SizedBox(width: AppSizes.spaceS),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.spaceS,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          'ADMIN',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: AppSizes.spaceXS),
-                Text(
-                  email ?? '',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                ),
-              ],
-            ),
-          ),
-          // 로그아웃 버튼
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              final shouldLogout = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(l10n.settings_logoutConfirmTitle),
-                  content: Text(l10n.settings_logoutConfirmMessage),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text(l10n.common_cancel),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text(l10n.settings_logout),
-                    ),
-                  ],
-                ),
-              );
-
-              if (shouldLogout == true && mounted) {
-                await ref.read(authProvider.notifier).logout();
-                if (mounted) {
-                  context.go('/login');
-                }
-              }
-            },
-          ),
-        ],
-      ),
-      ),
-    );
   }
 
   Widget _buildSectionHeader(BuildContext context, String title) {
