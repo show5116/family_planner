@@ -468,6 +468,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get themeSettings_systemModeDesc => 'デバイスのシステム設定に従います';
 
   @override
+  String get themeSettings_colorTitle => 'カラーテーマ';
+
+  @override
+  String get themeSettings_brightnessTitle => '明るさモード';
+
+  @override
   String get themeSettings_currentThemePreview => '現在のテーマプレビュー';
 
   @override

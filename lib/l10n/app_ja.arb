@@ -176,6 +176,8 @@
   "themeSettings_darkModeDesc": "暗いテーマを使用します",
   "themeSettings_systemMode": "システム設定",
   "themeSettings_systemModeDesc": "デバイスのシステム設定に従います",
+  "themeSettings_colorTitle": "カラーテーマ",
+  "themeSettings_brightnessTitle": "明るさモード",
   "themeSettings_currentThemePreview": "現在のテーマプレビュー",
   "themeSettings_currentTheme": "現在のテーマ",
 

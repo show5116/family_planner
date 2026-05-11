@@ -1000,6 +1000,18 @@ abstract class AppLocalizations {
   /// **'기기의 시스템 설정을 따릅니다'**
   String get themeSettings_systemModeDesc;
 
+  /// No description provided for @themeSettings_colorTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'컬러 테마'**
+  String get themeSettings_colorTitle;
+
+  /// No description provided for @themeSettings_brightnessTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'밝기 모드'**
+  String get themeSettings_brightnessTitle;
+
   /// No description provided for @themeSettings_currentThemePreview.
   ///
   /// In ko, this message translates to:

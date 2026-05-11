@@ -58,9 +58,9 @@ class ThemeToggleButton extends ConsumerWidget {
   /// 테마 전환
   void _toggleTheme(WidgetRef ref, bool isDark) {
     if (isDark) {
-      ref.read(themeModeProvider.notifier).setLightMode();
+      ref.read(themeSettingsProvider.notifier).setLightMode();
     } else {
-      ref.read(themeModeProvider.notifier).setDarkMode();
+      ref.read(themeSettingsProvider.notifier).setDarkMode();
     }
   }
 }

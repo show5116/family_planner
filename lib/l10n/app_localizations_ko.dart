@@ -469,6 +469,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get themeSettings_systemModeDesc => '기기의 시스템 설정을 따릅니다';
 
   @override
+  String get themeSettings_colorTitle => '컬러 테마';
+
+  @override
+  String get themeSettings_brightnessTitle => '밝기 모드';
+
+  @override
   String get themeSettings_currentThemePreview => '현재 테마 미리보기';
 
   @override

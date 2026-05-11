@@ -483,6 +483,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSettings_systemModeDesc => 'Follow device system settings';
 
   @override
+  String get themeSettings_colorTitle => 'Color Theme';
+
+  @override
+  String get themeSettings_brightnessTitle => 'Brightness Mode';
+
+  @override
   String get themeSettings_currentThemePreview => 'Current Theme Preview';
 
   @override

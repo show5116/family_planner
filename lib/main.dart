@@ -10,7 +10,6 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:family_planner/core/theme/app_theme.dart';
-
 import 'package:family_planner/core/theme/theme_provider.dart';
 import 'package:family_planner/core/routes/app_router.dart';
 import 'package:family_planner/core/config/environment.dart';
@@ -113,7 +112,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final themeMode = ref.watch(themeModeProvider);
+    final themeSettings = ref.watch(themeSettingsProvider);
     final locale = ref.watch(localeProvider);
     final router = ref.watch(goRouterProvider);
 
@@ -121,9 +120,9 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'Family Planner',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
+      theme: AppTheme.lightTheme(variant: themeSettings.variant),
+      darkTheme: AppTheme.darkTheme(variant: themeSettings.variant),
+      themeMode: themeSettings.mode,
       routerConfig: router,
       locale: locale,
       supportedLocales: const [

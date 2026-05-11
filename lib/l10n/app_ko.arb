@@ -176,6 +176,8 @@
   "themeSettings_darkModeDesc": "어두운 테마를 사용합니다",
   "themeSettings_systemMode": "시스템 설정",
   "themeSettings_systemModeDesc": "기기의 시스템 설정을 따릅니다",
+  "themeSettings_colorTitle": "컬러 테마",
+  "themeSettings_brightnessTitle": "밝기 모드",
   "themeSettings_currentThemePreview": "현재 테마 미리보기",
   "themeSettings_currentTheme": "현재 테마",
 

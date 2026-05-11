@@ -176,6 +176,8 @@
   "themeSettings_darkModeDesc": "Use dark theme",
   "themeSettings_systemMode": "System Settings",
   "themeSettings_systemModeDesc": "Follow device system settings",
+  "themeSettings_colorTitle": "Color Theme",
+  "themeSettings_brightnessTitle": "Brightness Mode",
   "themeSettings_currentThemePreview": "Current Theme Preview",
   "themeSettings_currentTheme": "Current Theme",
 
