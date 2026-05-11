@@ -886,6 +886,8 @@
   "@household_category_asset_transfer": { "description": "Category: Asset Transfer" },
   "household_category_childcare": "Childcare",
   "@household_category_childcare": { "description": "Category: Childcare" },
+  "household_category_communication": "Communication",
+  "@household_category_communication": { "description": "Category: Communication" },
   "household_category_other": "Other",
   "@household_category_other": { "description": "Category: Other" },
   "household_payment_cash": "Cash",

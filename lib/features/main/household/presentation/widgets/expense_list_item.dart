@@ -27,6 +27,8 @@ IconData categoryIcon(ExpenseCategory? category) {
       return Icons.swap_horiz;
     case ExpenseCategory.childcare:
       return Icons.child_care;
+    case ExpenseCategory.communication:
+      return Icons.phone_android;
     case ExpenseCategory.other:
     case null:
       return Icons.category;
@@ -56,6 +58,8 @@ Color categoryColor(ExpenseCategory? category) {
       return Colors.blueGrey;
     case ExpenseCategory.childcare:
       return Colors.lightBlue;
+    case ExpenseCategory.communication:
+      return Colors.cyan;
     case ExpenseCategory.other:
     case null:
       return Colors.grey;
@@ -85,6 +89,8 @@ String categoryName(AppLocalizations l10n, ExpenseCategory? category) {
       return l10n.household_category_asset_transfer;
     case ExpenseCategory.childcare:
       return l10n.household_category_childcare;
+    case ExpenseCategory.communication:
+      return l10n.household_category_communication;
     case ExpenseCategory.other:
     case null:
       return l10n.household_category_other;

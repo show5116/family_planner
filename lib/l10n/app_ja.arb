@@ -886,6 +886,8 @@
   "@household_category_asset_transfer": { "description": "カテゴリ: 資産移動" },
   "household_category_childcare": "育児費",
   "@household_category_childcare": { "description": "カテゴリ: 育児費" },
+  "household_category_communication": "通信費",
+  "@household_category_communication": { "description": "カテゴリ: 通信費" },
   "household_category_other": "その他",
   "@household_category_other": { "description": "カテゴリ: その他" },
   "household_payment_cash": "現金",

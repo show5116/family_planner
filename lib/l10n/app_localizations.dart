@@ -4390,6 +4390,12 @@ abstract class AppLocalizations {
   /// **'육아비'**
   String get household_category_childcare;
 
+  /// 카테고리: 통신비
+  ///
+  /// In ko, this message translates to:
+  /// **'통신비'**
+  String get household_category_communication;
+
   /// 카테고리: 기타
   ///
   /// In ko, this message translates to:

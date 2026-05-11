@@ -84,6 +84,8 @@ class SetBudgetDto {
         return 'ASSET_TRANSFER';
       case ExpenseCategory.childcare:
         return 'CHILDCARE';
+      case ExpenseCategory.communication:
+        return 'COMMUNICATION';
       case ExpenseCategory.other:
         return 'OTHER';
     }

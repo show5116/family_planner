@@ -2204,6 +2204,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_category_childcare => '육아비';
 
   @override
+  String get household_category_communication => '통신비';
+
+  @override
   String get household_category_other => '기타';
 
   @override

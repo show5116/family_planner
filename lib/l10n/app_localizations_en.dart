@@ -2245,6 +2245,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_category_childcare => 'Childcare';
 
   @override
+  String get household_category_communication => 'Communication';
+
+  @override
   String get household_category_other => 'Other';
 
   @override

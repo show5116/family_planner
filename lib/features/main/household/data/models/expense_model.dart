@@ -16,6 +16,7 @@ enum ExpenseCategory {
   celebration,
   assetTransfer,
   childcare,
+  communication,
   other,
 }
 
@@ -99,6 +100,8 @@ class ExpenseModel {
         return ExpenseCategory.assetTransfer;
       case 'CHILDCARE':
         return ExpenseCategory.childcare;
+      case 'COMMUNICATION':
+        return ExpenseCategory.communication;
       default:
         return ExpenseCategory.other;
     }
@@ -250,6 +253,8 @@ String _categoryToString(ExpenseCategory category) {
       return 'ASSET_TRANSFER';
     case ExpenseCategory.childcare:
       return 'CHILDCARE';
+    case ExpenseCategory.communication:
+      return 'COMMUNICATION';
     case ExpenseCategory.other:
       return 'OTHER';
   }

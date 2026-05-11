@@ -2201,6 +2201,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_category_childcare => '育児費';
 
   @override
+  String get household_category_communication => '通信費';
+
+  @override
   String get household_category_other => 'その他';
 
   @override
