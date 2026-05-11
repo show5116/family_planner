@@ -217,8 +217,8 @@ class MemoManagementNotifier extends StateNotifier<AsyncValue<void>> {
       // 목록 갱신
       _ref.read(memoListProvider.notifier).afterDelete(id);
 
-      // 상세 Provider 무효화
-      _ref.invalidate(memoDetailProvider(id));
+      // 상세 Provider는 invalidate하지 않음 — 삭제 직후 화면이 닫히기 전에
+      // 재요청이 발생하면 404 에러 화면이 잠깐 노출되기 때문
 
       state = const AsyncValue.data(null);
       return true;
