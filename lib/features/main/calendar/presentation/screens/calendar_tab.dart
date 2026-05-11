@@ -47,8 +47,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     if (ctx == null) return null;
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return null;
-    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    final offset = box.localToGlobal(Offset.zero, ancestor: overlay);
+    final offset = box.localToGlobal(Offset.zero);
     return TargetPosition(box.size, offset);
   }
 
