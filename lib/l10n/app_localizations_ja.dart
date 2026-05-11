@@ -2751,4 +2751,47 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get childcare_no_child => '子どもが登録されていません。\n右上のボタンから子どもを登録してください。';
+
+  @override
+  String get household_settings_title => '家計簿の設定';
+
+  @override
+  String get household_settings_group_section => 'デフォルトグループ';
+
+  @override
+  String get household_settings_auto_section => 'プッシュ自動登録';
+
+  @override
+  String get household_settings_auto_toggle => '決済通知の自動登録';
+
+  @override
+  String get household_settings_auto_toggle_desc =>
+      'カード・銀行の決済通知を検知して家計簿に自動で記録します';
+
+  @override
+  String get household_settings_permission_required =>
+      '通知へのアクセス権限が必要です。「許可」をタップして設定画面で権限を付与してください。';
+
+  @override
+  String get household_settings_permission_grant => '許可';
+
+  @override
+  String get household_settings_privacy_section => 'プライバシーポリシー';
+
+  @override
+  String get household_settings_privacy_title => '収集情報と処理方針を確認';
+
+  @override
+  String get household_settings_privacy_subtitle => 'プッシュ自動登録機能が収集する情報を確認します';
+
+  @override
+  String get household_settings_privacy_dialog_title => 'プライバシーポリシー';
+
+  @override
+  String get household_settings_auto_scope_notice =>
+      'アプリが起動中（フォアグラウンド・バックグラウンド）のときのみ動作します。アプリを完全に終了すると自動登録は停止します。';
+
+  @override
+  String get household_settings_privacy_content =>
+      '■ 収集する情報\nアプリは、端末に表示されるカード会社・銀行アプリからの決済完了通知から以下の情報を一時的に読み取ります。\n  · 通知のタイトルおよび本文テキスト（例：「KBカード 12,000円 承認」）\n  · 通知を送信したアプリのパッケージ名（例：com.kbcard.kbkookmincard）\n\n■ 収集目的\n読み取った通知テキストから決済金額・支払方法・カテゴリを抽出し、家計簿に自動記録するためにのみ使用されます。\n\n■ 保管および廃棄\n通知テキストは端末内で即座に解析・廃棄され、原文はサーバーへ送信・保存されません。家計簿項目に変換されたデータのみアカウントに保存されます。\n\n■ 第三者への提供\n収集した通知情報は、いかなる第三者にも提供・販売・共有されません。\n\n■ 同意の撤回\nいつでも本設定画面で自動登録をオフにするか、端末設定 > 通知へのアクセスからFamily Plannerの権限を解除できます。';
 }

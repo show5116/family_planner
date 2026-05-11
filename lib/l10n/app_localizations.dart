@@ -5463,6 +5463,84 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'등록된 자녀가 없습니다.\n오른쪽 상단 버튼으로 자녀를 등록해보세요.'**
   String get childcare_no_child;
+
+  /// 가계부 설정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 설정'**
+  String get household_settings_title;
+
+  /// 대표 그룹 섹션 헤더
+  ///
+  /// In ko, this message translates to:
+  /// **'대표 그룹'**
+  String get household_settings_group_section;
+
+  /// 자동 등록 섹션 헤더
+  ///
+  /// In ko, this message translates to:
+  /// **'푸시 자동 등록'**
+  String get household_settings_auto_section;
+
+  /// 자동 등록 토글 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 알림 자동 등록'**
+  String get household_settings_auto_toggle;
+
+  /// 자동 등록 토글 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'카드·은행 결제 알림을 감지해 가계부에 자동으로 기록합니다'**
+  String get household_settings_auto_toggle_desc;
+
+  /// 알림 권한 미허용 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 접근 권한이 필요합니다. \'허용\'을 눌러 설정 화면에서 권한을 부여해주세요.'**
+  String get household_settings_permission_required;
+
+  /// 권한 허용 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'허용'**
+  String get household_settings_permission_grant;
+
+  /// 개인정보 섹션 헤더
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get household_settings_privacy_section;
+
+  /// 개인정보 타일 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'수집 정보 및 처리 방침 확인'**
+  String get household_settings_privacy_title;
+
+  /// 개인정보 타일 부제목
+  ///
+  /// In ko, this message translates to:
+  /// **'푸시 자동 등록 기능이 수집하는 정보를 확인합니다'**
+  String get household_settings_privacy_subtitle;
+
+  /// 개인정보 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get household_settings_privacy_dialog_title;
+
+  /// 자동 등록 동작 범위 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'앱이 실행 중(포그라운드·백그라운드)일 때만 동작합니다. 앱을 완전히 종료하면 자동 등록이 중단됩니다.'**
+  String get household_settings_auto_scope_notice;
+
+  /// 개인정보 처리방침 전문
+  ///
+  /// In ko, this message translates to:
+  /// **'■ 수집하는 정보\n앱은 기기에 표시되는 알림 중 카드사·은행 앱에서 발송된 결제 완료 알림의 아래 정보를 일시적으로 읽습니다.\n  · 알림 제목 및 본문 텍스트 (예: \"KB카드 12,000원 승인\")\n  · 알림을 보낸 앱 패키지명 (예: com.kbcard.kbkookmincard)\n\n■ 수집 목적\n읽은 알림 텍스트에서 결제 금액·결제 수단·카테고리를 추출하여 가계부에 자동으로 기록하는 데에만 사용됩니다.\n\n■ 보관 및 파기\n알림 텍스트는 기기 내에서 즉시 파싱 후 파기되며, 원문은 서버로 전송되거나 저장되지 않습니다. 가계부 항목으로 변환된 데이터만 회원 계정에 저장됩니다.\n\n■ 제3자 제공\n수집한 알림 정보는 어떠한 제3자에게도 제공·판매·공유되지 않습니다.\n\n■ 권한 철회\n언제든지 본 설정 화면에서 자동 등록을 끄거나, 기기 설정 > 알림 접근 권한에서 Family Planner의 권한을 해제할 수 있습니다.'**
+  String get household_settings_privacy_content;
 }
 
 class _AppLocalizationsDelegate

@@ -18,6 +18,7 @@ import 'package:family_planner/features/main/household/presentation/screens/hous
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_category_expenses_screen.dart';
+import 'package:family_planner/features/main/household/presentation/screens/household_settings_screen.dart';
 import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
@@ -254,6 +255,11 @@ List<RouteBase> getMainRoutes() {
           type: extra['type'] as TransactionType?,
         );
       },
+    ),
+    GoRoute(
+      path: AppRoutes.householdSettings,
+      name: 'householdSettings',
+      builder: (context, state) => const HouseholdSettingsScreen(),
     ),
 
     // Memo Routes (메모)

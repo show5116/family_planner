@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -203,6 +206,12 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             tooltip: l10n.household_statistics,
             onPressed: () => context.push(AppRoutes.householdStatistics),
           ),
+          if (!kIsWeb && Platform.isAndroid)
+            IconButton(
+              icon: const Icon(Icons.receipt_long_outlined),
+              tooltip: l10n.household_settings_title,
+              onPressed: () => context.push(AppRoutes.householdSettings),
+            ),
           AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
         ],
       ),

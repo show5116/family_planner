@@ -2806,4 +2806,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get childcare_no_child =>
       'No children registered.\nTap the button in the top right to add a child.';
+
+  @override
+  String get household_settings_title => 'Household Settings';
+
+  @override
+  String get household_settings_group_section => 'Default Group';
+
+  @override
+  String get household_settings_auto_section => 'Push Auto-Register';
+
+  @override
+  String get household_settings_auto_toggle =>
+      'Auto-register payment notifications';
+
+  @override
+  String get household_settings_auto_toggle_desc =>
+      'Detects card/bank payment notifications and records them in your household ledger automatically';
+
+  @override
+  String get household_settings_permission_required =>
+      'Notification access permission is required. Tap \'Allow\' to grant it in Settings.';
+
+  @override
+  String get household_settings_permission_grant => 'Allow';
+
+  @override
+  String get household_settings_privacy_section => 'Privacy Policy';
+
+  @override
+  String get household_settings_privacy_title => 'View collected data & policy';
+
+  @override
+  String get household_settings_privacy_subtitle =>
+      'See what information the push auto-register feature collects';
+
+  @override
+  String get household_settings_privacy_dialog_title => 'Privacy Policy';
+
+  @override
+  String get household_settings_auto_scope_notice =>
+      'Works only while the app is running (foreground or background). Auto-registration stops when the app is fully closed.';
+
+  @override
+  String get household_settings_privacy_content =>
+      '■ Data collected\nThe app temporarily reads the following information from payment-complete notifications sent by card/bank apps displayed on your device:\n  · Notification title and body text (e.g. \"KB Card ₩12,000 approved\")\n  · Package name of the sending app (e.g. com.kbcard.kbkookmincard)\n\n■ Purpose\nThe data is used solely to extract payment amount, payment method, and category from the notification text and automatically record it in your household ledger.\n\n■ Retention & disposal\nNotification text is parsed on-device and discarded immediately; the raw text is never transmitted to or stored on a server. Only the converted ledger entry is saved to your account.\n\n■ Third-party sharing\nCollected notification information is never provided, sold, or shared with any third party.\n\n■ Withdrawing consent\nYou can turn off auto-register at any time in this settings screen, or revoke Family Planner\'s notification access permission under device Settings > Notification Access.';
 }
