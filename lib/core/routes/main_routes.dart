@@ -18,7 +18,8 @@ import 'package:family_planner/features/main/household/presentation/screens/hous
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_category_expenses_screen.dart';
-import 'package:family_planner/features/main/household/presentation/screens/household_settings_screen.dart';
+// TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
+// import 'package:family_planner/features/main/household/presentation/screens/household_settings_screen.dart';
 import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
@@ -256,11 +257,12 @@ List<RouteBase> getMainRoutes() {
         );
       },
     ),
-    GoRoute(
-      path: AppRoutes.householdSettings,
-      name: 'householdSettings',
-      builder: (context, state) => const HouseholdSettingsScreen(),
-    ),
+    // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
+    // GoRoute(
+    //   path: AppRoutes.householdSettings,
+    //   name: 'householdSettings',
+    //   builder: (context, state) => const HouseholdSettingsScreen(),
+    // ),
 
     // Memo Routes (메모)
     GoRoute(

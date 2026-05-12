@@ -1,3 +1,7 @@
+// TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 아래 주석 해제
+// household_auto_settings_model.dart, push_expense_listener_service.dart 주석도 함께 해제 필요
+
+/*
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,3 +122,4 @@ final householdAutoSettingsProvider = StateNotifierProvider<
     HouseholdAutoSettingsNotifier, HouseholdAutoSettingsModel>((ref) {
   return HouseholdAutoSettingsNotifier(ref);
 });
+*/

@@ -1,3 +1,8 @@
+// TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 아래 주석 해제
+// pubspec.yaml 의 flutter_notification_listener 패키지 주석도 함께 해제 필요
+// AndroidManifest.xml 의 권한·서비스 선언 주석도 함께 해제 필요
+
+/*
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -79,7 +84,6 @@ void onNotificationEvent(NotificationEvent event) {
     debugPrint('[PushExpenseListener] 중복 알림 무시: ${amount.toInt()}원 ($pkg)');
     return;
   }
-
 
   final parsed = ParsedExpense(
     amount: amount,
@@ -193,7 +197,6 @@ class PushExpenseListenerService {
 
   // ── 파싱 로직 ────────────────────────────────────────────────────────────────
 
-  /// 금액 추출 — '12,345원', '₩12,345' 형식 지원
   static double? parseAmount(String text) {
     final krwPattern = RegExp(r'₩\s*([\d,]+)');
     final wonPattern = RegExp(r'([\d,]+)\s*원');
@@ -254,3 +257,4 @@ class PushExpenseListenerService {
     return joined.length > 80 ? '${joined.substring(0, 77)}...' : joined;
   }
 }
+*/

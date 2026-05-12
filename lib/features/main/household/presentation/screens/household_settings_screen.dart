@@ -1,3 +1,9 @@
+// TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 아래 주석 해제
+// household_auto_settings_provider.dart, push_expense_listener_service.dart 주석도 함께 해제 필요
+// app_routes.dart · main_routes.dart 의 householdSettings 라우트 주석도 해제 필요
+// main.dart 의 householdAutoSettingsProvider.load() 호출 주석도 해제 필요
+
+/*
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -322,3 +328,4 @@ class _PermissionBanner extends StatelessWidget {
     );
   }
 }
+*/

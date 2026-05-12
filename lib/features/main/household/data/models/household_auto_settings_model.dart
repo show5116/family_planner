@@ -1,3 +1,6 @@
+// TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 아래 주석 해제
+
+/*
 /// 가계부 자동 등록 설정 모델
 class HouseholdAutoSettingsModel {
   /// 푸시 자동 등록 기능 on/off
@@ -26,3 +29,4 @@ class HouseholdAutoSettingsModel {
 
 // sentinel for nullable copyWith
 const Object _sentinel = Object();
+*/

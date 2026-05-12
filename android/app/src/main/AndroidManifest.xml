@@ -9,8 +9,9 @@
     <!-- 알림 권한 (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
-    <!-- 알림 읽기 권한 (카드/은행 결제 알림 자동 등록) -->
+    <!-- TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+    -->
 
     <application
         android:label="family_planner"
@@ -70,7 +71,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- 카드/은행 결제 알림 자동 파싱 서비스 -->
+        <!-- TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
         <service
             android:name="im.zoe.labs.flutter_notification_listener.NotificationsHandlerService"
             android:label="Family Planner 알림 접근"
@@ -80,6 +81,7 @@
                 <action android:name="android.service.notification.NotificationListenerService"/>
             </intent-filter>
         </service>
+        -->
 
         <!-- AdMob App ID (테스트용 — 프로덕션 배포 전 실제 ID로 교체) -->
         <meta-data

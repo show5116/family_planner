@@ -16,7 +16,8 @@ import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
-import 'package:family_planner/features/main/household/providers/household_auto_settings_provider.dart';
+// TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
+// import 'package:family_planner/features/main/household/providers/household_auto_settings_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
@@ -107,7 +108,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).checkAuthStatus();
       ref.read(subscriptionProvider.notifier).refresh();
-      ref.read(householdAutoSettingsProvider.notifier).load();
+      // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
+      // ref.read(householdAutoSettingsProvider.notifier).load();
       if (kIsWeb) {
         OAuthCallbackHandler().initDeepLinkListener();
       }
