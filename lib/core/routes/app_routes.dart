@@ -100,4 +100,11 @@ class AppRoutes {
   static const String savingsCreate = '/savings/create';
   static const String savingsEdit = '/savings/:id/edit';
   static const String savingsTransactions = '/savings/:id/transactions';
+
+  // Fridge & Shopping Routes
+  static const String fridge = '/fridge';
+  static const String shopping = '/shopping';
+  static const String shoppingHistoryDetail = '/shopping/history/:historyId';
+  static const String fridgeShoppingHistory = '/fridge/history';
+  static const String fridgeShoppingHistoryDetail = '/fridge/history/:historyId';
 }

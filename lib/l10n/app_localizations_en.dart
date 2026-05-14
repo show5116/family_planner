@@ -2851,4 +2851,152 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get household_settings_privacy_content =>
       '■ Data collected\nThe app temporarily reads the following information from payment-complete notifications sent by card/bank apps displayed on your device:\n  · Notification title and body text (e.g. \"KB Card ₩12,000 approved\")\n  · Package name of the sending app (e.g. com.kbcard.kbkookmincard)\n\n■ Purpose\nThe data is used solely to extract payment amount, payment method, and category from the notification text and automatically record it in your household ledger.\n\n■ Retention & disposal\nNotification text is parsed on-device and discarded immediately; the raw text is never transmitted to or stored on a server. Only the converted ledger entry is saved to your account.\n\n■ Third-party sharing\nCollected notification information is never provided, sold, or shared with any third party.\n\n■ Withdrawing consent\nYou can turn off auto-register at any time in this settings screen, or revoke Family Planner\'s notification access permission under device Settings > Notification Access.';
+
+  @override
+  String get fridge_title => 'Fridge';
+
+  @override
+  String get shopping_title => 'Shopping';
+
+  @override
+  String get fridge_tab_fridge => 'Fridge';
+
+  @override
+  String get fridge_tab_cart => 'Cart';
+
+  @override
+  String get fridge_tab_frequent => 'Frequent';
+
+  @override
+  String get fridge_tab_history => 'History';
+
+  @override
+  String get fridge_storage_add => 'Add storage';
+
+  @override
+  String get fridge_storage_edit => 'Edit storage';
+
+  @override
+  String get fridge_storage_delete => 'Delete storage';
+
+  @override
+  String get fridge_storage_delete_confirm =>
+      'Deleting this storage will also delete all items inside. Continue?';
+
+  @override
+  String get fridge_storage_name_hint => 'e.g. Kitchen Fridge';
+
+  @override
+  String get fridge_storage_type_fridge => 'Fridge';
+
+  @override
+  String get fridge_storage_type_freezer => 'Freezer';
+
+  @override
+  String get fridge_storage_type_pantry => 'Pantry';
+
+  @override
+  String get fridge_item_add => 'Add item';
+
+  @override
+  String get fridge_item_edit => 'Edit item';
+
+  @override
+  String get fridge_item_name => 'Item name';
+
+  @override
+  String get fridge_item_quantity => 'Quantity';
+
+  @override
+  String get fridge_item_unit => 'Unit (optional)';
+
+  @override
+  String get fridge_item_expires_at => 'Expiry date (optional)';
+
+  @override
+  String fridge_item_alert_days(int days) {
+    return 'Alert $days days before expiry';
+  }
+
+  @override
+  String get fridge_item_memo => 'Memo (optional)';
+
+  @override
+  String get fridge_item_dday_today => 'D-Day';
+
+  @override
+  String fridge_item_dday_expired(int days) {
+    return 'D+$days';
+  }
+
+  @override
+  String fridge_item_dday_remaining(int days) {
+    return 'D-$days';
+  }
+
+  @override
+  String get fridge_item_no_expiry => 'No expiry';
+
+  @override
+  String get fridge_empty_storage => 'No storages yet. Add one!';
+
+  @override
+  String get fridge_empty_items => 'No items';
+
+  @override
+  String get fridge_frequent_add => 'Add item';
+
+  @override
+  String get fridge_frequent_auto_add => 'Auto-add when depleted';
+
+  @override
+  String get fridge_frequent_empty => 'No frequent items yet';
+
+  @override
+  String get fridge_frequent_add_to_cart => 'Add to cart';
+
+  @override
+  String get fridge_cart_empty => 'Your cart is empty';
+
+  @override
+  String get fridge_cart_add_item => 'Add item';
+
+  @override
+  String get fridge_cart_complete => 'Complete shopping';
+
+  @override
+  String get fridge_cart_complete_title => 'Complete shopping';
+
+  @override
+  String get fridge_cart_complete_transfer_hint =>
+      'Select a storage to transfer items to';
+
+  @override
+  String get fridge_cart_complete_add_expense => 'Record in ledger';
+
+  @override
+  String get fridge_cart_complete_amount => 'Total amount';
+
+  @override
+  String get fridge_cart_complete_description => 'Note (optional)';
+
+  @override
+  String get fridge_cart_skip_transfer => 'Don\'t transfer';
+
+  @override
+  String get fridge_history_empty => 'No purchase history yet';
+
+  @override
+  String fridge_history_items_count(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get fridge_history_linked_expense => 'Linked to ledger';
+
+  @override
+  String get fridge_history_view_expense => 'View in ledger';
+
+  @override
+  String get fridge_group_selector_personal => 'Personal';
 }

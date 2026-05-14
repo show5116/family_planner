@@ -1,0 +1,352 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
+import 'package:family_planner/features/main/fridge/data/repositories/fridge_repository.dart';
+
+// ── 현재 그룹 ID ──────────────────────────────────────────────────────────────
+
+final fridgeSelectedGroupIdProvider = StateProvider<String?>((ref) => null);
+
+// ── Storage Provider ──────────────────────────────────────────────────────────
+
+final storagesProvider =
+    AsyncNotifierProvider<StoragesNotifier, List<StorageModel>>(
+        StoragesNotifier.new);
+
+class StoragesNotifier extends AsyncNotifier<List<StorageModel>> {
+  @override
+  Future<List<StorageModel>> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    return ref.read(fridgeRepositoryProvider).getStorages(groupId: groupId);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => future);
+  }
+
+  Future<void> create(CreateStorageDto dto) async {
+    final repo = ref.read(fridgeRepositoryProvider);
+    final created = await repo.createStorage(dto);
+    state = AsyncData([...state.value ?? [], created]);
+  }
+
+  Future<void> edit(String storageId, UpdateStorageDto dto) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    final repo = ref.read(fridgeRepositoryProvider);
+    final updated = await repo.updateStorage(storageId, dto, groupId: groupId);
+    state = AsyncData(
+      (state.value ?? []).map((s) => s.id == storageId ? updated : s).toList(),
+    );
+  }
+
+  Future<void> delete(String storageId) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    await ref.read(fridgeRepositoryProvider).deleteStorage(storageId, groupId: groupId);
+    state = AsyncData((state.value ?? []).where((s) => s.id != storageId).toList());
+  }
+
+  Future<void> reorder(List<String> ids) async {
+    await ref.read(fridgeRepositoryProvider).reorderStorages(ids);
+    final current = state.value ?? [];
+    final reordered = ids
+        .map((id) => current.firstWhere((s) => s.id == id))
+        .toList();
+    state = AsyncData(reordered);
+  }
+}
+
+// ── 보관소 + 품목 통합 Provider ───────────────────────────────────────────────────
+
+final storagesWithItemsProvider = AsyncNotifierProvider<
+    StoragesWithItemsNotifier,
+    List<StorageWithItemsModel>>(StoragesWithItemsNotifier.new);
+
+class StoragesWithItemsNotifier
+    extends AsyncNotifier<List<StorageWithItemsModel>> {
+  @override
+  Future<List<StorageWithItemsModel>> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    return ref
+        .read(fridgeRepositoryProvider)
+        .getItemsGroupedByStorage(groupId: groupId);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => future);
+  }
+
+  void updateItem(FridgeItemModel updated) {
+    state = AsyncData(
+      (state.value ?? []).map((swi) {
+        if (swi.storage.id != updated.storageLocationId) return swi;
+        return StorageWithItemsModel(
+          storage: swi.storage,
+          items: swi.items
+              .map((i) => i.id == updated.id ? updated : i)
+              .toList(),
+        );
+      }).toList(),
+    );
+  }
+
+  void addItem(FridgeItemModel item) {
+    state = AsyncData(
+      (state.value ?? []).map((swi) {
+        if (swi.storage.id != item.storageLocationId) return swi;
+        return StorageWithItemsModel(
+          storage: swi.storage,
+          items: [...swi.items, item],
+        );
+      }).toList(),
+    );
+  }
+
+  void removeItem(String itemId) {
+    state = AsyncData(
+      (state.value ?? []).map((swi) => StorageWithItemsModel(
+            storage: swi.storage,
+            items: swi.items.where((i) => i.id != itemId).toList(),
+          )).toList(),
+    );
+  }
+}
+
+// ── FridgeItems Provider ───────────────────────────────────────────────────────
+
+/// 보관소 ID → 해당 보관소의 품목 목록 (직접 CRUD용)
+final fridgeItemsByStorageProvider = StateNotifierProvider.family<
+    FridgeItemsNotifier, List<FridgeItemModel>, String>(
+  (ref, storageId) => FridgeItemsNotifier(ref, storageId),
+);
+
+class FridgeItemsNotifier extends StateNotifier<List<FridgeItemModel>> {
+  final Ref _ref;
+  final String storageId;
+
+  FridgeItemsNotifier(this._ref, this.storageId) : super([]);
+
+  void setItems(List<FridgeItemModel> items) {
+    state = items;
+  }
+
+  Future<void> create(CreateFridgeItemDto dto) async {
+    final item = await _ref.read(fridgeRepositoryProvider).createFridgeItem(dto);
+    state = [...state, item];
+  }
+
+  Future<void> update(String itemId, UpdateFridgeItemDto dto) async {
+    final groupId = _ref.read(fridgeSelectedGroupIdProvider);
+    final updated = await _ref
+        .read(fridgeRepositoryProvider)
+        .updateFridgeItem(itemId, dto, groupId: groupId);
+    state = state.map((i) => i.id == itemId ? updated : i).toList();
+  }
+
+  Future<void> updateQuantity(String itemId, int quantity) async {
+    final groupId = _ref.read(fridgeSelectedGroupIdProvider);
+    final updated = await _ref
+        .read(fridgeRepositoryProvider)
+        .updateFridgeItemQuantity(itemId, quantity, groupId: groupId);
+    state = state.map((i) => i.id == itemId ? updated : i).toList();
+    // 수량이 0이 되면 카트를 새로고침 (서버가 자동으로 카트에 추가)
+    if (updated.quantity == 0) {
+      _ref.invalidate(cartProvider);
+    }
+  }
+
+  Future<void> delete(String itemId) async {
+    final groupId = _ref.read(fridgeSelectedGroupIdProvider);
+    await _ref
+        .read(fridgeRepositoryProvider)
+        .deleteFridgeItem(itemId, groupId: groupId);
+    state = state.where((i) => i.id != itemId).toList();
+  }
+}
+
+// ── FrequentItems Provider ─────────────────────────────────────────────────────
+
+final frequentItemsProvider =
+    AsyncNotifierProvider<FrequentItemsNotifier, List<FrequentItemModel>>(
+        FrequentItemsNotifier.new);
+
+class FrequentItemsNotifier extends AsyncNotifier<List<FrequentItemModel>> {
+  @override
+  Future<List<FrequentItemModel>> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    return ref
+        .read(fridgeRepositoryProvider)
+        .getFrequentItems(groupId: groupId);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => future);
+  }
+
+  Future<void> create(CreateFrequentItemDto dto) async {
+    final item =
+        await ref.read(fridgeRepositoryProvider).createFrequentItem(dto);
+    state = AsyncData([...state.value ?? [], item]);
+  }
+
+  Future<void> edit(String itemId, UpdateFrequentItemDto dto) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    final updated = await ref
+        .read(fridgeRepositoryProvider)
+        .updateFrequentItem(itemId, dto, groupId: groupId);
+    state = AsyncData(
+      (state.value ?? []).map((i) => i.id == itemId ? updated : i).toList(),
+    );
+  }
+
+  Future<void> toggleAutoAdd(String itemId, bool autoAdd) async {
+    await edit(itemId, UpdateFrequentItemDto(autoAdd: autoAdd));
+  }
+
+  Future<void> delete(String itemId) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    await ref
+        .read(fridgeRepositoryProvider)
+        .deleteFrequentItem(itemId, groupId: groupId);
+    state = AsyncData(
+      (state.value ?? []).where((i) => i.id != itemId).toList(),
+    );
+  }
+
+  Future<void> reorder(List<String> ids) async {
+    await ref.read(fridgeRepositoryProvider).reorderFrequentItems(ids);
+    final current = state.value ?? [];
+    final reordered = ids
+        .map((id) => current.firstWhere((i) => i.id == id))
+        .toList();
+    state = AsyncData(reordered);
+  }
+}
+
+// ── Cart Provider ─────────────────────────────────────────────────────────────
+
+final cartProvider =
+    AsyncNotifierProvider<CartNotifier, CartModel?>(CartNotifier.new);
+
+class CartNotifier extends AsyncNotifier<CartModel?> {
+  @override
+  Future<CartModel?> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    return ref.read(fridgeRepositoryProvider).getCart(groupId: groupId);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => future);
+  }
+
+  Future<void> addItem(AddCartItemDto dto) async {
+    final item = await ref.read(fridgeRepositoryProvider).addCartItem(dto);
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(current.copyWith(items: [...current.items, item]));
+    } else {
+      // 장바구니가 없으면 새로고침
+      await refresh();
+    }
+  }
+
+  Future<void> updateItem(String itemId, UpdateCartItemDto dto) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    final updated = await ref
+        .read(fridgeRepositoryProvider)
+        .updateCartItem(itemId, dto, groupId: groupId);
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(
+        current.copyWith(
+          items: current.items
+              .map((i) => i.id == itemId ? updated : i)
+              .toList(),
+        ),
+      );
+    }
+  }
+
+  Future<void> toggleCheck(String itemId, bool checked) async {
+    await updateItem(itemId, UpdateCartItemDto(isChecked: checked));
+  }
+
+  Future<void> deleteItem(String itemId) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    await ref
+        .read(fridgeRepositoryProvider)
+        .deleteCartItem(itemId, groupId: groupId);
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(
+        current.copyWith(
+          items: current.items.where((i) => i.id != itemId).toList(),
+        ),
+      );
+    }
+  }
+
+  Future<ShoppingHistoryModel> complete(CompleteCartDto dto) async {
+    final history =
+        await ref.read(fridgeRepositoryProvider).completeCart(dto);
+    // 완료 후 장바구니 초기화
+    await refresh();
+    // 보관소 목록도 새로고침 (이관된 품목 반영)
+    ref.invalidate(storagesProvider);
+    return history;
+  }
+}
+
+// ── Shopping History Provider ─────────────────────────────────────────────────
+
+final shoppingHistoryProvider =
+    AsyncNotifierProvider<ShoppingHistoryNotifier, ShoppingHistoryPageModel>(
+        ShoppingHistoryNotifier.new);
+
+class ShoppingHistoryNotifier
+    extends AsyncNotifier<ShoppingHistoryPageModel> {
+  static const _limit = 20;
+
+  @override
+  Future<ShoppingHistoryPageModel> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    return ref.read(fridgeRepositoryProvider).getShoppingHistory(
+          groupId: groupId,
+          page: 1,
+          limit: _limit,
+        );
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => future);
+  }
+
+  Future<void> loadMore() async {
+    final current = state.value;
+    if (current == null || !current.hasMore) return;
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    final next = await ref.read(fridgeRepositoryProvider).getShoppingHistory(
+          groupId: groupId,
+          page: current.page + 1,
+          limit: _limit,
+        );
+    state = AsyncData(ShoppingHistoryPageModel(
+      data: [...current.data, ...next.data],
+      total: next.total,
+      page: next.page,
+      limit: next.limit,
+    ));
+  }
+}
+
+final shoppingHistoryDetailProvider =
+    FutureProvider.family<ShoppingHistoryModel, String>((ref, historyId) async {
+  final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+  return ref
+      .read(fridgeRepositoryProvider)
+      .getShoppingHistoryById(historyId, groupId: groupId);
+});

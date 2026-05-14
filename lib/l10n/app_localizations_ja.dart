@@ -2794,4 +2794,151 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get household_settings_privacy_content =>
       '■ 収集する情報\nアプリは、端末に表示されるカード会社・銀行アプリからの決済完了通知から以下の情報を一時的に読み取ります。\n  · 通知のタイトルおよび本文テキスト（例：「KBカード 12,000円 承認」）\n  · 通知を送信したアプリのパッケージ名（例：com.kbcard.kbkookmincard）\n\n■ 収集目的\n読み取った通知テキストから決済金額・支払方法・カテゴリを抽出し、家計簿に自動記録するためにのみ使用されます。\n\n■ 保管および廃棄\n通知テキストは端末内で即座に解析・廃棄され、原文はサーバーへ送信・保存されません。家計簿項目に変換されたデータのみアカウントに保存されます。\n\n■ 第三者への提供\n収集した通知情報は、いかなる第三者にも提供・販売・共有されません。\n\n■ 同意の撤回\nいつでも本設定画面で自動登録をオフにするか、端末設定 > 通知へのアクセスからFamily Plannerの権限を解除できます。';
+
+  @override
+  String get fridge_title => '冷蔵庫';
+
+  @override
+  String get shopping_title => '買い物';
+
+  @override
+  String get fridge_tab_fridge => '冷蔵庫';
+
+  @override
+  String get fridge_tab_cart => 'カート';
+
+  @override
+  String get fridge_tab_frequent => 'よく買うもの';
+
+  @override
+  String get fridge_tab_history => '購入履歴';
+
+  @override
+  String get fridge_storage_add => '保管場所を追加';
+
+  @override
+  String get fridge_storage_edit => '保管場所を編集';
+
+  @override
+  String get fridge_storage_delete => '保管場所を削除';
+
+  @override
+  String get fridge_storage_delete_confirm =>
+      'この保管場所を削除すると、中の品目もすべて削除されます。続けますか？';
+
+  @override
+  String get fridge_storage_name_hint => '例：キッチンの冷蔵庫';
+
+  @override
+  String get fridge_storage_type_fridge => '冷蔵';
+
+  @override
+  String get fridge_storage_type_freezer => '冷凍';
+
+  @override
+  String get fridge_storage_type_pantry => 'パントリー';
+
+  @override
+  String get fridge_item_add => '品目を追加';
+
+  @override
+  String get fridge_item_edit => '品目を編集';
+
+  @override
+  String get fridge_item_name => '品目名';
+
+  @override
+  String get fridge_item_quantity => '数量';
+
+  @override
+  String get fridge_item_unit => '単位（任意）';
+
+  @override
+  String get fridge_item_expires_at => '賞味期限（任意）';
+
+  @override
+  String fridge_item_alert_days(int days) {
+    return '$days日前に通知';
+  }
+
+  @override
+  String get fridge_item_memo => 'メモ（任意）';
+
+  @override
+  String get fridge_item_dday_today => 'D-Day';
+
+  @override
+  String fridge_item_dday_expired(int days) {
+    return 'D+$days';
+  }
+
+  @override
+  String fridge_item_dday_remaining(int days) {
+    return 'D-$days';
+  }
+
+  @override
+  String get fridge_item_no_expiry => '賞味期限なし';
+
+  @override
+  String get fridge_empty_storage => '保管場所がありません。追加してみましょう。';
+
+  @override
+  String get fridge_empty_items => '品目がありません';
+
+  @override
+  String get fridge_frequent_add => '項目を追加';
+
+  @override
+  String get fridge_frequent_auto_add => 'なくなったら自動でカートに追加';
+
+  @override
+  String get fridge_frequent_empty => 'よく買うものがありません';
+
+  @override
+  String get fridge_frequent_add_to_cart => 'カートに追加';
+
+  @override
+  String get fridge_cart_empty => 'カートが空です';
+
+  @override
+  String get fridge_cart_add_item => '品目を追加';
+
+  @override
+  String get fridge_cart_complete => '買い物完了';
+
+  @override
+  String get fridge_cart_complete_title => '買い物完了';
+
+  @override
+  String get fridge_cart_complete_transfer_hint => '冷蔵庫に移す保管場所を選択してください';
+
+  @override
+  String get fridge_cart_complete_add_expense => '家計簿に登録';
+
+  @override
+  String get fridge_cart_complete_amount => '購入金額';
+
+  @override
+  String get fridge_cart_complete_description => 'メモ（任意）';
+
+  @override
+  String get fridge_cart_skip_transfer => '移送しない';
+
+  @override
+  String get fridge_history_empty => '購入履歴がありません';
+
+  @override
+  String fridge_history_items_count(int count) {
+    return '$count点';
+  }
+
+  @override
+  String get fridge_history_linked_expense => '家計簿連携済み';
+
+  @override
+  String get fridge_history_view_expense => '家計簿を見る';
+
+  @override
+  String get fridge_group_selector_personal => '個人';
 }

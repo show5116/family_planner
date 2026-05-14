@@ -2799,4 +2799,151 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get household_settings_privacy_content =>
       '■ 수집하는 정보\n앱은 기기에 표시되는 알림 중 카드사·은행 앱에서 발송된 결제 완료 알림의 아래 정보를 일시적으로 읽습니다.\n  · 알림 제목 및 본문 텍스트 (예: \"KB카드 12,000원 승인\")\n  · 알림을 보낸 앱 패키지명 (예: com.kbcard.kbkookmincard)\n\n■ 수집 목적\n읽은 알림 텍스트에서 결제 금액·결제 수단·카테고리를 추출하여 가계부에 자동으로 기록하는 데에만 사용됩니다.\n\n■ 보관 및 파기\n알림 텍스트는 기기 내에서 즉시 파싱 후 파기되며, 원문은 서버로 전송되거나 저장되지 않습니다. 가계부 항목으로 변환된 데이터만 회원 계정에 저장됩니다.\n\n■ 제3자 제공\n수집한 알림 정보는 어떠한 제3자에게도 제공·판매·공유되지 않습니다.\n\n■ 권한 철회\n언제든지 본 설정 화면에서 자동 등록을 끄거나, 기기 설정 > 알림 접근 권한에서 Family Planner의 권한을 해제할 수 있습니다.';
+
+  @override
+  String get fridge_title => '냉장고';
+
+  @override
+  String get shopping_title => '장보기';
+
+  @override
+  String get fridge_tab_fridge => '냉장고';
+
+  @override
+  String get fridge_tab_cart => '장바구니';
+
+  @override
+  String get fridge_tab_frequent => '자주 사는 것';
+
+  @override
+  String get fridge_tab_history => '구매 이력';
+
+  @override
+  String get fridge_storage_add => '보관소 추가';
+
+  @override
+  String get fridge_storage_edit => '보관소 수정';
+
+  @override
+  String get fridge_storage_delete => '보관소 삭제';
+
+  @override
+  String get fridge_storage_delete_confirm =>
+      '보관소를 삭제하면 안에 있는 모든 품목도 함께 삭제됩니다. 계속하시겠습니까?';
+
+  @override
+  String get fridge_storage_name_hint => '예: 우리집 냉장고';
+
+  @override
+  String get fridge_storage_type_fridge => '냉장';
+
+  @override
+  String get fridge_storage_type_freezer => '냉동';
+
+  @override
+  String get fridge_storage_type_pantry => '팬트리';
+
+  @override
+  String get fridge_item_add => '품목 추가';
+
+  @override
+  String get fridge_item_edit => '품목 수정';
+
+  @override
+  String get fridge_item_name => '품목명';
+
+  @override
+  String get fridge_item_quantity => '수량';
+
+  @override
+  String get fridge_item_unit => '단위 (선택)';
+
+  @override
+  String get fridge_item_expires_at => '유통기한 (선택)';
+
+  @override
+  String fridge_item_alert_days(int days) {
+    return '만료 $days일 전 알림';
+  }
+
+  @override
+  String get fridge_item_memo => '메모 (선택)';
+
+  @override
+  String get fridge_item_dday_today => 'D-Day';
+
+  @override
+  String fridge_item_dday_expired(int days) {
+    return 'D+$days';
+  }
+
+  @override
+  String fridge_item_dday_remaining(int days) {
+    return 'D-$days';
+  }
+
+  @override
+  String get fridge_item_no_expiry => '유통기한 없음';
+
+  @override
+  String get fridge_empty_storage => '보관소가 없습니다. 추가해보세요.';
+
+  @override
+  String get fridge_empty_items => '품목이 없습니다';
+
+  @override
+  String get fridge_frequent_add => '항목 추가';
+
+  @override
+  String get fridge_frequent_auto_add => '소진 시 자동 장바구니';
+
+  @override
+  String get fridge_frequent_empty => '자주 사는 항목이 없습니다';
+
+  @override
+  String get fridge_frequent_add_to_cart => '장바구니에 추가';
+
+  @override
+  String get fridge_cart_empty => '장바구니가 비어 있습니다';
+
+  @override
+  String get fridge_cart_add_item => '품목 추가';
+
+  @override
+  String get fridge_cart_complete => '장보기 완료';
+
+  @override
+  String get fridge_cart_complete_title => '장보기 완료';
+
+  @override
+  String get fridge_cart_complete_transfer_hint => '냉장고로 이관할 보관소를 선택하세요';
+
+  @override
+  String get fridge_cart_complete_add_expense => '가계부에 등록';
+
+  @override
+  String get fridge_cart_complete_amount => '구매 금액';
+
+  @override
+  String get fridge_cart_complete_description => '메모 (선택)';
+
+  @override
+  String get fridge_cart_skip_transfer => '이관 안 함';
+
+  @override
+  String get fridge_history_empty => '구매 이력이 없습니다';
+
+  @override
+  String fridge_history_items_count(int count) {
+    return '$count개 품목';
+  }
+
+  @override
+  String get fridge_history_linked_expense => '가계부 연결됨';
+
+  @override
+  String get fridge_history_view_expense => '가계부 보기';
+
+  @override
+  String get fridge_group_selector_personal => '개인';
 }

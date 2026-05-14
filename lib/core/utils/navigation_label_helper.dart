@@ -27,6 +27,10 @@ class NavigationLabelHelper {
         return l10n.nav_investmentIndicators;
       case 'savings':
         return l10n.nav_savings;
+      case 'fridge':
+        return l10n.fridge_title;
+      case 'shopping':
+        return l10n.shopping_title;
       default:
         return id; // fallback
     }

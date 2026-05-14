@@ -42,6 +42,9 @@ import 'package:family_planner/features/main/savings/presentation/screens/saving
 import 'package:family_planner/features/main/savings/presentation/screens/savings_form_screen.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_transactions_screen.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
+import 'package:family_planner/features/main/fridge/presentation/screens/fridge_screen.dart';
+import 'package:family_planner/features/main/shopping/presentation/screens/shopping_screen.dart';
+import 'package:family_planner/features/main/shopping/presentation/screens/shopping_history_detail_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -420,6 +423,34 @@ List<RouteBase> getMainRoutes() {
         final extra = state.extra as Map<String, dynamic>?;
         final goalName = extra?['goalName'] as String? ?? '';
         return SavingsTransactionsScreen(goalId: id, goalName: goalName);
+      },
+    ),
+
+    // Fridge & Shopping Routes (냉장고 & 장보기)
+    GoRoute(
+      path: AppRoutes.fridge,
+      name: 'fridge',
+      builder: (context, state) => const FridgeScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.shopping,
+      name: 'shopping',
+      builder: (context, state) => const ShoppingScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.shoppingHistoryDetail,
+      name: 'shoppingHistoryDetail',
+      builder: (context, state) {
+        final historyId = state.pathParameters['historyId']!;
+        return ShoppingHistoryDetailScreen(historyId: historyId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.fridgeShoppingHistoryDetail,
+      name: 'fridgeShoppingHistoryDetail',
+      builder: (context, state) {
+        final historyId = state.pathParameters['historyId']!;
+        return ShoppingHistoryDetailScreen(historyId: historyId);
       },
     ),
   ];

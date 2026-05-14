@@ -5541,6 +5541,282 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'■ 수집하는 정보\n앱은 기기에 표시되는 알림 중 카드사·은행 앱에서 발송된 결제 완료 알림의 아래 정보를 일시적으로 읽습니다.\n  · 알림 제목 및 본문 텍스트 (예: \"KB카드 12,000원 승인\")\n  · 알림을 보낸 앱 패키지명 (예: com.kbcard.kbkookmincard)\n\n■ 수집 목적\n읽은 알림 텍스트에서 결제 금액·결제 수단·카테고리를 추출하여 가계부에 자동으로 기록하는 데에만 사용됩니다.\n\n■ 보관 및 파기\n알림 텍스트는 기기 내에서 즉시 파싱 후 파기되며, 원문은 서버로 전송되거나 저장되지 않습니다. 가계부 항목으로 변환된 데이터만 회원 계정에 저장됩니다.\n\n■ 제3자 제공\n수집한 알림 정보는 어떠한 제3자에게도 제공·판매·공유되지 않습니다.\n\n■ 권한 철회\n언제든지 본 설정 화면에서 자동 등록을 끄거나, 기기 설정 > 알림 접근 권한에서 Family Planner의 권한을 해제할 수 있습니다.'**
   String get household_settings_privacy_content;
+
+  /// 냉장고 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고'**
+  String get fridge_title;
+
+  /// 장보기 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기'**
+  String get shopping_title;
+
+  /// 냉장고 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고'**
+  String get fridge_tab_fridge;
+
+  /// 장바구니 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니'**
+  String get fridge_tab_cart;
+
+  /// 자주 사는 항목 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 사는 것'**
+  String get fridge_tab_frequent;
+
+  /// 구매 이력 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 이력'**
+  String get fridge_tab_history;
+
+  /// 보관소 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 추가'**
+  String get fridge_storage_add;
+
+  /// 보관소 수정
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 수정'**
+  String get fridge_storage_edit;
+
+  /// 보관소 삭제
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 삭제'**
+  String get fridge_storage_delete;
+
+  /// 보관소 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소를 삭제하면 안에 있는 모든 품목도 함께 삭제됩니다. 계속하시겠습니까?'**
+  String get fridge_storage_delete_confirm;
+
+  /// 보관소 이름 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 우리집 냉장고'**
+  String get fridge_storage_name_hint;
+
+  /// 냉장 타입
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장'**
+  String get fridge_storage_type_fridge;
+
+  /// 냉동 타입
+  ///
+  /// In ko, this message translates to:
+  /// **'냉동'**
+  String get fridge_storage_type_freezer;
+
+  /// 팬트리 타입
+  ///
+  /// In ko, this message translates to:
+  /// **'팬트리'**
+  String get fridge_storage_type_pantry;
+
+  /// 품목 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 추가'**
+  String get fridge_item_add;
+
+  /// 품목 수정
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 수정'**
+  String get fridge_item_edit;
+
+  /// 품목명 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'품목명'**
+  String get fridge_item_name;
+
+  /// 수량 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수량'**
+  String get fridge_item_quantity;
+
+  /// 단위 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'단위 (선택)'**
+  String get fridge_item_unit;
+
+  /// 유통기한 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 (선택)'**
+  String get fridge_item_expires_at;
+
+  /// 만료 알림 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'만료 {days}일 전 알림'**
+  String fridge_item_alert_days(int days);
+
+  /// 메모 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 (선택)'**
+  String get fridge_item_memo;
+
+  /// 오늘 만료
+  ///
+  /// In ko, this message translates to:
+  /// **'D-Day'**
+  String get fridge_item_dday_today;
+
+  /// 만료 지남
+  ///
+  /// In ko, this message translates to:
+  /// **'D+{days}'**
+  String fridge_item_dday_expired(int days);
+
+  /// 남은 날수
+  ///
+  /// In ko, this message translates to:
+  /// **'D-{days}'**
+  String fridge_item_dday_remaining(int days);
+
+  /// 유통기한 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 없음'**
+  String get fridge_item_no_expiry;
+
+  /// 보관소 없음 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소가 없습니다. 추가해보세요.'**
+  String get fridge_empty_storage;
+
+  /// 품목 없음 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'품목이 없습니다'**
+  String get fridge_empty_items;
+
+  /// 자주 사는 항목 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 추가'**
+  String get fridge_frequent_add;
+
+  /// 자동 장바구니 토글 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'소진 시 자동 장바구니'**
+  String get fridge_frequent_auto_add;
+
+  /// 자주 사는 항목 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 사는 항목이 없습니다'**
+  String get fridge_frequent_empty;
+
+  /// 장바구니에 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니에 추가'**
+  String get fridge_frequent_add_to_cart;
+
+  /// 장바구니 비어 있음
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니가 비어 있습니다'**
+  String get fridge_cart_empty;
+
+  /// 장바구니 품목 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 추가'**
+  String get fridge_cart_add_item;
+
+  /// 장보기 완료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 완료'**
+  String get fridge_cart_complete;
+
+  /// 장보기 완료 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 완료'**
+  String get fridge_cart_complete_title;
+
+  /// 이관 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고로 이관할 보관소를 선택하세요'**
+  String get fridge_cart_complete_transfer_hint;
+
+  /// 가계부 등록 토글
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부에 등록'**
+  String get fridge_cart_complete_add_expense;
+
+  /// 구매 금액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 금액'**
+  String get fridge_cart_complete_amount;
+
+  /// 장보기 메모
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 (선택)'**
+  String get fridge_cart_complete_description;
+
+  /// 이관 안 함 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'이관 안 함'**
+  String get fridge_cart_skip_transfer;
+
+  /// 구매 이력 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 이력이 없습니다'**
+  String get fridge_history_empty;
+
+  /// 품목 수
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 품목'**
+  String fridge_history_items_count(int count);
+
+  /// 가계부 연결 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 연결됨'**
+  String get fridge_history_linked_expense;
+
+  /// 가계부 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 보기'**
+  String get fridge_history_view_expense;
+
+  /// 개인 모드
+  ///
+  /// In ko, this message translates to:
+  /// **'개인'**
+  String get fridge_group_selector_personal;
 }
 
 class _AppLocalizationsDelegate

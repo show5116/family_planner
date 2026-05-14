@@ -242,6 +242,10 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         context.push(AppRoutes.investmentIndicators);
       case 'savings':
         context.push(AppRoutes.savings);
+      case 'fridge':
+        context.push(AppRoutes.fridge);
+      case 'shopping':
+        context.push(AppRoutes.shopping);
       case 'calendar':
         context.push(AppRoutes.calendar);
       case 'todo':

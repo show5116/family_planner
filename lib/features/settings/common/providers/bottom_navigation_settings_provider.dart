@@ -137,6 +137,18 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
       icon: Icons.savings_outlined,
       selectedIcon: Icons.savings,
     ),
+    'fridge': NavigationItem(
+      id: 'fridge',
+      label: '냉장고',
+      icon: Icons.kitchen_outlined,
+      selectedIcon: Icons.kitchen,
+    ),
+    'shopping': NavigationItem(
+      id: 'shopping',
+      label: '장보기',
+      icon: Icons.shopping_cart_outlined,
+      selectedIcon: Icons.shopping_cart,
+    ),
   };
 
   // 기본 중간 슬롯 (자산, 일정, 할일)
