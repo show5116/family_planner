@@ -516,9 +516,6 @@ class _LineChartState extends State<_LineChart> {
       return const Center(child: Text('데이터가 없습니다'));
     }
 
-    // 포인트가 적으면 곡선이 세모처럼 튀므로 직선 처리
-    final useCurve = spots.length >= 5;
-
     // 선택 범위 강조 수직선
     final rangeStart = widget.dragStartX;
     final rangeEnd = widget.dragEndX;
@@ -623,7 +620,7 @@ class _LineChartState extends State<_LineChart> {
         lineBarsData: [
           LineChartBarData(
             spots: spots,
-            isCurved: useCurve,
+            isCurved: false,
             color: lineColor,
             barWidth: 2,
             dotData: const FlDotData(show: false),
@@ -825,8 +822,6 @@ class _SpreadChartSection extends StatelessWidget {
     final labelInterval = (maxX / 3).ceilToDouble();
     final yRange = (maxY + yPadding) - (minY - yPadding);
     final yInterval = yRange > 0 ? yRange / 4 : 0.5;
-    final useCurve = spots.length >= 5;
-
     // 최신 이격률 기준 색상
     final latestSpread = spots.last.y;
     final spreadColor = latestSpread >= 0 ? AppColors.error : AppColors.success;
@@ -930,7 +925,7 @@ class _SpreadChartSection extends StatelessWidget {
               lineBarsData: [
                 LineChartBarData(
                   spots: spots,
-                  isCurved: useCurve,
+                  isCurved: false,
                   color: spreadColor,
                   barWidth: 2,
                   dotData: const FlDotData(show: false),
