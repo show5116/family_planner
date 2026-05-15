@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
@@ -14,6 +13,8 @@ import 'package:family_planner/features/onboarding/presentation/widgets/feature_
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -23,8 +24,6 @@ class HouseholdScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<HouseholdScreen> createState() => _HouseholdScreenState();
 }
-
-const _kHouseholdGroupIdKey = 'household_selected_group_id';
 
 class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   final _fabKey = GlobalKey();
@@ -36,16 +35,21 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _loadSavedGroupFilter();
+      await _initGroupFilter();
       _showCoachMark();
     });
   }
 
-  Future<void> _loadSavedGroupFilter() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedGroupId = prefs.getString(_kHouseholdGroupIdKey);
-    if (!mounted) return;
-    ref.read(householdSelectedGroupIdProvider.notifier).state = savedGroupId;
+  Future<void> _initGroupFilter() async {
+    final defaultId = ref.read(defaultGroupProvider);
+    final groups = await ref
+        .read(myGroupsProvider.future)
+        .catchError((_) => <Group>[]);
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(householdSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {
@@ -177,7 +181,6 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final groupsAsync = ref.watch(myGroupsProvider);
     final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
 
@@ -215,10 +218,14 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
       ),
       body: Column(
         children: [
-          _GroupAndMonthBar(
-            groupsAsync: groupsAsync,
+          GroupFilterBar(
             selectedGroupId: selectedGroupId,
-            selectedMonth: selectedMonth,
+            showPersonal: true,
+            personalLabel: l10n.household_personal_mode,
+            onChanged: (value) {
+              ref.read(householdSelectedGroupIdProvider.notifier).state = value;
+            },
+            trailing: _MonthNavigator(selectedMonth: selectedMonth),
           ),
           const _MonthlySummaryCard(),
           Expanded(
@@ -238,129 +245,40 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   }
 }
 
-// 그룹 선택 + 월 이동 바
-class _GroupAndMonthBar extends ConsumerWidget {
-  final AsyncValue<List<Group>> groupsAsync;
-  final String? selectedGroupId;
+// 월 이동 버튼 (GroupFilterBar trailing으로 사용)
+class _MonthNavigator extends ConsumerWidget {
   final String selectedMonth;
 
-  const _GroupAndMonthBar({
-    required this.groupsAsync,
-    required this.selectedGroupId,
-    required this.selectedMonth,
-  });
+  const _MonthNavigator({required this.selectedMonth});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.spaceM,
-        vertical: AppSizes.spaceS,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            width: 0.5,
-          ),
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => _changeMonth(ref, -1),
+          icon: const Icon(Icons.chevron_left),
+          visualDensity: VisualDensity.compact,
         ),
-      ),
-      child: Row(
-        children: [
-          // 그룹 드롭다운 (개인 모드 포함)
-          Expanded(
-            child: groupsAsync.when(
-              data: (groups) {
-                // 개인 항목 + 그룹 목록
-                const personalValue = '__personal__';
-                final currentValue = selectedGroupId ?? personalValue;
-                final items = <DropdownMenuItem<String>>[
-                  DropdownMenuItem<String>(
-                    value: personalValue,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.person, size: 16),
-                        const SizedBox(width: AppSizes.spaceXS),
-                        Text(l10n.household_personal_mode),
-                      ],
-                    ),
-                  ),
-                  ...groups.map<DropdownMenuItem<String>>(
-                    (g) => DropdownMenuItem<String>(
-                      value: g.id,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.group, size: 16),
-                          const SizedBox(width: AppSizes.spaceXS),
-                          Text(g.name),
-                        ],
-                      ),
-                    ),
-                  ),
-                ];
-                return DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: currentValue,
-                    isDense: true,
-                    items: items,
-                    onChanged: (value) {
-                      final groupId = value == personalValue ? null : value;
-                      ref.read(householdSelectedGroupIdProvider.notifier).state = groupId;
-                      SharedPreferences.getInstance().then((prefs) {
-                        if (groupId == null) {
-                          prefs.remove(_kHouseholdGroupIdKey);
-                        } else {
-                          prefs.setString(_kHouseholdGroupIdKey, groupId);
-                        }
-                      });
-                    },
-                  ),
-                );
-              },
-              loading: () => const SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+        Text(
+          _formatMonth(selectedMonth),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              error: (_, _) => Text(l10n.household_no_group_selected),
-            ),
-          ),
-          // 월 이동
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => _changeMonth(ref, selectedMonth, -1),
-                icon: const Icon(Icons.chevron_left),
-                visualDensity: VisualDensity.compact,
-              ),
-              Text(
-                _formatMonth(selectedMonth),
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              IconButton(
-                onPressed: () => _changeMonth(ref, selectedMonth, 1),
-                icon: const Icon(Icons.chevron_right),
-                visualDensity: VisualDensity.compact,
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+        IconButton(
+          onPressed: () => _changeMonth(ref, 1),
+          icon: const Icon(Icons.chevron_right),
+          visualDensity: VisualDensity.compact,
+        ),
+      ],
     );
   }
 
-  void _changeMonth(WidgetRef ref, String currentMonth, int delta) {
-    final parts = currentMonth.split('-');
+  void _changeMonth(WidgetRef ref, int delta) {
+    final parts = selectedMonth.split('-');
     var year = int.parse(parts[0]);
     var month = int.parse(parts[1]) + delta;
-
     if (month > 12) {
       month = 1;
       year++;
@@ -368,7 +286,6 @@ class _GroupAndMonthBar extends ConsumerWidget {
       month = 12;
       year--;
     }
-
     ref.read(householdSelectedMonthProvider.notifier).state =
         '$year-${month.toString().padLeft(2, '0')}';
   }

@@ -12,7 +12,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // 분리된 위젯 import
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_view.dart';
-import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_filter_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/task_list_section.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_results.dart';
@@ -119,7 +119,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const CalendarGroupSelector(),
+        title: Text(l10n.nav_calendar),
         bottom: isLoading
             ? const PreferredSize(
                 preferredSize: Size.fromHeight(2),
@@ -165,6 +165,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       body: ref.watch(calendarSearchQueryProvider) != null
           ? Column(
               children: [
+                const CalendarFilterBar(),
                 if (ref.watch(calendarSearchActiveProvider))
                   const CalendarSearchBar(),
                 const Expanded(child: CalendarSearchResults()),
@@ -172,6 +173,8 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             )
           : CustomScrollView(
               slivers: [
+                const SliverToBoxAdapter(child: CalendarFilterBar()),
+
                 if (ref.watch(calendarSearchActiveProvider))
                   const SliverToBoxAdapter(child: CalendarSearchBar()),
 

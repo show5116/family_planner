@@ -9,7 +9,9 @@ import 'package:family_planner/features/minigame/providers/minigame_provider.dar
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 
 class MiniGamesScreen extends ConsumerStatefulWidget {
   const MiniGamesScreen({super.key});
@@ -27,7 +29,21 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeStartOnboarding());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initGroupSelection();
+      _maybeStartOnboarding();
+    });
+  }
+
+  Future<void> _initGroupSelection() async {
+    if (ref.read(minigameSelectedGroupIdProvider) != null) return;
+    final defaultId = ref.read(defaultGroupProvider);
+    final groups = ref.read(myGroupsProvider).valueOrNull ?? [];
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(minigameSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {
@@ -157,7 +173,6 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
     final resultsAsync = ref.watch(minigameResultsProvider);
 
@@ -202,34 +217,16 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               ],
             ),
           ),
-          // 그룹 선택
-          if (groups.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: DropdownButtonFormField<String?>(
-                key: _groupDropdownKey,
-                // key: ValueKey(selectedGroupId), // 튜토리얼용 GlobalKey 우선
-                initialValue: selectedGroupId,
-                decoration: const InputDecoration(
-                  labelText: '그룹 선택 (이력 저장 시 필요)',
-                  border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-                items: [
-                  const DropdownMenuItem<String?>(
-                    value: null,
-                    child: Text('그룹 없음 (이력 저장 안 함)',
-                        style: TextStyle(color: Colors.grey)),
-                  ),
-                  ...groups.map((g) =>
-                      DropdownMenuItem(value: g.id, child: Text(g.name))),
-                ],
-                onChanged: (value) {
-                  ref.read(minigameSelectedGroupIdProvider.notifier).state = value;
-                },
-              ),
-            ),
+          // 그룹 선택 (null = 이력 저장 안 함)
+          GroupFilterBar(
+            key: _groupDropdownKey,
+            selectedGroupId: selectedGroupId,
+            showPersonal: true,
+            personalLabel: '그룹 없음 (이력 저장 안 함)',
+            onChanged: (value) {
+              ref.read(minigameSelectedGroupIdProvider.notifier).state = value;
+            },
+          ),
           const SizedBox(height: 8),
           // 이력 섹션 (그룹 선택 시)
           if (selectedGroupId != null) ...[

@@ -10,6 +10,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
+import 'package:family_planner/features/memo/presentation/widgets/memo_filter_bar.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -20,8 +21,6 @@ import 'package:family_planner/shared/widgets/app_search_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 const _kTagChipLimit = 5;
-
-typedef _DropdownValue = String?;
 
 // ── 온보딩용 샘플 메모 ────────────────────────────────────────────────────────
 
@@ -81,7 +80,6 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   bool _isSearching = false;
   bool _tagsExpanded = false;
 
-  _DropdownValue _dropdownValue;
   String? _selectedTag;
 
   // 온보딩 데모 상태
@@ -267,61 +265,10 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     });
   }
 
-  void _onDropdownChanged(_DropdownValue value) {
-    setState(() {
-      _dropdownValue = value;
-      _selectedTag = null;
-      _tagsExpanded = false;
-    });
-    final notifier = ref.read(memoListProvider.notifier);
-    if (value == null) {
-      notifier.setVisibility(null);
-    } else if (value == 'PRIVATE') {
-      notifier.setVisibility('PRIVATE');
-    } else {
-      notifier.setGroupId(value);
-    }
-    notifier.setTag(null);
-  }
-
   void _selectTag(String? tag) {
     if (_selectedTag == tag) return;
     setState(() => _selectedTag = tag);
     ref.read(memoListProvider.notifier).setTag(tag);
-  }
-
-  Widget _buildDropdown(BuildContext context) {
-    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
-
-    final items = <DropdownMenuItem<_DropdownValue>>[
-      const DropdownMenuItem(value: null, child: Text('전체')),
-      const DropdownMenuItem(value: 'PRIVATE', child: Text('나만 보기')),
-      ...groups.map(
-        (g) => DropdownMenuItem(value: g.id, child: Text(g.name)),
-      ),
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSizes.spaceM,
-        AppSizes.spaceS,
-        AppSizes.spaceM,
-        0,
-      ),
-      child: DropdownButtonFormField<_DropdownValue>(
-        initialValue: _dropdownValue,
-        decoration: const InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceM,
-            vertical: AppSizes.spaceS,
-          ),
-          border: OutlineInputBorder(),
-        ),
-        items: items,
-        onChanged: _onDropdownChanged,
-      ),
-    );
   }
 
   FilterChip _chip({
@@ -383,12 +330,13 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     final l10n = AppLocalizations.of(context)!;
     final memosAsync = ref.watch(memoListProvider);
 
+    final selectedFilter = ref.watch(memoSelectedFilterProvider);
     final tagsAsync = ref.watch(
       memoTagsProvider(
-        groupId: (_dropdownValue != null && _dropdownValue != 'PRIVATE')
-            ? _dropdownValue
+        groupId: (selectedFilter != null && selectedFilter != 'PRIVATE')
+            ? selectedFilter
             : null,
-        personal: _dropdownValue == 'PRIVATE' ? true : null,
+        personal: selectedFilter == 'PRIVATE' ? true : null,
       ),
     );
 
@@ -421,7 +369,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
               },
               onClose: _toggleSearch,
             ),
-          if (!_isDemo) _buildDropdown(context),
+          if (!_isDemo) const MemoFilterBar(),
           if (!_isDemo) _buildTagChips(tagsAsync.valueOrNull ?? []),
           Expanded(
             child: _isDemo

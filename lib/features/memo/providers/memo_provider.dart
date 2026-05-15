@@ -8,6 +8,9 @@ import 'package:family_planner/features/memo/data/dto/memo_dto.dart'
 
 part 'memo_provider.g.dart';
 
+/// 메모 필터 선택값 Provider: null=전체, 'PRIVATE'=나만보기, groupId=특정그룹
+final memoSelectedFilterProvider = StateProvider<String?>((ref) => null);
+
 /// 메모 목록 Provider (무한 스크롤 + 검색 지원)
 @riverpod
 class MemoList extends _$MemoList {
@@ -87,6 +90,14 @@ class MemoList extends _$MemoList {
   Future<void> setGroupId(String? groupId) async {
     _groupIdFilter = groupId;
     _visibilityFilter = null;
+    await refresh();
+  }
+
+  /// 복합 필터 설정 (멀티셀렉트 필터 바용)
+  /// [groupId]: 특정 그룹 ID, [visibility]: 'PRIVATE', 둘 다 null이면 전체
+  Future<void> setFilter({String? groupId, String? visibility}) async {
+    _groupIdFilter = groupId;
+    _visibilityFilter = visibility;
     await refresh();
   }
 

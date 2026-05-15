@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -11,9 +10,8 @@ import 'package:family_planner/features/main/child_points/data/models/childcare_
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
-
-const _kChildcareGroupIdKey = 'childcare_selected_group_id';
 
 class ChildcareSummaryWidget extends ConsumerStatefulWidget {
   const ChildcareSummaryWidget({
@@ -45,22 +43,16 @@ class _ChildcareSummaryWidgetState
           _selectedGroupId;
       return;
     }
-    final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getString(_kChildcareGroupIdKey);
-    if (!mounted) return;
-    if (saved != null) {
-      setState(() => _selectedGroupId = saved);
-      ref.read(childcareSelectedGroupIdProvider.notifier).state = saved;
-    } else {
-      final groups = await ref
-          .read(myGroupsProvider.future)
-          .catchError((_) => <Group>[]);
-      if (groups.isNotEmpty && mounted) {
-        setState(() => _selectedGroupId = groups.first.id);
-        ref.read(childcareSelectedGroupIdProvider.notifier).state =
-            groups.first.id;
-      }
-    }
+    final defaultId = ref.read(defaultGroupProvider);
+    final groups = await ref
+        .read(myGroupsProvider.future)
+        .catchError((_) => <Group>[]);
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    setState(() => _selectedGroupId = resolved);
+    ref.read(childcareSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   Future<void> _saveFilter(String groupId) async {

@@ -8,8 +8,8 @@ import 'package:family_planner/features/main/assets/providers/asset_provider.dar
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_list_item.dart';
 
-import 'package:family_planner/features/main/assets/presentation/widgets/asset_group_bar.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_summary_card.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
@@ -18,6 +18,7 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -69,10 +70,13 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   Future<void> _initGroupSelection() async {
     final groupId = ref.read(assetSelectedGroupIdProvider);
     if (groupId != null) return;
+    final defaultId = ref.read(defaultGroupProvider);
     final groups = await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
-    if (groups.isNotEmpty && mounted) {
-      ref.read(assetSelectedGroupIdProvider.notifier).state = groups.first.id;
-    }
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(assetSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   Future<void> _maybeStartOnboarding() async {
@@ -176,7 +180,6 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final groupsAsync = ref.watch(myGroupsProvider);
     final selectedGroupId = ref.watch(assetSelectedGroupIdProvider);
 
     return ValueListenableBuilder<bool>(
@@ -199,10 +202,13 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
           body: Column(
             children: [
               if (!isDemo)
-                AssetGroupBar(
+                GroupFilterBar(
                   key: _groupBarKey,
-                  groupsAsync: groupsAsync,
                   selectedGroupId: selectedGroupId,
+                  onChanged: (value) {
+                    ref.read(assetSelectedGroupIdProvider.notifier).state = value;
+                    ref.read(assetSelectedUserIdProvider.notifier).state = null;
+                  },
                 ),
               if (!isDemo) const AssetSummaryCard(),
               if (isDemo)

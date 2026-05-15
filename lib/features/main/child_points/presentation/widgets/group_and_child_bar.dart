@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
-
-const _kChildcareGroupIdKey = 'childcare_selected_group_id';
-const _kChildcareChildIdKey = 'childcare_selected_child_id';
 
 /// 그룹 + 자녀 선택 바
 class GroupAndChildBar extends ConsumerWidget {
@@ -23,76 +20,17 @@ class GroupAndChildBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final childrenAsync = ref.watch(childcareChildrenProvider);
     final selectedChildId = ref.watch(childcareSelectedChildIdProvider);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.spaceM,
-        vertical: AppSizes.spaceS,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          // 그룹 선택
-          const Icon(Icons.group, size: AppSizes.iconSmall),
-          const SizedBox(width: AppSizes.spaceXS),
-          groupsAsync.when(
-            data: (groups) {
-              if (groups.isEmpty) {
-                return Text(l10n.childcare_no_group,
-                    style: Theme.of(context).textTheme.bodySmall);
-              }
-              return DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: selectedGroupId ?? groups.first.id,
-                  isDense: true,
-                  items: groups
-                      .map<DropdownMenuItem<String>>(
-                        (g) => DropdownMenuItem<String>(
-                          value: g.id,
-                          child: Text(g.name),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    ref
-                        .read(childcareSelectedGroupIdProvider.notifier)
-                        .state = value;
-                    ref
-                        .read(childcareSelectedChildIdProvider.notifier)
-                        .state = null;
-                    SharedPreferences.getInstance().then((prefs) {
-                      if (value == null) {
-                        prefs.remove(_kChildcareGroupIdKey);
-                      } else {
-                        prefs.setString(_kChildcareGroupIdKey, value);
-                      }
-                      prefs.remove(_kChildcareChildIdKey);
-                    });
-                  },
-                ),
-              );
-            },
-            loading: () => const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-            error: (_, _) => Text(l10n.childcare_select_group),
-          ),
-          // 자녀 선택
-          if (selectedGroupId != null)
-            childrenAsync.when(
+    return GroupFilterBar(
+      selectedGroupId: selectedGroupId,
+      onChanged: (value) {
+        ref.read(childcareSelectedGroupIdProvider.notifier).state = value;
+        ref.read(childcareSelectedChildIdProvider.notifier).state = null;
+      },
+      trailing: selectedGroupId != null
+          ? childrenAsync.when(
               data: (children) {
                 if (children.isEmpty) return const SizedBox.shrink();
 
@@ -132,9 +70,8 @@ class GroupAndChildBar extends ConsumerWidget {
                                   Icon(
                                     Icons.link,
                                     size: 14,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                   ),
                                 ],
                               ],
@@ -145,13 +82,6 @@ class GroupAndChildBar extends ConsumerWidget {
                           ref
                               .read(childcareSelectedChildIdProvider.notifier)
                               .state = value;
-                          SharedPreferences.getInstance().then((prefs) {
-                            if (value == null) {
-                              prefs.remove(_kChildcareChildIdKey);
-                            } else {
-                              prefs.setString(_kChildcareChildIdKey, value);
-                            }
-                          });
                         },
                       ),
                     ),
@@ -167,9 +97,9 @@ class GroupAndChildBar extends ConsumerWidget {
                 ),
               ),
               error: (_, _) => const SizedBox.shrink(),
-            ),
-        ],
-      ),
+            )
+          : null,
+      emptyText: AppLocalizations.of(context)!.childcare_no_group,
     );
   }
 }

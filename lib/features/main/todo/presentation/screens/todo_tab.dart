@@ -13,7 +13,7 @@ import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_kanban_column.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_list_item.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_week_bar.dart';
-import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
 
@@ -244,7 +244,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const CalendarGroupSelector(),
+            title: Text(l10n.nav_todo),
             bottom: (!isDemo && isLoading)
                 ? const PreferredSize(
                     preferredSize: Size.fromHeight(2),
@@ -303,6 +303,8 @@ class _TodoTabState extends ConsumerState<TodoTab> {
           ),
           body: Column(
             children: [
+              if (!isDemo) const CalendarFilterBar(),
+
               if (!isDemo && ref.watch(todoSearchActiveProvider))
                 const _TodoSearchBar(),
 

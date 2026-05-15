@@ -10,6 +10,7 @@ import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/core/widgets/group_dropdown.dart';
 import 'package:family_planner/shared/widgets/editor/rich_text_editor.dart';
 import 'package:family_planner/core/services/storage_service.dart';
@@ -220,11 +221,16 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
                     const SizedBox(height: AppSizes.spaceS),
                     ref.watch(myGroupsProvider).when(
                       data: (groups) {
-                        // groups 로드 후 선택된 그룹이 없으면 첫 번째 그룹 자동 선택
+                        // groups 로드 후 선택된 그룹이 없으면 대표 그룹 → 첫 번째 그룹 자동 선택
                         if (_selectedGroupId == null && groups.isNotEmpty) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             if (mounted) {
-                              setState(() => _selectedGroupId = groups.first.id);
+                              final defaultId = ref.read(defaultGroupProvider);
+                              final resolved = (defaultId != null &&
+                                      groups.any((g) => g.id == defaultId))
+                                  ? defaultId
+                                  : groups.first.id;
+                              setState(() => _selectedGroupId = resolved);
                             }
                           });
                         }

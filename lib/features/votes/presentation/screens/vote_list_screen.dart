@@ -8,6 +8,8 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/features/votes/data/models/vote_model.dart';
 import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
@@ -79,13 +81,21 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final groups = ref.read(myGroupsProvider).valueOrNull ?? [];
-      if (groups.isNotEmpty && ref.read(voteSelectedGroupIdProvider) == null) {
-        ref.read(voteSelectedGroupIdProvider.notifier).state = groups.first.id;
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initGroupSelection();
       _maybeStartOnboarding();
     });
+  }
+
+  Future<void> _initGroupSelection() async {
+    if (ref.read(voteSelectedGroupIdProvider) != null) return;
+    final defaultId = ref.read(defaultGroupProvider);
+    final groups = ref.read(myGroupsProvider).valueOrNull ?? [];
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(voteSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   // ── 튜토리얼 ────────────────────────────────────────────────────────────────
@@ -240,7 +250,6 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final selectedGroupId = ref.watch(voteSelectedGroupIdProvider);
     final statusFilter = ref.watch(voteStatusFilterProvider);
     final votesAsync = ref.watch(voteListProvider);
@@ -266,35 +275,13 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
       body: Column(
         children: [
           // 그룹 선택
-          if (groups.isNotEmpty || _isDemo)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, 0),
-              child: DropdownButtonFormField<String?>(
-                key: _groupDropdownKey,
-                initialValue: _isDemo ? '__demo__' : selectedGroupId,
-                decoration: const InputDecoration(
-                  labelText: '그룹 선택',
-                  border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-                items: _isDemo
-                    ? const [
-                        DropdownMenuItem(
-                            value: '__demo__', child: Text('우리 가족')),
-                      ]
-                    : groups
-                        .map((g) => DropdownMenuItem(
-                            value: g.id, child: Text(g.name)))
-                        .toList(),
-                onChanged: _isDemo
-                    ? null
-                    : (value) {
-                        ref.read(voteSelectedGroupIdProvider.notifier).state =
-                            value;
-                      },
-              ),
+          if (!_isDemo)
+            GroupFilterBar(
+              key: _groupDropdownKey,
+              selectedGroupId: selectedGroupId,
+              onChanged: (value) {
+                ref.read(voteSelectedGroupIdProvider.notifier).state = value;
+              },
             ),
           // 상태 필터 탭
           if (selectedGroupId != null || _isDemo)

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
@@ -100,6 +103,16 @@ class GroupUtils {
   /// 현재 사용자가 멤버를 관리할 수 있는지 확인
   static bool canManageMembers(List<dynamic> members, {String? currentUserId}) {
     return hasPermission(members, 'MANAGE_MEMBER', currentUserId: currentUserId);
+  }
+
+  /// 대표 그룹을 우선으로, 없으면 첫 번째 그룹을 반환
+  /// 그룹 목록에 대표 그룹이 없으면(탈퇴 등) 첫 번째 그룹으로 폴백
+  static Future<String?> resolveInitialGroupId(Ref ref) async {
+    final defaultId = ref.read(defaultGroupProvider);
+    final groups = await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
+    if (groups.isEmpty) return null;
+    if (defaultId != null && groups.any((g) => g.id == defaultId)) return defaultId;
+    return groups.first.id;
   }
 
   /// 삭제/탈퇴된 그룹이 각 화면 필터에 남아있으면 초기화

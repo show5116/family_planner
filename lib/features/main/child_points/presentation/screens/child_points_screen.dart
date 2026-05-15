@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
@@ -18,6 +17,7 @@ import 'package:family_planner/features/onboarding/presentation/widgets/feature_
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
@@ -132,9 +132,6 @@ class ChildPointsScreen extends ConsumerStatefulWidget {
   ConsumerState<ChildPointsScreen> createState() => _ChildPointsScreenState();
 }
 
-const _kChildcareGroupIdKey = 'childcare_selected_group_id';
-const _kChildcareChildIdKey = 'childcare_selected_child_id';
-
 class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -171,24 +168,14 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
   }
 
   Future<void> _initGroupSelection() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedGroupId = prefs.getString(_kChildcareGroupIdKey);
-    final savedChildId = prefs.getString(_kChildcareChildIdKey);
-
-    if (!mounted) return;
-
-    if (savedGroupId != null) {
-      ref.read(childcareSelectedGroupIdProvider.notifier).state = savedGroupId;
-      ref.read(childcareSelectedChildIdProvider.notifier).state = savedChildId;
-      return;
-    }
-
+    final defaultId = ref.read(defaultGroupProvider);
     final groups =
         await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
-    if (groups.isNotEmpty && mounted) {
-      ref.read(childcareSelectedGroupIdProvider.notifier).state =
-          groups.first.id;
-    }
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(childcareSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   Future<void> _maybeStartOnboarding() async {

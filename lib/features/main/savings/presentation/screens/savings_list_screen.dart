@@ -13,6 +13,8 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 
 // 온보딩용 가짜 저금통 데이터
 final _demoGoals = [
@@ -81,11 +83,14 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
   Future<void> _initGroupSelection() async {
     final groupId = ref.read(savingsSelectedGroupIdProvider);
     if (groupId != null) return;
+    final defaultId = ref.read(defaultGroupProvider);
     final groups =
         await ref.read(myGroupsProvider.future).catchError((_) => <Group>[]);
-    if (groups.isNotEmpty && mounted) {
-      ref.read(savingsSelectedGroupIdProvider.notifier).state = groups.first.id;
-    }
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(savingsSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   Future<void> _maybeStartOnboarding() async {
@@ -187,7 +192,6 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final groupsAsync = ref.watch(myGroupsProvider);
     final selectedGroupId = ref.watch(savingsSelectedGroupIdProvider);
 
     return ValueListenableBuilder<List<SavingsGoalModel>?>(
@@ -216,10 +220,9 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
             children: [
               const _InfoBanner(),
               if (!isOnboarding)
-                _GroupSelectorBar(
-                  groupsAsync: groupsAsync,
+                GroupFilterBar(
                   selectedGroupId: selectedGroupId,
-                  onGroupChanged: (id) {
+                  onChanged: (id) {
                     ref.read(savingsSelectedGroupIdProvider.notifier).state = id;
                   },
                 ),
@@ -339,52 +342,6 @@ class _InfoBannerState extends State<_InfoBanner> {
           ],
         ),
       ),
-    );
-  }
-}
-
-// ── 그룹 선택 바 ──────────────────────────────────────────────────────────────
-
-class _GroupSelectorBar extends StatelessWidget {
-  const _GroupSelectorBar({
-    required this.groupsAsync,
-    required this.selectedGroupId,
-    required this.onGroupChanged,
-  });
-
-  final AsyncValue<List<Group>> groupsAsync;
-  final String? selectedGroupId;
-  final ValueChanged<String?> onGroupChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return groupsAsync.when(
-      loading: () => const LinearProgressIndicator(),
-      error: (_, _) => const SizedBox.shrink(),
-      data: (groups) {
-        if (groups.isEmpty) return const SizedBox.shrink();
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceM,
-            vertical: AppSizes.spaceS,
-          ),
-          child: DropdownButtonFormField<String>(
-            initialValue: selectedGroupId,
-            decoration: const InputDecoration(
-              labelText: '그룹 선택',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-            ),
-            items: groups
-                .map((g) => DropdownMenuItem(value: g.id, child: Text(g.name)))
-                .toList(),
-            onChanged: onGroupChanged,
-          ),
-        );
-      },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/group_detail_screen.dart';
 
 /// 그룹 카드 위젯
@@ -25,10 +26,12 @@ class GroupCard extends ConsumerWidget {
     final groupColor = _parseGroupColor();
     final canInvite = group.hasPermission('INVITE_MEMBER');
     final isExpired = DateTime.now().isAfter(group.inviteCodeExpiresAt);
+    final defaultGroupId = ref.watch(defaultGroupProvider);
+    final isDefault = defaultGroupId == group.id;
 
     return Card(
       margin: EdgeInsets.only(
-        bottom: isLast ? 96 : AppSizes.spaceM, // FAB 높이만큼 마지막 카드에 여백
+        bottom: isLast ? 96 : AppSizes.spaceM,
       ),
       child: InkWell(
         onTap: () => _navigateToDetail(context),
@@ -38,7 +41,7 @@ class GroupCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(theme, groupColor),
+              _buildHeader(context, theme, groupColor, isDefault, ref),
               if (group.description != null && group.description!.isNotEmpty)
                 _buildDescription(theme),
               if (canInvite) ...[
@@ -52,7 +55,6 @@ class GroupCard extends ConsumerWidget {
     );
   }
 
-  /// 그룹 색상 파싱
   Color? _parseGroupColor() {
     final colorToUse = group.myColor ?? group.defaultColor;
     if (colorToUse != null && colorToUse.isNotEmpty) {
@@ -67,7 +69,6 @@ class GroupCard extends ConsumerWidget {
     return null;
   }
 
-  /// 상세 화면으로 이동
   void _navigateToDetail(BuildContext context) {
     Navigator.push(
       context,
@@ -77,8 +78,13 @@ class GroupCard extends ConsumerWidget {
     );
   }
 
-  /// 헤더 (색상 + 이름)
-  Widget _buildHeader(ThemeData theme, Color? groupColor) {
+  Widget _buildHeader(
+    BuildContext context,
+    ThemeData theme,
+    Color? groupColor,
+    bool isDefault,
+    WidgetRef ref,
+  ) {
     return Row(
       children: [
         if (groupColor != null)
@@ -92,18 +98,33 @@ class GroupCard extends ConsumerWidget {
           ),
         const SizedBox(width: AppSizes.spaceS),
         Expanded(
-          child: Text(
-            group.name,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+          child: Row(
+            children: [
+              Text(
+                group.name,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (isDefault) ...[
+                const SizedBox(width: AppSizes.spaceXS),
+                Tooltip(
+                  message: '대표 그룹',
+                  child: Icon(
+                    Icons.star_rounded,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
+        _DefaultGroupButton(group: group, isDefault: isDefault),
       ],
     );
   }
 
-  /// 설명
   Widget _buildDescription(ThemeData theme) {
     return Column(
       children: [
@@ -118,7 +139,6 @@ class GroupCard extends ConsumerWidget {
     );
   }
 
-  /// 초대 코드 행
   Widget _buildInviteCodeRow(BuildContext context, AppLocalizations l10n, bool isExpired) {
     return Row(
       children: [
@@ -147,5 +167,53 @@ class GroupCard extends ConsumerWidget {
           ),
       ],
     );
+  }
+}
+
+/// 대표 그룹 설정/해제 버튼
+class _DefaultGroupButton extends ConsumerWidget {
+  final Group group;
+  final bool isDefault;
+
+  const _DefaultGroupButton({required this.group, required this.isDefault});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
+    return Tooltip(
+      message: isDefault ? '대표 그룹 해제' : '대표 그룹으로 설정',
+      child: InkWell(
+        onTap: () => _toggle(context, ref),
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Icon(
+            isDefault ? Icons.star_rounded : Icons.star_outline_rounded,
+            size: 22,
+            color: isDefault ? theme.colorScheme.primary : theme.colorScheme.outline,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _toggle(BuildContext context, WidgetRef ref) async {
+    final notifier = ref.read(defaultGroupProvider.notifier);
+    if (isDefault) {
+      await notifier.clear();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('대표 그룹을 해제했습니다')),
+        );
+      }
+    } else {
+      await notifier.setDefaultGroup(group.id);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('\'${group.name}\'을(를) 대표 그룹으로 설정했습니다')),
+        );
+      }
+    }
   }
 }

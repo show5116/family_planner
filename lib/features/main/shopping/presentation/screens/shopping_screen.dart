@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_group_selector.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/cart_tab.dart';
@@ -31,12 +32,15 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
   Future<void> _initGroupSelection() async {
     final groupId = ref.read(fridgeSelectedGroupIdProvider);
     if (groupId != null) return;
+    final defaultId = ref.read(defaultGroupProvider);
     final groups = await ref
         .read(myGroupsProvider.future)
         .catchError((_) => <Group>[]);
-    if (groups.isNotEmpty && mounted) {
-      ref.read(fridgeSelectedGroupIdProvider.notifier).state = groups.first.id;
-    }
+    if (groups.isEmpty || !mounted) return;
+    final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
+        ? defaultId
+        : groups.first.id;
+    ref.read(fridgeSelectedGroupIdProvider.notifier).state = resolved;
   }
 
   @override

@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/savings/providers/savings_provider.
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 
 /// 인증 상태
 class AuthState {
@@ -186,6 +187,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _ref.read(childcareSelectedGroupIdProvider.notifier).state = null;
     _ref.read(voteSelectedGroupIdProvider.notifier).state = null;
     _ref.read(minigameSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(defaultGroupProvider.notifier).clear();
   }
 
   /// FCM 토큰 등록 (로그인 성공 후)
