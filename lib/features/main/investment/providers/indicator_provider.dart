@@ -21,10 +21,14 @@ class Indicators extends _$Indicators {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final list = await ref.read(indicatorRepositoryProvider).getIndicators();
       return _sorted(list);
     });
+    // Provider가 dispose된 후 state 쓰기를 방지
+    try {
+      state = result;
+    } catch (_) {}
   }
 
   List<IndicatorModel> _sorted(List<IndicatorModel> list) {
@@ -207,9 +211,12 @@ class MarketBriefing extends _$MarketBriefing {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(indicatorRepositoryProvider).getMarketBriefing(),
     );
+    try {
+      state = result;
+    } catch (_) {}
   }
 }
 
@@ -229,8 +236,11 @@ class BookmarkedIndicators extends _$BookmarkedIndicators {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(indicatorRepositoryProvider).getBookmarkedIndicators(),
     );
+    try {
+      state = result;
+    } catch (_) {}
   }
 }
