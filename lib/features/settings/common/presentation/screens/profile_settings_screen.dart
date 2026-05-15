@@ -578,8 +578,11 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                   // 저장 버튼
                   SizedBox(
                     width: double.infinity,
-                    height: AppSizes.buttonHeightLarge,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
                       onPressed: _isLoading ? null : _updateProfile,
                       child: _isLoading
                           ? const SizedBox(

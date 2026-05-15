@@ -265,9 +265,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildLoginButton(AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
-      height: AppSizes.buttonHeightLarge,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(animationDuration: Duration.zero),
+        style: ElevatedButton.styleFrom(
+          animationDuration: Duration.zero,
+          minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        ),
         onPressed: _isLoading ? null : _handleLogin,
         child: _isLoading
             ? const SizedBox(

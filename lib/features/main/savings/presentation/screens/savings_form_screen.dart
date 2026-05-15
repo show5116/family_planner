@@ -265,12 +265,14 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
 
             // 저장 버튼
             SizedBox(
-              height: AppSizes.buttonHeightLarge,
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: _loading ? null : _submit,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.investment,
                   foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 child: _loading
                     ? const SizedBox(

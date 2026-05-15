@@ -272,8 +272,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       const SizedBox(height: AppSizes.spaceXL),
                       SizedBox(
                         width: double.infinity,
-                        height: AppSizes.buttonHeightLarge,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
                           onPressed: _isLoading ? null : _requestCode,
                           child: _isLoading
                               ? const SizedBox(
@@ -397,8 +400,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       // 비밀번호 재설정 버튼
                       SizedBox(
                         width: double.infinity,
-                        height: AppSizes.buttonHeightLarge,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
                           onPressed: _isLoading ? null : _resetPassword,
                           child: _isLoading
                               ? const SizedBox(

@@ -23,13 +23,14 @@ class SocialLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: AppSizes.buttonHeightLarge,
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           animationDuration: Duration.zero,
+          minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+          padding: const EdgeInsets.symmetric(vertical: 12),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

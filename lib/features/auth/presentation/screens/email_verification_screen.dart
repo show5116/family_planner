@@ -201,8 +201,11 @@ class _EmailVerificationScreenState
                           const SizedBox(height: AppSizes.spaceM),
                           SizedBox(
                             width: double.infinity,
-                            height: AppSizes.buttonHeightLarge,
                             child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
                               onPressed: _isLoading ? null : _handleVerifyEmail,
                               child: _isLoading
                                   ? const SizedBox(
@@ -257,8 +260,11 @@ class _EmailVerificationScreenState
                   // 재전송 버튼
                   SizedBox(
                     width: double.infinity,
-                    height: AppSizes.buttonHeightLarge,
                     child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
                       onPressed: _isResending
                           ? null
                           : _handleResendVerification,
