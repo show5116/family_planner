@@ -17,6 +17,7 @@ class StoragesNotifier extends AsyncNotifier<List<StorageModel>> {
   @override
   Future<List<StorageModel>> build() async {
     final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    if (groupId == null) return [];
     return ref.read(fridgeRepositoryProvider).getStorages(groupId: groupId);
   }
 
@@ -29,6 +30,8 @@ class StoragesNotifier extends AsyncNotifier<List<StorageModel>> {
     final repo = ref.read(fridgeRepositoryProvider);
     final created = await repo.createStorage(dto);
     state = AsyncData([...state.value ?? [], created]);
+    // storagesWithItemsProvider에도 빈 보관소 섹션 추가
+    ref.read(storagesWithItemsProvider.notifier).addStorage(created);
   }
 
   Future<void> edit(String storageId, UpdateStorageDto dto) async {
@@ -38,12 +41,14 @@ class StoragesNotifier extends AsyncNotifier<List<StorageModel>> {
     state = AsyncData(
       (state.value ?? []).map((s) => s.id == storageId ? updated : s).toList(),
     );
+    ref.read(storagesWithItemsProvider.notifier).updateStorage(updated);
   }
 
   Future<void> delete(String storageId) async {
     final groupId = ref.read(fridgeSelectedGroupIdProvider);
     await ref.read(fridgeRepositoryProvider).deleteStorage(storageId, groupId: groupId);
     state = AsyncData((state.value ?? []).where((s) => s.id != storageId).toList());
+    ref.read(storagesWithItemsProvider.notifier).removeStorage(storageId);
   }
 
   Future<void> reorder(List<String> ids) async {
@@ -67,6 +72,7 @@ class StoragesWithItemsNotifier
   @override
   Future<List<StorageWithItemsModel>> build() async {
     final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    if (groupId == null) return [];
     return ref
         .read(fridgeRepositoryProvider)
         .getItemsGroupedByStorage(groupId: groupId);
@@ -88,6 +94,27 @@ class StoragesWithItemsNotifier
               .toList(),
         );
       }).toList(),
+    );
+  }
+
+  void addStorage(StorageModel storage) {
+    state = AsyncData([
+      ...state.value ?? [],
+      StorageWithItemsModel(storage: storage, items: []),
+    ]);
+  }
+
+  void updateStorage(StorageModel updated) {
+    state = AsyncData(
+      (state.value ?? []).map((swi) => swi.storage.id == updated.id
+          ? StorageWithItemsModel(storage: updated, items: swi.items)
+          : swi).toList(),
+    );
+  }
+
+  void removeStorage(String storageId) {
+    state = AsyncData(
+      (state.value ?? []).where((swi) => swi.storage.id != storageId).toList(),
     );
   }
 
@@ -175,6 +202,7 @@ class FrequentItemsNotifier extends AsyncNotifier<List<FrequentItemModel>> {
   @override
   Future<List<FrequentItemModel>> build() async {
     final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    if (groupId == null) return [];
     return ref
         .read(fridgeRepositoryProvider)
         .getFrequentItems(groupId: groupId);
@@ -234,6 +262,7 @@ class CartNotifier extends AsyncNotifier<CartModel?> {
   @override
   Future<CartModel?> build() async {
     final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    if (groupId == null) return null;
     return ref.read(fridgeRepositoryProvider).getCart(groupId: groupId);
   }
 
@@ -313,6 +342,9 @@ class ShoppingHistoryNotifier
   @override
   Future<ShoppingHistoryPageModel> build() async {
     final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    if (groupId == null) {
+      return ShoppingHistoryPageModel(data: [], total: 0, page: 1, limit: _limit);
+    }
     return ref.read(fridgeRepositoryProvider).getShoppingHistory(
           groupId: groupId,
           page: 1,

@@ -50,7 +50,7 @@ class StorageModel {
       groupId: json['groupId'] as String,
       name: json['name'] as String,
       type: _parseStorageType(json['type'] as String),
-      sortOrder: (json['sortOrder'] as num).toInt(),
+      sortOrder: int.parse(json['sortOrder'].toString()),
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     );
   }
@@ -164,13 +164,13 @@ class FridgeItemModel {
       groupId: json['groupId'] as String,
       storageLocationId: json['storageLocationId'] as String,
       name: json['name'] as String,
-      quantity: (json['quantity'] as num).toInt(),
+      quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
       registeredAt: DateTime.parse(json['registeredAt'] as String).toLocal(),
       expiresAt: json['expiresAt'] != null
           ? DateTime.parse(json['expiresAt'] as String).toLocal()
           : null,
-      alertDaysBefore: (json['alertDaysBefore'] as num?)?.toInt() ?? 3,
+      alertDaysBefore: json['alertDaysBefore'] != null ? int.parse(json['alertDaysBefore'].toString()) : 3,
       memo: json['memo'] as String?,
       frequentItemId: json['frequentItemId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
@@ -318,7 +318,7 @@ class FrequentItemModel {
       name: json['name'] as String,
       defaultUnit: json['defaultUnit'] as String?,
       autoAdd: (json['autoAdd'] as bool?) ?? false,
-      sortOrder: (json['sortOrder'] as num).toInt(),
+      sortOrder: int.parse(json['sortOrder'].toString()),
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -413,7 +413,7 @@ class CartItemModel {
       cartId: json['cartId'] as String,
       frequentItemId: json['frequentItemId'] as String?,
       name: json['name'] as String,
-      quantity: (json['quantity'] as num).toInt(),
+      quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
       isChecked: (json['isChecked'] as bool?) ?? false,
       memo: json['memo'] as String?,
@@ -656,7 +656,7 @@ class ShoppingHistoryItemModel {
     return ShoppingHistoryItemModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      quantity: (json['quantity'] as num).toInt(),
+      quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
       transferredToFridge: (json['transferredToFridge'] as bool?) ?? false,
       fridgeItemId: json['fridgeItemId'] as String?,
