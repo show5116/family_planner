@@ -346,10 +346,11 @@ class CartNotifier extends AsyncNotifier<CartModel?> {
   Future<ShoppingHistoryModel> complete(CompleteCartDto dto) async {
     final history =
         await ref.read(fridgeRepositoryProvider).completeCart(dto);
-    // 완료 후 장바구니 초기화
-    await refresh();
-    // 보관소 목록도 새로고침 (이관된 품목 반영)
-    ref.invalidate(storagesProvider);
+    // AsyncLoading을 거치지 않고 즉시 빈 장바구니로 교체 → 다이얼로그 유지
+    state = const AsyncData(null);
+    // 보관소·이력은 invalidate로 백그라운드 갱신
+    ref.invalidate(storagesWithItemsProvider);
+    ref.invalidate(shoppingHistoryProvider);
     return history;
   }
 }

@@ -5638,6 +5638,18 @@ abstract class AppLocalizations {
   /// **'품목 수정'**
   String get fridge_item_edit;
 
+  /// 품목 삭제 확인 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 삭제'**
+  String get fridge_item_delete_title;
+
+  /// 품목 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 삭제하시겠습니까?'**
+  String fridge_item_delete_confirm(String name);
+
   /// 품목명 레이블
   ///
   /// In ko, this message translates to:

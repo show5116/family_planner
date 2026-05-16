@@ -2850,6 +2850,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_item_edit => '품목 수정';
 
   @override
+  String get fridge_item_delete_title => '품목 삭제';
+
+  @override
+  String fridge_item_delete_confirm(String name) {
+    return '$name을(를) 삭제하시겠습니까?';
+  }
+
+  @override
   String get fridge_item_name => '품목명';
 
   @override

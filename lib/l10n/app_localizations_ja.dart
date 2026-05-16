@@ -2845,6 +2845,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_item_edit => '品目を編集';
 
   @override
+  String get fridge_item_delete_title => '品目を削除';
+
+  @override
+  String fridge_item_delete_confirm(String name) {
+    return '$nameを削除しますか？';
+  }
+
+  @override
   String get fridge_item_name => '品目名';
 
   @override

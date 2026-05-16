@@ -123,6 +123,32 @@ class _FridgeItemTileState extends ConsumerState<FridgeItemTile> {
   }
 
   Future<void> _changeQuantity(int newQty) async {
+    if (newQty == 0) {
+      final l10n = AppLocalizations.of(context)!;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.fridge_item_delete_title),
+          content: Text(l10n.fridge_item_delete_confirm(widget.item.name)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.common_cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.common_delete,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.error)),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+      await _handleAction(_ItemAction.delete);
+      return;
+    }
+
     setState(() => _loadingQuantity = true);
     try {
       final groupId = ref.read(fridgeSelectedGroupIdProvider);
@@ -131,9 +157,6 @@ class _FridgeItemTileState extends ConsumerState<FridgeItemTile> {
           .updateFridgeItemQuantity(widget.item.id, newQty,
               groupId: groupId);
       ref.read(storagesWithItemsProvider.notifier).updateItem(updated);
-      if (updated.quantity == 0) {
-        ref.invalidate(cartProvider);
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -163,6 +186,7 @@ class _FridgeItemTileState extends ConsumerState<FridgeItemTile> {
           ref
               .read(storagesWithItemsProvider.notifier)
               .removeItem(widget.item.id);
+          ref.invalidate(cartProvider);
         } catch (e) {
           if (!mounted) return;
           ScaffoldMessenger.of(context)

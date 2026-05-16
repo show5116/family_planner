@@ -116,6 +116,7 @@ class _FrequentItemTile extends ConsumerWidget {
             quantity: 1,
             unit: item.defaultUnit,
           ));
+      ref.invalidate(cartProvider);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${item.name}을(를) 장바구니에 추가했습니다')),

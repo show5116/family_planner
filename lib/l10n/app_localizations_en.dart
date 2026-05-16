@@ -2902,6 +2902,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_item_edit => 'Edit item';
 
   @override
+  String get fridge_item_delete_title => 'Delete item';
+
+  @override
+  String fridge_item_delete_confirm(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
   String get fridge_item_name => 'Item name';
 
   @override
