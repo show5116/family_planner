@@ -2944,6 +2944,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_empty_items => 'No items';
 
   @override
+  String get fridge_item_count => '';
+
+  @override
+  String get fridge_sort_expiry => 'Expiry';
+
+  @override
+  String get fridge_sort_name => 'Name';
+
+  @override
+  String get fridge_sort_registered => 'Added';
+
+  @override
+  String get fridge_item_elapsed_days => 'd';
+
+  @override
   String get fridge_frequent_add => 'Add item';
 
   @override

@@ -91,38 +91,95 @@ class _EmptyCart extends StatelessWidget {
   }
 }
 
-class _CartItemTile extends ConsumerWidget {
+class _CartItemTile extends ConsumerStatefulWidget {
   final CartItemModel item;
   const _CartItemTile({required this.item});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+  ConsumerState<_CartItemTile> createState() => _CartItemTileState();
+}
 
-    return ListTile(
-      leading: Checkbox(
-        value: item.isChecked,
-        onChanged: (v) => ref
-            .read(cartProvider.notifier)
-            .toggleCheck(item.id, v ?? false),
-      ),
-      title: Text(
-        item.name,
-        style: item.isChecked
-            ? Theme.of(context).textTheme.bodyMedium?.copyWith(
-                decoration: TextDecoration.lineThrough,
-                color: Theme.of(context).colorScheme.outline)
-            : null,
-      ),
-      subtitle: Text(
-          '${item.quantity}${item.unit != null ? ' ${item.unit}' : ''}',
-          style: Theme.of(context).textTheme.bodySmall),
-      trailing: IconButton(
-        icon: Icon(Icons.delete_outline,
-            color: Theme.of(context).colorScheme.error, size: 20),
-        tooltip: l10n.common_delete,
-        onPressed: () =>
-            ref.read(cartProvider.notifier).deleteItem(item.id),
+class _CartItemTileState extends ConsumerState<_CartItemTile> {
+  bool _loadingCheck = false;
+  bool _loadingDelete = false;
+
+  bool get _busy => _loadingCheck || _loadingDelete;
+
+  Future<void> _toggleCheck(bool value) async {
+    setState(() => _loadingCheck = true);
+    try {
+      await ref
+          .read(cartProvider.notifier)
+          .toggleCheck(widget.item.id, value);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _loadingCheck = false);
+    }
+  }
+
+  Future<void> _delete() async {
+    setState(() => _loadingDelete = true);
+    try {
+      await ref.read(cartProvider.notifier).deleteItem(widget.item.id);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _loadingDelete = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final item = widget.item;
+
+    return AbsorbPointer(
+      absorbing: _busy,
+      child: ListTile(
+        leading: _loadingCheck
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Checkbox(
+                value: item.isChecked,
+                onChanged: (v) => _toggleCheck(v ?? false),
+              ),
+        title: Text(
+          item.name,
+          style: item.isChecked
+              ? Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  decoration: TextDecoration.lineThrough,
+                  color: Theme.of(context).colorScheme.outline)
+              : null,
+        ),
+        subtitle: Text(
+            '${item.quantity}${item.unit != null ? ' ${item.unit}' : ''}',
+            style: Theme.of(context).textTheme.bodySmall),
+        trailing: _loadingDelete
+            ? const SizedBox(
+                width: 36,
+                height: 36,
+                child: Center(
+                  child: SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              )
+            : IconButton(
+                icon: Icon(Icons.delete_outline,
+                    color: Theme.of(context).colorScheme.error, size: 20),
+                tooltip: l10n.common_delete,
+                onPressed: _delete,
+              ),
       ),
     );
   }

@@ -5710,6 +5710,36 @@ abstract class AppLocalizations {
   /// **'품목이 없습니다'**
   String get fridge_empty_items;
 
+  /// 품목 수 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'개'**
+  String get fridge_item_count;
+
+  /// 유통기한 정렬
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한순'**
+  String get fridge_sort_expiry;
+
+  /// 이름 정렬
+  ///
+  /// In ko, this message translates to:
+  /// **'이름순'**
+  String get fridge_sort_name;
+
+  /// 등록일 정렬
+  ///
+  /// In ko, this message translates to:
+  /// **'등록순'**
+  String get fridge_sort_registered;
+
+  /// 등록 후 경과일 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get fridge_item_elapsed_days;
+
   /// 자주 사는 항목 추가
   ///
   /// In ko, this message translates to:

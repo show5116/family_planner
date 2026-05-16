@@ -2892,6 +2892,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_empty_items => '품목이 없습니다';
 
   @override
+  String get fridge_item_count => '개';
+
+  @override
+  String get fridge_sort_expiry => '유통기한순';
+
+  @override
+  String get fridge_sort_name => '이름순';
+
+  @override
+  String get fridge_sort_registered => '등록순';
+
+  @override
+  String get fridge_item_elapsed_days => '일';
+
+  @override
   String get fridge_frequent_add => '항목 추가';
 
   @override

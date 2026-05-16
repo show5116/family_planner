@@ -2887,6 +2887,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_empty_items => '品目がありません';
 
   @override
+  String get fridge_item_count => '個';
+
+  @override
+  String get fridge_sort_expiry => '期限順';
+
+  @override
+  String get fridge_sort_name => '名前順';
+
+  @override
+  String get fridge_sort_registered => '登録順';
+
+  @override
+  String get fridge_item_elapsed_days => '日';
+
+  @override
   String get fridge_frequent_add => '項目を追加';
 
   @override
