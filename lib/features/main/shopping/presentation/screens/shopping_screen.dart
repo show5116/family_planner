@@ -63,6 +63,8 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
               const FridgeGroupSelector(),
               TabBar(
                 controller: _tabController,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white70,
                 tabs: [
                   Tab(text: l10n.fridge_tab_cart),
                   Tab(text: l10n.fridge_tab_frequent),
