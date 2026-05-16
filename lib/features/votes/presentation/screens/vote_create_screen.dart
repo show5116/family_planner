@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/votes/data/repositories/vote_repository.dart';
 import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
 
@@ -107,10 +108,24 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final groupId = ref.watch(voteSelectedGroupIdProvider);
+    final groupName = ref.watch(myGroupsProvider).whenOrNull(
+      data: (groups) => groups.where((g) => g.id == groupId).firstOrNull?.name,
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('새 투표 만들기'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('새 투표 만들기'),
+            if (groupName != null)
+              Text(
+                groupName,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+              ),
+          ],
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),

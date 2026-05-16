@@ -10,10 +10,9 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
-import 'package:family_planner/features/memo/presentation/widgets/memo_filter_bar.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
-import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
@@ -333,10 +332,10 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     final selectedFilter = ref.watch(memoSelectedFilterProvider);
     final tagsAsync = ref.watch(
       memoTagsProvider(
-        groupId: (selectedFilter != null && selectedFilter != 'PRIVATE')
+        groupId: (selectedFilter != null && selectedFilter != '__personal__')
             ? selectedFilter
             : null,
-        personal: selectedFilter == 'PRIVATE' ? true : null,
+        personal: selectedFilter == '__personal__' ? true : null,
       ),
     );
 
@@ -369,7 +368,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
               },
               onClose: _toggleSearch,
             ),
-          if (!_isDemo) const MemoFilterBar(),
+          if (!_isDemo) const _MemoGroupFilterBar(),
           if (!_isDemo) _buildTagChips(tagsAsync.valueOrNull ?? []),
           Expanded(
             child: _isDemo
@@ -426,6 +425,38 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
         const SizedBox(height: AppSizes.spaceM),
         MemoCard(key: _checklistCardKey, memo: _demoChecklistMemo, isDemo: true),
       ],
+    );
+  }
+}
+
+// ── 메모 그룹 필터 바 ────────────────────────────────────────────────────────
+
+class _MemoGroupFilterBar extends ConsumerWidget {
+  const _MemoGroupFilterBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GroupFilterBar(
+      filterMode: FilterMode.withAll,
+      savedKey: 'memo_group_filter',
+      onMultiFilterChanged: (sel) {
+        final notifier = ref.read(memoListProvider.notifier);
+        if (sel.isAll) {
+          notifier.setFilter(groupId: null, visibility: null);
+          ref.read(memoSelectedFilterProvider.notifier).state = null;
+        } else if (sel.includePersonal && (sel.groupIds?.isEmpty ?? true)) {
+          notifier.setFilter(groupId: null, visibility: 'PRIVATE');
+          ref.read(memoSelectedFilterProvider.notifier).state = '__personal__';
+        } else {
+          // 여러 그룹 선택 시: 단일 필터만 지원하므로 선택된 그룹이 1개면 해당 그룹, 복수면 전체
+          final ids = sel.groupIds ?? [];
+          final groupId = ids.length == 1 ? ids.first : null;
+          final visibility = sel.includePersonal && ids.isEmpty ? 'PRIVATE' : null;
+          notifier.setFilter(groupId: groupId, visibility: visibility);
+          ref.read(memoSelectedFilterProvider.notifier).state =
+              groupId ?? (visibility != null ? '__personal__' : null);
+        }
+      },
     );
   }
 }

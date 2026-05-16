@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_form_provider.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -69,9 +70,27 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _previousGroupId = ref.read(selectedGroupIdProvider);
-      // 수정 모드: task의 groupId로 초기화
       if (widget.task != null) {
+        // 수정 모드: task의 groupId로 초기화
         ref.read(selectedGroupIdProvider.notifier).state = widget.task!.groupId;
+      } else {
+        // 신규 모드: 현재 필터에서 그룹 자동 선택
+        final filterIds = ref.read(selectedGroupIdsProvider);
+        final includePersonal = ref.read(includePersonalProvider);
+
+        if (filterIds != null && filterIds.length == 1) {
+          // 그룹 1개만 선택 → 해당 그룹
+          ref.read(selectedGroupIdProvider.notifier).state = filterIds.first;
+        } else if (filterIds != null && filterIds.isEmpty && includePersonal) {
+          // 나만 보기만 선택 → 개인 일정 (null = 개인)
+          ref.read(selectedGroupIdProvider.notifier).state = null;
+        } else {
+          // 전체 또는 여러 그룹 → 대표 그룹
+          final defaultId = ref.read(defaultGroupProvider);
+          if (defaultId != null) {
+            ref.read(selectedGroupIdProvider.notifier).state = defaultId;
+          }
+        }
       }
       // 상세 API 로드 (reminders + groupId 재확인)
       if (widget.taskId != null) {

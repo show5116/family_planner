@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -38,7 +38,7 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
   final _contentController = TextEditingController();
   List<String> _tags = [];
   MemoType _memoType = MemoType.note;
-  MemoVisibility _visibility = MemoVisibility.private_;
+  // null = 개인(PRIVATE), non-null = 그룹(GROUP)
   String? _selectedGroupId;
 
   // 체크리스트 항목 (작성 시 로컬 상태로 관리)
@@ -60,6 +60,26 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _loadMemoData();
       });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _autoSelectGroup();
+      });
+    }
+  }
+
+  /// 신규 메모 작성 시 현재 필터 기반 그룹 자동 선택
+  void _autoSelectGroup() {
+    final filterValue = ref.read(memoSelectedFilterProvider);
+    String? autoGroupId;
+    if (filterValue != null &&
+        filterValue != '__personal__' &&
+        filterValue.isNotEmpty) {
+      autoGroupId = filterValue;
+    } else {
+      autoGroupId = ref.read(defaultGroupProvider);
+    }
+    if (mounted) {
+      setState(() => _selectedGroupId = autoGroupId);
     }
   }
 
@@ -73,8 +93,9 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
           _contentController.text = memo.content;
           _tags = memo.tags.map((t) => t.name).toList();
           _memoType = memo.type ?? MemoType.note;
-          _visibility = memo.visibility ?? MemoVisibility.private_;
-          _selectedGroupId = memo.groupId;
+          // 수정 모드: visibility가 GROUP이면 groupId 사용, 아니면 null(개인)
+          _selectedGroupId =
+              (memo.visibility == MemoVisibility.group) ? memo.groupId : null;
           _checklistDrafts.clear();
           for (final c in _draftControllers) {
             c.dispose();
@@ -130,6 +151,10 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
               child: ListView(
                 padding: const EdgeInsets.all(AppSizes.spaceL),
                 children: [
+                  // 그룹 선택 (최상단)
+                  _buildGroupSelector(l10n),
+                  const SizedBox(height: AppSizes.spaceL),
+
                   // 제목 입력
                   TextFormField(
                     controller: _titleController,
@@ -180,89 +205,6 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
                     ),
                     const SizedBox(height: AppSizes.spaceL),
                   ],
-
-                  // 공개 범위 선택
-                  Text(
-                    l10n.memo_visibility,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: AppSizes.spaceS),
-                  SegmentedButton<MemoVisibility>(
-                    segments: [
-                      ButtonSegment(
-                        value: MemoVisibility.private_,
-                        label: Text(l10n.memo_visibilityPrivate),
-                        icon: const Icon(Icons.lock_outline),
-                      ),
-                      ButtonSegment(
-                        value: MemoVisibility.group,
-                        label: Text(l10n.memo_visibilityGroup),
-                        icon: const Icon(Icons.group_outlined),
-                      ),
-                    ],
-                    selected: {_visibility},
-                    onSelectionChanged: (selected) {
-                      setState(() {
-                        _visibility = selected.first;
-                        if (_visibility != MemoVisibility.group) {
-                          _selectedGroupId = null;
-                        }
-                      });
-                    },
-                  ),
-
-                  // 그룹 선택 (visibility=GROUP 일 때만 표시)
-                  if (_visibility == MemoVisibility.group) ...[
-                    const SizedBox(height: AppSizes.spaceM),
-                    Text(
-                      l10n.memo_groupSelect,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(height: AppSizes.spaceS),
-                    ref.watch(myGroupsProvider).when(
-                      data: (groups) {
-                        // groups 로드 후 선택된 그룹이 없으면 대표 그룹 → 첫 번째 그룹 자동 선택
-                        if (_selectedGroupId == null && groups.isNotEmpty) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (mounted) {
-                              final defaultId = ref.read(defaultGroupProvider);
-                              final resolved = (defaultId != null &&
-                                      groups.any((g) => g.id == defaultId))
-                                  ? defaultId
-                                  : groups.first.id;
-                              setState(() => _selectedGroupId = resolved);
-                            }
-                          });
-                        }
-                        return Card(
-                          elevation: 0,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest
-                              .withValues(alpha: 0.3),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSizes.spaceM,
-                              vertical: AppSizes.spaceS,
-                            ),
-                            child: GroupDropdown(
-                              groups: groups,
-                              selectedGroupId: _selectedGroupId,
-                              onChanged: (value) {
-                                setState(() => _selectedGroupId = value);
-                              },
-                              style: GroupDropdownStyle.form,
-                              showPersonalOption: false,
-                            ),
-                          ),
-                        );
-                      },
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (_, _) => Text(l10n.common_error),
-                    ),
-                  ],
-                  const SizedBox(height: AppSizes.spaceL),
 
                   // 태그 입력
                   Text(
@@ -324,6 +266,54 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
           ],
         ),
       ),
+    );
+  }
+
+  /// 그룹 선택 드롭다운 (일정 화면 GroupSelector와 동일한 스타일)
+  Widget _buildGroupSelector(AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.schedule_group,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        Card(
+          elevation: 0,
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withValues(alpha: 0.3),
+          child: ref.watch(myGroupsProvider).when(
+            data: (groups) => Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceS,
+              ),
+              child: GroupDropdown(
+                groups: groups,
+                selectedGroupId: _selectedGroupId,
+                onChanged: (value) {
+                  setState(() => _selectedGroupId = value);
+                },
+                style: GroupDropdownStyle.form,
+                showPersonalOption: true,
+              ),
+            ),
+            loading: () => const Padding(
+              padding: EdgeInsets.all(AppSizes.spaceM),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (_, _) => Padding(
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              child: Text(l10n.common_error),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -444,6 +434,10 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
     final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
 
+    // _selectedGroupId != null → GROUP, null → PRIVATE
+    final isGroup = _selectedGroupId != null;
+    final visibilityStr = isGroup ? 'GROUP' : 'PRIVATE';
+
     try {
       final notifier = ref.read(memoManagementProvider.notifier);
       final tagDtos = _tags.map((name) => CreateMemoTagDto(name: name)).toList();
@@ -454,8 +448,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
           content: _memoType == MemoType.note
               ? _contentController.text.trim()
               : '',
-          visibility: _visibility == MemoVisibility.group ? 'GROUP' : 'PRIVATE',
-          groupId: _visibility == MemoVisibility.group ? _selectedGroupId : null,
+          visibility: visibilityStr,
+          groupId: isGroup ? _selectedGroupId : null,
           tags: tagDtos.isEmpty ? null : tagDtos,
         );
 
@@ -525,8 +519,8 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
               ? _contentController.text.trim()
               : null,
           type: _memoType == MemoType.checklist ? 'CHECKLIST' : 'NOTE',
-          visibility: _visibility == MemoVisibility.group ? 'GROUP' : 'PRIVATE',
-          groupId: _visibility == MemoVisibility.group ? _selectedGroupId : null,
+          visibility: visibilityStr,
+          groupId: isGroup ? _selectedGroupId : null,
           tags: tagDtos.isEmpty ? null : tagDtos,
           checklistItems: checklistDtos,
         );

@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
 class SavingsFormScreen extends ConsumerStatefulWidget {
@@ -125,9 +126,23 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
 
   @override
   Widget build(BuildContext context) {
+    final groupName = ref.watch(myGroupsProvider).whenOrNull(
+      data: (groups) => groups.where((g) => g.id == widget.groupId).firstOrNull?.name,
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? '저금통 수정' : '저금통 추가'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_isEdit ? '저금통 수정' : '저금통 추가'),
+            if (groupName != null)
+              Text(
+                groupName,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+              ),
+          ],
+        ),
       ),
       body: Form(
         key: _formKey,

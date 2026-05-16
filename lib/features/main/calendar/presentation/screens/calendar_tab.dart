@@ -12,10 +12,10 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // 분리된 위젯 import
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_view.dart';
-import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_filter_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/task_list_section.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_results.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 
 /// 일정 관리 탭 (월간 캘린더 뷰)
 class CalendarTab extends ConsumerStatefulWidget {
@@ -165,7 +165,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       body: ref.watch(calendarSearchQueryProvider) != null
           ? Column(
               children: [
-                const CalendarFilterBar(),
+                _CalendarGroupFilterBar(),
                 if (ref.watch(calendarSearchActiveProvider))
                   const CalendarSearchBar(),
                 const Expanded(child: CalendarSearchResults()),
@@ -173,7 +173,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             )
           : CustomScrollView(
               slivers: [
-                const SliverToBoxAdapter(child: CalendarFilterBar()),
+                SliverToBoxAdapter(child: _CalendarGroupFilterBar()),
 
                 if (ref.watch(calendarSearchActiveProvider))
                   const SliverToBoxAdapter(child: CalendarSearchBar()),
@@ -245,5 +245,22 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
         _calendarFormat = format;
       });
     }
+  }
+}
+
+/// 일정 화면용 그룹 필터 바 — selectedGroupIdsProvider/includePersonalProvider 연결
+class _CalendarGroupFilterBar extends ConsumerWidget {
+  const _CalendarGroupFilterBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GroupFilterBar(
+      filterMode: FilterMode.withAll,
+      savedKey: 'calendar_group_filter',
+      onMultiFilterChanged: (sel) {
+        ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
+        ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
+      },
+    );
   }
 }

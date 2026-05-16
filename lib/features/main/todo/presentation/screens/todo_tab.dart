@@ -13,7 +13,7 @@ import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_kanban_column.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_list_item.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_week_bar.dart';
-import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_filter_bar.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
 
@@ -303,7 +303,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
           ),
           body: Column(
             children: [
-              if (!isDemo) const CalendarFilterBar(),
+              if (!isDemo) const _TodoGroupFilterBar(),
 
               if (!isDemo && ref.watch(todoSearchActiveProvider))
                 const _TodoSearchBar(),
@@ -1531,6 +1531,23 @@ class _ErrorState extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// 할일 화면용 그룹 필터 바 — selectedGroupIdsProvider/includePersonalProvider 연결
+class _TodoGroupFilterBar extends ConsumerWidget {
+  const _TodoGroupFilterBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GroupFilterBar(
+      filterMode: FilterMode.withAll,
+      savedKey: 'todo_group_filter',
+      onMultiFilterChanged: (sel) {
+        ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
+        ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
+      },
     );
   }
 }

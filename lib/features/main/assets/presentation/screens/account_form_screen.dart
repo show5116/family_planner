@@ -5,6 +5,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
@@ -51,10 +52,24 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final managementState = ref.watch(assetManagementProvider);
+    final effectiveGroupId = widget.groupId ?? ref.watch(assetSelectedGroupIdProvider);
+    final groupName = ref.watch(myGroupsProvider).whenOrNull(
+      data: (groups) => groups.where((g) => g.id == effectiveGroupId).firstOrNull?.name,
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? l10n.asset_edit_account : l10n.asset_add_account),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_isEdit ? l10n.asset_edit_account : l10n.asset_add_account),
+            if (groupName != null)
+              Text(
+                groupName,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+              ),
+          ],
+        ),
       ),
       body: SafeArea(
         top: false,

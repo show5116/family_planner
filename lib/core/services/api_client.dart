@@ -112,6 +112,40 @@ class ApiClient {
 
           final statusCode = error.response?.statusCode;
 
+          // 429 에러 처리 (Too Many Requests) — 지수 백오프 재시도
+          if (statusCode == 429) {
+            final options = error.requestOptions;
+            final attempt = (options.extra['_429_attempt'] as int?) ?? 0;
+            const maxAttempts = 3;
+
+            if (attempt < maxAttempts) {
+              // Retry-After 헤더 우선, 없으면 지수 백오프 (1s, 2s, 4s)
+              final retryAfterHeader =
+                  error.response?.headers.value('Retry-After');
+              final waitSeconds = retryAfterHeader != null
+                  ? int.tryParse(retryAfterHeader) ?? (1 << attempt)
+                  : (1 << attempt);
+
+              if (EnvironmentConfig.enableLogging) {
+                debugPrint('│ 429 Too Many Requests — attempt ${attempt + 1}/$maxAttempts, waiting ${waitSeconds}s');
+              }
+
+              await Future.delayed(Duration(seconds: waitSeconds));
+
+              options.extra['_429_attempt'] = attempt + 1;
+              try {
+                final response = await _dio.fetch(options);
+                return handler.resolve(response);
+              } catch (e) {
+                return handler.next(error);
+              }
+            }
+
+            // 최대 재시도 초과 — 사용자에게 알림
+            onError?.call('잠시 후 다시 시도해주세요. (요청이 너무 많습니다)');
+            return handler.next(error);
+          }
+
           // 401 에러 처리 (토큰 만료)
           if (statusCode == 401) {
             final requestPath = error.requestOptions.path;
@@ -165,8 +199,8 @@ class ApiClient {
             }
           }
 
-          // 401 (인증 실패, 이미 처리됨), 500 (서버 내부 오류) 제외한 에러 메시지 표시
-          if (statusCode != null && statusCode != 401 && statusCode != 500) {
+          // 401 (인증 실패, 이미 처리됨), 429 (재시도 로직에서 처리), 500 (서버 내부 오류) 제외한 에러 메시지 표시
+          if (statusCode != null && statusCode != 401 && statusCode != 429 && statusCode != 500) {
             final errorMessage = _extractErrorMessage(error.response?.data);
             if (errorMessage != null && onError != null) {
               onError!(errorMessage);

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/child_points/data/repositories/childcare_repository.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 자녀 프로필 등록 화면 (앱 계정 없이 이름+생년월일만)
 class ChildProfileFormScreen extends ConsumerStatefulWidget {
@@ -33,9 +34,23 @@ class _ChildProfileFormScreenState
 
   @override
   Widget build(BuildContext context) {
+    final groupName = ref.watch(myGroupsProvider).whenOrNull(
+      data: (groups) => groups.where((g) => g.id == widget.groupId).firstOrNull?.name,
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('자녀 프로필 등록'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('자녀 프로필 등록'),
+            if (groupName != null)
+              Text(
+                groupName,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+              ),
+          ],
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
