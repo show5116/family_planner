@@ -130,6 +130,20 @@ class StoragesWithItemsNotifier
     );
   }
 
+  void addItems(List<FridgeItemModel> items) {
+    var current = state.value ?? [];
+    for (final item in items) {
+      current = current.map((swi) {
+        if (swi.storage.id != item.storageLocationId) return swi;
+        return StorageWithItemsModel(
+          storage: swi.storage,
+          items: [...swi.items, item],
+        );
+      }).toList();
+    }
+    state = AsyncData(current);
+  }
+
   void removeItem(String itemId) {
     state = AsyncData(
       (state.value ?? []).map((swi) => StorageWithItemsModel(
@@ -277,7 +291,18 @@ class CartNotifier extends AsyncNotifier<CartModel?> {
     if (current != null) {
       state = AsyncData(current.copyWith(items: [...current.items, item]));
     } else {
-      // 장바구니가 없으면 새로고침
+      await refresh();
+    }
+  }
+
+  Future<void> bulkAddItems(BulkAddCartItemDto dto) async {
+    final newItems =
+        await ref.read(fridgeRepositoryProvider).bulkAddCartItems(dto);
+    final current = state.value;
+    if (current != null) {
+      state =
+          AsyncData(current.copyWith(items: [...current.items, ...newItems]));
+    } else {
       await refresh();
     }
   }

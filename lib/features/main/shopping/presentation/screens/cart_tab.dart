@@ -130,6 +130,28 @@ class _CartItemTile extends ConsumerWidget {
 
 // ── 품목 추가 다이얼로그 ──────────────────────────────────────────────────────────
 
+class _CartItemEntry {
+  final TextEditingController name;
+  final TextEditingController quantity;
+  final TextEditingController unit;
+  final TextEditingController memo;
+
+  _CartItemEntry()
+      : name = TextEditingController(),
+        quantity = TextEditingController(text: '1'),
+        unit = TextEditingController(),
+        memo = TextEditingController();
+
+  void dispose() {
+    name.dispose();
+    quantity.dispose();
+    unit.dispose();
+    memo.dispose();
+  }
+
+  bool get hasName => name.text.trim().isNotEmpty;
+}
+
 class _AddCartItemDialog extends ConsumerStatefulWidget {
   const _AddCartItemDialog();
 
@@ -138,39 +160,47 @@ class _AddCartItemDialog extends ConsumerStatefulWidget {
 }
 
 class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
-  final _nameController = TextEditingController();
-  final _quantityController = TextEditingController(text: '1');
-  final _unitController = TextEditingController();
-  final _memoController = TextEditingController();
+  final List<_CartItemEntry> _entries = [_CartItemEntry()];
   bool _loading = false;
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _quantityController.dispose();
-    _unitController.dispose();
-    _memoController.dispose();
+    for (final e in _entries) {
+      e.dispose();
+    }
     super.dispose();
   }
 
+  void _addEntry() {
+    setState(() => _entries.add(_CartItemEntry()));
+  }
+
+  void _removeEntry(int index) {
+    setState(() {
+      _entries[index].dispose();
+      _entries.removeAt(index);
+    });
+  }
+
   Future<void> _submit() async {
-    final name = _nameController.text.trim();
-    if (name.isEmpty) return;
-    final qty = int.tryParse(_quantityController.text) ?? 1;
-    final unit =
-        _unitController.text.trim().isEmpty ? null : _unitController.text.trim();
-    final memo =
-        _memoController.text.trim().isEmpty ? null : _memoController.text.trim();
+    final valid = _entries.where((e) => e.hasName).toList();
+    if (valid.isEmpty) return;
 
     setState(() => _loading = true);
     try {
       final groupId = ref.read(fridgeSelectedGroupIdProvider);
-      await ref.read(cartProvider.notifier).addItem(AddCartItemDto(
+      await ref.read(cartProvider.notifier).bulkAddItems(BulkAddCartItemDto(
             groupId: groupId ?? '',
-            name: name,
-            quantity: qty,
-            unit: unit,
-            memo: memo,
+            items: valid
+                .map((e) => CartItemEntryDto(
+                      name: e.name.text.trim(),
+                      quantity: int.tryParse(e.quantity.text) ?? 1,
+                      unit:
+                          e.unit.text.trim().isEmpty ? null : e.unit.text.trim(),
+                      memo:
+                          e.memo.text.trim().isEmpty ? null : e.memo.text.trim(),
+                    ))
+                .toList(),
           ));
       if (mounted) Navigator.pop(context);
     } catch (e) {
@@ -188,43 +218,32 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
     final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
       title: Text(l10n.fridge_cart_add_item),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: l10n.fridge_item_name),
-            textCapitalization: TextCapitalization.sentences,
-          ),
-          const SizedBox(height: AppSizes.spaceS),
-          Row(
+      content: SizedBox(
+        width: double.maxFinite,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _quantityController,
-                  decoration:
-                      InputDecoration(labelText: l10n.fridge_item_quantity),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              const SizedBox(width: AppSizes.spaceS),
-              Expanded(
-                flex: 3,
-                child: TextField(
-                  controller: _unitController,
-                  decoration:
-                      InputDecoration(labelText: l10n.fridge_item_unit),
-                ),
+              ..._entries.asMap().entries.map((entry) {
+                final i = entry.key;
+                final e = entry.value;
+                return _CartItemEntryRow(
+                  entry: e,
+                  index: i,
+                  showRemove: _entries.length > 1,
+                  onRemove: () => _removeEntry(i),
+                  l10n: l10n,
+                );
+              }),
+              const SizedBox(height: AppSizes.spaceS),
+              TextButton.icon(
+                onPressed: _addEntry,
+                icon: const Icon(Icons.add, size: 18),
+                label: Text(l10n.common_add),
               ),
             ],
           ),
-          const SizedBox(height: AppSizes.spaceS),
-          TextField(
-            controller: _memoController,
-            decoration: InputDecoration(labelText: l10n.fridge_item_memo),
-          ),
-        ],
+        ),
       ),
       actions: [
         TextButton(
@@ -238,9 +257,84 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2))
-              : Text(l10n.common_add),
+              : Text(l10n.common_save),
         ),
       ],
+    );
+  }
+}
+
+class _CartItemEntryRow extends StatelessWidget {
+  final _CartItemEntry entry;
+  final int index;
+  final bool showRemove;
+  final VoidCallback onRemove;
+  final AppLocalizations l10n;
+
+  const _CartItemEntryRow({
+    required this.entry,
+    required this.index,
+    required this.showRemove,
+    required this.onRemove,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (index > 0) const Divider(height: AppSizes.spaceM),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: entry.name,
+                  decoration:
+                      InputDecoration(labelText: l10n.fridge_item_name),
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+              ),
+              if (showRemove)
+                IconButton(
+                  icon: Icon(Icons.remove_circle_outline,
+                      color: Theme.of(context).colorScheme.error, size: 20),
+                  onPressed: onRemove,
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  controller: entry.quantity,
+                  decoration:
+                      InputDecoration(labelText: l10n.fridge_item_quantity),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+              Expanded(
+                flex: 3,
+                child: TextField(
+                  controller: entry.unit,
+                  decoration:
+                      InputDecoration(labelText: l10n.fridge_item_unit),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          TextField(
+            controller: entry.memo,
+            decoration: InputDecoration(labelText: l10n.fridge_item_memo),
+          ),
+        ],
+      ),
     );
   }
 }

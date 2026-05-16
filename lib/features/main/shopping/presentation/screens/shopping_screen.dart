@@ -60,7 +60,6 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
           preferredSize: const Size.fromHeight(96),
           child: Column(
             children: [
-              const FridgeGroupSelector(),
               TabBar(
                 controller: _tabController,
                 labelColor: Colors.white,
@@ -71,6 +70,7 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
                   Tab(text: l10n.fridge_tab_history),
                 ],
               ),
+              const FridgeGroupSelector(),
             ],
           ),
         ),

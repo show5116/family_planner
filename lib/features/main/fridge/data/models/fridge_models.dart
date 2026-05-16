@@ -537,6 +537,89 @@ class UpdateCartItemDto {
       };
 }
 
+// POST /shopping/cart/items/bulk
+class CartItemEntryDto {
+  final String? frequentItemId;
+  final String name;
+  final int quantity;
+  final String? unit;
+  final String? memo;
+
+  const CartItemEntryDto({
+    this.frequentItemId,
+    required this.name,
+    required this.quantity,
+    this.unit,
+    this.memo,
+  });
+
+  Map<String, dynamic> toJson() => {
+        if (frequentItemId != null) 'frequentItemId': frequentItemId,
+        'name': name,
+        'quantity': quantity,
+        if (unit != null) 'unit': unit,
+        if (memo != null) 'memo': memo,
+      };
+}
+
+class BulkAddCartItemDto {
+  final String groupId;
+  final List<CartItemEntryDto> items;
+
+  const BulkAddCartItemDto({required this.groupId, required this.items});
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
+}
+
+// POST /fridge/items/bulk
+class FridgeItemEntryDto {
+  final String storageLocationId;
+  final String name;
+  final int quantity;
+  final String? unit;
+  final String? expiresAt;
+  final int? alertDaysBefore;
+  final String? memo;
+  final String? frequentItemId;
+
+  const FridgeItemEntryDto({
+    required this.storageLocationId,
+    required this.name,
+    required this.quantity,
+    this.unit,
+    this.expiresAt,
+    this.alertDaysBefore,
+    this.memo,
+    this.frequentItemId,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'storageLocationId': storageLocationId,
+        'name': name,
+        'quantity': quantity,
+        if (unit != null) 'unit': unit,
+        if (expiresAt != null) 'expiresAt': expiresAt,
+        if (alertDaysBefore != null) 'alertDaysBefore': alertDaysBefore,
+        if (memo != null) 'memo': memo,
+        if (frequentItemId != null) 'frequentItemId': frequentItemId,
+      };
+}
+
+class BulkCreateFridgeItemDto {
+  final String groupId;
+  final List<FridgeItemEntryDto> items;
+
+  const BulkCreateFridgeItemDto({required this.groupId, required this.items});
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
+}
+
 /// 장보기 완료 시 냉장고로 이관할 품목
 class TransferItemDto {
   final String cartItemId;
