@@ -8,6 +8,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
+import 'package:family_planner/features/main/household/providers/household_provider.dart';
 
 class ShoppingHistoryDetailScreen extends ConsumerWidget {
   final String historyId;
@@ -30,13 +31,13 @@ class ShoppingHistoryDetailScreen extends ConsumerWidget {
   }
 }
 
-class _HistoryDetail extends StatelessWidget {
+class _HistoryDetail extends ConsumerWidget {
   final ShoppingHistoryModel history;
   final AppLocalizations l10n;
   const _HistoryDetail({required this.history, required this.l10n});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dateStr =
         DateFormat('yyyy년 MM월 dd일 HH:mm').format(history.completedAt);
 
@@ -60,10 +61,13 @@ class _HistoryDetail extends StatelessWidget {
                   ? Text(history.expense!.description!)
                   : null,
               trailing: TextButton(
-                onPressed: () {
-                  context.push(
-                    '${AppRoutes.assetDetail}?id=${history.expense!.id}',
-                  );
+                onPressed: () async {
+                  final expense = await ref
+                      .read(expenseByIdProvider(history.expense!.id).future);
+                  if (context.mounted) {
+                    context.push(AppRoutes.householdDetail,
+                        extra: {'expense': expense});
+                  }
                 },
                 child: Text(l10n.fridge_history_view_expense),
               ),

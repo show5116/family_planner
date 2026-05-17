@@ -28,6 +28,8 @@
   "common_close": "Close",
   "common_done": "Done",
   "common_undo": "Undo",
+  "common_add_to_list": "Add to list",
+  "@common_add_to_list": { "description": "Add to list button" },
   "cart_unsaved_changes": "You have unsaved changes",
   "common_next": "Next",
   "common_back": "Back",

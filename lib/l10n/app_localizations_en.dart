@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_undo => 'Undo';
 
   @override
+  String get common_add_to_list => 'Add to list';
+
+  @override
   String get cart_unsaved_changes => 'You have unsaved changes';
 
   @override

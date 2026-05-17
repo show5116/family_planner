@@ -28,6 +28,8 @@
   "common_close": "닫기",
   "common_done": "완료",
   "common_undo": "되돌리기",
+  "common_add_to_list": "목록에 담기",
+  "@common_add_to_list": { "description": "목록에 담기 버튼" },
   "cart_unsaved_changes": "저장되지 않은 변경사항이 있습니다",
   "common_next": "다음",
   "common_back": "이전",

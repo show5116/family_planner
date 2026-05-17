@@ -127,6 +127,12 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   }
 }
 
+/// 지출 단건 조회 Provider (장보기 이력 → 가계부 이동 등에 사용)
+final expenseByIdProvider =
+    FutureProvider.family<ExpenseModel, String>((ref, id) {
+  return ref.read(householdRepositoryProvider).getExpenseById(id);
+});
+
 /// 예산 템플릿 목록 Provider
 @riverpod
 Future<List<BudgetTemplateModel>> householdBudgetTemplates(Ref ref) async {

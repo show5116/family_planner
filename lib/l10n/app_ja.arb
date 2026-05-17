@@ -28,6 +28,8 @@
   "common_close": "閉じる",
   "common_done": "完了",
   "common_undo": "元に戻す",
+  "common_add_to_list": "リストに追加",
+  "@common_add_to_list": { "description": "リストに追加ボタン" },
   "cart_unsaved_changes": "未保存の変更があります",
   "common_next": "次へ",
   "common_back": "戻る",

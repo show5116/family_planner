@@ -7,8 +7,8 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/storage_form_dialog.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_form_dialog.dart';
-import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_tile.dart'
-    show FridgeItemTile, FridgeItemEditState;
+import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_tile.dart';
+import 'package:intl/intl.dart';
 
 // ── 정렬 방식 ──────────────────────────────────────────────────────────────────
 
@@ -177,49 +177,31 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
   StorageModel get storage => widget.swi.storage;
 
   @override
-  void didUpdateWidget(_StorageSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _syncEdits(widget.swi.items);
-  }
-
-  @override
   void initState() {
     super.initState();
     _syncEdits(widget.swi.items);
   }
 
+  @override
+  void didUpdateWidget(_StorageSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncEdits(widget.swi.items);
+  }
+
   void _syncEdits(List<FridgeItemModel> items) {
     final incoming = {for (final i in items) i.id: i};
-    // 삭제된 항목 제거
-    _edits.removeWhere((id, es) {
-      if (!incoming.containsKey(id)) {
-        es.dispose();
-        return true;
-      }
-      return false;
-    });
-    // 새 항목 추가 (이미 있는 항목은 유지)
+    _edits.removeWhere((id, _) => !incoming.containsKey(id));
     for (final item in items) {
-      if (!_edits.containsKey(item.id)) {
-        _edits[item.id] = FridgeItemEditState(item);
-      }
+      _edits.putIfAbsent(item.id, () => FridgeItemEditState(item));
     }
   }
 
-  bool get _hasChanges => widget.swi.items.any((item) {
-        final es = _edits[item.id];
-        return es != null && es.hasChanges(item);
-      });
+  bool get _hasChanges =>
+      widget.swi.items.any((item) => _edits[item.id]?.hasChanges(item) == true);
 
   void _cancelChanges() {
-    for (final entry in _edits.entries) {
-      final original = widget.swi.items
-          .where((i) => i.id == entry.key)
-          .firstOrNull;
-      if (original != null) {
-        entry.value.dispose();
-        _edits[entry.key] = FridgeItemEditState(original);
-      }
+    for (final item in widget.swi.items) {
+      _edits[item.id] = FridgeItemEditState(item);
     }
     setState(() {});
   }
@@ -233,22 +215,18 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
 
     for (final item in items) {
       final es = _edits[item.id];
-      if (es == null) continue;
-      if (!es.hasChanges(item)) continue;
-
+      if (es == null || !es.hasChanges(item)) continue;
       if (es.markedForDelete) {
         deletes.add(item.id);
       } else {
         updates.add(FridgeItemUpdateEntryDto(
           id: item.id,
-          name: es.name.text.trim().isEmpty ? null : es.name.text.trim(),
-          quantity: int.tryParse(es.quantity.text),
-          unit: es.unit.text.trim().isEmpty ? null : es.unit.text.trim(),
-          expiresAt: es.expiresAt.text.trim().isEmpty
-              ? null
-              : es.expiresAt.text.trim(),
-          alertDaysBefore: int.tryParse(es.alertDays.text.trim()),
-          memo: es.memo.text.trim().isEmpty ? null : es.memo.text.trim(),
+          name: es.name.isEmpty ? null : es.name,
+          quantity: es.quantity,
+          unit: es.unit?.isEmpty == true ? null : es.unit,
+          expiresAt: es.expiresAt,
+          alertDaysBefore: es.alertDaysBefore,
+          memo: es.memo?.isEmpty == true ? null : es.memo,
         ));
       }
     }
@@ -272,12 +250,164 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
     }
   }
 
-  @override
-  void dispose() {
-    for (final es in _edits.values) {
-      es.dispose();
-    }
-    super.dispose();
+  // 탭 → 바텀 시트로 상세 편집
+  Future<void> _showEditBottomSheet(
+      BuildContext context, FridgeItemModel item, FridgeItemEditState es) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    // 바텀 시트용 임시 컨트롤러 (기존 es 값으로 초기화)
+    final nameCtrl = TextEditingController(text: es.name);
+    final unitCtrl = TextEditingController(text: es.unit ?? '');
+    final memoCtrl = TextEditingController(text: es.memo ?? '');
+    DateTime? expiresAt = es.expiresAt != null
+        ? DateTime.tryParse(es.expiresAt!)
+        : null;
+    int alertDays = es.alertDaysBefore;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setInner) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: AppSizes.spaceL,
+              right: AppSizes.spaceL,
+              top: AppSizes.spaceL,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + AppSizes.spaceL,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(l10n.fridge_item_edit,
+                    style: Theme.of(ctx).textTheme.titleMedium),
+                const SizedBox(height: AppSizes.spaceM),
+                TextField(
+                  controller: nameCtrl,
+                  decoration:
+                      InputDecoration(labelText: l10n.fridge_item_name),
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        controller: unitCtrl,
+                        decoration:
+                            InputDecoration(labelText: l10n.fridge_item_unit),
+                      ),
+                    ),
+                    const SizedBox(width: AppSizes.spaceM),
+                    Expanded(
+                      flex: 3,
+                      child: TextField(
+                        controller: memoCtrl,
+                        decoration:
+                            InputDecoration(labelText: l10n.fridge_item_memo),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                // 유통기한 선택
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    expiresAt != null
+                        ? DateFormat('yyyy-MM-dd').format(expiresAt!)
+                        : l10n.fridge_item_expires_at,
+                    style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                          color: expiresAt != null
+                              ? null
+                              : Theme.of(ctx).colorScheme.outline,
+                        ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (expiresAt != null)
+                        IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () => setInner(() => expiresAt = null),
+                        ),
+                      const Icon(Icons.calendar_today_outlined, size: 18),
+                    ],
+                  ),
+                  onTap: () async {
+                    final picked = await showDatePicker(
+                      context: ctx,
+                      initialDate: expiresAt ??
+                          DateTime.now().add(const Duration(days: 7)),
+                      firstDate: DateTime.now(),
+                      lastDate:
+                          DateTime.now().add(const Duration(days: 3650)),
+                    );
+                    if (picked != null) setInner(() => expiresAt = picked);
+                  },
+                ),
+                if (expiresAt != null)
+                  Row(
+                    children: [
+                      Text(l10n.fridge_item_alert_days(alertDays),
+                          style: Theme.of(ctx).textTheme.bodySmall),
+                      Expanded(
+                        child: Slider(
+                          value: alertDays.toDouble(),
+                          min: 1,
+                          max: 14,
+                          divisions: 13,
+                          onChanged: (v) =>
+                              setInner(() => alertDays = v.toInt()),
+                        ),
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: AppSizes.spaceM),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(l10n.common_cancel),
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    FilledButton(
+                      onPressed: () {
+                        // es에 바텀 시트 값 반영
+                        es.name = nameCtrl.text.trim().isEmpty
+                            ? item.name
+                            : nameCtrl.text.trim();
+                        es.unit = unitCtrl.text.trim().isEmpty
+                            ? null
+                            : unitCtrl.text.trim();
+                        es.memo = memoCtrl.text.trim().isEmpty
+                            ? null
+                            : memoCtrl.text.trim();
+                        es.expiresAt = expiresAt != null
+                            ? DateFormat('yyyy-MM-dd').format(expiresAt!)
+                            : null;
+                        es.alertDaysBefore = alertDays;
+                        setState(() {});
+                        Navigator.pop(ctx);
+                      },
+                      child: Text(l10n.common_done),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    nameCtrl.dispose();
+    unitCtrl.dispose();
+    memoCtrl.dispose();
   }
 
   @override
@@ -350,8 +480,10 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
                       padding: const EdgeInsets.fromLTRB(
                           AppSizes.spaceL, 0, AppSizes.spaceM, AppSizes.spaceM),
                       child: Text(l10n.fridge_empty_items,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.outline)),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.outline)),
                     )
                   else
                     ...items.map((item) {
@@ -362,6 +494,8 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
                         item: item,
                         editState: es,
                         onChanged: () => setState(() {}),
+                        onTapEdit: () =>
+                            _showEditBottomSheet(context, item, es),
                       );
                     }),
                   // 변경사항 저장/취소 바

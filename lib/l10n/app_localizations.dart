@@ -208,6 +208,12 @@ abstract class AppLocalizations {
   /// **'되돌리기'**
   String get common_undo;
 
+  /// 목록에 담기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'목록에 담기'**
+  String get common_add_to_list;
+
   /// No description provided for @cart_unsaved_changes.
   ///
   /// In ko, this message translates to:

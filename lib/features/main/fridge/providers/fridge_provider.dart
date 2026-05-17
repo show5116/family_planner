@@ -161,6 +161,8 @@ class StoragesWithItemsNotifier
         .read(fridgeRepositoryProvider)
         .getItemsGroupedByStorage(groupId: groupId);
     state = AsyncData(fresh);
+    // 수량 감소 시 자주 사는 항목 연동으로 장바구니가 자동 추가될 수 있으므로 재조회
+    ref.invalidate(cartProvider);
   }
 }
 
