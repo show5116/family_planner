@@ -313,6 +313,28 @@ class FridgeRepository {
     }
   }
 
+  Future<CartModel> bulkUpdateCartItems(BulkUpdateCartItemDto dto) async {
+    try {
+      final response = await _dio.patch(
+        '/shopping/cart/items/bulk',
+        data: dto.toJson(),
+      );
+      return CartModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [FridgeRepository] 장바구니 일괄 수정/삭제 실패: ${e.message}');
+      throw Exception('장바구니 일괄 수정/삭제 실패: ${e.message}');
+    }
+  }
+
+  Future<void> bulkUpdateFridgeItems(BulkUpdateFridgeItemDto dto) async {
+    try {
+      await _dio.patch('/fridge/items/bulk', data: dto.toJson());
+    } on DioException catch (e) {
+      debugPrint('❌ [FridgeRepository] 냉장고 품목 일괄 수정/삭제 실패: ${e.message}');
+      throw Exception('냉장고 품목 일괄 수정/삭제 실패: ${e.message}');
+    }
+  }
+
   Future<ShoppingHistoryModel> completeCart(CompleteCartDto dto) async {
     try {
       final response =

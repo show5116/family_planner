@@ -7,7 +7,8 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/storage_form_dialog.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_form_dialog.dart';
-import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_tile.dart';
+import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_tile.dart'
+    show FridgeItemTile, FridgeItemEditState;
 
 // ── 정렬 방식 ──────────────────────────────────────────────────────────────────
 
@@ -170,89 +171,241 @@ class _StorageSection extends ConsumerStatefulWidget {
 
 class _StorageSectionState extends ConsumerState<_StorageSection> {
   bool _expanded = true;
+  bool _saving = false;
+  final Map<String, FridgeItemEditState> _edits = {};
 
   StorageModel get storage => widget.swi.storage;
+
+  @override
+  void didUpdateWidget(_StorageSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncEdits(widget.swi.items);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _syncEdits(widget.swi.items);
+  }
+
+  void _syncEdits(List<FridgeItemModel> items) {
+    final incoming = {for (final i in items) i.id: i};
+    // 삭제된 항목 제거
+    _edits.removeWhere((id, es) {
+      if (!incoming.containsKey(id)) {
+        es.dispose();
+        return true;
+      }
+      return false;
+    });
+    // 새 항목 추가 (이미 있는 항목은 유지)
+    for (final item in items) {
+      if (!_edits.containsKey(item.id)) {
+        _edits[item.id] = FridgeItemEditState(item);
+      }
+    }
+  }
+
+  bool get _hasChanges => widget.swi.items.any((item) {
+        final es = _edits[item.id];
+        return es != null && es.hasChanges(item);
+      });
+
+  void _cancelChanges() {
+    for (final entry in _edits.entries) {
+      final original = widget.swi.items
+          .where((i) => i.id == entry.key)
+          .firstOrNull;
+      if (original != null) {
+        entry.value.dispose();
+        _edits[entry.key] = FridgeItemEditState(original);
+      }
+    }
+    setState(() {});
+  }
+
+  Future<void> _save(List<FridgeItemModel> items) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    if (groupId == null) return;
+
+    final updates = <FridgeItemUpdateEntryDto>[];
+    final deletes = <String>[];
+
+    for (final item in items) {
+      final es = _edits[item.id];
+      if (es == null) continue;
+      if (!es.hasChanges(item)) continue;
+
+      if (es.markedForDelete) {
+        deletes.add(item.id);
+      } else {
+        updates.add(FridgeItemUpdateEntryDto(
+          id: item.id,
+          name: es.name.text.trim().isEmpty ? null : es.name.text.trim(),
+          quantity: int.tryParse(es.quantity.text),
+          unit: es.unit.text.trim().isEmpty ? null : es.unit.text.trim(),
+          expiresAt: es.expiresAt.text.trim().isEmpty
+              ? null
+              : es.expiresAt.text.trim(),
+          alertDaysBefore: int.tryParse(es.alertDays.text.trim()),
+          memo: es.memo.text.trim().isEmpty ? null : es.memo.text.trim(),
+        ));
+      }
+    }
+
+    setState(() => _saving = true);
+    try {
+      await ref.read(storagesWithItemsProvider.notifier).bulkUpdate(
+            BulkUpdateFridgeItemDto(
+              groupId: groupId,
+              updates: updates.isEmpty ? null : updates,
+              deletes: deletes.isEmpty ? null : deletes,
+            ),
+          );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final es in _edits.values) {
+      es.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final items = widget.sortOrder.sort(widget.swi.items);
+    final hasChanges = _hasChanges;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            leading: Icon(_storageIcon(storage.type)),
-            title: Text(storage.name,
-                style: Theme.of(context).textTheme.titleMedium),
-            subtitle: Text(
-              '${_storageTypeLabel(l10n, storage.type)}  ·  ${items.length}${l10n.fridge_item_count}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.add, size: 20),
-                  tooltip: l10n.fridge_item_add,
-                  onPressed: () => _showAddItemDialog(context, storage.id),
-                ),
-                IconButton(
-                  icon: Icon(
-                    _expanded
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    size: 20,
+    return AbsorbPointer(
+      absorbing: _saving,
+      child: Card(
+        margin: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (_saving) const LinearProgressIndicator(),
+            ListTile(
+              leading: Icon(_storageIcon(storage.type)),
+              title: Text(storage.name,
+                  style: Theme.of(context).textTheme.titleMedium),
+              subtitle: Text(
+                '${_storageTypeLabel(l10n, storage.type)}  ·  ${items.length}${l10n.fridge_item_count}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add, size: 20),
+                    tooltip: l10n.fridge_item_add,
+                    onPressed: () => _showAddItemDialog(context, storage.id),
                   ),
-                  onPressed: () => setState(() => _expanded = !_expanded),
-                ),
-                PopupMenuButton<_StorageAction>(
-                  onSelected: _handleStorageAction,
-                  itemBuilder: (_) => [
-                    PopupMenuItem(
-                      value: _StorageAction.edit,
-                      child: Text(l10n.fridge_storage_edit),
+                  IconButton(
+                    icon: Icon(
+                      _expanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      size: 20,
                     ),
-                    PopupMenuItem(
-                      value: _StorageAction.delete,
-                      child: Text(l10n.fridge_storage_delete,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error)),
-                    ),
-                  ],
-                ),
-              ],
+                    onPressed: () => setState(() => _expanded = !_expanded),
+                  ),
+                  PopupMenuButton<_StorageAction>(
+                    onSelected: _handleStorageAction,
+                    itemBuilder: (_) => [
+                      PopupMenuItem(
+                        value: _StorageAction.edit,
+                        child: Text(l10n.fridge_storage_edit),
+                      ),
+                      PopupMenuItem(
+                        value: _StorageAction.delete,
+                        child: Text(l10n.fridge_storage_delete,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          AnimatedCrossFade(
-            duration: const Duration(milliseconds: 200),
-            crossFadeState: _expanded
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-            firstChild: Column(
-              children: [
-                if (items.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                        AppSizes.spaceL, 0, AppSizes.spaceM, AppSizes.spaceM),
-                    child: Text(l10n.fridge_empty_items,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.outline)),
-                  )
-                else
-                  ...items.map((item) => FridgeItemTile(
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 200),
+              crossFadeState: _expanded
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              firstChild: Column(
+                children: [
+                  if (items.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                          AppSizes.spaceL, 0, AppSizes.spaceM, AppSizes.spaceM),
+                      child: Text(l10n.fridge_empty_items,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.outline)),
+                    )
+                  else
+                    ...items.map((item) {
+                      final es = _edits[item.id];
+                      if (es == null) return const SizedBox.shrink();
+                      return FridgeItemTile(
+                        key: ValueKey(item.id),
                         item: item,
-                        storageId: storage.id,
-                      )),
-                const SizedBox(height: AppSizes.spaceS),
-              ],
+                        editState: es,
+                        onChanged: () => setState(() {}),
+                      );
+                    }),
+                  // 변경사항 저장/취소 바
+                  if (hasChanges)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.spaceM,
+                          vertical: AppSizes.spaceS),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(AppSizes.radiusMedium),
+                          bottomRight: Radius.circular(AppSizes.radiusMedium),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              l10n.cart_unsaved_changes,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _cancelChanges,
+                            child: Text(l10n.common_cancel),
+                          ),
+                          const SizedBox(width: AppSizes.spaceXS),
+                          FilledButton(
+                            onPressed: () => _save(items),
+                            child: Text(l10n.common_save),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (!hasChanges) const SizedBox(height: AppSizes.spaceS),
+                ],
+              ),
+              secondChild: const SizedBox.shrink(),
             ),
-            secondChild: const SizedBox.shrink(),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

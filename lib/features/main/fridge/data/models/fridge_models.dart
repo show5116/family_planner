@@ -138,7 +138,6 @@ class FridgeItemModel {
   final DateTime? expiresAt;
   final int alertDaysBefore;
   final String? memo;
-  final String? frequentItemId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -153,7 +152,6 @@ class FridgeItemModel {
     this.expiresAt,
     required this.alertDaysBefore,
     this.memo,
-    this.frequentItemId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -172,7 +170,6 @@ class FridgeItemModel {
           : null,
       alertDaysBefore: json['alertDaysBefore'] != null ? int.parse(json['alertDaysBefore'].toString()) : 3,
       memo: json['memo'] as String?,
-      frequentItemId: json['frequentItemId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -197,7 +194,6 @@ class FridgeItemModel {
     DateTime? expiresAt,
     int? alertDaysBefore,
     String? memo,
-    String? frequentItemId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -212,7 +208,6 @@ class FridgeItemModel {
       expiresAt: expiresAt ?? this.expiresAt,
       alertDaysBefore: alertDaysBefore ?? this.alertDaysBefore,
       memo: memo ?? this.memo,
-      frequentItemId: frequentItemId ?? this.frequentItemId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -228,7 +223,6 @@ class CreateFridgeItemDto {
   final String? expiresAt; // YYYY-MM-DD
   final int? alertDaysBefore;
   final String? memo;
-  final String? frequentItemId;
 
   const CreateFridgeItemDto({
     required this.groupId,
@@ -239,7 +233,6 @@ class CreateFridgeItemDto {
     this.expiresAt,
     this.alertDaysBefore,
     this.memo,
-    this.frequentItemId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -251,7 +244,6 @@ class CreateFridgeItemDto {
         if (expiresAt != null) 'expiresAt': expiresAt,
         if (alertDaysBefore != null) 'alertDaysBefore': alertDaysBefore,
         if (memo != null) 'memo': memo,
-        if (frequentItemId != null) 'frequentItemId': frequentItemId,
       };
 }
 
@@ -263,7 +255,6 @@ class UpdateFridgeItemDto {
   final String? expiresAt;
   final int? alertDaysBefore;
   final String? memo;
-  final String? frequentItemId;
 
   const UpdateFridgeItemDto({
     this.storageLocationId,
@@ -273,7 +264,6 @@ class UpdateFridgeItemDto {
     this.expiresAt,
     this.alertDaysBefore,
     this.memo,
-    this.frequentItemId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -284,7 +274,6 @@ class UpdateFridgeItemDto {
         if (expiresAt != null) 'expiresAt': expiresAt,
         if (alertDaysBefore != null) 'alertDaysBefore': alertDaysBefore,
         if (memo != null) 'memo': memo,
-        if (frequentItemId != null) 'frequentItemId': frequentItemId,
       };
 }
 
@@ -387,7 +376,6 @@ class UpdateFrequentItemDto {
 class CartItemModel {
   final String id;
   final String cartId;
-  final String? frequentItemId;
   final String name;
   final int quantity;
   final String? unit;
@@ -398,7 +386,6 @@ class CartItemModel {
   const CartItemModel({
     required this.id,
     required this.cartId,
-    this.frequentItemId,
     required this.name,
     required this.quantity,
     this.unit,
@@ -411,7 +398,6 @@ class CartItemModel {
     return CartItemModel(
       id: json['id'] as String,
       cartId: json['cartId'] as String,
-      frequentItemId: json['frequentItemId'] as String?,
       name: json['name'] as String,
       quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
@@ -424,7 +410,6 @@ class CartItemModel {
   CartItemModel copyWith({
     String? id,
     String? cartId,
-    String? frequentItemId,
     String? name,
     int? quantity,
     String? unit,
@@ -435,7 +420,6 @@ class CartItemModel {
     return CartItemModel(
       id: id ?? this.id,
       cartId: cartId ?? this.cartId,
-      frequentItemId: frequentItemId ?? this.frequentItemId,
       name: name ?? this.name,
       quantity: quantity ?? this.quantity,
       unit: unit ?? this.unit,
@@ -496,7 +480,6 @@ class CartModel {
 
 class AddCartItemDto {
   final String groupId;
-  final String? frequentItemId;
   final String name;
   final int quantity;
   final String? unit;
@@ -504,7 +487,6 @@ class AddCartItemDto {
 
   const AddCartItemDto({
     required this.groupId,
-    this.frequentItemId,
     required this.name,
     required this.quantity,
     this.unit,
@@ -513,7 +495,6 @@ class AddCartItemDto {
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
-        if (frequentItemId != null) 'frequentItemId': frequentItemId,
         'name': name,
         'quantity': quantity,
         if (unit != null) 'unit': unit,
@@ -539,14 +520,12 @@ class UpdateCartItemDto {
 
 // POST /shopping/cart/items/bulk
 class CartItemEntryDto {
-  final String? frequentItemId;
   final String name;
   final int quantity;
   final String? unit;
   final String? memo;
 
   const CartItemEntryDto({
-    this.frequentItemId,
     required this.name,
     required this.quantity,
     this.unit,
@@ -554,7 +533,6 @@ class CartItemEntryDto {
   });
 
   Map<String, dynamic> toJson() => {
-        if (frequentItemId != null) 'frequentItemId': frequentItemId,
         'name': name,
         'quantity': quantity,
         if (unit != null) 'unit': unit,
@@ -574,6 +552,50 @@ class BulkAddCartItemDto {
       };
 }
 
+// PATCH /shopping/cart/items/bulk
+class CartItemUpdateEntryDto {
+  final String id;
+  final int? quantity;
+  final String? unit;
+  final bool? isChecked;
+  final String? memo;
+
+  const CartItemUpdateEntryDto({
+    required this.id,
+    this.quantity,
+    this.unit,
+    this.isChecked,
+    this.memo,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        if (quantity != null) 'quantity': quantity,
+        if (unit != null) 'unit': unit,
+        if (isChecked != null) 'isChecked': isChecked,
+        if (memo != null) 'memo': memo,
+      };
+}
+
+class BulkUpdateCartItemDto {
+  final String groupId;
+  final List<CartItemUpdateEntryDto>? updates;
+  final List<String>? deletes;
+
+  const BulkUpdateCartItemDto({
+    required this.groupId,
+    this.updates,
+    this.deletes,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        if (updates != null && updates!.isNotEmpty)
+          'updates': updates!.map((e) => e.toJson()).toList(),
+        if (deletes != null && deletes!.isNotEmpty) 'deletes': deletes,
+      };
+}
+
 // POST /fridge/items/bulk
 class FridgeItemEntryDto {
   final String storageLocationId;
@@ -583,7 +605,6 @@ class FridgeItemEntryDto {
   final String? expiresAt;
   final int? alertDaysBefore;
   final String? memo;
-  final String? frequentItemId;
 
   const FridgeItemEntryDto({
     required this.storageLocationId,
@@ -593,7 +614,6 @@ class FridgeItemEntryDto {
     this.expiresAt,
     this.alertDaysBefore,
     this.memo,
-    this.frequentItemId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -604,7 +624,6 @@ class FridgeItemEntryDto {
         if (expiresAt != null) 'expiresAt': expiresAt,
         if (alertDaysBefore != null) 'alertDaysBefore': alertDaysBefore,
         if (memo != null) 'memo': memo,
-        if (frequentItemId != null) 'frequentItemId': frequentItemId,
       };
 }
 
@@ -617,6 +636,59 @@ class BulkCreateFridgeItemDto {
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
         'items': items.map((e) => e.toJson()).toList(),
+      };
+}
+
+// PATCH /fridge/items/bulk
+class FridgeItemUpdateEntryDto {
+  final String id;
+  final String? storageLocationId;
+  final String? name;
+  final int? quantity;
+  final String? unit;
+  final String? expiresAt;
+  final int? alertDaysBefore;
+  final String? memo;
+
+  const FridgeItemUpdateEntryDto({
+    required this.id,
+    this.storageLocationId,
+    this.name,
+    this.quantity,
+    this.unit,
+    this.expiresAt,
+    this.alertDaysBefore,
+    this.memo,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        if (storageLocationId != null) 'storageLocationId': storageLocationId,
+        if (name != null) 'name': name,
+        if (quantity != null) 'quantity': quantity,
+        if (unit != null) 'unit': unit,
+        if (expiresAt != null) 'expiresAt': expiresAt,
+        if (alertDaysBefore != null) 'alertDaysBefore': alertDaysBefore,
+        if (memo != null) 'memo': memo,
+      };
+}
+
+class BulkUpdateFridgeItemDto {
+  final String groupId;
+  final List<FridgeItemUpdateEntryDto>? updates;
+  final List<String>? deletes;
+
+  const BulkUpdateFridgeItemDto({
+    required this.groupId,
+    this.updates,
+    this.deletes,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        if (updates != null && updates!.isNotEmpty)
+          'updates': updates!.map((e) => e.toJson()).toList(),
+        if (deletes != null && deletes!.isNotEmpty) 'deletes': deletes,
       };
 }
 

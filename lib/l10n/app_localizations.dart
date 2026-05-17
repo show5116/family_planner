@@ -202,6 +202,18 @@ abstract class AppLocalizations {
   /// **'완료'**
   String get common_done;
 
+  /// No description provided for @common_undo.
+  ///
+  /// In ko, this message translates to:
+  /// **'되돌리기'**
+  String get common_undo;
+
+  /// No description provided for @cart_unsaved_changes.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장되지 않은 변경사항이 있습니다'**
+  String get cart_unsaved_changes;
+
   /// No description provided for @common_next.
   ///
   /// In ko, this message translates to:

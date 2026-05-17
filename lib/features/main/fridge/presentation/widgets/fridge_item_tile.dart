@@ -1,39 +1,231 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
-import 'package:family_planner/features/main/fridge/data/repositories/fridge_repository.dart';
-import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
-import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_item_form_dialog.dart';
 
-class FridgeItemTile extends ConsumerStatefulWidget {
+// ── Edit state ────────────────────────────────────────────────────────────────
+
+class FridgeItemEditState {
+  final TextEditingController name;
+  final TextEditingController quantity;
+  final TextEditingController unit;
+  final TextEditingController expiresAt;
+  final TextEditingController alertDays;
+  final TextEditingController memo;
+  bool markedForDelete;
+
+  FridgeItemEditState(FridgeItemModel item)
+      : name = TextEditingController(text: item.name),
+        quantity = TextEditingController(text: item.quantity.toString()),
+        unit = TextEditingController(text: item.unit ?? ''),
+        expiresAt = TextEditingController(
+            text: item.expiresAt != null
+                ? '${item.expiresAt!.year}-${item.expiresAt!.month.toString().padLeft(2, '0')}-${item.expiresAt!.day.toString().padLeft(2, '0')}'
+                : ''),
+        alertDays = TextEditingController(
+            text: item.alertDaysBefore == 0
+                ? ''
+                : item.alertDaysBefore.toString()),
+        memo = TextEditingController(text: item.memo ?? ''),
+        markedForDelete = false;
+
+  bool hasChanges(FridgeItemModel original) {
+    if (markedForDelete) return true;
+    if (name.text.trim() != original.name) return true;
+    if ((int.tryParse(quantity.text) ?? original.quantity) != original.quantity) {
+      return true;
+    }
+    final unitVal = unit.text.trim().isEmpty ? null : unit.text.trim();
+    if (unitVal != original.unit) return true;
+    final expiresVal = expiresAt.text.trim().isEmpty ? null : expiresAt.text.trim();
+    final originalExpires = original.expiresAt != null
+        ? '${original.expiresAt!.year}-${original.expiresAt!.month.toString().padLeft(2, '0')}-${original.expiresAt!.day.toString().padLeft(2, '0')}'
+        : null;
+    if (expiresVal != originalExpires) return true;
+    final alertVal = int.tryParse(alertDays.text.trim()) ?? 0;
+    if (alertVal != original.alertDaysBefore) return true;
+    final memoVal = memo.text.trim().isEmpty ? null : memo.text.trim();
+    if (memoVal != original.memo) return true;
+    return false;
+  }
+
+  void dispose() {
+    name.dispose();
+    quantity.dispose();
+    unit.dispose();
+    expiresAt.dispose();
+    alertDays.dispose();
+    memo.dispose();
+  }
+}
+
+// ── Tile ──────────────────────────────────────────────────────────────────────
+
+class FridgeItemTile extends StatelessWidget {
   final FridgeItemModel item;
-  final String storageId;
+  final FridgeItemEditState editState;
+  final VoidCallback onChanged;
 
   const FridgeItemTile({
     super.key,
     required this.item,
-    required this.storageId,
+    required this.editState,
+    required this.onChanged,
   });
-
-  @override
-  ConsumerState<FridgeItemTile> createState() => _FridgeItemTileState();
-}
-
-class _FridgeItemTileState extends ConsumerState<FridgeItemTile> {
-  bool _loadingQuantity = false;
-  bool _loadingDelete = false;
-
-  bool get _busy => _loadingQuantity || _loadingDelete;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final item = widget.item;
-    final dday = item.daysUntilExpiry;
+    final deleted = editState.markedForDelete;
 
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      opacity: deleted ? 0.38 : 1.0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM, vertical: AppSizes.spaceXS),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 삭제/되돌리기 버튼
+            IconButton(
+              icon: Icon(
+                deleted ? Icons.undo : Icons.delete_outline,
+                color: deleted
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.error,
+                size: 20,
+              ),
+              tooltip: deleted ? l10n.common_undo : l10n.common_delete,
+              onPressed: () {
+                editState.markedForDelete = !editState.markedForDelete;
+                onChanged();
+              },
+            ),
+            Expanded(
+              child: IgnorePointer(
+                ignoring: deleted,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 이름
+                    TextField(
+                      controller: editState.name,
+                      decoration: InputDecoration(
+                        labelText: l10n.fridge_item_name,
+                        isDense: true,
+                        border: const UnderlineInputBorder(),
+                      ),
+                      onChanged: (_) => onChanged(),
+                    ),
+                    const SizedBox(height: AppSizes.spaceXS),
+                    Row(
+                      children: [
+                        // 수량
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: editState.quantity,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_quantity,
+                              isDense: true,
+                              border: const UnderlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        // 단위
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: editState.unit,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_unit,
+                              isDense: true,
+                              border: const UnderlineInputBorder(),
+                            ),
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        // 알림 일수
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: editState.alertDays,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_alert_days(0)
+                                  .replaceAll('0', '')
+                                  .trim(),
+                              isDense: true,
+                              border: const UnderlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSizes.spaceXS),
+                    Row(
+                      children: [
+                        // 유통기한
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: editState.expiresAt,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_expires_at,
+                              hintText: 'YYYY-MM-DD',
+                              isDense: true,
+                              border: const UnderlineInputBorder(),
+                            ),
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        // 메모
+                        Expanded(
+                          flex: 4,
+                          child: TextField(
+                            controller: editState.memo,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_memo,
+                              isDense: true,
+                              border: const UnderlineInputBorder(),
+                            ),
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSizes.spaceXS),
+                    // D-day 칩 (읽기 전용 표시)
+                    _DdayRow(item: item, l10n: l10n),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── D-day row ─────────────────────────────────────────────────────────────────
+
+class _DdayRow extends StatelessWidget {
+  final FridgeItemModel item;
+  final AppLocalizations l10n;
+  const _DdayRow({required this.item, required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    final dday = item.daysUntilExpiry;
     final now = DateTime.now();
     final registered = item.registeredAt;
     final elapsedDays = DateTime(now.year, now.month, now.day)
@@ -43,160 +235,23 @@ class _FridgeItemTileState extends ConsumerState<FridgeItemTile> {
     final registeredLabel =
         '${registered.month}/${registered.day}  +$elapsedDays${l10n.fridge_item_elapsed_days}';
 
-    return AbsorbPointer(
-      absorbing: _busy,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceL, vertical: 0),
-        title: Row(
-          children: [
-            Expanded(child: Text(item.name)),
-            if (dday != null) _DdayChip(days: dday, l10n: l10n),
-          ],
+    return Row(
+      children: [
+        Text(
+          registeredLabel,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: Theme.of(context).colorScheme.outline),
         ),
-        subtitle: Text(
-          '${item.quantity}${item.unit != null ? ' ${item.unit}' : ''}  ·  $registeredLabel',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // 수량 감소
-            _loadingQuantity
-                ? const SizedBox(
-                    width: 36,
-                    height: 36,
-                    child: Center(
-                        child: SizedBox(
-                            width: 16,
-                            height: 16,
-                            child:
-                                CircularProgressIndicator(strokeWidth: 2))),
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.remove, size: 18),
-                        onPressed: item.quantity > 0
-                            ? () => _changeQuantity(item.quantity - 1)
-                            : null,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.add, size: 18),
-                        onPressed: () => _changeQuantity(item.quantity + 1),
-                      ),
-                    ],
-                  ),
-            _loadingDelete
-                ? const SizedBox(
-                    width: 36,
-                    height: 36,
-                    child: Center(
-                        child: SizedBox(
-                            width: 16,
-                            height: 16,
-                            child:
-                                CircularProgressIndicator(strokeWidth: 2))),
-                  )
-                : PopupMenuButton<_ItemAction>(
-                    enabled: !_busy,
-                    onSelected: _handleAction,
-                    itemBuilder: (_) => [
-                      PopupMenuItem(
-                        value: _ItemAction.edit,
-                        child: Text(l10n.fridge_item_edit),
-                      ),
-                      PopupMenuItem(
-                        value: _ItemAction.delete,
-                        child: Text(l10n.common_delete,
-                            style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.error)),
-                      ),
-                    ],
-                  ),
-          ],
-        ),
-      ),
+        if (dday != null) ...[
+          const SizedBox(width: AppSizes.spaceS),
+          _DdayChip(days: dday, l10n: l10n),
+        ],
+      ],
     );
   }
-
-  Future<void> _changeQuantity(int newQty) async {
-    if (newQty == 0) {
-      final l10n = AppLocalizations.of(context)!;
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(l10n.fridge_item_delete_title),
-          content: Text(l10n.fridge_item_delete_confirm(widget.item.name)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l10n.common_cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(l10n.common_delete,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.error)),
-            ),
-          ],
-        ),
-      );
-      if (confirmed != true) return;
-      await _handleAction(_ItemAction.delete);
-      return;
-    }
-
-    setState(() => _loadingQuantity = true);
-    try {
-      final groupId = ref.read(fridgeSelectedGroupIdProvider);
-      final updated = await ref
-          .read(fridgeRepositoryProvider)
-          .updateFridgeItemQuantity(widget.item.id, newQty,
-              groupId: groupId);
-      ref.read(storagesWithItemsProvider.notifier).updateItem(updated);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    } finally {
-      if (mounted) setState(() => _loadingQuantity = false);
-    }
-  }
-
-  Future<void> _handleAction(_ItemAction action) async {
-    switch (action) {
-      case _ItemAction.edit:
-        await showDialog<void>(
-          context: context,
-          builder: (_) => FridgeItemFormDialog(
-              storageId: widget.storageId, item: widget.item),
-        );
-      case _ItemAction.delete:
-        setState(() => _loadingDelete = true);
-        try {
-          final groupId = ref.read(fridgeSelectedGroupIdProvider);
-          await ref
-              .read(fridgeRepositoryProvider)
-              .deleteFridgeItem(widget.item.id, groupId: groupId);
-          if (!mounted) return;
-          ref
-              .read(storagesWithItemsProvider.notifier)
-              .removeItem(widget.item.id);
-          ref.invalidate(cartProvider);
-        } catch (e) {
-          if (!mounted) return;
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(e.toString())));
-        } finally {
-          if (mounted) setState(() => _loadingDelete = false);
-        }
-    }
-  }
 }
+
+// ── D-day chip ────────────────────────────────────────────────────────────────
 
 class _DdayChip extends StatelessWidget {
   final int days;
@@ -239,5 +294,3 @@ class _DdayChip extends StatelessWidget {
     );
   }
 }
-
-enum _ItemAction { edit, delete }

@@ -27,6 +27,8 @@
   "common_retry": "다시 시도",
   "common_close": "닫기",
   "common_done": "완료",
+  "common_undo": "되돌리기",
+  "cart_unsaved_changes": "저장되지 않은 변경사항이 있습니다",
   "common_next": "다음",
   "common_back": "이전",
   "common_previous": "이전",

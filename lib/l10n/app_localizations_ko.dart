@@ -60,6 +60,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_done => '완료';
 
   @override
+  String get common_undo => '되돌리기';
+
+  @override
+  String get cart_unsaved_changes => '저장되지 않은 변경사항이 있습니다';
+
+  @override
   String get common_next => '다음';
 
   @override

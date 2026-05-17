@@ -152,6 +152,16 @@ class StoragesWithItemsNotifier
           )).toList(),
     );
   }
+
+  Future<void> bulkUpdate(BulkUpdateFridgeItemDto dto) async {
+    await ref.read(fridgeRepositoryProvider).bulkUpdateFridgeItems(dto);
+    // 서버가 보관소 목록 전체를 반환하지 않으므로 전체 재조회
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    final fresh = await ref
+        .read(fridgeRepositoryProvider)
+        .getItemsGroupedByStorage(groupId: groupId);
+    state = AsyncData(fresh);
+  }
 }
 
 // ── FridgeItems Provider ───────────────────────────────────────────────────────
@@ -341,6 +351,11 @@ class CartNotifier extends AsyncNotifier<CartModel?> {
         ),
       );
     }
+  }
+
+  Future<void> bulkUpdate(BulkUpdateCartItemDto dto) async {
+    final updated = await ref.read(fridgeRepositoryProvider).bulkUpdateCartItems(dto);
+    state = AsyncData(updated);
   }
 
   Future<ShoppingHistoryModel> complete(CompleteCartDto dto) async {

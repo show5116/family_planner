@@ -111,7 +111,6 @@ class _FrequentItemTile extends ConsumerWidget {
     try {
       await ref.read(cartProvider.notifier).addItem(AddCartItemDto(
             groupId: groupId ?? '',
-            frequentItemId: item.id,
             name: item.name,
             quantity: 1,
             unit: item.defaultUnit,

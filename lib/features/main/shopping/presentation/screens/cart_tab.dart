@@ -8,11 +8,144 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 
-class CartTab extends ConsumerWidget {
+// ── 로컬 편집 상태 ─────────────────────────────────────────────────────────────
+
+class _CartEditState {
+  final TextEditingController name;
+  final TextEditingController quantity;
+  final TextEditingController unit;
+  final TextEditingController memo;
+  bool markedForDelete;
+
+  _CartEditState(CartItemModel item)
+      : name = TextEditingController(text: item.name),
+        quantity = TextEditingController(text: item.quantity.toString()),
+        unit = TextEditingController(text: item.unit ?? ''),
+        memo = TextEditingController(text: item.memo ?? ''),
+        markedForDelete = false;
+
+  void dispose() {
+    name.dispose();
+    quantity.dispose();
+    unit.dispose();
+    memo.dispose();
+  }
+}
+
+// ── 탭 ─────────────────────────────────────────────────────────────────────────
+
+class CartTab extends ConsumerStatefulWidget {
   const CartTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CartTab> createState() => _CartTabState();
+}
+
+class _CartTabState extends ConsumerState<CartTab> {
+  // itemId → 편집 상태
+  final Map<String, _CartEditState> _edits = {};
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    for (final e in _edits.values) {
+      e.dispose();
+    }
+    super.dispose();
+  }
+
+  void _syncEdits(List<CartItemModel> items) {
+    // 새 항목에 대한 편집 상태 생성, 삭제된 항목 정리
+    final ids = items.map((i) => i.id).toSet();
+    final removed = _edits.keys.where((k) => !ids.contains(k)).toList();
+    for (final k in removed) {
+      _edits[k]!.dispose();
+      _edits.remove(k);
+    }
+    for (final item in items) {
+      _edits.putIfAbsent(item.id, () => _CartEditState(item));
+    }
+  }
+
+  bool get _hasChanges {
+    return _edits.values.any((e) => e.markedForDelete) ||
+        _edits.entries.any((entry) {
+          final item = ref
+              .read(cartProvider)
+              .value
+              ?.items
+              .firstWhere((i) => i.id == entry.key,
+                  orElse: () => throw StateError(''));
+          if (item == null) return false;
+          final e = entry.value;
+          return e.name.text.trim() != item.name ||
+              e.quantity.text.trim() != item.quantity.toString() ||
+              e.unit.text.trim() != (item.unit ?? '') ||
+              e.memo.text.trim() != (item.memo ?? '');
+        });
+  }
+
+  Future<void> _save(List<CartItemModel> items) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+
+    final deletes = _edits.entries
+        .where((e) => e.value.markedForDelete)
+        .map((e) => e.key)
+        .toList();
+
+    final updates = _edits.entries
+        .where((e) => !e.value.markedForDelete)
+        .map((entry) {
+          final item = items.firstWhere((i) => i.id == entry.key,
+              orElse: () => throw StateError(''));
+          final e = entry.value;
+          final newName = e.name.text.trim();
+          final newQty = int.tryParse(e.quantity.text) ?? item.quantity;
+          final newUnit = e.unit.text.trim().isEmpty ? null : e.unit.text.trim();
+          final newMemo = e.memo.text.trim().isEmpty ? null : e.memo.text.trim();
+
+          if (newName == item.name &&
+              newQty == item.quantity &&
+              newUnit == item.unit &&
+              newMemo == item.memo) {
+            return null;
+          }
+
+          return CartItemUpdateEntryDto(
+            id: item.id,
+            quantity: newQty != item.quantity ? newQty : null,
+            unit: newUnit != item.unit ? newUnit : null,
+            memo: newMemo != item.memo ? newMemo : null,
+          );
+        })
+        .whereType<CartItemUpdateEntryDto>()
+        .toList();
+
+    if (updates.isEmpty && deletes.isEmpty) return;
+
+    setState(() => _saving = true);
+    try {
+      await ref.read(cartProvider.notifier).bulkUpdate(BulkUpdateCartItemDto(
+            groupId: groupId ?? '',
+            updates: updates.isEmpty ? null : updates,
+            deletes: deletes.isEmpty ? null : deletes,
+          ));
+      // 저장 후 편집 상태 초기화 (새 items로 재동기화됨)
+      for (final e in _edits.values) {
+        e.dispose();
+      }
+      _edits.clear();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final cartAsync = ref.watch(cartProvider);
 
@@ -21,48 +154,93 @@ class CartTab extends ConsumerWidget {
       error: (e, _) => Center(child: Text(e.toString())),
       data: (cart) {
         final items = cart?.items ?? [];
+        _syncEdits(items);
+        final hasChanges = _hasChanges;
+
         return Scaffold(
           backgroundColor: Colors.transparent,
-          body: items.isEmpty
-              ? _EmptyCart(l10n: l10n)
-              : ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 100),
-                  itemCount: items.length,
-                  itemBuilder: (_, i) => _CartItemTile(item: items[i]),
-                ),
-          floatingActionButton: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              FloatingActionButton.small(
-                heroTag: 'cart_add',
-                onPressed: () => _showAddItemDialog(context, ref),
-                child: const Icon(Icons.add),
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-              if (items.isNotEmpty)
-                FloatingActionButton.extended(
-                  heroTag: 'cart_complete',
-                  onPressed: () => _showCompleteDialog(context, ref, items),
-                  icon: const Icon(Icons.check),
-                  label: Text(l10n.fridge_cart_complete),
-                ),
-            ],
+          appBar: hasChanges
+              ? AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  title: Text(l10n.cart_unsaved_changes,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  actions: [
+                    TextButton(
+                      onPressed: _saving ? null : () {
+                        for (final e in _edits.values) {
+                          e.dispose();
+                        }
+                        _edits.clear();
+                        setState(() {});
+                      },
+                      child: Text(l10n.common_cancel),
+                    ),
+                    FilledButton(
+                      onPressed: _saving ? null : () => _save(items),
+                      child: _saving
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                          : Text(l10n.common_save),
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                  ],
+                )
+              : null,
+          body: AbsorbPointer(
+            absorbing: _saving,
+            child: items.isEmpty
+                ? _EmptyCart(l10n: l10n)
+                : ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 100),
+                    itemCount: items.length,
+                    itemBuilder: (_, i) {
+                      final item = items[i];
+                      final editState = _edits[item.id]!;
+                      return _CartItemTile(
+                        item: item,
+                        editState: editState,
+                        onChanged: () => setState(() {}),
+                      );
+                    },
+                  ),
           ),
+          floatingActionButton: hasChanges
+              ? null
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FloatingActionButton.small(
+                      heroTag: 'cart_add',
+                      onPressed: () => _showAddItemDialog(context),
+                      child: const Icon(Icons.add),
+                    ),
+                    const SizedBox(height: AppSizes.spaceS),
+                    if (items.isNotEmpty)
+                      FloatingActionButton.extended(
+                        heroTag: 'cart_complete',
+                        onPressed: () => _showCompleteDialog(context, items),
+                        icon: const Icon(Icons.check),
+                        label: Text(l10n.fridge_cart_complete),
+                      ),
+                  ],
+                ),
         );
       },
     );
   }
 
-  void _showAddItemDialog(BuildContext context, WidgetRef ref) {
+  void _showAddItemDialog(BuildContext context) {
     showDialog<void>(
       context: context,
       builder: (_) => const _AddCartItemDialog(),
     );
   }
 
-  void _showCompleteDialog(
-      BuildContext context, WidgetRef ref, List<CartItemModel> items) {
+  void _showCompleteDialog(BuildContext context, List<CartItemModel> items) {
     showDialog<void>(
       context: context,
       builder: (_) => _CompleteShoppingDialog(items: items),
@@ -91,95 +269,111 @@ class _EmptyCart extends StatelessWidget {
   }
 }
 
-class _CartItemTile extends ConsumerStatefulWidget {
+class _CartItemTile extends StatelessWidget {
   final CartItemModel item;
-  const _CartItemTile({required this.item});
+  final _CartEditState editState;
+  final VoidCallback onChanged;
 
-  @override
-  ConsumerState<_CartItemTile> createState() => _CartItemTileState();
-}
-
-class _CartItemTileState extends ConsumerState<_CartItemTile> {
-  bool _loadingCheck = false;
-  bool _loadingDelete = false;
-
-  bool get _busy => _loadingCheck || _loadingDelete;
-
-  Future<void> _toggleCheck(bool value) async {
-    setState(() => _loadingCheck = true);
-    try {
-      await ref
-          .read(cartProvider.notifier)
-          .toggleCheck(widget.item.id, value);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-    } finally {
-      if (mounted) setState(() => _loadingCheck = false);
-    }
-  }
-
-  Future<void> _delete() async {
-    setState(() => _loadingDelete = true);
-    try {
-      await ref.read(cartProvider.notifier).deleteItem(widget.item.id);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-    } finally {
-      if (mounted) setState(() => _loadingDelete = false);
-    }
-  }
+  const _CartItemTile({
+    required this.item,
+    required this.editState,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final item = widget.item;
+    final deleted = editState.markedForDelete;
 
-    return AbsorbPointer(
-      absorbing: _busy,
-      child: ListTile(
-        leading: _loadingCheck
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : Checkbox(
-                value: item.isChecked,
-                onChanged: (v) => _toggleCheck(v ?? false),
+    return AnimatedOpacity(
+      opacity: deleted ? 0.4 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 삭제 마킹 버튼
+            IconButton(
+              icon: Icon(
+                deleted ? Icons.undo : Icons.delete_outline,
+                color: deleted
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.error,
+                size: 20,
               ),
-        title: Text(
-          item.name,
-          style: item.isChecked
-              ? Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  decoration: TextDecoration.lineThrough,
-                  color: Theme.of(context).colorScheme.outline)
-              : null,
-        ),
-        subtitle: Text(
-            '${item.quantity}${item.unit != null ? ' ${item.unit}' : ''}',
-            style: Theme.of(context).textTheme.bodySmall),
-        trailing: _loadingDelete
-            ? const SizedBox(
-                width: 36,
-                height: 36,
-                child: Center(
-                  child: SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
+              tooltip: deleted ? l10n.common_undo : l10n.common_delete,
+              onPressed: () {
+                editState.markedForDelete = !editState.markedForDelete;
+                onChanged();
+              },
+            ),
+            // 편집 필드
+            Expanded(
+              child: IgnorePointer(
+                ignoring: deleted,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: editState.name,
+                      decoration: InputDecoration(
+                        labelText: l10n.fridge_item_name,
+                        isDense: true,
+                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      onChanged: (_) => onChanged(),
+                    ),
+                    const SizedBox(height: AppSizes.spaceXS),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 64,
+                          child: TextField(
+                            controller: editState.quantity,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_quantity,
+                              isDense: true,
+                            ),
+                            keyboardType: TextInputType.number,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Expanded(
+                          child: TextField(
+                            controller: editState.unit,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_unit,
+                              isDense: true,
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceS),
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: editState.memo,
+                            decoration: InputDecoration(
+                              labelText: l10n.fridge_item_memo,
+                              isDense: true,
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
+                            onChanged: (_) => onChanged(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              )
-            : IconButton(
-                icon: Icon(Icons.delete_outline,
-                    color: Theme.of(context).colorScheme.error, size: 20),
-                tooltip: l10n.common_delete,
-                onPressed: _delete,
               ),
+            ),
+          ],
+        ),
       ),
     );
   }

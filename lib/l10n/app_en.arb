@@ -27,6 +27,8 @@
   "common_retry": "Retry",
   "common_close": "Close",
   "common_done": "Done",
+  "common_undo": "Undo",
+  "cart_unsaved_changes": "You have unsaved changes",
   "common_next": "Next",
   "common_back": "Back",
   "common_previous": "Previous",

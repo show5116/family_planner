@@ -27,6 +27,8 @@
   "common_retry": "再試行",
   "common_close": "閉じる",
   "common_done": "完了",
+  "common_undo": "元に戻す",
+  "cart_unsaved_changes": "未保存の変更があります",
   "common_next": "次へ",
   "common_back": "戻る",
   "common_previous": "前へ",

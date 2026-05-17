@@ -60,6 +60,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_done => '完了';
 
   @override
+  String get common_undo => '元に戻す';
+
+  @override
+  String get cart_unsaved_changes => '未保存の変更があります';
+
+  @override
   String get common_next => '次へ';
 
   @override
