@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:go_router/go_router.dart';
+
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
@@ -104,6 +107,19 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
           ],
         ),
         actions: [
+          if (_isEditMode &&
+              widget.expense!.shoppingHistoryId != null)
+            IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined),
+              tooltip: l10n.household_view_shopping_history,
+              onPressed: () {
+                final historyId = widget.expense!.shoppingHistoryId!;
+                final groupId = widget.expense!.groupId;
+                final path = AppRoutes.shoppingHistoryDetail.replaceFirst(':historyId', historyId);
+                final query = groupId != null ? '?groupId=$groupId' : '';
+                context.push('$path$query');
+              },
+            ),
           if (isLoading)
             const Padding(
               padding: EdgeInsets.all(AppSizes.spaceM),

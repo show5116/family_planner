@@ -63,6 +63,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_next => '다음';
 
   @override
+  String get common_back => '이전';
+
+  @override
   String get common_previous => '이전';
 
   @override
@@ -2123,6 +2126,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_add_expense => '지출 추가';
 
   @override
+  String get household_view_shopping_history => '장보기 기록 보기';
+
+  @override
   String get household_edit_expense => '지출 수정';
 
   @override
@@ -2939,13 +2945,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_cart_complete_title => '장보기 완료';
 
   @override
+  String get fridge_cart_complete_step2_title => '냉장고 이관 상세 입력';
+
+  @override
   String get fridge_cart_complete_transfer_hint => '냉장고로 이관할 보관소를 선택하세요';
 
   @override
   String get fridge_cart_complete_add_expense => '가계부에 등록';
 
   @override
-  String get fridge_cart_complete_amount => '구매 금액';
+  String get fridge_cart_complete_amount => '총액 (선택 — 미입력 시 항목 금액 합산)';
+
+  @override
+  String get fridge_cart_item_price => '금액 (선택)';
 
   @override
   String get fridge_cart_complete_description => '메모 (선택)';

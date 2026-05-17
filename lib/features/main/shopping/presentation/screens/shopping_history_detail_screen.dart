@@ -11,12 +11,13 @@ import 'package:family_planner/features/main/fridge/providers/fridge_provider.da
 
 class ShoppingHistoryDetailScreen extends ConsumerWidget {
   final String historyId;
-  const ShoppingHistoryDetailScreen({super.key, required this.historyId});
+  final String? groupId;
+  const ShoppingHistoryDetailScreen({super.key, required this.historyId, this.groupId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final historyAsync = ref.watch(shoppingHistoryDetailProvider(historyId));
+    final historyAsync = ref.watch(shoppingHistoryDetailProvider((historyId, groupId)));
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.fridge_tab_history)),
@@ -98,10 +99,23 @@ class _HistoryItemTile extends StatelessWidget {
       title: Text(item.name),
       subtitle: Text(
           '${item.quantity}${item.unit != null ? ' ${item.unit}' : ''}'),
-      trailing: item.transferredToFridge
-          ? Icon(Icons.check_circle_outline,
-              color: Theme.of(context).colorScheme.primary, size: 18)
-          : null,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (item.price != null)
+            Text(
+              '${NumberFormat('#,###').format(item.price!.toInt())}원',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+            ),
+          if (item.transferredToFridge) ...[
+            if (item.price != null) const SizedBox(width: 4),
+            Icon(Icons.check_circle_outline,
+                color: Theme.of(context).colorScheme.primary, size: 18),
+          ],
+        ],
+      ),
     );
   }
 }

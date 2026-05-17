@@ -63,6 +63,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_next => '次へ';
 
   @override
+  String get common_back => '戻る';
+
+  @override
   String get common_previous => '前へ';
 
   @override
@@ -2120,6 +2123,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_add_expense => '支出を追加';
 
   @override
+  String get household_view_shopping_history => '買い物履歴を見る';
+
+  @override
   String get household_edit_expense => '支出を編集';
 
   @override
@@ -2934,13 +2940,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_cart_complete_title => '買い物完了';
 
   @override
+  String get fridge_cart_complete_step2_title => '冷蔵庫移送の詳細入力';
+
+  @override
   String get fridge_cart_complete_transfer_hint => '冷蔵庫に移す保管場所を選択してください';
 
   @override
   String get fridge_cart_complete_add_expense => '家計簿に登録';
 
   @override
-  String get fridge_cart_complete_amount => '購入金額';
+  String get fridge_cart_complete_amount => '合計（任意 — 未入力時は品目金額の合計）';
+
+  @override
+  String get fridge_cart_item_price => '金額（任意）';
 
   @override
   String get fridge_cart_complete_description => 'メモ（任意）';

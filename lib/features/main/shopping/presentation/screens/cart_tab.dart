@@ -396,6 +396,29 @@ class _CartItemEntryRow extends StatelessWidget {
   }
 }
 
+// ── 이관 상세 정보 (Step 2용) ──────────────────────────────────────────────────
+
+class _TransferDetail {
+  final CartItemModel cartItem;
+  String storageId;
+  final TextEditingController quantity;
+  final TextEditingController price;
+  DateTime? expiresAt;
+  int alertDays;
+
+  _TransferDetail({
+    required this.cartItem,
+    required this.storageId,
+  })  : quantity = TextEditingController(text: cartItem.quantity.toString()),
+        price = TextEditingController(),
+        alertDays = 3;
+
+  void dispose() {
+    quantity.dispose();
+    price.dispose();
+  }
+}
+
 // ── 장보기 완료 다이얼로그 ─────────────────────────────────────────────────────────
 
 class _CompleteShoppingDialog extends ConsumerStatefulWidget {
@@ -409,12 +432,17 @@ class _CompleteShoppingDialog extends ConsumerStatefulWidget {
 
 class _CompleteShoppingDialogState
     extends ConsumerState<_CompleteShoppingDialog> {
-  // cartItemId → storageLocationId (null = 이관 안 함)
-  final Map<String, String?> _transferMap = {};
+  // Step 1 상태
+  final Map<String, String?> _transferMap = {}; // cartItemId → storageId | null
   bool _addExpense = false;
   final _amountController = TextEditingController();
   final _descController = TextEditingController(text: '마트 장보기');
   PaymentMethod _paymentMethod = PaymentMethod.card;
+
+  // Step 2 상태
+  bool _isStep2 = false;
+  final List<_TransferDetail> _details = [];
+
   bool _loading = false;
 
   @override
@@ -429,7 +457,25 @@ class _CompleteShoppingDialogState
   void dispose() {
     _amountController.dispose();
     _descController.dispose();
+    for (final d in _details) {
+      d.dispose();
+    }
     super.dispose();
+  }
+
+  void _goToStep2() {
+    // 이관할 항목만 추려서 Step2 상세 목록 구성
+    for (final d in _details) {
+      d.dispose();
+    }
+    _details.clear();
+    for (final item in widget.items) {
+      final storageId = _transferMap[item.id];
+      if (storageId != null) {
+        _details.add(_TransferDetail(cartItem: item, storageId: storageId));
+      }
+    }
+    setState(() => _isStep2 = true);
   }
 
   Future<void> _submit() async {
@@ -437,29 +483,41 @@ class _CompleteShoppingDialogState
     try {
       final groupId = ref.read(fridgeSelectedGroupIdProvider);
 
-      final transfers = _transferMap.entries
-          .where((e) => e.value != null)
-          .map((e) => TransferItemDto(
-                cartItemId: e.key,
-                storageLocationId: e.value!,
-              ))
-          .toList();
+      final transfers = _isStep2
+          ? _details
+              .map((d) => TransferItemDto(
+                    cartItemId: d.cartItem.id,
+                    storageLocationId: d.storageId,
+                    quantity: int.tryParse(d.quantity.text) ?? d.cartItem.quantity,
+                    price: double.tryParse(d.price.text.replaceAll(',', '').trim()),
+                    expiresAt: d.expiresAt != null
+                        ? DateFormat('yyyy-MM-dd').format(d.expiresAt!)
+                        : null,
+                    alertDaysBefore: d.expiresAt != null ? d.alertDays : null,
+                  ))
+              .toList()
+          : _transferMap.entries
+              .where((e) => e.value != null)
+              .map((e) => TransferItemDto(
+                    cartItemId: e.key,
+                    storageLocationId: e.value!,
+                  ))
+              .toList();
 
       ShoppingExpenseDto? expense;
       if (_addExpense) {
+        // amount를 직접 입력하지 않으면 null → 백엔드가 품목별 price 합계로 자동 계산
         final amount = double.tryParse(
             _amountController.text.replaceAll(',', '').trim());
-        if (amount != null && amount > 0) {
-          expense = ShoppingExpenseDto(
-            amount: amount,
-            paymentMethod: _paymentMethod,
-            date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-            description: _descController.text.trim().isEmpty
-                ? null
-                : _descController.text.trim(),
-            category: ExpenseCategory.food,
-          );
-        }
+        expense = ShoppingExpenseDto(
+          amount: (amount != null && amount > 0) ? amount : null,
+          paymentMethod: _paymentMethod,
+          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          description: _descController.text.trim().isEmpty
+              ? null
+              : _descController.text.trim(),
+          category: ExpenseCategory.food,
+        );
       }
 
       await ref.read(cartProvider.notifier).complete(CompleteCartDto(
@@ -487,85 +545,273 @@ class _CompleteShoppingDialogState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final storagesAsync = ref.watch(storagesProvider);
-    final storages = storagesAsync.value ?? [];
 
     return AlertDialog(
-      title: Text(l10n.fridge_cart_complete_title),
+      title: Text(_isStep2
+          ? l10n.fridge_cart_complete_step2_title
+          : l10n.fridge_cart_complete_title),
       content: SizedBox(
         width: double.maxFinite,
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.fridge_cart_complete_transfer_hint,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline)),
-              const SizedBox(height: AppSizes.spaceS),
-              ...widget.items.map((item) => _TransferRow(
-                    item: item,
-                    storages: storages,
-                    selectedStorageId: _transferMap[item.id],
-                    onChanged: (id) =>
-                        setState(() => _transferMap[item.id] = id),
-                    l10n: l10n,
-                  )),
-              const Divider(height: AppSizes.spaceL),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.fridge_cart_complete_add_expense),
-                value: _addExpense,
-                onChanged: (v) => setState(() => _addExpense = v),
-              ),
-              if (_addExpense) ...[
-                TextField(
-                  controller: _amountController,
-                  decoration: InputDecoration(
-                      labelText: l10n.fridge_cart_complete_amount),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: false),
+          child: _isStep2
+              ? _Step2Content(details: _details, l10n: l10n)
+              : _Step1Content(
+                  items: widget.items,
+                  transferMap: _transferMap,
+                  addExpense: _addExpense,
+                  amountController: _amountController,
+                  descController: _descController,
+                  paymentMethod: _paymentMethod,
+                  onTransferChanged: (id, storageId) =>
+                      setState(() => _transferMap[id] = storageId),
+                  onAddExpenseChanged: (v) =>
+                      setState(() => _addExpense = v),
+                  onPaymentMethodChanged: (v) =>
+                      setState(() => _paymentMethod = v),
+                  l10n: l10n,
                 ),
-                const SizedBox(height: AppSizes.spaceS),
-                TextField(
-                  controller: _descController,
-                  decoration: InputDecoration(
-                      labelText: l10n.fridge_cart_complete_description),
-                ),
-                const SizedBox(height: AppSizes.spaceS),
-                SegmentedButton<PaymentMethod>(
-                  segments: const [
-                    ButtonSegment(
-                        value: PaymentMethod.card, label: Text('카드')),
-                    ButtonSegment(
-                        value: PaymentMethod.cash, label: Text('현금')),
-                    ButtonSegment(
-                        value: PaymentMethod.transfer, label: Text('이체')),
-                  ],
-                  selected: {_paymentMethod},
-                  onSelectionChanged: (s) =>
-                      setState(() => _paymentMethod = s.first),
-                ),
-              ],
-            ],
-          ),
         ),
       ),
       actions: [
         TextButton(
-          onPressed: _loading ? null : () => Navigator.pop(context),
-          child: Text(l10n.common_cancel),
+          onPressed: _loading
+              ? null
+              : () {
+                  if (_isStep2) {
+                    setState(() => _isStep2 = false);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+          child: Text(_isStep2 ? l10n.common_back : l10n.common_cancel),
         ),
         FilledButton(
-          onPressed: _loading ? null : _submit,
+          onPressed: _loading
+              ? null
+              : () {
+                  final hasTransfer =
+                      _transferMap.values.any((v) => v != null);
+                  if (!_isStep2 && hasTransfer) {
+                    _goToStep2();
+                  } else {
+                    _submit();
+                  }
+                },
           child: _loading
               ? const SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2))
-              : Text(l10n.fridge_cart_complete),
+              : Text(_isStep2 || !_transferMap.values.any((v) => v != null)
+                  ? l10n.fridge_cart_complete
+                  : l10n.common_next),
         ),
       ],
+    );
+  }
+}
+
+// ── Step 1: 보관소 선택 + 가계부 ─────────────────────────────────────────────────
+
+class _Step1Content extends ConsumerWidget {
+  final List<CartItemModel> items;
+  final Map<String, String?> transferMap;
+  final bool addExpense;
+  final TextEditingController amountController;
+  final TextEditingController descController;
+  final PaymentMethod paymentMethod;
+  final void Function(String itemId, String? storageId) onTransferChanged;
+  final ValueChanged<bool> onAddExpenseChanged;
+  final ValueChanged<PaymentMethod> onPaymentMethodChanged;
+  final AppLocalizations l10n;
+
+  const _Step1Content({
+    required this.items,
+    required this.transferMap,
+    required this.addExpense,
+    required this.amountController,
+    required this.descController,
+    required this.paymentMethod,
+    required this.onTransferChanged,
+    required this.onAddExpenseChanged,
+    required this.onPaymentMethodChanged,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storages = ref.watch(storagesProvider).value ?? [];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.fridge_cart_complete_transfer_hint,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outline)),
+        const SizedBox(height: AppSizes.spaceS),
+        ...items.map((item) => _TransferRow(
+              item: item,
+              storages: storages,
+              selectedStorageId: transferMap[item.id],
+              onChanged: (id) => onTransferChanged(item.id, id),
+              l10n: l10n,
+            )),
+        const Divider(height: AppSizes.spaceL),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(l10n.fridge_cart_complete_add_expense),
+          value: addExpense,
+          onChanged: onAddExpenseChanged,
+        ),
+        if (addExpense) ...[
+          TextField(
+            controller: amountController,
+            decoration:
+                InputDecoration(labelText: l10n.fridge_cart_complete_amount),
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: false),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          TextField(
+            controller: descController,
+            decoration: InputDecoration(
+                labelText: l10n.fridge_cart_complete_description),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          SegmentedButton<PaymentMethod>(
+            segments: const [
+              ButtonSegment(value: PaymentMethod.card, label: Text('카드')),
+              ButtonSegment(value: PaymentMethod.cash, label: Text('현금')),
+              ButtonSegment(
+                  value: PaymentMethod.transfer, label: Text('이체')),
+            ],
+            selected: {paymentMethod},
+            onSelectionChanged: (s) => onPaymentMethodChanged(s.first),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+// ── Step 2: 이관 상세 입력 ───────────────────────────────────────────────────────
+
+class _Step2Content extends StatefulWidget {
+  final List<_TransferDetail> details;
+  final AppLocalizations l10n;
+
+  const _Step2Content({required this.details, required this.l10n});
+
+  @override
+  State<_Step2Content> createState() => _Step2ContentState();
+}
+
+class _Step2ContentState extends State<_Step2Content> {
+  Future<void> _pickDate(_TransferDetail detail) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate:
+          detail.expiresAt ?? DateTime.now().add(const Duration(days: 7)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 3650)),
+    );
+    if (picked != null) setState(() => detail.expiresAt = picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = widget.l10n;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: widget.details.map((d) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
+          child: Card(
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    d.cartItem.name,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: d.quantity,
+                          decoration: InputDecoration(
+                              labelText: l10n.fridge_item_quantity),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Expanded(
+                        child: TextField(
+                          controller: d.price,
+                          decoration: InputDecoration(
+                              labelText: l10n.fridge_cart_item_price,
+                              suffixText: '원'),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: false),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      d.expiresAt != null
+                          ? DateFormat('yyyy-MM-dd').format(d.expiresAt!)
+                          : l10n.fridge_item_expires_at,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: d.expiresAt != null
+                                ? null
+                                : Theme.of(context).colorScheme.outline,
+                          ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (d.expiresAt != null)
+                          IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: () =>
+                                setState(() => d.expiresAt = null),
+                          ),
+                        const Icon(Icons.calendar_today_outlined, size: 18),
+                      ],
+                    ),
+                    onTap: () => _pickDate(d),
+                  ),
+                  if (d.expiresAt != null)
+                    Row(
+                      children: [
+                        Text(l10n.fridge_item_alert_days(d.alertDays),
+                            style: Theme.of(context).textTheme.bodySmall),
+                        Expanded(
+                          child: Slider(
+                            value: d.alertDays.toDouble(),
+                            min: 1,
+                            max: 14,
+                            divisions: 13,
+                            onChanged: (v) =>
+                                setState(() => d.alertDays = v.toInt()),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

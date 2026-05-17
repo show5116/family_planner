@@ -402,9 +402,10 @@ class ShoppingHistoryNotifier
 }
 
 final shoppingHistoryDetailProvider =
-    FutureProvider.family<ShoppingHistoryModel, String>((ref, historyId) async {
-  final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    FutureProvider.family<ShoppingHistoryModel, (String, String?)>((ref, args) async {
+  final (historyId, groupId) = args;
+  final resolvedGroupId = groupId ?? ref.watch(fridgeSelectedGroupIdProvider);
   return ref
       .read(fridgeRepositoryProvider)
-      .getShoppingHistoryById(historyId, groupId: groupId);
+      .getShoppingHistoryById(historyId, groupId: resolvedGroupId);
 });

@@ -39,6 +39,7 @@ class ExpenseModel {
   final String? description;
   final PaymentMethod? paymentMethod;
   final bool isRecurring;
+  final String? shoppingHistoryId; // 장보기 완료 시 자동 생성된 지출에만 존재
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -53,6 +54,7 @@ class ExpenseModel {
     this.description,
     this.paymentMethod,
     required this.isRecurring,
+    this.shoppingHistoryId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -73,6 +75,7 @@ class ExpenseModel {
           ? _parsePaymentMethod(json['paymentMethod'] as String)
           : null,
       isRecurring: (json['isRecurring'] as bool?) ?? false,
+      shoppingHistoryId: json['shoppingHistoryId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -131,6 +134,7 @@ class ExpenseModel {
     String? description,
     PaymentMethod? paymentMethod,
     bool? isRecurring,
+    String? shoppingHistoryId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -145,6 +149,7 @@ class ExpenseModel {
       description: description ?? this.description,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       isRecurring: isRecurring ?? this.isRecurring,
+      shoppingHistoryId: shoppingHistoryId ?? this.shoppingHistoryId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

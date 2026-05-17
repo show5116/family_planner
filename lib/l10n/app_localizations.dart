@@ -208,6 +208,12 @@ abstract class AppLocalizations {
   /// **'다음'**
   String get common_next;
 
+  /// No description provided for @common_back.
+  ///
+  /// In ko, this message translates to:
+  /// **'이전'**
+  String get common_back;
+
   /// No description provided for @common_previous.
   ///
   /// In ko, this message translates to:
@@ -4228,6 +4234,12 @@ abstract class AppLocalizations {
   /// **'지출 추가'**
   String get household_add_expense;
 
+  /// 연결된 장보기 기록으로 이동
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 기록 보기'**
+  String get household_view_shopping_history;
+
   /// 지출 수정 버튼
   ///
   /// In ko, this message translates to:
@@ -5800,6 +5812,12 @@ abstract class AppLocalizations {
   /// **'장보기 완료'**
   String get fridge_cart_complete_title;
 
+  /// 장보기 완료 2단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고 이관 상세 입력'**
+  String get fridge_cart_complete_step2_title;
+
   /// 이관 힌트
   ///
   /// In ko, this message translates to:
@@ -5812,11 +5830,17 @@ abstract class AppLocalizations {
   /// **'가계부에 등록'**
   String get fridge_cart_complete_add_expense;
 
-  /// 구매 금액 레이블
+  /// 구매 총액 레이블 (선택)
   ///
   /// In ko, this message translates to:
-  /// **'구매 금액'**
+  /// **'총액 (선택 — 미입력 시 항목 금액 합산)'**
   String get fridge_cart_complete_amount;
+
+  /// 항목별 금액 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'금액 (선택)'**
+  String get fridge_cart_item_price;
 
   /// 장보기 메모
   ///

@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_next => 'Next';
 
   @override
+  String get common_back => 'Back';
+
+  @override
   String get common_previous => 'Previous';
 
   @override
@@ -2163,6 +2166,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_add_expense => 'Add Expense';
 
   @override
+  String get household_view_shopping_history => 'View Shopping History';
+
+  @override
   String get household_edit_expense => 'Edit Expense';
 
   @override
@@ -2991,6 +2997,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_cart_complete_title => 'Complete shopping';
 
   @override
+  String get fridge_cart_complete_step2_title => 'Fridge transfer details';
+
+  @override
   String get fridge_cart_complete_transfer_hint =>
       'Select a storage to transfer items to';
 
@@ -2998,7 +3007,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_cart_complete_add_expense => 'Record in ledger';
 
   @override
-  String get fridge_cart_complete_amount => 'Total amount';
+  String get fridge_cart_complete_amount =>
+      'Total (optional — auto-sum if empty)';
+
+  @override
+  String get fridge_cart_item_price => 'Price (optional)';
 
   @override
   String get fridge_cart_complete_description => 'Note (optional)';

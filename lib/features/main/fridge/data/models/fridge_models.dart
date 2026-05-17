@@ -626,6 +626,7 @@ class TransferItemDto {
   final String storageLocationId;
   final int? quantity;
   final String? unit;
+  final double? price;
   final String? expiresAt;
   final int? alertDaysBefore;
 
@@ -634,6 +635,7 @@ class TransferItemDto {
     required this.storageLocationId,
     this.quantity,
     this.unit,
+    this.price,
     this.expiresAt,
     this.alertDaysBefore,
   });
@@ -643,6 +645,7 @@ class TransferItemDto {
         'storageLocationId': storageLocationId,
         if (quantity != null) 'quantity': quantity,
         if (unit != null) 'unit': unit,
+        if (price != null) 'price': price,
         if (expiresAt != null) 'expiresAt': expiresAt,
         if (alertDaysBefore != null) 'alertDaysBefore': alertDaysBefore,
       };
@@ -650,14 +653,14 @@ class TransferItemDto {
 
 /// 장보기 완료 시 가계부 등록 DTO
 class ShoppingExpenseDto {
-  final double amount;
+  final double? amount; // null이면 품목별 price 합계로 자동 계산
   final PaymentMethod? paymentMethod;
   final String? date;
   final String? description;
   final ExpenseCategory? category;
 
   const ShoppingExpenseDto({
-    required this.amount,
+    this.amount,
     this.paymentMethod,
     this.date,
     this.description,
@@ -665,7 +668,7 @@ class ShoppingExpenseDto {
   });
 
   Map<String, dynamic> toJson() => {
-        'amount': amount,
+        if (amount != null) 'amount': amount,
         if (paymentMethod != null)
           'paymentMethod': _paymentMethodToString(paymentMethod!),
         if (date != null) 'date': date,
@@ -723,6 +726,7 @@ class ShoppingHistoryItemModel {
   final String name;
   final int quantity;
   final String? unit;
+  final double? price;
   final bool transferredToFridge;
   final String? fridgeItemId;
 
@@ -731,6 +735,7 @@ class ShoppingHistoryItemModel {
     required this.name,
     required this.quantity,
     this.unit,
+    this.price,
     required this.transferredToFridge,
     this.fridgeItemId,
   });
@@ -741,6 +746,7 @@ class ShoppingHistoryItemModel {
       name: json['name'] as String,
       quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
+      price: json['price'] != null ? double.parse(json['price'].toString()) : null,
       transferredToFridge: (json['transferredToFridge'] as bool?) ?? false,
       fridgeItemId: json['fridgeItemId'] as String?,
     );

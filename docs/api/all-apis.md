@@ -7330,12 +7330,13 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
       "storageLocationId": "uuid-storage", // string
       "quantity": 2, // number?
       "unit": "개", // string?
+      "price": 3500, // 품목 금액 (number?)
       "expiresAt": "2026-05-30", // string?
       "alertDaysBefore": 3 // number?
     }
   ], // 냉장고로 이관할 품목 목록 (TransferItemDto[])
   "expense": {
-    "amount": 45000, // 총 구매액 (number)
+    "amount": 45000, // 총 구매액 (생략 시 품목별 금액 합계로 자동 계산) (number?)
     "paymentMethod": "CARD", // 결제 수단 (PaymentMethod?)
     "date": "2026-05-12", // 지출 날짜 (기본: 오늘) (string?)
     "description": "마트 장보기", // 지출 내용 (string?)
@@ -7359,6 +7360,7 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
       "name": "우유", // string
       "quantity": 2, // number
       "unit": "개", // string | null
+      "price": 3500, // number | null
       "transferredToFridge": true, // boolean
       "fridgeItemId": "uuid-fridge-item" // string | null
     }
@@ -7406,6 +7408,7 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
         "name": "우유",
         "quantity": 2,
         "unit": "개",
+        "price": 3500,
         "transferredToFridge": true,
         "fridgeItemId": "uuid-fridge-item"
       }, // ShoppingHistoryItemDto[]
@@ -7454,6 +7457,7 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
       "name": "우유", // string
       "quantity": 2, // number
       "unit": "개", // string | null
+      "price": 3500, // number | null
       "transferredToFridge": true, // boolean
       "fridgeItemId": "uuid-fridge-item" // string | null
     }

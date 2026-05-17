@@ -442,7 +442,8 @@ List<RouteBase> getMainRoutes() {
       name: 'shoppingHistoryDetail',
       builder: (context, state) {
         final historyId = state.pathParameters['historyId']!;
-        return ShoppingHistoryDetailScreen(historyId: historyId);
+        final groupId = state.uri.queryParameters['groupId'];
+        return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
       },
     ),
     GoRoute(
@@ -450,7 +451,8 @@ List<RouteBase> getMainRoutes() {
       name: 'fridgeShoppingHistoryDetail',
       builder: (context, state) {
         final historyId = state.pathParameters['historyId']!;
-        return ShoppingHistoryDetailScreen(historyId: historyId);
+        final groupId = state.uri.queryParameters['groupId'];
+        return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
       },
     ),
   ];
