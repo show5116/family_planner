@@ -8,6 +8,7 @@ import 'package:family_planner/features/settings/groups/providers/default_group_
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/fridge/presentation/screens/fridge_tab.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_group_selector.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
 class FridgeScreen extends ConsumerStatefulWidget {
   const FridgeScreen({super.key});
@@ -17,6 +18,8 @@ class FridgeScreen extends ConsumerStatefulWidget {
 }
 
 class _FridgeScreenState extends ConsumerState<FridgeScreen> {
+  VoidCallback? _replayOnboarding;
+
   @override
   void initState() {
     super.initState();
@@ -44,12 +47,19 @@ class _FridgeScreenState extends ConsumerState<FridgeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.fridge_title),
+        actions: [
+          AppBarMoreMenu(
+            onReplayOnboarding: () => _replayOnboarding?.call(),
+          ),
+        ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(48),
           child: FridgeGroupSelector(),
         ),
       ),
-      body: const FridgeTab(),
+      body: FridgeTab(
+        onReplayOnboardingReady: (replay) => _replayOnboarding = replay,
+      ),
     );
   }
 }
