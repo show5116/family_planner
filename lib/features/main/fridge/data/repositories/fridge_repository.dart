@@ -386,4 +386,26 @@ class FridgeRepository {
       throw Exception('구매 이력 상세 조회 실패: ${e.message}');
     }
   }
+
+  // ── 자동완성 ────────────────────────────────────────────────────────────────
+
+  Future<List<String>> getItemNameSuggestions({
+    required String groupId,
+    String? q,
+  }) async {
+    try {
+      final response = await _dio.get('/fridge/item-names', queryParameters: {
+        'groupId': groupId,
+        if (q != null && q.isNotEmpty) 'q': q,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data.map((e) => e as String).toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [FridgeRepository] 자동완성 조회 실패: ${e.message}');
+      return [];
+    }
+  }
 }

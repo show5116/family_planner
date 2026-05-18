@@ -8,6 +8,21 @@
 
 **Base Path:** `/fridge`
 
+### GET `fridge/item-names`
+
+**요약:** 품목 이름 자동완성 목록 조회
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+- `q` (`string`) (Optional): 검색어 (부분 일치)
+
+**Responses:**
+
+#### 200 - 조회 성공
+
+---
+
 ### GET `fridge/storages`
 
 **요약:** 보관소 목록 조회

@@ -2282,6 +2282,21 @@ period=monthly 시 year 필수.
 
 **Base Path:** `/fridge`
 
+### GET `fridge/item-names`
+
+**요약:** 품목 이름 자동완성 목록 조회
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+- `q` (`string`) (Optional): 검색어 (부분 일치)
+
+**Responses:**
+
+#### 200 - 조회 성공
+
+---
+
 ### GET `fridge/storages`
 
 **요약:** 보관소 목록 조회
@@ -7418,7 +7433,7 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
     "paymentMethod": "CARD", // 결제 수단 (PaymentMethod?)
     "date": "2026-05-12", // 지출 날짜 (기본: 오늘) (string?)
     "description": "마트 장보기", // 지출 내용 (string?)
-    "category": "FOOD" // 가계부 카테고리 (기본: FOOD) (ExpenseCategory?)
+    "category": "GROCERIES" // 가계부 카테고리 (기본: GROCERIES) (ExpenseCategory?)
   } // 가계부 자동 등록 (생략 시 가계부 미등록) (ShoppingExpenseDto?)
 }
 ```

@@ -7,6 +7,7 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
 import 'package:family_planner/features/main/fridge/data/repositories/fridge_repository.dart';
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
+import 'package:family_planner/shared/widgets/item_name_autocomplete.dart';
 
 // ── 대기 목록 항목 ───────────────────────────────────────────────────────────────
 
@@ -471,7 +472,7 @@ class _EditForm extends StatelessWidget {
 
 // ── 추가 모드 폼 (입력 + 대기 목록) ─────────────────────────────────────────────
 
-class _AddForm extends StatelessWidget {
+class _AddForm extends ConsumerWidget {
   final TextEditingController nameCtrl;
   final TextEditingController quantityCtrl;
   final TextEditingController unitCtrl;
@@ -515,7 +516,7 @@ class _AddForm extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final canAdd = nameCtrl.text.trim().isNotEmpty;
 
     return Column(
@@ -523,12 +524,12 @@ class _AddForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // ── 입력 폼 ──
-        TextField(
+        ItemNameAutocomplete(
           controller: nameCtrl,
           decoration: InputDecoration(labelText: l10n.fridge_item_name),
-          textCapitalization: TextCapitalization.sentences,
           onChanged: (_) => onChanged(),
           onSubmitted: (_) => onAddToPending(),
+          onSelected: (_) => onChanged(),
         ),
         const SizedBox(height: AppSizes.spaceS),
         Row(

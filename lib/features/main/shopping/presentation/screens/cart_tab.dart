@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/fridge/providers/fridge_provider.da
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/shared/widgets/item_name_autocomplete.dart';
 
 // ── 온보딩용 샘플 데이터 ─────────────────────────────────────────────────────────
 
@@ -1082,12 +1083,12 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // ── 입력 폼 ──
-              TextField(
+              ItemNameAutocomplete(
                 controller: _nameCtrl,
                 decoration: InputDecoration(labelText: l10n.fridge_item_name),
-                textCapitalization: TextCapitalization.sentences,
                 onChanged: (_) => setState(() {}),
                 onSubmitted: (_) => _addToPending(),
+                onSelected: (_) => setState(() {}),
               ),
               const SizedBox(height: AppSizes.spaceS),
               Row(
