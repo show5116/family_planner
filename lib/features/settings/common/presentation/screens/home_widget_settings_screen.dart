@@ -104,6 +104,9 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
         case 'savingsSummary':
           _settings = _settings.copyWith(showSavingsSummary: value);
           break;
+        case 'fridgeSummary':
+          _settings = _settings.copyWith(showFridgeSummary: value);
+          break;
         case 'weather':
           _settings = _settings.copyWith(showWeather: value);
           break;
@@ -189,6 +192,13 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
           'title': '저금통',
           'description': '그룹별 적립 목표 및 달성 현황',
           'enabled': _settings.showSavingsSummary,
+        };
+      case 'fridgeSummary':
+        return {
+          'icon': Icons.warning_amber_outlined,
+          'title': '유통기한 임박',
+          'description': '냉장고에서 유통기한이 얼마 남지 않은 식품 목록',
+          'enabled': _settings.showFridgeSummary,
         };
       case 'weather':
         return {

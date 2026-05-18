@@ -426,3 +426,27 @@ final shoppingHistoryDetailProvider =
       .read(fridgeRepositoryProvider)
       .getShoppingHistoryById(historyId, groupId: resolvedGroupId);
 });
+
+// ── 대시보드용 냉장고 유통기한 임박 품목 Provider ────────────────────────────────
+
+/// storagesWithItemsProvider를 watch해서 파생하므로
+/// 냉장고 품목이 변경되면 대시보드 위젯도 즉시 반영된다.
+final fridgeExpiryItemsProvider =
+    Provider<AsyncValue<List<FridgeItemModel>>>((ref) {
+  final swisAsync = ref.watch(storagesWithItemsProvider);
+  return swisAsync.whenData((swis) {
+    final now = DateTime.now();
+    final items = swis.expand((s) => s.items).where((item) {
+      if (item.expiresAt == null) return false;
+      final days = item.expiresAt!.difference(now).inDays;
+      return days <= item.alertDaysBefore;
+    }).toList()
+      ..sort((a, b) {
+        final da = a.expiresAt!.difference(now).inDays;
+        final db = b.expiresAt!.difference(now).inDays;
+        return da.compareTo(db);
+      });
+    return items;
+  });
+});
+
