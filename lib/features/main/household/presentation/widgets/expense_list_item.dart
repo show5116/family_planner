@@ -11,6 +11,8 @@ IconData categoryIcon(ExpenseCategory? category) {
       return Icons.directions_bus;
     case ExpenseCategory.food:
       return Icons.restaurant;
+    case ExpenseCategory.groceries:
+      return Icons.shopping_cart;
     case ExpenseCategory.leisure:
       return Icons.sports_esports;
     case ExpenseCategory.living:
@@ -42,6 +44,8 @@ Color categoryColor(ExpenseCategory? category) {
       return Colors.blue;
     case ExpenseCategory.food:
       return Colors.orange;
+    case ExpenseCategory.groceries:
+      return Colors.green;
     case ExpenseCategory.leisure:
       return Colors.purple;
     case ExpenseCategory.living:
@@ -73,6 +77,8 @@ String categoryName(AppLocalizations l10n, ExpenseCategory? category) {
       return l10n.household_category_transport;
     case ExpenseCategory.food:
       return l10n.household_category_food;
+    case ExpenseCategory.groceries:
+      return l10n.household_category_groceries;
     case ExpenseCategory.leisure:
       return l10n.household_category_leisure;
     case ExpenseCategory.living:

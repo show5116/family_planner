@@ -446,6 +446,8 @@ class _CategoryDistribution extends StatelessWidget {
     switch (category) {
       case ExpenseCategory.food:
         return AppColors.primary;
+      case ExpenseCategory.groceries:
+        return Colors.green;
       case ExpenseCategory.transportation:
         return Colors.blue;
       case ExpenseCategory.leisure:

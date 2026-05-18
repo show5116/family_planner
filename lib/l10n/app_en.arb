@@ -897,6 +897,8 @@
   "@household_category_childcare": { "description": "Category: Childcare" },
   "household_category_communication": "Communication",
   "@household_category_communication": { "description": "Category: Communication" },
+  "household_category_groceries": "Groceries",
+  "@household_category_groceries": { "description": "Category: Groceries" },
   "household_category_other": "Other",
   "@household_category_other": { "description": "Category: Other" },
   "household_payment_cash": "Cash",

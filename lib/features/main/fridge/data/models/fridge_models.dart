@@ -761,6 +761,8 @@ class ShoppingExpenseDto {
 
   static String _categoryToString(ExpenseCategory c) {
     switch (c) {
+      case ExpenseCategory.groceries:
+        return 'GROCERIES';
       case ExpenseCategory.food:
         return 'FOOD';
       case ExpenseCategory.living:
@@ -768,7 +770,7 @@ class ShoppingExpenseDto {
       case ExpenseCategory.other:
         return 'OTHER';
       default:
-        return 'FOOD';
+        return 'GROCERIES';
     }
   }
 }

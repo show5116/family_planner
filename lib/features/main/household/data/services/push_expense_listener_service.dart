@@ -210,7 +210,10 @@ class PushExpenseListenerService {
   }
 
   static ExpenseCategory? inferCategory(String text) {
-    if (_matchAny(text, ['카페', '커피', '음식', '식당', '배달', '맥도날드', '스타벅스', 'gs25', 'cu', '편의점', '마트', '이마트', '홈플러스', '롯데마트'])) {
+    if (_matchAny(text, ['마트', '이마트', '홈플러스', '롯데마트', '코스트코', '트레이더스', '하나로마트'])) {
+      return ExpenseCategory.groceries;
+    }
+    if (_matchAny(text, ['카페', '커피', '음식', '식당', '배달', '맥도날드', '스타벅스', 'gs25', 'cu', '편의점'])) {
       return ExpenseCategory.food;
     }
     if (_matchAny(text, ['지하철', '버스', '택시', '주유', '카카오t', '우버'])) {

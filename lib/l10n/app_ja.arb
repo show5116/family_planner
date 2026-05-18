@@ -897,6 +897,8 @@
   "@household_category_childcare": { "description": "カテゴリ: 育児費" },
   "household_category_communication": "通信費",
   "@household_category_communication": { "description": "カテゴリ: 通信費" },
+  "household_category_groceries": "食料品",
+  "@household_category_groceries": { "description": "カテゴリ: 食料品" },
   "household_category_other": "その他",
   "@household_category_other": { "description": "カテゴリ: その他" },
   "household_payment_cash": "現金",

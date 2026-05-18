@@ -2228,6 +2228,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_category_communication => '통신비';
 
   @override
+  String get household_category_groceries => '장보기';
+
+  @override
   String get household_category_other => '기타';
 
   @override

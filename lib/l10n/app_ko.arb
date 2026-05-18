@@ -911,6 +911,8 @@
   "@household_category_childcare": { "description": "카테고리: 육아비" },
   "household_category_communication": "통신비",
   "@household_category_communication": { "description": "카테고리: 통신비" },
+  "household_category_groceries": "장보기",
+  "@household_category_groceries": { "description": "카테고리: 장보기" },
   "household_category_other": "기타",
   "@household_category_other": { "description": "카테고리: 기타" },
   "household_payment_cash": "현금",

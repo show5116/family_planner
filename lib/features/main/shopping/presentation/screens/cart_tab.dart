@@ -1301,7 +1301,7 @@ class _CompleteShoppingDialogState
           description: _descController.text.trim().isEmpty
               ? null
               : _descController.text.trim(),
-          category: ExpenseCategory.food,
+          category: ExpenseCategory.groceries,
         );
       }
 

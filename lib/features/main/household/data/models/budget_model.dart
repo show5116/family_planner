@@ -68,6 +68,8 @@ class SetBudgetDto {
         return 'TRANSPORTATION';
       case ExpenseCategory.food:
         return 'FOOD';
+      case ExpenseCategory.groceries:
+        return 'GROCERIES';
       case ExpenseCategory.leisure:
         return 'LEISURE';
       case ExpenseCategory.living:

@@ -8,6 +8,7 @@ enum TransactionType {
 enum ExpenseCategory {
   transportation,
   food,
+  groceries,
   leisure,
   living,
   medical,
@@ -87,6 +88,8 @@ class ExpenseModel {
         return ExpenseCategory.transportation;
       case 'FOOD':
         return ExpenseCategory.food;
+      case 'GROCERIES':
+        return ExpenseCategory.groceries;
       case 'LEISURE':
         return ExpenseCategory.leisure;
       case 'LIVING':
@@ -242,6 +245,8 @@ String _categoryToString(ExpenseCategory category) {
       return 'TRANSPORTATION';
     case ExpenseCategory.food:
       return 'FOOD';
+    case ExpenseCategory.groceries:
+      return 'GROCERIES';
     case ExpenseCategory.leisure:
       return 'LEISURE';
     case ExpenseCategory.living:
