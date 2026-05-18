@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,6 +12,7 @@ import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_
 import 'package:family_planner/features/main/shopping/presentation/screens/cart_tab.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/frequent_items_tab.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_history_tab.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
 class ShoppingScreen extends ConsumerStatefulWidget {
   const ShoppingScreen({super.key});
@@ -21,6 +24,15 @@ class ShoppingScreen extends ConsumerStatefulWidget {
 class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  VoidCallback? _replayCartOnboarding;
+  VoidCallback? _replayFrequentOnboarding;
+  VoidCallback? _replayHistoryOnboarding;
+
+  // 탭 전환 중 중복 호출 방지
+  bool _transitioning = false;
+
+  static const _tabAnimationDuration = Duration(milliseconds: 300);
 
   @override
   void initState() {
@@ -49,6 +61,43 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
     super.dispose();
   }
 
+  /// 탭 전환 후 충분히 안정된 시점에 콜백 실행
+  /// TabBarView 스와이프 애니메이션(300ms) + 렌더링 2프레임 대기
+  Future<void> _switchTabAndStart(int targetIndex, VoidCallback startOnboarding) async {
+    if (_transitioning || !mounted) return;
+    _transitioning = true;
+
+    _tabController.animateTo(targetIndex);
+
+    // 탭 전환 애니메이션 완료 대기
+    await Future.delayed(_tabAnimationDuration + const Duration(milliseconds: 50));
+    if (!mounted) {
+      _transitioning = false;
+      return;
+    }
+
+    // 렌더링 안정화: 2프레임 대기 (첫 프레임에 레이아웃, 둘째 프레임에 GlobalKey 위치 확정)
+    final completer = Completer<void>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => completer.complete());
+    });
+    await completer.future;
+
+    if (mounted) startOnboarding();
+    _transitioning = false;
+  }
+
+  void _replayCurrentTabOnboarding() {
+    switch (_tabController.index) {
+      case 0:
+        _replayCartOnboarding?.call();
+      case 1:
+        _replayFrequentOnboarding?.call();
+      case 2:
+        _replayHistoryOnboarding?.call();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -56,6 +105,11 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.shopping_title),
+        actions: [
+          AppBarMoreMenu(
+            onReplayOnboarding: _replayCurrentTabOnboarding,
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(96),
           child: Column(
@@ -77,10 +131,27 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          CartTab(),
-          FrequentItemsTab(),
-          ShoppingHistoryTab(),
+        children: [
+          CartTab(
+            onReplayOnboardingReady: (replay) => _replayCartOnboarding = replay,
+            onOnboardingFinished: () => _switchTabAndStart(
+              1,
+              () => _replayFrequentOnboarding?.call(),
+            ),
+          ),
+          FrequentItemsTab(
+            onReplayOnboardingReady: (replay) =>
+                _replayFrequentOnboarding = replay,
+            onOnboardingFinished: () => _switchTabAndStart(
+              2,
+              () => _replayHistoryOnboarding?.call(),
+            ),
+          ),
+          ShoppingHistoryTab(
+            onReplayOnboardingReady: (replay) =>
+                _replayHistoryOnboarding = replay,
+            // 마지막 탭 — 체인 종료
+          ),
         ],
       ),
     );
