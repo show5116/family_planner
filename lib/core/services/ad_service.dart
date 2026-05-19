@@ -1,22 +1,47 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-/// 광고 단위 ID (테스트용)
-/// 프로덕션 배포 시 실제 ID로 교체 필요
+/// 테스트 계정 이메일 목록 (항상 테스트 광고 Unit ID 사용)
+const testAdAccountEmails = {
+  'test-owner@familyplanner.test',
+  'test-member@familyplanner.test',
+};
+
+/// 광고 단위 ID
 class _AdUnitIds {
-  // Android 테스트 ID
-  static const _androidBanner = 'ca-app-pub-3940256099942544/6300978111';
-  static const _androidInterstitial = 'ca-app-pub-3940256099942544/1033173712';
-  static const _androidRewarded = 'ca-app-pub-3940256099942544/5224354917';
+  // Android 테스트 ID (Google 공식 데모)
+  static const _androidTestBanner = 'ca-app-pub-3940256099942544/6300978111';
+  static const _androidTestInterstitial = 'ca-app-pub-3940256099942544/1033173712';
+  static const _androidTestRewarded = 'ca-app-pub-3940256099942544/5224354917';
 
-  // iOS 테스트 ID
-  static const _iosBanner = 'ca-app-pub-3940256099942544/2934735716';
-  static const _iosInterstitial = 'ca-app-pub-3940256099942544/4411468910';
-  static const _iosRewarded = 'ca-app-pub-3940256099942544/1712485313';
+  // iOS 테스트 ID (Google 공식 데모)
+  static const _iosTestBanner = 'ca-app-pub-3940256099942544/2934735716';
+  static const _iosTestInterstitial = 'ca-app-pub-3940256099942544/4411468910';
+  static const _iosTestRewarded = 'ca-app-pub-3940256099942544/1712485313';
 
-  static String get banner => defaultTargetPlatform == TargetPlatform.iOS ? _iosBanner : _androidBanner;
-  static String get interstitial => defaultTargetPlatform == TargetPlatform.iOS ? _iosInterstitial : _androidInterstitial;
-  static String get rewarded => defaultTargetPlatform == TargetPlatform.iOS ? _iosRewarded : _androidRewarded;
+  // Android 실제 Unit ID (프로덕션)
+  static const _androidBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _androidInterstitial = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _androidRewarded = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+
+  // iOS 실제 Unit ID (프로덕션)
+  static const _iosBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _iosInterstitial = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _iosRewarded = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+
+  static bool get _isIos => defaultTargetPlatform == TargetPlatform.iOS;
+
+  static String banner(bool useTest) => useTest
+      ? (_isIos ? _iosTestBanner : _androidTestBanner)
+      : (_isIos ? _iosBanner : _androidBanner);
+
+  static String interstitial(bool useTest) => useTest
+      ? (_isIos ? _iosTestInterstitial : _androidTestInterstitial)
+      : (_isIos ? _iosInterstitial : _androidInterstitial);
+
+  static String rewarded(bool useTest) => useTest
+      ? (_isIos ? _iosTestRewarded : _androidTestRewarded)
+      : (_isIos ? _iosRewarded : _androidRewarded);
 }
 
 class AdService {
@@ -28,6 +53,9 @@ class AdService {
   bool _isInterstitialLoading = false;
   bool _isRewardedLoading = false;
 
+  /// 개발 환경, 운영자 계정, 테스트 계정 여부 (로그인 후 subscription_provider에서 주입)
+  bool useTestAds = kDebugMode;
+
   /// MobileAds SDK 초기화 (main.dart에서 호출)
   static Future<void> initialize() async {
     if (kIsWeb) return;
@@ -38,7 +66,7 @@ class AdService {
 
   BannerAd createBannerAd() {
     return BannerAd(
-      adUnitId: _AdUnitIds.banner,
+      adUnitId: _AdUnitIds.banner(useTestAds),
       size: AdSize.banner,
       request: const AdRequest(),
       listener: const BannerAdListener(),
@@ -52,7 +80,7 @@ class AdService {
     _isInterstitialLoading = true;
 
     InterstitialAd.load(
-      adUnitId: _AdUnitIds.interstitial,
+      adUnitId: _AdUnitIds.interstitial(useTestAds),
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -104,7 +132,7 @@ class AdService {
     _isRewardedLoading = true;
 
     RewardedAd.load(
-      adUnitId: _AdUnitIds.rewarded,
+      adUnitId: _AdUnitIds.rewarded(useTestAds),
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {

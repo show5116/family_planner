@@ -108,6 +108,10 @@ class _MyAppState extends ConsumerState<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).checkAuthStatus();
       ref.read(subscriptionProvider.notifier).refresh();
+      AdService.instance.useTestAds = ref.read(useTestAdsProvider);
+      ref.listen(useTestAdsProvider, (_, useTest) {
+        AdService.instance.useTestAds = useTest;
+      });
       // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
       // ref.read(householdAutoSettingsProvider.notifier).load();
       if (kIsWeb) {
