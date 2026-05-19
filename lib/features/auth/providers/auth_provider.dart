@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
@@ -12,6 +13,10 @@ import 'package:family_planner/features/main/child_points/providers/childcare_pr
 import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
+import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
+import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 
 /// 인증 상태
 class AuthState {
@@ -158,26 +163,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       // 백엔드 로그아웃 실패(Token Not Found 등)여도 로컬 정리는 완료됨
     } finally {
-      // 그룹 관련 provider 초기화 (로그아웃 시에는 상태만 비움, 다시 fetch 안함)
-      _invalidateGroupProviders(clearOnly: true);
-
+      // 먼저 인증 상태를 false로 → 화면이 로그인으로 이동하며 위젯 트리가 해제됨
       state = const AuthState(isAuthenticated: false);
+
+      // 위젯 트리 해제 후 provider 초기화 (rebuild → API 재호출 방지)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _invalidateGroupProviders();
+      });
     }
   }
 
-  /// 그룹 관련 provider들을 모두 초기화
-  /// [clearOnly]가 true면 invalidate 없이 상태만 비움 (로그아웃 시)
-  /// [clearOnly]가 false면 invalidate 수행 (계정 전환 시 새로 fetch 필요)
-  void _invalidateGroupProviders({bool clearOnly = false}) {
-    if (clearOnly) {
-      // 로그아웃 시: 상태만 비우고 다시 fetch하지 않음
-      // groupNotifierProvider의 상태를 빈 데이터로 설정
-      _ref.read(groupNotifierProvider.notifier).clearGroups();
-    } else {
-      // 로그인/계정 전환 시: invalidate하여 새 계정의 데이터를 fetch
-      _ref.invalidate(myGroupsProvider);
-      _ref.invalidate(groupNotifierProvider);
-    }
+  /// 그룹 관련 provider들을 모두 초기화 (로그아웃/계정 전환 공통)
+  void _invalidateGroupProviders() {
+    // 로그아웃/계정 전환 모두 invalidate하여 다음 로그인 시 새 계정 데이터를 fetch
+    _ref.invalidate(myGroupsProvider);
+    _ref.invalidate(groupNotifierProvider);
     // family provider들은 자동으로 무효화됨 (부모 provider가 무효화되면)
 
     // 피처별 선택된 그룹 ID 초기화 (이전 계정의 groupId가 남지 않도록)
@@ -187,7 +187,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _ref.read(childcareSelectedGroupIdProvider.notifier).state = null;
     _ref.read(voteSelectedGroupIdProvider.notifier).state = null;
     _ref.read(minigameSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(fridgeSelectedGroupIdProvider.notifier).state = null;
+    _ref.read(selectedGroupIdProvider.notifier).state = null;
     _ref.read(defaultGroupProvider.notifier).clear();
+
+    // 대시보드 캐시(keepAlive) 및 위젯 설정의 그룹 ID 초기화
+    _ref.invalidate(dashboardTodayTasksProvider);
+    _ref.invalidate(dashboardTodoTasksProvider);
+    _ref.invalidate(dashboardAssetStatisticsProvider);
+    _ref.invalidate(dashboardHouseholdStatisticsProvider);
+    _ref.invalidate(dashboardMemosProvider);
+    _ref.invalidate(dashboardSavingsProvider);
+    _ref.read(dashboardWidgetSettingsProvider.notifier).clearGroupIds();
   }
 
   /// FCM 토큰 등록 (로그인 성공 후)
@@ -488,8 +499,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// 401 에러 발생 시 호출되는 콜백 (ApiClient에서 호출)
   void _handleUnauthorized() {
-    // 인증 상태를 false로 설정하여 로그인 화면으로 리다이렉트
     state = const AuthState(isAuthenticated: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _invalidateGroupProviders();
+    });
   }
 }
 

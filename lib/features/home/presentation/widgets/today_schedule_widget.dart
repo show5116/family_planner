@@ -40,6 +40,17 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
     _includePersonal = widget.initialIncludePersonal;
   }
 
+  @override
+  void didUpdateWidget(TodayScheduleWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupIds != oldWidget.initialSelectedGroupIds) {
+      _selectedGroupIds = widget.initialSelectedGroupIds;
+    }
+    if (widget.initialIncludePersonal != oldWidget.initialIncludePersonal) {
+      _includePersonal = widget.initialIncludePersonal;
+    }
+  }
+
   String _title() {
     switch (widget.viewMode) {
       case ScheduleViewMode.today:

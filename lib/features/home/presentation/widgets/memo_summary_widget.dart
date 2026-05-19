@@ -38,6 +38,14 @@ class _MemoSummaryWidgetState extends ConsumerState<MemoSummaryWidget> {
     _personalOnly = widget.initialPersonalOnly;
   }
 
+  @override
+  void didUpdateWidget(MemoSummaryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupId != oldWidget.initialSelectedGroupId) {
+      _selectedGroupId = widget.initialSelectedGroupId;
+    }
+  }
+
   Future<void> _saveFilter() async {
     final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
     if (current == null) return;

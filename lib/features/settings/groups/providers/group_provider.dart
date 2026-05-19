@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/settings/groups/services/group_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
@@ -12,6 +13,10 @@ final groupServiceProvider = Provider<GroupService>((ref) {
 
 /// 내 그룹 목록 Provider
 final myGroupsProvider = FutureProvider<List<Group>>((ref) async {
+  // 토큰 없으면 API 호출 없이 빈 리스트 반환 (로그아웃 후 재빌드 방어)
+  final token = await SecureStorageService().getAccessToken();
+  if (token == null || token.isEmpty) return [];
+
   final groupService = ref.watch(groupServiceProvider);
   return await groupService.getMyGroups();
 });

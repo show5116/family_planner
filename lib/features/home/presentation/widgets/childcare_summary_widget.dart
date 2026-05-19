@@ -37,6 +37,15 @@ class _ChildcareSummaryWidgetState
     WidgetsBinding.instance.addPostFrameCallback((_) => _initGroup());
   }
 
+  @override
+  void didUpdateWidget(ChildcareSummaryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupId != oldWidget.initialSelectedGroupId) {
+      _selectedGroupId = widget.initialSelectedGroupId;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _initGroup());
+    }
+  }
+
   Future<void> _initGroup() async {
     if (_selectedGroupId != null) {
       ref.read(childcareSelectedGroupIdProvider.notifier).state =

@@ -61,14 +61,40 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // 인증이 필요 없는 경로 (로그인/회원가입/리프레시)
+          final isPublicPath = options.path.contains('/auth/login') ||
+              options.path.contains('/auth/register') ||
+              options.path.contains('/auth/refresh') ||
+              options.path.contains('/auth/logout') ||
+              options.path.contains('/auth/kakao') ||
+              options.path.contains('/auth/google');
+
+          // 비공개 경로인데 토큰이 없으면 요청 즉시 취소 (로그아웃 후 잔여 rebuild 방어)
+          if (!isPublicPath) {
+            final token = await _getAccessToken();
+            if (token == null || token.isEmpty) {
+              return handler.reject(
+                DioException(
+                  requestOptions: options,
+                  type: DioExceptionType.cancel,
+                ),
+                true,
+              );
+            }
+            // 이미 토큰을 읽었으므로 아래에서 다시 읽지 않도록 헤더에 바로 설정
+            if (options.extra['retry_with_new_token'] != true) {
+              options.headers['Authorization'] = 'Bearer $token';
+            }
+          }
+
           // 웹 환경에서 쿠키 자동 전송 활성화 (RefreshToken용)
           if (kIsWeb) {
             options.extra['withCredentials'] = true;
           }
 
-          // 모든 플랫폼에서 AccessToken을 Authorization 헤더에 추가
-          // retry 플래그가 있으면 토큰 재설정을 건너뜀 (이미 설정됨)
-          if (options.extra['retry_with_new_token'] != true) {
+          // 토큰을 위에서 아직 설정하지 않은 경우 (public path + retry)
+          if (options.extra['retry_with_new_token'] != true &&
+              options.headers['Authorization'] == null) {
             final token = await _getAccessToken();
             if (token != null) {
               options.headers['Authorization'] = 'Bearer $token';

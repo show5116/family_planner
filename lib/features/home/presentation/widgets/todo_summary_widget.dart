@@ -40,6 +40,17 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     _includePersonal = widget.initialIncludePersonal;
   }
 
+  @override
+  void didUpdateWidget(TodoSummaryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupIds != oldWidget.initialSelectedGroupIds) {
+      _selectedGroupIds = widget.initialSelectedGroupIds;
+    }
+    if (widget.initialIncludePersonal != oldWidget.initialIncludePersonal) {
+      _includePersonal = widget.initialIncludePersonal;
+    }
+  }
+
   String _title() {
     switch (widget.viewMode) {
       case ScheduleViewMode.today:

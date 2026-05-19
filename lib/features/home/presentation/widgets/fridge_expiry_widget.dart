@@ -30,6 +30,15 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
     _selectedGroupId = widget.initialSelectedGroupId;
   }
 
+  @override
+  void didUpdateWidget(FridgeExpiryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupId != oldWidget.initialSelectedGroupId) {
+      _selectedGroupId = widget.initialSelectedGroupId;
+      _initialized = false;
+    }
+  }
+
   /// 그룹을 선택하면 fridgeSelectedGroupIdProvider도 함께 업데이트해서
   /// storagesWithItemsProvider가 해당 그룹 데이터를 가져오도록 한다.
   void _selectGroup(String groupId) {

@@ -33,6 +33,14 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
     _selectedGroupId = widget.initialSelectedGroupId;
   }
 
+  @override
+  void didUpdateWidget(SavingsSummaryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupId != oldWidget.initialSelectedGroupId) {
+      _selectedGroupId = widget.initialSelectedGroupId;
+    }
+  }
+
   Future<void> _saveFilter() async {
     final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
     if (current == null) return;

@@ -26,6 +26,23 @@ class DashboardWidgetSettingsNotifier
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefsKey, jsonEncode(settings.toJson()));
   }
+
+  /// 로그아웃/계정 전환 시 저장된 그룹 ID를 초기화 (위젯 표시 설정은 유지)
+  Future<void> clearGroupIds() async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    final cleared = current.copyWith(
+      scheduleSelectedGroupIds: null,
+      todoSelectedGroupIds: null,
+      assetSelectedGroupId: null,
+      memoSelectedGroupId: null,
+      householdSelectedGroupId: null,
+      childcareSelectedGroupId: null,
+      savingsSelectedGroupId: null,
+      fridgeExpirySelectedGroupId: null,
+    );
+    await save(cleared);
+  }
 }
 
 final dashboardWidgetSettingsProvider = AsyncNotifierProvider<

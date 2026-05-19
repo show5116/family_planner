@@ -42,6 +42,14 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
     _selectedGroupId = widget.initialSelectedGroupId;
   }
 
+  @override
+  void didUpdateWidget(HouseholdSummaryWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelectedGroupId != oldWidget.initialSelectedGroupId) {
+      _selectedGroupId = widget.initialSelectedGroupId;
+    }
+  }
+
   // 개인 모드 여부
   bool get _isPersonal => _selectedGroupId == _kPersonal;
 
