@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:family_planner/core/utils/network_image_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/widgets/color_picker.dart';
@@ -334,9 +334,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                             profileImageUrl != null && profileImageUrl.isNotEmpty
                                 ? CircleAvatar(
                                     radius: 60,
-                                    backgroundImage: CachedNetworkImageProvider(
-                                      profileImageUrl,
-                                    ),
+                                    backgroundImage: networkImageProvider(profileImageUrl),
                                   )
                                 : CircleAvatar(
                                     radius: 60,

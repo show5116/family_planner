@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:family_planner/core/utils/network_image_utils.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 
@@ -46,7 +46,7 @@ class ProfileImageSection extends StatelessWidget {
     if (profileImageUrl != null && profileImageUrl!.isNotEmpty) {
       return CircleAvatar(
         radius: 60,
-        backgroundImage: CachedNetworkImageProvider(profileImageUrl!),
+        backgroundImage: networkImageProvider(profileImageUrl!),
       );
     }
     return CircleAvatar(
