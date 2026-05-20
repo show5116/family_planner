@@ -8,6 +8,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 import 'package:family_planner/shared/widgets/sparkline_chart.dart';
 
@@ -20,7 +21,7 @@ class InvestmentSummaryWidget extends ConsumerWidget {
     final bookmarkedAsync = ref.watch(bookmarkedIndicatorsProvider);
 
     return DashboardCard(
-      title: '투자 지표',
+      title: AppLocalizations.of(context)!.investment_widgetTitle,
       icon: Icons.trending_up,
       action: IconButton(
         onPressed: () => ref.read(bookmarkedIndicatorsProvider.notifier).refresh(),
@@ -66,7 +67,7 @@ class _ErrorIndicators extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceM),
       child: Center(
         child: Text(
-          '데이터를 불러올 수 없습니다',
+          AppLocalizations.of(context)!.investment_errorMessage,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.error,
               ),
@@ -85,7 +86,7 @@ class _EmptyIndicators extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceM),
       child: Center(
         child: Text(
-          '즐겨찾기한 지표가 없습니다',
+          AppLocalizations.of(context)!.investment_emptyBookmarks,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

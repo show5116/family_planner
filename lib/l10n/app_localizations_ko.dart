@@ -314,6 +314,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nav_savings => '그룹 저금통';
 
   @override
+  String get nav_votes => '투표';
+
+  @override
+  String get more_coach_groupDesc =>
+      '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.';
+
+  @override
+  String get more_coach_settingsDesc =>
+      '테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.';
+
+  @override
   String get home_greeting_morning => '좋은 아침이에요!';
 
   @override
@@ -445,6 +456,66 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get widgetSettings_memoSummaryDesc => '최근 작성한 메모를 표시합니다';
+
+  @override
+  String get widgetSettings_householdSummary => '가계 현황';
+
+  @override
+  String get widgetSettings_householdSummaryDesc => '이번 달 지출 요약 및 예산 달성률';
+
+  @override
+  String get widgetSettings_childcareSummary => '육아 포인트';
+
+  @override
+  String get widgetSettings_childcareSummaryDesc => '자녀별 포인트 잔액 현황';
+
+  @override
+  String get widgetSettings_savingsSummary => '저금통';
+
+  @override
+  String get widgetSettings_savingsSummaryDesc => '그룹별 적립 목표 및 달성 현황';
+
+  @override
+  String get widgetSettings_fridgeSummary => '유통기한 임박';
+
+  @override
+  String get widgetSettings_fridgeSummaryDesc => '냉장고에서 유통기한이 얼마 남지 않은 식품 목록';
+
+  @override
+  String get widgetSettings_viewToday => '오늘';
+
+  @override
+  String get widgetSettings_viewWeek => '금주';
+
+  @override
+  String get widgetSettings_viewMonth => '이번달';
+
+  @override
+  String get widgetSettings_viewBudget => '전체 예산 보기';
+
+  @override
+  String get widgetSettings_viewCategory => '카테고리별 보기';
+
+  @override
+  String get widgetSettings_savingsEmpty => '등록된 저금통이 없습니다';
+
+  @override
+  String get widgetSettings_fridgeExpiryEmpty => '유통기한 임박 식품이 없어요';
+
+  @override
+  String get widgetSettings_scheduleWeek => '금주 일정';
+
+  @override
+  String get widgetSettings_scheduleMonth => '이번달 일정';
+
+  @override
+  String get widgetSettings_scheduleEmptyToday => '오늘 일정이 없습니다';
+
+  @override
+  String get widgetSettings_scheduleEmptyWeek => '이번 주 일정이 없습니다';
+
+  @override
+  String get widgetSettings_scheduleEmptyMonth => '이번 달 일정이 없습니다';
 
   @override
   String get widgetSettings_weather => '날씨';
@@ -970,7 +1041,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_deleteSuccess => '그룹이 삭제되었습니다';
 
   @override
-  String get group_leaveSuccess => '그룹을 나갔습니다';
+  String get group_leaveSuccess => '그룹에서 나갔습니다';
 
   @override
   String get group_inviteSent => '초대 이메일이 발송되었습니다';
@@ -1025,6 +1096,171 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get group_joinRequestRejected => '거부됨';
+
+  @override
+  String get group_codeExpiredLabel => '초대 코드 만료됨';
+
+  @override
+  String get group_defaultGroupTooltip => '대표 그룹';
+
+  @override
+  String get group_setDefaultGroupTooltip => '대표 그룹으로 설정';
+
+  @override
+  String get group_unsetDefaultGroupTooltip => '대표 그룹 해제';
+
+  @override
+  String group_setDefaultSuccess(String name) {
+    return '\'$name\'을(를) 대표 그룹으로 설정했습니다';
+  }
+
+  @override
+  String get group_unsetDefaultSuccess => '대표 그룹을 해제했습니다';
+
+  @override
+  String get group_myColorTitle => '나만의 그룹 색상';
+
+  @override
+  String get group_myColorNotSet => '설정하지 않음 (그룹 기본 색상 사용)';
+
+  @override
+  String get group_myColorSet => '설정됨';
+
+  @override
+  String get group_myColorReset => '초기화';
+
+  @override
+  String get group_dangerZone => '위험 구역';
+
+  @override
+  String get group_dangerZoneDesc => '그룹을 삭제하면 모든 데이터가 영구적으로 삭제됩니다.';
+
+  @override
+  String get group_leaveTitle => '그룹 나가기';
+
+  @override
+  String get group_leaveDesc => '그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없습니다.';
+
+  @override
+  String group_leaveConfirmBody(String name) {
+    return '정말로 \"$name\" 그룹을 나가시겠습니까?\n\n그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없으며, 다시 참여하려면 초대 코드가 필요합니다.';
+  }
+
+  @override
+  String get group_leaveButton => '나가기';
+
+  @override
+  String get group_roleManagementTitle => '역할 관리';
+
+  @override
+  String get group_roleManagementDesc => '이 그룹의 역할 목록입니다.';
+
+  @override
+  String get group_roleEmpty => '역할이 없습니다';
+
+  @override
+  String get group_roleDefaultBadge => '기본 역할';
+
+  @override
+  String group_rolePermissionCount(int count) {
+    return '권한: $count개';
+  }
+
+  @override
+  String get group_roleEdit => '역할 수정';
+
+  @override
+  String get group_roleDelete => '역할 삭제';
+
+  @override
+  String get group_roleSortSaved => '정렬 순서가 저장되었습니다';
+
+  @override
+  String get group_roleLoadError => '역할 목록을 불러올 수 없습니다';
+
+  @override
+  String get group_roleInfoTitle => '안내';
+
+  @override
+  String get group_roleInfoBullet1 =>
+      '공통 역할 (OWNER, ADMIN, MEMBER)은 모든 그룹에 기본으로 제공됩니다.';
+
+  @override
+  String get group_roleInfoBullet2 => '커스텀 역할은 그룹 OWNER만 생성, 수정, 삭제할 수 있습니다.';
+
+  @override
+  String get group_roleInfoBullet3 => '역할을 관리하려면 그룹 OWNER 권한이 필요합니다.';
+
+  @override
+  String get group_roleCreateTitle => '역할 생성';
+
+  @override
+  String get group_roleEditTitle => '역할 수정';
+
+  @override
+  String get group_roleDeleteTitle => '역할 삭제';
+
+  @override
+  String get group_roleNameLabel => '역할 이름';
+
+  @override
+  String get group_roleNameRequired => '역할 이름을 입력해주세요';
+
+  @override
+  String get group_roleDefaultSwitch => '기본 역할';
+
+  @override
+  String get group_roleDefaultSwitchSub => '새 멤버 가입 시 자동 부여';
+
+  @override
+  String get group_roleColorLabel => '역할 색상';
+
+  @override
+  String get group_rolePermissionsLabel => '권한 선택';
+
+  @override
+  String get group_rolePermissionsViewLabel => '권한 목록';
+
+  @override
+  String get group_rolePermissionNone => '권한이 없습니다';
+
+  @override
+  String get group_roleDefaultLabel => '기본 역할 (새 멤버 가입 시 자동 부여)';
+
+  @override
+  String group_roleDeleteConfirm(String name) {
+    return '$name 역할을 삭제하시겠습니까?';
+  }
+
+  @override
+  String get group_roleDeleteWarning => '⚠️ 이 역할을 사용 중인 멤버가 있으면 삭제할 수 없습니다.';
+
+  @override
+  String get group_roleCreateSuccess => '역할이 생성되었습니다';
+
+  @override
+  String group_roleCreateFail(String error) {
+    return '역할 생성 실패: $error';
+  }
+
+  @override
+  String get group_roleEditSuccess => '역할이 수정되었습니다';
+
+  @override
+  String group_roleEditFail(String error) {
+    return '역할 수정 실패: $error';
+  }
+
+  @override
+  String get group_roleDeleteSuccess => '역할이 삭제되었습니다';
+
+  @override
+  String group_roleDeleteFail(String error) {
+    return '역할 삭제 실패: $error';
+  }
+
+  @override
+  String get group_settings_groupManagementTitle => '그룹 관리';
 
   @override
   String get error_network => '네트워크 연결을 확인해주세요';
@@ -1955,6 +2191,27 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get todo_clearFilter => '필터 초기화';
+
+  @override
+  String get todo_filterTooltip => '할일 필터';
+
+  @override
+  String get todo_widgetTitleToday => '오늘의 할일';
+
+  @override
+  String get todo_widgetTitleWeek => '금주 할일';
+
+  @override
+  String get todo_widgetTitleMonth => '이번달 할일';
+
+  @override
+  String get todo_emptyToday => '오늘 할일이 없습니다';
+
+  @override
+  String get todo_emptyWeek => '이번 주 할일이 없습니다';
+
+  @override
+  String get todo_emptyMonth => '이번 달 할일이 없습니다';
 
   @override
   String get todo_searchHint => '할일 제목, 설명으로 검색';
@@ -2945,6 +3202,57 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_frequent_add_to_cart => '장바구니에 추가';
 
   @override
+  String fridge_frequent_added_snackbar(String name) {
+    return '$name을(를) 장바구니에 추가했습니다';
+  }
+
+  @override
+  String fridge_frequent_delete_confirm(String name) {
+    return '$name을(를) 삭제하시겠습니까?';
+  }
+
+  @override
+  String get fridge_frequent_autoAddInfo_title => '자동 추가란?';
+
+  @override
+  String get fridge_frequent_autoAddInfo_body =>
+      '냉장고에서 이 품목의 수량이 0이 되면 장바구니에 자동으로 추가돼요.\n스위치를 켜두면 냉장고가 비었을 때 알아서 장보기 목록에 담아드립니다.';
+
+  @override
+  String get fridge_frequent_autoAddInfo_hint => '냉장고 탭에서 수량을 관리하면 연동됩니다';
+
+  @override
+  String get fridge_frequent_coach_fabTitle => '자주 사는 항목 추가';
+
+  @override
+  String get fridge_frequent_coach_fabDesc =>
+      '자주 구매하는 품목을 등록해 두면\n다음 장보기 때 빠르게 담을 수 있어요.';
+
+  @override
+  String get fridge_frequent_coach_itemTitle => '항목 관리';
+
+  @override
+  String get fridge_frequent_coach_itemDesc =>
+      '품목명·기본 단위를 설정할 수 있어요.\n탭하면 수정, 길게 누르면 삭제할 수 있습니다.';
+
+  @override
+  String get fridge_frequent_coach_autoAddTitle => '자동 추가';
+
+  @override
+  String get fridge_frequent_coach_autoAddDesc =>
+      '냉장고에서 이 품목의 수량이 0이 되면\n장바구니에 자동으로 추가돼요.\n냉장고 탭과 연동되는 스마트 기능이에요.';
+
+  @override
+  String get fridge_frequent_coach_addToCartTitle => '장바구니에 바로 담기';
+
+  @override
+  String get fridge_frequent_coach_addToCartDesc =>
+      '버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.';
+
+  @override
+  String get fridge_frequent_coach_skip => '건너뛰기';
+
+  @override
   String get fridge_cart_empty => '장바구니가 비어 있습니다';
 
   @override
@@ -2993,4 +3301,199 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '개인';
+
+  @override
+  String get dashboard_greetingMorning => '좋은 아침입니다';
+
+  @override
+  String get dashboard_greetingAfternoon => '좋은 오후입니다';
+
+  @override
+  String get dashboard_greetingEvening => '좋은 저녁입니다';
+
+  @override
+  String get dashboard_greetingSubtitle => '오늘도 좋은 하루 되세요!';
+
+  @override
+  String get dashboard_emptyWidgets => '표시할 위젯이 없습니다';
+
+  @override
+  String get dashboard_emptyWidgetsHint => '설정에서 위젯을 활성화하세요';
+
+  @override
+  String get dashboard_widgetSettings => '위젯 설정';
+
+  @override
+  String get dashboard_notifications => '알림';
+
+  @override
+  String get weather_widgetTitle => '오늘 날씨';
+
+  @override
+  String get weather_refresh => '날씨 새로고침';
+
+  @override
+  String get weather_detail => '자세히';
+
+  @override
+  String get weather_errorMessage => '날씨 정보를 불러올 수 없습니다';
+
+  @override
+  String get weather_dustFine => '미세';
+
+  @override
+  String get weather_dustUltraFine => '초미세';
+
+  @override
+  String get investment_widgetTitle => '투자 지표';
+
+  @override
+  String get investment_errorMessage => '데이터를 불러올 수 없습니다';
+
+  @override
+  String get investment_emptyBookmarks => '즐겨찾기한 지표가 없습니다';
+
+  @override
+  String get householdWidget_groupTooltip => '그룹 선택';
+
+  @override
+  String householdWidget_incomeLabel(String month) {
+    return '$month 입금';
+  }
+
+  @override
+  String householdWidget_expenseLabel(String month) {
+    return '$month 지출';
+  }
+
+  @override
+  String get householdWidget_balance => '잔액';
+
+  @override
+  String householdWidget_budget(String amount) {
+    return '예산 $amount';
+  }
+
+  @override
+  String householdWidget_budgetUsed(int percent) {
+    return '$percent% 사용';
+  }
+
+  @override
+  String householdWidget_budgetOver(String amount) {
+    return '$amount 초과';
+  }
+
+  @override
+  String householdWidget_budgetRemaining(String amount) {
+    return '$amount 남음';
+  }
+
+  @override
+  String get householdWidget_filterTitle => '필터 선택';
+
+  @override
+  String get householdWidget_filterPersonal => '개인';
+
+  @override
+  String get householdWidget_filterPersonalSub => '그룹 없이 개인 지출만';
+
+  @override
+  String get householdWidget_applyButton => '적용';
+
+  @override
+  String get householdWidget_categoryTitle => '카테고리별 지출';
+
+  @override
+  String householdWidget_categoryOver(String amount) {
+    return '$amount 초과';
+  }
+
+  @override
+  String householdWidget_categoryUsed(int percent) {
+    return '$percent% 사용';
+  }
+
+  @override
+  String get householdWidget_catTransportation => '교통';
+
+  @override
+  String get householdWidget_catFood => '식비';
+
+  @override
+  String get householdWidget_catLeisure => '여가';
+
+  @override
+  String get householdWidget_catLiving => '생활';
+
+  @override
+  String get householdWidget_catMedical => '의료';
+
+  @override
+  String get householdWidget_catEducation => '교육';
+
+  @override
+  String get householdWidget_catAllowance => '용돈';
+
+  @override
+  String get householdWidget_catCelebration => '경조사비';
+
+  @override
+  String get householdWidget_catAssetTransfer => '자산이동';
+
+  @override
+  String get householdWidget_catChildcare => '육아비';
+
+  @override
+  String get householdWidget_catOther => '기타';
+
+  @override
+  String get assetWidget_title => '자산 현황';
+
+  @override
+  String assetWidget_groupTitle(String groupName) {
+    return '$groupName 자산';
+  }
+
+  @override
+  String get assetWidget_groupTooltip => '그룹 선택';
+
+  @override
+  String get assetWidget_totalAsset => '총 자산';
+
+  @override
+  String get assetWidget_totalProfit => '총 수익';
+
+  @override
+  String get assetWidget_profitRate => '수익률';
+
+  @override
+  String get assetWidget_distribution => '자산 분포';
+
+  @override
+  String get assetWidget_groupPickerTitle => '그룹 선택';
+
+  @override
+  String get assetWidget_applyButton => '적용';
+
+  @override
+  String get assetWidget_typeSavings => '적금';
+
+  @override
+  String get assetWidget_typeDeposit => '예금';
+
+  @override
+  String get assetWidget_typeStock => '주식';
+
+  @override
+  String get assetWidget_typeFund => '펀드';
+
+  @override
+  String get assetWidget_typeRealEstate => '부동산';
+
+  @override
+  String get assetWidget_typeGold => '실물 금';
+
+  @override
+  String get assetWidget_typeOther => '기타';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/navigation_label_helper.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/features/settings/common/presentation/widgets/navigation_slot_preview.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -201,7 +202,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                       : Colors.grey,
                 ),
                 title: Text(
-                  item.label,
+                  NavigationLabelHelper.getLabel(l10n, item.id),
                   style: TextStyle(
                     fontWeight: isUsed ? FontWeight.bold : FontWeight.normal,
                   ),
@@ -279,7 +280,7 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
                           : (isUsedInOtherSlot ? Colors.grey : null),
                     ),
                     title: Text(
-                      item.label,
+                      NavigationLabelHelper.getLabel(l10n, item.id),
                       style: TextStyle(
                         fontWeight: isCurrentlySelected ? FontWeight.bold : null,
                         color: isUsedInOtherSlot ? Colors.grey : null,

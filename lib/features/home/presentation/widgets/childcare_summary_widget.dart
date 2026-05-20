@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/child_points/providers/childcare_pr
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 class ChildcareSummaryWidget extends ConsumerStatefulWidget {
@@ -102,7 +103,7 @@ class _ChildcareSummaryWidgetState
     final accountsAsync = ref.watch(childcareAccountsProvider);
 
     final hasFilter = _selectedGroupId != null;
-    const title = '육아 포인트';
+    final title = AppLocalizations.of(context)!.widgetSettings_childcareSummary;
 
     return DashboardCard(
       title: title,

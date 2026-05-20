@@ -121,6 +121,9 @@
   "nav_miniGames": "미니게임",
   "nav_investmentIndicators": "투자 지표",
   "nav_savings": "그룹 저금통",
+  "nav_votes": "투표",
+  "more_coach_groupDesc": "가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.",
+  "more_coach_settingsDesc": "테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.",
 
   "home_greeting_morning": "좋은 아침이에요!",
   "home_greeting_afternoon": "좋은 오후에요!",
@@ -169,6 +172,26 @@
   "widgetSettings_assetSummaryDesc": "총 자산과 수익률을 표시합니다",
   "widgetSettings_memoSummary": "메모 요약",
   "widgetSettings_memoSummaryDesc": "최근 작성한 메모를 표시합니다",
+  "widgetSettings_householdSummary": "가계 현황",
+  "widgetSettings_householdSummaryDesc": "이번 달 지출 요약 및 예산 달성률",
+  "widgetSettings_childcareSummary": "육아 포인트",
+  "widgetSettings_childcareSummaryDesc": "자녀별 포인트 잔액 현황",
+  "widgetSettings_savingsSummary": "저금통",
+  "widgetSettings_savingsSummaryDesc": "그룹별 적립 목표 및 달성 현황",
+  "widgetSettings_fridgeSummary": "유통기한 임박",
+  "widgetSettings_fridgeSummaryDesc": "냉장고에서 유통기한이 얼마 남지 않은 식품 목록",
+  "widgetSettings_viewToday": "오늘",
+  "widgetSettings_viewWeek": "금주",
+  "widgetSettings_viewMonth": "이번달",
+  "widgetSettings_viewBudget": "전체 예산 보기",
+  "widgetSettings_viewCategory": "카테고리별 보기",
+  "widgetSettings_savingsEmpty": "등록된 저금통이 없습니다",
+  "widgetSettings_fridgeExpiryEmpty": "유통기한 임박 식품이 없어요",
+  "widgetSettings_scheduleWeek": "금주 일정",
+  "widgetSettings_scheduleMonth": "이번달 일정",
+  "widgetSettings_scheduleEmptyToday": "오늘 일정이 없습니다",
+  "widgetSettings_scheduleEmptyWeek": "이번 주 일정이 없습니다",
+  "widgetSettings_scheduleEmptyMonth": "이번 달 일정이 없습니다",
   "widgetSettings_weather": "날씨",
   "widgetSettings_weatherDesc": "현재 위치의 날씨 정보를 표시합니다",
 
@@ -401,6 +424,84 @@
   "group_joinRequestStatusDone": "처리완료",
   "group_joinRequestAccepted": "승인됨",
   "group_joinRequestRejected": "거부됨",
+
+  "group_codeExpiredLabel": "초대 코드 만료됨",
+  "group_defaultGroupTooltip": "대표 그룹",
+  "group_setDefaultGroupTooltip": "대표 그룹으로 설정",
+  "group_unsetDefaultGroupTooltip": "대표 그룹 해제",
+  "group_setDefaultSuccess": "'{name}'을(를) 대표 그룹으로 설정했습니다",
+  "@group_setDefaultSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_unsetDefaultSuccess": "대표 그룹을 해제했습니다",
+
+  "group_myColorTitle": "나만의 그룹 색상",
+  "group_myColorNotSet": "설정하지 않음 (그룹 기본 색상 사용)",
+  "group_myColorSet": "설정됨",
+  "group_myColorReset": "초기화",
+
+  "group_dangerZone": "위험 구역",
+  "group_dangerZoneDesc": "그룹을 삭제하면 모든 데이터가 영구적으로 삭제됩니다.",
+  "group_leaveTitle": "그룹 나가기",
+  "group_leaveDesc": "그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없습니다.",
+  "group_leaveConfirmBody": "정말로 \"{name}\" 그룹을 나가시겠습니까?\n\n그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없으며, 다시 참여하려면 초대 코드가 필요합니다.",
+  "@group_leaveConfirmBody": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_leaveButton": "나가기",
+  "group_leaveSuccess": "그룹에서 나갔습니다",
+
+  "group_roleManagementTitle": "역할 관리",
+  "group_roleManagementDesc": "이 그룹의 역할 목록입니다.",
+  "group_roleEmpty": "역할이 없습니다",
+  "group_roleDefaultBadge": "기본 역할",
+  "group_rolePermissionCount": "권한: {count}개",
+  "@group_rolePermissionCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "group_roleEdit": "역할 수정",
+  "group_roleDelete": "역할 삭제",
+  "group_roleSortSaved": "정렬 순서가 저장되었습니다",
+  "group_roleLoadError": "역할 목록을 불러올 수 없습니다",
+
+  "group_roleInfoTitle": "안내",
+  "group_roleInfoBullet1": "공통 역할 (OWNER, ADMIN, MEMBER)은 모든 그룹에 기본으로 제공됩니다.",
+  "group_roleInfoBullet2": "커스텀 역할은 그룹 OWNER만 생성, 수정, 삭제할 수 있습니다.",
+  "group_roleInfoBullet3": "역할을 관리하려면 그룹 OWNER 권한이 필요합니다.",
+
+  "group_roleCreateTitle": "역할 생성",
+  "group_roleEditTitle": "역할 수정",
+  "group_roleDeleteTitle": "역할 삭제",
+  "group_roleNameLabel": "역할 이름",
+  "group_roleNameRequired": "역할 이름을 입력해주세요",
+  "group_roleDefaultSwitch": "기본 역할",
+  "group_roleDefaultSwitchSub": "새 멤버 가입 시 자동 부여",
+  "group_roleColorLabel": "역할 색상",
+  "group_rolePermissionsLabel": "권한 선택",
+  "group_rolePermissionsViewLabel": "권한 목록",
+  "group_rolePermissionNone": "권한이 없습니다",
+  "group_roleDefaultLabel": "기본 역할 (새 멤버 가입 시 자동 부여)",
+  "group_roleDeleteConfirm": "{name} 역할을 삭제하시겠습니까?",
+  "@group_roleDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_roleDeleteWarning": "⚠️ 이 역할을 사용 중인 멤버가 있으면 삭제할 수 없습니다.",
+  "group_roleCreateSuccess": "역할이 생성되었습니다",
+  "group_roleCreateFail": "역할 생성 실패: {error}",
+  "@group_roleCreateFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_roleEditSuccess": "역할이 수정되었습니다",
+  "group_roleEditFail": "역할 수정 실패: {error}",
+  "@group_roleEditFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_roleDeleteSuccess": "역할이 삭제되었습니다",
+  "group_roleDeleteFail": "역할 삭제 실패: {error}",
+  "@group_roleDeleteFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_settings_groupManagementTitle": "그룹 관리",
 
   "error_network": "네트워크 연결을 확인해주세요",
   "error_server": "서버 오류가 발생했습니다",
@@ -768,6 +869,13 @@
   "todo_sortByCreatedAt": "생성일순",
   "todo_filterApplied": "필터 적용됨",
   "todo_clearFilter": "필터 초기화",
+  "todo_filterTooltip": "할일 필터",
+  "todo_widgetTitleToday": "오늘의 할일",
+  "todo_widgetTitleWeek": "금주 할일",
+  "todo_widgetTitleMonth": "이번달 할일",
+  "todo_emptyToday": "오늘 할일이 없습니다",
+  "todo_emptyWeek": "이번 주 할일이 없습니다",
+  "todo_emptyMonth": "이번 달 할일이 없습니다",
 
   "todo_searchHint": "할일 제목, 설명으로 검색",
   "todo_searchNoResults": "검색 결과가 없습니다",
@@ -1394,6 +1502,26 @@
   "@fridge_frequent_empty": { "description": "자주 사는 항목 없음" },
   "fridge_frequent_add_to_cart": "장바구니에 추가",
   "@fridge_frequent_add_to_cart": { "description": "장바구니에 추가 버튼" },
+  "fridge_frequent_added_snackbar": "{name}을(를) 장바구니에 추가했습니다",
+  "@fridge_frequent_added_snackbar": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "fridge_frequent_delete_confirm": "{name}을(를) 삭제하시겠습니까?",
+  "@fridge_frequent_delete_confirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "fridge_frequent_autoAddInfo_title": "자동 추가란?",
+  "fridge_frequent_autoAddInfo_body": "냉장고에서 이 품목의 수량이 0이 되면 장바구니에 자동으로 추가돼요.\n스위치를 켜두면 냉장고가 비었을 때 알아서 장보기 목록에 담아드립니다.",
+  "fridge_frequent_autoAddInfo_hint": "냉장고 탭에서 수량을 관리하면 연동됩니다",
+  "fridge_frequent_coach_fabTitle": "자주 사는 항목 추가",
+  "fridge_frequent_coach_fabDesc": "자주 구매하는 품목을 등록해 두면\n다음 장보기 때 빠르게 담을 수 있어요.",
+  "fridge_frequent_coach_itemTitle": "항목 관리",
+  "fridge_frequent_coach_itemDesc": "품목명·기본 단위를 설정할 수 있어요.\n탭하면 수정, 길게 누르면 삭제할 수 있습니다.",
+  "fridge_frequent_coach_autoAddTitle": "자동 추가",
+  "fridge_frequent_coach_autoAddDesc": "냉장고에서 이 품목의 수량이 0이 되면\n장바구니에 자동으로 추가돼요.\n냉장고 탭과 연동되는 스마트 기능이에요.",
+  "fridge_frequent_coach_addToCartTitle": "장바구니에 바로 담기",
+  "fridge_frequent_coach_addToCartDesc": "버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.",
+  "fridge_frequent_coach_skip": "건너뛰기",
   "fridge_cart_empty": "장바구니가 비어 있습니다",
   "@fridge_cart_empty": { "description": "장바구니 비어 있음" },
   "fridge_cart_add_item": "품목 추가",
@@ -1425,5 +1553,96 @@
   "fridge_history_view_expense": "가계부 보기",
   "@fridge_history_view_expense": { "description": "가계부 보기 버튼" },
   "fridge_group_selector_personal": "개인",
-  "@fridge_group_selector_personal": { "description": "개인 모드" }
+  "@fridge_group_selector_personal": { "description": "개인 모드" },
+
+  "dashboard_greetingMorning": "좋은 아침입니다",
+  "dashboard_greetingAfternoon": "좋은 오후입니다",
+  "dashboard_greetingEvening": "좋은 저녁입니다",
+  "dashboard_greetingSubtitle": "오늘도 좋은 하루 되세요!",
+  "dashboard_emptyWidgets": "표시할 위젯이 없습니다",
+  "dashboard_emptyWidgetsHint": "설정에서 위젯을 활성화하세요",
+  "dashboard_widgetSettings": "위젯 설정",
+  "dashboard_notifications": "알림",
+
+  "weather_widgetTitle": "오늘 날씨",
+  "weather_refresh": "날씨 새로고침",
+  "weather_detail": "자세히",
+  "weather_errorMessage": "날씨 정보를 불러올 수 없습니다",
+  "weather_dustFine": "미세",
+  "weather_dustUltraFine": "초미세",
+
+  "investment_widgetTitle": "투자 지표",
+  "investment_errorMessage": "데이터를 불러올 수 없습니다",
+  "investment_emptyBookmarks": "즐겨찾기한 지표가 없습니다",
+
+  "householdWidget_groupTooltip": "그룹 선택",
+  "householdWidget_incomeLabel": "{month} 입금",
+  "@householdWidget_incomeLabel": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "householdWidget_expenseLabel": "{month} 지출",
+  "@householdWidget_expenseLabel": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "householdWidget_balance": "잔액",
+  "householdWidget_budget": "예산 {amount}",
+  "@householdWidget_budget": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_budgetUsed": "{percent}% 사용",
+  "@householdWidget_budgetUsed": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "householdWidget_budgetOver": "{amount} 초과",
+  "@householdWidget_budgetOver": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_budgetRemaining": "{amount} 남음",
+  "@householdWidget_budgetRemaining": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_filterTitle": "필터 선택",
+  "householdWidget_filterPersonal": "개인",
+  "householdWidget_filterPersonalSub": "그룹 없이 개인 지출만",
+  "householdWidget_applyButton": "적용",
+  "householdWidget_categoryTitle": "카테고리별 지출",
+  "householdWidget_categoryOver": "{amount} 초과",
+  "@householdWidget_categoryOver": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_categoryUsed": "{percent}% 사용",
+  "@householdWidget_categoryUsed": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "householdWidget_catTransportation": "교통",
+  "householdWidget_catFood": "식비",
+  "householdWidget_catLeisure": "여가",
+  "householdWidget_catLiving": "생활",
+  "householdWidget_catMedical": "의료",
+  "householdWidget_catEducation": "교육",
+  "householdWidget_catAllowance": "용돈",
+  "householdWidget_catCelebration": "경조사비",
+  "householdWidget_catAssetTransfer": "자산이동",
+  "householdWidget_catChildcare": "육아비",
+  "householdWidget_catOther": "기타",
+
+  "assetWidget_title": "자산 현황",
+  "assetWidget_groupTitle": "{groupName} 자산",
+  "@assetWidget_groupTitle": {
+    "placeholders": { "groupName": { "type": "String" } }
+  },
+  "assetWidget_groupTooltip": "그룹 선택",
+  "assetWidget_totalAsset": "총 자산",
+  "assetWidget_totalProfit": "총 수익",
+  "assetWidget_profitRate": "수익률",
+  "assetWidget_distribution": "자산 분포",
+  "assetWidget_groupPickerTitle": "그룹 선택",
+  "assetWidget_applyButton": "적용",
+  "assetWidget_typeSavings": "적금",
+  "assetWidget_typeDeposit": "예금",
+  "assetWidget_typeStock": "주식",
+  "assetWidget_typeFund": "펀드",
+  "assetWidget_typeRealEstate": "부동산",
+  "assetWidget_typeGold": "실물 금",
+  "assetWidget_typeOther": "기타"
 }

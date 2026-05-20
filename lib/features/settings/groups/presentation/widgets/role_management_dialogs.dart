@@ -32,7 +32,7 @@ class GroupRoleCreateDialog {
           return StatefulBuilder(
             builder: (builderContext, setState) {
               return AlertDialog(
-                title: const Text('역할 생성'),
+                title: Text(l10n.group_roleCreateTitle),
                 content: SingleChildScrollView(
                   child: SizedBox(
                     width: double.maxFinite,
@@ -42,17 +42,17 @@ class GroupRoleCreateDialog {
                       children: [
                         TextField(
                           controller: nameController,
-                          decoration: const InputDecoration(
-                            labelText: '역할 이름',
+                          decoration: InputDecoration(
+                            labelText: l10n.group_roleNameLabel,
                             hintText: 'CUSTOM_ROLE',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                           ),
                           textCapitalization: TextCapitalization.characters,
                         ),
                         const SizedBox(height: AppSizes.spaceM),
                         SwitchListTile(
-                          title: const Text('기본 역할'),
-                          subtitle: const Text('새 멤버 가입 시 자동 부여'),
+                          title: Text(l10n.group_roleDefaultSwitch),
+                          subtitle: Text(l10n.group_roleDefaultSwitchSub),
                           value: isDefaultRole,
                           onChanged: (value) {
                             setState(() {
@@ -61,9 +61,9 @@ class GroupRoleCreateDialog {
                           },
                         ),
                         const SizedBox(height: AppSizes.spaceM),
-                        const Text(
-                          '역할 색상',
-                          style: TextStyle(
+                        Text(
+                          l10n.group_roleColorLabel,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -79,9 +79,9 @@ class GroupRoleCreateDialog {
 
                         ),
                         const SizedBox(height: AppSizes.spaceM),
-                        const Text(
-                          '권한 선택',
-                          style: TextStyle(
+                        Text(
+                          l10n.group_rolePermissionsLabel,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -126,8 +126,8 @@ class GroupRoleCreateDialog {
                     onPressed: () async {
                       if (nameController.text.isEmpty) {
                         ScaffoldMessenger.of(builderContext).showSnackBar(
-                          const SnackBar(
-                            content: Text('역할 이름을 입력해주세요'),
+                          SnackBar(
+                            content: Text(l10n.group_roleNameRequired),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -184,8 +184,8 @@ class GroupRoleCreateDialog {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('역할이 생성되었습니다'),
+          SnackBar(
+            content: Text(l10n.group_roleCreateSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -194,7 +194,7 @@ class GroupRoleCreateDialog {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('역할 생성 실패: $e'),
+            content: Text(l10n.group_roleCreateFail(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -230,7 +230,7 @@ class GroupRoleEditDialog {
 
           return StatefulBuilder(
             builder: (builderContext, setState) => AlertDialog(
-              title: const Text('역할 수정'),
+              title: Text(l10n.group_roleEditTitle),
               content: SingleChildScrollView(
                 child: SizedBox(
                   width: double.maxFinite,
@@ -240,16 +240,16 @@ class GroupRoleEditDialog {
                     children: [
                       TextField(
                         controller: nameController,
-                        decoration: const InputDecoration(
-                          labelText: '역할 이름',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.group_roleNameLabel,
+                          border: const OutlineInputBorder(),
                         ),
                         textCapitalization: TextCapitalization.characters,
                       ),
                       const SizedBox(height: AppSizes.spaceM),
                       SwitchListTile(
-                        title: const Text('기본 역할'),
-                        subtitle: const Text('새 멤버 가입 시 자동 부여'),
+                        title: Text(l10n.group_roleDefaultSwitch),
+                        subtitle: Text(l10n.group_roleDefaultSwitchSub),
                         value: isDefaultRole,
                         onChanged: (value) {
                           setState(() {
@@ -258,9 +258,9 @@ class GroupRoleEditDialog {
                         },
                       ),
                       const SizedBox(height: AppSizes.spaceM),
-                      const Text(
-                        '역할 색상',
-                        style: TextStyle(
+                      Text(
+                        l10n.group_roleColorLabel,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -276,9 +276,9 @@ class GroupRoleEditDialog {
 
                       ),
                       const SizedBox(height: AppSizes.spaceM),
-                      const Text(
-                        '권한 선택',
-                        style: TextStyle(
+                      Text(
+                        l10n.group_rolePermissionsLabel,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -323,8 +323,8 @@ class GroupRoleEditDialog {
                   onPressed: () async {
                     if (nameController.text.isEmpty) {
                       ScaffoldMessenger.of(builderContext).showSnackBar(
-                        const SnackBar(
-                          content: Text('역할 이름을 입력해주세요'),
+                        SnackBar(
+                          content: Text(l10n.group_roleNameRequired),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -382,8 +382,8 @@ class GroupRoleEditDialog {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('역할이 수정되었습니다'),
+          SnackBar(
+            content: Text(l10n.group_roleEditSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -392,7 +392,7 @@ class GroupRoleEditDialog {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('역할 수정 실패: $e'),
+            content: Text(l10n.group_roleEditFail(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -414,16 +414,16 @@ class GroupRoleDeleteDialog {
     await showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('역할 삭제'),
+        title: Text(l10n.group_roleDeleteTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${role.name} 역할을 삭제하시겠습니까?'),
+            Text(l10n.group_roleDeleteConfirm(role.name)),
             const SizedBox(height: AppSizes.spaceM),
-            const Text(
-              '⚠️ 이 역할을 사용 중인 멤버가 있으면 삭제할 수 없습니다.',
-              style: TextStyle(fontSize: 12, color: Colors.red),
+            Text(
+              l10n.group_roleDeleteWarning,
+              style: const TextStyle(fontSize: 12, color: Colors.red),
             ),
           ],
         ),
@@ -463,8 +463,8 @@ class GroupRoleDeleteDialog {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('역할이 삭제되었습니다'),
+          SnackBar(
+            content: Text(l10n.group_roleDeleteSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -473,7 +473,7 @@ class GroupRoleDeleteDialog {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('역할 삭제 실패: $e'),
+            content: Text(l10n.group_roleDeleteFail(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -525,7 +525,7 @@ class GroupRoleViewDialog {
                         const SizedBox(width: AppSizes.spaceS),
                         Flexible(
                           child: Text(
-                            '기본 역할 (새 멤버 가입 시 자동 부여)',
+                            l10n.group_roleDefaultLabel,
                             style: TextStyle(
                               color: Colors.blue[700],
                               fontWeight: FontWeight.bold,
@@ -539,9 +539,9 @@ class GroupRoleViewDialog {
 
                 // 역할 색상 표시
                 if (role.color != null) ...[
-                  const Text(
-                    '역할 색상',
-                    style: TextStyle(
+                  Text(
+                    l10n.group_roleColorLabel,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -563,9 +563,9 @@ class GroupRoleViewDialog {
                 ],
 
                 // 권한 목록 표시
-                const Text(
-                  '권한 목록',
-                  style: TextStyle(
+                Text(
+                  l10n.group_rolePermissionsViewLabel,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -579,11 +579,11 @@ class GroupRoleViewDialog {
                     ),
                   )
                 else if (role.permissions.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: AppSizes.spaceM),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceM),
                     child: Text(
-                      '권한이 없습니다',
-                      style: TextStyle(
+                      l10n.group_rolePermissionNone,
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontStyle: FontStyle.italic,
                       ),

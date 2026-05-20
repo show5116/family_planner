@@ -96,7 +96,7 @@ class RoleCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              '기본 역할',
+                              l10n.group_roleDefaultBadge,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: Colors.blue[700],
@@ -109,7 +109,7 @@ class RoleCard extends StatelessWidget {
                     if (role.permissions.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        '권한: ${role.permissions.length}개',
+                        l10n.group_rolePermissionCount(role.permissions.length),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                         ),

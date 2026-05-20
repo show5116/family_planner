@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/assets/data/models/account_model.da
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 자산 요약 위젯
@@ -83,9 +84,11 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
 
     final hasActiveFilter = _selectedGroupId != null;
 
+    final l10n = AppLocalizations.of(context)!;
+
     return statsAsync.when(
       loading: () => DashboardCard(
-        title: '자산 현황',
+        title: l10n.assetWidget_title,
         icon: Icons.account_balance_wallet,
         onTap: () {},
         child: const Center(
@@ -101,12 +104,13 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
   }
 
   Widget _buildCard(BuildContext context, List<Group> groups, AssetStatisticsModel stats, bool hasActiveFilter) {
+    final l10n = AppLocalizations.of(context)!;
     final isProfit = stats.totalProfit >= 0;
 
-    String title = '자산 현황';
+    String title = l10n.assetWidget_title;
     if (_selectedGroupId != null && groups.isNotEmpty) {
       final group = groups.where((g) => g.id == _selectedGroupId).firstOrNull;
-      if (group != null) title = '${group.name} 자산';
+      if (group != null) title = l10n.assetWidget_groupTitle(group.name);
     }
 
     return DashboardCard(
@@ -119,7 +123,7 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '그룹 선택',
+              tooltip: l10n.assetWidget_groupTooltip,
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
@@ -142,7 +146,7 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
       child: Column(
         children: [
           _AssetRow(
-            label: '총 자산',
+            label: l10n.assetWidget_totalAsset,
             value: stats.totalBalance.toCurrency(),
             valueStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -153,13 +157,13 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
           const Divider(),
           const SizedBox(height: AppSizes.spaceM),
           _AssetRow(
-            label: '총 수익',
+            label: l10n.assetWidget_totalProfit,
             value: stats.totalProfit.toCurrency(),
             valueColor: isProfit ? AppColors.success : AppColors.error,
           ),
           const SizedBox(height: AppSizes.spaceS),
           _AssetRow(
-            label: '수익률',
+            label: l10n.assetWidget_profitRate,
             value: stats.profitRate.toPercent(),
             valueColor: isProfit ? AppColors.success : AppColors.error,
             trailing: Icon(
@@ -227,7 +231,7 @@ class _AssetGroupPickerSheetState extends State<_AssetGroupPickerSheet> {
             padding: const EdgeInsets.fromLTRB(
               AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
             ),
-            child: Text('그룹 선택', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(AppLocalizations.of(context)!.assetWidget_groupPickerTitle, style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
           RadioGroup<String>(
@@ -251,7 +255,7 @@ class _AssetGroupPickerSheetState extends State<_AssetGroupPickerSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () => widget.onApply(_selectedGroupId),
-                child: const Text('적용'),
+                child: Text(AppLocalizations.of(context)!.assetWidget_applyButton),
               ),
             ),
           ),
@@ -313,22 +317,23 @@ class _AssetDistribution extends StatelessWidget {
 
   final List<AccountTypeStatModel> byType;
 
-  static String _typeLabel(AccountType? type) {
+  static String _typeLabel(BuildContext context, AccountType? type) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
       case AccountType.savings:
-        return '적금';
+        return l10n.assetWidget_typeSavings;
       case AccountType.deposit:
-        return '예금';
+        return l10n.assetWidget_typeDeposit;
       case AccountType.stock:
-        return '주식';
+        return l10n.assetWidget_typeStock;
       case AccountType.fund:
-        return '펀드';
+        return l10n.assetWidget_typeFund;
       case AccountType.realEstate:
-        return '부동산';
+        return l10n.assetWidget_typeRealEstate;
       case AccountType.gold:
-        return '실물 금';
+        return l10n.assetWidget_typeGold;
       default:
-        return '기타';
+        return l10n.assetWidget_typeOther;
     }
   }
 
@@ -356,10 +361,11 @@ class _AssetDistribution extends StatelessWidget {
     final total = byType.fold<double>(0, (sum, t) => sum + t.balance);
     if (total == 0) return const SizedBox.shrink();
 
+    final l10n = AppLocalizations.of(context)!;
     final distribution = byType
         .where((t) => t.balance > 0)
         .map((t) => (
-              name: _typeLabel(t.type),
+              name: _typeLabel(context, t.type),
               ratio: t.balance / total,
               color: _typeColor(t.type),
             ))
@@ -371,7 +377,7 @@ class _AssetDistribution extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '자산 분포',
+          l10n.assetWidget_distribution,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

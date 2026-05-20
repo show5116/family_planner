@@ -18,6 +18,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'package:family_planner/shared/widgets/banner_ad_widget.dart';
 
@@ -79,7 +80,7 @@ class DashboardTab extends ConsumerWidget {
                 child: const Icon(Icons.notifications_outlined),
               ),
               onPressed: () => _showNotificationPopup(context),
-              tooltip: '알림',
+              tooltip: AppLocalizations.of(context)!.dashboard_notifications,
             ),
           ),
           AppBarMoreMenu(
@@ -280,14 +281,14 @@ class _DashboardGrid extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceM),
             Text(
-              '표시할 위젯이 없습니다',
+              AppLocalizations.of(context)!.dashboard_emptyWidgets,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(
-              '설정에서 위젯을 활성화하세요',
+              AppLocalizations.of(context)!.dashboard_emptyWidgetsHint,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -296,7 +297,7 @@ class _DashboardGrid extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: () => context.push(AppRoutes.homeWidgetSettings),
               icon: const Icon(Icons.settings),
-              label: const Text('위젯 설정'),
+              label: Text(AppLocalizations.of(context)!.dashboard_widgetSettings),
             ),
           ],
         ),
@@ -319,14 +320,15 @@ class _GreetingSection extends StatelessWidget {
     String greeting;
     IconData icon;
 
+    final l10n = AppLocalizations.of(context)!;
     if (hour < 12) {
-      greeting = '좋은 아침입니다';
+      greeting = l10n.dashboard_greetingMorning;
       icon = Icons.wb_sunny;
     } else if (hour < 18) {
-      greeting = '좋은 오후입니다';
+      greeting = l10n.dashboard_greetingAfternoon;
       icon = Icons.wb_twilight;
     } else {
-      greeting = '좋은 저녁입니다';
+      greeting = l10n.dashboard_greetingEvening;
       icon = Icons.nights_stay;
     }
 
@@ -348,7 +350,7 @@ class _GreetingSection extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '오늘도 좋은 하루 되세요!',
+                l10n.dashboard_greetingSubtitle,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),

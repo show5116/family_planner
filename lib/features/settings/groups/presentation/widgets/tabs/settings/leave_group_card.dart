@@ -30,7 +30,7 @@ class LeaveGroupCard extends ConsumerWidget {
                 Icon(Icons.exit_to_app, color: Colors.orange.shade700),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  '그룹 나가기',
+                  l10n.group_leaveTitle,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -41,7 +41,7 @@ class LeaveGroupCard extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(
-              '그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없습니다.',
+              l10n.group_leaveDesc,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.orange.shade700,
@@ -53,7 +53,7 @@ class LeaveGroupCard extends ConsumerWidget {
               child: ElevatedButton.icon(
                 onPressed: () => _showLeaveGroupDialog(context, ref, l10n),
                 icon: const Icon(Icons.exit_to_app),
-                label: const Text('그룹 나가기'),
+                label: Text(l10n.group_leaveTitle),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
@@ -74,28 +74,27 @@ class LeaveGroupCard extends ConsumerWidget {
   ) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('그룹 나가기'),
-        content: Text(
-          '정말로 "${group.name}" 그룹을 나가시겠습니까?\n\n'
-          '그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없으며, '
-          '다시 참여하려면 초대 코드가 필요합니다.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.group_cancel),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white,
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.group_leaveTitle),
+          content: Text(l10n.group_leaveConfirmBody(group.name)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.group_cancel),
             ),
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('나가기'),
-          ),
-        ],
-      ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.group_leaveButton),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed == true && context.mounted) {
@@ -106,7 +105,7 @@ class LeaveGroupCard extends ConsumerWidget {
           Navigator.pop(context);
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('그룹에서 나갔습니다')));
+          ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.group_leaveSuccess)));
         }
       } catch (e) {
         if (context.mounted) {

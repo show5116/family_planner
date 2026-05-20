@@ -10,6 +10,7 @@ import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 할일 요약 위젯 (오늘 / 금주 / 이번달, 그룹 필터 지원)
@@ -51,25 +52,27 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     }
   }
 
-  String _title() {
+  String _title(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (widget.viewMode) {
       case ScheduleViewMode.today:
-        return '오늘의 할일';
+        return l10n.todo_widgetTitleToday;
       case ScheduleViewMode.week:
-        return '금주 할일';
+        return l10n.todo_widgetTitleWeek;
       case ScheduleViewMode.month:
-        return '이번달 할일';
+        return l10n.todo_widgetTitleMonth;
     }
   }
 
-  String _emptyMessage() {
+  String _emptyMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (widget.viewMode) {
       case ScheduleViewMode.today:
-        return '오늘 할일이 없습니다';
+        return l10n.todo_emptyToday;
       case ScheduleViewMode.week:
-        return '이번 주 할일이 없습니다';
+        return l10n.todo_emptyWeek;
       case ScheduleViewMode.month:
-        return '이번 달 할일이 없습니다';
+        return l10n.todo_emptyMonth;
     }
   }
 
@@ -126,7 +129,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
 
     return todosAsync.when(
       loading: () => DashboardCard(
-        title: _title(),
+        title: _title(context),
         icon: Icons.check_box,
         onTap: () {},
         child: const Center(
@@ -151,7 +154,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     final totalCount = todos.length;
 
     return DashboardCard(
-      title: _title(),
+      title: _title(context),
       icon: Icons.check_box,
       action: Row(
         mainAxisSize: MainAxisSize.min,
@@ -170,7 +173,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '할일 필터',
+              tooltip: AppLocalizations.of(context)!.todo_filterTooltip,
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
@@ -187,7 +190,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
       ),
       onTap: () => ref.read(homeTabNavigationProvider.notifier).state = 'todo',
       child: todos.isEmpty
-          ? _EmptyState(message: _emptyMessage())
+          ? _EmptyState(message: _emptyMessage(context))
           : Column(
               children: todos
                   .take(5)
@@ -216,7 +219,7 @@ class _TodoItemState extends State<_TodoItem> {
     final todo = widget.todo;
     final ref = widget.ref;
     final priorityColor = _getPriorityColor(todo.priority);
-    final priorityLabel = _getPriorityLabel(todo.priority);
+    final priorityLabel = _getPriorityLabel(context, todo.priority);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
@@ -299,16 +302,17 @@ class _TodoItemState extends State<_TodoItem> {
     }
   }
 
-  String? _getPriorityLabel(TaskPriority? priority) {
+  String? _getPriorityLabel(BuildContext context, TaskPriority? priority) {
+    final l10n = AppLocalizations.of(context)!;
     switch (priority) {
       case TaskPriority.urgent:
-        return '긴급';
+        return l10n.todo_priorityUrgent;
       case TaskPriority.high:
-        return '높음';
+        return l10n.todo_priorityHigh;
       case TaskPriority.medium:
-        return '중간';
+        return l10n.todo_priorityMedium;
       case TaskPriority.low:
-        return '낮음';
+        return l10n.todo_priorityLow;
       default:
         return null;
     }

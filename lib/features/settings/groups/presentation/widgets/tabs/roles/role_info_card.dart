@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/common_widgets.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 역할 정보 카드
 class RoleInfoCard extends StatelessWidget {
@@ -12,13 +13,15 @@ class RoleInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return InfoCard(
-      title: '안내',
+      title: l10n.group_roleInfoTitle,
       message: '',
       bulletPoints: [
-        '공통 역할 (OWNER, ADMIN, MEMBER)은 모든 그룹에 기본으로 제공됩니다.',
-        '커스텀 역할은 그룹 OWNER만 생성, 수정, 삭제할 수 있습니다.',
-        if (!isOwner) '역할을 관리하려면 그룹 OWNER 권한이 필요합니다.',
+        l10n.group_roleInfoBullet1,
+        l10n.group_roleInfoBullet2,
+        if (!isOwner) l10n.group_roleInfoBullet3,
       ],
       backgroundColor: Colors.blue[50],
       iconColor: Colors.blue[700],

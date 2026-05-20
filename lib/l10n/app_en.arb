@@ -121,6 +121,9 @@
   "nav_miniGames": "Mini Games",
   "nav_investmentIndicators": "Investment Indicators",
   "nav_savings": "Group Piggy Bank",
+  "nav_votes": "Votes",
+  "more_coach_groupDesc": "Create groups for family, couples, friends, and more.\nInvite members with an invitation code.",
+  "more_coach_settingsDesc": "Customize the app with themes, language, notifications,\nbottom tab layout, and more.",
 
   "home_greeting_morning": "Good morning!",
   "home_greeting_afternoon": "Good afternoon!",
@@ -169,6 +172,26 @@
   "widgetSettings_assetSummaryDesc": "Display total assets and return rate",
   "widgetSettings_memoSummary": "Memo Summary",
   "widgetSettings_memoSummaryDesc": "Display recently written memos",
+  "widgetSettings_householdSummary": "Household Budget",
+  "widgetSettings_householdSummaryDesc": "Monthly expense summary and budget achievement rate",
+  "widgetSettings_childcareSummary": "Childcare Points",
+  "widgetSettings_childcareSummaryDesc": "Point balance status per child",
+  "widgetSettings_savingsSummary": "Savings",
+  "widgetSettings_savingsSummaryDesc": "Savings goal and achievement status per group",
+  "widgetSettings_fridgeSummary": "Expiring Soon",
+  "widgetSettings_fridgeSummaryDesc": "List of items in the fridge with upcoming expiry dates",
+  "widgetSettings_viewToday": "Today",
+  "widgetSettings_viewWeek": "This Week",
+  "widgetSettings_viewMonth": "This Month",
+  "widgetSettings_viewBudget": "Budget Overview",
+  "widgetSettings_viewCategory": "By Category",
+  "widgetSettings_savingsEmpty": "No savings registered",
+  "widgetSettings_fridgeExpiryEmpty": "No items expiring soon",
+  "widgetSettings_scheduleWeek": "This Week's Schedule",
+  "widgetSettings_scheduleMonth": "This Month's Schedule",
+  "widgetSettings_scheduleEmptyToday": "No schedule for today",
+  "widgetSettings_scheduleEmptyWeek": "No schedule this week",
+  "widgetSettings_scheduleEmptyMonth": "No schedule this month",
   "widgetSettings_weather": "Weather",
   "widgetSettings_weatherDesc": "Display current location weather information",
 
@@ -401,6 +424,84 @@
   "group_joinRequestStatusDone": "Done",
   "group_joinRequestAccepted": "Accepted",
   "group_joinRequestRejected": "Rejected",
+
+  "group_codeExpiredLabel": "Invite code expired",
+  "group_defaultGroupTooltip": "Default group",
+  "group_setDefaultGroupTooltip": "Set as default group",
+  "group_unsetDefaultGroupTooltip": "Unset default group",
+  "group_setDefaultSuccess": "'{name}' set as default group",
+  "@group_setDefaultSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_unsetDefaultSuccess": "Default group unset",
+
+  "group_myColorTitle": "My Group Color",
+  "group_myColorNotSet": "Not set (using group default color)",
+  "group_myColorSet": "Set",
+  "group_myColorReset": "Reset",
+
+  "group_dangerZone": "Danger Zone",
+  "group_dangerZoneDesc": "Deleting the group will permanently remove all data.",
+  "group_leaveTitle": "Leave Group",
+  "group_leaveDesc": "You will no longer have access to the group's data.",
+  "group_leaveConfirmBody": "Are you sure you want to leave \"{name}\"?\n\nYou will lose access to the group's data and will need an invite code to rejoin.",
+  "@group_leaveConfirmBody": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_leaveButton": "Leave",
+  "group_leaveSuccess": "You have left the group",
+
+  "group_roleManagementTitle": "Role Management",
+  "group_roleManagementDesc": "List of roles in this group.",
+  "group_roleEmpty": "No roles",
+  "group_roleDefaultBadge": "Default",
+  "group_rolePermissionCount": "{count} permissions",
+  "@group_rolePermissionCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "group_roleEdit": "Edit Role",
+  "group_roleDelete": "Delete Role",
+  "group_roleSortSaved": "Sort order saved",
+  "group_roleLoadError": "Unable to load roles",
+
+  "group_roleInfoTitle": "Info",
+  "group_roleInfoBullet1": "Common roles (OWNER, ADMIN, MEMBER) are provided by default in all groups.",
+  "group_roleInfoBullet2": "Custom roles can only be created, edited, or deleted by the group OWNER.",
+  "group_roleInfoBullet3": "OWNER permission is required to manage roles.",
+
+  "group_roleCreateTitle": "Create Role",
+  "group_roleEditTitle": "Edit Role",
+  "group_roleDeleteTitle": "Delete Role",
+  "group_roleNameLabel": "Role name",
+  "group_roleNameRequired": "Please enter a role name",
+  "group_roleDefaultSwitch": "Default role",
+  "group_roleDefaultSwitchSub": "Automatically assigned to new members",
+  "group_roleColorLabel": "Role color",
+  "group_rolePermissionsLabel": "Select permissions",
+  "group_rolePermissionsViewLabel": "Permissions",
+  "group_rolePermissionNone": "No permissions",
+  "group_roleDefaultLabel": "Default role (automatically assigned to new members)",
+  "group_roleDeleteConfirm": "Delete the role \"{name}\"?",
+  "@group_roleDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_roleDeleteWarning": "⚠️ Roles assigned to members cannot be deleted.",
+  "group_roleCreateSuccess": "Role created",
+  "group_roleCreateFail": "Failed to create role: {error}",
+  "@group_roleCreateFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_roleEditSuccess": "Role updated",
+  "group_roleEditFail": "Failed to update role: {error}",
+  "@group_roleEditFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_roleDeleteSuccess": "Role deleted",
+  "group_roleDeleteFail": "Failed to delete role: {error}",
+  "@group_roleDeleteFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_settings_groupManagementTitle": "Group Management",
 
   "error_network": "Please check your network connection",
   "error_server": "Server error occurred",
@@ -761,6 +862,13 @@
   "todo_sortByCreatedAt": "By Created",
   "todo_filterApplied": "Filter applied",
   "todo_clearFilter": "Clear filter",
+  "todo_filterTooltip": "Task filter",
+  "todo_widgetTitleToday": "Today's Tasks",
+  "todo_widgetTitleWeek": "This Week's Tasks",
+  "todo_widgetTitleMonth": "This Month's Tasks",
+  "todo_emptyToday": "No tasks for today",
+  "todo_emptyWeek": "No tasks this week",
+  "todo_emptyMonth": "No tasks this month",
 
   "todo_searchHint": "Search by title, description",
   "todo_searchNoResults": "No search results",
@@ -1380,6 +1488,26 @@
   "@fridge_frequent_empty": { "description": "No frequent items" },
   "fridge_frequent_add_to_cart": "Add to cart",
   "@fridge_frequent_add_to_cart": { "description": "Add to cart button" },
+  "fridge_frequent_added_snackbar": "{name} added to cart",
+  "@fridge_frequent_added_snackbar": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "fridge_frequent_delete_confirm": "Delete {name}?",
+  "@fridge_frequent_delete_confirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "fridge_frequent_autoAddInfo_title": "What is Auto-Add?",
+  "fridge_frequent_autoAddInfo_body": "When this item's quantity reaches 0 in the fridge, it will be automatically added to your cart.\nWith the switch on, your shopping list will be filled in automatically when the fridge is empty.",
+  "fridge_frequent_autoAddInfo_hint": "Syncs when you manage quantities in the Fridge tab",
+  "fridge_frequent_coach_fabTitle": "Add Frequent Items",
+  "fridge_frequent_coach_fabDesc": "Register items you buy often\nto add them quickly next time you shop.",
+  "fridge_frequent_coach_itemTitle": "Manage Items",
+  "fridge_frequent_coach_itemDesc": "Set item name and default unit.\nTap to edit, long press to delete.",
+  "fridge_frequent_coach_autoAddTitle": "Auto-Add",
+  "fridge_frequent_coach_autoAddDesc": "When this item's quantity reaches 0 in the fridge,\nit will be automatically added to your cart.\nA smart feature linked to the Fridge tab.",
+  "fridge_frequent_coach_addToCartTitle": "Add to Cart Instantly",
+  "fridge_frequent_coach_addToCartDesc": "Add to your current cart\ninstantly with one tap.",
+  "fridge_frequent_coach_skip": "Skip",
   "fridge_cart_empty": "Your cart is empty",
   "@fridge_cart_empty": { "description": "Cart empty" },
   "fridge_cart_add_item": "Add item",
@@ -1411,5 +1539,96 @@
   "fridge_history_view_expense": "View in ledger",
   "@fridge_history_view_expense": { "description": "View expense button" },
   "fridge_group_selector_personal": "Personal",
-  "@fridge_group_selector_personal": { "description": "Personal mode" }
+  "@fridge_group_selector_personal": { "description": "Personal mode" },
+
+  "dashboard_greetingMorning": "Good Morning",
+  "dashboard_greetingAfternoon": "Good Afternoon",
+  "dashboard_greetingEvening": "Good Evening",
+  "dashboard_greetingSubtitle": "Have a wonderful day!",
+  "dashboard_emptyWidgets": "No widgets to display",
+  "dashboard_emptyWidgetsHint": "Enable widgets in settings",
+  "dashboard_widgetSettings": "Widget Settings",
+  "dashboard_notifications": "Notifications",
+
+  "weather_widgetTitle": "Today's Weather",
+  "weather_refresh": "Refresh Weather",
+  "weather_detail": "Details",
+  "weather_errorMessage": "Unable to load weather information",
+  "weather_dustFine": "PM10",
+  "weather_dustUltraFine": "PM2.5",
+
+  "investment_widgetTitle": "Investment Indicators",
+  "investment_errorMessage": "Unable to load data",
+  "investment_emptyBookmarks": "No bookmarked indicators",
+
+  "householdWidget_groupTooltip": "Select Group",
+  "householdWidget_incomeLabel": "{month} Income",
+  "@householdWidget_incomeLabel": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "householdWidget_expenseLabel": "{month} Expense",
+  "@householdWidget_expenseLabel": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "householdWidget_balance": "Balance",
+  "householdWidget_budget": "Budget {amount}",
+  "@householdWidget_budget": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_budgetUsed": "{percent}% used",
+  "@householdWidget_budgetUsed": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "householdWidget_budgetOver": "{amount} over budget",
+  "@householdWidget_budgetOver": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_budgetRemaining": "{amount} remaining",
+  "@householdWidget_budgetRemaining": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_filterTitle": "Select Filter",
+  "householdWidget_filterPersonal": "Personal",
+  "householdWidget_filterPersonalSub": "Personal expenses only",
+  "householdWidget_applyButton": "Apply",
+  "householdWidget_categoryTitle": "Expense by Category",
+  "householdWidget_categoryOver": "{amount} over",
+  "@householdWidget_categoryOver": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_categoryUsed": "{percent}% used",
+  "@householdWidget_categoryUsed": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "householdWidget_catTransportation": "Transportation",
+  "householdWidget_catFood": "Food",
+  "householdWidget_catLeisure": "Leisure",
+  "householdWidget_catLiving": "Living",
+  "householdWidget_catMedical": "Medical",
+  "householdWidget_catEducation": "Education",
+  "householdWidget_catAllowance": "Allowance",
+  "householdWidget_catCelebration": "Celebration",
+  "householdWidget_catAssetTransfer": "Asset Transfer",
+  "householdWidget_catChildcare": "Childcare",
+  "householdWidget_catOther": "Other",
+
+  "assetWidget_title": "Asset Overview",
+  "assetWidget_groupTitle": "{groupName} Assets",
+  "@assetWidget_groupTitle": {
+    "placeholders": { "groupName": { "type": "String" } }
+  },
+  "assetWidget_groupTooltip": "Select Group",
+  "assetWidget_totalAsset": "Total Assets",
+  "assetWidget_totalProfit": "Total Profit",
+  "assetWidget_profitRate": "Return Rate",
+  "assetWidget_distribution": "Asset Distribution",
+  "assetWidget_groupPickerTitle": "Select Group",
+  "assetWidget_applyButton": "Apply",
+  "assetWidget_typeSavings": "Savings",
+  "assetWidget_typeDeposit": "Deposit",
+  "assetWidget_typeStock": "Stocks",
+  "assetWidget_typeFund": "Fund",
+  "assetWidget_typeRealEstate": "Real Estate",
+  "assetWidget_typeGold": "Gold",
+  "assetWidget_typeOther": "Other"
 }

@@ -10,6 +10,7 @@ import 'package:family_planner/features/home/presentation/widgets/schedule_filte
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 일정 위젯 (오늘 / 금주 / 이번달, 그룹 필터 지원)
@@ -51,25 +52,27 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
     }
   }
 
-  String _title() {
+  String _title(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (widget.viewMode) {
       case ScheduleViewMode.today:
-        return '오늘의 일정';
+        return l10n.home_todaySchedule;
       case ScheduleViewMode.week:
-        return '금주 일정';
+        return l10n.widgetSettings_scheduleWeek;
       case ScheduleViewMode.month:
-        return '이번달 일정';
+        return l10n.widgetSettings_scheduleMonth;
     }
   }
 
-  String _emptyMessage() {
+  String _emptyMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (widget.viewMode) {
       case ScheduleViewMode.today:
-        return '오늘 일정이 없습니다';
+        return l10n.widgetSettings_scheduleEmptyToday;
       case ScheduleViewMode.week:
-        return '이번 주 일정이 없습니다';
+        return l10n.widgetSettings_scheduleEmptyWeek;
       case ScheduleViewMode.month:
-        return '이번 달 일정이 없습니다';
+        return l10n.widgetSettings_scheduleEmptyMonth;
     }
   }
 
@@ -125,7 +128,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
     final hasActiveFilter = _selectedGroupIds != null || !_includePersonal;
 
     return DashboardCard(
-      title: _title(),
+      title: _title(context),
       icon: Icons.calendar_today,
       action: Row(
         mainAxisSize: MainAxisSize.min,
@@ -163,9 +166,9 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
             child: CircularProgressIndicator(),
           ),
         ),
-        error: (_, _) => _EmptyState(message: _emptyMessage()),
+        error: (_, _) => _EmptyState(message: _emptyMessage(context)),
         data: (tasks) {
-          if (tasks.isEmpty) return _EmptyState(message: _emptyMessage());
+          if (tasks.isEmpty) return _EmptyState(message: _emptyMessage(context));
           final showDate = widget.viewMode != ScheduleViewMode.today;
           return Column(
             children: tasks

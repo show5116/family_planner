@@ -175,29 +175,29 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
       case 'householdSummary':
         return {
           'icon': Icons.account_balance,
-          'title': '가계 현황',
-          'description': '이번 달 지출 요약 및 예산 달성률',
+          'title': l10n.widgetSettings_householdSummary,
+          'description': l10n.widgetSettings_householdSummaryDesc,
           'enabled': _settings.showHouseholdSummary,
         };
       case 'childcareSummary':
         return {
           'icon': Icons.child_care,
-          'title': '육아 포인트',
-          'description': '자녀별 포인트 잔액 현황',
+          'title': l10n.widgetSettings_childcareSummary,
+          'description': l10n.widgetSettings_childcareSummaryDesc,
           'enabled': _settings.showChildcareSummary,
         };
       case 'savingsSummary':
         return {
           'icon': Icons.savings,
-          'title': '저금통',
-          'description': '그룹별 적립 목표 및 달성 현황',
+          'title': l10n.widgetSettings_savingsSummary,
+          'description': l10n.widgetSettings_savingsSummaryDesc,
           'enabled': _settings.showSavingsSummary,
         };
       case 'fridgeSummary':
         return {
           'icon': Icons.warning_amber_outlined,
-          'title': '유통기한 임박',
-          'description': '냉장고에서 유통기한이 얼마 남지 않은 식품 목록',
+          'title': l10n.widgetSettings_fridgeSummary,
+          'description': l10n.widgetSettings_fridgeSummaryDesc,
           'enabled': _settings.showFridgeSummary,
         };
       case 'weather':
@@ -404,10 +404,10 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
             if (isSchedule && enabled) ...[
               const SizedBox(height: AppSizes.spaceS),
               SegmentedButton<ScheduleViewMode>(
-                segments: const [
-                  ButtonSegment(value: ScheduleViewMode.today, label: Text('오늘')),
-                  ButtonSegment(value: ScheduleViewMode.week, label: Text('금주')),
-                  ButtonSegment(value: ScheduleViewMode.month, label: Text('이번달')),
+                segments: [
+                  ButtonSegment(value: ScheduleViewMode.today, label: Text(AppLocalizations.of(context)!.widgetSettings_viewToday)),
+                  ButtonSegment(value: ScheduleViewMode.week, label: Text(AppLocalizations.of(context)!.widgetSettings_viewWeek)),
+                  ButtonSegment(value: ScheduleViewMode.month, label: Text(AppLocalizations.of(context)!.widgetSettings_viewMonth)),
                 ],
                 selected: {_settings.scheduleViewMode},
                 onSelectionChanged: (selected) =>
@@ -418,10 +418,10 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
             if (isTodo && enabled) ...[
               const SizedBox(height: AppSizes.spaceS),
               SegmentedButton<ScheduleViewMode>(
-                segments: const [
-                  ButtonSegment(value: ScheduleViewMode.today, label: Text('오늘')),
-                  ButtonSegment(value: ScheduleViewMode.week, label: Text('금주')),
-                  ButtonSegment(value: ScheduleViewMode.month, label: Text('이번달')),
+                segments: [
+                  ButtonSegment(value: ScheduleViewMode.today, label: Text(AppLocalizations.of(context)!.widgetSettings_viewToday)),
+                  ButtonSegment(value: ScheduleViewMode.week, label: Text(AppLocalizations.of(context)!.widgetSettings_viewWeek)),
+                  ButtonSegment(value: ScheduleViewMode.month, label: Text(AppLocalizations.of(context)!.widgetSettings_viewMonth)),
                 ],
                 selected: {_settings.todoViewMode},
                 onSelectionChanged: (selected) =>
@@ -432,16 +432,16 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
             if (isHousehold && enabled) ...[
               const SizedBox(height: AppSizes.spaceS),
               SegmentedButton<HouseholdWidgetViewMode>(
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: HouseholdWidgetViewMode.budget,
-                    label: Text('전체 예산 보기'),
-                    icon: Icon(Icons.account_balance_wallet_outlined),
+                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewBudget),
+                    icon: const Icon(Icons.account_balance_wallet_outlined),
                   ),
                   ButtonSegment(
                     value: HouseholdWidgetViewMode.category,
-                    label: Text('카테고리별 보기'),
-                    icon: Icon(Icons.bar_chart),
+                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewCategory),
+                    icon: const Icon(Icons.bar_chart),
                   ),
                 ],
                 selected: {_settings.householdViewMode},

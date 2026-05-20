@@ -10,6 +10,7 @@ import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 class SavingsSummaryWidget extends ConsumerStatefulWidget {
@@ -82,7 +83,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
 
     return goalsAsync.when(
       loading: () => DashboardCard(
-        title: '저금통',
+        title: AppLocalizations.of(context)!.widgetSettings_savingsSummary,
         icon: Icons.savings,
         onTap: () {},
         child: const Center(
@@ -109,7 +110,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
     final hasTarget = totalTarget > 0;
 
     return DashboardCard(
-      title: '저금통',
+      title: AppLocalizations.of(context)!.widgetSettings_savingsSummary,
       icon: Icons.savings,
       action: Row(
         mainAxisSize: MainAxisSize.min,
@@ -225,7 +226,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
       padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceM),
       child: Center(
         child: Text(
-          '등록된 저금통이 없습니다',
+          AppLocalizations.of(context)!.widgetSettings_savingsEmpty,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

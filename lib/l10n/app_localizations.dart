@@ -700,6 +700,24 @@ abstract class AppLocalizations {
   /// **'그룹 저금통'**
   String get nav_savings;
 
+  /// No description provided for @nav_votes.
+  ///
+  /// In ko, this message translates to:
+  /// **'투표'**
+  String get nav_votes;
+
+  /// No description provided for @more_coach_groupDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.'**
+  String get more_coach_groupDesc;
+
+  /// No description provided for @more_coach_settingsDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.'**
+  String get more_coach_settingsDesc;
+
   /// No description provided for @home_greeting_morning.
   ///
   /// In ko, this message translates to:
@@ -957,6 +975,126 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'최근 작성한 메모를 표시합니다'**
   String get widgetSettings_memoSummaryDesc;
+
+  /// No description provided for @widgetSettings_householdSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'가계 현황'**
+  String get widgetSettings_householdSummary;
+
+  /// No description provided for @widgetSettings_householdSummaryDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 지출 요약 및 예산 달성률'**
+  String get widgetSettings_householdSummaryDesc;
+
+  /// No description provided for @widgetSettings_childcareSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'육아 포인트'**
+  String get widgetSettings_childcareSummary;
+
+  /// No description provided for @widgetSettings_childcareSummaryDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀별 포인트 잔액 현황'**
+  String get widgetSettings_childcareSummaryDesc;
+
+  /// No description provided for @widgetSettings_savingsSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통'**
+  String get widgetSettings_savingsSummary;
+
+  /// No description provided for @widgetSettings_savingsSummaryDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹별 적립 목표 및 달성 현황'**
+  String get widgetSettings_savingsSummaryDesc;
+
+  /// No description provided for @widgetSettings_fridgeSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 임박'**
+  String get widgetSettings_fridgeSummary;
+
+  /// No description provided for @widgetSettings_fridgeSummaryDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고에서 유통기한이 얼마 남지 않은 식품 목록'**
+  String get widgetSettings_fridgeSummaryDesc;
+
+  /// No description provided for @widgetSettings_viewToday.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get widgetSettings_viewToday;
+
+  /// No description provided for @widgetSettings_viewWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'금주'**
+  String get widgetSettings_viewWeek;
+
+  /// No description provided for @widgetSettings_viewMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번달'**
+  String get widgetSettings_viewMonth;
+
+  /// No description provided for @widgetSettings_viewBudget.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 예산 보기'**
+  String get widgetSettings_viewBudget;
+
+  /// No description provided for @widgetSettings_viewCategory.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별 보기'**
+  String get widgetSettings_viewCategory;
+
+  /// No description provided for @widgetSettings_savingsEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 저금통이 없습니다'**
+  String get widgetSettings_savingsEmpty;
+
+  /// No description provided for @widgetSettings_fridgeExpiryEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 임박 식품이 없어요'**
+  String get widgetSettings_fridgeExpiryEmpty;
+
+  /// No description provided for @widgetSettings_scheduleWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'금주 일정'**
+  String get widgetSettings_scheduleWeek;
+
+  /// No description provided for @widgetSettings_scheduleMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번달 일정'**
+  String get widgetSettings_scheduleMonth;
+
+  /// No description provided for @widgetSettings_scheduleEmptyToday.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 일정이 없습니다'**
+  String get widgetSettings_scheduleEmptyToday;
+
+  /// No description provided for @widgetSettings_scheduleEmptyWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 일정이 없습니다'**
+  String get widgetSettings_scheduleEmptyWeek;
+
+  /// No description provided for @widgetSettings_scheduleEmptyMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 일정이 없습니다'**
+  String get widgetSettings_scheduleEmptyMonth;
 
   /// No description provided for @widgetSettings_weather.
   ///
@@ -1987,7 +2125,7 @@ abstract class AppLocalizations {
   /// No description provided for @group_leaveSuccess.
   ///
   /// In ko, this message translates to:
-  /// **'그룹을 나갔습니다'**
+  /// **'그룹에서 나갔습니다'**
   String get group_leaveSuccess;
 
   /// No description provided for @group_inviteSent.
@@ -2085,6 +2223,306 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'거부됨'**
   String get group_joinRequestRejected;
+
+  /// No description provided for @group_codeExpiredLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드 만료됨'**
+  String get group_codeExpiredLabel;
+
+  /// No description provided for @group_defaultGroupTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'대표 그룹'**
+  String get group_defaultGroupTooltip;
+
+  /// No description provided for @group_setDefaultGroupTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'대표 그룹으로 설정'**
+  String get group_setDefaultGroupTooltip;
+
+  /// No description provided for @group_unsetDefaultGroupTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'대표 그룹 해제'**
+  String get group_unsetDefaultGroupTooltip;
+
+  /// No description provided for @group_setDefaultSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'\'{name}\'을(를) 대표 그룹으로 설정했습니다'**
+  String group_setDefaultSuccess(String name);
+
+  /// No description provided for @group_unsetDefaultSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'대표 그룹을 해제했습니다'**
+  String get group_unsetDefaultSuccess;
+
+  /// No description provided for @group_myColorTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'나만의 그룹 색상'**
+  String get group_myColorTitle;
+
+  /// No description provided for @group_myColorNotSet.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정하지 않음 (그룹 기본 색상 사용)'**
+  String get group_myColorNotSet;
+
+  /// No description provided for @group_myColorSet.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정됨'**
+  String get group_myColorSet;
+
+  /// No description provided for @group_myColorReset.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화'**
+  String get group_myColorReset;
+
+  /// No description provided for @group_dangerZone.
+  ///
+  /// In ko, this message translates to:
+  /// **'위험 구역'**
+  String get group_dangerZone;
+
+  /// No description provided for @group_dangerZoneDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 삭제하면 모든 데이터가 영구적으로 삭제됩니다.'**
+  String get group_dangerZoneDesc;
+
+  /// No description provided for @group_leaveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 나가기'**
+  String get group_leaveTitle;
+
+  /// No description provided for @group_leaveDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없습니다.'**
+  String get group_leaveDesc;
+
+  /// No description provided for @group_leaveConfirmBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'정말로 \"{name}\" 그룹을 나가시겠습니까?\n\n그룹을 나가면 더 이상 그룹의 데이터에 접근할 수 없으며, 다시 참여하려면 초대 코드가 필요합니다.'**
+  String group_leaveConfirmBody(String name);
+
+  /// No description provided for @group_leaveButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'나가기'**
+  String get group_leaveButton;
+
+  /// No description provided for @group_roleManagementTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 관리'**
+  String get group_roleManagementTitle;
+
+  /// No description provided for @group_roleManagementDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 그룹의 역할 목록입니다.'**
+  String get group_roleManagementDesc;
+
+  /// No description provided for @group_roleEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할이 없습니다'**
+  String get group_roleEmpty;
+
+  /// No description provided for @group_roleDefaultBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 역할'**
+  String get group_roleDefaultBadge;
+
+  /// No description provided for @group_rolePermissionCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한: {count}개'**
+  String group_rolePermissionCount(int count);
+
+  /// No description provided for @group_roleEdit.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 수정'**
+  String get group_roleEdit;
+
+  /// No description provided for @group_roleDelete.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 삭제'**
+  String get group_roleDelete;
+
+  /// No description provided for @group_roleSortSaved.
+  ///
+  /// In ko, this message translates to:
+  /// **'정렬 순서가 저장되었습니다'**
+  String get group_roleSortSaved;
+
+  /// No description provided for @group_roleLoadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 목록을 불러올 수 없습니다'**
+  String get group_roleLoadError;
+
+  /// No description provided for @group_roleInfoTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'안내'**
+  String get group_roleInfoTitle;
+
+  /// No description provided for @group_roleInfoBullet1.
+  ///
+  /// In ko, this message translates to:
+  /// **'공통 역할 (OWNER, ADMIN, MEMBER)은 모든 그룹에 기본으로 제공됩니다.'**
+  String get group_roleInfoBullet1;
+
+  /// No description provided for @group_roleInfoBullet2.
+  ///
+  /// In ko, this message translates to:
+  /// **'커스텀 역할은 그룹 OWNER만 생성, 수정, 삭제할 수 있습니다.'**
+  String get group_roleInfoBullet2;
+
+  /// No description provided for @group_roleInfoBullet3.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 관리하려면 그룹 OWNER 권한이 필요합니다.'**
+  String get group_roleInfoBullet3;
+
+  /// No description provided for @group_roleCreateTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 생성'**
+  String get group_roleCreateTitle;
+
+  /// No description provided for @group_roleEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 수정'**
+  String get group_roleEditTitle;
+
+  /// No description provided for @group_roleDeleteTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 삭제'**
+  String get group_roleDeleteTitle;
+
+  /// No description provided for @group_roleNameLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 이름'**
+  String get group_roleNameLabel;
+
+  /// No description provided for @group_roleNameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 이름을 입력해주세요'**
+  String get group_roleNameRequired;
+
+  /// No description provided for @group_roleDefaultSwitch.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 역할'**
+  String get group_roleDefaultSwitch;
+
+  /// No description provided for @group_roleDefaultSwitchSub.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 멤버 가입 시 자동 부여'**
+  String get group_roleDefaultSwitchSub;
+
+  /// No description provided for @group_roleColorLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 색상'**
+  String get group_roleColorLabel;
+
+  /// No description provided for @group_rolePermissionsLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 선택'**
+  String get group_rolePermissionsLabel;
+
+  /// No description provided for @group_rolePermissionsViewLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 목록'**
+  String get group_rolePermissionsViewLabel;
+
+  /// No description provided for @group_rolePermissionNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'권한이 없습니다'**
+  String get group_rolePermissionNone;
+
+  /// No description provided for @group_roleDefaultLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 역할 (새 멤버 가입 시 자동 부여)'**
+  String get group_roleDefaultLabel;
+
+  /// No description provided for @group_roleDeleteConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 역할을 삭제하시겠습니까?'**
+  String group_roleDeleteConfirm(String name);
+
+  /// No description provided for @group_roleDeleteWarning.
+  ///
+  /// In ko, this message translates to:
+  /// **'⚠️ 이 역할을 사용 중인 멤버가 있으면 삭제할 수 없습니다.'**
+  String get group_roleDeleteWarning;
+
+  /// No description provided for @group_roleCreateSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할이 생성되었습니다'**
+  String get group_roleCreateSuccess;
+
+  /// No description provided for @group_roleCreateFail.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 생성 실패: {error}'**
+  String group_roleCreateFail(String error);
+
+  /// No description provided for @group_roleEditSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할이 수정되었습니다'**
+  String get group_roleEditSuccess;
+
+  /// No description provided for @group_roleEditFail.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 수정 실패: {error}'**
+  String group_roleEditFail(String error);
+
+  /// No description provided for @group_roleDeleteSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할이 삭제되었습니다'**
+  String get group_roleDeleteSuccess;
+
+  /// No description provided for @group_roleDeleteFail.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 삭제 실패: {error}'**
+  String group_roleDeleteFail(String error);
+
+  /// No description provided for @group_settings_groupManagementTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 관리'**
+  String get group_settings_groupManagementTitle;
 
   /// No description provided for @error_network.
   ///
@@ -3903,6 +4341,48 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'필터 초기화'**
   String get todo_clearFilter;
+
+  /// No description provided for @todo_filterTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 필터'**
+  String get todo_filterTooltip;
+
+  /// No description provided for @todo_widgetTitleToday.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 할일'**
+  String get todo_widgetTitleToday;
+
+  /// No description provided for @todo_widgetTitleWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'금주 할일'**
+  String get todo_widgetTitleWeek;
+
+  /// No description provided for @todo_widgetTitleMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번달 할일'**
+  String get todo_widgetTitleMonth;
+
+  /// No description provided for @todo_emptyToday.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 할일이 없습니다'**
+  String get todo_emptyToday;
+
+  /// No description provided for @todo_emptyWeek.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 할일이 없습니다'**
+  String get todo_emptyWeek;
+
+  /// No description provided for @todo_emptyMonth.
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 할일이 없습니다'**
+  String get todo_emptyMonth;
 
   /// No description provided for @todo_searchHint.
   ///
@@ -5812,6 +6292,90 @@ abstract class AppLocalizations {
   /// **'장바구니에 추가'**
   String get fridge_frequent_add_to_cart;
 
+  /// No description provided for @fridge_frequent_added_snackbar.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에 추가했습니다'**
+  String fridge_frequent_added_snackbar(String name);
+
+  /// No description provided for @fridge_frequent_delete_confirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 삭제하시겠습니까?'**
+  String fridge_frequent_delete_confirm(String name);
+
+  /// No description provided for @fridge_frequent_autoAddInfo_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 추가란?'**
+  String get fridge_frequent_autoAddInfo_title;
+
+  /// No description provided for @fridge_frequent_autoAddInfo_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고에서 이 품목의 수량이 0이 되면 장바구니에 자동으로 추가돼요.\n스위치를 켜두면 냉장고가 비었을 때 알아서 장보기 목록에 담아드립니다.'**
+  String get fridge_frequent_autoAddInfo_body;
+
+  /// No description provided for @fridge_frequent_autoAddInfo_hint.
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고 탭에서 수량을 관리하면 연동됩니다'**
+  String get fridge_frequent_autoAddInfo_hint;
+
+  /// No description provided for @fridge_frequent_coach_fabTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 사는 항목 추가'**
+  String get fridge_frequent_coach_fabTitle;
+
+  /// No description provided for @fridge_frequent_coach_fabDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 구매하는 품목을 등록해 두면\n다음 장보기 때 빠르게 담을 수 있어요.'**
+  String get fridge_frequent_coach_fabDesc;
+
+  /// No description provided for @fridge_frequent_coach_itemTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 관리'**
+  String get fridge_frequent_coach_itemTitle;
+
+  /// No description provided for @fridge_frequent_coach_itemDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목명·기본 단위를 설정할 수 있어요.\n탭하면 수정, 길게 누르면 삭제할 수 있습니다.'**
+  String get fridge_frequent_coach_itemDesc;
+
+  /// No description provided for @fridge_frequent_coach_autoAddTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 추가'**
+  String get fridge_frequent_coach_autoAddTitle;
+
+  /// No description provided for @fridge_frequent_coach_autoAddDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고에서 이 품목의 수량이 0이 되면\n장바구니에 자동으로 추가돼요.\n냉장고 탭과 연동되는 스마트 기능이에요.'**
+  String get fridge_frequent_coach_autoAddDesc;
+
+  /// No description provided for @fridge_frequent_coach_addToCartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니에 바로 담기'**
+  String get fridge_frequent_coach_addToCartTitle;
+
+  /// No description provided for @fridge_frequent_coach_addToCartDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.'**
+  String get fridge_frequent_coach_addToCartDesc;
+
+  /// No description provided for @fridge_frequent_coach_skip.
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛰기'**
+  String get fridge_frequent_coach_skip;
+
   /// 장바구니 비어 있음
   ///
   /// In ko, this message translates to:
@@ -5907,6 +6471,360 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'개인'**
   String get fridge_group_selector_personal;
+
+  /// No description provided for @dashboard_greetingMorning.
+  ///
+  /// In ko, this message translates to:
+  /// **'좋은 아침입니다'**
+  String get dashboard_greetingMorning;
+
+  /// No description provided for @dashboard_greetingAfternoon.
+  ///
+  /// In ko, this message translates to:
+  /// **'좋은 오후입니다'**
+  String get dashboard_greetingAfternoon;
+
+  /// No description provided for @dashboard_greetingEvening.
+  ///
+  /// In ko, this message translates to:
+  /// **'좋은 저녁입니다'**
+  String get dashboard_greetingEvening;
+
+  /// No description provided for @dashboard_greetingSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘도 좋은 하루 되세요!'**
+  String get dashboard_greetingSubtitle;
+
+  /// No description provided for @dashboard_emptyWidgets.
+  ///
+  /// In ko, this message translates to:
+  /// **'표시할 위젯이 없습니다'**
+  String get dashboard_emptyWidgets;
+
+  /// No description provided for @dashboard_emptyWidgetsHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정에서 위젯을 활성화하세요'**
+  String get dashboard_emptyWidgetsHint;
+
+  /// No description provided for @dashboard_widgetSettings.
+  ///
+  /// In ko, this message translates to:
+  /// **'위젯 설정'**
+  String get dashboard_widgetSettings;
+
+  /// No description provided for @dashboard_notifications.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get dashboard_notifications;
+
+  /// No description provided for @weather_widgetTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 날씨'**
+  String get weather_widgetTitle;
+
+  /// No description provided for @weather_refresh.
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨 새로고침'**
+  String get weather_refresh;
+
+  /// No description provided for @weather_detail.
+  ///
+  /// In ko, this message translates to:
+  /// **'자세히'**
+  String get weather_detail;
+
+  /// No description provided for @weather_errorMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨 정보를 불러올 수 없습니다'**
+  String get weather_errorMessage;
+
+  /// No description provided for @weather_dustFine.
+  ///
+  /// In ko, this message translates to:
+  /// **'미세'**
+  String get weather_dustFine;
+
+  /// No description provided for @weather_dustUltraFine.
+  ///
+  /// In ko, this message translates to:
+  /// **'초미세'**
+  String get weather_dustUltraFine;
+
+  /// No description provided for @investment_widgetTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 지표'**
+  String get investment_widgetTitle;
+
+  /// No description provided for @investment_errorMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'데이터를 불러올 수 없습니다'**
+  String get investment_errorMessage;
+
+  /// No description provided for @investment_emptyBookmarks.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기한 지표가 없습니다'**
+  String get investment_emptyBookmarks;
+
+  /// No description provided for @householdWidget_groupTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get householdWidget_groupTooltip;
+
+  /// No description provided for @householdWidget_incomeLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'{month} 입금'**
+  String householdWidget_incomeLabel(String month);
+
+  /// No description provided for @householdWidget_expenseLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'{month} 지출'**
+  String householdWidget_expenseLabel(String month);
+
+  /// No description provided for @householdWidget_balance.
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액'**
+  String get householdWidget_balance;
+
+  /// No description provided for @householdWidget_budget.
+  ///
+  /// In ko, this message translates to:
+  /// **'예산 {amount}'**
+  String householdWidget_budget(String amount);
+
+  /// No description provided for @householdWidget_budgetUsed.
+  ///
+  /// In ko, this message translates to:
+  /// **'{percent}% 사용'**
+  String householdWidget_budgetUsed(int percent);
+
+  /// No description provided for @householdWidget_budgetOver.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount} 초과'**
+  String householdWidget_budgetOver(String amount);
+
+  /// No description provided for @householdWidget_budgetRemaining.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount} 남음'**
+  String householdWidget_budgetRemaining(String amount);
+
+  /// No description provided for @householdWidget_filterTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'필터 선택'**
+  String get householdWidget_filterTitle;
+
+  /// No description provided for @householdWidget_filterPersonal.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인'**
+  String get householdWidget_filterPersonal;
+
+  /// No description provided for @householdWidget_filterPersonalSub.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 없이 개인 지출만'**
+  String get householdWidget_filterPersonalSub;
+
+  /// No description provided for @householdWidget_applyButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'적용'**
+  String get householdWidget_applyButton;
+
+  /// No description provided for @householdWidget_categoryTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별 지출'**
+  String get householdWidget_categoryTitle;
+
+  /// No description provided for @householdWidget_categoryOver.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount} 초과'**
+  String householdWidget_categoryOver(String amount);
+
+  /// No description provided for @householdWidget_categoryUsed.
+  ///
+  /// In ko, this message translates to:
+  /// **'{percent}% 사용'**
+  String householdWidget_categoryUsed(int percent);
+
+  /// No description provided for @householdWidget_catTransportation.
+  ///
+  /// In ko, this message translates to:
+  /// **'교통'**
+  String get householdWidget_catTransportation;
+
+  /// No description provided for @householdWidget_catFood.
+  ///
+  /// In ko, this message translates to:
+  /// **'식비'**
+  String get householdWidget_catFood;
+
+  /// No description provided for @householdWidget_catLeisure.
+  ///
+  /// In ko, this message translates to:
+  /// **'여가'**
+  String get householdWidget_catLeisure;
+
+  /// No description provided for @householdWidget_catLiving.
+  ///
+  /// In ko, this message translates to:
+  /// **'생활'**
+  String get householdWidget_catLiving;
+
+  /// No description provided for @householdWidget_catMedical.
+  ///
+  /// In ko, this message translates to:
+  /// **'의료'**
+  String get householdWidget_catMedical;
+
+  /// No description provided for @householdWidget_catEducation.
+  ///
+  /// In ko, this message translates to:
+  /// **'교육'**
+  String get householdWidget_catEducation;
+
+  /// No description provided for @householdWidget_catAllowance.
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈'**
+  String get householdWidget_catAllowance;
+
+  /// No description provided for @householdWidget_catCelebration.
+  ///
+  /// In ko, this message translates to:
+  /// **'경조사비'**
+  String get householdWidget_catCelebration;
+
+  /// No description provided for @householdWidget_catAssetTransfer.
+  ///
+  /// In ko, this message translates to:
+  /// **'자산이동'**
+  String get householdWidget_catAssetTransfer;
+
+  /// No description provided for @householdWidget_catChildcare.
+  ///
+  /// In ko, this message translates to:
+  /// **'육아비'**
+  String get householdWidget_catChildcare;
+
+  /// No description provided for @householdWidget_catOther.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get householdWidget_catOther;
+
+  /// No description provided for @assetWidget_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 현황'**
+  String get assetWidget_title;
+
+  /// No description provided for @assetWidget_groupTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'{groupName} 자산'**
+  String assetWidget_groupTitle(String groupName);
+
+  /// No description provided for @assetWidget_groupTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get assetWidget_groupTooltip;
+
+  /// No description provided for @assetWidget_totalAsset.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 자산'**
+  String get assetWidget_totalAsset;
+
+  /// No description provided for @assetWidget_totalProfit.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 수익'**
+  String get assetWidget_totalProfit;
+
+  /// No description provided for @assetWidget_profitRate.
+  ///
+  /// In ko, this message translates to:
+  /// **'수익률'**
+  String get assetWidget_profitRate;
+
+  /// No description provided for @assetWidget_distribution.
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 분포'**
+  String get assetWidget_distribution;
+
+  /// No description provided for @assetWidget_groupPickerTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get assetWidget_groupPickerTitle;
+
+  /// No description provided for @assetWidget_applyButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'적용'**
+  String get assetWidget_applyButton;
+
+  /// No description provided for @assetWidget_typeSavings.
+  ///
+  /// In ko, this message translates to:
+  /// **'적금'**
+  String get assetWidget_typeSavings;
+
+  /// No description provided for @assetWidget_typeDeposit.
+  ///
+  /// In ko, this message translates to:
+  /// **'예금'**
+  String get assetWidget_typeDeposit;
+
+  /// No description provided for @assetWidget_typeStock.
+  ///
+  /// In ko, this message translates to:
+  /// **'주식'**
+  String get assetWidget_typeStock;
+
+  /// No description provided for @assetWidget_typeFund.
+  ///
+  /// In ko, this message translates to:
+  /// **'펀드'**
+  String get assetWidget_typeFund;
+
+  /// No description provided for @assetWidget_typeRealEstate.
+  ///
+  /// In ko, this message translates to:
+  /// **'부동산'**
+  String get assetWidget_typeRealEstate;
+
+  /// No description provided for @assetWidget_typeGold.
+  ///
+  /// In ko, this message translates to:
+  /// **'실물 금'**
+  String get assetWidget_typeGold;
+
+  /// No description provided for @assetWidget_typeOther.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get assetWidget_typeOther;
 }
 
 class _AppLocalizationsDelegate

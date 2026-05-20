@@ -31,7 +31,7 @@ class DeleteGroupCard extends ConsumerWidget {
                 Icon(Icons.warning, color: Colors.red.shade700),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  '위험 구역',
+                  l10n.group_dangerZone,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class DeleteGroupCard extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(
-              '그룹을 삭제하면 모든 데이터가 영구적으로 삭제됩니다.',
+              l10n.group_dangerZoneDesc,
               style: TextStyle(fontSize: 14, color: Colors.red.shade700),
             ),
             const SizedBox(height: AppSizes.spaceM),

@@ -85,6 +85,7 @@ class GroupCard extends ConsumerWidget {
     bool isDefault,
     WidgetRef ref,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         if (groupColor != null)
@@ -109,7 +110,7 @@ class GroupCard extends ConsumerWidget {
               if (isDefault) ...[
                 const SizedBox(width: AppSizes.spaceXS),
                 Tooltip(
-                  message: '대표 그룹',
+                  message: l10n.group_defaultGroupTooltip,
                   child: Icon(
                     Icons.star_rounded,
                     size: 18,
@@ -149,7 +150,7 @@ class GroupCard extends ConsumerWidget {
               Icon(Icons.warning_amber_rounded, size: 14, color: Colors.orange[700]),
               const SizedBox(width: 4),
               Text(
-                '초대 코드 만료됨',
+                l10n.group_codeExpiredLabel,
                 style: TextStyle(fontSize: 12, color: Colors.orange[700]),
               ),
             ],
@@ -181,8 +182,9 @@ class _DefaultGroupButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
+    final l10n = AppLocalizations.of(context)!;
     return Tooltip(
-      message: isDefault ? '대표 그룹 해제' : '대표 그룹으로 설정',
+      message: isDefault ? l10n.group_unsetDefaultGroupTooltip : l10n.group_setDefaultGroupTooltip,
       child: InkWell(
         onTap: () => _toggle(context, ref),
         borderRadius: BorderRadius.circular(20),
@@ -200,18 +202,19 @@ class _DefaultGroupButton extends ConsumerWidget {
 
   Future<void> _toggle(BuildContext context, WidgetRef ref) async {
     final notifier = ref.read(defaultGroupProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
     if (isDefault) {
       await notifier.clear();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('대표 그룹을 해제했습니다')),
+          SnackBar(content: Text(l10n.group_unsetDefaultSuccess)),
         );
       }
     } else {
       await notifier.setDefaultGroup(group.id);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('\'${group.name}\'을(를) 대표 그룹으로 설정했습니다')),
+          SnackBar(content: Text(l10n.group_setDefaultSuccess(group.name))),
         );
       }
     }

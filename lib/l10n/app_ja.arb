@@ -121,6 +121,9 @@
   "nav_miniGames": "ミニゲーム",
   "nav_investmentIndicators": "投資指標",
   "nav_savings": "グループ貯金箱",
+  "nav_votes": "投票",
+  "more_coach_groupDesc": "家族、恋人、友達などのグループを作り、\n招待コードでメンバーを招待しましょう。",
+  "more_coach_settingsDesc": "テーマ、言語、通知、ボトムタブ構成など\nアプリをお好みにカスタマイズしましょう。",
 
   "home_greeting_morning": "おはようございます！",
   "home_greeting_afternoon": "こんにちは！",
@@ -169,6 +172,26 @@
   "widgetSettings_assetSummaryDesc": "総資産と収益率を表示します",
   "widgetSettings_memoSummary": "メモ概要",
   "widgetSettings_memoSummaryDesc": "最近作成したメモを表示します",
+  "widgetSettings_householdSummary": "家計状況",
+  "widgetSettings_householdSummaryDesc": "今月の支出サマリーと予算達成率",
+  "widgetSettings_childcareSummary": "育児ポイント",
+  "widgetSettings_childcareSummaryDesc": "お子様ごとのポイント残高状況",
+  "widgetSettings_savingsSummary": "貯金箱",
+  "widgetSettings_savingsSummaryDesc": "グループ別の積立目標と達成状況",
+  "widgetSettings_fridgeSummary": "賞味期限間近",
+  "widgetSettings_fridgeSummaryDesc": "冷蔵庫の賞味期限が近い食品リスト",
+  "widgetSettings_viewToday": "今日",
+  "widgetSettings_viewWeek": "今週",
+  "widgetSettings_viewMonth": "今月",
+  "widgetSettings_viewBudget": "予算全体を見る",
+  "widgetSettings_viewCategory": "カテゴリ別",
+  "widgetSettings_savingsEmpty": "登録された貯金箱がありません",
+  "widgetSettings_fridgeExpiryEmpty": "賞味期限間近の食品はありません",
+  "widgetSettings_scheduleWeek": "今週の予定",
+  "widgetSettings_scheduleMonth": "今月の予定",
+  "widgetSettings_scheduleEmptyToday": "今日の予定はありません",
+  "widgetSettings_scheduleEmptyWeek": "今週の予定はありません",
+  "widgetSettings_scheduleEmptyMonth": "今月の予定はありません",
   "widgetSettings_weather": "天気",
   "widgetSettings_weatherDesc": "現在地の天気情報を表示します",
 
@@ -401,6 +424,84 @@
   "group_joinRequestStatusDone": "処理済み",
   "group_joinRequestAccepted": "承認済み",
   "group_joinRequestRejected": "拒否済み",
+
+  "group_codeExpiredLabel": "招待コード期限切れ",
+  "group_defaultGroupTooltip": "デフォルトグループ",
+  "group_setDefaultGroupTooltip": "デフォルトグループに設定",
+  "group_unsetDefaultGroupTooltip": "デフォルトグループを解除",
+  "group_setDefaultSuccess": "'{name}'をデフォルトグループに設定しました",
+  "@group_setDefaultSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_unsetDefaultSuccess": "デフォルトグループを解除しました",
+
+  "group_myColorTitle": "マイグループカラー",
+  "group_myColorNotSet": "未設定（グループデフォルトカラーを使用）",
+  "group_myColorSet": "設定済み",
+  "group_myColorReset": "リセット",
+
+  "group_dangerZone": "危険ゾーン",
+  "group_dangerZoneDesc": "グループを削除すると、すべてのデータが完全に削除されます。",
+  "group_leaveTitle": "グループを退出",
+  "group_leaveDesc": "グループを退出すると、グループのデータにアクセスできなくなります。",
+  "group_leaveConfirmBody": "本当に「{name}」グループを退出しますか？\n\n退出後はグループのデータにアクセスできなくなり、再参加には招待コードが必要です。",
+  "@group_leaveConfirmBody": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_leaveButton": "退出",
+  "group_leaveSuccess": "グループから退出しました",
+
+  "group_roleManagementTitle": "ロール管理",
+  "group_roleManagementDesc": "このグループのロール一覧です。",
+  "group_roleEmpty": "ロールがありません",
+  "group_roleDefaultBadge": "デフォルト",
+  "group_rolePermissionCount": "権限: {count}個",
+  "@group_rolePermissionCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "group_roleEdit": "ロールを編集",
+  "group_roleDelete": "ロールを削除",
+  "group_roleSortSaved": "並び順を保存しました",
+  "group_roleLoadError": "ロール一覧を読み込めません",
+
+  "group_roleInfoTitle": "ご案内",
+  "group_roleInfoBullet1": "共通ロール（OWNER、ADMIN、MEMBER）はすべてのグループにデフォルトで提供されます。",
+  "group_roleInfoBullet2": "カスタムロールはグループOWNERのみ作成・編集・削除できます。",
+  "group_roleInfoBullet3": "ロールを管理するにはグループOWNER権限が必要です。",
+
+  "group_roleCreateTitle": "ロールを作成",
+  "group_roleEditTitle": "ロールを編集",
+  "group_roleDeleteTitle": "ロールを削除",
+  "group_roleNameLabel": "ロール名",
+  "group_roleNameRequired": "ロール名を入力してください",
+  "group_roleDefaultSwitch": "デフォルトロール",
+  "group_roleDefaultSwitchSub": "新規メンバー参加時に自動付与",
+  "group_roleColorLabel": "ロールカラー",
+  "group_rolePermissionsLabel": "権限を選択",
+  "group_rolePermissionsViewLabel": "権限一覧",
+  "group_rolePermissionNone": "権限がありません",
+  "group_roleDefaultLabel": "デフォルトロール（新規メンバー参加時に自動付与）",
+  "group_roleDeleteConfirm": "「{name}」ロールを削除しますか？",
+  "@group_roleDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "group_roleDeleteWarning": "⚠️ このロールを使用中のメンバーがいる場合は削除できません。",
+  "group_roleCreateSuccess": "ロールが作成されました",
+  "group_roleCreateFail": "ロール作成失敗: {error}",
+  "@group_roleCreateFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_roleEditSuccess": "ロールが更新されました",
+  "group_roleEditFail": "ロール更新失敗: {error}",
+  "@group_roleEditFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_roleDeleteSuccess": "ロールが削除されました",
+  "group_roleDeleteFail": "ロール削除失敗: {error}",
+  "@group_roleDeleteFail": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "group_settings_groupManagementTitle": "グループ管理",
 
   "error_network": "ネットワーク接続を確認してください",
   "error_server": "サーバーエラーが発生しました",
@@ -761,6 +862,13 @@
   "todo_sortByCreatedAt": "作成日順",
   "todo_filterApplied": "フィルター適用中",
   "todo_clearFilter": "フィルターをクリア",
+  "todo_filterTooltip": "タスクフィルター",
+  "todo_widgetTitleToday": "今日のタスク",
+  "todo_widgetTitleWeek": "今週のタスク",
+  "todo_widgetTitleMonth": "今月のタスク",
+  "todo_emptyToday": "今日のタスクはありません",
+  "todo_emptyWeek": "今週のタスクはありません",
+  "todo_emptyMonth": "今月のタスクはありません",
 
   "todo_searchHint": "タイトル、説明で検索",
   "todo_searchNoResults": "検索結果がありません",
@@ -1380,6 +1488,26 @@
   "@fridge_frequent_empty": { "description": "よく買うものなし" },
   "fridge_frequent_add_to_cart": "カートに追加",
   "@fridge_frequent_add_to_cart": { "description": "カートに追加ボタン" },
+  "fridge_frequent_added_snackbar": "{name}をカートに追加しました",
+  "@fridge_frequent_added_snackbar": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "fridge_frequent_delete_confirm": "{name}を削除しますか？",
+  "@fridge_frequent_delete_confirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "fridge_frequent_autoAddInfo_title": "自動追加とは？",
+  "fridge_frequent_autoAddInfo_body": "冷蔵庫でこの品目の数量が0になると、カートに自動で追加されます。\nスイッチをオンにしておくと、冷蔵庫が空になったとき自動で買い物リストに入れます。",
+  "fridge_frequent_autoAddInfo_hint": "冷蔵庫タブで数量を管理すると連携されます",
+  "fridge_frequent_coach_fabTitle": "よく買う品目を追加",
+  "fridge_frequent_coach_fabDesc": "よく購入する品目を登録しておくと\n次の買い物で素早く追加できます。",
+  "fridge_frequent_coach_itemTitle": "品目管理",
+  "fridge_frequent_coach_itemDesc": "品目名・デフォルト単位を設定できます。\nタップで編集、長押しで削除できます。",
+  "fridge_frequent_coach_autoAddTitle": "自動追加",
+  "fridge_frequent_coach_autoAddDesc": "冷蔵庫でこの品目の数量が0になると\nカートに自動で追加されます。\n冷蔵庫タブと連携するスマート機能です。",
+  "fridge_frequent_coach_addToCartTitle": "カートにすぐ追加",
+  "fridge_frequent_coach_addToCartDesc": "ボタン一つで現在のカートに\n即座に追加できます。",
+  "fridge_frequent_coach_skip": "スキップ",
   "fridge_cart_empty": "カートが空です",
   "@fridge_cart_empty": { "description": "カートが空" },
   "fridge_cart_add_item": "品目を追加",
@@ -1411,5 +1539,96 @@
   "fridge_history_view_expense": "家計簿を見る",
   "@fridge_history_view_expense": { "description": "家計簿を見るボタン" },
   "fridge_group_selector_personal": "個人",
-  "@fridge_group_selector_personal": { "description": "個人モード" }
+  "@fridge_group_selector_personal": { "description": "個人モード" },
+
+  "dashboard_greetingMorning": "おはようございます",
+  "dashboard_greetingAfternoon": "こんにちは",
+  "dashboard_greetingEvening": "こんばんは",
+  "dashboard_greetingSubtitle": "今日も良い一日を！",
+  "dashboard_emptyWidgets": "表示するウィジェットがありません",
+  "dashboard_emptyWidgetsHint": "設定でウィジェットを有効にしてください",
+  "dashboard_widgetSettings": "ウィジェット設定",
+  "dashboard_notifications": "通知",
+
+  "weather_widgetTitle": "今日の天気",
+  "weather_refresh": "天気を更新",
+  "weather_detail": "詳しく",
+  "weather_errorMessage": "天気情報を読み込めません",
+  "weather_dustFine": "PM10",
+  "weather_dustUltraFine": "PM2.5",
+
+  "investment_widgetTitle": "投資指標",
+  "investment_errorMessage": "データを読み込めません",
+  "investment_emptyBookmarks": "お気に入りの指標がありません",
+
+  "householdWidget_groupTooltip": "グループ選択",
+  "householdWidget_incomeLabel": "{month} 入金",
+  "@householdWidget_incomeLabel": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "householdWidget_expenseLabel": "{month} 支出",
+  "@householdWidget_expenseLabel": {
+    "placeholders": { "month": { "type": "String" } }
+  },
+  "householdWidget_balance": "残高",
+  "householdWidget_budget": "予算 {amount}",
+  "@householdWidget_budget": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_budgetUsed": "{percent}% 使用",
+  "@householdWidget_budgetUsed": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "householdWidget_budgetOver": "{amount} 超過",
+  "@householdWidget_budgetOver": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_budgetRemaining": "{amount} 残り",
+  "@householdWidget_budgetRemaining": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_filterTitle": "フィルター選択",
+  "householdWidget_filterPersonal": "個人",
+  "householdWidget_filterPersonalSub": "グループなしで個人支出のみ",
+  "householdWidget_applyButton": "適用",
+  "householdWidget_categoryTitle": "カテゴリ別支出",
+  "householdWidget_categoryOver": "{amount} 超過",
+  "@householdWidget_categoryOver": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "householdWidget_categoryUsed": "{percent}% 使用",
+  "@householdWidget_categoryUsed": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "householdWidget_catTransportation": "交通",
+  "householdWidget_catFood": "食費",
+  "householdWidget_catLeisure": "レジャー",
+  "householdWidget_catLiving": "生活",
+  "householdWidget_catMedical": "医療",
+  "householdWidget_catEducation": "教育",
+  "householdWidget_catAllowance": "お小遣い",
+  "householdWidget_catCelebration": "冠婚葬祭",
+  "householdWidget_catAssetTransfer": "資産移動",
+  "householdWidget_catChildcare": "育児費",
+  "householdWidget_catOther": "その他",
+
+  "assetWidget_title": "資産状況",
+  "assetWidget_groupTitle": "{groupName} 資産",
+  "@assetWidget_groupTitle": {
+    "placeholders": { "groupName": { "type": "String" } }
+  },
+  "assetWidget_groupTooltip": "グループ選択",
+  "assetWidget_totalAsset": "総資産",
+  "assetWidget_totalProfit": "総収益",
+  "assetWidget_profitRate": "収益率",
+  "assetWidget_distribution": "資産分布",
+  "assetWidget_groupPickerTitle": "グループ選択",
+  "assetWidget_applyButton": "適用",
+  "assetWidget_typeSavings": "積立",
+  "assetWidget_typeDeposit": "預金",
+  "assetWidget_typeStock": "株式",
+  "assetWidget_typeFund": "ファンド",
+  "assetWidget_typeRealEstate": "不動産",
+  "assetWidget_typeGold": "実物金",
+  "assetWidget_typeOther": "その他"
 }

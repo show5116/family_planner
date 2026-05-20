@@ -57,6 +57,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
 
   Future<void> _showCoachMark({bool force = false}) async {
     final groupPos = _keyToPosition(_groupManagementKey);
+    final l10n = AppLocalizations.of(context)!;
 
     await FeatureCoachMark.show(
       context: context,
@@ -73,8 +74,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
             TargetContent(
               align: ContentAlign.bottom,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '그룹 관리',
-                description: '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.',
+                title: l10n.settings_groupManagementTitle,
+                description: l10n.more_coach_groupDesc,
                 icon: Icons.group_outlined,
                 color: Colors.blue,
               ),
@@ -91,8 +92,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
             TargetContent(
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '설정',
-                description: '테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.',
+                title: l10n.settings_title,
+                description: l10n.more_coach_settingsDesc,
                 icon: Icons.settings,
                 color: Colors.grey,
               ),
@@ -180,7 +181,7 @@ class _MoreTabState extends ConsumerState<MoreTab> {
               }),
               MenuListTile(
                 icon: Icons.how_to_vote_outlined,
-                title: '투표',
+                title: l10n.nav_votes,
                 onTap: () => context.push(AppRoutes.votes),
               ),
               const Divider(),

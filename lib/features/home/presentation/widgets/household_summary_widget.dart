@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
@@ -13,6 +14,7 @@ import 'package:family_planner/features/main/household/providers/household_provi
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 // 개인 모드를 나타내는 sentinel 값 (groupId: null로 API 호출)
@@ -95,9 +97,11 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
 
     final hasActiveFilter = _selectedGroupId != null;
 
+    final l10n = AppLocalizations.of(context)!;
+
     return statsAsync.when(
       loading: () => DashboardCard(
-        title: '가계 현황',
+        title: l10n.widgetSettings_householdSummary,
         icon: Icons.account_balance,
         onTap: () {},
         child: const Center(
@@ -130,9 +134,11 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
     bool hasActiveFilter,
   ) {
     final now = DateTime.now();
-    final monthLabel = '${now.month}월';
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
+    final monthLabel = DateFormat('MMMM', locale).format(now);
 
-    const title = '가계 현황';
+    final title = l10n.widgetSettings_householdSummary;
 
     final hasBudget = stats.totalBudget > 0;
     final budgetRatio = hasBudget ? (stats.totalExpense / stats.totalBudget).clamp(0.0, 1.0) : null;
@@ -149,7 +155,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '그룹 선택',
+              tooltip: l10n.householdWidget_groupTooltip,
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
@@ -189,7 +195,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '$monthLabel 입금',
+                        l10n.householdWidget_incomeLabel(monthLabel),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -209,7 +215,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '$monthLabel 지출',
+                        l10n.householdWidget_expenseLabel(monthLabel),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -229,7 +235,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '잔액',
+                        l10n.householdWidget_balance,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -252,14 +258,14 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$monthLabel 지출',
+                l10n.householdWidget_expenseLabel(monthLabel),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
               ),
               if (hasBudget)
                 Text(
-                  '예산 ${stats.totalBudget.toCurrency()}',
+                  l10n.householdWidget_budget(stats.totalBudget.toCurrency()),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -294,15 +300,15 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${(budgetRatio! * 100).toInt()}% 사용',
+                  l10n.householdWidget_budgetUsed((budgetRatio! * 100).toInt()),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: isOverBudget ? AppColors.error : AppColors.success,
                       ),
                 ),
                 Text(
                   isOverBudget
-                      ? '${(stats.totalExpense - stats.totalBudget).toCurrency()} 초과'
-                      : '${remaining.toCurrency()} 남음',
+                      ? l10n.householdWidget_budgetOver((stats.totalExpense - stats.totalBudget).toCurrency())
+                      : l10n.householdWidget_budgetRemaining(remaining.toCurrency()),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: isOverBudget
                             ? AppColors.error
@@ -376,7 +382,7 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
             padding: const EdgeInsets.fromLTRB(
               AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
             ),
-            child: Text('필터 선택', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(AppLocalizations.of(context)!.householdWidget_filterTitle, style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
           RadioGroup<String>(
@@ -386,8 +392,8 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
               children: [
                 // 개인 옵션
                 RadioListTile<String>(
-                  title: const Text('개인'),
-                  subtitle: const Text('그룹 없이 개인 지출만'),
+                  title: Text(AppLocalizations.of(context)!.householdWidget_filterPersonal),
+                  subtitle: Text(AppLocalizations.of(context)!.householdWidget_filterPersonalSub),
                   value: _kPersonal,
                 ),
                 if (widget.groups.isNotEmpty) const Divider(height: 1),
@@ -408,7 +414,7 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
               width: double.infinity,
               child: FilledButton(
                 onPressed: () => widget.onApply(_selectedGroupId),
-                child: const Text('적용'),
+                child: Text(AppLocalizations.of(context)!.householdWidget_applyButton),
               ),
             ),
           ),
@@ -423,30 +429,31 @@ class _CategoryDistribution extends StatelessWidget {
 
   final List<CategoryStatModel> categories;
 
-  static String _categoryLabel(ExpenseCategory? category) {
+  static String _categoryLabel(BuildContext context, ExpenseCategory? category) {
+    final l10n = AppLocalizations.of(context)!;
     switch (category) {
       case ExpenseCategory.transportation:
-        return '교통';
+        return l10n.householdWidget_catTransportation;
       case ExpenseCategory.food:
-        return '식비';
+        return l10n.householdWidget_catFood;
       case ExpenseCategory.leisure:
-        return '여가';
+        return l10n.householdWidget_catLeisure;
       case ExpenseCategory.living:
-        return '생활';
+        return l10n.householdWidget_catLiving;
       case ExpenseCategory.medical:
-        return '의료';
+        return l10n.householdWidget_catMedical;
       case ExpenseCategory.education:
-        return '교육';
+        return l10n.householdWidget_catEducation;
       case ExpenseCategory.allowance:
-        return '용돈';
+        return l10n.householdWidget_catAllowance;
       case ExpenseCategory.celebration:
-        return '경조사비';
+        return l10n.householdWidget_catCelebration;
       case ExpenseCategory.assetTransfer:
-        return '자산이동';
+        return l10n.householdWidget_catAssetTransfer;
       case ExpenseCategory.childcare:
-        return '육아비';
+        return l10n.householdWidget_catChildcare;
       default:
-        return '기타';
+        return l10n.householdWidget_catOther;
     }
   }
 
@@ -492,7 +499,7 @@ class _CategoryDistribution extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '카테고리별 지출',
+          AppLocalizations.of(context)!.householdWidget_categoryTitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -524,7 +531,7 @@ class _CategoryDistribution extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSizes.spaceS),
                     Text(
-                      _categoryLabel(cat.category),
+                      _categoryLabel(context, cat.category),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const Spacer(),
@@ -560,8 +567,8 @@ class _CategoryDistribution extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     isOverBudget
-                        ? '${(cat.total - cat.budget!).toCurrency()} 초과'
-                        : '${(barValue * 100).toInt()}% 사용',
+                        ? AppLocalizations.of(context)!.householdWidget_categoryOver((cat.total - cat.budget!).toCurrency())
+                        : AppLocalizations.of(context)!.householdWidget_categoryUsed((barValue * 100).toInt()),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: isOverBudget
                               ? AppColors.error

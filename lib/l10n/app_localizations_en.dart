@@ -321,6 +321,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nav_savings => 'Group Piggy Bank';
 
   @override
+  String get nav_votes => 'Votes';
+
+  @override
+  String get more_coach_groupDesc =>
+      'Create groups for family, couples, friends, and more.\nInvite members with an invitation code.';
+
+  @override
+  String get more_coach_settingsDesc =>
+      'Customize the app with themes, language, notifications,\nbottom tab layout, and more.';
+
+  @override
   String get home_greeting_morning => 'Good morning!';
 
   @override
@@ -458,6 +469,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetSettings_memoSummaryDesc => 'Display recently written memos';
+
+  @override
+  String get widgetSettings_householdSummary => 'Household Budget';
+
+  @override
+  String get widgetSettings_householdSummaryDesc =>
+      'Monthly expense summary and budget achievement rate';
+
+  @override
+  String get widgetSettings_childcareSummary => 'Childcare Points';
+
+  @override
+  String get widgetSettings_childcareSummaryDesc =>
+      'Point balance status per child';
+
+  @override
+  String get widgetSettings_savingsSummary => 'Savings';
+
+  @override
+  String get widgetSettings_savingsSummaryDesc =>
+      'Savings goal and achievement status per group';
+
+  @override
+  String get widgetSettings_fridgeSummary => 'Expiring Soon';
+
+  @override
+  String get widgetSettings_fridgeSummaryDesc =>
+      'List of items in the fridge with upcoming expiry dates';
+
+  @override
+  String get widgetSettings_viewToday => 'Today';
+
+  @override
+  String get widgetSettings_viewWeek => 'This Week';
+
+  @override
+  String get widgetSettings_viewMonth => 'This Month';
+
+  @override
+  String get widgetSettings_viewBudget => 'Budget Overview';
+
+  @override
+  String get widgetSettings_viewCategory => 'By Category';
+
+  @override
+  String get widgetSettings_savingsEmpty => 'No savings registered';
+
+  @override
+  String get widgetSettings_fridgeExpiryEmpty => 'No items expiring soon';
+
+  @override
+  String get widgetSettings_scheduleWeek => 'This Week\'s Schedule';
+
+  @override
+  String get widgetSettings_scheduleMonth => 'This Month\'s Schedule';
+
+  @override
+  String get widgetSettings_scheduleEmptyToday => 'No schedule for today';
+
+  @override
+  String get widgetSettings_scheduleEmptyWeek => 'No schedule this week';
+
+  @override
+  String get widgetSettings_scheduleEmptyMonth => 'No schedule this month';
 
   @override
   String get widgetSettings_weather => 'Weather';
@@ -997,7 +1072,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_deleteSuccess => 'Group deleted successfully';
 
   @override
-  String get group_leaveSuccess => 'Left group successfully';
+  String get group_leaveSuccess => 'You have left the group';
 
   @override
   String get group_inviteSent => 'Invitation email sent';
@@ -1053,6 +1128,178 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get group_joinRequestRejected => 'Rejected';
+
+  @override
+  String get group_codeExpiredLabel => 'Invite code expired';
+
+  @override
+  String get group_defaultGroupTooltip => 'Default group';
+
+  @override
+  String get group_setDefaultGroupTooltip => 'Set as default group';
+
+  @override
+  String get group_unsetDefaultGroupTooltip => 'Unset default group';
+
+  @override
+  String group_setDefaultSuccess(String name) {
+    return '\'$name\' set as default group';
+  }
+
+  @override
+  String get group_unsetDefaultSuccess => 'Default group unset';
+
+  @override
+  String get group_myColorTitle => 'My Group Color';
+
+  @override
+  String get group_myColorNotSet => 'Not set (using group default color)';
+
+  @override
+  String get group_myColorSet => 'Set';
+
+  @override
+  String get group_myColorReset => 'Reset';
+
+  @override
+  String get group_dangerZone => 'Danger Zone';
+
+  @override
+  String get group_dangerZoneDesc =>
+      'Deleting the group will permanently remove all data.';
+
+  @override
+  String get group_leaveTitle => 'Leave Group';
+
+  @override
+  String get group_leaveDesc =>
+      'You will no longer have access to the group\'s data.';
+
+  @override
+  String group_leaveConfirmBody(String name) {
+    return 'Are you sure you want to leave \"$name\"?\n\nYou will lose access to the group\'s data and will need an invite code to rejoin.';
+  }
+
+  @override
+  String get group_leaveButton => 'Leave';
+
+  @override
+  String get group_roleManagementTitle => 'Role Management';
+
+  @override
+  String get group_roleManagementDesc => 'List of roles in this group.';
+
+  @override
+  String get group_roleEmpty => 'No roles';
+
+  @override
+  String get group_roleDefaultBadge => 'Default';
+
+  @override
+  String group_rolePermissionCount(int count) {
+    return '$count permissions';
+  }
+
+  @override
+  String get group_roleEdit => 'Edit Role';
+
+  @override
+  String get group_roleDelete => 'Delete Role';
+
+  @override
+  String get group_roleSortSaved => 'Sort order saved';
+
+  @override
+  String get group_roleLoadError => 'Unable to load roles';
+
+  @override
+  String get group_roleInfoTitle => 'Info';
+
+  @override
+  String get group_roleInfoBullet1 =>
+      'Common roles (OWNER, ADMIN, MEMBER) are provided by default in all groups.';
+
+  @override
+  String get group_roleInfoBullet2 =>
+      'Custom roles can only be created, edited, or deleted by the group OWNER.';
+
+  @override
+  String get group_roleInfoBullet3 =>
+      'OWNER permission is required to manage roles.';
+
+  @override
+  String get group_roleCreateTitle => 'Create Role';
+
+  @override
+  String get group_roleEditTitle => 'Edit Role';
+
+  @override
+  String get group_roleDeleteTitle => 'Delete Role';
+
+  @override
+  String get group_roleNameLabel => 'Role name';
+
+  @override
+  String get group_roleNameRequired => 'Please enter a role name';
+
+  @override
+  String get group_roleDefaultSwitch => 'Default role';
+
+  @override
+  String get group_roleDefaultSwitchSub =>
+      'Automatically assigned to new members';
+
+  @override
+  String get group_roleColorLabel => 'Role color';
+
+  @override
+  String get group_rolePermissionsLabel => 'Select permissions';
+
+  @override
+  String get group_rolePermissionsViewLabel => 'Permissions';
+
+  @override
+  String get group_rolePermissionNone => 'No permissions';
+
+  @override
+  String get group_roleDefaultLabel =>
+      'Default role (automatically assigned to new members)';
+
+  @override
+  String group_roleDeleteConfirm(String name) {
+    return 'Delete the role \"$name\"?';
+  }
+
+  @override
+  String get group_roleDeleteWarning =>
+      '⚠️ Roles assigned to members cannot be deleted.';
+
+  @override
+  String get group_roleCreateSuccess => 'Role created';
+
+  @override
+  String group_roleCreateFail(String error) {
+    return 'Failed to create role: $error';
+  }
+
+  @override
+  String get group_roleEditSuccess => 'Role updated';
+
+  @override
+  String group_roleEditFail(String error) {
+    return 'Failed to update role: $error';
+  }
+
+  @override
+  String get group_roleDeleteSuccess => 'Role deleted';
+
+  @override
+  String group_roleDeleteFail(String error) {
+    return 'Failed to delete role: $error';
+  }
+
+  @override
+  String get group_settings_groupManagementTitle => 'Group Management';
 
   @override
   String get error_network => 'Please check your network connection';
@@ -1994,6 +2241,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todo_clearFilter => 'Clear filter';
+
+  @override
+  String get todo_filterTooltip => 'Task filter';
+
+  @override
+  String get todo_widgetTitleToday => 'Today\'s Tasks';
+
+  @override
+  String get todo_widgetTitleWeek => 'This Week\'s Tasks';
+
+  @override
+  String get todo_widgetTitleMonth => 'This Month\'s Tasks';
+
+  @override
+  String get todo_emptyToday => 'No tasks for today';
+
+  @override
+  String get todo_emptyWeek => 'No tasks this week';
+
+  @override
+  String get todo_emptyMonth => 'No tasks this month';
 
   @override
   String get todo_searchHint => 'Search by title, description';
@@ -2997,6 +3265,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_frequent_add_to_cart => 'Add to cart';
 
   @override
+  String fridge_frequent_added_snackbar(String name) {
+    return '$name added to cart';
+  }
+
+  @override
+  String fridge_frequent_delete_confirm(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get fridge_frequent_autoAddInfo_title => 'What is Auto-Add?';
+
+  @override
+  String get fridge_frequent_autoAddInfo_body =>
+      'When this item\'s quantity reaches 0 in the fridge, it will be automatically added to your cart.\nWith the switch on, your shopping list will be filled in automatically when the fridge is empty.';
+
+  @override
+  String get fridge_frequent_autoAddInfo_hint =>
+      'Syncs when you manage quantities in the Fridge tab';
+
+  @override
+  String get fridge_frequent_coach_fabTitle => 'Add Frequent Items';
+
+  @override
+  String get fridge_frequent_coach_fabDesc =>
+      'Register items you buy often\nto add them quickly next time you shop.';
+
+  @override
+  String get fridge_frequent_coach_itemTitle => 'Manage Items';
+
+  @override
+  String get fridge_frequent_coach_itemDesc =>
+      'Set item name and default unit.\nTap to edit, long press to delete.';
+
+  @override
+  String get fridge_frequent_coach_autoAddTitle => 'Auto-Add';
+
+  @override
+  String get fridge_frequent_coach_autoAddDesc =>
+      'When this item\'s quantity reaches 0 in the fridge,\nit will be automatically added to your cart.\nA smart feature linked to the Fridge tab.';
+
+  @override
+  String get fridge_frequent_coach_addToCartTitle => 'Add to Cart Instantly';
+
+  @override
+  String get fridge_frequent_coach_addToCartDesc =>
+      'Add to your current cart\ninstantly with one tap.';
+
+  @override
+  String get fridge_frequent_coach_skip => 'Skip';
+
+  @override
   String get fridge_cart_empty => 'Your cart is empty';
 
   @override
@@ -3047,4 +3367,199 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => 'Personal';
+
+  @override
+  String get dashboard_greetingMorning => 'Good Morning';
+
+  @override
+  String get dashboard_greetingAfternoon => 'Good Afternoon';
+
+  @override
+  String get dashboard_greetingEvening => 'Good Evening';
+
+  @override
+  String get dashboard_greetingSubtitle => 'Have a wonderful day!';
+
+  @override
+  String get dashboard_emptyWidgets => 'No widgets to display';
+
+  @override
+  String get dashboard_emptyWidgetsHint => 'Enable widgets in settings';
+
+  @override
+  String get dashboard_widgetSettings => 'Widget Settings';
+
+  @override
+  String get dashboard_notifications => 'Notifications';
+
+  @override
+  String get weather_widgetTitle => 'Today\'s Weather';
+
+  @override
+  String get weather_refresh => 'Refresh Weather';
+
+  @override
+  String get weather_detail => 'Details';
+
+  @override
+  String get weather_errorMessage => 'Unable to load weather information';
+
+  @override
+  String get weather_dustFine => 'PM10';
+
+  @override
+  String get weather_dustUltraFine => 'PM2.5';
+
+  @override
+  String get investment_widgetTitle => 'Investment Indicators';
+
+  @override
+  String get investment_errorMessage => 'Unable to load data';
+
+  @override
+  String get investment_emptyBookmarks => 'No bookmarked indicators';
+
+  @override
+  String get householdWidget_groupTooltip => 'Select Group';
+
+  @override
+  String householdWidget_incomeLabel(String month) {
+    return '$month Income';
+  }
+
+  @override
+  String householdWidget_expenseLabel(String month) {
+    return '$month Expense';
+  }
+
+  @override
+  String get householdWidget_balance => 'Balance';
+
+  @override
+  String householdWidget_budget(String amount) {
+    return 'Budget $amount';
+  }
+
+  @override
+  String householdWidget_budgetUsed(int percent) {
+    return '$percent% used';
+  }
+
+  @override
+  String householdWidget_budgetOver(String amount) {
+    return '$amount over budget';
+  }
+
+  @override
+  String householdWidget_budgetRemaining(String amount) {
+    return '$amount remaining';
+  }
+
+  @override
+  String get householdWidget_filterTitle => 'Select Filter';
+
+  @override
+  String get householdWidget_filterPersonal => 'Personal';
+
+  @override
+  String get householdWidget_filterPersonalSub => 'Personal expenses only';
+
+  @override
+  String get householdWidget_applyButton => 'Apply';
+
+  @override
+  String get householdWidget_categoryTitle => 'Expense by Category';
+
+  @override
+  String householdWidget_categoryOver(String amount) {
+    return '$amount over';
+  }
+
+  @override
+  String householdWidget_categoryUsed(int percent) {
+    return '$percent% used';
+  }
+
+  @override
+  String get householdWidget_catTransportation => 'Transportation';
+
+  @override
+  String get householdWidget_catFood => 'Food';
+
+  @override
+  String get householdWidget_catLeisure => 'Leisure';
+
+  @override
+  String get householdWidget_catLiving => 'Living';
+
+  @override
+  String get householdWidget_catMedical => 'Medical';
+
+  @override
+  String get householdWidget_catEducation => 'Education';
+
+  @override
+  String get householdWidget_catAllowance => 'Allowance';
+
+  @override
+  String get householdWidget_catCelebration => 'Celebration';
+
+  @override
+  String get householdWidget_catAssetTransfer => 'Asset Transfer';
+
+  @override
+  String get householdWidget_catChildcare => 'Childcare';
+
+  @override
+  String get householdWidget_catOther => 'Other';
+
+  @override
+  String get assetWidget_title => 'Asset Overview';
+
+  @override
+  String assetWidget_groupTitle(String groupName) {
+    return '$groupName Assets';
+  }
+
+  @override
+  String get assetWidget_groupTooltip => 'Select Group';
+
+  @override
+  String get assetWidget_totalAsset => 'Total Assets';
+
+  @override
+  String get assetWidget_totalProfit => 'Total Profit';
+
+  @override
+  String get assetWidget_profitRate => 'Return Rate';
+
+  @override
+  String get assetWidget_distribution => 'Asset Distribution';
+
+  @override
+  String get assetWidget_groupPickerTitle => 'Select Group';
+
+  @override
+  String get assetWidget_applyButton => 'Apply';
+
+  @override
+  String get assetWidget_typeSavings => 'Savings';
+
+  @override
+  String get assetWidget_typeDeposit => 'Deposit';
+
+  @override
+  String get assetWidget_typeStock => 'Stocks';
+
+  @override
+  String get assetWidget_typeFund => 'Fund';
+
+  @override
+  String get assetWidget_typeRealEstate => 'Real Estate';
+
+  @override
+  String get assetWidget_typeGold => 'Gold';
+
+  @override
+  String get assetWidget_typeOther => 'Other';
 }

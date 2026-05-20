@@ -27,6 +27,8 @@ class NavigationLabelHelper {
         return l10n.nav_investmentIndicators;
       case 'savings':
         return l10n.nav_savings;
+      case 'votes':
+        return l10n.nav_votes;
       case 'fridge':
         return l10n.fridge_title;
       case 'shopping':

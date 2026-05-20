@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/navigation_label_helper.dart';
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 네비게이션 슬롯 미리보기 위젯
 class NavigationSlotPreview extends StatelessWidget {
@@ -49,7 +51,7 @@ class NavigationSlotPreview extends StatelessWidget {
             ),
             const SizedBox(height: AppSizes.spaceXS),
             Text(
-              item.label,
+              NavigationLabelHelper.getLabel(AppLocalizations.of(context)!, item.id),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isFixed ? FontWeight.normal : FontWeight.bold,

@@ -53,7 +53,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     return widget.rolesAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) => ErrorView(
-        message: '역할 목록을 불러올 수 없습니다\n${ErrorHandler.getErrorMessage(error)}',
+        message: '${l10n.group_roleLoadError}\n${ErrorHandler.getErrorMessage(error)}',
         onRetry: widget.onRetry,
       ),
       data: (roles) {
@@ -154,7 +154,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       children: [
         RoleHeader(isOwner: widget.isOwner),
         const SizedBox(height: AppSizes.spaceM),
-        _buildEmptyState(theme),
+        _buildEmptyState(theme, l10n),
         const SizedBox(height: AppSizes.spaceM),
         RoleInfoCard(isOwner: widget.isOwner),
       ],
@@ -162,13 +162,13 @@ class _RolesTabState extends ConsumerState<RolesTab> {
   }
 
   /// 빈 상태
-  Widget _buildEmptyState(ThemeData theme) {
+  Widget _buildEmptyState(ThemeData theme, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.spaceXL),
         child: Center(
           child: Text(
-            '역할이 없습니다',
+            l10n.group_roleEmpty,
             style: theme.textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
           ),
         ),
@@ -212,7 +212,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
           children: [
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('역할 수정'),
+              title: Text(l10n.group_roleEdit),
               onTap: () {
                 Navigator.pop(context);
                 widget.onEditRole(role);
@@ -220,7 +220,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
             ),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('역할 삭제', style: TextStyle(color: Colors.red)),
+              title: Text(l10n.group_roleDelete, style: const TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 widget.onDeleteRole(role);
@@ -276,7 +276,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
 
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('정렬 순서가 저장되었습니다')));
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.group_roleSortSaved)));
       }
     } catch (e) {
       if (mounted) {

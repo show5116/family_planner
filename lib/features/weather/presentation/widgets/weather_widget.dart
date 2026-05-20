@@ -8,6 +8,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/weather/models/weather_model.dart';
 
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 날씨 아이콘 / 색상 헬퍼
@@ -78,8 +79,9 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget>
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
 
+    final l10n = AppLocalizations.of(context)!;
     return DashboardCard(
-      title: '오늘 날씨',
+      title: l10n.weather_widgetTitle,
       icon: Icons.wb_sunny_outlined,
       action: Row(
         mainAxisSize: MainAxisSize.min,
@@ -88,12 +90,12 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget>
             icon: const Icon(Icons.refresh),
             iconSize: AppSizes.iconMedium,
             visualDensity: VisualDensity.compact,
-            tooltip: '날씨 새로고침',
+            tooltip: l10n.weather_refresh,
             onPressed: _refresh,
           ),
           TextButton(
             onPressed: () => context.push(AppRoutes.weather),
-            child: const Text('자세히'),
+            child: Text(l10n.weather_detail),
           ),
         ],
       ),
@@ -210,12 +212,12 @@ class _WeatherContent extends StatelessWidget {
                     Row(
                       children: [
                         if (weather.pm10Grade != null) ...[
-                          _DustChip(label: '미세', grade: weather.pm10Grade!),
+                          _DustChip(label: AppLocalizations.of(context)!.weather_dustFine, grade: weather.pm10Grade!),
                         ],
                         if (weather.pm10Grade != null && weather.pm25Grade != null)
                           const SizedBox(width: AppSizes.spaceM),
                         if (weather.pm25Grade != null) ...[
-                          _DustChip(label: '초미세', grade: weather.pm25Grade!),
+                          _DustChip(label: AppLocalizations.of(context)!.weather_dustUltraFine, grade: weather.pm25Grade!),
                         ],
                       ],
                     ),
@@ -320,12 +322,12 @@ class _ErrorState extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '날씨 정보를 불러올 수 없습니다',
+            AppLocalizations.of(context)!.weather_errorMessage,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
-          TextButton(onPressed: onRetry, child: const Text('다시 시도')),
+          TextButton(onPressed: onRetry, child: Text(AppLocalizations.of(context)!.common_retry)),
         ],
       ),
     );

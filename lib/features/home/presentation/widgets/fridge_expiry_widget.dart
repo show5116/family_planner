@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 class FridgeExpiryWidget extends ConsumerStatefulWidget {
@@ -102,7 +103,7 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
 
     return itemsAsync.when(
       loading: () => DashboardCard(
-        title: '유통기한 임박',
+        title: AppLocalizations.of(context)!.widgetSettings_fridgeSummary,
         icon: Icons.warning_amber_outlined,
         onTap: () {},
         child: const Center(
@@ -124,7 +125,7 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
     bool hasFilter,
   ) {
     return DashboardCard(
-      title: '유통기한 임박',
+      title: AppLocalizations.of(context)!.widgetSettings_fridgeSummary,
       icon: Icons.warning_amber_outlined,
       action: Row(
         mainAxisSize: MainAxisSize.min,
@@ -171,7 +172,7 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
               color: Theme.of(context).colorScheme.primary, size: 20),
           const SizedBox(width: AppSizes.spaceS),
           Text(
-            '유통기한 임박 식품이 없어요',
+            AppLocalizations.of(context)!.widgetSettings_fridgeExpiryEmpty,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

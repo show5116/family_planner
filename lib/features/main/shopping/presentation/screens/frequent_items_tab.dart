@@ -111,6 +111,8 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
     final autoAddPos = _keyToPosition(_autoAddKey);
     final addToCartPos = _keyToPosition(_addToCartKey);
 
+    final l10n = AppLocalizations.of(context)!;
+
     final targets = <TargetFocus>[
       // 1. 추가 FAB
       TargetFocus(
@@ -122,8 +124,8 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '자주 사는 항목 추가',
-              description: '자주 구매하는 품목을 등록해 두면\n다음 장보기 때 빠르게 담을 수 있어요.',
+              title: l10n.fridge_frequent_coach_fabTitle,
+              description: l10n.fridge_frequent_coach_fabDesc,
               icon: Icons.add,
               color: AppColors.primary,
             ),
@@ -141,8 +143,8 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '항목 관리',
-              description: '품목명·기본 단위를 설정할 수 있어요.\n탭하면 수정, 길게 누르면 삭제할 수 있습니다.',
+              title: l10n.fridge_frequent_coach_itemTitle,
+              description: l10n.fridge_frequent_coach_itemDesc,
               icon: Icons.star_outline,
               color: AppColors.primary,
             ),
@@ -160,8 +162,8 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '자동 추가',
-              description: '냉장고에서 이 품목의 수량이 0이 되면\n장바구니에 자동으로 추가돼요.\n냉장고 탭과 연동되는 스마트 기능이에요.',
+              title: l10n.fridge_frequent_coach_autoAddTitle,
+              description: l10n.fridge_frequent_coach_autoAddDesc,
               icon: Icons.kitchen_outlined,
               color: AppColors.primary,
             ),
@@ -178,8 +180,8 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '장바구니에 바로 담기',
-              description: '버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.',
+              title: l10n.fridge_frequent_coach_addToCartTitle,
+              description: l10n.fridge_frequent_coach_addToCartDesc,
               icon: Icons.add_shopping_cart_outlined,
               color: AppColors.primary,
             ),
@@ -195,7 +197,7 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
       targets: targets,
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.fridge_frequent_coach_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -204,9 +206,9 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
-          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        child: Text(
+          l10n.fridge_frequent_coach_skip,
+          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
       onFinish: () {
@@ -357,7 +359,7 @@ class _AutoAddInfoBannerState extends State<_AutoAddInfoBanner> {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      '자동 추가란?',
+                      AppLocalizations.of(context)!.fridge_frequent_autoAddInfo_title,
                       style: textTheme.labelMedium?.copyWith(color: colorScheme.secondary),
                     ),
                   ),
@@ -371,7 +373,7 @@ class _AutoAddInfoBannerState extends State<_AutoAddInfoBanner> {
               if (_expanded) ...[
                 const SizedBox(height: 8),
                 Text(
-                  '냉장고에서 이 품목의 수량이 0이 되면 장바구니에 자동으로 추가돼요.\n스위치를 켜두면 냉장고가 비었을 때 알아서 장보기 목록에 담아드립니다.',
+                  AppLocalizations.of(context)!.fridge_frequent_autoAddInfo_body,
                   style: textTheme.bodySmall?.copyWith(color: colorScheme.onSecondaryContainer),
                 ),
                 const SizedBox(height: 4),
@@ -380,7 +382,7 @@ class _AutoAddInfoBannerState extends State<_AutoAddInfoBanner> {
                     Icon(Icons.info_outline, size: 12, color: colorScheme.outline),
                     const SizedBox(width: 4),
                     Text(
-                      '냉장고 탭에서 수량을 관리하면 연동됩니다',
+                      AppLocalizations.of(context)!.fridge_frequent_autoAddInfo_hint,
                       style: textTheme.labelSmall?.copyWith(color: colorScheme.outline),
                     ),
                   ],
@@ -514,7 +516,7 @@ class _FrequentItemTile extends ConsumerWidget {
       ref.invalidate(cartProvider);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${item.name}을(를) 장바구니에 추가했습니다')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.fridge_frequent_added_snackbar(item.name))),
         );
       }
     } catch (e) {
@@ -538,7 +540,7 @@ class _FrequentItemTile extends ConsumerWidget {
         final confirmed = await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            content: Text('${item.name}을(를) 삭제하시겠습니까?'),
+            content: Text(l10n.fridge_frequent_delete_confirm(item.name)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),

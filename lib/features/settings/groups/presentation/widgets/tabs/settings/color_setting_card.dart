@@ -55,7 +55,7 @@ class ColorSettingCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '나만의 그룹 색상',
+              l10n.group_myColorTitle,
               style: theme.textTheme.titleSmall?.copyWith(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.bold,
@@ -80,14 +80,14 @@ class ColorSettingCard extends StatelessWidget {
                     children: [
                       if (!hasCustomColor)
                         Text(
-                          '설정하지 않음 (그룹 기본 색상 사용)',
+                          l10n.group_myColorNotSet,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.grey[600],
                           ),
                         )
                       else
                         Text(
-                          '설정됨',
+                          l10n.group_myColorSet,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w500,
@@ -99,7 +99,7 @@ class ColorSettingCard extends StatelessWidget {
                 if (hasCustomColor)
                   TextButton(
                     onPressed: onResetColor,
-                    child: const Text('초기화'),
+                    child: Text(l10n.group_myColorReset),
                   ),
                 TextButton(
                   onPressed: () =>

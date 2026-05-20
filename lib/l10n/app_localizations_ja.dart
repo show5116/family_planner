@@ -313,6 +313,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get nav_savings => 'グループ貯金箱';
 
   @override
+  String get nav_votes => '投票';
+
+  @override
+  String get more_coach_groupDesc => '家族、恋人、友達などのグループを作り、\n招待コードでメンバーを招待しましょう。';
+
+  @override
+  String get more_coach_settingsDesc =>
+      'テーマ、言語、通知、ボトムタブ構成など\nアプリをお好みにカスタマイズしましょう。';
+
+  @override
   String get home_greeting_morning => 'おはようございます！';
 
   @override
@@ -444,6 +454,66 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get widgetSettings_memoSummaryDesc => '最近作成したメモを表示します';
+
+  @override
+  String get widgetSettings_householdSummary => '家計状況';
+
+  @override
+  String get widgetSettings_householdSummaryDesc => '今月の支出サマリーと予算達成率';
+
+  @override
+  String get widgetSettings_childcareSummary => '育児ポイント';
+
+  @override
+  String get widgetSettings_childcareSummaryDesc => 'お子様ごとのポイント残高状況';
+
+  @override
+  String get widgetSettings_savingsSummary => '貯金箱';
+
+  @override
+  String get widgetSettings_savingsSummaryDesc => 'グループ別の積立目標と達成状況';
+
+  @override
+  String get widgetSettings_fridgeSummary => '賞味期限間近';
+
+  @override
+  String get widgetSettings_fridgeSummaryDesc => '冷蔵庫の賞味期限が近い食品リスト';
+
+  @override
+  String get widgetSettings_viewToday => '今日';
+
+  @override
+  String get widgetSettings_viewWeek => '今週';
+
+  @override
+  String get widgetSettings_viewMonth => '今月';
+
+  @override
+  String get widgetSettings_viewBudget => '予算全体を見る';
+
+  @override
+  String get widgetSettings_viewCategory => 'カテゴリ別';
+
+  @override
+  String get widgetSettings_savingsEmpty => '登録された貯金箱がありません';
+
+  @override
+  String get widgetSettings_fridgeExpiryEmpty => '賞味期限間近の食品はありません';
+
+  @override
+  String get widgetSettings_scheduleWeek => '今週の予定';
+
+  @override
+  String get widgetSettings_scheduleMonth => '今月の予定';
+
+  @override
+  String get widgetSettings_scheduleEmptyToday => '今日の予定はありません';
+
+  @override
+  String get widgetSettings_scheduleEmptyWeek => '今週の予定はありません';
+
+  @override
+  String get widgetSettings_scheduleEmptyMonth => '今月の予定はありません';
 
   @override
   String get widgetSettings_weather => '天気';
@@ -968,7 +1038,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_deleteSuccess => 'グループが削除されました';
 
   @override
-  String get group_leaveSuccess => 'グループを退出しました';
+  String get group_leaveSuccess => 'グループから退出しました';
 
   @override
   String get group_inviteSent => '招待メールが送信されました';
@@ -1023,6 +1093,171 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get group_joinRequestRejected => '拒否済み';
+
+  @override
+  String get group_codeExpiredLabel => '招待コード期限切れ';
+
+  @override
+  String get group_defaultGroupTooltip => 'デフォルトグループ';
+
+  @override
+  String get group_setDefaultGroupTooltip => 'デフォルトグループに設定';
+
+  @override
+  String get group_unsetDefaultGroupTooltip => 'デフォルトグループを解除';
+
+  @override
+  String group_setDefaultSuccess(String name) {
+    return '\'$name\'をデフォルトグループに設定しました';
+  }
+
+  @override
+  String get group_unsetDefaultSuccess => 'デフォルトグループを解除しました';
+
+  @override
+  String get group_myColorTitle => 'マイグループカラー';
+
+  @override
+  String get group_myColorNotSet => '未設定（グループデフォルトカラーを使用）';
+
+  @override
+  String get group_myColorSet => '設定済み';
+
+  @override
+  String get group_myColorReset => 'リセット';
+
+  @override
+  String get group_dangerZone => '危険ゾーン';
+
+  @override
+  String get group_dangerZoneDesc => 'グループを削除すると、すべてのデータが完全に削除されます。';
+
+  @override
+  String get group_leaveTitle => 'グループを退出';
+
+  @override
+  String get group_leaveDesc => 'グループを退出すると、グループのデータにアクセスできなくなります。';
+
+  @override
+  String group_leaveConfirmBody(String name) {
+    return '本当に「$name」グループを退出しますか？\n\n退出後はグループのデータにアクセスできなくなり、再参加には招待コードが必要です。';
+  }
+
+  @override
+  String get group_leaveButton => '退出';
+
+  @override
+  String get group_roleManagementTitle => 'ロール管理';
+
+  @override
+  String get group_roleManagementDesc => 'このグループのロール一覧です。';
+
+  @override
+  String get group_roleEmpty => 'ロールがありません';
+
+  @override
+  String get group_roleDefaultBadge => 'デフォルト';
+
+  @override
+  String group_rolePermissionCount(int count) {
+    return '権限: $count個';
+  }
+
+  @override
+  String get group_roleEdit => 'ロールを編集';
+
+  @override
+  String get group_roleDelete => 'ロールを削除';
+
+  @override
+  String get group_roleSortSaved => '並び順を保存しました';
+
+  @override
+  String get group_roleLoadError => 'ロール一覧を読み込めません';
+
+  @override
+  String get group_roleInfoTitle => 'ご案内';
+
+  @override
+  String get group_roleInfoBullet1 =>
+      '共通ロール（OWNER、ADMIN、MEMBER）はすべてのグループにデフォルトで提供されます。';
+
+  @override
+  String get group_roleInfoBullet2 => 'カスタムロールはグループOWNERのみ作成・編集・削除できます。';
+
+  @override
+  String get group_roleInfoBullet3 => 'ロールを管理するにはグループOWNER権限が必要です。';
+
+  @override
+  String get group_roleCreateTitle => 'ロールを作成';
+
+  @override
+  String get group_roleEditTitle => 'ロールを編集';
+
+  @override
+  String get group_roleDeleteTitle => 'ロールを削除';
+
+  @override
+  String get group_roleNameLabel => 'ロール名';
+
+  @override
+  String get group_roleNameRequired => 'ロール名を入力してください';
+
+  @override
+  String get group_roleDefaultSwitch => 'デフォルトロール';
+
+  @override
+  String get group_roleDefaultSwitchSub => '新規メンバー参加時に自動付与';
+
+  @override
+  String get group_roleColorLabel => 'ロールカラー';
+
+  @override
+  String get group_rolePermissionsLabel => '権限を選択';
+
+  @override
+  String get group_rolePermissionsViewLabel => '権限一覧';
+
+  @override
+  String get group_rolePermissionNone => '権限がありません';
+
+  @override
+  String get group_roleDefaultLabel => 'デフォルトロール（新規メンバー参加時に自動付与）';
+
+  @override
+  String group_roleDeleteConfirm(String name) {
+    return '「$name」ロールを削除しますか？';
+  }
+
+  @override
+  String get group_roleDeleteWarning => '⚠️ このロールを使用中のメンバーがいる場合は削除できません。';
+
+  @override
+  String get group_roleCreateSuccess => 'ロールが作成されました';
+
+  @override
+  String group_roleCreateFail(String error) {
+    return 'ロール作成失敗: $error';
+  }
+
+  @override
+  String get group_roleEditSuccess => 'ロールが更新されました';
+
+  @override
+  String group_roleEditFail(String error) {
+    return 'ロール更新失敗: $error';
+  }
+
+  @override
+  String get group_roleDeleteSuccess => 'ロールが削除されました';
+
+  @override
+  String group_roleDeleteFail(String error) {
+    return 'ロール削除失敗: $error';
+  }
+
+  @override
+  String get group_settings_groupManagementTitle => 'グループ管理';
 
   @override
   String get error_network => 'ネットワーク接続を確認してください';
@@ -1952,6 +2187,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get todo_clearFilter => 'フィルターをクリア';
+
+  @override
+  String get todo_filterTooltip => 'タスクフィルター';
+
+  @override
+  String get todo_widgetTitleToday => '今日のタスク';
+
+  @override
+  String get todo_widgetTitleWeek => '今週のタスク';
+
+  @override
+  String get todo_widgetTitleMonth => '今月のタスク';
+
+  @override
+  String get todo_emptyToday => '今日のタスクはありません';
+
+  @override
+  String get todo_emptyWeek => '今週のタスクはありません';
+
+  @override
+  String get todo_emptyMonth => '今月のタスクはありません';
 
   @override
   String get todo_searchHint => 'タイトル、説明で検索';
@@ -2940,6 +3196,56 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_frequent_add_to_cart => 'カートに追加';
 
   @override
+  String fridge_frequent_added_snackbar(String name) {
+    return '$nameをカートに追加しました';
+  }
+
+  @override
+  String fridge_frequent_delete_confirm(String name) {
+    return '$nameを削除しますか？';
+  }
+
+  @override
+  String get fridge_frequent_autoAddInfo_title => '自動追加とは？';
+
+  @override
+  String get fridge_frequent_autoAddInfo_body =>
+      '冷蔵庫でこの品目の数量が0になると、カートに自動で追加されます。\nスイッチをオンにしておくと、冷蔵庫が空になったとき自動で買い物リストに入れます。';
+
+  @override
+  String get fridge_frequent_autoAddInfo_hint => '冷蔵庫タブで数量を管理すると連携されます';
+
+  @override
+  String get fridge_frequent_coach_fabTitle => 'よく買う品目を追加';
+
+  @override
+  String get fridge_frequent_coach_fabDesc =>
+      'よく購入する品目を登録しておくと\n次の買い物で素早く追加できます。';
+
+  @override
+  String get fridge_frequent_coach_itemTitle => '品目管理';
+
+  @override
+  String get fridge_frequent_coach_itemDesc =>
+      '品目名・デフォルト単位を設定できます。\nタップで編集、長押しで削除できます。';
+
+  @override
+  String get fridge_frequent_coach_autoAddTitle => '自動追加';
+
+  @override
+  String get fridge_frequent_coach_autoAddDesc =>
+      '冷蔵庫でこの品目の数量が0になると\nカートに自動で追加されます。\n冷蔵庫タブと連携するスマート機能です。';
+
+  @override
+  String get fridge_frequent_coach_addToCartTitle => 'カートにすぐ追加';
+
+  @override
+  String get fridge_frequent_coach_addToCartDesc => 'ボタン一つで現在のカートに\n即座に追加できます。';
+
+  @override
+  String get fridge_frequent_coach_skip => 'スキップ';
+
+  @override
   String get fridge_cart_empty => 'カートが空です';
 
   @override
@@ -2988,4 +3294,199 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '個人';
+
+  @override
+  String get dashboard_greetingMorning => 'おはようございます';
+
+  @override
+  String get dashboard_greetingAfternoon => 'こんにちは';
+
+  @override
+  String get dashboard_greetingEvening => 'こんばんは';
+
+  @override
+  String get dashboard_greetingSubtitle => '今日も良い一日を！';
+
+  @override
+  String get dashboard_emptyWidgets => '表示するウィジェットがありません';
+
+  @override
+  String get dashboard_emptyWidgetsHint => '設定でウィジェットを有効にしてください';
+
+  @override
+  String get dashboard_widgetSettings => 'ウィジェット設定';
+
+  @override
+  String get dashboard_notifications => '通知';
+
+  @override
+  String get weather_widgetTitle => '今日の天気';
+
+  @override
+  String get weather_refresh => '天気を更新';
+
+  @override
+  String get weather_detail => '詳しく';
+
+  @override
+  String get weather_errorMessage => '天気情報を読み込めません';
+
+  @override
+  String get weather_dustFine => 'PM10';
+
+  @override
+  String get weather_dustUltraFine => 'PM2.5';
+
+  @override
+  String get investment_widgetTitle => '投資指標';
+
+  @override
+  String get investment_errorMessage => 'データを読み込めません';
+
+  @override
+  String get investment_emptyBookmarks => 'お気に入りの指標がありません';
+
+  @override
+  String get householdWidget_groupTooltip => 'グループ選択';
+
+  @override
+  String householdWidget_incomeLabel(String month) {
+    return '$month 入金';
+  }
+
+  @override
+  String householdWidget_expenseLabel(String month) {
+    return '$month 支出';
+  }
+
+  @override
+  String get householdWidget_balance => '残高';
+
+  @override
+  String householdWidget_budget(String amount) {
+    return '予算 $amount';
+  }
+
+  @override
+  String householdWidget_budgetUsed(int percent) {
+    return '$percent% 使用';
+  }
+
+  @override
+  String householdWidget_budgetOver(String amount) {
+    return '$amount 超過';
+  }
+
+  @override
+  String householdWidget_budgetRemaining(String amount) {
+    return '$amount 残り';
+  }
+
+  @override
+  String get householdWidget_filterTitle => 'フィルター選択';
+
+  @override
+  String get householdWidget_filterPersonal => '個人';
+
+  @override
+  String get householdWidget_filterPersonalSub => 'グループなしで個人支出のみ';
+
+  @override
+  String get householdWidget_applyButton => '適用';
+
+  @override
+  String get householdWidget_categoryTitle => 'カテゴリ別支出';
+
+  @override
+  String householdWidget_categoryOver(String amount) {
+    return '$amount 超過';
+  }
+
+  @override
+  String householdWidget_categoryUsed(int percent) {
+    return '$percent% 使用';
+  }
+
+  @override
+  String get householdWidget_catTransportation => '交通';
+
+  @override
+  String get householdWidget_catFood => '食費';
+
+  @override
+  String get householdWidget_catLeisure => 'レジャー';
+
+  @override
+  String get householdWidget_catLiving => '生活';
+
+  @override
+  String get householdWidget_catMedical => '医療';
+
+  @override
+  String get householdWidget_catEducation => '教育';
+
+  @override
+  String get householdWidget_catAllowance => 'お小遣い';
+
+  @override
+  String get householdWidget_catCelebration => '冠婚葬祭';
+
+  @override
+  String get householdWidget_catAssetTransfer => '資産移動';
+
+  @override
+  String get householdWidget_catChildcare => '育児費';
+
+  @override
+  String get householdWidget_catOther => 'その他';
+
+  @override
+  String get assetWidget_title => '資産状況';
+
+  @override
+  String assetWidget_groupTitle(String groupName) {
+    return '$groupName 資産';
+  }
+
+  @override
+  String get assetWidget_groupTooltip => 'グループ選択';
+
+  @override
+  String get assetWidget_totalAsset => '総資産';
+
+  @override
+  String get assetWidget_totalProfit => '総収益';
+
+  @override
+  String get assetWidget_profitRate => '収益率';
+
+  @override
+  String get assetWidget_distribution => '資産分布';
+
+  @override
+  String get assetWidget_groupPickerTitle => 'グループ選択';
+
+  @override
+  String get assetWidget_applyButton => '適用';
+
+  @override
+  String get assetWidget_typeSavings => '積立';
+
+  @override
+  String get assetWidget_typeDeposit => '預金';
+
+  @override
+  String get assetWidget_typeStock => '株式';
+
+  @override
+  String get assetWidget_typeFund => 'ファンド';
+
+  @override
+  String get assetWidget_typeRealEstate => '不動産';
+
+  @override
+  String get assetWidget_typeGold => '実物金';
+
+  @override
+  String get assetWidget_typeOther => 'その他';
 }

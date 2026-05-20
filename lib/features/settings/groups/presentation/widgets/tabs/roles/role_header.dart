@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 역할 탭 헤더
 class RoleHeader extends StatelessWidget {
@@ -13,6 +14,7 @@ class RoleHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       child: Padding(
@@ -29,7 +31,7 @@ class RoleHeader extends StatelessWidget {
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: Text(
-                    '역할 관리',
+                    l10n.group_roleManagementTitle,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -39,7 +41,7 @@ class RoleHeader extends StatelessWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(
-              '이 그룹의 역할 목록입니다.',
+              l10n.group_roleManagementDesc,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: Colors.grey[600],
               ),
