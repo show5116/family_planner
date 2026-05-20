@@ -639,6 +639,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get language_japanese => '日本語';
 
   @override
+  String get language_chinese => '중국어';
+
+  @override
   String get language_selectDescription => '앱에서 사용할 언어를 선택하세요';
 
   @override

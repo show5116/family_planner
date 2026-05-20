@@ -71,6 +71,8 @@ class LanguageSettingsScreen extends ConsumerWidget {
         return l10n.language_english;
       case AppLanguage.japanese:
         return l10n.language_japanese;
+      case AppLanguage.chinese:
+        return l10n.language_chinese;
     }
   }
 }

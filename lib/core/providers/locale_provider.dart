@@ -7,7 +7,8 @@ import 'package:family_planner/core/services/api_client.dart';
 enum AppLanguage {
   korean('ko', 'KR', '한국어'),
   english('en', 'US', 'English'),
-  japanese('ja', 'JP', '日本語');
+  japanese('ja', 'JP', '日本語'),
+  chinese('zh', 'CN', '中文');
 
   const AppLanguage(this.languageCode, this.countryCode, this.displayName);
 

@@ -637,6 +637,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get language_japanese => '日本語';
 
   @override
+  String get language_chinese => '中国語';
+
+  @override
   String get language_selectDescription => 'アプリで使用する言語を選択してください';
 
   @override

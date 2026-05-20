@@ -150,6 +150,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         Locale('ko', 'KR'),
         Locale('en', 'US'),
         Locale('ja', 'JP'),
+        Locale('zh', 'CN'),
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,

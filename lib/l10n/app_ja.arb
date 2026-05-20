@@ -236,6 +236,7 @@
   "language_korean": "한국어",
   "language_english": "English",
   "language_japanese": "日本語",
+  "language_chinese": "中国語",
   "language_selectDescription": "アプリで使用する言語を選択してください",
   "language_useSystemLanguage": "システム言語を使用",
   "language_useSystemLanguageDescription": "デバイスの言語設定に従います",
