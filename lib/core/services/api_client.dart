@@ -24,6 +24,14 @@ class ApiClient {
   // API 에러 시 호출될 콜백 (에러 메시지 표시) - 401, 500 제외
   void Function(String message)? onError;
 
+  // 현재 언어 코드 (Accept-Language 헤더용)
+  String _languageCode = 'ko';
+
+  /// 언어 코드 설정 (locale 변경 시 호출)
+  void setLanguageCode(String code) {
+    _languageCode = code;
+  }
+
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
@@ -86,6 +94,9 @@ class ApiClient {
               options.headers['Authorization'] = 'Bearer $token';
             }
           }
+
+          // Accept-Language 헤더 설정
+          options.headers['Accept-Language'] = _languageCode;
 
           // 웹 환경에서 쿠키 자동 전송 활성화 (RefreshToken용)
           if (kIsWeb) {

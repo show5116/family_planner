@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:family_planner/core/services/api_client.dart';
 
 /// 지원 언어 목록
 enum AppLanguage {
@@ -45,27 +46,29 @@ class LocaleNotifier extends StateNotifier<Locale?> {
       if (languageCode != null) {
         final language = AppLanguage.values.firstWhere(
           (lang) => lang.languageCode == languageCode,
-          orElse: () => AppLanguage.korean, // 기본값
+          orElse: () => AppLanguage.korean,
         );
         state = language.locale;
+        ApiClient.instance.setLanguageCode(language.languageCode);
       } else {
-        // 저장된 설정이 없으면 기본값 (한국어)
         state = AppLanguage.korean.locale;
+        ApiClient.instance.setLanguageCode(AppLanguage.korean.languageCode);
       }
     } catch (e) {
       state = AppLanguage.korean.locale;
+      ApiClient.instance.setLanguageCode(AppLanguage.korean.languageCode);
     }
   }
 
   /// 언어 변경
   Future<void> setLocale(AppLanguage language) async {
     state = language.locale;
+    ApiClient.instance.setLanguageCode(language.languageCode);
 
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_localeKey, language.languageCode);
     } catch (e) {
-      // 저장 실패해도 앱은 계속 동작
       debugPrint('Failed to save locale: $e');
     }
   }
@@ -73,6 +76,7 @@ class LocaleNotifier extends StateNotifier<Locale?> {
   /// 시스템 언어로 변경
   Future<void> setSystemLocale() async {
     state = null; // null이면 시스템 언어 사용
+    ApiClient.instance.setLanguageCode(AppLanguage.korean.languageCode);
 
     try {
       final prefs = await SharedPreferences.getInstance();
