@@ -48,9 +48,15 @@ final _demoFrequentItems = [
 // ── 탭 ─────────────────────────────────────────────────────────────────────────
 
 class FrequentItemsTab extends ConsumerStatefulWidget {
-  const FrequentItemsTab({super.key, this.onReplayOnboardingReady, this.onOnboardingFinished});
+  const FrequentItemsTab({
+    super.key,
+    this.onReplayOnboardingReady,
+    this.onStartOnboardingReady,
+    this.onOnboardingFinished,
+  });
 
   final void Function(VoidCallback replay)? onReplayOnboardingReady;
+  final void Function(VoidCallback start)? onStartOnboardingReady;
   final VoidCallback? onOnboardingFinished;
 
   @override
@@ -68,19 +74,14 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
   void initState() {
     super.initState();
     widget.onReplayOnboardingReady?.call(replayOnboarding);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeStartOnboarding());
+    widget.onStartOnboardingReady?.call(_startDemo);
+    // 자동 시작 없음 — CartTab 온보딩 완료 후 ShoppingScreen 체인으로만 시작
   }
 
   @override
   void dispose() {
     _showDemo.dispose();
     super.dispose();
-  }
-
-  Future<void> _maybeStartOnboarding() async {
-    final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.frequentItems);
-    if (completed || !mounted) return;
-    _startDemo();
   }
 
   void replayOnboarding() {
@@ -99,7 +100,8 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
     if (ctx == null) return null;
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
+    final ancestor = ctx.findAncestorStateOfType<NavigatorState>()?.context.findRenderObject();
+    final offset = box.localToGlobal(Offset.zero, ancestor: ancestor);
     return TargetPosition(box.size, offset);
   }
 

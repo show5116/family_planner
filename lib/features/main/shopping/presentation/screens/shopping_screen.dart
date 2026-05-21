@@ -29,6 +29,9 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
   VoidCallback? _replayFrequentOnboarding;
   VoidCallback? _replayHistoryOnboarding;
 
+  VoidCallback? _startFrequentOnboarding;
+  VoidCallback? _startHistoryOnboarding;
+
   // 탭 전환 중 중복 호출 방지
   bool _transitioning = false;
 
@@ -136,20 +139,20 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
             onReplayOnboardingReady: (replay) => _replayCartOnboarding = replay,
             onOnboardingFinished: () => _switchTabAndStart(
               1,
-              () => _replayFrequentOnboarding?.call(),
+              () => _startFrequentOnboarding?.call(),
             ),
           ),
           FrequentItemsTab(
-            onReplayOnboardingReady: (replay) =>
-                _replayFrequentOnboarding = replay,
+            onReplayOnboardingReady: (replay) => _replayFrequentOnboarding = replay,
+            onStartOnboardingReady: (start) => _startFrequentOnboarding = start,
             onOnboardingFinished: () => _switchTabAndStart(
               2,
-              () => _replayHistoryOnboarding?.call(),
+              () => _startHistoryOnboarding?.call(),
             ),
           ),
           ShoppingHistoryTab(
-            onReplayOnboardingReady: (replay) =>
-                _replayHistoryOnboarding = replay,
+            onReplayOnboardingReady: (replay) => _replayHistoryOnboarding = replay,
+            onStartOnboardingReady: (start) => _startHistoryOnboarding = start,
             // 마지막 탭 — 체인 종료
           ),
         ],
