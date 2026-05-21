@@ -709,7 +709,7 @@ class _IndicatorTile extends ConsumerWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          indicator.nameKo,
+                          indicator.displayName,
                           style: Theme.of(context).textTheme.titleSmall,
                           overflow: TextOverflow.ellipsis,
                         ),

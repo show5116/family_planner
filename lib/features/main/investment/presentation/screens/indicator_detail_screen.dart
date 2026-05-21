@@ -40,7 +40,7 @@ class _IndicatorDetailScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(indicator?.nameKo ?? widget.symbol),
+        title: Text(indicator?.displayName ?? widget.symbol),
         actions: [
           if (indicator != null)
             IconButton(

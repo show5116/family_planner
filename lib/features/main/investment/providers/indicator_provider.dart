@@ -141,6 +141,7 @@ Future<IndicatorHistoryModel> indicatorHistory(
     return IndicatorHistoryModel(
       symbol: raw.symbol,
       nameKo: raw.nameKo,
+      displayName: raw.displayName,
       history: filteredHistory,
       spreadHistory: filteredSpread,
     );

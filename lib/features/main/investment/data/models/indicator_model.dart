@@ -3,6 +3,7 @@ class IndicatorModel {
   final String symbol;
   final String name;
   final String nameKo;
+  final String displayName;
   final String? category;
   final String unit;
   final double? price;
@@ -18,6 +19,7 @@ class IndicatorModel {
     required this.symbol,
     required this.name,
     required this.nameKo,
+    String? displayName,
     this.category,
     required this.unit,
     this.price,
@@ -27,13 +29,15 @@ class IndicatorModel {
     this.recordedAt,
     required this.isBookmarked,
     this.spread,
-  });
+  }) : displayName = displayName ?? nameKo;
 
   factory IndicatorModel.fromJson(Map<String, dynamic> json) {
+    final nameKo = json['nameKo'] as String;
     return IndicatorModel(
       symbol: json['symbol'] as String,
       name: json['name'] as String,
-      nameKo: json['nameKo'] as String,
+      nameKo: nameKo,
+      displayName: json['displayName'] as String? ?? nameKo,
       category: json['category'] as String?,
       unit: json['unit'] as String,
       price: json['price'] != null ? double.tryParse(json['price'].toString()) : null,
@@ -51,6 +55,7 @@ class IndicatorModel {
       symbol: symbol,
       name: name,
       nameKo: nameKo,
+      displayName: displayName,
       category: category,
       unit: unit,
       price: price,
@@ -92,6 +97,7 @@ class InitHistoryResult {
 class IndicatorHistoryModel {
   final String symbol;
   final String nameKo;
+  final String displayName;
   final List<IndicatorPricePoint> history;
   /// GOLD_KRW_SPOT 전용: 이격률 시계열
   final List<SpreadPoint> spreadHistory;
@@ -99,16 +105,19 @@ class IndicatorHistoryModel {
   const IndicatorHistoryModel({
     required this.symbol,
     required this.nameKo,
+    String? displayName,
     required this.history,
     this.spreadHistory = const [],
-  });
+  }) : displayName = displayName ?? nameKo;
 
   factory IndicatorHistoryModel.fromJson(Map<String, dynamic> json) {
+    final nameKo = json['nameKo'] as String;
     final historyJson = json['history'] as List<dynamic>? ?? [];
     final spreadJson = json['spreadHistory'] as List<dynamic>? ?? [];
     return IndicatorHistoryModel(
       symbol: json['symbol'] as String,
-      nameKo: json['nameKo'] as String,
+      nameKo: nameKo,
+      displayName: json['displayName'] as String? ?? nameKo,
       history: historyJson
           .map((e) => IndicatorPricePoint.fromJson(e as Map<String, dynamic>))
           .toList(),
