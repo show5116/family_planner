@@ -216,6 +216,36 @@ abstract class AppLocalizations {
   /// **'목록에 담기'**
   String get common_add_to_list;
 
+  /// 전체보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전체보기'**
+  String get common_view_all;
+
+  /// 메모 필터: 개인 메모만 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 메모만'**
+  String get memo_filter_personal_only;
+
+  /// 전체 그룹 선택 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 그룹'**
+  String get common_all_groups;
+
+  /// 일정/할일 필터 시트의 그룹 일정 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 일정'**
+  String get schedule_filter_group_schedule;
+
+  /// 날짜 표시 형식 (월, 일)
+  ///
+  /// In ko, this message translates to:
+  /// **'{month}월 {day}일'**
+  String common_date_format(int month, int day);
+
   /// No description provided for @cart_unsaved_changes.
   ///
   /// In ko, this message translates to:

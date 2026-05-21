@@ -10,6 +10,7 @@ import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
 
 /// 메모 요약 위젯
@@ -122,7 +123,7 @@ class _MemoSummaryWidgetState extends ConsumerState<MemoSummaryWidget> {
             ),
           TextButton(
             onPressed: () => context.push(AppRoutes.memo),
-            child: const Text('전체보기'),
+            child: Text(AppLocalizations.of(context)!.common_view_all),
           ),
         ],
       ),
@@ -211,12 +212,12 @@ class _MemoGroupPickerSheetState extends State<_MemoGroupPickerSheet> {
             onChanged: (v) => setState(() => _value = v!),
             child: Column(
               children: [
-                const RadioListTile<String>(
-                  title: Text('전체 그룹'),
+                RadioListTile<String>(
+                  title: Text(AppLocalizations.of(context)!.common_all_groups),
                   value: _allGroupsValue,
                 ),
-                const RadioListTile<String>(
-                  title: Text('개인 메모만'),
+                RadioListTile<String>(
+                  title: Text(AppLocalizations.of(context)!.memo_filter_personal_only),
                   value: _personalOnlyValue,
                 ),
                 ...widget.groups.map((group) => RadioListTile<String>(

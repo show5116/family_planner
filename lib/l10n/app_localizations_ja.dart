@@ -66,6 +66,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_add_to_list => 'リストに追加';
 
   @override
+  String get common_view_all => 'すべて見る';
+
+  @override
+  String get memo_filter_personal_only => '個人メモのみ';
+
+  @override
+  String get common_all_groups => 'すべてのグループ';
+
+  @override
+  String get schedule_filter_group_schedule => 'グループ予定';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month月$day日';
+  }
+
+  @override
   String get cart_unsaved_changes => '未保存の変更があります';
 
   @override

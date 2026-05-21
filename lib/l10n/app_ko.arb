@@ -30,6 +30,22 @@
   "common_undo": "되돌리기",
   "common_add_to_list": "목록에 담기",
   "@common_add_to_list": { "description": "목록에 담기 버튼" },
+  "common_view_all": "전체보기",
+  "@common_view_all": { "description": "전체보기 버튼" },
+  "memo_filter_personal_only": "개인 메모만",
+  "@memo_filter_personal_only": { "description": "메모 필터: 개인 메모만 보기" },
+  "common_all_groups": "전체 그룹",
+  "@common_all_groups": { "description": "전체 그룹 선택 옵션" },
+  "schedule_filter_group_schedule": "그룹 일정",
+  "@schedule_filter_group_schedule": { "description": "일정/할일 필터 시트의 그룹 일정 섹션 제목" },
+  "common_date_format": "{month}월 {day}일",
+  "@common_date_format": {
+    "description": "날짜 표시 형식 (월, 일)",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "cart_unsaved_changes": "저장되지 않은 변경사항이 있습니다",
   "common_next": "다음",
   "common_back": "이전",

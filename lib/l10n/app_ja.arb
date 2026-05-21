@@ -30,6 +30,22 @@
   "common_undo": "元に戻す",
   "common_add_to_list": "リストに追加",
   "@common_add_to_list": { "description": "リストに追加ボタン" },
+  "common_view_all": "すべて見る",
+  "@common_view_all": { "description": "すべて見るボタン" },
+  "memo_filter_personal_only": "個人メモのみ",
+  "@memo_filter_personal_only": { "description": "メモフィルター：個人メモのみ" },
+  "common_all_groups": "すべてのグループ",
+  "@common_all_groups": { "description": "すべてのグループ選択オプション" },
+  "schedule_filter_group_schedule": "グループ予定",
+  "@schedule_filter_group_schedule": { "description": "フィルターシートのグループ予定セクションタイトル" },
+  "common_date_format": "{month}月{day}日",
+  "@common_date_format": {
+    "description": "日付表示形式（月、日）",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "cart_unsaved_changes": "未保存の変更があります",
   "common_next": "次へ",
   "common_back": "戻る",

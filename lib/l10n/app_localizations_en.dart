@@ -66,6 +66,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_add_to_list => 'Add to list';
 
   @override
+  String get common_view_all => 'View All';
+
+  @override
+  String get memo_filter_personal_only => 'Personal Only';
+
+  @override
+  String get common_all_groups => 'All Groups';
+
+  @override
+  String get schedule_filter_group_schedule => 'Group Schedule';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month/$day';
+  }
+
+  @override
   String get cart_unsaved_changes => 'You have unsaved changes';
 
   @override

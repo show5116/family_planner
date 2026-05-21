@@ -66,6 +66,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get common_add_to_list => '添加到列表';
 
   @override
+  String get common_view_all => '전체보기';
+
+  @override
+  String get memo_filter_personal_only => '개인 메모만';
+
+  @override
+  String get common_all_groups => '전체 그룹';
+
+  @override
+  String get schedule_filter_group_schedule => '그룹 일정';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month월 $day일';
+  }
+
+  @override
   String get cart_unsaved_changes => '有未保存的更改';
 
   @override

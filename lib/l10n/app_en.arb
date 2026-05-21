@@ -30,6 +30,22 @@
   "common_undo": "Undo",
   "common_add_to_list": "Add to list",
   "@common_add_to_list": { "description": "Add to list button" },
+  "common_view_all": "View All",
+  "@common_view_all": { "description": "View all button" },
+  "memo_filter_personal_only": "Personal Only",
+  "@memo_filter_personal_only": { "description": "Memo filter: personal memos only" },
+  "common_all_groups": "All Groups",
+  "@common_all_groups": { "description": "All groups option" },
+  "schedule_filter_group_schedule": "Group Schedule",
+  "@schedule_filter_group_schedule": { "description": "Group schedule section title in filter sheet" },
+  "common_date_format": "{month}/{day}",
+  "@common_date_format": {
+    "description": "Date format (month, day)",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "cart_unsaved_changes": "You have unsaved changes",
   "common_next": "Next",
   "common_back": "Back",
