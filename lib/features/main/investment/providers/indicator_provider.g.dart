@@ -6,7 +6,7 @@ part of 'indicator_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$indicatorHistoryHash() => r'98ac9cea96b7626a0697be907d360b393737b5f0';
+String _$indicatorHistoryHash() => r'47e69645a1d80e2232ed8bfecb409b8efc7fe0d3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -446,7 +446,7 @@ class _InitIndicatorHistoryProviderElement
   int? get days => (origin as InitIndicatorHistoryProvider).days;
 }
 
-String _$indicatorsHash() => r'e4285660fdde937c26eaef0ac8ba99943949dd93';
+String _$indicatorsHash() => r'2ac0235b874c2b5bd20bc6eb2c056767676aae76';
 
 /// 전체 지표 목록 Provider
 ///
@@ -464,7 +464,7 @@ final indicatorsProvider =
     );
 
 typedef _$Indicators = AutoDisposeAsyncNotifier<List<IndicatorModel>>;
-String _$marketBriefingHash() => r'4c84bb77a22d1d88b295a4e56d8877d45b7c729a';
+String _$marketBriefingHash() => r'dc571d90dfe01433d71791f959e72430a6a163bf';
 
 /// AI 시황 브리핑 Provider
 ///
@@ -486,7 +486,7 @@ final marketBriefingProvider =
 
 typedef _$MarketBriefing = AutoDisposeAsyncNotifier<MarketBriefingModel>;
 String _$bookmarkedIndicatorsHash() =>
-    r'd5aea6a36a8323ef81e08b1d0e32db8f58e0184c';
+    r'b5496b3f70e6ff0aac69901ceb47587751d4d9ef';
 
 /// 즐겨찾기 지표 목록 Provider
 ///
