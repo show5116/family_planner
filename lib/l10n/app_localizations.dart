@@ -6582,6 +6582,282 @@ abstract class AppLocalizations {
   /// **'즐겨찾기한 지표가 없습니다'**
   String get investment_emptyBookmarks;
 
+  /// No description provided for @investment_screenTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 지표'**
+  String get investment_screenTitle;
+
+  /// No description provided for @investment_bookmarkSection.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기'**
+  String get investment_bookmarkSection;
+
+  /// No description provided for @investment_bookmarkReorderHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'(길게 눌러 순서 변경)'**
+  String get investment_bookmarkReorderHint;
+
+  /// No description provided for @investment_allSection.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 지표'**
+  String get investment_allSection;
+
+  /// No description provided for @investment_noData.
+  ///
+  /// In ko, this message translates to:
+  /// **'지표 데이터가 없습니다'**
+  String get investment_noData;
+
+  /// No description provided for @investment_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'데이터를 불러오지 못했습니다'**
+  String get investment_loadError;
+
+  /// No description provided for @investment_retry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get investment_retry;
+
+  /// No description provided for @investment_adminTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'과거 데이터 초기화 (관리자)'**
+  String get investment_adminTooltip;
+
+  /// No description provided for @investment_briefingTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'AI 시황 브리핑'**
+  String get investment_briefingTitle;
+
+  /// No description provided for @investment_briefingError.
+  ///
+  /// In ko, this message translates to:
+  /// **'AI 브리핑 오류: {error}'**
+  String investment_briefingError(String error);
+
+  /// No description provided for @investment_briefingMacro.
+  ///
+  /// In ko, this message translates to:
+  /// **'매크로'**
+  String get investment_briefingMacro;
+
+  /// No description provided for @investment_briefingDomestic.
+  ///
+  /// In ko, this message translates to:
+  /// **'국내 시장'**
+  String get investment_briefingDomestic;
+
+  /// No description provided for @investment_briefingGlobal.
+  ///
+  /// In ko, this message translates to:
+  /// **'글로벌 시장'**
+  String get investment_briefingGlobal;
+
+  /// No description provided for @investment_briefingUpdatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'업데이트: {time}'**
+  String investment_briefingUpdatedAt(String time);
+
+  /// No description provided for @investment_adminDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'과거 데이터 초기화'**
+  String get investment_adminDialogTitle;
+
+  /// No description provided for @investment_adminDialogDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.'**
+  String get investment_adminDialogDesc;
+
+  /// No description provided for @investment_adminDaysLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'수집 일수 (1~3650)'**
+  String get investment_adminDaysLabel;
+
+  /// No description provided for @investment_adminDaysSuffix.
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get investment_adminDaysSuffix;
+
+  /// No description provided for @investment_adminExecute.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화 실행'**
+  String get investment_adminExecute;
+
+  /// No description provided for @investment_adminResultTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화 완료'**
+  String get investment_adminResultTitle;
+
+  /// No description provided for @investment_adminResultYahoo.
+  ///
+  /// In ko, this message translates to:
+  /// **'Yahoo (주가/환율/원자재)'**
+  String get investment_adminResultYahoo;
+
+  /// No description provided for @investment_adminResultCrypto.
+  ///
+  /// In ko, this message translates to:
+  /// **'암호화폐 (BTC/KRW)'**
+  String get investment_adminResultCrypto;
+
+  /// No description provided for @investment_adminResultBond.
+  ///
+  /// In ko, this message translates to:
+  /// **'한국 채권'**
+  String get investment_adminResultBond;
+
+  /// No description provided for @investment_adminResultGold.
+  ///
+  /// In ko, this message translates to:
+  /// **'국내 금값'**
+  String get investment_adminResultGold;
+
+  /// No description provided for @investment_adminResultCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}건'**
+  String investment_adminResultCount(int count);
+
+  /// No description provided for @investment_adminInitError.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화 실패: {error}'**
+  String investment_adminInitError(String error);
+
+  /// No description provided for @investment_adminLoading.
+  ///
+  /// In ko, this message translates to:
+  /// **'과거 데이터를 수집 중입니다...'**
+  String get investment_adminLoading;
+
+  /// No description provided for @investment_prevPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'전일 종가'**
+  String get investment_prevPrice;
+
+  /// No description provided for @investment_spreadBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'이격률 {value}%'**
+  String investment_spreadBadge(String value);
+
+  /// No description provided for @investment_spreadPremium.
+  ///
+  /// In ko, this message translates to:
+  /// **'국제 환산가 대비 프리미엄'**
+  String get investment_spreadPremium;
+
+  /// No description provided for @investment_spreadDiscount.
+  ///
+  /// In ko, this message translates to:
+  /// **'국제 환산가 대비 디스카운트'**
+  String get investment_spreadDiscount;
+
+  /// No description provided for @investment_chartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'시세 추이'**
+  String get investment_chartTitle;
+
+  /// No description provided for @investment_chartDayChip.
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String investment_chartDayChip(int days);
+
+  /// No description provided for @investment_chartYearChip.
+  ///
+  /// In ko, this message translates to:
+  /// **'1년'**
+  String get investment_chartYearChip;
+
+  /// No description provided for @investment_chartLoadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'차트를 불러올 수 없습니다'**
+  String get investment_chartLoadError;
+
+  /// No description provided for @investment_chartNoData.
+  ///
+  /// In ko, this message translates to:
+  /// **'데이터가 없습니다'**
+  String get investment_chartNoData;
+
+  /// No description provided for @investment_marketClosed.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴장 중 · 마지막 거래일: {date}'**
+  String investment_marketClosed(String date);
+
+  /// No description provided for @investment_spreadChartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이격률 추이'**
+  String get investment_spreadChartTitle;
+
+  /// No description provided for @investment_spreadChartSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'(국제 환산가 대비)'**
+  String get investment_spreadChartSubtitle;
+
+  /// No description provided for @investment_spreadSummaryLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 국제 환산가 대비 {label}'**
+  String investment_spreadSummaryLabel(String label);
+
+  /// No description provided for @investment_spreadPremiumLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄'**
+  String get investment_spreadPremiumLabel;
+
+  /// No description provided for @investment_spreadDiscountLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'디스카운트'**
+  String get investment_spreadDiscountLabel;
+
+  /// No description provided for @investment_coachIndicatorTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 지표'**
+  String get investment_coachIndicatorTitle;
+
+  /// No description provided for @investment_coachIndicatorDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.'**
+  String get investment_coachIndicatorDesc;
+
+  /// No description provided for @investment_coachBookmarkTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기'**
+  String get investment_coachBookmarkTitle;
+
+  /// No description provided for @investment_coachBookmarkDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.'**
+  String get investment_coachBookmarkDesc;
+
   /// No description provided for @householdWidget_groupTooltip.
   ///
   /// In ko, this message translates to:

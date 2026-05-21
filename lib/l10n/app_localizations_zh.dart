@@ -3330,6 +3330,163 @@ class AppLocalizationsZh extends AppLocalizations {
   String get investment_emptyBookmarks => '没有收藏的指标';
 
   @override
+  String get investment_screenTitle => '投资指标';
+
+  @override
+  String get investment_bookmarkSection => '收藏';
+
+  @override
+  String get investment_bookmarkReorderHint => '（长按排序）';
+
+  @override
+  String get investment_allSection => '全部指标';
+
+  @override
+  String get investment_noData => '暂无指标数据';
+
+  @override
+  String get investment_loadError => '数据加载失败';
+
+  @override
+  String get investment_retry => '重试';
+
+  @override
+  String get investment_adminTooltip => '重置历史数据（管理员）';
+
+  @override
+  String get investment_briefingTitle => 'AI市场简报';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AI简报错误：$error';
+  }
+
+  @override
+  String get investment_briefingMacro => '宏观';
+
+  @override
+  String get investment_briefingDomestic => '国内市场';
+
+  @override
+  String get investment_briefingGlobal => '全球市场';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return '更新：$time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => '重置历史数据';
+
+  @override
+  String get investment_adminDialogDesc =>
+      '从Yahoo/CoinGecko/BOK收集历史价格并保存到数据库。\n可能需要一些时间。';
+
+  @override
+  String get investment_adminDaysLabel => '收集天数 (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => '天';
+
+  @override
+  String get investment_adminExecute => '执行重置';
+
+  @override
+  String get investment_adminResultTitle => '重置完成';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo（股票/外汇/大宗商品）';
+
+  @override
+  String get investment_adminResultCrypto => '加密货币（BTC/KRW）';
+
+  @override
+  String get investment_adminResultBond => '韩国债券';
+
+  @override
+  String get investment_adminResultGold => '国内黄金价格';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count条';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return '重置失败：$error';
+  }
+
+  @override
+  String get investment_adminLoading => '正在收集历史数据...';
+
+  @override
+  String get investment_prevPrice => '昨收价';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return '乖离率 $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => '相对国际价格溢价';
+
+  @override
+  String get investment_spreadDiscount => '相对国际价格折价';
+
+  @override
+  String get investment_chartTitle => '价格走势';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get investment_chartYearChip => '1年';
+
+  @override
+  String get investment_chartLoadError => '无法加载图表';
+
+  @override
+  String get investment_chartNoData => '暂无数据';
+
+  @override
+  String investment_marketClosed(String date) {
+    return '休市中 · 最后交易日: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => '乖离率走势';
+
+  @override
+  String get investment_spreadChartSubtitle => '（相对国际价格）';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return '当前相对国际价格$label';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => '溢价';
+
+  @override
+  String get investment_spreadDiscountLabel => '折价';
+
+  @override
+  String get investment_coachIndicatorTitle => '投资指标';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      '一览主要股指、汇率、大宗商品、加密货币等实时指标。\n点击查看详细图表和历史走势。';
+
+  @override
+  String get investment_coachBookmarkTitle => '收藏';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      '点击星标添加到收藏。\n收藏的指标置顶显示，\n并可在主页仪表板小部件中直接查看。';
+
+  @override
   String get householdWidget_groupTooltip => '选择群组';
 
   @override

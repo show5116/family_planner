@@ -3423,6 +3423,163 @@ class AppLocalizationsEn extends AppLocalizations {
   String get investment_emptyBookmarks => 'No bookmarked indicators';
 
   @override
+  String get investment_screenTitle => 'Investment Indicators';
+
+  @override
+  String get investment_bookmarkSection => 'Bookmarks';
+
+  @override
+  String get investment_bookmarkReorderHint => '(Long press to reorder)';
+
+  @override
+  String get investment_allSection => 'All Indicators';
+
+  @override
+  String get investment_noData => 'No indicator data';
+
+  @override
+  String get investment_loadError => 'Failed to load data';
+
+  @override
+  String get investment_retry => 'Retry';
+
+  @override
+  String get investment_adminTooltip => 'Reset History (Admin)';
+
+  @override
+  String get investment_briefingTitle => 'AI Market Briefing';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AI briefing error: $error';
+  }
+
+  @override
+  String get investment_briefingMacro => 'Macro';
+
+  @override
+  String get investment_briefingDomestic => 'Domestic Market';
+
+  @override
+  String get investment_briefingGlobal => 'Global Market';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return 'Updated: $time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => 'Reset History Data';
+
+  @override
+  String get investment_adminDialogDesc =>
+      'Collects historical prices from Yahoo/CoinGecko/BOK and saves to DB.\nThis may take a while.';
+
+  @override
+  String get investment_adminDaysLabel => 'Days to collect (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => 'days';
+
+  @override
+  String get investment_adminExecute => 'Execute Reset';
+
+  @override
+  String get investment_adminResultTitle => 'Reset Complete';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo (Stocks/FX/Commodities)';
+
+  @override
+  String get investment_adminResultCrypto => 'Crypto (BTC/KRW)';
+
+  @override
+  String get investment_adminResultBond => 'Korean Bonds';
+
+  @override
+  String get investment_adminResultGold => 'Domestic Gold';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return 'Reset failed: $error';
+  }
+
+  @override
+  String get investment_adminLoading => 'Collecting historical data...';
+
+  @override
+  String get investment_prevPrice => 'Prev. Close';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return 'Spread $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => 'Premium vs international price';
+
+  @override
+  String get investment_spreadDiscount => 'Discount vs international price';
+
+  @override
+  String get investment_chartTitle => 'Price Trend';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '${days}d';
+  }
+
+  @override
+  String get investment_chartYearChip => '1Y';
+
+  @override
+  String get investment_chartLoadError => 'Unable to load chart';
+
+  @override
+  String get investment_chartNoData => 'No data';
+
+  @override
+  String investment_marketClosed(String date) {
+    return 'Market closed · Last trading day: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => 'Spread Trend';
+
+  @override
+  String get investment_spreadChartSubtitle => '(vs. international price)';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return 'Currently $label vs international price';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => 'Premium';
+
+  @override
+  String get investment_spreadDiscountLabel => 'Discount';
+
+  @override
+  String get investment_coachIndicatorTitle => 'Investment Indicators';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      'View major stock indices, exchange rates,\ncommodities, and crypto in real time.\nTap to see detailed charts and history.';
+
+  @override
+  String get investment_coachBookmarkTitle => 'Bookmarks';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      'Tap the star to bookmark an indicator.\nBookmarked indicators are pinned to the top\nand visible on the home dashboard widget.';
+
+  @override
   String get householdWidget_groupTooltip => 'Select Group';
 
   @override

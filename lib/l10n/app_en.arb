@@ -1562,6 +1562,81 @@
   "investment_errorMessage": "Unable to load data",
   "investment_emptyBookmarks": "No bookmarked indicators",
 
+  "investment_screenTitle": "Investment Indicators",
+  "investment_bookmarkSection": "Bookmarks",
+  "investment_bookmarkReorderHint": "(Long press to reorder)",
+  "investment_allSection": "All Indicators",
+  "investment_noData": "No indicator data",
+  "investment_loadError": "Failed to load data",
+  "investment_retry": "Retry",
+  "investment_adminTooltip": "Reset History (Admin)",
+
+  "investment_briefingTitle": "AI Market Briefing",
+  "investment_briefingError": "AI briefing error: {error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "Macro",
+  "investment_briefingDomestic": "Domestic Market",
+  "investment_briefingGlobal": "Global Market",
+  "investment_briefingUpdatedAt": "Updated: {time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "Reset History Data",
+  "investment_adminDialogDesc": "Collects historical prices from Yahoo/CoinGecko/BOK and saves to DB.\nThis may take a while.",
+  "investment_adminDaysLabel": "Days to collect (1~3650)",
+  "investment_adminDaysSuffix": "days",
+  "investment_adminExecute": "Execute Reset",
+  "investment_adminResultTitle": "Reset Complete",
+  "investment_adminResultYahoo": "Yahoo (Stocks/FX/Commodities)",
+  "investment_adminResultCrypto": "Crypto (BTC/KRW)",
+  "investment_adminResultBond": "Korean Bonds",
+  "investment_adminResultGold": "Domestic Gold",
+  "investment_adminResultCount": "{count} items",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "Reset failed: {error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "Collecting historical data...",
+
+  "investment_prevPrice": "Prev. Close",
+  "investment_spreadBadge": "Spread {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "Premium vs international price",
+  "investment_spreadDiscount": "Discount vs international price",
+  "investment_chartTitle": "Price Trend",
+  "investment_chartDayChip": "{days}d",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1Y",
+  "investment_chartLoadError": "Unable to load chart",
+  "investment_chartNoData": "No data",
+  "investment_marketClosed": "Market closed · Last trading day: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "Spread Trend",
+  "investment_spreadChartSubtitle": "(vs. international price)",
+  "investment_spreadSummaryLabel": "Currently {label} vs international price",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "Premium",
+  "investment_spreadDiscountLabel": "Discount",
+
+  "investment_coachIndicatorTitle": "Investment Indicators",
+  "investment_coachIndicatorDesc": "View major stock indices, exchange rates,\ncommodities, and crypto in real time.\nTap to see detailed charts and history.",
+  "investment_coachBookmarkTitle": "Bookmarks",
+  "investment_coachBookmarkDesc": "Tap the star to bookmark an indicator.\nBookmarked indicators are pinned to the top\nand visible on the home dashboard widget.",
+
   "householdWidget_groupTooltip": "Select Group",
   "householdWidget_incomeLabel": "{month} Income",
   "@householdWidget_incomeLabel": {

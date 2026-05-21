@@ -1521,6 +1521,81 @@
   "investment_errorMessage": "无法加载数据",
   "investment_emptyBookmarks": "没有收藏的指标",
 
+  "investment_screenTitle": "投资指标",
+  "investment_bookmarkSection": "收藏",
+  "investment_bookmarkReorderHint": "（长按排序）",
+  "investment_allSection": "全部指标",
+  "investment_noData": "暂无指标数据",
+  "investment_loadError": "数据加载失败",
+  "investment_retry": "重试",
+  "investment_adminTooltip": "重置历史数据（管理员）",
+
+  "investment_briefingTitle": "AI市场简报",
+  "investment_briefingError": "AI简报错误：{error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "宏观",
+  "investment_briefingDomestic": "国内市场",
+  "investment_briefingGlobal": "全球市场",
+  "investment_briefingUpdatedAt": "更新：{time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "重置历史数据",
+  "investment_adminDialogDesc": "从Yahoo/CoinGecko/BOK收集历史价格并保存到数据库。\n可能需要一些时间。",
+  "investment_adminDaysLabel": "收集天数 (1~3650)",
+  "investment_adminDaysSuffix": "天",
+  "investment_adminExecute": "执行重置",
+  "investment_adminResultTitle": "重置完成",
+  "investment_adminResultYahoo": "Yahoo（股票/外汇/大宗商品）",
+  "investment_adminResultCrypto": "加密货币（BTC/KRW）",
+  "investment_adminResultBond": "韩国债券",
+  "investment_adminResultGold": "国内黄金价格",
+  "investment_adminResultCount": "{count}条",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "重置失败：{error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "正在收集历史数据...",
+
+  "investment_prevPrice": "昨收价",
+  "investment_spreadBadge": "乖离率 {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "相对国际价格溢价",
+  "investment_spreadDiscount": "相对国际价格折价",
+  "investment_chartTitle": "价格走势",
+  "investment_chartDayChip": "{days}天",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1年",
+  "investment_chartLoadError": "无法加载图表",
+  "investment_chartNoData": "暂无数据",
+  "investment_marketClosed": "休市中 · 最后交易日: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "乖离率走势",
+  "investment_spreadChartSubtitle": "（相对国际价格）",
+  "investment_spreadSummaryLabel": "当前相对国际价格{label}",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "溢价",
+  "investment_spreadDiscountLabel": "折价",
+
+  "investment_coachIndicatorTitle": "投资指标",
+  "investment_coachIndicatorDesc": "一览主要股指、汇率、大宗商品、加密货币等实时指标。\n点击查看详细图表和历史走势。",
+  "investment_coachBookmarkTitle": "收藏",
+  "investment_coachBookmarkDesc": "点击星标添加到收藏。\n收藏的指标置顶显示，\n并可在主页仪表板小部件中直接查看。",
+
   "householdWidget_groupTooltip": "选择群组",
   "householdWidget_incomeLabel": "{month}收入",
   "@householdWidget_incomeLabel": {

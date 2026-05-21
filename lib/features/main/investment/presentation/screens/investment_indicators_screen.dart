@@ -14,6 +14,7 @@ import 'package:family_planner/features/main/investment/data/repositories/indica
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/sparkline_chart.dart';
 
@@ -65,6 +66,7 @@ class _InvestmentIndicatorsScreenState
 
   Future<void> _showCoachMark() async {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
 
     final tilePos = _keyToPosition(_firstTileKey);
     final bookmarkPos = _keyToPosition(_bookmarkKey);
@@ -80,8 +82,8 @@ class _InvestmentIndicatorsScreenState
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '투자 지표',
-              description: '주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.',
+              title: l10n.investment_coachIndicatorTitle,
+              description: l10n.investment_coachIndicatorDesc,
               icon: Icons.show_chart,
               color: AppColors.investment,
             ),
@@ -98,8 +100,8 @@ class _InvestmentIndicatorsScreenState
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '즐겨찾기',
-              description: '별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.',
+              title: l10n.investment_coachBookmarkTitle,
+              description: l10n.investment_coachBookmarkDesc,
               icon: Icons.star_outline,
               color: Colors.amber,
             ),
@@ -115,9 +117,9 @@ class _InvestmentIndicatorsScreenState
       targets: targets,
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.fridge_frequent_coach_skip,
       alignSkip: Alignment.topRight,
-      skipWidget: _skipWidget,
+      skipWidget: _buildSkipWidget(l10n),
       onFinish: () => OnboardingService.completeCoachMark(
           CoachMarkKeys.investmentIndicators),
       onSkip: () {
@@ -130,16 +132,16 @@ class _InvestmentIndicatorsScreenState
     ).show(context: context);
   }
 
-  Widget get _skipWidget => Container(
+  Widget _buildSkipWidget(AppLocalizations l10n) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
-          style: TextStyle(
+        child: Text(
+          l10n.fridge_frequent_coach_skip,
+          style: const TextStyle(
               color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       );
@@ -151,14 +153,15 @@ class _InvestmentIndicatorsScreenState
     final isAdmin = ref.watch(isAdminProvider);
     final briefingReady = briefingAsync.hasValue;
 
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('투자 지표'),
+        title: Text(l10n.investment_screenTitle),
         actions: [
           if (isAdmin)
             IconButton(
               icon: const Icon(Icons.history),
-              tooltip: '과거 데이터 초기화 (관리자)',
+              tooltip: l10n.investment_adminTooltip,
               onPressed: () => _showInitHistoryDialog(),
             ),
           IconButton(
@@ -182,7 +185,7 @@ class _InvestmentIndicatorsScreenState
         ),
         data: (indicators) {
           if (indicators.isEmpty) {
-            return const Center(child: Text('지표 데이터가 없습니다'));
+            return Center(child: Text(l10n.investment_noData));
           }
           _tryStartCoachMarkAfterLoad(briefingReady: briefingReady);
           return RefreshIndicator(
@@ -199,48 +202,52 @@ class _InvestmentIndicatorsScreenState
   }
 
   Future<void> _showInitHistoryDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final daysController = TextEditingController(text: '365');
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('과거 데이터 초기화'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            TextField(
-              controller: daysController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: '수집 일수 (1~3650)',
-                hintText: '365',
-                border: OutlineInputBorder(),
-                suffixText: '일',
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.investment_adminDialogTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.investment_adminDialogDesc,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
+              const SizedBox(height: AppSizes.spaceM),
+              TextField(
+                controller: daysController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: l10n.investment_adminDaysLabel,
+                  hintText: '365',
+                  border: const OutlineInputBorder(),
+                  suffixText: l10n.investment_adminDaysSuffix,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.common_cancel),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.error,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.investment_adminExecute),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('초기화 실행'),
-          ),
-        ],
-      ),
+        );
+      },
     );
 
     if (confirmed != true || !mounted) return;
@@ -248,7 +255,7 @@ class _InvestmentIndicatorsScreenState
     final days = int.tryParse(daysController.text.trim());
 
     try {
-      _showLoadingSnackBar();
+      _showLoadingSnackBar(l10n);
       final result = await ref
           .read(indicatorRepositoryProvider)
           .initHistory(days: days);
@@ -261,28 +268,28 @@ class _InvestmentIndicatorsScreenState
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('초기화 실패: $e'),
+          content: Text(l10n.investment_adminInitError(e.toString())),
           backgroundColor: AppColors.error,
         ),
       );
     }
   }
 
-  void _showLoadingSnackBar() {
+  void _showLoadingSnackBar(AppLocalizations l10n) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 16,
               height: 16,
               child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
             ),
-            SizedBox(width: AppSizes.spaceM),
-            Text('과거 데이터를 수집 중입니다...'),
+            const SizedBox(width: AppSizes.spaceM),
+            Text(l10n.investment_adminLoading),
           ],
         ),
-        duration: Duration(minutes: 5),
+        duration: const Duration(minutes: 5),
       ),
     );
   }
@@ -290,25 +297,28 @@ class _InvestmentIndicatorsScreenState
   void _showResultDialog(InitHistoryResult result) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('초기화 완료'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _ResultRow(label: 'Yahoo (주가/환율/원자재)', count: result.yahoo),
-            _ResultRow(label: '암호화폐 (BTC/KRW)', count: result.crypto),
-            _ResultRow(label: '한국 채권', count: result.bond),
-            if (result.goldKrw != null)
-              _ResultRow(label: '국내 금값', count: result.goldKrw!),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('확인'),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.investment_adminResultTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _ResultRow(label: l10n.investment_adminResultYahoo, count: result.yahoo),
+              _ResultRow(label: l10n.investment_adminResultCrypto, count: result.crypto),
+              _ResultRow(label: l10n.investment_adminResultBond, count: result.bond),
+              if (result.goldKrw != null)
+                _ResultRow(label: l10n.investment_adminResultGold, count: result.goldKrw!),
+            ],
           ),
-        ],
-      ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.common_ok),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -352,7 +362,7 @@ class _IndicatorListBody extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    '즐겨찾기',
+                    AppLocalizations.of(context)!.investment_bookmarkSection,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: AppColors.investment,
                           fontWeight: FontWeight.w600,
@@ -360,7 +370,7 @@ class _IndicatorListBody extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    '(길게 눌러 순서 변경)',
+                    AppLocalizations.of(context)!.investment_bookmarkReorderHint,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -416,7 +426,7 @@ class _IndicatorListBody extends ConsumerWidget {
                 AppSizes.spaceXS,
               ),
               child: Text(
-                '전체 지표',
+                AppLocalizations.of(context)!.investment_allSection,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
@@ -469,7 +479,7 @@ class _ResultRow extends StatelessWidget {
         children: [
           Text(label, style: Theme.of(context).textTheme.bodyMedium),
           Text(
-            '$count건',
+            AppLocalizations.of(context)!.investment_adminResultCount(count),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -495,13 +505,13 @@ class _ErrorBody extends StatelessWidget {
           const Icon(Icons.error_outline, size: 48, color: AppColors.error),
           const SizedBox(height: AppSizes.spaceM),
           Text(
-            '데이터를 불러오지 못했습니다',
+            AppLocalizations.of(context)!.investment_loadError,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: AppSizes.spaceS),
           ElevatedButton(
             onPressed: onRetry,
-            child: const Text('다시 시도'),
+            child: Text(AppLocalizations.of(context)!.investment_retry),
           ),
         ],
       ),
@@ -524,15 +534,16 @@ class _MarketBriefingSection extends ConsumerWidget {
       error: (error, _) => Padding(
         padding: const EdgeInsets.all(AppSizes.spaceM),
         child: Text(
-          'AI 브리핑 오류: $error',
-          style: TextStyle(color: AppColors.error, fontSize: 12),
+          AppLocalizations.of(context)!.investment_briefingError(error.toString()),
+          style: const TextStyle(color: AppColors.error, fontSize: 12),
         ),
       ),
       data: (briefing) {
+        final l10n = AppLocalizations.of(context)!;
         final items = <(String, MarketBriefingItem)>[];
-        if (briefing.macro != null) items.add(('매크로', briefing.macro!));
-        if (briefing.domesticMarket != null) items.add(('국내 시장', briefing.domesticMarket!));
-        if (briefing.globalMarket != null) items.add(('글로벌 시장', briefing.globalMarket!));
+        if (briefing.macro != null) items.add((l10n.investment_briefingMacro, briefing.macro!));
+        if (briefing.domesticMarket != null) items.add((l10n.investment_briefingDomestic, briefing.domesticMarket!));
+        if (briefing.globalMarket != null) items.add((l10n.investment_briefingGlobal, briefing.globalMarket!));
 
         if (items.isEmpty) return const SizedBox.shrink();
 
@@ -551,7 +562,7 @@ class _MarketBriefingSection extends ConsumerWidget {
                   Icon(Icons.auto_awesome, size: 16, color: AppColors.investment),
                   const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    'AI 시황 브리핑',
+                    AppLocalizations.of(context)!.investment_briefingTitle,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: AppColors.investment,
                           fontWeight: FontWeight.w600,
@@ -643,7 +654,7 @@ class _BriefingCardState extends State<_BriefingCard> {
                 ),
                 const SizedBox(height: AppSizes.spaceXS),
                 Text(
-                  '업데이트: $timeStr',
+                  AppLocalizations.of(context)!.investment_briefingUpdatedAt(timeStr),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),

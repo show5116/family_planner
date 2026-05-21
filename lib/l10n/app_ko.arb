@@ -1576,6 +1576,81 @@
   "investment_errorMessage": "데이터를 불러올 수 없습니다",
   "investment_emptyBookmarks": "즐겨찾기한 지표가 없습니다",
 
+  "investment_screenTitle": "투자 지표",
+  "investment_bookmarkSection": "즐겨찾기",
+  "investment_bookmarkReorderHint": "(길게 눌러 순서 변경)",
+  "investment_allSection": "전체 지표",
+  "investment_noData": "지표 데이터가 없습니다",
+  "investment_loadError": "데이터를 불러오지 못했습니다",
+  "investment_retry": "다시 시도",
+  "investment_adminTooltip": "과거 데이터 초기화 (관리자)",
+
+  "investment_briefingTitle": "AI 시황 브리핑",
+  "investment_briefingError": "AI 브리핑 오류: {error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "매크로",
+  "investment_briefingDomestic": "국내 시장",
+  "investment_briefingGlobal": "글로벌 시장",
+  "investment_briefingUpdatedAt": "업데이트: {time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "과거 데이터 초기화",
+  "investment_adminDialogDesc": "Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.",
+  "investment_adminDaysLabel": "수집 일수 (1~3650)",
+  "investment_adminDaysSuffix": "일",
+  "investment_adminExecute": "초기화 실행",
+  "investment_adminResultTitle": "초기화 완료",
+  "investment_adminResultYahoo": "Yahoo (주가/환율/원자재)",
+  "investment_adminResultCrypto": "암호화폐 (BTC/KRW)",
+  "investment_adminResultBond": "한국 채권",
+  "investment_adminResultGold": "국내 금값",
+  "investment_adminResultCount": "{count}건",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "초기화 실패: {error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "과거 데이터를 수집 중입니다...",
+
+  "investment_prevPrice": "전일 종가",
+  "investment_spreadBadge": "이격률 {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "국제 환산가 대비 프리미엄",
+  "investment_spreadDiscount": "국제 환산가 대비 디스카운트",
+  "investment_chartTitle": "시세 추이",
+  "investment_chartDayChip": "{days}일",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1년",
+  "investment_chartLoadError": "차트를 불러올 수 없습니다",
+  "investment_chartNoData": "데이터가 없습니다",
+  "investment_marketClosed": "휴장 중 · 마지막 거래일: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "이격률 추이",
+  "investment_spreadChartSubtitle": "(국제 환산가 대비)",
+  "investment_spreadSummaryLabel": "현재 국제 환산가 대비 {label}",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "프리미엄",
+  "investment_spreadDiscountLabel": "디스카운트",
+
+  "investment_coachIndicatorTitle": "투자 지표",
+  "investment_coachIndicatorDesc": "주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.",
+  "investment_coachBookmarkTitle": "즐겨찾기",
+  "investment_coachBookmarkDesc": "별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.",
+
   "householdWidget_groupTooltip": "그룹 선택",
   "householdWidget_incomeLabel": "{month} 입금",
   "@householdWidget_incomeLabel": {

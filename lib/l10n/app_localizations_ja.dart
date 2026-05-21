@@ -3350,6 +3350,163 @@ class AppLocalizationsJa extends AppLocalizations {
   String get investment_emptyBookmarks => 'お気に入りの指標がありません';
 
   @override
+  String get investment_screenTitle => '投資指標';
+
+  @override
+  String get investment_bookmarkSection => 'お気に入り';
+
+  @override
+  String get investment_bookmarkReorderHint => '（長押しで並べ替え）';
+
+  @override
+  String get investment_allSection => '全指標';
+
+  @override
+  String get investment_noData => '指標データがありません';
+
+  @override
+  String get investment_loadError => 'データを読み込めませんでした';
+
+  @override
+  String get investment_retry => '再試行';
+
+  @override
+  String get investment_adminTooltip => '過去データ初期化（管理者）';
+
+  @override
+  String get investment_briefingTitle => 'AI市況ブリーフィング';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AIブリーフィングエラー: $error';
+  }
+
+  @override
+  String get investment_briefingMacro => 'マクロ';
+
+  @override
+  String get investment_briefingDomestic => '国内市場';
+
+  @override
+  String get investment_briefingGlobal => 'グローバル市場';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return '更新: $time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => '過去データ初期化';
+
+  @override
+  String get investment_adminDialogDesc =>
+      'Yahoo/CoinGecko/BOKから過去の相場を収集しDBに保存します。\n時間がかかる場合があります。';
+
+  @override
+  String get investment_adminDaysLabel => '収集日数 (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => '日';
+
+  @override
+  String get investment_adminExecute => '初期化実行';
+
+  @override
+  String get investment_adminResultTitle => '初期化完了';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo（株価/為替/商品）';
+
+  @override
+  String get investment_adminResultCrypto => '暗号通貨（BTC/KRW）';
+
+  @override
+  String get investment_adminResultBond => '韓国債券';
+
+  @override
+  String get investment_adminResultGold => '国内金価格';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count件';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return '初期化失敗: $error';
+  }
+
+  @override
+  String get investment_adminLoading => '過去データを収集中...';
+
+  @override
+  String get investment_prevPrice => '前日終値';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return '乖離率 $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => '国際換算価格比プレミアム';
+
+  @override
+  String get investment_spreadDiscount => '国際換算価格比ディスカウント';
+
+  @override
+  String get investment_chartTitle => '相場推移';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get investment_chartYearChip => '1年';
+
+  @override
+  String get investment_chartLoadError => 'チャートを読み込めません';
+
+  @override
+  String get investment_chartNoData => 'データがありません';
+
+  @override
+  String investment_marketClosed(String date) {
+    return '休場中・最終取引日: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => '乖離率推移';
+
+  @override
+  String get investment_spreadChartSubtitle => '（国際換算価格比）';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return '現在国際換算価格比 $label';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => 'プレミアム';
+
+  @override
+  String get investment_spreadDiscountLabel => 'ディスカウント';
+
+  @override
+  String get investment_coachIndicatorTitle => '投資指標';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      '主要株価指数、為替、商品、暗号通貨など\nリアルタイム指標を一目で確認できます。\nタップで詳細チャートと過去の推移を表示。';
+
+  @override
+  String get investment_coachBookmarkTitle => 'お気に入り';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      '星マークをタップしてお気に入りに追加。\nお気に入りはリスト上部に固定され、\nホームダッシュボードウィジェットで確認できます。';
+
+  @override
   String get householdWidget_groupTooltip => 'グループ選択';
 
   @override

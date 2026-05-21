@@ -3357,6 +3357,163 @@ class AppLocalizationsKo extends AppLocalizations {
   String get investment_emptyBookmarks => '즐겨찾기한 지표가 없습니다';
 
   @override
+  String get investment_screenTitle => '투자 지표';
+
+  @override
+  String get investment_bookmarkSection => '즐겨찾기';
+
+  @override
+  String get investment_bookmarkReorderHint => '(길게 눌러 순서 변경)';
+
+  @override
+  String get investment_allSection => '전체 지표';
+
+  @override
+  String get investment_noData => '지표 데이터가 없습니다';
+
+  @override
+  String get investment_loadError => '데이터를 불러오지 못했습니다';
+
+  @override
+  String get investment_retry => '다시 시도';
+
+  @override
+  String get investment_adminTooltip => '과거 데이터 초기화 (관리자)';
+
+  @override
+  String get investment_briefingTitle => 'AI 시황 브리핑';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AI 브리핑 오류: $error';
+  }
+
+  @override
+  String get investment_briefingMacro => '매크로';
+
+  @override
+  String get investment_briefingDomestic => '국내 시장';
+
+  @override
+  String get investment_briefingGlobal => '글로벌 시장';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return '업데이트: $time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => '과거 데이터 초기화';
+
+  @override
+  String get investment_adminDialogDesc =>
+      'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.';
+
+  @override
+  String get investment_adminDaysLabel => '수집 일수 (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => '일';
+
+  @override
+  String get investment_adminExecute => '초기화 실행';
+
+  @override
+  String get investment_adminResultTitle => '초기화 완료';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo (주가/환율/원자재)';
+
+  @override
+  String get investment_adminResultCrypto => '암호화폐 (BTC/KRW)';
+
+  @override
+  String get investment_adminResultBond => '한국 채권';
+
+  @override
+  String get investment_adminResultGold => '국내 금값';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count건';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return '초기화 실패: $error';
+  }
+
+  @override
+  String get investment_adminLoading => '과거 데이터를 수집 중입니다...';
+
+  @override
+  String get investment_prevPrice => '전일 종가';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return '이격률 $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => '국제 환산가 대비 프리미엄';
+
+  @override
+  String get investment_spreadDiscount => '국제 환산가 대비 디스카운트';
+
+  @override
+  String get investment_chartTitle => '시세 추이';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '$days일';
+  }
+
+  @override
+  String get investment_chartYearChip => '1년';
+
+  @override
+  String get investment_chartLoadError => '차트를 불러올 수 없습니다';
+
+  @override
+  String get investment_chartNoData => '데이터가 없습니다';
+
+  @override
+  String investment_marketClosed(String date) {
+    return '휴장 중 · 마지막 거래일: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => '이격률 추이';
+
+  @override
+  String get investment_spreadChartSubtitle => '(국제 환산가 대비)';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return '현재 국제 환산가 대비 $label';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => '프리미엄';
+
+  @override
+  String get investment_spreadDiscountLabel => '디스카운트';
+
+  @override
+  String get investment_coachIndicatorTitle => '투자 지표';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      '주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.';
+
+  @override
+  String get investment_coachBookmarkTitle => '즐겨찾기';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      '별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.';
+
+  @override
   String get householdWidget_groupTooltip => '그룹 선택';
 
   @override

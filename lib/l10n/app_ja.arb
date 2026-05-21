@@ -1562,6 +1562,81 @@
   "investment_errorMessage": "データを読み込めません",
   "investment_emptyBookmarks": "お気に入りの指標がありません",
 
+  "investment_screenTitle": "投資指標",
+  "investment_bookmarkSection": "お気に入り",
+  "investment_bookmarkReorderHint": "（長押しで並べ替え）",
+  "investment_allSection": "全指標",
+  "investment_noData": "指標データがありません",
+  "investment_loadError": "データを読み込めませんでした",
+  "investment_retry": "再試行",
+  "investment_adminTooltip": "過去データ初期化（管理者）",
+
+  "investment_briefingTitle": "AI市況ブリーフィング",
+  "investment_briefingError": "AIブリーフィングエラー: {error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "マクロ",
+  "investment_briefingDomestic": "国内市場",
+  "investment_briefingGlobal": "グローバル市場",
+  "investment_briefingUpdatedAt": "更新: {time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "過去データ初期化",
+  "investment_adminDialogDesc": "Yahoo/CoinGecko/BOKから過去の相場を収集しDBに保存します。\n時間がかかる場合があります。",
+  "investment_adminDaysLabel": "収集日数 (1~3650)",
+  "investment_adminDaysSuffix": "日",
+  "investment_adminExecute": "初期化実行",
+  "investment_adminResultTitle": "初期化完了",
+  "investment_adminResultYahoo": "Yahoo（株価/為替/商品）",
+  "investment_adminResultCrypto": "暗号通貨（BTC/KRW）",
+  "investment_adminResultBond": "韓国債券",
+  "investment_adminResultGold": "国内金価格",
+  "investment_adminResultCount": "{count}件",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "初期化失敗: {error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "過去データを収集中...",
+
+  "investment_prevPrice": "前日終値",
+  "investment_spreadBadge": "乖離率 {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "国際換算価格比プレミアム",
+  "investment_spreadDiscount": "国際換算価格比ディスカウント",
+  "investment_chartTitle": "相場推移",
+  "investment_chartDayChip": "{days}日",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1年",
+  "investment_chartLoadError": "チャートを読み込めません",
+  "investment_chartNoData": "データがありません",
+  "investment_marketClosed": "休場中・最終取引日: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "乖離率推移",
+  "investment_spreadChartSubtitle": "（国際換算価格比）",
+  "investment_spreadSummaryLabel": "現在国際換算価格比 {label}",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "プレミアム",
+  "investment_spreadDiscountLabel": "ディスカウント",
+
+  "investment_coachIndicatorTitle": "投資指標",
+  "investment_coachIndicatorDesc": "主要株価指数、為替、商品、暗号通貨など\nリアルタイム指標を一目で確認できます。\nタップで詳細チャートと過去の推移を表示。",
+  "investment_coachBookmarkTitle": "お気に入り",
+  "investment_coachBookmarkDesc": "星マークをタップしてお気に入りに追加。\nお気に入りはリスト上部に固定され、\nホームダッシュボードウィジェットで確認できます。",
+
   "householdWidget_groupTooltip": "グループ選択",
   "householdWidget_incomeLabel": "{month} 入金",
   "@householdWidget_incomeLabel": {
