@@ -80,6 +80,10 @@ class AppRoutes {
   static const String announcementCreate = '/announcements/create';
   static const String announcementEdit = '/announcements/:id/edit';
 
+  // Legal Routes
+  static const String termsOfService = '/terms-of-service';
+  static const String privacyPolicy = '/privacy-policy';
+
   // Weather Routes
   static const String weather = '/weather';
 

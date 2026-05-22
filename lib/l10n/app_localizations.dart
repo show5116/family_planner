@@ -7139,6 +7139,222 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'기타'**
   String get assetWidget_typeOther;
+
+  /// No description provided for @legal_termsOfService.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관'**
+  String get legal_termsOfService;
+
+  /// No description provided for @legal_privacyPolicy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get legal_privacyPolicy;
+
+  /// No description provided for @legal_termsLastUpdated.
+  ///
+  /// In ko, this message translates to:
+  /// **'최종 업데이트: 2025년 1월 1일'**
+  String get legal_termsLastUpdated;
+
+  /// No description provided for @legal_termsContact.
+  ///
+  /// In ko, this message translates to:
+  /// **'문의: support@familyplanner.app'**
+  String get legal_termsContact;
+
+  /// No description provided for @legal_agreeToTerms.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관'**
+  String get legal_agreeToTerms;
+
+  /// No description provided for @legal_agreeToPrivacy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get legal_agreeToPrivacy;
+
+  /// No description provided for @legal_required.
+  ///
+  /// In ko, this message translates to:
+  /// **'(필수)'**
+  String get legal_required;
+
+  /// No description provided for @legal_agreeAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 동의'**
+  String get legal_agreeAll;
+
+  /// No description provided for @legal_mustAgreeTerms.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관에 동의해 주세요.'**
+  String get legal_mustAgreeTerms;
+
+  /// No description provided for @legal_mustAgreePrivacy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침에 동의해 주세요.'**
+  String get legal_mustAgreePrivacy;
+
+  /// No description provided for @legal_socialLoginConsent.
+  ///
+  /// In ko, this message translates to:
+  /// **'계속하면 서비스 {termsLink} 및 {privacyLink}에 동의하는 것으로 간주합니다.'**
+  String legal_socialLoginConsent(String termsLink, String privacyLink);
+
+  /// No description provided for @legal_terms_section1_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제1조 (목적)'**
+  String get legal_terms_section1_title;
+
+  /// No description provided for @legal_terms_section1_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 약관은 Family Planner(이하 \'서비스\')가 제공하는 가족 일정 및 생활 관리 서비스의 이용조건 및 절차, 이용자와 서비스 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.'**
+  String get legal_terms_section1_body;
+
+  /// No description provided for @legal_terms_section2_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제2조 (용어의 정의)'**
+  String get legal_terms_section2_title;
+
+  /// No description provided for @legal_terms_section2_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'\'이용자\'란 이 약관에 따라 서비스에 접속하여 서비스를 이용하는 회원 및 비회원을 말합니다.\n\'회원\'이란 서비스에 회원 가입한 자로서, 계속적으로 서비스를 이용할 수 있는 자를 말합니다.\n\'콘텐츠\'란 이용자가 서비스 내에서 등록하는 일정, 가계부, 메모 등 모든 정보를 말합니다.'**
+  String get legal_terms_section2_body;
+
+  /// No description provided for @legal_terms_section3_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제3조 (서비스의 제공)'**
+  String get legal_terms_section3_title;
+
+  /// No description provided for @legal_terms_section3_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스는 다음과 같은 기능을 제공합니다.\n• 가족 일정 관리 및 공유\n• 가계부 및 자산 관리\n• 할일 목록 관리\n• 냉장고 및 장보기 관리\n• 육아 포인트 관리\n• 기타 가족 생활 관련 서비스\n서비스는 연중무휴, 24시간 제공함을 원칙으로 합니다. 단, 시스템 점검이나 기술적 문제로 인해 일시적으로 중단될 수 있습니다.'**
+  String get legal_terms_section3_body;
+
+  /// No description provided for @legal_terms_section4_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제4조 (회원 가입 및 관리)'**
+  String get legal_terms_section4_title;
+
+  /// No description provided for @legal_terms_section4_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 가입은 이용자가 약관에 동의하고 서비스가 정한 양식에 따라 정보를 기입함으로써 완료됩니다. 회원은 가입 시 등록한 정보를 최신 상태로 유지할 의무가 있습니다. 회원은 자신의 계정 정보를 타인에게 양도하거나 공유할 수 없습니다.'**
+  String get legal_terms_section4_body;
+
+  /// No description provided for @legal_terms_section5_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제5조 (개인정보 보호)'**
+  String get legal_terms_section5_title;
+
+  /// No description provided for @legal_terms_section5_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스는 이용자의 개인정보를 중요시하며, 개인정보보호법 등 관련 법령을 준수합니다. 개인정보의 수집·이용·제공 등에 관한 사항은 별도의 개인정보 처리방침에 따릅니다.'**
+  String get legal_terms_section5_body;
+
+  /// No description provided for @legal_terms_section6_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제6조 (면책 조항)'**
+  String get legal_terms_section6_title;
+
+  /// No description provided for @legal_terms_section6_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스는 천재지변, 전쟁, 기간통신사업자의 서비스 중지 등 불가항력적인 사유로 인한 서비스 중단에 대해 책임을 지지 않습니다. 서비스는 이용자가 서비스를 이용하여 기대하는 수익을 상실한 것에 대해 책임을 지지 않습니다.'**
+  String get legal_terms_section6_body;
+
+  /// No description provided for @legal_privacy_section1_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제1조 (수집하는 개인정보)'**
+  String get legal_privacy_section1_title;
+
+  /// No description provided for @legal_privacy_section1_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스는 다음과 같은 개인정보를 수집합니다.\n• 필수: 이메일 주소, 이름, 비밀번호\n• 소셜 로그인: 소셜 계정의 이메일, 이름, 프로필 사진\n• 자동 수집: 서비스 이용 기록, 접속 로그, 기기 정보'**
+  String get legal_privacy_section1_body;
+
+  /// No description provided for @legal_privacy_section2_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제2조 (개인정보의 이용 목적)'**
+  String get legal_privacy_section2_title;
+
+  /// No description provided for @legal_privacy_section2_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'수집한 개인정보는 다음 목적으로만 사용됩니다.\n• 회원 가입 및 관리\n• 서비스 제공 및 운영\n• 서비스 개선 및 신규 기능 개발\n• 고객 문의 응대\n개인정보는 수집 목적 외의 용도로 사용하지 않으며, 제3자에게 제공하지 않습니다.'**
+  String get legal_privacy_section2_body;
+
+  /// No description provided for @legal_privacy_section3_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제3조 (개인정보의 보유 기간)'**
+  String get legal_privacy_section3_title;
+
+  /// No description provided for @legal_privacy_section3_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 탈퇴 시 개인정보는 즉시 삭제됩니다. 단, 관련 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관 후 삭제합니다.\n• 계약 또는 청약철회 기록: 5년 (전자상거래법)\n• 소비자 불만 또는 분쟁처리 기록: 3년 (전자상거래법)'**
+  String get legal_privacy_section3_body;
+
+  /// No description provided for @legal_privacy_section4_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제4조 (개인정보의 제3자 제공)'**
+  String get legal_privacy_section4_title;
+
+  /// No description provided for @legal_privacy_section4_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스는 이용자의 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 단, 다음의 경우에는 예외로 합니다.\n• 법령에 특별한 규정이 있는 경우\n• 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요청이 있는 경우'**
+  String get legal_privacy_section4_body;
+
+  /// No description provided for @legal_privacy_section5_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제5조 (이용자의 권리)'**
+  String get legal_privacy_section5_title;
+
+  /// No description provided for @legal_privacy_section5_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있습니다. 또한 개인정보 처리의 정지를 요청하거나 탈퇴를 통해 개인정보 삭제를 요청할 수 있습니다. 이용자의 요청은 지체 없이 처리됩니다.'**
+  String get legal_privacy_section5_body;
+
+  /// No description provided for @legal_privacy_section6_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제6조 (문의)'**
+  String get legal_privacy_section6_title;
+
+  /// No description provided for @legal_privacy_section6_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리에 관한 문의는 아래로 연락주시기 바랍니다.\n이메일: support@familyplanner.app\n처리 기간: 영업일 기준 3일 이내'**
+  String get legal_privacy_section6_body;
+
+  /// No description provided for @legal_privacyLastUpdated.
+  ///
+  /// In ko, this message translates to:
+  /// **'최종 업데이트: 2025년 1월 1일'**
+  String get legal_privacyLastUpdated;
 }
 
 class _AppLocalizationsDelegate

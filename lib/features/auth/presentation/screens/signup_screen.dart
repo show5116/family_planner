@@ -31,6 +31,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
+  bool _agreedToTerms = false;
+  bool _agreedToPrivacy = false;
 
   @override
   void dispose() {
@@ -43,6 +45,27 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   Future<void> _handleSignup() async {
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+
+    if (!_agreedToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.legal_mustAgreeTerms),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+    if (!_agreedToPrivacy) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.legal_mustAgreePrivacy),
+          backgroundColor: AppColors.error,
+        ),
+      );
       return;
     }
 
@@ -121,7 +144,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     _buildPasswordField(l10n),
                     const SizedBox(height: AppSizes.spaceM),
                     _buildConfirmPasswordField(l10n),
-                    const SizedBox(height: AppSizes.spaceXL),
+                    const SizedBox(height: AppSizes.spaceL),
+                    _buildTermsAgreement(l10n),
+                    const SizedBox(height: AppSizes.spaceM),
                     _buildSignupButton(l10n),
                     const SizedBox(height: AppSizes.spaceXL),
                     AuthLinkRow(
@@ -236,6 +261,44 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
+  Widget _buildTermsAgreement(AppLocalizations l10n) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _AgreeAllRow(
+          checked: _agreedToTerms && _agreedToPrivacy,
+          label: l10n.legal_agreeAll,
+          onChanged: (value) {
+            setState(() {
+              _agreedToTerms = value;
+              _agreedToPrivacy = value;
+            });
+          },
+        ),
+        const Divider(height: AppSizes.spaceM),
+        _TermsCheckRow(
+          checked: _agreedToTerms,
+          label: l10n.legal_agreeToTerms,
+          required: l10n.legal_required,
+          onChanged: (value) => setState(() => _agreedToTerms = value),
+          onTap: () => context.push(AppRoutes.termsOfService),
+          color: primary,
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        _TermsCheckRow(
+          checked: _agreedToPrivacy,
+          label: l10n.legal_agreeToPrivacy,
+          required: l10n.legal_required,
+          onChanged: (value) => setState(() => _agreedToPrivacy = value),
+          onTap: () => context.push(AppRoutes.privacyPolicy),
+          color: primary,
+        ),
+      ],
+    );
+  }
+
   Widget _buildSignupButton(AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
@@ -257,6 +320,81 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               )
             : Text(l10n.auth_signupButton),
       ),
+    );
+  }
+}
+
+class _AgreeAllRow extends StatelessWidget {
+  const _AgreeAllRow({required this.checked, required this.label, required this.onChanged});
+
+  final bool checked;
+  final String label;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onChanged(!checked),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
+        child: Row(
+          children: [
+            Checkbox(
+              value: checked,
+              onChanged: (v) => onChanged(v ?? false),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TermsCheckRow extends StatelessWidget {
+  const _TermsCheckRow({
+    required this.checked,
+    required this.label,
+    required this.required,
+    required this.onChanged,
+    required this.onTap,
+    required this.color,
+  });
+
+  final bool checked;
+  final String label;
+  final String required;
+  final ValueChanged<bool> onChanged;
+  final VoidCallback onTap;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+          value: checked,
+          onChanged: (v) => onChanged(v ?? false),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => onChanged(!checked),
+            child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+        ),
+        Text(required, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.error)),
+        const SizedBox(width: AppSizes.spaceXS),
+        GestureDetector(
+          onTap: onTap,
+          child: Text(
+            '>',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color),
+          ),
+        ),
+      ],
     );
   }
 }

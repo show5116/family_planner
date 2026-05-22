@@ -1665,5 +1665,61 @@
   "assetWidget_typeFund": "基金",
   "assetWidget_typeRealEstate": "房产",
   "assetWidget_typeGold": "黄金",
-  "assetWidget_typeOther": "其他"
+  "assetWidget_typeOther": "其他",
+
+  "legal_termsOfService": "服务条款",
+  "legal_privacyPolicy": "隐私政策",
+  "legal_termsLastUpdated": "最后更新：2025年1月1日",
+  "legal_termsContact": "联系方式：support@familyplanner.app",
+  "legal_agreeToTerms": "服务条款",
+  "legal_agreeToPrivacy": "隐私政策",
+  "legal_required": "（必填）",
+  "legal_agreeAll": "全部同意",
+  "legal_mustAgreeTerms": "请同意服务条款。",
+  "legal_mustAgreePrivacy": "请同意隐私政策。",
+  "legal_socialLoginConsent": "继续即表示您同意我们的{termsLink}和{privacyLink}。",
+  "@legal_socialLoginConsent": {
+    "placeholders": {
+      "termsLink": { "type": "String" },
+      "privacyLink": { "type": "String" }
+    }
+  },
+
+  "legal_terms_section1_title": "第一条（目的）",
+  "legal_terms_section1_body": "本条款旨在规定Family Planner（以下简称\"服务\"）提供的家庭日程及生活管理服务的使用条件与程序、用户与服务之间的权利义务及责任事项等相关内容。",
+
+  "legal_terms_section2_title": "第二条（术语定义）",
+  "legal_terms_section2_body": "\"用户\"是指依据本条款访问并使用服务的会员及非会员。\n\"会员\"是指已在服务中注册的用户，可持续使用服务。\n\"内容\"是指用户在服务中注册的日程、家庭账本、备忘录等所有信息。",
+
+  "legal_terms_section3_title": "第三条（服务提供）",
+  "legal_terms_section3_body": "服务提供以下功能：\n• 家庭日程管理与共享\n• 家庭账本与资产管理\n• 待办事项管理\n• 冰箱与购物清单管理\n• 育儿积分管理\n• 其他家庭生活相关服务\n服务原则上全年无休、24小时提供。但因系统维护或技术问题可能临时中断。",
+
+  "legal_terms_section4_title": "第四条（会员注册与管理）",
+  "legal_terms_section4_body": "会员注册在用户同意本条款并按要求填写信息后完成。会员有义务保持注册信息的最新状态。会员不得将账号信息转让或共享给他人。",
+
+  "legal_terms_section5_title": "第五条（个人信息保护）",
+  "legal_terms_section5_body": "服务重视用户个人信息，遵守个人信息保护法等相关法律法规。个人信息的收集、使用、提供等事项依据单独的隐私政策执行。",
+
+  "legal_terms_section6_title": "第六条（免责声明）",
+  "legal_terms_section6_body": "对于因自然灾害、战争、通信运营商服务中断等不可抗力原因导致的服务中断，服务不承担责任。对于用户因使用服务而未能获得预期收益，服务不承担责任。",
+
+  "legal_privacy_section1_title": "第一条（收集的个人信息）",
+  "legal_privacy_section1_body": "服务收集以下个人信息：\n• 必填项：电子邮件地址、姓名、密码\n• 社交登录：社交账号的电子邮件、姓名、头像\n• 自动收集：服务使用记录、访问日志、设备信息",
+
+  "legal_privacy_section2_title": "第二条（使用目的）",
+  "legal_privacy_section2_body": "所收集的个人信息仅用于以下目的：\n• 会员注册与管理\n• 服务提供与运营\n• 服务改善与新功能开发\n• 客户咨询响应\n个人信息不会用于收集目的以外的用途，也不会提供给第三方。",
+
+  "legal_privacy_section3_title": "第三条（保存期限）",
+  "legal_privacy_section3_body": "注销账号时，个人信息将立即删除。但如相关法律要求保存，则在规定期限内保存后删除。\n• 合同或撤约记录：5年（电子商务法）\n• 消费者投诉或纠纷处理记录：3年（电子商务法）",
+
+  "legal_privacy_section4_title": "第四条（第三方提供）",
+  "legal_privacy_section4_body": "未经用户同意，服务不向第三方提供个人信息。但以下情况除外：\n• 法律法规有特别规定的情况\n• 依法律规定的程序和方式，接到调查机关要求的情况",
+
+  "legal_privacy_section5_title": "第五条（用户权利）",
+  "legal_privacy_section5_body": "用户可随时查询或修改自己的个人信息。也可申请停止处理个人信息，或通过注销账号申请删除个人信息。用户的请求将被及时处理。",
+
+  "legal_privacy_section6_title": "第六条（联系方式）",
+  "legal_privacy_section6_body": "如有关于个人信息处理的疑问，请通过以下方式联系我们：\n电子邮件：support@familyplanner.app\n处理时间：工作日3天内",
+
+  "legal_privacyLastUpdated": "最后更新：2025年1月1日"
 }

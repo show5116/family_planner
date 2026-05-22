@@ -32,7 +32,7 @@ flutter clean && flutter pub get       # 클린 빌드
 
 - 🏗️ **feature-create**: 새 기능 자동 생성 (Screen, Provider, Model, Repository)
   - 예: "일정관리 기능을 만들어주세요"
-- 🌐 **i18n-add**: 다국어 문자열 자동 추가 (한/영/일)
+- 🌐 **i18n-add**: 다국어 문자열 자동 추가 (한/영/일/중)
   - 예: "로그인 버튼 텍스트 추가해줘"
 - 📝 **docs-update**: 문서 자동 업데이트 (ROADMAP.md, TODO.md)
   - 예: "공지사항 기능 완료"

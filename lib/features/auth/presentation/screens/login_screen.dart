@@ -8,6 +8,7 @@ import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
+import 'package:flutter/gestures.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_app_bar.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_link_row.dart';
@@ -172,7 +173,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     AppDivider(text: l10n.auth_or),
                     const SizedBox(height: AppSizes.spaceL),
                     _buildSocialLoginButtons(l10n),
-                    const SizedBox(height: AppSizes.spaceXL),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _buildSocialLoginConsent(l10n),
+                    const SizedBox(height: AppSizes.spaceL),
                     AuthLinkRow(
                       text: l10n.auth_noAccount,
                       linkText: l10n.auth_signup,
@@ -280,6 +283,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               )
             : Text(l10n.auth_login),
       ),
+    );
+  }
+
+  Widget _buildSocialLoginConsent(AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final baseStyle = Theme.of(context).textTheme.bodySmall?.copyWith(color: colorScheme.outline);
+    final linkStyle = baseStyle?.copyWith(color: colorScheme.primary, decoration: TextDecoration.underline);
+
+    // legal_socialLoginConsent("{termsLink}", "{privacyLink}") 형태로 분리하여 RichText 조합
+    final raw = l10n.legal_socialLoginConsent(l10n.legal_agreeToTerms, l10n.legal_agreeToPrivacy);
+    final termsPart = raw.split(l10n.legal_agreeToTerms);
+    final beforeTerms = termsPart.first;
+    final afterTerms = raw.substring(beforeTerms.length + l10n.legal_agreeToTerms.length);
+    final privacyParts = afterTerms.split(l10n.legal_agreeToPrivacy);
+    final betweenLinks = privacyParts.first;
+    final afterPrivacy = privacyParts.length > 1 ? privacyParts.last : '';
+
+    return Text.rich(
+      TextSpan(
+        style: baseStyle,
+        children: [
+          TextSpan(text: beforeTerms),
+          TextSpan(
+            text: l10n.legal_agreeToTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()..onTap = () => context.push(AppRoutes.termsOfService),
+          ),
+          TextSpan(text: betweenLinks),
+          TextSpan(
+            text: l10n.legal_agreeToPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()..onTap = () => context.push(AppRoutes.privacyPolicy),
+          ),
+          TextSpan(text: afterPrivacy),
+        ],
+      ),
+      textAlign: TextAlign.center,
     );
   }
 
