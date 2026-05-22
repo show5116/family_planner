@@ -261,35 +261,19 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   Future<void> _handleLogout() async {
     if (_isLoggingOut) return; // 중복 클릭 방지
 
-    final l10n = AppLocalizations.of(context)!;
-
     setState(() {
       _isLoggingOut = true;
     });
 
-    try {
-      // 로그아웃 실행
-      await ref.read(authProvider.notifier).logout();
+    // logout()은 내부적으로 절대 throw하지 않는다
+    await ref.read(authProvider.notifier).logout();
 
-      if (mounted) {
-        // 로그인 화면으로 이동 (스택 초기화)
-        context.go(AppRoutes.login);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${l10n.common_logoutFailed}: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoggingOut = false;
-        });
-      }
+    if (mounted) {
+      setState(() {
+        _isLoggingOut = false;
+      });
+      // 어떤 상황에서도 반드시 로그인 화면으로 이동
+      context.go(AppRoutes.login);
     }
   }
 }

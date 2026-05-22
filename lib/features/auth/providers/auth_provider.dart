@@ -151,26 +151,23 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  /// 로그아웃
+  /// 로그아웃 — 어떤 에러가 발생해도 반드시 로컬 데이터를 지우고 상태를 초기화한다
   Future<void> logout() async {
-    state = state.copyWith(error: null);
+    // FCM 토큰 삭제 및 백엔드 로그아웃은 best-effort
+    try {
+      await _deleteFcmToken();
+    } catch (_) {}
 
     try {
-      // 로그아웃 전 FCM 토큰 삭제
-      await _deleteFcmToken();
-
       await _authService.logout();
-    } catch (e) {
-      // 백엔드 로그아웃 실패(Token Not Found 등)여도 로컬 정리는 완료됨
-    } finally {
-      // 먼저 인증 상태를 false로 → 화면이 로그인으로 이동하며 위젯 트리가 해제됨
-      state = const AuthState(isAuthenticated: false);
+    } catch (_) {}
 
-      // 위젯 트리 해제 후 provider 초기화 (rebuild → API 재호출 방지)
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _invalidateGroupProviders();
-      });
-    }
+    // 성공/실패 무관하게 반드시 인증 상태 초기화
+    state = const AuthState(isAuthenticated: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _invalidateGroupProviders();
+    });
   }
 
   /// 그룹 관련 provider들을 모두 초기화 (로그아웃/계정 전환 공통)

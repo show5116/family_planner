@@ -110,21 +110,23 @@ class AuthService extends ApiServiceBase {
     }
   }
 
-  /// 로그아웃
+  /// 로그아웃 — 어떤 에러가 발생해도 로컬 데이터는 반드시 삭제한다. throw하지 않는다.
   Future<void> logout() async {
     try {
-      // 백엔드 로그아웃 API 호출
       await apiClient.post(ApiConstants.logout);
-    } catch (e) {
-      // 로그아웃 실패해도 로컬 토큰은 삭제
-    } finally {
-      // 소셜 로그인 SDK 로그아웃
-      await _cleanupSocialLogin();
+    } catch (_) {}
 
-      // 로컬 토큰 및 사용자 정보 삭제
+    try {
+      await _cleanupSocialLogin();
+    } catch (_) {}
+
+    try {
       await apiClient.clearTokens();
+    } catch (_) {}
+
+    try {
       await _storage.clearUserInfo();
-    }
+    } catch (_) {}
   }
 
   /// 소셜 로그인 정리
