@@ -741,10 +741,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_appInfoTitle => 'アプリ情報';
 
   @override
-  String get settings_appInfoSubtitle => 'バージョン 1.0.0';
+  String get settings_appInfoSubtitle => 'バージョン情報';
 
   @override
   String get settings_appDescription => '家族と一緒に日常を管理するプランナー';
+
+  @override
+  String get settings_termsOfServiceTitle => '利用規約';
+
+  @override
+  String get settings_termsOfServiceSubtitle => '利用規約を確認する';
+
+  @override
+  String get settings_privacyPolicyTitle => 'プライバシーポリシー';
+
+  @override
+  String get settings_privacyPolicySubtitle => 'プライバシーポリシーを確認する';
 
   @override
   String get settings_helpTitle => 'ヘルプ';
@@ -3674,10 +3686,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get legal_privacyPolicy => 'プライバシーポリシー';
 
   @override
-  String get legal_termsLastUpdated => '最終更新日: 2025年1月1日';
+  String get legal_termsLastUpdated => '施行日: 2026年6月1日';
 
   @override
-  String get legal_termsContact => 'お問い合わせ: support@familyplanner.app';
+  String get legal_termsContact => 'お問い合わせ: hmn.corp.dev@gmail.com';
 
   @override
   String get legal_agreeToTerms => '利用規約';
@@ -3707,85 +3719,97 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get legal_terms_section1_body =>
-      '本規約は、Family Planner（以下「サービス」）が提供する家族スケジュールおよび生活管理サービスの利用条件・手続き、利用者とサービス間の権利・義務および責任事項、その他必要な事項を定めることを目的とします。';
+      '本規約は、エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）が提供するFamily Plannerサービス（以下「サービス」）の利用に関して、会社と会員間の権利・義務および責任事項を定めることを目的とします。';
 
   @override
-  String get legal_terms_section2_title => '第2条（用語の定義）';
+  String get legal_terms_section2_title => '第2条（サービスの内容）';
 
   @override
   String get legal_terms_section2_body =>
-      '「利用者」とは、本規約に従いサービスにアクセスして利用する会員および非会員をいいます。\n「会員」とは、サービスに会員登録した者であり、継続的にサービスを利用できる者をいいます。\n「コンテンツ」とは、利用者がサービス内で登録するスケジュール、家計簿、メモなどすべての情報をいいます。';
+      '会社は会員に以下のサービスを提供します：\n• 家族グループ単位のカレンダーおよびタスク共有\n• メンバー間の資産管理および履歴共有\n• 育児報酬（ほめシール等）管理システム\n• AIエージェントを通じた会話、スケジュール管理、マクロ経済/市場ブリーフィングサービス\n• その他会社が追加開発または提携契約等を通じて提供するサービス';
 
   @override
-  String get legal_terms_section3_title => '第3条（サービスの提供）';
+  String get legal_terms_section3_title => '第3条（会員の義務）';
 
   @override
   String get legal_terms_section3_body =>
-      'サービスは以下の機能を提供します：\n• 家族スケジュールの管理と共有\n• 家計・資産管理\n• ToDoリスト管理\n• 冷蔵庫・買い物リスト管理\n• 子育てポイント管理\n• その他の家族生活関連サービス\nサービスは年中無休・24時間提供を原則とします。ただし、システムメンテナンスや技術的な問題により一時的に中断される場合があります。';
+      '• 会員はサービスのAIエージェントに対して、違法または他者に危害を加えるプロンプトを入力してはなりません。\n• 会員は家族グループの招待コードおよびアカウント情報を安全に管理する責任を負います。\n• サービス内の資産管理および市場ブリーフィング機能は参考データの提供を目的としており、会社はこれによる投資結果について法的責任を負いません。';
 
   @override
-  String get legal_terms_section4_title => '第4条（会員登録および管理）';
+  String get legal_terms_section4_title => '第4条（投稿物の著作権および管理）';
 
   @override
   String get legal_terms_section4_body =>
-      '会員登録は、利用者が規約に同意し、所定のフォームに情報を入力することで完了します。会員は登録情報を最新の状態に保つ義務があります。会員はアカウント情報を他者に譲渡または共有することはできません。';
+      '• 会員がサービス内に投稿した情報（チャット、スケジュール、資産情報等）の著作権は当該会員に帰属します。\n• 会社は会員の投稿物をサービス運営・改善（AI機能高度化等）・広報目的にのみ活用し、個人を特定できない形に非識別化して使用します。';
 
   @override
-  String get legal_terms_section5_title => '第5条（個人情報の保護）';
+  String get legal_terms_section5_title => '第5条（サービスの中断および変更）';
 
   @override
   String get legal_terms_section5_body =>
-      'サービスは利用者の個人情報を重視し、個人情報保護法等の関連法令を遵守します。個人情報の収集・利用・提供等に関する事項は、別途のプライバシーポリシーに従います。';
+      '会社は運営上・技術上の必要に応じて提供中のサービスの全部または一部を変更または中断することができ、その場合は事前に告知します。';
 
   @override
-  String get legal_terms_section6_title => '第6条（免責事項）';
+  String get legal_terms_section6_title => '第6条（責任の制限）';
 
   @override
   String get legal_terms_section6_body =>
-      'サービスは、天災、戦争、通信事業者のサービス停止等の不可抗力によるサービス中断について責任を負いません。サービスは、利用者がサービスの利用により期待した収益を失ったことに対して責任を負いません。';
+      '会社は、天災、サーバー提供業者の障害、第三者AIAPIサービスの障害等の不可抗力によりサービスを提供できない場合、サービス提供に関する責任が免除されます。';
 
   @override
-  String get legal_privacy_section1_title => '第1条（収集する個人情報）';
+  String get legal_terms_section7_title => '第7条（施行日）';
+
+  @override
+  String get legal_terms_section7_body => '本規約は2026年6月1日より適用されます。';
+
+  @override
+  String get legal_privacy_section1_title => '1. 個人情報の処理目的';
 
   @override
   String get legal_privacy_section1_body =>
-      'サービスは以下の個人情報を収集します：\n• 必須：メールアドレス、氏名、パスワード\n• ソーシャルログイン：ソーシャルアカウントのメール、氏名、プロフィール写真\n• 自動収集：サービス利用記録、アクセスログ、端末情報';
+      'エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）は、以下の目的のために個人情報を処理します。処理している個人情報は以下の目的以外の用途には使用されず、利用目的が変更される場合には別途同意を取得するなど必要な措置を講じます。\n• 会員登録・管理、家族グループ（招待コード等）の識別\n• サービス提供（カレンダー、タスク、資産管理、育児報酬システム等）\n• AIエージェント（チャットボット、ブリーフィング等）サービスの提供と品質向上\n• 新サービスの開発およびパーソナライズされたサービスの提供';
 
   @override
-  String get legal_privacy_section2_title => '第2条（利用目的）';
+  String get legal_privacy_section2_title => '2. 処理する個人情報の項目';
 
   @override
   String get legal_privacy_section2_body =>
-      '収集した個人情報は以下の目的にのみ使用します：\n• 会員登録および管理\n• サービスの提供および運営\n• サービスの改善および新機能の開発\n• お客様からのお問い合わせへの対応\n個人情報は収集目的以外には使用せず、第三者に提供しません。';
+      '会社はサービス提供のために以下の個人情報を処理しています。\n• 必須項目：メールアドレス、パスワード、氏名（またはニックネーム）、プロフィール画像\n• サービス利用過程で収集される情報：カレンダーの予定、タスクリスト、資産データ、家族グループ情報、AIとのチャット履歴、サービス利用記録、端末情報';
 
   @override
-  String get legal_privacy_section3_title => '第3条（保有期間）';
+  String get legal_privacy_section3_title => '3. 個人情報の第三者提供および委託';
 
   @override
   String get legal_privacy_section3_body =>
-      '退会時に個人情報は速やかに削除されます。ただし、関連法令による保存が必要な場合は、該当期間保管後に削除します。\n• 契約または申込撤回記録：5年（電子商取引法）\n• 消費者苦情または紛争処理記録：3年（電子商取引法）';
+      'スムーズなAIサービス（文脈分析、ブリーフィング生成等）の提供のため、入力されたデータの一部を外部AIモデルAPI（例：OpenAI、Anthropic、Googleなど）に送信することがあります。\nただし、このデータはサービス提供目的にのみ使用され、モデルの学習には使用されないよう措置を講じます。';
 
   @override
-  String get legal_privacy_section4_title => '第4条（第三者提供）';
+  String get legal_privacy_section4_title => '4. 個人情報の廃棄';
 
   @override
   String get legal_privacy_section4_body =>
-      'サービスは、利用者の同意なく個人情報を第三者に提供しません。ただし、以下の場合は例外とします：\n• 法令に特別な規定がある場合\n• 捜査目的で法令に定められた手続きおよび方法に従い捜査機関から要請があった場合';
+      '会社は原則として、個人情報の処理目的が達成された場合は速やかに当該個人情報を廃棄します。\n• 廃棄手順：利用者が退会を要請した場合、収集された情報は即時または法令に基づく保存期間の経過後に廃棄されます。\n• 廃棄方法：電子ファイル形式の情報は、記録を再生できない技術的方法を使用します。';
 
   @override
-  String get legal_privacy_section5_title => '第5条（利用者の権利）';
+  String get legal_privacy_section5_title => '5. 情報主体の権利および行使方法';
 
   @override
   String get legal_privacy_section5_body =>
-      '利用者はいつでも自己の個人情報を照会または修正することができます。また、個人情報処理の停止を要請したり、退会により個人情報の削除を要請したりすることができます。利用者の要請は速やかに処理されます。';
+      '利用者はいつでも自己の個人情報を照会・修正することができ、退会を通じて個人情報の収集・利用への同意を撤回することができます。';
 
   @override
-  String get legal_privacy_section6_title => '第6条（お問い合わせ）';
+  String get legal_privacy_section6_title => '6. 個人情報保護責任者';
 
   @override
   String get legal_privacy_section6_body =>
-      '個人情報の処理に関するお問い合わせは下記までご連絡ください：\nメール：support@familyplanner.app\n対応期間：営業日3日以内';
+      '氏名：ユ・ヨンジン\nメール：hmn.corp.dev@gmail.com';
 
   @override
-  String get legal_privacyLastUpdated => '最終更新日: 2025年1月1日';
+  String get legal_privacy_section7_title => '7. 施行日';
+
+  @override
+  String get legal_privacy_section7_body => '本プライバシーポリシーは2026年6月1日より適用されます。';
+
+  @override
+  String get legal_privacyLastUpdated => '施行日: 2026年6月1日';
 }

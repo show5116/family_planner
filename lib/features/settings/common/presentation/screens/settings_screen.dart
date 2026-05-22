@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
@@ -17,6 +18,21 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  String _appVersion = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() => _appVersion = '${info.version} (${info.buildNumber})');
+    }
+  }
+
   /// 비밀번호 설정 안내 다이얼로그
   Future<void> _showPasswordSetupGuideDialog() async {
     final l10n = AppLocalizations.of(context)!;
@@ -185,18 +201,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             context,
             icon: Icons.info_outlined,
             title: l10n.settings_appInfoTitle,
-            subtitle: l10n.settings_appInfoSubtitle,
+            subtitle: _appVersion.isEmpty ? l10n.settings_appInfoSubtitle : _appVersion,
             onTap: () {
               showAboutDialog(
                 context: context,
                 applicationName: 'Family Planner',
-                applicationVersion: '1.0.0',
+                applicationVersion: _appVersion,
                 applicationIcon: const FlutterLogo(size: 48),
                 children: [
                   Text(l10n.settings_appDescription),
                 ],
               );
             },
+          ),
+          _buildSettingTile(
+            context,
+            icon: Icons.description_outlined,
+            title: l10n.settings_termsOfServiceTitle,
+            subtitle: l10n.settings_termsOfServiceSubtitle,
+            onTap: () => context.push(AppRoutes.termsOfService),
+          ),
+          _buildSettingTile(
+            context,
+            icon: Icons.privacy_tip_outlined,
+            title: l10n.settings_privacyPolicyTitle,
+            subtitle: l10n.settings_privacyPolicySubtitle,
+            onTap: () => context.push(AppRoutes.privacyPolicy),
           ),
           _buildSettingTile(
             context,

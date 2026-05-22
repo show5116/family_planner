@@ -767,10 +767,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_appInfoTitle => 'App Info';
 
   @override
-  String get settings_appInfoSubtitle => 'Version 1.0.0';
+  String get settings_appInfoSubtitle => 'Version info';
 
   @override
   String get settings_appDescription => 'Daily planner for families';
+
+  @override
+  String get settings_termsOfServiceTitle => 'Terms of Service';
+
+  @override
+  String get settings_termsOfServiceSubtitle => 'View our terms of service';
+
+  @override
+  String get settings_privacyPolicyTitle => 'Privacy Policy';
+
+  @override
+  String get settings_privacyPolicySubtitle => 'View our privacy policy';
 
   @override
   String get settings_helpTitle => 'Help';
@@ -3747,10 +3759,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legal_privacyPolicy => 'Privacy Policy';
 
   @override
-  String get legal_termsLastUpdated => 'Last updated: January 1, 2025';
+  String get legal_termsLastUpdated => 'Effective date: June 1, 2026';
 
   @override
-  String get legal_termsContact => 'Contact: support@familyplanner.app';
+  String get legal_termsContact => 'Contact: hmn.corp.dev@gmail.com';
 
   @override
   String get legal_agreeToTerms => 'Terms of Service';
@@ -3780,88 +3792,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legal_terms_section1_body =>
-      'These Terms govern the use of the family planning and life management service provided by Family Planner (the \'Service\'), including terms and procedures for use, rights and obligations between users and the Service, and other necessary matters.';
+      'These Terms govern the rights, obligations, and responsibilities between HMN Corporation (the \"Company\") and its members in connection with the use of the Family Planner service (the \"Service\") provided by the Company.';
 
   @override
-  String get legal_terms_section2_title => 'Article 2 (Definitions)';
+  String get legal_terms_section2_title => 'Article 2 (Service Content)';
 
   @override
   String get legal_terms_section2_body =>
-      '\'User\' means any member or non-member who accesses and uses the Service under these Terms.\n\'Member\' means a person who has registered for the Service and may continue to use it.\n\'Content\' means all information registered by users within the Service, including schedules, household accounts, and memos.';
+      'The Company provides members with the following services:\n• Family group-based calendar and to-do sharing\n• Asset management and history sharing among members\n• Child reward (praise stickers, etc.) management system\n• Conversation, schedule management, and macroeconomic/market briefing services via AI agent\n• Other services additionally developed by the Company or provided through partnership agreements';
 
   @override
-  String get legal_terms_section3_title => 'Article 3 (Service Provision)';
+  String get legal_terms_section3_title => 'Article 3 (Member Obligations)';
 
   @override
   String get legal_terms_section3_body =>
-      'The Service provides the following features:\n• Family schedule management and sharing\n• Household budget and asset management\n• To-do list management\n• Fridge and shopping list management\n• Child points management\n• Other family life-related services\nThe Service is provided around the clock, year-round in principle. However, it may be temporarily suspended due to system maintenance or technical issues.';
+      '• Members must not input illegal or harmful prompts to the AI agent within the Service.\n• Members are responsible for securely managing family group invitation codes and account information.\n• The asset management and market briefing features are provided for reference purposes only, and the Company bears no legal responsibility for investment outcomes based on such information.';
 
   @override
   String get legal_terms_section4_title =>
-      'Article 4 (Membership Registration and Management)';
+      'Article 4 (Copyright and Management of Posts)';
 
   @override
   String get legal_terms_section4_body =>
-      'Membership registration is completed when a user agrees to these Terms and fills in the required information. Members are obligated to keep their registered information up to date. Members may not transfer or share their account information with others.';
+      '• Copyright of information posted by members within the Service (chats, schedules, asset information, etc.) belongs to the respective member.\n• The Company uses member posts only for service operation, improvement (including AI feature enhancement), and promotion, and only in a de-identified form that cannot identify individuals.';
 
   @override
-  String get legal_terms_section5_title => 'Article 5 (Privacy Protection)';
+  String get legal_terms_section5_title =>
+      'Article 5 (Service Suspension and Changes)';
 
   @override
   String get legal_terms_section5_body =>
-      'The Service values users\' personal information and complies with the Personal Information Protection Act and other relevant laws. Details on the collection, use, and provision of personal information are governed by a separate Privacy Policy.';
+      'The Company may change or suspend all or part of the Service as needed for operational or technical reasons, and will provide advance notice in such cases.';
 
   @override
-  String get legal_terms_section6_title => 'Article 6 (Disclaimer)';
+  String get legal_terms_section6_title =>
+      'Article 6 (Limitation of Liability)';
 
   @override
   String get legal_terms_section6_body =>
-      'The Service is not liable for service interruptions due to force majeure events such as natural disasters, war, or suspension of telecommunications services. The Service is not responsible for any loss of expected profits by users from using the Service.';
+      'The Company is exempt from liability for service provision in cases where the Service cannot be provided due to force majeure events such as natural disasters, server provider failures, or third-party AI API service failures.';
+
+  @override
+  String get legal_terms_section7_title => 'Article 7 (Effective Date)';
+
+  @override
+  String get legal_terms_section7_body =>
+      'These Terms are effective from June 1, 2026.';
 
   @override
   String get legal_privacy_section1_title =>
-      'Article 1 (Personal Information Collected)';
+      '1. Purpose of Processing Personal Information';
 
   @override
   String get legal_privacy_section1_body =>
-      'The Service collects the following personal information:\n• Required: email address, name, password\n• Social login: email, name, and profile photo from social account\n• Automatically collected: service usage records, access logs, device information';
+      'HMN Corporation (the \'Company\') processes personal information for the following purposes. The personal information being processed will not be used for any purpose other than the following, and if the purpose of use changes, necessary measures such as obtaining separate consent will be taken.\n• Member registration and management, family group (invitation code, etc.) identification\n• Service provision (calendar, to-do, asset management, child reward system, etc.)\n• AI agent (chatbot, briefing, etc.) service provision and quality improvement\n• New service development and personalized service provision';
 
   @override
-  String get legal_privacy_section2_title => 'Article 2 (Purpose of Use)';
+  String get legal_privacy_section2_title =>
+      '2. Personal Information Items Processed';
 
   @override
   String get legal_privacy_section2_body =>
-      'Collected personal information is used only for the following purposes:\n• Membership registration and management\n• Service provision and operation\n• Service improvement and new feature development\n• Customer inquiry responses\nPersonal information will not be used for purposes other than those stated, nor will it be provided to third parties.';
+      'The Company processes the following personal information items to provide its services.\n• Required items: email address, password, name (or nickname), profile image\n• Information collected during service use: calendar events, to-do lists, asset data, family group information, AI chat history, service usage records, device information';
 
   @override
-  String get legal_privacy_section3_title => 'Article 3 (Retention Period)';
+  String get legal_privacy_section3_title =>
+      '3. Third-Party Provision and Entrustment of Personal Information';
 
   @override
   String get legal_privacy_section3_body =>
-      'Personal information is deleted immediately upon account termination. However, if retention is required by applicable law, it will be retained for the specified period and then deleted.\n• Contract or withdrawal records: 5 years (E-Commerce Act)\n• Consumer complaint or dispute records: 3 years (E-Commerce Act)';
+      'To provide smooth AI services (context analysis, briefing generation, etc.), the Company may transmit some of the entered data to external AI model APIs (e.g., OpenAI, Anthropic, Google, etc.).\nHowever, this data is used only for service provision purposes and measures are taken to ensure it is not used for model training.';
 
   @override
   String get legal_privacy_section4_title =>
-      'Article 4 (Provision to Third Parties)';
+      '4. Destruction of Personal Information';
 
   @override
   String get legal_privacy_section4_body =>
-      'The Service does not provide personal information to third parties without the user\'s consent. Exceptions include:\n• When required by specific legal provisions\n• When requested by investigative authorities in accordance with legal procedures for investigative purposes';
+      'In principle, the Company destroys personal information without delay when the purpose of processing has been achieved.\n• Destruction procedure: When a user requests account withdrawal, the collected information is destroyed immediately or after the retention period required by law has elapsed.\n• Destruction method: Information in electronic file format is destroyed using technical methods that make it impossible to reproduce the records.';
 
   @override
-  String get legal_privacy_section5_title => 'Article 5 (User Rights)';
+  String get legal_privacy_section5_title =>
+      '5. Rights of Data Subjects and How to Exercise Them';
 
   @override
   String get legal_privacy_section5_body =>
-      'Users may access or modify their personal information at any time. Users may also request suspension of personal information processing or request deletion by withdrawing from the Service. User requests will be processed without delay.';
+      'Users may access or modify their personal information at any time, and may withdraw consent to the collection and use of personal information by withdrawing from membership.';
 
   @override
-  String get legal_privacy_section6_title => 'Article 6 (Contact)';
+  String get legal_privacy_section6_title => '6. Privacy Officer';
 
   @override
   String get legal_privacy_section6_body =>
-      'For inquiries regarding personal information processing, please contact us:\nEmail: support@familyplanner.app\nResponse time: within 3 business days';
+      'Name: Yoo Youngjin\nEmail: hmn.corp.dev@gmail.com';
 
   @override
-  String get legal_privacyLastUpdated => 'Last updated: January 1, 2025';
+  String get legal_privacy_section7_title => '7. Effective Date';
+
+  @override
+  String get legal_privacy_section7_body =>
+      'This Privacy Policy is effective from June 1, 2026.';
+
+  @override
+  String get legal_privacyLastUpdated => 'Effective date: June 1, 2026';
 }

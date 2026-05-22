@@ -743,10 +743,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_appInfoTitle => '앱 정보';
 
   @override
-  String get settings_appInfoSubtitle => '버전 1.0.0';
+  String get settings_appInfoSubtitle => '버전 정보';
 
   @override
   String get settings_appDescription => '가족과 함께하는 일상 플래너';
+
+  @override
+  String get settings_termsOfServiceTitle => '서비스 이용약관';
+
+  @override
+  String get settings_termsOfServiceSubtitle => '서비스 이용 약관을 확인하세요';
+
+  @override
+  String get settings_privacyPolicyTitle => '개인정보 처리방침';
+
+  @override
+  String get settings_privacyPolicySubtitle => '개인정보 처리 방침을 확인하세요';
 
   @override
   String get settings_helpTitle => '도움말';
@@ -3681,10 +3693,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get legal_privacyPolicy => '개인정보 처리방침';
 
   @override
-  String get legal_termsLastUpdated => '최종 업데이트: 2025년 1월 1일';
+  String get legal_termsLastUpdated => '시행일: 2026년 6월 1일';
 
   @override
-  String get legal_termsContact => '문의: support@familyplanner.app';
+  String get legal_termsContact => '문의: hmn.corp.dev@gmail.com';
 
   @override
   String get legal_agreeToTerms => '서비스 이용약관';
@@ -3714,85 +3726,97 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get legal_terms_section1_body =>
-      '이 약관은 Family Planner(이하 \'서비스\')가 제공하는 가족 일정 및 생활 관리 서비스의 이용조건 및 절차, 이용자와 서비스 간의 권리·의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.';
+      '본 약관은 에이치엠엔 코퍼레이션(HMN Corporation)이 제공하는 Family Planner 서비스(이하 \"서비스\")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.';
 
   @override
-  String get legal_terms_section2_title => '제2조 (용어의 정의)';
+  String get legal_terms_section2_title => '제2조 (서비스의 내용)';
 
   @override
   String get legal_terms_section2_body =>
-      '\'이용자\'란 이 약관에 따라 서비스에 접속하여 서비스를 이용하는 회원 및 비회원을 말합니다.\n\'회원\'이란 서비스에 회원 가입한 자로서, 계속적으로 서비스를 이용할 수 있는 자를 말합니다.\n\'콘텐츠\'란 이용자가 서비스 내에서 등록하는 일정, 가계부, 메모 등 모든 정보를 말합니다.';
+      '회사는 회원에게 다음과 같은 서비스를 제공합니다.\n• 가족 그룹 기반의 캘린더 및 할 일 공유\n• 구성원 간 자산 관리 및 내역 공유\n• 육아 보상(칭찬 스티커 등) 관리 시스템\n• AI 에이전트를 통한 대화, 일정 관리, 거시 경제/시장 브리핑 서비스\n• 기타 회사가 추가로 개발하거나 제휴 계약 등을 통해 제공하는 서비스';
 
   @override
-  String get legal_terms_section3_title => '제3조 (서비스의 제공)';
+  String get legal_terms_section3_title => '제3조 (회원의 의무)';
 
   @override
   String get legal_terms_section3_body =>
-      '서비스는 다음과 같은 기능을 제공합니다.\n• 가족 일정 관리 및 공유\n• 가계부 및 자산 관리\n• 할일 목록 관리\n• 냉장고 및 장보기 관리\n• 육아 포인트 관리\n• 기타 가족 생활 관련 서비스\n서비스는 연중무휴, 24시간 제공함을 원칙으로 합니다. 단, 시스템 점검이나 기술적 문제로 인해 일시적으로 중단될 수 있습니다.';
+      '• 회원은 본 서비스의 AI 에이전트에게 불법적이거나 타인에게 위해를 가할 수 있는 프롬프트를 입력해서는 안 됩니다.\n• 회원은 가족 그룹 초대 코드 및 계정 정보를 안전하게 관리할 책임이 있습니다.\n• 서비스 내 자산 관리 및 시장 브리핑 기능은 참고용 데이터 제공을 목적으로 하며, 회사는 이를 통한 투자 결과에 대해 법적 책임을 지지 않습니다.';
 
   @override
-  String get legal_terms_section4_title => '제4조 (회원 가입 및 관리)';
+  String get legal_terms_section4_title => '제4조 (게시물의 저작권 및 관리)';
 
   @override
   String get legal_terms_section4_body =>
-      '회원 가입은 이용자가 약관에 동의하고 서비스가 정한 양식에 따라 정보를 기입함으로써 완료됩니다. 회원은 가입 시 등록한 정보를 최신 상태로 유지할 의무가 있습니다. 회원은 자신의 계정 정보를 타인에게 양도하거나 공유할 수 없습니다.';
+      '• 회원이 서비스 내에 게시한 정보(채팅, 일정, 자산 정보 등)의 저작권은 해당 회원에게 있습니다.\n• 회사는 회원의 게시물을 서비스 운영, 개선(AI 기능 고도화 등), 홍보의 목적으로만 활용하며, 개인을 식별할 수 없는 형태로 비식별화하여 사용합니다.';
 
   @override
-  String get legal_terms_section5_title => '제5조 (개인정보 보호)';
+  String get legal_terms_section5_title => '제5조 (서비스의 중단 및 변경)';
 
   @override
   String get legal_terms_section5_body =>
-      '서비스는 이용자의 개인정보를 중요시하며, 개인정보보호법 등 관련 법령을 준수합니다. 개인정보의 수집·이용·제공 등에 관한 사항은 별도의 개인정보 처리방침에 따릅니다.';
+      '회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스의 전부 또는 일부를 변경하거나 중단할 수 있으며, 이 경우 사전에 공지합니다.';
 
   @override
-  String get legal_terms_section6_title => '제6조 (면책 조항)';
+  String get legal_terms_section6_title => '제6조 (책임 제한)';
 
   @override
   String get legal_terms_section6_body =>
-      '서비스는 천재지변, 전쟁, 기간통신사업자의 서비스 중지 등 불가항력적인 사유로 인한 서비스 중단에 대해 책임을 지지 않습니다. 서비스는 이용자가 서비스를 이용하여 기대하는 수익을 상실한 것에 대해 책임을 지지 않습니다.';
+      '회사는 천재지변, 서버 제공 업체의 장애, 제3자 AI API 서비스의 장애 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.';
 
   @override
-  String get legal_privacy_section1_title => '제1조 (수집하는 개인정보)';
+  String get legal_terms_section7_title => '제7조 (시행일)';
+
+  @override
+  String get legal_terms_section7_body => '본 약관은 2026년 6월 1일부터 적용됩니다.';
+
+  @override
+  String get legal_privacy_section1_title => '1. 개인정보의 처리 목적';
 
   @override
   String get legal_privacy_section1_body =>
-      '서비스는 다음과 같은 개인정보를 수집합니다.\n• 필수: 이메일 주소, 이름, 비밀번호\n• 소셜 로그인: 소셜 계정의 이메일, 이름, 프로필 사진\n• 자동 수집: 서비스 이용 기록, 접속 로그, 기기 정보';
+      '에이치엠엔 코퍼레이션(HMN Corporation)(이하 \'회사\')은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n• 회원 가입 및 관리, 가족 그룹(초대 코드 등) 식별\n• 서비스 제공 (캘린더, 할 일, 자산 관리, 육아 보상 시스템 등)\n• AI 에이전트(챗봇, 브리핑 등) 서비스 제공 및 품질 향상\n• 신규 서비스 개발 및 맞춤 서비스 제공';
 
   @override
-  String get legal_privacy_section2_title => '제2조 (개인정보의 이용 목적)';
+  String get legal_privacy_section2_title => '2. 처리하는 개인정보 항목';
 
   @override
   String get legal_privacy_section2_body =>
-      '수집한 개인정보는 다음 목적으로만 사용됩니다.\n• 회원 가입 및 관리\n• 서비스 제공 및 운영\n• 서비스 개선 및 신규 기능 개발\n• 고객 문의 응대\n개인정보는 수집 목적 외의 용도로 사용하지 않으며, 제3자에게 제공하지 않습니다.';
+      '회사는 서비스 제공을 위해 다음의 개인정보 항목을 처리하고 있습니다.\n• 필수항목: 이메일 주소, 비밀번호, 이름(또는 닉네임), 프로필 이미지\n• 서비스 이용 과정에서 수집되는 정보: 캘린더 일정, 할 일 목록, 자산 데이터, 가족 그룹 정보, AI와의 채팅 내역, 서비스 이용 기록, 기기 정보';
 
   @override
-  String get legal_privacy_section3_title => '제3조 (개인정보의 보유 기간)';
+  String get legal_privacy_section3_title => '3. 개인정보의 제3자 제공 및 위탁';
 
   @override
   String get legal_privacy_section3_body =>
-      '회원 탈퇴 시 개인정보는 즉시 삭제됩니다. 단, 관련 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관 후 삭제합니다.\n• 계약 또는 청약철회 기록: 5년 (전자상거래법)\n• 소비자 불만 또는 분쟁처리 기록: 3년 (전자상거래법)';
+      '회사는 원활한 AI 서비스 제공(문맥 분석, 브리핑 생성 등)을 위해 입력된 데이터의 일부를 외부 AI 모델 API(예: OpenAI, Anthropic, Google 등)에 전송할 수 있습니다.\n단, 이 데이터는 서비스 제공 목적으로만 활용되며 모델 학습에 사용되지 않도록 조치합니다.';
 
   @override
-  String get legal_privacy_section4_title => '제4조 (개인정보의 제3자 제공)';
+  String get legal_privacy_section4_title => '4. 개인정보의 파기';
 
   @override
   String get legal_privacy_section4_body =>
-      '서비스는 이용자의 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 단, 다음의 경우에는 예외로 합니다.\n• 법령에 특별한 규정이 있는 경우\n• 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요청이 있는 경우';
+      '회사는 원칙적으로 개인정보 처리 목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다.\n• 파기절차: 이용자가 회원탈퇴를 요청하는 경우, 수집된 정보는 즉시 또는 법령에 따른 보존 기간 경과 후 파기됩니다.\n• 파기방법: 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용합니다.';
 
   @override
-  String get legal_privacy_section5_title => '제5조 (이용자의 권리)';
+  String get legal_privacy_section5_title => '5. 정보주체의 권리 및 행사 방법';
 
   @override
   String get legal_privacy_section5_body =>
-      '이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있습니다. 또한 개인정보 처리의 정지를 요청하거나 탈퇴를 통해 개인정보 삭제를 요청할 수 있습니다. 이용자의 요청은 지체 없이 처리됩니다.';
+      '이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보의 수집 및 이용 동의를 철회할 수 있습니다.';
 
   @override
-  String get legal_privacy_section6_title => '제6조 (문의)';
+  String get legal_privacy_section6_title => '6. 개인정보 보호책임자';
 
   @override
   String get legal_privacy_section6_body =>
-      '개인정보 처리에 관한 문의는 아래로 연락주시기 바랍니다.\n이메일: support@familyplanner.app\n처리 기간: 영업일 기준 3일 이내';
+      '성명: 유영진\n이메일: hmn.corp.dev@gmail.com';
 
   @override
-  String get legal_privacyLastUpdated => '최종 업데이트: 2025년 1월 1일';
+  String get legal_privacy_section7_title => '7. 시행일';
+
+  @override
+  String get legal_privacy_section7_body => '본 개인정보 처리방침은 2026년 6월 1일부터 적용됩니다.';
+
+  @override
+  String get legal_privacyLastUpdated => '시행일: 2026년 6월 1일';
 }

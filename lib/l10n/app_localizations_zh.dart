@@ -734,10 +734,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_appInfoTitle => '应用信息';
 
   @override
-  String get settings_appInfoSubtitle => '版本 1.0.0';
+  String get settings_appInfoSubtitle => '版本信息';
 
   @override
   String get settings_appDescription => '家庭每日规划工具';
+
+  @override
+  String get settings_termsOfServiceTitle => '服务条款';
+
+  @override
+  String get settings_termsOfServiceSubtitle => '查看服务条款';
+
+  @override
+  String get settings_privacyPolicyTitle => '隐私政策';
+
+  @override
+  String get settings_privacyPolicySubtitle => '查看隐私政策';
 
   @override
   String get settings_helpTitle => '帮助';
@@ -3654,10 +3666,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get legal_privacyPolicy => '隐私政策';
 
   @override
-  String get legal_termsLastUpdated => '最后更新：2025年1月1日';
+  String get legal_termsLastUpdated => '施行日：2026年6月1日';
 
   @override
-  String get legal_termsContact => '联系方式：support@familyplanner.app';
+  String get legal_termsContact => '联系方式：hmn.corp.dev@gmail.com';
 
   @override
   String get legal_agreeToTerms => '服务条款';
@@ -3687,85 +3699,97 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get legal_terms_section1_body =>
-      '本条款旨在规定Family Planner（以下简称\"服务\"）提供的家庭日程及生活管理服务的使用条件与程序、用户与服务之间的权利义务及责任事项等相关内容。';
+      '本条款旨在规定HMN Corporation（以下简称\"公司\"）提供的Family Planner服务（以下简称\"服务\"）使用过程中，公司与会员之间的权利、义务及责任事项。';
 
   @override
-  String get legal_terms_section2_title => '第二条（术语定义）';
+  String get legal_terms_section2_title => '第二条（服务内容）';
 
   @override
   String get legal_terms_section2_body =>
-      '\"用户\"是指依据本条款访问并使用服务的会员及非会员。\n\"会员\"是指已在服务中注册的用户，可持续使用服务。\n\"内容\"是指用户在服务中注册的日程、家庭账本、备忘录等所有信息。';
+      '公司为会员提供以下服务：\n• 基于家庭群组的日历及待办事项共享\n• 成员间的资产管理及记录共享\n• 育儿奖励（表扬贴纸等）管理系统\n• 通过AI助手进行对话、日程管理、宏观经济/市场简报服务\n• 其他公司额外开发或通过合作协议提供的服务';
 
   @override
-  String get legal_terms_section3_title => '第三条（服务提供）';
+  String get legal_terms_section3_title => '第三条（会员义务）';
 
   @override
   String get legal_terms_section3_body =>
-      '服务提供以下功能：\n• 家庭日程管理与共享\n• 家庭账本与资产管理\n• 待办事项管理\n• 冰箱与购物清单管理\n• 育儿积分管理\n• 其他家庭生活相关服务\n服务原则上全年无休、24小时提供。但因系统维护或技术问题可能临时中断。';
+      '• 会员不得向服务的AI助手输入违法或可能危害他人的提示。\n• 会员有责任安全管理家庭群组邀请码及账号信息。\n• 服务内的资产管理及市场简报功能仅供参考，公司对由此产生的投资结果不承担法律责任。';
 
   @override
-  String get legal_terms_section4_title => '第四条（会员注册与管理）';
+  String get legal_terms_section4_title => '第四条（帖子的版权及管理）';
 
   @override
   String get legal_terms_section4_body =>
-      '会员注册在用户同意本条款并按要求填写信息后完成。会员有义务保持注册信息的最新状态。会员不得将账号信息转让或共享给他人。';
+      '• 会员在服务内发布的信息（聊天、日程、资产信息等）的版权归该会员所有。\n• 公司仅将会员帖子用于服务运营、改善（包括AI功能升级）及推广目的，并以无法识别个人身份的脱敏形式使用。';
 
   @override
-  String get legal_terms_section5_title => '第五条（个人信息保护）';
+  String get legal_terms_section5_title => '第五条（服务中断及变更）';
 
   @override
   String get legal_terms_section5_body =>
-      '服务重视用户个人信息，遵守个人信息保护法等相关法律法规。个人信息的收集、使用、提供等事项依据单独的隐私政策执行。';
+      '公司可根据运营或技术需要变更或中断所提供服务的全部或部分，并在此情况下提前公告。';
 
   @override
-  String get legal_terms_section6_title => '第六条（免责声明）';
+  String get legal_terms_section6_title => '第六条（责任限制）';
 
   @override
   String get legal_terms_section6_body =>
-      '对于因自然灾害、战争、通信运营商服务中断等不可抗力原因导致的服务中断，服务不承担责任。对于用户因使用服务而未能获得预期收益，服务不承担责任。';
+      '因自然灾害、服务器提供商故障、第三方AI API服务故障等不可抗力导致无法提供服务的情况，公司免除服务提供相关责任。';
 
   @override
-  String get legal_privacy_section1_title => '第一条（收集的个人信息）';
+  String get legal_terms_section7_title => '第七条（施行日）';
+
+  @override
+  String get legal_terms_section7_body => '本条款自2026年6月1日起适用。';
+
+  @override
+  String get legal_privacy_section1_title => '1. 个人信息的处理目的';
 
   @override
   String get legal_privacy_section1_body =>
-      '服务收集以下个人信息：\n• 必填项：电子邮件地址、姓名、密码\n• 社交登录：社交账号的电子邮件、姓名、头像\n• 自动收集：服务使用记录、访问日志、设备信息';
+      'HMN Corporation（以下简称\"公司\"）为以下目的处理个人信息。所处理的个人信息不会用于以下目的以外的用途，如利用目的发生变更，将采取单独征得同意等必要措施。\n• 会员注册与管理、家庭群组（邀请码等）识别\n• 服务提供（日历、待办事项、资产管理、育儿奖励系统等）\n• AI助手（聊天机器人、简报等）服务提供及质量提升\n• 新服务开发及个性化服务提供';
 
   @override
-  String get legal_privacy_section2_title => '第二条（使用目的）';
+  String get legal_privacy_section2_title => '2. 处理的个人信息项目';
 
   @override
   String get legal_privacy_section2_body =>
-      '所收集的个人信息仅用于以下目的：\n• 会员注册与管理\n• 服务提供与运营\n• 服务改善与新功能开发\n• 客户咨询响应\n个人信息不会用于收集目的以外的用途，也不会提供给第三方。';
+      '公司为提供服务处理以下个人信息项目。\n• 必填项：电子邮件地址、密码、姓名（或昵称）、头像\n• 服务使用过程中收集的信息：日历日程、待办事项、资产数据、家庭群组信息、与AI的聊天记录、服务使用记录、设备信息';
 
   @override
-  String get legal_privacy_section3_title => '第三条（保存期限）';
+  String get legal_privacy_section3_title => '3. 个人信息的第三方提供及委托';
 
   @override
   String get legal_privacy_section3_body =>
-      '注销账号时，个人信息将立即删除。但如相关法律要求保存，则在规定期限内保存后删除。\n• 合同或撤约记录：5年（电子商务法）\n• 消费者投诉或纠纷处理记录：3年（电子商务法）';
+      '为顺畅提供AI服务（上下文分析、简报生成等），公司可能将部分输入数据发送至外部AI模型API（如：OpenAI、Anthropic、Google等）。\n但该数据仅用于服务提供目的，并采取措施确保不用于模型训练。';
 
   @override
-  String get legal_privacy_section4_title => '第四条（第三方提供）';
+  String get legal_privacy_section4_title => '4. 个人信息的销毁';
 
   @override
   String get legal_privacy_section4_body =>
-      '未经用户同意，服务不向第三方提供个人信息。但以下情况除外：\n• 法律法规有特别规定的情况\n• 依法律规定的程序和方式，接到调查机关要求的情况';
+      '公司原则上在个人信息处理目的达成后立即销毁相关个人信息。\n• 销毁程序：用户申请注销时，收集的信息将立即或在法律规定的保存期限届满后销毁。\n• 销毁方式：电子文件形式的信息采用无法恢复记录的技术方法进行销毁。';
 
   @override
-  String get legal_privacy_section5_title => '第五条（用户权利）';
+  String get legal_privacy_section5_title => '5. 信息主体的权利及行使方法';
 
   @override
   String get legal_privacy_section5_body =>
-      '用户可随时查询或修改自己的个人信息。也可申请停止处理个人信息，或通过注销账号申请删除个人信息。用户的请求将被及时处理。';
+      '用户可随时查询或修改自己的个人信息，并可通过注销账号撤回对个人信息收集和使用的同意。';
 
   @override
-  String get legal_privacy_section6_title => '第六条（联系方式）';
+  String get legal_privacy_section6_title => '6. 个人信息保护负责人';
 
   @override
   String get legal_privacy_section6_body =>
-      '如有关于个人信息处理的疑问，请通过以下方式联系我们：\n电子邮件：support@familyplanner.app\n处理时间：工作日3天内';
+      '姓名：유영진（Yoo Youngjin）\n电子邮件：hmn.corp.dev@gmail.com';
 
   @override
-  String get legal_privacyLastUpdated => '最后更新：2025年1月1日';
+  String get legal_privacy_section7_title => '7. 施行日';
+
+  @override
+  String get legal_privacy_section7_body => '本隐私政策自2026年6月1日起适用。';
+
+  @override
+  String get legal_privacyLastUpdated => '施行日：2026年6月1日';
 }

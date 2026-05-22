@@ -34,6 +34,7 @@ class TermsOfServiceScreen extends StatelessWidget {
             _LegalSection(title: l10n.legal_terms_section4_title, body: l10n.legal_terms_section4_body),
             _LegalSection(title: l10n.legal_terms_section5_title, body: l10n.legal_terms_section5_body),
             _LegalSection(title: l10n.legal_terms_section6_title, body: l10n.legal_terms_section6_body),
+            _LegalSection(title: l10n.legal_terms_section7_title, body: l10n.legal_terms_section7_body),
             const SizedBox(height: AppSizes.spaceXL),
             Text(
               l10n.legal_termsContact,
