@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// 애플리케이션 환경 설정
-enum Environment { development, production }
+enum Environment { local, development, production }
 
 /// 환경 설정 관리 클래스
 class EnvironmentConfig {
@@ -15,6 +15,9 @@ class EnvironmentConfig {
     _currentEnvironment = env;
   }
 
+  /// 로컬 환경 여부
+  static bool get isLocal => _currentEnvironment == Environment.local;
+
   /// 개발 환경 여부
   static bool get isDevelopment =>
       _currentEnvironment == Environment.development;
@@ -25,8 +28,11 @@ class EnvironmentConfig {
   /// API 베이스 URL
   static String get apiBaseUrl {
     switch (_currentEnvironment) {
+      case Environment.local:
+        return dotenv.get('API_BASE_URL_LOCAL', fallback: 'http://localhost:3000');
       case Environment.development:
-        return dotenv.get('API_BASE_URL_DEV', fallback: 'http://localhost:3000');
+        return dotenv.get('API_BASE_URL_DEV',
+            fallback: 'https://familyplannerbackend-production.up.railway.app');
       case Environment.production:
         return dotenv.get('API_BASE_URL_PROD',
             fallback: 'https://familyplannerbackend-production.up.railway.app');
@@ -36,12 +42,15 @@ class EnvironmentConfig {
   /// 프론트엔드 URL (OAuth 콜백에 사용)
   ///
   /// 백엔드가 OAuth 인증 후 이 URL로 리다이렉트합니다.
-  /// - 개발: localhost:3001 (웹)
+  /// - 로컬: localhost:3001 (웹)
+  /// - 개발: dev Netlify 사이트
   /// - 프로덕션: 실제 도메인 (웹), Universal/App Links (모바일)
   static String get frontendUrl {
     switch (_currentEnvironment) {
-      case Environment.development:
+      case Environment.local:
         return 'http://localhost:3001';
+      case Environment.development:
+        return 'https://family-planner-web.netlify.app/';
       case Environment.production:
         return 'https://family-planner-web.netlify.app/';
     }
@@ -50,6 +59,8 @@ class EnvironmentConfig {
   /// API 타임아웃 설정 (밀리초)
   static int get apiTimeout {
     switch (_currentEnvironment) {
+      case Environment.local:
+        return 30000; // 30초
       case Environment.development:
         return 30000; // 30초
       case Environment.production:
@@ -58,10 +69,10 @@ class EnvironmentConfig {
   }
 
   /// 로그 활성화 여부
-  static bool get enableLogging => isDevelopment;
+  static bool get enableLogging => isLocal || isDevelopment;
 
   /// 디버그 모드 여부
-  static bool get isDebugMode => isDevelopment;
+  static bool get isDebugMode => isLocal || isDevelopment;
 
   // ========== OAuth 설정 ==========
 
