@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -36,12 +38,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             _LegalSection(title: l10n.legal_privacy_section6_title, body: l10n.legal_privacy_section6_body),
             _LegalSection(title: l10n.legal_privacy_section7_title, body: l10n.legal_privacy_section7_body),
             const SizedBox(height: AppSizes.spaceXL),
-            Text(
-              l10n.legal_termsContact,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-              ),
-            ),
+            _ContactText(contact: l10n.legal_termsContact),
             const SizedBox(height: AppSizes.spaceXXL),
           ],
         ),
@@ -69,6 +66,60 @@ class _LegalSection extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(body, style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.6)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContactText extends StatelessWidget {
+  const _ContactText({required this.contact});
+
+  final String contact;
+
+  static const _email = 'hmn.corp.dev@gmail.com';
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: Theme.of(context).colorScheme.outline,
+    );
+    final emailStyle = style?.copyWith(
+      color: Theme.of(context).colorScheme.primary,
+      decoration: TextDecoration.underline,
+    );
+
+    final parts = contact.split(_email);
+    if (parts.length != 2) {
+      return Text(contact, style: style);
+    }
+
+    return Text.rich(
+      TextSpan(
+        style: style,
+        children: [
+          TextSpan(text: parts[0]),
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: GestureDetector(
+              onTap: () async {
+                final uri = Uri.parse('mailto:$_email');
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                } else {
+                  await Clipboard.setData(const ClipboardData(text: _email));
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('이메일 주소가 복사되었습니다.')),
+                    );
+                  }
+                }
+              },
+              child: Text(_email, style: emailStyle),
+            ),
+          ),
+          TextSpan(text: parts[1]),
         ],
       ),
     );
