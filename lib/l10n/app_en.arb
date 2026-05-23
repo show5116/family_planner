@@ -1738,6 +1738,8 @@
   "legal_agreeAll": "Agree to all",
   "legal_mustAgreeTerms": "Please agree to the Terms of Service.",
   "legal_mustAgreePrivacy": "Please agree to the Privacy Policy.",
+  "legal_agreeAgeVerification": "I am 14 years of age or older (Required)",
+  "legal_mustAgreeAgeVerification": "Please confirm that you are 14 years of age or older.",
   "legal_socialLoginConsent": "By continuing, you agree to our {termsLink} and {privacyLink}.",
   "@legal_socialLoginConsent": {
     "placeholders": {

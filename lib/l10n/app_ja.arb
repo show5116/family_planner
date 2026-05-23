@@ -1738,6 +1738,8 @@
   "legal_agreeAll": "すべてに同意",
   "legal_mustAgreeTerms": "利用規約に同意してください。",
   "legal_mustAgreePrivacy": "プライバシーポリシーに同意してください。",
+  "legal_agreeAgeVerification": "14歳以上です（必須）",
+  "legal_mustAgreeAgeVerification": "14歳以上であることを確認してください。",
   "legal_socialLoginConsent": "続けることで、{termsLink}および{privacyLink}に同意したものとみなされます。",
   "@legal_socialLoginConsent": {
     "placeholders": {

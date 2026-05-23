@@ -3690,6 +3690,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get legal_mustAgreePrivacy => '请同意隐私政策。';
 
   @override
+  String get legal_agreeAgeVerification => '本人已满14周岁（必填）';
+
+  @override
+  String get legal_mustAgreeAgeVerification => '请确认您已满14周岁。';
+
+  @override
   String legal_socialLoginConsent(String termsLink, String privacyLink) {
     return '继续即表示您同意我们的$termsLink和$privacyLink。';
   }

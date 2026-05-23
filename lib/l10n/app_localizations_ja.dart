@@ -3710,6 +3710,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get legal_mustAgreePrivacy => 'プライバシーポリシーに同意してください。';
 
   @override
+  String get legal_agreeAgeVerification => '14歳以上です（必須）';
+
+  @override
+  String get legal_mustAgreeAgeVerification => '14歳以上であることを確認してください。';
+
+  @override
   String legal_socialLoginConsent(String termsLink, String privacyLink) {
     return '続けることで、$termsLinkおよび$privacyLinkに同意したものとみなされます。';
   }

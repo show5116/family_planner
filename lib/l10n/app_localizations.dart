@@ -7224,6 +7224,18 @@ abstract class AppLocalizations {
   /// **'개인정보 처리방침에 동의해 주세요.'**
   String get legal_mustAgreePrivacy;
 
+  /// No description provided for @legal_agreeAgeVerification.
+  ///
+  /// In ko, this message translates to:
+  /// **'만 14세 이상입니다 (필수)'**
+  String get legal_agreeAgeVerification;
+
+  /// No description provided for @legal_mustAgreeAgeVerification.
+  ///
+  /// In ko, this message translates to:
+  /// **'만 14세 이상인지 확인해 주세요.'**
+  String get legal_mustAgreeAgeVerification;
+
   /// No description provided for @legal_socialLoginConsent.
   ///
   /// In ko, this message translates to:

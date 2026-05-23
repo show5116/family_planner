@@ -3717,6 +3717,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get legal_mustAgreePrivacy => '개인정보 처리방침에 동의해 주세요.';
 
   @override
+  String get legal_agreeAgeVerification => '만 14세 이상입니다 (필수)';
+
+  @override
+  String get legal_mustAgreeAgeVerification => '만 14세 이상인지 확인해 주세요.';
+
+  @override
   String legal_socialLoginConsent(String termsLink, String privacyLink) {
     return '계속하면 서비스 $termsLink 및 $privacyLink에 동의하는 것으로 간주합니다.';
   }

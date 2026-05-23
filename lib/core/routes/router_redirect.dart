@@ -29,6 +29,14 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
       currentLocation == AppRoutes.forgotPassword &&
       state.uri.queryParameters['setup'] == 'true';
 
+  // 로그인 여부와 관계없이 항상 접근 가능한 페이지
+  final isPublicPage = [
+    AppRoutes.termsOfService,
+    AppRoutes.privacyPolicy,
+  ].contains(currentLocation);
+
+  if (isPublicPage) return null;
+
   final isAuthPage = [
     AppRoutes.login,
     AppRoutes.signup,

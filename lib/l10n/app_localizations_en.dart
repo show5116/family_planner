@@ -3783,6 +3783,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legal_mustAgreePrivacy => 'Please agree to the Privacy Policy.';
 
   @override
+  String get legal_agreeAgeVerification =>
+      'I am 14 years of age or older (Required)';
+
+  @override
+  String get legal_mustAgreeAgeVerification =>
+      'Please confirm that you are 14 years of age or older.';
+
+  @override
   String legal_socialLoginConsent(String termsLink, String privacyLink) {
     return 'By continuing, you agree to our $termsLink and $privacyLink.';
   }

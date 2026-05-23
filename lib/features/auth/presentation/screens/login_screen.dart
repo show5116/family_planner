@@ -30,11 +30,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  late final TapGestureRecognizer _termsRecognizer;
+  late final TapGestureRecognizer _privacyRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _termsRecognizer = TapGestureRecognizer()..onTap = () => context.push(AppRoutes.termsOfService);
+    _privacyRecognizer = TapGestureRecognizer()..onTap = () => context.push(AppRoutes.privacyPolicy);
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _termsRecognizer.dispose();
+    _privacyRecognizer.dispose();
     super.dispose();
   }
 
@@ -308,13 +319,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           TextSpan(
             text: l10n.legal_agreeToTerms,
             style: linkStyle,
-            recognizer: TapGestureRecognizer()..onTap = () => context.push(AppRoutes.termsOfService),
+            recognizer: _termsRecognizer,
           ),
           TextSpan(text: betweenLinks),
           TextSpan(
             text: l10n.legal_agreeToPrivacy,
             style: linkStyle,
-            recognizer: TapGestureRecognizer()..onTap = () => context.push(AppRoutes.privacyPolicy),
+            recognizer: _privacyRecognizer,
           ),
           TextSpan(text: afterPrivacy),
         ],
