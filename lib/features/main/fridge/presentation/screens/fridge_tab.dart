@@ -164,13 +164,15 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
     if (ctx == null) return null;
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
+    final ancestor = ctx.findAncestorStateOfType<NavigatorState>()?.context.findRenderObject();
+    final offset = box.localToGlobal(Offset.zero, ancestor: ancestor);
     return TargetPosition(box.size, offset);
   }
 
   Future<void> _showCoachMark() async {
     if (!mounted) return;
 
+    final l10n = AppLocalizations.of(context)!;
     final fabPos = _keyToPosition(_fabKey);
     final sectionPos = _keyToPosition(_firstSectionKey);
     final itemPos = _keyToPosition(_firstItemKey);
@@ -188,8 +190,8 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '보관소 추가',
-              description: '냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.',
+              title: l10n.fridge_coach_fabTitle,
+              description: l10n.fridge_coach_fabDesc,
               icon: Icons.add,
               color: AppColors.primary,
             ),
@@ -207,8 +209,8 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '보관소',
-              description: '헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.',
+              title: l10n.fridge_coach_sectionTitle,
+              description: l10n.fridge_coach_sectionDesc,
               icon: Icons.kitchen_outlined,
               color: AppColors.primary,
             ),
@@ -226,8 +228,8 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '품목 관리',
-              description: '• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다',
+              title: l10n.fridge_coach_itemTitle,
+              description: l10n.fridge_coach_itemDesc,
               icon: Icons.edit_outlined,
               color: AppColors.primary,
             ),
@@ -245,8 +247,8 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '유통기한 알림',
-              description: '품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.',
+              title: l10n.fridge_coach_ddayTitle,
+              description: l10n.fridge_coach_ddayDesc,
               icon: Icons.notifications_outlined,
               color: Colors.orange,
             ),
@@ -263,10 +265,28 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '품목 추가',
-              description: '보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.',
+              title: l10n.fridge_coach_addItemTitle,
+              description: l10n.fridge_coach_addItemDesc,
               icon: Icons.add_circle_outline,
               color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+      // 6. 유통기한 자동 추천 (품목 추가 버튼 재활용 — 다이얼로그 내 기능 안내)
+      TargetFocus(
+        identify: 'fridge_expiry_suggestion',
+        targetPosition: addItemPos,
+        keyTarget: addItemPos == null ? _addItemKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: l10n.fridge_coach_suggestionTitle,
+              description: l10n.fridge_coach_suggestionDesc,
+              icon: Icons.lightbulb_outline,
+              color: Colors.amber.shade700,
             ),
           ),
         ],
@@ -280,7 +300,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
       targets: targets,
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.fridge_coach_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -289,9 +309,10 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
-          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+        child: Text(
+          l10n.fridge_coach_skip,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
       onFinish: () {
@@ -320,6 +341,10 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
     return ValueListenableBuilder<bool>(
       valueListenable: _showDemo,
       builder: (context, isDemo, _) {
+        // Pre-warm providers so autocomplete and expiry suggestion are ready before dialog opens
+        ref.watch(itemNamesProvider);
+        ref.watch(expiryPresetsProvider);
+
         final swisAsync = ref.watch(storagesWithItemsProvider);
 
         return Scaffold(
@@ -843,7 +868,10 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
   void _showAddItemDialog(BuildContext context, String storageId) {
     showDialog<void>(
       context: context,
-      builder: (_) => FridgeItemFormDialog(storageId: storageId),
+      builder: (_) => FridgeItemFormDialog(
+        storageId: storageId,
+        storageType: storage.type,
+      ),
     );
   }
 

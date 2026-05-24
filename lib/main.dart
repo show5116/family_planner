@@ -70,10 +70,13 @@ void main() async {
 
   AuthRepository.initialize(appKey: EnvironmentConfig.kakaoJavaScriptAppKey);
 
-  if (kReleaseMode) {
+  const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'local');
+  if (flavor == 'prod') {
     EnvironmentConfig.setEnvironment(Environment.production);
-  } else {
+  } else if (flavor == 'dev') {
     EnvironmentConfig.setEnvironment(Environment.development);
+  } else {
+    EnvironmentConfig.setEnvironment(Environment.local);
   }
 
 

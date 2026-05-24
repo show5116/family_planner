@@ -20,6 +20,8 @@ enum NotificationCategory {
   savings, // 적금/저축
   @JsonValue('SYSTEM')
   system, // 시스템
+  @JsonValue('WEATHER')
+  weather, // 날씨
 }
 
 /// 알림 모델

@@ -8,6 +8,98 @@
 
 **Base Path:** `/fridge`
 
+### GET `fridge/expiry-presets`
+
+**요약:** 유통기한 프리셋 전체 조회 (글로벌 기본값 + 그룹 커스텀 머지, keywords로 클라이언트 로컬 매칭)
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+
+**Responses:**
+
+#### 200 - 조회 성공
+
+```json
+{
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "days": 7, // 적용 유통기한 (일) - 커스텀이 있으면 커스텀, 없으면 글로벌 (number)
+  "keywords": ["시금치", "열무"], // 매칭 키워드 목록 (클라이언트 로컬 매칭용, 글로벌 항목에만 존재) (string[] | null)
+  "isCustom": false, // 그룹 커스텀 여부 (boolean)
+  "customPresetId": "uuid-1234" // 그룹 커스텀 프리셋 ID (커스텀인 경우에만 존재) (string | null)
+}
+```
+
+---
+
+### PUT `fridge/expiry-presets`
+
+**요약:** 그룹별 유통기한 커스텀 프리셋 등록/수정
+
+**Request Body:**
+
+```json
+{
+  "groupId": "uuid-1234", // 그룹 ID (string)
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "customDays": 10 // 커스텀 유통기한 (일) (number)
+}
+```
+
+**Responses:**
+
+#### 200 - 저장 성공
+
+```json
+{
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "days": 7, // 적용 유통기한 (일) - 커스텀이 있으면 커스텀, 없으면 글로벌 (number)
+  "keywords": ["시금치", "열무"], // 매칭 키워드 목록 (클라이언트 로컬 매칭용, 글로벌 항목에만 존재) (string[] | null)
+  "isCustom": false, // 그룹 커스텀 여부 (boolean)
+  "customPresetId": "uuid-1234" // 그룹 커스텀 프리셋 ID (커스텀인 경우에만 존재) (string | null)
+}
+```
+
+---
+
+### DELETE `fridge/expiry-presets/:presetId`
+
+**요약:** 그룹별 유통기한 커스텀 프리셋 삭제 (글로벌 기본값으로 복원)
+
+**Path Parameters:**
+
+- `presetId` (`string`)
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+
+**Responses:**
+
+#### 200 - 삭제 성공
+
+```json
+{
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "days": 7, // 적용 유통기한 (일) - 커스텀이 있으면 커스텀, 없으면 글로벌 (number)
+  "keywords": ["시금치", "열무"], // 매칭 키워드 목록 (클라이언트 로컬 매칭용, 글로벌 항목에만 존재) (string[] | null)
+  "isCustom": false, // 그룹 커스텀 여부 (boolean)
+  "customPresetId": "uuid-1234" // 그룹 커스텀 프리셋 ID (커스텀인 경우에만 존재) (string | null)
+}
+```
+
+#### 404 - 프리셋을 찾을 수 없습니다
+
+---
+
+## 냉장고 관리
+
+**Base Path:** `/fridge`
+
 ### GET `fridge/item-names`
 
 **요약:** 품목 이름 자동완성 목록 조회

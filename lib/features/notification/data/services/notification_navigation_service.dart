@@ -88,6 +88,9 @@ class NotificationNavigationService {
 
       case NotificationCategory.system:
         return _navigateToSystem(context, data);
+
+      case NotificationCategory.weather:
+        return _navigateToWeather(context);
     }
   }
 
@@ -196,6 +199,12 @@ class NotificationNavigationService {
     return true;
   }
 
+  /// 날씨 화면으로 이동
+  static bool _navigateToWeather(BuildContext context) {
+    context.push(AppRoutes.weather);
+    return true;
+  }
+
   /// 시스템 알림 화면으로 이동 (공지사항, QnA 등)
   static bool _navigateToSystem(
     BuildContext context,
@@ -241,6 +250,8 @@ class NotificationNavigationService {
         return NotificationCategory.group;
       case 'SYSTEM':
         return NotificationCategory.system;
+      case 'WEATHER':
+        return NotificationCategory.weather;
       default:
         return null;
     }

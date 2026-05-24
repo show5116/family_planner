@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/features/main/investment/data/models/market_briefing_model.dart';
+import 'package:family_planner/core/providers/locale_provider.dart';
 import 'package:family_planner/features/main/investment/data/repositories/indicator_repository.dart';
 
 part 'indicator_provider.g.dart';
@@ -14,6 +15,7 @@ part 'indicator_provider.g.dart';
 class Indicators extends _$Indicators {
   @override
   Future<List<IndicatorModel>> build() async {
+    ref.watch(localeProvider); // 언어 변경 시 재조회
     final repository = ref.watch(indicatorRepositoryProvider);
     final list = await repository.getIndicators();
     return _sorted(list);
@@ -141,6 +143,7 @@ Future<IndicatorHistoryModel> indicatorHistory(
     return IndicatorHistoryModel(
       symbol: raw.symbol,
       nameKo: raw.nameKo,
+      displayName: raw.displayName,
       history: filteredHistory,
       spreadHistory: filteredSpread,
     );
@@ -227,6 +230,7 @@ class BookmarkedIndicators extends _$BookmarkedIndicators {
 
   @override
   Future<List<IndicatorModel>> build() async {
+    ref.watch(localeProvider); // 언어 변경 시 재조회
     _cacheTimer?.cancel();
     _cacheTimer = Timer(const Duration(minutes: 5), () => ref.invalidateSelf());
 

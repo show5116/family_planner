@@ -1,15 +1,21 @@
-name: Deploy to Netlify
+name: Deploy
 
 on:
   push:
     branches:
       - main
+      - prd
   pull_request:
     branches:
       - main
+      - prd
 
+# ─────────────────────────────────────────
+# main 브랜치 → dev APK (테스트용)
+# ─────────────────────────────────────────
 jobs:
-  build-android:
+  build-dev-android:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -50,29 +56,102 @@ jobs:
           printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=upload\nstoreFile=%s/upload-keystore.jks\n' \
             "$STORE_PASSWORD" "$KEY_PASSWORD" "$HOME" > android/key.properties
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build Dev APK
+        run: flutter build apk --flavor dev --dart-define=FLAVOR=dev --release
 
-      - name: Upload APK artifact
+      - name: Upload Dev APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-${{ github.sha }}
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: app-dev-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-dev-release.apk
           retention-days: 30
 
-      - name: Release latest APK
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Release latest Dev APK
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: Latest Release
-          body: "최신 빌드 - ${{ github.event.head_commit.message }}"
-          files: build/app/outputs/flutter-apk/app-release.apk
+          tag_name: dev-latest
+          name: Dev Latest
+          body: "[DEV] ${{ github.event.head_commit.message }}"
+          files: build/app/outputs/flutter-apk/app-dev-release.apk
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # main 브랜치는 웹 배포 없음 (Android APK만 빌드)
+
+  # ─────────────────────────────────────────
+  # prd 브랜치 → prod AAB (Play Store 배포용)
+  # ─────────────────────────────────────────
+  build-prod-android:
+    if: github.ref == 'refs/heads/prd' || (github.event_name == 'pull_request' && github.base_ref == 'prd')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.1'
+          channel: 'stable'
+          cache: true
+
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_FILE_PROD }}" > .env
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Decode keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_BASE64" | base64 -d > $HOME/upload-keystore.jks
+
+      - name: Create key.properties
+        env:
+          STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=upload\nstoreFile=%s/upload-keystore.jks\n' \
+            "$STORE_PASSWORD" "$KEY_PASSWORD" "$HOME" > android/key.properties
+
+      - name: Build Prod AAB
+        run: flutter build appbundle --flavor prod --dart-define=FLAVOR=prod --release
+
+      - name: Upload Prod AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-prod-${{ github.sha }}
+          path: build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          retention-days: 90
+
+      - name: Release Prod AAB
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: prod-${{ github.run_number }}
+          name: "Production Release #${{ github.run_number }}"
+          body: "[PROD] ${{ github.event.head_commit.message }}"
+          files: build/app/outputs/bundle/prodRelease/app-prod-release.aab
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-and-deploy:
+  # ─────────────────────────────────────────
+  # prd 브랜치 → 웹 빌드 및 Netlify 프로덕션 배포
+  # ─────────────────────────────────────────
+  build-and-deploy-prod-web:
+    if: github.ref == 'refs/heads/prd' || (github.event_name == 'pull_request' && github.base_ref == 'prd')
     runs-on: ubuntu-latest
 
     steps:
@@ -87,9 +166,7 @@ jobs:
           cache: true
 
       - name: Create .env file
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
-          echo "✅ .env file created"
+        run: echo "${{ secrets.ENV_FILE_PROD }}" > .env
 
       - name: Install dependencies
         run: flutter pub get
@@ -98,23 +175,16 @@ jobs:
         run: flutter analyze
         continue-on-error: true
 
-      - name: Build web
-        run: flutter build web --release
+      - name: Build Prod Web
+        run: flutter build web --dart-define=FLAVOR=prod --release
 
-      - name: Verify build directory
-        run: |
-          echo "Checking build directory..."
-          ls -la
-          echo "Checking build/web directory..."
-          ls -la build/web || echo "build/web does not exist!"
-
-      - name: Deploy to Netlify
+      - name: Deploy to Netlify (Prod)
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './build/web'
-          production-branch: main
+          production-branch: prd
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions - ${{ github.event.head_commit.message }}"
+          deploy-message: "[PROD] ${{ github.event.head_commit.message }}"
           enable-pull-request-comment: true
           enable-commit-comment: true
           overwrites-pull-request-comment: true

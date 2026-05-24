@@ -66,6 +66,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_add_to_list => '목록에 담기';
 
   @override
+  String get common_view_all => '전체보기';
+
+  @override
+  String get memo_filter_personal_only => '개인 메모만';
+
+  @override
+  String get common_all_groups => '전체 그룹';
+
+  @override
+  String get schedule_filter_group_schedule => '그룹 일정';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month월 $day일';
+  }
+
+  @override
   String get cart_unsaved_changes => '저장되지 않은 변경사항이 있습니다';
 
   @override
@@ -726,10 +743,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_appInfoTitle => '앱 정보';
 
   @override
-  String get settings_appInfoSubtitle => '버전 1.0.0';
+  String get settings_appInfoSubtitle => '버전 정보';
 
   @override
   String get settings_appDescription => '가족과 함께하는 일상 플래너';
+
+  @override
+  String get settings_termsOfServiceTitle => '서비스 이용약관';
+
+  @override
+  String get settings_termsOfServiceSubtitle => '서비스 이용 약관을 확인하세요';
+
+  @override
+  String get settings_privacyPolicyTitle => '개인정보 처리방침';
+
+  @override
+  String get settings_privacyPolicySubtitle => '개인정보 처리 방침을 확인하세요';
 
   @override
   String get settings_helpTitle => '도움말';
@@ -3256,6 +3285,51 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_frequent_coach_skip => '건너뛰기';
 
   @override
+  String get fridge_coach_fabTitle => '보관소 추가';
+
+  @override
+  String get fridge_coach_fabDesc =>
+      '냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.';
+
+  @override
+  String get fridge_coach_sectionTitle => '보관소';
+
+  @override
+  String get fridge_coach_sectionDesc =>
+      '헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.';
+
+  @override
+  String get fridge_coach_itemTitle => '품목 관리';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다';
+
+  @override
+  String get fridge_coach_ddayTitle => '유통기한 알림';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      '품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.';
+
+  @override
+  String get fridge_coach_addItemTitle => '품목 추가';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      '보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.';
+
+  @override
+  String get fridge_coach_suggestionTitle => '유통기한 자동 추천';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      '품목명을 입력하면 서버가 자동으로 유통기한을 추천해줘요.\n추천 결과가 마음에 들지 않으면\n🔍 버튼으로 다른 품목을 기준으로 설정할 수 있어요.';
+
+  @override
+  String get fridge_coach_skip => '건너뛰기';
+
+  @override
   String get fridge_cart_empty => '장바구니가 비어 있습니다';
 
   @override
@@ -3304,6 +3378,79 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '개인';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '$keyword 기준 · $storageType $days일 추천';
+  }
+
+  @override
+  String get fridge_expiry_apply => '추천 적용';
+
+  @override
+  String get fridge_expiry_manual => '직접 입력';
+
+  @override
+  String get fridge_expiry_change_reference => '다른 품목 기준으로 설정';
+
+  @override
+  String get fridge_expiry_reference_title => '유통기한 기준 품목 선택';
+
+  @override
+  String get fridge_expiry_reference_search => '품목 검색';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days일';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => '검색 결과가 없습니다';
+
+  @override
+  String get fridge_preset_management_title => '유통기한 프리셋 관리';
+
+  @override
+  String get fridge_preset_management_menu => '유통기한 프리셋 관리';
+
+  @override
+  String get fridge_preset_edit_shortcut => '프리셋 편집';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days일';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => '커스텀';
+
+  @override
+  String get fridge_preset_reset_confirm => '기본값으로 초기화하시겠습니까?';
+
+  @override
+  String get fridge_preset_edit_dialog_title => '유통기한 수정';
+
+  @override
+  String get fridge_preset_add_dialog_title => '새 프리셋 등록';
+
+  @override
+  String get fridge_preset_days_input_label => '유통기한 (일)';
+
+  @override
+  String get fridge_preset_category_input_label => '카테고리';
+
+  @override
+  String get fridge_preset_storage_type_label => '보관 방법';
+
+  @override
+  String get fridge_preset_delete_confirm => '커스텀 설정을 삭제하고 기본값으로 되돌리겠습니까?';
+
+  @override
+  String get fridge_preset_search_hint => '카테고리 또는 품목 검색';
 
   @override
   String get dashboard_greetingMorning => '좋은 아침입니다';
@@ -3355,6 +3502,163 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get investment_emptyBookmarks => '즐겨찾기한 지표가 없습니다';
+
+  @override
+  String get investment_screenTitle => '투자 지표';
+
+  @override
+  String get investment_bookmarkSection => '즐겨찾기';
+
+  @override
+  String get investment_bookmarkReorderHint => '(길게 눌러 순서 변경)';
+
+  @override
+  String get investment_allSection => '전체 지표';
+
+  @override
+  String get investment_noData => '지표 데이터가 없습니다';
+
+  @override
+  String get investment_loadError => '데이터를 불러오지 못했습니다';
+
+  @override
+  String get investment_retry => '다시 시도';
+
+  @override
+  String get investment_adminTooltip => '과거 데이터 초기화 (관리자)';
+
+  @override
+  String get investment_briefingTitle => 'AI 시황 브리핑';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AI 브리핑 오류: $error';
+  }
+
+  @override
+  String get investment_briefingMacro => '매크로';
+
+  @override
+  String get investment_briefingDomestic => '국내 시장';
+
+  @override
+  String get investment_briefingGlobal => '글로벌 시장';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return '업데이트: $time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => '과거 데이터 초기화';
+
+  @override
+  String get investment_adminDialogDesc =>
+      'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.';
+
+  @override
+  String get investment_adminDaysLabel => '수집 일수 (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => '일';
+
+  @override
+  String get investment_adminExecute => '초기화 실행';
+
+  @override
+  String get investment_adminResultTitle => '초기화 완료';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo (주가/환율/원자재)';
+
+  @override
+  String get investment_adminResultCrypto => '암호화폐 (BTC/KRW)';
+
+  @override
+  String get investment_adminResultBond => '한국 채권';
+
+  @override
+  String get investment_adminResultGold => '국내 금값';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count건';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return '초기화 실패: $error';
+  }
+
+  @override
+  String get investment_adminLoading => '과거 데이터를 수집 중입니다...';
+
+  @override
+  String get investment_prevPrice => '전일 종가';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return '이격률 $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => '국제 환산가 대비 프리미엄';
+
+  @override
+  String get investment_spreadDiscount => '국제 환산가 대비 디스카운트';
+
+  @override
+  String get investment_chartTitle => '시세 추이';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '$days일';
+  }
+
+  @override
+  String get investment_chartYearChip => '1년';
+
+  @override
+  String get investment_chartLoadError => '차트를 불러올 수 없습니다';
+
+  @override
+  String get investment_chartNoData => '데이터가 없습니다';
+
+  @override
+  String investment_marketClosed(String date) {
+    return '휴장 중 · 마지막 거래일: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => '이격률 추이';
+
+  @override
+  String get investment_spreadChartSubtitle => '(국제 환산가 대비)';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return '현재 국제 환산가 대비 $label';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => '프리미엄';
+
+  @override
+  String get investment_spreadDiscountLabel => '디스카운트';
+
+  @override
+  String get investment_coachIndicatorTitle => '투자 지표';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      '주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.';
+
+  @override
+  String get investment_coachBookmarkTitle => '즐겨찾기';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      '별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.';
 
   @override
   String get householdWidget_groupTooltip => '그룹 선택';
@@ -3499,4 +3803,144 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get assetWidget_typeOther => '기타';
+
+  @override
+  String get legal_termsOfService => '서비스 이용약관';
+
+  @override
+  String get legal_privacyPolicy => '개인정보 처리방침';
+
+  @override
+  String get legal_termsLastUpdated => '시행일: 2026년 6월 1일';
+
+  @override
+  String get legal_termsContact => '문의: hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_agreeToTerms => '서비스 이용약관';
+
+  @override
+  String get legal_agreeToPrivacy => '개인정보 처리방침';
+
+  @override
+  String get legal_required => '(필수)';
+
+  @override
+  String get legal_agreeAll => '전체 동의';
+
+  @override
+  String get legal_mustAgreeTerms => '서비스 이용약관에 동의해 주세요.';
+
+  @override
+  String get legal_mustAgreePrivacy => '개인정보 처리방침에 동의해 주세요.';
+
+  @override
+  String get legal_agreeAgeVerification => '만 14세 이상입니다 (필수)';
+
+  @override
+  String get legal_mustAgreeAgeVerification => '만 14세 이상인지 확인해 주세요.';
+
+  @override
+  String legal_socialLoginConsent(String termsLink, String privacyLink) {
+    return '계속하면 서비스 $termsLink 및 $privacyLink에 동의하는 것으로 간주합니다.';
+  }
+
+  @override
+  String get legal_terms_section1_title => '제1조 (목적)';
+
+  @override
+  String get legal_terms_section1_body =>
+      '본 약관은 에이치엠엔 코퍼레이션(HMN Corporation)이 제공하는 Family Planner 서비스(이하 \"서비스\")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.';
+
+  @override
+  String get legal_terms_section2_title => '제2조 (서비스의 내용)';
+
+  @override
+  String get legal_terms_section2_body =>
+      '회사는 회원에게 다음과 같은 서비스를 제공합니다.\n• 가족 그룹 기반의 캘린더 및 할 일 공유\n• 구성원 간 자산 관리 및 내역 공유\n• 육아 보상(칭찬 스티커 등) 관리 시스템\n• AI 에이전트를 통한 대화, 일정 관리, 거시 경제/시장 브리핑 서비스\n• 기타 회사가 추가로 개발하거나 제휴 계약 등을 통해 제공하는 서비스';
+
+  @override
+  String get legal_terms_section3_title => '제3조 (회원의 의무)';
+
+  @override
+  String get legal_terms_section3_body =>
+      '• 회원은 본 서비스의 AI 에이전트에게 불법적이거나 타인에게 위해를 가할 수 있는 프롬프트를 입력해서는 안 됩니다.\n• 회원은 가족 그룹 초대 코드 및 계정 정보를 안전하게 관리할 책임이 있습니다.\n• 서비스 내 자산 관리 및 시장 브리핑 기능은 참고용 데이터 제공을 목적으로 하며, 회사는 이를 통한 투자 결과에 대해 법적 책임을 지지 않습니다.';
+
+  @override
+  String get legal_terms_section4_title => '제4조 (게시물의 저작권 및 관리)';
+
+  @override
+  String get legal_terms_section4_body =>
+      '• 회원이 서비스 내에 게시한 정보(채팅, 일정, 자산 정보 등)의 저작권은 해당 회원에게 있습니다.\n• 회사는 회원의 게시물을 서비스 운영, 개선(AI 기능 고도화 등), 홍보의 목적으로만 활용하며, 개인을 식별할 수 없는 형태로 비식별화하여 사용합니다.';
+
+  @override
+  String get legal_terms_section5_title => '제5조 (서비스의 중단 및 변경)';
+
+  @override
+  String get legal_terms_section5_body =>
+      '회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스의 전부 또는 일부를 변경하거나 중단할 수 있으며, 이 경우 사전에 공지합니다.';
+
+  @override
+  String get legal_terms_section6_title => '제6조 (책임 제한)';
+
+  @override
+  String get legal_terms_section6_body =>
+      '회사는 천재지변, 서버 제공 업체의 장애, 제3자 AI API 서비스의 장애 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.';
+
+  @override
+  String get legal_terms_section7_title => '제7조 (시행일)';
+
+  @override
+  String get legal_terms_section7_body => '본 약관은 2026년 6월 1일부터 적용됩니다.';
+
+  @override
+  String get legal_privacy_section1_title => '1. 개인정보의 처리 목적';
+
+  @override
+  String get legal_privacy_section1_body =>
+      '에이치엠엔 코퍼레이션(HMN Corporation)(이하 \'회사\')은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n• 회원 가입 및 관리, 가족 그룹(초대 코드 등) 식별\n• 서비스 제공 (캘린더, 할 일, 자산 관리, 육아 보상 시스템 등)\n• AI 에이전트(챗봇, 브리핑 등) 서비스 제공 및 품질 향상\n• 신규 서비스 개발 및 맞춤 서비스 제공';
+
+  @override
+  String get legal_privacy_section2_title => '2. 처리하는 개인정보 항목';
+
+  @override
+  String get legal_privacy_section2_body =>
+      '회사는 서비스 제공을 위해 다음의 개인정보 항목을 처리하고 있습니다.\n• 필수항목: 이메일 주소, 비밀번호, 이름(또는 닉네임), 프로필 이미지\n• 서비스 이용 과정에서 수집되는 정보: 캘린더 일정, 할 일 목록, 자산 데이터, 가족 그룹 정보, AI와의 채팅 내역, 서비스 이용 기록, 기기 정보';
+
+  @override
+  String get legal_privacy_section3_title => '3. 개인정보의 제3자 제공 및 위탁';
+
+  @override
+  String get legal_privacy_section3_body =>
+      '회사는 원활한 AI 서비스 제공(문맥 분석, 브리핑 생성 등)을 위해 입력된 데이터의 일부를 외부 AI 모델 API(예: OpenAI, Anthropic, Google 등)에 전송할 수 있습니다.\n단, 이 데이터는 서비스 제공 목적으로만 활용되며 모델 학습에 사용되지 않도록 조치합니다.';
+
+  @override
+  String get legal_privacy_section4_title => '4. 개인정보의 파기';
+
+  @override
+  String get legal_privacy_section4_body =>
+      '회사는 원칙적으로 개인정보 처리 목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다.\n• 파기절차: 이용자가 회원탈퇴를 요청하는 경우, 수집된 정보는 즉시 또는 법령에 따른 보존 기간 경과 후 파기됩니다.\n• 파기방법: 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용합니다.';
+
+  @override
+  String get legal_privacy_section5_title => '5. 정보주체의 권리 및 행사 방법';
+
+  @override
+  String get legal_privacy_section5_body =>
+      '이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보의 수집 및 이용 동의를 철회할 수 있습니다.';
+
+  @override
+  String get legal_privacy_section6_title => '6. 개인정보 보호책임자';
+
+  @override
+  String get legal_privacy_section6_body =>
+      '성명: 유영진\n이메일: hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_privacy_section7_title => '7. 시행일';
+
+  @override
+  String get legal_privacy_section7_body => '본 개인정보 처리방침은 2026년 6월 1일부터 적용됩니다.';
+
+  @override
+  String get legal_privacyLastUpdated => '시행일: 2026년 6월 1일';
 }

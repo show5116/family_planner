@@ -216,6 +216,36 @@ abstract class AppLocalizations {
   /// **'목록에 담기'**
   String get common_add_to_list;
 
+  /// 전체보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전체보기'**
+  String get common_view_all;
+
+  /// 메모 필터: 개인 메모만 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 메모만'**
+  String get memo_filter_personal_only;
+
+  /// 전체 그룹 선택 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 그룹'**
+  String get common_all_groups;
+
+  /// 일정/할일 필터 시트의 그룹 일정 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 일정'**
+  String get schedule_filter_group_schedule;
+
+  /// 날짜 표시 형식 (월, 일)
+  ///
+  /// In ko, this message translates to:
+  /// **'{month}월 {day}일'**
+  String common_date_format(int month, int day);
+
   /// No description provided for @cart_unsaved_changes.
   ///
   /// In ko, this message translates to:
@@ -1515,7 +1545,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_appInfoSubtitle.
   ///
   /// In ko, this message translates to:
-  /// **'버전 1.0.0'**
+  /// **'버전 정보'**
   String get settings_appInfoSubtitle;
 
   /// No description provided for @settings_appDescription.
@@ -1523,6 +1553,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'가족과 함께하는 일상 플래너'**
   String get settings_appDescription;
+
+  /// No description provided for @settings_termsOfServiceTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관'**
+  String get settings_termsOfServiceTitle;
+
+  /// No description provided for @settings_termsOfServiceSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용 약관을 확인하세요'**
+  String get settings_termsOfServiceSubtitle;
+
+  /// No description provided for @settings_privacyPolicyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get settings_privacyPolicyTitle;
+
+  /// No description provided for @settings_privacyPolicySubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리 방침을 확인하세요'**
+  String get settings_privacyPolicySubtitle;
 
   /// No description provided for @settings_helpTitle.
   ///
@@ -6384,6 +6438,84 @@ abstract class AppLocalizations {
   /// **'건너뛰기'**
   String get fridge_frequent_coach_skip;
 
+  /// No description provided for @fridge_coach_fabTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 추가'**
+  String get fridge_coach_fabTitle;
+
+  /// No description provided for @fridge_coach_fabDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.'**
+  String get fridge_coach_fabDesc;
+
+  /// No description provided for @fridge_coach_sectionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소'**
+  String get fridge_coach_sectionTitle;
+
+  /// No description provided for @fridge_coach_sectionDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.'**
+  String get fridge_coach_sectionDesc;
+
+  /// No description provided for @fridge_coach_itemTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 관리'**
+  String get fridge_coach_itemTitle;
+
+  /// No description provided for @fridge_coach_itemDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다'**
+  String get fridge_coach_itemDesc;
+
+  /// No description provided for @fridge_coach_ddayTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 알림'**
+  String get fridge_coach_ddayTitle;
+
+  /// No description provided for @fridge_coach_ddayDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.'**
+  String get fridge_coach_ddayDesc;
+
+  /// No description provided for @fridge_coach_addItemTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 추가'**
+  String get fridge_coach_addItemTitle;
+
+  /// No description provided for @fridge_coach_addItemDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.'**
+  String get fridge_coach_addItemDesc;
+
+  /// No description provided for @fridge_coach_suggestionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 자동 추천'**
+  String get fridge_coach_suggestionTitle;
+
+  /// No description provided for @fridge_coach_suggestionDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목명을 입력하면 서버가 자동으로 유통기한을 추천해줘요.\n추천 결과가 마음에 들지 않으면\n🔍 버튼으로 다른 품목을 기준으로 설정할 수 있어요.'**
+  String get fridge_coach_suggestionDesc;
+
+  /// No description provided for @fridge_coach_skip.
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛰기'**
+  String get fridge_coach_skip;
+
   /// 장바구니 비어 있음
   ///
   /// In ko, this message translates to:
@@ -6479,6 +6611,136 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'개인'**
   String get fridge_group_selector_personal;
+
+  /// 유통기한 추천 칩 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'{keyword} 기준 · {storageType} {days}일 추천'**
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  );
+
+  /// 추천 유통기한 적용 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'추천 적용'**
+  String get fridge_expiry_apply;
+
+  /// 유통기한 직접 입력 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 입력'**
+  String get fridge_expiry_manual;
+
+  /// 다른 기준 품목 선택 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'다른 품목 기준으로 설정'**
+  String get fridge_expiry_change_reference;
+
+  /// 기준 품목 선택 모달 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 기준 품목 선택'**
+  String get fridge_expiry_reference_title;
+
+  /// 기준 품목 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 검색'**
+  String get fridge_expiry_reference_search;
+
+  /// 추천 일수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String fridge_expiry_reference_days(int days);
+
+  /// 기준 품목 검색 결과 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get fridge_expiry_reference_empty;
+
+  /// 유통기한 프리셋 관리 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 프리셋 관리'**
+  String get fridge_preset_management_title;
+
+  /// 앱바 메뉴 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 프리셋 관리'**
+  String get fridge_preset_management_menu;
+
+  /// 기준 품목 선택 시트의 편집 바로가기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'프리셋 편집'**
+  String get fridge_preset_edit_shortcut;
+
+  /// 프리셋 일수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String fridge_preset_days_label(int days);
+
+  /// 그룹 커스텀 프리셋 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'커스텀'**
+  String get fridge_preset_custom_badge;
+
+  /// 프리셋 초기화 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'기본값으로 초기화하시겠습니까?'**
+  String get fridge_preset_reset_confirm;
+
+  /// 프리셋 수정 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 수정'**
+  String get fridge_preset_edit_dialog_title;
+
+  /// 프리셋 등록 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'새 프리셋 등록'**
+  String get fridge_preset_add_dialog_title;
+
+  /// 일수 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 (일)'**
+  String get fridge_preset_days_input_label;
+
+  /// 카테고리 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get fridge_preset_category_input_label;
+
+  /// 보관 방법 선택 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'보관 방법'**
+  String get fridge_preset_storage_type_label;
+
+  /// 프리셋 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'커스텀 설정을 삭제하고 기본값으로 되돌리겠습니까?'**
+  String get fridge_preset_delete_confirm;
+
+  /// 프리셋 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 또는 품목 검색'**
+  String get fridge_preset_search_hint;
 
   /// No description provided for @dashboard_greetingMorning.
   ///
@@ -6581,6 +6843,282 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'즐겨찾기한 지표가 없습니다'**
   String get investment_emptyBookmarks;
+
+  /// No description provided for @investment_screenTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 지표'**
+  String get investment_screenTitle;
+
+  /// No description provided for @investment_bookmarkSection.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기'**
+  String get investment_bookmarkSection;
+
+  /// No description provided for @investment_bookmarkReorderHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'(길게 눌러 순서 변경)'**
+  String get investment_bookmarkReorderHint;
+
+  /// No description provided for @investment_allSection.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 지표'**
+  String get investment_allSection;
+
+  /// No description provided for @investment_noData.
+  ///
+  /// In ko, this message translates to:
+  /// **'지표 데이터가 없습니다'**
+  String get investment_noData;
+
+  /// No description provided for @investment_loadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'데이터를 불러오지 못했습니다'**
+  String get investment_loadError;
+
+  /// No description provided for @investment_retry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get investment_retry;
+
+  /// No description provided for @investment_adminTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'과거 데이터 초기화 (관리자)'**
+  String get investment_adminTooltip;
+
+  /// No description provided for @investment_briefingTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'AI 시황 브리핑'**
+  String get investment_briefingTitle;
+
+  /// No description provided for @investment_briefingError.
+  ///
+  /// In ko, this message translates to:
+  /// **'AI 브리핑 오류: {error}'**
+  String investment_briefingError(String error);
+
+  /// No description provided for @investment_briefingMacro.
+  ///
+  /// In ko, this message translates to:
+  /// **'매크로'**
+  String get investment_briefingMacro;
+
+  /// No description provided for @investment_briefingDomestic.
+  ///
+  /// In ko, this message translates to:
+  /// **'국내 시장'**
+  String get investment_briefingDomestic;
+
+  /// No description provided for @investment_briefingGlobal.
+  ///
+  /// In ko, this message translates to:
+  /// **'글로벌 시장'**
+  String get investment_briefingGlobal;
+
+  /// No description provided for @investment_briefingUpdatedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'업데이트: {time}'**
+  String investment_briefingUpdatedAt(String time);
+
+  /// No description provided for @investment_adminDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'과거 데이터 초기화'**
+  String get investment_adminDialogTitle;
+
+  /// No description provided for @investment_adminDialogDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.'**
+  String get investment_adminDialogDesc;
+
+  /// No description provided for @investment_adminDaysLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'수집 일수 (1~3650)'**
+  String get investment_adminDaysLabel;
+
+  /// No description provided for @investment_adminDaysSuffix.
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get investment_adminDaysSuffix;
+
+  /// No description provided for @investment_adminExecute.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화 실행'**
+  String get investment_adminExecute;
+
+  /// No description provided for @investment_adminResultTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화 완료'**
+  String get investment_adminResultTitle;
+
+  /// No description provided for @investment_adminResultYahoo.
+  ///
+  /// In ko, this message translates to:
+  /// **'Yahoo (주가/환율/원자재)'**
+  String get investment_adminResultYahoo;
+
+  /// No description provided for @investment_adminResultCrypto.
+  ///
+  /// In ko, this message translates to:
+  /// **'암호화폐 (BTC/KRW)'**
+  String get investment_adminResultCrypto;
+
+  /// No description provided for @investment_adminResultBond.
+  ///
+  /// In ko, this message translates to:
+  /// **'한국 채권'**
+  String get investment_adminResultBond;
+
+  /// No description provided for @investment_adminResultGold.
+  ///
+  /// In ko, this message translates to:
+  /// **'국내 금값'**
+  String get investment_adminResultGold;
+
+  /// No description provided for @investment_adminResultCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}건'**
+  String investment_adminResultCount(int count);
+
+  /// No description provided for @investment_adminInitError.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화 실패: {error}'**
+  String investment_adminInitError(String error);
+
+  /// No description provided for @investment_adminLoading.
+  ///
+  /// In ko, this message translates to:
+  /// **'과거 데이터를 수집 중입니다...'**
+  String get investment_adminLoading;
+
+  /// No description provided for @investment_prevPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'전일 종가'**
+  String get investment_prevPrice;
+
+  /// No description provided for @investment_spreadBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'이격률 {value}%'**
+  String investment_spreadBadge(String value);
+
+  /// No description provided for @investment_spreadPremium.
+  ///
+  /// In ko, this message translates to:
+  /// **'국제 환산가 대비 프리미엄'**
+  String get investment_spreadPremium;
+
+  /// No description provided for @investment_spreadDiscount.
+  ///
+  /// In ko, this message translates to:
+  /// **'국제 환산가 대비 디스카운트'**
+  String get investment_spreadDiscount;
+
+  /// No description provided for @investment_chartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'시세 추이'**
+  String get investment_chartTitle;
+
+  /// No description provided for @investment_chartDayChip.
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String investment_chartDayChip(int days);
+
+  /// No description provided for @investment_chartYearChip.
+  ///
+  /// In ko, this message translates to:
+  /// **'1년'**
+  String get investment_chartYearChip;
+
+  /// No description provided for @investment_chartLoadError.
+  ///
+  /// In ko, this message translates to:
+  /// **'차트를 불러올 수 없습니다'**
+  String get investment_chartLoadError;
+
+  /// No description provided for @investment_chartNoData.
+  ///
+  /// In ko, this message translates to:
+  /// **'데이터가 없습니다'**
+  String get investment_chartNoData;
+
+  /// No description provided for @investment_marketClosed.
+  ///
+  /// In ko, this message translates to:
+  /// **'휴장 중 · 마지막 거래일: {date}'**
+  String investment_marketClosed(String date);
+
+  /// No description provided for @investment_spreadChartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이격률 추이'**
+  String get investment_spreadChartTitle;
+
+  /// No description provided for @investment_spreadChartSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'(국제 환산가 대비)'**
+  String get investment_spreadChartSubtitle;
+
+  /// No description provided for @investment_spreadSummaryLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 국제 환산가 대비 {label}'**
+  String investment_spreadSummaryLabel(String label);
+
+  /// No description provided for @investment_spreadPremiumLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄'**
+  String get investment_spreadPremiumLabel;
+
+  /// No description provided for @investment_spreadDiscountLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'디스카운트'**
+  String get investment_spreadDiscountLabel;
+
+  /// No description provided for @investment_coachIndicatorTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 지표'**
+  String get investment_coachIndicatorTitle;
+
+  /// No description provided for @investment_coachIndicatorDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.'**
+  String get investment_coachIndicatorDesc;
+
+  /// No description provided for @investment_coachBookmarkTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기'**
+  String get investment_coachBookmarkTitle;
+
+  /// No description provided for @investment_coachBookmarkDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.'**
+  String get investment_coachBookmarkDesc;
 
   /// No description provided for @householdWidget_groupTooltip.
   ///
@@ -6833,6 +7371,258 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'기타'**
   String get assetWidget_typeOther;
+
+  /// No description provided for @legal_termsOfService.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관'**
+  String get legal_termsOfService;
+
+  /// No description provided for @legal_privacyPolicy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get legal_privacyPolicy;
+
+  /// No description provided for @legal_termsLastUpdated.
+  ///
+  /// In ko, this message translates to:
+  /// **'시행일: 2026년 6월 1일'**
+  String get legal_termsLastUpdated;
+
+  /// No description provided for @legal_termsContact.
+  ///
+  /// In ko, this message translates to:
+  /// **'문의: hmn.corp.dev@gmail.com'**
+  String get legal_termsContact;
+
+  /// No description provided for @legal_agreeToTerms.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관'**
+  String get legal_agreeToTerms;
+
+  /// No description provided for @legal_agreeToPrivacy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get legal_agreeToPrivacy;
+
+  /// No description provided for @legal_required.
+  ///
+  /// In ko, this message translates to:
+  /// **'(필수)'**
+  String get legal_required;
+
+  /// No description provided for @legal_agreeAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 동의'**
+  String get legal_agreeAll;
+
+  /// No description provided for @legal_mustAgreeTerms.
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용약관에 동의해 주세요.'**
+  String get legal_mustAgreeTerms;
+
+  /// No description provided for @legal_mustAgreePrivacy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침에 동의해 주세요.'**
+  String get legal_mustAgreePrivacy;
+
+  /// No description provided for @legal_agreeAgeVerification.
+  ///
+  /// In ko, this message translates to:
+  /// **'만 14세 이상입니다 (필수)'**
+  String get legal_agreeAgeVerification;
+
+  /// No description provided for @legal_mustAgreeAgeVerification.
+  ///
+  /// In ko, this message translates to:
+  /// **'만 14세 이상인지 확인해 주세요.'**
+  String get legal_mustAgreeAgeVerification;
+
+  /// No description provided for @legal_socialLoginConsent.
+  ///
+  /// In ko, this message translates to:
+  /// **'계속하면 서비스 {termsLink} 및 {privacyLink}에 동의하는 것으로 간주합니다.'**
+  String legal_socialLoginConsent(String termsLink, String privacyLink);
+
+  /// No description provided for @legal_terms_section1_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제1조 (목적)'**
+  String get legal_terms_section1_title;
+
+  /// No description provided for @legal_terms_section1_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'본 약관은 에이치엠엔 코퍼레이션(HMN Corporation)이 제공하는 Family Planner 서비스(이하 \"서비스\")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.'**
+  String get legal_terms_section1_body;
+
+  /// No description provided for @legal_terms_section2_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제2조 (서비스의 내용)'**
+  String get legal_terms_section2_title;
+
+  /// No description provided for @legal_terms_section2_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회사는 회원에게 다음과 같은 서비스를 제공합니다.\n• 가족 그룹 기반의 캘린더 및 할 일 공유\n• 구성원 간 자산 관리 및 내역 공유\n• 육아 보상(칭찬 스티커 등) 관리 시스템\n• AI 에이전트를 통한 대화, 일정 관리, 거시 경제/시장 브리핑 서비스\n• 기타 회사가 추가로 개발하거나 제휴 계약 등을 통해 제공하는 서비스'**
+  String get legal_terms_section2_body;
+
+  /// No description provided for @legal_terms_section3_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제3조 (회원의 의무)'**
+  String get legal_terms_section3_title;
+
+  /// No description provided for @legal_terms_section3_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'• 회원은 본 서비스의 AI 에이전트에게 불법적이거나 타인에게 위해를 가할 수 있는 프롬프트를 입력해서는 안 됩니다.\n• 회원은 가족 그룹 초대 코드 및 계정 정보를 안전하게 관리할 책임이 있습니다.\n• 서비스 내 자산 관리 및 시장 브리핑 기능은 참고용 데이터 제공을 목적으로 하며, 회사는 이를 통한 투자 결과에 대해 법적 책임을 지지 않습니다.'**
+  String get legal_terms_section3_body;
+
+  /// No description provided for @legal_terms_section4_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제4조 (게시물의 저작권 및 관리)'**
+  String get legal_terms_section4_title;
+
+  /// No description provided for @legal_terms_section4_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'• 회원이 서비스 내에 게시한 정보(채팅, 일정, 자산 정보 등)의 저작권은 해당 회원에게 있습니다.\n• 회사는 회원의 게시물을 서비스 운영, 개선(AI 기능 고도화 등), 홍보의 목적으로만 활용하며, 개인을 식별할 수 없는 형태로 비식별화하여 사용합니다.'**
+  String get legal_terms_section4_body;
+
+  /// No description provided for @legal_terms_section5_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제5조 (서비스의 중단 및 변경)'**
+  String get legal_terms_section5_title;
+
+  /// No description provided for @legal_terms_section5_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스의 전부 또는 일부를 변경하거나 중단할 수 있으며, 이 경우 사전에 공지합니다.'**
+  String get legal_terms_section5_body;
+
+  /// No description provided for @legal_terms_section6_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제6조 (책임 제한)'**
+  String get legal_terms_section6_title;
+
+  /// No description provided for @legal_terms_section6_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회사는 천재지변, 서버 제공 업체의 장애, 제3자 AI API 서비스의 장애 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.'**
+  String get legal_terms_section6_body;
+
+  /// No description provided for @legal_terms_section7_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'제7조 (시행일)'**
+  String get legal_terms_section7_title;
+
+  /// No description provided for @legal_terms_section7_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'본 약관은 2026년 6월 1일부터 적용됩니다.'**
+  String get legal_terms_section7_body;
+
+  /// No description provided for @legal_privacy_section1_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'1. 개인정보의 처리 목적'**
+  String get legal_privacy_section1_title;
+
+  /// No description provided for @legal_privacy_section1_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'에이치엠엔 코퍼레이션(HMN Corporation)(이하 \'회사\')은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n• 회원 가입 및 관리, 가족 그룹(초대 코드 등) 식별\n• 서비스 제공 (캘린더, 할 일, 자산 관리, 육아 보상 시스템 등)\n• AI 에이전트(챗봇, 브리핑 등) 서비스 제공 및 품질 향상\n• 신규 서비스 개발 및 맞춤 서비스 제공'**
+  String get legal_privacy_section1_body;
+
+  /// No description provided for @legal_privacy_section2_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'2. 처리하는 개인정보 항목'**
+  String get legal_privacy_section2_title;
+
+  /// No description provided for @legal_privacy_section2_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회사는 서비스 제공을 위해 다음의 개인정보 항목을 처리하고 있습니다.\n• 필수항목: 이메일 주소, 비밀번호, 이름(또는 닉네임), 프로필 이미지\n• 서비스 이용 과정에서 수집되는 정보: 캘린더 일정, 할 일 목록, 자산 데이터, 가족 그룹 정보, AI와의 채팅 내역, 서비스 이용 기록, 기기 정보'**
+  String get legal_privacy_section2_body;
+
+  /// No description provided for @legal_privacy_section3_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'3. 개인정보의 제3자 제공 및 위탁'**
+  String get legal_privacy_section3_title;
+
+  /// No description provided for @legal_privacy_section3_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회사는 원활한 AI 서비스 제공(문맥 분석, 브리핑 생성 등)을 위해 입력된 데이터의 일부를 외부 AI 모델 API(예: OpenAI, Anthropic, Google 등)에 전송할 수 있습니다.\n단, 이 데이터는 서비스 제공 목적으로만 활용되며 모델 학습에 사용되지 않도록 조치합니다.'**
+  String get legal_privacy_section3_body;
+
+  /// No description provided for @legal_privacy_section4_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'4. 개인정보의 파기'**
+  String get legal_privacy_section4_title;
+
+  /// No description provided for @legal_privacy_section4_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'회사는 원칙적으로 개인정보 처리 목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다.\n• 파기절차: 이용자가 회원탈퇴를 요청하는 경우, 수집된 정보는 즉시 또는 법령에 따른 보존 기간 경과 후 파기됩니다.\n• 파기방법: 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용합니다.'**
+  String get legal_privacy_section4_body;
+
+  /// No description provided for @legal_privacy_section5_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'5. 정보주체의 권리 및 행사 방법'**
+  String get legal_privacy_section5_title;
+
+  /// No description provided for @legal_privacy_section5_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보의 수집 및 이용 동의를 철회할 수 있습니다.'**
+  String get legal_privacy_section5_body;
+
+  /// No description provided for @legal_privacy_section6_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'6. 개인정보 보호책임자'**
+  String get legal_privacy_section6_title;
+
+  /// No description provided for @legal_privacy_section6_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'성명: 유영진\n이메일: hmn.corp.dev@gmail.com'**
+  String get legal_privacy_section6_body;
+
+  /// No description provided for @legal_privacy_section7_title.
+  ///
+  /// In ko, this message translates to:
+  /// **'7. 시행일'**
+  String get legal_privacy_section7_title;
+
+  /// No description provided for @legal_privacy_section7_body.
+  ///
+  /// In ko, this message translates to:
+  /// **'본 개인정보 처리방침은 2026년 6월 1일부터 적용됩니다.'**
+  String get legal_privacy_section7_body;
+
+  /// No description provided for @legal_privacyLastUpdated.
+  ///
+  /// In ko, this message translates to:
+  /// **'시행일: 2026년 6월 1일'**
+  String get legal_privacyLastUpdated;
 }
 
 class _AppLocalizationsDelegate

@@ -153,7 +153,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
           TextButton(
             onPressed: () =>
                 ref.read(homeTabNavigationProvider.notifier).state = 'calendar',
-            child: const Text('전체보기'),
+            child: Text(AppLocalizations.of(context)!.common_view_all),
           ),
         ],
       ),
@@ -204,7 +204,8 @@ class _ScheduleItem extends ConsumerWidget {
       final dt = task.scheduledAt!;
       final hhmm =
           '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-      timeText = showDate ? '${dt.month}/${dt.day} $hhmm' : hhmm;
+      final dateStr = AppLocalizations.of(context)!.common_date_format(dt.month, dt.day);
+      timeText = showDate ? '$dateStr $hhmm' : hhmm;
     }
 
     return Padding(

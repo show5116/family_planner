@@ -30,6 +30,22 @@
   "common_undo": "되돌리기",
   "common_add_to_list": "목록에 담기",
   "@common_add_to_list": { "description": "목록에 담기 버튼" },
+  "common_view_all": "전체보기",
+  "@common_view_all": { "description": "전체보기 버튼" },
+  "memo_filter_personal_only": "개인 메모만",
+  "@memo_filter_personal_only": { "description": "메모 필터: 개인 메모만 보기" },
+  "common_all_groups": "전체 그룹",
+  "@common_all_groups": { "description": "전체 그룹 선택 옵션" },
+  "schedule_filter_group_schedule": "그룹 일정",
+  "@schedule_filter_group_schedule": { "description": "일정/할일 필터 시트의 그룹 일정 섹션 제목" },
+  "common_date_format": "{month}월 {day}일",
+  "@common_date_format": {
+    "description": "날짜 표시 형식 (월, 일)",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "cart_unsaved_changes": "저장되지 않은 변경사항이 있습니다",
   "common_next": "다음",
   "common_back": "이전",
@@ -267,8 +283,12 @@
   "settings_notificationSubtitle": "알림 수신 설정을 변경하세요",
   "settings_information": "정보",
   "settings_appInfoTitle": "앱 정보",
-  "settings_appInfoSubtitle": "버전 1.0.0",
+  "settings_appInfoSubtitle": "버전 정보",
   "settings_appDescription": "가족과 함께하는 일상 플래너",
+  "settings_termsOfServiceTitle": "서비스 이용약관",
+  "settings_termsOfServiceSubtitle": "서비스 이용 약관을 확인하세요",
+  "settings_privacyPolicyTitle": "개인정보 처리방침",
+  "settings_privacyPolicySubtitle": "개인정보 처리 방침을 확인하세요",
   "settings_helpTitle": "도움말",
   "settings_helpSubtitle": "사용법을 확인하세요",
   "settings_user": "사용자",
@@ -1523,6 +1543,21 @@
   "fridge_frequent_coach_addToCartTitle": "장바구니에 바로 담기",
   "fridge_frequent_coach_addToCartDesc": "버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.",
   "fridge_frequent_coach_skip": "건너뛰기",
+
+  "fridge_coach_fabTitle": "보관소 추가",
+  "fridge_coach_fabDesc": "냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.",
+  "fridge_coach_sectionTitle": "보관소",
+  "fridge_coach_sectionDesc": "헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.",
+  "fridge_coach_itemTitle": "품목 관리",
+  "fridge_coach_itemDesc": "• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다",
+  "fridge_coach_ddayTitle": "유통기한 알림",
+  "fridge_coach_ddayDesc": "품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.",
+  "fridge_coach_addItemTitle": "품목 추가",
+  "fridge_coach_addItemDesc": "보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.",
+  "fridge_coach_suggestionTitle": "유통기한 자동 추천",
+  "fridge_coach_suggestionDesc": "품목명을 입력하면 서버가 자동으로 유통기한을 추천해줘요.\n추천 결과가 마음에 들지 않으면\n🔍 버튼으로 다른 품목을 기준으로 설정할 수 있어요.",
+  "fridge_coach_skip": "건너뛰기",
+
   "fridge_cart_empty": "장바구니가 비어 있습니다",
   "@fridge_cart_empty": { "description": "장바구니 비어 있음" },
   "fridge_cart_add_item": "품목 추가",
@@ -1556,6 +1591,63 @@
   "fridge_group_selector_personal": "개인",
   "@fridge_group_selector_personal": { "description": "개인 모드" },
 
+  "fridge_expiry_suggestion_label": "{keyword} 기준 · {storageType} {days}일 추천",
+  "@fridge_expiry_suggestion_label": {
+    "description": "유통기한 추천 칩 텍스트",
+    "placeholders": {
+      "keyword": { "type": "String" },
+      "storageType": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "fridge_expiry_apply": "추천 적용",
+  "@fridge_expiry_apply": { "description": "추천 유통기한 적용 버튼" },
+  "fridge_expiry_manual": "직접 입력",
+  "@fridge_expiry_manual": { "description": "유통기한 직접 입력 버튼" },
+  "fridge_expiry_change_reference": "다른 품목 기준으로 설정",
+  "@fridge_expiry_change_reference": { "description": "다른 기준 품목 선택 버튼" },
+  "fridge_expiry_reference_title": "유통기한 기준 품목 선택",
+  "@fridge_expiry_reference_title": { "description": "기준 품목 선택 모달 제목" },
+  "fridge_expiry_reference_search": "품목 검색",
+  "@fridge_expiry_reference_search": { "description": "기준 품목 검색 힌트" },
+  "fridge_expiry_reference_days": "{days}일",
+  "@fridge_expiry_reference_days": {
+    "description": "추천 일수 표시",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fridge_expiry_reference_empty": "검색 결과가 없습니다",
+  "@fridge_expiry_reference_empty": { "description": "기준 품목 검색 결과 없음" },
+
+  "fridge_preset_management_title": "유통기한 프리셋 관리",
+  "@fridge_preset_management_title": { "description": "유통기한 프리셋 관리 화면 제목" },
+  "fridge_preset_management_menu": "유통기한 프리셋 관리",
+  "@fridge_preset_management_menu": { "description": "앱바 메뉴 항목" },
+  "fridge_preset_edit_shortcut": "프리셋 편집",
+  "@fridge_preset_edit_shortcut": { "description": "기준 품목 선택 시트의 편집 바로가기 버튼" },
+  "fridge_preset_days_label": "{days}일",
+  "@fridge_preset_days_label": {
+    "description": "프리셋 일수 표시",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fridge_preset_custom_badge": "커스텀",
+  "@fridge_preset_custom_badge": { "description": "그룹 커스텀 프리셋 배지" },
+  "fridge_preset_reset_confirm": "기본값으로 초기화하시겠습니까?",
+  "@fridge_preset_reset_confirm": { "description": "프리셋 초기화 확인 메시지" },
+  "fridge_preset_edit_dialog_title": "유통기한 수정",
+  "@fridge_preset_edit_dialog_title": { "description": "프리셋 수정 다이얼로그 제목" },
+  "fridge_preset_add_dialog_title": "새 프리셋 등록",
+  "@fridge_preset_add_dialog_title": { "description": "프리셋 등록 다이얼로그 제목" },
+  "fridge_preset_days_input_label": "유통기한 (일)",
+  "@fridge_preset_days_input_label": { "description": "일수 입력 필드 라벨" },
+  "fridge_preset_category_input_label": "카테고리",
+  "@fridge_preset_category_input_label": { "description": "카테고리 입력 필드 라벨" },
+  "fridge_preset_storage_type_label": "보관 방법",
+  "@fridge_preset_storage_type_label": { "description": "보관 방법 선택 라벨" },
+  "fridge_preset_delete_confirm": "커스텀 설정을 삭제하고 기본값으로 되돌리겠습니까?",
+  "@fridge_preset_delete_confirm": { "description": "프리셋 삭제 확인 메시지" },
+  "fridge_preset_search_hint": "카테고리 또는 품목 검색",
+  "@fridge_preset_search_hint": { "description": "프리셋 검색 힌트" },
+
   "dashboard_greetingMorning": "좋은 아침입니다",
   "dashboard_greetingAfternoon": "좋은 오후입니다",
   "dashboard_greetingEvening": "좋은 저녁입니다",
@@ -1575,6 +1667,81 @@
   "investment_widgetTitle": "투자 지표",
   "investment_errorMessage": "데이터를 불러올 수 없습니다",
   "investment_emptyBookmarks": "즐겨찾기한 지표가 없습니다",
+
+  "investment_screenTitle": "투자 지표",
+  "investment_bookmarkSection": "즐겨찾기",
+  "investment_bookmarkReorderHint": "(길게 눌러 순서 변경)",
+  "investment_allSection": "전체 지표",
+  "investment_noData": "지표 데이터가 없습니다",
+  "investment_loadError": "데이터를 불러오지 못했습니다",
+  "investment_retry": "다시 시도",
+  "investment_adminTooltip": "과거 데이터 초기화 (관리자)",
+
+  "investment_briefingTitle": "AI 시황 브리핑",
+  "investment_briefingError": "AI 브리핑 오류: {error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "매크로",
+  "investment_briefingDomestic": "국내 시장",
+  "investment_briefingGlobal": "글로벌 시장",
+  "investment_briefingUpdatedAt": "업데이트: {time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "과거 데이터 초기화",
+  "investment_adminDialogDesc": "Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.",
+  "investment_adminDaysLabel": "수집 일수 (1~3650)",
+  "investment_adminDaysSuffix": "일",
+  "investment_adminExecute": "초기화 실행",
+  "investment_adminResultTitle": "초기화 완료",
+  "investment_adminResultYahoo": "Yahoo (주가/환율/원자재)",
+  "investment_adminResultCrypto": "암호화폐 (BTC/KRW)",
+  "investment_adminResultBond": "한국 채권",
+  "investment_adminResultGold": "국내 금값",
+  "investment_adminResultCount": "{count}건",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "초기화 실패: {error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "과거 데이터를 수집 중입니다...",
+
+  "investment_prevPrice": "전일 종가",
+  "investment_spreadBadge": "이격률 {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "국제 환산가 대비 프리미엄",
+  "investment_spreadDiscount": "국제 환산가 대비 디스카운트",
+  "investment_chartTitle": "시세 추이",
+  "investment_chartDayChip": "{days}일",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1년",
+  "investment_chartLoadError": "차트를 불러올 수 없습니다",
+  "investment_chartNoData": "데이터가 없습니다",
+  "investment_marketClosed": "휴장 중 · 마지막 거래일: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "이격률 추이",
+  "investment_spreadChartSubtitle": "(국제 환산가 대비)",
+  "investment_spreadSummaryLabel": "현재 국제 환산가 대비 {label}",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "프리미엄",
+  "investment_spreadDiscountLabel": "디스카운트",
+
+  "investment_coachIndicatorTitle": "투자 지표",
+  "investment_coachIndicatorDesc": "주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.",
+  "investment_coachBookmarkTitle": "즐겨찾기",
+  "investment_coachBookmarkDesc": "별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.",
 
   "householdWidget_groupTooltip": "그룹 선택",
   "householdWidget_incomeLabel": "{month} 입금",
@@ -1645,5 +1812,69 @@
   "assetWidget_typeFund": "펀드",
   "assetWidget_typeRealEstate": "부동산",
   "assetWidget_typeGold": "실물 금",
-  "assetWidget_typeOther": "기타"
+  "assetWidget_typeOther": "기타",
+
+  "legal_termsOfService": "서비스 이용약관",
+  "legal_privacyPolicy": "개인정보 처리방침",
+  "legal_termsLastUpdated": "시행일: 2026년 6월 1일",
+  "legal_termsContact": "문의: hmn.corp.dev@gmail.com",
+  "legal_agreeToTerms": "서비스 이용약관",
+  "legal_agreeToPrivacy": "개인정보 처리방침",
+  "legal_required": "(필수)",
+  "legal_agreeAll": "전체 동의",
+  "legal_mustAgreeTerms": "서비스 이용약관에 동의해 주세요.",
+  "legal_mustAgreePrivacy": "개인정보 처리방침에 동의해 주세요.",
+  "legal_agreeAgeVerification": "만 14세 이상입니다 (필수)",
+  "legal_mustAgreeAgeVerification": "만 14세 이상인지 확인해 주세요.",
+  "legal_socialLoginConsent": "계속하면 서비스 {termsLink} 및 {privacyLink}에 동의하는 것으로 간주합니다.",
+  "@legal_socialLoginConsent": {
+    "placeholders": {
+      "termsLink": { "type": "String" },
+      "privacyLink": { "type": "String" }
+    }
+  },
+
+  "legal_terms_section1_title": "제1조 (목적)",
+  "legal_terms_section1_body": "본 약관은 에이치엠엔 코퍼레이션(HMN Corporation)이 제공하는 Family Planner 서비스(이하 \"서비스\")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.",
+
+  "legal_terms_section2_title": "제2조 (서비스의 내용)",
+  "legal_terms_section2_body": "회사는 회원에게 다음과 같은 서비스를 제공합니다.\n• 가족 그룹 기반의 캘린더 및 할 일 공유\n• 구성원 간 자산 관리 및 내역 공유\n• 육아 보상(칭찬 스티커 등) 관리 시스템\n• AI 에이전트를 통한 대화, 일정 관리, 거시 경제/시장 브리핑 서비스\n• 기타 회사가 추가로 개발하거나 제휴 계약 등을 통해 제공하는 서비스",
+
+  "legal_terms_section3_title": "제3조 (회원의 의무)",
+  "legal_terms_section3_body": "• 회원은 본 서비스의 AI 에이전트에게 불법적이거나 타인에게 위해를 가할 수 있는 프롬프트를 입력해서는 안 됩니다.\n• 회원은 가족 그룹 초대 코드 및 계정 정보를 안전하게 관리할 책임이 있습니다.\n• 서비스 내 자산 관리 및 시장 브리핑 기능은 참고용 데이터 제공을 목적으로 하며, 회사는 이를 통한 투자 결과에 대해 법적 책임을 지지 않습니다.",
+
+  "legal_terms_section4_title": "제4조 (게시물의 저작권 및 관리)",
+  "legal_terms_section4_body": "• 회원이 서비스 내에 게시한 정보(채팅, 일정, 자산 정보 등)의 저작권은 해당 회원에게 있습니다.\n• 회사는 회원의 게시물을 서비스 운영, 개선(AI 기능 고도화 등), 홍보의 목적으로만 활용하며, 개인을 식별할 수 없는 형태로 비식별화하여 사용합니다.",
+
+  "legal_terms_section5_title": "제5조 (서비스의 중단 및 변경)",
+  "legal_terms_section5_body": "회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스의 전부 또는 일부를 변경하거나 중단할 수 있으며, 이 경우 사전에 공지합니다.",
+
+  "legal_terms_section6_title": "제6조 (책임 제한)",
+  "legal_terms_section6_body": "회사는 천재지변, 서버 제공 업체의 장애, 제3자 AI API 서비스의 장애 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.",
+
+  "legal_terms_section7_title": "제7조 (시행일)",
+  "legal_terms_section7_body": "본 약관은 2026년 6월 1일부터 적용됩니다.",
+
+  "legal_privacy_section1_title": "1. 개인정보의 처리 목적",
+  "legal_privacy_section1_body": "에이치엠엔 코퍼레이션(HMN Corporation)(이하 '회사')은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n• 회원 가입 및 관리, 가족 그룹(초대 코드 등) 식별\n• 서비스 제공 (캘린더, 할 일, 자산 관리, 육아 보상 시스템 등)\n• AI 에이전트(챗봇, 브리핑 등) 서비스 제공 및 품질 향상\n• 신규 서비스 개발 및 맞춤 서비스 제공",
+
+  "legal_privacy_section2_title": "2. 처리하는 개인정보 항목",
+  "legal_privacy_section2_body": "회사는 서비스 제공을 위해 다음의 개인정보 항목을 처리하고 있습니다.\n• 필수항목: 이메일 주소, 비밀번호, 이름(또는 닉네임), 프로필 이미지\n• 서비스 이용 과정에서 수집되는 정보: 캘린더 일정, 할 일 목록, 자산 데이터, 가족 그룹 정보, AI와의 채팅 내역, 서비스 이용 기록, 기기 정보",
+
+  "legal_privacy_section3_title": "3. 개인정보의 제3자 제공 및 위탁",
+  "legal_privacy_section3_body": "회사는 원활한 AI 서비스 제공(문맥 분석, 브리핑 생성 등)을 위해 입력된 데이터의 일부를 외부 AI 모델 API(예: OpenAI, Anthropic, Google 등)에 전송할 수 있습니다.\n단, 이 데이터는 서비스 제공 목적으로만 활용되며 모델 학습에 사용되지 않도록 조치합니다.",
+
+  "legal_privacy_section4_title": "4. 개인정보의 파기",
+  "legal_privacy_section4_body": "회사는 원칙적으로 개인정보 처리 목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다.\n• 파기절차: 이용자가 회원탈퇴를 요청하는 경우, 수집된 정보는 즉시 또는 법령에 따른 보존 기간 경과 후 파기됩니다.\n• 파기방법: 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용합니다.",
+
+  "legal_privacy_section5_title": "5. 정보주체의 권리 및 행사 방법",
+  "legal_privacy_section5_body": "이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보의 수집 및 이용 동의를 철회할 수 있습니다.",
+
+  "legal_privacy_section6_title": "6. 개인정보 보호책임자",
+  "legal_privacy_section6_body": "성명: 유영진\n이메일: hmn.corp.dev@gmail.com",
+
+  "legal_privacy_section7_title": "7. 시행일",
+  "legal_privacy_section7_body": "본 개인정보 처리방침은 2026년 6월 1일부터 적용됩니다.",
+
+  "legal_privacyLastUpdated": "시행일: 2026년 6월 1일"
 }

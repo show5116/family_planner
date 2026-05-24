@@ -692,6 +692,67 @@ class BulkUpdateFridgeItemDto {
       };
 }
 
+
+// ── ExpiryPresetModel ─────────────────────────────────────────────────────────
+// API 응답: { category, storageType(nullable), days, keywords(nullable), isCustom, customPresetId(nullable) }
+
+class ExpiryPresetModel {
+  final String category;
+  final StorageType? storageType; // null = 보관방식 무관
+  final int days;
+  final List<String> keywords; // 로컬 매칭용 키워드 목록
+  final bool isCustom;
+  final String? customPresetId; // 커스텀인 경우에만 존재 (DELETE 시 사용)
+
+  const ExpiryPresetModel({
+    required this.category,
+    this.storageType,
+    required this.days,
+    this.keywords = const [],
+    required this.isCustom,
+    this.customPresetId,
+  });
+
+  factory ExpiryPresetModel.fromJson(Map<String, dynamic> json) {
+    final storageTypeRaw = json['storageType'];
+    return ExpiryPresetModel(
+      category: json['category'] as String,
+      storageType: storageTypeRaw != null
+          ? _parseStorageType(storageTypeRaw as String)
+          : null,
+      days: (json['days'] as num).toInt(),
+      keywords: (json['keywords'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      isCustom: json['isCustom'] as bool,
+      customPresetId: json['customPresetId'] as String?,
+    );
+  }
+}
+
+class UpsertExpiryPresetDto {
+  final String groupId;
+  final String category;
+  final StorageType? storageType;
+  final int customDays;
+
+  const UpsertExpiryPresetDto({
+    required this.groupId,
+    required this.category,
+    this.storageType,
+    required this.customDays,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'groupId': groupId,
+        'category': category,
+        'storageType':
+            storageType != null ? storageTypeToString(storageType!) : null,
+        'customDays': customDays,
+      };
+}
+
 /// 장보기 완료 시 냉장고로 이관할 품목
 class TransferItemDto {
   final String cartItemId;

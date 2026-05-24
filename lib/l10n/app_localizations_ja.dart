@@ -66,6 +66,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_add_to_list => 'リストに追加';
 
   @override
+  String get common_view_all => 'すべて見る';
+
+  @override
+  String get memo_filter_personal_only => '個人メモのみ';
+
+  @override
+  String get common_all_groups => 'すべてのグループ';
+
+  @override
+  String get schedule_filter_group_schedule => 'グループ予定';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month月$day日';
+  }
+
+  @override
   String get cart_unsaved_changes => '未保存の変更があります';
 
   @override
@@ -724,10 +741,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_appInfoTitle => 'アプリ情報';
 
   @override
-  String get settings_appInfoSubtitle => 'バージョン 1.0.0';
+  String get settings_appInfoSubtitle => 'バージョン情報';
 
   @override
   String get settings_appDescription => '家族と一緒に日常を管理するプランナー';
+
+  @override
+  String get settings_termsOfServiceTitle => '利用規約';
+
+  @override
+  String get settings_termsOfServiceSubtitle => '利用規約を確認する';
+
+  @override
+  String get settings_privacyPolicyTitle => 'プライバシーポリシー';
+
+  @override
+  String get settings_privacyPolicySubtitle => 'プライバシーポリシーを確認する';
 
   @override
   String get settings_helpTitle => 'ヘルプ';
@@ -3249,6 +3278,51 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_frequent_coach_skip => 'スキップ';
 
   @override
+  String get fridge_coach_fabTitle => '保管場所を追加';
+
+  @override
+  String get fridge_coach_fabDesc =>
+      '冷蔵庫、冷凍室、パントリーなど保管場所を追加できます。\n+ボタンを押して作成してみましょう。';
+
+  @override
+  String get fridge_coach_sectionTitle => '保管場所';
+
+  @override
+  String get fridge_coach_sectionDesc =>
+      'ヘッダーをタップして開閉できます。\n右側の⋮メニューで編集・削除ができます。';
+
+  @override
+  String get fridge_coach_itemTitle => '食材管理';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• タップで名前・消費期限・メモを編集できます\n• ±ボタンで数量を調整できます\n• 左スワイプで削除マークが付きます\n• 変更後は保存ボタンを押してください';
+
+  @override
+  String get fridge_coach_ddayTitle => '消費期限アラート';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      '消費期限を登録すると残り日数が表示されます。\n• 青：余裕あり\n• オレンジ：3日以内\n• 赤：当日または期限切れ\n設定した日前にプッシュ通知が届きます。';
+
+  @override
+  String get fridge_coach_addItemTitle => '食材を追加';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      '保管場所の右側の+ボタンで追加できます。\n複数の食材を一度に登録でき、\n消費期限・数量・単位・メモも入力できます。';
+
+  @override
+  String get fridge_coach_suggestionTitle => '消費期限の自動提案';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      '食材名を入力すると消費期限が自動で提案されます。\n提案が合わない場合は\n🔍ボタンで別の食材を基準にできます。';
+
+  @override
+  String get fridge_coach_skip => 'スキップ';
+
+  @override
   String get fridge_cart_empty => 'カートが空です';
 
   @override
@@ -3297,6 +3371,79 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '個人';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '$keyword基準 · $storageType $days日推奨';
+  }
+
+  @override
+  String get fridge_expiry_apply => '推奨を適用';
+
+  @override
+  String get fridge_expiry_manual => '手動入力';
+
+  @override
+  String get fridge_expiry_change_reference => '別の品目を基準にする';
+
+  @override
+  String get fridge_expiry_reference_title => '基準品目を選択';
+
+  @override
+  String get fridge_expiry_reference_search => '品目を検索';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => '検索結果がありません';
+
+  @override
+  String get fridge_preset_management_title => '賞味期限プリセット管理';
+
+  @override
+  String get fridge_preset_management_menu => '賞味期限プリセット管理';
+
+  @override
+  String get fridge_preset_edit_shortcut => 'プリセット編集';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => 'カスタム';
+
+  @override
+  String get fridge_preset_reset_confirm => 'デフォルトにリセットしますか？';
+
+  @override
+  String get fridge_preset_edit_dialog_title => '賞味期限を編集';
+
+  @override
+  String get fridge_preset_add_dialog_title => '新規プリセット登録';
+
+  @override
+  String get fridge_preset_days_input_label => '賞味期限（日）';
+
+  @override
+  String get fridge_preset_category_input_label => 'カテゴリ';
+
+  @override
+  String get fridge_preset_storage_type_label => '保管方法';
+
+  @override
+  String get fridge_preset_delete_confirm => 'カスタム設定を削除してデフォルトに戻しますか？';
+
+  @override
+  String get fridge_preset_search_hint => 'カテゴリまたは品目を検索';
 
   @override
   String get dashboard_greetingMorning => 'おはようございます';
@@ -3348,6 +3495,163 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get investment_emptyBookmarks => 'お気に入りの指標がありません';
+
+  @override
+  String get investment_screenTitle => '投資指標';
+
+  @override
+  String get investment_bookmarkSection => 'お気に入り';
+
+  @override
+  String get investment_bookmarkReorderHint => '（長押しで並べ替え）';
+
+  @override
+  String get investment_allSection => '全指標';
+
+  @override
+  String get investment_noData => '指標データがありません';
+
+  @override
+  String get investment_loadError => 'データを読み込めませんでした';
+
+  @override
+  String get investment_retry => '再試行';
+
+  @override
+  String get investment_adminTooltip => '過去データ初期化（管理者）';
+
+  @override
+  String get investment_briefingTitle => 'AI市況ブリーフィング';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AIブリーフィングエラー: $error';
+  }
+
+  @override
+  String get investment_briefingMacro => 'マクロ';
+
+  @override
+  String get investment_briefingDomestic => '国内市場';
+
+  @override
+  String get investment_briefingGlobal => 'グローバル市場';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return '更新: $time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => '過去データ初期化';
+
+  @override
+  String get investment_adminDialogDesc =>
+      'Yahoo/CoinGecko/BOKから過去の相場を収集しDBに保存します。\n時間がかかる場合があります。';
+
+  @override
+  String get investment_adminDaysLabel => '収集日数 (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => '日';
+
+  @override
+  String get investment_adminExecute => '初期化実行';
+
+  @override
+  String get investment_adminResultTitle => '初期化完了';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo（株価/為替/商品）';
+
+  @override
+  String get investment_adminResultCrypto => '暗号通貨（BTC/KRW）';
+
+  @override
+  String get investment_adminResultBond => '韓国債券';
+
+  @override
+  String get investment_adminResultGold => '国内金価格';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count件';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return '初期化失敗: $error';
+  }
+
+  @override
+  String get investment_adminLoading => '過去データを収集中...';
+
+  @override
+  String get investment_prevPrice => '前日終値';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return '乖離率 $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => '国際換算価格比プレミアム';
+
+  @override
+  String get investment_spreadDiscount => '国際換算価格比ディスカウント';
+
+  @override
+  String get investment_chartTitle => '相場推移';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get investment_chartYearChip => '1年';
+
+  @override
+  String get investment_chartLoadError => 'チャートを読み込めません';
+
+  @override
+  String get investment_chartNoData => 'データがありません';
+
+  @override
+  String investment_marketClosed(String date) {
+    return '休場中・最終取引日: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => '乖離率推移';
+
+  @override
+  String get investment_spreadChartSubtitle => '（国際換算価格比）';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return '現在国際換算価格比 $label';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => 'プレミアム';
+
+  @override
+  String get investment_spreadDiscountLabel => 'ディスカウント';
+
+  @override
+  String get investment_coachIndicatorTitle => '投資指標';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      '主要株価指数、為替、商品、暗号通貨など\nリアルタイム指標を一目で確認できます。\nタップで詳細チャートと過去の推移を表示。';
+
+  @override
+  String get investment_coachBookmarkTitle => 'お気に入り';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      '星マークをタップしてお気に入りに追加。\nお気に入りはリスト上部に固定され、\nホームダッシュボードウィジェットで確認できます。';
 
   @override
   String get householdWidget_groupTooltip => 'グループ選択';
@@ -3492,4 +3796,144 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get assetWidget_typeOther => 'その他';
+
+  @override
+  String get legal_termsOfService => '利用規約';
+
+  @override
+  String get legal_privacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get legal_termsLastUpdated => '施行日: 2026年6月1日';
+
+  @override
+  String get legal_termsContact => 'お問い合わせ: hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_agreeToTerms => '利用規約';
+
+  @override
+  String get legal_agreeToPrivacy => 'プライバシーポリシー';
+
+  @override
+  String get legal_required => '(必須)';
+
+  @override
+  String get legal_agreeAll => 'すべてに同意';
+
+  @override
+  String get legal_mustAgreeTerms => '利用規約に同意してください。';
+
+  @override
+  String get legal_mustAgreePrivacy => 'プライバシーポリシーに同意してください。';
+
+  @override
+  String get legal_agreeAgeVerification => '14歳以上です（必須）';
+
+  @override
+  String get legal_mustAgreeAgeVerification => '14歳以上であることを確認してください。';
+
+  @override
+  String legal_socialLoginConsent(String termsLink, String privacyLink) {
+    return '続けることで、$termsLinkおよび$privacyLinkに同意したものとみなされます。';
+  }
+
+  @override
+  String get legal_terms_section1_title => '第1条（目的）';
+
+  @override
+  String get legal_terms_section1_body =>
+      '本規約は、エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）が提供するFamily Plannerサービス（以下「サービス」）の利用に関して、会社と会員間の権利・義務および責任事項を定めることを目的とします。';
+
+  @override
+  String get legal_terms_section2_title => '第2条（サービスの内容）';
+
+  @override
+  String get legal_terms_section2_body =>
+      '会社は会員に以下のサービスを提供します：\n• 家族グループ単位のカレンダーおよびタスク共有\n• メンバー間の資産管理および履歴共有\n• 育児報酬（ほめシール等）管理システム\n• AIエージェントを通じた会話、スケジュール管理、マクロ経済/市場ブリーフィングサービス\n• その他会社が追加開発または提携契約等を通じて提供するサービス';
+
+  @override
+  String get legal_terms_section3_title => '第3条（会員の義務）';
+
+  @override
+  String get legal_terms_section3_body =>
+      '• 会員はサービスのAIエージェントに対して、違法または他者に危害を加えるプロンプトを入力してはなりません。\n• 会員は家族グループの招待コードおよびアカウント情報を安全に管理する責任を負います。\n• サービス内の資産管理および市場ブリーフィング機能は参考データの提供を目的としており、会社はこれによる投資結果について法的責任を負いません。';
+
+  @override
+  String get legal_terms_section4_title => '第4条（投稿物の著作権および管理）';
+
+  @override
+  String get legal_terms_section4_body =>
+      '• 会員がサービス内に投稿した情報（チャット、スケジュール、資産情報等）の著作権は当該会員に帰属します。\n• 会社は会員の投稿物をサービス運営・改善（AI機能高度化等）・広報目的にのみ活用し、個人を特定できない形に非識別化して使用します。';
+
+  @override
+  String get legal_terms_section5_title => '第5条（サービスの中断および変更）';
+
+  @override
+  String get legal_terms_section5_body =>
+      '会社は運営上・技術上の必要に応じて提供中のサービスの全部または一部を変更または中断することができ、その場合は事前に告知します。';
+
+  @override
+  String get legal_terms_section6_title => '第6条（責任の制限）';
+
+  @override
+  String get legal_terms_section6_body =>
+      '会社は、天災、サーバー提供業者の障害、第三者AIAPIサービスの障害等の不可抗力によりサービスを提供できない場合、サービス提供に関する責任が免除されます。';
+
+  @override
+  String get legal_terms_section7_title => '第7条（施行日）';
+
+  @override
+  String get legal_terms_section7_body => '本規約は2026年6月1日より適用されます。';
+
+  @override
+  String get legal_privacy_section1_title => '1. 個人情報の処理目的';
+
+  @override
+  String get legal_privacy_section1_body =>
+      'エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）は、以下の目的のために個人情報を処理します。処理している個人情報は以下の目的以外の用途には使用されず、利用目的が変更される場合には別途同意を取得するなど必要な措置を講じます。\n• 会員登録・管理、家族グループ（招待コード等）の識別\n• サービス提供（カレンダー、タスク、資産管理、育児報酬システム等）\n• AIエージェント（チャットボット、ブリーフィング等）サービスの提供と品質向上\n• 新サービスの開発およびパーソナライズされたサービスの提供';
+
+  @override
+  String get legal_privacy_section2_title => '2. 処理する個人情報の項目';
+
+  @override
+  String get legal_privacy_section2_body =>
+      '会社はサービス提供のために以下の個人情報を処理しています。\n• 必須項目：メールアドレス、パスワード、氏名（またはニックネーム）、プロフィール画像\n• サービス利用過程で収集される情報：カレンダーの予定、タスクリスト、資産データ、家族グループ情報、AIとのチャット履歴、サービス利用記録、端末情報';
+
+  @override
+  String get legal_privacy_section3_title => '3. 個人情報の第三者提供および委託';
+
+  @override
+  String get legal_privacy_section3_body =>
+      'スムーズなAIサービス（文脈分析、ブリーフィング生成等）の提供のため、入力されたデータの一部を外部AIモデルAPI（例：OpenAI、Anthropic、Googleなど）に送信することがあります。\nただし、このデータはサービス提供目的にのみ使用され、モデルの学習には使用されないよう措置を講じます。';
+
+  @override
+  String get legal_privacy_section4_title => '4. 個人情報の廃棄';
+
+  @override
+  String get legal_privacy_section4_body =>
+      '会社は原則として、個人情報の処理目的が達成された場合は速やかに当該個人情報を廃棄します。\n• 廃棄手順：利用者が退会を要請した場合、収集された情報は即時または法令に基づく保存期間の経過後に廃棄されます。\n• 廃棄方法：電子ファイル形式の情報は、記録を再生できない技術的方法を使用します。';
+
+  @override
+  String get legal_privacy_section5_title => '5. 情報主体の権利および行使方法';
+
+  @override
+  String get legal_privacy_section5_body =>
+      '利用者はいつでも自己の個人情報を照会・修正することができ、退会を通じて個人情報の収集・利用への同意を撤回することができます。';
+
+  @override
+  String get legal_privacy_section6_title => '6. 個人情報保護責任者';
+
+  @override
+  String get legal_privacy_section6_body =>
+      '氏名：ユ・ヨンジン\nメール：hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_privacy_section7_title => '7. 施行日';
+
+  @override
+  String get legal_privacy_section7_body => '本プライバシーポリシーは2026年6月1日より適用されます。';
+
+  @override
+  String get legal_privacyLastUpdated => '施行日: 2026年6月1日';
 }

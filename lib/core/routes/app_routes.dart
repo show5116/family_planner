@@ -80,6 +80,10 @@ class AppRoutes {
   static const String announcementCreate = '/announcements/create';
   static const String announcementEdit = '/announcements/:id/edit';
 
+  // Legal Routes
+  static const String termsOfService = '/terms-of-service';
+  static const String privacyPolicy = '/privacy-policy';
+
   // Weather Routes
   static const String weather = '/weather';
 
@@ -103,6 +107,7 @@ class AppRoutes {
 
   // Fridge & Shopping Routes
   static const String fridge = '/fridge';
+  static const String fridgeExpiryPresets = '/fridge/expiry-presets';
   static const String shopping = '/shopping';
   static const String shoppingHistoryDetail = '/shopping/history/:historyId';
   static const String fridgeShoppingHistory = '/fridge/history';

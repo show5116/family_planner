@@ -1414,6 +1414,36 @@ period=monthly 시 year 필수.
 
 ---
 
+### POST `auth/kakao/mobile`
+
+**요약:** Kakao 모바일 로그인 (액세스 토큰)
+
+**Responses:**
+
+#### 200 - Kakao 모바일 로그인 성공, 토큰 반환
+
+```json
+{
+  "user": {
+    "id": "user_clxxx123", // 사용자 ID (string)
+    "email": "user@example.com", // 이메일 (string)
+    "name": "홍길동", // 사용자 이름 (string)
+    "isEmailVerified": true, // 이메일 인증 여부 (boolean)
+    "isAdmin": false, // 운영자 여부 (boolean)
+    "profileImageUrl": "https://r2.yourdomain.com/profiles/google-123456.jpg", // 프로필 이미지 URL (R2 public URL) (string?)
+    "phoneNumber": "010-1234-5678", // 전화번호 (string?)
+    "personalColor": "#FF5733", // 개인 색상 (HEX 코드) (string?)
+    "socialProvider": "google", // 소셜 로그인 제공자 (string?)
+    "createdAt": "2024-01-01T00:00:00.000Z", // 생성 일시 (Date)
+    "updatedAt": "2024-01-01T00:00:00.000Z" // 수정 일시 (Date)
+  } // 사용자 정보 (UserDto)
+}
+```
+
+#### 401 - 유효하지 않은 액세스 토큰
+
+---
+
 ### GET `auth/kakao`
 
 **요약:** Kakao 로그인 시작
@@ -2275,6 +2305,98 @@ period=monthly 시 year 필수.
 #### 404 - 육아 계정을 찾을 수 없습니다
 
 #### 403 - 부모만 수행할 수 있는 작업입니다
+
+---
+
+## 냉장고 관리
+
+**Base Path:** `/fridge`
+
+### GET `fridge/expiry-presets`
+
+**요약:** 유통기한 프리셋 전체 조회 (글로벌 기본값 + 그룹 커스텀 머지, keywords로 클라이언트 로컬 매칭)
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+
+**Responses:**
+
+#### 200 - 조회 성공
+
+```json
+{
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "days": 7, // 적용 유통기한 (일) - 커스텀이 있으면 커스텀, 없으면 글로벌 (number)
+  "keywords": ["시금치", "열무"], // 매칭 키워드 목록 (클라이언트 로컬 매칭용, 글로벌 항목에만 존재) (string[] | null)
+  "isCustom": false, // 그룹 커스텀 여부 (boolean)
+  "customPresetId": "uuid-1234" // 그룹 커스텀 프리셋 ID (커스텀인 경우에만 존재) (string | null)
+}
+```
+
+---
+
+### PUT `fridge/expiry-presets`
+
+**요약:** 그룹별 유통기한 커스텀 프리셋 등록/수정
+
+**Request Body:**
+
+```json
+{
+  "groupId": "uuid-1234", // 그룹 ID (string)
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "customDays": 10 // 커스텀 유통기한 (일) (number)
+}
+```
+
+**Responses:**
+
+#### 200 - 저장 성공
+
+```json
+{
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "days": 7, // 적용 유통기한 (일) - 커스텀이 있으면 커스텀, 없으면 글로벌 (number)
+  "keywords": ["시금치", "열무"], // 매칭 키워드 목록 (클라이언트 로컬 매칭용, 글로벌 항목에만 존재) (string[] | null)
+  "isCustom": false, // 그룹 커스텀 여부 (boolean)
+  "customPresetId": "uuid-1234" // 그룹 커스텀 프리셋 ID (커스텀인 경우에만 존재) (string | null)
+}
+```
+
+---
+
+### DELETE `fridge/expiry-presets/:presetId`
+
+**요약:** 그룹별 유통기한 커스텀 프리셋 삭제 (글로벌 기본값으로 복원)
+
+**Path Parameters:**
+
+- `presetId` (`string`)
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+
+**Responses:**
+
+#### 200 - 삭제 성공
+
+```json
+{
+  "category": "채소", // 카테고리 (string)
+  "storageType": null, // 보관 유형 (StorageType)
+  "days": 7, // 적용 유통기한 (일) - 커스텀이 있으면 커스텀, 없으면 글로벌 (number)
+  "keywords": ["시금치", "열무"], // 매칭 키워드 목록 (클라이언트 로컬 매칭용, 글로벌 항목에만 존재) (string[] | null)
+  "isCustom": false, // 그룹 커스텀 여부 (boolean)
+  "customPresetId": "uuid-1234" // 그룹 커스텀 프리셋 ID (커스텀인 경우에만 존재) (string | null)
+}
+```
+
+#### 404 - 프리셋을 찾을 수 없습니다
 
 ---
 
@@ -4563,6 +4685,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "symbol": "KOSPI", // 심볼 (string)
   "name": "KOSPI", // 영문명 (string)
   "nameKo": "코스피", // 한글명 (string)
+  "displayName": "코스피", // 요청 언어에 맞는 표시명 (accept-language 헤더 기준) (string)
   "category": null, // 카테고리 (IndicatorCategory)
   "unit": "pt", // 단위 (string)
   "price": "2580.34", // 현재 시세 (string | null)
@@ -4590,6 +4713,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "symbol": "KOSPI", // 심볼 (string)
   "name": "KOSPI", // 영문명 (string)
   "nameKo": "코스피", // 한글명 (string)
+  "displayName": "코스피", // 요청 언어에 맞는 표시명 (accept-language 헤더 기준) (string)
   "category": null, // 카테고리 (IndicatorCategory)
   "unit": "pt", // 단위 (string)
   "price": "2580.34", // 현재 시세 (string | null)
@@ -4642,6 +4766,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "symbol": "KOSPI", // 심볼 (string)
   "name": "KOSPI", // 영문명 (string)
   "nameKo": "코스피", // 한글명 (string)
+  "displayName": "코스피", // 요청 언어에 맞는 표시명 (accept-language 헤더 기준) (string)
   "category": null, // 카테고리 (IndicatorCategory)
   "unit": "pt", // 단위 (string)
   "price": "2580.34", // 현재 시세 (string | null)
@@ -4678,6 +4803,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
 {
   "symbol": "KOSPI", // 심볼 (string)
   "nameKo": "코스피", // 한글명 (string)
+  "displayName": "코스피", // 요청 언어에 맞는 표시명 (accept-language 헤더 기준) (string)
   "history": [
     {
       "price": "2580.34", // 시세 (string)
@@ -4714,6 +4840,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "symbol": "KOSPI", // 심볼 (string)
   "name": "KOSPI", // 영문명 (string)
   "nameKo": "코스피", // 한글명 (string)
+  "displayName": "코스피", // 요청 언어에 맞는 표시명 (accept-language 헤더 기준) (string)
   "category": null, // 카테고리 (IndicatorCategory)
   "unit": "pt", // 단위 (string)
   "price": "2580.34", // 현재 시세 (string | null)
@@ -4747,6 +4874,7 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
   "symbol": "KOSPI", // 심볼 (string)
   "name": "KOSPI", // 영문명 (string)
   "nameKo": "코스피", // 한글명 (string)
+  "displayName": "코스피", // 요청 언어에 맞는 표시명 (accept-language 헤더 기준) (string)
   "category": null, // 카테고리 (IndicatorCategory)
   "unit": "pt", // 단위 (string)
   "price": "2580.34", // 현재 시세 (string | null)
@@ -5632,7 +5760,8 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
 ```json
 {
   "token": "fGw3ZJ0kRZe-Xz9YlK6J7M:APA91bH4...(생략)...k5L8mN9oP0qR1sT2u", // FCM 디바이스 토큰 (string)
-  "platform": null // 디바이스 플랫폼 (DevicePlatform)
+  "platform": null, // 디바이스 플랫폼 (DevicePlatform)
+  "language": "ko" // 앱 언어 설정 (ko, en, ja, zh) (string?)
 }
 ```
 
@@ -8846,14 +8975,14 @@ GPS 좌표(위도/경도)로 현재 날씨를 조회합니다 (초단기실황)
   "windSpeed": 3, // 풍속 (m/s) (number)
   "precipitation": 0, // 1시간 강수량 (mm) (number)
   "precipitationType": 0, // 강수형태 코드 (0=없음, 1=비, 2=진눈깨비, 3=눈, 4=소나기) (number)
-  "weatherDescription": "맑음", // 날씨 설명 (string)
+  "weatherDescription": "맑음 / Clear / 晴れ / 晴", // 날씨 설명 (accept-language 헤더 기준 다국어) (string)
   "baseDate": "20260314", // 기준 날짜 (YYYYMMDD) (string)
   "baseTime": "1200", // 기준 시각 (HHmm) (string)
   "pm10": 35, // 미세먼지 농도 (㎍/㎥) (number | null)
   "pm25": 18, // 초미세먼지 농도 (㎍/㎥) (number | null)
   "pm10Grade": 2, // 미세먼지 등급 (1=좋음, 2=보통, 3=나쁨, 4=매우나쁨) (number | null)
   "pm25Grade": 2, // 초미세먼지 등급 (1=좋음, 2=보통, 3=나쁨, 4=매우나쁨) (number | null)
-  "sidoName": "서울" // 미세먼지 기준 시도명 (string | null)
+  "sidoName": "서울 / Seoul / ソウル / 首尔" // 미세먼지 기준 시도명 (accept-language 헤더 기준 다국어) (string | null)
 }
 ```
 
@@ -8892,7 +9021,7 @@ GPS 좌표(위도/경도)로 향후 3일간 시간별 날씨 예보를 조회합
       "windSpeed": 3, // 풍속 (m/s) (number)
       "sky": 1, // 하늘상태 코드 (1=맑음, 3=구름많음, 4=흐림) (number)
       "precipitationType": 0, // 강수형태 코드 (0=없음, 1=비, 2=진눈깨비, 3=눈, 4=소나기) (number)
-      "weatherDescription": "맑음" // 날씨 설명 (string)
+      "weatherDescription": "맑음 / Clear / 晴れ / 晴" // 날씨 설명 (accept-language 헤더 기준 다국어) (string)
     }
   ] // 시간별 예보 목록 (ForecastItemDto[])
 }

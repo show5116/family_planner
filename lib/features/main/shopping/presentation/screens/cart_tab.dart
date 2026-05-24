@@ -131,7 +131,8 @@ class _CartTabState extends ConsumerState<CartTab> {
     if (ctx == null) return null;
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
+    final ancestor = ctx.findAncestorStateOfType<NavigatorState>()?.context.findRenderObject();
+    final offset = box.localToGlobal(Offset.zero, ancestor: ancestor);
     return TargetPosition(box.size, offset);
   }
 

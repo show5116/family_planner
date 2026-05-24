@@ -387,6 +387,48 @@ class FridgeRepository {
     }
   }
 
+  // ── Expiry Presets ────────────────────────────────────────────────────────────
+
+  Future<List<ExpiryPresetModel>> getExpiryPresets({String? groupId}) async {
+    try {
+      final response = await _dio.get('/fridge/expiry-presets', queryParameters: {
+        if (groupId != null) 'groupId': groupId,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => ExpiryPresetModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [FridgeRepository] 유통기한 프리셋 조회 실패: ${e.message}');
+      return [];
+    }
+  }
+
+  Future<ExpiryPresetModel> upsertExpiryPreset(UpsertExpiryPresetDto dto) async {
+    try {
+      final response = await _dio.put('/fridge/expiry-presets', data: dto.toJson());
+      return ExpiryPresetModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [FridgeRepository] 유통기한 프리셋 저장 실패: ${e.message}');
+      throw Exception('유통기한 프리셋 저장 실패: ${e.message}');
+    }
+  }
+
+  Future<void> deleteExpiryPreset(String presetId, {String? groupId}) async {
+    try {
+      await _dio.delete(
+        '/fridge/expiry-presets/$presetId',
+        queryParameters: {if (groupId != null) 'groupId': groupId},
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [FridgeRepository] 유통기한 프리셋 삭제 실패: ${e.message}');
+      throw Exception('유통기한 프리셋 삭제 실패: ${e.message}');
+    }
+  }
+
   // ── 자동완성 ────────────────────────────────────────────────────────────────
 
   Future<List<String>> getItemNameSuggestions({

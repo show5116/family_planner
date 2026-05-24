@@ -30,6 +30,22 @@
   "common_undo": "Undo",
   "common_add_to_list": "Add to list",
   "@common_add_to_list": { "description": "Add to list button" },
+  "common_view_all": "View All",
+  "@common_view_all": { "description": "View all button" },
+  "memo_filter_personal_only": "Personal Only",
+  "@memo_filter_personal_only": { "description": "Memo filter: personal memos only" },
+  "common_all_groups": "All Groups",
+  "@common_all_groups": { "description": "All groups option" },
+  "schedule_filter_group_schedule": "Group Schedule",
+  "@schedule_filter_group_schedule": { "description": "Group schedule section title in filter sheet" },
+  "common_date_format": "{month}/{day}",
+  "@common_date_format": {
+    "description": "Date format (month, day)",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "cart_unsaved_changes": "You have unsaved changes",
   "common_next": "Next",
   "common_back": "Back",
@@ -267,7 +283,11 @@
   "settings_notificationSubtitle": "Change notification preferences",
   "settings_information": "Information",
   "settings_appInfoTitle": "App Info",
-  "settings_appInfoSubtitle": "Version 1.0.0",
+  "settings_appInfoSubtitle": "Version info",
+  "settings_termsOfServiceTitle": "Terms of Service",
+  "settings_termsOfServiceSubtitle": "View our terms of service",
+  "settings_privacyPolicyTitle": "Privacy Policy",
+  "settings_privacyPolicySubtitle": "View our privacy policy",
   "settings_appDescription": "Daily planner for families",
   "settings_helpTitle": "Help",
   "settings_helpSubtitle": "View usage instructions",
@@ -1509,6 +1529,21 @@
   "fridge_frequent_coach_addToCartTitle": "Add to Cart Instantly",
   "fridge_frequent_coach_addToCartDesc": "Add to your current cart\ninstantly with one tap.",
   "fridge_frequent_coach_skip": "Skip",
+
+  "fridge_coach_fabTitle": "Add Storage",
+  "fridge_coach_fabDesc": "Add storage locations like fridge, freezer, or pantry.\nTap + to create a new storage.",
+  "fridge_coach_sectionTitle": "Storage Section",
+  "fridge_coach_sectionDesc": "Tap the header to expand or collapse.\nUse the ⋮ menu to edit or delete the storage.",
+  "fridge_coach_itemTitle": "Manage Items",
+  "fridge_coach_itemDesc": "• Tap to edit name, expiry date, and memo\n• Use ± buttons to adjust quantity\n• Swipe left to mark for deletion\n• Press Save to apply changes",
+  "fridge_coach_ddayTitle": "Expiry Alerts",
+  "fridge_coach_ddayDesc": "Register an expiry date to see remaining days.\n• Blue: plenty of time\n• Orange: expiring within 3 days\n• Red: today or already expired\nYou'll receive push notifications before the alert day.",
+  "fridge_coach_addItemTitle": "Add Items",
+  "fridge_coach_addItemDesc": "Tap + next to a storage to add items.\nYou can add multiple items at once,\nwith expiry date, quantity, unit, and memo.",
+  "fridge_coach_suggestionTitle": "Auto Expiry Suggestion",
+  "fridge_coach_suggestionDesc": "Enter an item name and we'll suggest an expiry date automatically.\nIf the suggestion doesn't fit,\ntap 🔍 to choose a different reference item.",
+  "fridge_coach_skip": "Skip",
+
   "fridge_cart_empty": "Your cart is empty",
   "@fridge_cart_empty": { "description": "Cart empty" },
   "fridge_cart_add_item": "Add item",
@@ -1542,6 +1577,63 @@
   "fridge_group_selector_personal": "Personal",
   "@fridge_group_selector_personal": { "description": "Personal mode" },
 
+  "fridge_expiry_suggestion_label": "{keyword} based · {storageType} {days} days",
+  "@fridge_expiry_suggestion_label": {
+    "description": "Expiry suggestion chip text",
+    "placeholders": {
+      "keyword": { "type": "String" },
+      "storageType": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "fridge_expiry_apply": "Apply Suggestion",
+  "@fridge_expiry_apply": { "description": "Apply suggested expiry date" },
+  "fridge_expiry_manual": "Enter Manually",
+  "@fridge_expiry_manual": { "description": "Enter expiry date manually" },
+  "fridge_expiry_change_reference": "Use different item as reference",
+  "@fridge_expiry_change_reference": { "description": "Change reference item button" },
+  "fridge_expiry_reference_title": "Select Reference Item",
+  "@fridge_expiry_reference_title": { "description": "Reference item selector modal title" },
+  "fridge_expiry_reference_search": "Search items",
+  "@fridge_expiry_reference_search": { "description": "Reference item search hint" },
+  "fridge_expiry_reference_days": "{days} days",
+  "@fridge_expiry_reference_days": {
+    "description": "Suggested days display",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fridge_expiry_reference_empty": "No results found",
+  "@fridge_expiry_reference_empty": { "description": "Reference item search empty result" },
+
+  "fridge_preset_management_title": "Expiry Preset Management",
+  "@fridge_preset_management_title": { "description": "Screen title" },
+  "fridge_preset_management_menu": "Expiry Preset Management",
+  "@fridge_preset_management_menu": { "description": "App bar menu item" },
+  "fridge_preset_edit_shortcut": "Edit Presets",
+  "@fridge_preset_edit_shortcut": { "description": "Edit shortcut button in reference selector sheet" },
+  "fridge_preset_days_label": "{days} days",
+  "@fridge_preset_days_label": {
+    "description": "Days label",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fridge_preset_custom_badge": "Custom",
+  "@fridge_preset_custom_badge": { "description": "Custom preset badge" },
+  "fridge_preset_reset_confirm": "Reset to default?",
+  "@fridge_preset_reset_confirm": { "description": "Reset confirmation message" },
+  "fridge_preset_edit_dialog_title": "Edit Expiry Days",
+  "@fridge_preset_edit_dialog_title": { "description": "Edit dialog title" },
+  "fridge_preset_add_dialog_title": "Add New Preset",
+  "@fridge_preset_add_dialog_title": { "description": "Add dialog title" },
+  "fridge_preset_days_input_label": "Expiry days",
+  "@fridge_preset_days_input_label": { "description": "Days input field label" },
+  "fridge_preset_category_input_label": "Category",
+  "@fridge_preset_category_input_label": { "description": "Category input field label" },
+  "fridge_preset_storage_type_label": "Storage type",
+  "@fridge_preset_storage_type_label": { "description": "Storage type selection label" },
+  "fridge_preset_delete_confirm": "Delete custom setting and restore default?",
+  "@fridge_preset_delete_confirm": { "description": "Delete confirmation message" },
+  "fridge_preset_search_hint": "Search category or item",
+  "@fridge_preset_search_hint": { "description": "Preset search hint" },
+
   "dashboard_greetingMorning": "Good Morning",
   "dashboard_greetingAfternoon": "Good Afternoon",
   "dashboard_greetingEvening": "Good Evening",
@@ -1561,6 +1653,81 @@
   "investment_widgetTitle": "Investment Indicators",
   "investment_errorMessage": "Unable to load data",
   "investment_emptyBookmarks": "No bookmarked indicators",
+
+  "investment_screenTitle": "Investment Indicators",
+  "investment_bookmarkSection": "Bookmarks",
+  "investment_bookmarkReorderHint": "(Long press to reorder)",
+  "investment_allSection": "All Indicators",
+  "investment_noData": "No indicator data",
+  "investment_loadError": "Failed to load data",
+  "investment_retry": "Retry",
+  "investment_adminTooltip": "Reset History (Admin)",
+
+  "investment_briefingTitle": "AI Market Briefing",
+  "investment_briefingError": "AI briefing error: {error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "Macro",
+  "investment_briefingDomestic": "Domestic Market",
+  "investment_briefingGlobal": "Global Market",
+  "investment_briefingUpdatedAt": "Updated: {time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "Reset History Data",
+  "investment_adminDialogDesc": "Collects historical prices from Yahoo/CoinGecko/BOK and saves to DB.\nThis may take a while.",
+  "investment_adminDaysLabel": "Days to collect (1~3650)",
+  "investment_adminDaysSuffix": "days",
+  "investment_adminExecute": "Execute Reset",
+  "investment_adminResultTitle": "Reset Complete",
+  "investment_adminResultYahoo": "Yahoo (Stocks/FX/Commodities)",
+  "investment_adminResultCrypto": "Crypto (BTC/KRW)",
+  "investment_adminResultBond": "Korean Bonds",
+  "investment_adminResultGold": "Domestic Gold",
+  "investment_adminResultCount": "{count} items",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "Reset failed: {error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "Collecting historical data...",
+
+  "investment_prevPrice": "Prev. Close",
+  "investment_spreadBadge": "Spread {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "Premium vs international price",
+  "investment_spreadDiscount": "Discount vs international price",
+  "investment_chartTitle": "Price Trend",
+  "investment_chartDayChip": "{days}d",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1Y",
+  "investment_chartLoadError": "Unable to load chart",
+  "investment_chartNoData": "No data",
+  "investment_marketClosed": "Market closed · Last trading day: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "Spread Trend",
+  "investment_spreadChartSubtitle": "(vs. international price)",
+  "investment_spreadSummaryLabel": "Currently {label} vs international price",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "Premium",
+  "investment_spreadDiscountLabel": "Discount",
+
+  "investment_coachIndicatorTitle": "Investment Indicators",
+  "investment_coachIndicatorDesc": "View major stock indices, exchange rates,\ncommodities, and crypto in real time.\nTap to see detailed charts and history.",
+  "investment_coachBookmarkTitle": "Bookmarks",
+  "investment_coachBookmarkDesc": "Tap the star to bookmark an indicator.\nBookmarked indicators are pinned to the top\nand visible on the home dashboard widget.",
 
   "householdWidget_groupTooltip": "Select Group",
   "householdWidget_incomeLabel": "{month} Income",
@@ -1631,5 +1798,69 @@
   "assetWidget_typeFund": "Fund",
   "assetWidget_typeRealEstate": "Real Estate",
   "assetWidget_typeGold": "Gold",
-  "assetWidget_typeOther": "Other"
+  "assetWidget_typeOther": "Other",
+
+  "legal_termsOfService": "Terms of Service",
+  "legal_privacyPolicy": "Privacy Policy",
+  "legal_termsLastUpdated": "Effective date: June 1, 2026",
+  "legal_termsContact": "Contact: hmn.corp.dev@gmail.com",
+  "legal_agreeToTerms": "Terms of Service",
+  "legal_agreeToPrivacy": "Privacy Policy",
+  "legal_required": "(Required)",
+  "legal_agreeAll": "Agree to all",
+  "legal_mustAgreeTerms": "Please agree to the Terms of Service.",
+  "legal_mustAgreePrivacy": "Please agree to the Privacy Policy.",
+  "legal_agreeAgeVerification": "I am 14 years of age or older (Required)",
+  "legal_mustAgreeAgeVerification": "Please confirm that you are 14 years of age or older.",
+  "legal_socialLoginConsent": "By continuing, you agree to our {termsLink} and {privacyLink}.",
+  "@legal_socialLoginConsent": {
+    "placeholders": {
+      "termsLink": { "type": "String" },
+      "privacyLink": { "type": "String" }
+    }
+  },
+
+  "legal_terms_section1_title": "Article 1 (Purpose)",
+  "legal_terms_section1_body": "These Terms govern the rights, obligations, and responsibilities between HMN Corporation (the \"Company\") and its members in connection with the use of the Family Planner service (the \"Service\") provided by the Company.",
+
+  "legal_terms_section2_title": "Article 2 (Service Content)",
+  "legal_terms_section2_body": "The Company provides members with the following services:\n• Family group-based calendar and to-do sharing\n• Asset management and history sharing among members\n• Child reward (praise stickers, etc.) management system\n• Conversation, schedule management, and macroeconomic/market briefing services via AI agent\n• Other services additionally developed by the Company or provided through partnership agreements",
+
+  "legal_terms_section3_title": "Article 3 (Member Obligations)",
+  "legal_terms_section3_body": "• Members must not input illegal or harmful prompts to the AI agent within the Service.\n• Members are responsible for securely managing family group invitation codes and account information.\n• The asset management and market briefing features are provided for reference purposes only, and the Company bears no legal responsibility for investment outcomes based on such information.",
+
+  "legal_terms_section4_title": "Article 4 (Copyright and Management of Posts)",
+  "legal_terms_section4_body": "• Copyright of information posted by members within the Service (chats, schedules, asset information, etc.) belongs to the respective member.\n• The Company uses member posts only for service operation, improvement (including AI feature enhancement), and promotion, and only in a de-identified form that cannot identify individuals.",
+
+  "legal_terms_section5_title": "Article 5 (Service Suspension and Changes)",
+  "legal_terms_section5_body": "The Company may change or suspend all or part of the Service as needed for operational or technical reasons, and will provide advance notice in such cases.",
+
+  "legal_terms_section6_title": "Article 6 (Limitation of Liability)",
+  "legal_terms_section6_body": "The Company is exempt from liability for service provision in cases where the Service cannot be provided due to force majeure events such as natural disasters, server provider failures, or third-party AI API service failures.",
+
+  "legal_terms_section7_title": "Article 7 (Effective Date)",
+  "legal_terms_section7_body": "These Terms are effective from June 1, 2026.",
+
+  "legal_privacy_section1_title": "1. Purpose of Processing Personal Information",
+  "legal_privacy_section1_body": "HMN Corporation (the 'Company') processes personal information for the following purposes. The personal information being processed will not be used for any purpose other than the following, and if the purpose of use changes, necessary measures such as obtaining separate consent will be taken.\n• Member registration and management, family group (invitation code, etc.) identification\n• Service provision (calendar, to-do, asset management, child reward system, etc.)\n• AI agent (chatbot, briefing, etc.) service provision and quality improvement\n• New service development and personalized service provision",
+
+  "legal_privacy_section2_title": "2. Personal Information Items Processed",
+  "legal_privacy_section2_body": "The Company processes the following personal information items to provide its services.\n• Required items: email address, password, name (or nickname), profile image\n• Information collected during service use: calendar events, to-do lists, asset data, family group information, AI chat history, service usage records, device information",
+
+  "legal_privacy_section3_title": "3. Third-Party Provision and Entrustment of Personal Information",
+  "legal_privacy_section3_body": "To provide smooth AI services (context analysis, briefing generation, etc.), the Company may transmit some of the entered data to external AI model APIs (e.g., OpenAI, Anthropic, Google, etc.).\nHowever, this data is used only for service provision purposes and measures are taken to ensure it is not used for model training.",
+
+  "legal_privacy_section4_title": "4. Destruction of Personal Information",
+  "legal_privacy_section4_body": "In principle, the Company destroys personal information without delay when the purpose of processing has been achieved.\n• Destruction procedure: When a user requests account withdrawal, the collected information is destroyed immediately or after the retention period required by law has elapsed.\n• Destruction method: Information in electronic file format is destroyed using technical methods that make it impossible to reproduce the records.",
+
+  "legal_privacy_section5_title": "5. Rights of Data Subjects and How to Exercise Them",
+  "legal_privacy_section5_body": "Users may access or modify their personal information at any time, and may withdraw consent to the collection and use of personal information by withdrawing from membership.",
+
+  "legal_privacy_section6_title": "6. Privacy Officer",
+  "legal_privacy_section6_body": "Name: Yoo Youngjin\nEmail: hmn.corp.dev@gmail.com",
+
+  "legal_privacy_section7_title": "7. Effective Date",
+  "legal_privacy_section7_body": "This Privacy Policy is effective from June 1, 2026.",
+
+  "legal_privacyLastUpdated": "Effective date: June 1, 2026"
 }

@@ -9,6 +9,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/main/investment/data/models/indicator_model.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 class IndicatorDetailScreen extends ConsumerStatefulWidget {
   const IndicatorDetailScreen({super.key, required this.symbol});
@@ -40,7 +41,7 @@ class _IndicatorDetailScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(indicator?.nameKo ?? widget.symbol),
+        title: Text(indicator?.displayName ?? widget.symbol),
         actions: [
           if (indicator != null)
             IconButton(
@@ -174,7 +175,7 @@ class _PriceSummaryCard extends StatelessWidget {
             if (indicator.prevPrice != null) ...[
               const SizedBox(height: AppSizes.spaceS),
               Text(
-                '전일 종가  ${_formatNumber(indicator.prevPrice!)} ${indicator.unit}',
+                '${AppLocalizations.of(context)!.investment_prevPrice}  ${_formatNumber(indicator.prevPrice!)} ${indicator.unit}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -213,7 +214,7 @@ class _SpreadBadge extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
           ),
           child: Text(
-            '이격률 $sign${spread.toStringAsFixed(2)}%',
+            AppLocalizations.of(context)!.investment_spreadBadge('$sign${spread.toStringAsFixed(2)}'),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: color,
                   fontWeight: FontWeight.w600,
@@ -222,7 +223,9 @@ class _SpreadBadge extends StatelessWidget {
         ),
         const SizedBox(width: AppSizes.spaceXS),
         Text(
-          isPremium ? '국제 환산가 대비 프리미엄' : '국제 환산가 대비 디스카운트',
+          isPremium
+              ? AppLocalizations.of(context)!.investment_spreadPremium
+              : AppLocalizations.of(context)!.investment_spreadDiscount,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -271,7 +274,7 @@ class _ChartSectionState extends State<_ChartSection> {
         Row(
           children: [
             Text(
-              '시세 추이',
+              AppLocalizations.of(context)!.investment_chartTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -284,7 +287,9 @@ class _ChartSectionState extends State<_ChartSection> {
                     .map(
                       (days) => Flexible(
                         child: _DayChip(
-                          label: days >= 365 ? '1년' : '$days일',
+                          label: days >= 365
+                              ? AppLocalizations.of(context)!.investment_chartYearChip
+                              : AppLocalizations.of(context)!.investment_chartDayChip(days),
                           selected: widget.selectedDays == days,
                           onTap: () {
                             _onRangeChanged(null, null);
@@ -323,10 +328,10 @@ class _ChartSectionState extends State<_ChartSection> {
           height: 220,
           child: widget.historyAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, _) => const Center(child: Text('차트를 불러올 수 없습니다')),
+            error: (_, _) => Center(child: Text(AppLocalizations.of(context)!.investment_chartLoadError)),
             data: (history) {
               if (history.history.isEmpty) {
-                return const Center(child: Text('데이터가 없습니다'));
+                return Center(child: Text(AppLocalizations.of(context)!.investment_chartNoData));
               }
               return _LineChart(
                 history: history,
@@ -513,7 +518,7 @@ class _LineChartState extends State<_LineChart> {
     }
 
     if (spots.isEmpty) {
-      return const Center(child: Text('데이터가 없습니다'));
+      return Center(child: Text(AppLocalizations.of(context)!.investment_chartNoData));
     }
 
     // 선택 범위 강조 수직선
@@ -832,14 +837,14 @@ class _SpreadChartSection extends StatelessWidget {
         Row(
           children: [
             Text(
-              '이격률 추이',
+              AppLocalizations.of(context)!.investment_spreadChartTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
             const SizedBox(width: AppSizes.spaceS),
             Text(
-              '(국제 환산가 대비)',
+              AppLocalizations.of(context)!.investment_spreadChartSubtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -987,7 +992,7 @@ class _MarketClosedBadge extends StatelessWidget {
         ),
         const SizedBox(width: 4),
         Text(
-          '휴장 중 · 마지막 거래일: $label',
+          AppLocalizations.of(context)!.investment_marketClosed(label),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -1007,7 +1012,9 @@ class _SpreadSummaryBadge extends StatelessWidget {
     final isPremium = spread >= 0;
     final color = isPremium ? AppColors.error : AppColors.success;
     final sign = isPremium ? '+' : '';
-    final label = isPremium ? '프리미엄' : '디스카운트';
+    final label = isPremium
+        ? AppLocalizations.of(context)!.investment_spreadPremiumLabel
+        : AppLocalizations.of(context)!.investment_spreadDiscountLabel;
 
     return Row(
       children: [
@@ -1027,7 +1034,7 @@ class _SpreadSummaryBadge extends StatelessWidget {
         ),
         const SizedBox(width: AppSizes.spaceS),
         Text(
-          '현재 국제 환산가 대비 $label',
+          AppLocalizations.of(context)!.investment_spreadSummaryLabel(label),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

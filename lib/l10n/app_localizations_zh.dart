@@ -66,6 +66,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get common_add_to_list => '添加到列表';
 
   @override
+  String get common_view_all => '전체보기';
+
+  @override
+  String get memo_filter_personal_only => '개인 메모만';
+
+  @override
+  String get common_all_groups => '전체 그룹';
+
+  @override
+  String get schedule_filter_group_schedule => '그룹 일정';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month월 $day일';
+  }
+
+  @override
   String get cart_unsaved_changes => '有未保存的更改';
 
   @override
@@ -717,10 +734,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_appInfoTitle => '应用信息';
 
   @override
-  String get settings_appInfoSubtitle => '版本 1.0.0';
+  String get settings_appInfoSubtitle => '版本信息';
 
   @override
   String get settings_appDescription => '家庭每日规划工具';
+
+  @override
+  String get settings_termsOfServiceTitle => '服务条款';
+
+  @override
+  String get settings_termsOfServiceSubtitle => '查看服务条款';
+
+  @override
+  String get settings_privacyPolicyTitle => '隐私政策';
+
+  @override
+  String get settings_privacyPolicySubtitle => '查看隐私政策';
 
   @override
   String get settings_helpTitle => '帮助';
@@ -3229,6 +3258,49 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_frequent_coach_skip => '跳过';
 
   @override
+  String get fridge_coach_fabTitle => '添加储存位置';
+
+  @override
+  String get fridge_coach_fabDesc => '可以添加冰箱、冷冻室、储藏室等储存位置。\n点击+按钮来创建储存位置。';
+
+  @override
+  String get fridge_coach_sectionTitle => '储存位置';
+
+  @override
+  String get fridge_coach_sectionDesc => '点击标题可以展开或收起。\n使用右侧⋮菜单可以编辑或删除储存位置。';
+
+  @override
+  String get fridge_coach_itemTitle => '管理食材';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• 点击可编辑名称、保质期和备注\n• 使用±按钮调整数量\n• 向左滑动标记为删除\n• 更改后需按保存按钮才能生效';
+
+  @override
+  String get fridge_coach_ddayTitle => '保质期提醒';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      '登记保质期后会显示剩余天数。\n• 蓝色：时间充裕\n• 橙色：3天内即将到期\n• 红色：今天或已过期\n在设定的提醒日前会收到推送通知。';
+
+  @override
+  String get fridge_coach_addItemTitle => '添加食材';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      '点击储存位置右侧+按钮添加食材。\n可以一次添加多个食材，\n同时输入保质期、数量、单位和备注。';
+
+  @override
+  String get fridge_coach_suggestionTitle => '保质期自动推荐';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      '输入食材名称后会自动推荐保质期。\n如果推荐结果不合适，\n点击🔍按钮可以选择其他参考食材。';
+
+  @override
+  String get fridge_coach_skip => '跳过';
+
+  @override
   String get fridge_cart_empty => '购物车为空';
 
   @override
@@ -3277,6 +3349,79 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '个人';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '以$keyword为基准 · $storageType 推荐$days天';
+  }
+
+  @override
+  String get fridge_expiry_apply => '应用推荐';
+
+  @override
+  String get fridge_expiry_manual => '手动输入';
+
+  @override
+  String get fridge_expiry_change_reference => '以其他品项为基准';
+
+  @override
+  String get fridge_expiry_reference_title => '选择基准品项';
+
+  @override
+  String get fridge_expiry_reference_search => '搜索品项';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => '没有搜索结果';
+
+  @override
+  String get fridge_preset_management_title => '保质期预设管理';
+
+  @override
+  String get fridge_preset_management_menu => '保质期预设管理';
+
+  @override
+  String get fridge_preset_edit_shortcut => '编辑预设';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => '自定义';
+
+  @override
+  String get fridge_preset_reset_confirm => '是否重置为默认值？';
+
+  @override
+  String get fridge_preset_edit_dialog_title => '编辑保质期';
+
+  @override
+  String get fridge_preset_add_dialog_title => '添加新预设';
+
+  @override
+  String get fridge_preset_days_input_label => '保质期（天）';
+
+  @override
+  String get fridge_preset_category_input_label => '分类';
+
+  @override
+  String get fridge_preset_storage_type_label => '保存方式';
+
+  @override
+  String get fridge_preset_delete_confirm => '删除自定义设置并恢复默认值？';
+
+  @override
+  String get fridge_preset_search_hint => '搜索分类或品项';
 
   @override
   String get dashboard_greetingMorning => '早上好';
@@ -3328,6 +3473,163 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get investment_emptyBookmarks => '没有收藏的指标';
+
+  @override
+  String get investment_screenTitle => '投资指标';
+
+  @override
+  String get investment_bookmarkSection => '收藏';
+
+  @override
+  String get investment_bookmarkReorderHint => '（长按排序）';
+
+  @override
+  String get investment_allSection => '全部指标';
+
+  @override
+  String get investment_noData => '暂无指标数据';
+
+  @override
+  String get investment_loadError => '数据加载失败';
+
+  @override
+  String get investment_retry => '重试';
+
+  @override
+  String get investment_adminTooltip => '重置历史数据（管理员）';
+
+  @override
+  String get investment_briefingTitle => 'AI市场简报';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AI简报错误：$error';
+  }
+
+  @override
+  String get investment_briefingMacro => '宏观';
+
+  @override
+  String get investment_briefingDomestic => '国内市场';
+
+  @override
+  String get investment_briefingGlobal => '全球市场';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return '更新：$time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => '重置历史数据';
+
+  @override
+  String get investment_adminDialogDesc =>
+      '从Yahoo/CoinGecko/BOK收集历史价格并保存到数据库。\n可能需要一些时间。';
+
+  @override
+  String get investment_adminDaysLabel => '收集天数 (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => '天';
+
+  @override
+  String get investment_adminExecute => '执行重置';
+
+  @override
+  String get investment_adminResultTitle => '重置完成';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo（股票/外汇/大宗商品）';
+
+  @override
+  String get investment_adminResultCrypto => '加密货币（BTC/KRW）';
+
+  @override
+  String get investment_adminResultBond => '韩国债券';
+
+  @override
+  String get investment_adminResultGold => '国内黄金价格';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count条';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return '重置失败：$error';
+  }
+
+  @override
+  String get investment_adminLoading => '正在收集历史数据...';
+
+  @override
+  String get investment_prevPrice => '昨收价';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return '乖离率 $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => '相对国际价格溢价';
+
+  @override
+  String get investment_spreadDiscount => '相对国际价格折价';
+
+  @override
+  String get investment_chartTitle => '价格走势';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get investment_chartYearChip => '1年';
+
+  @override
+  String get investment_chartLoadError => '无法加载图表';
+
+  @override
+  String get investment_chartNoData => '暂无数据';
+
+  @override
+  String investment_marketClosed(String date) {
+    return '休市中 · 最后交易日: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => '乖离率走势';
+
+  @override
+  String get investment_spreadChartSubtitle => '（相对国际价格）';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return '当前相对国际价格$label';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => '溢价';
+
+  @override
+  String get investment_spreadDiscountLabel => '折价';
+
+  @override
+  String get investment_coachIndicatorTitle => '投资指标';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      '一览主要股指、汇率、大宗商品、加密货币等实时指标。\n点击查看详细图表和历史走势。';
+
+  @override
+  String get investment_coachBookmarkTitle => '收藏';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      '点击星标添加到收藏。\n收藏的指标置顶显示，\n并可在主页仪表板小部件中直接查看。';
 
   @override
   String get householdWidget_groupTooltip => '选择群组';
@@ -3472,4 +3774,144 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get assetWidget_typeOther => '其他';
+
+  @override
+  String get legal_termsOfService => '服务条款';
+
+  @override
+  String get legal_privacyPolicy => '隐私政策';
+
+  @override
+  String get legal_termsLastUpdated => '施行日：2026年6月1日';
+
+  @override
+  String get legal_termsContact => '联系方式：hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_agreeToTerms => '服务条款';
+
+  @override
+  String get legal_agreeToPrivacy => '隐私政策';
+
+  @override
+  String get legal_required => '（必填）';
+
+  @override
+  String get legal_agreeAll => '全部同意';
+
+  @override
+  String get legal_mustAgreeTerms => '请同意服务条款。';
+
+  @override
+  String get legal_mustAgreePrivacy => '请同意隐私政策。';
+
+  @override
+  String get legal_agreeAgeVerification => '本人已满14周岁（必填）';
+
+  @override
+  String get legal_mustAgreeAgeVerification => '请确认您已满14周岁。';
+
+  @override
+  String legal_socialLoginConsent(String termsLink, String privacyLink) {
+    return '继续即表示您同意我们的$termsLink和$privacyLink。';
+  }
+
+  @override
+  String get legal_terms_section1_title => '第一条（目的）';
+
+  @override
+  String get legal_terms_section1_body =>
+      '本条款旨在规定HMN Corporation（以下简称\"公司\"）提供的Family Planner服务（以下简称\"服务\"）使用过程中，公司与会员之间的权利、义务及责任事项。';
+
+  @override
+  String get legal_terms_section2_title => '第二条（服务内容）';
+
+  @override
+  String get legal_terms_section2_body =>
+      '公司为会员提供以下服务：\n• 基于家庭群组的日历及待办事项共享\n• 成员间的资产管理及记录共享\n• 育儿奖励（表扬贴纸等）管理系统\n• 通过AI助手进行对话、日程管理、宏观经济/市场简报服务\n• 其他公司额外开发或通过合作协议提供的服务';
+
+  @override
+  String get legal_terms_section3_title => '第三条（会员义务）';
+
+  @override
+  String get legal_terms_section3_body =>
+      '• 会员不得向服务的AI助手输入违法或可能危害他人的提示。\n• 会员有责任安全管理家庭群组邀请码及账号信息。\n• 服务内的资产管理及市场简报功能仅供参考，公司对由此产生的投资结果不承担法律责任。';
+
+  @override
+  String get legal_terms_section4_title => '第四条（帖子的版权及管理）';
+
+  @override
+  String get legal_terms_section4_body =>
+      '• 会员在服务内发布的信息（聊天、日程、资产信息等）的版权归该会员所有。\n• 公司仅将会员帖子用于服务运营、改善（包括AI功能升级）及推广目的，并以无法识别个人身份的脱敏形式使用。';
+
+  @override
+  String get legal_terms_section5_title => '第五条（服务中断及变更）';
+
+  @override
+  String get legal_terms_section5_body =>
+      '公司可根据运营或技术需要变更或中断所提供服务的全部或部分，并在此情况下提前公告。';
+
+  @override
+  String get legal_terms_section6_title => '第六条（责任限制）';
+
+  @override
+  String get legal_terms_section6_body =>
+      '因自然灾害、服务器提供商故障、第三方AI API服务故障等不可抗力导致无法提供服务的情况，公司免除服务提供相关责任。';
+
+  @override
+  String get legal_terms_section7_title => '第七条（施行日）';
+
+  @override
+  String get legal_terms_section7_body => '本条款自2026年6月1日起适用。';
+
+  @override
+  String get legal_privacy_section1_title => '1. 个人信息的处理目的';
+
+  @override
+  String get legal_privacy_section1_body =>
+      'HMN Corporation（以下简称\"公司\"）为以下目的处理个人信息。所处理的个人信息不会用于以下目的以外的用途，如利用目的发生变更，将采取单独征得同意等必要措施。\n• 会员注册与管理、家庭群组（邀请码等）识别\n• 服务提供（日历、待办事项、资产管理、育儿奖励系统等）\n• AI助手（聊天机器人、简报等）服务提供及质量提升\n• 新服务开发及个性化服务提供';
+
+  @override
+  String get legal_privacy_section2_title => '2. 处理的个人信息项目';
+
+  @override
+  String get legal_privacy_section2_body =>
+      '公司为提供服务处理以下个人信息项目。\n• 必填项：电子邮件地址、密码、姓名（或昵称）、头像\n• 服务使用过程中收集的信息：日历日程、待办事项、资产数据、家庭群组信息、与AI的聊天记录、服务使用记录、设备信息';
+
+  @override
+  String get legal_privacy_section3_title => '3. 个人信息的第三方提供及委托';
+
+  @override
+  String get legal_privacy_section3_body =>
+      '为顺畅提供AI服务（上下文分析、简报生成等），公司可能将部分输入数据发送至外部AI模型API（如：OpenAI、Anthropic、Google等）。\n但该数据仅用于服务提供目的，并采取措施确保不用于模型训练。';
+
+  @override
+  String get legal_privacy_section4_title => '4. 个人信息的销毁';
+
+  @override
+  String get legal_privacy_section4_body =>
+      '公司原则上在个人信息处理目的达成后立即销毁相关个人信息。\n• 销毁程序：用户申请注销时，收集的信息将立即或在法律规定的保存期限届满后销毁。\n• 销毁方式：电子文件形式的信息采用无法恢复记录的技术方法进行销毁。';
+
+  @override
+  String get legal_privacy_section5_title => '5. 信息主体的权利及行使方法';
+
+  @override
+  String get legal_privacy_section5_body =>
+      '用户可随时查询或修改自己的个人信息，并可通过注销账号撤回对个人信息收集和使用的同意。';
+
+  @override
+  String get legal_privacy_section6_title => '6. 个人信息保护负责人';
+
+  @override
+  String get legal_privacy_section6_body =>
+      '姓名：유영진（Yoo Youngjin）\n电子邮件：hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_privacy_section7_title => '7. 施行日';
+
+  @override
+  String get legal_privacy_section7_body => '本隐私政策自2026年6月1日起适用。';
+
+  @override
+  String get legal_privacyLastUpdated => '施行日：2026年6月1日';
 }

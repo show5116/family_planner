@@ -66,6 +66,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_add_to_list => 'Add to list';
 
   @override
+  String get common_view_all => 'View All';
+
+  @override
+  String get memo_filter_personal_only => 'Personal Only';
+
+  @override
+  String get common_all_groups => 'All Groups';
+
+  @override
+  String get schedule_filter_group_schedule => 'Group Schedule';
+
+  @override
+  String common_date_format(int month, int day) {
+    return '$month/$day';
+  }
+
+  @override
   String get cart_unsaved_changes => 'You have unsaved changes';
 
   @override
@@ -750,10 +767,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_appInfoTitle => 'App Info';
 
   @override
-  String get settings_appInfoSubtitle => 'Version 1.0.0';
+  String get settings_appInfoSubtitle => 'Version info';
 
   @override
   String get settings_appDescription => 'Daily planner for families';
+
+  @override
+  String get settings_termsOfServiceTitle => 'Terms of Service';
+
+  @override
+  String get settings_termsOfServiceSubtitle => 'View our terms of service';
+
+  @override
+  String get settings_privacyPolicyTitle => 'Privacy Policy';
+
+  @override
+  String get settings_privacyPolicySubtitle => 'View our privacy policy';
 
   @override
   String get settings_helpTitle => 'Help';
@@ -3320,6 +3349,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_frequent_coach_skip => 'Skip';
 
   @override
+  String get fridge_coach_fabTitle => 'Add Storage';
+
+  @override
+  String get fridge_coach_fabDesc =>
+      'Add storage locations like fridge, freezer, or pantry.\nTap + to create a new storage.';
+
+  @override
+  String get fridge_coach_sectionTitle => 'Storage Section';
+
+  @override
+  String get fridge_coach_sectionDesc =>
+      'Tap the header to expand or collapse.\nUse the ⋮ menu to edit or delete the storage.';
+
+  @override
+  String get fridge_coach_itemTitle => 'Manage Items';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• Tap to edit name, expiry date, and memo\n• Use ± buttons to adjust quantity\n• Swipe left to mark for deletion\n• Press Save to apply changes';
+
+  @override
+  String get fridge_coach_ddayTitle => 'Expiry Alerts';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      'Register an expiry date to see remaining days.\n• Blue: plenty of time\n• Orange: expiring within 3 days\n• Red: today or already expired\nYou\'ll receive push notifications before the alert day.';
+
+  @override
+  String get fridge_coach_addItemTitle => 'Add Items';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      'Tap + next to a storage to add items.\nYou can add multiple items at once,\nwith expiry date, quantity, unit, and memo.';
+
+  @override
+  String get fridge_coach_suggestionTitle => 'Auto Expiry Suggestion';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      'Enter an item name and we\'ll suggest an expiry date automatically.\nIf the suggestion doesn\'t fit,\ntap 🔍 to choose a different reference item.';
+
+  @override
+  String get fridge_coach_skip => 'Skip';
+
+  @override
   String get fridge_cart_empty => 'Your cart is empty';
 
   @override
@@ -3372,6 +3446,81 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_group_selector_personal => 'Personal';
 
   @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '$keyword based · $storageType $days days';
+  }
+
+  @override
+  String get fridge_expiry_apply => 'Apply Suggestion';
+
+  @override
+  String get fridge_expiry_manual => 'Enter Manually';
+
+  @override
+  String get fridge_expiry_change_reference =>
+      'Use different item as reference';
+
+  @override
+  String get fridge_expiry_reference_title => 'Select Reference Item';
+
+  @override
+  String get fridge_expiry_reference_search => 'Search items';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => 'No results found';
+
+  @override
+  String get fridge_preset_management_title => 'Expiry Preset Management';
+
+  @override
+  String get fridge_preset_management_menu => 'Expiry Preset Management';
+
+  @override
+  String get fridge_preset_edit_shortcut => 'Edit Presets';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => 'Custom';
+
+  @override
+  String get fridge_preset_reset_confirm => 'Reset to default?';
+
+  @override
+  String get fridge_preset_edit_dialog_title => 'Edit Expiry Days';
+
+  @override
+  String get fridge_preset_add_dialog_title => 'Add New Preset';
+
+  @override
+  String get fridge_preset_days_input_label => 'Expiry days';
+
+  @override
+  String get fridge_preset_category_input_label => 'Category';
+
+  @override
+  String get fridge_preset_storage_type_label => 'Storage type';
+
+  @override
+  String get fridge_preset_delete_confirm =>
+      'Delete custom setting and restore default?';
+
+  @override
+  String get fridge_preset_search_hint => 'Search category or item';
+
+  @override
   String get dashboard_greetingMorning => 'Good Morning';
 
   @override
@@ -3421,6 +3570,163 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get investment_emptyBookmarks => 'No bookmarked indicators';
+
+  @override
+  String get investment_screenTitle => 'Investment Indicators';
+
+  @override
+  String get investment_bookmarkSection => 'Bookmarks';
+
+  @override
+  String get investment_bookmarkReorderHint => '(Long press to reorder)';
+
+  @override
+  String get investment_allSection => 'All Indicators';
+
+  @override
+  String get investment_noData => 'No indicator data';
+
+  @override
+  String get investment_loadError => 'Failed to load data';
+
+  @override
+  String get investment_retry => 'Retry';
+
+  @override
+  String get investment_adminTooltip => 'Reset History (Admin)';
+
+  @override
+  String get investment_briefingTitle => 'AI Market Briefing';
+
+  @override
+  String investment_briefingError(String error) {
+    return 'AI briefing error: $error';
+  }
+
+  @override
+  String get investment_briefingMacro => 'Macro';
+
+  @override
+  String get investment_briefingDomestic => 'Domestic Market';
+
+  @override
+  String get investment_briefingGlobal => 'Global Market';
+
+  @override
+  String investment_briefingUpdatedAt(String time) {
+    return 'Updated: $time';
+  }
+
+  @override
+  String get investment_adminDialogTitle => 'Reset History Data';
+
+  @override
+  String get investment_adminDialogDesc =>
+      'Collects historical prices from Yahoo/CoinGecko/BOK and saves to DB.\nThis may take a while.';
+
+  @override
+  String get investment_adminDaysLabel => 'Days to collect (1~3650)';
+
+  @override
+  String get investment_adminDaysSuffix => 'days';
+
+  @override
+  String get investment_adminExecute => 'Execute Reset';
+
+  @override
+  String get investment_adminResultTitle => 'Reset Complete';
+
+  @override
+  String get investment_adminResultYahoo => 'Yahoo (Stocks/FX/Commodities)';
+
+  @override
+  String get investment_adminResultCrypto => 'Crypto (BTC/KRW)';
+
+  @override
+  String get investment_adminResultBond => 'Korean Bonds';
+
+  @override
+  String get investment_adminResultGold => 'Domestic Gold';
+
+  @override
+  String investment_adminResultCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String investment_adminInitError(String error) {
+    return 'Reset failed: $error';
+  }
+
+  @override
+  String get investment_adminLoading => 'Collecting historical data...';
+
+  @override
+  String get investment_prevPrice => 'Prev. Close';
+
+  @override
+  String investment_spreadBadge(String value) {
+    return 'Spread $value%';
+  }
+
+  @override
+  String get investment_spreadPremium => 'Premium vs international price';
+
+  @override
+  String get investment_spreadDiscount => 'Discount vs international price';
+
+  @override
+  String get investment_chartTitle => 'Price Trend';
+
+  @override
+  String investment_chartDayChip(int days) {
+    return '${days}d';
+  }
+
+  @override
+  String get investment_chartYearChip => '1Y';
+
+  @override
+  String get investment_chartLoadError => 'Unable to load chart';
+
+  @override
+  String get investment_chartNoData => 'No data';
+
+  @override
+  String investment_marketClosed(String date) {
+    return 'Market closed · Last trading day: $date';
+  }
+
+  @override
+  String get investment_spreadChartTitle => 'Spread Trend';
+
+  @override
+  String get investment_spreadChartSubtitle => '(vs. international price)';
+
+  @override
+  String investment_spreadSummaryLabel(String label) {
+    return 'Currently $label vs international price';
+  }
+
+  @override
+  String get investment_spreadPremiumLabel => 'Premium';
+
+  @override
+  String get investment_spreadDiscountLabel => 'Discount';
+
+  @override
+  String get investment_coachIndicatorTitle => 'Investment Indicators';
+
+  @override
+  String get investment_coachIndicatorDesc =>
+      'View major stock indices, exchange rates,\ncommodities, and crypto in real time.\nTap to see detailed charts and history.';
+
+  @override
+  String get investment_coachBookmarkTitle => 'Bookmarks';
+
+  @override
+  String get investment_coachBookmarkDesc =>
+      'Tap the star to bookmark an indicator.\nBookmarked indicators are pinned to the top\nand visible on the home dashboard widget.';
 
   @override
   String get householdWidget_groupTooltip => 'Select Group';
@@ -3565,4 +3871,156 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get assetWidget_typeOther => 'Other';
+
+  @override
+  String get legal_termsOfService => 'Terms of Service';
+
+  @override
+  String get legal_privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get legal_termsLastUpdated => 'Effective date: June 1, 2026';
+
+  @override
+  String get legal_termsContact => 'Contact: hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_agreeToTerms => 'Terms of Service';
+
+  @override
+  String get legal_agreeToPrivacy => 'Privacy Policy';
+
+  @override
+  String get legal_required => '(Required)';
+
+  @override
+  String get legal_agreeAll => 'Agree to all';
+
+  @override
+  String get legal_mustAgreeTerms => 'Please agree to the Terms of Service.';
+
+  @override
+  String get legal_mustAgreePrivacy => 'Please agree to the Privacy Policy.';
+
+  @override
+  String get legal_agreeAgeVerification =>
+      'I am 14 years of age or older (Required)';
+
+  @override
+  String get legal_mustAgreeAgeVerification =>
+      'Please confirm that you are 14 years of age or older.';
+
+  @override
+  String legal_socialLoginConsent(String termsLink, String privacyLink) {
+    return 'By continuing, you agree to our $termsLink and $privacyLink.';
+  }
+
+  @override
+  String get legal_terms_section1_title => 'Article 1 (Purpose)';
+
+  @override
+  String get legal_terms_section1_body =>
+      'These Terms govern the rights, obligations, and responsibilities between HMN Corporation (the \"Company\") and its members in connection with the use of the Family Planner service (the \"Service\") provided by the Company.';
+
+  @override
+  String get legal_terms_section2_title => 'Article 2 (Service Content)';
+
+  @override
+  String get legal_terms_section2_body =>
+      'The Company provides members with the following services:\n• Family group-based calendar and to-do sharing\n• Asset management and history sharing among members\n• Child reward (praise stickers, etc.) management system\n• Conversation, schedule management, and macroeconomic/market briefing services via AI agent\n• Other services additionally developed by the Company or provided through partnership agreements';
+
+  @override
+  String get legal_terms_section3_title => 'Article 3 (Member Obligations)';
+
+  @override
+  String get legal_terms_section3_body =>
+      '• Members must not input illegal or harmful prompts to the AI agent within the Service.\n• Members are responsible for securely managing family group invitation codes and account information.\n• The asset management and market briefing features are provided for reference purposes only, and the Company bears no legal responsibility for investment outcomes based on such information.';
+
+  @override
+  String get legal_terms_section4_title =>
+      'Article 4 (Copyright and Management of Posts)';
+
+  @override
+  String get legal_terms_section4_body =>
+      '• Copyright of information posted by members within the Service (chats, schedules, asset information, etc.) belongs to the respective member.\n• The Company uses member posts only for service operation, improvement (including AI feature enhancement), and promotion, and only in a de-identified form that cannot identify individuals.';
+
+  @override
+  String get legal_terms_section5_title =>
+      'Article 5 (Service Suspension and Changes)';
+
+  @override
+  String get legal_terms_section5_body =>
+      'The Company may change or suspend all or part of the Service as needed for operational or technical reasons, and will provide advance notice in such cases.';
+
+  @override
+  String get legal_terms_section6_title =>
+      'Article 6 (Limitation of Liability)';
+
+  @override
+  String get legal_terms_section6_body =>
+      'The Company is exempt from liability for service provision in cases where the Service cannot be provided due to force majeure events such as natural disasters, server provider failures, or third-party AI API service failures.';
+
+  @override
+  String get legal_terms_section7_title => 'Article 7 (Effective Date)';
+
+  @override
+  String get legal_terms_section7_body =>
+      'These Terms are effective from June 1, 2026.';
+
+  @override
+  String get legal_privacy_section1_title =>
+      '1. Purpose of Processing Personal Information';
+
+  @override
+  String get legal_privacy_section1_body =>
+      'HMN Corporation (the \'Company\') processes personal information for the following purposes. The personal information being processed will not be used for any purpose other than the following, and if the purpose of use changes, necessary measures such as obtaining separate consent will be taken.\n• Member registration and management, family group (invitation code, etc.) identification\n• Service provision (calendar, to-do, asset management, child reward system, etc.)\n• AI agent (chatbot, briefing, etc.) service provision and quality improvement\n• New service development and personalized service provision';
+
+  @override
+  String get legal_privacy_section2_title =>
+      '2. Personal Information Items Processed';
+
+  @override
+  String get legal_privacy_section2_body =>
+      'The Company processes the following personal information items to provide its services.\n• Required items: email address, password, name (or nickname), profile image\n• Information collected during service use: calendar events, to-do lists, asset data, family group information, AI chat history, service usage records, device information';
+
+  @override
+  String get legal_privacy_section3_title =>
+      '3. Third-Party Provision and Entrustment of Personal Information';
+
+  @override
+  String get legal_privacy_section3_body =>
+      'To provide smooth AI services (context analysis, briefing generation, etc.), the Company may transmit some of the entered data to external AI model APIs (e.g., OpenAI, Anthropic, Google, etc.).\nHowever, this data is used only for service provision purposes and measures are taken to ensure it is not used for model training.';
+
+  @override
+  String get legal_privacy_section4_title =>
+      '4. Destruction of Personal Information';
+
+  @override
+  String get legal_privacy_section4_body =>
+      'In principle, the Company destroys personal information without delay when the purpose of processing has been achieved.\n• Destruction procedure: When a user requests account withdrawal, the collected information is destroyed immediately or after the retention period required by law has elapsed.\n• Destruction method: Information in electronic file format is destroyed using technical methods that make it impossible to reproduce the records.';
+
+  @override
+  String get legal_privacy_section5_title =>
+      '5. Rights of Data Subjects and How to Exercise Them';
+
+  @override
+  String get legal_privacy_section5_body =>
+      'Users may access or modify their personal information at any time, and may withdraw consent to the collection and use of personal information by withdrawing from membership.';
+
+  @override
+  String get legal_privacy_section6_title => '6. Privacy Officer';
+
+  @override
+  String get legal_privacy_section6_body =>
+      'Name: Yoo Youngjin\nEmail: hmn.corp.dev@gmail.com';
+
+  @override
+  String get legal_privacy_section7_title => '7. Effective Date';
+
+  @override
+  String get legal_privacy_section7_body =>
+      'This Privacy Policy is effective from June 1, 2026.';
+
+  @override
+  String get legal_privacyLastUpdated => 'Effective date: June 1, 2026';
 }

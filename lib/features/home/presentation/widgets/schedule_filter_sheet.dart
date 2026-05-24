@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 일정/할일 위젯 공통 필터 바텀시트
 class ScheduleFilterSheet extends StatefulWidget {
@@ -117,14 +118,14 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
                 vertical: AppSizes.spaceS,
               ),
               child: Text(
-                '그룹 일정',
+                AppLocalizations.of(context)!.schedule_filter_group_schedule,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
               ),
             ),
             CheckboxListTile(
-              title: const Text('전체 그룹'),
+              title: Text(AppLocalizations.of(context)!.common_all_groups),
               value: _isAllGroups(),
               onChanged: (_) => _toggleAllGroups(),
               controlAffinity: ListTileControlAffinity.leading,

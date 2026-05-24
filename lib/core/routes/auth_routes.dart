@@ -7,6 +7,8 @@ import 'package:family_planner/features/auth/presentation/screens/email_verifica
 import 'package:family_planner/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/oauth_callback_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/splash_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/terms_of_service_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/privacy_policy_screen.dart';
 
 /// 인증 관련 라우트 목록
 ///
@@ -61,6 +63,16 @@ List<RouteBase> getAuthRoutes() {
           email: email,
         );
       },
+    ),
+    GoRoute(
+      path: AppRoutes.termsOfService,
+      name: 'termsOfService',
+      builder: (context, state) => const TermsOfServiceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.privacyPolicy,
+      name: 'privacyPolicy',
+      builder: (context, state) => const PrivacyPolicyScreen(),
     ),
     GoRoute(
       path: AppRoutes.oauthCallback,

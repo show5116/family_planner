@@ -117,7 +117,7 @@ class _IndicatorItem extends ConsumerWidget {
           Expanded(
             flex: 2,
             child: Text(
-              indicator.nameKo,
+              indicator.displayName,
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),

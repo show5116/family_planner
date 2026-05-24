@@ -43,6 +43,7 @@ import 'package:family_planner/features/main/savings/presentation/screens/saving
 import 'package:family_planner/features/main/savings/presentation/screens/savings_transactions_screen.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/fridge/presentation/screens/fridge_screen.dart';
+import 'package:family_planner/features/main/fridge/presentation/screens/expiry_preset_management_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_history_detail_screen.dart';
 
@@ -431,6 +432,11 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.fridge,
       name: 'fridge',
       builder: (context, state) => const FridgeScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.fridgeExpiryPresets,
+      name: 'fridgeExpiryPresets',
+      builder: (context, state) => const ExpiryPresetManagementScreen(),
     ),
     GoRoute(
       path: AppRoutes.shopping,

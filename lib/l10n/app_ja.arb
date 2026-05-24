@@ -30,6 +30,22 @@
   "common_undo": "元に戻す",
   "common_add_to_list": "リストに追加",
   "@common_add_to_list": { "description": "リストに追加ボタン" },
+  "common_view_all": "すべて見る",
+  "@common_view_all": { "description": "すべて見るボタン" },
+  "memo_filter_personal_only": "個人メモのみ",
+  "@memo_filter_personal_only": { "description": "メモフィルター：個人メモのみ" },
+  "common_all_groups": "すべてのグループ",
+  "@common_all_groups": { "description": "すべてのグループ選択オプション" },
+  "schedule_filter_group_schedule": "グループ予定",
+  "@schedule_filter_group_schedule": { "description": "フィルターシートのグループ予定セクションタイトル" },
+  "common_date_format": "{month}月{day}日",
+  "@common_date_format": {
+    "description": "日付表示形式（月、日）",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "cart_unsaved_changes": "未保存の変更があります",
   "common_next": "次へ",
   "common_back": "戻る",
@@ -267,7 +283,11 @@
   "settings_notificationSubtitle": "通知受信設定を変更します",
   "settings_information": "情報",
   "settings_appInfoTitle": "アプリ情報",
-  "settings_appInfoSubtitle": "バージョン 1.0.0",
+  "settings_appInfoSubtitle": "バージョン情報",
+  "settings_termsOfServiceTitle": "利用規約",
+  "settings_termsOfServiceSubtitle": "利用規約を確認する",
+  "settings_privacyPolicyTitle": "プライバシーポリシー",
+  "settings_privacyPolicySubtitle": "プライバシーポリシーを確認する",
   "settings_appDescription": "家族と一緒に日常を管理するプランナー",
   "settings_helpTitle": "ヘルプ",
   "settings_helpSubtitle": "使い方を確認します",
@@ -1509,6 +1529,21 @@
   "fridge_frequent_coach_addToCartTitle": "カートにすぐ追加",
   "fridge_frequent_coach_addToCartDesc": "ボタン一つで現在のカートに\n即座に追加できます。",
   "fridge_frequent_coach_skip": "スキップ",
+
+  "fridge_coach_fabTitle": "保管場所を追加",
+  "fridge_coach_fabDesc": "冷蔵庫、冷凍室、パントリーなど保管場所を追加できます。\n+ボタンを押して作成してみましょう。",
+  "fridge_coach_sectionTitle": "保管場所",
+  "fridge_coach_sectionDesc": "ヘッダーをタップして開閉できます。\n右側の⋮メニューで編集・削除ができます。",
+  "fridge_coach_itemTitle": "食材管理",
+  "fridge_coach_itemDesc": "• タップで名前・消費期限・メモを編集できます\n• ±ボタンで数量を調整できます\n• 左スワイプで削除マークが付きます\n• 変更後は保存ボタンを押してください",
+  "fridge_coach_ddayTitle": "消費期限アラート",
+  "fridge_coach_ddayDesc": "消費期限を登録すると残り日数が表示されます。\n• 青：余裕あり\n• オレンジ：3日以内\n• 赤：当日または期限切れ\n設定した日前にプッシュ通知が届きます。",
+  "fridge_coach_addItemTitle": "食材を追加",
+  "fridge_coach_addItemDesc": "保管場所の右側の+ボタンで追加できます。\n複数の食材を一度に登録でき、\n消費期限・数量・単位・メモも入力できます。",
+  "fridge_coach_suggestionTitle": "消費期限の自動提案",
+  "fridge_coach_suggestionDesc": "食材名を入力すると消費期限が自動で提案されます。\n提案が合わない場合は\n🔍ボタンで別の食材を基準にできます。",
+  "fridge_coach_skip": "スキップ",
+
   "fridge_cart_empty": "カートが空です",
   "@fridge_cart_empty": { "description": "カートが空" },
   "fridge_cart_add_item": "品目を追加",
@@ -1542,6 +1577,63 @@
   "fridge_group_selector_personal": "個人",
   "@fridge_group_selector_personal": { "description": "個人モード" },
 
+  "fridge_expiry_suggestion_label": "{keyword}基準 · {storageType} {days}日推奨",
+  "@fridge_expiry_suggestion_label": {
+    "description": "消費期限推奨チップテキスト",
+    "placeholders": {
+      "keyword": { "type": "String" },
+      "storageType": { "type": "String" },
+      "days": { "type": "int" }
+    }
+  },
+  "fridge_expiry_apply": "推奨を適用",
+  "@fridge_expiry_apply": { "description": "推奨消費期限を適用" },
+  "fridge_expiry_manual": "手動入力",
+  "@fridge_expiry_manual": { "description": "消費期限を手動入力" },
+  "fridge_expiry_change_reference": "別の品目を基準にする",
+  "@fridge_expiry_change_reference": { "description": "基準品目変更ボタン" },
+  "fridge_expiry_reference_title": "基準品目を選択",
+  "@fridge_expiry_reference_title": { "description": "基準品目選択モーダルタイトル" },
+  "fridge_expiry_reference_search": "品目を検索",
+  "@fridge_expiry_reference_search": { "description": "基準品目検索ヒント" },
+  "fridge_expiry_reference_days": "{days}日",
+  "@fridge_expiry_reference_days": {
+    "description": "推奨日数表示",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fridge_expiry_reference_empty": "検索結果がありません",
+  "@fridge_expiry_reference_empty": { "description": "基準品目検索結果なし" },
+
+  "fridge_preset_management_title": "賞味期限プリセット管理",
+  "@fridge_preset_management_title": { "description": "画面タイトル" },
+  "fridge_preset_management_menu": "賞味期限プリセット管理",
+  "@fridge_preset_management_menu": { "description": "アプリバーメニュー項目" },
+  "fridge_preset_edit_shortcut": "プリセット編集",
+  "@fridge_preset_edit_shortcut": { "description": "基準品目選択シートの編集ショートカット" },
+  "fridge_preset_days_label": "{days}日",
+  "@fridge_preset_days_label": {
+    "description": "日数ラベル",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fridge_preset_custom_badge": "カスタム",
+  "@fridge_preset_custom_badge": { "description": "グループカスタムプリセットバッジ" },
+  "fridge_preset_reset_confirm": "デフォルトにリセットしますか？",
+  "@fridge_preset_reset_confirm": { "description": "リセット確認メッセージ" },
+  "fridge_preset_edit_dialog_title": "賞味期限を編集",
+  "@fridge_preset_edit_dialog_title": { "description": "編集ダイアログタイトル" },
+  "fridge_preset_add_dialog_title": "新規プリセット登録",
+  "@fridge_preset_add_dialog_title": { "description": "登録ダイアログタイトル" },
+  "fridge_preset_days_input_label": "賞味期限（日）",
+  "@fridge_preset_days_input_label": { "description": "日数入力フィールドラベル" },
+  "fridge_preset_category_input_label": "カテゴリ",
+  "@fridge_preset_category_input_label": { "description": "カテゴリ入力フィールドラベル" },
+  "fridge_preset_storage_type_label": "保管方法",
+  "@fridge_preset_storage_type_label": { "description": "保管方法選択ラベル" },
+  "fridge_preset_delete_confirm": "カスタム設定を削除してデフォルトに戻しますか？",
+  "@fridge_preset_delete_confirm": { "description": "削除確認メッセージ" },
+  "fridge_preset_search_hint": "カテゴリまたは品目を検索",
+  "@fridge_preset_search_hint": { "description": "プリセット検索ヒント" },
+
   "dashboard_greetingMorning": "おはようございます",
   "dashboard_greetingAfternoon": "こんにちは",
   "dashboard_greetingEvening": "こんばんは",
@@ -1561,6 +1653,81 @@
   "investment_widgetTitle": "投資指標",
   "investment_errorMessage": "データを読み込めません",
   "investment_emptyBookmarks": "お気に入りの指標がありません",
+
+  "investment_screenTitle": "投資指標",
+  "investment_bookmarkSection": "お気に入り",
+  "investment_bookmarkReorderHint": "（長押しで並べ替え）",
+  "investment_allSection": "全指標",
+  "investment_noData": "指標データがありません",
+  "investment_loadError": "データを読み込めませんでした",
+  "investment_retry": "再試行",
+  "investment_adminTooltip": "過去データ初期化（管理者）",
+
+  "investment_briefingTitle": "AI市況ブリーフィング",
+  "investment_briefingError": "AIブリーフィングエラー: {error}",
+  "@investment_briefingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_briefingMacro": "マクロ",
+  "investment_briefingDomestic": "国内市場",
+  "investment_briefingGlobal": "グローバル市場",
+  "investment_briefingUpdatedAt": "更新: {time}",
+  "@investment_briefingUpdatedAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "investment_adminDialogTitle": "過去データ初期化",
+  "investment_adminDialogDesc": "Yahoo/CoinGecko/BOKから過去の相場を収集しDBに保存します。\n時間がかかる場合があります。",
+  "investment_adminDaysLabel": "収集日数 (1~3650)",
+  "investment_adminDaysSuffix": "日",
+  "investment_adminExecute": "初期化実行",
+  "investment_adminResultTitle": "初期化完了",
+  "investment_adminResultYahoo": "Yahoo（株価/為替/商品）",
+  "investment_adminResultCrypto": "暗号通貨（BTC/KRW）",
+  "investment_adminResultBond": "韓国債券",
+  "investment_adminResultGold": "国内金価格",
+  "investment_adminResultCount": "{count}件",
+  "@investment_adminResultCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "investment_adminInitError": "初期化失敗: {error}",
+  "@investment_adminInitError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "investment_adminLoading": "過去データを収集中...",
+
+  "investment_prevPrice": "前日終値",
+  "investment_spreadBadge": "乖離率 {value}%",
+  "@investment_spreadBadge": {
+    "placeholders": { "value": { "type": "String" } }
+  },
+  "investment_spreadPremium": "国際換算価格比プレミアム",
+  "investment_spreadDiscount": "国際換算価格比ディスカウント",
+  "investment_chartTitle": "相場推移",
+  "investment_chartDayChip": "{days}日",
+  "@investment_chartDayChip": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "investment_chartYearChip": "1年",
+  "investment_chartLoadError": "チャートを読み込めません",
+  "investment_chartNoData": "データがありません",
+  "investment_marketClosed": "休場中・最終取引日: {date}",
+  "@investment_marketClosed": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "investment_spreadChartTitle": "乖離率推移",
+  "investment_spreadChartSubtitle": "（国際換算価格比）",
+  "investment_spreadSummaryLabel": "現在国際換算価格比 {label}",
+  "@investment_spreadSummaryLabel": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "investment_spreadPremiumLabel": "プレミアム",
+  "investment_spreadDiscountLabel": "ディスカウント",
+
+  "investment_coachIndicatorTitle": "投資指標",
+  "investment_coachIndicatorDesc": "主要株価指数、為替、商品、暗号通貨など\nリアルタイム指標を一目で確認できます。\nタップで詳細チャートと過去の推移を表示。",
+  "investment_coachBookmarkTitle": "お気に入り",
+  "investment_coachBookmarkDesc": "星マークをタップしてお気に入りに追加。\nお気に入りはリスト上部に固定され、\nホームダッシュボードウィジェットで確認できます。",
 
   "householdWidget_groupTooltip": "グループ選択",
   "householdWidget_incomeLabel": "{month} 入金",
@@ -1631,5 +1798,69 @@
   "assetWidget_typeFund": "ファンド",
   "assetWidget_typeRealEstate": "不動産",
   "assetWidget_typeGold": "実物金",
-  "assetWidget_typeOther": "その他"
+  "assetWidget_typeOther": "その他",
+
+  "legal_termsOfService": "利用規約",
+  "legal_privacyPolicy": "プライバシーポリシー",
+  "legal_termsLastUpdated": "施行日: 2026年6月1日",
+  "legal_termsContact": "お問い合わせ: hmn.corp.dev@gmail.com",
+  "legal_agreeToTerms": "利用規約",
+  "legal_agreeToPrivacy": "プライバシーポリシー",
+  "legal_required": "(必須)",
+  "legal_agreeAll": "すべてに同意",
+  "legal_mustAgreeTerms": "利用規約に同意してください。",
+  "legal_mustAgreePrivacy": "プライバシーポリシーに同意してください。",
+  "legal_agreeAgeVerification": "14歳以上です（必須）",
+  "legal_mustAgreeAgeVerification": "14歳以上であることを確認してください。",
+  "legal_socialLoginConsent": "続けることで、{termsLink}および{privacyLink}に同意したものとみなされます。",
+  "@legal_socialLoginConsent": {
+    "placeholders": {
+      "termsLink": { "type": "String" },
+      "privacyLink": { "type": "String" }
+    }
+  },
+
+  "legal_terms_section1_title": "第1条（目的）",
+  "legal_terms_section1_body": "本規約は、エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）が提供するFamily Plannerサービス（以下「サービス」）の利用に関して、会社と会員間の権利・義務および責任事項を定めることを目的とします。",
+
+  "legal_terms_section2_title": "第2条（サービスの内容）",
+  "legal_terms_section2_body": "会社は会員に以下のサービスを提供します：\n• 家族グループ単位のカレンダーおよびタスク共有\n• メンバー間の資産管理および履歴共有\n• 育児報酬（ほめシール等）管理システム\n• AIエージェントを通じた会話、スケジュール管理、マクロ経済/市場ブリーフィングサービス\n• その他会社が追加開発または提携契約等を通じて提供するサービス",
+
+  "legal_terms_section3_title": "第3条（会員の義務）",
+  "legal_terms_section3_body": "• 会員はサービスのAIエージェントに対して、違法または他者に危害を加えるプロンプトを入力してはなりません。\n• 会員は家族グループの招待コードおよびアカウント情報を安全に管理する責任を負います。\n• サービス内の資産管理および市場ブリーフィング機能は参考データの提供を目的としており、会社はこれによる投資結果について法的責任を負いません。",
+
+  "legal_terms_section4_title": "第4条（投稿物の著作権および管理）",
+  "legal_terms_section4_body": "• 会員がサービス内に投稿した情報（チャット、スケジュール、資産情報等）の著作権は当該会員に帰属します。\n• 会社は会員の投稿物をサービス運営・改善（AI機能高度化等）・広報目的にのみ活用し、個人を特定できない形に非識別化して使用します。",
+
+  "legal_terms_section5_title": "第5条（サービスの中断および変更）",
+  "legal_terms_section5_body": "会社は運営上・技術上の必要に応じて提供中のサービスの全部または一部を変更または中断することができ、その場合は事前に告知します。",
+
+  "legal_terms_section6_title": "第6条（責任の制限）",
+  "legal_terms_section6_body": "会社は、天災、サーバー提供業者の障害、第三者AIAPIサービスの障害等の不可抗力によりサービスを提供できない場合、サービス提供に関する責任が免除されます。",
+
+  "legal_terms_section7_title": "第7条（施行日）",
+  "legal_terms_section7_body": "本規約は2026年6月1日より適用されます。",
+
+  "legal_privacy_section1_title": "1. 個人情報の処理目的",
+  "legal_privacy_section1_body": "エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）は、以下の目的のために個人情報を処理します。処理している個人情報は以下の目的以外の用途には使用されず、利用目的が変更される場合には別途同意を取得するなど必要な措置を講じます。\n• 会員登録・管理、家族グループ（招待コード等）の識別\n• サービス提供（カレンダー、タスク、資産管理、育児報酬システム等）\n• AIエージェント（チャットボット、ブリーフィング等）サービスの提供と品質向上\n• 新サービスの開発およびパーソナライズされたサービスの提供",
+
+  "legal_privacy_section2_title": "2. 処理する個人情報の項目",
+  "legal_privacy_section2_body": "会社はサービス提供のために以下の個人情報を処理しています。\n• 必須項目：メールアドレス、パスワード、氏名（またはニックネーム）、プロフィール画像\n• サービス利用過程で収集される情報：カレンダーの予定、タスクリスト、資産データ、家族グループ情報、AIとのチャット履歴、サービス利用記録、端末情報",
+
+  "legal_privacy_section3_title": "3. 個人情報の第三者提供および委託",
+  "legal_privacy_section3_body": "スムーズなAIサービス（文脈分析、ブリーフィング生成等）の提供のため、入力されたデータの一部を外部AIモデルAPI（例：OpenAI、Anthropic、Googleなど）に送信することがあります。\nただし、このデータはサービス提供目的にのみ使用され、モデルの学習には使用されないよう措置を講じます。",
+
+  "legal_privacy_section4_title": "4. 個人情報の廃棄",
+  "legal_privacy_section4_body": "会社は原則として、個人情報の処理目的が達成された場合は速やかに当該個人情報を廃棄します。\n• 廃棄手順：利用者が退会を要請した場合、収集された情報は即時または法令に基づく保存期間の経過後に廃棄されます。\n• 廃棄方法：電子ファイル形式の情報は、記録を再生できない技術的方法を使用します。",
+
+  "legal_privacy_section5_title": "5. 情報主体の権利および行使方法",
+  "legal_privacy_section5_body": "利用者はいつでも自己の個人情報を照会・修正することができ、退会を通じて個人情報の収集・利用への同意を撤回することができます。",
+
+  "legal_privacy_section6_title": "6. 個人情報保護責任者",
+  "legal_privacy_section6_body": "氏名：ユ・ヨンジン\nメール：hmn.corp.dev@gmail.com",
+
+  "legal_privacy_section7_title": "7. 施行日",
+  "legal_privacy_section7_body": "本プライバシーポリシーは2026年6月1日より適用されます。",
+
+  "legal_privacyLastUpdated": "施行日: 2026年6月1日"
 }
