@@ -107,6 +107,7 @@ class AppRoutes {
 
   // Fridge & Shopping Routes
   static const String fridge = '/fridge';
+  static const String fridgeExpiryPresets = '/fridge/expiry-presets';
   static const String shopping = '/shopping';
   static const String shoppingHistoryDetail = '/shopping/history/:historyId';
   static const String fridgeShoppingHistory = '/fridge/history';

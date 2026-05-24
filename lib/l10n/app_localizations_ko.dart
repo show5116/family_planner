@@ -3285,6 +3285,51 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_frequent_coach_skip => '건너뛰기';
 
   @override
+  String get fridge_coach_fabTitle => '보관소 추가';
+
+  @override
+  String get fridge_coach_fabDesc =>
+      '냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.';
+
+  @override
+  String get fridge_coach_sectionTitle => '보관소';
+
+  @override
+  String get fridge_coach_sectionDesc =>
+      '헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.';
+
+  @override
+  String get fridge_coach_itemTitle => '품목 관리';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다';
+
+  @override
+  String get fridge_coach_ddayTitle => '유통기한 알림';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      '품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.';
+
+  @override
+  String get fridge_coach_addItemTitle => '품목 추가';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      '보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.';
+
+  @override
+  String get fridge_coach_suggestionTitle => '유통기한 자동 추천';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      '품목명을 입력하면 서버가 자동으로 유통기한을 추천해줘요.\n추천 결과가 마음에 들지 않으면\n🔍 버튼으로 다른 품목을 기준으로 설정할 수 있어요.';
+
+  @override
+  String get fridge_coach_skip => '건너뛰기';
+
+  @override
   String get fridge_cart_empty => '장바구니가 비어 있습니다';
 
   @override
@@ -3333,6 +3378,79 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '개인';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '$keyword 기준 · $storageType $days일 추천';
+  }
+
+  @override
+  String get fridge_expiry_apply => '추천 적용';
+
+  @override
+  String get fridge_expiry_manual => '직접 입력';
+
+  @override
+  String get fridge_expiry_change_reference => '다른 품목 기준으로 설정';
+
+  @override
+  String get fridge_expiry_reference_title => '유통기한 기준 품목 선택';
+
+  @override
+  String get fridge_expiry_reference_search => '품목 검색';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days일';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => '검색 결과가 없습니다';
+
+  @override
+  String get fridge_preset_management_title => '유통기한 프리셋 관리';
+
+  @override
+  String get fridge_preset_management_menu => '유통기한 프리셋 관리';
+
+  @override
+  String get fridge_preset_edit_shortcut => '프리셋 편집';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days일';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => '커스텀';
+
+  @override
+  String get fridge_preset_reset_confirm => '기본값으로 초기화하시겠습니까?';
+
+  @override
+  String get fridge_preset_edit_dialog_title => '유통기한 수정';
+
+  @override
+  String get fridge_preset_add_dialog_title => '새 프리셋 등록';
+
+  @override
+  String get fridge_preset_days_input_label => '유통기한 (일)';
+
+  @override
+  String get fridge_preset_category_input_label => '카테고리';
+
+  @override
+  String get fridge_preset_storage_type_label => '보관 방법';
+
+  @override
+  String get fridge_preset_delete_confirm => '커스텀 설정을 삭제하고 기본값으로 되돌리겠습니까?';
+
+  @override
+  String get fridge_preset_search_hint => '카테고리 또는 품목 검색';
 
   @override
   String get dashboard_greetingMorning => '좋은 아침입니다';

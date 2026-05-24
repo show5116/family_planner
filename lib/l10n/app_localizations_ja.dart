@@ -3278,6 +3278,51 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_frequent_coach_skip => 'スキップ';
 
   @override
+  String get fridge_coach_fabTitle => '保管場所を追加';
+
+  @override
+  String get fridge_coach_fabDesc =>
+      '冷蔵庫、冷凍室、パントリーなど保管場所を追加できます。\n+ボタンを押して作成してみましょう。';
+
+  @override
+  String get fridge_coach_sectionTitle => '保管場所';
+
+  @override
+  String get fridge_coach_sectionDesc =>
+      'ヘッダーをタップして開閉できます。\n右側の⋮メニューで編集・削除ができます。';
+
+  @override
+  String get fridge_coach_itemTitle => '食材管理';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• タップで名前・消費期限・メモを編集できます\n• ±ボタンで数量を調整できます\n• 左スワイプで削除マークが付きます\n• 変更後は保存ボタンを押してください';
+
+  @override
+  String get fridge_coach_ddayTitle => '消費期限アラート';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      '消費期限を登録すると残り日数が表示されます。\n• 青：余裕あり\n• オレンジ：3日以内\n• 赤：当日または期限切れ\n設定した日前にプッシュ通知が届きます。';
+
+  @override
+  String get fridge_coach_addItemTitle => '食材を追加';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      '保管場所の右側の+ボタンで追加できます。\n複数の食材を一度に登録でき、\n消費期限・数量・単位・メモも入力できます。';
+
+  @override
+  String get fridge_coach_suggestionTitle => '消費期限の自動提案';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      '食材名を入力すると消費期限が自動で提案されます。\n提案が合わない場合は\n🔍ボタンで別の食材を基準にできます。';
+
+  @override
+  String get fridge_coach_skip => 'スキップ';
+
+  @override
   String get fridge_cart_empty => 'カートが空です';
 
   @override
@@ -3326,6 +3371,79 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '個人';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '$keyword基準 · $storageType $days日推奨';
+  }
+
+  @override
+  String get fridge_expiry_apply => '推奨を適用';
+
+  @override
+  String get fridge_expiry_manual => '手動入力';
+
+  @override
+  String get fridge_expiry_change_reference => '別の品目を基準にする';
+
+  @override
+  String get fridge_expiry_reference_title => '基準品目を選択';
+
+  @override
+  String get fridge_expiry_reference_search => '品目を検索';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => '検索結果がありません';
+
+  @override
+  String get fridge_preset_management_title => '賞味期限プリセット管理';
+
+  @override
+  String get fridge_preset_management_menu => '賞味期限プリセット管理';
+
+  @override
+  String get fridge_preset_edit_shortcut => 'プリセット編集';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => 'カスタム';
+
+  @override
+  String get fridge_preset_reset_confirm => 'デフォルトにリセットしますか？';
+
+  @override
+  String get fridge_preset_edit_dialog_title => '賞味期限を編集';
+
+  @override
+  String get fridge_preset_add_dialog_title => '新規プリセット登録';
+
+  @override
+  String get fridge_preset_days_input_label => '賞味期限（日）';
+
+  @override
+  String get fridge_preset_category_input_label => 'カテゴリ';
+
+  @override
+  String get fridge_preset_storage_type_label => '保管方法';
+
+  @override
+  String get fridge_preset_delete_confirm => 'カスタム設定を削除してデフォルトに戻しますか？';
+
+  @override
+  String get fridge_preset_search_hint => 'カテゴリまたは品目を検索';
 
   @override
   String get dashboard_greetingMorning => 'おはようございます';

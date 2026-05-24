@@ -3258,6 +3258,49 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_frequent_coach_skip => '跳过';
 
   @override
+  String get fridge_coach_fabTitle => '添加储存位置';
+
+  @override
+  String get fridge_coach_fabDesc => '可以添加冰箱、冷冻室、储藏室等储存位置。\n点击+按钮来创建储存位置。';
+
+  @override
+  String get fridge_coach_sectionTitle => '储存位置';
+
+  @override
+  String get fridge_coach_sectionDesc => '点击标题可以展开或收起。\n使用右侧⋮菜单可以编辑或删除储存位置。';
+
+  @override
+  String get fridge_coach_itemTitle => '管理食材';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• 点击可编辑名称、保质期和备注\n• 使用±按钮调整数量\n• 向左滑动标记为删除\n• 更改后需按保存按钮才能生效';
+
+  @override
+  String get fridge_coach_ddayTitle => '保质期提醒';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      '登记保质期后会显示剩余天数。\n• 蓝色：时间充裕\n• 橙色：3天内即将到期\n• 红色：今天或已过期\n在设定的提醒日前会收到推送通知。';
+
+  @override
+  String get fridge_coach_addItemTitle => '添加食材';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      '点击储存位置右侧+按钮添加食材。\n可以一次添加多个食材，\n同时输入保质期、数量、单位和备注。';
+
+  @override
+  String get fridge_coach_suggestionTitle => '保质期自动推荐';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      '输入食材名称后会自动推荐保质期。\n如果推荐结果不合适，\n点击🔍按钮可以选择其他参考食材。';
+
+  @override
+  String get fridge_coach_skip => '跳过';
+
+  @override
   String get fridge_cart_empty => '购物车为空';
 
   @override
@@ -3306,6 +3349,79 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => '个人';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '以$keyword为基准 · $storageType 推荐$days天';
+  }
+
+  @override
+  String get fridge_expiry_apply => '应用推荐';
+
+  @override
+  String get fridge_expiry_manual => '手动输入';
+
+  @override
+  String get fridge_expiry_change_reference => '以其他品项为基准';
+
+  @override
+  String get fridge_expiry_reference_title => '选择基准品项';
+
+  @override
+  String get fridge_expiry_reference_search => '搜索品项';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => '没有搜索结果';
+
+  @override
+  String get fridge_preset_management_title => '保质期预设管理';
+
+  @override
+  String get fridge_preset_management_menu => '保质期预设管理';
+
+  @override
+  String get fridge_preset_edit_shortcut => '编辑预设';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => '自定义';
+
+  @override
+  String get fridge_preset_reset_confirm => '是否重置为默认值？';
+
+  @override
+  String get fridge_preset_edit_dialog_title => '编辑保质期';
+
+  @override
+  String get fridge_preset_add_dialog_title => '添加新预设';
+
+  @override
+  String get fridge_preset_days_input_label => '保质期（天）';
+
+  @override
+  String get fridge_preset_category_input_label => '分类';
+
+  @override
+  String get fridge_preset_storage_type_label => '保存方式';
+
+  @override
+  String get fridge_preset_delete_confirm => '删除自定义设置并恢复默认值？';
+
+  @override
+  String get fridge_preset_search_hint => '搜索分类或品项';
 
   @override
   String get dashboard_greetingMorning => '早上好';

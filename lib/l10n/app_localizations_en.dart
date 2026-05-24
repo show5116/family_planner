@@ -3349,6 +3349,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_frequent_coach_skip => 'Skip';
 
   @override
+  String get fridge_coach_fabTitle => 'Add Storage';
+
+  @override
+  String get fridge_coach_fabDesc =>
+      'Add storage locations like fridge, freezer, or pantry.\nTap + to create a new storage.';
+
+  @override
+  String get fridge_coach_sectionTitle => 'Storage Section';
+
+  @override
+  String get fridge_coach_sectionDesc =>
+      'Tap the header to expand or collapse.\nUse the ⋮ menu to edit or delete the storage.';
+
+  @override
+  String get fridge_coach_itemTitle => 'Manage Items';
+
+  @override
+  String get fridge_coach_itemDesc =>
+      '• Tap to edit name, expiry date, and memo\n• Use ± buttons to adjust quantity\n• Swipe left to mark for deletion\n• Press Save to apply changes';
+
+  @override
+  String get fridge_coach_ddayTitle => 'Expiry Alerts';
+
+  @override
+  String get fridge_coach_ddayDesc =>
+      'Register an expiry date to see remaining days.\n• Blue: plenty of time\n• Orange: expiring within 3 days\n• Red: today or already expired\nYou\'ll receive push notifications before the alert day.';
+
+  @override
+  String get fridge_coach_addItemTitle => 'Add Items';
+
+  @override
+  String get fridge_coach_addItemDesc =>
+      'Tap + next to a storage to add items.\nYou can add multiple items at once,\nwith expiry date, quantity, unit, and memo.';
+
+  @override
+  String get fridge_coach_suggestionTitle => 'Auto Expiry Suggestion';
+
+  @override
+  String get fridge_coach_suggestionDesc =>
+      'Enter an item name and we\'ll suggest an expiry date automatically.\nIf the suggestion doesn\'t fit,\ntap 🔍 to choose a different reference item.';
+
+  @override
+  String get fridge_coach_skip => 'Skip';
+
+  @override
   String get fridge_cart_empty => 'Your cart is empty';
 
   @override
@@ -3399,6 +3444,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fridge_group_selector_personal => 'Personal';
+
+  @override
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
+    return '$keyword based · $storageType $days days';
+  }
+
+  @override
+  String get fridge_expiry_apply => 'Apply Suggestion';
+
+  @override
+  String get fridge_expiry_manual => 'Enter Manually';
+
+  @override
+  String get fridge_expiry_change_reference =>
+      'Use different item as reference';
+
+  @override
+  String get fridge_expiry_reference_title => 'Select Reference Item';
+
+  @override
+  String get fridge_expiry_reference_search => 'Search items';
+
+  @override
+  String fridge_expiry_reference_days(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get fridge_expiry_reference_empty => 'No results found';
+
+  @override
+  String get fridge_preset_management_title => 'Expiry Preset Management';
+
+  @override
+  String get fridge_preset_management_menu => 'Expiry Preset Management';
+
+  @override
+  String get fridge_preset_edit_shortcut => 'Edit Presets';
+
+  @override
+  String fridge_preset_days_label(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get fridge_preset_custom_badge => 'Custom';
+
+  @override
+  String get fridge_preset_reset_confirm => 'Reset to default?';
+
+  @override
+  String get fridge_preset_edit_dialog_title => 'Edit Expiry Days';
+
+  @override
+  String get fridge_preset_add_dialog_title => 'Add New Preset';
+
+  @override
+  String get fridge_preset_days_input_label => 'Expiry days';
+
+  @override
+  String get fridge_preset_category_input_label => 'Category';
+
+  @override
+  String get fridge_preset_storage_type_label => 'Storage type';
+
+  @override
+  String get fridge_preset_delete_confirm =>
+      'Delete custom setting and restore default?';
+
+  @override
+  String get fridge_preset_search_hint => 'Search category or item';
 
   @override
   String get dashboard_greetingMorning => 'Good Morning';

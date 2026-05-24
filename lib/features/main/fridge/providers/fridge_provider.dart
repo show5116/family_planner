@@ -427,6 +427,80 @@ final shoppingHistoryDetailProvider =
       .getShoppingHistoryById(historyId, groupId: resolvedGroupId);
 });
 
+// ── ItemNames Provider ────────────────────────────────────────────────────────
+// 자동완성용 품목명 전체 목록 — 그룹 변경 시 자동 갱신, 세션 동안 캐시 유지
+
+final itemNamesProvider =
+    AsyncNotifierProvider<ItemNamesNotifier, List<String>>(
+        ItemNamesNotifier.new);
+
+class ItemNamesNotifier extends AsyncNotifier<List<String>> {
+  @override
+  Future<List<String>> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    if (groupId == null) return [];
+
+    // 냉장고 품목명 + 유통기한 프리셋 카테고리를 합산하여 중복 제거
+    final results = await Future.wait([
+      ref.read(fridgeRepositoryProvider).getItemNameSuggestions(groupId: groupId),
+      ref.read(fridgeRepositoryProvider).getExpiryPresets(groupId: groupId),
+    ]);
+
+    final itemNames = results[0] as List<String>;
+    final presets = results[1] as List<ExpiryPresetModel>;
+    // category + keywords 모두 자동완성 후보에 포함
+    final presetNames = presets.expand((p) => [p.category, ...p.keywords]).toList();
+
+    final merged = {...itemNames, ...presetNames}.toList()..sort();
+    return merged;
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => future);
+  }
+}
+
+// ── ExpiryPresets Provider ────────────────────────────────────────────────────
+
+final expiryPresetsProvider =
+    AsyncNotifierProvider<ExpiryPresetsNotifier, List<ExpiryPresetModel>>(
+        ExpiryPresetsNotifier.new);
+
+class ExpiryPresetsNotifier extends AsyncNotifier<List<ExpiryPresetModel>> {
+  @override
+  Future<List<ExpiryPresetModel>> build() async {
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    return ref
+        .read(fridgeRepositoryProvider)
+        .getExpiryPresets(groupId: groupId);
+  }
+
+  Future<void> upsert(UpsertExpiryPresetDto dto) async {
+    final updated =
+        await ref.read(fridgeRepositoryProvider).upsertExpiryPreset(dto);
+    final current = state.value ?? [];
+    final idx = current.indexWhere(
+        (p) => p.category == updated.category && p.storageType == updated.storageType);
+    if (idx >= 0) {
+      final next = [...current];
+      next[idx] = updated;
+      state = AsyncData(next);
+    } else {
+      state = AsyncData([...current, updated]);
+    }
+  }
+
+  Future<void> delete(String presetId) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    await ref
+        .read(fridgeRepositoryProvider)
+        .deleteExpiryPreset(presetId, groupId: groupId);
+    state = AsyncData(
+        (state.value ?? []).where((p) => p.customPresetId != presetId).toList());
+  }
+}
+
 // ── 대시보드용 냉장고 유통기한 임박 품목 Provider ────────────────────────────────
 
 /// storagesWithItemsProvider를 watch해서 파생하므로

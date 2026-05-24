@@ -6438,6 +6438,84 @@ abstract class AppLocalizations {
   /// **'건너뛰기'**
   String get fridge_frequent_coach_skip;
 
+  /// No description provided for @fridge_coach_fabTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 추가'**
+  String get fridge_coach_fabTitle;
+
+  /// No description provided for @fridge_coach_fabDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.'**
+  String get fridge_coach_fabDesc;
+
+  /// No description provided for @fridge_coach_sectionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소'**
+  String get fridge_coach_sectionTitle;
+
+  /// No description provided for @fridge_coach_sectionDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.'**
+  String get fridge_coach_sectionDesc;
+
+  /// No description provided for @fridge_coach_itemTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 관리'**
+  String get fridge_coach_itemTitle;
+
+  /// No description provided for @fridge_coach_itemDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다'**
+  String get fridge_coach_itemDesc;
+
+  /// No description provided for @fridge_coach_ddayTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 알림'**
+  String get fridge_coach_ddayTitle;
+
+  /// No description provided for @fridge_coach_ddayDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.'**
+  String get fridge_coach_ddayDesc;
+
+  /// No description provided for @fridge_coach_addItemTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 추가'**
+  String get fridge_coach_addItemTitle;
+
+  /// No description provided for @fridge_coach_addItemDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.'**
+  String get fridge_coach_addItemDesc;
+
+  /// No description provided for @fridge_coach_suggestionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 자동 추천'**
+  String get fridge_coach_suggestionTitle;
+
+  /// No description provided for @fridge_coach_suggestionDesc.
+  ///
+  /// In ko, this message translates to:
+  /// **'품목명을 입력하면 서버가 자동으로 유통기한을 추천해줘요.\n추천 결과가 마음에 들지 않으면\n🔍 버튼으로 다른 품목을 기준으로 설정할 수 있어요.'**
+  String get fridge_coach_suggestionDesc;
+
+  /// No description provided for @fridge_coach_skip.
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛰기'**
+  String get fridge_coach_skip;
+
   /// 장바구니 비어 있음
   ///
   /// In ko, this message translates to:
@@ -6533,6 +6611,136 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'개인'**
   String get fridge_group_selector_personal;
+
+  /// 유통기한 추천 칩 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'{keyword} 기준 · {storageType} {days}일 추천'**
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  );
+
+  /// 추천 유통기한 적용 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'추천 적용'**
+  String get fridge_expiry_apply;
+
+  /// 유통기한 직접 입력 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 입력'**
+  String get fridge_expiry_manual;
+
+  /// 다른 기준 품목 선택 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'다른 품목 기준으로 설정'**
+  String get fridge_expiry_change_reference;
+
+  /// 기준 품목 선택 모달 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 기준 품목 선택'**
+  String get fridge_expiry_reference_title;
+
+  /// 기준 품목 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 검색'**
+  String get fridge_expiry_reference_search;
+
+  /// 추천 일수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String fridge_expiry_reference_days(int days);
+
+  /// 기준 품목 검색 결과 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get fridge_expiry_reference_empty;
+
+  /// 유통기한 프리셋 관리 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 프리셋 관리'**
+  String get fridge_preset_management_title;
+
+  /// 앱바 메뉴 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 프리셋 관리'**
+  String get fridge_preset_management_menu;
+
+  /// 기준 품목 선택 시트의 편집 바로가기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'프리셋 편집'**
+  String get fridge_preset_edit_shortcut;
+
+  /// 프리셋 일수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String fridge_preset_days_label(int days);
+
+  /// 그룹 커스텀 프리셋 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'커스텀'**
+  String get fridge_preset_custom_badge;
+
+  /// 프리셋 초기화 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'기본값으로 초기화하시겠습니까?'**
+  String get fridge_preset_reset_confirm;
+
+  /// 프리셋 수정 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 수정'**
+  String get fridge_preset_edit_dialog_title;
+
+  /// 프리셋 등록 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'새 프리셋 등록'**
+  String get fridge_preset_add_dialog_title;
+
+  /// 일수 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'유통기한 (일)'**
+  String get fridge_preset_days_input_label;
+
+  /// 카테고리 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get fridge_preset_category_input_label;
+
+  /// 보관 방법 선택 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'보관 방법'**
+  String get fridge_preset_storage_type_label;
+
+  /// 프리셋 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'커스텀 설정을 삭제하고 기본값으로 되돌리겠습니까?'**
+  String get fridge_preset_delete_confirm;
+
+  /// 프리셋 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 또는 품목 검색'**
+  String get fridge_preset_search_hint;
 
   /// No description provided for @dashboard_greetingMorning.
   ///

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +9,7 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
 import 'package:family_planner/features/main/fridge/data/repositories/fridge_repository.dart';
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
+import 'package:family_planner/features/main/fridge/presentation/widgets/expiry_reference_selector_sheet.dart';
 import 'package:family_planner/shared/widgets/item_name_autocomplete.dart';
 
 // ── 대기 목록 항목 ───────────────────────────────────────────────────────────────
@@ -37,15 +40,33 @@ class _FridgePendingItem {
   }
 }
 
+// ── 유통기한 추천 상태 ────────────────────────────────────────────────────────────
+
+class _ExpirySuggestion {
+  final String keyword;
+  final StorageType storageType;
+  final int days;
+  final DateTime suggestedDate;
+
+  const _ExpirySuggestion({
+    required this.keyword,
+    required this.storageType,
+    required this.days,
+    required this.suggestedDate,
+  });
+}
+
 // ── 다이얼로그 ──────────────────────────────────────────────────────────────────
 
 class FridgeItemFormDialog extends ConsumerStatefulWidget {
   final String storageId;
+  final StorageType storageType;
   final FridgeItemModel? item;
 
   const FridgeItemFormDialog({
     super.key,
     required this.storageId,
+    required this.storageType,
     this.item,
   });
 
@@ -74,6 +95,12 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
   // 대기 목록
   final List<_FridgePendingItem> _pending = [];
 
+  // 유통기한 추천
+  _ExpirySuggestion? _suggestion;
+  Timer? _debounce;
+  // expiryPresetsProvider 로드 완료 시 재매칭을 위해 현재 입력명 기억
+  String _lastNameForSuggestion = '';
+
   bool _loading = false;
 
   bool get _isEdit => widget.item != null;
@@ -94,6 +121,7 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _nameController.dispose();
     _quantityController.dispose();
     _unitController.dispose();
@@ -104,6 +132,84 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
     _addMemoCtrl.dispose();
     super.dispose();
   }
+
+  // ── 유통기한 추천 ────────────────────────────────────────────────────────────
+
+  void _onNameChanged(String name, StorageType storageType) {
+    _lastNameForSuggestion = name.trim();
+    _debounce?.cancel();
+    if (name.trim().isEmpty) {
+      setState(() => _suggestion = null);
+      return;
+    }
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _matchSuggestion(name.trim(), storageType);
+    });
+  }
+
+  void _matchSuggestion(String name, StorageType storageType) {
+    final presets = ref.read(expiryPresetsProvider).valueOrNull;
+    if (presets == null || presets.isEmpty) {
+      setState(() => _suggestion = null);
+      return;
+    }
+
+    final q = name.toLowerCase();
+
+    // 프리셋 매칭: category 또는 keywords 중 하나라도 q를 포함하면 후보
+    bool hits(ExpiryPresetModel p) =>
+        p.category.toLowerCase().contains(q) ||
+        p.keywords.any((k) => k.toLowerCase().contains(q));
+
+    // 매칭된 것 중 category 길이가 짧을수록 더 구체적인 매칭으로 우선
+    ExpiryPresetModel? best(Iterable<ExpiryPresetModel> candidates) =>
+        candidates.fold<ExpiryPresetModel?>(
+          null,
+          (b, p) => b == null || p.category.length < b.category.length ? p : b,
+        );
+
+    // 1) storageType 일치 우선, 2) storageType null(무관)도 허용, 3) 전체 fallback
+    ExpiryPresetModel? match =
+        best(presets.where((p) => p.storageType == storageType && hits(p)));
+    match ??= best(presets.where((p) => p.storageType == null && hits(p)));
+    match ??= best(presets.where(hits));
+
+    if (match == null) {
+      setState(() => _suggestion = null);
+      return;
+    }
+
+    setState(() {
+      _suggestion = _ExpirySuggestion(
+        keyword: match!.category,
+        storageType: match.storageType ?? storageType,
+        days: match.days,
+        suggestedDate: DateTime.now().add(Duration(days: match.days)),
+      );
+    });
+  }
+
+  Future<void> _openReferenceSelector(BuildContext context) async {
+    final result = await showModalBottomSheet<ExpiryReferenceResult>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => ExpiryReferenceSelectorSheet(
+        currentStorageType: widget.storageType,
+      ),
+    );
+    if (result == null || !mounted) return;
+    setState(() {
+      if (_isEdit) {
+        _expiresAt = result.suggestedExpiresAt;
+      } else {
+        _addExpiresAt = result.suggestedExpiresAt;
+      }
+      _suggestion = null;
+    });
+  }
+
+  // ── 대기 목록 ────────────────────────────────────────────────────────────────
 
   void _addToPending() {
     final name = _addNameCtrl.text.trim();
@@ -123,6 +229,7 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
       _addMemoCtrl.clear();
       _addExpiresAt = null;
       _addAlertDays = 3;
+      _suggestion = null;
     });
   }
 
@@ -130,7 +237,6 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
     setState(() => _pending.removeAt(index));
   }
 
-  // Chip 탭 시 유통기한·알림 미니 편집 팝업
   Future<void> _editPendingDetail(BuildContext context, int index) async {
     final item = _pending[index];
     DateTime? tmpExpires = item.expiresAt;
@@ -164,8 +270,7 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
                       if (tmpExpires != null)
                         IconButton(
                           icon: const Icon(Icons.clear, size: 18),
-                          onPressed: () =>
-                              setInner(() => tmpExpires = null),
+                          onPressed: () => setInner(() => tmpExpires = null),
                         ),
                       const Icon(Icons.calendar_today_outlined, size: 18),
                     ],
@@ -176,8 +281,7 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
                       initialDate: tmpExpires ??
                           DateTime.now().add(const Duration(days: 7)),
                       firstDate: DateTime.now(),
-                      lastDate:
-                          DateTime.now().add(const Duration(days: 3650)),
+                      lastDate: DateTime.now().add(const Duration(days: 3650)),
                     );
                     if (picked != null) setInner(() => tmpExpires = picked);
                   },
@@ -193,8 +297,7 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
                           min: 1,
                           max: 14,
                           divisions: 13,
-                          onChanged: (v) =>
-                              setInner(() => tmpAlert = v.toInt()),
+                          onChanged: (v) => setInner(() => tmpAlert = v.toInt()),
                         ),
                       ),
                     ],
@@ -222,6 +325,8 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
       ),
     );
   }
+
+  // ── 저장 ─────────────────────────────────────────────────────────────────────
 
   Future<void> _submit() async {
     setState(() => _loading = true);
@@ -252,7 +357,6 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
         );
         ref.read(storagesWithItemsProvider.notifier).updateItem(updated);
       } else {
-        // 입력 중인 내용이 있으면 먼저 담기
         if (_addNameCtrl.text.trim().isNotEmpty) {
           _addToPending();
         }
@@ -292,6 +396,16 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // presets 로드 완료 시 이미 입력된 이름으로 즉시 재매칭
+    ref.listen<AsyncValue<List<ExpiryPresetModel>>>(expiryPresetsProvider,
+        (prev, next) {
+      if (next.hasValue &&
+          _lastNameForSuggestion.isNotEmpty &&
+          _suggestion == null) {
+        _matchSuggestion(_lastNameForSuggestion, widget.storageType);
+      }
+    });
+
     return AlertDialog(
       title: Text(_isEdit ? l10n.fridge_item_edit : l10n.fridge_item_add),
       content: SizedBox(
@@ -305,8 +419,18 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
                   memoController: _memoController,
                   expiresAt: _expiresAt,
                   alertDays: _alertDays,
+                  suggestion: _suggestion,
+                  storageType: widget.storageType,
                   onExpiresAtChanged: (d) => setState(() => _expiresAt = d),
                   onAlertDaysChanged: (v) => setState(() => _alertDays = v),
+                  onNameChanged: (name) =>
+                      _onNameChanged(name, widget.storageType),
+                  onApplySuggestion: () => setState(() {
+                    _expiresAt = _suggestion?.suggestedDate;
+                    _suggestion = null;
+                  }),
+                  onOpenReferenceSelector: () =>
+                      _openReferenceSelector(context),
                   l10n: l10n,
                 )
               : _AddForm(
@@ -317,6 +441,8 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
                   expiresAt: _addExpiresAt,
                   alertDays: _addAlertDays,
                   pending: _pending,
+                  suggestion: _suggestion,
+                  storageType: widget.storageType,
                   onExpiresAtChanged: (d) =>
                       setState(() => _addExpiresAt = d),
                   onAlertDaysChanged: (v) =>
@@ -326,6 +452,14 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
                   onEditPendingDetail: (i) =>
                       _editPendingDetail(context, i),
                   onChanged: () => setState(() {}),
+                  onNameChanged: (name) =>
+                      _onNameChanged(name, widget.storageType),
+                  onApplySuggestion: () => setState(() {
+                    _addExpiresAt = _suggestion?.suggestedDate;
+                    _suggestion = null;
+                  }),
+                  onOpenReferenceSelector: () =>
+                      _openReferenceSelector(context),
                   l10n: l10n,
                 ),
         ),
@@ -350,6 +484,110 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
   }
 }
 
+// ── 유통기한 추천 칩 ──────────────────────────────────────────────────────────────
+
+class _ExpirysuggestionChip extends StatelessWidget {
+  final _ExpirySuggestion suggestion;
+  final String inputName;
+  final StorageType currentStorageType;
+  final VoidCallback onApply;
+  final VoidCallback onManual;
+  final AppLocalizations l10n;
+
+  const _ExpirysuggestionChip({
+    required this.suggestion,
+    required this.inputName,
+    required this.currentStorageType,
+    required this.onApply,
+    required this.onManual,
+    required this.l10n,
+  });
+
+  String _storageLabel(StorageType type) {
+    switch (type) {
+      case StorageType.fridge:
+        return l10n.fridge_storage_type_fridge;
+      case StorageType.freezer:
+        return l10n.fridge_storage_type_freezer;
+      case StorageType.pantry:
+        return l10n.fridge_storage_type_pantry;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final baseStyle = Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: colorScheme.onSurface,
+        );
+
+    final storageLabel = _storageLabel(suggestion.storageType);
+    final storageMismatch = suggestion.storageType != currentStorageType;
+
+    // 입력한 이름과 keyword가 다를 때 "양파 → 파 기준" 형태로 표시
+    final displayKeyword = inputName.trim().isNotEmpty &&
+            inputName.trim() != suggestion.keyword
+        ? '${inputName.trim()} → ${suggestion.keyword}'
+        : suggestion.keyword;
+
+    // fridge_expiry_suggestion_label: "{keyword} 기준 · {storageType} {days}일 추천"
+    // storageType 부분만 색을 다르게 줘야 하므로 RichText로 분리
+    final beforeStorage = '$displayKeyword 기준 · ';
+    final afterStorage = ' ${suggestion.days}일 추천';
+
+    return Container(
+      margin: const EdgeInsets.only(top: AppSizes.spaceXS),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceS, vertical: AppSizes.spaceXS),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.lightbulb_outline, size: 14, color: colorScheme.primary),
+          const SizedBox(width: AppSizes.spaceXS),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: baseStyle,
+                children: [
+                  TextSpan(text: beforeStorage),
+                  TextSpan(
+                    text: storageLabel,
+                    style: storageMismatch
+                        ? baseStyle?.copyWith(
+                            color: colorScheme.error,
+                            fontWeight: FontWeight.bold,
+                          )
+                        : null,
+                  ),
+                  TextSpan(text: afterStorage),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceXS),
+          FilledButton(
+            onPressed: onApply,
+            style: FilledButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+            ),
+            child: Text(
+              l10n.fridge_expiry_apply,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onPrimary,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ── 편집 모드 폼 ────────────────────────────────────────────────────────────────
 
 class _EditForm extends StatelessWidget {
@@ -359,8 +597,13 @@ class _EditForm extends StatelessWidget {
   final TextEditingController memoController;
   final DateTime? expiresAt;
   final int alertDays;
+  final _ExpirySuggestion? suggestion;
+  final StorageType storageType;
   final ValueChanged<DateTime?> onExpiresAtChanged;
   final ValueChanged<int> onAlertDaysChanged;
+  final ValueChanged<String> onNameChanged;
+  final VoidCallback onApplySuggestion;
+  final VoidCallback onOpenReferenceSelector;
   final AppLocalizations l10n;
 
   const _EditForm({
@@ -370,8 +613,13 @@ class _EditForm extends StatelessWidget {
     required this.memoController,
     required this.expiresAt,
     required this.alertDays,
+    required this.suggestion,
+    required this.storageType,
     required this.onExpiresAtChanged,
     required this.onAlertDaysChanged,
+    required this.onNameChanged,
+    required this.onApplySuggestion,
+    required this.onOpenReferenceSelector,
     required this.l10n,
   });
 
@@ -394,6 +642,7 @@ class _EditForm extends StatelessWidget {
           controller: nameController,
           decoration: InputDecoration(labelText: l10n.fridge_item_name),
           textCapitalization: TextCapitalization.sentences,
+          onChanged: onNameChanged,
         ),
         const SizedBox(height: AppSizes.spaceS),
         Row(
@@ -412,8 +661,7 @@ class _EditForm extends StatelessWidget {
               flex: 3,
               child: TextField(
                 controller: unitController,
-                decoration:
-                    InputDecoration(labelText: l10n.fridge_item_unit),
+                decoration: InputDecoration(labelText: l10n.fridge_item_unit),
               ),
             ),
           ],
@@ -440,10 +688,25 @@ class _EditForm extends StatelessWidget {
                   onPressed: () => onExpiresAtChanged(null),
                 ),
               const Icon(Icons.calendar_today_outlined, size: 18),
+              IconButton(
+                tooltip: l10n.fridge_expiry_change_reference,
+                icon: const Icon(Icons.search, size: 18),
+                onPressed: onOpenReferenceSelector,
+              ),
             ],
           ),
           onTap: () => _pickDate(context),
         ),
+        // 유통기한 추천 칩
+        if (suggestion != null && expiresAt == null)
+          _ExpirysuggestionChip(
+            suggestion: suggestion!,
+            inputName: nameController.text,
+            currentStorageType: storageType,
+            onApply: onApplySuggestion,
+            onManual: () => _pickDate(context),
+            l10n: l10n,
+          ),
         if (expiresAt != null)
           Row(
             children: [
@@ -480,12 +743,17 @@ class _AddForm extends ConsumerWidget {
   final DateTime? expiresAt;
   final int alertDays;
   final List<_FridgePendingItem> pending;
+  final _ExpirySuggestion? suggestion;
+  final StorageType storageType;
   final ValueChanged<DateTime?> onExpiresAtChanged;
   final ValueChanged<int> onAlertDaysChanged;
   final VoidCallback onAddToPending;
   final ValueChanged<int> onRemovePending;
   final ValueChanged<int> onEditPendingDetail;
   final VoidCallback onChanged;
+  final ValueChanged<String> onNameChanged;
+  final VoidCallback onApplySuggestion;
+  final VoidCallback onOpenReferenceSelector;
   final AppLocalizations l10n;
 
   const _AddForm({
@@ -496,12 +764,17 @@ class _AddForm extends ConsumerWidget {
     required this.expiresAt,
     required this.alertDays,
     required this.pending,
+    required this.suggestion,
+    required this.storageType,
     required this.onExpiresAtChanged,
     required this.onAlertDaysChanged,
     required this.onAddToPending,
     required this.onRemovePending,
     required this.onEditPendingDetail,
     required this.onChanged,
+    required this.onNameChanged,
+    required this.onApplySuggestion,
+    required this.onOpenReferenceSelector,
     required this.l10n,
   });
 
@@ -527,9 +800,15 @@ class _AddForm extends ConsumerWidget {
         ItemNameAutocomplete(
           controller: nameCtrl,
           decoration: InputDecoration(labelText: l10n.fridge_item_name),
-          onChanged: (_) => onChanged(),
+          onChanged: (v) {
+            onChanged();
+            onNameChanged(v);
+          },
           onSubmitted: (_) => onAddToPending(),
-          onSelected: (_) => onChanged(),
+          onSelected: (v) {
+            onChanged();
+            onNameChanged(v);
+          },
         ),
         const SizedBox(height: AppSizes.spaceS),
         Row(
@@ -577,10 +856,25 @@ class _AddForm extends ConsumerWidget {
                   onPressed: () => onExpiresAtChanged(null),
                 ),
               const Icon(Icons.calendar_today_outlined, size: 18),
+              IconButton(
+                tooltip: l10n.fridge_expiry_change_reference,
+                icon: const Icon(Icons.search, size: 18),
+                onPressed: onOpenReferenceSelector,
+              ),
             ],
           ),
           onTap: () => _pickDate(context),
         ),
+        // 유통기한 추천 칩 (날짜 미선택 상태에서만 표시)
+        if (suggestion != null && expiresAt == null)
+          _ExpirysuggestionChip(
+            suggestion: suggestion!,
+            inputName: nameCtrl.text,
+            currentStorageType: storageType,
+            onApply: onApplySuggestion,
+            onManual: () => _pickDate(context),
+            l10n: l10n,
+          ),
         if (expiresAt != null)
           Row(
             children: [

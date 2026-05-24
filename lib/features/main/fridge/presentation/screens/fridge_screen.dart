@@ -8,6 +8,9 @@ import 'package:family_planner/features/settings/groups/providers/default_group_
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/fridge/presentation/screens/fridge_tab.dart';
 import 'package:family_planner/features/main/fridge/presentation/widgets/fridge_group_selector.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 
 class FridgeScreen extends ConsumerStatefulWidget {
@@ -50,6 +53,14 @@ class _FridgeScreenState extends ConsumerState<FridgeScreen> {
         actions: [
           AppBarMoreMenu(
             onReplayOnboarding: () => _replayOnboarding?.call(),
+            extraItems: [
+              MoreMenuItem(
+                id: 'expiry_presets',
+                icon: Icons.tune,
+                label: l10n.fridge_preset_management_menu,
+                onTap: (ctx) => ctx.push(AppRoutes.fridgeExpiryPresets),
+              ),
+            ],
           ),
         ],
         bottom: const PreferredSize(
