@@ -386,6 +386,36 @@
 
 ---
 
+### POST `auth/kakao/mobile`
+
+**요약:** Kakao 모바일 로그인 (액세스 토큰)
+
+**Responses:**
+
+#### 200 - Kakao 모바일 로그인 성공, 토큰 반환
+
+```json
+{
+  "user": {
+    "id": "user_clxxx123", // 사용자 ID (string)
+    "email": "user@example.com", // 이메일 (string)
+    "name": "홍길동", // 사용자 이름 (string)
+    "isEmailVerified": true, // 이메일 인증 여부 (boolean)
+    "isAdmin": false, // 운영자 여부 (boolean)
+    "profileImageUrl": "https://r2.yourdomain.com/profiles/google-123456.jpg", // 프로필 이미지 URL (R2 public URL) (string?)
+    "phoneNumber": "010-1234-5678", // 전화번호 (string?)
+    "personalColor": "#FF5733", // 개인 색상 (HEX 코드) (string?)
+    "socialProvider": "google", // 소셜 로그인 제공자 (string?)
+    "createdAt": "2024-01-01T00:00:00.000Z", // 생성 일시 (Date)
+    "updatedAt": "2024-01-01T00:00:00.000Z" // 수정 일시 (Date)
+  } // 사용자 정보 (UserDto)
+}
+```
+
+#### 401 - 유효하지 않은 액세스 토큰
+
+---
+
 ### GET `auth/kakao`
 
 **요약:** Kakao 로그인 시작
@@ -440,5 +470,78 @@
 **Responses:**
 
 #### 200 - 위치 정보 업데이트 성공
+
+---
+
+### DELETE `auth/admin/users/:userId`
+
+**요약:** 계정 삭제 예약 (운영자 전용, 7일 유예)
+
+**인증/권한:**
+
+- AdminGuard
+
+**Path Parameters:**
+
+- `userId` (`string`)
+
+**Responses:**
+
+#### 200 - 계정 삭제 예약 성공
+
+```json
+{
+  "message": "계정 삭제가 예약되었습니다. 7일 후 완전히 삭제됩니다", // 응답 메시지 (string)
+  "scheduledDeleteAt": "2024-01-08T00:00:00.000Z" // 실제 삭제 예정 일시 (Date)
+}
+```
+
+---
+
+### POST `auth/admin/users/:userId/cancel-delete`
+
+**요약:** 계정 삭제 예약 취소 (운영자 전용)
+
+**인증/권한:**
+
+- AdminGuard
+
+**Path Parameters:**
+
+- `userId` (`string`)
+
+**Responses:**
+
+#### 200 - 계정 삭제 예약 취소 성공
+
+```json
+{
+  "message": "계정 삭제 예약이 취소되었습니다" // 응답 메시지 (string)
+}
+```
+
+---
+
+### DELETE `auth/admin/users/:userId/force`
+
+**요약:** 삭제 예약 계정 즉시 완전 삭제 (운영자 전용)
+
+**인증/권한:**
+
+- AdminGuard
+
+**Path Parameters:**
+
+- `userId` (`string`)
+
+**Responses:**
+
+#### 200 - 계정 즉시 삭제 성공
+
+```json
+{
+  "message": "계정이 즉시 삭제되었습니다" // 응답 메시지 (string)
+}
+```
 
 ---

@@ -25,6 +25,7 @@ class ApiConstants {
   static const String googleMobileLogin = '/auth/google/mobile';
   static const String kakaoLogin = '/auth/kakao';
   static const String kakaoCallback = '/auth/kakao/callback';
+  static const String kakaoMobileLogin = '/auth/kakao/mobile';
 
   // User Endpoints
   static const String userProfile = '$apiVersion/users/profile';

@@ -5,16 +5,53 @@ import 'package:family_planner/features/subscription/data/repositories/admin_sub
 
 // ── 목록 필터 상태 ────────────────────────────────────────────
 
+enum UserDeleteStatusFilter { all, active, pendingDelete }
+
+extension UserDeleteStatusFilterExt on UserDeleteStatusFilter {
+  String get label {
+    switch (this) {
+      case UserDeleteStatusFilter.all:
+        return '전체';
+      case UserDeleteStatusFilter.active:
+        return '정상';
+      case UserDeleteStatusFilter.pendingDelete:
+        return '삭제 유예';
+    }
+  }
+
+  String? get apiValue {
+    switch (this) {
+      case UserDeleteStatusFilter.all:
+        return null;
+      case UserDeleteStatusFilter.active:
+        return 'active';
+      case UserDeleteStatusFilter.pendingDelete:
+        return 'pending_delete';
+    }
+  }
+}
+
 class AdminUserFilter {
   final String search;
   final SubscriptionTier? tier;
+  final UserDeleteStatusFilter deleteStatus;
 
-  const AdminUserFilter({this.search = '', this.tier});
+  const AdminUserFilter({
+    this.search = '',
+    this.tier,
+    this.deleteStatus = UserDeleteStatusFilter.all,
+  });
 
-  AdminUserFilter copyWith({String? search, SubscriptionTier? tier, bool clearTier = false}) {
+  AdminUserFilter copyWith({
+    String? search,
+    SubscriptionTier? tier,
+    bool clearTier = false,
+    UserDeleteStatusFilter? deleteStatus,
+  }) {
     return AdminUserFilter(
       search: search ?? this.search,
       tier: clearTier ? null : (tier ?? this.tier),
+      deleteStatus: deleteStatus ?? this.deleteStatus,
     );
   }
 }
@@ -43,6 +80,7 @@ class AdminUserListNotifier extends AsyncNotifier<AdminUserListResult> {
       limit: _limit,
       search: filter.search.isEmpty ? null : filter.search,
       tier: filter.tier,
+      deleteStatus: filter.deleteStatus.apiValue,
     );
   }
 
@@ -61,7 +99,7 @@ class AdminUserListNotifier extends AsyncNotifier<AdminUserListResult> {
     ));
   }
 
-  /// 목록에서 특정 유저의 구독 정보를 갱신
+  /// 목록에서 특정 유저의 정보를 갱신
   void updateUserInList(AdminUserDto updated) {
     final current = state.valueOrNull;
     if (current == null) return;
@@ -70,6 +108,18 @@ class AdminUserListNotifier extends AsyncNotifier<AdminUserListResult> {
           .map((u) => u.id == updated.id ? updated : u)
           .toList(),
       total: current.total,
+      page: current.page,
+      limit: current.limit,
+    ));
+  }
+
+  /// 목록에서 특정 유저를 제거 (즉시 삭제 후)
+  void removeUserFromList(String userId) {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    state = AsyncData(AdminUserListResult(
+      items: current.items.where((u) => u.id != userId).toList(),
+      total: current.total - 1,
       page: current.page,
       limit: current.limit,
     ));
@@ -120,4 +170,86 @@ class AdminSubscriptionEditNotifier extends AsyncNotifier<void> {
 final adminSubscriptionEditProvider =
     AsyncNotifierProvider<AdminSubscriptionEditNotifier, void>(
   AdminSubscriptionEditNotifier.new,
+);
+
+// ── 계정 삭제 관련 액션 ───────────────────────────────────────
+
+class AdminUserDeleteNotifier extends AsyncNotifier<void> {
+  @override
+  Future<void> build() async {}
+
+  /// 계정 삭제 예약 (7일 유예) — 성공 시 deletedAt 날짜 반환
+  Future<DateTime?> scheduleDelete(String userId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() async {
+      final repo = ref.read(adminSubscriptionRepositoryProvider);
+      final data = await repo.scheduleDelete(userId);
+      return data['scheduledDeleteAt'] as String?;
+    });
+    state = const AsyncData(null);
+
+    if (result is AsyncData<String?> && result.value != null) {
+      final scheduledAt = DateTime.tryParse(result.value!);
+      final current = ref
+          .read(adminUserListProvider)
+          .valueOrNull
+          ?.items
+          .where((u) => u.id == userId)
+          .firstOrNull;
+      if (current != null && scheduledAt != null) {
+        ref
+            .read(adminUserListProvider.notifier)
+            .updateUserInList(current.copyWith(deletedAt: scheduledAt));
+      }
+      return scheduledAt;
+    }
+    return null;
+  }
+
+  /// 계정 삭제 예약 취소
+  Future<bool> cancelDelete(String userId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() async {
+      final repo = ref.read(adminSubscriptionRepositoryProvider);
+      await repo.cancelDelete(userId);
+    });
+    state = const AsyncData(null);
+
+    if (result is AsyncData) {
+      final current = ref
+          .read(adminUserListProvider)
+          .valueOrNull
+          ?.items
+          .where((u) => u.id == userId)
+          .firstOrNull;
+      if (current != null) {
+        ref
+            .read(adminUserListProvider.notifier)
+            .updateUserInList(current.copyWith(clearDeletedAt: true));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /// 삭제 예약 계정 즉시 완전 삭제
+  Future<bool> forceDelete(String userId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() async {
+      final repo = ref.read(adminSubscriptionRepositoryProvider);
+      await repo.forceDelete(userId);
+    });
+    state = const AsyncData(null);
+
+    if (result is AsyncData) {
+      ref.read(adminUserListProvider.notifier).removeUserFromList(userId);
+      return true;
+    }
+    return false;
+  }
+}
+
+final adminUserDeleteProvider =
+    AsyncNotifierProvider<AdminUserDeleteNotifier, void>(
+  AdminUserDeleteNotifier.new,
 );

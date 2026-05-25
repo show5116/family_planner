@@ -129,6 +129,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  // TODO: 카카오 사업자 동의항목(이메일) 심사 승인 후 활성화
   // Future<void> _handleKakaoLogin() async {
   //   final l10n = AppLocalizations.of(context)!;
   //   setState(() => _isLoading = true);
@@ -342,7 +343,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           label: l10n.auth_continueWithGoogle,
           onPressed: _isLoading ? null : _handleGoogleLogin,
         ),
-        // 카카오/애플 로그인은 사업자 등록 후 활성화 예정
+        // TODO: 카카오 사업자 동의항목(이메일) 심사 승인 후 활성화
         // const SizedBox(height: AppSizes.spaceM),
         // SocialLoginButton(
         //   icon: Icons.chat_bubble_outline,
@@ -350,17 +351,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         //   backgroundColor: const Color(0xFFFEE500),
         //   textColor: Colors.black87,
         //   onPressed: _isLoading ? null : _handleKakaoLogin,
-        // ),
-        // const SizedBox(height: AppSizes.spaceM),
-        // SocialLoginButton(
-        //   icon: Icons.apple,
-        //   label: l10n.auth_continueWithApple,
-        //   backgroundColor: Colors.black,
-        //   onPressed: () {
-        //     ScaffoldMessenger.of(context).showSnackBar(
-        //       SnackBar(content: Text(l10n.common_comingSoon)),
-        //     );
-        //   },
         // ),
       ],
     );

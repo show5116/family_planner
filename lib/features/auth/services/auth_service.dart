@@ -337,14 +337,6 @@ class AuthService extends ApiServiceBase {
   /// Kakao Flutter SDK를 사용하여 인증 후 백엔드에 토큰을 전송합니다.
   /// 웹에서는 loginWithKakaoOAuth()를 사용하세요.
   ///
-  /// [백엔드 API 요구사항]
-  /// 올바른 구현을 위해서는 백엔드에 다음 엔드포인트가 필요합니다:
-  /// - POST /auth/kakao/token
-  /// - Request Body: { "accessToken": "..." }
-  /// - Response: { "accessToken": "jwt", "refreshToken": "jwt", "user": {...} }
-  ///
-  /// [현재 임시 구현]
-  /// 백엔드 엔드포인트가 없어 임시로 GET /auth/kakao/callback 사용 중
   Future<Map<String, dynamic>> loginWithKakao() async {
     try {
       // 1. Kakao SDK로 로그인하여 Access Token 획득
@@ -354,16 +346,10 @@ class AuthService extends ApiServiceBase {
         throw Exception('Kakao Access Token을 가져올 수 없습니다');
       }
 
-      // 2. [임시] Access Token을 백엔드로 전송
-      // TODO: 백엔드에 POST /auth/kakao/token 엔드포인트 추가 후 다음과 같이 수정:
-      // final response = await apiClient.post(
-      //   '/auth/kakao/token',
-      //   data: {
-      //     'accessToken': accessToken,
-      //   },
-      // );
-      final response = await apiClient.get(
-        '${ApiConstants.kakaoCallback}?access_token=$accessToken',
+      // 2. Access Token을 백엔드로 전송
+      final response = await apiClient.post(
+        ApiConstants.kakaoMobileLogin,
+        data: {'accessToken': accessToken},
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);
