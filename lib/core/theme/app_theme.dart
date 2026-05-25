@@ -219,13 +219,10 @@ class AppTheme {
         ),
       ),
 
-      snackBarTheme: SnackBarThemeData(
+      snackBarTheme: const SnackBarThemeData(
         backgroundColor: AppColors.textPrimary,
-        contentTextStyle: const TextStyle(color: Colors.white),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        ),
+        contentTextStyle: TextStyle(color: Colors.white),
+        behavior: SnackBarBehavior.fixed,
       ),
 
       chipTheme: ChipThemeData(
