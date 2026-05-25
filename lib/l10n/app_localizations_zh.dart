@@ -1848,6 +1848,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get category_management => '管理类别';
 
   @override
+  String get category_filter => '类别筛选';
+
+  @override
   String get category_add => '添加类别';
 
   @override

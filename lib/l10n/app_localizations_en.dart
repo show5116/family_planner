@@ -1914,6 +1914,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category_management => 'Manage Categories';
 
   @override
+  String get category_filter => 'Category Filter';
+
+  @override
   String get category_add => 'Add Category';
 
   @override

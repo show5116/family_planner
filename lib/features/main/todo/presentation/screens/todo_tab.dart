@@ -13,6 +13,9 @@ import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_kanban_column.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_list_item.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_week_bar.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
@@ -583,6 +586,7 @@ class _FilterSortBar extends ConsumerWidget {
                 onPressed: () {
                   ref.read(todoFilterStatusProvider.notifier).state = null;
                   ref.read(todoFilterPriorityProvider.notifier).state = null;
+                  ref.read(selectedCategoryIdsProvider.notifier).state = [];
                 },
               ),
             ],
@@ -1535,19 +1539,52 @@ class _ErrorState extends StatelessWidget {
   }
 }
 
-/// 할일 화면용 그룹 필터 바 — selectedGroupIdsProvider/includePersonalProvider 연결
+/// 할일 화면용 그룹 + 카테고리 필터 바
 class _TodoGroupFilterBar extends ConsumerWidget {
   const _TodoGroupFilterBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GroupFilterBar(
-      filterMode: FilterMode.withAll,
-      savedKey: 'todo_group_filter',
-      onMultiFilterChanged: (sel) {
-        ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
-        ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
-      },
+    final selectedCategoryIds = ref.watch(selectedCategoryIdsProvider);
+    final groups = ref.watch(myGroupsProvider).valueOrNull ?? const <Group>[];
+
+    return Row(
+      children: [
+        Expanded(
+          child: GroupFilterBar(
+            filterMode: FilterMode.withAll,
+            savedKey: 'todo_group_filter',
+            onMultiFilterChanged: (sel) {
+              ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
+              ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: AppSizes.spaceS),
+          child: IconButton(
+            icon: Badge(
+              isLabelVisible: selectedCategoryIds.isNotEmpty,
+              label: Text('${selectedCategoryIds.length}'),
+              child: const Icon(Icons.label_outline, size: 22),
+            ),
+            tooltip: AppLocalizations.of(context)!.category_filter,
+            onPressed: () => _showCategoryFilter(context, groups),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showCategoryFilter(BuildContext context, List<Group> groups) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusLarge)),
+      ),
+      builder: (context) => CategoryFilterSheet(groups: groups),
     );
   }
 }

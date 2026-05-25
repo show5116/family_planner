@@ -761,6 +761,7 @@
   },
 
   "category_management": "Manage Categories",
+  "category_filter": "Category Filter",
   "category_add": "Add Category",
   "category_edit": "Edit Category",
   "category_empty": "No categories",

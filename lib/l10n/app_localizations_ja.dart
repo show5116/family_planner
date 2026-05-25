@@ -1861,6 +1861,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get category_management => 'カテゴリー管理';
 
   @override
+  String get category_filter => 'カテゴリーフィルター';
+
+  @override
   String get category_add => 'カテゴリー追加';
 
   @override

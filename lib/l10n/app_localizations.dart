@@ -3690,6 +3690,12 @@ abstract class AppLocalizations {
   /// **'카테고리 관리'**
   String get category_management;
 
+  /// No description provided for @category_filter.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 필터'**
+  String get category_filter;
+
   /// No description provided for @category_add.
   ///
   /// In ko, this message translates to:

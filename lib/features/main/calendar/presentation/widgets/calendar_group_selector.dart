@@ -209,7 +209,7 @@ class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusLarge)),
       ),
-      builder: (context) => _CategoryFilterSheet(groups: groups),
+      builder: (context) => CategoryFilterSheet(groups: groups),
     );
   }
 }
@@ -395,16 +395,16 @@ class _GroupFilterSheetState extends ConsumerState<_GroupFilterSheet> {
 }
 
 /// 카테고리 필터 바텀 시트 (그룹별 표시)
-class _CategoryFilterSheet extends ConsumerStatefulWidget {
+class CategoryFilterSheet extends ConsumerStatefulWidget {
   final List<Group> groups;
 
-  const _CategoryFilterSheet({required this.groups});
+  const CategoryFilterSheet({super.key, required this.groups});
 
   @override
-  ConsumerState<_CategoryFilterSheet> createState() => _CategoryFilterSheetState();
+  ConsumerState<CategoryFilterSheet> createState() => _CategoryFilterSheetState();
 }
 
-class _CategoryFilterSheetState extends ConsumerState<_CategoryFilterSheet> {
+class _CategoryFilterSheetState extends ConsumerState<CategoryFilterSheet> {
   late List<String> _selectedCategoryIds;
 
   @override
@@ -435,7 +435,7 @@ class _CategoryFilterSheetState extends ConsumerState<_CategoryFilterSheet> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    l10n.category_management,
+                    l10n.category_filter,
                     style: theme.textTheme.titleLarge,
                   ),
                   Row(

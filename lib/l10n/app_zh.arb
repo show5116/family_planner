@@ -712,6 +712,7 @@
   },
 
   "category_management": "管理类别",
+  "category_filter": "类别筛选",
   "category_add": "添加类别",
   "category_edit": "编辑类别",
   "category_empty": "暂无类别",

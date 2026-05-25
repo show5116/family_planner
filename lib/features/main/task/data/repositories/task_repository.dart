@@ -196,6 +196,23 @@ class TaskRepository {
     }
   }
 
+  /// 전체 카테고리 조회 (개인 + 내가 속한 모든 그룹)
+  Future<List<CategoryModel>> getAllCategories() async {
+    try {
+      final response = await _dio.get('/tasks/categories/all');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [TaskRepository] 전체 카테고리 조회 실패: ${e.message}');
+      throw Exception('전체 카테고리 조회 실패: ${e.message}');
+    }
+  }
+
   /// 카테고리 목록 조회
   Future<List<CategoryModel>> getCategories({String? groupId}) async {
     try {

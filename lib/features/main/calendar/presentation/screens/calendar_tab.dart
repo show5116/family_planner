@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -15,6 +17,7 @@ import 'package:family_planner/features/main/calendar/presentation/widgets/calen
 import 'package:family_planner/features/main/calendar/presentation/widgets/task_list_section.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_results.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
 import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 
 /// 일정 관리 탭 (월간 캘린더 뷰)
@@ -248,19 +251,54 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
   }
 }
 
-/// 일정 화면용 그룹 필터 바 — selectedGroupIdsProvider/includePersonalProvider 연결
+/// 일정 화면용 그룹 + 카테고리 필터 바
 class _CalendarGroupFilterBar extends ConsumerWidget {
   const _CalendarGroupFilterBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GroupFilterBar(
-      filterMode: FilterMode.withAll,
-      savedKey: 'calendar_group_filter',
-      onMultiFilterChanged: (sel) {
-        ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
-        ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
-      },
+    final selectedCategoryIds = ref.watch(selectedCategoryIdsProvider);
+    final groupsAsync = ref.watch(myGroupsProvider);
+    final groups = groupsAsync.valueOrNull ?? [];
+
+    return Row(
+      children: [
+        Expanded(
+          child: GroupFilterBar(
+            filterMode: FilterMode.withAll,
+            savedKey: 'calendar_group_filter',
+            onMultiFilterChanged: (sel) {
+              ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
+              ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
+            },
+          ),
+        ),
+        // 카테고리 필터 버튼
+        Padding(
+          padding: const EdgeInsets.only(right: AppSizes.spaceS),
+          child: IconButton(
+            icon: Badge(
+              isLabelVisible: selectedCategoryIds.isNotEmpty,
+              label: Text('${selectedCategoryIds.length}'),
+              child: const Icon(Icons.label_outline, size: 22),
+            ),
+            tooltip: AppLocalizations.of(context)!.category_filter,
+            onPressed: () => _showCategoryFilter(context, ref, groups),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showCategoryFilter(BuildContext context, WidgetRef ref, groups) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusLarge)),
+      ),
+      builder: (context) => CategoryFilterSheet(groups: groups),
     );
   }
 }
