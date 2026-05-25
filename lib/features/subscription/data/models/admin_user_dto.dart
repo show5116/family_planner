@@ -4,28 +4,35 @@ class AdminUserDto {
   final String id;
   final String name;
   final String? email;
+  final bool isAdmin;
   final SubscriptionTier subscriptionTier;
   final DateTime? subscriptionExpiresAt;
   final bool isSubscriptionActive;
   final DateTime createdAt;
   final DateTime? lastLoginAt;
+  final DateTime? deletedAt;
 
   const AdminUserDto({
     required this.id,
     required this.name,
     this.email,
+    this.isAdmin = false,
     required this.subscriptionTier,
     this.subscriptionExpiresAt,
     required this.isSubscriptionActive,
     required this.createdAt,
     this.lastLoginAt,
+    this.deletedAt,
   });
+
+  bool get isPendingDelete => deletedAt != null;
 
   factory AdminUserDto.fromJson(Map<String, dynamic> json) {
     return AdminUserDto(
       id: json['id'] as String,
       name: json['name'] as String,
       email: json['email'] as String?,
+      isAdmin: json['isAdmin'] as bool? ?? false,
       subscriptionTier: SubscriptionTier.values.firstWhere(
         (e) => e.name == json['subscriptionTier'],
         orElse: () => SubscriptionTier.free,
@@ -38,6 +45,9 @@ class AdminUserDto {
       lastLoginAt: json['lastLoginAt'] != null
           ? DateTime.tryParse(json['lastLoginAt'] as String)
           : null,
+      deletedAt: json['deletedAt'] != null
+          ? DateTime.tryParse(json['deletedAt'] as String)
+          : null,
     );
   }
 
@@ -46,11 +56,14 @@ class AdminUserDto {
     DateTime? subscriptionExpiresAt,
     bool? isSubscriptionActive,
     bool clearExpiresAt = false,
+    DateTime? deletedAt,
+    bool clearDeletedAt = false,
   }) {
     return AdminUserDto(
       id: id,
       name: name,
       email: email,
+      isAdmin: isAdmin,
       subscriptionTier: subscriptionTier ?? this.subscriptionTier,
       subscriptionExpiresAt: clearExpiresAt
           ? null
@@ -58,6 +71,7 @@ class AdminUserDto {
       isSubscriptionActive: isSubscriptionActive ?? this.isSubscriptionActive,
       createdAt: createdAt,
       lastLoginAt: lastLoginAt,
+      deletedAt: clearDeletedAt ? null : (deletedAt ?? this.deletedAt),
     );
   }
 }

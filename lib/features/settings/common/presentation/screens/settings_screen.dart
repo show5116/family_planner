@@ -185,9 +185,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             _buildSettingTile(
               context,
-              icon: Icons.people_outlined,
-              title: '사용자 관리',
-              subtitle: '사용자 목록 조회 및 구독 정보 수정',
+              icon: Icons.manage_accounts_outlined,
+              title: '사용자 및 계정 관리',
+              subtitle: '구독 수정, 계정 삭제 예약 및 처리',
               onTap: () {
                 context.push(AppRoutes.adminUserManagement);
               },

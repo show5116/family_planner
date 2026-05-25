@@ -9,6 +9,7 @@ class AdminSubscriptionRepository {
     int limit = 20,
     String? search,
     SubscriptionTier? tier,
+    String? deleteStatus,
   }) async {
     final response = await ApiClient.instance.dio.get(
       '/subscription/admin/users',
@@ -17,6 +18,7 @@ class AdminSubscriptionRepository {
         'limit': limit,
         if (search != null && search.isNotEmpty) 'search': search,
         if (tier != null) 'tier': tier.name,
+        if (deleteStatus != null) 'deleteStatus': deleteStatus,
       },
     );
     return AdminUserListResult.fromJson(response.data as Map<String, dynamic>);
@@ -42,6 +44,28 @@ class AdminSubscriptionRepository {
       },
     );
     return AdminUserDto.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// 계정 삭제 예약 (7일 유예)
+  Future<Map<String, dynamic>> scheduleDelete(String userId) async {
+    final response = await ApiClient.instance.dio.delete(
+      '/auth/admin/users/$userId',
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  /// 계정 삭제 예약 취소
+  Future<void> cancelDelete(String userId) async {
+    await ApiClient.instance.dio.post(
+      '/auth/admin/users/$userId/cancel-delete',
+    );
+  }
+
+  /// 삭제 예약 계정 즉시 완전 삭제
+  Future<void> forceDelete(String userId) async {
+    await ApiClient.instance.dio.delete(
+      '/auth/admin/users/$userId/force',
+    );
   }
 }
 

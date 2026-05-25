@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
@@ -28,6 +29,8 @@ class AdminUserDetailScreen extends ConsumerWidget {
           const SizedBox(height: AppSizes.spaceM),
           _SubscriptionCard(user: current),
           const SizedBox(height: AppSizes.spaceM),
+          _AccountManagementCard(user: current),
+          const SizedBox(height: AppSizes.spaceM),
           _ActivityCard(user: current),
         ],
       ),
@@ -43,6 +46,7 @@ class _ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPending = user.isPendingDelete;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -50,13 +54,14 @@ class _ProfileCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              backgroundColor:
-                  user.subscriptionTier.color.withValues(alpha: 0.15),
+              backgroundColor: isPending
+                  ? Colors.orange.withValues(alpha: 0.15)
+                  : user.subscriptionTier.color.withValues(alpha: 0.15),
               child: Text(
                 user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
                 style: TextStyle(
                   fontSize: 22,
-                  color: user.subscriptionTier.color,
+                  color: isPending ? Colors.orange : user.subscriptionTier.color,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -66,9 +71,54 @@ class _ProfileCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    user.name,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Row(
+                    children: [
+                      Text(
+                        user.name,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      if (user.isAdmin) ...[
+                        const SizedBox(width: AppSizes.spaceXS),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '운영자',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                      if (isPending) ...[
+                        const SizedBox(width: AppSizes.spaceXS),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            '삭제 유예',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   if (user.email != null)
                     Text(
@@ -178,6 +228,250 @@ class _SubscriptionCard extends ConsumerWidget {
   String _formatDateTime(DateTime dt) {
     return '${dt.year}.${dt.month.toString().padLeft(2, '0')}.${dt.day.toString().padLeft(2, '0')} '
         '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  }
+}
+
+// ── 계정 관리 카드 ───────────────────────────────────────────
+
+class _AccountManagementCard extends ConsumerWidget {
+  const _AccountManagementCard({required this.user});
+  final AdminUserDto user;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deleteState = ref.watch(adminUserDeleteProvider);
+    final isLoading = deleteState is AsyncLoading;
+    final isPending = user.isPendingDelete;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.manage_accounts_outlined,
+                  color: isPending ? Colors.orange : null,
+                ),
+                const SizedBox(width: AppSizes.spaceS),
+                Text('계정 관리',
+                    style: Theme.of(context).textTheme.titleSmall),
+              ],
+            ),
+            const Divider(height: AppSizes.spaceL),
+            if (isPending) ...[
+              // 삭제 유예 상태일 때
+              _InfoRow(
+                label: '삭제 예정일',
+                value: _formatDate(user.deletedAt!),
+                valueColor: Colors.orange,
+              ),
+              const SizedBox(height: AppSizes.spaceL),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: isLoading
+                          ? null
+                          : () => _onCancelDelete(context, ref),
+                      icon: const Icon(Icons.restore_outlined),
+                      label: const Text('삭제 취소'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.green,
+                        side: const BorderSide(color: Colors.green),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: isLoading
+                          ? null
+                          : () => _onForceDelete(context, ref),
+                      icon: isLoading
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Colors.white),
+                            )
+                          : const Icon(Icons.delete_forever_outlined),
+                      label: const Text('즉시 삭제'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ] else ...[
+              // 정상 계정일 때
+              Text(
+                '계정 삭제 예약 시 7일의 유예 기간이 부여됩니다.\n유예 기간 중 삭제를 취소하거나 즉시 삭제할 수 있습니다.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+              const SizedBox(height: AppSizes.spaceL),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: isLoading
+                      ? null
+                      : () => _onScheduleDelete(context, ref),
+                  icon: isLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.schedule_outlined),
+                  label: const Text('계정 삭제 예약 (7일 유예)'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onScheduleDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('계정 삭제 예약'),
+        content: Text(
+          '${user.name} 계정을 삭제 예약하시겠습니까?\n7일 후 자동으로 완전 삭제됩니다.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('삭제 예약'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final scheduledAt = await ref
+        .read(adminUserDeleteProvider.notifier)
+        .scheduleDelete(user.id);
+
+    if (!context.mounted) return;
+    if (scheduledAt != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '삭제가 예약되었습니다. 삭제 예정일: ${_formatDate(scheduledAt)}',
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('삭제 예약 실패. 다시 시도해주세요.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onCancelDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('삭제 예약 취소'),
+        content: Text('${user.name} 계정의 삭제 예약을 취소하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('닫기'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('취소 확인'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final success = await ref
+        .read(adminUserDeleteProvider.notifier)
+        .cancelDelete(user.id);
+
+    if (!context.mounted) return;
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('삭제 예약이 취소되었습니다.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('취소 실패. 다시 시도해주세요.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onForceDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('즉시 완전 삭제'),
+        content: Text(
+          '${user.name} 계정을 즉시 완전 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('즉시 삭제'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final success = await ref
+        .read(adminUserDeleteProvider.notifier)
+        .forceDelete(user.id);
+
+    if (!context.mounted) return;
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('계정이 즉시 삭제되었습니다.')),
+      );
+      context.pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('삭제 실패. 다시 시도해주세요.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.year}.${dt.month.toString().padLeft(2, '0')}.${dt.day.toString().padLeft(2, '0')}';
   }
 }
 

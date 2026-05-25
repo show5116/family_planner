@@ -52,6 +52,12 @@ class _AdminUserListScreenState extends ConsumerState<AdminUserListScreen> {
         );
   }
 
+  void _onDeleteStatusChanged(UserDeleteStatusFilter status) {
+    ref.read(adminUserFilterProvider.notifier).update(
+          (s) => s.copyWith(deleteStatus: status),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     final listAsync = ref.watch(adminUserListProvider);
@@ -59,7 +65,7 @@ class _AdminUserListScreenState extends ConsumerState<AdminUserListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('사용자 관리'),
+        title: const Text('사용자 및 계정 관리'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -74,8 +80,10 @@ class _AdminUserListScreenState extends ConsumerState<AdminUserListScreen> {
           _SearchFilterBar(
             controller: _searchController,
             selectedTier: filter.tier,
+            selectedDeleteStatus: filter.deleteStatus,
             onSearchChanged: _onSearchChanged,
             onTierChanged: _onTierFilterChanged,
+            onDeleteStatusChanged: _onDeleteStatusChanged,
           ),
           Expanded(
             child: listAsync.when(
@@ -166,14 +174,18 @@ class _SearchFilterBar extends StatelessWidget {
   const _SearchFilterBar({
     required this.controller,
     required this.selectedTier,
+    required this.selectedDeleteStatus,
     required this.onSearchChanged,
     required this.onTierChanged,
+    required this.onDeleteStatusChanged,
   });
 
   final TextEditingController controller;
   final SubscriptionTier? selectedTier;
+  final UserDeleteStatusFilter selectedDeleteStatus;
   final ValueChanged<String> onSearchChanged;
   final ValueChanged<SubscriptionTier?> onTierChanged;
+  final ValueChanged<UserDeleteStatusFilter> onDeleteStatusChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +197,7 @@ class _SearchFilterBar extends StatelessWidget {
         AppSizes.spaceS,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
             controller: controller,
@@ -209,11 +222,12 @@ class _SearchFilterBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSizes.spaceS),
+          // 구독 tier 필터
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _TierChip(
+                _FilterChip(
                   label: '전체',
                   selected: selectedTier == null,
                   onSelected: (_) => onTierChanged(null),
@@ -222,11 +236,32 @@ class _SearchFilterBar extends StatelessWidget {
                 for (final tier in SubscriptionTier.values)
                   Padding(
                     padding: const EdgeInsets.only(right: AppSizes.spaceXS),
-                    child: _TierChip(
+                    child: _FilterChip(
                       label: tier.displayName,
                       selected: selectedTier == tier,
                       color: tier.color,
                       onSelected: (_) => onTierChanged(tier),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+          // 계정 상태 필터
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final status in UserDeleteStatusFilter.values)
+                  Padding(
+                    padding: const EdgeInsets.only(right: AppSizes.spaceXS),
+                    child: _FilterChip(
+                      label: status.label,
+                      selected: selectedDeleteStatus == status,
+                      color: status == UserDeleteStatusFilter.pendingDelete
+                          ? Colors.orange
+                          : null,
+                      onSelected: (_) => onDeleteStatusChanged(status),
                     ),
                   ),
               ],
@@ -238,8 +273,8 @@ class _SearchFilterBar extends StatelessWidget {
   }
 }
 
-class _TierChip extends StatelessWidget {
-  const _TierChip({
+class _FilterChip extends StatelessWidget {
+  const _FilterChip({
     required this.label,
     required this.selected,
     required this.onSelected,
@@ -282,14 +317,20 @@ class _UserListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final isPending = user.isPendingDelete;
 
     return ListTile(
+      tileColor: isPending
+          ? Colors.orange.withValues(alpha: 0.05)
+          : null,
       leading: CircleAvatar(
-        backgroundColor: user.subscriptionTier.color.withValues(alpha: 0.15),
+        backgroundColor: isPending
+            ? Colors.orange.withValues(alpha: 0.15)
+            : user.subscriptionTier.color.withValues(alpha: 0.15),
         child: Text(
           user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
           style: TextStyle(
-            color: user.subscriptionTier.color,
+            color: isPending ? Colors.orange : user.subscriptionTier.color,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -300,7 +341,10 @@ class _UserListTile extends StatelessWidget {
             child: Text(user.name, style: textTheme.bodyLarge),
           ),
           const SizedBox(width: AppSizes.spaceXS),
-          _TierBadge(tier: user.subscriptionTier),
+          if (isPending)
+            _DeletePendingBadge(deletedAt: user.deletedAt!)
+          else
+            _TierBadge(tier: user.subscriptionTier),
         ],
       ),
       subtitle: Column(
@@ -313,7 +357,12 @@ class _UserListTile extends StatelessWidget {
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-          if (user.subscriptionExpiresAt != null)
+          if (isPending)
+            Text(
+              '삭제 예정: ${_formatDate(user.deletedAt!)}',
+              style: textTheme.bodySmall?.copyWith(color: Colors.orange),
+            )
+          else if (user.subscriptionExpiresAt != null)
             Text(
               '만료: ${_formatDate(user.subscriptionExpiresAt!)}',
               style: textTheme.bodySmall?.copyWith(
@@ -331,6 +380,33 @@ class _UserListTile extends StatelessWidget {
 
   String _formatDate(DateTime dt) {
     return '${dt.year}.${dt.month.toString().padLeft(2, '0')}.${dt.day.toString().padLeft(2, '0')}';
+  }
+}
+
+// ── 삭제 유예 배지 ───────────────────────────────────────────
+
+class _DeletePendingBadge extends StatelessWidget {
+  const _DeletePendingBadge({required this.deletedAt});
+  final DateTime deletedAt;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.orange.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.orange.withValues(alpha: 0.4)),
+      ),
+      child: const Text(
+        '삭제 유예',
+        style: TextStyle(
+          fontSize: 10,
+          color: Colors.orange,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 }
 
