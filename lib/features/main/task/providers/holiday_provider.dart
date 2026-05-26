@@ -51,3 +51,15 @@ AsyncValue<Map<String, SpecialDayModel>> specialDayMapForMonth(
         (days) => {for (final d in days) d.date: d},
       );
 }
+
+@riverpod
+AsyncValue<SpecialDayModel?> specialDayForDate(Ref ref, DateTime date) {
+  final year = date.year;
+  final month = date.month;
+  final dateStr =
+      '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  return ref.watch(specialDaysProvider(year, month)).whenData(
+        (days) => days.where((d) => d.date == dateStr).firstOrNull,
+      );
+}

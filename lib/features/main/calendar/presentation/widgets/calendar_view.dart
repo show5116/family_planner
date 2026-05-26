@@ -483,7 +483,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       if (holiday || date.weekday == DateTime.sunday) {
         textColor = AppColors.error.withValues(alpha: 0.3);
       } else if (specialDay) {
-        textColor = Colors.orange.withValues(alpha: 0.3);
+        textColor = const Color(0xFF4CAF50).withValues(alpha: 0.3);
       } else if (date.weekday == DateTime.saturday) {
         textColor = AppColors.primary.withValues(alpha: 0.3);
       } else {
@@ -492,7 +492,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     } else if (holiday || date.weekday == DateTime.sunday) {
       textColor = AppColors.error.withValues(alpha: 0.8);
     } else if (specialDay) {
-      textColor = Colors.orange.withValues(alpha: 0.9);
+      textColor = const Color(0xFF4CAF50).withValues(alpha: 0.9);
     } else if (date.weekday == DateTime.saturday) {
       textColor = AppColors.primary;
     } else {

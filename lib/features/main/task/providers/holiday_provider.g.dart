@@ -690,5 +690,127 @@ class _SpecialDayMapForMonthProviderElement
   int get month => (origin as SpecialDayMapForMonthProvider).month;
 }
 
+String _$specialDayForDateHash() => r'8a98d7b50c9a13abfeba31a291ef53da91740c6b';
+
+/// See also [specialDayForDate].
+@ProviderFor(specialDayForDate)
+const specialDayForDateProvider = SpecialDayForDateFamily();
+
+/// See also [specialDayForDate].
+class SpecialDayForDateFamily extends Family<AsyncValue<SpecialDayModel?>> {
+  /// See also [specialDayForDate].
+  const SpecialDayForDateFamily();
+
+  /// See also [specialDayForDate].
+  SpecialDayForDateProvider call(DateTime date) {
+    return SpecialDayForDateProvider(date);
+  }
+
+  @override
+  SpecialDayForDateProvider getProviderOverride(
+    covariant SpecialDayForDateProvider provider,
+  ) {
+    return call(provider.date);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'specialDayForDateProvider';
+}
+
+/// See also [specialDayForDate].
+class SpecialDayForDateProvider
+    extends AutoDisposeProvider<AsyncValue<SpecialDayModel?>> {
+  /// See also [specialDayForDate].
+  SpecialDayForDateProvider(DateTime date)
+    : this._internal(
+        (ref) => specialDayForDate(ref as SpecialDayForDateRef, date),
+        from: specialDayForDateProvider,
+        name: r'specialDayForDateProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$specialDayForDateHash,
+        dependencies: SpecialDayForDateFamily._dependencies,
+        allTransitiveDependencies:
+            SpecialDayForDateFamily._allTransitiveDependencies,
+        date: date,
+      );
+
+  SpecialDayForDateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.date,
+  }) : super.internal();
+
+  final DateTime date;
+
+  @override
+  Override overrideWith(
+    AsyncValue<SpecialDayModel?> Function(SpecialDayForDateRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SpecialDayForDateProvider._internal(
+        (ref) => create(ref as SpecialDayForDateRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        date: date,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<AsyncValue<SpecialDayModel?>> createElement() {
+    return _SpecialDayForDateProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SpecialDayForDateProvider && other.date == date;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, date.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin SpecialDayForDateRef
+    on AutoDisposeProviderRef<AsyncValue<SpecialDayModel?>> {
+  /// The parameter `date` of this provider.
+  DateTime get date;
+}
+
+class _SpecialDayForDateProviderElement
+    extends AutoDisposeProviderElement<AsyncValue<SpecialDayModel?>>
+    with SpecialDayForDateRef {
+  _SpecialDayForDateProviderElement(super.provider);
+
+  @override
+  DateTime get date => (origin as SpecialDayForDateProvider).date;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
