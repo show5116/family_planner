@@ -1914,6 +1914,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category_management => 'Manage Categories';
 
   @override
+  String get category_filter => 'Category Filter';
+
+  @override
   String get category_add => 'Add Category';
 
   @override
@@ -2618,6 +2621,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get household_recurring_no_expenses => 'No fixed expenses';
+
+  @override
+  String get household_recurring_total => 'Monthly Total';
+
+  @override
+  String get household_recurring_count => 'Items';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get household_recurring_top_category => 'By Category';
+
+  @override
+  String get household_merchants => 'Merchants';
+
+  @override
+  String get household_merchants_my => 'My Merchants';
+
+  @override
+  String get household_merchants_samples => 'Popular Merchants';
+
+  @override
+  String get household_merchants_empty => 'No merchants registered';
+
+  @override
+  String get household_merchants_add => 'Add Merchant';
+
+  @override
+  String get household_merchants_edit => 'Edit Merchant';
+
+  @override
+  String get household_merchants_name => 'Merchant name';
+
+  @override
+  String get household_merchants_delete => 'Delete Merchant';
+
+  @override
+  String household_merchants_delete_confirm(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get household_merchant_select => 'Select Merchant';
+
+  @override
+  String get household_merchant_none => 'None';
 
   @override
   String get household_budget_set => 'Budget Settings';

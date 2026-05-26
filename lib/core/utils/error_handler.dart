@@ -21,7 +21,6 @@ class ErrorHandler {
       SnackBar(
         content: Text(errorMessage),
         backgroundColor: Theme.of(context).colorScheme.error,
-        behavior: SnackBarBehavior.floating,
         action: onRetry != null
             ? SnackBarAction(
                 label: '재시도',

@@ -10,6 +10,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
+import 'package:family_planner/features/main/household/providers/merchant_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
@@ -42,6 +43,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   TransactionType _transactionType = TransactionType.expense;
   ExpenseCategory? _selectedCategory;
   PaymentMethod? _selectedPaymentMethod;
+  String? _selectedMerchantId;
   bool _isRecurring = false;
 
   bool get _isEditMode => widget.expense != null;
@@ -58,6 +60,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
       _selectedCategory = e.category;
       _selectedPaymentMethod = e.paymentMethod;
       _isRecurring = e.isRecurring;
+      _selectedMerchantId = e.merchant?.id;
     } else {
       _selectedDate = DateTime.now();
       _isRecurring = widget.initialIsRecurring;
@@ -195,6 +198,11 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
               ),
               if (_transactionType == TransactionType.expense) ...[
                 const SizedBox(height: AppSizes.spaceM),
+                _MerchantSelector(
+                  selectedId: _selectedMerchantId,
+                  onChanged: (id) => setState(() => _selectedMerchantId = id),
+                ),
+                const SizedBox(height: AppSizes.spaceM),
                 _RecurringToggle(
                   value: _isRecurring,
                   onChanged: (v) => setState(() => _isRecurring = v),
@@ -228,6 +236,8 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
             ? null
             : _descriptionController.text.trim(),
         paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
+        merchantId: _transactionType == TransactionType.income ? null : _selectedMerchantId,
+        merchantIdExplicitNull: _transactionType == TransactionType.expense && _selectedMerchantId == null,
         isRecurring: _transactionType == TransactionType.income ? false : _isRecurring,
       );
       final result = await ref
@@ -248,6 +258,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
             ? null
             : _descriptionController.text.trim(),
         paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
+        merchantId: _transactionType == TransactionType.income ? null : _selectedMerchantId,
         isRecurring: _transactionType == TransactionType.income ? false : _isRecurring,
       );
       final result = await ref
@@ -556,6 +567,66 @@ class _TypeToggle extends StatelessWidget {
           return null;
         }),
       ),
+    );
+  }
+}
+
+// 소비처 선택
+class _MerchantSelector extends ConsumerWidget {
+  final String? selectedId;
+  final ValueChanged<String?> onChanged;
+
+  const _MerchantSelector({
+    required this.selectedId,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final merchantsAsync = ref.watch(merchantsProvider);
+
+    return merchantsAsync.when(
+      data: (merchants) => InputDecorator(
+        decoration: InputDecoration(
+          labelText: l10n.household_merchant_select,
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.storefront_outlined, size: 18),
+            tooltip: l10n.household_merchants,
+            onPressed: () => context.push(AppRoutes.householdMerchants),
+          ),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String?>(
+            value: merchants.any((m) => m.id == selectedId) ? selectedId : null,
+            isExpanded: true,
+            isDense: true,
+            hint: Text(
+              merchants.isEmpty ? l10n.household_merchants_empty : l10n.household_merchant_none,
+            ),
+            items: [
+              DropdownMenuItem(
+                value: null,
+                child: Text(l10n.household_merchant_none),
+              ),
+              ...merchants.map(
+                (m) => DropdownMenuItem(
+                  value: m.id,
+                  child: Text(m.name),
+                ),
+              ),
+            ],
+            onChanged: merchants.isEmpty ? null : onChanged,
+          ),
+        ),
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 }

@@ -91,26 +91,32 @@ Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) as
   return repository.getYearlyStatistics(groupId: groupId, year: year);
 }
 
+/// 특정 월 지출 목록 Provider (통계 화면 소비처/필터 탭용)
+final householdExpensesByMonthProvider =
+    FutureProvider.family<List<ExpenseModel>, String>((ref, month) {
+  final groupId = ref.watch(householdSelectedGroupIdProvider);
+  return ref
+      .watch(householdRepositoryProvider)
+      .getExpenses(groupId: groupId, month: month);
+});
+
 /// 고정 지출 목록 Provider (isRecurring=true)
 @riverpod
 class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   @override
   Future<List<ExpenseModel>> build() async {
     final groupId = ref.watch(householdSelectedGroupIdProvider);
-
     final repository = ref.watch(householdRepositoryProvider);
-    final all = await repository.getExpenses(groupId: groupId);
-    return all.where((e) => e.isRecurring).toList();
+    return repository.getRecurringExpenses(groupId: groupId);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final groupId = ref.read(householdSelectedGroupIdProvider);
-      final all = await ref
+      return ref
           .read(householdRepositoryProvider)
-          .getExpenses(groupId: groupId);
-      return all.where((e) => e.isRecurring).toList();
+          .getRecurringExpenses(groupId: groupId);
     });
   }
 

@@ -539,10 +539,9 @@ class _CategoriesProviderElement
 }
 
 String _$allGroupsCategoriesHash() =>
-    r'a675757ce0e5291d80bf9201ed84f0fb55e515db';
+    r'f5f61e701970535a4049e7fd4bc26661aac41149';
 
-/// 모든 그룹 + 개인 카테고리를 합쳐서 반환하는 Provider
-/// 중복 id 제거 후 반환
+/// 모든 그룹 + 개인 카테고리를 한 번에 반환하는 Provider
 ///
 /// Copied from [allGroupsCategories].
 @ProviderFor(allGroupsCategories)

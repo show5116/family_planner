@@ -444,7 +444,7 @@ final householdExpensesProvider =
 
 typedef _$HouseholdExpenses = AutoDisposeAsyncNotifier<List<ExpenseModel>>;
 String _$householdRecurringExpensesHash() =>
-    r'c94c847cef1a0fde81e20ffd02210d4b621d9791';
+    r'2f5e202430f9cbc47cc2b8c38ffd0e7a0976688c';
 
 /// 고정 지출 목록 Provider (isRecurring=true)
 ///

@@ -151,7 +151,7 @@ class _ExpenseList extends ConsumerWidget {
 
         final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
         final total = sorted.fold<double>(0, (sum, e) => sum + e.amount);
-        final prefix = isIncome ? '+₩' : '₩';
+        final prefix = '₩';
         final totalColor = isIncome
             ? Colors.green
             : Theme.of(context).colorScheme.error;

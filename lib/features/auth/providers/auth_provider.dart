@@ -17,6 +17,9 @@ import 'package:family_planner/features/main/fridge/providers/fridge_provider.da
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
+import 'package:family_planner/features/memo/providers/memo_provider.dart';
+import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
+import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 
 /// 인증 상태
 class AuthState {
@@ -186,6 +189,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _ref.read(minigameSelectedGroupIdProvider.notifier).state = null;
     _ref.read(fridgeSelectedGroupIdProvider.notifier).state = null;
     _ref.read(selectedGroupIdProvider.notifier).state = null;
+    _ref.read(selectedGroupIdsProvider.notifier).state = null;
+    _ref.read(includePersonalProvider.notifier).state = true;
+    _ref.read(selectedCategoryIdsProvider.notifier).state = [];
+    _ref.read(memoSelectedFilterProvider.notifier).state = null;
+    _ref.read(assetSelectedUserIdProvider.notifier).state = null;
+    _ref.read(assetStatSelectedAccountIdsProvider.notifier).state = {};
+    _ref.read(childcareSelectedChildIdProvider.notifier).state = null;
+    _ref.invalidate(bookmarkedIndicatorsProvider);
+    _ref.invalidate(notificationSettingsProvider);
     _ref.read(defaultGroupProvider.notifier).clear();
 
     // 대시보드 캐시(keepAlive) 및 위젯 설정의 그룹 ID 초기화

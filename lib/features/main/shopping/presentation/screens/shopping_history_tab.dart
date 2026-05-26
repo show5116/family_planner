@@ -130,8 +130,7 @@ class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab> {
     if (ctx == null) return null;
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return null;
-    final ancestor = ctx.findAncestorStateOfType<NavigatorState>()?.context.findRenderObject();
-    final offset = box.localToGlobal(Offset.zero, ancestor: ancestor);
+    final offset = box.localToGlobal(Offset.zero);
     return TargetPosition(box.size, offset);
   }
 

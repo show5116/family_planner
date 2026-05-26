@@ -1865,6 +1865,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get category_management => '카테고리 관리';
 
   @override
+  String get category_filter => '카테고리 필터';
+
+  @override
   String get category_add => '카테고리 추가';
 
   @override
@@ -2566,6 +2569,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get household_recurring_no_expenses => '고정 지출이 없습니다';
+
+  @override
+  String get household_recurring_total => '월 합계';
+
+  @override
+  String get household_recurring_count => '항목 수';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count건';
+  }
+
+  @override
+  String get household_recurring_top_category => '카테고리별 분포';
+
+  @override
+  String get household_merchants => '소비처 관리';
+
+  @override
+  String get household_merchants_my => '내 소비처';
+
+  @override
+  String get household_merchants_samples => '자주 쓰는 소비처';
+
+  @override
+  String get household_merchants_empty => '등록된 소비처가 없습니다';
+
+  @override
+  String get household_merchants_add => '소비처 추가';
+
+  @override
+  String get household_merchants_edit => '소비처 수정';
+
+  @override
+  String get household_merchants_name => '소비처 이름';
+
+  @override
+  String get household_merchants_delete => '소비처 삭제';
+
+  @override
+  String household_merchants_delete_confirm(String name) {
+    return '\"$name\" 소비처를 삭제할까요?';
+  }
+
+  @override
+  String get household_merchant_select => '소비처 선택';
+
+  @override
+  String get household_merchant_none => '없음';
 
   @override
   String get household_budget_set => '예산 설정';

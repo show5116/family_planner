@@ -10,6 +10,37 @@ import 'package:family_planner/features/main/household/providers/household_provi
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+class _RecurringSummary {
+  final double totalExpense;
+  final int count;
+  final List<MapEntry<ExpenseCategory, double>> categoryAmounts;
+
+  const _RecurringSummary({
+    required this.totalExpense,
+    required this.count,
+    required this.categoryAmounts,
+  });
+
+  factory _RecurringSummary.from(List<ExpenseModel> expenses) {
+    final expenseOnly = expenses.where((e) => e.type == TransactionType.expense).toList();
+    final total = expenseOnly.fold(0.0, (sum, e) => sum + e.amount);
+
+    final categorySum = <ExpenseCategory, double>{};
+    for (final e in expenseOnly) {
+      final key = e.category ?? ExpenseCategory.other;
+      categorySum[key] = (categorySum[key] ?? 0) + e.amount;
+    }
+    final sorted = categorySum.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return _RecurringSummary(
+      totalExpense: total,
+      count: expenses.length,
+      categoryAmounts: sorted,
+    );
+  }
+}
+
 class RecurringExpensesScreen extends ConsumerWidget {
   const RecurringExpensesScreen({super.key});
 
@@ -115,15 +146,19 @@ class _RecurringExpensesList extends ConsumerWidget {
     }
 
     final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
+    final summary = _RecurringSummary.from(expenses);
 
     return RefreshIndicator(
       onRefresh: () =>
           ref.read(householdRecurringExpensesProvider.notifier).refresh(),
       child: ListView.builder(
         padding: const EdgeInsets.only(bottom: 80),
-        itemCount: sorted.length,
+        itemCount: sorted.length + 1,
         itemBuilder: (context, index) {
-          final expense = sorted[index];
+          if (index == 0) {
+            return _RecurringSummaryCard(summary: summary);
+          }
+          final expense = sorted[index - 1];
           return ExpenseListItem(
             expense: expense,
             onTap: () => context.push(
@@ -183,5 +218,200 @@ class _RecurringExpensesList extends ConsumerWidget {
         content: Text(success ? l10n.household_delete_success : l10n.common_error),
       ),
     );
+  }
+}
+
+class _RecurringSummaryCard extends StatelessWidget {
+  final _RecurringSummary summary;
+
+  const _RecurringSummaryCard({required this.summary});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceS,
+      ),
+      child: Card(
+        elevation: 0,
+        color: colorScheme.surfaceContainerLow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+          side: BorderSide(color: colorScheme.outlineVariant, width: 0.5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.spaceM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 월 합계 + 항목 수
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.household_recurring_total,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '₩${_formatAmount(summary.totalExpense)}',
+                          style: textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.spaceM,
+                      vertical: AppSizes.spaceS,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          l10n.household_recurring_count,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSecondaryContainer,
+                          ),
+                        ),
+                        Text(
+                          l10n.household_recurring_count_unit(summary.count),
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSecondaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // 카테고리별 분포
+              if (summary.categoryAmounts.isNotEmpty) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                Divider(color: colorScheme.outlineVariant, height: 1),
+                const SizedBox(height: AppSizes.spaceM),
+                Text(
+                  l10n.household_recurring_top_category,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                ...summary.categoryAmounts.map(
+                  (entry) => _CategoryBar(
+                    category: entry.key,
+                    amount: entry.value,
+                    total: summary.totalExpense,
+                    l10n: l10n,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatAmount(double amount) {
+    final intAmount = amount.toInt();
+    final str = intAmount.toString();
+    final buffer = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buffer.write(',');
+      buffer.write(str[i]);
+    }
+    return buffer.toString();
+  }
+}
+
+class _CategoryBar extends StatelessWidget {
+  final ExpenseCategory category;
+  final double amount;
+  final double total;
+  final AppLocalizations l10n;
+
+  const _CategoryBar({
+    required this.category,
+    required this.amount,
+    required this.total,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final ratio = total > 0 ? (amount / total).clamp(0.0, 1.0) : 0.0;
+    final color = categoryColor(category);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+      child: Row(
+        children: [
+          Icon(categoryIcon(category), size: 14, color: color),
+          const SizedBox(width: AppSizes.spaceS),
+          SizedBox(
+            width: 72,
+            child: Text(
+              categoryName(l10n, category),
+              style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurface),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: LinearProgressIndicator(
+                value: ratio,
+                minHeight: 6,
+                backgroundColor: colorScheme.surfaceContainerHighest,
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Text(
+            '₩${_formatAmount(amount)}',
+            style: textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatAmount(double amount) {
+    final intAmount = amount.toInt();
+    final str = intAmount.toString();
+    final buffer = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buffer.write(',');
+      buffer.write(str[i]);
+    }
+    return buffer.toString();
   }
 }

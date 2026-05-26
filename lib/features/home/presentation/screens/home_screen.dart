@@ -61,21 +61,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (tabId == null) return;
     final index = displayedItems.indexWhere((item) => item.id == tabId);
     if (index >= 0) {
-      setState(() {
-        _selectedIndex = index;
-        _visitedTabs.add(tabId);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() {
+          _selectedIndex = index;
+          _visitedTabs.add(tabId);
+        });
+        ref.read(homeTabNavigationProvider.notifier).state = null;
       });
     } else {
       // 하단 네비게이션에 없는 탭은 push로 이동
       final route = _routeForTabId(tabId);
-      if (route != null) context.push(route);
-    }
-    // 요청 소비
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        if (route != null) context.push(route);
         ref.read(homeTabNavigationProvider.notifier).state = null;
-      }
-    });
+      });
+    }
   }
 
   String? _routeForTabId(String tabId) {

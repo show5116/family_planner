@@ -102,7 +102,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         SnackBar(
           content: Text(message),
           backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 4),
         ),
       );

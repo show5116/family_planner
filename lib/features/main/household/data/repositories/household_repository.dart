@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/merchant_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 
 final householdRepositoryProvider = Provider<HouseholdRepository>((ref) {
@@ -43,6 +44,25 @@ class HouseholdRepository {
     } on DioException catch (e) {
       debugPrint('❌ [HouseholdRepository] 지출 목록 조회 실패: ${e.message}');
       throw Exception('지출 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 고정 지출 목록 조회
+  Future<List<ExpenseModel>> getRecurringExpenses({String? groupId}) async {
+    try {
+      final response = await _dio.get('/household/expenses/recurring', queryParameters: {
+        if (groupId != null) 'groupId': groupId,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => ExpenseModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 고정 지출 조회 실패: ${e.message}');
+      throw Exception('고정 지출 조회 실패: ${e.message}');
     }
   }
 
@@ -309,6 +329,59 @@ class HouseholdRepository {
       if (e.response?.statusCode == 404) throw Exception('전체 예산 템플릿을 찾을 수 없습니다');
       if (e.response?.statusCode == 403) throw Exception('접근 권한이 없습니다');
       throw Exception('전체 예산 템플릿 삭제 실패: ${e.message}');
+    }
+  }
+
+  /// 소비처 목록 조회
+  Future<List<MerchantModel>> getMerchants({String? groupId}) async {
+    try {
+      final response = await _dio.get('/household/merchants', queryParameters: {
+        if (groupId != null) 'groupId': groupId,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => MerchantModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 소비처 목록 조회 실패: ${e.message}');
+      throw Exception('소비처 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 소비처 등록
+  Future<MerchantModel> createMerchant(CreateMerchantDto dto) async {
+    try {
+      final response = await _dio.post('/household/merchants', data: dto.toJson());
+      return MerchantModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 소비처 등록 실패: ${e.message}');
+      throw Exception('소비처 등록 실패: ${e.message}');
+    }
+  }
+
+  /// 소비처 수정
+  Future<MerchantModel> updateMerchant(String id, UpdateMerchantDto dto) async {
+    try {
+      final response = await _dio.patch('/household/merchants/$id', data: dto.toJson());
+      return MerchantModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('소비처를 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('본인이 등록한 소비처만 수정할 수 있습니다');
+      throw Exception('소비처 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 소비처 삭제
+  Future<void> deleteMerchant(String id) async {
+    try {
+      await _dio.delete('/household/merchants/$id');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('소비처를 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('본인이 등록한 소비처만 삭제할 수 있습니다');
+      throw Exception('소비처 삭제 실패: ${e.message}');
     }
   }
 

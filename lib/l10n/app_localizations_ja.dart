@@ -1861,6 +1861,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get category_management => 'カテゴリー管理';
 
   @override
+  String get category_filter => 'カテゴリーフィルター';
+
+  @override
   String get category_add => 'カテゴリー追加';
 
   @override
@@ -2562,6 +2565,55 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get household_recurring_no_expenses => '固定費がありません';
+
+  @override
+  String get household_recurring_total => '月合計';
+
+  @override
+  String get household_recurring_count => '件数';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count件';
+  }
+
+  @override
+  String get household_recurring_top_category => 'カテゴリ別内訳';
+
+  @override
+  String get household_merchants => '支払先管理';
+
+  @override
+  String get household_merchants_my => 'マイ支払先';
+
+  @override
+  String get household_merchants_samples => 'よく使う支払先';
+
+  @override
+  String get household_merchants_empty => '支払先が登録されていません';
+
+  @override
+  String get household_merchants_add => '支払先を追加';
+
+  @override
+  String get household_merchants_edit => '支払先を編集';
+
+  @override
+  String get household_merchants_name => '支払先名';
+
+  @override
+  String get household_merchants_delete => '支払先を削除';
+
+  @override
+  String household_merchants_delete_confirm(String name) {
+    return '「$name」を削除しますか？';
+  }
+
+  @override
+  String get household_merchant_select => '支払先を選択';
+
+  @override
+  String get household_merchant_none => 'なし';
 
   @override
   String get household_budget_set => '予算設定';

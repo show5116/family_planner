@@ -202,6 +202,8 @@ class _DateHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final holidayAsync = ref.watch(holidayForDateProvider(date));
     final holiday = holidayAsync.valueOrNull;
+    final specialDayAsync = ref.watch(specialDayForDateProvider(date));
+    final specialDay = specialDayAsync.valueOrNull;
     final lunarLabel = LunarService.lunarLabel(date);
 
     return Padding(
@@ -244,6 +246,26 @@ class _DateHeader extends ConsumerWidget {
                 holiday.name,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AppColors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ],
+          if (specialDay != null) ...[
+            const SizedBox(width: AppSizes.spaceS),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceS,
+                vertical: 2,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Text(
+                specialDay.name,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: const Color(0xFF4CAF50),
                       fontWeight: FontWeight.w600,
                     ),
               ),

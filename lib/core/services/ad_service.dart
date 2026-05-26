@@ -53,8 +53,8 @@ class AdService {
   bool _isInterstitialLoading = false;
   bool _isRewardedLoading = false;
 
-  /// 개발 환경, 운영자 계정, 테스트 계정 여부 (로그인 후 subscription_provider에서 주입)
-  bool useTestAds = kDebugMode;
+  /// 실제 Unit ID 발급 전까지 항상 테스트 광고 사용
+  bool useTestAds = true;
 
   /// MobileAds SDK 초기화 (main.dart에서 호출)
   static Future<void> initialize() async {
