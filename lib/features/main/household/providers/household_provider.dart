@@ -97,20 +97,17 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   @override
   Future<List<ExpenseModel>> build() async {
     final groupId = ref.watch(householdSelectedGroupIdProvider);
-
     final repository = ref.watch(householdRepositoryProvider);
-    final all = await repository.getExpenses(groupId: groupId);
-    return all.where((e) => e.isRecurring).toList();
+    return repository.getRecurringExpenses(groupId: groupId);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final groupId = ref.read(householdSelectedGroupIdProvider);
-      final all = await ref
+      return ref
           .read(householdRepositoryProvider)
-          .getExpenses(groupId: groupId);
-      return all.where((e) => e.isRecurring).toList();
+          .getRecurringExpenses(groupId: groupId);
     });
   }
 

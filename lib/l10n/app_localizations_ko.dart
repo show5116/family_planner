@@ -2571,6 +2571,20 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_recurring_no_expenses => '고정 지출이 없습니다';
 
   @override
+  String get household_recurring_total => '월 합계';
+
+  @override
+  String get household_recurring_count => '항목 수';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count건';
+  }
+
+  @override
+  String get household_recurring_top_category => '카테고리별 분포';
+
+  @override
   String get household_budget_set => '예산 설정';
 
   @override

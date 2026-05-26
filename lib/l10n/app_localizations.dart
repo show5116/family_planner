@@ -5088,6 +5088,30 @@ abstract class AppLocalizations {
   /// **'고정 지출이 없습니다'**
   String get household_recurring_no_expenses;
 
+  /// 고정 지출 월 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'월 합계'**
+  String get household_recurring_total;
+
+  /// 고정 지출 항목 수 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 수'**
+  String get household_recurring_count;
+
+  /// 고정 지출 항목 수 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}건'**
+  String household_recurring_count_unit(int count);
+
+  /// 고정 지출 카테고리별 분포 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별 분포'**
+  String get household_recurring_top_category;
+
   /// 예산 설정 버튼/제목
   ///
   /// In ko, this message translates to:

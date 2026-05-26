@@ -2623,6 +2623,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_recurring_no_expenses => 'No fixed expenses';
 
   @override
+  String get household_recurring_total => 'Monthly Total';
+
+  @override
+  String get household_recurring_count => 'Items';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get household_recurring_top_category => 'By Category';
+
+  @override
   String get household_budget_set => 'Budget Settings';
 
   @override

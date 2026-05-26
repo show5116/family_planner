@@ -2553,6 +2553,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_recurring_no_expenses => '暂无固定支出';
 
   @override
+  String get household_recurring_total => '月合计';
+
+  @override
+  String get household_recurring_count => '项目数';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count项';
+  }
+
+  @override
+  String get household_recurring_top_category => '按类别分布';
+
+  @override
   String get household_budget_set => '预算设置';
 
   @override

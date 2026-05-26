@@ -46,6 +46,25 @@ class HouseholdRepository {
     }
   }
 
+  /// 고정 지출 목록 조회
+  Future<List<ExpenseModel>> getRecurringExpenses({String? groupId}) async {
+    try {
+      final response = await _dio.get('/household/expenses/recurring', queryParameters: {
+        if (groupId != null) 'groupId': groupId,
+      });
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => ExpenseModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 고정 지출 조회 실패: ${e.message}');
+      throw Exception('고정 지출 조회 실패: ${e.message}');
+    }
+  }
+
   /// 지출 상세 조회
   Future<ExpenseModel> getExpenseById(String id) async {
     try {

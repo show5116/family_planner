@@ -2567,6 +2567,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_recurring_no_expenses => '固定費がありません';
 
   @override
+  String get household_recurring_total => '月合計';
+
+  @override
+  String get household_recurring_count => '件数';
+
+  @override
+  String household_recurring_count_unit(int count) {
+    return '$count件';
+  }
+
+  @override
+  String get household_recurring_top_category => 'カテゴリ別内訳';
+
+  @override
   String get household_budget_set => '予算設定';
 
   @override
