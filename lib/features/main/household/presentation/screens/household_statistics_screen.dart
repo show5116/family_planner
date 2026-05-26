@@ -291,7 +291,7 @@ class _TotalSummaryCard extends StatelessWidget {
                       children: [
                         Text(l10n.household_total_income, style: Theme.of(context).textTheme.bodySmall),
                         Text(
-                          '+₩${_fmt(stats.totalIncome)}',
+                          '₩${_fmt(stats.totalIncome)}',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green,
@@ -554,7 +554,7 @@ class _IncomeSummaryItem extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    '+₩${_fmt(totalIncome)}',
+                    '₩${_fmt(totalIncome)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
@@ -663,7 +663,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
                             children: [
                               Text('${stats.year}년 총 입금', style: Theme.of(context).textTheme.bodySmall),
                               Text(
-                                '+₩${_fmt(stats.totalIncome)}',
+                                '₩${_fmt(stats.totalIncome)}',
                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.green,

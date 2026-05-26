@@ -612,7 +612,7 @@ class _DayGroup extends StatelessWidget {
               const Spacer(),
               if (totalIncome > 0)
                 Text(
-                  '+₩${_fmt(totalIncome)}',
+                  '₩${_fmt(totalIncome)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.green,
                         fontWeight: FontWeight.w600,
