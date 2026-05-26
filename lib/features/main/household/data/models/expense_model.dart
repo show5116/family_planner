@@ -28,6 +28,21 @@ enum PaymentMethod {
   transfer,
 }
 
+/// 소비처 요약 (지출 응답에 포함)
+class MerchantDto {
+  final String id;
+  final String name;
+
+  const MerchantDto({required this.id, required this.name});
+
+  factory MerchantDto.fromJson(Map<String, dynamic> json) {
+    return MerchantDto(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
+  }
+}
+
 /// 지출 모델
 class ExpenseModel {
   final String id;
@@ -40,6 +55,7 @@ class ExpenseModel {
   final String? description;
   final PaymentMethod? paymentMethod;
   final bool isRecurring;
+  final MerchantDto? merchant;
   final String? shoppingHistoryId; // 장보기 완료 시 자동 생성된 지출에만 존재
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -55,6 +71,7 @@ class ExpenseModel {
     this.description,
     this.paymentMethod,
     required this.isRecurring,
+    this.merchant,
     this.shoppingHistoryId,
     required this.createdAt,
     required this.updatedAt,
@@ -76,6 +93,9 @@ class ExpenseModel {
           ? _parsePaymentMethod(json['paymentMethod'] as String)
           : null,
       isRecurring: (json['isRecurring'] as bool?) ?? false,
+      merchant: json['merchant'] != null
+          ? MerchantDto.fromJson(json['merchant'] as Map<String, dynamic>)
+          : null,
       shoppingHistoryId: json['shoppingHistoryId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
@@ -137,6 +157,7 @@ class ExpenseModel {
     String? description,
     PaymentMethod? paymentMethod,
     bool? isRecurring,
+    MerchantDto? merchant,
     String? shoppingHistoryId,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -152,6 +173,7 @@ class ExpenseModel {
       description: description ?? this.description,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       isRecurring: isRecurring ?? this.isRecurring,
+      merchant: merchant ?? this.merchant,
       shoppingHistoryId: shoppingHistoryId ?? this.shoppingHistoryId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -168,6 +190,7 @@ class CreateExpenseDto {
   final String date; // YYYY-MM-DD
   final String? description;
   final PaymentMethod? paymentMethod;
+  final String? merchantId;
   final bool? isRecurring;
 
   const CreateExpenseDto({
@@ -178,6 +201,7 @@ class CreateExpenseDto {
     required this.date,
     this.description,
     this.paymentMethod,
+    this.merchantId,
     this.isRecurring,
   });
 
@@ -190,6 +214,7 @@ class CreateExpenseDto {
       'date': date,
       if (description != null) 'description': description,
       if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod!),
+      if (merchantId != null) 'merchantId': merchantId,
       if (isRecurring != null) 'isRecurring': isRecurring,
     };
   }
@@ -203,6 +228,8 @@ class UpdateExpenseDto {
   final String? date;
   final String? description;
   final PaymentMethod? paymentMethod;
+  final String? merchantId; // null 전달 시 소비처 연결 해제
+  final bool? merchantIdExplicitNull; // true면 merchantId: null 을 명시적으로 전송
   final bool? isRecurring;
 
   const UpdateExpenseDto({
@@ -212,6 +239,8 @@ class UpdateExpenseDto {
     this.date,
     this.description,
     this.paymentMethod,
+    this.merchantId,
+    this.merchantIdExplicitNull = false,
     this.isRecurring,
   });
 
@@ -223,6 +252,8 @@ class UpdateExpenseDto {
       if (date != null) 'date': date,
       if (description != null) 'description': description,
       if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod!),
+      if (merchantIdExplicitNull == true) 'merchantId': null
+      else if (merchantId != null) 'merchantId': merchantId,
       if (isRecurring != null) 'isRecurring': isRecurring,
     };
   }

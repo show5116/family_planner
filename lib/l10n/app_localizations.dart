@@ -5112,6 +5112,72 @@ abstract class AppLocalizations {
   /// **'카테고리별 분포'**
   String get household_recurring_top_category;
 
+  /// 소비처 관리 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 관리'**
+  String get household_merchants;
+
+  /// 내 소비처 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'내 소비처'**
+  String get household_merchants_my;
+
+  /// 샘플 소비처 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 쓰는 소비처'**
+  String get household_merchants_samples;
+
+  /// 소비처 없음 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 소비처가 없습니다'**
+  String get household_merchants_empty;
+
+  /// 소비처 추가 시트 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 추가'**
+  String get household_merchants_add;
+
+  /// 소비처 수정 시트 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 수정'**
+  String get household_merchants_edit;
+
+  /// 소비처 이름 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 이름'**
+  String get household_merchants_name;
+
+  /// 소비처 삭제 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 삭제'**
+  String get household_merchants_delete;
+
+  /// 소비처 삭제 확인 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\" 소비처를 삭제할까요?'**
+  String household_merchants_delete_confirm(String name);
+
+  /// 지출 폼 소비처 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 선택'**
+  String get household_merchant_select;
+
+  /// 소비처 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'없음'**
+  String get household_merchant_none;
+
   /// 예산 설정 버튼/제목
   ///
   /// In ko, this message translates to:

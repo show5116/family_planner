@@ -195,6 +195,11 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             onPressed: () => showBudgetSettingSheet(context),
           ),
           IconButton(
+            icon: const Icon(Icons.storefront_outlined),
+            tooltip: l10n.household_merchants,
+            onPressed: () => context.push(AppRoutes.householdMerchants),
+          ),
+          IconButton(
             key: _recurringKey,
             icon: const Icon(Icons.repeat),
             tooltip: l10n.household_recurring_expenses,

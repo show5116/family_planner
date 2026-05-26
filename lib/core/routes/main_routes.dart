@@ -17,6 +17,7 @@ import 'package:family_planner/features/main/household/presentation/screens/expe
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
+import 'package:family_planner/features/main/household/presentation/screens/merchants_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_category_expenses_screen.dart';
 // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
 // import 'package:family_planner/features/main/household/presentation/screens/household_settings_screen.dart';
@@ -248,6 +249,11 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.householdRecurring,
       name: 'householdRecurring',
       builder: (context, state) => const RecurringExpensesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.householdMerchants,
+      name: 'householdMerchants',
+      builder: (context, state) => const MerchantsScreen(),
     ),
     GoRoute(
       path: AppRoutes.householdCategoryExpenses,

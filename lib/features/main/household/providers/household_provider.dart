@@ -91,6 +91,15 @@ Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) as
   return repository.getYearlyStatistics(groupId: groupId, year: year);
 }
 
+/// 특정 월 지출 목록 Provider (통계 화면 소비처/필터 탭용)
+final householdExpensesByMonthProvider =
+    FutureProvider.family<List<ExpenseModel>, String>((ref, month) {
+  final groupId = ref.watch(householdSelectedGroupIdProvider);
+  return ref
+      .watch(householdRepositoryProvider)
+      .getExpenses(groupId: groupId, month: month);
+});
+
 /// 고정 지출 목록 Provider (isRecurring=true)
 @riverpod
 class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {

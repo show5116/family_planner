@@ -2567,6 +2567,41 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_recurring_top_category => '按类别分布';
 
   @override
+  String get household_merchants => '消费商家管理';
+
+  @override
+  String get household_merchants_my => '我的商家';
+
+  @override
+  String get household_merchants_samples => '常用商家';
+
+  @override
+  String get household_merchants_empty => '暂无商家';
+
+  @override
+  String get household_merchants_add => '添加商家';
+
+  @override
+  String get household_merchants_edit => '编辑商家';
+
+  @override
+  String get household_merchants_name => '商家名称';
+
+  @override
+  String get household_merchants_delete => '删除商家';
+
+  @override
+  String household_merchants_delete_confirm(String name) {
+    return '确定删除「$name」吗？';
+  }
+
+  @override
+  String get household_merchant_select => '选择商家';
+
+  @override
+  String get household_merchant_none => '无';
+
+  @override
   String get household_budget_set => '预算设置';
 
   @override

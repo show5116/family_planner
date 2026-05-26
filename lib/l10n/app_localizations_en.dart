@@ -2637,6 +2637,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_recurring_top_category => 'By Category';
 
   @override
+  String get household_merchants => 'Merchants';
+
+  @override
+  String get household_merchants_my => 'My Merchants';
+
+  @override
+  String get household_merchants_samples => 'Popular Merchants';
+
+  @override
+  String get household_merchants_empty => 'No merchants registered';
+
+  @override
+  String get household_merchants_add => 'Add Merchant';
+
+  @override
+  String get household_merchants_edit => 'Edit Merchant';
+
+  @override
+  String get household_merchants_name => 'Merchant name';
+
+  @override
+  String get household_merchants_delete => 'Delete Merchant';
+
+  @override
+  String household_merchants_delete_confirm(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get household_merchant_select => 'Select Merchant';
+
+  @override
+  String get household_merchant_none => 'None';
+
+  @override
   String get household_budget_set => 'Budget Settings';
 
   @override
