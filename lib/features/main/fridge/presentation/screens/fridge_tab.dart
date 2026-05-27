@@ -296,7 +296,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
     if (!mounted) return;
 
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: l10n.fridge_coach_skip,

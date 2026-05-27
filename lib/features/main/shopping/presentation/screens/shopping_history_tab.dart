@@ -185,7 +185,7 @@ class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab> {
     if (!mounted) return;
 
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

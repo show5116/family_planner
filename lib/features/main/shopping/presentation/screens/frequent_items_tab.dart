@@ -195,7 +195,7 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
     if (!mounted) return;
 
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: l10n.fridge_frequent_coach_skip,

@@ -114,7 +114,7 @@ class _InvestmentIndicatorsScreenState
     if (!mounted) return;
 
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: l10n.fridge_frequent_coach_skip,

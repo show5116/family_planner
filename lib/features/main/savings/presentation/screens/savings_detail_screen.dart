@@ -102,7 +102,7 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: '건너뛰기',

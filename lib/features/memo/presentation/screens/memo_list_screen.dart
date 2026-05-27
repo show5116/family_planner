@@ -119,25 +119,14 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     _startDemo();
   }
 
-  TargetPosition? _keyToPosition(GlobalKey key) {
-    final ctx = key.currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
-    return TargetPosition(box.size, offset);
-  }
-
   // ── 1단계: 일반 메모 설명 ────────────────────────────────────────────────
 
   Future<void> _showPhase1() async {
     if (!mounted) return;
-    final notePos = _keyToPosition(_noteCardKey);
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'note_card',
-        targetPosition: notePos,
-        keyTarget: notePos == null ? _noteCardKey : null,
+        keyTarget: _noteCardKey,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [
@@ -156,7 +145,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
@@ -174,12 +163,10 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
 
   Future<void> _showPhase2() async {
     if (!mounted) return;
-    final checklistPos = _keyToPosition(_checklistCardKey);
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'checklist_card',
-        targetPosition: checklistPos,
-        keyTarget: checklistPos == null ? _checklistCardKey : null,
+        keyTarget: _checklistCardKey,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [
@@ -198,7 +185,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
@@ -490,15 +477,10 @@ class _DemoChecklistDetailScreenState
 
   Future<void> _showCoachMark() async {
     if (!mounted) return;
-    final progressPos = _keyToPosition(_progressKey);
-    final checkItemPos = _keyToPosition(_checkItemKey);
-    final addRowPos = _keyToPosition(_addRowKey);
-
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'checklist_progress',
-        targetPosition: progressPos,
-        keyTarget: progressPos == null ? _progressKey : null,
+        keyTarget: _progressKey,
         shape: ShapeLightFocus.RRect,
         radius: 8,
         contents: [
@@ -515,8 +497,7 @@ class _DemoChecklistDetailScreenState
       ),
       TargetFocus(
         identify: 'checklist_item',
-        targetPosition: checkItemPos,
-        keyTarget: checkItemPos == null ? _checkItemKey : null,
+        keyTarget: _checkItemKey,
         shape: ShapeLightFocus.RRect,
         radius: 8,
         contents: [
@@ -533,8 +514,7 @@ class _DemoChecklistDetailScreenState
       ),
       TargetFocus(
         identify: 'checklist_add',
-        targetPosition: addRowPos,
-        keyTarget: addRowPos == null ? _addRowKey : null,
+        keyTarget: _addRowKey,
         shape: ShapeLightFocus.RRect,
         radius: 8,
         contents: [
@@ -554,7 +534,7 @@ class _DemoChecklistDetailScreenState
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
@@ -568,14 +548,6 @@ class _DemoChecklistDetailScreenState
     ).show(context: context);
   }
 
-  TargetPosition? _keyToPosition(GlobalKey key) {
-    final ctx = key.currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
-    return TargetPosition(box.size, offset);
-  }
 
   Widget get _skipWidget => Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
