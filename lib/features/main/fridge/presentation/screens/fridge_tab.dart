@@ -128,6 +128,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
   final _firstItemKey = GlobalKey();
   final _addItemKey = GlobalKey();
   final _ddayChipKey = GlobalKey();
+  final _suggestionChipKey = GlobalKey();
 
   @override
   void initState() {
@@ -175,7 +176,6 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
     final fabPos = _keyToPosition(_fabKey);
     final sectionPos = _keyToPosition(_firstSectionKey);
     final itemPos = _keyToPosition(_firstItemKey);
-    final addItemPos = _keyToPosition(_addItemKey);
     final ddayPos = _keyToPosition(_ddayChipKey);
 
     final targets = <TargetFocus>[
@@ -257,8 +257,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
       // 5. 품목 추가 버튼
       TargetFocus(
         identify: 'fridge_add_item',
-        targetPosition: addItemPos,
-        keyTarget: addItemPos == null ? _addItemKey : null,
+        keyTarget: _addItemKey,
         shape: ShapeLightFocus.Circle,
         contents: [
           TargetContent(
@@ -272,12 +271,12 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           ),
         ],
       ),
-      // 6. 유통기한 자동 추천 (품목 추가 버튼 재활용 — 다이얼로그 내 기능 안내)
+      // 6. 유통기한 추천 칩 (온보딩 뷰에 샘플로 렌더링된 칩을 직접 포커스)
       TargetFocus(
         identify: 'fridge_expiry_suggestion',
-        targetPosition: addItemPos,
-        keyTarget: addItemPos == null ? _addItemKey : null,
-        shape: ShapeLightFocus.Circle,
+        keyTarget: _suggestionChipKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 8,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -296,7 +295,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
     if (!mounted) return;
 
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
       textSkip: l10n.fridge_coach_skip,
@@ -367,6 +366,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
                   firstItemKey: _firstItemKey,
                   addItemKey: _addItemKey,
                   ddayChipKey: _ddayChipKey,
+                  suggestionChipKey: _suggestionChipKey,
                 )
               : AbsorbPointer(
                   absorbing: _deletingStorage,
@@ -922,6 +922,7 @@ class _OnboardingFridgeView extends StatelessWidget {
   final GlobalKey firstItemKey;
   final GlobalKey addItemKey;
   final GlobalKey ddayChipKey;
+  final GlobalKey suggestionChipKey;
 
   const _OnboardingFridgeView({
     required this.swis,
@@ -930,6 +931,7 @@ class _OnboardingFridgeView extends StatelessWidget {
     required this.firstItemKey,
     required this.addItemKey,
     required this.ddayChipKey,
+    required this.suggestionChipKey,
   });
 
   @override
@@ -969,48 +971,60 @@ class _OnboardingFridgeView extends StatelessWidget {
                   ],
                 ),
               ),
-              ...items.asMap().entries.map((entry) {
+              ...items.asMap().entries.expand((entry) {
                 final isFirstItem = isFirstSection && entry.key == 0;
                 final item = entry.value;
                 final dday = item.daysUntilExpiry;
-                return AbsorbPointer(
-                  child: ListTile(
-                    key: isFirstItem ? firstItemKey : null,
-                    contentPadding: const EdgeInsets.only(
-                        left: AppSizes.spaceL, right: AppSizes.spaceXS),
-                    title: Row(
-                      children: [
-                        Expanded(child: Text(item.name)),
-                        if (dday != null) ...[
-                          const SizedBox(width: AppSizes.spaceS),
-                          _DemoExpiryChip(
-                            key: isFirstItem ? ddayChipKey : null,
-                            days: dday,
-                          ),
+                return [
+                  AbsorbPointer(
+                    child: ListTile(
+                      key: isFirstItem ? firstItemKey : null,
+                      contentPadding: const EdgeInsets.only(
+                          left: AppSizes.spaceL, right: AppSizes.spaceXS),
+                      title: Row(
+                        children: [
+                          Expanded(child: Text(item.name)),
+                          if (dday != null) ...[
+                            const SizedBox(width: AppSizes.spaceS),
+                            _DemoExpiryChip(
+                              key: isFirstItem ? ddayChipKey : null,
+                              days: dday,
+                            ),
+                          ],
                         ],
-                      ],
-                    ),
-                    subtitle: Text(
-                      item.unit ?? '',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.remove, size: 18),
-                        const SizedBox(width: 4),
-                        Text('${item.quantity}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.w600)),
-                        const Icon(Icons.add, size: 18),
-                      ],
+                      ),
+                      subtitle: Text(
+                        item.unit ?? '',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.remove, size: 18),
+                          const SizedBox(width: 4),
+                          Text('${item.quantity}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600)),
+                          const Icon(Icons.add, size: 18),
+                        ],
+                      ),
                     ),
                   ),
-                );
+                  // 첫 번째 품목 아래 유통기한 추천 칩 샘플 (클릭 불가)
+                  if (isFirstItem)
+                    AbsorbPointer(
+                      child: Padding(
+                        key: suggestionChipKey,
+                        padding: const EdgeInsets.fromLTRB(
+                            AppSizes.spaceL, 0, AppSizes.spaceM, AppSizes.spaceS),
+                        child: _DemoSuggestionChip(),
+                      ),
+                    ),
+                ];
               }),
               if (items.isEmpty) const SizedBox(height: AppSizes.spaceS),
             ],
@@ -1064,6 +1078,56 @@ class _DemoExpiryChip extends StatelessWidget {
   }
 }
 
+// ── 온보딩 전용 유통기한 추천 칩 샘플 ────────────────────────────────────────────
+
+class _DemoSuggestionChip extends StatelessWidget {
+  const _DemoSuggestionChip();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceS, vertical: AppSizes.spaceXS),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.lightbulb_outline, size: 14, color: colorScheme.primary),
+          const SizedBox(width: AppSizes.spaceXS),
+          Expanded(
+            child: Text(
+              l10n.fridge_expiry_suggestion_label(
+                '우유',
+                l10n.fridge_storage_type_fridge,
+                7,
+              ),
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceXS),
+          FilledButton(
+            onPressed: null,
+            style: FilledButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+            ),
+            child: Text(
+              l10n.fridge_expiry_apply,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ── 빈 상태 ────────────────────────────────────────────────────────────────────
 
 class _EmptyStorageView extends StatelessWidget {
@@ -1097,3 +1161,4 @@ class _EmptyStorageView extends StatelessWidget {
 }
 
 enum _StorageAction { edit, delete }
+

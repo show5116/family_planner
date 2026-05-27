@@ -133,6 +133,19 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   }
 }
 
+/// 이번 달 미치뤄진 고정 지출 목록 Provider
+///
+/// 이번 달 지출 목록 중 isRecurring=true && isConfirmed=false 인 항목.
+/// 백엔드가 매달 고정지출을 isConfirmed=false 로 자동 복사하므로
+/// 이 상태 = "아직 실제 금액이 확정되지 않은(또는 미치뤄진) 고정지출"을 의미.
+final householdUnpaidRecurringProvider = Provider<List<ExpenseModel>>((ref) {
+  final expenses = ref.watch(householdExpensesProvider).valueOrNull ?? [];
+  return expenses
+      .where((e) => e.isRecurring && !e.isConfirmed)
+      .toList()
+    ..sort((a, b) => a.date.compareTo(b.date));
+});
+
 /// 지출 단건 조회 Provider (장보기 이력 → 가계부 이동 등에 사용)
 final expenseByIdProvider =
     FutureProvider.family<ExpenseModel, String>((ref, id) {
@@ -334,6 +347,64 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;
+    }
+  }
+
+  /// 잔금 이월: 이번 달 마지막 날 ASSET_TRANSFER 지출 + 다음 달 1일 INCOME 입금
+  Future<bool> carryOverBalance({
+    required String? groupId,
+    required double balance,
+    required String currentMonth, // YYYY-MM
+  }) async {
+    if (balance <= 0) return false;
+
+    state = const AsyncValue.loading();
+    try {
+      final parts = currentMonth.split('-');
+      final year = int.parse(parts[0]);
+      final month = int.parse(parts[1]);
+
+      // 이번 달 마지막 날 계산
+      final lastDayOfMonth = DateTime(year, month + 1, 0);
+      final lastDayStr =
+          '${lastDayOfMonth.year}-${lastDayOfMonth.month.toString().padLeft(2, '0')}-${lastDayOfMonth.day.toString().padLeft(2, '0')}';
+
+      // 다음 달 1일 계산
+      final nextMonth = month == 12 ? 1 : month + 1;
+      final nextYear = month == 12 ? year + 1 : year;
+      final nextMonthFirstStr =
+          '$nextYear-${nextMonth.toString().padLeft(2, '0')}-01';
+
+      // 1) 이번 달 마지막 날: ASSET_TRANSFER 지출로 잔금만큼 차감
+      await _repository.createExpense(CreateExpenseDto(
+        groupId: groupId,
+        type: TransactionType.expense,
+        amount: balance,
+        category: ExpenseCategory.assetTransfer,
+        date: lastDayStr,
+        description: '잔금 이월',
+      ));
+
+      // 2) 다음 달 1일: INCOME 입금으로 이월
+      await _repository.createExpense(CreateExpenseDto(
+        groupId: groupId,
+        type: TransactionType.income,
+        amount: balance,
+        category: null,
+        date: nextMonthFirstStr,
+        description: '전월 이월',
+      ));
+
+      _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
+      // 현재 보고 있는 월이 이번 달이면 지출 목록도 갱신
+      _ref.read(householdExpensesProvider.notifier).refresh();
+
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
     }
   }
 

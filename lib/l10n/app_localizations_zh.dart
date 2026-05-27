@@ -2448,6 +2448,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_balance => '余额';
 
   @override
+  String get household_carry_over => '结转';
+
+  @override
+  String get household_carry_over_title => '结转余额';
+
+  @override
+  String household_carry_over_desc(String amount) {
+    return '将本月余额 ₩$amount 结转至下月。\n\n· 本月最后一天将登记一笔「余额结转」（资产转移）支出。\n· 下月1日将登记一笔「上月结转」收入。';
+  }
+
+  @override
+  String get household_carry_over_success => '结转完成';
+
+  @override
+  String get household_carry_over_no_balance => '没有可结转的余额';
+
+  @override
   String get household_income => '收入';
 
   @override
@@ -2565,6 +2582,53 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get household_recurring_top_category => '按类别分布';
+
+  @override
+  String get household_recurring_fixed => '固定';
+
+  @override
+  String get household_recurring_variable => '浮动';
+
+  @override
+  String get household_recurring_type_label => '定期支出类型';
+
+  @override
+  String get household_recurring_type_none => '无';
+
+  @override
+  String get household_recurring_type_fixed => '固定金额';
+
+  @override
+  String get household_recurring_type_fixed_desc => '每月自动反映相同金额';
+
+  @override
+  String get household_recurring_type_variable => '浮动金额';
+
+  @override
+  String get household_recurring_type_variable_desc => '每月发生但金额不固定（例：物业费）';
+
+  @override
+  String get household_estimated_amount => '预估金额';
+
+  @override
+  String get household_estimated_amount_hint => '请输入本月预估金额';
+
+  @override
+  String get household_estimated_amount_required => '请输入预估金额';
+
+  @override
+  String get household_variable_badge => '浮动';
+
+  @override
+  String get household_unconfirmed_badge => '未确认';
+
+  @override
+  String get household_unpaid_recurring_title => '未支付固定支出';
+
+  @override
+  String household_unpaid_recurring_subtitle(int count, String amount) {
+    return '$count项 · 预估合计 ₩$amount';
+  }
 
   @override
   String get household_merchants => '消费商家管理';
@@ -3347,7 +3411,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fridge_coach_suggestionDesc =>
-      '输入食材名称后会自动推荐保质期。\n如果推荐结果不合适，\n点击🔍按钮可以选择其他参考食材。';
+      '输入食材名称后会自动推荐保质期。\n在设置 > 保质期预设管理中，可以自行添加或修改\n各食材的基准天数，自定义自动化规则。';
 
   @override
   String get fridge_coach_skip => '跳过';

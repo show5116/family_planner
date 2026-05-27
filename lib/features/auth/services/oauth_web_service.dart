@@ -37,15 +37,20 @@ class OAuthWebService {
 
       final accessToken = params['accessToken'];
       final refreshToken = params['refreshToken'];
+      final tempToken = params['tempToken'];
 
-      // 웹: RefreshToken은 HTTP Only Cookie로 관리되므로 accessToken만 필수
+      // 신규 유저: 약관 동의 필요 (tempToken만 있고 accessToken 없음)
+      if (tempToken != null) {
+        return {'tempToken': tempToken, 'isNewUser': 'true'};
+      }
+
+      // 기존 유저: accessToken 필수
       if (accessToken == null) {
         throw Exception('OAuth 인증에 실패했습니다 (AccessToken 없음)');
       }
 
       return {
         'accessToken': accessToken,
-        // RefreshToken은 웹에서는 null일 수 있음 (쿠키로 관리)
         if (refreshToken != null) 'refreshToken': refreshToken,
       };
     } catch (e) {

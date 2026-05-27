@@ -211,7 +211,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
     if (!mounted) return;
 
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
@@ -272,100 +272,163 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
         onPressed: _isDemo ? null : () => context.push(AppRoutes.voteCreate),
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          // 그룹 선택
-          if (!_isDemo)
-            GroupFilterBar(
-              key: _groupDropdownKey,
-              selectedGroupId: selectedGroupId,
-              onChanged: (value) {
-                ref.read(voteSelectedGroupIdProvider.notifier).state = value;
-              },
-            ),
-          // 상태 필터 탭
-          if (selectedGroupId != null || _isDemo)
-            Padding(
-              key: _filterKey,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
-              child: SegmentedButton<VoteStatusFilter>(
-                segments: const [
-                  ButtonSegment(
-                      value: VoteStatusFilter.all, label: Text('전체')),
-                  ButtonSegment(
-                      value: VoteStatusFilter.ongoing, label: Text('진행중')),
-                  ButtonSegment(
-                      value: VoteStatusFilter.closed, label: Text('종료됨')),
-                ],
-                selected: {statusFilter},
-                onSelectionChanged: _isDemo
-                    ? null
-                    : (val) {
+      body: _isDemo
+          ? _DemoVoteBody(
+              groupBarKey: _groupDropdownKey,
+              filterKey: _filterKey,
+              firstCardKey: _firstCardKey,
+            )
+          : Column(
+              children: [
+                GroupFilterBar(
+                  key: _groupDropdownKey,
+                  selectedGroupId: selectedGroupId,
+                  onChanged: (value) {
+                    ref.read(voteSelectedGroupIdProvider.notifier).state = value;
+                  },
+                ),
+                if (selectedGroupId != null)
+                  Padding(
+                    key: _filterKey,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+                    child: SegmentedButton<VoteStatusFilter>(
+                      segments: const [
+                        ButtonSegment(
+                            value: VoteStatusFilter.all, label: Text('전체')),
+                        ButtonSegment(
+                            value: VoteStatusFilter.ongoing,
+                            label: Text('진행중')),
+                        ButtonSegment(
+                            value: VoteStatusFilter.closed,
+                            label: Text('종료됨')),
+                      ],
+                      selected: {statusFilter},
+                      onSelectionChanged: (val) {
                         ref.read(voteStatusFilterProvider.notifier).state =
                             val.first;
                       },
-                style: const ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                ),
-              ),
-            ),
-          // 목록
-          Expanded(
-            child: _isDemo
-                ? _buildDemoList()
-                : selectedGroupId == null
-                    ? const AppEmptyState(
-                        icon: Icons.group_outlined,
-                        message: '그룹을 선택하면 투표 목록이 표시됩니다',
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () =>
-                            ref.read(voteListProvider.notifier).refresh(),
-                        child: votesAsync.when(
-                          data: (votes) {
-                            if (votes.isEmpty) {
-                              return const AppEmptyState(
-                                icon: Icons.how_to_vote_outlined,
-                                message: '아직 투표가 없습니다\n+ 버튼으로 새 투표를 만들어보세요',
+                      style: const ButtonStyle(
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                  ),
+                Expanded(
+                  child: selectedGroupId == null
+                      ? const AppEmptyState(
+                          icon: Icons.group_outlined,
+                          message: '그룹을 선택하면 투표 목록이 표시됩니다',
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () =>
+                              ref.read(voteListProvider.notifier).refresh(),
+                          child: votesAsync.when(
+                            data: (votes) {
+                              if (votes.isEmpty) {
+                                return const AppEmptyState(
+                                  icon: Icons.how_to_vote_outlined,
+                                  message: '아직 투표가 없습니다\n+ 버튼으로 새 투표를 만들어보세요',
+                                );
+                              }
+                              return ListView.separated(
+                                padding: const EdgeInsets.all(AppSizes.spaceM),
+                                itemCount: votes.length,
+                                separatorBuilder: (_, _) =>
+                                    const SizedBox(height: AppSizes.spaceM),
+                                itemBuilder: (_, index) =>
+                                    _VoteCard(vote: votes[index]),
                               );
-                            }
-                            return ListView.separated(
-                              padding:
-                                  const EdgeInsets.all(AppSizes.spaceM),
-                              itemCount: votes.length,
-                              separatorBuilder: (_, _) =>
-                                  const SizedBox(height: AppSizes.spaceM),
-                              itemBuilder: (_, index) =>
-                                  _VoteCard(vote: votes[index]),
-                            );
-                          },
-                          loading: () => const Center(
-                              child: CircularProgressIndicator()),
-                          error: (e, _) => AppErrorState(
-                            error: e,
-                            title: '투표 목록을 불러오지 못했습니다',
-                            onRetry: () =>
-                                ref.read(voteListProvider.notifier).refresh(),
+                            },
+                            loading: () => const Center(
+                                child: CircularProgressIndicator()),
+                            error: (e, _) => AppErrorState(
+                              error: e,
+                              title: '투표 목록을 불러오지 못했습니다',
+                              onRetry: () =>
+                                  ref.read(voteListProvider.notifier).refresh(),
+                            ),
                           ),
                         ),
-                      ),
-          ),
-        ],
-      ),
+                ),
+              ],
+            ),
     );
   }
 
-  Widget _buildDemoList() {
-    return ListView.separated(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
-      itemCount: _demoVotes.length,
-      separatorBuilder: (_, _) => const SizedBox(height: AppSizes.spaceM),
-      itemBuilder: (_, index) => _VoteCard(
-        key: index == 0 ? _firstCardKey : null,
-        vote: _demoVotes[index],
-        isDemo: true,
-      ),
+}
+
+// ─── 온보딩 전용 뷰 ───────────────────────────────────────────────────────────
+
+class _DemoVoteBody extends StatelessWidget {
+  final GlobalKey groupBarKey;
+  final GlobalKey filterKey;
+  final GlobalKey firstCardKey;
+
+  const _DemoVoteBody({
+    required this.groupBarKey,
+    required this.filterKey,
+    required this.firstCardKey,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+        // 그룹 선택 바 더미
+        AbsorbPointer(
+          child: Padding(
+            key: groupBarKey,
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+            child: Row(
+              children: [
+                Icon(Icons.group_outlined,
+                    size: 18, color: colorScheme.onSurfaceVariant),
+                const SizedBox(width: AppSizes.spaceS),
+                Text('우리 가족',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(width: 4),
+                Icon(Icons.arrow_drop_down,
+                    color: colorScheme.onSurfaceVariant),
+              ],
+            ),
+          ),
+        ),
+        // 상태 필터 탭
+        AbsorbPointer(
+          child: Padding(
+            key: filterKey,
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+            child: SegmentedButton<int>(
+              segments: const [
+                ButtonSegment(value: 0, label: Text('전체')),
+                ButtonSegment(value: 1, label: Text('진행중')),
+                ButtonSegment(value: 2, label: Text('종료됨')),
+              ],
+              selected: const {0},
+              onSelectionChanged: (_) {},
+              style: const ButtonStyle(
+                  visualDensity: VisualDensity.compact),
+            ),
+          ),
+        ),
+        // 샘플 투표 카드 목록
+        Expanded(
+          child: ListView.separated(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            itemCount: _demoVotes.length,
+            separatorBuilder: (_, _) =>
+                const SizedBox(height: AppSizes.spaceM),
+            itemBuilder: (_, index) => _VoteCard(
+              key: index == 0 ? firstCardKey : null,
+              vote: _demoVotes[index],
+              isDemo: true,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -2518,6 +2518,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_balance => 'Balance';
 
   @override
+  String get household_carry_over => 'Carry Over';
+
+  @override
+  String get household_carry_over_title => 'Carry Over Balance';
+
+  @override
+  String household_carry_over_desc(String amount) {
+    return 'Carry over ₩$amount remaining balance to next month.\n\n· An \'Asset Transfer\' expense will be added on the last day of this month.\n· An income entry \'Carried Over\' will be added on the 1st of next month.';
+  }
+
+  @override
+  String get household_carry_over_success =>
+      'Balance carried over successfully';
+
+  @override
+  String get household_carry_over_no_balance => 'No balance to carry over';
+
+  @override
   String get household_income => 'Income';
 
   @override
@@ -2635,6 +2653,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get household_recurring_top_category => 'By Category';
+
+  @override
+  String get household_recurring_fixed => 'Fixed';
+
+  @override
+  String get household_recurring_variable => 'Variable';
+
+  @override
+  String get household_recurring_type_label => 'Recurring Type';
+
+  @override
+  String get household_recurring_type_none => 'None';
+
+  @override
+  String get household_recurring_type_fixed => 'Fixed Amount';
+
+  @override
+  String get household_recurring_type_fixed_desc =>
+      'The same amount is applied every month';
+
+  @override
+  String get household_recurring_type_variable => 'Variable Amount';
+
+  @override
+  String get household_recurring_type_variable_desc =>
+      'Occurs monthly but the amount varies (e.g. maintenance fee)';
+
+  @override
+  String get household_estimated_amount => 'Estimated Amount';
+
+  @override
+  String get household_estimated_amount_hint =>
+      'Enter the estimated amount for this month';
+
+  @override
+  String get household_estimated_amount_required =>
+      'Please enter an estimated amount';
+
+  @override
+  String get household_variable_badge => 'Variable';
+
+  @override
+  String get household_unconfirmed_badge => 'Unconfirmed';
+
+  @override
+  String get household_unpaid_recurring_title => 'Unpaid Recurring Expenses';
+
+  @override
+  String household_unpaid_recurring_subtitle(int count, String amount) {
+    return '$count items · Est. ₩$amount';
+  }
 
   @override
   String get household_merchants => 'Merchants';
@@ -3440,7 +3509,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fridge_coach_suggestionDesc =>
-      'Enter an item name and we\'ll suggest an expiry date automatically.\nIf the suggestion doesn\'t fit,\ntap 🔍 to choose a different reference item.';
+      'Enter an item name and we\'ll suggest an expiry date automatically.\nIn Settings > Expiry Preset Management, you can add or edit\nper-item reference days to customize your own automation rules.';
 
   @override
   String get fridge_coach_skip => 'Skip';

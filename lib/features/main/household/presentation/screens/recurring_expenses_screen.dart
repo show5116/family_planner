@@ -23,12 +23,21 @@ class _RecurringSummary {
 
   factory _RecurringSummary.from(List<ExpenseModel> expenses) {
     final expenseOnly = expenses.where((e) => e.type == TransactionType.expense).toList();
-    final total = expenseOnly.fold(0.0, (sum, e) => sum + e.amount);
+    // 가변 고정지출 미확인 상태면 예상 금액으로 합산
+    final total = expenseOnly.fold(0.0, (sum, e) {
+      final amt = (e.isVariableRecurring && !e.isConfirmed && e.estimatedAmount != null)
+          ? e.estimatedAmount!
+          : e.amount;
+      return sum + amt;
+    });
 
     final categorySum = <ExpenseCategory, double>{};
     for (final e in expenseOnly) {
       final key = e.category ?? ExpenseCategory.other;
-      categorySum[key] = (categorySum[key] ?? 0) + e.amount;
+      final amt = (e.isVariableRecurring && !e.isConfirmed && e.estimatedAmount != null)
+          ? e.estimatedAmount!
+          : e.amount;
+      categorySum[key] = (categorySum[key] ?? 0) + amt;
     }
     final sorted = categorySum.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));

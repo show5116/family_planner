@@ -21,14 +21,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   });
 
   ref.listen<AuthState>(authProvider, (previous, next) {
-    if (previous?.isAuthenticated != next.isAuthenticated) {
-      // 로그인 성공 시 온보딩 완료 여부 로드
+    final authChanged = previous?.isAuthenticated != next.isAuthenticated;
+    final pendingTermsChanged = previous?.isPendingTerms != next.isPendingTerms;
+
+    if (authChanged || pendingTermsChanged) {
       if (next.isAuthenticated == true) {
         ref.read(onboardingProvider.notifier).load();
       }
       notifier.value++;
     }
   });
+
+  // pendingTempToken 변경도 별도로 감지 (cancelSocialSignup 등)
+  ref.listen<String?>(
+    authProvider.select((s) => s.pendingTempToken),
+    (_, _) => notifier.value++,
+  );
 
   // 온보딩 상태 변화 시에도 redirect 재실행
   ref.listen<bool?>(onboardingProvider, (_, _) {

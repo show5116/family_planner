@@ -211,6 +211,56 @@ class ExpenseListItem extends StatelessWidget {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ],
+                        if (!isIncome && expense.isVariableRecurring) ...[
+                          const SizedBox(width: 2),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.household_variable_badge,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiaryContainer,
+                                    fontSize: 10,
+                                  ),
+                            ),
+                          ),
+                        ],
+                        if (!isIncome && expense.isRecurring && !expense.isConfirmed) ...[
+                          const SizedBox(width: 2),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .errorContainer,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.household_unconfirmed_badge,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onErrorContainer,
+                                    fontSize: 10,
+                                  ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ],
@@ -219,13 +269,24 @@ class ExpenseListItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    '$amountPrefix${_formatAmount(expense.amount)}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: amountColor,
-                        ),
-                  ),
+                  if (expense.isVariableRecurring && !expense.isConfirmed &&
+                      expense.estimatedAmount != null)
+                    Text(
+                      '~₩${_formatAmount(expense.estimatedAmount!)}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: amountColor.withValues(alpha: 0.6),
+                            fontStyle: FontStyle.italic,
+                          ),
+                    )
+                  else
+                    Text(
+                      '$amountPrefix${_formatAmount(expense.amount)}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: amountColor,
+                          ),
+                    ),
                   Text(
                     _formatDate(expense.date),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(

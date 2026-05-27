@@ -19,9 +19,19 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
 
   final String currentLocation = state.matchedLocation;
 
-  // OAuth 콜백 페이지인 경우 redirect 건너뛰기
+  // OAuth 콜백은 항상 통과
   if (currentLocation.startsWith('/auth/callback')) {
     return null;
+  }
+
+  // 소셜 신규 가입 약관 동의 대기 상태 → 약관 동의 화면 유지 (열람 페이지 포함)
+  if (authState.isPendingTerms) {
+    if (currentLocation == AppRoutes.socialTerms ||
+        currentLocation == AppRoutes.termsOfService ||
+        currentLocation == AppRoutes.privacyPolicy) {
+      return null;
+    }
+    return AppRoutes.socialTerms;
   }
 
   // 'setup=true' 쿼리가 있으면 "로그인 한 유저의 비밀번호 변경"으로 간주
@@ -59,8 +69,15 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
   // [CASE 2] 로그인 상태 (Authenticated)
   if (isAuthenticated) {
     // 온보딩 로드 중(null)이면 splash 유지
+    // 단, 소셜 약관 동의 완료 직후에는 splash로 보내지 않음 (checkAuthStatus 재호출 방지)
     if (onboardingCompleted == null) {
+      if (currentLocation == AppRoutes.socialTerms) return null;
       return isSplashPage ? null : AppRoutes.splash;
+    }
+
+    // 소셜 약관 동의 완료 후 → 홈으로
+    if (currentLocation == AppRoutes.socialTerms) {
+      return onboardingCompleted ? AppRoutes.home : AppRoutes.onboarding;
     }
 
     // 온보딩 미완료 → 온보딩 화면으로 (온보딩 화면 자체는 통과)

@@ -159,7 +159,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
     TutorialCoachMark(
-      targets: targets,
+      targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
