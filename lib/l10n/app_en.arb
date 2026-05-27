@@ -1572,7 +1572,7 @@
   "fridge_coach_addItemTitle": "Add Items",
   "fridge_coach_addItemDesc": "Tap + next to a storage to add items.\nYou can add multiple items at once,\nwith expiry date, quantity, unit, and memo.",
   "fridge_coach_suggestionTitle": "Auto Expiry Suggestion",
-  "fridge_coach_suggestionDesc": "Enter an item name and we'll suggest an expiry date automatically.\nIf the suggestion doesn't fit,\ntap 🔍 to choose a different reference item.",
+  "fridge_coach_suggestionDesc": "Enter an item name and we'll suggest an expiry date automatically.\nIn Settings > Expiry Preset Management, you can add or edit\nper-item reference days to customize your own automation rules.",
   "fridge_coach_skip": "Skip",
 
   "fridge_cart_empty": "Your cart is empty",

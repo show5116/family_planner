@@ -3369,7 +3369,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fridge_coach_suggestionDesc =>
-      '食材名を入力すると消費期限が自動で提案されます。\n提案が合わない場合は\n🔍ボタンで別の食材を基準にできます。';
+      '食材名を入力すると消費期限が自動で提案されます。\n設定 > 消費期限プリセット管理で食材ごとの基準日を\n追加・編集して自動化ルールをカスタマイズできます。';
 
   @override
   String get fridge_coach_skip => 'スキップ';

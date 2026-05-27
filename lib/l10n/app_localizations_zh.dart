@@ -3347,7 +3347,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fridge_coach_suggestionDesc =>
-      '输入食材名称后会自动推荐保质期。\n如果推荐结果不合适，\n点击🔍按钮可以选择其他参考食材。';
+      '输入食材名称后会自动推荐保质期。\n在设置 > 保质期预设管理中，可以自行添加或修改\n各食材的基准天数，自定义自动化规则。';
 
   @override
   String get fridge_coach_skip => '跳过';

@@ -3376,7 +3376,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get fridge_coach_suggestionDesc =>
-      '품목명을 입력하면 서버가 자동으로 유통기한을 추천해줘요.\n추천 결과가 마음에 들지 않으면\n🔍 버튼으로 다른 품목을 기준으로 설정할 수 있어요.';
+      '품목명을 입력하면 유통기한을 자동으로 추천해줘요.\n설정 > 유통기한 프리셋 관리에서 품목별 기준일을\n직접 추가·수정해 자동화 규칙을 커스터마이징할 수 있어요.';
 
   @override
   String get fridge_coach_skip => '건너뛰기';

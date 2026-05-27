@@ -1515,7 +1515,7 @@
   "fridge_coach_addItemTitle": "添加食材",
   "fridge_coach_addItemDesc": "点击储存位置右侧+按钮添加食材。\n可以一次添加多个食材，\n同时输入保质期、数量、单位和备注。",
   "fridge_coach_suggestionTitle": "保质期自动推荐",
-  "fridge_coach_suggestionDesc": "输入食材名称后会自动推荐保质期。\n如果推荐结果不合适，\n点击🔍按钮可以选择其他参考食材。",
+  "fridge_coach_suggestionDesc": "输入食材名称后会自动推荐保质期。\n在设置 > 保质期预设管理中，可以自行添加或修改\n各食材的基准天数，自定义自动化规则。",
   "fridge_coach_skip": "跳过",
 
   "fridge_cart_empty": "购物车为空",

@@ -1572,7 +1572,7 @@
   "fridge_coach_addItemTitle": "食材を追加",
   "fridge_coach_addItemDesc": "保管場所の右側の+ボタンで追加できます。\n複数の食材を一度に登録でき、\n消費期限・数量・単位・メモも入力できます。",
   "fridge_coach_suggestionTitle": "消費期限の自動提案",
-  "fridge_coach_suggestionDesc": "食材名を入力すると消費期限が自動で提案されます。\n提案が合わない場合は\n🔍ボタンで別の食材を基準にできます。",
+  "fridge_coach_suggestionDesc": "食材名を入力すると消費期限が自動で提案されます。\n設定 > 消費期限プリセット管理で食材ごとの基準日を\n追加・編集して自動化ルールをカスタマイズできます。",
   "fridge_coach_skip": "スキップ",
 
   "fridge_cart_empty": "カートが空です",

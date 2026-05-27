@@ -3440,7 +3440,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fridge_coach_suggestionDesc =>
-      'Enter an item name and we\'ll suggest an expiry date automatically.\nIf the suggestion doesn\'t fit,\ntap 🔍 to choose a different reference item.';
+      'Enter an item name and we\'ll suggest an expiry date automatically.\nIn Settings > Expiry Preset Management, you can add or edit\nper-item reference days to customize your own automation rules.';
 
   @override
   String get fridge_coach_skip => 'Skip';
