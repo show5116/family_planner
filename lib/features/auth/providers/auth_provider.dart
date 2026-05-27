@@ -20,14 +20,26 @@ import 'package:family_planner/core/providers/dashboard_widget_settings_provider
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
+import 'package:family_planner/features/onboarding/providers/onboarding_provider.dart';
 
 /// 인증 상태
 class AuthState {
-  const AuthState({this.isAuthenticated, this.user, this.error});
+  const AuthState({
+    this.isAuthenticated,
+    this.user,
+    this.error,
+    this.pendingTempToken,
+  });
 
   final bool? isAuthenticated;
   final Map<String, dynamic>? user;
   final String? error;
+
+  /// 소셜 신규 가입 시 약관 동의 대기 상태의 임시 토큰.
+  /// null이 아니면 약관 동의 화면을 표시해야 한다.
+  final String? pendingTempToken;
+
+  bool get isPendingTerms => pendingTempToken != null;
 
   /// 현재 로그인한 사용자 ID
   /// 응답 구조가 { "user": { "id": "..." } } 또는 { "id": "..." } 두 가지 케이스 대응
@@ -39,11 +51,14 @@ class AuthState {
     bool? isAuthenticated,
     Map<String, dynamic>? user,
     String? error,
+    String? pendingTempToken,
+    bool clearPendingTempToken = false,
   }) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       user: user ?? this.user,
       error: error,
+      pendingTempToken: clearPendingTempToken ? null : (pendingTempToken ?? this.pendingTempToken),
     );
   }
 }
@@ -314,6 +329,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
           ? await _authService.loginWithGoogleOAuth()
           : await _authService.loginWithGoogle();
 
+      // 신규 가입 → 약관 동의 대기 상태로 전환
+      if (_isPendingTerms(response)) {
+        state = state.copyWith(
+          pendingTempToken: response['tempToken'] as String,
+          clearPendingTempToken: false,
+        );
+        return;
+      }
+
       // 이전 계정의 캐시된 데이터 초기화
       _invalidateGroupProviders();
 
@@ -322,7 +346,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final userInfo = await _authService.getUserInfo();
         state = state.copyWith(isAuthenticated: true, user: userInfo);
       } else if (!kIsWeb) {
-        // 모바일: response에 사용자 정보 포함
         state = state.copyWith(isAuthenticated: true, user: response);
       }
 
@@ -346,6 +369,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
           ? await _authService.loginWithKakaoOAuth()
           : await _authService.loginWithKakao();
 
+      // 신규 가입 → 약관 동의 대기 상태로 전환
+      if (_isPendingTerms(response)) {
+        state = state.copyWith(
+          pendingTempToken: response['tempToken'] as String,
+          clearPendingTempToken: false,
+        );
+        return;
+      }
+
       // 이전 계정의 캐시된 데이터 초기화
       _invalidateGroupProviders();
 
@@ -354,7 +386,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final userInfo = await _authService.getUserInfo();
         state = state.copyWith(isAuthenticated: true, user: userInfo);
       } else if (!kIsWeb) {
-        // 모바일: response에 사용자 정보 포함
         state = state.copyWith(isAuthenticated: true, user: response);
       }
 
@@ -364,6 +395,55 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(error: e.toString());
       rethrow;
     }
+  }
+
+  /// 소셜 신규 회원가입 완료 (약관 동의)
+  Future<void> completeSocialSignup() async {
+    final tempToken = state.pendingTempToken;
+    if (tempToken == null) return;
+
+    state = state.copyWith(error: null);
+
+    try {
+      // 토큰 저장 (socialSignup 내부에서 처리)
+      await _authService.socialSignup(tempToken: tempToken);
+
+      _invalidateGroupProviders();
+
+      // auth/me로 최신 사용자 정보 조회 (토큰 저장 후이므로 호출 가능)
+      final userInfo = await _authService.getUserInfo();
+
+      // 온보딩 상태를 먼저 로드한 뒤 state 변경 (state 변경 시 redirect가 즉시 실행되므로)
+      await _ref.read(onboardingProvider.notifier).load();
+
+      // pendingTempToken을 클리어하고 로그인 상태로 전환 → redirect가 홈으로 이동
+      state = AuthState(isAuthenticated: true, user: userInfo);
+
+      await _registerFcmToken();
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 약관 동의 화면에서 뒤로 가기 (로그인 화면으로)
+  void cancelSocialSignup() {
+    state = const AuthState(isAuthenticated: false);
+  }
+
+  /// 웹 OAuth 콜백 URL로 직접 진입한 경우 tempToken을 AuthState에 설정
+  void setPendingTempToken(String tempToken) {
+    state = state.copyWith(pendingTempToken: tempToken);
+  }
+
+  /// 응답에 isNewUser: true + tempToken이 있으면 약관 동의 대기 상태
+  /// 웹은 String 'true', 모바일은 bool true로 올 수 있으므로 양쪽 처리
+  bool _isPendingTerms(Map<String, dynamic> response) {
+    final isNewUser = response['isNewUser'];
+    final hasNewUserFlag = isNewUser == true || isNewUser == 'true';
+    return hasNewUserFlag &&
+        response['tempToken'] is String &&
+        (response['tempToken'] as String).isNotEmpty;
   }
 
   /// 비밀번호 재설정 요청

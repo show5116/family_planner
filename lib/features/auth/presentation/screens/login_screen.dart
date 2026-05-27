@@ -117,7 +117,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await ref.read(authProvider.notifier).loginWithGoogle();
     } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -126,6 +125,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         );
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -137,7 +138,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   //   try {
   //     await ref.read(authProvider.notifier).loginWithKakao();
   //   } catch (e) {
-  //     if (mounted) setState(() => _isLoading = false);
   //     if (mounted) {
   //       ScaffoldMessenger.of(context).showSnackBar(
   //         SnackBar(
@@ -146,6 +146,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   //         ),
   //       );
   //     }
+  //   } finally {
+  //     if (mounted) setState(() => _isLoading = false);
   //   }
   // }
 

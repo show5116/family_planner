@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:family_planner/features/auth/services/oauth_popup_helper_web.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/presentation/screens/login_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/signup_screen.dart';
@@ -9,6 +11,7 @@ import 'package:family_planner/features/auth/presentation/screens/oauth_callback
 import 'package:family_planner/features/auth/presentation/screens/splash_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/terms_of_service_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/privacy_policy_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/social_terms_screen.dart';
 
 /// 인증 관련 라우트 목록
 ///
@@ -73,6 +76,21 @@ List<RouteBase> getAuthRoutes() {
       path: AppRoutes.privacyPolicy,
       name: 'privacyPolicy',
       builder: (context, state) => const PrivacyPolicyScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.socialTerms,
+      name: 'socialTerms',
+      builder: (context, state) {
+        final tempToken = state.uri.queryParameters['tempToken'];
+        // 웹 팝업에서 진입한 경우: postMessage로 부모에 tempToken 전달 후 창 닫기
+        if (kIsWeb && tempToken != null && OAuthPopupHelper.isPopup()) {
+          OAuthPopupHelper.sendMessageToParent({'tempToken': tempToken});
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return SocialTermsScreen(webTempToken: tempToken);
+      },
     ),
     GoRoute(
       path: AppRoutes.oauthCallback,

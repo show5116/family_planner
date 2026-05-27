@@ -373,6 +373,29 @@ class AuthService extends ApiServiceBase {
     await _kakaoAuthService.signOut();
   }
 
+  // ========== 소셜 신규 가입 완료 ==========
+
+  /// 소셜 신규 회원가입 완료 (약관 동의)
+  ///
+  /// 소셜 로그인 응답에서 isNewUser: true + tempToken을 받은 경우 호출합니다.
+  Future<Map<String, dynamic>> socialSignup({required String tempToken}) async {
+    try {
+      final response = await apiClient.post(
+        ApiConstants.socialSignup,
+        data: {'tempToken': tempToken, 'agreedTerms': true},
+      );
+
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      await _saveTokens(data);
+      await _saveUserInfoFromResponse(data);
+
+      return data;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
   // ========== OAuth URL 방식 로그인 (웹 전용) ==========
   // 백엔드의 OAuth 페이지를 브라우저로 열고 리다이렉트로 콜백을 받는 방식
   // 웹 플랫폼 전용 - 모바일에서는 loginWithGoogle(), loginWithKakao() 사용
