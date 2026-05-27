@@ -38,13 +38,15 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _estimatedAmountController = TextEditingController();
 
   late DateTime _selectedDate;
   TransactionType _transactionType = TransactionType.expense;
   ExpenseCategory? _selectedCategory;
   PaymentMethod? _selectedPaymentMethod;
   String? _selectedMerchantId;
-  bool _isRecurring = false;
+  // none / fixed / variable
+  _RecurringType _recurringType = _RecurringType.none;
 
   bool get _isEditMode => widget.expense != null;
 
@@ -59,11 +61,21 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
       _transactionType = e.type;
       _selectedCategory = e.category;
       _selectedPaymentMethod = e.paymentMethod;
-      _isRecurring = e.isRecurring;
       _selectedMerchantId = e.merchant?.id;
+      if (e.isRecurring) {
+        if (e.estimatedAmount != null) {
+          _recurringType = _RecurringType.variable;
+          _estimatedAmountController.text =
+              NumberFormat('#,###').format(e.estimatedAmount!.toInt());
+        } else {
+          _recurringType = _RecurringType.fixed;
+        }
+      } else {
+        _recurringType = _RecurringType.none;
+      }
     } else {
       _selectedDate = DateTime.now();
-      _isRecurring = widget.initialIsRecurring;
+      _recurringType = widget.initialIsRecurring ? _RecurringType.fixed : _RecurringType.none;
     }
   }
 
@@ -71,6 +83,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   void dispose() {
     _amountController.dispose();
     _descriptionController.dispose();
+    _estimatedAmountController.dispose();
     super.dispose();
   }
 
@@ -157,7 +170,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
                   if (v == TransactionType.income) {
                     _selectedCategory = null;
                     _selectedPaymentMethod = null;
-                    _isRecurring = false;
+                    _recurringType = _RecurringType.none;
                   }
                 }),
                 incomeLabel: l10n.household_income,
@@ -203,11 +216,19 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
                   onChanged: (id) => setState(() => _selectedMerchantId = id),
                 ),
                 const SizedBox(height: AppSizes.spaceM),
-                _RecurringToggle(
-                  value: _isRecurring,
-                  onChanged: (v) => setState(() => _isRecurring = v),
-                  label: l10n.household_recurring,
+                _RecurringTypeSelector(
+                  value: _recurringType,
+                  onChanged: (v) => setState(() => _recurringType = v),
                 ),
+                if (_recurringType == _RecurringType.variable) ...[
+                  const SizedBox(height: AppSizes.spaceM),
+                  _AmountField(
+                    controller: _estimatedAmountController,
+                    label: l10n.household_estimated_amount,
+                    hint: l10n.household_estimated_amount_hint,
+                    errorText: l10n.household_estimated_amount_required,
+                  ),
+                ],
               ],
             ],
           ),
@@ -238,7 +259,16 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
         paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
         merchantId: _transactionType == TransactionType.income ? null : _selectedMerchantId,
         merchantIdExplicitNull: _transactionType == TransactionType.expense && _selectedMerchantId == null,
-        isRecurring: _transactionType == TransactionType.income ? false : _isRecurring,
+        isRecurring: _transactionType == TransactionType.income
+            ? false
+            : _recurringType != _RecurringType.none,
+        estimatedAmount: (_transactionType == TransactionType.expense &&
+                _recurringType == _RecurringType.variable)
+            ? double.tryParse(
+                _estimatedAmountController.text.replaceAll(',', ''))
+            : null,
+        estimatedAmountExplicitNull: _transactionType == TransactionType.expense &&
+            _recurringType != _RecurringType.variable,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)
@@ -259,7 +289,14 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
             : _descriptionController.text.trim(),
         paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
         merchantId: _transactionType == TransactionType.income ? null : _selectedMerchantId,
-        isRecurring: _transactionType == TransactionType.income ? false : _isRecurring,
+        isRecurring: _transactionType == TransactionType.income
+            ? false
+            : _recurringType != _RecurringType.none,
+        estimatedAmount: (_transactionType == TransactionType.expense &&
+                _recurringType == _RecurringType.variable)
+            ? double.tryParse(
+                _estimatedAmountController.text.replaceAll(',', ''))
+            : null,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)
@@ -631,36 +668,91 @@ class _MerchantSelector extends ConsumerWidget {
   }
 }
 
-// 고정 지출 토글
-class _RecurringToggle extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool> onChanged;
-  final String label;
+enum _RecurringType { none, fixed, variable }
 
-  const _RecurringToggle({
+// 고정 지출 유형 선택 (없음 / 고정 금액 / 가변 금액)
+class _RecurringTypeSelector extends StatelessWidget {
+  final _RecurringType value;
+  final ValueChanged<_RecurringType> onChanged;
+
+  const _RecurringTypeSelector({
     required this.value,
     required this.onChanged,
-    required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ),
+        side: BorderSide(color: colorScheme.outlineVariant),
       ),
-      child: SwitchListTile(
-        title: Text(label),
-        subtitle: const Text('매월 자동으로 반영됩니다'),
-        value: value,
-        onChanged: onChanged,
-        secondary: Icon(
-          Icons.repeat,
-          color: value ? Theme.of(context).colorScheme.primary : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM,
+          vertical: AppSizes.spaceS,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.repeat,
+                    size: 18,
+                    color: value != _RecurringType.none
+                        ? colorScheme.primary
+                        : colorScheme.outline),
+                const SizedBox(width: AppSizes.spaceS),
+                Text(
+                  l10n.household_recurring_type_label,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            SegmentedButton<_RecurringType>(
+              segments: [
+                ButtonSegment(
+                  value: _RecurringType.none,
+                  label: Text(l10n.household_recurring_type_none),
+                ),
+                ButtonSegment(
+                  value: _RecurringType.fixed,
+                  label: Text(l10n.household_recurring_type_fixed),
+                  icon: const Icon(Icons.lock_outline, size: 14),
+                ),
+                ButtonSegment(
+                  value: _RecurringType.variable,
+                  label: Text(l10n.household_recurring_type_variable),
+                  icon: const Icon(Icons.tune, size: 14),
+                ),
+              ],
+              selected: {value},
+              onSelectionChanged: (s) => onChanged(s.first),
+              style: const ButtonStyle(
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+            const SizedBox(height: AppSizes.spaceXS),
+            if (value == _RecurringType.fixed)
+              Text(
+                l10n.household_recurring_type_fixed_desc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+              )
+            else if (value == _RecurringType.variable)
+              Text(
+                l10n.household_recurring_type_variable_desc,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+              ),
+          ],
         ),
       ),
     );

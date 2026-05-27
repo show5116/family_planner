@@ -2462,6 +2462,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_balance => '残高';
 
   @override
+  String get household_carry_over => '繰越';
+
+  @override
+  String get household_carry_over_title => '残高繰越';
+
+  @override
+  String household_carry_over_desc(String amount) {
+    return '今月の残高 ₩$amount を来月に繰り越します。\n\n· 今月末日に「残高繰越」（資産移動）の支出が登録されます。\n· 来月1日に「前月繰越」の収入が登録されます。';
+  }
+
+  @override
+  String get household_carry_over_success => '繰越が完了しました';
+
+  @override
+  String get household_carry_over_no_balance => '繰越できる残高がありません';
+
+  @override
   String get household_income => '収入';
 
   @override
@@ -2579,6 +2596,54 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get household_recurring_top_category => 'カテゴリ別内訳';
+
+  @override
+  String get household_recurring_fixed => '固定';
+
+  @override
+  String get household_recurring_variable => '変動';
+
+  @override
+  String get household_recurring_type_label => '定期支出タイプ';
+
+  @override
+  String get household_recurring_type_none => 'なし';
+
+  @override
+  String get household_recurring_type_fixed => '固定金額';
+
+  @override
+  String get household_recurring_type_fixed_desc => '毎月同じ金額が反映されます';
+
+  @override
+  String get household_recurring_type_variable => '変動金額';
+
+  @override
+  String get household_recurring_type_variable_desc =>
+      '毎月発生しますが金額が変わります（例：管理費）';
+
+  @override
+  String get household_estimated_amount => '予想金額';
+
+  @override
+  String get household_estimated_amount_hint => '今月の予想金額を入力してください';
+
+  @override
+  String get household_estimated_amount_required => '予想金額を入力してください';
+
+  @override
+  String get household_variable_badge => '変動';
+
+  @override
+  String get household_unconfirmed_badge => '未確認';
+
+  @override
+  String get household_unpaid_recurring_title => '未払い定期支出';
+
+  @override
+  String household_unpaid_recurring_subtitle(int count, String amount) {
+    return '$count件 · 予想合計 ₩$amount';
+  }
 
   @override
   String get household_merchants => '支払先管理';

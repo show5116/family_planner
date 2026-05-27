@@ -233,6 +233,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             trailing: _MonthNavigator(selectedMonth: selectedMonth),
           ),
           const _MonthlySummaryCard(),
+          const _UnpaidRecurringBanner(),
           Expanded(
             child: _ExpenseList(selectedGroupId: selectedGroupId),
           ),
@@ -309,6 +310,13 @@ class _MonthlySummaryCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final statsAsync = ref.watch(householdMonthlyStatisticsProvider);
+    final selectedMonth = ref.watch(householdSelectedMonthProvider);
+    final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
+
+    // 이번 달일 때만 이월 버튼 표시
+    final now = DateTime.now();
+    final currentMonth = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    final isCurrentMonth = selectedMonth == currentMonth;
 
     return statsAsync.when(
       data: (stats) => Container(
@@ -318,10 +326,10 @@ class _MonthlySummaryCard extends ConsumerWidget {
           color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
         ),
-        child: stats.hasIncome
-            ? Column(
-                children: [
-                  Row(
+        child: Column(
+          children: [
+            stats.hasIncome
+                ? Row(
                     children: [
                       Expanded(
                         child: _SummaryItem(
@@ -357,32 +365,68 @@ class _MonthlySummaryCard extends ConsumerWidget {
                         ),
                       ),
                     ],
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: _SummaryItem(
+                          label: l10n.household_total_expense,
+                          amount: stats.totalExpense,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+                      ),
+                      Expanded(
+                        child: _SummaryItem(
+                          label: l10n.household_total_budget,
+                          amount: stats.totalBudget,
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              )
-            : Row(
-                children: [
-                  Expanded(
-                    child: _SummaryItem(
-                      label: l10n.household_total_expense,
-                      amount: stats.totalExpense,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
-                  ),
-                  Expanded(
-                    child: _SummaryItem(
-                      label: l10n.household_total_budget,
-                      amount: stats.totalBudget,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                ],
+            // 잔금이 있고 이번 달일 때 이월 버튼
+            if (isCurrentMonth && stats.hasIncome && stats.balance > 0) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.15),
               ),
+              const SizedBox(height: AppSizes.spaceXS),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: () => _showCarryOverDialog(
+                    context, ref, l10n,
+                    balance: stats.balance,
+                    groupId: selectedGroupId,
+                    currentMonth: selectedMonth,
+                  ),
+                  icon: Icon(
+                    Icons.arrow_forward,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                  label: Text(
+                    l10n.household_carry_over,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
       loading: () => const Padding(
         padding: EdgeInsets.all(AppSizes.spaceM),
@@ -390,6 +434,63 @@ class _MonthlySummaryCard extends ConsumerWidget {
       ),
       error: (_, _) => const SizedBox.shrink(),
     );
+  }
+
+  Future<void> _showCarryOverDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n, {
+    required double balance,
+    required String? groupId,
+    required String currentMonth,
+  }) async {
+    final amountStr = _fmtAmount(balance);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.household_carry_over_title),
+        content: Text(l10n.household_carry_over_desc(amountStr)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.common_cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.household_carry_over),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    final success = await ref
+        .read(householdManagementProvider.notifier)
+        .carryOverBalance(
+          groupId: groupId,
+          balance: balance,
+          currentMonth: currentMonth,
+        );
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success ? l10n.household_carry_over_success : l10n.common_error,
+        ),
+      ),
+    );
+  }
+
+  String _fmtAmount(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
   }
 }
 
@@ -658,6 +759,112 @@ class _DayGroup extends StatelessWidget {
   }
 
   String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
+  }
+}
+
+// 이번 달 미치뤄진 고정 지출 배너
+class _UnpaidRecurringBanner extends ConsumerWidget {
+  const _UnpaidRecurringBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unpaid = ref.watch(householdUnpaidRecurringProvider);
+    final selectedMonth = ref.watch(householdSelectedMonthProvider);
+
+    // 현재 달이 아닌 달을 보고 있으면 표시 안 함
+    final now = DateTime.now();
+    final currentMonth =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    if (unpaid.isEmpty || selectedMonth != currentMonth) {
+      return const SizedBox.shrink();
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    // 예상 합계: 가변은 estimatedAmount, 고정은 amount
+    final total = unpaid.fold(0.0, (sum, e) {
+      final amt = (e.isVariableRecurring && e.estimatedAmount != null)
+          ? e.estimatedAmount!
+          : e.amount;
+      return sum + amt;
+    });
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        0,
+        AppSizes.spaceM,
+        AppSizes.spaceS,
+      ),
+      child: InkWell(
+        onTap: () => context.push(AppRoutes.householdRecurring),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.errorContainer.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            border: Border.all(
+              color: colorScheme.error.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.repeat_outlined,
+                size: 18,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.household_unpaid_recurring_title,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onErrorContainer,
+                          ),
+                    ),
+                    Text(
+                      l10n.household_unpaid_recurring_subtitle(
+                        unpaid.length,
+                        _fmtAmount(total),
+                      ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onErrorContainer
+                                .withValues(alpha: 0.8),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 18,
+                color: colorScheme.onErrorContainer.withValues(alpha: 0.6),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _fmtAmount(double amount) {
     final str = amount.toInt().toString();
     final buf = StringBuffer();
     for (var i = 0; i < str.length; i++) {

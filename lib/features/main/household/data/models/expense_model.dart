@@ -55,6 +55,8 @@ class ExpenseModel {
   final String? description;
   final PaymentMethod? paymentMethod;
   final bool isRecurring;
+  final double? estimatedAmount; // 가변 고정 지출 예상 금액 (null이면 고정 금액 방식)
+  final bool isConfirmed; // 실제 금액 확인 여부 (가변 고정 지출에서 false = 예상 금액 상태)
   final MerchantDto? merchant;
   final String? shoppingHistoryId; // 장보기 완료 시 자동 생성된 지출에만 존재
   final DateTime createdAt;
@@ -71,6 +73,8 @@ class ExpenseModel {
     this.description,
     this.paymentMethod,
     required this.isRecurring,
+    this.estimatedAmount,
+    this.isConfirmed = true,
     this.merchant,
     this.shoppingHistoryId,
     required this.createdAt,
@@ -93,6 +97,10 @@ class ExpenseModel {
           ? _parsePaymentMethod(json['paymentMethod'] as String)
           : null,
       isRecurring: (json['isRecurring'] as bool?) ?? false,
+      estimatedAmount: json['estimatedAmount'] != null
+          ? double.tryParse(json['estimatedAmount'].toString())
+          : null,
+      isConfirmed: (json['isConfirmed'] as bool?) ?? true,
       merchant: json['merchant'] != null
           ? MerchantDto.fromJson(json['merchant'] as Map<String, dynamic>)
           : null,
@@ -146,6 +154,8 @@ class ExpenseModel {
     }
   }
 
+  bool get isVariableRecurring => isRecurring && estimatedAmount != null;
+
   ExpenseModel copyWith({
     String? id,
     String? groupId,
@@ -157,6 +167,8 @@ class ExpenseModel {
     String? description,
     PaymentMethod? paymentMethod,
     bool? isRecurring,
+    Object? estimatedAmount = _sentinel,
+    bool? isConfirmed,
     MerchantDto? merchant,
     String? shoppingHistoryId,
     DateTime? createdAt,
@@ -173,6 +185,10 @@ class ExpenseModel {
       description: description ?? this.description,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       isRecurring: isRecurring ?? this.isRecurring,
+      estimatedAmount: estimatedAmount == _sentinel
+          ? this.estimatedAmount
+          : estimatedAmount as double?,
+      isConfirmed: isConfirmed ?? this.isConfirmed,
       merchant: merchant ?? this.merchant,
       shoppingHistoryId: shoppingHistoryId ?? this.shoppingHistoryId,
       createdAt: createdAt ?? this.createdAt,
@@ -180,6 +196,8 @@ class ExpenseModel {
     );
   }
 }
+
+const _sentinel = Object();
 
 /// 지출 생성 DTO
 class CreateExpenseDto {
@@ -192,6 +210,7 @@ class CreateExpenseDto {
   final PaymentMethod? paymentMethod;
   final String? merchantId;
   final bool? isRecurring;
+  final double? estimatedAmount; // 가변 고정 지출 예상 금액
 
   const CreateExpenseDto({
     this.groupId,
@@ -203,6 +222,7 @@ class CreateExpenseDto {
     this.paymentMethod,
     this.merchantId,
     this.isRecurring,
+    this.estimatedAmount,
   });
 
   Map<String, dynamic> toJson() {
@@ -216,6 +236,7 @@ class CreateExpenseDto {
       if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod!),
       if (merchantId != null) 'merchantId': merchantId,
       if (isRecurring != null) 'isRecurring': isRecurring,
+      if (estimatedAmount != null) 'estimatedAmount': estimatedAmount,
     };
   }
 }
@@ -231,6 +252,8 @@ class UpdateExpenseDto {
   final String? merchantId; // null 전달 시 소비처 연결 해제
   final bool? merchantIdExplicitNull; // true면 merchantId: null 을 명시적으로 전송
   final bool? isRecurring;
+  final Object? estimatedAmount; // double | null (null 전달 시 해제) — _sentinel 사용
+  final bool estimatedAmountExplicitNull;
 
   const UpdateExpenseDto({
     this.type,
@@ -242,6 +265,8 @@ class UpdateExpenseDto {
     this.merchantId,
     this.merchantIdExplicitNull = false,
     this.isRecurring,
+    this.estimatedAmount = _sentinel,
+    this.estimatedAmountExplicitNull = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -255,6 +280,8 @@ class UpdateExpenseDto {
       if (merchantIdExplicitNull == true) 'merchantId': null
       else if (merchantId != null) 'merchantId': merchantId,
       if (isRecurring != null) 'isRecurring': isRecurring,
+      if (estimatedAmountExplicitNull) 'estimatedAmount': null
+      else if (estimatedAmount != _sentinel) 'estimatedAmount': estimatedAmount,
     };
   }
 }

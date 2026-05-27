@@ -2466,6 +2466,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_balance => '잔액';
 
   @override
+  String get household_carry_over => '이월';
+
+  @override
+  String get household_carry_over_title => '잔금 이월';
+
+  @override
+  String household_carry_over_desc(String amount) {
+    return '이번 달 잔금 ₩$amount을 다음 달로 이월합니다.\n\n· 이번 달 말일에 \'잔금 이월\' (자산이동) 지출이 등록됩니다.\n· 다음 달 1일에 \'전월 이월\' 입금이 등록됩니다.';
+  }
+
+  @override
+  String get household_carry_over_success => '이월이 완료되었습니다';
+
+  @override
+  String get household_carry_over_no_balance => '이월할 잔금이 없습니다';
+
+  @override
   String get household_income => '입금';
 
   @override
@@ -2583,6 +2600,54 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get household_recurring_top_category => '카테고리별 분포';
+
+  @override
+  String get household_recurring_fixed => '고정';
+
+  @override
+  String get household_recurring_variable => '가변';
+
+  @override
+  String get household_recurring_type_label => '고정 지출 유형';
+
+  @override
+  String get household_recurring_type_none => '없음';
+
+  @override
+  String get household_recurring_type_fixed => '고정 금액';
+
+  @override
+  String get household_recurring_type_fixed_desc => '매월 동일한 금액이 반영됩니다';
+
+  @override
+  String get household_recurring_type_variable => '가변 금액';
+
+  @override
+  String get household_recurring_type_variable_desc =>
+      '매월 발생하지만 금액이 달라집니다 (예: 관리비)';
+
+  @override
+  String get household_estimated_amount => '예상 금액';
+
+  @override
+  String get household_estimated_amount_hint => '이번 달 예상 금액을 입력하세요';
+
+  @override
+  String get household_estimated_amount_required => '예상 금액을 입력해주세요';
+
+  @override
+  String get household_variable_badge => '가변';
+
+  @override
+  String get household_unconfirmed_badge => '미확인';
+
+  @override
+  String get household_unpaid_recurring_title => '미치뤄진 고정 지출';
+
+  @override
+  String household_unpaid_recurring_subtitle(int count, String amount) {
+    return '$count건 · 예상 합계 ₩$amount';
+  }
 
   @override
   String get household_merchants => '소비처 관리';

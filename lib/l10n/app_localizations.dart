@@ -4878,6 +4878,36 @@ abstract class AppLocalizations {
   /// **'잔액'**
   String get household_balance;
 
+  /// 잔금 이월 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'이월'**
+  String get household_carry_over;
+
+  /// 이월 확인 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'잔금 이월'**
+  String get household_carry_over_title;
+
+  /// 이월 확인 다이얼로그 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 잔금 ₩{amount}을 다음 달로 이월합니다.\n\n· 이번 달 말일에 \'잔금 이월\' (자산이동) 지출이 등록됩니다.\n· 다음 달 1일에 \'전월 이월\' 입금이 등록됩니다.'**
+  String household_carry_over_desc(String amount);
+
+  /// 이월 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'이월이 완료되었습니다'**
+  String get household_carry_over_success;
+
+  /// 잔금 없음 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'이월할 잔금이 없습니다'**
+  String get household_carry_over_no_balance;
+
   /// 입금 유형 레이블
   ///
   /// In ko, this message translates to:
@@ -5111,6 +5141,96 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'카테고리별 분포'**
   String get household_recurring_top_category;
+
+  /// 고정 금액 고정지출 타입 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'고정'**
+  String get household_recurring_fixed;
+
+  /// 가변 금액 고정지출 타입 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'가변'**
+  String get household_recurring_variable;
+
+  /// 고정 지출 유형 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 지출 유형'**
+  String get household_recurring_type_label;
+
+  /// 고정 지출 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'없음'**
+  String get household_recurring_type_none;
+
+  /// 매월 동일한 금액이 지출되는 고정 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 금액'**
+  String get household_recurring_type_fixed;
+
+  /// 고정 금액 고정지출 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 동일한 금액이 반영됩니다'**
+  String get household_recurring_type_fixed_desc;
+
+  /// 매월 금액이 달라지는 가변 고정 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'가변 금액'**
+  String get household_recurring_type_variable;
+
+  /// 가변 금액 고정지출 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 발생하지만 금액이 달라집니다 (예: 관리비)'**
+  String get household_recurring_type_variable_desc;
+
+  /// 가변 고정 지출 예상 금액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 금액'**
+  String get household_estimated_amount;
+
+  /// 예상 금액 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 예상 금액을 입력하세요'**
+  String get household_estimated_amount_hint;
+
+  /// 예상 금액 필수 입력 오류 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 금액을 입력해주세요'**
+  String get household_estimated_amount_required;
+
+  /// 가변 고정지출 배지 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'가변'**
+  String get household_variable_badge;
+
+  /// 실제 금액 미확인 상태 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'미확인'**
+  String get household_unconfirmed_badge;
+
+  /// 이번 달 아직 확정되지 않은 고정 지출 배너 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'미치뤄진 고정 지출'**
+  String get household_unpaid_recurring_title;
+
+  /// 미치뤄진 고정 지출 건수 및 예상 합계
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}건 · 예상 합계 ₩{amount}'**
+  String household_unpaid_recurring_subtitle(int count, String amount);
 
   /// 소비처 관리 화면 제목
   ///
