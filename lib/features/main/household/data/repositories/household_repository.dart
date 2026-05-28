@@ -116,11 +116,15 @@ class HouseholdRepository {
   Future<MonthlyStatisticsModel> getMonthlyStatistics({
     String? groupId, // null이면 개인 모드
     required String month, // YYYY-MM
+    bool excludeRefunds = false,
+    bool excludeCarryover = false,
   }) async {
     try {
       final response = await _dio.get('/household/statistics', queryParameters: {
         if (groupId != null) 'groupId': groupId,
         'month': month,
+        if (excludeRefunds) 'excludeRefunds': true,
+        if (excludeCarryover) 'excludeCarryover': true,
       });
       return MonthlyStatisticsModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -133,11 +137,15 @@ class HouseholdRepository {
   Future<YearlyStatisticsModel> getYearlyStatistics({
     String? groupId, // null이면 개인 모드
     required String year, // YYYY
+    bool excludeRefunds = false,
+    bool excludeCarryover = false,
   }) async {
     try {
       final response = await _dio.get('/household/statistics/yearly', queryParameters: {
         if (groupId != null) 'groupId': groupId,
         'year': year,
+        if (excludeRefunds) 'excludeRefunds': true,
+        if (excludeCarryover) 'excludeCarryover': true,
       });
       return YearlyStatisticsModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {

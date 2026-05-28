@@ -2433,6 +2433,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_edit_expense => '지출 수정';
 
   @override
+  String get household_refund => '환불 등록';
+
+  @override
+  String get household_refund_badge => '환불됨';
+
+  @override
+  String get household_refund_origin_badge => '환불';
+
+  @override
+  String get household_refund_amount_label => '환불 금액';
+
+  @override
+  String get household_refund_origin_label => '원본 지출';
+
+  @override
+  String get household_view_refund_origin => '원본 지출 보기';
+
+  @override
+  String get household_refund_total => '총 환불';
+
+  @override
   String get household_delete_expense => '지출 삭제';
 
   @override
@@ -2543,6 +2564,36 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_category_other => '기타';
 
   @override
+  String get household_income_category => '입금 종류';
+
+  @override
+  String get household_income_category_salary => '월급';
+
+  @override
+  String get household_income_category_allowance => '용돈';
+
+  @override
+  String get household_income_category_carryover => '이월';
+
+  @override
+  String get household_income_category_bonus => '상여금';
+
+  @override
+  String get household_income_category_interest => '이자 수익';
+
+  @override
+  String get household_income_category_rental => '임대 수익';
+
+  @override
+  String get household_income_category_side_income => '부업';
+
+  @override
+  String get household_income_category_transfer_in => '계좌이체';
+
+  @override
+  String get household_income_category_other => '기타 수입';
+
+  @override
   String get household_payment_cash => '현금';
 
   @override
@@ -2642,7 +2693,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_unconfirmed_badge => '미확인';
 
   @override
-  String get household_unpaid_recurring_title => '미치뤄진 고정 지출';
+  String get household_exclude_refunds => '환불 제외';
+
+  @override
+  String get household_exclude_carryover => '이월 제외';
+
+  @override
+  String get household_unpaid_recurring_title => '이번 달 남은 고정 지출';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {

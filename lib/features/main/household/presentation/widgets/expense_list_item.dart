@@ -4,6 +4,81 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+/// 입금 카테고리 아이콘
+IconData incomeCategoryIcon(IncomeCategory? category) {
+  switch (category) {
+    case IncomeCategory.salary:
+      return Icons.account_balance_wallet;
+    case IncomeCategory.allowance:
+      return Icons.redeem;
+    case IncomeCategory.carryover:
+      return Icons.arrow_forward;
+    case IncomeCategory.bonus:
+      return Icons.star;
+    case IncomeCategory.interest:
+      return Icons.trending_up;
+    case IncomeCategory.rental:
+      return Icons.home_work;
+    case IncomeCategory.sideIncome:
+      return Icons.work_outline;
+    case IncomeCategory.transferIn:
+      return Icons.swap_horiz;
+    case IncomeCategory.otherIncome:
+    case null:
+      return Icons.attach_money;
+  }
+}
+
+/// 입금 카테고리 색상
+Color incomeCategoryColor(IncomeCategory? category) {
+  switch (category) {
+    case IncomeCategory.salary:
+      return Colors.green;
+    case IncomeCategory.allowance:
+      return Colors.teal;
+    case IncomeCategory.carryover:
+      return Colors.blueGrey;
+    case IncomeCategory.bonus:
+      return Colors.amber;
+    case IncomeCategory.interest:
+      return Colors.lightGreen;
+    case IncomeCategory.rental:
+      return Colors.cyan;
+    case IncomeCategory.sideIncome:
+      return Colors.indigo;
+    case IncomeCategory.transferIn:
+      return Colors.blue;
+    case IncomeCategory.otherIncome:
+    case null:
+      return Colors.green;
+  }
+}
+
+/// 입금 카테고리 이름
+String incomeCategoryName(AppLocalizations l10n, IncomeCategory? category) {
+  switch (category) {
+    case IncomeCategory.salary:
+      return l10n.household_income_category_salary;
+    case IncomeCategory.allowance:
+      return l10n.household_income_category_allowance;
+    case IncomeCategory.carryover:
+      return l10n.household_income_category_carryover;
+    case IncomeCategory.bonus:
+      return l10n.household_income_category_bonus;
+    case IncomeCategory.interest:
+      return l10n.household_income_category_interest;
+    case IncomeCategory.rental:
+      return l10n.household_income_category_rental;
+    case IncomeCategory.sideIncome:
+      return l10n.household_income_category_side_income;
+    case IncomeCategory.transferIn:
+      return l10n.household_income_category_transfer_in;
+    case IncomeCategory.otherIncome:
+    case null:
+      return l10n.household_income_category_other;
+  }
+}
+
 /// 카테고리별 아이콘
 IconData categoryIcon(ExpenseCategory? category) {
   switch (category) {
@@ -134,9 +209,15 @@ class ExpenseListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isIncome = expense.type == TransactionType.income;
-    final color = isIncome ? Colors.green : categoryColor(expense.category);
-    final icon = isIncome ? Icons.arrow_downward : categoryIcon(expense.category);
-    final label = isIncome ? l10n.household_income : categoryName(l10n, expense.category);
+    final color = isIncome
+        ? incomeCategoryColor(expense.incomeCategory)
+        : categoryColor(expense.category);
+    final icon = isIncome
+        ? incomeCategoryIcon(expense.incomeCategory)
+        : categoryIcon(expense.category);
+    final label = isIncome
+        ? incomeCategoryName(l10n, expense.incomeCategory)
+        : categoryName(l10n, expense.category);
     final amountPrefix = isIncome ? '+₩' : '₩';
     final amountColor = isIncome ? Colors.green : Theme.of(context).colorScheme.error;
 
@@ -261,6 +342,44 @@ class ExpenseListItem extends StatelessWidget {
                             ),
                           ),
                         ],
+                        // 지출 항목이 환불된 경우 "환불됨" 배지
+                        if (!isIncome && expense.refunds.isNotEmpty) ...[
+                          const SizedBox(width: 2),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.household_refund_badge,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.outline,
+                                    fontSize: 10,
+                                  ),
+                            ),
+                          ),
+                        ],
+                        // 환불 입금 항목 "환불" 배지
+                        if (isIncome && expense.refundedExpenseId != null) ...[
+                          const SizedBox(width: 2),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 4, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Colors.teal.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.household_refund_origin_badge,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Colors.teal,
+                                    fontSize: 10,
+                                  ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ],
@@ -284,7 +403,12 @@ class ExpenseListItem extends StatelessWidget {
                       '$amountPrefix${_formatAmount(expense.amount)}',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: amountColor,
+                            color: expense.refunds.isNotEmpty
+                                ? Theme.of(context).colorScheme.outline
+                                : amountColor,
+                            decoration: expense.refunds.isNotEmpty
+                                ? TextDecoration.lineThrough
+                                : null,
                           ),
                     ),
                   Text(
@@ -296,12 +420,20 @@ class ExpenseListItem extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: AppSizes.spaceXS),
-              IconButton(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline),
-                iconSize: 18,
-                color: Theme.of(context).colorScheme.outline,
-                visualDensity: VisualDensity.compact,
+              GestureDetector(
+                onTap: onDelete,
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: Icon(
+                    Icons.delete_outline,
+                    size: 17,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.45),
+                  ),
+                ),
               ),
             ],
           ),

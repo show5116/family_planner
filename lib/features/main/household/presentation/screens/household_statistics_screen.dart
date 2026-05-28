@@ -258,6 +258,9 @@ class _MonthlyStatisticsContentState
   }
 
   List<Widget> _buildCategoryView(BuildContext context, AppLocalizations l10n) {
+    // 입금 카테고리별 집계를 위해 지출 목록 로드
+    final expensesAsync = ref.watch(householdExpensesByMonthProvider(widget.month));
+
     return [
       if (widget.stats.hasIncome) ...[
         Text(
@@ -265,7 +268,35 @@ class _MonthlyStatisticsContentState
           style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSizes.spaceS),
-        _IncomeSummaryItem(totalIncome: widget.stats.totalIncome, month: widget.month),
+        expensesAsync.when(
+          data: (expenses) {
+            final incomes = expenses.where((e) => e.type == TransactionType.income).toList();
+            if (incomes.isEmpty) {
+              return _IncomeSummaryItem(totalIncome: widget.stats.totalIncome, month: widget.month);
+            }
+            // IncomeCategory별 집계
+            final catTotals = <IncomeCategory?, double>{};
+            for (final e in incomes) {
+              catTotals[e.incomeCategory] = (catTotals[e.incomeCategory] ?? 0) + e.amount;
+            }
+            final sorted = catTotals.entries.toList()
+              ..sort((a, b) => b.value.compareTo(a.value));
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...sorted.map((entry) => _IncomeCategoryStatItem(
+                  category: entry.key,
+                  amount: entry.value,
+                  totalIncome: widget.stats.totalIncome,
+                  month: widget.month,
+                )),
+              ],
+            );
+          },
+          loading: () => _IncomeSummaryItem(totalIncome: widget.stats.totalIncome, month: widget.month),
+          error: (_, _) => _IncomeSummaryItem(totalIncome: widget.stats.totalIncome, month: widget.month),
+        ),
         const SizedBox(height: AppSizes.spaceM),
       ],
       if (widget.stats.categories.isNotEmpty) ...[
@@ -1132,6 +1163,116 @@ class _MonthBarItem extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
+    final i = amount.toInt();
+    final s = i.toString();
+    final buf = StringBuffer();
+    for (var j = 0; j < s.length; j++) {
+      if (j > 0 && (s.length - j) % 3 == 0) buf.write(',');
+      buf.write(s[j]);
+    }
+    return buf.toString();
+  }
+}
+
+// 입금 카테고리별 통계 아이템
+class _IncomeCategoryStatItem extends StatelessWidget {
+  final IncomeCategory? category;
+  final double amount;
+  final double totalIncome;
+  final String month;
+
+  const _IncomeCategoryStatItem({
+    required this.category,
+    required this.amount,
+    required this.totalIncome,
+    required this.month,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final color = incomeCategoryColor(category);
+    final ratio = totalIncome > 0 ? (amount / totalIncome).clamp(0.0, 1.0) : 0.0;
+
+    return InkWell(
+      onTap: () => context.push(
+        AppRoutes.householdCategoryExpenses,
+        extra: {
+          'month': month,
+          'type': TransactionType.income,
+          'incomeCategory': category,
+        },
+      ),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Icon(incomeCategoryIcon(category), color: color, size: 18),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        incomeCategoryName(l10n, category),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      Text(
+                        '₩${_fmt(amount)}',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade700,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: LinearProgressIndicator(
+                      value: ratio,
+                      minHeight: 4,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      color: color,
+                    ),
+                  ),
+                  Text(
+                    '총 입금의 ${(ratio * 100).toStringAsFixed(0)}%',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSizes.spaceXS),
+            Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+          ],
+        ),
       ),
     );
   }

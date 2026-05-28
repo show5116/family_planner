@@ -2429,6 +2429,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_edit_expense => '支出を編集';
 
   @override
+  String get household_refund => '返金登録';
+
+  @override
+  String get household_refund_badge => '返金済';
+
+  @override
+  String get household_refund_origin_badge => '返金';
+
+  @override
+  String get household_refund_amount_label => '返金金額';
+
+  @override
+  String get household_refund_origin_label => '元の支出';
+
+  @override
+  String get household_view_refund_origin => '元の支出を見る';
+
+  @override
+  String get household_refund_total => '合計返金';
+
+  @override
   String get household_delete_expense => '支出を削除';
 
   @override
@@ -2539,6 +2560,36 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_category_other => 'その他';
 
   @override
+  String get household_income_category => '収入の種類';
+
+  @override
+  String get household_income_category_salary => '給与';
+
+  @override
+  String get household_income_category_allowance => '小遣い';
+
+  @override
+  String get household_income_category_carryover => '繰越';
+
+  @override
+  String get household_income_category_bonus => 'ボーナス';
+
+  @override
+  String get household_income_category_interest => '利息';
+
+  @override
+  String get household_income_category_rental => '賃貸収入';
+
+  @override
+  String get household_income_category_side_income => '副業';
+
+  @override
+  String get household_income_category_transfer_in => '振込';
+
+  @override
+  String get household_income_category_other => 'その他収入';
+
+  @override
   String get household_payment_cash => '現金';
 
   @override
@@ -2638,7 +2689,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_unconfirmed_badge => '未確認';
 
   @override
-  String get household_unpaid_recurring_title => '未払い定期支出';
+  String get household_exclude_refunds => '返金を除外';
+
+  @override
+  String get household_exclude_carryover => '繰越を除外';
+
+  @override
+  String get household_unpaid_recurring_title => '今月の残り定期支出';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {

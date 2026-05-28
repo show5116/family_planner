@@ -214,13 +214,16 @@ List<RouteBase> getMainRoutes() {
         final extra = state.extra;
         String? groupId;
         bool initialIsRecurring = false;
+        ExpenseModel? refundedExpense;
         if (extra is Map<String, dynamic>) {
           groupId = extra['groupId'] as String?;
           initialIsRecurring = extra['initialIsRecurring'] as bool? ?? false;
+          refundedExpense = extra['refundedExpense'] as ExpenseModel?;
         }
         return ExpenseFormScreen(
           groupId: groupId,
           initialIsRecurring: initialIsRecurring,
+          refundedExpense: refundedExpense,
         );
       },
     ),
@@ -264,6 +267,7 @@ List<RouteBase> getMainRoutes() {
           category: extra['category'] as ExpenseCategory?,
           month: extra['month'] as String,
           type: extra['type'] as TransactionType?,
+          incomeCategory: extra['incomeCategory'] as IncomeCategory?,
         );
       },
     ),

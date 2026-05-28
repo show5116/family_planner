@@ -232,10 +232,11 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             },
             trailing: _MonthNavigator(selectedMonth: selectedMonth),
           ),
+          const _ExcludeFilterBar(),
           const _MonthlySummaryCard(),
           const _UnpaidRecurringBanner(),
           Expanded(
-            child: _ExpenseList(selectedGroupId: selectedGroupId),
+            child: _ExpenseBody(selectedGroupId: selectedGroupId),
           ),
         ],
       ),
@@ -259,6 +260,7 @@ class _MonthNavigator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final viewMode = ref.watch(householdViewModeProvider);
     return Row(
       children: [
         IconButton(
@@ -275,6 +277,21 @@ class _MonthNavigator extends ConsumerWidget {
         IconButton(
           onPressed: () => _changeMonth(ref, 1),
           icon: const Icon(Icons.chevron_right),
+          visualDensity: VisualDensity.compact,
+        ),
+        const SizedBox(width: 4),
+        IconButton(
+          onPressed: () {
+            ref.read(householdViewModeProvider.notifier).state =
+                viewMode == HouseholdViewMode.list
+                    ? HouseholdViewMode.calendar
+                    : HouseholdViewMode.list;
+          },
+          icon: Icon(
+            viewMode == HouseholdViewMode.list
+                ? Icons.calendar_month_outlined
+                : Icons.view_list_outlined,
+          ),
           visualDensity: VisualDensity.compact,
         ),
       ],
@@ -335,7 +352,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                         child: _SummaryItem(
                           label: l10n.household_total_income,
                           amount: stats.totalIncome,
-                          color: Colors.green,
+                          color: Colors.green.shade700,
                         ),
                       ),
                       Container(
@@ -360,7 +377,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                           label: l10n.household_balance,
                           amount: stats.balance,
                           color: stats.balance >= 0
-                              ? Colors.green
+                              ? Colors.green.shade700
                               : Theme.of(context).colorScheme.error,
                         ),
                       ),
@@ -539,43 +556,47 @@ class _SummaryItem extends StatelessWidget {
   }
 }
 
-// 지출 목록
-class _ExpenseList extends ConsumerWidget {
+// 뷰 모드에 따라 리스트/캘린더를 전환하는 컨테이너
+class _ExpenseBody extends ConsumerStatefulWidget {
   final String? selectedGroupId;
 
-  const _ExpenseList({required this.selectedGroupId});
+  const _ExpenseBody({required this.selectedGroupId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+  ConsumerState<_ExpenseBody> createState() => _ExpenseBodyState();
+}
 
+class _ExpenseBodyState extends ConsumerState<_ExpenseBody> {
+  final _scrollController = ScrollController();
+  final _itemKeys = <String, GlobalKey>{};
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToDate(String dateKey) {
+    final key = _itemKeys[dateKey];
+    if (key == null) return;
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+    Scrollable.ensureVisible(
+      ctx,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+      alignment: 0.0,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final viewMode = ref.watch(householdViewModeProvider);
     final expensesAsync = ref.watch(householdExpensesProvider);
 
     return expensesAsync.when(
       data: (expenses) {
-        if (expenses.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.receipt_long,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                const SizedBox(height: AppSizes.spaceM),
-                Text(
-                  l10n.household_no_expenses,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        // 날짜 내림차순 정렬 후 일 단위 그룹핑
+        // 날짜 내림차순 정렬 + 그룹핑 (리스트·캘린더 공용)
         final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
         final grouped = <String, List<ExpenseModel>>{};
         for (final e in sorted) {
@@ -585,19 +606,61 @@ class _ExpenseList extends ConsumerWidget {
         }
         final dateKeys = grouped.keys.toList();
 
+        // GlobalKey 동기화
+        for (final k in dateKeys) {
+          _itemKeys.putIfAbsent(k, () => GlobalKey());
+        }
+
+        if (viewMode == HouseholdViewMode.calendar) {
+          return _CalendarView(
+            expenses: expenses,
+            grouped: grouped,
+            onDateTap: (dateKey) {
+              // 캘린더 → 리스트 전환 후 스크롤
+              ref.read(householdViewModeProvider.notifier).state =
+                  HouseholdViewMode.list;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToDate(dateKey);
+              });
+            },
+          );
+        }
+
+        // 리스트 뷰
+        if (expenses.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.receipt_long, size: 64,
+                    color: Theme.of(context).colorScheme.outline),
+                const SizedBox(height: AppSizes.spaceM),
+                Text(
+                  AppLocalizations.of(context)!.household_no_expenses,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return RefreshIndicator(
           onRefresh: () => ref.read(householdExpensesProvider.notifier).refresh(),
           child: ListView.builder(
+            controller: _scrollController,
             itemCount: dateKeys.length,
             padding: const EdgeInsets.only(bottom: 80),
             itemBuilder: (context, index) {
               final dateKey = dateKeys[index];
-              final dayExpenses = grouped[dateKey]!;
+              final dayExpenses = grouped[dateKey]!; // dateKeys에서 추출한 키라 항상 존재
               return _DayGroup(
+                key: _itemKeys[dateKey],
                 dateKey: dateKey,
                 expenses: dayExpenses,
                 onTap: (e) => context.push(AppRoutes.householdDetail, extra: e),
-                onDelete: (e) => _confirmDelete(context, ref, l10n, e),
+                onDelete: (e) => _confirmDelete(context, ref, dateKey, dayExpenses, e),
               );
             },
           ),
@@ -608,14 +671,12 @@ class _ExpenseList extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              l10n.common_error,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            Text(AppLocalizations.of(context)!.common_error,
+                style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: AppSizes.spaceS),
             ElevatedButton(
               onPressed: () => ref.read(householdExpensesProvider.notifier).refresh(),
-              child: Text(l10n.common_retry),
+              child: Text(AppLocalizations.of(context)!.common_retry),
             ),
           ],
         ),
@@ -626,9 +687,11 @@ class _ExpenseList extends ConsumerWidget {
   Future<void> _confirmDelete(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    String dateKey,
+    List<ExpenseModel> dayExpenses,
     ExpenseModel expense,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -641,10 +704,8 @@ class _ExpenseList extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(
-              l10n.common_delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
+            child: Text(l10n.common_delete,
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
@@ -657,7 +718,6 @@ class _ExpenseList extends ConsumerWidget {
         .deleteExpense(expense.id);
 
     if (!context.mounted) return;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(success ? l10n.household_delete_success : l10n.common_error),
@@ -666,14 +726,184 @@ class _ExpenseList extends ConsumerWidget {
   }
 }
 
+// 캘린더 뷰
+class _CalendarView extends StatelessWidget {
+  final List<ExpenseModel> expenses;
+  final Map<String, List<ExpenseModel>> grouped;
+  final void Function(String dateKey) onDateTap;
+
+  const _CalendarView({
+    required this.expenses,
+    required this.grouped,
+    required this.onDateTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (expenses.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // 현재 달 기준으로 캘린더 생성
+    final firstDate = expenses.map((e) => e.date).reduce(
+        (a, b) => a.isBefore(b) ? a : b);
+    final year = firstDate.year;
+    final month = firstDate.month;
+    final firstDayOfMonth = DateTime(year, month, 1);
+    final daysInMonth = DateTime(year, month + 1, 0).day;
+    // 월요일 시작 기준 (0=월 ... 6=일)
+    final startWeekday = (firstDayOfMonth.weekday - 1) % 7;
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(
+        AppSizes.spaceM, 0, AppSizes.spaceM, AppSizes.spaceXL),
+      child: Column(
+        children: [
+          // 요일 헤더
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
+            child: Row(
+              children: ['월', '화', '수', '목', '금', '토', '일']
+                  .map((d) => Expanded(
+                        child: Center(
+                          child: Text(d,
+                              style: textTheme.labelSmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          // 날짜 그리드
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              childAspectRatio: 0.72,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 2,
+            ),
+            itemCount: startWeekday + daysInMonth,
+            itemBuilder: (context, index) {
+              if (index < startWeekday) return const SizedBox.shrink();
+              final day = index - startWeekday + 1;
+              final dateKey =
+                  '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+              final dayExpenses = grouped[dateKey];
+              final hasData = dayExpenses != null && dayExpenses.isNotEmpty;
+
+              double incomeTotal = 0;
+              double expenseTotal = 0;
+              if (hasData) {
+                for (final e in dayExpenses) {
+                  if (e.type == TransactionType.income) {
+                    incomeTotal += e.amount;
+                  } else {
+                    expenseTotal += e.amount;
+                  }
+                }
+              }
+
+              final isToday = DateTime.now().year == year &&
+                  DateTime.now().month == month &&
+                  DateTime.now().day == day;
+
+              return GestureDetector(
+                onTap: hasData ? () => onDateTap(dateKey) : null,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isToday
+                        ? colorScheme.primaryContainer.withValues(alpha: 0.5)
+                        : null,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                    border: isToday
+                        ? Border.all(
+                            color: colorScheme.primary.withValues(alpha: 0.4),
+                            width: 1)
+                        : null,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 2, vertical: 4),
+                  child: Column(
+                    children: [
+                      // 날짜 숫자
+                      Text(
+                        '$day',
+                        style: textTheme.labelSmall?.copyWith(
+                          fontWeight: isToday
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isToday
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
+                        ),
+                      ),
+                      if (hasData) ...[
+                        const SizedBox(height: 2),
+                        if (expenseTotal > 0)
+                          Text(
+                            '-${_compact(expenseTotal)}',
+                            style: textTheme.labelSmall?.copyWith(
+                              fontSize: 9,
+                              color: colorScheme.error,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        if (incomeTotal > 0)
+                          Text(
+                            '+${_compact(incomeTotal)}',
+                            style: textTheme.labelSmall?.copyWith(
+                              fontSize: 9,
+                              color: Colors.green.shade700,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 금액을 짧게 표시: 10000 → 1만, 150000 → 15만, 1500000 → 150만
+  String _compact(double amount) {
+    final v = amount.toInt();
+    if (v >= 10000000) return '${(v / 10000000).toStringAsFixed(0)}천만';
+    if (v >= 1000000) return '${(v / 10000).toStringAsFixed(0)}만';
+    if (v >= 10000) {
+      final man = v ~/ 10000;
+      final rem = (v % 10000) ~/ 1000;
+      return rem > 0 ? '$man.$rem만' : '$man만';
+    }
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(0)}천';
+    return '$v';
+  }
+}
+
 // 일 단위 그룹 헤더 + 거래 목록
-class _DayGroup extends StatelessWidget {
+class _DayGroup extends ConsumerWidget {
   final String dateKey; // 'YYYY-MM-DD'
   final List<ExpenseModel> expenses;
   final void Function(ExpenseModel) onTap;
   final void Function(ExpenseModel) onDelete;
 
   const _DayGroup({
+    super.key,
     required this.dateKey,
     required this.expenses,
     required this.onTap,
@@ -681,7 +911,10 @@ class _DayGroup extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
+    final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
+
     final parts = dateKey.split('-');
     final month = int.parse(parts[1]);
     final day = int.parse(parts[2]);
@@ -690,8 +923,11 @@ class _DayGroup extends StatelessWidget {
     double totalExpense = 0;
     for (final e in expenses) {
       if (e.type == TransactionType.income) {
+        if (excludeRefunds && e.refundedExpenseId != null) continue;
+        if (excludeCarryover && e.incomeCategory == IncomeCategory.carryover) continue;
         totalIncome += e.amount;
       } else {
+        if (excludeRefunds && e.refunds.isNotEmpty) continue;
         totalExpense += e.amount;
       }
     }
@@ -705,7 +941,7 @@ class _DayGroup extends StatelessWidget {
             AppSizes.spaceM,
             AppSizes.spaceM,
             AppSizes.spaceM,
-            AppSizes.spaceXS,
+            AppSizes.spaceS,
           ),
           child: Row(
             children: [
@@ -720,7 +956,7 @@ class _DayGroup extends StatelessWidget {
                 Text(
                   '₩${_fmt(totalIncome)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.green,
+                        color: Colors.green.shade700,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
@@ -747,6 +983,7 @@ class _DayGroup extends StatelessWidget {
           endIndent: AppSizes.spaceM,
           color: Theme.of(context).colorScheme.outlineVariant,
         ),
+        const SizedBox(height: AppSizes.spaceXS),
         ...expenses.map(
           (e) => ExpenseListItem(
             expense: e,
@@ -872,5 +1109,105 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
       buf.write(str[i]);
     }
     return buf.toString();
+  }
+}
+
+// 환불/이월 제외 체크 필터 바
+class _ExcludeFilterBar extends ConsumerWidget {
+  const _ExcludeFilterBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
+    final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceM,
+        vertical: AppSizes.spaceXS,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.filter_alt_outlined,
+            size: 15,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          _FilterChip(
+            label: l10n.household_exclude_refunds,
+            selected: excludeRefunds,
+            onTap: () => ref
+                .read(householdExcludeRefundsProvider.notifier)
+                .state = !excludeRefunds,
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          _FilterChip(
+            label: l10n.household_exclude_carryover,
+            selected: excludeCarryover,
+            onTap: () => ref
+                .read(householdExcludeCarryoverProvider.notifier)
+                .state = !excludeCarryover,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _FilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected
+                ? colorScheme.onSurface
+                : colorScheme.outlineVariant,
+            width: selected ? 1.5 : 0.5,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (selected)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: Icon(Icons.check,
+                    size: 12, color: colorScheme.onSurface),
+              ),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: selected
+                        ? colorScheme.onSurface
+                        : colorScheme.onSurfaceVariant,
+                    fontWeight:
+                        selected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

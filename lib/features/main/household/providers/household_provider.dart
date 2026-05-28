@@ -18,6 +18,18 @@ final householdSelectedMonthProvider = StateProvider<String>((ref) {
   return '${now.year}-${now.month.toString().padLeft(2, '0')}';
 });
 
+/// 통계/일별 합산에서 환불 항목 제외 여부
+final householdExcludeRefundsProvider = StateProvider<bool>((ref) => false);
+
+/// 가계부 뷰 모드 (list / calendar)
+enum HouseholdViewMode { list, calendar }
+
+final householdViewModeProvider =
+    StateProvider<HouseholdViewMode>((ref) => HouseholdViewMode.list);
+
+/// 통계/일별 합산에서 이월 항목 제외 여부
+final householdExcludeCarryoverProvider = StateProvider<bool>((ref) => false);
+
 /// 지출 목록 Provider
 @riverpod
 class HouseholdExpenses extends _$HouseholdExpenses {
@@ -67,9 +79,16 @@ class HouseholdExpenses extends _$HouseholdExpenses {
 Future<MonthlyStatisticsModel> householdMonthlyStatistics(Ref ref) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
   final month = ref.watch(householdSelectedMonthProvider);
+  final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
+  final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
 
   final repository = ref.watch(householdRepositoryProvider);
-  return repository.getMonthlyStatistics(groupId: groupId, month: month);
+  return repository.getMonthlyStatistics(
+    groupId: groupId,
+    month: month,
+    excludeRefunds: excludeRefunds,
+    excludeCarryover: excludeCarryover,
+  );
 }
 
 /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
@@ -77,18 +96,32 @@ Future<MonthlyStatisticsModel> householdMonthlyStatistics(Ref ref) async {
 Future<MonthlyStatisticsModel> householdMonthlyStatisticsByMonth(
     Ref ref, String month) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
+  final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
+  final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
 
   final repository = ref.watch(householdRepositoryProvider);
-  return repository.getMonthlyStatistics(groupId: groupId, month: month);
+  return repository.getMonthlyStatistics(
+    groupId: groupId,
+    month: month,
+    excludeRefunds: excludeRefunds,
+    excludeCarryover: excludeCarryover,
+  );
 }
 
 /// 연간 통계 Provider
 @riverpod
 Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
+  final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
+  final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
 
   final repository = ref.watch(householdRepositoryProvider);
-  return repository.getYearlyStatistics(groupId: groupId, year: year);
+  return repository.getYearlyStatistics(
+    groupId: groupId,
+    year: year,
+    excludeRefunds: excludeRefunds,
+    excludeCarryover: excludeCarryover,
+  );
 }
 
 /// 특정 월 지출 목록 Provider (통계 화면 소비처/필터 탭용)
@@ -133,17 +166,27 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   }
 }
 
-/// 이번 달 미치뤄진 고정 지출 목록 Provider
+/// 이번 달 아직 치뤄지지 않은 고정 지출 목록 Provider
 ///
-/// 이번 달 지출 목록 중 isRecurring=true && isConfirmed=false 인 항목.
-/// 백엔드가 매달 고정지출을 isConfirmed=false 로 자동 복사하므로
-/// 이 상태 = "아직 실제 금액이 확정되지 않은(또는 미치뤄진) 고정지출"을 의미.
+/// 고정지출 원본 목록의 날짜(day)를 이번 달로 환산했을 때
+/// 오늘 이후에 해당하는 항목 = 아직 발생하지 않은 고정지출.
+/// (백엔드 복사는 해당 날짜에 일어나므로, 오늘 이후 항목은 아직 지출 목록에 없음)
 final householdUnpaidRecurringProvider = Provider<List<ExpenseModel>>((ref) {
-  final expenses = ref.watch(householdExpensesProvider).valueOrNull ?? [];
-  return expenses
-      .where((e) => e.isRecurring && !e.isConfirmed)
+  final recurring = ref.watch(householdRecurringExpensesProvider).valueOrNull ?? [];
+  final now = DateTime.now();
+  return recurring
+      .where((e) {
+        if (e.type != TransactionType.expense) return false;
+        // 원본 등록일(day)을 이번 달 날짜로 환산
+        final dueDay = e.date.day;
+        final lastDay = DateTime(now.year, now.month + 1, 0).day;
+        final effectiveDay = dueDay > lastDay ? lastDay : dueDay;
+        final dueDate = DateTime(now.year, now.month, effectiveDay);
+        // 오늘보다 미래인 항목만 (오늘 당일 포함)
+        return !dueDate.isBefore(DateTime(now.year, now.month, now.day));
+      })
       .toList()
-    ..sort((a, b) => a.date.compareTo(b.date));
+    ..sort((a, b) => a.date.day.compareTo(b.date.day));
 });
 
 /// 지출 단건 조회 Provider (장보기 이력 → 가계부 이동 등에 사용)
@@ -385,14 +428,14 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         description: '잔금 이월',
       ));
 
-      // 2) 다음 달 1일: INCOME 입금으로 이월
+      // 2) 다음 달 1일: INCOME + CARRYOVER 카테고리로 이월
       await _repository.createExpense(CreateExpenseDto(
         groupId: groupId,
         type: TransactionType.income,
         amount: balance,
-        category: null,
         date: nextMonthFirstStr,
         description: '전월 이월',
+        incomeCategory: IncomeCategory.carryover,
       ));
 
       _ref.invalidate(householdMonthlyStatisticsProvider);

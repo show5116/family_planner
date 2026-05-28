@@ -2415,6 +2415,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_edit_expense => '编辑支出';
 
   @override
+  String get household_refund => '登记退款';
+
+  @override
+  String get household_refund_badge => '已退款';
+
+  @override
+  String get household_refund_origin_badge => '退款';
+
+  @override
+  String get household_refund_amount_label => '退款金额';
+
+  @override
+  String get household_refund_origin_label => '原始支出';
+
+  @override
+  String get household_view_refund_origin => '查看原始支出';
+
+  @override
+  String get household_refund_total => '总退款';
+
+  @override
   String get household_delete_expense => '删除支出';
 
   @override
@@ -2525,6 +2546,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_category_other => '其他';
 
   @override
+  String get household_income_category => '收入类型';
+
+  @override
+  String get household_income_category_salary => '工资';
+
+  @override
+  String get household_income_category_allowance => '零花钱';
+
+  @override
+  String get household_income_category_carryover => '结转';
+
+  @override
+  String get household_income_category_bonus => '奖金';
+
+  @override
+  String get household_income_category_interest => '利息';
+
+  @override
+  String get household_income_category_rental => '租金';
+
+  @override
+  String get household_income_category_side_income => '副业';
+
+  @override
+  String get household_income_category_transfer_in => '转账';
+
+  @override
+  String get household_income_category_other => '其他收入';
+
+  @override
   String get household_payment_cash => '现金';
 
   @override
@@ -2623,7 +2674,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_unconfirmed_badge => '未确认';
 
   @override
-  String get household_unpaid_recurring_title => '未支付固定支出';
+  String get household_exclude_refunds => '排除退款';
+
+  @override
+  String get household_exclude_carryover => '排除结转';
+
+  @override
+  String get household_unpaid_recurring_title => '本月剩余固定支出';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {

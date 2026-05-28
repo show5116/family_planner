@@ -2484,6 +2484,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_edit_expense => 'Edit Expense';
 
   @override
+  String get household_refund => 'Register Refund';
+
+  @override
+  String get household_refund_badge => 'Refunded';
+
+  @override
+  String get household_refund_origin_badge => 'Refund';
+
+  @override
+  String get household_refund_amount_label => 'Refund Amount';
+
+  @override
+  String get household_refund_origin_label => 'Original Expense';
+
+  @override
+  String get household_view_refund_origin => 'View Original Expense';
+
+  @override
+  String get household_refund_total => 'Total Refunded';
+
+  @override
   String get household_delete_expense => 'Delete Expense';
 
   @override
@@ -2596,6 +2617,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_category_other => 'Other';
 
   @override
+  String get household_income_category => 'Income Type';
+
+  @override
+  String get household_income_category_salary => 'Salary';
+
+  @override
+  String get household_income_category_allowance => 'Allowance';
+
+  @override
+  String get household_income_category_carryover => 'Carry Over';
+
+  @override
+  String get household_income_category_bonus => 'Bonus';
+
+  @override
+  String get household_income_category_interest => 'Interest';
+
+  @override
+  String get household_income_category_rental => 'Rental';
+
+  @override
+  String get household_income_category_side_income => 'Side Income';
+
+  @override
+  String get household_income_category_transfer_in => 'Transfer In';
+
+  @override
+  String get household_income_category_other => 'Other Income';
+
+  @override
   String get household_payment_cash => 'Cash';
 
   @override
@@ -2698,7 +2749,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_unconfirmed_badge => 'Unconfirmed';
 
   @override
-  String get household_unpaid_recurring_title => 'Unpaid Recurring Expenses';
+  String get household_exclude_refunds => 'Exclude Refunds';
+
+  @override
+  String get household_exclude_carryover => 'Exclude Carry-over';
+
+  @override
+  String get household_unpaid_recurring_title => 'Remaining Fixed Expenses';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {

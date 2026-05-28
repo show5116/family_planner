@@ -4812,6 +4812,48 @@ abstract class AppLocalizations {
   /// **'지출 수정'**
   String get household_edit_expense;
 
+  /// 환불 등록 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 등록'**
+  String get household_refund;
+
+  /// 환불된 지출에 표시되는 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'환불됨'**
+  String get household_refund_badge;
+
+  /// 환불 항목(입금)에 표시되는 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'환불'**
+  String get household_refund_origin_badge;
+
+  /// 환불 금액 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 금액'**
+  String get household_refund_amount_label;
+
+  /// 환불 항목에서 원본 지출을 가리키는 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'원본 지출'**
+  String get household_refund_origin_label;
+
+  /// 환불 항목에서 원본 지출 화면으로 이동 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'원본 지출 보기'**
+  String get household_view_refund_origin;
+
+  /// 원본 지출에 연결된 환불 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 환불'**
+  String get household_refund_total;
+
   /// 지출 삭제 버튼
   ///
   /// In ko, this message translates to:
@@ -5028,6 +5070,66 @@ abstract class AppLocalizations {
   /// **'기타'**
   String get household_category_other;
 
+  /// 입금 카테고리 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'입금 종류'**
+  String get household_income_category;
+
+  /// 입금 카테고리: 월급
+  ///
+  /// In ko, this message translates to:
+  /// **'월급'**
+  String get household_income_category_salary;
+
+  /// 입금 카테고리: 용돈
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈'**
+  String get household_income_category_allowance;
+
+  /// 입금 카테고리: 전월 이월
+  ///
+  /// In ko, this message translates to:
+  /// **'이월'**
+  String get household_income_category_carryover;
+
+  /// 입금 카테고리: 상여금
+  ///
+  /// In ko, this message translates to:
+  /// **'상여금'**
+  String get household_income_category_bonus;
+
+  /// 입금 카테고리: 이자 수익
+  ///
+  /// In ko, this message translates to:
+  /// **'이자 수익'**
+  String get household_income_category_interest;
+
+  /// 입금 카테고리: 임대 수익
+  ///
+  /// In ko, this message translates to:
+  /// **'임대 수익'**
+  String get household_income_category_rental;
+
+  /// 입금 카테고리: 부업
+  ///
+  /// In ko, this message translates to:
+  /// **'부업'**
+  String get household_income_category_side_income;
+
+  /// 입금 카테고리: 계좌이체 입금
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌이체'**
+  String get household_income_category_transfer_in;
+
+  /// 입금 카테고리: 기타 수입
+  ///
+  /// In ko, this message translates to:
+  /// **'기타 수입'**
+  String get household_income_category_other;
+
   /// 결제수단: 현금
   ///
   /// In ko, this message translates to:
@@ -5220,10 +5322,22 @@ abstract class AppLocalizations {
   /// **'미확인'**
   String get household_unconfirmed_badge;
 
-  /// 이번 달 아직 확정되지 않은 고정 지출 배너 제목
+  /// 통계/일별 합산에서 환불 항목 제외 체크버튼
   ///
   /// In ko, this message translates to:
-  /// **'미치뤄진 고정 지출'**
+  /// **'환불 제외'**
+  String get household_exclude_refunds;
+
+  /// 통계/일별 합산에서 이월 항목 제외 체크버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'이월 제외'**
+  String get household_exclude_carryover;
+
+  /// 이번 달 아직 발생하지 않은 고정 지출 배너 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 남은 고정 지출'**
   String get household_unpaid_recurring_title;
 
   /// 미치뤄진 고정 지출 건수 및 예상 합계
