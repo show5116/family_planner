@@ -6102,6 +6102,54 @@ abstract class AppLocalizations {
   /// **'수익금'**
   String get asset_trend_profit;
 
+  /// 파이차트 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌별 비중'**
+  String get asset_pie_chart_title;
+
+  /// 파이차트 모드 - 유형별
+  ///
+  /// In ko, this message translates to:
+  /// **'유형별'**
+  String get asset_pie_mode_type;
+
+  /// 파이차트 모드 - 계좌별
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌별'**
+  String get asset_pie_mode_account;
+
+  /// 파이차트 모드 - 포트폴리오 합산
+  ///
+  /// In ko, this message translates to:
+  /// **'포트폴리오 합산'**
+  String get asset_pie_mode_portfolio;
+
+  /// 포트폴리오 데이터 없음 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'포트폴리오 데이터가 없습니다'**
+  String get asset_pie_no_portfolio;
+
+  /// 비교 차트 - 내 자산 라인 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'내 자산'**
+  String get asset_compare_my_asset;
+
+  /// 비교 차트 - 달러 환산 라인 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'달러 환산'**
+  String get asset_compare_usd_label;
+
+  /// 지수 비교 모드 토글 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'비교'**
+  String get asset_compare_button;
+
   /// 육아포인트 메인 타이틀
   ///
   /// In ko, this message translates to:

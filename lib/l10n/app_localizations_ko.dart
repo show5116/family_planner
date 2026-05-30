@@ -3099,6 +3099,30 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_trend_profit => '수익금';
 
   @override
+  String get asset_pie_chart_title => '계좌별 비중';
+
+  @override
+  String get asset_pie_mode_type => '유형별';
+
+  @override
+  String get asset_pie_mode_account => '계좌별';
+
+  @override
+  String get asset_pie_mode_portfolio => '포트폴리오 합산';
+
+  @override
+  String get asset_pie_no_portfolio => '포트폴리오 데이터가 없습니다';
+
+  @override
+  String get asset_compare_my_asset => '내 자산';
+
+  @override
+  String get asset_compare_usd_label => '달러 환산';
+
+  @override
+  String get asset_compare_button => '비교';
+
+  @override
   String get childcare_title => '육아포인트';
 
   @override

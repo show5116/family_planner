@@ -3094,6 +3094,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_trend_profit => '収益';
 
   @override
+  String get asset_pie_chart_title => '口座別比率';
+
+  @override
+  String get asset_pie_mode_type => '種類別';
+
+  @override
+  String get asset_pie_mode_account => '口座別';
+
+  @override
+  String get asset_pie_mode_portfolio => 'ポートフォリオ合算';
+
+  @override
+  String get asset_pie_no_portfolio => 'ポートフォリオデータがありません';
+
+  @override
+  String get asset_compare_my_asset => '自分の資産';
+
+  @override
+  String get asset_compare_usd_label => 'ドル換算';
+
+  @override
+  String get asset_compare_button => '比較';
+
+  @override
   String get childcare_title => '育児ポイント';
 
   @override

@@ -424,8 +424,8 @@ class _AssetListState extends ConsumerState<_AssetList> {
                         ),
                       ),
                     ],
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: 80),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: 80 + MediaQuery.of(context).padding.bottom),
                     ),
                   ],
                 ),

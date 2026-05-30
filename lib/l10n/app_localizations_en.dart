@@ -3161,6 +3161,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_trend_profit => 'Profit';
 
   @override
+  String get asset_pie_chart_title => 'Account Breakdown';
+
+  @override
+  String get asset_pie_mode_type => 'By Type';
+
+  @override
+  String get asset_pie_mode_account => 'By Account';
+
+  @override
+  String get asset_pie_mode_portfolio => 'Portfolio';
+
+  @override
+  String get asset_pie_no_portfolio => 'No portfolio data';
+
+  @override
+  String get asset_compare_my_asset => 'My Assets';
+
+  @override
+  String get asset_compare_usd_label => 'USD Value';
+
+  @override
+  String get asset_compare_button => 'Compare';
+
+  @override
   String get childcare_title => 'Child Points';
 
   @override

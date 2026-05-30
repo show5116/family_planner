@@ -3077,6 +3077,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get asset_trend_profit => '收益';
 
   @override
+  String get asset_pie_chart_title => '账户占比';
+
+  @override
+  String get asset_pie_mode_type => '按类型';
+
+  @override
+  String get asset_pie_mode_account => '按账户';
+
+  @override
+  String get asset_pie_mode_portfolio => '投资组合汇总';
+
+  @override
+  String get asset_pie_no_portfolio => '暂无投资组合数据';
+
+  @override
+  String get asset_compare_my_asset => '我的资产';
+
+  @override
+  String get asset_compare_usd_label => '美元折算';
+
+  @override
+  String get asset_compare_button => '对比';
+
+  @override
   String get childcare_title => '育儿积分';
 
   @override

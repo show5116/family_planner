@@ -9,6 +9,7 @@ import 'package:family_planner/core/utils/extensions.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
+import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -137,7 +138,14 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
               onPressed: () => _showGroupPicker(groups),
             ),
           IconButton(
-            onPressed: () => context.push(AppRoutes.assetStatistics),
+            onPressed: () {
+              final groups = ref.read(myGroupsProvider).valueOrNull ?? [];
+              final groupId = _selectedGroupId ?? (groups.isNotEmpty ? groups.first.id : null);
+              if (groupId != null) {
+                ref.read(assetSelectedGroupIdProvider.notifier).state = groupId;
+              }
+              context.push(AppRoutes.assetStatistics);
+            },
             icon: const Icon(Icons.show_chart, size: AppSizes.iconMedium),
           ),
         ],
