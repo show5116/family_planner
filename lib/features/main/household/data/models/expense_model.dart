@@ -18,7 +18,21 @@ enum ExpenseCategory {
   assetTransfer,
   childcare,
   communication,
+  carryover,  // 이월 지출
   other,
+}
+
+/// 입금 카테고리
+enum IncomeCategory {
+  salary,       // 월급
+  allowance,    // 용돈
+  carryover,    // 이월
+  bonus,        // 상여금
+  interest,     // 이자 수익
+  rental,       // 임대 수익
+  sideIncome,   // 부업
+  transferIn,   // 계좌이체 입금
+  otherIncome,  // 기타 수입
 }
 
 /// 결제 수단
@@ -57,6 +71,9 @@ class ExpenseModel {
   final bool isRecurring;
   final double? estimatedAmount; // 가변 고정 지출 예상 금액 (null이면 고정 금액 방식)
   final bool isConfirmed; // 실제 금액 확인 여부 (가변 고정 지출에서 false = 예상 금액 상태)
+  final IncomeCategory? incomeCategory; // 입금 카테고리 (type=INCOME 일 때)
+  final String? refundedExpenseId; // 환불 대상 원본 지출 ID
+  final List<ExpenseModel> refunds; // 이 지출에 연결된 환불 목록
   final MerchantDto? merchant;
   final String? shoppingHistoryId; // 장보기 완료 시 자동 생성된 지출에만 존재
   final DateTime createdAt;
@@ -75,6 +92,9 @@ class ExpenseModel {
     required this.isRecurring,
     this.estimatedAmount,
     this.isConfirmed = true,
+    this.incomeCategory,
+    this.refundedExpenseId,
+    this.refunds = const [],
     this.merchant,
     this.shoppingHistoryId,
     required this.createdAt,
@@ -101,6 +121,14 @@ class ExpenseModel {
           ? double.tryParse(json['estimatedAmount'].toString())
           : null,
       isConfirmed: (json['isConfirmed'] as bool?) ?? true,
+      incomeCategory: json['incomeCategory'] != null
+          ? _parseIncomeCategory(json['incomeCategory'] as String)
+          : null,
+      refundedExpenseId: json['refundedExpenseId'] as String?,
+      refunds: (json['refunds'] as List<dynamic>?)
+              ?.map((e) => ExpenseModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       merchant: json['merchant'] != null
           ? MerchantDto.fromJson(json['merchant'] as Map<String, dynamic>)
           : null,
@@ -136,6 +164,8 @@ class ExpenseModel {
         return ExpenseCategory.childcare;
       case 'COMMUNICATION':
         return ExpenseCategory.communication;
+      case 'CARRYOVER':
+        return ExpenseCategory.carryover;
       default:
         return ExpenseCategory.other;
     }
@@ -149,6 +179,31 @@ class ExpenseModel {
         return PaymentMethod.card;
       case 'TRANSFER':
         return PaymentMethod.transfer;
+      default:
+        return null;
+    }
+  }
+
+  static IncomeCategory? _parseIncomeCategory(String value) {
+    switch (value) {
+      case 'SALARY':
+        return IncomeCategory.salary;
+      case 'ALLOWANCE':
+        return IncomeCategory.allowance;
+      case 'CARRYOVER':
+        return IncomeCategory.carryover;
+      case 'BONUS':
+        return IncomeCategory.bonus;
+      case 'INTEREST':
+        return IncomeCategory.interest;
+      case 'RENTAL':
+        return IncomeCategory.rental;
+      case 'SIDE_INCOME':
+        return IncomeCategory.sideIncome;
+      case 'TRANSFER_IN':
+        return IncomeCategory.transferIn;
+      case 'OTHER_INCOME':
+        return IncomeCategory.otherIncome;
       default:
         return null;
     }
@@ -169,6 +224,9 @@ class ExpenseModel {
     bool? isRecurring,
     Object? estimatedAmount = _sentinel,
     bool? isConfirmed,
+    Object? incomeCategory = _sentinel,
+    Object? refundedExpenseId = _sentinel,
+    List<ExpenseModel>? refunds,
     MerchantDto? merchant,
     String? shoppingHistoryId,
     DateTime? createdAt,
@@ -189,6 +247,13 @@ class ExpenseModel {
           ? this.estimatedAmount
           : estimatedAmount as double?,
       isConfirmed: isConfirmed ?? this.isConfirmed,
+      incomeCategory: incomeCategory == _sentinel
+          ? this.incomeCategory
+          : incomeCategory as IncomeCategory?,
+      refundedExpenseId: refundedExpenseId == _sentinel
+          ? this.refundedExpenseId
+          : refundedExpenseId as String?,
+      refunds: refunds ?? this.refunds,
       merchant: merchant ?? this.merchant,
       shoppingHistoryId: shoppingHistoryId ?? this.shoppingHistoryId,
       createdAt: createdAt ?? this.createdAt,
@@ -211,6 +276,8 @@ class CreateExpenseDto {
   final String? merchantId;
   final bool? isRecurring;
   final double? estimatedAmount; // 가변 고정 지출 예상 금액
+  final IncomeCategory? incomeCategory; // 입금 카테고리 (type=INCOME 일 때)
+  final String? refundedExpenseId; // 환불 대상 원본 지출 ID
 
   const CreateExpenseDto({
     this.groupId,
@@ -223,6 +290,8 @@ class CreateExpenseDto {
     this.merchantId,
     this.isRecurring,
     this.estimatedAmount,
+    this.incomeCategory,
+    this.refundedExpenseId,
   });
 
   Map<String, dynamic> toJson() {
@@ -237,6 +306,8 @@ class CreateExpenseDto {
       if (merchantId != null) 'merchantId': merchantId,
       if (isRecurring != null) 'isRecurring': isRecurring,
       if (estimatedAmount != null) 'estimatedAmount': estimatedAmount,
+      if (incomeCategory != null) 'incomeCategory': _incomeCategoryToString(incomeCategory!),
+      if (refundedExpenseId != null) 'refundedExpenseId': refundedExpenseId,
     };
   }
 }
@@ -254,6 +325,8 @@ class UpdateExpenseDto {
   final bool? isRecurring;
   final Object? estimatedAmount; // double | null (null 전달 시 해제) — _sentinel 사용
   final bool estimatedAmountExplicitNull;
+  final Object? incomeCategory; // IncomeCategory | null (null 전달 시 해제) — _sentinel 사용
+  final Object? refundedExpenseId; // String | null (null 전달 시 연결 해제) — _sentinel 사용
 
   const UpdateExpenseDto({
     this.type,
@@ -267,6 +340,8 @@ class UpdateExpenseDto {
     this.isRecurring,
     this.estimatedAmount = _sentinel,
     this.estimatedAmountExplicitNull = false,
+    this.incomeCategory = _sentinel,
+    this.refundedExpenseId = _sentinel,
   });
 
   Map<String, dynamic> toJson() {
@@ -282,6 +357,12 @@ class UpdateExpenseDto {
       if (isRecurring != null) 'isRecurring': isRecurring,
       if (estimatedAmountExplicitNull) 'estimatedAmount': null
       else if (estimatedAmount != _sentinel) 'estimatedAmount': estimatedAmount,
+      if (incomeCategory != _sentinel)
+        'incomeCategory': incomeCategory != null
+            ? _incomeCategoryToString(incomeCategory as IncomeCategory)
+            : null,
+      if (refundedExpenseId != _sentinel)
+        'refundedExpenseId': refundedExpenseId as String?,
     };
   }
 }
@@ -323,6 +404,8 @@ String _categoryToString(ExpenseCategory category) {
       return 'CHILDCARE';
     case ExpenseCategory.communication:
       return 'COMMUNICATION';
+    case ExpenseCategory.carryover:
+      return 'CARRYOVER';
     case ExpenseCategory.other:
       return 'OTHER';
   }
@@ -337,5 +420,29 @@ String _paymentMethodToString(PaymentMethod method) {
       return 'CARD';
     case PaymentMethod.transfer:
       return 'TRANSFER';
+  }
+}
+
+/// IncomeCategory → API 문자열 변환
+String _incomeCategoryToString(IncomeCategory category) {
+  switch (category) {
+    case IncomeCategory.salary:
+      return 'SALARY';
+    case IncomeCategory.allowance:
+      return 'ALLOWANCE';
+    case IncomeCategory.carryover:
+      return 'CARRYOVER';
+    case IncomeCategory.bonus:
+      return 'BONUS';
+    case IncomeCategory.interest:
+      return 'INTEREST';
+    case IncomeCategory.rental:
+      return 'RENTAL';
+    case IncomeCategory.sideIncome:
+      return 'SIDE_INCOME';
+    case IncomeCategory.transferIn:
+      return 'TRANSFER_IN';
+    case IncomeCategory.otherIncome:
+      return 'OTHER_INCOME';
   }
 }

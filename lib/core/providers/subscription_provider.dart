@@ -61,7 +61,9 @@ final subscriptionProvider =
 );
 
 /// 광고 표시 여부만 빠르게 읽는 편의 provider
+/// admin/테스트 계정은 구독 tier 무관하게 항상 광고 표시 (테스트 광고 확인용)
 final showAdsProvider = Provider<bool>((ref) {
+  if (ref.watch(useTestAdsProvider)) return true;
   return ref.watch(subscriptionProvider).valueOrNull?.tier.showAds ?? true;
 });
 

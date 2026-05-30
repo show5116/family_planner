@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
+import 'package:family_planner/features/main/assets/presentation/widgets/asset_comparison_chart.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+
+enum _TrendViewMode { chart, compare }
 
 class AssetTrendChart extends ConsumerStatefulWidget {
   final AsyncValue<List<AssetTrendPoint>> Function(TrendPeriod, String?) trendBuilder;
@@ -21,6 +24,7 @@ enum _ChartMetric { balance, principal, profit, profitRate, periodReturn }
 class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
   TrendPeriod _period = TrendPeriod.monthly;
   _ChartMetric _metric = _ChartMetric.balance;
+  _TrendViewMode _viewMode = _TrendViewMode.chart;
   late String _selectedYear;
 
   @override
@@ -38,7 +42,7 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 월별 / 연도별 토글
+        // 월별 / 연도별 토글 + 비교 모드 토글
         Row(
           children: [
             Expanded(
@@ -64,67 +68,92 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
                 onChanged: (y) => setState(() => _selectedYear = y),
               ),
             ],
+            const SizedBox(width: AppSizes.spaceS),
+            // 비교 모드 토글
+            _CompareToggle(
+              active: _viewMode == _TrendViewMode.compare,
+              onTap: () => setState(() {
+                _viewMode = _viewMode == _TrendViewMode.compare
+                    ? _TrendViewMode.chart
+                    : _TrendViewMode.compare;
+              }),
+            ),
           ],
         ),
         const SizedBox(height: AppSizes.spaceS),
 
-        // 지표 선택 탭
-        Wrap(
-          spacing: AppSizes.spaceXS,
-          runSpacing: AppSizes.spaceXS,
-          children: [
-            _MetricChip(
-              label: l10n.asset_trend_balance,
-              selected: _metric == _ChartMetric.balance,
-              onTap: () => setState(() => _metric = _ChartMetric.balance),
-            ),
-            _MetricChip(
-              label: l10n.asset_trend_principal,
-              selected: _metric == _ChartMetric.principal,
-              onTap: () => setState(() => _metric = _ChartMetric.principal),
-            ),
-            _MetricChip(
-              label: l10n.asset_trend_profit,
-              selected: _metric == _ChartMetric.profit,
-              onTap: () => setState(() => _metric = _ChartMetric.profit),
-            ),
-            _MetricChip(
-              label: l10n.asset_trend_profit_rate,
-              selected: _metric == _ChartMetric.profitRate,
-              onTap: () => setState(() => _metric = _ChartMetric.profitRate),
-            ),
-            _MetricChip(
-              label: l10n.asset_trend_period_return,
-              selected: _metric == _ChartMetric.periodReturn,
-              onTap: () => setState(() => _metric = _ChartMetric.periodReturn),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSizes.spaceM),
+        // 지표 선택 탭 (비교 모드에서는 숨김)
+        if (_viewMode == _TrendViewMode.chart) ...[
+          Wrap(
+            spacing: AppSizes.spaceXS,
+            runSpacing: AppSizes.spaceXS,
+            children: [
+              _MetricChip(
+                label: l10n.asset_trend_balance,
+                selected: _metric == _ChartMetric.balance,
+                onTap: () => setState(() => _metric = _ChartMetric.balance),
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_principal,
+                selected: _metric == _ChartMetric.principal,
+                onTap: () => setState(() => _metric = _ChartMetric.principal),
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_profit,
+                selected: _metric == _ChartMetric.profit,
+                onTap: () => setState(() => _metric = _ChartMetric.profit),
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_profit_rate,
+                selected: _metric == _ChartMetric.profitRate,
+                onTap: () => setState(() => _metric = _ChartMetric.profitRate),
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_period_return,
+                selected: _metric == _ChartMetric.periodReturn,
+                onTap: () =>
+                    setState(() => _metric = _ChartMetric.periodReturn),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+        ],
 
         // 차트
-        SizedBox(
-          height: 220,
-          child: trendAsync.when(
-            data: (points) {
-              if (points.isEmpty) {
-                return Center(
-                  child: Text(
-                    l10n.asset_trend_no_data,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                  ),
-                );
-              }
-              return _TrendLineChart(
+        trendAsync.when(
+          data: (points) {
+            if (points.isEmpty) {
+              return Center(
+                child: Text(
+                  l10n.asset_trend_no_data,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
+              );
+            }
+            if (_viewMode == _TrendViewMode.compare) {
+              return AssetComparisonChart(
+                assetPoints: points,
+                period: _period,
+              );
+            }
+            return SizedBox(
+              height: 220,
+              child: _TrendLineChart(
                 points: points,
                 metric: _metric,
                 period: _period,
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, s) => Center(
+              ),
+            );
+          },
+          loading: () => const SizedBox(
+            height: 220,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (e, s) => SizedBox(
+            height: 220,
+            child: Center(
               child: Text(
                 l10n.common_error,
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -133,6 +162,55 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CompareToggle extends StatelessWidget {
+  final bool active;
+  final VoidCallback onTap;
+
+  const _CompareToggle({required this.active, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS, vertical: 6),
+        decoration: BoxDecoration(
+          color: active
+              ? colorScheme.secondaryContainer
+              : colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+          border: Border.all(
+            color: active
+                ? colorScheme.secondary.withValues(alpha: 0.5)
+                : Colors.transparent,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.compare_arrows,
+              size: 14,
+              color: active ? colorScheme.secondary : colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              l10n.asset_compare_button,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: active ? colorScheme.secondary : colorScheme.onSurfaceVariant,
+                    fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                  ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -452,22 +530,17 @@ class _TrendLineChartState extends State<_TrendLineChart> {
           _dragIdx = _xToIndex(d.localPosition.dx);
         });
       },
-      onPanEnd: (_) {
-        setState(() {
-          _anchorIdx = null;
-          _dragIdx = null;
-        });
-      },
       onTapDown: (d) {
+        final idx = _xToIndex(d.localPosition.dx);
         setState(() {
-          _anchorIdx = _xToIndex(d.localPosition.dx);
-          _dragIdx = _anchorIdx;
-        });
-      },
-      onTapUp: (_) {
-        setState(() {
-          _anchorIdx = null;
-          _dragIdx = null;
+          // 같은 지점 탭 시 토글 해제, 다른 지점이면 새로 선택
+          if (_dragIdx == idx && _anchorIdx == idx) {
+            _anchorIdx = null;
+            _dragIdx = null;
+          } else {
+            _anchorIdx = idx;
+            _dragIdx = idx;
+          }
         });
       },
       child: chart,

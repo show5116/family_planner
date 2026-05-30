@@ -239,7 +239,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 childCount: _demoRecords.length,
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 80)),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 80 + MediaQuery.of(context).padding.bottom),
+            ),
           ],
         ),
       );
@@ -370,7 +372,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               child: Center(child: Text(l10n.common_error)),
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 80 + MediaQuery.of(context).padding.bottom),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

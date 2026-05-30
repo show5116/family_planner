@@ -11,7 +11,8 @@ import 'package:family_planner/features/main/household/providers/household_provi
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 카테고리 + 월 + 거래유형 기준 목록 Provider
-final _categoryExpensesProvider = FutureProvider.family<
+/// autoDispose: 화면을 벗어나면 캐시 파기 → 재진입 시 항상 최신 데이터 조회
+final _categoryExpensesProvider = FutureProvider.autoDispose.family<
     List<ExpenseModel>,
     ({String? groupId, String month, ExpenseCategory? category, TransactionType? type})>((ref, args) {
   final repository = ref.watch(householdRepositoryProvider);
@@ -28,12 +29,15 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
   final ExpenseCategory? category;
   final String month;
   final TransactionType? type;
+  /// non-null이면 해당 입금 카테고리만 필터링
+  final IncomeCategory? incomeCategory;
 
   const HouseholdCategoryExpensesScreen({
     super.key,
     required this.category,
     required this.month,
     this.type,
+    this.incomeCategory,
   });
 
   @override
@@ -46,9 +50,16 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
     final IconData icon;
     final String label;
     if (isIncome) {
-      color = Colors.green;
-      icon = Icons.arrow_downward;
-      label = l10n.household_income;
+      // 입금 카테고리가 지정된 경우 해당 카테고리의 색상/아이콘/이름 사용
+      color = incomeCategory != null
+          ? incomeCategoryColor(incomeCategory)
+          : Colors.green;
+      icon = incomeCategory != null
+          ? incomeCategoryIcon(incomeCategory)
+          : Icons.arrow_downward;
+      label = incomeCategory != null
+          ? incomeCategoryName(l10n, incomeCategory)
+          : l10n.household_income;
     } else {
       color = categoryColor(category);
       icon = categoryIcon(category);
@@ -94,6 +105,7 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
         category: category,
         type: type,
         isIncome: isIncome,
+        incomeCategory: incomeCategory,
       ),
     );
   }
@@ -110,6 +122,7 @@ class _ExpenseList extends ConsumerWidget {
   final ExpenseCategory? category;
   final TransactionType? type;
   final bool isIncome;
+  final IncomeCategory? incomeCategory;
 
   const _ExpenseList({
     required this.groupId,
@@ -117,6 +130,7 @@ class _ExpenseList extends ConsumerWidget {
     required this.category,
     required this.type,
     required this.isIncome,
+    this.incomeCategory,
   });
 
   @override
@@ -127,7 +141,19 @@ class _ExpenseList extends ConsumerWidget {
 
     return expensesAsync.when(
       data: (expenses) {
-        if (expenses.isEmpty) {
+        // 입금 카테고리가 지정된 경우 프론트에서 추가 필터링
+        // otherIncome은 null(미설정) 항목도 함께 포함
+        final filtered = incomeCategory != null
+            ? expenses.where((e) {
+                if (incomeCategory == IncomeCategory.otherIncome) {
+                  return e.incomeCategory == IncomeCategory.otherIncome ||
+                      e.incomeCategory == null;
+                }
+                return e.incomeCategory == incomeCategory;
+              }).toList()
+            : expenses;
+
+        if (filtered.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -149,11 +175,11 @@ class _ExpenseList extends ConsumerWidget {
           );
         }
 
-        final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
+        final sorted = [...filtered]..sort((a, b) => b.date.compareTo(a.date));
         final total = sorted.fold<double>(0, (sum, e) => sum + e.amount);
         final prefix = '₩';
         final totalColor = isIncome
-            ? Colors.green
+            ? Colors.green.shade700
             : Theme.of(context).colorScheme.error;
 
         return Column(
