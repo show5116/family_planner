@@ -106,6 +106,8 @@ IconData categoryIcon(ExpenseCategory? category) {
       return Icons.child_care;
     case ExpenseCategory.communication:
       return Icons.phone_android;
+    case ExpenseCategory.carryover:
+      return Icons.arrow_forward;
     case ExpenseCategory.other:
     case null:
       return Icons.category;
@@ -139,6 +141,8 @@ Color categoryColor(ExpenseCategory? category) {
       return Colors.lightBlue;
     case ExpenseCategory.communication:
       return Colors.cyan;
+    case ExpenseCategory.carryover:
+      return Colors.blueGrey;
     case ExpenseCategory.other:
     case null:
       return Colors.grey;
@@ -172,6 +176,8 @@ String categoryName(AppLocalizations l10n, ExpenseCategory? category) {
       return l10n.household_category_childcare;
     case ExpenseCategory.communication:
       return l10n.household_category_communication;
+    case ExpenseCategory.carryover:
+      return l10n.household_category_carryover;
     case ExpenseCategory.other:
     case null:
       return l10n.household_category_other;

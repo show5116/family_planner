@@ -2548,6 +2548,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_category_asset_transfer => '資産移動';
 
   @override
+  String get household_category_carryover => '繰越';
+
+  @override
   String get household_category_childcare => '育児費';
 
   @override

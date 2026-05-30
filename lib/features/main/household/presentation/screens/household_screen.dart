@@ -30,6 +30,31 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   final _budgetKey = GlobalKey();
   final _recurringKey = GlobalKey();
   final _statisticsKey = GlobalKey();
+  final _scrollController = ScrollController();
+  final _itemKeys = <String, GlobalKey>{};
+  String? _selectedCalendarDate;
+
+  void scrollToDate(String dateKey) {
+    setState(() => _selectedCalendarDate = dateKey);
+
+    final key = _itemKeys[dateKey];
+    if (key == null) return;
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+
+    Scrollable.ensureVisible(
+      ctx,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      alignment: 0.0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -233,10 +258,24 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             trailing: _MonthNavigator(selectedMonth: selectedMonth),
           ),
           const _ExcludeFilterBar(),
-          const _MonthlySummaryCard(),
+          // 뷰모드에 따라 요약카드 or 캘린더 표시
+          Consumer(builder: (context, ref, _) {
+            final viewMode = ref.watch(householdViewModeProvider);
+            if (viewMode == HouseholdViewMode.calendar) {
+              return _CalendarSummary(
+                selectedDateKey: _selectedCalendarDate,
+                onDateTap: (dateKey) => scrollToDate(dateKey),
+              );
+            }
+            return const _MonthlySummaryCard();
+          }),
           const _UnpaidRecurringBanner(),
           Expanded(
-            child: _ExpenseBody(selectedGroupId: selectedGroupId),
+            child: _ExpenseBody(
+              selectedGroupId: selectedGroupId,
+              scrollController: _scrollController,
+              itemKeys: _itemKeys,
+            ),
           ),
         ],
       ),
@@ -557,46 +596,23 @@ class _SummaryItem extends StatelessWidget {
 }
 
 // 뷰 모드에 따라 리스트/캘린더를 전환하는 컨테이너
-class _ExpenseBody extends ConsumerStatefulWidget {
+class _ExpenseBody extends ConsumerWidget {
   final String? selectedGroupId;
+  final ScrollController scrollController;
+  final Map<String, GlobalKey> itemKeys;
 
-  const _ExpenseBody({required this.selectedGroupId});
-
-  @override
-  ConsumerState<_ExpenseBody> createState() => _ExpenseBodyState();
-}
-
-class _ExpenseBodyState extends ConsumerState<_ExpenseBody> {
-  final _scrollController = ScrollController();
-  final _itemKeys = <String, GlobalKey>{};
+  const _ExpenseBody({
+    required this.selectedGroupId,
+    required this.scrollController,
+    required this.itemKeys,
+  });
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollToDate(String dateKey) {
-    final key = _itemKeys[dateKey];
-    if (key == null) return;
-    final ctx = key.currentContext;
-    if (ctx == null) return;
-    Scrollable.ensureVisible(
-      ctx,
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeInOut,
-      alignment: 0.0,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final viewMode = ref.watch(householdViewModeProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final expensesAsync = ref.watch(householdExpensesProvider);
 
     return expensesAsync.when(
       data: (expenses) {
-        // 날짜 내림차순 정렬 + 그룹핑 (리스트·캘린더 공용)
         final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
         final grouped = <String, List<ExpenseModel>>{};
         for (final e in sorted) {
@@ -606,24 +622,8 @@ class _ExpenseBodyState extends ConsumerState<_ExpenseBody> {
         }
         final dateKeys = grouped.keys.toList();
 
-        // GlobalKey 동기화
         for (final k in dateKeys) {
-          _itemKeys.putIfAbsent(k, () => GlobalKey());
-        }
-
-        if (viewMode == HouseholdViewMode.calendar) {
-          return _CalendarView(
-            expenses: expenses,
-            grouped: grouped,
-            onDateTap: (dateKey) {
-              // 캘린더 → 리스트 전환 후 스크롤
-              ref.read(householdViewModeProvider.notifier).state =
-                  HouseholdViewMode.list;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _scrollToDate(dateKey);
-              });
-            },
-          );
+          itemKeys.putIfAbsent(k, () => GlobalKey());
         }
 
         // 리스트 뷰
@@ -649,18 +649,20 @@ class _ExpenseBodyState extends ConsumerState<_ExpenseBody> {
         return RefreshIndicator(
           onRefresh: () => ref.read(householdExpensesProvider.notifier).refresh(),
           child: ListView.builder(
-            controller: _scrollController,
+            controller: scrollController,
             itemCount: dateKeys.length,
             padding: const EdgeInsets.only(bottom: 80),
+            // 월 전체 아이템을 미리 렌더링해두어 캘린더 탭 스크롤이 정확히 동작
+            cacheExtent: 8000,
             itemBuilder: (context, index) {
               final dateKey = dateKeys[index];
-              final dayExpenses = grouped[dateKey]!; // dateKeys에서 추출한 키라 항상 존재
+              final dayExpenses = grouped[dateKey]!;
               return _DayGroup(
-                key: _itemKeys[dateKey],
+                key: itemKeys[dateKey],
                 dateKey: dateKey,
                 expenses: dayExpenses,
                 onTap: (e) => context.push(AppRoutes.householdDetail, extra: e),
-                onDelete: (e) => _confirmDelete(context, ref, dateKey, dayExpenses, e),
+                onDelete: (e) => _confirmDelete(context, ref, dayExpenses, e),
               );
             },
           ),
@@ -687,7 +689,6 @@ class _ExpenseBodyState extends ConsumerState<_ExpenseBody> {
   Future<void> _confirmDelete(
     BuildContext context,
     WidgetRef ref,
-    String dateKey,
     List<ExpenseModel> dayExpenses,
     ExpenseModel expense,
   ) async {
@@ -726,29 +727,75 @@ class _ExpenseBodyState extends ConsumerState<_ExpenseBody> {
   }
 }
 
+// 상단 캘린더 요약 (요약카드 자리를 대체)
+class _CalendarSummary extends ConsumerWidget {
+  final String? selectedDateKey;
+  final void Function(String dateKey) onDateTap;
+
+  const _CalendarSummary({
+    required this.onDateTap,
+    this.selectedDateKey,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final expensesAsync = ref.watch(householdExpensesProvider);
+    final selectedMonth = ref.watch(householdSelectedMonthProvider);
+    final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
+    final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
+
+    return expensesAsync.when(
+      data: (expenses) {
+        final grouped = <String, List<ExpenseModel>>{};
+        for (final e in expenses) {
+          final key =
+              '${e.date.year}-${e.date.month.toString().padLeft(2, '0')}-${e.date.day.toString().padLeft(2, '0')}';
+          grouped.putIfAbsent(key, () => []).add(e);
+        }
+        final parts = selectedMonth.split('-');
+        final year = int.parse(parts[0]);
+        final month = int.parse(parts[1]);
+        return _CalendarView(
+          year: year,
+          month: month,
+          grouped: grouped,
+          selectedDateKey: selectedDateKey,
+          excludeRefunds: excludeRefunds,
+          excludeCarryover: excludeCarryover,
+          onDateTap: onDateTap,
+        );
+      },
+      loading: () => const SizedBox(
+        height: 240,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
 // 캘린더 뷰
 class _CalendarView extends StatelessWidget {
-  final List<ExpenseModel> expenses;
+  final int year;
+  final int month;
   final Map<String, List<ExpenseModel>> grouped;
+  final String? selectedDateKey;
+  final bool excludeRefunds;
+  final bool excludeCarryover;
   final void Function(String dateKey) onDateTap;
 
   const _CalendarView({
-    required this.expenses,
+    required this.year,
+    required this.month,
     required this.grouped,
     required this.onDateTap,
+    this.selectedDateKey,
+    this.excludeRefunds = false,
+    this.excludeCarryover = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (expenses.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    // 현재 달 기준으로 캘린더 생성
-    final firstDate = expenses.map((e) => e.date).reduce(
-        (a, b) => a.isBefore(b) ? a : b);
-    final year = firstDate.year;
-    final month = firstDate.month;
     final firstDayOfMonth = DateTime(year, month, 1);
     final daysInMonth = DateTime(year, month + 1, 0).day;
     // 월요일 시작 기준 (0=월 ... 6=일)
@@ -757,14 +804,14 @@ class _CalendarView extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.fromLTRB(
-        AppSizes.spaceM, 0, AppSizes.spaceM, AppSizes.spaceXL),
+          AppSizes.spaceM, 0, AppSizes.spaceM, AppSizes.spaceS),
       child: Column(
         children: [
           // 요일 헤더
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
               children: ['월', '화', '수', '목', '금', '토', '일']
                   .map((d) => Expanded(
@@ -785,8 +832,8 @@ class _CalendarView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
-              childAspectRatio: 0.72,
-              mainAxisSpacing: 4,
+              childAspectRatio: 0.95,
+              mainAxisSpacing: 2,
               crossAxisSpacing: 2,
             ),
             itemCount: startWeekday + daysInMonth,
@@ -803,8 +850,12 @@ class _CalendarView extends StatelessWidget {
               if (hasData) {
                 for (final e in dayExpenses) {
                   if (e.type == TransactionType.income) {
+                    if (excludeRefunds && e.refundedExpenseId != null) continue;
+                    if (excludeCarryover && e.incomeCategory == IncomeCategory.carryover) continue;
                     incomeTotal += e.amount;
                   } else {
+                    if (excludeRefunds && e.refunds.isNotEmpty) continue;
+                    if (excludeCarryover && e.category == ExpenseCategory.carryover) continue;
                     expenseTotal += e.amount;
                   }
                 }
@@ -813,44 +864,52 @@ class _CalendarView extends StatelessWidget {
               final isToday = DateTime.now().year == year &&
                   DateTime.now().month == month &&
                   DateTime.now().day == day;
+              final isSelected = dateKey == selectedDateKey;
 
               return GestureDetector(
                 onTap: hasData ? () => onDateTap(dateKey) : null,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isToday
-                        ? colorScheme.primaryContainer.withValues(alpha: 0.5)
-                        : null,
+                    color: isSelected
+                        ? colorScheme.primary.withValues(alpha: 0.15)
+                        : isToday
+                            ? colorScheme.primaryContainer.withValues(alpha: 0.5)
+                            : null,
                     borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                    border: isToday
-                        ? Border.all(
-                            color: colorScheme.primary.withValues(alpha: 0.4),
-                            width: 1)
-                        : null,
+                    border: isSelected
+                        ? Border.all(color: colorScheme.primary, width: 1.5)
+                        : isToday
+                            ? Border.all(
+                                color: colorScheme.primary.withValues(alpha: 0.4),
+                                width: 1)
+                            : null,
                   ),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 2, vertical: 4),
+                      horizontal: 1, vertical: 2),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // 날짜 숫자
                       Text(
                         '$day',
                         style: textTheme.labelSmall?.copyWith(
-                          fontWeight: isToday
+                          fontSize: 10,
+                          fontWeight: (isToday || isSelected)
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          color: isToday
+                          color: isSelected
                               ? colorScheme.primary
-                              : colorScheme.onSurface,
+                              : isToday
+                                  ? colorScheme.primary
+                                  : colorScheme.onSurface,
                         ),
                       ),
                       if (hasData) ...[
-                        const SizedBox(height: 2),
                         if (expenseTotal > 0)
                           Text(
                             '-${_compact(expenseTotal)}',
                             style: textTheme.labelSmall?.copyWith(
-                              fontSize: 9,
+                              fontSize: 8,
                               color: colorScheme.error,
                               fontWeight: FontWeight.w600,
                             ),
@@ -861,7 +920,7 @@ class _CalendarView extends StatelessWidget {
                           Text(
                             '+${_compact(incomeTotal)}',
                             style: textTheme.labelSmall?.copyWith(
-                              fontSize: 9,
+                              fontSize: 8,
                               color: Colors.green.shade700,
                               fontWeight: FontWeight.w600,
                             ),
@@ -928,6 +987,7 @@ class _DayGroup extends ConsumerWidget {
         totalIncome += e.amount;
       } else {
         if (excludeRefunds && e.refunds.isNotEmpty) continue;
+        if (excludeCarryover && e.category == ExpenseCategory.carryover) continue;
         totalExpense += e.amount;
       }
     }
@@ -1015,7 +1075,7 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
     final unpaid = ref.watch(householdUnpaidRecurringProvider);
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
 
-    // 현재 달이 아닌 달을 보고 있으면 표시 안 함
+    // 이번 달이 아닌 달을 보고 있으면 표시 안 함
     final now = DateTime.now();
     final currentMonth =
         '${now.year}-${now.month.toString().padLeft(2, '0')}';

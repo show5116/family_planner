@@ -2552,6 +2552,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_category_asset_transfer => '자산이동';
 
   @override
+  String get household_category_carryover => '이월';
+
+  @override
   String get household_category_childcare => '육아비';
 
   @override

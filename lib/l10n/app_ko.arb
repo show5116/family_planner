@@ -1064,6 +1064,8 @@
   "@household_category_celebration": { "description": "카테고리: 경조사비" },
   "household_category_asset_transfer": "자산이동",
   "@household_category_asset_transfer": { "description": "카테고리: 자산이동" },
+  "household_category_carryover": "이월",
+  "@household_category_carryover": { "description": "카테고리: 이월 지출" },
   "household_category_childcare": "육아비",
   "@household_category_childcare": { "description": "카테고리: 육아비" },
   "household_category_communication": "통신비",

@@ -1050,6 +1050,8 @@
   "@household_category_celebration": { "description": "カテゴリ: 冠婚葬祭費" },
   "household_category_asset_transfer": "資産移動",
   "@household_category_asset_transfer": { "description": "カテゴリ: 資産移動" },
+  "household_category_carryover": "繰越",
+  "@household_category_carryover": { "description": "カテゴリ: 繰越支出" },
   "household_category_childcare": "育児費",
   "@household_category_childcare": { "description": "カテゴリ: 育児費" },
   "household_category_communication": "通信費",

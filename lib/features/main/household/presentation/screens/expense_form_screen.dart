@@ -270,6 +270,24 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
                     errorText: l10n.household_estimated_amount_required,
                   ),
                 ],
+                // 환불된 지출 — 연결된 환불 목록 표시
+                if (_isEditMode && widget.expense!.refunds.isNotEmpty) ...[
+                  const SizedBox(height: AppSizes.spaceM),
+                  _RefundLinksSection(
+                    expense: widget.expense!,
+                    groupId: widget.groupId,
+                  ),
+                ],
+              ],
+              // 환불 입금 — 원본 지출 연결 표시
+              if (_isEditMode &&
+                  _transactionType == TransactionType.income &&
+                  widget.expense!.refundedExpenseId != null) ...[
+                const SizedBox(height: AppSizes.spaceM),
+                _RefundOriginSection(
+                  expense: widget.expense!,
+                  groupId: widget.groupId,
+                ),
               ],
             ],
           ),
@@ -860,5 +878,214 @@ class _RecurringTypeSelector extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+// 지출 항목에 연결된 환불 목록 표시
+class _RefundLinksSection extends StatelessWidget {
+  final ExpenseModel expense;
+  final String? groupId;
+
+  const _RefundLinksSection({required this.expense, this.groupId});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.undo, size: 16, color: colorScheme.outline),
+                const SizedBox(width: AppSizes.spaceS),
+                Text(
+                  l10n.household_refund_total,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            ...expense.refunds.map((refund) => _RefundRow(
+                  refund: refund,
+                  groupId: groupId,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// 환불 입금 항목에서 원본 지출 표시
+class _RefundOriginSection extends ConsumerWidget {
+  final ExpenseModel expense;
+  final String? groupId;
+
+  const _RefundOriginSection({required this.expense, this.groupId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final originAsync = ref.watch(
+        expenseByIdProvider(expense.refundedExpenseId!));
+
+    return originAsync.when(
+      data: (origin) => Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          side: BorderSide(color: colorScheme.outlineVariant),
+        ),
+        child: InkWell(
+          onTap: () => context.push(AppRoutes.householdDetail, extra: origin),
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.receipt_outlined, size: 16,
+                        color: colorScheme.outline),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Text(
+                      l10n.household_refund_origin_label,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    const Spacer(),
+                    Icon(Icons.chevron_right, size: 16,
+                        color: colorScheme.outline),
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                Row(
+                  children: [
+                    const SizedBox(width: 22),
+                    Expanded(
+                      child: Text(
+                        origin.description?.isNotEmpty == true
+                            ? origin.description!
+                            : categoryName(l10n, origin.category),
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      '₩${_fmt(origin.amount)}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.error,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 22, top: 2),
+                  child: Text(
+                    '${origin.date.year}.${origin.date.month.toString().padLeft(2,'0')}.${origin.date.day.toString().padLeft(2,'0')}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.outline,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
+  String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
+  }
+}
+
+// 환불 항목 한 줄 표시
+class _RefundRow extends StatelessWidget {
+  final ExpenseModel refund;
+  final String? groupId;
+
+  const _RefundRow({required this.refund, this.groupId});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final date =
+        '${refund.date.month}/${refund.date.day}';
+    final amount = _fmt(refund.amount);
+
+    return InkWell(
+      onTap: () => context.push(
+        AppRoutes.householdDetail,
+        extra: refund,
+      ),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Icon(Icons.arrow_back, size: 14,
+                color: Colors.teal),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(
+              refund.description?.isNotEmpty == true
+                  ? refund.description!
+                  : AppLocalizations.of(context)!.household_refund_origin_badge,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const Spacer(),
+            Text(
+              '$date  +₩$amount',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.teal,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right, size: 14, color: colorScheme.outline),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
   }
 }

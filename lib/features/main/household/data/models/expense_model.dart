@@ -18,6 +18,7 @@ enum ExpenseCategory {
   assetTransfer,
   childcare,
   communication,
+  carryover,  // 이월 지출
   other,
 }
 
@@ -163,6 +164,8 @@ class ExpenseModel {
         return ExpenseCategory.childcare;
       case 'COMMUNICATION':
         return ExpenseCategory.communication;
+      case 'CARRYOVER':
+        return ExpenseCategory.carryover;
       default:
         return ExpenseCategory.other;
     }
@@ -401,6 +404,8 @@ String _categoryToString(ExpenseCategory category) {
       return 'CHILDCARE';
     case ExpenseCategory.communication:
       return 'COMMUNICATION';
+    case ExpenseCategory.carryover:
+      return 'CARRYOVER';
     case ExpenseCategory.other:
       return 'OTHER';
   }

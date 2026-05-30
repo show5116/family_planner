@@ -5046,6 +5046,12 @@ abstract class AppLocalizations {
   /// **'자산이동'**
   String get household_category_asset_transfer;
 
+  /// 카테고리: 이월 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'이월'**
+  String get household_category_carryover;
+
   /// 카테고리: 육아비
   ///
   /// In ko, this message translates to:

@@ -2534,6 +2534,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_category_asset_transfer => '资产转移';
 
   @override
+  String get household_category_carryover => '结转';
+
+  @override
   String get household_category_childcare => '育儿费';
 
   @override

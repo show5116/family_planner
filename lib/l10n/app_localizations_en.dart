@@ -2605,6 +2605,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_category_asset_transfer => 'Asset Transfer';
 
   @override
+  String get household_category_carryover => 'Carry Over';
+
+  @override
   String get household_category_childcare => 'Childcare';
 
   @override

@@ -270,14 +270,19 @@ class _MonthlyStatisticsContentState
         const SizedBox(height: AppSizes.spaceS),
         expensesAsync.when(
           data: (expenses) {
-            final incomes = expenses.where((e) => e.type == TransactionType.income).toList();
+            // 통계 화면: 환불 입금 및 이월 입금 제외
+            final incomes = expenses.where((e) =>
+                e.type == TransactionType.income &&
+                e.refundedExpenseId == null &&
+                e.incomeCategory != IncomeCategory.carryover).toList();
             if (incomes.isEmpty) {
               return _IncomeSummaryItem(totalIncome: widget.stats.totalIncome, month: widget.month);
             }
-            // IncomeCategory별 집계
-            final catTotals = <IncomeCategory?, double>{};
+            // IncomeCategory별 집계 — null은 otherIncome으로 통합
+            final catTotals = <IncomeCategory, double>{};
             for (final e in incomes) {
-              catTotals[e.incomeCategory] = (catTotals[e.incomeCategory] ?? 0) + e.amount;
+              final cat = e.incomeCategory ?? IncomeCategory.otherIncome;
+              catTotals[cat] = (catTotals[cat] ?? 0) + e.amount;
             }
             final sorted = catTotals.entries.toList()
               ..sort((a, b) => b.value.compareTo(a.value));

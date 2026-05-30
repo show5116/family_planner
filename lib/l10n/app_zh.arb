@@ -999,6 +999,8 @@
   "@household_category_celebration": { "description": "Category: Celebration" },
   "household_category_asset_transfer": "资产转移",
   "@household_category_asset_transfer": { "description": "Category: Asset Transfer" },
+  "household_category_carryover": "结转",
+  "@household_category_carryover": { "description": "类别: 结转支出" },
   "household_category_childcare": "育儿费",
   "@household_category_childcare": { "description": "Category: Childcare" },
   "household_category_communication": "通信",

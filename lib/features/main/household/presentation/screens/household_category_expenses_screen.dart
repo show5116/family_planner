@@ -142,8 +142,15 @@ class _ExpenseList extends ConsumerWidget {
     return expensesAsync.when(
       data: (expenses) {
         // 입금 카테고리가 지정된 경우 프론트에서 추가 필터링
+        // otherIncome은 null(미설정) 항목도 함께 포함
         final filtered = incomeCategory != null
-            ? expenses.where((e) => e.incomeCategory == incomeCategory).toList()
+            ? expenses.where((e) {
+                if (incomeCategory == IncomeCategory.otherIncome) {
+                  return e.incomeCategory == IncomeCategory.otherIncome ||
+                      e.incomeCategory == null;
+                }
+                return e.incomeCategory == incomeCategory;
+              }).toList()
             : expenses;
 
         if (filtered.isEmpty) {

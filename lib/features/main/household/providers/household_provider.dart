@@ -91,36 +91,32 @@ Future<MonthlyStatisticsModel> householdMonthlyStatistics(Ref ref) async {
   );
 }
 
-/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+/// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 @riverpod
 Future<MonthlyStatisticsModel> householdMonthlyStatisticsByMonth(
     Ref ref, String month) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
-  final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
-  final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
 
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getMonthlyStatistics(
     groupId: groupId,
     month: month,
-    excludeRefunds: excludeRefunds,
-    excludeCarryover: excludeCarryover,
+    excludeRefunds: true,
+    excludeCarryover: true,
   );
 }
 
-/// 연간 통계 Provider
+/// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 @riverpod
 Future<YearlyStatisticsModel> householdYearlyStatistics(Ref ref, String year) async {
   final groupId = ref.watch(householdSelectedGroupIdProvider);
-  final excludeRefunds = ref.watch(householdExcludeRefundsProvider);
-  final excludeCarryover = ref.watch(householdExcludeCarryoverProvider);
 
   final repository = ref.watch(householdRepositoryProvider);
   return repository.getYearlyStatistics(
     groupId: groupId,
     year: year,
-    excludeRefunds: excludeRefunds,
-    excludeCarryover: excludeCarryover,
+    excludeRefunds: true,
+    excludeCarryover: true,
   );
 }
 
@@ -166,24 +162,31 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   }
 }
 
-/// 이번 달 아직 치뤄지지 않은 고정 지출 목록 Provider
+/// 선택된 달의 아직 치뤄지지 않은 고정 지출 목록 Provider
 ///
-/// 고정지출 원본 목록의 날짜(day)를 이번 달로 환산했을 때
+/// 고정지출 원본 목록의 날짜(day)를 선택된 달로 환산했을 때
 /// 오늘 이후에 해당하는 항목 = 아직 발생하지 않은 고정지출.
-/// (백엔드 복사는 해당 날짜에 일어나므로, 오늘 이후 항목은 아직 지출 목록에 없음)
+/// 미래 달이면 해당 달 전체 고정지출이 모두 포함됨.
 final householdUnpaidRecurringProvider = Provider<List<ExpenseModel>>((ref) {
   final recurring = ref.watch(householdRecurringExpensesProvider).valueOrNull ?? [];
+  final selectedMonth = ref.watch(householdSelectedMonthProvider);
   final now = DateTime.now();
+
+  final parts = selectedMonth.split('-');
+  final targetYear = int.parse(parts[0]);
+  final targetMonth = int.parse(parts[1]);
+  final today = DateTime(now.year, now.month, now.day);
+
   return recurring
       .where((e) {
         if (e.type != TransactionType.expense) return false;
-        // 원본 등록일(day)을 이번 달 날짜로 환산
+        // 원본 등록일(day)을 선택된 달 날짜로 환산
         final dueDay = e.date.day;
-        final lastDay = DateTime(now.year, now.month + 1, 0).day;
+        final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
         final effectiveDay = dueDay > lastDay ? lastDay : dueDay;
-        final dueDate = DateTime(now.year, now.month, effectiveDay);
-        // 오늘보다 미래인 항목만 (오늘 당일 포함)
-        return !dueDate.isBefore(DateTime(now.year, now.month, now.day));
+        final dueDate = DateTime(targetYear, targetMonth, effectiveDay);
+        // 오늘 이후인 항목만 (오늘 당일 포함)
+        return !dueDate.isBefore(today);
       })
       .toList()
     ..sort((a, b) => a.date.day.compareTo(b.date.day));
@@ -245,9 +248,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       final expense = await _repository.createExpense(dto);
-      _ref.read(householdExpensesProvider.notifier).addExpense(expense);
-      _ref.invalidate(householdMonthlyStatisticsProvider);
-      _ref.invalidate(dashboardHouseholdStatisticsProvider);
+      _invalidateAll(expense: expense, isNew: true);
       state = const AsyncValue.data(null);
       return expense;
     } catch (e, st) {
@@ -260,9 +261,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       final expense = await _repository.updateExpense(id, dto);
-      _ref.read(householdExpensesProvider.notifier).updateExpense(expense);
-      _ref.invalidate(householdMonthlyStatisticsProvider);
-      _ref.invalidate(dashboardHouseholdStatisticsProvider);
+      _invalidateAll(expense: expense);
       state = const AsyncValue.data(null);
       return expense;
     } catch (e, st) {
@@ -276,14 +275,35 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       await _repository.deleteExpense(id);
       _ref.read(householdExpensesProvider.notifier).removeExpense(id);
-      _ref.invalidate(householdMonthlyStatisticsProvider);
-      _ref.invalidate(dashboardHouseholdStatisticsProvider);
+      _invalidateAll();
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return false;
     }
+  }
+
+  /// 지출 생성/수정/삭제 후 관련 provider 일괄 갱신
+  void _invalidateAll({ExpenseModel? expense, bool isNew = false}) {
+    // 메인 지출 목록 (낙관적 업데이트)
+    if (expense != null && isNew) {
+      _ref.read(householdExpensesProvider.notifier).addExpense(expense);
+    } else if (expense != null) {
+      _ref.read(householdExpensesProvider.notifier).updateExpense(expense);
+    }
+
+    // 월간/연간 통계 (양쪽 provider 모두)
+    _ref.invalidate(householdMonthlyStatisticsProvider);
+    _ref.invalidate(householdMonthlyStatisticsByMonthProvider);
+    _ref.invalidate(householdYearlyStatisticsProvider);
+    _ref.invalidate(dashboardHouseholdStatisticsProvider);
+
+    // 통계 화면 월별 지출 목록 (카테고리 드릴다운용)
+    _ref.invalidate(householdExpensesByMonthProvider);
+
+    // 고정지출 목록 (isRecurring 항목 변경 시 반영)
+    _ref.invalidate(householdRecurringExpensesProvider);
   }
 
   Future<BulkBudgetResult?> setBudgetBulk(BulkSetBudgetDto dto) async {
@@ -418,12 +438,12 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       final nextMonthFirstStr =
           '$nextYear-${nextMonth.toString().padLeft(2, '0')}-01';
 
-      // 1) 이번 달 마지막 날: ASSET_TRANSFER 지출로 잔금만큼 차감
+      // 1) 이번 달 마지막 날: CARRYOVER 지출로 잔금만큼 차감
       await _repository.createExpense(CreateExpenseDto(
         groupId: groupId,
         type: TransactionType.expense,
         amount: balance,
-        category: ExpenseCategory.assetTransfer,
+        category: ExpenseCategory.carryover,
         date: lastDayStr,
         description: '잔금 이월',
       ));

@@ -88,6 +88,8 @@ class SetBudgetDto {
         return 'CHILDCARE';
       case ExpenseCategory.communication:
         return 'COMMUNICATION';
+      case ExpenseCategory.carryover:
+        return 'CARRYOVER';
       case ExpenseCategory.other:
         return 'OTHER';
     }
