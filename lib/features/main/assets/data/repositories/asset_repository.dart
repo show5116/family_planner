@@ -435,11 +435,14 @@ class AssetRepository {
   Future<AssetStatisticsModel> getAssetStatistics({
     required String groupId,
     String? userId,
+    List<String>? accountIds,
   }) async {
     try {
       final response = await _dio.get('/assets/statistics', queryParameters: {
         'groupId': groupId,
         if (userId != null) 'userId': userId,
+        if (accountIds != null && accountIds.isNotEmpty)
+          'accountIds': accountIds.join(','),
       });
       return AssetStatisticsModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {

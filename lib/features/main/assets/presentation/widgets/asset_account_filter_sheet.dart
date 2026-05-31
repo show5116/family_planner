@@ -24,34 +24,44 @@ class AssetAccountFilterSheet extends StatefulWidget {
 
 class _AssetAccountFilterSheetState extends State<AssetAccountFilterSheet> {
   late Set<String> _selectedIds;
+  String? _errorMsg;
 
   @override
   void initState() {
     super.initState();
-    _selectedIds = Set<String>.from(widget.selectedIds);
+    // 빈 Set(전체) 진입 시 전체 계좌 ID를 명시적으로 채움
+    _selectedIds = widget.selectedIds.isEmpty
+        ? Set<String>.from(widget.accounts.map((a) => a.id))
+        : Set<String>.from(widget.selectedIds);
   }
 
-  bool get _isAll => _selectedIds.isEmpty;
+  bool get _isAll =>
+      _selectedIds.length == widget.accounts.length;
 
+  // 전체 클릭: 전부 선택 ↔ 전부 해제 토글
   void _toggleAll() {
-    setState(() => _selectedIds = {});
-  }
-
-  void _toggle(String id) {
     setState(() {
-      if (_selectedIds.contains(id)) {
-        _selectedIds.remove(id);
-        // 전부 해제되면 전체로 복귀
-        if (_selectedIds.isEmpty) _selectedIds = {};
+      _errorMsg = null;
+      if (_isAll) {
+        _selectedIds = {};
       } else {
-        _selectedIds.add(id);
-        // 전부 선택되면 전체로 표시
-        if (_selectedIds.length == widget.accounts.length) _selectedIds = {};
+        _selectedIds = Set<String>.from(widget.accounts.map((a) => a.id));
       }
     });
   }
 
-  bool _isSelected(String id) => _isAll || _selectedIds.contains(id);
+  void _toggle(String id) {
+    setState(() {
+      _errorMsg = null;
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+      } else {
+        _selectedIds.add(id);
+      }
+    });
+  }
+
+  bool _isSelected(String id) => _selectedIds.contains(id);
 
   @override
   Widget build(BuildContext context) {
@@ -139,12 +149,32 @@ class _AssetAccountFilterSheetState extends State<AssetAccountFilterSheet> {
               padding: const EdgeInsets.fromLTRB(
                 AppSizes.spaceL, AppSizes.spaceS, AppSizes.spaceL, AppSizes.spaceL,
               ),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () => widget.onApply(_selectedIds),
-                  child: Text(l10n.common_apply),
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (_errorMsg != null) ...[
+                    Text(
+                      _errorMsg!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSizes.spaceXS),
+                  ],
+                  FilledButton(
+                    onPressed: () {
+                      if (_selectedIds.isEmpty) {
+                        setState(() => _errorMsg = '적어도 한 개의 계좌를 선택해 주세요.');
+                        return;
+                      }
+                      // 전체 선택이면 빈 Set으로 변환해서 전달 (전체 = 필터 없음)
+                      final result = _isAll ? <String>{} : _selectedIds;
+                      widget.onApply(result);
+                    },
+                    child: Text(l10n.common_apply),
+                  ),
+                ],
               ),
             ),
           ],

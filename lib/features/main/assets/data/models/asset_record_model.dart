@@ -23,6 +23,9 @@ class AssetRecordModel {
   // ── WITHDRAWAL 전용 ──
   final double? amount;
   final WithdrawalType? withdrawalType;
+  final double? balanceAfter;
+  final double? principalAfter;
+  final double? profitAfter;
 
   const AssetRecordModel({
     required this.entryType,
@@ -39,6 +42,9 @@ class AssetRecordModel {
     required this.createdAt,
     this.amount,
     this.withdrawalType,
+    this.balanceAfter,
+    this.principalAfter,
+    this.profitAfter,
   });
 
   bool get isSnapshot => entryType == AssetRecordEntryType.snapshot;
@@ -77,6 +83,15 @@ class AssetRecordModel {
           ? double.tryParse(json['amount'].toString())
           : null,
       withdrawalType: parseWithdrawalType(json['type'] as String?),
+      balanceAfter: json['balanceAfter'] != null
+          ? double.tryParse(json['balanceAfter'].toString())
+          : null,
+      principalAfter: json['principalAfter'] != null
+          ? double.tryParse(json['principalAfter'].toString())
+          : null,
+      profitAfter: json['profitAfter'] != null
+          ? double.tryParse(json['profitAfter'].toString())
+          : null,
     );
   }
 }

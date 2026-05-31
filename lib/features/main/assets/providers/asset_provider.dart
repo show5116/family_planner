@@ -105,16 +105,21 @@ class AssetRecords extends _$AssetRecords {
   }
 }
 
-/// 자산 통계 Provider
+/// 자산 통계 Provider (계좌 필터 자동 반영)
 @riverpod
 Future<AssetStatisticsModel> assetStatistics(Ref ref) async {
   final groupId = ref.watch(assetSelectedGroupIdProvider);
   final userId = ref.watch(assetSelectedUserIdProvider);
+  final selectedIds = ref.watch(assetStatSelectedAccountIdsProvider);
 
   if (groupId == null) return AssetStatisticsModel.empty();
 
   final repository = ref.watch(assetRepositoryProvider);
-  return repository.getAssetStatistics(groupId: groupId, userId: userId);
+  return repository.getAssetStatistics(
+    groupId: groupId,
+    userId: userId,
+    accountIds: selectedIds.isEmpty ? null : selectedIds.toList(),
+  );
 }
 
 /// 그룹 자산 추이 Provider
