@@ -105,7 +105,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(error: null);
 
     try {
-      final response = await _authService.login(
+      await _authService.login(
         email: email,
         password: password,
       );
@@ -113,7 +113,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 이전 계정의 캐시된 데이터 초기화
       _invalidateGroupProviders();
 
-      state = state.copyWith(isAuthenticated: true, user: response);
+      // auth/me로 정규화된 사용자 정보 조회 (로그인 응답은 user 중첩 구조라 직접 사용 불가)
+      final userInfo = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: userInfo);
 
       // 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
