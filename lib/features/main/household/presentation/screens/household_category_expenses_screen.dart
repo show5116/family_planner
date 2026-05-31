@@ -31,6 +31,9 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
   final TransactionType? type;
   /// non-null이면 해당 입금 카테고리만 필터링
   final IncomeCategory? incomeCategory;
+  /// non-null이면 소비처별 필터링 ('' = 소비처 없음)
+  final String? merchantId;
+  final String? merchantName;
 
   const HouseholdCategoryExpensesScreen({
     super.key,
@@ -38,19 +41,25 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
     required this.month,
     this.type,
     this.incomeCategory,
+    this.merchantId,
+    this.merchantName,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final groupId = ref.watch(householdSelectedGroupIdProvider);
+    final isMerchantMode = merchantId != null;
     final isIncome = type == TransactionType.income;
 
     final Color color;
     final IconData icon;
     final String label;
-    if (isIncome) {
-      // 입금 카테고리가 지정된 경우 해당 카테고리의 색상/아이콘/이름 사용
+    if (isMerchantMode) {
+      color = Theme.of(context).colorScheme.primary;
+      icon = merchantId!.isEmpty ? Icons.storefront_outlined : Icons.storefront;
+      label = merchantName ?? '소비처';
+    } else if (isIncome) {
       color = incomeCategory != null
           ? incomeCategoryColor(incomeCategory)
           : Colors.green;
@@ -99,14 +108,20 @@ class HouseholdCategoryExpensesScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: _ExpenseList(
-        groupId: groupId,
-        month: month,
-        category: category,
-        type: type,
-        isIncome: isIncome,
-        incomeCategory: incomeCategory,
-      ),
+      body: isMerchantMode
+          ? _MerchantExpenseList(
+              groupId: groupId,
+              month: month,
+              merchantId: merchantId!,
+            )
+          : _ExpenseList(
+              groupId: groupId,
+              month: month,
+              category: category,
+              type: type,
+              isIncome: isIncome,
+              incomeCategory: incomeCategory,
+            ),
     );
   }
 
@@ -229,6 +244,125 @@ class _ExpenseList extends ConsumerWidget {
             ElevatedButton(
               onPressed: () =>
                   ref.invalidate(_categoryExpensesProvider(args)),
+              child: Text(l10n.common_retry),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
+    final i = amount.toInt();
+    final s = i.toString();
+    final buf = StringBuffer();
+    for (var j = 0; j < s.length; j++) {
+      if (j > 0 && (s.length - j) % 3 == 0) buf.write(',');
+      buf.write(s[j]);
+    }
+    return buf.toString();
+  }
+}
+
+final _merchantExpensesProvider = FutureProvider.autoDispose.family<
+    List<ExpenseModel>,
+    ({String? groupId, String month})>((ref, args) {
+  final repository = ref.watch(householdRepositoryProvider);
+  return repository.getExpenses(
+    groupId: args.groupId,
+    month: args.month,
+    type: TransactionType.expense,
+  );
+});
+
+class _MerchantExpenseList extends ConsumerWidget {
+  final String? groupId;
+  final String month;
+  /// 소비처 id — 빈 문자열이면 소비처 없음 항목만 표시
+  final String merchantId;
+
+  const _MerchantExpenseList({
+    required this.groupId,
+    required this.month,
+    required this.merchantId,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final args = (groupId: groupId, month: month);
+    final expensesAsync = ref.watch(_merchantExpensesProvider(args));
+
+    return expensesAsync.when(
+      data: (expenses) {
+        final filtered = merchantId.isEmpty
+            ? expenses.where((e) => e.merchant == null).toList()
+            : expenses.where((e) => e.merchant?.id == merchantId).toList();
+
+        if (filtered.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.receipt_long, size: 64, color: Theme.of(context).colorScheme.outline),
+                const SizedBox(height: AppSizes.spaceM),
+                Text(
+                  l10n.household_no_expenses,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final sorted = [...filtered]..sort((a, b) => b.date.compareTo(a.date));
+        final total = sorted.fold<double>(0, (sum, e) => sum + e.amount);
+
+        return Column(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceS,
+              ),
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
+              child: Text(
+                '총 ${sorted.length}건 · ₩${_fmt(total)}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: sorted.length,
+                padding: const EdgeInsets.only(bottom: 80),
+                itemBuilder: (context, index) {
+                  final expense = sorted[index];
+                  return ExpenseListItem(
+                    expense: expense,
+                    onTap: () => context.push(AppRoutes.householdDetail, extra: expense),
+                    onDelete: () {},
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(l10n.common_error),
+            const SizedBox(height: AppSizes.spaceS),
+            ElevatedButton(
+              onPressed: () => ref.invalidate(_merchantExpensesProvider(args)),
               child: Text(l10n.common_retry),
             ),
           ],

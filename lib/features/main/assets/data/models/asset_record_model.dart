@@ -1,35 +1,97 @@
-/// 자산 기록 모델
+import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
+
+enum AssetRecordEntryType { snapshot, withdrawal }
+
+/// 자산 기록 통합 모델 (SNAPSHOT + WITHDRAWAL)
 class AssetRecordModel {
+  final AssetRecordEntryType entryType;
+  /// 정렬용 공통 날짜 (SNAPSHOT: recordDate, WITHDRAWAL: withdrawalDate)
+  final DateTime date;
+
+  // ── SNAPSHOT 전용 ──
   final String id;
   final String accountId;
   final DateTime recordDate;
   final double balance;
   final double principal;
   final double profit;
+  final double? profitRate;
+  final double? gramWeight;
   final String? note;
   final DateTime createdAt;
 
+  // ── WITHDRAWAL 전용 ──
+  final double? amount;
+  final WithdrawalType? withdrawalType;
+  final double? balanceAfter;
+  final double? principalAfter;
+  final double? profitAfter;
+
   const AssetRecordModel({
+    required this.entryType,
+    required this.date,
     required this.id,
     required this.accountId,
     required this.recordDate,
     required this.balance,
     required this.principal,
     required this.profit,
+    this.profitRate,
+    this.gramWeight,
     this.note,
     required this.createdAt,
+    this.amount,
+    this.withdrawalType,
+    this.balanceAfter,
+    this.principalAfter,
+    this.profitAfter,
   });
 
+  bool get isSnapshot => entryType == AssetRecordEntryType.snapshot;
+  bool get isWithdrawal => entryType == AssetRecordEntryType.withdrawal;
+
   factory AssetRecordModel.fromJson(Map<String, dynamic> json) {
+    final typeStr = json['entryType'] as String? ?? 'SNAPSHOT';
+    final entryType = typeStr == 'WITHDRAWAL'
+        ? AssetRecordEntryType.withdrawal
+        : AssetRecordEntryType.snapshot;
+
+    final date = DateTime.parse(
+      (json['date'] ?? json['recordDate'] ?? json['withdrawalDate']) as String,
+    ).toLocal();
+
     return AssetRecordModel(
+      entryType: entryType,
+      date: date,
       id: json['id'] as String,
       accountId: json['accountId'] as String,
-      recordDate: DateTime.parse(json['recordDate'] as String).toLocal(),
-      balance: double.parse(json['balance'].toString()),
-      principal: double.parse(json['principal'].toString()),
-      profit: double.parse(json['profit'].toString()),
+      recordDate: DateTime.parse(
+        (json['recordDate'] ?? json['withdrawalDate'] ?? json['date']) as String,
+      ).toLocal(),
+      balance: double.tryParse(json['balance']?.toString() ?? '') ?? 0,
+      principal: double.tryParse(json['principal']?.toString() ?? '') ?? 0,
+      profit: double.tryParse(json['profit']?.toString() ?? '') ?? 0,
+      profitRate: json['profitRate'] != null
+          ? double.tryParse(json['profitRate'].toString())
+          : null,
+      gramWeight: json['gramWeight'] != null
+          ? double.tryParse(json['gramWeight'].toString())
+          : null,
       note: json['note'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      amount: json['amount'] != null
+          ? double.tryParse(json['amount'].toString())
+          : null,
+      withdrawalType: parseWithdrawalType(json['type'] as String?),
+      balanceAfter: json['balanceAfter'] != null
+          ? double.tryParse(json['balanceAfter'].toString())
+          : null,
+      principalAfter: json['principalAfter'] != null
+          ? double.tryParse(json['principalAfter'].toString())
+          : null,
+      profitAfter: json['profitAfter'] != null
+          ? double.tryParse(json['profitAfter'].toString())
+          : null,
     );
   }
 }

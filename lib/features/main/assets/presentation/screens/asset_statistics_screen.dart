@@ -8,11 +8,8 @@ import 'package:family_planner/features/main/assets/presentation/widgets/asset_a
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_pie_chart.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_stat_summary_card.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_trend_chart.dart';
-import 'package:family_planner/features/main/assets/presentation/widgets/asset_type_stat_card.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
-
-enum _ChartView { trend, pie }
 
 class AssetStatisticsScreen extends ConsumerStatefulWidget {
   const AssetStatisticsScreen({super.key});
@@ -22,7 +19,6 @@ class AssetStatisticsScreen extends ConsumerStatefulWidget {
 }
 
 class _AssetStatisticsScreenState extends ConsumerState<AssetStatisticsScreen> {
-  _ChartView _chartView = _ChartView.trend;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +43,7 @@ class _AssetStatisticsScreenState extends ConsumerState<AssetStatisticsScreen> {
     final accountIdsJoined = selectedIds.isEmpty ? null : selectedIds.join(',');
     final isFiltered = selectedIds.isNotEmpty;
 
-    // 파이차트용: 필터 적용된 계좌 목록
+    // 파이차트 계좌별 모드: 필터 중이면 선택된 계좌만 전달
     final filteredAccounts = isFiltered
         ? accounts.where((a) => selectedIds.contains(a.id)).toList()
         : accounts;
@@ -113,81 +109,34 @@ class _AssetStatisticsScreenState extends ConsumerState<AssetStatisticsScreen> {
           ),
           const SizedBox(height: AppSizes.spaceM),
 
-          // 유형별 현황
+          // 파이차트 (유형별 현황 대체)
           statsAsync.when(
-            data: (stats) {
-              if (stats.byType.isEmpty) return const SizedBox.shrink();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.asset_by_type,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceS),
-                  ...stats.byType.map((t) => AssetTypeStatCard(typeStat: t)),
-                  const SizedBox(height: AppSizes.spaceM),
-                ],
-              );
-            },
+            data: (stats) => AssetPieChart(
+              accounts: filteredAccounts,
+              stats: stats,
+            ),
             loading: () => const SizedBox.shrink(),
             error: (_, _) => const SizedBox.shrink(),
           ),
+          const SizedBox(height: AppSizes.spaceM),
 
-          // 차트 섹션 헤더 + 뷰 토글
-          Row(
-            children: [
-              Text(
-                _chartView == _ChartView.trend ? l10n.asset_trend : l10n.asset_pie_chart_title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const Spacer(),
-              SegmentedButton<_ChartView>(
-                style: ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          // 자산 추이 차트
+          Text(
+            l10n.asset_trend,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                segments: const [
-                  ButtonSegment(
-                    value: _ChartView.trend,
-                    icon: Icon(Icons.show_chart, size: 16),
-                  ),
-                  ButtonSegment(
-                    value: _ChartView.pie,
-                    icon: Icon(Icons.pie_chart, size: 16),
-                  ),
-                ],
-                selected: {_chartView},
-                onSelectionChanged: (s) => setState(() => _chartView = s.first),
-              ),
-            ],
           ),
           const SizedBox(height: AppSizes.spaceS),
-
-          // 차트
-          if (_chartView == _ChartView.trend)
-            AssetTrendChart(
-              trendBuilder: (period, year) => ref.watch(
-                groupAssetTrendProvider(
-                  period: period,
-                  year: year,
-                  accountIdsJoined: accountIdsJoined,
-                ),
+          AssetTrendChart(
+            trendBuilder: (period, year) => ref.watch(
+              groupAssetTrendProvider(
+                period: period,
+                year: year,
+                accountIdsJoined: accountIdsJoined,
               ),
-            )
-          else
-            statsAsync.when(
-              data: (stats) => AssetPieChart(
-                accounts: filteredAccounts,
-                stats: stats,
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, _) => const SizedBox.shrink(),
             ),
+          ),
         ],
       ),
     );

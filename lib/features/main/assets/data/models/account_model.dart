@@ -64,6 +64,8 @@ class AccountModel {
   final DateTime updatedAt;
   final double? latestBalance;
   final double? profitRate;
+  /// 매월 자산 기록 입력 알림 일자 (1~31, null이면 알림 없음)
+  final int? recordReminderDay;
 
   const AccountModel({
     required this.id,
@@ -78,6 +80,7 @@ class AccountModel {
     required this.updatedAt,
     this.latestBalance,
     this.profitRate,
+    this.recordReminderDay,
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> json) {
@@ -100,6 +103,7 @@ class AccountModel {
       profitRate: json['profitRate'] != null
           ? double.tryParse(json['profitRate'].toString())
           : null,
+      recordReminderDay: json['recordReminderDay'] as int?,
     );
   }
 
@@ -116,6 +120,7 @@ class AccountModel {
     DateTime? updatedAt,
     double? latestBalance,
     double? profitRate,
+    int? recordReminderDay,
   }) {
     return AccountModel(
       id: id ?? this.id,
@@ -130,6 +135,7 @@ class AccountModel {
       updatedAt: updatedAt ?? this.updatedAt,
       latestBalance: latestBalance ?? this.latestBalance,
       profitRate: profitRate ?? this.profitRate,
+      recordReminderDay: recordReminderDay ?? this.recordReminderDay,
     );
   }
 }
@@ -142,6 +148,7 @@ class CreateAccountDto {
   final String? institution;
   final AccountType? type;
   final double? gramWeight;
+  final int? recordReminderDay;
 
   const CreateAccountDto({
     required this.groupId,
@@ -150,6 +157,7 @@ class CreateAccountDto {
     this.institution,
     this.type,
     this.gramWeight,
+    this.recordReminderDay,
   });
 
   Map<String, dynamic> toJson() {
@@ -160,6 +168,7 @@ class CreateAccountDto {
       if (institution != null) 'institution': institution,
       if (type != null) 'type': accountTypeToString(type!),
       if (gramWeight != null) 'gramWeight': gramWeight,
+      'recordReminderDay': recordReminderDay,
     };
   }
 }
@@ -171,6 +180,8 @@ class UpdateAccountDto {
   final String? institution;
   final AccountType? type;
   final double? gramWeight;
+  final int? recordReminderDay;
+  final bool clearReminderDay;
 
   const UpdateAccountDto({
     this.name,
@@ -178,6 +189,8 @@ class UpdateAccountDto {
     this.institution,
     this.type,
     this.gramWeight,
+    this.recordReminderDay,
+    this.clearReminderDay = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -187,6 +200,8 @@ class UpdateAccountDto {
       if (institution != null) 'institution': institution,
       if (type != null) 'type': accountTypeToString(type!),
       if (gramWeight != null) 'gramWeight': gramWeight,
+      if (recordReminderDay != null || clearReminderDay)
+        'recordReminderDay': recordReminderDay,
     };
   }
 }

@@ -99,13 +99,23 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
     return _goldPricePerGram! * grams;
   }
 
+  String _formatWithComma(int value) {
+    final s = value.toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < s.length; i++) {
+      if (i > 0 && (s.length - i) % 3 == 0) buf.write(',');
+      buf.write(s[i]);
+    }
+    return buf.toString();
+  }
+
   void _syncPrincipalIfNeeded() {
     if (_principalUserEdited) return;
     final estimated = _autoEstimatedPrincipal;
     if (estimated == null) {
       _goldPrincipalController.text = '';
     } else {
-      _goldPrincipalController.text = estimated.toInt().toString();
+      _goldPrincipalController.text = _formatWithComma(estimated.toInt());
     }
   }
 

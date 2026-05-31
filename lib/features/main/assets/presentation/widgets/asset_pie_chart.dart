@@ -175,7 +175,9 @@ class _PieChartBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = slices.fold<double>(0, (s, e) => s + e.amount);
-    final touched = touchedIndex != null && touchedIndex! < slices.length
+    final touched = touchedIndex != null &&
+            touchedIndex! >= 0 &&
+            touchedIndex! < slices.length
         ? slices[touchedIndex!]
         : null;
 
@@ -210,11 +212,12 @@ class _PieChartBody extends StatelessWidget {
               sectionsSpace: 2,
               pieTouchData: PieTouchData(
                 touchCallback: (event, response) {
-                  if (!event.isInterestedForInteractions ||
-                      response?.touchedSection == null) {
-                    return;
-                  }
-                  onTouch(response!.touchedSection!.touchedSectionIndex);
+                  // PointerUpEvent에서만 처리 — down/move 이벤트 중복 방지
+                  if (event is! FlTapUpEvent) return;
+                  if (response?.touchedSection == null) return;
+                  final idx = response!.touchedSection!.touchedSectionIndex;
+                  if (idx < 0 || idx >= slices.length) return;
+                  onTouch(idx);
                 },
               ),
             ),

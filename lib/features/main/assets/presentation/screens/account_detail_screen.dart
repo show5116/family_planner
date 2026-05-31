@@ -8,13 +8,16 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
+import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
+import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_info_card.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/add_asset_record_sheet.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_record_list_item.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/asset_trend_chart.dart';
-import 'package:family_planner/features/main/assets/presentation/widgets/holdings_section.dart';
+import 'package:family_planner/features/main/assets/presentation/widgets/add_withdrawal_sheet.dart';
+import 'package:family_planner/features/main/assets/presentation/widgets/holding_records_section.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -53,6 +56,8 @@ class AccountDetailByIdScreen extends ConsumerWidget {
 // 온보딩용 가짜 잔액 기록
 final _demoRecords = [
   AssetRecordModel(
+    entryType: AssetRecordEntryType.snapshot,
+    date: DateTime(2025, 3, 1),
     id: '__demo_r1__',
     accountId: '__demo_asset__',
     recordDate: DateTime(2025, 3, 1),
@@ -62,6 +67,8 @@ final _demoRecords = [
     createdAt: DateTime(2025, 3, 1),
   ),
   AssetRecordModel(
+    entryType: AssetRecordEntryType.snapshot,
+    date: DateTime(2025, 4, 1),
     id: '__demo_r2__',
     accountId: '__demo_asset__',
     recordDate: DateTime(2025, 4, 1),
@@ -72,6 +79,8 @@ final _demoRecords = [
     createdAt: DateTime(2025, 4, 1),
   ),
   AssetRecordModel(
+    entryType: AssetRecordEntryType.snapshot,
+    date: DateTime(2025, 5, 1),
     id: '__demo_r3__',
     accountId: '__demo_asset__',
     recordDate: DateTime(2025, 5, 1),
@@ -299,7 +308,10 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: HoldingsSection(accountId: account.id),
+            child: HoldingRecordsSection(
+              accountId: account.id,
+              assetRecords: recordsAsync.valueOrNull ?? [],
+            ),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -331,7 +343,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                     ],
                   ),
                   TextButton.icon(
-                    onPressed: () => _showAddRecordSheet(context),
+                    onPressed: () => _showAddSheet(context),
                     icon: const Icon(Icons.add, size: 18),
                     label: Text(l10n.asset_add_record),
                   ),
@@ -339,6 +351,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               ),
             ),
           ),
+          // 자산 기록 목록 (SNAPSHOT + WITHDRAWAL 통합, 서버에서 날짜 내림차순 정렬)
           recordsAsync.when(
             data: (records) {
               if (records.isEmpty) {
@@ -360,7 +373,12 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
               }
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => AssetRecordListItem(record: records[index]),
+                  (context, index) {
+                    final item = records[index];
+                    return item.isWithdrawal
+                        ? _WithdrawalListItem(record: item, accountId: account.id)
+                        : AssetRecordListItem(record: item);
+                  },
                   childCount: records.length,
                 ),
               );
@@ -378,7 +396,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddRecordSheet(context),
+        onPressed: () => _showAddSheet(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -403,12 +421,216 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     );
   }
 
-  Future<void> _showAddRecordSheet(BuildContext context) async {
+  Future<void> _showAddSheet(BuildContext context) async {
     await showModalBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
       useSafeArea: true,
-      builder: (ctx) => AddAssetRecordSheet(account: widget.account),
+      builder: (ctx) => _AddActionSheet(
+        onSelectRecord: () {
+          Navigator.of(ctx).pop();
+          showModalBottomSheet<void>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            builder: (_) => AddAssetRecordSheet(account: widget.account),
+          );
+        },
+        onSelectWithdrawal: () {
+          Navigator.of(ctx).pop();
+          showModalBottomSheet<void>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            builder: (_) => AddWithdrawalSheet(accountId: widget.account.id),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ─── 출금 기록 목록 아이템 (AssetRecordModel.entryType == withdrawal) ──────────
+class _WithdrawalListItem extends ConsumerWidget {
+  final AssetRecordModel record;
+  final String accountId;
+
+  const _WithdrawalListItem({required this.record, required this.accountId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dateStr =
+        '${record.date.year}.${record.date.month.toString().padLeft(2, '0')}.${record.date.day.toString().padLeft(2, '0')}';
+    final typeColor = record.withdrawalType == WithdrawalType.profit
+        ? Colors.orange.shade700
+        : Theme.of(context).colorScheme.primary;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: AppSizes.spaceXS),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 상단 행: 날짜+뱃지(좌) / 출금금액+잔액+삭제(우)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      dateStr,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
+                    ),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: typeColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        withdrawalTypeLabel(record.withdrawalType),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: typeColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // 출금 금액 — 작은 사이즈로 위에
+                        Text(
+                          '-₩${formatAssetAmount(record.amount ?? 0)}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                        // 잔액 — 자산 기록의 balance와 동일한 위치/스타일
+                        if (record.balanceAfter != null)
+                          Text(
+                            '₩${formatAssetAmount(record.balanceAfter!)}',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(width: AppSizes.spaceXS),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, size: 18),
+                      color: Theme.of(context).colorScheme.error,
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      onPressed: () => _confirmDelete(context, ref),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            // 하단: 원금/수익 칩 + 메모
+            if (record.principalAfter != null || record.profitAfter != null) ...[
+              const SizedBox(height: AppSizes.spaceXS),
+              Row(
+                children: [
+                  if (record.principalAfter != null)
+                    AssetAmountChip(
+                      label: '원금',
+                      amount: record.principalAfter!,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      textColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                  if (record.principalAfter != null && record.profitAfter != null)
+                    const SizedBox(width: AppSizes.spaceS),
+                  if (record.profitAfter != null)
+                    AssetAmountChip(
+                      label: '수익금',
+                      amount: record.profitAfter!,
+                      color: record.profitAfter! >= 0
+                          ? Colors.green.shade100
+                          : Colors.red.shade100,
+                      textColor: record.profitAfter! >= 0
+                          ? Colors.green.shade800
+                          : Colors.red.shade800,
+                    ),
+                ],
+              ),
+            ],
+            if (record.note != null && record.note!.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text(
+                record.note!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('출금 기록 삭제'),
+        content: const Text('삭제하면 출금일 이후 원금/수익이 원복됩니다. 계속하시겠어요?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('취소')),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('삭제', style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      await ref.read(assetManagementProvider.notifier).deleteWithdrawal(accountId, record.id);
+    }
+  }
+}
+
+// ─── 기록 추가 선택 시트 ──────────────────────────────────────────────────────
+class _AddActionSheet extends StatelessWidget {
+  final VoidCallback onSelectRecord;
+  final VoidCallback onSelectWithdrawal;
+
+  const _AddActionSheet({
+    required this.onSelectRecord,
+    required this.onSelectWithdrawal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.add_chart_outlined),
+              title: const Text('잔액 기록'),
+              subtitle: const Text('잔액·원금·수익을 기록합니다'),
+              onTap: onSelectRecord,
+            ),
+            ListTile(
+              leading: const Icon(Icons.remove_circle_outline),
+              title: const Text('출금'),
+              subtitle: const Text('원금 인출 또는 수익 실현을 기록합니다'),
+              onTap: onSelectWithdrawal,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
