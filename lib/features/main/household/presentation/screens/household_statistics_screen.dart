@@ -370,12 +370,23 @@ class _MonthlyStatisticsContentState
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: AppSizes.spaceS),
-              ...sorted.map((stat) => _MerchantStatItem(stat: stat, maxAmount: maxAmount)),
+              ...sorted.map((stat) => _MerchantStatItem(
+                    stat: stat,
+                    maxAmount: maxAmount,
+                    onTap: () => context.push(
+                      AppRoutes.householdCategoryExpenses,
+                      extra: {'month': widget.month, 'merchantId': stat.id, 'merchantName': stat.name, 'category': null},
+                    ),
+                  )),
               if (noMerchantCount > 0)
                 _MerchantStatItem(
                   stat: _MerchantStat(id: '', name: '소비처 없음', total: noMerchantTotal, count: noMerchantCount),
                   maxAmount: maxAmount,
                   isNone: true,
+                  onTap: () => context.push(
+                    AppRoutes.householdCategoryExpenses,
+                    extra: {'month': widget.month, 'merchantId': '', 'merchantName': '소비처 없음', 'category': null},
+                  ),
                 ),
             ],
           );
@@ -509,8 +520,9 @@ class _MerchantStatItem extends StatelessWidget {
   final _MerchantStat stat;
   final double maxAmount;
   final bool isNone;
+  final VoidCallback? onTap;
 
-  const _MerchantStatItem({required this.stat, required this.maxAmount, this.isNone = false});
+  const _MerchantStatItem({required this.stat, required this.maxAmount, this.isNone = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -519,7 +531,10 @@ class _MerchantStatItem extends StatelessWidget {
         ? Theme.of(context).colorScheme.outline
         : Theme.of(context).colorScheme.primary;
 
-    return Padding(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
       padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
       child: Row(
         children: [
@@ -578,6 +593,7 @@ class _MerchantStatItem extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }
