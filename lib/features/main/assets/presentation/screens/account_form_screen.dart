@@ -26,6 +26,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
   late final TextEditingController _institutionController;
   late final TextEditingController _accountNumberController;
   AccountType _selectedType = AccountType.savings;
+  int? _reminderDay;
 
   bool get _isEdit => widget.account != null;
 
@@ -38,6 +39,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
     _accountNumberController =
         TextEditingController(text: widget.account?.accountNumber ?? '');
     _selectedType = widget.account?.type ?? AccountType.savings;
+    _reminderDay = widget.account?.recordReminderDay;
   }
 
   @override
@@ -128,6 +130,13 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
                     .toList(),
                 onChanged: (v) => setState(() => _selectedType = v ?? AccountType.savings),
               ),
+              const SizedBox(height: AppSizes.spaceM),
+
+              // 알림 일자
+              _ReminderDayField(
+                value: _reminderDay,
+                onChanged: (v) => setState(() => _reminderDay = v),
+              ),
               const SizedBox(height: AppSizes.spaceL),
 
               // 저장 버튼
@@ -170,6 +179,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
               institution: institution,
               accountNumber: accountNumber.isEmpty ? null : accountNumber,
               type: _selectedType,
+              recordReminderDay: _reminderDay,
+              clearReminderDay: _reminderDay == null,
             ),
           );
     } else {
@@ -184,6 +195,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
               institution: institution,
               accountNumber: accountNumber.isEmpty ? null : accountNumber,
               type: _selectedType,
+              recordReminderDay: _reminderDay,
             ),
           );
     }
@@ -202,5 +214,107 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
         SnackBar(content: Text(l10n.common_error)),
       );
     }
+  }
+}
+
+// ─── 알림 일자 선택 위젯 ──────────────────────────────────────────────────────
+class _ReminderDayField extends StatelessWidget {
+  final int? value;
+  final ValueChanged<int?> onChanged;
+
+  const _ReminderDayField({required this.value, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final isEnabled = value != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 헤더 + 토글
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '기록 알림',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '매월 지정한 날짜에 자산 기록 입력 알림을 보내드립니다.',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            Switch(
+              value: isEnabled,
+              onChanged: (on) => onChanged(on ? 1 : null),
+            ),
+          ],
+        ),
+
+        // 일자 선택 (활성화 시에만 표시)
+        if (isEnabled) ...[
+          const SizedBox(height: AppSizes.spaceS),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceM,
+              vertical: 4,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).colorScheme.outline),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_month_outlined,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: AppSizes.spaceS),
+                Text(
+                  '알림 날짜',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
+                const SizedBox(width: AppSizes.spaceS),
+                Expanded(
+                  child: DropdownButton<int>(
+                    value: value,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    items: List.generate(
+                      31,
+                      (i) => DropdownMenuItem(
+                        value: i + 1,
+                        child: Text('매월 ${i + 1}일'),
+                      ),
+                    ),
+                    onChanged: onChanged,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+          Text(
+            '29~31일은 해당 월에 없는 경우 말일에 발송됩니다.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+        ],
+      ],
+    );
   }
 }
