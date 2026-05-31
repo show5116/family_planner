@@ -305,6 +305,8 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       final withdrawal = await _repository.createWithdrawal(accountId, dto);
+      // /records가 SNAPSHOT+WITHDRAWAL 통합 반환이므로 한 번만 invalidate
+      _ref.invalidate(assetRecordsProvider(accountId));
       _ref.invalidate(assetStatisticsProvider);
       _ref.invalidate(dashboardAssetStatisticsProvider);
       _ref.invalidate(groupAssetTrendProvider);
@@ -322,7 +324,7 @@ class AssetManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       await _repository.deleteWithdrawal(accountId, withdrawalId);
-      _ref.invalidate(assetWithdrawalsProvider(accountId));
+      _ref.invalidate(assetRecordsProvider(accountId));
       _ref.invalidate(assetStatisticsProvider);
       _ref.invalidate(dashboardAssetStatisticsProvider);
       _ref.invalidate(groupAssetTrendProvider);
