@@ -89,11 +89,12 @@ class FirebaseMessagingService {
 
   /// 포그라운드 메시지 처리
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    // 로컬 알림으로 표시 (탭 시 LocalNotificationService._onNotificationTapped가 처리)
+    final title = message.data['title'] ?? message.notification?.title ?? '';
+    final body = message.data['body'] ?? message.notification?.body ?? '';
     await LocalNotificationService.show(
       id: message.messageId.hashCode,
-      title: message.notification?.title ?? '',
-      body: message.notification?.body ?? '',
+      title: title,
+      body: body,
       payload: jsonEncode(message.data),
     );
   }
@@ -114,7 +115,17 @@ class FirebaseMessagingService {
 }
 
 /// 백그라운드 메시지 핸들러 (Top-level 함수)
+/// data-only 메시지를 백그라운드/종료 상태에서 수신하면 로컬 알림으로 표시
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // 백그라운드 메시지 수신 처리
+  await LocalNotificationService.initialize();
+  final title = message.data['title'] ?? '';
+  final body = message.data['body'] ?? '';
+  if (title.isEmpty && body.isEmpty) return;
+  await LocalNotificationService.show(
+    id: message.messageId.hashCode,
+    title: title,
+    body: body,
+    payload: jsonEncode(message.data),
+  );
 }
