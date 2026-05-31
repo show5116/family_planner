@@ -8,6 +8,7 @@ import 'package:family_planner/features/main/assets/data/models/asset_record_mod
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
 import 'package:family_planner/features/main/assets/data/models/holding_model.dart';
+import 'package:family_planner/features/main/assets/data/models/holding_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 
 class DuplicateRecordDateException implements Exception {}
@@ -341,6 +342,92 @@ class AssetRepository {
     } on DioException catch (e) {
       debugPrint('❌ [AssetRepository] 금 현물가 조회 실패: ${e.message}');
       throw Exception('금 현물가 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 기록 - 자동완성용 종목명 목록 조회
+  Future<List<String>> getHoldingRecordNames(String accountId) async {
+    try {
+      final response = await _dio.get('/assets/accounts/$accountId/holding-records/names');
+      final data = response.data;
+      if (data is List) return data.map((e) => e.toString()).toList();
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [AssetRepository] 종목명 목록 조회 실패: ${e.message}');
+      return [];
+    }
+  }
+
+  /// 종목 기록 목록 조회 (날짜 지정 시 해당 날짜만)
+  Future<List<HoldingRecordModel>> getHoldingRecords(
+    String accountId, {
+    String? recordDate, // YYYY-MM-DD
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/assets/accounts/$accountId/holding-records',
+        queryParameters: {
+          if (recordDate != null) 'recordDate': recordDate,
+        },
+      );
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => HoldingRecordModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [AssetRepository] 종목 기록 조회 실패: ${e.message}');
+      throw Exception('종목 기록 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 기록 추가
+  Future<HoldingRecordModel> createHoldingRecord(
+    String accountId,
+    CreateHoldingRecordDto dto,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/assets/accounts/$accountId/holding-records',
+        data: dto.toJson(),
+      );
+      return HoldingRecordModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('해당 날짜의 자산 기록이 없습니다. 먼저 잔액 기록을 추가해주세요.');
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌에만 기록을 추가할 수 있습니다');
+      throw Exception('종목 기록 추가 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 기록 수정
+  Future<HoldingRecordModel> updateHoldingRecord(
+    String accountId,
+    String recordId,
+    UpdateHoldingRecordDto dto,
+  ) async {
+    try {
+      final response = await _dio.patch(
+        '/assets/accounts/$accountId/holding-records/$recordId',
+        data: dto.toJson(),
+      );
+      return HoldingRecordModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('기록을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌 기록만 수정할 수 있습니다');
+      throw Exception('종목 기록 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 종목 기록 삭제
+  Future<void> deleteHoldingRecord(String accountId, String recordId) async {
+    try {
+      await _dio.delete('/assets/accounts/$accountId/holding-records/$recordId');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('기록을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('본인의 계좌 기록만 삭제할 수 있습니다');
+      throw Exception('종목 기록 삭제 실패: ${e.message}');
     }
   }
 

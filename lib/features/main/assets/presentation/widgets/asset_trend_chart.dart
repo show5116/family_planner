@@ -92,27 +92,36 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
                 label: l10n.asset_trend_balance,
                 selected: _metric == _ChartMetric.balance,
                 onTap: () => setState(() => _metric = _ChartMetric.balance),
+                tooltipTitle: '잔액',
+                tooltipBody: '각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금',
               ),
               _MetricChip(
                 label: l10n.asset_trend_principal,
                 selected: _metric == _ChartMetric.principal,
                 onTap: () => setState(() => _metric = _ChartMetric.principal),
+                tooltipTitle: '원금',
+                tooltipBody: '각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.',
               ),
               _MetricChip(
                 label: l10n.asset_trend_profit,
                 selected: _metric == _ChartMetric.profit,
                 onTap: () => setState(() => _metric = _ChartMetric.profit),
+                tooltipTitle: '수익금',
+                tooltipBody: '각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금',
               ),
               _MetricChip(
                 label: l10n.asset_trend_profit_rate,
                 selected: _metric == _ChartMetric.profitRate,
                 onTap: () => setState(() => _metric = _ChartMetric.profitRate),
+                tooltipTitle: '누적 수익률',
+                tooltipBody: '각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100',
               ),
               _MetricChip(
                 label: l10n.asset_trend_period_return,
                 selected: _metric == _ChartMetric.periodReturn,
-                onTap: () =>
-                    setState(() => _metric = _ChartMetric.periodReturn),
+                onTap: () => setState(() => _metric = _ChartMetric.periodReturn),
+                tooltipTitle: '기간 수익률',
+                tooltipBody: '직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100',
               ),
             ],
           ),
@@ -240,26 +249,69 @@ class _MetricChip extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
+  final String tooltipTitle;
+  final String tooltipBody;
 
-  const _MetricChip({required this.label, required this.selected, required this.onTap});
+  const _MetricChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    required this.tooltipTitle,
+    required this.tooltipBody,
+  });
+
+  void _showInfo(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tooltipTitle),
+        content: Text(tooltipBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final labelColor = selected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS, vertical: 4),
+        padding: const EdgeInsets.only(left: AppSizes.spaceS, right: 4, top: 4, bottom: 4),
         decoration: BoxDecoration(
           color: selected ? colorScheme.primary : colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
         ),
-        child: Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: selected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
-                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: labelColor,
+                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  ),
+            ),
+            const SizedBox(width: 2),
+            GestureDetector(
+              onTap: () => _showInfo(context),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Icon(
+                  Icons.info_outline,
+                  size: 13,
+                  color: labelColor.withValues(alpha: 0.7),
+                ),
               ),
+            ),
+          ],
         ),
       ),
     );
@@ -301,13 +353,14 @@ class _TrendLineChartState extends State<_TrendLineChart> {
     return (ratio * (n - 1)).round().clamp(0, n - 1);
   }
 
-  /// 기간별 수익률: (이번 잔액 - 전 잔액) / 전 잔액 × 100
+  /// 기간별 수익률: (이번 수익금 - 전 수익금) / 전 원금 × 100
+  /// 잔액 대신 profit 변화를 principal로 나눠 원금 입금의 영향을 제거한다.
   List<double> _periodReturns(List<AssetTrendPoint> pts) {
     return List.generate(pts.length, (i) {
       if (i == 0) return 0;
-      final prev = pts[i - 1].balance;
-      if (prev == 0) return 0;
-      return (pts[i].balance - prev) / prev * 100;
+      final prevPrincipal = pts[i - 1].principal;
+      if (prevPrincipal == 0) return 0;
+      return (pts[i].profit - pts[i - 1].profit) / prevPrincipal * 100;
     });
   }
 

@@ -6,6 +6,7 @@ import 'package:family_planner/features/main/assets/data/models/asset_record_mod
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_trend_model.dart';
 import 'package:family_planner/features/main/assets/data/models/holding_model.dart';
+import 'package:family_planner/features/main/assets/data/models/holding_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
@@ -418,3 +419,65 @@ final holdingsProvider = StateNotifierProvider.family<
     accountId,
   ),
 );
+
+// ─── 날짜별 종목 기록 (holding-records) ───────────────────────────────────────
+
+/// (accountId, recordDate) 쌍으로 keyed — recordDate가 바뀌면 별도 캐시
+final holdingRecordsProvider = StateNotifierProvider.autoDispose.family<
+    HoldingRecordsNotifier,
+    AsyncValue<List<HoldingRecordModel>>,
+    ({String accountId, String recordDate})>(
+  (ref, args) => HoldingRecordsNotifier(
+    ref.watch(assetRepositoryProvider),
+    args.accountId,
+    args.recordDate,
+  ),
+);
+
+class HoldingRecordsNotifier
+    extends StateNotifier<AsyncValue<List<HoldingRecordModel>>> {
+  final AssetRepository _repository;
+  final String _accountId;
+  final String _recordDate;
+
+  HoldingRecordsNotifier(this._repository, this._accountId, this._recordDate)
+      : super(const AsyncValue.loading()) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () => _repository.getHoldingRecords(_accountId, recordDate: _recordDate),
+    );
+  }
+
+  Future<void> refresh() => _load();
+
+  Future<HoldingRecordModel> create(CreateHoldingRecordDto dto) async {
+    final record = await _repository.createHoldingRecord(_accountId, dto);
+    if (state.hasValue) {
+      state = AsyncValue.data([...state.value!, record]);
+    }
+    return record;
+  }
+
+  Future<HoldingRecordModel> update(String recordId, UpdateHoldingRecordDto dto) async {
+    final updated = await _repository.updateHoldingRecord(_accountId, recordId, dto);
+    if (state.hasValue) {
+      state = AsyncValue.data(
+        state.value!.map((r) => r.id == recordId ? updated : r).toList(),
+      );
+    }
+    return updated;
+  }
+
+  Future<void> delete(String recordId) async {
+    await _repository.deleteHoldingRecord(_accountId, recordId);
+    if (state.hasValue) {
+      state = AsyncValue.data(
+        state.value!.where((r) => r.id != recordId).toList(),
+      );
+    }
+  }
+}
