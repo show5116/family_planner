@@ -225,6 +225,20 @@ class _MonthlyStatisticsContentState
       ),
       children: [
         _TotalSummaryCard(stats: widget.stats),
+        const SizedBox(height: AppSizes.spaceXS),
+        Row(
+          children: [
+            Icon(Icons.info_outline, size: 12, color: Theme.of(context).colorScheme.outline),
+            const SizedBox(width: 4),
+            Text(
+              '원금 및 이월 입금은 통계에서 제외됩니다',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+                fontSize: 11,
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: AppSizes.spaceM),
 
         // 뷰 모드 세그먼트
@@ -1101,6 +1115,20 @@ class _YearlyStatisticsContent extends StatelessWidget {
                     ),
             ),
           ),
+        ),
+        const SizedBox(height: AppSizes.spaceXS),
+        Row(
+          children: [
+            Icon(Icons.info_outline, size: 12, color: Theme.of(context).colorScheme.outline),
+            const SizedBox(width: 4),
+            Text(
+              '원금 및 이월 입금은 통계에서 제외됩니다',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+                fontSize: 11,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: AppSizes.spaceM),
         // 월별 막대 차트
