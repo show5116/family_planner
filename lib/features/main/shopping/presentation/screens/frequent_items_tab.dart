@@ -347,7 +347,7 @@ class _AutoAddInfoBannerState extends State<_AutoAddInfoBanner> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: colorScheme.secondaryContainer.withValues(alpha: 0.5),
+            color: colorScheme.secondaryContainer,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: colorScheme.secondaryContainer),
           ),
@@ -375,7 +375,7 @@ class _AutoAddInfoBannerState extends State<_AutoAddInfoBanner> {
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.of(context)!.fridge_frequent_autoAddInfo_body,
-                  style: textTheme.bodySmall?.copyWith(color: colorScheme.onSecondaryContainer),
+                  style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurface),
                 ),
                 const SizedBox(height: 4),
                 Row(
