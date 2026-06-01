@@ -118,7 +118,8 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
         defaultColor: defaultColor,
       );
 
-      // 그룹 목록 새로고침
+      // 그룹 목록 새로고침 (myGroupsProvider도 함께 갱신해야 GroupFilterBar 등 UI에 즉시 반영됨)
+      _ref.invalidate(myGroupsProvider);
       await loadGroups();
 
       // 그룹 상세도 새로고침
