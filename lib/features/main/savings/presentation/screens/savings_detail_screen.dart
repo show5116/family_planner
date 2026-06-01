@@ -141,6 +141,7 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
       await action();
       if (mounted) {
         ref.read(savingsGoalDetailProvider(widget.goalId).notifier).refresh();
+        ref.read(savingsTransactionsProvider(widget.goalId).notifier).refresh();
         ref.invalidate(dashboardSavingsProvider);
       }
     } catch (e) {
