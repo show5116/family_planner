@@ -55,6 +55,7 @@ class _CartEditState {
   int quantity;
   String? unit;
   String? memo;
+  String? price; // 로컬 전용 — API 미지원, 완료 다이얼로그에 전달
   bool markedForDelete;
 
   _CartEditState(CartItemModel item)
@@ -62,6 +63,7 @@ class _CartEditState {
         quantity = item.quantity,
         unit = item.unit,
         memo = item.memo,
+        price = null,
         markedForDelete = false;
 
   bool hasChanges(CartItemModel original) {
@@ -86,7 +88,10 @@ class CartTab extends ConsumerStatefulWidget {
   ConsumerState<CartTab> createState() => _CartTabState();
 }
 
-class _CartTabState extends ConsumerState<CartTab> {
+class _CartTabState extends ConsumerState<CartTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   final Map<String, _CartEditState> _edits = {};
   bool _saving = false;
 
@@ -311,6 +316,7 @@ class _CartTabState extends ConsumerState<CartTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = AppLocalizations.of(context)!;
 
     return ValueListenableBuilder<bool>(
@@ -423,7 +429,14 @@ class _CartTabState extends ConsumerState<CartTab> {
   void _showCompleteDialog(BuildContext context, List<CartItemModel> items) {
     showDialog<void>(
       context: context,
-      builder: (_) => _CompleteShoppingDialog(items: items),
+      builder: (_) => _CompleteShoppingDialog(
+        items: items,
+        initialPrices: {
+          for (final item in items)
+            if (_edits[item.id]?.price != null)
+              item.id: _edits[item.id]!.price!,
+        },
+      ),
     );
   }
 
@@ -855,7 +868,7 @@ class _EmptyCart extends StatelessWidget {
   }
 }
 
-class _CartItemTile extends StatelessWidget {
+class _CartItemTile extends StatefulWidget {
   final CartItemModel item;
   final _CartEditState editState;
   final VoidCallback onChanged;
@@ -870,16 +883,39 @@ class _CartItemTile extends StatelessWidget {
   });
 
   @override
+  State<_CartItemTile> createState() => _CartItemTileState();
+}
+
+class _CartItemTileState extends State<_CartItemTile> {
+  late final TextEditingController _priceCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _priceCtrl = TextEditingController(text: widget.editState.price ?? '');
+    _priceCtrl.addListener(() {
+      widget.editState.price =
+          _priceCtrl.text.trim().isEmpty ? null : _priceCtrl.text.trim();
+    });
+  }
+
+  @override
+  void dispose() {
+    _priceCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final deleted = editState.markedForDelete;
+    final deleted = widget.editState.markedForDelete;
 
     return Dismissible(
-      key: ValueKey('cart_dismissible_${item.id}'),
+      key: ValueKey('cart_dismissible_${widget.item.id}'),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) async {
-        editState.markedForDelete = true;
-        onChanged();
+        widget.editState.markedForDelete = true;
+        widget.onChanged();
         return false;
       },
       background: Container(
@@ -892,75 +928,100 @@ class _CartItemTile extends StatelessWidget {
       child: AnimatedOpacity(
         opacity: deleted ? 0.38 : 1.0,
         duration: const Duration(milliseconds: 200),
-        child: ListTile(
-          onTap: deleted ? null : onTapEdit,
-          title: Text(
-            editState.name,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  decoration:
-                      deleted ? TextDecoration.lineThrough : null,
-                ),
-          ),
-          subtitle: () {
-            final parts = <String>[];
-            final u = editState.unit;
-            if (u != null && u.isNotEmpty) parts.add(u);
-            final m = editState.memo;
-            if (m != null && m.isNotEmpty) parts.add(m);
-            if (parts.isEmpty) return null;
-            return Text(
-              parts.join('  ·  '),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-            );
-          }(),
-          trailing: deleted
-              ? IconButton(
-                  icon: Icon(Icons.undo,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20),
-                  tooltip: l10n.common_undo,
-                  onPressed: () {
-                    editState.markedForDelete = false;
-                    if (editState.quantity == 0) {
-                      editState.quantity = item.quantity;
-                    }
-                    onChanged();
-                  },
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove, size: 18),
-                      visualDensity: VisualDensity.compact,
-                      onPressed: editState.quantity > 0
-                          ? () {
-                              editState.quantity--;
-                              if (editState.quantity == 0) {
-                                editState.markedForDelete = true;
-                              }
-                              onChanged();
-                            }
-                          : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              onTap: deleted ? null : widget.onTapEdit,
+              title: Text(
+                widget.editState.name,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      decoration: deleted ? TextDecoration.lineThrough : null,
                     ),
-                    Text(
-                      editState.quantity.toString(),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add, size: 18),
-                      visualDensity: VisualDensity.compact,
+              ),
+              subtitle: () {
+                final parts = <String>[];
+                final u = widget.editState.unit;
+                if (u != null && u.isNotEmpty) parts.add(u);
+                final m = widget.editState.memo;
+                if (m != null && m.isNotEmpty) parts.add(m);
+                if (parts.isEmpty) return null;
+                return Text(
+                  parts.join('  ·  '),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                );
+              }(),
+              trailing: deleted
+                  ? IconButton(
+                      icon: Icon(Icons.undo,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: 20),
+                      tooltip: l10n.common_undo,
                       onPressed: () {
-                        editState.quantity++;
-                        onChanged();
+                        widget.editState.markedForDelete = false;
+                        if (widget.editState.quantity == 0) {
+                          widget.editState.quantity = widget.item.quantity;
+                        }
+                        widget.onChanged();
                       },
+                    )
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove, size: 18),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: widget.editState.quantity > 0
+                              ? () {
+                                  widget.editState.quantity--;
+                                  if (widget.editState.quantity == 0) {
+                                    widget.editState.markedForDelete = true;
+                                  }
+                                  widget.onChanged();
+                                }
+                              : null,
+                        ),
+                        Text(
+                          widget.editState.quantity.toString(),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add, size: 18),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () {
+                            widget.editState.quantity++;
+                            widget.onChanged();
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+            ),
+            if (!deleted)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    AppSizes.spaceM, 0, AppSizes.spaceM, AppSizes.spaceS),
+                child: SizedBox(
+                  width: 130,
+                  child: TextField(
+                    controller: _priceCtrl,
+                    decoration: InputDecoration(
+                      labelText: l10n.fridge_cart_item_price,
+                      suffixText: '원',
+                      isDense: true,
+                      border: const OutlineInputBorder(),
+                    ),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: false),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
+              ),
+          ],
         ),
       ),
     );
@@ -1198,7 +1259,11 @@ class _TransferDetail {
 
 class _CompleteShoppingDialog extends ConsumerStatefulWidget {
   final List<CartItemModel> items;
-  const _CompleteShoppingDialog({required this.items});
+  final Map<String, String> initialPrices; // cartItemId → price string
+  const _CompleteShoppingDialog({
+    required this.items,
+    this.initialPrices = const {},
+  });
 
   @override
   ConsumerState<_CompleteShoppingDialog> createState() =>
@@ -1221,12 +1286,27 @@ class _CompleteShoppingDialogState
 
   bool _loading = false;
 
+  // 품목별 가격 합계를 계산해서 amountController에 반영
+  void _syncAmountFromPrices() {
+    if (!_addExpense) return;
+    final total = _priceMap.values.fold<double>(0, (sum, c) {
+      return sum + (double.tryParse(c.text.replaceAll(',', '').trim()) ?? 0);
+    });
+    if (total > 0) {
+      _amountController.text = total.toInt().toString();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     for (final item in widget.items) {
       _transferMap[item.id] = null;
-      _priceMap[item.id] = TextEditingController();
+      final ctrl = TextEditingController(
+        text: widget.initialPrices[item.id] ?? '',
+      );
+      ctrl.addListener(_syncAmountFromPrices);
+      _priceMap[item.id] = ctrl;
     }
   }
 
@@ -1287,6 +1367,8 @@ class _CompleteShoppingDialogState
               .map((e) => TransferItemDto(
                     cartItemId: e.key,
                     storageLocationId: e.value!,
+                    price: double.tryParse(
+                        _priceMap[e.key]?.text.replaceAll(',', '').trim() ?? ''),
                   ))
               .toList();
 
@@ -1351,8 +1433,10 @@ class _CompleteShoppingDialogState
                   paymentMethod: _paymentMethod,
                   onTransferChanged: (id, storageId) =>
                       setState(() => _transferMap[id] = storageId),
-                  onAddExpenseChanged: (v) =>
-                      setState(() => _addExpense = v),
+                  onAddExpenseChanged: (v) => setState(() {
+                        _addExpense = v;
+                        if (v) _syncAmountFromPrices();
+                      }),
                   onPaymentMethodChanged: (v) =>
                       setState(() => _paymentMethod = v),
                   l10n: l10n,

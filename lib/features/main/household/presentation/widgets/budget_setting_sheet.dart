@@ -144,6 +144,8 @@ class _MonthlyBudgetTabState extends ConsumerState<_MonthlyBudgetTab> {
   double? _totalAmount;
   final Map<ExpenseCategory, double?> _categoryAmounts = {};
   bool _initialized = false;
+  bool _saving = false;
+  String? _errorMsg;
 
   void _initFromData(GroupBudgetModel? groupBudget, List<BudgetModel> budgets) {
     if (_initialized) return;
@@ -166,6 +168,8 @@ class _MonthlyBudgetTabState extends ConsumerState<_MonthlyBudgetTab> {
       _totalAmount != null && _totalAmount! > 0 && _categorySum > _totalAmount!;
 
   Future<void> _saveAll(BuildContext context, AppLocalizations l10n) async {
+    setState(() { _saving = true; _errorMsg = null; });
+
     final groupId = ref.read(householdSelectedGroupIdProvider);
     final month = ref.read(householdSelectedMonthProvider);
 
@@ -186,14 +190,12 @@ class _MonthlyBudgetTabState extends ConsumerState<_MonthlyBudgetTab> {
 
     if (!context.mounted) return;
     if (result != null) {
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.household_budget_saved)),
       );
-      Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.common_error)),
-      );
+      setState(() { _saving = false; _errorMsg = l10n.common_error; });
     }
   }
 
@@ -291,8 +293,20 @@ class _MonthlyBudgetTabState extends ConsumerState<_MonthlyBudgetTab> {
             ],
           ),
         ),
-        // 저장 버튼
-        _SaveButton(onPressed: () => _saveAll(context, l10n)),
+        // 에러 메시지 + 저장 버튼
+        if (_errorMsg != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+            child: Text(
+              _errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ),
+        _SaveButton(
+          onPressed: _saving ? null : () => _saveAll(context, l10n),
+        ),
       ],
     );
   }
@@ -314,6 +328,8 @@ class _TemplateTabState extends ConsumerState<_TemplateTab> {
   double? _totalAmount;
   final Map<ExpenseCategory, double?> _categoryAmounts = {};
   bool _initialized = false;
+  bool _saving = false;
+  String? _errorMsg;
 
   void _initFromData(
       GroupBudgetTemplateModel? groupTemplate, List<BudgetTemplateModel> templates) {
@@ -337,6 +353,8 @@ class _TemplateTabState extends ConsumerState<_TemplateTab> {
       _totalAmount != null && _totalAmount! > 0 && _categorySum > _totalAmount!;
 
   Future<void> _saveAll(BuildContext context, AppLocalizations l10n) async {
+    setState(() { _saving = true; _errorMsg = null; });
+
     final groupId = ref.read(householdSelectedGroupIdProvider);
 
     final categories = _categoryAmounts.entries
@@ -355,14 +373,12 @@ class _TemplateTabState extends ConsumerState<_TemplateTab> {
 
     if (!context.mounted) return;
     if (result != null) {
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.household_budget_template_saved)),
       );
-      Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.common_error)),
-      );
+      setState(() { _saving = false; _errorMsg = l10n.common_error; });
     }
   }
 
@@ -485,7 +501,19 @@ class _TemplateTabState extends ConsumerState<_TemplateTab> {
             ],
           ),
         ),
-        _SaveButton(onPressed: () => _saveAll(context, l10n)),
+        if (_errorMsg != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+            child: Text(
+              _errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ),
+        _SaveButton(
+          onPressed: _saving ? null : () => _saveAll(context, l10n),
+        ),
       ],
     );
   }
@@ -533,7 +561,7 @@ class _ErrorView extends StatelessWidget {
 
 /// 하단 저장 버튼
 class _SaveButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   const _SaveButton({required this.onPressed});
 
   @override

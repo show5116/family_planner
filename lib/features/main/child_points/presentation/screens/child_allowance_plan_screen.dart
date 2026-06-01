@@ -306,6 +306,10 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('용돈 플랜이 저장되었습니다')),
       );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('저장에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+      );
     }
   }
 }

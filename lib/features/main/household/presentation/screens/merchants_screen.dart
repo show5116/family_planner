@@ -349,6 +349,7 @@ class _MerchantFormSheet extends StatefulWidget {
 class _MerchantFormSheetState extends State<_MerchantFormSheet> {
   late final TextEditingController _controller;
   bool _loading = false;
+  String? _errorMsg;
 
   @override
   void initState() {
@@ -392,6 +393,15 @@ class _MerchantFormSheetState extends State<_MerchantFormSheet> {
             ),
             onSubmitted: (_) => _submit(l10n),
           ),
+          if (_errorMsg != null) ...[
+            const SizedBox(height: AppSizes.spaceXS),
+            Text(
+              _errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ],
           const SizedBox(height: AppSizes.spaceM),
           FilledButton(
             onPressed: _loading ? null : () => _submit(l10n),
@@ -413,12 +423,13 @@ class _MerchantFormSheetState extends State<_MerchantFormSheet> {
       if (mounted) Navigator.of(context).pop();
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.common_error)),
-        );
+        setState(() {
+          _loading = false;
+          _errorMsg = l10n.common_error;
+        });
       }
     } finally {
-      if (mounted) setState(() => _loading = false);
+      // _loading은 catch에서 이미 처리, 성공 시 pop으로 위젯 소멸
     }
   }
 }

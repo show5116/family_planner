@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
@@ -192,6 +193,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// 그룹 관련 provider들을 모두 초기화 (로그아웃/계정 전환 공통)
   void _invalidateGroupProviders() {
+    // 이전 계정의 group filter가 새 계정에 적용되지 않도록 SharedPreferences 제거
+    _clearGroupFilterPrefs();
+
     // 로그아웃/계정 전환 모두 invalidate하여 다음 로그인 시 새 계정 데이터를 fetch
     _ref.invalidate(myGroupsProvider);
     _ref.invalidate(groupNotifierProvider);
@@ -448,6 +452,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
         (response['tempToken'] as String).isNotEmpty;
   }
 
+  /// 이전 계정의 그룹 필터 SharedPreferences 제거 (계정 전환 시 잔존 방지)
+  Future<void> _clearGroupFilterPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      for (final key in ['calendar_group_filter', 'todo_group_filter']) {
+        await prefs.remove('${key}_all');
+        await prefs.remove('${key}_personal');
+        await prefs.remove('${key}_ids');
+      }
+    } catch (_) {}
+  }
+
   /// 비밀번호 재설정 요청
   Future<void> requestPasswordReset({required String email}) async {
     state = state.copyWith(error: null);
@@ -499,7 +515,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(error: null);
 
     try {
-      final updatedUser = await _authService.updateProfile(
+      await _authService.updateProfile(
         name: name,
         phoneNumber: phoneNumber,
         currentPassword: currentPassword,
@@ -507,8 +523,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         personalColor: personalColor,
       );
 
-      // 업데이트된 사용자 정보로 상태 업데이트
-      state = state.copyWith(isAuthenticated: true, user: updatedUser);
+      // /auth/me 재호출로 최신 사용자 정보 갱신
+      final user = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: user);
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;

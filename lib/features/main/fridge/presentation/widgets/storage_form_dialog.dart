@@ -18,6 +18,7 @@ class _StorageFormDialogState extends ConsumerState<StorageFormDialog> {
   final _nameController = TextEditingController();
   StorageType _type = StorageType.fridge;
   bool _loading = false;
+  String? _errorMsg;
 
   @override
   void initState() {
@@ -57,11 +58,11 @@ class _StorageFormDialogState extends ConsumerState<StorageFormDialog> {
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        setState(() {
+          _loading = false;
+          _errorMsg = e.toString();
+        });
       }
-    } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -83,6 +84,15 @@ class _StorageFormDialogState extends ConsumerState<StorageFormDialog> {
             ),
             textCapitalization: TextCapitalization.sentences,
           ),
+          if (_errorMsg != null) ...[
+            const SizedBox(height: AppSizes.spaceXS),
+            Text(
+              _errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ],
           const SizedBox(height: AppSizes.spaceM),
           SegmentedButton<StorageType>(
             segments: [

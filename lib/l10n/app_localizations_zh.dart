@@ -413,8 +413,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bottomNav_howToUse => '使用方法';
 
   @override
-  String get bottomNav_instructions =>
-      '• 点击第2、3、4个位置可更改菜单。\n• 第1位（主页）和第5位（更多）为固定项。\n• 不在底部导航栏中的菜单显示在「更多」标签中。';
+  String get bottomNav_instructions => '• 点击第2、3、4个位置可更改菜单。\n• 第1位（主页）和第5位（更多）为固定项。\n• 不在底部导航栏中的菜单显示在「更多」标签中。';
 
   @override
   String get bottomNav_availableMenus => '可用菜单';
@@ -2955,8 +2954,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get asset_gold_record_info_title => '关于黄金账户';
 
   @override
-  String get asset_gold_record_info_body =>
-      '这是自动管理的实物黄金账户：\n\n• 添加记录时，余额按重量×当前黄金现货价计算。\n\n• 每月1日使用最新黄金现货价自动更新余额、收益和收益率。\n\n• 您可以手动调整本金；否则将保留第一条记录时计算的值。';
+  String get asset_gold_record_info_body => '这是自动管理的实物黄金账户：\n\n• 添加记录时，余额按重量×当前黄金现货价计算。\n\n• 每月1日使用最新黄金现货价自动更新余额、收益和收益率。\n\n• 您可以手动调整本金；否则将保留第一条记录时计算的值。';
 
   @override
   String get asset_no_records => '暂无记录';
@@ -3258,8 +3256,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_settings_auto_toggle_desc => '检测银行卡/银行支付通知并自动记录到家计账本';
 
   @override
-  String get household_settings_permission_required =>
-      '需要通知访问权限。请点击「允许」在设置中授权。';
+  String get household_settings_permission_required => '需要通知访问权限。请点击「允许」在设置中授权。';
 
   @override
   String get household_settings_permission_grant => '允许';
@@ -3277,12 +3274,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_settings_privacy_dialog_title => '隐私政策';
 
   @override
-  String get household_settings_auto_scope_notice =>
-      '仅在应用运行时有效（前台或后台）。完全关闭应用后自动记账将停止。';
+  String get household_settings_auto_scope_notice => '仅在应用运行时有效（前台或后台）。完全关闭应用后自动记账将停止。';
 
   @override
-  String get household_settings_privacy_content =>
-      '■ 收集的数据\n应用临时读取设备上银行卡/银行应用发送的支付完成通知中的以下信息：\n  · 通知标题和正文（例：「工商银行 ¥120 已扣款」）\n  · 发送应用的包名（例：com.icbc.icbcapp）\n\n■ 用途\n数据仅用于从通知文本中提取支付金额、支付方式和类别，并自动记录到家计账本。\n\n■ 保留和处置\n通知文本在设备上解析后立即丢弃；原始文本不会传输到服务器或存储。只有转换后的账本条目会保存到您的账户。\n\n■ 第三方共享\n收集的通知信息不会提供、出售或与任何第三方共享。\n\n■ 撤回同意\n您可以随时在此设置页面关闭自动记账，或在设备设置 > 通知访问中撤销Family Planner的通知访问权限。';
+  String get household_settings_privacy_content => '■ 收集的数据\n应用临时读取设备上银行卡/银行应用发送的支付完成通知中的以下信息：\n  · 通知标题和正文（例：「工商银行 ¥120 已扣款」）\n  · 发送应用的包名（例：com.icbc.icbcapp）\n\n■ 用途\n数据仅用于从通知文本中提取支付金额、支付方式和类别，并自动记录到家计账本。\n\n■ 保留和处置\n通知文本在设备上解析后立即丢弃；原始文本不会传输到服务器或存储。只有转换后的账本条目会保存到您的账户。\n\n■ 第三方共享\n收集的通知信息不会提供、出售或与任何第三方共享。\n\n■ 撤回同意\n您可以随时在此设置页面关闭自动记账，或在设备设置 > 通知访问中撤销Family Planner的通知访问权限。';
 
   @override
   String get fridge_title => '冰箱';
@@ -3423,8 +3418,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_frequent_autoAddInfo_title => '什么是自动添加？';
 
   @override
-  String get fridge_frequent_autoAddInfo_body =>
-      '当冰箱中此食材数量为0时，将自动添加到购物车。\n开启后，冰箱中没有时购物清单会自动填充。';
+  String get fridge_frequent_autoAddInfo_body => '当冰箱中此食材数量为0时，将自动添加到购物车。\n开启后，冰箱中没有时购物清单会自动填充。';
 
   @override
   String get fridge_frequent_autoAddInfo_hint => '在冰箱标签管理数量时同步';
@@ -3445,8 +3439,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_frequent_coach_autoAddTitle => '自动添加';
 
   @override
-  String get fridge_frequent_coach_autoAddDesc =>
-      '当冰箱中此食材数量为0时，\n将自动添加到购物车。\n与冰箱标签联动的智能功能。';
+  String get fridge_frequent_coach_autoAddDesc => '当冰箱中此食材数量为0时，\n将自动添加到购物车。\n与冰箱标签联动的智能功能。';
 
   @override
   String get fridge_frequent_coach_addToCartTitle => '一键加入购物车';
@@ -3473,29 +3466,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_coach_itemTitle => '管理食材';
 
   @override
-  String get fridge_coach_itemDesc =>
-      '• 点击可编辑名称、保质期和备注\n• 使用±按钮调整数量\n• 向左滑动标记为删除\n• 更改后需按保存按钮才能生效';
+  String get fridge_coach_itemDesc => '• 点击可编辑名称、保质期和备注\n• 使用±按钮调整数量\n• 向左滑动标记为删除\n• 更改后需按保存按钮才能生效';
 
   @override
   String get fridge_coach_ddayTitle => '保质期提醒';
 
   @override
-  String get fridge_coach_ddayDesc =>
-      '登记保质期后会显示剩余天数。\n• 蓝色：时间充裕\n• 橙色：3天内即将到期\n• 红色：今天或已过期\n在设定的提醒日前会收到推送通知。';
+  String get fridge_coach_ddayDesc => '登记保质期后会显示剩余天数。\n• 蓝色：时间充裕\n• 橙色：3天内即将到期\n• 红色：今天或已过期\n在设定的提醒日前会收到推送通知。';
 
   @override
   String get fridge_coach_addItemTitle => '添加食材';
 
   @override
-  String get fridge_coach_addItemDesc =>
-      '点击储存位置右侧+按钮添加食材。\n可以一次添加多个食材，\n同时输入保质期、数量、单位和备注。';
+  String get fridge_coach_addItemDesc => '点击储存位置右侧+按钮添加食材。\n可以一次添加多个食材，\n同时输入保质期、数量、单位和备注。';
 
   @override
   String get fridge_coach_suggestionTitle => '保质期自动推荐';
 
   @override
-  String get fridge_coach_suggestionDesc =>
-      '输入食材名称后会自动推荐保质期。\n在设置 > 保质期预设管理中，可以自行添加或修改\n各食材的基准天数，自定义自动化规则。';
+  String get fridge_coach_suggestionDesc => '输入食材名称后会自动推荐保质期。\n在设置 > 保质期预设管理中，可以自行添加或修改\n各食材的基准天数，自定义自动化规则。';
 
   @override
   String get fridge_coach_skip => '跳过';
@@ -3522,7 +3511,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_cart_complete_add_expense => '记录到账本';
 
   @override
-  String get fridge_cart_complete_amount => '合计（可选—空白时自动求和）';
+  String get fridge_cart_complete_amount => '合计（根据品目金额自动计算）';
 
   @override
   String get fridge_cart_item_price => '价格（可选）';
@@ -3548,14 +3537,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_history_view_expense => '在账本中查看';
 
   @override
+  String get fridge_history_delete => '删除记录';
+
+  @override
+  String get fridge_history_delete_confirm_title => '删除购物记录';
+
+  @override
+  String get fridge_history_delete_confirm_body => '确定删除这条购物记录吗？';
+
+  @override
+  String get fridge_history_delete_expense_notice => '与账本关联的支出，即使删除购物记录，仍会保留在账本中。';
+
+  @override
   String get fridge_group_selector_personal => '个人';
 
   @override
-  String fridge_expiry_suggestion_label(
-    String keyword,
-    String storageType,
-    int days,
-  ) {
+  String fridge_expiry_suggestion_label(String keyword, String storageType, int days) {
     return '以$keyword为基准 · $storageType 推荐$days天';
   }
 
@@ -3724,8 +3721,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get investment_adminDialogTitle => '重置历史数据';
 
   @override
-  String get investment_adminDialogDesc =>
-      '从Yahoo/CoinGecko/BOK收集历史价格并保存到数据库。\n可能需要一些时间。';
+  String get investment_adminDialogDesc => '从Yahoo/CoinGecko/BOK收集历史价格并保存到数据库。\n可能需要一些时间。';
 
   @override
   String get investment_adminDaysLabel => '收集天数 (1~3650)';
@@ -3821,15 +3817,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get investment_coachIndicatorTitle => '投资指标';
 
   @override
-  String get investment_coachIndicatorDesc =>
-      '一览主要股指、汇率、大宗商品、加密货币等实时指标。\n点击查看详细图表和历史走势。';
+  String get investment_coachIndicatorDesc => '一览主要股指、汇率、大宗商品、加密货币等实时指标。\n点击查看详细图表和历史走势。';
 
   @override
   String get investment_coachBookmarkTitle => '收藏';
 
   @override
-  String get investment_coachBookmarkDesc =>
-      '点击星标添加到收藏。\n收藏的指标置顶显示，\n并可在主页仪表板小部件中直接查看。';
+  String get investment_coachBookmarkDesc => '点击星标添加到收藏。\n收藏的指标置顶显示，\n并可在主页仪表板小部件中直接查看。';
 
   @override
   String get householdWidget_groupTooltip => '选择群组';
@@ -4020,43 +4014,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get legal_terms_section1_title => '第一条（目的）';
 
   @override
-  String get legal_terms_section1_body =>
-      '本条款旨在规定HMN Corporation（以下简称\"公司\"）提供的Family Planner服务（以下简称\"服务\"）使用过程中，公司与会员之间的权利、义务及责任事项。';
+  String get legal_terms_section1_body => '本条款旨在规定HMN Corporation（以下简称\"公司\"）提供的Family Planner服务（以下简称\"服务\"）使用过程中，公司与会员之间的权利、义务及责任事项。';
 
   @override
   String get legal_terms_section2_title => '第二条（服务内容）';
 
   @override
-  String get legal_terms_section2_body =>
-      '公司为会员提供以下服务：\n• 基于家庭群组的日历及待办事项共享\n• 成员间的资产管理及记录共享\n• 育儿奖励（表扬贴纸等）管理系统\n• 通过AI助手进行对话、日程管理、宏观经济/市场简报服务\n• 其他公司额外开发或通过合作协议提供的服务';
+  String get legal_terms_section2_body => '公司为会员提供以下服务：\n• 基于家庭群组的日历及待办事项共享\n• 成员间的资产管理及记录共享\n• 育儿奖励（表扬贴纸等）管理系统\n• 通过AI助手进行对话、日程管理、宏观经济/市场简报服务\n• 其他公司额外开发或通过合作协议提供的服务';
 
   @override
   String get legal_terms_section3_title => '第三条（会员义务）';
 
   @override
-  String get legal_terms_section3_body =>
-      '• 会员不得向服务的AI助手输入违法或可能危害他人的提示。\n• 会员有责任安全管理家庭群组邀请码及账号信息。\n• 服务内的资产管理及市场简报功能仅供参考，公司对由此产生的投资结果不承担法律责任。';
+  String get legal_terms_section3_body => '• 会员不得向服务的AI助手输入违法或可能危害他人的提示。\n• 会员有责任安全管理家庭群组邀请码及账号信息。\n• 服务内的资产管理及市场简报功能仅供参考，公司对由此产生的投资结果不承担法律责任。';
 
   @override
   String get legal_terms_section4_title => '第四条（帖子的版权及管理）';
 
   @override
-  String get legal_terms_section4_body =>
-      '• 会员在服务内发布的信息（聊天、日程、资产信息等）的版权归该会员所有。\n• 公司仅将会员帖子用于服务运营、改善（包括AI功能升级）及推广目的，并以无法识别个人身份的脱敏形式使用。';
+  String get legal_terms_section4_body => '• 会员在服务内发布的信息（聊天、日程、资产信息等）的版权归该会员所有。\n• 公司仅将会员帖子用于服务运营、改善（包括AI功能升级）及推广目的，并以无法识别个人身份的脱敏形式使用。';
 
   @override
   String get legal_terms_section5_title => '第五条（服务中断及变更）';
 
   @override
-  String get legal_terms_section5_body =>
-      '公司可根据运营或技术需要变更或中断所提供服务的全部或部分，并在此情况下提前公告。';
+  String get legal_terms_section5_body => '公司可根据运营或技术需要变更或中断所提供服务的全部或部分，并在此情况下提前公告。';
 
   @override
   String get legal_terms_section6_title => '第六条（责任限制）';
 
   @override
-  String get legal_terms_section6_body =>
-      '因自然灾害、服务器提供商故障、第三方AI API服务故障等不可抗力导致无法提供服务的情况，公司免除服务提供相关责任。';
+  String get legal_terms_section6_body => '因自然灾害、服务器提供商故障、第三方AI API服务故障等不可抗力导致无法提供服务的情况，公司免除服务提供相关责任。';
 
   @override
   String get legal_terms_section7_title => '第七条（施行日）';
@@ -4068,43 +4056,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get legal_privacy_section1_title => '1. 个人信息的处理目的';
 
   @override
-  String get legal_privacy_section1_body =>
-      'HMN Corporation（以下简称\"公司\"）为以下目的处理个人信息。所处理的个人信息不会用于以下目的以外的用途，如利用目的发生变更，将采取单独征得同意等必要措施。\n• 会员注册与管理、家庭群组（邀请码等）识别\n• 服务提供（日历、待办事项、资产管理、育儿奖励系统等）\n• AI助手（聊天机器人、简报等）服务提供及质量提升\n• 新服务开发及个性化服务提供';
+  String get legal_privacy_section1_body => 'HMN Corporation（以下简称\"公司\"）为以下目的处理个人信息。所处理的个人信息不会用于以下目的以外的用途，如利用目的发生变更，将采取单独征得同意等必要措施。\n• 会员注册与管理、家庭群组（邀请码等）识别\n• 服务提供（日历、待办事项、资产管理、育儿奖励系统等）\n• AI助手（聊天机器人、简报等）服务提供及质量提升\n• 新服务开发及个性化服务提供';
 
   @override
   String get legal_privacy_section2_title => '2. 处理的个人信息项目';
 
   @override
-  String get legal_privacy_section2_body =>
-      '公司为提供服务处理以下个人信息项目。\n• 必填项：电子邮件地址、密码、姓名（或昵称）、头像\n• 服务使用过程中收集的信息：日历日程、待办事项、资产数据、家庭群组信息、与AI的聊天记录、服务使用记录、设备信息';
+  String get legal_privacy_section2_body => '公司为提供服务处理以下个人信息项目。\n• 必填项：电子邮件地址、密码、姓名（或昵称）、头像\n• 服务使用过程中收集的信息：日历日程、待办事项、资产数据、家庭群组信息、与AI的聊天记录、服务使用记录、设备信息';
 
   @override
   String get legal_privacy_section3_title => '3. 个人信息的第三方提供及委托';
 
   @override
-  String get legal_privacy_section3_body =>
-      '为顺畅提供AI服务（上下文分析、简报生成等），公司可能将部分输入数据发送至外部AI模型API（如：OpenAI、Anthropic、Google等）。\n但该数据仅用于服务提供目的，并采取措施确保不用于模型训练。';
+  String get legal_privacy_section3_body => '为顺畅提供AI服务（上下文分析、简报生成等），公司可能将部分输入数据发送至外部AI模型API（如：OpenAI、Anthropic、Google等）。\n但该数据仅用于服务提供目的，并采取措施确保不用于模型训练。';
 
   @override
   String get legal_privacy_section4_title => '4. 个人信息的销毁';
 
   @override
-  String get legal_privacy_section4_body =>
-      '公司原则上在个人信息处理目的达成后立即销毁相关个人信息。\n• 销毁程序：用户申请注销时，收集的信息将立即或在法律规定的保存期限届满后销毁。\n• 销毁方式：电子文件形式的信息采用无法恢复记录的技术方法进行销毁。';
+  String get legal_privacy_section4_body => '公司原则上在个人信息处理目的达成后立即销毁相关个人信息。\n• 销毁程序：用户申请注销时，收集的信息将立即或在法律规定的保存期限届满后销毁。\n• 销毁方式：电子文件形式的信息采用无法恢复记录的技术方法进行销毁。';
 
   @override
   String get legal_privacy_section5_title => '5. 信息主体的权利及行使方法';
 
   @override
-  String get legal_privacy_section5_body =>
-      '用户可随时查询或修改自己的个人信息，并可通过注销账号撤回对个人信息收集和使用的同意。';
+  String get legal_privacy_section5_body => '用户可随时查询或修改自己的个人信息，并可通过注销账号撤回对个人信息收集和使用的同意。';
 
   @override
   String get legal_privacy_section6_title => '6. 个人信息保护负责人';
 
   @override
-  String get legal_privacy_section6_body =>
-      '姓名：유영진（Yoo Youngjin）\n电子邮件：hmn.corp.dev@gmail.com';
+  String get legal_privacy_section6_body => '姓名：유영진（Yoo Youngjin）\n电子邮件：hmn.corp.dev@gmail.com';
 
   @override
   String get legal_privacy_section7_title => '7. 施行日';

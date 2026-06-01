@@ -158,82 +158,9 @@ class PointsTab extends ConsumerWidget {
     ChildcareAccount account,
     AllowancePlan plan,
   ) async {
-    final controller = TextEditingController();
-    final ratio = plan.pointToMoneyRatio;
-
-    final confirmed = await showDialog<bool>(
+    await showDialog<void>(
       context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) {
-          final points = int.tryParse(controller.text) ?? 0;
-          final money = points * ratio;
-          return AlertDialog(
-            title: const Text('포인트 현금화'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '1P = $ratio원 · 보유 ${account.balance.toInt()}P',
-                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(ctx).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: controller,
-                  keyboardType: TextInputType.number,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    labelText: '현금화할 포인트',
-                    suffixText: 'P',
-                  ),
-                  onChanged: (_) => setState(() {}),
-                ),
-                if (money > 0) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    '≈ $money원',
-                    style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(ctx).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('취소'),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('현금화'),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-
-    if (confirmed != true || !context.mounted) return;
-
-    final points = double.tryParse(controller.text);
-    if (points == null || points <= 0) return;
-
-    await ref.read(childcareManagementProvider.notifier).addTransaction(
-          account.id,
-          CreateTransactionDto.direct(
-            type: ChildcareTransactionType.cashout,
-            amount: points,
-            description: '포인트 현금화 (${points.toInt() * ratio}원)',
-          ),
-        );
-
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${points.toInt()}P → ${points.toInt() * ratio}원 현금화되었습니다')),
+      builder: (ctx) => _CashoutDialog(account: account, plan: plan, ref: ref),
     );
   }
 
@@ -837,4 +764,136 @@ class NegotiationDateBanner extends StatelessWidget {
 
   String _fmt(DateTime d) =>
       '${d.year}.${d.month.toString().padLeft(2, '0')}.${d.day.toString().padLeft(2, '0')}';
+}
+
+// ── 현금화 다이얼로그 ─────────────────────────────────────────────────────────
+
+class _CashoutDialog extends StatefulWidget {
+  const _CashoutDialog({
+    required this.account,
+    required this.plan,
+    required this.ref,
+  });
+
+  final ChildcareAccount account;
+  final AllowancePlan plan;
+  final WidgetRef ref;
+
+  @override
+  State<_CashoutDialog> createState() => _CashoutDialogState();
+}
+
+class _CashoutDialogState extends State<_CashoutDialog> {
+  final _controller = TextEditingController();
+  bool _isSaving = false;
+  String? _errorMsg;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSubmit() async {
+    final points = double.tryParse(_controller.text);
+    if (points == null || points <= 0) return;
+
+    setState(() {
+      _isSaving = true;
+      _errorMsg = null;
+    });
+
+    final ratio = widget.plan.pointToMoneyRatio;
+    final result = await widget.ref
+        .read(childcareManagementProvider.notifier)
+        .addTransaction(
+          widget.account.id,
+          CreateTransactionDto.direct(
+            type: ChildcareTransactionType.cashout,
+            amount: points,
+            description: '포인트 현금화 (${points.toInt() * ratio}원)',
+          ),
+        );
+
+    if (!mounted) return;
+
+    if (result == null) {
+      setState(() {
+        _isSaving = false;
+        _errorMsg = '현금화에 실패했습니다. 잠시 후 다시 시도해주세요.';
+      });
+      return;
+    }
+
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            '${points.toInt()}P → ${points.toInt() * widget.plan.pointToMoneyRatio}원 현금화되었습니다'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ratio = widget.plan.pointToMoneyRatio;
+    final points = int.tryParse(_controller.text) ?? 0;
+    final money = points * ratio;
+
+    return AlertDialog(
+      title: const Text('포인트 현금화'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '1P = $ratio원 · 보유 ${widget.account.balance.toInt()}P',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _controller,
+            keyboardType: TextInputType.number,
+            autofocus: true,
+            decoration: const InputDecoration(
+              labelText: '현금화할 포인트',
+              suffixText: 'P',
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+          if (money > 0) ...[
+            const SizedBox(height: 8),
+            Text(
+              '≈ $money원',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+          if (_errorMsg != null) ...[
+            const SizedBox(height: AppSizes.spaceS),
+            Text(
+              _errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isSaving ? null : () => Navigator.pop(context),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          onPressed: _isSaving ? null : _handleSubmit,
+          child: const Text('현금화'),
+        ),
+      ],
+    );
+  }
 }

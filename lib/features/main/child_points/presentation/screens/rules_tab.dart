@@ -720,6 +720,8 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
   late final TextEditingController _descCtrl;
   late final TextEditingController _pointsCtrl;
   late ChildcareRuleType _type;
+  bool _isSaving = false;
+  String? _errorMsg;
 
   @override
   void initState() {
@@ -828,6 +830,15 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
                 ),
               ),
             ],
+            if (_errorMsg != null) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              Text(
+                _errorMsg!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+              ),
+            ],
           ],
         ),
       ),
@@ -837,7 +848,7 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
           child: const Text('취소'),
         ),
         FilledButton(
-          onPressed: _handleSave,
+          onPressed: _isSaving ? null : _handleSave,
           child: Text(isNew ? '추가' : '저장'),
         ),
       ],
@@ -854,18 +865,21 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
       if (points < 0) return;
     }
 
+    setState(() => _isSaving = true);
+
     final desc =
         _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim();
     final notifier = widget.ref.read(childcareManagementProvider.notifier);
 
+    final Object? result;
     if (widget.rule == null) {
-      await notifier.addRule(
+      result = await notifier.addRule(
         widget.accountId,
         CreateRuleDto(
             name: name, description: desc, type: _type, points: points),
       );
     } else {
-      await notifier.updateRule(
+      result = await notifier.updateRule(
         widget.accountId,
         widget.rule!.id,
         UpdateRuleDto(
@@ -874,6 +888,15 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
     }
 
     if (!mounted) return;
+
+    if (result == null) {
+      setState(() {
+        _isSaving = false;
+        _errorMsg = '저장에 실패했습니다. 잠시 후 다시 시도해주세요.';
+      });
+      return;
+    }
+
     Navigator.pop(context);
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('저장되었습니다')));

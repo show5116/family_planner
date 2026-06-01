@@ -155,12 +155,18 @@ class ShopTab extends ConsumerWidget {
     );
     if (confirmed != true || !context.mounted) return;
 
-    await ref.read(childcareManagementProvider.notifier).addTransaction(
+    final result = await ref.read(childcareManagementProvider.notifier).addTransaction(
           accountId,
           CreateTransactionDto.byShopItem(item.id),
         );
 
     if (!context.mounted) return;
+    if (result == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('사용에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+      );
+      return;
+    }
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('"${item.name}" 사용되었습니다')));
   }
@@ -171,76 +177,14 @@ class ShopTab extends ConsumerWidget {
     required String accountId,
     ChildcareShopItem? item,
   }) async {
-    final nameController = TextEditingController(text: item?.name ?? '');
-    final descController = TextEditingController(text: item?.description ?? '');
-    final pointsController = TextEditingController(
-      text: item != null ? item.points.toString() : '',
-    );
-
-    final confirmed = await showDialog<bool>(
+    await showDialog<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(item == null ? '상점 아이템 추가' : '상점 아이템 수정'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: '아이템 이름',
-                hintText: '예: TV 30분 더보기',
-              ),
-              autofocus: true,
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            TextField(
-              controller: descController,
-              decoration: const InputDecoration(labelText: '설명 (선택)'),
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            TextField(
-              controller: pointsController,
-              keyboardType: TextInputType.number,
-              decoration:
-                  const InputDecoration(labelText: '포인트 비용', suffixText: 'P'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(item == null ? '추가' : '저장'),
-          ),
-        ],
+      builder: (ctx) => ShopItemFormDialog(
+        accountId: accountId,
+        item: item,
+        ref: ref,
       ),
     );
-
-    if (confirmed != true || !context.mounted) return;
-
-    final name = nameController.text.trim();
-    final points = int.tryParse(pointsController.text.trim());
-    if (name.isEmpty || points == null || points <= 0) return;
-
-    final notifier = ref.read(childcareManagementProvider.notifier);
-    final desc = descController.text.trim().isEmpty
-        ? null
-        : descController.text.trim();
-
-    if (item == null) {
-      await notifier.addShopItem(
-          accountId, CreateShopItemDto(name: name, description: desc, points: points));
-    } else {
-      await notifier.updateShopItem(
-          accountId, item.id, UpdateShopItemDto(name: name, description: desc, points: points));
-    }
-
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('저장되었습니다')));
   }
 
   Future<void> _confirmDeleteItem(
@@ -270,12 +214,154 @@ class ShopTab extends ConsumerWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    await ref
+    final success = await ref
         .read(childcareManagementProvider.notifier)
         .deleteShopItem(accountId, item.id);
     if (!context.mounted) return;
+    if (!success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('삭제에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+      );
+      return;
+    }
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('삭제되었습니다')));
+  }
+}
+
+// ── 상점 아이템 폼 다이얼로그 ─────────────────────────────────────────────────────
+
+class ShopItemFormDialog extends StatefulWidget {
+  const ShopItemFormDialog({
+    super.key,
+    required this.accountId,
+    required this.item,
+    required this.ref,
+  });
+
+  final String accountId;
+  final ChildcareShopItem? item;
+  final WidgetRef ref;
+
+  @override
+  State<ShopItemFormDialog> createState() => _ShopItemFormDialogState();
+}
+
+class _ShopItemFormDialogState extends State<ShopItemFormDialog> {
+  late final TextEditingController _nameCtrl;
+  late final TextEditingController _descCtrl;
+  late final TextEditingController _pointsCtrl;
+  bool _isSaving = false;
+  String? _errorMsg;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameCtrl = TextEditingController(text: widget.item?.name ?? '');
+    _descCtrl = TextEditingController(text: widget.item?.description ?? '');
+    _pointsCtrl = TextEditingController(
+      text: widget.item != null ? widget.item!.points.toString() : '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _descCtrl.dispose();
+    _pointsCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSave() async {
+    final name = _nameCtrl.text.trim();
+    final points = int.tryParse(_pointsCtrl.text.trim());
+    if (name.isEmpty || points == null || points <= 0) return;
+
+    setState(() => _isSaving = true);
+
+    final desc = _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim();
+    final notifier = widget.ref.read(childcareManagementProvider.notifier);
+
+    final Object? result;
+    if (widget.item == null) {
+      result = await notifier.addShopItem(
+        widget.accountId,
+        CreateShopItemDto(name: name, description: desc, points: points),
+      );
+    } else {
+      result = await notifier.updateShopItem(
+        widget.accountId,
+        widget.item!.id,
+        UpdateShopItemDto(name: name, description: desc, points: points),
+      );
+    }
+
+    if (!mounted) return;
+
+    if (result == null) {
+      setState(() {
+        _isSaving = false;
+        _errorMsg = '저장에 실패했습니다. 잠시 후 다시 시도해주세요.';
+      });
+      return;
+    }
+
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('저장되었습니다')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isNew = widget.item == null;
+
+    return AlertDialog(
+      title: Text(isNew ? '상점 아이템 추가' : '상점 아이템 수정'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _nameCtrl,
+            decoration: const InputDecoration(
+              labelText: '아이템 이름',
+              hintText: '예: TV 30분 더보기',
+            ),
+            autofocus: true,
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          TextField(
+            controller: _descCtrl,
+            decoration: const InputDecoration(labelText: '설명 (선택)'),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          TextField(
+            controller: _pointsCtrl,
+            keyboardType: TextInputType.number,
+            decoration:
+                const InputDecoration(labelText: '포인트 비용', suffixText: 'P'),
+          ),
+          if (_errorMsg != null) ...[
+            const SizedBox(height: AppSizes.spaceS),
+            Text(
+              _errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isSaving ? null : () => Navigator.pop(context),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          onPressed: _isSaving ? null : _handleSave,
+          child: Text(isNew ? '추가' : '저장'),
+        ),
+      ],
+    );
   }
 }
 

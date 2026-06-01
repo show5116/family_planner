@@ -741,6 +741,12 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
           SnackBar(content: Text(saved != null ? '게임 결과가 저장되었습니다' : '저장 실패')),
         );
       }
+    }).catchError((_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('저장 실패')),
+        );
+      }
     });
   }
 }
