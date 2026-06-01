@@ -3578,6 +3578,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_history_view_expense => '가계부 보기';
 
   @override
+  String get fridge_history_delete => '이력 삭제';
+
+  @override
+  String get fridge_history_delete_confirm_title => '구매 이력 삭제';
+
+  @override
+  String get fridge_history_delete_confirm_body => '이 구매 이력을 삭제할까요?';
+
+  @override
+  String get fridge_history_delete_expense_notice =>
+      '가계부에 연동된 지출은 장보기 이력을 삭제해도 가계부에 그대로 남아 있어요.';
+
+  @override
   String get fridge_group_selector_personal => '개인';
 
   @override

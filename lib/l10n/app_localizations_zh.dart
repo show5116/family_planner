@@ -3548,6 +3548,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_history_view_expense => '在账本中查看';
 
   @override
+  String get fridge_history_delete => '删除记录';
+
+  @override
+  String get fridge_history_delete_confirm_title => '删除购物记录';
+
+  @override
+  String get fridge_history_delete_confirm_body => '确定删除这条购物记录吗？';
+
+  @override
+  String get fridge_history_delete_expense_notice =>
+      '与账本关联的支出，即使删除购物记录，仍会保留在账本中。';
+
+  @override
   String get fridge_group_selector_personal => '个人';
 
   @override

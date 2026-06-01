@@ -3648,6 +3648,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_history_view_expense => 'View in ledger';
 
   @override
+  String get fridge_history_delete => 'Delete history';
+
+  @override
+  String get fridge_history_delete_confirm_title => 'Delete purchase history';
+
+  @override
+  String get fridge_history_delete_confirm_body =>
+      'Delete this purchase history?';
+
+  @override
+  String get fridge_history_delete_expense_notice =>
+      'Any linked expense in the ledger will remain even after this history is deleted.';
+
+  @override
   String get fridge_group_selector_personal => 'Personal';
 
   @override

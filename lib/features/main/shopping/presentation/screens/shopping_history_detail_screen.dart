@@ -15,13 +15,81 @@ class ShoppingHistoryDetailScreen extends ConsumerWidget {
   final String? groupId;
   const ShoppingHistoryDetailScreen({super.key, required this.historyId, this.groupId});
 
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, ShoppingHistoryModel history) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.fridge_history_delete_confirm_title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.fridge_history_delete_confirm_body),
+            if (history.expense != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Theme.of(ctx).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.info_outline,
+                        size: 16,
+                        color: Theme.of(ctx).colorScheme.onSurfaceVariant),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        l10n.fridge_history_delete_expense_notice,
+                        style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(ctx).colorScheme.onSurfaceVariant),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.common_cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(
+                foregroundColor: Theme.of(ctx).colorScheme.error),
+            child: Text(l10n.common_delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await ref.read(shoppingHistoryProvider.notifier).delete(historyId);
+    if (context.mounted) context.pop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final historyAsync = ref.watch(shoppingHistoryDetailProvider((historyId, groupId)));
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.fridge_tab_history)),
+      appBar: AppBar(
+        title: Text(l10n.fridge_tab_history),
+        actions: [
+          if (historyAsync.hasValue)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: l10n.fridge_history_delete,
+              onPressed: () => _confirmDelete(context, ref, historyAsync.value!),
+            ),
+        ],
+      ),
       body: historyAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(e.toString())),

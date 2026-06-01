@@ -416,6 +416,20 @@ class ShoppingHistoryNotifier
       limit: next.limit,
     ));
   }
+
+  Future<void> delete(String historyId) async {
+    final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    await ref.read(fridgeRepositoryProvider).deleteShoppingHistory(historyId, groupId: groupId);
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(ShoppingHistoryPageModel(
+        data: current.data.where((h) => h.id != historyId).toList(),
+        total: current.total - 1,
+        page: current.page,
+        limit: current.limit,
+      ));
+    }
+  }
 }
 
 final shoppingHistoryDetailProvider =

@@ -387,6 +387,19 @@ class FridgeRepository {
     }
   }
 
+  Future<void> deleteShoppingHistory(String historyId, {String? groupId}) async {
+    try {
+      await _dio.delete(
+        '/shopping/history/$historyId',
+        queryParameters: {if (groupId != null) 'groupId': groupId},
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('구매 이력을 찾을 수 없습니다');
+      debugPrint('❌ [FridgeRepository] 구매 이력 삭제 실패: ${e.message}');
+      throw Exception('구매 이력 삭제 실패: ${e.message}');
+    }
+  }
+
   // ── Expiry Presets ────────────────────────────────────────────────────────────
 
   Future<List<ExpiryPresetModel>> getExpiryPresets({String? groupId}) async {

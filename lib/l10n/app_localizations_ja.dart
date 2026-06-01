@@ -3571,6 +3571,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_history_view_expense => '家計簿を見る';
 
   @override
+  String get fridge_history_delete => '履歴を削除';
+
+  @override
+  String get fridge_history_delete_confirm_title => '購買履歴の削除';
+
+  @override
+  String get fridge_history_delete_confirm_body => 'この購買履歴を削除しますか？';
+
+  @override
+  String get fridge_history_delete_expense_notice =>
+      '家計簿に連携された支出は、この履歴を削除しても家計簿にそのまま残ります。';
+
+  @override
   String get fridge_group_selector_personal => '個人';
 
   @override

@@ -6990,6 +6990,30 @@ abstract class AppLocalizations {
   /// **'가계부 보기'**
   String get fridge_history_view_expense;
 
+  /// 구매 이력 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'이력 삭제'**
+  String get fridge_history_delete;
+
+  /// 삭제 확인 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 이력 삭제'**
+  String get fridge_history_delete_confirm_title;
+
+  /// 삭제 확인 다이얼로그 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'이 구매 이력을 삭제할까요?'**
+  String get fridge_history_delete_confirm_body;
+
+  /// 가계부 연동 이력 삭제 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부에 연동된 지출은 장보기 이력을 삭제해도 가계부에 그대로 남아 있어요.'**
+  String get fridge_history_delete_expense_notice;
+
   /// 개인 모드
   ///
   /// In ko, this message translates to:

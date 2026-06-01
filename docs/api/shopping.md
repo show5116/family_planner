@@ -261,7 +261,7 @@
     "paymentMethod": "CARD", // 결제 수단 (PaymentMethod?)
     "date": "2026-05-12", // 지출 날짜 (기본: 오늘) (string?)
     "description": "마트 장보기", // 지출 내용 (string?)
-    "category": "FOOD" // 가계부 카테고리 (기본: FOOD) (ExpenseCategory?)
+    "category": "GROCERIES" // 가계부 카테고리 (기본: GROCERIES) (ExpenseCategory?)
   } // 가계부 자동 등록 (생략 시 가계부 미등록) (ShoppingExpenseDto?)
 }
 ```
@@ -391,6 +391,32 @@
     "date": "2025-01-01T00:00:00Z", // Date
     "description": "마트 장보기" // string | null
   } // 연결된 가계부 지출 (장보기 완료 시 가계부 등록한 경우에만 존재) (LinkedExpenseDto | null)
+}
+```
+
+#### 404 - 구매 이력을 찾을 수 없습니다
+
+---
+
+### DELETE `shopping/history/:historyId`
+
+**요약:** 구매 이력 삭제 (오입력 정정용)
+
+**Path Parameters:**
+
+- `historyId` (`string`)
+
+**Query Parameters:**
+
+- `groupId` (`string`)
+
+**Responses:**
+
+#### 200 - 이력 삭제 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
 }
 ```
 
