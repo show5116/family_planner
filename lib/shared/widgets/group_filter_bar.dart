@@ -106,9 +106,20 @@ class _GroupFilterBarState extends ConsumerState<GroupFilterBar> {
         groupIds = null; // 전체
         includePersonal = prefs.getBool('${widget.savedKey}_personal') ?? true;
       } else {
-        groupIds = prefs.getStringList('${widget.savedKey}_ids') ?? [];
+        final savedIds = prefs.getStringList('${widget.savedKey}_ids') ?? [];
         includePersonal =
             prefs.getBool('${widget.savedKey}_personal') ?? false;
+        // 현재 계정에 속한 그룹만 남김 (계정 전환 후 이전 계정의 groupId 제거)
+        final groups = await ref
+            .read(myGroupsProvider.future)
+            .catchError((_) => <Group>[]);
+        final validIds = savedIds.where((id) => groups.any((g) => g.id == id)).toList();
+        groupIds = validIds;
+        if (validIds.isEmpty && !includePersonal) {
+          // 유효한 그룹이 하나도 없으면 전체로 fallback
+          groupIds = null;
+          includePersonal = true;
+        }
       }
     }
 
