@@ -499,7 +499,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(error: null);
 
     try {
-      final updatedUser = await _authService.updateProfile(
+      await _authService.updateProfile(
         name: name,
         phoneNumber: phoneNumber,
         currentPassword: currentPassword,
@@ -507,8 +507,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         personalColor: personalColor,
       );
 
-      // 업데이트된 사용자 정보로 상태 업데이트
-      state = state.copyWith(isAuthenticated: true, user: updatedUser);
+      // /auth/me 재호출로 최신 사용자 정보 갱신
+      final user = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: user);
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;
