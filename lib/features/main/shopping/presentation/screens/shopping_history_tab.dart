@@ -95,7 +95,10 @@ class ShoppingHistoryTab extends ConsumerStatefulWidget {
   ConsumerState<ShoppingHistoryTab> createState() => _ShoppingHistoryTabState();
 }
 
-class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab> {
+class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   final _showDemo = ValueNotifier<bool>(false);
   final _firstCardKey = GlobalKey();
   final _expenseBadgeKey = GlobalKey();
@@ -221,6 +224,7 @@ class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ValueListenableBuilder<bool>(
       valueListenable: _showDemo,
       builder: (context, isDemo, _) {

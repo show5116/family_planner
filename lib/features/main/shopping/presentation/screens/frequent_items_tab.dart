@@ -63,7 +63,10 @@ class FrequentItemsTab extends ConsumerStatefulWidget {
   ConsumerState<FrequentItemsTab> createState() => _FrequentItemsTabState();
 }
 
-class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
+class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   final _showDemo = ValueNotifier<bool>(false);
   final _fabKey = GlobalKey();
   final _firstItemKey = GlobalKey();
@@ -231,6 +234,7 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ValueListenableBuilder<bool>(
       valueListenable: _showDemo,
       builder: (context, isDemo, _) {

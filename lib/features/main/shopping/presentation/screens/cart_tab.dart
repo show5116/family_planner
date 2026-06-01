@@ -88,7 +88,10 @@ class CartTab extends ConsumerStatefulWidget {
   ConsumerState<CartTab> createState() => _CartTabState();
 }
 
-class _CartTabState extends ConsumerState<CartTab> {
+class _CartTabState extends ConsumerState<CartTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   final Map<String, _CartEditState> _edits = {};
   bool _saving = false;
 
@@ -313,6 +316,7 @@ class _CartTabState extends ConsumerState<CartTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = AppLocalizations.of(context)!;
 
     return ValueListenableBuilder<bool>(
