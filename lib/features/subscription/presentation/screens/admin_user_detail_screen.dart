@@ -537,6 +537,7 @@ class _EditSubscriptionDialogState extends State<_EditSubscriptionDialog> {
   late SubscriptionTier _selectedTier;
   DateTime? _expiresAt;
   bool _noExpiry = false;
+  String? _errorMsg;
 
   @override
   void initState() {
@@ -579,12 +580,7 @@ class _EditSubscriptionDialogState extends State<_EditSubscriptionDialog> {
         const SnackBar(content: Text('구독 정보가 수정되었습니다.')),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('수정 실패. 다시 시도해주세요.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      setState(() => _errorMsg = '수정 실패. 다시 시도해주세요.');
     }
   }
 
@@ -656,6 +652,15 @@ class _EditSubscriptionDialogState extends State<_EditSubscriptionDialog> {
                       ? '${_expiresAt!.year}.${_expiresAt!.month.toString().padLeft(2, '0')}.${_expiresAt!.day.toString().padLeft(2, '0')}'
                       : '날짜 선택',
                 ),
+              ),
+            ],
+            if (_errorMsg != null) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              Text(
+                _errorMsg!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
               ),
             ],
           ],

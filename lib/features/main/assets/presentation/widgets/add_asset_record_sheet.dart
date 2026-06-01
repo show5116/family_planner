@@ -78,6 +78,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
   late DateTime _recordDate;
   RecordInputMode _inputMode = RecordInputMode.manual;
   bool _duplicateDateError = false;
+  String? _errorMsg;
 
   // GOLD 시세
   double? _goldPricePerGram;
@@ -257,6 +258,15 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                   border: const OutlineInputBorder(),
                 ),
               ),
+              if (_errorMsg != null) ...[
+                const SizedBox(height: AppSizes.spaceXS),
+                Text(
+                  _errorMsg!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                ),
+              ],
               const SizedBox(height: AppSizes.spaceM),
 
               ElevatedButton(
@@ -539,9 +549,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
 
       if (!mounted) return;
       if (result == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.common_error)),
-        );
+        setState(() => _errorMsg = l10n.common_error);
         return;
       }
 
@@ -554,10 +562,10 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       }
 
       if (!mounted) return;
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.asset_record_save_success)),
       );
-      Navigator.of(context).pop();
       return;
     }
 
@@ -591,14 +599,12 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       if (!mounted) return;
 
       if (result != null) {
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.asset_record_save_success)),
         );
-        Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.common_error)),
-        );
+        setState(() => _errorMsg = l10n.common_error);
       }
     } on DuplicateRecordDateException {
       if (!mounted) return;
