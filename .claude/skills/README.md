@@ -23,6 +23,7 @@
 | [code-review](code-review/) | CODE_STYLE.md 기준 코드 자동 리뷰 | "login_screen.dart 리뷰해주세요" |
 | [api-sync](api-sync/) | 백엔드 API 문서와 프론트엔드 동기화 확인 | "공지사항 API 동기화 확인해줘" |
 | [test-generate](test-generate/) | 테스트 코드 자동 생성 | "MemoProvider 테스트 생성해줘" |
+| [vibe-verify](vibe-verify/) | 배포 전 5개 영역 검증 (그룹삭제·캐시·i18n·광고·Android UI) | "배포 전 검증해줘", "vibe-verify 실행" |
 
 ### 💡 토큰 효율성 최적화
 
