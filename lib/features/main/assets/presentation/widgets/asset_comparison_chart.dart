@@ -27,10 +27,15 @@ class _CompareTarget {
 }
 
 const _targets = [
-  _CompareTarget(symbol: 'KS11',   labelKey: 'KOSPI',   color: Color(0xFF3B82F6)),
-  _CompareTarget(symbol: 'SPX',    labelKey: 'S&P500',  color: Color(0xFF22C55E)),
-  _CompareTarget(symbol: 'NQ100',  labelKey: 'NASDAQ',  color: Color(0xFFF59E0B)),
-  _CompareTarget(symbol: 'USDKRW', labelKey: 'USD환산', color: Color(0xFFEF4444), isDollar: true),
+  _CompareTarget(symbol: 'KOSPI', labelKey: 'KOSPI', color: Color(0xFF3B82F6)),
+  _CompareTarget(symbol: 'SP500', labelKey: 'S&P500', color: Color(0xFF22C55E)),
+  _CompareTarget(symbol: 'NQ100', labelKey: 'NASDAQ', color: Color(0xFFF59E0B)),
+  _CompareTarget(
+    symbol: 'USD_KRW',
+    labelKey: 'USD환산',
+    color: Color(0xFFEF4444),
+    isDollar: true,
+  ),
 ];
 
 // ─────────────────────────────────────────────
@@ -110,8 +115,8 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
         child: Text(
           l10n.asset_trend_no_data,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-              ),
+            color: Theme.of(context).colorScheme.outline,
+          ),
         ),
       );
     }
@@ -190,7 +195,9 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: enabled ? t.color : Theme.of(context).colorScheme.outline,
+                        color: enabled
+                            ? t.color
+                            : Theme.of(context).colorScheme.outline,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -198,13 +205,13 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
                     Text(
                       t.isDollar ? l10n.asset_compare_usd_label : t.labelKey,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: enabled
-                                ? t.color
-                                : Theme.of(context).colorScheme.outline,
-                            fontWeight: enabled
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
+                        color: enabled
+                            ? t.color
+                            : Theme.of(context).colorScheme.outline,
+                        fontWeight: enabled
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
                     ),
                   ],
                 ),
@@ -293,9 +300,9 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
         dashArray: thick ? null : [4, 3],
         showingIndicators: _touchedPeriodIdx != null
             ? spots
-                .where((s) => s.x.toInt() == _touchedPeriodIdx)
-                .map((s) => spots.indexOf(s))
-                .toList()
+                  .where((s) => s.x.toInt() == _touchedPeriodIdx)
+                  .map((s) => spots.indexOf(s))
+                  .toList()
             : [],
       );
     }
@@ -313,9 +320,11 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
         final bar = lineBars[barIdx];
         for (var spotIdx = 0; spotIdx < bar.spots.length; spotIdx++) {
           if (bar.spots[spotIdx].x.toInt() == _touchedPeriodIdx) {
-            showingTooltips.add(ShowingTooltipIndicators(
-              [LineBarSpot(bar, barIdx, bar.spots[spotIdx])],
-            ));
+            showingTooltips.add(
+              ShowingTooltipIndicators([
+                LineBarSpot(bar, barIdx, bar.spots[spotIdx]),
+              ]),
+            );
           }
         }
       }
@@ -359,20 +368,25 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
             ],
           ),
           titlesData: FlTitlesData(
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 44,
                 getTitlesWidget: (v, meta) {
-                  if (v == meta.min || v == meta.max) return const SizedBox.shrink();
+                  if (v == meta.min || v == meta.max)
+                    return const SizedBox.shrink();
                   return Text(
                     v.toStringAsFixed(0),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.outline,
-                          fontSize: 9,
-                        ),
+                      color: colorScheme.outline,
+                      fontSize: 9,
+                    ),
                     textAlign: TextAlign.right,
                   );
                 },
@@ -396,9 +410,9 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
                     child: Text(
                       label,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.outline,
-                            fontSize: 10,
-                          ),
+                        color: colorScheme.outline,
+                        fontSize: 10,
+                      ),
                     ),
                   );
                 },
@@ -421,7 +435,9 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
 
                   String label;
                   if (s.barIndex == 0) {
-                    label = AppLocalizations.of(context)!.asset_compare_my_asset;
+                    label = AppLocalizations.of(
+                      context,
+                    )!.asset_compare_my_asset;
                   } else {
                     final targetIdx = _enabledTargets.elementAt(s.barIndex - 1);
                     final t = _targets[targetIdx];
@@ -433,16 +449,16 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
                   return LineTooltipItem(
                     '$label\n',
                     Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
                     children: [
                       TextSpan(
                         text: '$sign${diff.toStringAsFixed(1)}%',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: diffColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          color: diffColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   );
@@ -535,7 +551,11 @@ class _LinePainter extends CustomPainter {
   final bool dashed;
   final bool thick;
 
-  const _LinePainter({required this.color, required this.dashed, required this.thick});
+  const _LinePainter({
+    required this.color,
+    required this.dashed,
+    required this.thick,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -547,11 +567,19 @@ class _LinePainter extends CustomPainter {
     if (dashed) {
       double x = 0;
       while (x < size.width) {
-        canvas.drawLine(Offset(x, size.height / 2), Offset((x + 4).clamp(0, size.width), size.height / 2), paint);
+        canvas.drawLine(
+          Offset(x, size.height / 2),
+          Offset((x + 4).clamp(0, size.width), size.height / 2),
+          paint,
+        );
         x += 7;
       }
     } else {
-      canvas.drawLine(Offset(0, size.height / 2), Offset(size.width, size.height / 2), paint);
+      canvas.drawLine(
+        Offset(0, size.height / 2),
+        Offset(size.width, size.height / 2),
+        paint,
+      );
     }
   }
 
