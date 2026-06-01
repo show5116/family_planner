@@ -1708,7 +1708,7 @@
   "@fridge_cart_complete_transfer_hint": { "description": "이관 힌트" },
   "fridge_cart_complete_add_expense": "가계부에 등록",
   "@fridge_cart_complete_add_expense": { "description": "가계부 등록 토글" },
-  "fridge_cart_complete_amount": "총액 (선택 — 미입력 시 항목 금액 합산)",
+  "fridge_cart_complete_amount": "총액 (항목 금액 입력 시 자동 계산)",
   "@fridge_cart_complete_amount": { "description": "구매 총액 레이블 (선택)" },
   "fridge_cart_item_price": "금액 (선택)",
   "@fridge_cart_item_price": { "description": "항목별 금액 입력 레이블" },

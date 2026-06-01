@@ -1637,7 +1637,7 @@
   "@fridge_cart_complete_transfer_hint": { "description": "Transfer hint" },
   "fridge_cart_complete_add_expense": "记录到账本",
   "@fridge_cart_complete_add_expense": { "description": "Record expense toggle" },
-  "fridge_cart_complete_amount": "合计（可选—空白时自动求和）",
+  "fridge_cart_complete_amount": "合计（根据品目金额自动计算）",
   "@fridge_cart_complete_amount": { "description": "Total amount label (optional)" },
   "fridge_cart_item_price": "价格（可选）",
   "@fridge_cart_item_price": { "description": "Per-item price input label" },

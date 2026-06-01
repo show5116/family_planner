@@ -1694,7 +1694,7 @@
   "@fridge_cart_complete_transfer_hint": { "description": "移送ヒント" },
   "fridge_cart_complete_add_expense": "家計簿に登録",
   "@fridge_cart_complete_add_expense": { "description": "家計簿登録トグル" },
-  "fridge_cart_complete_amount": "合計（任意 — 未入力時は品目金額の合計）",
+  "fridge_cart_complete_amount": "合計（品目金額から自動計算）",
   "@fridge_cart_complete_amount": { "description": "購入合計金額ラベル（任意）" },
   "fridge_cart_item_price": "金額（任意）",
   "@fridge_cart_item_price": { "description": "品目ごとの金額入力ラベル" },

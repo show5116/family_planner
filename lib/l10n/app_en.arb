@@ -1694,7 +1694,7 @@
   "@fridge_cart_complete_transfer_hint": { "description": "Transfer hint" },
   "fridge_cart_complete_add_expense": "Record in ledger",
   "@fridge_cart_complete_add_expense": { "description": "Record expense toggle" },
-  "fridge_cart_complete_amount": "Total (optional — auto-sum if empty)",
+  "fridge_cart_complete_amount": "Total (auto-calculated from item prices)",
   "@fridge_cart_complete_amount": { "description": "Total amount label (optional)" },
   "fridge_cart_item_price": "Price (optional)",
   "@fridge_cart_item_price": { "description": "Per-item price input label" },
