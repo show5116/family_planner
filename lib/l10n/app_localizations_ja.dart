@@ -209,7 +209,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_resetPassword => 'パスワードリセット';
 
   @override
-  String get auth_resetPasswordMessage => '登録されたメールアドレスを入力してください。\n認証コードを送信します。';
+  String get auth_resetPasswordMessage =>
+      '登録されたメールアドレスを入力してください。\n認証コードを送信します。';
 
   @override
   String get auth_newPassword => '新しいパスワード';
@@ -251,13 +252,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_forgotPasswordGuide => '登録されたメールアドレスを入力してください。\n認証コードを送信します。';
 
   @override
-  String get auth_forgotPasswordGuideWithCode => 'メールで送信された認証コードを入力し、\n新しいパスワードを設定してください。';
+  String get auth_forgotPasswordGuideWithCode =>
+      'メールで送信された認証コードを入力し、\n新しいパスワードを設定してください。';
 
   @override
-  String get auth_setPasswordGuide => 'アカウントのセキュリティのためにパスワードを設定してください。\n登録されたメールアドレスを入力すると\n認証コードを送信します。';
+  String get auth_setPasswordGuide =>
+      'アカウントのセキュリティのためにパスワードを設定してください。\n登録されたメールアドレスを入力すると\n認証コードを送信します。';
 
   @override
-  String get auth_setPasswordGuideWithCode => 'メールで送信された認証コードを入力し、\nパスワードを設定してください。';
+  String get auth_setPasswordGuideWithCode =>
+      'メールで送信された認証コードを入力し、\nパスワードを設定してください。';
 
   @override
   String get auth_verificationCodeLabel => '認証コード（6桁）';
@@ -332,7 +336,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get more_coach_groupDesc => '家族、恋人、友達などのグループを作り、\n招待コードでメンバーを招待しましょう。';
 
   @override
-  String get more_coach_settingsDesc => 'テーマ、言語、通知、ボトムタブ構成など\nアプリをお好みにカスタマイズしましょう。';
+  String get more_coach_settingsDesc =>
+      'テーマ、言語、通知、ボトムタブ構成など\nアプリをお好みにカスタマイズしましょう。';
 
   @override
   String get home_greeting_morning => 'おはようございます！';
@@ -404,7 +409,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bottomNav_resetSuccess => 'デフォルト設定にリセットされました';
 
   @override
-  String get bottomNav_guideMessage => 'ホームとその他は固定されています。\n中央の3つのスロットをタップしてメニューを選択してください。';
+  String get bottomNav_guideMessage =>
+      'ホームとその他は固定されています。\n中央の3つのスロットをタップしてメニューを選択してください。';
 
   @override
   String get bottomNav_preview => '下部ナビゲーションプレビュー';
@@ -413,7 +419,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bottomNav_howToUse => '使い方';
 
   @override
-  String get bottomNav_instructions => '• スロット2、3、4をタップして希望のメニューに変更してください。\n• スロット1（ホーム）とスロット5（その他）は固定です。\n• 下部ナビゲーションにないメニューは「その他」タブに表示されます。';
+  String get bottomNav_instructions =>
+      '• スロット2、3、4をタップして希望のメニューに変更してください。\n• スロット1（ホーム）とスロット5（その他）は固定です。\n• 下部ナビゲーションにないメニューは「その他」タブに表示されます。';
 
   @override
   String get bottomNav_availableMenus => '利用可能なメニュー';
@@ -538,7 +545,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get themeSettings_selectTheme => 'テーマ選択';
 
   @override
-  String get themeSettings_description => 'アプリの明るさテーマを選択してください。システム設定に従うか、手動で選択できます。';
+  String get themeSettings_description =>
+      'アプリの明るさテーマを選択してください。システム設定に従うか、手動で選択できます。';
 
   @override
   String get themeSettings_lightMode => 'ライトモード';
@@ -772,10 +780,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings_passwordSetupRequired => 'パスワード設定が必要です';
 
   @override
-  String get settings_passwordSetupMessage1 => 'ソーシャルログインのみで登録されたため、パスワードが設定されていません。';
+  String get settings_passwordSetupMessage1 =>
+      'ソーシャルログインのみで登録されたため、パスワードが設定されていません。';
 
   @override
-  String get settings_passwordSetupMessage2 => 'プロフィールを編集したり、アカウントのセキュリティを強化するには、パスワードの設定を推奨します。';
+  String get settings_passwordSetupMessage2 =>
+      'プロフィールを編集したり、アカウントのセキュリティを強化するには、パスワードの設定を推奨します。';
 
   @override
   String get settings_passwordSetupMessage3 => 'パスワード設定画面に移動しますか？';
@@ -1034,7 +1044,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_deleteConfirmTitle => 'グループ削除';
 
   @override
-  String get group_deleteConfirmMessage => '本当にこのグループを削除しますか？\nすべてのデータが削除され、復元できません。';
+  String get group_deleteConfirmMessage =>
+      '本当にこのグループを削除しますか？\nすべてのデータが削除され、復元できません。';
 
   @override
   String get group_leaveConfirmTitle => 'グループ退出';
@@ -1043,7 +1054,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_leaveConfirmMessage => '本当にこのグループを退出しますか？';
 
   @override
-  String get group_ownerCannotLeave => 'オーナーはグループを退出できません。\nオーナー権限を譲渡するか、グループを削除してください。';
+  String get group_ownerCannotLeave =>
+      'オーナーはグループを退出できません。\nオーナー権限を譲渡するか、グループを削除してください。';
 
   @override
   String get group_createSuccess => 'グループが作成されました';
@@ -1199,7 +1211,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get group_roleInfoTitle => 'ご案内';
 
   @override
-  String get group_roleInfoBullet1 => '共通ロール（OWNER、ADMIN、MEMBER）はすべてのグループにデフォルトで提供されます。';
+  String get group_roleInfoBullet1 =>
+      '共通ロール（OWNER、ADMIN、MEMBER）はすべてのグループにデフォルトで提供されます。';
 
   @override
   String get group_roleInfoBullet2 => 'カスタムロールはグループOWNERのみ作成・編集・削除できます。';
@@ -1377,7 +1390,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get announcement_deleteDialogTitle => 'お知らせの削除';
 
   @override
-  String get announcement_deleteDialogMessage => 'このお知らせを削除しますか？\n削除されたお知らせは復元できません。';
+  String get announcement_deleteDialogMessage =>
+      'このお知らせを削除しますか？\n削除されたお知らせは復元できません。';
 
   @override
   String get announcement_pinSuccess => 'お知らせを固定しました';
@@ -1907,7 +1921,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get category_deleteDialogTitle => 'カテゴリー削除';
 
   @override
-  String get category_deleteDialogMessage => 'このカテゴリーを削除しますか？\n関連する予定があると削除できません。';
+  String get category_deleteDialogMessage =>
+      'このカテゴリーを削除しますか？\n関連する予定があると削除できません。';
 
   @override
   String get schedule_recurringEvery => '毎';
@@ -2658,7 +2673,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_recurring_type_variable => '変動金額';
 
   @override
-  String get household_recurring_type_variable_desc => '毎月発生しますが金額が変わります（例：管理費）';
+  String get household_recurring_type_variable_desc =>
+      '毎月発生しますが金額が変わります（例：管理費）';
 
   @override
   String get household_estimated_amount => '予想金額';
@@ -2743,7 +2759,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_budget_tab_template => '毎月自動予算';
 
   @override
-  String get household_budget_template_info => '毎月1日にテンプレートに基づいて予算が自動設定されます。その月にすでに予算がある場合はスキップされます。';
+  String get household_budget_template_info =>
+      '毎月1日にテンプレートに基づいて予算が自動設定されます。その月にすでに予算がある場合はスキップされます。';
 
   @override
   String get household_budget_template_saved => '自動予算テンプレートが設定されました';
@@ -2752,7 +2769,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_budget_template_delete_title => 'テンプレート削除';
 
   @override
-  String get household_budget_template_delete_confirm => 'このカテゴリの自動予算テンプレートを削除しますか？';
+  String get household_budget_template_delete_confirm =>
+      'このカテゴリの自動予算テンプレートを削除しますか？';
 
   @override
   String get household_budget_template_deleted => '自動予算テンプレートが削除されました';
@@ -2954,7 +2972,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_gold_record_info_title => '金口座の自動管理について';
 
   @override
-  String get asset_gold_record_info_body => 'この口座は現物金口座で、以下のように自動管理されます。\n\n• 記録追加時、現在の金現物相場（GOLD_KRW_SPOT）を基に 保有重量 × 相場 = 残高 が自動計算されます。\n\n• 毎月1日、最新の金現物相場を反映して残高・利益・利益率が自動更新されます。\n\n• 元金は手動で変更できます。変更しない場合は最初の記録時に計算された値が維持されます。';
+  String get asset_gold_record_info_body =>
+      'この口座は現物金口座で、以下のように自動管理されます。\n\n• 記録追加時、現在の金現物相場（GOLD_KRW_SPOT）を基に 保有重量 × 相場 = 残高 が自動計算されます。\n\n• 毎月1日、最新の金現物相場を反映して残高・利益・利益率が自動更新されます。\n\n• 元金は手動で変更できます。変更しない場合は最初の記録時に計算された値が維持されます。';
 
   @override
   String get asset_no_records => '記録がありません';
@@ -3253,10 +3272,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_settings_auto_toggle => '決済通知の自動登録';
 
   @override
-  String get household_settings_auto_toggle_desc => 'カード・銀行の決済通知を検知して家計簿に自動で記録します';
+  String get household_settings_auto_toggle_desc =>
+      'カード・銀行の決済通知を検知して家計簿に自動で記録します';
 
   @override
-  String get household_settings_permission_required => '通知へのアクセス権限が必要です。「許可」をタップして設定画面で権限を付与してください。';
+  String get household_settings_permission_required =>
+      '通知へのアクセス権限が必要です。「許可」をタップして設定画面で権限を付与してください。';
 
   @override
   String get household_settings_permission_grant => '許可';
@@ -3274,10 +3295,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_settings_privacy_dialog_title => 'プライバシーポリシー';
 
   @override
-  String get household_settings_auto_scope_notice => 'アプリが起動中（フォアグラウンド・バックグラウンド）のときのみ動作します。アプリを完全に終了すると自動登録は停止します。';
+  String get household_settings_auto_scope_notice =>
+      'アプリが起動中（フォアグラウンド・バックグラウンド）のときのみ動作します。アプリを完全に終了すると自動登録は停止します。';
 
   @override
-  String get household_settings_privacy_content => '■ 収集する情報\nアプリは、端末に表示されるカード会社・銀行アプリからの決済完了通知から以下の情報を一時的に読み取ります。\n  · 通知のタイトルおよび本文テキスト（例：「KBカード 12,000円 承認」）\n  · 通知を送信したアプリのパッケージ名（例：com.kbcard.kbkookmincard）\n\n■ 収集目的\n読み取った通知テキストから決済金額・支払方法・カテゴリを抽出し、家計簿に自動記録するためにのみ使用されます。\n\n■ 保管および廃棄\n通知テキストは端末内で即座に解析・廃棄され、原文はサーバーへ送信・保存されません。家計簿項目に変換されたデータのみアカウントに保存されます。\n\n■ 第三者への提供\n収集した通知情報は、いかなる第三者にも提供・販売・共有されません。\n\n■ 同意の撤回\nいつでも本設定画面で自動登録をオフにするか、端末設定 > 通知へのアクセスからFamily Plannerの権限を解除できます。';
+  String get household_settings_privacy_content =>
+      '■ 収集する情報\nアプリは、端末に表示されるカード会社・銀行アプリからの決済完了通知から以下の情報を一時的に読み取ります。\n  · 通知のタイトルおよび本文テキスト（例：「KBカード 12,000円 承認」）\n  · 通知を送信したアプリのパッケージ名（例：com.kbcard.kbkookmincard）\n\n■ 収集目的\n読み取った通知テキストから決済金額・支払方法・カテゴリを抽出し、家計簿に自動記録するためにのみ使用されます。\n\n■ 保管および廃棄\n通知テキストは端末内で即座に解析・廃棄され、原文はサーバーへ送信・保存されません。家計簿項目に変換されたデータのみアカウントに保存されます。\n\n■ 第三者への提供\n収集した通知情報は、いかなる第三者にも提供・販売・共有されません。\n\n■ 同意の撤回\nいつでも本設定画面で自動登録をオフにするか、端末設定 > 通知へのアクセスからFamily Plannerの権限を解除できます。';
 
   @override
   String get fridge_title => '冷蔵庫';
@@ -3307,7 +3330,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_storage_delete => '保管場所を削除';
 
   @override
-  String get fridge_storage_delete_confirm => 'この保管場所を削除すると、中の品目もすべて削除されます。続けますか？';
+  String get fridge_storage_delete_confirm =>
+      'この保管場所を削除すると、中の品目もすべて削除されます。続けますか？';
 
   @override
   String get fridge_storage_name_hint => '例：キッチンの冷蔵庫';
@@ -3418,7 +3442,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_frequent_autoAddInfo_title => '自動追加とは？';
 
   @override
-  String get fridge_frequent_autoAddInfo_body => '冷蔵庫でこの品目の数量が0になると、カートに自動で追加されます。\nスイッチをオンにしておくと、冷蔵庫が空になったとき自動で買い物リストに入れます。';
+  String get fridge_frequent_autoAddInfo_body =>
+      '冷蔵庫でこの品目の数量が0になると、カートに自動で追加されます。\nスイッチをオンにしておくと、冷蔵庫が空になったとき自動で買い物リストに入れます。';
 
   @override
   String get fridge_frequent_autoAddInfo_hint => '冷蔵庫タブで数量を管理すると連携されます';
@@ -3427,19 +3452,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_frequent_coach_fabTitle => 'よく買う品目を追加';
 
   @override
-  String get fridge_frequent_coach_fabDesc => 'よく購入する品目を登録しておくと\n次の買い物で素早く追加できます。';
+  String get fridge_frequent_coach_fabDesc =>
+      'よく購入する品目を登録しておくと\n次の買い物で素早く追加できます。';
 
   @override
   String get fridge_frequent_coach_itemTitle => '品目管理';
 
   @override
-  String get fridge_frequent_coach_itemDesc => '品目名・デフォルト単位を設定できます。\nタップで編集、長押しで削除できます。';
+  String get fridge_frequent_coach_itemDesc =>
+      '品目名・デフォルト単位を設定できます。\nタップで編集、長押しで削除できます。';
 
   @override
   String get fridge_frequent_coach_autoAddTitle => '自動追加';
 
   @override
-  String get fridge_frequent_coach_autoAddDesc => '冷蔵庫でこの品目の数量が0になると\nカートに自動で追加されます。\n冷蔵庫タブと連携するスマート機能です。';
+  String get fridge_frequent_coach_autoAddDesc =>
+      '冷蔵庫でこの品目の数量が0になると\nカートに自動で追加されます。\n冷蔵庫タブと連携するスマート機能です。';
 
   @override
   String get fridge_frequent_coach_addToCartTitle => 'カートにすぐ追加';
@@ -3454,37 +3482,43 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_coach_fabTitle => '保管場所を追加';
 
   @override
-  String get fridge_coach_fabDesc => '冷蔵庫、冷凍室、パントリーなど保管場所を追加できます。\n+ボタンを押して作成してみましょう。';
+  String get fridge_coach_fabDesc =>
+      '冷蔵庫、冷凍室、パントリーなど保管場所を追加できます。\n+ボタンを押して作成してみましょう。';
 
   @override
   String get fridge_coach_sectionTitle => '保管場所';
 
   @override
-  String get fridge_coach_sectionDesc => 'ヘッダーをタップして開閉できます。\n右側の⋮メニューで編集・削除ができます。';
+  String get fridge_coach_sectionDesc =>
+      'ヘッダーをタップして開閉できます。\n右側の⋮メニューで編集・削除ができます。';
 
   @override
   String get fridge_coach_itemTitle => '食材管理';
 
   @override
-  String get fridge_coach_itemDesc => '• タップで名前・消費期限・メモを編集できます\n• ±ボタンで数量を調整できます\n• 左スワイプで削除マークが付きます\n• 変更後は保存ボタンを押してください';
+  String get fridge_coach_itemDesc =>
+      '• タップで名前・消費期限・メモを編集できます\n• ±ボタンで数量を調整できます\n• 左スワイプで削除マークが付きます\n• 変更後は保存ボタンを押してください';
 
   @override
   String get fridge_coach_ddayTitle => '消費期限アラート';
 
   @override
-  String get fridge_coach_ddayDesc => '消費期限を登録すると残り日数が表示されます。\n• 青：余裕あり\n• オレンジ：3日以内\n• 赤：当日または期限切れ\n設定した日前にプッシュ通知が届きます。';
+  String get fridge_coach_ddayDesc =>
+      '消費期限を登録すると残り日数が表示されます。\n• 青：余裕あり\n• オレンジ：3日以内\n• 赤：当日または期限切れ\n設定した日前にプッシュ通知が届きます。';
 
   @override
   String get fridge_coach_addItemTitle => '食材を追加';
 
   @override
-  String get fridge_coach_addItemDesc => '保管場所の右側の+ボタンで追加できます。\n複数の食材を一度に登録でき、\n消費期限・数量・単位・メモも入力できます。';
+  String get fridge_coach_addItemDesc =>
+      '保管場所の右側の+ボタンで追加できます。\n複数の食材を一度に登録でき、\n消費期限・数量・単位・メモも入力できます。';
 
   @override
   String get fridge_coach_suggestionTitle => '消費期限の自動提案';
 
   @override
-  String get fridge_coach_suggestionDesc => '食材名を入力すると消費期限が自動で提案されます。\n設定 > 消費期限プリセット管理で食材ごとの基準日を\n追加・編集して自動化ルールをカスタマイズできます。';
+  String get fridge_coach_suggestionDesc =>
+      '食材名を入力すると消費期限が自動で提案されます。\n設定 > 消費期限プリセット管理で食材ごとの基準日を\n追加・編集して自動化ルールをカスタマイズできます。';
 
   @override
   String get fridge_coach_skip => 'スキップ';
@@ -3546,13 +3580,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get fridge_history_delete_confirm_body => 'この購買履歴を削除しますか？';
 
   @override
-  String get fridge_history_delete_expense_notice => '家計簿に連携された支出は、この履歴を削除しても家計簿にそのまま残ります。';
+  String get fridge_history_delete_expense_notice =>
+      '家計簿に連携された支出は、この履歴を削除しても家計簿にそのまま残ります。';
 
   @override
   String get fridge_group_selector_personal => '個人';
 
   @override
-  String fridge_expiry_suggestion_label(String keyword, String storageType, int days) {
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
     return '$keyword基準 · $storageType $days日推奨';
   }
 
@@ -3721,7 +3760,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get investment_adminDialogTitle => '過去データ初期化';
 
   @override
-  String get investment_adminDialogDesc => 'Yahoo/CoinGecko/BOKから過去の相場を収集しDBに保存します。\n時間がかかる場合があります。';
+  String get investment_adminDialogDesc =>
+      'Yahoo/CoinGecko/BOKから過去の相場を収集しDBに保存します。\n時間がかかる場合があります。';
 
   @override
   String get investment_adminDaysLabel => '収集日数 (1~3650)';
@@ -3817,13 +3857,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get investment_coachIndicatorTitle => '投資指標';
 
   @override
-  String get investment_coachIndicatorDesc => '主要株価指数、為替、商品、暗号通貨など\nリアルタイム指標を一目で確認できます。\nタップで詳細チャートと過去の推移を表示。';
+  String get investment_coachIndicatorDesc =>
+      '主要株価指数、為替、商品、暗号通貨など\nリアルタイム指標を一目で確認できます。\nタップで詳細チャートと過去の推移を表示。';
 
   @override
   String get investment_coachBookmarkTitle => 'お気に入り';
 
   @override
-  String get investment_coachBookmarkDesc => '星マークをタップしてお気に入りに追加。\nお気に入りはリスト上部に固定され、\nホームダッシュボードウィジェットで確認できます。';
+  String get investment_coachBookmarkDesc =>
+      '星マークをタップしてお気に入りに追加。\nお気に入りはリスト上部に固定され、\nホームダッシュボードウィジェットで確認できます。';
 
   @override
   String get householdWidget_groupTooltip => 'グループ選択';
@@ -4014,37 +4056,43 @@ class AppLocalizationsJa extends AppLocalizations {
   String get legal_terms_section1_title => '第1条（目的）';
 
   @override
-  String get legal_terms_section1_body => '本規約は、エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）が提供するFamily Plannerサービス（以下「サービス」）の利用に関して、会社と会員間の権利・義務および責任事項を定めることを目的とします。';
+  String get legal_terms_section1_body =>
+      '本規約は、エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）が提供するFamily Plannerサービス（以下「サービス」）の利用に関して、会社と会員間の権利・義務および責任事項を定めることを目的とします。';
 
   @override
   String get legal_terms_section2_title => '第2条（サービスの内容）';
 
   @override
-  String get legal_terms_section2_body => '会社は会員に以下のサービスを提供します：\n• 家族グループ単位のカレンダーおよびタスク共有\n• メンバー間の資産管理および履歴共有\n• 育児報酬（ほめシール等）管理システム\n• AIエージェントを通じた会話、スケジュール管理、マクロ経済/市場ブリーフィングサービス\n• その他会社が追加開発または提携契約等を通じて提供するサービス';
+  String get legal_terms_section2_body =>
+      '会社は会員に以下のサービスを提供します：\n• 家族グループ単位のカレンダーおよびタスク共有\n• メンバー間の資産管理および履歴共有\n• 育児報酬（ほめシール等）管理システム\n• AIエージェントを通じた会話、スケジュール管理、マクロ経済/市場ブリーフィングサービス\n• その他会社が追加開発または提携契約等を通じて提供するサービス';
 
   @override
   String get legal_terms_section3_title => '第3条（会員の義務）';
 
   @override
-  String get legal_terms_section3_body => '• 会員はサービスのAIエージェントに対して、違法または他者に危害を加えるプロンプトを入力してはなりません。\n• 会員は家族グループの招待コードおよびアカウント情報を安全に管理する責任を負います。\n• サービス内の資産管理および市場ブリーフィング機能は参考データの提供を目的としており、会社はこれによる投資結果について法的責任を負いません。';
+  String get legal_terms_section3_body =>
+      '• 会員はサービスのAIエージェントに対して、違法または他者に危害を加えるプロンプトを入力してはなりません。\n• 会員は家族グループの招待コードおよびアカウント情報を安全に管理する責任を負います。\n• サービス内の資産管理および市場ブリーフィング機能は参考データの提供を目的としており、会社はこれによる投資結果について法的責任を負いません。';
 
   @override
   String get legal_terms_section4_title => '第4条（投稿物の著作権および管理）';
 
   @override
-  String get legal_terms_section4_body => '• 会員がサービス内に投稿した情報（チャット、スケジュール、資産情報等）の著作権は当該会員に帰属します。\n• 会社は会員の投稿物をサービス運営・改善（AI機能高度化等）・広報目的にのみ活用し、個人を特定できない形に非識別化して使用します。';
+  String get legal_terms_section4_body =>
+      '• 会員がサービス内に投稿した情報（チャット、スケジュール、資産情報等）の著作権は当該会員に帰属します。\n• 会社は会員の投稿物をサービス運営・改善（AI機能高度化等）・広報目的にのみ活用し、個人を特定できない形に非識別化して使用します。';
 
   @override
   String get legal_terms_section5_title => '第5条（サービスの中断および変更）';
 
   @override
-  String get legal_terms_section5_body => '会社は運営上・技術上の必要に応じて提供中のサービスの全部または一部を変更または中断することができ、その場合は事前に告知します。';
+  String get legal_terms_section5_body =>
+      '会社は運営上・技術上の必要に応じて提供中のサービスの全部または一部を変更または中断することができ、その場合は事前に告知します。';
 
   @override
   String get legal_terms_section6_title => '第6条（責任の制限）';
 
   @override
-  String get legal_terms_section6_body => '会社は、天災、サーバー提供業者の障害、第三者AIAPIサービスの障害等の不可抗力によりサービスを提供できない場合、サービス提供に関する責任が免除されます。';
+  String get legal_terms_section6_body =>
+      '会社は、天災、サーバー提供業者の障害、第三者AIAPIサービスの障害等の不可抗力によりサービスを提供できない場合、サービス提供に関する責任が免除されます。';
 
   @override
   String get legal_terms_section7_title => '第7条（施行日）';
@@ -4056,37 +4104,43 @@ class AppLocalizationsJa extends AppLocalizations {
   String get legal_privacy_section1_title => '1. 個人情報の処理目的';
 
   @override
-  String get legal_privacy_section1_body => 'エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）は、以下の目的のために個人情報を処理します。処理している個人情報は以下の目的以外の用途には使用されず、利用目的が変更される場合には別途同意を取得するなど必要な措置を講じます。\n• 会員登録・管理、家族グループ（招待コード等）の識別\n• サービス提供（カレンダー、タスク、資産管理、育児報酬システム等）\n• AIエージェント（チャットボット、ブリーフィング等）サービスの提供と品質向上\n• 新サービスの開発およびパーソナライズされたサービスの提供';
+  String get legal_privacy_section1_body =>
+      'エイチエムエン コーポレーション（HMN Corporation）（以下「会社」）は、以下の目的のために個人情報を処理します。処理している個人情報は以下の目的以外の用途には使用されず、利用目的が変更される場合には別途同意を取得するなど必要な措置を講じます。\n• 会員登録・管理、家族グループ（招待コード等）の識別\n• サービス提供（カレンダー、タスク、資産管理、育児報酬システム等）\n• AIエージェント（チャットボット、ブリーフィング等）サービスの提供と品質向上\n• 新サービスの開発およびパーソナライズされたサービスの提供';
 
   @override
   String get legal_privacy_section2_title => '2. 処理する個人情報の項目';
 
   @override
-  String get legal_privacy_section2_body => '会社はサービス提供のために以下の個人情報を処理しています。\n• 必須項目：メールアドレス、パスワード、氏名（またはニックネーム）、プロフィール画像\n• サービス利用過程で収集される情報：カレンダーの予定、タスクリスト、資産データ、家族グループ情報、AIとのチャット履歴、サービス利用記録、端末情報';
+  String get legal_privacy_section2_body =>
+      '会社はサービス提供のために以下の個人情報を処理しています。\n• 必須項目：メールアドレス、パスワード、氏名（またはニックネーム）、プロフィール画像\n• サービス利用過程で収集される情報：カレンダーの予定、タスクリスト、資産データ、家族グループ情報、AIとのチャット履歴、サービス利用記録、端末情報';
 
   @override
   String get legal_privacy_section3_title => '3. 個人情報の第三者提供および委託';
 
   @override
-  String get legal_privacy_section3_body => 'スムーズなAIサービス（文脈分析、ブリーフィング生成等）の提供のため、入力されたデータの一部を外部AIモデルAPI（例：OpenAI、Anthropic、Googleなど）に送信することがあります。\nただし、このデータはサービス提供目的にのみ使用され、モデルの学習には使用されないよう措置を講じます。';
+  String get legal_privacy_section3_body =>
+      'スムーズなAIサービス（文脈分析、ブリーフィング生成等）の提供のため、入力されたデータの一部を外部AIモデルAPI（例：OpenAI、Anthropic、Googleなど）に送信することがあります。\nただし、このデータはサービス提供目的にのみ使用され、モデルの学習には使用されないよう措置を講じます。';
 
   @override
   String get legal_privacy_section4_title => '4. 個人情報の廃棄';
 
   @override
-  String get legal_privacy_section4_body => '会社は原則として、個人情報の処理目的が達成された場合は速やかに当該個人情報を廃棄します。\n• 廃棄手順：利用者が退会を要請した場合、収集された情報は即時または法令に基づく保存期間の経過後に廃棄されます。\n• 廃棄方法：電子ファイル形式の情報は、記録を再生できない技術的方法を使用します。';
+  String get legal_privacy_section4_body =>
+      '会社は原則として、個人情報の処理目的が達成された場合は速やかに当該個人情報を廃棄します。\n• 廃棄手順：利用者が退会を要請した場合、収集された情報は即時または法令に基づく保存期間の経過後に廃棄されます。\n• 廃棄方法：電子ファイル形式の情報は、記録を再生できない技術的方法を使用します。';
 
   @override
   String get legal_privacy_section5_title => '5. 情報主体の権利および行使方法';
 
   @override
-  String get legal_privacy_section5_body => '利用者はいつでも自己の個人情報を照会・修正することができ、退会を通じて個人情報の収集・利用への同意を撤回することができます。';
+  String get legal_privacy_section5_body =>
+      '利用者はいつでも自己の個人情報を照会・修正することができ、退会を通じて個人情報の収集・利用への同意を撤回することができます。';
 
   @override
   String get legal_privacy_section6_title => '6. 個人情報保護責任者';
 
   @override
-  String get legal_privacy_section6_body => '氏名：ユ・ヨンジン\nメール：hmn.corp.dev@gmail.com';
+  String get legal_privacy_section6_body =>
+      '氏名：ユ・ヨンジン\nメール：hmn.corp.dev@gmail.com';
 
   @override
   String get legal_privacy_section7_title => '7. 施行日';

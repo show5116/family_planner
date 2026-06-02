@@ -369,10 +369,13 @@ class _MonthlySummaryCard extends ConsumerWidget {
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
     final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
 
-    // 이번 달일 때만 이월 버튼 표시
+    // 이번 달 또는 지난달일 때 이월 버튼 표시
     final now = DateTime.now();
     final currentMonth = '${now.year}-${now.month.toString().padLeft(2, '0')}';
-    final isCurrentMonth = selectedMonth == currentMonth;
+    final prevMonth = now.month == 1
+        ? '${now.year - 1}-12'
+        : '${now.year}-${(now.month - 1).toString().padLeft(2, '0')}';
+    final isCurrentMonth = selectedMonth == currentMonth || selectedMonth == prevMonth;
 
     return statsAsync.when(
       data: (stats) => Container(
@@ -445,7 +448,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-            // 잔금이 있고 이번 달일 때 이월 버튼
+            // 잔금이 있고 이번 달 또는 지난달일 때 이월 버튼
             if (isCurrentMonth && stats.hasIncome && stats.balance > 0) ...[
               const SizedBox(height: AppSizes.spaceS),
               Divider(

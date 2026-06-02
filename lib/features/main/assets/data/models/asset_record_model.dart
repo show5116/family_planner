@@ -97,7 +97,7 @@ class AssetRecordModel {
 }
 
 /// 자산 기록 입력 방식
-enum RecordInputMode { manual, auto }
+enum RecordInputMode { manual, auto, gold }
 
 /// 자산 기록 생성 DTO
 class CreateAssetRecordDto {
@@ -110,6 +110,9 @@ class CreateAssetRecordDto {
   // auto 필드
   final double? currentBalance;
   final double? additionalPrincipal;
+  // gold 필드
+  final double? gramWeight;
+  final double? purchaseCost;
   final String? note;
 
   const CreateAssetRecordDto({
@@ -120,6 +123,8 @@ class CreateAssetRecordDto {
     this.profit,
     this.currentBalance,
     this.additionalPrincipal,
+    this.gramWeight,
+    this.purchaseCost,
     this.note,
   });
 
@@ -132,6 +137,8 @@ class CreateAssetRecordDto {
       if (profit != null) 'profit': profit,
       if (currentBalance != null) 'currentBalance': currentBalance,
       if (additionalPrincipal != null) 'additionalPrincipal': additionalPrincipal,
+      if (gramWeight != null) 'gramWeight': gramWeight,
+      if (purchaseCost != null) 'purchaseCost': purchaseCost,
       if (note != null) 'note': note,
     };
   }

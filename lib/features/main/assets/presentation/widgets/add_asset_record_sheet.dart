@@ -530,15 +530,13 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
 
     if (_isGold) {
       final grams = _gramsFromInput ?? 0;
-      final principal =
-          double.tryParse(_goldPrincipalController.text.replaceAll(',', '')) ??
-              _autoEstimatedPrincipal ??
-              0;
+      final purchaseCost =
+          double.tryParse(_goldPrincipalController.text.replaceAll(',', ''));
       dto = CreateAssetRecordDto(
         recordDate: dateStr,
-        inputMode: RecordInputMode.auto,
-        currentBalance: principal,
-        additionalPrincipal: principal,
+        inputMode: RecordInputMode.gold,
+        gramWeight: grams,
+        purchaseCost: purchaseCost,
         note: note.isEmpty ? null : note,
       );
 

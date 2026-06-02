@@ -209,7 +209,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_resetPassword => '비밀번호 재설정';
 
   @override
-  String get auth_resetPasswordMessage => '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.';
+  String get auth_resetPasswordMessage =>
+      '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.';
 
   @override
   String get auth_newPassword => '새 비밀번호';
@@ -221,7 +222,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_resetPasswordSuccess => '비밀번호가 재설정되었습니다. 로그인해주세요.';
 
   @override
-  String get auth_signupEmailVerificationMessage => '회원가입이 완료되었습니다. 이메일을 확인해주세요.';
+  String get auth_signupEmailVerificationMessage =>
+      '회원가입이 완료되었습니다. 이메일을 확인해주세요.';
 
   @override
   String get auth_signupNameLabel => '이름';
@@ -251,13 +253,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_forgotPasswordGuide => '가입하신 이메일 주소를 입력해주세요.\n인증 코드를 보내드립니다.';
 
   @override
-  String get auth_forgotPasswordGuideWithCode => '이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.';
+  String get auth_forgotPasswordGuideWithCode =>
+      '이메일로 전송된 인증 코드를 입력하고\n새 비밀번호를 설정해주세요.';
 
   @override
-  String get auth_setPasswordGuide => '계정 보안을 위해 비밀번호를 설정하세요.\n가입하신 이메일 주소를 입력하면\n인증 코드를 보내드립니다.';
+  String get auth_setPasswordGuide =>
+      '계정 보안을 위해 비밀번호를 설정하세요.\n가입하신 이메일 주소를 입력하면\n인증 코드를 보내드립니다.';
 
   @override
-  String get auth_setPasswordGuideWithCode => '이메일로 전송된 인증 코드를 입력하고\n비밀번호를 설정해주세요.';
+  String get auth_setPasswordGuideWithCode =>
+      '이메일로 전송된 인증 코드를 입력하고\n비밀번호를 설정해주세요.';
 
   @override
   String get auth_verificationCodeLabel => '인증 코드 (6자리)';
@@ -329,10 +334,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get nav_votes => '투표';
 
   @override
-  String get more_coach_groupDesc => '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.';
+  String get more_coach_groupDesc =>
+      '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.';
 
   @override
-  String get more_coach_settingsDesc => '테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.';
+  String get more_coach_settingsDesc =>
+      '테마, 언어, 알림, 하단 탭 구성 등\n앱을 원하는 대로 커스터마이징하세요.';
 
   @override
   String get home_greeting_morning => '좋은 아침이에요!';
@@ -404,7 +411,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bottomNav_resetSuccess => '기본값으로 초기화되었습니다';
 
   @override
-  String get bottomNav_guideMessage => '홈과 더보기는 고정입니다.\n중간 3개 슬롯을 탭하여 메뉴를 선택하세요.';
+  String get bottomNav_guideMessage =>
+      '홈과 더보기는 고정입니다.\n중간 3개 슬롯을 탭하여 메뉴를 선택하세요.';
 
   @override
   String get bottomNav_preview => '하단 네비게이션 미리보기';
@@ -413,7 +421,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bottomNav_howToUse => '사용 방법';
 
   @override
-  String get bottomNav_instructions => '• 슬롯 2, 3, 4를 탭하여 원하는 메뉴로 변경하세요.\n• 슬롯 1(홈)과 슬롯 5(더보기)는 고정입니다.\n• 하단 네비게이션에 없는 메뉴는 \"더보기\" 탭에 표시됩니다.';
+  String get bottomNav_instructions =>
+      '• 슬롯 2, 3, 4를 탭하여 원하는 메뉴로 변경하세요.\n• 슬롯 1(홈)과 슬롯 5(더보기)는 고정입니다.\n• 하단 네비게이션에 없는 메뉴는 \"더보기\" 탭에 표시됩니다.';
 
   @override
   String get bottomNav_availableMenus => '사용 가능한 메뉴';
@@ -538,7 +547,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get themeSettings_selectTheme => '테마 선택';
 
   @override
-  String get themeSettings_description => '앱의 밝기 테마를 선택하세요. 시스템 설정을 따르거나 직접 선택할 수 있습니다.';
+  String get themeSettings_description =>
+      '앱의 밝기 테마를 선택하세요. 시스템 설정을 따르거나 직접 선택할 수 있습니다.';
 
   @override
   String get themeSettings_lightMode => 'Light 모드';
@@ -772,10 +782,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_passwordSetupRequired => '비밀번호 설정이 필요합니다';
 
   @override
-  String get settings_passwordSetupMessage1 => '소셜 로그인으로만 가입하셔서 아직 비밀번호가 설정되지 않았습니다.';
+  String get settings_passwordSetupMessage1 =>
+      '소셜 로그인으로만 가입하셔서 아직 비밀번호가 설정되지 않았습니다.';
 
   @override
-  String get settings_passwordSetupMessage2 => '프로필을 수정하거나 계정 보안을 강화하려면 비밀번호를 설정하는 것을 권장합니다.';
+  String get settings_passwordSetupMessage2 =>
+      '프로필을 수정하거나 계정 보안을 강화하려면 비밀번호를 설정하는 것을 권장합니다.';
 
   @override
   String get settings_passwordSetupMessage3 => '비밀번호 설정 화면으로 이동하시겠습니까?';
@@ -846,7 +858,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get permission_deleteSoftDescription => '소프트 삭제: 비활성화하지만 데이터는 유지됩니다';
 
   @override
-  String get permission_deleteHardDescription => '하드 삭제: 데이터베이스에서 완전히 삭제됩니다 (주의!)';
+  String get permission_deleteHardDescription =>
+      '하드 삭제: 데이터베이스에서 완전히 삭제됩니다 (주의!)';
 
   @override
   String get permission_softDelete => '소프트 삭제';
@@ -1034,7 +1047,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_deleteConfirmTitle => '그룹 삭제';
 
   @override
-  String get group_deleteConfirmMessage => '정말로 이 그룹을 삭제하시겠습니까?\n모든 데이터가 삭제되며 복구할 수 없습니다.';
+  String get group_deleteConfirmMessage =>
+      '정말로 이 그룹을 삭제하시겠습니까?\n모든 데이터가 삭제되며 복구할 수 없습니다.';
 
   @override
   String get group_leaveConfirmTitle => '그룹 나가기';
@@ -1043,7 +1057,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_leaveConfirmMessage => '정말로 이 그룹을 나가시겠습니까?';
 
   @override
-  String get group_ownerCannotLeave => '그룹장은 그룹을 나갈 수 없습니다.\n그룹장 권한을 양도하거나 그룹을 삭제해주세요.';
+  String get group_ownerCannotLeave =>
+      '그룹장은 그룹을 나갈 수 없습니다.\n그룹장 권한을 양도하거나 그룹을 삭제해주세요.';
 
   @override
   String get group_createSuccess => '그룹이 생성되었습니다';
@@ -1199,7 +1214,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get group_roleInfoTitle => '안내';
 
   @override
-  String get group_roleInfoBullet1 => '공통 역할 (OWNER, ADMIN, MEMBER)은 모든 그룹에 기본으로 제공됩니다.';
+  String get group_roleInfoBullet1 =>
+      '공통 역할 (OWNER, ADMIN, MEMBER)은 모든 그룹에 기본으로 제공됩니다.';
 
   @override
   String get group_roleInfoBullet2 => '커스텀 역할은 그룹 OWNER만 생성, 수정, 삭제할 수 있습니다.';
@@ -1377,7 +1393,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get announcement_deleteDialogTitle => '공지사항 삭제';
 
   @override
-  String get announcement_deleteDialogMessage => '이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.';
+  String get announcement_deleteDialogMessage =>
+      '이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.';
 
   @override
   String get announcement_pinSuccess => '공지사항이 고정되었습니다';
@@ -1386,7 +1403,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get announcement_unpinSuccess => '고정이 해제되었습니다';
 
   @override
-  String get announcement_deleteConfirm => '이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.';
+  String get announcement_deleteConfirm =>
+      '이 공지사항을 삭제하시겠습니까?\n삭제된 공지사항은 복구할 수 없습니다.';
 
   @override
   String get announcement_loadError => '공지사항을 불러올 수 없습니다';
@@ -1907,7 +1925,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get category_deleteDialogTitle => '카테고리 삭제';
 
   @override
-  String get category_deleteDialogMessage => '이 카테고리를 삭제하시겠습니까?\n연결된 일정이 있으면 삭제할 수 없습니다.';
+  String get category_deleteDialogMessage =>
+      '이 카테고리를 삭제하시겠습니까?\n연결된 일정이 있으면 삭제할 수 없습니다.';
 
   @override
   String get schedule_recurringEvery => '매';
@@ -2658,7 +2677,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_recurring_type_variable => '가변 금액';
 
   @override
-  String get household_recurring_type_variable_desc => '매월 발생하지만 금액이 달라집니다 (예: 관리비)';
+  String get household_recurring_type_variable_desc =>
+      '매월 발생하지만 금액이 달라집니다 (예: 관리비)';
 
   @override
   String get household_estimated_amount => '예상 금액';
@@ -2743,7 +2763,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_budget_tab_template => '매월 자동 예산';
 
   @override
-  String get household_budget_template_info => '매월 1일에 템플릿 기반으로 예산이 자동 설정됩니다. 해당 월에 이미 예산이 있으면 건너뜁니다.';
+  String get household_budget_template_info =>
+      '매월 1일에 템플릿 기반으로 예산이 자동 설정됩니다. 해당 월에 이미 예산이 있으면 건너뜁니다.';
 
   @override
   String get household_budget_template_saved => '자동 예산 템플릿이 설정되었습니다';
@@ -2752,7 +2773,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_budget_template_delete_title => '템플릿 삭제';
 
   @override
-  String get household_budget_template_delete_confirm => '이 카테고리의 자동 예산 템플릿을 삭제하시겠습니까?';
+  String get household_budget_template_delete_confirm =>
+      '이 카테고리의 자동 예산 템플릿을 삭제하시겠습니까?';
 
   @override
   String get household_budget_template_deleted => '자동 예산 템플릿이 삭제되었습니다';
@@ -2885,7 +2907,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_delete_account => '계좌 삭제';
 
   @override
-  String get asset_delete_account_confirm => '이 계좌를 삭제하시겠습니까?\n관련된 모든 기록도 함께 삭제됩니다.';
+  String get asset_delete_account_confirm =>
+      '이 계좌를 삭제하시겠습니까?\n관련된 모든 기록도 함께 삭제됩니다.';
 
   @override
   String get asset_delete_success => '삭제되었습니다';
@@ -2954,7 +2977,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_gold_record_info_title => '금 계좌 자동 관리 안내';
 
   @override
-  String get asset_gold_record_info_body => '이 계좌는 실물 금(現物金) 계좌로, 아래와 같이 자동 관리됩니다.\n\n• 기록 추가 시 현재 금 현물 시세(GOLD_KRW_SPOT)를 기준으로 보유 중량 × 시세 = 잔액이 자동 계산됩니다.\n\n• 매달 1일, 최신 금 현물 시세를 반영하여 잔액·수익금·수익률이 자동으로 갱신됩니다.\n\n• 원금은 직접 수정할 수 있으며, 수정하지 않으면 처음 기록 시 계산된 값이 유지됩니다.';
+  String get asset_gold_record_info_body =>
+      '이 계좌는 실물 금(現物金) 계좌로, 아래와 같이 자동 관리됩니다.\n\n• 기록 추가 시 현재 금 현물 시세(GOLD_KRW_SPOT)를 기준으로 보유 중량 × 시세 = 잔액이 자동 계산됩니다.\n\n• 매달 1일, 최신 금 현물 시세를 반영하여 잔액·수익금·수익률이 자동으로 갱신됩니다.\n\n• 원금은 직접 수정할 수 있으며, 수정하지 않으면 처음 기록 시 계산된 값이 유지됩니다.';
 
   @override
   String get asset_no_records => '기록이 없습니다';
@@ -3253,10 +3277,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_settings_auto_toggle => '결제 알림 자동 등록';
 
   @override
-  String get household_settings_auto_toggle_desc => '카드·은행 결제 알림을 감지해 가계부에 자동으로 기록합니다';
+  String get household_settings_auto_toggle_desc =>
+      '카드·은행 결제 알림을 감지해 가계부에 자동으로 기록합니다';
 
   @override
-  String get household_settings_permission_required => '알림 접근 권한이 필요합니다. \'허용\'을 눌러 설정 화면에서 권한을 부여해주세요.';
+  String get household_settings_permission_required =>
+      '알림 접근 권한이 필요합니다. \'허용\'을 눌러 설정 화면에서 권한을 부여해주세요.';
 
   @override
   String get household_settings_permission_grant => '허용';
@@ -3268,16 +3294,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_settings_privacy_title => '수집 정보 및 처리 방침 확인';
 
   @override
-  String get household_settings_privacy_subtitle => '푸시 자동 등록 기능이 수집하는 정보를 확인합니다';
+  String get household_settings_privacy_subtitle =>
+      '푸시 자동 등록 기능이 수집하는 정보를 확인합니다';
 
   @override
   String get household_settings_privacy_dialog_title => '개인정보 처리방침';
 
   @override
-  String get household_settings_auto_scope_notice => '앱이 실행 중(포그라운드·백그라운드)일 때만 동작합니다. 앱을 완전히 종료하면 자동 등록이 중단됩니다.';
+  String get household_settings_auto_scope_notice =>
+      '앱이 실행 중(포그라운드·백그라운드)일 때만 동작합니다. 앱을 완전히 종료하면 자동 등록이 중단됩니다.';
 
   @override
-  String get household_settings_privacy_content => '■ 수집하는 정보\n앱은 기기에 표시되는 알림 중 카드사·은행 앱에서 발송된 결제 완료 알림의 아래 정보를 일시적으로 읽습니다.\n  · 알림 제목 및 본문 텍스트 (예: \"KB카드 12,000원 승인\")\n  · 알림을 보낸 앱 패키지명 (예: com.kbcard.kbkookmincard)\n\n■ 수집 목적\n읽은 알림 텍스트에서 결제 금액·결제 수단·카테고리를 추출하여 가계부에 자동으로 기록하는 데에만 사용됩니다.\n\n■ 보관 및 파기\n알림 텍스트는 기기 내에서 즉시 파싱 후 파기되며, 원문은 서버로 전송되거나 저장되지 않습니다. 가계부 항목으로 변환된 데이터만 회원 계정에 저장됩니다.\n\n■ 제3자 제공\n수집한 알림 정보는 어떠한 제3자에게도 제공·판매·공유되지 않습니다.\n\n■ 권한 철회\n언제든지 본 설정 화면에서 자동 등록을 끄거나, 기기 설정 > 알림 접근 권한에서 Family Planner의 권한을 해제할 수 있습니다.';
+  String get household_settings_privacy_content =>
+      '■ 수집하는 정보\n앱은 기기에 표시되는 알림 중 카드사·은행 앱에서 발송된 결제 완료 알림의 아래 정보를 일시적으로 읽습니다.\n  · 알림 제목 및 본문 텍스트 (예: \"KB카드 12,000원 승인\")\n  · 알림을 보낸 앱 패키지명 (예: com.kbcard.kbkookmincard)\n\n■ 수집 목적\n읽은 알림 텍스트에서 결제 금액·결제 수단·카테고리를 추출하여 가계부에 자동으로 기록하는 데에만 사용됩니다.\n\n■ 보관 및 파기\n알림 텍스트는 기기 내에서 즉시 파싱 후 파기되며, 원문은 서버로 전송되거나 저장되지 않습니다. 가계부 항목으로 변환된 데이터만 회원 계정에 저장됩니다.\n\n■ 제3자 제공\n수집한 알림 정보는 어떠한 제3자에게도 제공·판매·공유되지 않습니다.\n\n■ 권한 철회\n언제든지 본 설정 화면에서 자동 등록을 끄거나, 기기 설정 > 알림 접근 권한에서 Family Planner의 권한을 해제할 수 있습니다.';
 
   @override
   String get fridge_title => '냉장고';
@@ -3307,7 +3336,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_storage_delete => '보관소 삭제';
 
   @override
-  String get fridge_storage_delete_confirm => '보관소를 삭제하면 안에 있는 모든 품목도 함께 삭제됩니다. 계속하시겠습니까?';
+  String get fridge_storage_delete_confirm =>
+      '보관소를 삭제하면 안에 있는 모든 품목도 함께 삭제됩니다. 계속하시겠습니까?';
 
   @override
   String get fridge_storage_name_hint => '예: 우리집 냉장고';
@@ -3418,7 +3448,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_frequent_autoAddInfo_title => '자동 추가란?';
 
   @override
-  String get fridge_frequent_autoAddInfo_body => '냉장고에서 이 품목의 수량이 0이 되면 장바구니에 자동으로 추가돼요.\n스위치를 켜두면 냉장고가 비었을 때 알아서 장보기 목록에 담아드립니다.';
+  String get fridge_frequent_autoAddInfo_body =>
+      '냉장고에서 이 품목의 수량이 0이 되면 장바구니에 자동으로 추가돼요.\n스위치를 켜두면 냉장고가 비었을 때 알아서 장보기 목록에 담아드립니다.';
 
   @override
   String get fridge_frequent_autoAddInfo_hint => '냉장고 탭에서 수량을 관리하면 연동됩니다';
@@ -3427,25 +3458,29 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_frequent_coach_fabTitle => '자주 사는 항목 추가';
 
   @override
-  String get fridge_frequent_coach_fabDesc => '자주 구매하는 품목을 등록해 두면\n다음 장보기 때 빠르게 담을 수 있어요.';
+  String get fridge_frequent_coach_fabDesc =>
+      '자주 구매하는 품목을 등록해 두면\n다음 장보기 때 빠르게 담을 수 있어요.';
 
   @override
   String get fridge_frequent_coach_itemTitle => '항목 관리';
 
   @override
-  String get fridge_frequent_coach_itemDesc => '품목명·기본 단위를 설정할 수 있어요.\n탭하면 수정, 길게 누르면 삭제할 수 있습니다.';
+  String get fridge_frequent_coach_itemDesc =>
+      '품목명·기본 단위를 설정할 수 있어요.\n탭하면 수정, 길게 누르면 삭제할 수 있습니다.';
 
   @override
   String get fridge_frequent_coach_autoAddTitle => '자동 추가';
 
   @override
-  String get fridge_frequent_coach_autoAddDesc => '냉장고에서 이 품목의 수량이 0이 되면\n장바구니에 자동으로 추가돼요.\n냉장고 탭과 연동되는 스마트 기능이에요.';
+  String get fridge_frequent_coach_autoAddDesc =>
+      '냉장고에서 이 품목의 수량이 0이 되면\n장바구니에 자동으로 추가돼요.\n냉장고 탭과 연동되는 스마트 기능이에요.';
 
   @override
   String get fridge_frequent_coach_addToCartTitle => '장바구니에 바로 담기';
 
   @override
-  String get fridge_frequent_coach_addToCartDesc => '버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.';
+  String get fridge_frequent_coach_addToCartDesc =>
+      '버튼 하나로 현재 장바구니에\n즉시 추가할 수 있어요.';
 
   @override
   String get fridge_frequent_coach_skip => '건너뛰기';
@@ -3454,37 +3489,43 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_coach_fabTitle => '보관소 추가';
 
   @override
-  String get fridge_coach_fabDesc => '냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.';
+  String get fridge_coach_fabDesc =>
+      '냉장고, 냉동실, 팬트리 등 보관 장소를 추가할 수 있어요.\n+ 버튼을 눌러 보관소를 만들어 보세요.';
 
   @override
   String get fridge_coach_sectionTitle => '보관소';
 
   @override
-  String get fridge_coach_sectionDesc => '헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.';
+  String get fridge_coach_sectionDesc =>
+      '헤더를 탭해 펼치고 접을 수 있어요.\n우측 메뉴(⋮)로 보관소를 수정하거나 삭제할 수 있어요.';
 
   @override
   String get fridge_coach_itemTitle => '품목 관리';
 
   @override
-  String get fridge_coach_itemDesc => '• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다';
+  String get fridge_coach_itemDesc =>
+      '• 탭하면 이름·유통기한·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제 표시돼요\n• 변경 후 저장 버튼을 눌러야 반영됩니다';
 
   @override
   String get fridge_coach_ddayTitle => '유통기한 알림';
 
   @override
-  String get fridge_coach_ddayDesc => '품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.';
+  String get fridge_coach_ddayDesc =>
+      '품목에 유통기한을 등록하면 남은 일수가 표시돼요.\n• 파란색: 여유 있음\n• 주황색: 3일 이내 임박\n• 빨간색: 오늘 또는 이미 지남\n설정한 알림일 전에 푸시 알림도 받을 수 있어요.';
 
   @override
   String get fridge_coach_addItemTitle => '품목 추가';
 
   @override
-  String get fridge_coach_addItemDesc => '보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.';
+  String get fridge_coach_addItemDesc =>
+      '보관소 우측 + 버튼으로 품목을 추가해요.\n여러 품목을 한 번에 등록할 수 있고,\n유통기한·수량·단위·메모도 함께 입력할 수 있어요.';
 
   @override
   String get fridge_coach_suggestionTitle => '유통기한 자동 추천';
 
   @override
-  String get fridge_coach_suggestionDesc => '품목명을 입력하면 유통기한을 자동으로 추천해줘요.\n설정 > 유통기한 프리셋 관리에서 품목별 기준일을\n직접 추가·수정해 자동화 규칙을 커스터마이징할 수 있어요.';
+  String get fridge_coach_suggestionDesc =>
+      '품목명을 입력하면 유통기한을 자동으로 추천해줘요.\n설정 > 유통기한 프리셋 관리에서 품목별 기준일을\n직접 추가·수정해 자동화 규칙을 커스터마이징할 수 있어요.';
 
   @override
   String get fridge_coach_skip => '건너뛰기';
@@ -3546,13 +3587,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fridge_history_delete_confirm_body => '이 구매 이력을 삭제할까요?';
 
   @override
-  String get fridge_history_delete_expense_notice => '가계부에 연동된 지출은 장보기 이력을 삭제해도 가계부에 그대로 남아 있어요.';
+  String get fridge_history_delete_expense_notice =>
+      '가계부에 연동된 지출은 장보기 이력을 삭제해도 가계부에 그대로 남아 있어요.';
 
   @override
   String get fridge_group_selector_personal => '개인';
 
   @override
-  String fridge_expiry_suggestion_label(String keyword, String storageType, int days) {
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
     return '$keyword 기준 · $storageType $days일 추천';
   }
 
@@ -3721,7 +3767,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get investment_adminDialogTitle => '과거 데이터 초기화';
 
   @override
-  String get investment_adminDialogDesc => 'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.';
+  String get investment_adminDialogDesc =>
+      'Yahoo/CoinGecko/BOK에서 과거 시세를 수집해 DB에 저장합니다.\n시간이 걸릴 수 있습니다.';
 
   @override
   String get investment_adminDaysLabel => '수집 일수 (1~3650)';
@@ -3817,13 +3864,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get investment_coachIndicatorTitle => '투자 지표';
 
   @override
-  String get investment_coachIndicatorDesc => '주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.';
+  String get investment_coachIndicatorDesc =>
+      '주요 주가지수, 환율, 원자재, 암호화폐 등\n실시간 지표를 한눈에 확인할 수 있어요.\n탭하면 상세 차트와 과거 추이를 볼 수 있어요.';
 
   @override
   String get investment_coachBookmarkTitle => '즐겨찾기';
 
   @override
-  String get investment_coachBookmarkDesc => '별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.';
+  String get investment_coachBookmarkDesc =>
+      '별표를 눌러 즐겨찾기에 추가하세요.\n즐겨찾기한 지표는 목록 상단에 고정되고\n홈 화면 대시보드 위젯에서 바로 확인할 수 있어요.';
 
   @override
   String get householdWidget_groupTooltip => '그룹 선택';
@@ -4014,37 +4063,43 @@ class AppLocalizationsKo extends AppLocalizations {
   String get legal_terms_section1_title => '제1조 (목적)';
 
   @override
-  String get legal_terms_section1_body => '본 약관은 에이치엠엔 코퍼레이션(HMN Corporation)이 제공하는 Family Planner 서비스(이하 \"서비스\")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.';
+  String get legal_terms_section1_body =>
+      '본 약관은 에이치엠엔 코퍼레이션(HMN Corporation)이 제공하는 Family Planner 서비스(이하 \"서비스\")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.';
 
   @override
   String get legal_terms_section2_title => '제2조 (서비스의 내용)';
 
   @override
-  String get legal_terms_section2_body => '회사는 회원에게 다음과 같은 서비스를 제공합니다.\n• 가족 그룹 기반의 캘린더 및 할 일 공유\n• 구성원 간 자산 관리 및 내역 공유\n• 육아 보상(칭찬 스티커 등) 관리 시스템\n• AI 에이전트를 통한 대화, 일정 관리, 거시 경제/시장 브리핑 서비스\n• 기타 회사가 추가로 개발하거나 제휴 계약 등을 통해 제공하는 서비스';
+  String get legal_terms_section2_body =>
+      '회사는 회원에게 다음과 같은 서비스를 제공합니다.\n• 가족 그룹 기반의 캘린더 및 할 일 공유\n• 구성원 간 자산 관리 및 내역 공유\n• 육아 보상(칭찬 스티커 등) 관리 시스템\n• AI 에이전트를 통한 대화, 일정 관리, 거시 경제/시장 브리핑 서비스\n• 기타 회사가 추가로 개발하거나 제휴 계약 등을 통해 제공하는 서비스';
 
   @override
   String get legal_terms_section3_title => '제3조 (회원의 의무)';
 
   @override
-  String get legal_terms_section3_body => '• 회원은 본 서비스의 AI 에이전트에게 불법적이거나 타인에게 위해를 가할 수 있는 프롬프트를 입력해서는 안 됩니다.\n• 회원은 가족 그룹 초대 코드 및 계정 정보를 안전하게 관리할 책임이 있습니다.\n• 서비스 내 자산 관리 및 시장 브리핑 기능은 참고용 데이터 제공을 목적으로 하며, 회사는 이를 통한 투자 결과에 대해 법적 책임을 지지 않습니다.';
+  String get legal_terms_section3_body =>
+      '• 회원은 본 서비스의 AI 에이전트에게 불법적이거나 타인에게 위해를 가할 수 있는 프롬프트를 입력해서는 안 됩니다.\n• 회원은 가족 그룹 초대 코드 및 계정 정보를 안전하게 관리할 책임이 있습니다.\n• 서비스 내 자산 관리 및 시장 브리핑 기능은 참고용 데이터 제공을 목적으로 하며, 회사는 이를 통한 투자 결과에 대해 법적 책임을 지지 않습니다.';
 
   @override
   String get legal_terms_section4_title => '제4조 (게시물의 저작권 및 관리)';
 
   @override
-  String get legal_terms_section4_body => '• 회원이 서비스 내에 게시한 정보(채팅, 일정, 자산 정보 등)의 저작권은 해당 회원에게 있습니다.\n• 회사는 회원의 게시물을 서비스 운영, 개선(AI 기능 고도화 등), 홍보의 목적으로만 활용하며, 개인을 식별할 수 없는 형태로 비식별화하여 사용합니다.';
+  String get legal_terms_section4_body =>
+      '• 회원이 서비스 내에 게시한 정보(채팅, 일정, 자산 정보 등)의 저작권은 해당 회원에게 있습니다.\n• 회사는 회원의 게시물을 서비스 운영, 개선(AI 기능 고도화 등), 홍보의 목적으로만 활용하며, 개인을 식별할 수 없는 형태로 비식별화하여 사용합니다.';
 
   @override
   String get legal_terms_section5_title => '제5조 (서비스의 중단 및 변경)';
 
   @override
-  String get legal_terms_section5_body => '회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스의 전부 또는 일부를 변경하거나 중단할 수 있으며, 이 경우 사전에 공지합니다.';
+  String get legal_terms_section5_body =>
+      '회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스의 전부 또는 일부를 변경하거나 중단할 수 있으며, 이 경우 사전에 공지합니다.';
 
   @override
   String get legal_terms_section6_title => '제6조 (책임 제한)';
 
   @override
-  String get legal_terms_section6_body => '회사는 천재지변, 서버 제공 업체의 장애, 제3자 AI API 서비스의 장애 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.';
+  String get legal_terms_section6_body =>
+      '회사는 천재지변, 서버 제공 업체의 장애, 제3자 AI API 서비스의 장애 등 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.';
 
   @override
   String get legal_terms_section7_title => '제7조 (시행일)';
@@ -4056,37 +4111,43 @@ class AppLocalizationsKo extends AppLocalizations {
   String get legal_privacy_section1_title => '1. 개인정보의 처리 목적';
 
   @override
-  String get legal_privacy_section1_body => '에이치엠엔 코퍼레이션(HMN Corporation)(이하 \'회사\')은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n• 회원 가입 및 관리, 가족 그룹(초대 코드 등) 식별\n• 서비스 제공 (캘린더, 할 일, 자산 관리, 육아 보상 시스템 등)\n• AI 에이전트(챗봇, 브리핑 등) 서비스 제공 및 품질 향상\n• 신규 서비스 개발 및 맞춤 서비스 제공';
+  String get legal_privacy_section1_body =>
+      '에이치엠엔 코퍼레이션(HMN Corporation)(이하 \'회사\')은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n• 회원 가입 및 관리, 가족 그룹(초대 코드 등) 식별\n• 서비스 제공 (캘린더, 할 일, 자산 관리, 육아 보상 시스템 등)\n• AI 에이전트(챗봇, 브리핑 등) 서비스 제공 및 품질 향상\n• 신규 서비스 개발 및 맞춤 서비스 제공';
 
   @override
   String get legal_privacy_section2_title => '2. 처리하는 개인정보 항목';
 
   @override
-  String get legal_privacy_section2_body => '회사는 서비스 제공을 위해 다음의 개인정보 항목을 처리하고 있습니다.\n• 필수항목: 이메일 주소, 비밀번호, 이름(또는 닉네임), 프로필 이미지\n• 서비스 이용 과정에서 수집되는 정보: 캘린더 일정, 할 일 목록, 자산 데이터, 가족 그룹 정보, AI와의 채팅 내역, 서비스 이용 기록, 기기 정보';
+  String get legal_privacy_section2_body =>
+      '회사는 서비스 제공을 위해 다음의 개인정보 항목을 처리하고 있습니다.\n• 필수항목: 이메일 주소, 비밀번호, 이름(또는 닉네임), 프로필 이미지\n• 서비스 이용 과정에서 수집되는 정보: 캘린더 일정, 할 일 목록, 자산 데이터, 가족 그룹 정보, AI와의 채팅 내역, 서비스 이용 기록, 기기 정보';
 
   @override
   String get legal_privacy_section3_title => '3. 개인정보의 제3자 제공 및 위탁';
 
   @override
-  String get legal_privacy_section3_body => '회사는 원활한 AI 서비스 제공(문맥 분석, 브리핑 생성 등)을 위해 입력된 데이터의 일부를 외부 AI 모델 API(예: OpenAI, Anthropic, Google 등)에 전송할 수 있습니다.\n단, 이 데이터는 서비스 제공 목적으로만 활용되며 모델 학습에 사용되지 않도록 조치합니다.';
+  String get legal_privacy_section3_body =>
+      '회사는 원활한 AI 서비스 제공(문맥 분석, 브리핑 생성 등)을 위해 입력된 데이터의 일부를 외부 AI 모델 API(예: OpenAI, Anthropic, Google 등)에 전송할 수 있습니다.\n단, 이 데이터는 서비스 제공 목적으로만 활용되며 모델 학습에 사용되지 않도록 조치합니다.';
 
   @override
   String get legal_privacy_section4_title => '4. 개인정보의 파기';
 
   @override
-  String get legal_privacy_section4_body => '회사는 원칙적으로 개인정보 처리 목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다.\n• 파기절차: 이용자가 회원탈퇴를 요청하는 경우, 수집된 정보는 즉시 또는 법령에 따른 보존 기간 경과 후 파기됩니다.\n• 파기방법: 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용합니다.';
+  String get legal_privacy_section4_body =>
+      '회사는 원칙적으로 개인정보 처리 목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다.\n• 파기절차: 이용자가 회원탈퇴를 요청하는 경우, 수집된 정보는 즉시 또는 법령에 따른 보존 기간 경과 후 파기됩니다.\n• 파기방법: 전자적 파일 형태의 정보는 기록을 재생할 수 없는 기술적 방법을 사용합니다.';
 
   @override
   String get legal_privacy_section5_title => '5. 정보주체의 권리 및 행사 방법';
 
   @override
-  String get legal_privacy_section5_body => '이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보의 수집 및 이용 동의를 철회할 수 있습니다.';
+  String get legal_privacy_section5_body =>
+      '이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있으며, 회원 탈퇴를 통해 개인정보의 수집 및 이용 동의를 철회할 수 있습니다.';
 
   @override
   String get legal_privacy_section6_title => '6. 개인정보 보호책임자';
 
   @override
-  String get legal_privacy_section6_body => '성명: 유영진\n이메일: hmn.corp.dev@gmail.com';
+  String get legal_privacy_section6_body =>
+      '성명: 유영진\n이메일: hmn.corp.dev@gmail.com';
 
   @override
   String get legal_privacy_section7_title => '7. 시행일';
