@@ -70,6 +70,9 @@ class HoldingRecordsSection extends ConsumerStatefulWidget {
 
 class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
   String? _selectedDate; // YYYY-MM-DD
+  bool _compareMode = false;
+  String? _compareDateA;
+  String? _compareDateB;
 
   @override
   void initState() {
@@ -134,17 +137,33 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
                 '포트폴리오',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
-              if (_selectedDate != null)
-                TextButton.icon(
-                  onPressed: () => _showAddSheet(context, _selectedDate!),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('종목 추가'),
-                ),
+              Row(
+                children: [
+                  if (!_compareMode && _selectedDate != null)
+                    TextButton.icon(
+                      onPressed: () => _showAddSheet(context, _selectedDate!),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('종목 추가'),
+                    ),
+                  if (dateOptions.length >= 2)
+                    TextButton.icon(
+                      onPressed: () => setState(() {
+                        _compareMode = !_compareMode;
+                        if (_compareMode) {
+                          _compareDateA = dateOptions.first;
+                          _compareDateB = dateOptions.length > 1 ? dateOptions[1] : null;
+                        }
+                      }),
+                      icon: Icon(_compareMode ? Icons.close : Icons.compare_arrows, size: 18),
+                      label: Text(_compareMode ? '닫기' : '비교'),
+                    ),
+                ],
+              ),
             ],
           ),
         ),
 
-        // 날짜 선택기
+        // 날짜 선택기 / 비교 모드
         if (dateOptions.isEmpty)
           Padding(
             padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -155,7 +174,45 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
                   ),
             ),
           )
-        else ...[
+        else if (_compareMode) ...[
+          // 비교 모드: 날짜 A / B 선택
+          Padding(
+            padding: const EdgeInsets.fromLTRB(AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _DateSelector(
+                    dates: dateOptions,
+                    selected: _compareDateA,
+                    onChanged: (d) => setState(() => _compareDateA = d),
+                    formatLabel: _formatDateLabel,
+                    label: 'A',
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+                  child: Icon(Icons.compare_arrows),
+                ),
+                Expanded(
+                  child: _DateSelector(
+                    dates: dateOptions,
+                    selected: _compareDateB,
+                    onChanged: (d) => setState(() => _compareDateB = d),
+                    formatLabel: _formatDateLabel,
+                    label: 'B',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_compareDateA != null && _compareDateB != null)
+            _HoldingRecordsComparison(
+              accountId: widget.accountId,
+              dateA: _compareDateA!,
+              dateB: _compareDateB!,
+              formatDateLabel: _formatDateLabel,
+            ),
+        ] else ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, 0),
             child: _DateSelector(
@@ -198,32 +255,51 @@ class _DateSelector extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onChanged;
   final String Function(String) formatLabel;
+  final String? label;
 
   const _DateSelector({
     required this.dates,
     required this.selected,
     required this.onChanged,
     required this.formatLabel,
+    this.label,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-      ),
-      child: DropdownButton<String>(
-        value: selected,
-        isExpanded: true,
-        underline: const SizedBox(),
-        icon: const Icon(Icons.calendar_today, size: 16),
-        items: dates
-            .map((d) => DropdownMenuItem(value: d, child: Text(formatLabel(d))))
-            .toList(),
-        onChanged: (v) { if (v != null) onChanged(v); },
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (label != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Text(
+              label!,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: 4),
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+          ),
+          child: DropdownButton<String>(
+            value: selected,
+            isExpanded: true,
+            underline: const SizedBox(),
+            icon: const Icon(Icons.calendar_today, size: 16),
+            items: dates
+                .map((d) => DropdownMenuItem(value: d, child: Text(formatLabel(d))))
+                .toList(),
+            onChanged: (v) { if (v != null) onChanged(v); },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -760,6 +836,271 @@ class _HoldingRecordListItem extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─── 포트폴리오 비교 ──────────────────────────────────────────────────────────
+class _HoldingRecordsComparison extends ConsumerWidget {
+  final String accountId;
+  final String dateA;
+  final String dateB;
+  final String Function(String) formatDateLabel;
+
+  const _HoldingRecordsComparison({
+    required this.accountId,
+    required this.dateA,
+    required this.dateB,
+    required this.formatDateLabel,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncA = ref.watch(holdingRecordsProvider((accountId: accountId, recordDate: dateA)));
+    final asyncB = ref.watch(holdingRecordsProvider((accountId: accountId, recordDate: dateB)));
+
+    if (asyncA.isLoading || asyncB.isLoading) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.spaceL),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (asyncA.hasError || asyncB.hasError) {
+      return Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Text('오류가 발생했습니다.',
+            style: TextStyle(color: Theme.of(context).colorScheme.error)),
+      );
+    }
+
+    final recordsA = asyncA.value ?? [];
+    final recordsB = asyncB.value ?? [];
+
+    // 두 날짜의 종목명 합집합
+    final allNames = {
+      ...recordsA.map((r) => r.name),
+      ...recordsB.map((r) => r.name),
+    }.toList();
+
+    final mapA = {for (final r in recordsA) r.name: r.amount};
+    final mapB = {for (final r in recordsB) r.name: r.amount};
+
+    // 변화량 기준 내림차순 정렬 (절댓값)
+    allNames.sort((a, b) {
+      final diffA = ((mapB[a] ?? 0) - (mapA[a] ?? 0)).abs();
+      final diffB = ((mapB[b] ?? 0) - (mapA[b] ?? 0)).abs();
+      return diffB.compareTo(diffA);
+    });
+
+    return Column(
+      children: [
+        const SizedBox(height: AppSizes.spaceS),
+        // 헤더
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+          child: Row(
+            children: [
+              const Expanded(flex: 3, child: SizedBox()),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  formatDateLabel(dateA),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  formatDateLabel(dateB),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  '변화',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: AppSizes.spaceS),
+        // 종목별 행
+        ...allNames.map((name) {
+          final amtA = mapA[name];
+          final amtB = mapB[name];
+          final diff = (amtB ?? 0) - (amtA ?? 0);
+          final isNew = amtA == null;
+          final isGone = amtB == null;
+          final diffColor = diff > 0
+              ? Colors.green
+              : diff < 0
+                  ? Theme.of(context).colorScheme.error
+                  : Theme.of(context).colorScheme.outline;
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM, vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      if (isNew)
+                        _CompareTag(label: 'NEW',
+                            color: Theme.of(context).colorScheme.secondary)
+                      else if (isGone)
+                        _CompareTag(label: '삭제',
+                            color: Theme.of(context).colorScheme.outline),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: Theme.of(context).textTheme.bodySmall,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    amtA != null ? '₩${formatAssetAmount(amtA)}' : '—',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    amtB != null ? '₩${formatAssetAmount(amtB)}' : '—',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    diff == 0
+                        ? '—'
+                        : '${diff > 0 ? '+' : ''}₩${formatAssetAmount(diff)}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: diffColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+        const Divider(height: AppSizes.spaceS),
+        // 합계 행
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+              AppSizes.spaceM, 4, AppSizes.spaceM, AppSizes.spaceM),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text('합계',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  '₩${formatAssetAmount(recordsA.fold(0.0, (s, r) => s + r.amount))}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  '₩${formatAssetAmount(recordsB.fold(0.0, (s, r) => s + r.amount))}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Builder(builder: (context) {
+                  final totalDiff =
+                      recordsB.fold(0.0, (s, r) => s + r.amount) -
+                          recordsA.fold(0.0, (s, r) => s + r.amount);
+                  final color = totalDiff > 0
+                      ? Colors.green
+                      : totalDiff < 0
+                          ? Theme.of(context).colorScheme.error
+                          : Theme.of(context).colorScheme.outline;
+                  return Text(
+                    totalDiff == 0
+                        ? '—'
+                        : '${totalDiff > 0 ? '+' : ''}₩${formatAssetAmount(totalDiff)}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.right,
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CompareTag extends StatelessWidget {
+  final String label;
+  final Color color;
+
+  const _CompareTag({required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 9,
+          fontWeight: FontWeight.bold,
+          color: color,
+        ),
       ),
     );
   }
