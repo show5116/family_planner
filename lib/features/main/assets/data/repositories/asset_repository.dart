@@ -345,12 +345,17 @@ class AssetRepository {
     }
   }
 
-  /// 종목 기록 - 자동완성용 종목명 목록 조회
-  Future<List<String>> getHoldingRecordNames(String accountId) async {
+  /// 종목 기록 - 자동완성용 종목명+티커 목록 조회 (그룹 단위)
+  Future<List<({String name, String? ticker})>> getHoldingRecordNames(String groupId) async {
     try {
-      final response = await _dio.get('/assets/accounts/$accountId/holding-records/names');
+      final response = await _dio.get('/assets/groups/$groupId/holding-records/names');
       final data = response.data;
-      if (data is List) return data.map((e) => e.toString()).toList();
+      if (data is List) {
+        return data.map((e) {
+          final map = e as Map<String, dynamic>;
+          return (name: map['name'] as String, ticker: map['ticker'] as String?);
+        }).toList();
+      }
       return [];
     } on DioException catch (e) {
       debugPrint('❌ [AssetRepository] 종목명 목록 조회 실패: ${e.message}');
@@ -371,8 +376,10 @@ class AssetRepository {
         },
       );
       final data = response.data;
-      if (data is List) {
-        return data
+      // API 응답: { records: [...], unallocatedAmount: "..." }
+      if (data is Map<String, dynamic>) {
+        final records = data['records'] as List<dynamic>? ?? [];
+        return records
             .map((e) => HoldingRecordModel.fromJson(e as Map<String, dynamic>))
             .toList();
       }

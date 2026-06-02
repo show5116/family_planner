@@ -46,7 +46,6 @@ class AssetScreen extends ConsumerStatefulWidget {
 }
 
 class _AssetScreenState extends ConsumerState<AssetScreen> {
-  final _fabKey = GlobalKey();
   final _groupBarKey = GlobalKey();
   final _demoCardKey = GlobalKey();
   // ValueNotifier: setState 없이 온보딩 on/off — 코치마크 콜백 내 build 충돌 방지
@@ -235,7 +234,6 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
           ),
           floatingActionButton: (!isDemo && selectedGroupId != null)
               ? FloatingActionButton(
-                  key: _fabKey,
                   onPressed: () => context.push(
                     AppRoutes.assetAccountAdd,
                     extra: {'groupId': selectedGroupId},

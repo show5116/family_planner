@@ -159,7 +159,7 @@ class _AssetPieChartState extends State<AssetPieChart> {
   }
 }
 
-class _PieChartBody extends StatelessWidget {
+class _PieChartBody extends StatefulWidget {
   final List<_PieSlice> slices;
   final int? touchedIndex;
   final Color Function(int) colorFor;
@@ -173,22 +173,38 @@ class _PieChartBody extends StatelessWidget {
   });
 
   @override
+  State<_PieChartBody> createState() => _PieChartBodyState();
+}
+
+class _PieChartBodyState extends State<_PieChartBody> {
+  static const _legendInitialCount = 6;
+  bool _legendExpanded = false;
+
+  @override
+  void didUpdateWidget(_PieChartBody old) {
+    super.didUpdateWidget(old);
+    // 모드 전환 시 접기 초기화
+    if (old.slices != widget.slices) _legendExpanded = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final slices = widget.slices;
     final total = slices.fold<double>(0, (s, e) => s + e.amount);
-    final touched = touchedIndex != null &&
-            touchedIndex! >= 0 &&
-            touchedIndex! < slices.length
-        ? slices[touchedIndex!]
+    final touched = widget.touchedIndex != null &&
+            widget.touchedIndex! >= 0 &&
+            widget.touchedIndex! < slices.length
+        ? slices[widget.touchedIndex!]
         : null;
 
     final sections = List.generate(slices.length, (i) {
       final slice = slices[i];
       final ratio = slice.amount / total;
-      final isTouched = touchedIndex == i;
+      final isTouched = widget.touchedIndex == i;
 
       return PieChartSectionData(
         value: slice.amount,
-        color: colorFor(i),
+        color: widget.colorFor(i),
         radius: isTouched ? 72 : 60,
         showTitle: ratio >= 0.06,
         title: '${(ratio * 100).toStringAsFixed(1)}%',
@@ -201,6 +217,10 @@ class _PieChartBody extends StatelessWidget {
       );
     });
 
+    final hasMore = slices.length > _legendInitialCount;
+    final visibleSlices =
+        _legendExpanded ? slices : slices.take(_legendInitialCount).toList();
+
     return Column(
       children: [
         SizedBox(
@@ -212,12 +232,11 @@ class _PieChartBody extends StatelessWidget {
               sectionsSpace: 2,
               pieTouchData: PieTouchData(
                 touchCallback: (event, response) {
-                  // PointerUpEvent에서만 처리 — down/move 이벤트 중복 방지
                   if (event is! FlTapUpEvent) return;
                   if (response?.touchedSection == null) return;
                   final idx = response!.touchedSection!.touchedSectionIndex;
                   if (idx < 0 || idx >= slices.length) return;
-                  onTouch(idx);
+                  widget.onTouch(idx);
                 },
               ),
             ),
@@ -251,53 +270,87 @@ class _PieChartBody extends StatelessWidget {
           spacing: AppSizes.spaceS,
           runSpacing: AppSizes.spaceXS,
           alignment: WrapAlignment.center,
-          children: List.generate(slices.length, (i) {
-            final slice = slices[i];
-            final ratio = slice.amount / total * 100;
-            final isTouched = touchedIndex == i;
+          children: [
+            ...List.generate(visibleSlices.length, (i) {
+              final slice = visibleSlices[i];
+              final ratio = slice.amount / total * 100;
+              final isTouched = widget.touchedIndex == i;
 
-            return GestureDetector(
-              onTap: () => onTouch(i),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 150),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.spaceS,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: isTouched
-                      ? colorFor(i).withValues(alpha: 0.15)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                  border: isTouched
-                      ? Border.all(color: colorFor(i).withValues(alpha: 0.4))
-                      : null,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: colorFor(i),
-                        shape: BoxShape.circle,
+              return GestureDetector(
+                onTap: () => widget.onTouch(i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceS,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isTouched
+                        ? widget.colorFor(i).withValues(alpha: 0.15)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                    border: isTouched
+                        ? Border.all(color: widget.colorFor(i).withValues(alpha: 0.4))
+                        : null,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: widget.colorFor(i),
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${slice.label}  ${ratio.toStringAsFixed(1)}%',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            fontWeight: isTouched
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                    ),
-                  ],
+                      const SizedBox(width: 4),
+                      Text(
+                        '${slice.label}  ${ratio.toStringAsFixed(1)}%',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontWeight: isTouched ? FontWeight.bold : FontWeight.normal,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+            if (hasMore)
+              GestureDetector(
+                onTap: () => setState(() => _legendExpanded = !_legendExpanded),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceS,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _legendExpanded ? Icons.expand_less : Icons.expand_more,
+                        size: 14,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        _legendExpanded
+                            ? '접기'
+                            : '+${slices.length - _legendInitialCount}개 더보기',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            );
-          }),
+          ],
         ),
       ],
     );

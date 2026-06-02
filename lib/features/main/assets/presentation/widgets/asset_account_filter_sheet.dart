@@ -73,7 +73,10 @@ class _AssetAccountFilterSheetState extends State<AssetAccountFilterSheet> {
       minChildSize: 0.3,
       maxChildSize: 0.85,
       builder: (_, scrollController) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom +
+              MediaQuery.of(context).viewPadding.bottom,
+        ),
         child: Column(
           children: [
             // 드래그 핸들

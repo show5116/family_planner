@@ -105,6 +105,8 @@ class AccountDetailScreen extends ConsumerStatefulWidget {
 class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   final _infoCardKey = GlobalKey();
   final _addRecordKey = GlobalKey();
+  static const _recordsInitialCount = 5;
+  bool _recordsExpanded = false;
 
   @override
   void initState() {
@@ -371,15 +373,32 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                   ),
                 );
               }
+              final visibleRecords = _recordsExpanded
+                  ? records
+                  : records.take(_recordsInitialCount).toList();
+              final hasMore = records.length > _recordsInitialCount;
+
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final item = records[index];
-                    return item.isWithdrawal
-                        ? _WithdrawalListItem(record: item, accountId: account.id)
-                        : AssetRecordListItem(record: item);
+                    if (index < visibleRecords.length) {
+                      final item = visibleRecords[index];
+                      return item.isWithdrawal
+                          ? _WithdrawalListItem(record: item, accountId: account.id)
+                          : AssetRecordListItem(record: item);
+                    }
+                    // 더보기 / 접기 버튼
+                    return TextButton.icon(
+                      onPressed: () => setState(() => _recordsExpanded = !_recordsExpanded),
+                      icon: Icon(_recordsExpanded ? Icons.expand_less : Icons.expand_more),
+                      label: Text(
+                        _recordsExpanded
+                            ? '접기'
+                            : '전체 ${records.length}건 보기',
+                      ),
+                    );
                   },
-                  childCount: records.length,
+                  childCount: hasMore ? visibleRecords.length + 1 : visibleRecords.length,
                 ),
               );
             },
@@ -394,10 +413,6 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             child: SizedBox(height: 80 + MediaQuery.of(context).padding.bottom),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddSheet(context),
-        child: const Icon(Icons.add),
       ),
     );
   }

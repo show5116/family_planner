@@ -6,7 +6,6 @@ class HoldingRecordModel {
   final String name;
   final String? ticker;
   final double amount;
-  final double ratio; // %, 해당 날짜 계좌 잔액 기준 자동 계산
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,7 +16,6 @@ class HoldingRecordModel {
     required this.name,
     this.ticker,
     required this.amount,
-    required this.ratio,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -30,7 +28,6 @@ class HoldingRecordModel {
       name: json['name'] as String,
       ticker: json['ticker'] as String?,
       amount: double.parse(json['amount'].toString()),
-      ratio: double.parse(json['ratio'].toString()),
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -55,7 +52,7 @@ class CreateHoldingRecordDto {
         'recordDate': recordDate,
         'name': name,
         if (ticker != null && ticker!.isNotEmpty) 'ticker': ticker,
-        'amount': amount,
+        'amount': amount.toInt(),
       };
 }
 
@@ -70,6 +67,6 @@ class UpdateHoldingRecordDto {
   Map<String, dynamic> toJson() => {
         if (name != null) 'name': name,
         if (ticker != null) 'ticker': ticker,
-        if (amount != null) 'amount': amount,
+        if (amount != null) 'amount': amount!.toInt(),
       };
 }

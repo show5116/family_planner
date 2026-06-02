@@ -20,7 +20,7 @@ class HoldingStatModel {
     return HoldingStatModel(
       name: json['name'] as String,
       ticker: json['ticker'] as String?,
-      ratio: double.parse(json['ratio'].toString()),
+      ratio: json['ratio'] != null ? double.parse(json['ratio'].toString()) : 0,
       estimatedAmount: double.parse(json['estimatedAmount'].toString()),
       globalRatio: double.parse(json['globalRatio'].toString()),
     );

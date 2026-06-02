@@ -147,7 +147,6 @@ class CreateAccountDto {
   final String? accountNumber;
   final String? institution;
   final AccountType? type;
-  final double? gramWeight;
   final int? recordReminderDay;
 
   const CreateAccountDto({
@@ -156,7 +155,6 @@ class CreateAccountDto {
     this.accountNumber,
     this.institution,
     this.type,
-    this.gramWeight,
     this.recordReminderDay,
   });
 
@@ -167,7 +165,6 @@ class CreateAccountDto {
       if (accountNumber != null) 'accountNumber': accountNumber,
       if (institution != null) 'institution': institution,
       if (type != null) 'type': accountTypeToString(type!),
-      if (gramWeight != null) 'gramWeight': gramWeight,
       'recordReminderDay': recordReminderDay,
     };
   }

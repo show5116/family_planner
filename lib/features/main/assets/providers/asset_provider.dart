@@ -436,6 +436,7 @@ final holdingRecordsProvider = StateNotifierProvider.autoDispose.family<
     ({String accountId, String recordDate})>(
   (ref, args) => HoldingRecordsNotifier(
     ref.watch(assetRepositoryProvider),
+    ref,
     args.accountId,
     args.recordDate,
   ),
@@ -444,13 +445,16 @@ final holdingRecordsProvider = StateNotifierProvider.autoDispose.family<
 class HoldingRecordsNotifier
     extends StateNotifier<AsyncValue<List<HoldingRecordModel>>> {
   final AssetRepository _repository;
+  final Ref _ref;
   final String _accountId;
   final String _recordDate;
 
-  HoldingRecordsNotifier(this._repository, this._accountId, this._recordDate)
+  HoldingRecordsNotifier(this._repository, this._ref, this._accountId, this._recordDate)
       : super(const AsyncValue.loading()) {
     _load();
   }
+
+  void _invalidateStats() => _ref.invalidate(assetStatisticsProvider);
 
   Future<void> _load() async {
     state = const AsyncValue.loading();
@@ -466,6 +470,7 @@ class HoldingRecordsNotifier
     if (state.hasValue) {
       state = AsyncValue.data([...state.value!, record]);
     }
+    _invalidateStats();
     return record;
   }
 
@@ -476,6 +481,7 @@ class HoldingRecordsNotifier
         state.value!.map((r) => r.id == recordId ? updated : r).toList(),
       );
     }
+    _invalidateStats();
     return updated;
   }
 
@@ -486,5 +492,6 @@ class HoldingRecordsNotifier
         state.value!.where((r) => r.id != recordId).toList(),
       );
     }
+    _invalidateStats();
   }
 }
