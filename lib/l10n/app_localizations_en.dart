@@ -191,7 +191,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_emailVerification => 'Email Verification';
 
   @override
-  String get auth_emailVerificationMessage => 'A verification code has been sent to your email.';
+  String get auth_emailVerificationMessage =>
+      'A verification code has been sent to your email.';
 
   @override
   String get auth_verificationCode => 'Verification Code';
@@ -209,7 +210,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_resetPassword => 'Reset Password';
 
   @override
-  String get auth_resetPasswordMessage => 'Enter your email address.\nWe\'ll send you a verification code.';
+  String get auth_resetPasswordMessage =>
+      'Enter your email address.\nWe\'ll send you a verification code.';
 
   @override
   String get auth_newPassword => 'New Password';
@@ -218,16 +220,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_sendCode => 'Send Code';
 
   @override
-  String get auth_resetPasswordSuccess => 'Password has been reset. Please log in.';
+  String get auth_resetPasswordSuccess =>
+      'Password has been reset. Please log in.';
 
   @override
-  String get auth_signupEmailVerificationMessage => 'Sign up successful. Please check your email.';
+  String get auth_signupEmailVerificationMessage =>
+      'Sign up successful. Please check your email.';
 
   @override
   String get auth_signupNameLabel => 'Name';
 
   @override
-  String get auth_signupNameMinLengthError => 'Name must be at least 2 characters';
+  String get auth_signupNameMinLengthError =>
+      'Name must be at least 2 characters';
 
   @override
   String get auth_signupPasswordHelperText => 'At least 8 characters';
@@ -248,16 +253,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_setPasswordTitle => 'Set Password';
 
   @override
-  String get auth_forgotPasswordGuide => 'Enter your email address.\nWe\'ll send you a verification code.';
+  String get auth_forgotPasswordGuide =>
+      'Enter your email address.\nWe\'ll send you a verification code.';
 
   @override
-  String get auth_forgotPasswordGuideWithCode => 'Enter the verification code sent to your email\nand set a new password.';
+  String get auth_forgotPasswordGuideWithCode =>
+      'Enter the verification code sent to your email\nand set a new password.';
 
   @override
-  String get auth_setPasswordGuide => 'Set a password for account security.\nEnter your registered email address and\nwe\'ll send you a verification code.';
+  String get auth_setPasswordGuide =>
+      'Set a password for account security.\nEnter your registered email address and\nwe\'ll send you a verification code.';
 
   @override
-  String get auth_setPasswordGuideWithCode => 'Enter the verification code sent to your email\nand set a password.';
+  String get auth_setPasswordGuideWithCode =>
+      'Enter the verification code sent to your email\nand set a password.';
 
   @override
   String get auth_verificationCodeLabel => 'Verification Code (6 digits)';
@@ -266,10 +275,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_verificationCodeError => 'Please enter the verification code';
 
   @override
-  String get auth_verificationCodeLengthError => 'Verification code must be 6 digits';
+  String get auth_verificationCodeLengthError =>
+      'Verification code must be 6 digits';
 
   @override
-  String get auth_codeSentMessage => 'Verification code has been sent to your email';
+  String get auth_codeSentMessage =>
+      'Verification code has been sent to your email';
 
   @override
   String get auth_codeSentError => 'Failed to send verification code';
@@ -284,7 +295,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_resendCodeButton => 'Resend verification code';
 
   @override
-  String get auth_passwordSetSuccess => 'Password has been set. You can now log in.';
+  String get auth_passwordSetSuccess =>
+      'Password has been set. You can now log in.';
 
   @override
   String get auth_passwordResetError => 'Failed to reset password';
@@ -329,10 +341,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nav_votes => 'Votes';
 
   @override
-  String get more_coach_groupDesc => 'Create groups for family, couples, friends, and more.\nInvite members with an invitation code.';
+  String get more_coach_groupDesc =>
+      'Create groups for family, couples, friends, and more.\nInvite members with an invitation code.';
 
   @override
-  String get more_coach_settingsDesc => 'Customize the app with themes, language, notifications,\nbottom tab layout, and more.';
+  String get more_coach_settingsDesc =>
+      'Customize the app with themes, language, notifications,\nbottom tab layout, and more.';
 
   @override
   String get home_greeting_morning => 'Good morning!';
@@ -398,13 +412,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bottomNav_resetConfirmTitle => 'Reset Confirmation';
 
   @override
-  String get bottomNav_resetConfirmMessage => 'Reset bottom navigation settings to default?';
+  String get bottomNav_resetConfirmMessage =>
+      'Reset bottom navigation settings to default?';
 
   @override
   String get bottomNav_resetSuccess => 'Reset to default settings';
 
   @override
-  String get bottomNav_guideMessage => 'Home and More are fixed.\nTap the middle 3 slots to select menus.';
+  String get bottomNav_guideMessage =>
+      'Home and More are fixed.\nTap the middle 3 slots to select menus.';
 
   @override
   String get bottomNav_preview => 'Bottom Navigation Preview';
@@ -413,7 +429,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bottomNav_howToUse => 'How to Use';
 
   @override
-  String get bottomNav_instructions => '• Tap slots 2, 3, 4 to change to desired menus.\n• Slot 1 (Home) and Slot 5 (More) are fixed.\n• Menus not in bottom navigation are shown in \"More\" tab.';
+  String get bottomNav_instructions =>
+      '• Tap slots 2, 3, 4 to change to desired menus.\n• Slot 1 (Home) and Slot 5 (More) are fixed.\n• Menus not in bottom navigation are shown in \"More\" tab.';
 
   @override
   String get bottomNav_availableMenus => 'Available Menus';
@@ -430,19 +447,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get bottomNav_usedInOtherSlot => 'Used in other slot (will swap if selected)';
+  String get bottomNav_usedInOtherSlot =>
+      'Used in other slot (will swap if selected)';
 
   @override
   String get widgetSettings_saveSuccess => 'Settings saved';
 
   @override
-  String get widgetSettings_guide => 'Select widgets to display on home screen and change their order';
+  String get widgetSettings_guide =>
+      'Select widgets to display on home screen and change their order';
 
   @override
   String get widgetSettings_widgetOrder => 'Widget Order';
 
   @override
-  String get widgetSettings_dragToReorder => 'Long press and drag widgets to change order';
+  String get widgetSettings_dragToReorder =>
+      'Long press and drag widgets to change order';
 
   @override
   String get widgetSettings_restoreDefaults => 'Restore Default Settings';
@@ -451,13 +471,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetSettings_todayScheduleDesc => 'Display today\'s events';
 
   @override
-  String get widgetSettings_investmentSummaryDesc => 'Display KOSPI, NASDAQ, and exchange rate information';
+  String get widgetSettings_investmentSummaryDesc =>
+      'Display KOSPI, NASDAQ, and exchange rate information';
 
   @override
   String get widgetSettings_todoSummaryDesc => 'Display in-progress tasks';
 
   @override
-  String get widgetSettings_assetSummaryDesc => 'Display total assets and return rate';
+  String get widgetSettings_assetSummaryDesc =>
+      'Display total assets and return rate';
 
   @override
   String get widgetSettings_memoSummary => 'Memo Summary';
@@ -469,25 +491,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetSettings_householdSummary => 'Household Budget';
 
   @override
-  String get widgetSettings_householdSummaryDesc => 'Monthly expense summary and budget achievement rate';
+  String get widgetSettings_householdSummaryDesc =>
+      'Monthly expense summary and budget achievement rate';
 
   @override
   String get widgetSettings_childcareSummary => 'Childcare Points';
 
   @override
-  String get widgetSettings_childcareSummaryDesc => 'Point balance status per child';
+  String get widgetSettings_childcareSummaryDesc =>
+      'Point balance status per child';
 
   @override
   String get widgetSettings_savingsSummary => 'Savings';
 
   @override
-  String get widgetSettings_savingsSummaryDesc => 'Savings goal and achievement status per group';
+  String get widgetSettings_savingsSummaryDesc =>
+      'Savings goal and achievement status per group';
 
   @override
   String get widgetSettings_fridgeSummary => 'Expiring Soon';
 
   @override
-  String get widgetSettings_fridgeSummaryDesc => 'List of items in the fridge with upcoming expiry dates';
+  String get widgetSettings_fridgeSummaryDesc =>
+      'List of items in the fridge with upcoming expiry dates';
 
   @override
   String get widgetSettings_viewToday => 'Today';
@@ -529,7 +555,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widgetSettings_weather => 'Weather';
 
   @override
-  String get widgetSettings_weatherDesc => 'Display current location weather information';
+  String get widgetSettings_weatherDesc =>
+      'Display current location weather information';
 
   @override
   String get themeSettings_title => 'Theme Settings';
@@ -538,7 +565,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSettings_selectTheme => 'Select Theme';
 
   @override
-  String get themeSettings_description => 'Choose your app\'s brightness theme. You can follow system settings or choose manually.';
+  String get themeSettings_description =>
+      'Choose your app\'s brightness theme. You can follow system settings or choose manually.';
 
   @override
   String get themeSettings_lightMode => 'Light Mode';
@@ -610,13 +638,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile_newPasswordRequired => 'Please enter new password';
 
   @override
-  String get profile_newPasswordMinLength => 'Password must be at least 6 characters';
+  String get profile_newPasswordMinLength =>
+      'Password must be at least 6 characters';
 
   @override
   String get profile_confirmNewPassword => 'Confirm New Password';
 
   @override
-  String get profile_confirmNewPasswordRequired => 'Please confirm new password';
+  String get profile_confirmNewPasswordRequired =>
+      'Please confirm new password';
 
   @override
   String get profile_passwordsDoNotMatch => 'Passwords do not match';
@@ -655,13 +685,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language_useSystemLanguage => 'Use System Language';
 
   @override
-  String get language_useSystemLanguageDescription => 'Follow device language settings';
+  String get language_useSystemLanguageDescription =>
+      'Follow device language settings';
 
   @override
   String get widgetSettings_title => 'Home Widget Settings';
 
   @override
-  String get widgetSettings_description => 'Select widgets to display on home screen';
+  String get widgetSettings_description =>
+      'Select widgets to display on home screen';
 
   @override
   String get widgetSettings_todaySchedule => 'Today\'s Schedule';
@@ -682,13 +714,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_bottomNavigationTitle => 'Bottom Navigation Settings';
 
   @override
-  String get settings_bottomNavigationSubtitle => 'Configure bottom menu order and visibility';
+  String get settings_bottomNavigationSubtitle =>
+      'Configure bottom menu order and visibility';
 
   @override
   String get settings_homeWidgetsTitle => 'Home Widget Settings';
 
   @override
-  String get settings_homeWidgetsSubtitle => 'Select widgets to display on home screen';
+  String get settings_homeWidgetsSubtitle =>
+      'Select widgets to display on home screen';
 
   @override
   String get settings_themeTitle => 'Theme Settings';
@@ -766,19 +800,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_logoutConfirmTitle => 'Logout';
 
   @override
-  String get settings_logoutConfirmMessage => 'Are you sure you want to logout?';
+  String get settings_logoutConfirmMessage =>
+      'Are you sure you want to logout?';
 
   @override
   String get settings_passwordSetupRequired => 'Password Setup Required';
 
   @override
-  String get settings_passwordSetupMessage1 => 'You signed up using only social login and haven\'t set a password yet.';
+  String get settings_passwordSetupMessage1 =>
+      'You signed up using only social login and haven\'t set a password yet.';
 
   @override
-  String get settings_passwordSetupMessage2 => 'We recommend setting a password to edit your profile or enhance account security.';
+  String get settings_passwordSetupMessage2 =>
+      'We recommend setting a password to edit your profile or enhance account security.';
 
   @override
-  String get settings_passwordSetupMessage3 => 'Would you like to go to the password setup screen?';
+  String get settings_passwordSetupMessage3 =>
+      'Would you like to go to the password setup screen?';
 
   @override
   String get settings_passwordSetupLater => 'Later';
@@ -793,13 +831,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_permissionManagementTitle => 'Permission Management';
 
   @override
-  String get settings_permissionManagementSubtitle => 'Manage permission types for Roles';
+  String get settings_permissionManagementSubtitle =>
+      'Manage permission types for Roles';
 
   @override
   String get permission_title => 'Permission Management';
 
   @override
-  String get permission_search => 'Search permissions (code, name, description)';
+  String get permission_search =>
+      'Search permissions (code, name, description)';
 
   @override
   String get permission_allCategories => 'All';
@@ -843,10 +883,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get permission_deleteSoftDescription => 'Soft delete: Deactivate but keep data';
+  String get permission_deleteSoftDescription =>
+      'Soft delete: Deactivate but keep data';
 
   @override
-  String get permission_deleteHardDescription => 'Hard delete: Permanently remove from database (Warning!)';
+  String get permission_deleteHardDescription =>
+      'Hard delete: Permanently remove from database (Warning!)';
 
   @override
   String get permission_softDelete => 'Soft Delete';
@@ -1019,7 +1061,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_rejectSuccess => 'Join request has been rejected';
 
   @override
-  String get group_rejectConfirmMessage => 'Are you sure you want to reject this join request?';
+  String get group_rejectConfirmMessage =>
+      'Are you sure you want to reject this join request?';
 
   @override
   String get group_groupNameRequired => 'Please enter group name';
@@ -1034,16 +1077,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_deleteConfirmTitle => 'Delete Group';
 
   @override
-  String get group_deleteConfirmMessage => 'Are you sure you want to delete this group?\nAll data will be deleted and cannot be recovered.';
+  String get group_deleteConfirmMessage =>
+      'Are you sure you want to delete this group?\nAll data will be deleted and cannot be recovered.';
 
   @override
   String get group_leaveConfirmTitle => 'Leave Group';
 
   @override
-  String get group_leaveConfirmMessage => 'Are you sure you want to leave this group?';
+  String get group_leaveConfirmMessage =>
+      'Are you sure you want to leave this group?';
 
   @override
-  String get group_ownerCannotLeave => 'Owner cannot leave the group.\nPlease transfer ownership or delete the group.';
+  String get group_ownerCannotLeave =>
+      'Owner cannot leave the group.\nPlease transfer ownership or delete the group.';
 
   @override
   String get group_createSuccess => 'Group created successfully';
@@ -1091,7 +1137,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_noGroups => 'No groups yet';
 
   @override
-  String get group_noGroupsDescription => 'Create a new group or\njoin one with an invite code';
+  String get group_noGroupsDescription =>
+      'Create a new group or\njoin one with an invite code';
 
   @override
   String get group_myJoinRequests => 'My Join Requests';
@@ -1150,13 +1197,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_dangerZone => 'Danger Zone';
 
   @override
-  String get group_dangerZoneDesc => 'Deleting the group will permanently remove all data.';
+  String get group_dangerZoneDesc =>
+      'Deleting the group will permanently remove all data.';
 
   @override
   String get group_leaveTitle => 'Leave Group';
 
   @override
-  String get group_leaveDesc => 'You will no longer have access to the group\'s data.';
+  String get group_leaveDesc =>
+      'You will no longer have access to the group\'s data.';
 
   @override
   String group_leaveConfirmBody(String name) {
@@ -1199,13 +1248,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_roleInfoTitle => 'Info';
 
   @override
-  String get group_roleInfoBullet1 => 'Common roles (OWNER, ADMIN, MEMBER) are provided by default in all groups.';
+  String get group_roleInfoBullet1 =>
+      'Common roles (OWNER, ADMIN, MEMBER) are provided by default in all groups.';
 
   @override
-  String get group_roleInfoBullet2 => 'Custom roles can only be created, edited, or deleted by the group OWNER.';
+  String get group_roleInfoBullet2 =>
+      'Custom roles can only be created, edited, or deleted by the group OWNER.';
 
   @override
-  String get group_roleInfoBullet3 => 'OWNER permission is required to manage roles.';
+  String get group_roleInfoBullet3 =>
+      'OWNER permission is required to manage roles.';
 
   @override
   String get group_roleCreateTitle => 'Create Role';
@@ -1226,7 +1278,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_roleDefaultSwitch => 'Default role';
 
   @override
-  String get group_roleDefaultSwitchSub => 'Automatically assigned to new members';
+  String get group_roleDefaultSwitchSub =>
+      'Automatically assigned to new members';
 
   @override
   String get group_roleColorLabel => 'Role color';
@@ -1241,7 +1294,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get group_rolePermissionNone => 'No permissions';
 
   @override
-  String get group_roleDefaultLabel => 'Default role (automatically assigned to new members)';
+  String get group_roleDefaultLabel =>
+      'Default role (automatically assigned to new members)';
 
   @override
   String group_roleDeleteConfirm(String name) {
@@ -1249,7 +1303,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get group_roleDeleteWarning => '⚠️ Roles assigned to members cannot be deleted.';
+  String get group_roleDeleteWarning =>
+      '⚠️ Roles assigned to members cannot be deleted.';
 
   @override
   String get group_roleCreateSuccess => 'Role created';
@@ -1321,7 +1376,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get announcement_pinned => 'Pinned';
 
   @override
-  String get announcement_pinDescription => 'Pin important announcements to the top of the list';
+  String get announcement_pinDescription =>
+      'Pin important announcements to the top of the list';
 
   @override
   String get announcement_category => 'Category';
@@ -1377,7 +1433,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get announcement_deleteDialogTitle => 'Delete Announcement';
 
   @override
-  String get announcement_deleteDialogMessage => 'Are you sure you want to delete this announcement?\nThis cannot be undone.';
+  String get announcement_deleteDialogMessage =>
+      'Are you sure you want to delete this announcement?\nThis cannot be undone.';
 
   @override
   String get announcement_pinSuccess => 'Announcement pinned';
@@ -1386,7 +1443,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get announcement_unpinSuccess => 'Announcement unpinned';
 
   @override
-  String get announcement_deleteConfirm => 'Delete this announcement?\nThis cannot be undone.';
+  String get announcement_deleteConfirm =>
+      'Delete this announcement?\nThis cannot be undone.';
 
   @override
   String get announcement_loadError => 'Failed to load announcement';
@@ -1407,16 +1465,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get announcement_titleRequired => 'Please enter a title';
 
   @override
-  String get announcement_titleMinLength => 'Title must be at least 3 characters';
+  String get announcement_titleMinLength =>
+      'Title must be at least 3 characters';
 
   @override
   String get announcement_contentRequired => 'Please enter content';
 
   @override
-  String get announcement_contentMinLength => 'Content must be at least 10 characters';
+  String get announcement_contentMinLength =>
+      'Content must be at least 10 characters';
 
   @override
-  String get announcement_attachmentComingSoon => 'File attachment feature coming soon';
+  String get announcement_attachmentComingSoon =>
+      'File attachment feature coming soon';
 
   @override
   String get qna_title => 'Q&A';
@@ -1549,7 +1610,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get qna_deleteDialogTitle => 'Delete Question';
 
   @override
-  String get qna_deleteDialogMessage => 'Are you sure you want to delete this question?\nThis cannot be undone.';
+  String get qna_deleteDialogMessage =>
+      'Are you sure you want to delete this question?\nThis cannot be undone.';
 
   @override
   String get qna_answerSuccess => 'Answer posted';
@@ -1642,7 +1704,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_deleteDialogTitle => 'Delete Schedule';
 
   @override
-  String get schedule_deleteDialogMessage => 'Are you sure you want to delete this schedule?';
+  String get schedule_deleteDialogMessage =>
+      'Are you sure you want to delete this schedule?';
 
   @override
   String get schedule_title => 'Title';
@@ -1759,13 +1822,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_taskTypeTodoLinked => 'Todo Linked';
 
   @override
-  String get schedule_taskTypeTodoLinkedDesc => 'Shown on both calendar and todo list';
+  String get schedule_taskTypeTodoLinkedDesc =>
+      'Shown on both calendar and todo list';
 
   @override
   String get schedule_taskTypeTodoOnly => 'Todo Only';
 
   @override
-  String get schedule_taskTypeTodoOnlyDesc => 'Show in todo list only (not in calendar)';
+  String get schedule_taskTypeTodoOnlyDesc =>
+      'Show in todo list only (not in calendar)';
 
   @override
   String get schedule_priority => 'Priority';
@@ -1786,7 +1851,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_participants => 'Participants';
 
   @override
-  String get schedule_participantsHint => 'Select group members to participate in this schedule';
+  String get schedule_participantsHint =>
+      'Select group members to participate in this schedule';
 
   @override
   String get schedule_noMembers => 'No group members';
@@ -1807,7 +1873,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schedule_reminderCustomTitle => 'Set Reminder Time';
 
   @override
-  String get schedule_reminderCustomHint => 'Set when to be reminded before the event';
+  String get schedule_reminderCustomHint =>
+      'Set when to be reminded before the event';
 
   @override
   String get schedule_reminderDays => 'Days';
@@ -1877,7 +1944,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category_description => 'Description';
 
   @override
-  String get category_descriptionHint => 'Description of the category (optional)';
+  String get category_descriptionHint =>
+      'Description of the category (optional)';
 
   @override
   String get category_emoji => 'Emoji';
@@ -1907,7 +1975,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category_deleteDialogTitle => 'Delete Category';
 
   @override
-  String get category_deleteDialogMessage => 'Are you sure you want to delete this category?\nCategories with linked schedules cannot be deleted.';
+  String get category_deleteDialogMessage =>
+      'Are you sure you want to delete this category?\nCategories with linked schedules cannot be deleted.';
 
   @override
   String get schedule_recurringEvery => 'Every';
@@ -2304,7 +2373,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memo_deleteDialogTitle => 'Delete Memo';
 
   @override
-  String get memo_deleteDialogMessage => 'Are you sure you want to delete this memo?\nThis cannot be undone.';
+  String get memo_deleteDialogMessage =>
+      'Are you sure you want to delete this memo?\nThis cannot be undone.';
 
   @override
   String get memo_loadError => 'Failed to load memo';
@@ -2438,7 +2508,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_delete_expense => 'Delete Expense';
 
   @override
-  String get household_delete_confirm => 'Are you sure you want to delete this expense?';
+  String get household_delete_confirm =>
+      'Are you sure you want to delete this expense?';
 
   @override
   String get household_amount => 'Amount';
@@ -2479,7 +2550,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get household_carry_over_success => 'Balance carried over successfully';
+  String get household_carry_over_success =>
+      'Balance carried over successfully';
 
   @override
   String get household_carry_over_no_balance => 'No balance to carry over';
@@ -2652,22 +2724,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_recurring_type_fixed => 'Fixed Amount';
 
   @override
-  String get household_recurring_type_fixed_desc => 'The same amount is applied every month';
+  String get household_recurring_type_fixed_desc =>
+      'The same amount is applied every month';
 
   @override
   String get household_recurring_type_variable => 'Variable Amount';
 
   @override
-  String get household_recurring_type_variable_desc => 'Occurs monthly but the amount varies (e.g. maintenance fee)';
+  String get household_recurring_type_variable_desc =>
+      'Occurs monthly but the amount varies (e.g. maintenance fee)';
 
   @override
   String get household_estimated_amount => 'Estimated Amount';
 
   @override
-  String get household_estimated_amount_hint => 'Enter the estimated amount for this month';
+  String get household_estimated_amount_hint =>
+      'Enter the estimated amount for this month';
 
   @override
-  String get household_estimated_amount_required => 'Please enter an estimated amount';
+  String get household_estimated_amount_required =>
+      'Please enter an estimated amount';
 
   @override
   String get household_variable_badge => 'Variable';
@@ -2743,19 +2819,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_budget_tab_template => 'Auto Monthly';
 
   @override
-  String get household_budget_template_info => 'Budget is automatically set on the 1st of each month based on the template. Existing budgets for that month will be skipped.';
+  String get household_budget_template_info =>
+      'Budget is automatically set on the 1st of each month based on the template. Existing budgets for that month will be skipped.';
 
   @override
-  String get household_budget_template_saved => 'Auto budget template has been saved';
+  String get household_budget_template_saved =>
+      'Auto budget template has been saved';
 
   @override
   String get household_budget_template_delete_title => 'Delete Template';
 
   @override
-  String get household_budget_template_delete_confirm => 'Are you sure you want to delete the auto budget template for this category?';
+  String get household_budget_template_delete_confirm =>
+      'Are you sure you want to delete the auto budget template for this category?';
 
   @override
-  String get household_budget_template_deleted => 'Auto budget template has been deleted';
+  String get household_budget_template_deleted =>
+      'Auto budget template has been deleted';
 
   @override
   String household_budget_category_sum_exceeds(String sum, String total) {
@@ -2885,7 +2965,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_delete_account => 'Delete Account';
 
   @override
-  String get asset_delete_account_confirm => 'Are you sure you want to delete this account?\nAll related records will also be deleted.';
+  String get asset_delete_account_confirm =>
+      'Are you sure you want to delete this account?\nAll related records will also be deleted.';
 
   @override
   String get asset_delete_success => 'Deleted successfully';
@@ -2939,7 +3020,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_holding_ratio_required => 'Please enter a ratio';
 
   @override
-  String get asset_holding_ratio_invalid => 'Enter a number between 0.01 and 100';
+  String get asset_holding_ratio_invalid =>
+      'Enter a number between 0.01 and 100';
 
   @override
   String get asset_holding_ratio_exceeded => 'Total ratio exceeds 100%';
@@ -2954,7 +3036,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_gold_record_info_title => 'About Gold Account';
 
   @override
-  String get asset_gold_record_info_body => 'This is a physical gold account managed automatically:\n\n• When you add a record, the balance is calculated as weight × current GOLD_KRW_SPOT price.\n\n• On the 1st of every month, the balance, profit, and profit rate are automatically updated using the latest gold spot price.\n\n• You can manually adjust the principal; otherwise, the value calculated at the first record is retained.';
+  String get asset_gold_record_info_body =>
+      'This is a physical gold account managed automatically:\n\n• When you add a record, the balance is calculated as weight × current GOLD_KRW_SPOT price.\n\n• On the 1st of every month, the balance, profit, and profit rate are automatically updated using the latest gold spot price.\n\n• You can manually adjust the principal; otherwise, the value calculated at the first record is retained.';
 
   @override
   String get asset_no_records => 'No records yet';
@@ -3048,19 +3131,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_additional_principal => 'Additional Principal';
 
   @override
-  String get asset_additional_principal_hint => 'Enter the full initial principal for the first record';
+  String get asset_additional_principal_hint =>
+      'Enter the full initial principal for the first record';
 
   @override
   String get asset_current_balance => 'Current Balance';
 
   @override
-  String get asset_duplicate_date_error => 'A record already exists for this date';
+  String get asset_duplicate_date_error =>
+      'A record already exists for this date';
 
   @override
   String get asset_delete_record => 'Delete Record';
 
   @override
-  String get asset_delete_record_confirm => 'Are you sure you want to delete this record?';
+  String get asset_delete_record_confirm =>
+      'Are you sure you want to delete this record?';
 
   @override
   String get asset_stat_account_filter => 'Account Filter';
@@ -3178,16 +3264,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get childcare_savings_withdraw => 'Withdraw';
 
   @override
-  String get childcare_empty_accounts => 'No child accounts.\nAdd an account to get started.';
+  String get childcare_empty_accounts =>
+      'No child accounts.\nAdd an account to get started.';
 
   @override
   String get childcare_empty_transactions => 'No transactions yet.';
 
   @override
-  String get childcare_empty_rewards => 'No rewards yet.\nAdd a reward for your child.';
+  String get childcare_empty_rewards =>
+      'No rewards yet.\nAdd a reward for your child.';
 
   @override
-  String get childcare_empty_rules => 'No rules yet.\nAdd rules to manage behavior.';
+  String get childcare_empty_rules =>
+      'No rules yet.\nAdd rules to manage behavior.';
 
   @override
   String get childcare_account_child_id => 'Child User ID';
@@ -3238,7 +3327,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get childcare_no_group => 'Join a group to use Child Points.';
 
   @override
-  String get childcare_no_child => 'No children registered.\nTap the button in the top right to add a child.';
+  String get childcare_no_child =>
+      'No children registered.\nTap the button in the top right to add a child.';
 
   @override
   String get household_settings_title => 'Household Settings';
@@ -3250,13 +3340,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_settings_auto_section => 'Push Auto-Register';
 
   @override
-  String get household_settings_auto_toggle => 'Auto-register payment notifications';
+  String get household_settings_auto_toggle =>
+      'Auto-register payment notifications';
 
   @override
-  String get household_settings_auto_toggle_desc => 'Detects card/bank payment notifications and records them in your household ledger automatically';
+  String get household_settings_auto_toggle_desc =>
+      'Detects card/bank payment notifications and records them in your household ledger automatically';
 
   @override
-  String get household_settings_permission_required => 'Notification access permission is required. Tap \'Allow\' to grant it in Settings.';
+  String get household_settings_permission_required =>
+      'Notification access permission is required. Tap \'Allow\' to grant it in Settings.';
 
   @override
   String get household_settings_permission_grant => 'Allow';
@@ -3268,16 +3361,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_settings_privacy_title => 'View collected data & policy';
 
   @override
-  String get household_settings_privacy_subtitle => 'See what information the push auto-register feature collects';
+  String get household_settings_privacy_subtitle =>
+      'See what information the push auto-register feature collects';
 
   @override
   String get household_settings_privacy_dialog_title => 'Privacy Policy';
 
   @override
-  String get household_settings_auto_scope_notice => 'Works only while the app is running (foreground or background). Auto-registration stops when the app is fully closed.';
+  String get household_settings_auto_scope_notice =>
+      'Works only while the app is running (foreground or background). Auto-registration stops when the app is fully closed.';
 
   @override
-  String get household_settings_privacy_content => '■ Data collected\nThe app temporarily reads the following information from payment-complete notifications sent by card/bank apps displayed on your device:\n  · Notification title and body text (e.g. \"KB Card ₩12,000 approved\")\n  · Package name of the sending app (e.g. com.kbcard.kbkookmincard)\n\n■ Purpose\nThe data is used solely to extract payment amount, payment method, and category from the notification text and automatically record it in your household ledger.\n\n■ Retention & disposal\nNotification text is parsed on-device and discarded immediately; the raw text is never transmitted to or stored on a server. Only the converted ledger entry is saved to your account.\n\n■ Third-party sharing\nCollected notification information is never provided, sold, or shared with any third party.\n\n■ Withdrawing consent\nYou can turn off auto-register at any time in this settings screen, or revoke Family Planner\'s notification access permission under device Settings > Notification Access.';
+  String get household_settings_privacy_content =>
+      '■ Data collected\nThe app temporarily reads the following information from payment-complete notifications sent by card/bank apps displayed on your device:\n  · Notification title and body text (e.g. \"KB Card ₩12,000 approved\")\n  · Package name of the sending app (e.g. com.kbcard.kbkookmincard)\n\n■ Purpose\nThe data is used solely to extract payment amount, payment method, and category from the notification text and automatically record it in your household ledger.\n\n■ Retention & disposal\nNotification text is parsed on-device and discarded immediately; the raw text is never transmitted to or stored on a server. Only the converted ledger entry is saved to your account.\n\n■ Third-party sharing\nCollected notification information is never provided, sold, or shared with any third party.\n\n■ Withdrawing consent\nYou can turn off auto-register at any time in this settings screen, or revoke Family Planner\'s notification access permission under device Settings > Notification Access.';
 
   @override
   String get fridge_title => 'Fridge';
@@ -3307,7 +3403,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_storage_delete => 'Delete storage';
 
   @override
-  String get fridge_storage_delete_confirm => 'Deleting this storage will also delete all items inside. Continue?';
+  String get fridge_storage_delete_confirm =>
+      'Deleting this storage will also delete all items inside. Continue?';
 
   @override
   String get fridge_storage_name_hint => 'e.g. Kitchen Fridge';
@@ -3418,34 +3515,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_frequent_autoAddInfo_title => 'What is Auto-Add?';
 
   @override
-  String get fridge_frequent_autoAddInfo_body => 'When this item\'s quantity reaches 0 in the fridge, it will be automatically added to your cart.\nWith the switch on, your shopping list will be filled in automatically when the fridge is empty.';
+  String get fridge_frequent_autoAddInfo_body =>
+      'When this item\'s quantity reaches 0 in the fridge, it will be automatically added to your cart.\nWith the switch on, your shopping list will be filled in automatically when the fridge is empty.';
 
   @override
-  String get fridge_frequent_autoAddInfo_hint => 'Syncs when you manage quantities in the Fridge tab';
+  String get fridge_frequent_autoAddInfo_hint =>
+      'Syncs when you manage quantities in the Fridge tab';
 
   @override
   String get fridge_frequent_coach_fabTitle => 'Add Frequent Items';
 
   @override
-  String get fridge_frequent_coach_fabDesc => 'Register items you buy often\nto add them quickly next time you shop.';
+  String get fridge_frequent_coach_fabDesc =>
+      'Register items you buy often\nto add them quickly next time you shop.';
 
   @override
   String get fridge_frequent_coach_itemTitle => 'Manage Items';
 
   @override
-  String get fridge_frequent_coach_itemDesc => 'Set item name and default unit.\nTap to edit, long press to delete.';
+  String get fridge_frequent_coach_itemDesc =>
+      'Set item name and default unit.\nTap to edit, long press to delete.';
 
   @override
   String get fridge_frequent_coach_autoAddTitle => 'Auto-Add';
 
   @override
-  String get fridge_frequent_coach_autoAddDesc => 'When this item\'s quantity reaches 0 in the fridge,\nit will be automatically added to your cart.\nA smart feature linked to the Fridge tab.';
+  String get fridge_frequent_coach_autoAddDesc =>
+      'When this item\'s quantity reaches 0 in the fridge,\nit will be automatically added to your cart.\nA smart feature linked to the Fridge tab.';
 
   @override
   String get fridge_frequent_coach_addToCartTitle => 'Add to Cart Instantly';
 
   @override
-  String get fridge_frequent_coach_addToCartDesc => 'Add to your current cart\ninstantly with one tap.';
+  String get fridge_frequent_coach_addToCartDesc =>
+      'Add to your current cart\ninstantly with one tap.';
 
   @override
   String get fridge_frequent_coach_skip => 'Skip';
@@ -3454,37 +3557,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_coach_fabTitle => 'Add Storage';
 
   @override
-  String get fridge_coach_fabDesc => 'Add storage locations like fridge, freezer, or pantry.\nTap + to create a new storage.';
+  String get fridge_coach_fabDesc =>
+      'Add storage locations like fridge, freezer, or pantry.\nTap + to create a new storage.';
 
   @override
   String get fridge_coach_sectionTitle => 'Storage Section';
 
   @override
-  String get fridge_coach_sectionDesc => 'Tap the header to expand or collapse.\nUse the ⋮ menu to edit or delete the storage.';
+  String get fridge_coach_sectionDesc =>
+      'Tap the header to expand or collapse.\nUse the ⋮ menu to edit or delete the storage.';
 
   @override
   String get fridge_coach_itemTitle => 'Manage Items';
 
   @override
-  String get fridge_coach_itemDesc => '• Tap to edit name, expiry date, and memo\n• Use ± buttons to adjust quantity\n• Swipe left to mark for deletion\n• Press Save to apply changes';
+  String get fridge_coach_itemDesc =>
+      '• Tap to edit name, expiry date, and memo\n• Use ± buttons to adjust quantity\n• Swipe left to mark for deletion\n• Press Save to apply changes';
 
   @override
   String get fridge_coach_ddayTitle => 'Expiry Alerts';
 
   @override
-  String get fridge_coach_ddayDesc => 'Register an expiry date to see remaining days.\n• Blue: plenty of time\n• Orange: expiring within 3 days\n• Red: today or already expired\nYou\'ll receive push notifications before the alert day.';
+  String get fridge_coach_ddayDesc =>
+      'Register an expiry date to see remaining days.\n• Blue: plenty of time\n• Orange: expiring within 3 days\n• Red: today or already expired\nYou\'ll receive push notifications before the alert day.';
 
   @override
   String get fridge_coach_addItemTitle => 'Add Items';
 
   @override
-  String get fridge_coach_addItemDesc => 'Tap + next to a storage to add items.\nYou can add multiple items at once,\nwith expiry date, quantity, unit, and memo.';
+  String get fridge_coach_addItemDesc =>
+      'Tap + next to a storage to add items.\nYou can add multiple items at once,\nwith expiry date, quantity, unit, and memo.';
 
   @override
   String get fridge_coach_suggestionTitle => 'Auto Expiry Suggestion';
 
   @override
-  String get fridge_coach_suggestionDesc => 'Enter an item name and we\'ll suggest an expiry date automatically.\nIn Settings > Expiry Preset Management, you can add or edit\nper-item reference days to customize your own automation rules.';
+  String get fridge_coach_suggestionDesc =>
+      'Enter an item name and we\'ll suggest an expiry date automatically.\nIn Settings > Expiry Preset Management, you can add or edit\nper-item reference days to customize your own automation rules.';
 
   @override
   String get fridge_coach_skip => 'Skip';
@@ -3505,13 +3614,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_cart_complete_step2_title => 'Fridge transfer details';
 
   @override
-  String get fridge_cart_complete_transfer_hint => 'Select a storage to transfer items to';
+  String get fridge_cart_complete_transfer_hint =>
+      'Select a storage to transfer items to';
 
   @override
   String get fridge_cart_complete_add_expense => 'Record in ledger';
 
   @override
-  String get fridge_cart_complete_amount => 'Total (auto-calculated from item prices)';
+  String get fridge_cart_complete_amount =>
+      'Total (auto-calculated from item prices)';
 
   @override
   String get fridge_cart_item_price => 'Price (optional)';
@@ -3543,16 +3654,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_history_delete_confirm_title => 'Delete purchase history';
 
   @override
-  String get fridge_history_delete_confirm_body => 'Delete this purchase history?';
+  String get fridge_history_delete_confirm_body =>
+      'Delete this purchase history?';
 
   @override
-  String get fridge_history_delete_expense_notice => 'Any linked expense in the ledger will remain even after this history is deleted.';
+  String get fridge_history_delete_expense_notice =>
+      'Any linked expense in the ledger will remain even after this history is deleted.';
 
   @override
   String get fridge_group_selector_personal => 'Personal';
 
   @override
-  String fridge_expiry_suggestion_label(String keyword, String storageType, int days) {
+  String fridge_expiry_suggestion_label(
+    String keyword,
+    String storageType,
+    int days,
+  ) {
     return '$keyword based · $storageType $days days';
   }
 
@@ -3563,7 +3680,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_expiry_manual => 'Enter Manually';
 
   @override
-  String get fridge_expiry_change_reference => 'Use different item as reference';
+  String get fridge_expiry_change_reference =>
+      'Use different item as reference';
 
   @override
   String get fridge_expiry_reference_title => 'Select Reference Item';
@@ -3615,7 +3733,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fridge_preset_storage_type_label => 'Storage type';
 
   @override
-  String get fridge_preset_delete_confirm => 'Delete custom setting and restore default?';
+  String get fridge_preset_delete_confirm =>
+      'Delete custom setting and restore default?';
 
   @override
   String get fridge_preset_search_hint => 'Search category or item';
@@ -3721,7 +3840,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get investment_adminDialogTitle => 'Reset History Data';
 
   @override
-  String get investment_adminDialogDesc => 'Collects historical prices from Yahoo/CoinGecko/BOK and saves to DB.\nThis may take a while.';
+  String get investment_adminDialogDesc =>
+      'Collects historical prices from Yahoo/CoinGecko/BOK and saves to DB.\nThis may take a while.';
 
   @override
   String get investment_adminDaysLabel => 'Days to collect (1~3650)';
@@ -3817,13 +3937,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get investment_coachIndicatorTitle => 'Investment Indicators';
 
   @override
-  String get investment_coachIndicatorDesc => 'View major stock indices, exchange rates,\ncommodities, and crypto in real time.\nTap to see detailed charts and history.';
+  String get investment_coachIndicatorDesc =>
+      'View major stock indices, exchange rates,\ncommodities, and crypto in real time.\nTap to see detailed charts and history.';
 
   @override
   String get investment_coachBookmarkTitle => 'Bookmarks';
 
   @override
-  String get investment_coachBookmarkDesc => 'Tap the star to bookmark an indicator.\nBookmarked indicators are pinned to the top\nand visible on the home dashboard widget.';
+  String get investment_coachBookmarkDesc =>
+      'Tap the star to bookmark an indicator.\nBookmarked indicators are pinned to the top\nand visible on the home dashboard widget.';
 
   @override
   String get householdWidget_groupTooltip => 'Select Group';
@@ -4000,10 +4122,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legal_mustAgreePrivacy => 'Please agree to the Privacy Policy.';
 
   @override
-  String get legal_agreeAgeVerification => 'I am 14 years of age or older (Required)';
+  String get legal_agreeAgeVerification =>
+      'I am 14 years of age or older (Required)';
 
   @override
-  String get legal_mustAgreeAgeVerification => 'Please confirm that you are 14 years of age or older.';
+  String get legal_mustAgreeAgeVerification =>
+      'Please confirm that you are 14 years of age or older.';
 
   @override
   String legal_socialLoginConsent(String termsLink, String privacyLink) {
@@ -4014,85 +4138,107 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legal_terms_section1_title => 'Article 1 (Purpose)';
 
   @override
-  String get legal_terms_section1_body => 'These Terms govern the rights, obligations, and responsibilities between HMN Corporation (the \"Company\") and its members in connection with the use of the Family Planner service (the \"Service\") provided by the Company.';
+  String get legal_terms_section1_body =>
+      'These Terms govern the rights, obligations, and responsibilities between HMN Corporation (the \"Company\") and its members in connection with the use of the Family Planner service (the \"Service\") provided by the Company.';
 
   @override
   String get legal_terms_section2_title => 'Article 2 (Service Content)';
 
   @override
-  String get legal_terms_section2_body => 'The Company provides members with the following services:\n• Family group-based calendar and to-do sharing\n• Asset management and history sharing among members\n• Child reward (praise stickers, etc.) management system\n• Conversation, schedule management, and macroeconomic/market briefing services via AI agent\n• Other services additionally developed by the Company or provided through partnership agreements';
+  String get legal_terms_section2_body =>
+      'The Company provides members with the following services:\n• Family group-based calendar and to-do sharing\n• Asset management and history sharing among members\n• Child reward (praise stickers, etc.) management system\n• Conversation, schedule management, and macroeconomic/market briefing services via AI agent\n• Other services additionally developed by the Company or provided through partnership agreements';
 
   @override
   String get legal_terms_section3_title => 'Article 3 (Member Obligations)';
 
   @override
-  String get legal_terms_section3_body => '• Members must not input illegal or harmful prompts to the AI agent within the Service.\n• Members are responsible for securely managing family group invitation codes and account information.\n• The asset management and market briefing features are provided for reference purposes only, and the Company bears no legal responsibility for investment outcomes based on such information.';
+  String get legal_terms_section3_body =>
+      '• Members must not input illegal or harmful prompts to the AI agent within the Service.\n• Members are responsible for securely managing family group invitation codes and account information.\n• The asset management and market briefing features are provided for reference purposes only, and the Company bears no legal responsibility for investment outcomes based on such information.';
 
   @override
-  String get legal_terms_section4_title => 'Article 4 (Copyright and Management of Posts)';
+  String get legal_terms_section4_title =>
+      'Article 4 (Copyright and Management of Posts)';
 
   @override
-  String get legal_terms_section4_body => '• Copyright of information posted by members within the Service (chats, schedules, asset information, etc.) belongs to the respective member.\n• The Company uses member posts only for service operation, improvement (including AI feature enhancement), and promotion, and only in a de-identified form that cannot identify individuals.';
+  String get legal_terms_section4_body =>
+      '• Copyright of information posted by members within the Service (chats, schedules, asset information, etc.) belongs to the respective member.\n• The Company uses member posts only for service operation, improvement (including AI feature enhancement), and promotion, and only in a de-identified form that cannot identify individuals.';
 
   @override
-  String get legal_terms_section5_title => 'Article 5 (Service Suspension and Changes)';
+  String get legal_terms_section5_title =>
+      'Article 5 (Service Suspension and Changes)';
 
   @override
-  String get legal_terms_section5_body => 'The Company may change or suspend all or part of the Service as needed for operational or technical reasons, and will provide advance notice in such cases.';
+  String get legal_terms_section5_body =>
+      'The Company may change or suspend all or part of the Service as needed for operational or technical reasons, and will provide advance notice in such cases.';
 
   @override
-  String get legal_terms_section6_title => 'Article 6 (Limitation of Liability)';
+  String get legal_terms_section6_title =>
+      'Article 6 (Limitation of Liability)';
 
   @override
-  String get legal_terms_section6_body => 'The Company is exempt from liability for service provision in cases where the Service cannot be provided due to force majeure events such as natural disasters, server provider failures, or third-party AI API service failures.';
+  String get legal_terms_section6_body =>
+      'The Company is exempt from liability for service provision in cases where the Service cannot be provided due to force majeure events such as natural disasters, server provider failures, or third-party AI API service failures.';
 
   @override
   String get legal_terms_section7_title => 'Article 7 (Effective Date)';
 
   @override
-  String get legal_terms_section7_body => 'These Terms are effective from June 1, 2026.';
+  String get legal_terms_section7_body =>
+      'These Terms are effective from June 1, 2026.';
 
   @override
-  String get legal_privacy_section1_title => '1. Purpose of Processing Personal Information';
+  String get legal_privacy_section1_title =>
+      '1. Purpose of Processing Personal Information';
 
   @override
-  String get legal_privacy_section1_body => 'HMN Corporation (the \'Company\') processes personal information for the following purposes. The personal information being processed will not be used for any purpose other than the following, and if the purpose of use changes, necessary measures such as obtaining separate consent will be taken.\n• Member registration and management, family group (invitation code, etc.) identification\n• Service provision (calendar, to-do, asset management, child reward system, etc.)\n• AI agent (chatbot, briefing, etc.) service provision and quality improvement\n• New service development and personalized service provision';
+  String get legal_privacy_section1_body =>
+      'HMN Corporation (the \'Company\') processes personal information for the following purposes. The personal information being processed will not be used for any purpose other than the following, and if the purpose of use changes, necessary measures such as obtaining separate consent will be taken.\n• Member registration and management, family group (invitation code, etc.) identification\n• Service provision (calendar, to-do, asset management, child reward system, etc.)\n• AI agent (chatbot, briefing, etc.) service provision and quality improvement\n• New service development and personalized service provision';
 
   @override
-  String get legal_privacy_section2_title => '2. Personal Information Items Processed';
+  String get legal_privacy_section2_title =>
+      '2. Personal Information Items Processed';
 
   @override
-  String get legal_privacy_section2_body => 'The Company processes the following personal information items to provide its services.\n• Required items: email address, password, name (or nickname), profile image\n• Information collected during service use: calendar events, to-do lists, asset data, family group information, AI chat history, service usage records, device information';
+  String get legal_privacy_section2_body =>
+      'The Company processes the following personal information items to provide its services.\n• Required items: email address, password, name (or nickname), profile image\n• Information collected during service use: calendar events, to-do lists, asset data, family group information, AI chat history, service usage records, device information';
 
   @override
-  String get legal_privacy_section3_title => '3. Third-Party Provision and Entrustment of Personal Information';
+  String get legal_privacy_section3_title =>
+      '3. Third-Party Provision and Entrustment of Personal Information';
 
   @override
-  String get legal_privacy_section3_body => 'To provide smooth AI services (context analysis, briefing generation, etc.), the Company may transmit some of the entered data to external AI model APIs (e.g., OpenAI, Anthropic, Google, etc.).\nHowever, this data is used only for service provision purposes and measures are taken to ensure it is not used for model training.';
+  String get legal_privacy_section3_body =>
+      'To provide smooth AI services (context analysis, briefing generation, etc.), the Company may transmit some of the entered data to external AI model APIs (e.g., OpenAI, Anthropic, Google, etc.).\nHowever, this data is used only for service provision purposes and measures are taken to ensure it is not used for model training.';
 
   @override
-  String get legal_privacy_section4_title => '4. Destruction of Personal Information';
+  String get legal_privacy_section4_title =>
+      '4. Destruction of Personal Information';
 
   @override
-  String get legal_privacy_section4_body => 'In principle, the Company destroys personal information without delay when the purpose of processing has been achieved.\n• Destruction procedure: When a user requests account withdrawal, the collected information is destroyed immediately or after the retention period required by law has elapsed.\n• Destruction method: Information in electronic file format is destroyed using technical methods that make it impossible to reproduce the records.';
+  String get legal_privacy_section4_body =>
+      'In principle, the Company destroys personal information without delay when the purpose of processing has been achieved.\n• Destruction procedure: When a user requests account withdrawal, the collected information is destroyed immediately or after the retention period required by law has elapsed.\n• Destruction method: Information in electronic file format is destroyed using technical methods that make it impossible to reproduce the records.';
 
   @override
-  String get legal_privacy_section5_title => '5. Rights of Data Subjects and How to Exercise Them';
+  String get legal_privacy_section5_title =>
+      '5. Rights of Data Subjects and How to Exercise Them';
 
   @override
-  String get legal_privacy_section5_body => 'Users may access or modify their personal information at any time, and may withdraw consent to the collection and use of personal information by withdrawing from membership.';
+  String get legal_privacy_section5_body =>
+      'Users may access or modify their personal information at any time, and may withdraw consent to the collection and use of personal information by withdrawing from membership.';
 
   @override
   String get legal_privacy_section6_title => '6. Privacy Officer';
 
   @override
-  String get legal_privacy_section6_body => 'Name: Yoo Youngjin\nEmail: hmn.corp.dev@gmail.com';
+  String get legal_privacy_section6_body =>
+      'Name: Yoo Youngjin\nEmail: hmn.corp.dev@gmail.com';
 
   @override
   String get legal_privacy_section7_title => '7. Effective Date';
 
   @override
-  String get legal_privacy_section7_body => 'This Privacy Policy is effective from June 1, 2026.';
+  String get legal_privacy_section7_body =>
+      'This Privacy Policy is effective from June 1, 2026.';
 
   @override
   String get legal_privacyLastUpdated => 'Effective date: June 1, 2026';
