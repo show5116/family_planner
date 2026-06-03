@@ -582,24 +582,23 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                   ),
                 );
               }),
-              if (hasOthers)
+              if (hasOthers && !_othersExpanded)
                 _LegendChip(
                   color: _othersColor,
                   label: '기타 ${otherRecords.length}개',
                   ratio: othersRatio,
                   isTouched: isOthersTouched,
                   trailing: Icon(
-                    _othersExpanded ? Icons.expand_less : Icons.expand_more,
+                    Icons.expand_more,
                     size: 14,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   onTap: () => setState(() {
                     _touchedIndex = isOthersTouched ? null : mainRecords.length;
-                    _othersExpanded = !_othersExpanded;
+                    _othersExpanded = true;
                   }),
                 ),
-              // 기타 인라인 펼치기
-              if (hasOthers && _othersExpanded)
+              if (hasOthers && _othersExpanded) ...[
                 ...otherRecords.asMap().entries.map((e) => _LegendChip(
                       color: _colorFor(mainRecords.length + e.key),
                       label: e.value.ticker != null
@@ -609,6 +608,22 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                       isTouched: false,
                       onTap: () {},
                     )),
+                _LegendChip(
+                  color: _othersColor,
+                  label: '접기',
+                  ratio: othersRatio,
+                  isTouched: false,
+                  trailing: Icon(
+                    Icons.expand_less,
+                    size: 14,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  onTap: () => setState(() {
+                    _othersExpanded = false;
+                    if (isOthersTouched) _touchedIndex = null;
+                  }),
+                ),
+              ],
             ],
           ),
         ),
@@ -649,10 +664,9 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
               onEdit: () => widget.onEdit(e.value),
               onDelete: () => widget.onDelete(e.value),
             )),
-        // 기타 종목 목록 인라인 펼치기
-        if (hasOthers) ...[
+        if (hasOthers && !_othersExpanded)
           InkWell(
-            onTap: () => setState(() => _othersExpanded = !_othersExpanded),
+            onTap: () => setState(() => _othersExpanded = true),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSizes.spaceM,
@@ -675,7 +689,7 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                   ),
                   const Spacer(),
                   Icon(
-                    _othersExpanded ? Icons.expand_less : Icons.expand_more,
+                    Icons.expand_more,
                     size: 18,
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -683,14 +697,35 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
               ),
             ),
           ),
-          if (_othersExpanded)
-            ...otherRecords.asMap().entries.map((e) => _HoldingRecordListItem(
-                  record: e.value,
-                  ratio: widget.ratioOf(e.value),
-                  color: _colorFor(mainRecords.length + e.key),
-                  onEdit: () => widget.onEdit(e.value),
-                  onDelete: () => widget.onDelete(e.value),
-                )),
+        if (hasOthers && _othersExpanded) ...[
+          ...otherRecords.asMap().entries.map((e) => _HoldingRecordListItem(
+                record: e.value,
+                ratio: widget.ratioOf(e.value),
+                color: _colorFor(mainRecords.length + e.key),
+                onEdit: () => widget.onEdit(e.value),
+                onDelete: () => widget.onDelete(e.value),
+              )),
+          InkWell(
+            onTap: () => setState(() => _othersExpanded = false),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceS,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.expand_less, size: 18,
+                      color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(width: 4),
+                  Text('접기',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.outline,
+                          )),
+                ],
+              ),
+            ),
+          ),
         ],
         const SizedBox(height: AppSizes.spaceM),
       ],
