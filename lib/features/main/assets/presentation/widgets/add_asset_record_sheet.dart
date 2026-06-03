@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/thousands_formatter.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart'
@@ -12,37 +12,6 @@ import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 const double _gramsPerDon = 3.75;
-
-/// 천 단위 콤마를 자동으로 표시하는 TextInputFormatter
-class _ThousandsFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final digits = newValue.text.replaceAll(',', '');
-    if (digits.isEmpty) return newValue.copyWith(text: '');
-
-    final number = int.tryParse(digits);
-    if (number == null) return oldValue;
-
-    final formatted = _formatWithComma(number);
-    return newValue.copyWith(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-
-  String _formatWithComma(int value) {
-    final str = value.toString();
-    final buffer = StringBuffer();
-    for (int i = 0; i < str.length; i++) {
-      if (i > 0 && (str.length - i) % 3 == 0) buffer.write(',');
-      buffer.write(str[i]);
-    }
-    return buffer.toString();
-  }
-}
 
 enum _GoldWeightUnit { gram, don }
 
@@ -405,7 +374,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _goldPrincipalController,
         keyboardType: TextInputType.number,
-        inputFormatters: [_ThousandsFormatter()],
+        inputFormatters: [ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_gold_estimated_principal,
           prefixText: '₩ ',
@@ -442,7 +411,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _balanceController,
         keyboardType: TextInputType.number,
-        inputFormatters: [_ThousandsFormatter()],
+        inputFormatters: [ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_balance,
           hintText: l10n.asset_amount_hint,
@@ -456,7 +425,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _manualPrincipalController,
         keyboardType: TextInputType.number,
-        inputFormatters: [_ThousandsFormatter()],
+        inputFormatters: [ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_principal,
           hintText: l10n.asset_amount_hint,
@@ -470,7 +439,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _profitController,
         keyboardType: TextInputType.number,
-        inputFormatters: [_ThousandsFormatter()],
+        inputFormatters: [ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_profit,
           hintText: l10n.asset_amount_hint,
@@ -489,7 +458,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _additionalPrincipalController,
         keyboardType: TextInputType.number,
-        inputFormatters: [_ThousandsFormatter()],
+        inputFormatters: [ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_additional_principal,
           hintText: l10n.asset_amount_hint,
@@ -504,7 +473,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       TextFormField(
         controller: _currentBalanceController,
         keyboardType: TextInputType.number,
-        inputFormatters: [_ThousandsFormatter()],
+        inputFormatters: [ThousandsFormatter()],
         decoration: InputDecoration(
           labelText: l10n.asset_current_balance,
           hintText: l10n.asset_amount_hint,
