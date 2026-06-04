@@ -91,6 +91,11 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
     return '${parts[0]}년 ${int.parse(parts[1])}월 ${int.parse(parts[2])}일';
   }
 
+  String _formatDateLabelShort(String date) {
+    final parts = date.split('-');
+    return '${parts[0].substring(2)}.${parts[1]}.${parts[2]}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final sortedRecords = [...widget.assetRecords]
@@ -159,7 +164,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
                     dates: dateOptions,
                     selected: _compareDateA,
                     onChanged: (d) => setState(() => _compareDateA = d),
-                    formatLabel: _formatDateLabel,
+                    formatLabel: _formatDateLabelShort,
                     label: 'A',
                   ),
                 ),
@@ -172,7 +177,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
                     dates: dateOptions,
                     selected: _compareDateB,
                     onChanged: (d) => setState(() => _compareDateB = d),
-                    formatLabel: _formatDateLabel,
+                    formatLabel: _formatDateLabelShort,
                     label: 'B',
                   ),
                 ),
@@ -184,7 +189,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
               accountId: widget.accountId,
               dateA: _compareDateA!,
               dateB: _compareDateB!,
-              formatDateLabel: _formatDateLabel,
+              formatDateLabel: _formatDateLabelShort,
             ),
         ] else ...[
           Padding(
@@ -304,7 +309,9 @@ class _HoldingRecordsList extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSizes.spaceM),
         child: Text('오류가 발생했습니다.', style: TextStyle(color: Theme.of(context).colorScheme.error)),
       ),
-      data: (records) {
+      data: (rawRecords) {
+        final records = [...rawRecords]
+          ..sort((a, b) => b.amount.compareTo(a.amount));
         if (records.isEmpty) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceL),

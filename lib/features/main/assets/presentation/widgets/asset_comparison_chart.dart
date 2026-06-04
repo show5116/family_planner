@@ -377,12 +377,14 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 44,
+                reservedSize: 52,
                 getTitlesWidget: (v, meta) {
-                  if (v == meta.min || v == meta.max)
+                  if (v == meta.min || v == meta.max) {
                     return const SizedBox.shrink();
+                  }
+                  final label = '${v.toStringAsFixed(0)}%';
                   return Text(
-                    v.toStringAsFixed(0),
+                    label,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: colorScheme.outline,
                       fontSize: 9,
@@ -403,7 +405,7 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
                     return const SizedBox.shrink();
                   }
                   final label = widget.period == TrendPeriod.monthly
-                      ? periods[idx].substring(5) // MM
+                      ? '${int.parse(periods[idx].substring(5))}월'
                       : periods[idx]; // YYYY
                   return Padding(
                     padding: const EdgeInsets.only(top: 4),

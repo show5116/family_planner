@@ -30,6 +30,7 @@ class AssetSummaryCard extends ConsumerWidget {
                 label: l10n.asset_total_balance,
                 value: '₩${formatAssetAmount(stats.totalBalance)}',
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
+                koreanValue: formatAssetAmountKorean(stats.totalBalance),
               ),
             ),
             Container(
@@ -45,6 +46,7 @@ class AssetSummaryCard extends ConsumerWidget {
                 label: l10n.asset_total_profit,
                 value: '₩${formatAssetAmount(stats.totalProfit)}',
                 color: profitColor(context, stats.totalProfit),
+                koreanValue: formatAssetAmountKorean(stats.totalProfit),
               ),
             ),
             Container(
@@ -79,12 +81,14 @@ class AssetSummaryItem extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
+  final String? koreanValue;
 
   const AssetSummaryItem({
     super.key,
     required this.label,
     required this.value,
     required this.color,
+    this.koreanValue,
   });
 
   @override
@@ -98,13 +102,26 @@ class AssetSummaryItem extends StatelessWidget {
               ),
         ),
         const SizedBox(height: AppSizes.spaceXS),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+          ),
         ),
+        if (koreanValue != null)
+          Text(
+            koreanValue!,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onPrimaryContainer
+                      .withValues(alpha: 0.7),
+                ),
+          ),
       ],
     );
   }

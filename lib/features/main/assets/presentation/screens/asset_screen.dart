@@ -48,8 +48,8 @@ class AssetScreen extends ConsumerStatefulWidget {
 class _AssetScreenState extends ConsumerState<AssetScreen> {
   final _groupBarKey = GlobalKey();
   final _demoCardKey = GlobalKey();
-  // ValueNotifier: setState 없이 온보딩 on/off — 코치마크 콜백 내 build 충돌 방지
-  final _showDemo = ValueNotifier<bool>(false);
+  final _statsButtonKey = GlobalKey();
+  bool _isDemo = false;
 
   @override
   void initState() {
@@ -58,12 +58,6 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
       await _initGroupSelection();
       await _maybeStartOnboarding();
     });
-  }
-
-  @override
-  void dispose() {
-    _showDemo.dispose();
-    super.dispose();
   }
 
   Future<void> _initGroupSelection() async {
@@ -81,23 +75,20 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   Future<void> _maybeStartOnboarding() async {
     final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.assets);
     if (completed || !mounted) return;
-    _startDemo();
+    setState(() => _isDemo = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
-  void _replayOnboarding() {
-    OnboardingService.resetCoachMark(CoachMarkKeys.assets).then((_) {
-      if (mounted) _startDemo();
-    });
-  }
-
-  void _startDemo() {
-    _showDemo.value = true;
+  Future<void> _replayOnboarding() async {
+    await OnboardingService.resetCoachMark(CoachMarkKeys.assets);
+    if (!mounted) return;
+    setState(() => _isDemo = true);
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
   void _goToDemo() {
     if (!mounted) return;
-    _showDemo.value = false;
+    setState(() => _isDemo = false);
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -119,8 +110,11 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   }
 
   Future<void> _showCoachMark() async {
+    debugPrint('🎯 [Coach] _showCoachMark 시작, mounted=$mounted');
     if (!mounted) return;
     final cardPos = _keyToPosition(_demoCardKey);
+    final statsPos = _keyToPosition(_statsButtonKey);
+    debugPrint('🎯 [Coach] cardPos=$cardPos, statsPos=$statsPos');
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'asset_card',
@@ -133,18 +127,38 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '계좌 카드',
-              description: '계좌명, 금융기관, 최신 잔액과\n수익률을 한눈에 확인할 수 있어요.',
+              description: '계좌명, 금융기관, 최신 잔액과 수익률을\n한눈에 확인할 수 있어요.\n탭하면 잔액 기록과 포트폴리오를 관리할 수 있습니다.',
               icon: Icons.account_balance_outlined,
               color: AppColors.primary,
             ),
           ),
         ],
       ),
+      if (statsPos != null)
+        TargetFocus(
+          identify: 'asset_statistics',
+          targetPosition: statsPos,
+          shape: ShapeLightFocus.Circle,
+          radius: 28,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (_, _) => FeatureCoachMark.buildContent(
+                title: '자산 통계',
+                description: '전체 자산의 합계, 수익률, 유형별 분포를\n차트로 한눈에 확인할 수 있어요.\nKOSPI·S&P500 등 지수와 비교도 가능합니다.',
+                icon: Icons.bar_chart,
+                color: Colors.indigo,
+              ),
+            ),
+          ],
+        ),
     ];
-    await FeatureCoachMark.waitForTargets(targets, context);
+    final activeTargets = targets;
+    await FeatureCoachMark.waitForTargets(activeTargets, context);
     if (!mounted) return;
+
     TutorialCoachMark(
-      targets: FeatureCoachMark.refreshPositions(targets),
+      targets: FeatureCoachMark.refreshPositions(activeTargets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
@@ -161,13 +175,16 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
-      onClickTarget: (_) => _goToDemo(),
+      onClickTarget: (target) {
+        if (target.identify == 'asset_card') _goToDemo();
+      },
       onFinish: () {
-        // onClickTarget 으로 이미 이동했으므로 중복 실행 방지
+        OnboardingService.completeCoachMark(CoachMarkKeys.assets);
+        if (mounted) setState(() => _isDemo = false);
       },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.assets);
-        _showDemo.value = false;
+        if (mounted) setState(() => _isDemo = false);
         return true;
       },
       paddingFocus: 8,
@@ -181,68 +198,64 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(assetSelectedGroupIdProvider);
 
-    return ValueListenableBuilder<bool>(
-      valueListenable: _showDemo,
-      builder: (context, isDemo, _) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(l10n.asset_title),
-            actions: [
-              if (!isDemo)
-                IconButton(
-                  icon: const Icon(Icons.bar_chart),
-                  tooltip: l10n.asset_statistics,
-                  onPressed: () => context.push(AppRoutes.assetStatistics),
-                ),
-              if (!isDemo)
-                AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
-            ],
-          ),
-          body: Column(
-            children: [
-              if (!isDemo)
-                GroupFilterBar(
-                  key: _groupBarKey,
-                  selectedGroupId: selectedGroupId,
-                  onChanged: (value) {
-                    ref.read(assetSelectedGroupIdProvider.notifier).state = value;
-                    ref.read(assetSelectedUserIdProvider.notifier).state = null;
-                  },
-                ),
-              if (!isDemo) const AssetSummaryCard(),
-              if (isDemo)
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(AppSizes.spaceM),
-                    children: [
-                      AccountListItem(
-                        key: _demoCardKey,
-                        account: _demoAccount,
-                        showDragHandle: false,
-                        dragIndex: 0,
-                        onTap: _goToDemo,
-                        onDelete: () {},
-                      ),
-                    ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.asset_title),
+        actions: [
+          if (!_isDemo)
+            IconButton(
+              key: _statsButtonKey,
+              icon: const Icon(Icons.bar_chart),
+              tooltip: l10n.asset_statistics,
+              onPressed: () => context.push(AppRoutes.assetStatistics),
+            ),
+          if (!_isDemo)
+            AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
+        ],
+      ),
+      body: Column(
+        children: [
+          if (!_isDemo)
+            GroupFilterBar(
+              key: _groupBarKey,
+              selectedGroupId: selectedGroupId,
+              onChanged: (value) {
+                ref.read(assetSelectedGroupIdProvider.notifier).state = value;
+                ref.read(assetSelectedUserIdProvider.notifier).state = null;
+              },
+            ),
+          if (!_isDemo) const AssetSummaryCard(),
+          if (_isDemo)
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(AppSizes.spaceM),
+                children: [
+                  AccountListItem(
+                    key: _demoCardKey,
+                    account: _demoAccount,
+                    showDragHandle: false,
+                    dragIndex: 0,
+                    onTap: _goToDemo,
+                    onDelete: () {},
                   ),
-                )
-              else
-                Expanded(
-                  child: _AssetList(selectedGroupId: selectedGroupId),
-                ),
-            ],
-          ),
-          floatingActionButton: (!isDemo && selectedGroupId != null)
-              ? FloatingActionButton(
-                  onPressed: () => context.push(
-                    AppRoutes.assetAccountAdd,
-                    extra: {'groupId': selectedGroupId},
-                  ),
-                  child: const Icon(Icons.add),
-                )
-              : null,
-        );
-      },
+                ],
+              ),
+            )
+          else
+            Expanded(
+              child: _AssetList(selectedGroupId: selectedGroupId),
+            ),
+        ],
+      ),
+      floatingActionButton: (!_isDemo && selectedGroupId != null)
+          ? FloatingActionButton(
+              onPressed: () => context.push(
+                AppRoutes.assetAccountAdd,
+                extra: {'groupId': selectedGroupId},
+              ),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

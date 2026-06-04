@@ -88,41 +88,41 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
             spacing: AppSizes.spaceXS,
             runSpacing: AppSizes.spaceXS,
             children: [
-              _MetricChip(
-                label: l10n.asset_trend_balance,
-                selected: _metric == _ChartMetric.balance,
-                onTap: () => setState(() => _metric = _ChartMetric.balance),
-                tooltipTitle: '잔액',
-                tooltipBody: '각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금',
-              ),
-              _MetricChip(
-                label: l10n.asset_trend_principal,
-                selected: _metric == _ChartMetric.principal,
-                onTap: () => setState(() => _metric = _ChartMetric.principal),
-                tooltipTitle: '원금',
-                tooltipBody: '각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.',
-              ),
-              _MetricChip(
-                label: l10n.asset_trend_profit,
-                selected: _metric == _ChartMetric.profit,
-                onTap: () => setState(() => _metric = _ChartMetric.profit),
-                tooltipTitle: '수익금',
-                tooltipBody: '각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금',
-              ),
-              _MetricChip(
-                label: l10n.asset_trend_profit_rate,
-                selected: _metric == _ChartMetric.profitRate,
-                onTap: () => setState(() => _metric = _ChartMetric.profitRate),
-                tooltipTitle: '누적 수익률',
-                tooltipBody: '각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100',
-              ),
-              _MetricChip(
-                label: l10n.asset_trend_period_return,
-                selected: _metric == _ChartMetric.periodReturn,
-                onTap: () => setState(() => _metric = _ChartMetric.periodReturn),
-                tooltipTitle: '기간 수익률',
-                tooltipBody: '직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100',
-              ),
+                _MetricChip(
+                  label: l10n.asset_trend_balance,
+                  selected: _metric == _ChartMetric.balance,
+                  onTap: () => setState(() => _metric = _ChartMetric.balance),
+                  tooltipTitle: '잔액',
+                  tooltipBody: '각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금',
+                ),
+                _MetricChip(
+                  label: l10n.asset_trend_principal,
+                  selected: _metric == _ChartMetric.principal,
+                  onTap: () => setState(() => _metric = _ChartMetric.principal),
+                  tooltipTitle: '원금',
+                  tooltipBody: '각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.',
+                ),
+                _MetricChip(
+                  label: l10n.asset_trend_profit,
+                  selected: _metric == _ChartMetric.profit,
+                  onTap: () => setState(() => _metric = _ChartMetric.profit),
+                  tooltipTitle: '수익금',
+                  tooltipBody: '각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금',
+                ),
+                _MetricChip(
+                  label: l10n.asset_trend_profit_rate,
+                  selected: _metric == _ChartMetric.profitRate,
+                  onTap: () => setState(() => _metric = _ChartMetric.profitRate),
+                  tooltipTitle: '누적 수익률',
+                  tooltipBody: '각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100',
+                ),
+                _MetricChip(
+                  label: l10n.asset_trend_period_return,
+                  selected: _metric == _ChartMetric.periodReturn,
+                  onTap: () => setState(() => _metric = _ChartMetric.periodReturn),
+                  tooltipTitle: '기간 수익률',
+                  tooltipBody: '직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100',
+                ),
             ],
           ),
           const SizedBox(height: AppSizes.spaceM),
@@ -473,14 +473,14 @@ class _TrendLineChartState extends State<_TrendLineChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 56,
+              reservedSize: 52,
               getTitlesWidget: (value, meta) {
                 if (value == meta.min || value == meta.max) {
                   return const SizedBox.shrink();
                 }
                 final label = _isPercent
                     ? '${value.toStringAsFixed(1)}%'
-                    : '${formatAssetAmount(value)}원';
+                    : (formatAssetAmountKorean(value) ?? '${formatAssetAmount(value)}원');
                 return Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -502,7 +502,7 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                 if (idx < 0 || idx >= pts.length) return const SizedBox.shrink();
                 final p = pts[idx].period;
                 final label = widget.period == TrendPeriod.monthly
-                    ? p.substring(5) // MM
+                    ? '${int.parse(p.substring(5))}월'
                     : p; // YYYY
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),

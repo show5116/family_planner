@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -104,6 +105,8 @@ class AccountDetailScreen extends ConsumerStatefulWidget {
 class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   final _infoCardKey = GlobalKey();
   final _addRecordKey = GlobalKey();
+  final _portfolioKey = GlobalKey();
+  final _demoScrollController = ScrollController();
   static const _recordsInitialCount = 5;
   bool _recordsExpanded = false;
 
@@ -113,6 +116,12 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     if (widget.isDemo) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _showDemoCoachMark());
     }
+  }
+
+  @override
+  void dispose() {
+    _demoScrollController.dispose();
+    super.dispose();
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {
@@ -125,6 +134,19 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   }
 
   Future<void> _showDemoCoachMark() async {
+    if (!mounted) return;
+    // 포트폴리오 좌표는 스크롤 후에 잡아야 정확함 — 먼저 끝까지 스크롤
+    await _demoScrollController.animateTo(
+      _demoScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (!mounted) return;
+    // 포트폴리오 좌표 계산 후 다시 맨 위로
+    final portfolioPos = _keyToPosition(_portfolioKey);
+    _demoScrollController.jumpTo(0);
+    await Future.delayed(const Duration(milliseconds: 50));
     if (!mounted) return;
     final infoPos = _keyToPosition(_infoCardKey);
     final recordPos = _keyToPosition(_addRecordKey);
@@ -140,7 +162,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '계좌 상세 정보',
-              description: '최신 잔액, 수익률, 금융기관 정보를\n한눈에 확인할 수 있어요.',
+              description: '최신 잔액과 수익률을 확인하고,\n아래로 스크롤하면 자산 변화 차트와\n원금·수익금 통계를 볼 수 있어요.',
               icon: Icons.account_balance_outlined,
               color: AppColors.primary,
             ),
@@ -157,10 +179,28 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '잔액 기록',
-              description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.',
+              title: '잔액 기록 추가',
+              description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.\n출금 기록도 함께 관리할 수 있습니다.',
               icon: Icons.add_chart,
               color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'asset_portfolio',
+        targetPosition: portfolioPos,
+        keyTarget: portfolioPos == null ? _portfolioKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '포트폴리오',
+              description: '날짜별로 보유 종목과 금액을 기록해\n자산 구성을 파이차트로 확인하세요.\n두 날짜를 비교해 변화도 볼 수 있어요.',
+              icon: Icons.pie_chart_outline,
+              color: Colors.deepPurple,
             ),
           ),
         ],
@@ -168,6 +208,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     ];
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
+
     TutorialCoachMark(
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
@@ -186,6 +227,17 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
+      beforeFocus: (target) async {
+        if (target.identify == 'asset_portfolio') {
+          await _demoScrollController.animateTo(
+            _demoScrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOut,
+          );
+        } else {
+          _demoScrollController.jumpTo(0);
+        }
+      },
       onFinish: _completeDemoOnboarding,
       onSkip: () {
         _completeDemoOnboarding();
@@ -212,6 +264,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
       return Scaffold(
         appBar: AppBar(title: Text(account.name)),
         body: CustomScrollView(
+          controller: _demoScrollController,
           slivers: [
             SliverToBoxAdapter(
               child: AccountInfoCard(key: _infoCardKey, account: account),
@@ -248,6 +301,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 ),
                 childCount: _demoRecords.length,
               ),
+            ),
+            SliverToBoxAdapter(
+              child: _DemoPortfolioSection(portfolioKey: _portfolioKey),
             ),
             SliverToBoxAdapter(
               child: SizedBox(height: 80 + MediaQuery.of(context).padding.bottom),
@@ -496,6 +552,98 @@ class _AddActionSheet extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─── 데모용 포트폴리오 섹션 ────────────────────────────────────────────────────
+class _DemoPortfolioSection extends StatelessWidget {
+  final GlobalKey portfolioKey;
+
+  const _DemoPortfolioSection({required this.portfolioKey});
+
+  static const _items = [
+    (label: '나스닥 ETF', ratio: 0.60, color: Color(0xFF6366F1)),
+    (label: '삼성전자', ratio: 0.25, color: Color(0xFF22C55E)),
+    (label: '현금', ratio: 0.15, color: Color(0xFFF59E0B)),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      key: portfolioKey,
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '포트폴리오',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 160,
+                  child: PieChart(
+                    PieChartData(
+                      sections: _items
+                          .map((item) => PieChartSectionData(
+                                value: item.ratio * 100,
+                                color: item.color,
+                                radius: 56,
+                                showTitle: true,
+                                title: '${(item.ratio * 100).toInt()}%',
+                                titleStyle: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                titlePositionPercentageOffset: 0.6,
+                              ))
+                          .toList(),
+                      centerSpaceRadius: 36,
+                      sectionsSpace: 2,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSizes.spaceL),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _items
+                    .map((item) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: item.color,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${item.label}  ${(item.ratio * 100).toInt()}%',
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
