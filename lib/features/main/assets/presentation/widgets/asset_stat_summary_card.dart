@@ -5,6 +5,9 @@ import 'package:family_planner/features/main/assets/data/models/asset_statistics
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+String _signedAmount(double v) =>
+    '${v >= 0 ? '+' : ''}₩${formatAssetAmount(v)}';
+
 /// 자산 통계 - 전체 요약 카드
 class AssetStatSummaryCard extends StatelessWidget {
   final AssetStatisticsModel stats;
@@ -38,12 +41,23 @@ class AssetStatSummaryCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSizes.spaceXS),
-            Text(
-              '₩${formatAssetAmount(stats.totalBalance)}',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '₩${formatAssetAmount(stats.totalBalance)}',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
+            if (formatAssetAmountKorean(stats.totalBalance) != null)
+              Text(
+                formatAssetAmountKorean(stats.totalBalance)!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
             const Divider(height: AppSizes.spaceL),
             Row(
               children: [
@@ -52,14 +66,15 @@ class AssetStatSummaryCard extends StatelessWidget {
                     label: l10n.asset_total_principal,
                     value: '₩${formatAssetAmount(stats.totalPrincipal)}',
                     valueColor: Theme.of(context).colorScheme.onSurface,
+                    koreanValue: formatAssetAmountKorean(stats.totalPrincipal),
                   ),
                 ),
                 Expanded(
                   child: AssetStatRow(
                     label: l10n.asset_total_profit,
-                    value:
-                        '${stats.totalProfit >= 0 ? '+' : ''}₩${formatAssetAmount(stats.totalProfit)}',
+                    value: _signedAmount(stats.totalProfit),
                     valueColor: color,
+                    koreanValue: formatAssetAmountKorean(stats.totalProfit),
                   ),
                 ),
                 Expanded(
@@ -131,12 +146,14 @@ class AssetStatRow extends StatelessWidget {
   final String label;
   final String value;
   final Color valueColor;
+  final String? koreanValue;
 
   const AssetStatRow({
     super.key,
     required this.label,
     required this.value,
     required this.valueColor,
+    this.koreanValue,
   });
 
   @override
@@ -151,13 +168,24 @@ class AssetStatRow extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 2),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: valueColor,
-              ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            value,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: valueColor,
+                ),
+          ),
         ),
+        if (koreanValue != null)
+          Text(
+            koreanValue!,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
       ],
     );
   }

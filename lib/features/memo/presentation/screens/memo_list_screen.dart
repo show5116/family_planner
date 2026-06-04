@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -8,6 +9,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
+import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_card.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -29,7 +31,6 @@ final _demoNoteMemo = MemoModel(
   id: '__demo_note__',
   title: '제주도 여행 준비',
   content: '항공권 예약 완료. 숙소는 한림읍 게스트하우스로 결정.\n렌터카 예약 필요. 우도, 성산일출봉 방문 예정.',
-  type: MemoType.note,
   visibility: MemoVisibility.private_,
   user: const MemoAuthor(id: '__demo_user__', name: '나'),
   tags: const [MemoTag(id: '__t1__', name: '여행'), MemoTag(id: '__t2__', name: '제주')],
@@ -37,31 +38,20 @@ final _demoNoteMemo = MemoModel(
   updatedAt: _demoNow,
 );
 
+// 데모 체크리스트 Delta JSON (우유 2개✓, 달걀 한 판✓, 두부, 사과 1kg)
+const _demoChecklistDelta =
+    '[{"insert":"우유 2개\\n","attributes":{"list":"checked"}},'
+    '{"insert":"달걀 한 판\\n","attributes":{"list":"checked"}},'
+    '{"insert":"두부\\n","attributes":{"list":"unchecked"}},'
+    '{"insert":"사과 1kg\\n","attributes":{"list":"unchecked"}}]';
+
 final _demoChecklistMemo = MemoModel(
   id: '__demo_checklist__',
   title: '장보기 목록',
-  content: '',
-  type: MemoType.checklist,
+  content: _demoChecklistDelta,
+  format: MemoFormat.delta,
   visibility: MemoVisibility.private_,
   user: const MemoAuthor(id: '__demo_user__', name: '나'),
-  checklistItems: [
-    ChecklistItem(
-      id: '__ci1__', content: '우유 2개', isChecked: true, order: 0,
-      createdAt: _demoNow, updatedAt: _demoNow,
-    ),
-    ChecklistItem(
-      id: '__ci2__', content: '달걀 한 판', isChecked: true, order: 1,
-      createdAt: _demoNow, updatedAt: _demoNow,
-    ),
-    ChecklistItem(
-      id: '__ci3__', content: '두부', isChecked: false, order: 2,
-      createdAt: _demoNow, updatedAt: _demoNow,
-    ),
-    ChecklistItem(
-      id: '__ci4__', content: '사과 1kg', isChecked: false, order: 3,
-      createdAt: _demoNow, updatedAt: _demoNow,
-    ),
-  ],
   createdAt: _demoNow,
   updatedAt: _demoNow,
 );
@@ -463,7 +453,7 @@ class _DemoChecklistDetailScreen extends StatefulWidget {
 
 class _DemoChecklistDetailScreenState
     extends State<_DemoChecklistDetailScreen> {
-  late List<ChecklistItem> _items;
+  late QuillController _quillController;
   final _checkItemKey = GlobalKey();
   final _progressKey = GlobalKey();
   final _addRowKey = GlobalKey();
@@ -471,8 +461,19 @@ class _DemoChecklistDetailScreenState
   @override
   void initState() {
     super.initState();
-    _items = List.of(widget.memo.checklistItems);
+    final doc = MemoEditorConverter.toDocument(widget.memo.content);
+    _quillController = QuillController(
+      document: doc,
+      selection: const TextSelection.collapsed(offset: 0),
+      readOnly: true,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
+
+  @override
+  void dispose() {
+    _quillController.dispose();
+    super.dispose();
   }
 
   Future<void> _showCoachMark() async {
@@ -562,19 +563,10 @@ class _DemoChecklistDetailScreenState
         ),
       );
 
-  void _toggle(String id) {
-    setState(() {
-      _items = _items.map((item) {
-        if (item.id == id) return item.copyWith(isChecked: !item.isChecked);
-        return item;
-      }).toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final checked = _items.where((i) => i.isChecked).length;
-    final total = _items.length;
+    final (checked, total) =
+        (widget.memo.checklistMeta.checked, widget.memo.checklistMeta.total);
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.memo.title)),
@@ -584,7 +576,6 @@ class _DemoChecklistDetailScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 제목
               Text(
                 widget.memo.title,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -608,61 +599,38 @@ class _DemoChecklistDetailScreenState
                           color: AppColors.textSecondary,
                         ),
                   ),
-                  const Spacer(),
-                  TextButton.icon(
-                    onPressed: () => setState(() {
-                      _items = _items.map((i) => i.copyWith(isChecked: true)).toList();
-                    }),
-                    icon: const Icon(Icons.check_box, size: AppSizes.iconSmall),
-                    label: const Text('전체 선택'),
-                    style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
-                  ),
                 ],
               ),
               const SizedBox(height: AppSizes.spaceS),
 
-              // 체크리스트 항목
-              ..._items.asMap().entries.map((entry) {
-                final index = entry.key;
-                final item = entry.value;
-                final isFirst = index == 0;
-                return Padding(
-                  key: isFirst ? _checkItemKey : null,
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: item.isChecked,
-                        onChanged: (_) => _toggle(item.id),
-                      ),
-                      Expanded(
-                        child: Text(
-                          item.content,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                decoration: item.isChecked
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                                color: item.isChecked
-                                    ? AppColors.textSecondary
-                                    : null,
-                              ),
-                        ),
-                      ),
-                    ],
+              // Quill 읽기 전용 뷰어 (데모용 — 탭 인터랙션 없음)
+              Container(
+                key: _checkItemKey,
+                child: QuillEditor(
+                  controller: _quillController,
+                  focusNode: FocusNode(),
+                  scrollController: ScrollController(),
+                  config: const QuillEditorConfig(
+                    autoFocus: false,
+                    expands: false,
+                    scrollable: false,
+                    padding: EdgeInsets.zero,
+                    showCursor: false,
+                    checkBoxReadOnly: true,
                   ),
-                );
-              }),
+                ),
+              ),
 
               const SizedBox(height: AppSizes.spaceM),
 
-              // 항목 추가 행 (비활성)
+              // 항목 추가 행 (비활성 — 데모)
               Row(
                 key: _addRowKey,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: TextField(
                       enabled: false,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: '항목 입력',
                         border: OutlineInputBorder(),
                         isDense: true,

@@ -6003,13 +6003,13 @@ abstract class AppLocalizations {
   /// 추이 차트 - 누적 수익률 탭
   ///
   /// In ko, this message translates to:
-  /// **'누적 수익률'**
+  /// **'수익률'**
   String get asset_trend_profit_rate;
 
   /// 추이 차트 - 기간별 수익률 탭 (전월/전년 대비)
   ///
   /// In ko, this message translates to:
-  /// **'기간 수익률'**
+  /// **'기간별'**
   String get asset_trend_period_return;
 
   /// 추이 데이터 없음

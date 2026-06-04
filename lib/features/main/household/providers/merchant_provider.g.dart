@@ -6,9 +6,10 @@ part of 'merchant_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$merchantsHash() => r'1f9eaeee9d44de68d15ec4f589470ae17f446477';
+String _$merchantsHash() => r'25269e3ca81ea7556ed08362b808b1da7f53c7ef';
 
 /// 소비처 목록 Provider
+/// keepAlive는 MerchantsScreen이 마운트될 때 활성화되고 dispose 시 해제됩니다.
 ///
 /// Copied from [Merchants].
 @ProviderFor(Merchants)

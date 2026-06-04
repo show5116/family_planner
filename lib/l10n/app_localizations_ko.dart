@@ -3046,10 +3046,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get asset_trend_balance => '잔액';
 
   @override
-  String get asset_trend_profit_rate => '누적 수익률';
+  String get asset_trend_profit_rate => '수익률';
 
   @override
-  String get asset_trend_period_return => '기간 수익률';
+  String get asset_trend_period_return => '기간별';
 
   @override
   String get asset_trend_no_data => '표시할 데이터가 없습니다';

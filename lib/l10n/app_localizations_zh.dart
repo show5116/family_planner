@@ -3024,10 +3024,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get asset_trend_balance => '余额';
 
   @override
-  String get asset_trend_profit_rate => '累计收益率';
+  String get asset_trend_profit_rate => '收益率';
 
   @override
-  String get asset_trend_period_return => '阶段收益';
+  String get asset_trend_period_return => '阶段%';
 
   @override
   String get asset_trend_no_data => '暂无数据';

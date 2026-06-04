@@ -3105,10 +3105,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get asset_trend_balance => 'Balance';
 
   @override
-  String get asset_trend_profit_rate => 'Cumulative Return';
+  String get asset_trend_profit_rate => 'Return';
 
   @override
-  String get asset_trend_period_return => 'Period Return';
+  String get asset_trend_period_return => 'Period%';
 
   @override
   String get asset_trend_no_data => 'No data available';

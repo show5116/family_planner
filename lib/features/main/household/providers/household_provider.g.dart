@@ -7,7 +7,7 @@ part of 'household_provider.dart';
 // **************************************************************************
 
 String _$householdMonthlyStatisticsHash() =>
-    r'38d304031590a264517371d6ad26a8ad5f85c415';
+    r'7fa7509c711da17e4479a1c01180be627de3d7b4';
 
 /// 월간 통계 Provider
 ///
@@ -29,7 +29,7 @@ final householdMonthlyStatisticsProvider =
 typedef HouseholdMonthlyStatisticsRef =
     AutoDisposeFutureProviderRef<MonthlyStatisticsModel>;
 String _$householdMonthlyStatisticsByMonthHash() =>
-    r'6bd96dc44e6861072eb5549a3bcacf5c9a5a0fe8';
+    r'62c4e8e045f5c59483635094e97d57434d42cbe8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -52,24 +52,24 @@ class _SystemHash {
   }
 }
 
-/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+/// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 ///
 /// Copied from [householdMonthlyStatisticsByMonth].
 @ProviderFor(householdMonthlyStatisticsByMonth)
 const householdMonthlyStatisticsByMonthProvider =
     HouseholdMonthlyStatisticsByMonthFamily();
 
-/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+/// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 ///
 /// Copied from [householdMonthlyStatisticsByMonth].
 class HouseholdMonthlyStatisticsByMonthFamily
     extends Family<AsyncValue<MonthlyStatisticsModel>> {
-  /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+  /// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
   ///
   /// Copied from [householdMonthlyStatisticsByMonth].
   const HouseholdMonthlyStatisticsByMonthFamily();
 
-  /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+  /// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
   ///
   /// Copied from [householdMonthlyStatisticsByMonth].
   HouseholdMonthlyStatisticsByMonthProvider call(String month) {
@@ -98,12 +98,12 @@ class HouseholdMonthlyStatisticsByMonthFamily
   String? get name => r'householdMonthlyStatisticsByMonthProvider';
 }
 
-/// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+/// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 ///
 /// Copied from [householdMonthlyStatisticsByMonth].
 class HouseholdMonthlyStatisticsByMonthProvider
     extends AutoDisposeFutureProvider<MonthlyStatisticsModel> {
-  /// 특정 월 통계 Provider (통계 화면 전용 - 독립 월 파라미터)
+  /// 특정 월 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
   ///
   /// Copied from [householdMonthlyStatisticsByMonth].
   HouseholdMonthlyStatisticsByMonthProvider(String month)
@@ -195,25 +195,25 @@ class _HouseholdMonthlyStatisticsByMonthProviderElement
 }
 
 String _$householdYearlyStatisticsHash() =>
-    r'e73f42783aa6f8534930e7be1e6277c0b66e0b3e';
+    r'4a63eb3f359c036b8b25dafb6a32dc4d29e13ab6';
 
-/// 연간 통계 Provider
+/// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 ///
 /// Copied from [householdYearlyStatistics].
 @ProviderFor(householdYearlyStatistics)
 const householdYearlyStatisticsProvider = HouseholdYearlyStatisticsFamily();
 
-/// 연간 통계 Provider
+/// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 ///
 /// Copied from [householdYearlyStatistics].
 class HouseholdYearlyStatisticsFamily
     extends Family<AsyncValue<YearlyStatisticsModel>> {
-  /// 연간 통계 Provider
+  /// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
   ///
   /// Copied from [householdYearlyStatistics].
   const HouseholdYearlyStatisticsFamily();
 
-  /// 연간 통계 Provider
+  /// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
   ///
   /// Copied from [householdYearlyStatistics].
   HouseholdYearlyStatisticsProvider call(String year) {
@@ -242,12 +242,12 @@ class HouseholdYearlyStatisticsFamily
   String? get name => r'householdYearlyStatisticsProvider';
 }
 
-/// 연간 통계 Provider
+/// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
 ///
 /// Copied from [householdYearlyStatistics].
 class HouseholdYearlyStatisticsProvider
     extends AutoDisposeFutureProvider<YearlyStatisticsModel> {
-  /// 연간 통계 Provider
+  /// 연간 통계 Provider (통계 화면 전용 - 환불/이월 항상 제외)
   ///
   /// Copied from [householdYearlyStatistics].
   HouseholdYearlyStatisticsProvider(String year)

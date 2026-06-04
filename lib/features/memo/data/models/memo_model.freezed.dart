@@ -15,261 +15,6 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-/// @nodoc
-mixin _$ChecklistItem {
-  String get id => throw _privateConstructorUsedError;
-  String get content => throw _privateConstructorUsedError;
-  bool get isChecked => throw _privateConstructorUsedError;
-  int get order => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
-
-  /// Create a copy of ChecklistItem
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ChecklistItemCopyWith<ChecklistItem> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ChecklistItemCopyWith<$Res> {
-  factory $ChecklistItemCopyWith(
-    ChecklistItem value,
-    $Res Function(ChecklistItem) then,
-  ) = _$ChecklistItemCopyWithImpl<$Res, ChecklistItem>;
-  @useResult
-  $Res call({
-    String id,
-    String content,
-    bool isChecked,
-    int order,
-    DateTime createdAt,
-    DateTime updatedAt,
-  });
-}
-
-/// @nodoc
-class _$ChecklistItemCopyWithImpl<$Res, $Val extends ChecklistItem>
-    implements $ChecklistItemCopyWith<$Res> {
-  _$ChecklistItemCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ChecklistItem
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? content = null,
-    Object? isChecked = null,
-    Object? order = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            content: null == content
-                ? _value.content
-                : content // ignore: cast_nullable_to_non_nullable
-                      as String,
-            isChecked: null == isChecked
-                ? _value.isChecked
-                : isChecked // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            order: null == order
-                ? _value.order
-                : order // ignore: cast_nullable_to_non_nullable
-                      as int,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            updatedAt: null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-          )
-          as $Val,
-    );
-  }
-}
-
-/// @nodoc
-abstract class _$$ChecklistItemImplCopyWith<$Res>
-    implements $ChecklistItemCopyWith<$Res> {
-  factory _$$ChecklistItemImplCopyWith(
-    _$ChecklistItemImpl value,
-    $Res Function(_$ChecklistItemImpl) then,
-  ) = __$$ChecklistItemImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String id,
-    String content,
-    bool isChecked,
-    int order,
-    DateTime createdAt,
-    DateTime updatedAt,
-  });
-}
-
-/// @nodoc
-class __$$ChecklistItemImplCopyWithImpl<$Res>
-    extends _$ChecklistItemCopyWithImpl<$Res, _$ChecklistItemImpl>
-    implements _$$ChecklistItemImplCopyWith<$Res> {
-  __$$ChecklistItemImplCopyWithImpl(
-    _$ChecklistItemImpl _value,
-    $Res Function(_$ChecklistItemImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of ChecklistItem
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? content = null,
-    Object? isChecked = null,
-    Object? order = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-  }) {
-    return _then(
-      _$ChecklistItemImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        content: null == content
-            ? _value.content
-            : content // ignore: cast_nullable_to_non_nullable
-                  as String,
-        isChecked: null == isChecked
-            ? _value.isChecked
-            : isChecked // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        order: null == order
-            ? _value.order
-            : order // ignore: cast_nullable_to_non_nullable
-                  as int,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        updatedAt: null == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-      ),
-    );
-  }
-}
-
-/// @nodoc
-
-class _$ChecklistItemImpl implements _ChecklistItem {
-  const _$ChecklistItemImpl({
-    required this.id,
-    required this.content,
-    required this.isChecked,
-    required this.order,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  @override
-  final String id;
-  @override
-  final String content;
-  @override
-  final bool isChecked;
-  @override
-  final int order;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime updatedAt;
-
-  @override
-  String toString() {
-    return 'ChecklistItem(id: $id, content: $content, isChecked: $isChecked, order: $order, createdAt: $createdAt, updatedAt: $updatedAt)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ChecklistItemImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.content, content) || other.content == content) &&
-            (identical(other.isChecked, isChecked) ||
-                other.isChecked == isChecked) &&
-            (identical(other.order, order) || other.order == order) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    content,
-    isChecked,
-    order,
-    createdAt,
-    updatedAt,
-  );
-
-  /// Create a copy of ChecklistItem
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ChecklistItemImplCopyWith<_$ChecklistItemImpl> get copyWith =>
-      __$$ChecklistItemImplCopyWithImpl<_$ChecklistItemImpl>(this, _$identity);
-}
-
-abstract class _ChecklistItem implements ChecklistItem {
-  const factory _ChecklistItem({
-    required final String id,
-    required final String content,
-    required final bool isChecked,
-    required final int order,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
-  }) = _$ChecklistItemImpl;
-
-  @override
-  String get id;
-  @override
-  String get content;
-  @override
-  bool get isChecked;
-  @override
-  int get order;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime get updatedAt;
-
-  /// Create a copy of ChecklistItem
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ChecklistItemImplCopyWith<_$ChecklistItemImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
 MemoAuthor _$MemoAuthorFromJson(Map<String, dynamic> json) {
   return _MemoAuthor.fromJson(json);
 }
@@ -881,14 +626,13 @@ mixin _$MemoModel {
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   MemoFormat? get format => throw _privateConstructorUsedError;
-  MemoType? get type => throw _privateConstructorUsedError;
   MemoVisibility? get visibility => throw _privateConstructorUsedError;
   bool get isPinned => throw _privateConstructorUsedError;
   String? get groupId => throw _privateConstructorUsedError;
   MemoAuthor get user => throw _privateConstructorUsedError;
   List<MemoTag> get tags => throw _privateConstructorUsedError;
   List<MemoAttachment> get attachments => throw _privateConstructorUsedError;
-  List<ChecklistItem> get checklistItems => throw _privateConstructorUsedError;
+  ChecklistMeta get checklistMeta => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
@@ -909,14 +653,13 @@ abstract class $MemoModelCopyWith<$Res> {
     String title,
     String content,
     MemoFormat? format,
-    MemoType? type,
     MemoVisibility? visibility,
     bool isPinned,
     String? groupId,
     MemoAuthor user,
     List<MemoTag> tags,
     List<MemoAttachment> attachments,
-    List<ChecklistItem> checklistItems,
+    ChecklistMeta checklistMeta,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -943,14 +686,13 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
     Object? title = null,
     Object? content = null,
     Object? format = freezed,
-    Object? type = freezed,
     Object? visibility = freezed,
     Object? isPinned = null,
     Object? groupId = freezed,
     Object? user = null,
     Object? tags = null,
     Object? attachments = null,
-    Object? checklistItems = null,
+    Object? checklistMeta = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -972,10 +714,6 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
                 ? _value.format
                 : format // ignore: cast_nullable_to_non_nullable
                       as MemoFormat?,
-            type: freezed == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as MemoType?,
             visibility: freezed == visibility
                 ? _value.visibility
                 : visibility // ignore: cast_nullable_to_non_nullable
@@ -1000,10 +738,10 @@ class _$MemoModelCopyWithImpl<$Res, $Val extends MemoModel>
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
                       as List<MemoAttachment>,
-            checklistItems: null == checklistItems
-                ? _value.checklistItems
-                : checklistItems // ignore: cast_nullable_to_non_nullable
-                      as List<ChecklistItem>,
+            checklistMeta: null == checklistMeta
+                ? _value.checklistMeta
+                : checklistMeta // ignore: cast_nullable_to_non_nullable
+                      as ChecklistMeta,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -1042,14 +780,13 @@ abstract class _$$MemoModelImplCopyWith<$Res>
     String title,
     String content,
     MemoFormat? format,
-    MemoType? type,
     MemoVisibility? visibility,
     bool isPinned,
     String? groupId,
     MemoAuthor user,
     List<MemoTag> tags,
     List<MemoAttachment> attachments,
-    List<ChecklistItem> checklistItems,
+    ChecklistMeta checklistMeta,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -1076,14 +813,13 @@ class __$$MemoModelImplCopyWithImpl<$Res>
     Object? title = null,
     Object? content = null,
     Object? format = freezed,
-    Object? type = freezed,
     Object? visibility = freezed,
     Object? isPinned = null,
     Object? groupId = freezed,
     Object? user = null,
     Object? tags = null,
     Object? attachments = null,
-    Object? checklistItems = null,
+    Object? checklistMeta = null,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -1105,10 +841,6 @@ class __$$MemoModelImplCopyWithImpl<$Res>
             ? _value.format
             : format // ignore: cast_nullable_to_non_nullable
                   as MemoFormat?,
-        type: freezed == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as MemoType?,
         visibility: freezed == visibility
             ? _value.visibility
             : visibility // ignore: cast_nullable_to_non_nullable
@@ -1133,10 +865,10 @@ class __$$MemoModelImplCopyWithImpl<$Res>
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
                   as List<MemoAttachment>,
-        checklistItems: null == checklistItems
-            ? _value._checklistItems
-            : checklistItems // ignore: cast_nullable_to_non_nullable
-                  as List<ChecklistItem>,
+        checklistMeta: null == checklistMeta
+            ? _value.checklistMeta
+            : checklistMeta // ignore: cast_nullable_to_non_nullable
+                  as ChecklistMeta,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -1158,19 +890,17 @@ class _$MemoModelImpl implements _MemoModel {
     required this.title,
     this.content = '',
     this.format,
-    this.type,
     this.visibility,
     this.isPinned = false,
     this.groupId,
     required this.user,
     final List<MemoTag> tags = const [],
     final List<MemoAttachment> attachments = const [],
-    final List<ChecklistItem> checklistItems = const [],
+    this.checklistMeta = const ChecklistMeta(),
     required this.createdAt,
     required this.updatedAt,
   }) : _tags = tags,
-       _attachments = attachments,
-       _checklistItems = checklistItems;
+       _attachments = attachments;
 
   @override
   final String id;
@@ -1181,8 +911,6 @@ class _$MemoModelImpl implements _MemoModel {
   final String content;
   @override
   final MemoFormat? format;
-  @override
-  final MemoType? type;
   @override
   final MemoVisibility? visibility;
   @override
@@ -1210,15 +938,9 @@ class _$MemoModelImpl implements _MemoModel {
     return EqualUnmodifiableListView(_attachments);
   }
 
-  final List<ChecklistItem> _checklistItems;
   @override
   @JsonKey()
-  List<ChecklistItem> get checklistItems {
-    if (_checklistItems is EqualUnmodifiableListView) return _checklistItems;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_checklistItems);
-  }
-
+  final ChecklistMeta checklistMeta;
   @override
   final DateTime createdAt;
   @override
@@ -1226,7 +948,7 @@ class _$MemoModelImpl implements _MemoModel {
 
   @override
   String toString() {
-    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, type: $type, visibility: $visibility, isPinned: $isPinned, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistItems: $checklistItems, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MemoModel(id: $id, title: $title, content: $content, format: $format, visibility: $visibility, isPinned: $isPinned, groupId: $groupId, user: $user, tags: $tags, attachments: $attachments, checklistMeta: $checklistMeta, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1238,7 +960,6 @@ class _$MemoModelImpl implements _MemoModel {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.format, format) || other.format == format) &&
-            (identical(other.type, type) || other.type == type) &&
             (identical(other.visibility, visibility) ||
                 other.visibility == visibility) &&
             (identical(other.isPinned, isPinned) ||
@@ -1250,10 +971,8 @@ class _$MemoModelImpl implements _MemoModel {
               other._attachments,
               _attachments,
             ) &&
-            const DeepCollectionEquality().equals(
-              other._checklistItems,
-              _checklistItems,
-            ) &&
+            (identical(other.checklistMeta, checklistMeta) ||
+                other.checklistMeta == checklistMeta) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -1267,14 +986,13 @@ class _$MemoModelImpl implements _MemoModel {
     title,
     content,
     format,
-    type,
     visibility,
     isPinned,
     groupId,
     user,
     const DeepCollectionEquality().hash(_tags),
     const DeepCollectionEquality().hash(_attachments),
-    const DeepCollectionEquality().hash(_checklistItems),
+    checklistMeta,
     createdAt,
     updatedAt,
   );
@@ -1294,14 +1012,13 @@ abstract class _MemoModel implements MemoModel {
     required final String title,
     final String content,
     final MemoFormat? format,
-    final MemoType? type,
     final MemoVisibility? visibility,
     final bool isPinned,
     final String? groupId,
     required final MemoAuthor user,
     final List<MemoTag> tags,
     final List<MemoAttachment> attachments,
-    final List<ChecklistItem> checklistItems,
+    final ChecklistMeta checklistMeta,
     required final DateTime createdAt,
     required final DateTime updatedAt,
   }) = _$MemoModelImpl;
@@ -1315,8 +1032,6 @@ abstract class _MemoModel implements MemoModel {
   @override
   MemoFormat? get format;
   @override
-  MemoType? get type;
-  @override
   MemoVisibility? get visibility;
   @override
   bool get isPinned;
@@ -1329,7 +1044,7 @@ abstract class _MemoModel implements MemoModel {
   @override
   List<MemoAttachment> get attachments;
   @override
-  List<ChecklistItem> get checklistItems;
+  ChecklistMeta get checklistMeta;
   @override
   DateTime get createdAt;
   @override

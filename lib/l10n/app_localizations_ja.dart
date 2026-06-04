@@ -3041,10 +3041,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get asset_trend_balance => '残高';
 
   @override
-  String get asset_trend_profit_rate => '累積利回り';
+  String get asset_trend_profit_rate => '利回り';
 
   @override
-  String get asset_trend_period_return => '期間収益率';
+  String get asset_trend_period_return => '期間別';
 
   @override
   String get asset_trend_no_data => '表示するデータがありません';

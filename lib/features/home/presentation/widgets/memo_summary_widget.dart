@@ -8,6 +8,7 @@ import 'package:family_planner/core/providers/dashboard_widget_settings_provider
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
+import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -256,31 +257,11 @@ class _MemoItem extends StatelessWidget {
 
   final MemoModel memo;
 
-  String _stripMarkdown(String text) {
-    return text
-        .replaceAll(RegExp(r'<[^>]*>'), '')
-        .replaceAll(RegExp(r'^#+\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'\*\*([^*]+)\*\*'), r'$1')
-        .replaceAll(RegExp(r'__([^_]+)__'), r'$1')
-        .replaceAll(RegExp(r'\*([^*]+)\*'), r'$1')
-        .replaceAll(RegExp(r'_([^_]+)_'), r'$1')
-        .replaceAll(RegExp(r'\[([^\]]+)\]\([^)]+\)'), r'$1')
-        .replaceAll(RegExp(r'```[^`]*```'), '')
-        .replaceAll(RegExp(r'`([^`]+)`'), r'$1')
-        .replaceAll(RegExp(r'^[\-\*\+]\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'^\d+\.\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'^>\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'^[\-\*]{3,}$', multiLine: true), '')
-        .replaceAll(RegExp(r'\n+'), ' ')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isChecklist = memo.type == MemoType.checklist;
-    final checkedCount = memo.checklistItems.where((i) => i.isChecked).length;
-    final totalCount = memo.checklistItems.length;
+    final checkedCount = memo.checklistMeta.checked;
+    final totalCount = memo.checklistMeta.total;
+    final isChecklist = totalCount > 0;
     final dateText = DateFormat('MM.dd').format(memo.updatedAt);
 
     return InkWell(
@@ -292,7 +273,7 @@ class _MemoItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
-              isChecklist ? Icons.checklist : Icons.note_outlined,
+              isChecklist ? Icons.checklist_outlined : Icons.note_outlined,
               size: AppSizes.iconSmall,
               color: AppColors.textSecondary,
             ),
@@ -319,7 +300,7 @@ class _MemoItem extends StatelessWidget {
                     )
                   else if (memo.content.isNotEmpty)
                     Text(
-                      _stripMarkdown(memo.content),
+                      MemoEditorConverter.plainTextPreview(memo.content),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.textSecondary,
                           ),

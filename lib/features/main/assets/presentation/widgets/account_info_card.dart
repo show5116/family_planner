@@ -49,14 +49,29 @@ class AccountInfoCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSizes.spaceS),
-          if (account.latestBalance != null)
-            Text(
-              '₩${formatAssetAmount(account.latestBalance!)}',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
+          if (account.latestBalance != null) ...[
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '₩${formatAssetAmount(account.latestBalance!)}',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+              ),
             ),
+            if (formatAssetAmountKorean(account.latestBalance!) != null)
+              Text(
+                formatAssetAmountKorean(account.latestBalance!)!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimaryContainer
+                          .withValues(alpha: 0.7),
+                    ),
+              ),
+          ],
           if (account.profitRate != null)
             Row(
               children: [

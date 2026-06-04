@@ -3,46 +3,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'memo_model.freezed.dart';
 part 'memo_model.g.dart';
 
-/// 메모 형식
+/// 메모 저장 포맷
 enum MemoFormat {
   @JsonValue('TEXT')
   text,
   @JsonValue('MARKDOWN')
   markdown,
   @JsonValue('HTML')
-  html;
-}
-
-/// 메모 타입
-enum MemoType {
-  @JsonValue('NOTE')
-  note,
-  @JsonValue('CHECKLIST')
-  checklist;
-}
-
-/// 체크리스트 항목 모델
-@freezed
-class ChecklistItem with _$ChecklistItem {
-  const factory ChecklistItem({
-    required String id,
-    required String content,
-    required bool isChecked,
-    required int order,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) = _ChecklistItem;
-
-  factory ChecklistItem.fromJson(Map<String, dynamic> json) {
-    return ChecklistItem(
-      id: json['id'] as String,
-      content: json['content'] as String,
-      isChecked: json['isChecked'] as bool,
-      order: json['order'] as int,
-      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
-      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
-    );
-  }
+  html,
+  @JsonValue('DELTA')
+  delta;
 }
 
 /// 메모 공개 범위
@@ -102,7 +72,26 @@ class MemoAttachment with _$MemoAttachment {
   }
 }
 
+/// 체크리스트 집계 (백엔드가 계산해서 내려줌)
+class ChecklistMeta {
+  final int total;
+  final int checked;
+
+  const ChecklistMeta({this.total = 0, this.checked = 0});
+
+  factory ChecklistMeta.fromJson(Map<String, dynamic> json) {
+    return ChecklistMeta(
+      total: json['total'] as int? ?? 0,
+      checked: json['checked'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {'total': total, 'checked': checked};
+}
+
 /// 메모 모델
+///
+/// content는 format=DELTA일 때 Quill Delta JSON 문자열입니다.
 @freezed
 class MemoModel with _$MemoModel {
   const factory MemoModel({
@@ -110,14 +99,13 @@ class MemoModel with _$MemoModel {
     required String title,
     @Default('') String content,
     MemoFormat? format,
-    MemoType? type,
     MemoVisibility? visibility,
     @Default(false) bool isPinned,
     String? groupId,
     required MemoAuthor user,
     @Default([]) List<MemoTag> tags,
     @Default([]) List<MemoAttachment> attachments,
-    @Default([]) List<ChecklistItem> checklistItems,
+    @Default(ChecklistMeta()) ChecklistMeta checklistMeta,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _MemoModel;
@@ -128,14 +116,7 @@ class MemoModel with _$MemoModel {
         case 'TEXT': return MemoFormat.text;
         case 'MARKDOWN': return MemoFormat.markdown;
         case 'HTML': return MemoFormat.html;
-        default: return null;
-      }
-    }
-
-    MemoType? parseType(dynamic v) {
-      switch (v as String?) {
-        case 'NOTE': return MemoType.note;
-        case 'CHECKLIST': return MemoType.checklist;
+        case 'DELTA': return MemoFormat.delta;
         default: return null;
       }
     }
@@ -153,7 +134,6 @@ class MemoModel with _$MemoModel {
       title: json['title'] as String,
       content: json['content'] as String? ?? '',
       format: parseFormat(json['format']),
-      type: parseType(json['type']),
       visibility: parseVisibility(json['visibility']),
       isPinned: json['isPinned'] as bool? ?? false,
       groupId: json['groupId'] as String?,
@@ -164,9 +144,10 @@ class MemoModel with _$MemoModel {
       attachments: (json['attachments'] as List<dynamic>? ?? [])
           .map((e) => MemoAttachment.fromJson(e as Map<String, dynamic>))
           .toList(),
-      checklistItems: (json['checklistItems'] as List<dynamic>? ?? [])
-          .map((e) => ChecklistItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      checklistMeta: json['checklistMeta'] != null
+          ? ChecklistMeta.fromJson(
+              json['checklistMeta'] as Map<String, dynamic>)
+          : const ChecklistMeta(),
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );

@@ -147,6 +147,8 @@ class FeatureCoachMark {
     required String description,
     IconData? icon,
     Color color = AppColors.primary,
+    String? buttonLabel,
+    VoidCallback? onButton,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -188,6 +190,30 @@ class FeatureCoachMark {
               height: 1.5,
             ),
           ),
+          if (buttonLabel != null && onButton != null) ...[
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: onButton,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    buttonLabel,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,9 +9,8 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
-import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
-import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
+import 'package:family_planner/features/main/assets/presentation/widgets/withdrawal_list_item.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/account_info_card.dart';
 import 'package:family_planner/features/main/assets/presentation/widgets/add_asset_record_sheet.dart';
@@ -105,6 +105,8 @@ class AccountDetailScreen extends ConsumerStatefulWidget {
 class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   final _infoCardKey = GlobalKey();
   final _addRecordKey = GlobalKey();
+  final _portfolioKey = GlobalKey();
+  final _demoScrollController = ScrollController();
   static const _recordsInitialCount = 5;
   bool _recordsExpanded = false;
 
@@ -114,6 +116,12 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     if (widget.isDemo) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _showDemoCoachMark());
     }
+  }
+
+  @override
+  void dispose() {
+    _demoScrollController.dispose();
+    super.dispose();
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {
@@ -126,6 +134,19 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   }
 
   Future<void> _showDemoCoachMark() async {
+    if (!mounted) return;
+    // 포트폴리오 좌표는 스크롤 후에 잡아야 정확함 — 먼저 끝까지 스크롤
+    await _demoScrollController.animateTo(
+      _demoScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (!mounted) return;
+    // 포트폴리오 좌표 계산 후 다시 맨 위로
+    final portfolioPos = _keyToPosition(_portfolioKey);
+    _demoScrollController.jumpTo(0);
+    await Future.delayed(const Duration(milliseconds: 50));
     if (!mounted) return;
     final infoPos = _keyToPosition(_infoCardKey);
     final recordPos = _keyToPosition(_addRecordKey);
@@ -141,7 +162,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '계좌 상세 정보',
-              description: '최신 잔액, 수익률, 금융기관 정보를\n한눈에 확인할 수 있어요.',
+              description: '최신 잔액과 수익률을 확인하고,\n아래로 스크롤하면 자산 변화 차트와\n원금·수익금 통계를 볼 수 있어요.',
               icon: Icons.account_balance_outlined,
               color: AppColors.primary,
             ),
@@ -158,10 +179,28 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '잔액 기록',
-              description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.',
+              title: '잔액 기록 추가',
+              description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.\n출금 기록도 함께 관리할 수 있습니다.',
               icon: Icons.add_chart,
               color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'asset_portfolio',
+        targetPosition: portfolioPos,
+        keyTarget: portfolioPos == null ? _portfolioKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '포트폴리오',
+              description: '날짜별로 보유 종목과 금액을 기록해\n자산 구성을 파이차트로 확인하세요.\n두 날짜를 비교해 변화도 볼 수 있어요.',
+              icon: Icons.pie_chart_outline,
+              color: Colors.deepPurple,
             ),
           ),
         ],
@@ -169,6 +208,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     ];
     await FeatureCoachMark.waitForTargets(targets, context);
     if (!mounted) return;
+
     TutorialCoachMark(
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
@@ -187,6 +227,17 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
+      beforeFocus: (target) async {
+        if (target.identify == 'asset_portfolio') {
+          await _demoScrollController.animateTo(
+            _demoScrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOut,
+          );
+        } else {
+          _demoScrollController.jumpTo(0);
+        }
+      },
       onFinish: _completeDemoOnboarding,
       onSkip: () {
         _completeDemoOnboarding();
@@ -213,6 +264,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
       return Scaffold(
         appBar: AppBar(title: Text(account.name)),
         body: CustomScrollView(
+          controller: _demoScrollController,
           slivers: [
             SliverToBoxAdapter(
               child: AccountInfoCard(key: _infoCardKey, account: account),
@@ -249,6 +301,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 ),
                 childCount: _demoRecords.length,
               ),
+            ),
+            SliverToBoxAdapter(
+              child: _DemoPortfolioSection(portfolioKey: _portfolioKey),
             ),
             SliverToBoxAdapter(
               child: SizedBox(height: 80 + MediaQuery.of(context).padding.bottom),
@@ -384,7 +439,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                     if (index < visibleRecords.length) {
                       final item = visibleRecords[index];
                       return item.isWithdrawal
-                          ? _WithdrawalListItem(record: item, accountId: account.id)
+                          ? WithdrawalListItem(record: item, accountId: account.id)
                           : AssetRecordListItem(record: item);
                     }
                     // 더보기 / 접기 버튼
@@ -464,154 +519,6 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   }
 }
 
-// ─── 출금 기록 목록 아이템 (AssetRecordModel.entryType == withdrawal) ──────────
-class _WithdrawalListItem extends ConsumerWidget {
-  final AssetRecordModel record;
-  final String accountId;
-
-  const _WithdrawalListItem({required this.record, required this.accountId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dateStr =
-        '${record.date.year}.${record.date.month.toString().padLeft(2, '0')}.${record.date.day.toString().padLeft(2, '0')}';
-    final typeColor = record.withdrawalType == WithdrawalType.profit
-        ? Colors.orange.shade700
-        : Theme.of(context).colorScheme.primary;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM, vertical: AppSizes.spaceXS),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 상단 행: 날짜+뱃지(좌) / 출금금액+잔액+삭제(우)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      dateStr,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                    ),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: typeColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        withdrawalTypeLabel(record.withdrawalType),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: typeColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        // 출금 금액 — 작은 사이즈로 위에
-                        Text(
-                          '-₩${formatAssetAmount(record.amount ?? 0)}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                        ),
-                        // 잔액 — 자산 기록의 balance와 동일한 위치/스타일
-                        if (record.balanceAfter != null)
-                          Text(
-                            '₩${formatAssetAmount(record.balanceAfter!)}',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: AppSizes.spaceXS),
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline, size: 18),
-                      color: Theme.of(context).colorScheme.error,
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      onPressed: () => _confirmDelete(context, ref),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // 하단: 원금/수익 칩 + 메모
-            if (record.principalAfter != null || record.profitAfter != null) ...[
-              const SizedBox(height: AppSizes.spaceXS),
-              Row(
-                children: [
-                  if (record.principalAfter != null)
-                    AssetAmountChip(
-                      label: '원금',
-                      amount: record.principalAfter!,
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      textColor: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
-                  if (record.principalAfter != null && record.profitAfter != null)
-                    const SizedBox(width: AppSizes.spaceS),
-                  if (record.profitAfter != null)
-                    AssetAmountChip(
-                      label: '수익금',
-                      amount: record.profitAfter!,
-                      color: record.profitAfter! >= 0
-                          ? Colors.green.shade100
-                          : Colors.red.shade100,
-                      textColor: record.profitAfter! >= 0
-                          ? Colors.green.shade800
-                          : Colors.red.shade800,
-                    ),
-                ],
-              ),
-            ],
-            if (record.note != null && record.note!.isNotEmpty) ...[
-              const SizedBox(height: 2),
-              Text(
-                record.note!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('출금 기록 삭제'),
-        content: const Text('삭제하면 출금일 이후 원금/수익이 원복됩니다. 계속하시겠어요?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('취소')),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('삭제', style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true && context.mounted) {
-      await ref.read(assetManagementProvider.notifier).deleteWithdrawal(accountId, record.id);
-    }
-  }
-}
 
 // ─── 기록 추가 선택 시트 ──────────────────────────────────────────────────────
 class _AddActionSheet extends StatelessWidget {
@@ -645,6 +552,98 @@ class _AddActionSheet extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─── 데모용 포트폴리오 섹션 ────────────────────────────────────────────────────
+class _DemoPortfolioSection extends StatelessWidget {
+  final GlobalKey portfolioKey;
+
+  const _DemoPortfolioSection({required this.portfolioKey});
+
+  static const _items = [
+    (label: '나스닥 ETF', ratio: 0.60, color: Color(0xFF6366F1)),
+    (label: '삼성전자', ratio: 0.25, color: Color(0xFF22C55E)),
+    (label: '현금', ratio: 0.15, color: Color(0xFFF59E0B)),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      key: portfolioKey,
+      padding: const EdgeInsets.all(AppSizes.spaceM),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '포트폴리오',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 160,
+                  child: PieChart(
+                    PieChartData(
+                      sections: _items
+                          .map((item) => PieChartSectionData(
+                                value: item.ratio * 100,
+                                color: item.color,
+                                radius: 56,
+                                showTitle: true,
+                                title: '${(item.ratio * 100).toInt()}%',
+                                titleStyle: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                titlePositionPercentageOffset: 0.6,
+                              ))
+                          .toList(),
+                      centerSpaceRadius: 36,
+                      sectionsSpace: 2,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSizes.spaceL),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _items
+                    .map((item) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: item.color,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${item.label}  ${(item.ratio * 100).toInt()}%',
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

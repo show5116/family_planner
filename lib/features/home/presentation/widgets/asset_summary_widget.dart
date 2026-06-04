@@ -10,6 +10,7 @@ import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
+import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -156,6 +157,7 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
           _AssetRow(
             label: l10n.assetWidget_totalAsset,
             value: stats.totalBalance.toCurrency(),
+            koreanValue: formatAssetAmountKorean(stats.totalBalance),
             valueStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -167,6 +169,7 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
           _AssetRow(
             label: l10n.assetWidget_totalProfit,
             value: stats.totalProfit.toCurrency(),
+            koreanValue: formatAssetAmountKorean(stats.totalProfit),
             valueColor: isProfit ? AppColors.success : AppColors.error,
           ),
           const SizedBox(height: AppSizes.spaceS),
@@ -277,6 +280,7 @@ class _AssetRow extends StatelessWidget {
   const _AssetRow({
     required this.label,
     required this.value,
+    this.koreanValue,
     this.valueStyle,
     this.valueColor,
     this.trailing,
@@ -284,6 +288,7 @@ class _AssetRow extends StatelessWidget {
 
   final String label;
   final String value;
+  final String? koreanValue;
   final TextStyle? valueStyle;
   final Color? valueColor;
   final Widget? trailing;
@@ -292,6 +297,7 @@ class _AssetRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           label,
@@ -300,14 +306,30 @@ class _AssetRow extends StatelessWidget {
               ),
         ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              value,
-              style: valueStyle ??
-                  Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: valueColor,
-                        fontWeight: FontWeight.w600,
-                      ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    value,
+                    style: valueStyle ??
+                        Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: valueColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                  ),
+                ),
+                if (koreanValue != null)
+                  Text(
+                    koreanValue!,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+              ],
             ),
             if (trailing != null) ...[
               const SizedBox(width: AppSizes.spaceS),
