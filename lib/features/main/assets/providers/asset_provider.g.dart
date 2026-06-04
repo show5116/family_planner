@@ -6,9 +6,9 @@ part of 'asset_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$assetStatisticsHash() => r'6c05ac4e76c4d992b1eed5c55f47e8e815e442af';
+String _$assetStatisticsHash() => r'4d0180f30516a872a07b975ef6c13c7331ba1ad1';
 
-/// 자산 통계 Provider
+/// 자산 통계 Provider (계좌 필터 자동 반영)
 ///
 /// Copied from [assetStatistics].
 @ProviderFor(assetStatistics)

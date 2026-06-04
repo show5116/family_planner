@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
+import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
@@ -25,26 +26,6 @@ class MemoCard extends ConsumerWidget {
     this.isDemo = false,
   });
 
-  /// HTML 태그 및 마크다운 구조 제거 (미리보기용)
-  String _stripContent(String content) {
-    return content
-        .replaceAll(RegExp(r'<[^>]*>'), '')
-        .replaceAll(RegExp(r'^#+\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'\*\*([^*]+)\*\*'), r'$1')
-        .replaceAll(RegExp(r'__([^_]+)__'), r'$1')
-        .replaceAll(RegExp(r'\*([^*]+)\*'), r'$1')
-        .replaceAll(RegExp(r'_([^_]+)_'), r'$1')
-        .replaceAll(RegExp(r'\[([^\]]+)\]\([^)]+\)'), r'$1')
-        .replaceAll(RegExp(r'```[^`]*```'), '')
-        .replaceAll(RegExp(r'`([^`]+)`'), r'$1')
-        .replaceAll(RegExp(r'^[\-\*\+]\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'^\d+\.\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'^>\s+', multiLine: true), '')
-        .replaceAll(RegExp(r'^[\-\*]{3,}$', multiLine: true), '')
-        .replaceAll(RegExp(r'\n+'), ' ')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,13 +57,29 @@ class MemoCard extends ConsumerWidget {
               const SizedBox(height: AppSizes.spaceS),
 
               // 체크리스트 진행률 또는 내용 미리보기
-              if (memo.type == MemoType.checklist) ...[
-                _buildChecklistProgress(context),
-                const SizedBox(height: AppSizes.spaceS),
-              ] else if (memo.content.isNotEmpty) ...[
-                _buildContentPreview(context),
-                const SizedBox(height: AppSizes.spaceS),
-              ],
+              Builder(builder: (context) {
+                final total = memo.checklistMeta.total;
+                final checked = memo.checklistMeta.checked;
+                if (total > 0) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildChecklistProgress(context, checked, total),
+                      const SizedBox(height: AppSizes.spaceS),
+                    ],
+                  );
+                }
+                if (memo.content.isNotEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildContentPreview(context),
+                      const SizedBox(height: AppSizes.spaceS),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
 
               // 태그
               MemoTagChips(tags: memo.tags),
@@ -99,10 +96,8 @@ class MemoCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildChecklistProgress(BuildContext context) {
+  Widget _buildChecklistProgress(BuildContext context, int checked, int total) {
     final l10n = AppLocalizations.of(context)!;
-    final total = memo.checklistItems.length;
-    final checked = memo.checklistItems.where((i) => i.isChecked).length;
     final progress = total == 0 ? 0.0 : checked / total;
 
     return Column(
@@ -141,8 +136,8 @@ class MemoCard extends ConsumerWidget {
     return Row(
       children: [
         Icon(
-          memo.type == MemoType.checklist
-              ? Icons.checklist
+          memo.checklistMeta.total > 0
+              ? Icons.checklist_outlined
               : Icons.note_outlined,
           size: AppSizes.iconSmall,
           color: AppColors.textSecondary,
@@ -193,7 +188,7 @@ class MemoCard extends ConsumerWidget {
 
   Widget _buildContentPreview(BuildContext context) {
     return Text(
-      _stripContent(memo.content),
+      MemoEditorConverter.plainTextPreview(memo.content),
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AppColors.textSecondary,
           ),

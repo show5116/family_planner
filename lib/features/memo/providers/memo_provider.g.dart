@@ -30,25 +30,21 @@ class _SystemHash {
 }
 
 /// 태그 목록 Provider
-/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
 ///
 /// Copied from [memoTags].
 @ProviderFor(memoTags)
 const memoTagsProvider = MemoTagsFamily();
 
 /// 태그 목록 Provider
-/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
 ///
 /// Copied from [memoTags].
 class MemoTagsFamily extends Family<AsyncValue<List<String>>> {
   /// 태그 목록 Provider
-  /// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
   ///
   /// Copied from [memoTags].
   const MemoTagsFamily();
 
   /// 태그 목록 Provider
-  /// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
   ///
   /// Copied from [memoTags].
   MemoTagsProvider call({String? groupId, bool? personal}) {
@@ -76,12 +72,10 @@ class MemoTagsFamily extends Family<AsyncValue<List<String>>> {
 }
 
 /// 태그 목록 Provider
-/// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
 ///
 /// Copied from [memoTags].
 class MemoTagsProvider extends AutoDisposeFutureProvider<List<String>> {
   /// 태그 목록 Provider
-  /// [groupId]: 특정 그룹의 태그, [personal]: 개인 메모 태그, 둘 다 null이면 전체
   ///
   /// Copied from [memoTags].
   MemoTagsProvider({String? groupId, bool? personal})
@@ -175,24 +169,24 @@ class _MemoTagsProviderElement
   bool? get personal => (origin as MemoTagsProvider).personal;
 }
 
-String _$memoDetailHash() => r'0c1b3fc668fea7797fe241efc6a91b3790900e64';
+String _$memoDetailHash() => r'4d83d9051f4774b94a76a69ef8a8859b38f43288';
 
-/// 특정 메모 상세 Provider
+/// 메모 상세 Provider
 ///
 /// Copied from [memoDetail].
 @ProviderFor(memoDetail)
 const memoDetailProvider = MemoDetailFamily();
 
-/// 특정 메모 상세 Provider
+/// 메모 상세 Provider
 ///
 /// Copied from [memoDetail].
 class MemoDetailFamily extends Family<AsyncValue<MemoModel>> {
-  /// 특정 메모 상세 Provider
+  /// 메모 상세 Provider
   ///
   /// Copied from [memoDetail].
   const MemoDetailFamily();
 
-  /// 특정 메모 상세 Provider
+  /// 메모 상세 Provider
   ///
   /// Copied from [memoDetail].
   MemoDetailProvider call(String id) {
@@ -221,11 +215,11 @@ class MemoDetailFamily extends Family<AsyncValue<MemoModel>> {
   String? get name => r'memoDetailProvider';
 }
 
-/// 특정 메모 상세 Provider
+/// 메모 상세 Provider
 ///
 /// Copied from [memoDetail].
 class MemoDetailProvider extends AutoDisposeFutureProvider<MemoModel> {
-  /// 특정 메모 상세 Provider
+  /// 메모 상세 Provider
   ///
   /// Copied from [memoDetail].
   MemoDetailProvider(String id)
@@ -308,24 +302,16 @@ class _MemoDetailProviderElement
 
 String _$pinnedMemosHash() => r'6df659f574252cd1ef2109008cf68a8d33d18c4d';
 
-/// 핀된 메모 목록 Provider
-///
-/// Copied from [pinnedMemos].
+/// See also [pinnedMemos].
 @ProviderFor(pinnedMemos)
 const pinnedMemosProvider = PinnedMemosFamily();
 
-/// 핀된 메모 목록 Provider
-///
-/// Copied from [pinnedMemos].
+/// See also [pinnedMemos].
 class PinnedMemosFamily extends Family<AsyncValue<List<MemoModel>>> {
-  /// 핀된 메모 목록 Provider
-  ///
-  /// Copied from [pinnedMemos].
+  /// See also [pinnedMemos].
   const PinnedMemosFamily();
 
-  /// 핀된 메모 목록 Provider
-  ///
-  /// Copied from [pinnedMemos].
+  /// See also [pinnedMemos].
   PinnedMemosProvider call({String? groupId, bool? personal}) {
     return PinnedMemosProvider(groupId: groupId, personal: personal);
   }
@@ -352,13 +338,9 @@ class PinnedMemosFamily extends Family<AsyncValue<List<MemoModel>>> {
   String? get name => r'pinnedMemosProvider';
 }
 
-/// 핀된 메모 목록 Provider
-///
-/// Copied from [pinnedMemos].
+/// See also [pinnedMemos].
 class PinnedMemosProvider extends AutoDisposeFutureProvider<List<MemoModel>> {
-  /// 핀된 메모 목록 Provider
-  ///
-  /// Copied from [pinnedMemos].
+  /// See also [pinnedMemos].
   PinnedMemosProvider({String? groupId, bool? personal})
     : this._internal(
         (ref) => pinnedMemos(
@@ -453,7 +435,7 @@ class _PinnedMemosProviderElement
   bool? get personal => (origin as PinnedMemosProvider).personal;
 }
 
-String _$memoListHash() => r'4e5e1d2d62b05ddbe88c4fd8b6992112ed423f4b';
+String _$memoListHash() => r'4f5f0de1bc59103e113f4c825783d7b1593c60b2';
 
 /// 메모 목록 Provider (무한 스크롤 + 검색 지원)
 ///
