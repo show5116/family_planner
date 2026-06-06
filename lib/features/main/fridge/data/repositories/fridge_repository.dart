@@ -259,30 +259,6 @@ class FridgeRepository {
     }
   }
 
-  Future<CartItemModel> addCartItem(AddCartItemDto dto) async {
-    try {
-      final response =
-          await _dio.post('/shopping/cart/items', data: dto.toJson());
-      return CartItemModel.fromJson(response.data as Map<String, dynamic>);
-    } on DioException catch (e) {
-      debugPrint('❌ [FridgeRepository] 장바구니 품목 추가 실패: ${e.message}');
-      throw Exception('장바구니 품목 추가 실패: ${e.message}');
-    }
-  }
-
-  Future<List<CartItemModel>> bulkAddCartItems(BulkAddCartItemDto dto) async {
-    try {
-      final response =
-          await _dio.post('/shopping/cart/items/bulk', data: dto.toJson());
-      final list = response.data as List<dynamic>;
-      return list
-          .map((e) => CartItemModel.fromJson(e as Map<String, dynamic>))
-          .toList();
-    } on DioException catch (e) {
-      debugPrint('❌ [FridgeRepository] 장바구니 품목 일괄 추가 실패: ${e.message}');
-      throw Exception('장바구니 품목 일괄 추가 실패: ${e.message}');
-    }
-  }
 
   Future<CartItemModel> updateCartItem(
       String itemId, UpdateCartItemDto dto, {String? groupId}) async {

@@ -509,27 +509,22 @@ class _FrequentItemTile extends ConsumerWidget {
     );
   }
 
-  Future<void> _addToCart(BuildContext context, WidgetRef ref) async {
-    final groupId = ref.read(fridgeSelectedGroupIdProvider);
-    try {
-      await ref.read(cartProvider.notifier).addItem(AddCartItemDto(
-            groupId: groupId ?? '',
-            name: item.name,
-            quantity: 1,
-            unit: item.defaultUnit,
-          ));
-      ref.invalidate(cartProvider);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.fridge_frequent_added_snackbar(item.name))),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
+  void _addToCart(BuildContext context, WidgetRef ref) {
+    final current = ref.read(cartPendingInsertsProvider);
+    ref.read(cartPendingInsertsProvider.notifier).state = [
+      ...current,
+      CartItemEntryDto(
+        name: item.name,
+        quantity: 1,
+        unit: item.defaultUnit,
+      ),
+    ];
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!
+            .fridge_frequent_added_snackbar(item.name)),
+      ),
+    );
   }
 
   Future<void> _handleAction(
