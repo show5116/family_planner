@@ -37,11 +37,12 @@ class MemoCard extends ConsumerWidget {
     final userInfo = ref.watch(authProvider).user;
     final myPersonalColor = ColorUtils.personalColor(userInfo?['personalColor'] as String?);
 
-    return Card(
+    final card = Card(
       elevation: AppSizes.elevation1,
       surfaceTintColor: Colors.transparent,
       child: InkWell(
         onTap: isDemo ? null : () => context.push('/memo/${memo.id}'),
+        onLongPress: isDemo ? null : () => _showActionSheet(context, ref),
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -82,15 +83,110 @@ class MemoCard extends ConsumerWidget {
               }),
 
               // 태그
-              MemoTagChips(tags: memo.tags),
-
-              // 작성자
-              if (memo.user.name.isNotEmpty) ...[
-                const SizedBox(height: AppSizes.spaceS),
-                _buildAuthor(context),
+              if (memo.tags.isNotEmpty) ...[
+                const SizedBox(height: AppSizes.spaceXS),
+                MemoTagChips(tags: memo.tags),
               ],
             ],
           ),
+        ),
+      ),
+    );
+
+    if (isDemo) return card;
+
+    return Dismissible(
+      key: ValueKey(memo.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) async {
+        return await showDialog<bool>(
+          context: context,
+          builder: (ctx) {
+            final l10n = AppLocalizations.of(ctx)!;
+            return AlertDialog(
+              title: Text(l10n.memo_deleteDialogTitle),
+              content: Text(l10n.memo_deleteDialogMessage),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(false),
+                  child: Text(l10n.common_cancel),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.of(ctx).pop(true),
+                  style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                  child: Text(l10n.common_delete),
+                ),
+              ],
+            );
+          },
+        ) ?? false;
+      },
+      onDismissed: (_) {
+        ref.read(memoManagementProvider.notifier).deleteMemo(memo.id);
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: AppSizes.spaceL),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
+      ),
+      child: card,
+    );
+  }
+
+  void _showActionSheet(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: Text(l10n.common_edit),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/memo/${memo.id}/edit');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline, color: Colors.red),
+              title: Text(l10n.common_delete,
+                  style: const TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.of(context).pop();
+                showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(l10n.memo_deleteDialogTitle),
+                    content: Text(l10n.memo_deleteDialogMessage),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(false),
+                        child: Text(l10n.common_cancel),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.of(ctx).pop(true),
+                        style: FilledButton.styleFrom(
+                            backgroundColor: Colors.red),
+                        child: Text(l10n.common_delete),
+                      ),
+                    ],
+                  ),
+                ).then((confirmed) {
+                  if (confirmed == true) {
+                    ref
+                        .read(memoManagementProvider.notifier)
+                        .deleteMemo(memo.id);
+                  }
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -143,14 +239,24 @@ class MemoCard extends ConsumerWidget {
           color: AppColors.textSecondary,
         ),
         const SizedBox(width: AppSizes.spaceXS),
-        Expanded(
-          child: Text(
-            dateFormat.format(memo.updatedAt),
+        Text(
+          dateFormat.format(memo.updatedAt),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.textSecondary,
+              ),
+        ),
+        if (memo.user.name.isNotEmpty) ...[
+          const SizedBox(width: AppSizes.spaceXS),
+          const Text('·', style: TextStyle(color: AppColors.textSecondary)),
+          const SizedBox(width: AppSizes.spaceXS),
+          Text(
+            memo.user.name,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                 ),
           ),
-        ),
+        ],
+        const Spacer(),
         const SizedBox(width: AppSizes.spaceXS),
         Container(
           padding: const EdgeInsets.symmetric(
@@ -169,7 +275,7 @@ class MemoCard extends ConsumerWidget {
                 ),
           ),
         ),
-        const SizedBox(width: AppSizes.spaceXS),
+        const SizedBox(width: AppSizes.spaceS),
         _PinButton(memoId: memo.id, isPinned: memo.isPinned),
       ],
     );
@@ -197,14 +303,6 @@ class MemoCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildAuthor(BuildContext context) {
-    return Text(
-      memo.user.name,
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: AppColors.textSecondary,
-          ),
-    );
-  }
 }
 
 class _PinButton extends ConsumerWidget {
@@ -228,18 +326,44 @@ class _PinButton extends ConsumerWidget {
 
     if (isLoading) {
       return const SizedBox(
-        width: AppSizes.iconSmall,
-        height: AppSizes.iconSmall,
-        child: CircularProgressIndicator(strokeWidth: 2),
+        width: 44,
+        height: 44,
+        child: Center(
+          child: SizedBox(
+            width: AppSizes.iconSmall,
+            height: AppSizes.iconSmall,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
       );
     }
 
     return GestureDetector(
-      onTap: () => ref.read(memoPinProvider.notifier).togglePin(memoId),
-      child: Icon(
-        isPinned ? Icons.push_pin : Icons.push_pin_outlined,
-        size: AppSizes.iconSmall,
-        color: isPinned ? AppColors.primary : AppColors.textSecondary,
+      onTap: () async {
+        final updated =
+            await ref.read(memoPinProvider.notifier).togglePin(memoId);
+        if (!context.mounted || updated == null) return;
+        final msg = updated.isPinned
+            ? '메모가 상단에 고정되고, 대시보드에 추가되었습니다.'
+            : '고정이 해제되었습니다.';
+        ScaffoldMessenger.of(context)
+          ..clearSnackBars()
+          ..showSnackBar(SnackBar(
+            content: Text(msg),
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+          ));
+      },
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: Center(
+          child: Icon(
+            isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+            size: AppSizes.iconSmall,
+            color: isPinned ? AppColors.primary : AppColors.textSecondary,
+          ),
+        ),
       ),
     );
   }

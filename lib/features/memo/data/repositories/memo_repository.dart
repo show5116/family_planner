@@ -167,4 +167,37 @@ class MemoRepository {
     }
   }
 
+  // ── 편집 잠금 ────────────────────────────────────────────────────
+
+  /// 편집 잠금 획득 (편집 모드 진입 시)
+  Future<void> acquireLock(String id) async {
+    try {
+      await _dio.post('/memos/$id/lock');
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 잠금 획득 실패: ${e.message}');
+      if (e.response?.statusCode == 409) {
+        throw Exception('다른 사용자가 편집 중입니다');
+      }
+      throw Exception('편집 잠금 실패: ${e.message}');
+    }
+  }
+
+  /// 편집 잠금 해제 (편집 완료 또는 취소 시)
+  Future<void> releaseLock(String id) async {
+    try {
+      await _dio.delete('/memos/$id/lock');
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] 잠금 해제 실패: ${e.message}');
+    }
+  }
+
+  /// 편집 잠금 TTL 갱신 (30초마다 호출)
+  Future<void> heartbeat(String id) async {
+    try {
+      await _dio.post('/memos/$id/lock/heartbeat');
+    } on DioException catch (e) {
+      debugPrint('❌ [MemoRepository] heartbeat 실패: ${e.message}');
+    }
+  }
+
 }

@@ -85,12 +85,12 @@ class MemoEditorConverter {
         if (insert is String) buffer.write(insert);
         if (buffer.length >= maxLength) break;
       }
-      return buffer
+      final text = buffer
           .toString()
           .replaceAll('\n', ' ')
           .replaceAll(RegExp(r'\s+'), ' ')
-          .trim()
-          .substring(0, buffer.length.clamp(0, maxLength));
+          .trim();
+      return text.length > maxLength ? text.substring(0, maxLength) : text;
     } catch (_) {
       return '';
     }

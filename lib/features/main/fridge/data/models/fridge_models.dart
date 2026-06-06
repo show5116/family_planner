@@ -379,6 +379,7 @@ class CartItemModel {
   final String name;
   final int quantity;
   final String? unit;
+  final double? price;
   final bool isChecked;
   final String? memo;
   final DateTime createdAt;
@@ -389,6 +390,7 @@ class CartItemModel {
     required this.name,
     required this.quantity,
     this.unit,
+    this.price,
     required this.isChecked,
     this.memo,
     required this.createdAt,
@@ -401,6 +403,7 @@ class CartItemModel {
       name: json['name'] as String,
       quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
+      price: json['price'] != null ? double.parse(json['price'].toString()) : null,
       isChecked: (json['isChecked'] as bool?) ?? false,
       memo: json['memo'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
@@ -413,6 +416,7 @@ class CartItemModel {
     String? name,
     int? quantity,
     String? unit,
+    double? price,
     bool? isChecked,
     String? memo,
     DateTime? createdAt,
@@ -423,6 +427,7 @@ class CartItemModel {
       name: name ?? this.name,
       quantity: quantity ?? this.quantity,
       unit: unit ?? this.unit,
+      price: price ?? this.price,
       isChecked: isChecked ?? this.isChecked,
       memo: memo ?? this.memo,
       createdAt: createdAt ?? this.createdAt,
@@ -478,29 +483,6 @@ class CartModel {
   }
 }
 
-class AddCartItemDto {
-  final String groupId;
-  final String name;
-  final int quantity;
-  final String? unit;
-  final String? memo;
-
-  const AddCartItemDto({
-    required this.groupId,
-    required this.name,
-    required this.quantity,
-    this.unit,
-    this.memo,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'groupId': groupId,
-        'name': name,
-        'quantity': quantity,
-        if (unit != null) 'unit': unit,
-        if (memo != null) 'memo': memo,
-      };
-}
 
 class UpdateCartItemDto {
   final int? quantity;
@@ -518,17 +500,19 @@ class UpdateCartItemDto {
       };
 }
 
-// POST /shopping/cart/items/bulk
+// PATCH /shopping/cart/items/bulk — inserts 항목
 class CartItemEntryDto {
   final String name;
   final int quantity;
   final String? unit;
+  final double? price;
   final String? memo;
 
   const CartItemEntryDto({
     required this.name,
     required this.quantity,
     this.unit,
+    this.price,
     this.memo,
   });
 
@@ -536,19 +520,8 @@ class CartItemEntryDto {
         'name': name,
         'quantity': quantity,
         if (unit != null) 'unit': unit,
+        if (price != null) 'price': price,
         if (memo != null) 'memo': memo,
-      };
-}
-
-class BulkAddCartItemDto {
-  final String groupId;
-  final List<CartItemEntryDto> items;
-
-  const BulkAddCartItemDto({required this.groupId, required this.items});
-
-  Map<String, dynamic> toJson() => {
-        'groupId': groupId,
-        'items': items.map((e) => e.toJson()).toList(),
       };
 }
 
@@ -558,6 +531,7 @@ class CartItemUpdateEntryDto {
   final int? quantity;
   final String? unit;
   final bool? isChecked;
+  final double? price;
   final String? memo;
 
   const CartItemUpdateEntryDto({
@@ -565,6 +539,7 @@ class CartItemUpdateEntryDto {
     this.quantity,
     this.unit,
     this.isChecked,
+    this.price,
     this.memo,
   });
 
@@ -573,23 +548,28 @@ class CartItemUpdateEntryDto {
         if (quantity != null) 'quantity': quantity,
         if (unit != null) 'unit': unit,
         if (isChecked != null) 'isChecked': isChecked,
+        if (price != null) 'price': price,
         if (memo != null) 'memo': memo,
       };
 }
 
 class BulkUpdateCartItemDto {
   final String groupId;
+  final List<CartItemEntryDto>? inserts;
   final List<CartItemUpdateEntryDto>? updates;
   final List<String>? deletes;
 
   const BulkUpdateCartItemDto({
     required this.groupId,
+    this.inserts,
     this.updates,
     this.deletes,
   });
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
+        if (inserts != null && inserts!.isNotEmpty)
+          'inserts': inserts!.map((e) => e.toJson()).toList(),
         if (updates != null && updates!.isNotEmpty)
           'updates': updates!.map((e) => e.toJson()).toList(),
         if (deletes != null && deletes!.isNotEmpty) 'deletes': deletes,

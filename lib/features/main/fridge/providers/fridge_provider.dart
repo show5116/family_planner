@@ -279,6 +279,12 @@ class FrequentItemsNotifier extends AsyncNotifier<List<FrequentItemModel>> {
   }
 }
 
+// ── Cart Pending Inserts Provider ────────────────────────────────────────────
+// 아직 서버에 저장되지 않은 추가 품목 목록 (CartTab + FrequentItemsTab 공유)
+
+final cartPendingInsertsProvider =
+    StateProvider<List<CartItemEntryDto>>((ref) => []);
+
 // ── Cart Provider ─────────────────────────────────────────────────────────────
 
 final cartProvider =
@@ -297,67 +303,26 @@ class CartNotifier extends AsyncNotifier<CartModel?> {
     state = await AsyncValue.guard(() => future);
   }
 
-  Future<void> addItem(AddCartItemDto dto) async {
-    final item = await ref.read(fridgeRepositoryProvider).addCartItem(dto);
-    final current = state.value;
-    if (current != null) {
-      state = AsyncData(current.copyWith(items: [...current.items, item]));
-    } else {
-      await refresh();
-    }
-  }
-
-  Future<void> bulkAddItems(BulkAddCartItemDto dto) async {
-    final newItems =
-        await ref.read(fridgeRepositoryProvider).bulkAddCartItems(dto);
-    final current = state.value;
-    if (current != null) {
-      state =
-          AsyncData(current.copyWith(items: [...current.items, ...newItems]));
-    } else {
-      await refresh();
-    }
-  }
-
-  Future<void> updateItem(String itemId, UpdateCartItemDto dto) async {
+  Future<void> toggleCheck(String itemId, bool checked) async {
     final groupId = ref.read(fridgeSelectedGroupIdProvider);
     final updated = await ref
         .read(fridgeRepositoryProvider)
-        .updateCartItem(itemId, dto, groupId: groupId);
+        .updateCartItem(itemId, UpdateCartItemDto(isChecked: checked), groupId: groupId);
     final current = state.value;
     if (current != null) {
       state = AsyncData(
         current.copyWith(
-          items: current.items
-              .map((i) => i.id == itemId ? updated : i)
-              .toList(),
+          items: current.items.map((i) => i.id == itemId ? updated : i).toList(),
         ),
       );
     }
   }
 
-  Future<void> toggleCheck(String itemId, bool checked) async {
-    await updateItem(itemId, UpdateCartItemDto(isChecked: checked));
-  }
-
-  Future<void> deleteItem(String itemId) async {
-    final groupId = ref.read(fridgeSelectedGroupIdProvider);
-    await ref
-        .read(fridgeRepositoryProvider)
-        .deleteCartItem(itemId, groupId: groupId);
-    final current = state.value;
-    if (current != null) {
-      state = AsyncData(
-        current.copyWith(
-          items: current.items.where((i) => i.id != itemId).toList(),
-        ),
-      );
-    }
-  }
-
-  Future<void> bulkUpdate(BulkUpdateCartItemDto dto) async {
+  // inserts + updates + deletes 를 한 번에 전송하고 pending 초기화
+  Future<void> syncCart(BulkUpdateCartItemDto dto) async {
     final updated = await ref.read(fridgeRepositoryProvider).bulkUpdateCartItems(dto);
     state = AsyncData(updated);
+    ref.read(cartPendingInsertsProvider.notifier).state = [];
   }
 
   Future<ShoppingHistoryModel> complete(CompleteCartDto dto) async {
@@ -365,6 +330,7 @@ class CartNotifier extends AsyncNotifier<CartModel?> {
         await ref.read(fridgeRepositoryProvider).completeCart(dto);
     // AsyncLoading을 거치지 않고 즉시 빈 장바구니로 교체 → 다이얼로그 유지
     state = const AsyncData(null);
+    ref.read(cartPendingInsertsProvider.notifier).state = [];
     // 보관소·이력은 invalidate로 백그라운드 갱신
     ref.invalidate(storagesWithItemsProvider);
     ref.invalidate(shoppingHistoryProvider);

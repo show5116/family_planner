@@ -154,14 +154,14 @@ class _GroupFilterBarState extends ConsumerState<GroupFilterBar> {
   // ── 드롭다운 버튼 라벨 ────────────────────────────────────────────────────
 
   String _buildLabel(List<Group> groups) {
-    if (_selectedGroupIds == null) return '전체';
+    if (_selectedGroupIds == null) return '전체 그룹';
 
     final parts = <String>[];
     if (_includePersonal) parts.add('나만 보기');
     for (final g in groups) {
       if (_selectedGroupIds!.contains(g.id)) parts.add(g.name);
     }
-    if (parts.isEmpty) return '전체';
+    if (parts.isEmpty) return '전체 그룹';
     if (parts.length == 1) return parts.first;
     return '${parts.first} 외 ${parts.length - 1}개';
   }
@@ -514,7 +514,7 @@ class _MultiFilterMenuBodyState extends State<_MultiFilterMenuBody> {
           title: const Row(children: [
             Icon(Icons.all_inclusive, size: 16),
             SizedBox(width: AppSizes.spaceXS),
-            Text('전체'),
+            Text('전체 그룹'),
           ]),
           onChanged: (_) => widget.notifier.toggleAll(),
           controlAffinity: ListTileControlAffinity.leading,

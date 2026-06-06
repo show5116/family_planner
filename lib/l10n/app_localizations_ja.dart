@@ -2283,6 +2283,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get memo_categoryHint => 'カテゴリーを入力してください（任意）';
 
   @override
+  String get memo_personal => 'マイメモ';
+
+  @override
   String get memo_tags => 'タグ';
 
   @override
@@ -2392,6 +2395,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get memo_checklistReset => '全て解除';
+
+  @override
+  String get memo_duplicate => 'コピー';
 
   @override
   String get memo_checklistSelectAll => '全て選択';

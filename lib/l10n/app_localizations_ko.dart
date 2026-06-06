@@ -2287,6 +2287,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get memo_categoryHint => '카테고리를 입력하세요 (선택사항)';
 
   @override
+  String get memo_personal => '나만의 메모';
+
+  @override
   String get memo_tags => '태그';
 
   @override
@@ -2396,6 +2399,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get memo_checklistReset => '전체 해제';
+
+  @override
+  String get memo_duplicate => '복사';
 
   @override
   String get memo_checklistSelectAll => '전체 선택';

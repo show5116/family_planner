@@ -856,6 +856,10 @@
   "memo_content": "内容",
   "memo_category": "类别",
   "memo_categoryHint": "请输入类别（可选）",
+  "memo_personal": "我的备忘录",
+  "@memo_personal": {
+    "description": "备忘录创建页面个人选项标签"
+  },
   "memo_tags": "标签",
   "memo_tagsHint": "添加标签",
   "memo_author": "作者",
@@ -893,6 +897,7 @@
   "memo_checklistAddHint": "请输入新项目",
   "memo_checklistEmpty": "暂无清单项目",
   "memo_checklistReset": "取消全选",
+  "memo_duplicate": "拷贝",
   "memo_checklistSelectAll": "全选",
   "memo_checklistDeleteItem": "删除项目",
   "memo_checklistEditItem": "编辑项目",

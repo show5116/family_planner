@@ -106,7 +106,9 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
   ) {
     final activeGoals = goals.where((g) => g.status == SavingsGoalStatus.active).toList();
     final totalCurrent = goals.fold<double>(0, (s, g) => s + g.currentAmount);
-    final totalTarget = goals.fold<double>(0, (s, g) => s + (g.targetAmount ?? 0));
+    final goalsWithTarget = goals.where((g) => g.targetAmount != null && g.targetAmount! > 0).toList();
+    final totalTarget = goalsWithTarget.fold<double>(0, (s, g) => s + g.targetAmount!);
+    final targetCurrent = goalsWithTarget.fold<double>(0, (s, g) => s + g.currentAmount);
     final hasTarget = totalTarget > 0;
 
     return DashboardCard(
@@ -175,7 +177,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
-                      value: (totalCurrent / totalTarget).clamp(0.0, 1.0),
+                      value: (targetCurrent / totalTarget).clamp(0.0, 1.0),
                       minHeight: 8,
                       backgroundColor:
                           Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -193,7 +195,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
                             ),
                       ),
                       Text(
-                        '${((totalCurrent / totalTarget) * 100).clamp(0, 100).toInt()}% 달성',
+                        '${((targetCurrent / totalTarget) * 100).clamp(0, 100).toInt()}% 달성',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: AppColors.success,
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard;
 import 'package:flutter_quill/flutter_quill.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -10,12 +11,15 @@ class MemoEditorToolbar extends StatelessWidget {
   final QuillController controller;
   final bool isUploadingImage;
   final VoidCallback? onImagePressed;
+  /// 하이퍼링크 적용 콜백 (URL 문자열을 받아 처리)
+  final void Function(String url)? onLinkPreview;
 
   const MemoEditorToolbar({
     super.key,
     required this.controller,
     this.isUploadingImage = false,
     this.onImagePressed,
+    this.onLinkPreview,
   });
 
   void _toggleChecklist() {
@@ -34,6 +38,47 @@ class MemoEditorToolbar extends StatelessWidget {
   bool get _isChecklistActive {
     final val = controller.getSelectionStyle().attributes['list']?.value;
     return val == 'unchecked' || val == 'checked';
+  }
+
+  Future<void> _showLinkDialog(BuildContext context) async {
+    // 클립보드에 URL이 있으면 바로 사용, 없으면 입력창
+    final clipboard = await Clipboard.getData(Clipboard.kTextPlain);
+    final clipText = clipboard?.text?.trim() ?? '';
+    final isClipUrl = clipText.startsWith('http://') || clipText.startsWith('https://');
+
+    if (!context.mounted) return;
+
+    final controller_ = TextEditingController(text: isClipUrl ? clipText : '');
+    final url = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('링크 카드 추가'),
+        content: TextField(
+          controller: controller_,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'https://example.com',
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.url,
+          onSubmitted: (v) => Navigator.of(ctx).pop(v.trim()),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(null),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(controller_.text.trim()),
+            child: const Text('추가'),
+          ),
+        ],
+      ),
+    );
+    controller_.dispose();
+    if (url != null && url.isNotEmpty) {
+      onLinkPreview!(url);
+    }
   }
 
   @override
@@ -65,7 +110,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 _divider(context),
               ],
 
-              // 체크리스트 토글 ← 핵심 버튼
+              // 체크리스트 토글
               ListenableBuilder(
                 listenable: controller,
                 builder: (_, _) => _ToolbarBtn(
@@ -81,6 +126,26 @@ class MemoEditorToolbar extends StatelessWidget {
                   onPressed: _toggleChecklist,
                 ),
               ),
+
+              // 하이퍼링크 — 텍스트 선택 시에만 활성화
+              if (onLinkPreview != null) ...[
+                const SizedBox(width: 2),
+                ListenableBuilder(
+                  listenable: controller,
+                  builder: (_, _) {
+                    final hasSelection = !controller.selection.isCollapsed;
+                    return _ToolbarBtn(
+                      icon: Icon(
+                        Icons.add_link,
+                        size: 18,
+                        color: hasSelection ? null : Theme.of(context).disabledColor,
+                      ),
+                      tooltip: hasSelection ? '하이퍼링크 적용' : '텍스트를 선택하세요',
+                      onPressed: hasSelection ? () => _showLinkDialog(context) : null,
+                    );
+                  },
+                ),
+              ],
 
               _divider(context),
 

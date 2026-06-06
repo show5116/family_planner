@@ -55,7 +55,7 @@ class _CartEditState {
   int quantity;
   String? unit;
   String? memo;
-  String? price; // 로컬 전용 — API 미지원, 완료 다이얼로그에 전달
+  double? price;       // 항상 총액으로 저장 (서버 전송값)
   bool markedForDelete;
 
   _CartEditState(CartItemModel item)
@@ -63,8 +63,14 @@ class _CartEditState {
         quantity = item.quantity,
         unit = item.unit,
         memo = item.memo,
-        price = null,
+        price = item.price,
         markedForDelete = false;
+
+  // 총액 반환 — 삭제 표시된 항목은 0
+  double get totalPrice {
+    if (markedForDelete) return 0;
+    return price ?? 0;
+  }
 
   bool hasChanges(CartItemModel original) {
     if (markedForDelete) return true;
@@ -72,6 +78,7 @@ class _CartEditState {
     if (quantity != original.quantity) return true;
     if (unit != original.unit) return true;
     if (memo != original.memo) return true;
+    if (price != original.price) return true;
     return false;
   }
 }
@@ -262,20 +269,39 @@ class _CartTabState extends ConsumerState<CartTab>
     }
   }
 
+  // 현재 담긴 품목들의 가격 총합 (삭제 표시 제외, 가격 미입력 품목 제외)
+  double _calcTotal(List<CartItemModel> serverItems, List<CartItemEntryDto> pending) {
+    double total = 0;
+    for (final item in serverItems) {
+      final e = _edits[item.id];
+      if (e == null || e.markedForDelete) continue;
+      total += e.totalPrice;
+    }
+    for (final p in pending) {
+      total += p.price ?? 0;
+    }
+    return total;
+  }
+
   bool get _hasChanges {
     final items = ref.read(cartProvider).value?.items ?? [];
-    return items.any((item) => _edits[item.id]?.hasChanges(item) == true);
+    if (items.any((item) => _edits[item.id]?.hasChanges(item) == true)) {
+      return true;
+    }
+    return ref.read(cartPendingInsertsProvider).isNotEmpty;
   }
 
   void _cancelChanges(List<CartItemModel> items) {
     for (final item in items) {
       _edits[item.id] = _CartEditState(item);
     }
+    ref.read(cartPendingInsertsProvider.notifier).state = [];
     setState(() {});
   }
 
   Future<void> _save(List<CartItemModel> items) async {
     final groupId = ref.read(fridgeSelectedGroupIdProvider);
+    final inserts = ref.read(cartPendingInsertsProvider);
 
     final deletes = <String>[];
     final updates = <CartItemUpdateEntryDto>[];
@@ -291,16 +317,18 @@ class _CartTabState extends ConsumerState<CartTab>
           quantity: e.quantity != item.quantity ? e.quantity : null,
           unit: e.unit != item.unit ? e.unit : null,
           memo: e.memo != item.memo ? e.memo : null,
+          price: e.price,
         ));
       }
     }
 
-    if (updates.isEmpty && deletes.isEmpty) return;
+    if (inserts.isEmpty && updates.isEmpty && deletes.isEmpty) return;
 
     setState(() => _saving = true);
     try {
-      await ref.read(cartProvider.notifier).bulkUpdate(BulkUpdateCartItemDto(
+      await ref.read(cartProvider.notifier).syncCart(BulkUpdateCartItemDto(
             groupId: groupId ?? '',
+            inserts: inserts.isEmpty ? null : inserts,
             updates: updates.isEmpty ? null : updates,
             deletes: deletes.isEmpty ? null : deletes,
           ));
@@ -332,13 +360,17 @@ class _CartTabState extends ConsumerState<CartTab>
         }
 
         final cartAsync = ref.watch(cartProvider);
+        final pendingInserts = ref.watch(cartPendingInsertsProvider);
         return cartAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text(e.toString())),
           data: (cart) {
-            final items = cart?.items ?? [];
-            _syncEdits(items);
+            final serverItems = cart?.items ?? [];
+            _syncEdits(serverItems);
             final hasChanges = _hasChanges;
+
+            // 서버 저장 품목 + 로컬 pending 합산
+            final totalCount = serverItems.length + pendingInserts.length;
 
             return Scaffold(
               backgroundColor: Colors.transparent,
@@ -351,12 +383,14 @@ class _CartTabState extends ConsumerState<CartTab>
                           style: Theme.of(context).textTheme.bodyMedium),
                       actions: [
                         TextButton(
-                          onPressed:
-                              _saving ? null : () => _cancelChanges(items),
+                          onPressed: _saving
+                              ? null
+                              : () => _cancelChanges(serverItems),
                           child: Text(l10n.common_cancel),
                         ),
                         FilledButton(
-                          onPressed: _saving ? null : () => _save(items),
+                          onPressed:
+                              _saving ? null : () => _save(serverItems),
                           child: _saving
                               ? const SizedBox(
                                   width: 16,
@@ -371,47 +405,69 @@ class _CartTabState extends ConsumerState<CartTab>
                   : null,
               body: AbsorbPointer(
                 absorbing: _saving,
-                child: items.isEmpty
-                    ? _EmptyCart(l10n: l10n)
-                    : ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 100),
-                        itemCount: items.length,
-                        itemBuilder: (_, i) {
-                          final item = items[i];
-                          final editState = _edits[item.id]!;
-                          return _CartItemTile(
-                            key: ValueKey(item.id),
-                            item: item,
-                            editState: editState,
-                            onChanged: () => setState(() {}),
-                            onTapEdit: () =>
-                                _showEditBottomSheet(context, item, editState),
-                          );
-                        },
-                      ),
-              ),
-              floatingActionButton: hasChanges
-                  ? null
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        FloatingActionButton.small(
-                          heroTag: 'cart_add',
-                          onPressed: () => _showAddItemDialog(context),
-                          child: const Icon(Icons.add),
-                        ),
-                        const SizedBox(height: AppSizes.spaceS),
-                        if (items.isNotEmpty)
-                          FloatingActionButton.extended(
-                            heroTag: 'cart_complete',
-                            onPressed: () =>
-                                _showCompleteDialog(context, items),
-                            icon: const Icon(Icons.check),
-                            label: Text(l10n.fridge_cart_complete),
-                          ),
-                      ],
+                child: Column(
+                  children: [
+                    _TotalPriceBar(total: _calcTotal(serverItems, pendingInserts)),
+                    Expanded(
+                      child: totalCount == 0
+                          ? _EmptyCart(l10n: l10n)
+                          : ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 100),
+                              itemCount: totalCount,
+                              itemBuilder: (_, i) {
+                                // 서버 품목
+                                if (i < serverItems.length) {
+                                  final item = serverItems[i];
+                                  final editState = _edits[item.id]!;
+                                  return _CartItemTile(
+                                    key: ValueKey(item.id),
+                                    item: item,
+                                    editState: editState,
+                                    onChanged: () => setState(() {}),
+                                    onTapEdit: () => _showEditBottomSheet(
+                                        context, item, editState),
+                                  );
+                                }
+                                // Pending insert 항목
+                                final pi = pendingInserts[i - serverItems.length];
+                                return _PendingCartItemTile(
+                                  key: ValueKey('pending_$i'),
+                                  entry: pi,
+                                  onRemove: () {
+                                    final list = [...ref.read(cartPendingInsertsProvider)];
+                                    list.removeAt(i - serverItems.length);
+                                    ref.read(cartPendingInsertsProvider.notifier).state = list;
+                                  },
+                                );
+                              },
+                            ),
                     ),
+                  ],
+                ),
+              ),
+              floatingActionButton: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  FloatingActionButton.small(
+                    key: _addFabKey,
+                    heroTag: 'cart_add',
+                    onPressed: () => _showAddItemDialog(context),
+                    child: const Icon(Icons.add),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  if (totalCount > 0)
+                    FloatingActionButton.extended(
+                      key: _completeFabKey,
+                      heroTag: 'cart_complete',
+                      onPressed: hasChanges
+                          ? null
+                          : () => _showCompleteDialog(context, serverItems),
+                      icon: const Icon(Icons.check),
+                      label: Text(l10n.fridge_cart_complete),
+                    ),
+                ],
+              ),
             );
           },
         );
@@ -439,6 +495,7 @@ class _CartTabState extends ConsumerState<CartTab>
       ),
     );
   }
+
 
   Future<void> _showEditBottomSheet(
       BuildContext context, CartItemModel item, _CartEditState es) async {
@@ -847,6 +904,47 @@ class _OnboardingCartView extends StatelessWidget {
   }
 }
 
+// ── 총합계 바 ───────────────────────────────────────────────────────────────────
+
+class _TotalPriceBar extends StatelessWidget {
+  final double total;
+  const _TotalPriceBar({required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final fmt = NumberFormat('#,###');
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceL, vertical: AppSizes.spaceS),
+      color: colorScheme.surfaceContainerHighest,
+      child: Row(
+        children: [
+          Icon(Icons.shopping_cart_outlined,
+              size: 16, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: AppSizes.spaceS),
+          Text(
+            '합계',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+          ),
+          const Spacer(),
+          Text(
+            total > 0 ? '${fmt.format(total.toInt())}원' : '-',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: total > 0 ? colorScheme.primary : colorScheme.outline,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _EmptyCart extends StatelessWidget {
   final AppLocalizations l10n;
   const _EmptyCart({required this.l10n});
@@ -863,6 +961,72 @@ class _EmptyCart extends StatelessWidget {
           Text(l10n.fridge_cart_empty,
               style: Theme.of(context).textTheme.bodyMedium),
         ],
+      ),
+    );
+  }
+}
+
+// 아직 서버에 저장되지 않은 추가 대기 품목 타일
+class _PendingCartItemTile extends StatelessWidget {
+  final CartItemEntryDto entry;
+  final VoidCallback onRemove;
+
+  const _PendingCartItemTile({
+    super.key,
+    required this.entry,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final parts = <String>[];
+    if (entry.unit != null) parts.add(entry.unit!);
+    if (entry.memo != null) parts.add(entry.memo!);
+
+    return Dismissible(
+      key: ValueKey('pending_dismissible_${entry.name}_${entry.hashCode}'),
+      direction: DismissDirection.endToStart,
+      onDismissed: (_) => onRemove(),
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: AppSizes.spaceL),
+        color: colorScheme.errorContainer,
+        child: Icon(Icons.delete_outline, color: colorScheme.onErrorContainer),
+      ),
+      child: ListTile(
+        leading: Icon(Icons.add_circle_outline,
+            size: 18, color: colorScheme.primary),
+        title: Text(
+          entry.name,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: colorScheme.primary,
+              ),
+        ),
+        subtitle: parts.isNotEmpty
+            ? Text(
+                parts.join('  ·  '),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.outline,
+                    ),
+              )
+            : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              entry.quantity.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, size: 18),
+              onPressed: onRemove,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -888,19 +1052,88 @@ class _CartItemTile extends StatefulWidget {
 
 class _CartItemTileState extends State<_CartItemTile> {
   late final TextEditingController _priceCtrl;
+  // isUnitPrice는 State 로컬 — editState 재사용 시 컨트롤러 표시값과 불일치 방지
+  bool _isUnitPrice = false;
+  bool _ignoreListener = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _priceCtrl = TextEditingController(text: widget.editState.price ?? '');
-    _priceCtrl.addListener(() {
-      widget.editState.price =
-          _priceCtrl.text.trim().isEmpty ? null : _priceCtrl.text.trim();
+  _CartEditState get _es => widget.editState;
+
+  String _displayText() {
+    if (_es.price == null) return '';
+    if (_isUnitPrice && _es.quantity > 0) {
+      return (_es.price! / _es.quantity).toInt().toString();
+    }
+    return _es.price!.toInt().toString();
+  }
+
+  // 컨트롤러 표시값 → editState.price(총액) 동기화
+  void _syncPrice() {
+    if (_ignoreListener) return;
+    final raw = _priceCtrl.text.trim();
+    final entered = raw.isEmpty ? null : double.tryParse(raw);
+    if (entered == null) {
+      _es.price = null;
+    } else if (_isUnitPrice) {
+      _es.price = entered * _es.quantity;
+    } else {
+      _es.price = entered;
+    }
+    widget.onChanged();
+  }
+
+  // 수량 변경 시 단가 모드라면 총액 재계산, 컨트롤러 표시값은 그대로 유지
+  void _changeQuantity(int delta) {
+    _es.quantity += delta;
+    if (_es.quantity == 0) _es.markedForDelete = true;
+    // 단가 모드: 입력값(단가)은 그대로, 총액만 재계산
+    final raw = double.tryParse(_priceCtrl.text.trim());
+    if (raw != null && _isUnitPrice) {
+      _es.price = raw * _es.quantity;
+    }
+    widget.onChanged();
+  }
+
+  // 모드 전환 시 컨트롤러 표시값 변환
+  void _togglePriceMode() {
+    setState(() {
+      _ignoreListener = true;
+      if (_isUnitPrice) {
+        // 단가 → 총액: 총액을 그대로 표시
+        _priceCtrl.text = _es.price != null ? _es.price!.toInt().toString() : '';
+        _isUnitPrice = false;
+      } else {
+        // 총액 → 단가: 총액 ÷ 수량
+        if (_es.price != null && _es.quantity > 0) {
+          _priceCtrl.text = (_es.price! / _es.quantity).toInt().toString();
+        }
+        _isUnitPrice = true;
+      }
+      _ignoreListener = false;
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    _priceCtrl = TextEditingController(text: _displayText());
+    _priceCtrl.addListener(_syncPrice);
+  }
+
+  @override
+  void didUpdateWidget(_CartItemTile old) {
+    super.didUpdateWidget(old);
+    // editState 객체가 바뀌었거나 외부에서 price가 변경된 경우 컨트롤러 동기화
+    if (old.editState != widget.editState) {
+      _isUnitPrice = false;
+      _ignoreListener = true;
+      _priceCtrl.text = _displayText();
+      _ignoreListener = false;
+    }
+  }
+
+  @override
   void dispose() {
+    _priceCtrl.removeListener(_syncPrice);
     _priceCtrl.dispose();
     super.dispose();
   }
@@ -908,22 +1141,29 @@ class _CartItemTileState extends State<_CartItemTile> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final deleted = widget.editState.markedForDelete;
+    final deleted = _es.markedForDelete;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    // 단가 모드일 때 총액 미리보기 문자열
+    String? priceHint;
+    if (_isUnitPrice && _es.price != null && _es.quantity > 1) {
+      final fmt = NumberFormat('#,###');
+      priceHint = '합계 ${fmt.format(_es.price!.toInt())}원';
+    }
 
     return Dismissible(
       key: ValueKey('cart_dismissible_${widget.item.id}'),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) async {
-        widget.editState.markedForDelete = true;
+        _es.markedForDelete = true;
         widget.onChanged();
         return false;
       },
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: AppSizes.spaceL),
-        color: Theme.of(context).colorScheme.errorContainer,
-        child: Icon(Icons.delete_outline,
-            color: Theme.of(context).colorScheme.onErrorContainer),
+        color: colorScheme.errorContainer,
+        child: Icon(Icons.delete_outline, color: colorScheme.onErrorContainer),
       ),
       child: AnimatedOpacity(
         opacity: deleted ? 0.38 : 1.0,
@@ -934,36 +1174,32 @@ class _CartItemTileState extends State<_CartItemTile> {
             ListTile(
               onTap: deleted ? null : widget.onTapEdit,
               title: Text(
-                widget.editState.name,
+                _es.name,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       decoration: deleted ? TextDecoration.lineThrough : null,
                     ),
               ),
               subtitle: () {
                 final parts = <String>[];
-                final u = widget.editState.unit;
+                final u = _es.unit;
                 if (u != null && u.isNotEmpty) parts.add(u);
-                final m = widget.editState.memo;
+                final m = _es.memo;
                 if (m != null && m.isNotEmpty) parts.add(m);
                 if (parts.isEmpty) return null;
                 return Text(
                   parts.join('  ·  '),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
+                        color: colorScheme.outline,
                       ),
                 );
               }(),
               trailing: deleted
                   ? IconButton(
-                      icon: Icon(Icons.undo,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 20),
+                      icon: Icon(Icons.undo, color: colorScheme.primary, size: 20),
                       tooltip: l10n.common_undo,
                       onPressed: () {
-                        widget.editState.markedForDelete = false;
-                        if (widget.editState.quantity == 0) {
-                          widget.editState.quantity = widget.item.quantity;
-                        }
+                        _es.markedForDelete = false;
+                        if (_es.quantity == 0) _es.quantity = widget.item.quantity;
                         widget.onChanged();
                       },
                     )
@@ -973,30 +1209,20 @@ class _CartItemTileState extends State<_CartItemTile> {
                         IconButton(
                           icon: const Icon(Icons.remove, size: 18),
                           visualDensity: VisualDensity.compact,
-                          onPressed: widget.editState.quantity > 0
-                              ? () {
-                                  widget.editState.quantity--;
-                                  if (widget.editState.quantity == 0) {
-                                    widget.editState.markedForDelete = true;
-                                  }
-                                  widget.onChanged();
-                                }
+                          onPressed: _es.quantity > 0
+                              ? () => setState(() => _changeQuantity(-1))
                               : null,
                         ),
                         Text(
-                          widget.editState.quantity.toString(),
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          _es.quantity.toString(),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                         IconButton(
                           icon: const Icon(Icons.add, size: 18),
                           visualDensity: VisualDensity.compact,
-                          onPressed: () {
-                            widget.editState.quantity++;
-                            widget.onChanged();
-                          },
+                          onPressed: () => setState(() => _changeQuantity(1)),
                         ),
                       ],
                     ),
@@ -1005,20 +1231,44 @@ class _CartItemTileState extends State<_CartItemTile> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                     AppSizes.spaceM, 0, AppSizes.spaceM, AppSizes.spaceS),
-                child: SizedBox(
-                  width: 130,
-                  child: TextField(
-                    controller: _priceCtrl,
-                    decoration: InputDecoration(
-                      labelText: l10n.fridge_cart_item_price,
-                      suffixText: '원',
-                      isDense: true,
-                      border: const OutlineInputBorder(),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 140,
+                      child: TextField(
+                        controller: _priceCtrl,
+                        decoration: InputDecoration(
+                          labelText: _isUnitPrice ? '개당 가격' : l10n.fridge_cart_item_price,
+                          suffixText: '원',
+                          helperText: priceHint,
+                          isDense: true,
+                          border: const OutlineInputBorder(),
+                        ),
+                        keyboardType:
+                            const TextInputType.numberWithOptions(decimal: false),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: false),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                    const SizedBox(width: AppSizes.spaceXS),
+                    // 단가/총액 토글
+                    Tooltip(
+                      message: _isUnitPrice ? '총액으로 전환' : '개당 가격으로 전환',
+                      child: InkWell(
+                        onTap: _togglePriceMode,
+                        borderRadius: BorderRadius.circular(4),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            _isUnitPrice ? '×${_es.quantity}' : '÷${_es.quantity}',
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],
@@ -1036,16 +1286,24 @@ class _CartPendingItem {
   final int quantity;
   final String? unit;
   final String? memo;
+  final double? price; // 총액
 
   const _CartPendingItem({
     required this.name,
     required this.quantity,
     this.unit,
     this.memo,
+    this.price,
   });
 
-  String get label =>
-      '$name  $quantity${unit != null ? unit! : ''}${memo != null ? '  · $memo' : ''}';
+  String get label {
+    final buf = StringBuffer('$name  $quantity${unit ?? ''}');
+    if (memo != null) buf.write('  · $memo');
+    if (price != null) {
+      buf.write('  ${NumberFormat('#,###').format(price!.toInt())}원');
+    }
+    return buf.toString();
+  }
 }
 
 class _AddCartItemDialog extends ConsumerStatefulWidget {
@@ -1056,16 +1314,15 @@ class _AddCartItemDialog extends ConsumerStatefulWidget {
 }
 
 class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
-  // 입력 폼 (항상 1개)
   final _nameCtrl = TextEditingController();
   final _quantityCtrl = TextEditingController(text: '1');
   final _unitCtrl = TextEditingController();
   final _memoCtrl = TextEditingController();
+  final _priceCtrl = TextEditingController();
+  bool _isUnitPrice = false;
 
-  // 대기 목록
+  // 다이얼로그 내 임시 목록 (확인 전 미리보기용)
   final List<_CartPendingItem> _pending = [];
-
-  bool _loading = false;
 
   @override
   void dispose() {
@@ -1073,7 +1330,15 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
     _quantityCtrl.dispose();
     _unitCtrl.dispose();
     _memoCtrl.dispose();
+    _priceCtrl.dispose();
     super.dispose();
+  }
+
+  double? _calcTotalPrice() {
+    final raw = double.tryParse(_priceCtrl.text.trim());
+    if (raw == null) return null;
+    final qty = int.tryParse(_quantityCtrl.text.trim()) ?? 1;
+    return _isUnitPrice ? raw * qty : raw;
   }
 
   void _addToPending() {
@@ -1085,11 +1350,13 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
         quantity: int.tryParse(_quantityCtrl.text) ?? 1,
         unit: _unitCtrl.text.trim().isEmpty ? null : _unitCtrl.text.trim(),
         memo: _memoCtrl.text.trim().isEmpty ? null : _memoCtrl.text.trim(),
+        price: _calcTotalPrice(),
       ));
       _nameCtrl.clear();
       _quantityCtrl.text = '1';
       _unitCtrl.clear();
       _memoCtrl.clear();
+      _priceCtrl.clear();
     });
   }
 
@@ -1097,36 +1364,27 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
     setState(() => _pending.removeAt(index));
   }
 
-  Future<void> _submit() async {
+  void _submit() {
     // 입력 중인 내용이 있으면 먼저 담기
-    if (_nameCtrl.text.trim().isNotEmpty) {
-      _addToPending();
-    }
+    if (_nameCtrl.text.trim().isNotEmpty) _addToPending();
     if (_pending.isEmpty) return;
 
-    setState(() => _loading = true);
-    try {
-      final groupId = ref.read(fridgeSelectedGroupIdProvider);
-      await ref.read(cartProvider.notifier).bulkAddItems(BulkAddCartItemDto(
-            groupId: groupId ?? '',
-            items: _pending
-                .map((p) => CartItemEntryDto(
-                      name: p.name,
-                      quantity: p.quantity,
-                      unit: p.unit,
-                      memo: p.memo,
-                    ))
-                .toList(),
-          ));
-      if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
+    // 서버 저장 없이 provider에 쌓기 — CartTab 저장 버튼으로 한꺼번에 전송
+    final newEntries = _pending
+        .map((p) => CartItemEntryDto(
+              name: p.name,
+              quantity: p.quantity,
+              unit: p.unit,
+              memo: p.memo,
+              price: p.price,
+            ))
+        .toList();
+    final current = ref.read(cartPendingInsertsProvider);
+    ref.read(cartPendingInsertsProvider.notifier).state = [
+      ...current,
+      ...newEntries,
+    ];
+    if (mounted) Navigator.pop(context);
   }
 
   @override
@@ -1180,6 +1438,42 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
                 decoration: InputDecoration(labelText: l10n.fridge_item_memo),
               ),
               const SizedBox(height: AppSizes.spaceS),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _priceCtrl,
+                      decoration: InputDecoration(
+                        labelText: _isUnitPrice ? '개당 가격' : l10n.fridge_cart_item_price,
+                        suffixText: '원',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: false),
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.spaceXS),
+                  TextButton(
+                    onPressed: () => setState(() => _isUnitPrice = !_isUnitPrice),
+                    child: Text(_isUnitPrice ? '개당' : '총액'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.spaceXS),
+              // 단가 모드일 때 총액 미리보기
+              if (_isUnitPrice) Builder(builder: (context) {
+                final qty = int.tryParse(_quantityCtrl.text.trim()) ?? 1;
+                final unitPrice = double.tryParse(_priceCtrl.text.trim());
+                if (unitPrice == null || qty <= 1) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: AppSizes.spaceXS),
+                  child: Text(
+                    '합계 ${NumberFormat('#,###').format((unitPrice * qty).toInt())}원',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                );
+              }),
               // 목록에 담기 버튼
               OutlinedButton.icon(
                 onPressed: canAddToList ? _addToPending : null,
@@ -1214,17 +1508,12 @@ class _AddCartItemDialogState extends ConsumerState<_AddCartItemDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _loading ? null : () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context),
           child: Text(l10n.common_cancel),
         ),
         FilledButton(
-          onPressed: _loading ? null : _submit,
-          child: _loading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2))
-              : Text(l10n.common_save),
+          onPressed: _submit,
+          child: Text(l10n.common_save),
         ),
       ],
     );
@@ -1259,7 +1548,7 @@ class _TransferDetail {
 
 class _CompleteShoppingDialog extends ConsumerStatefulWidget {
   final List<CartItemModel> items;
-  final Map<String, String> initialPrices; // cartItemId → price string
+  final Map<String, double> initialPrices; // cartItemId → price
   const _CompleteShoppingDialog({
     required this.items,
     this.initialPrices = const {},
@@ -1302,8 +1591,9 @@ class _CompleteShoppingDialogState
     super.initState();
     for (final item in widget.items) {
       _transferMap[item.id] = null;
+      final price = widget.initialPrices[item.id];
       final ctrl = TextEditingController(
-        text: widget.initialPrices[item.id] ?? '',
+        text: price != null ? price.toInt().toString() : '',
       );
       ctrl.addListener(_syncAmountFromPrices);
       _priceMap[item.id] = ctrl;

@@ -4524,6 +4524,12 @@ abstract class AppLocalizations {
   /// **'카테고리를 입력하세요 (선택사항)'**
   String get memo_categoryHint;
 
+  /// 메모 작성 화면 개인 옵션 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'나만의 메모'**
+  String get memo_personal;
+
   /// No description provided for @memo_tags.
   ///
   /// In ko, this message translates to:
@@ -4745,6 +4751,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'전체 해제'**
   String get memo_checklistReset;
+
+  /// No description provided for @memo_duplicate.
+  ///
+  /// In ko, this message translates to:
+  /// **'복사'**
+  String get memo_duplicate;
 
   /// No description provided for @memo_checklistSelectAll.
   ///

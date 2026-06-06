@@ -905,6 +905,10 @@
   "memo_content": "Content",
   "memo_category": "Category",
   "memo_categoryHint": "Enter category (optional)",
+  "memo_personal": "My Memo",
+  "@memo_personal": {
+    "description": "Personal option label in memo form"
+  },
   "memo_tags": "Tags",
   "memo_tagsHint": "Add tags",
   "memo_author": "Author",
@@ -942,6 +946,7 @@
   "memo_checklistAddHint": "Enter new item",
   "memo_checklistEmpty": "No checklist items",
   "memo_checklistReset": "Uncheck All",
+  "memo_duplicate": "Copy",
   "memo_checklistSelectAll": "Select All",
   "memo_checklistDeleteItem": "Delete Item",
   "memo_checklistEditItem": "Edit Item",

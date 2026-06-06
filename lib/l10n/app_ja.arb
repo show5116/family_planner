@@ -905,6 +905,10 @@
   "memo_content": "内容",
   "memo_category": "カテゴリー",
   "memo_categoryHint": "カテゴリーを入力してください（任意）",
+  "memo_personal": "マイメモ",
+  "@memo_personal": {
+    "description": "メモ作成画面の個人オプションラベル"
+  },
   "memo_tags": "タグ",
   "memo_tagsHint": "タグを追加",
   "memo_author": "作成者",
@@ -942,6 +946,7 @@
   "memo_checklistAddHint": "新しい項目を入力",
   "memo_checklistEmpty": "チェックリストの項目がありません",
   "memo_checklistReset": "全て解除",
+  "memo_duplicate": "コピー",
   "memo_checklistSelectAll": "全て選択",
   "memo_checklistDeleteItem": "項目を削除",
   "memo_checklistEditItem": "項目を編集",

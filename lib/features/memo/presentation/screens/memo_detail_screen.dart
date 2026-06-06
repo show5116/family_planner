@@ -9,9 +9,12 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
+import 'package:family_planner/features/memo/presentation/widgets/link_preview_embed.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
+import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_delete_dialog.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -266,6 +269,14 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
           ]),
         ),
         PopupMenuItem(
+          value: 'duplicate',
+          child: Row(children: [
+            const Icon(Icons.copy, size: AppSizes.iconSmall),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(l10n.memo_duplicate),
+          ]),
+        ),
+        PopupMenuItem(
           value: 'delete',
           child: Row(children: [
             const Icon(Icons.delete,
@@ -287,6 +298,17 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
   ) async {
     if (value == 'edit') {
       context.push('/memo/${widget.memoId}/edit');
+    } else if (value == 'duplicate') {
+      final memo = ref.read(memoDetailProvider(widget.memoId)).valueOrNull;
+      if (memo == null || !context.mounted) return;
+      context.push(
+        AppRoutes.memoAdd,
+        extra: MemoDuplicateData(
+          title: '${memo.title} (복사본)',
+          content: memo.content,
+          tags: memo.tags.map((t) => t.name).toList(),
+        ),
+      );
     } else if (value == 'delete') {
       MemoDeleteDialog.show(context, ref, widget.memoId);
     }
@@ -393,6 +415,9 @@ class _MemoViewerState extends State<_MemoViewer> {
         padding: EdgeInsets.zero,
         showCursor: false,
         checkBoxReadOnly: false,
+        embedBuilders: [
+          LinkPreviewEmbedBuilder(readOnly: true),
+        ],
         customLeadingBlockBuilder: (node, config) {
           final listAttr = config.attribute.value as String?;
           if (listAttr != 'unchecked' && listAttr != 'checked') return null;

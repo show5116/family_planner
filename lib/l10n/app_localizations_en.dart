@@ -2337,6 +2337,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memo_categoryHint => 'Enter category (optional)';
 
   @override
+  String get memo_personal => 'My Memo';
+
+  @override
   String get memo_tags => 'Tags';
 
   @override
@@ -2447,6 +2450,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get memo_checklistReset => 'Uncheck All';
+
+  @override
+  String get memo_duplicate => 'Copy';
 
   @override
   String get memo_checklistSelectAll => 'Select All';
