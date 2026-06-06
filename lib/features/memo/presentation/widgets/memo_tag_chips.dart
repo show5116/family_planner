@@ -28,22 +28,18 @@ class MemoTagChips extends StatelessWidget {
     if (tags.isEmpty) return const SizedBox.shrink();
 
     return Wrap(
-      spacing: AppSizes.spaceXS,
-      runSpacing: AppSizes.spaceXS,
+      spacing: AppSizes.spaceS,
+      runSpacing: AppSizes.spaceS,
       children: tags.map((tag) {
         final color = _parseColor(tag.color);
         return Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSizes.spaceS,
-            vertical: 2,
+            vertical: 3,
           ),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
+            color: color.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-            border: Border.all(
-              color: color.withValues(alpha: 0.3),
-              width: 0.5,
-            ),
           ),
           child: Text(
             tag.name,
@@ -62,11 +58,14 @@ class MemoTagChips extends StatelessWidget {
 class MemoTagInput extends StatefulWidget {
   final List<String> initialTags;
   final ValueChanged<List<String>> onChanged;
+  /// 자동완성 후보 태그 목록
+  final List<String> suggestedTags;
 
   const MemoTagInput({
     super.key,
     this.initialTags = const [],
     required this.onChanged,
+    this.suggestedTags = const [],
   });
 
   @override
@@ -75,7 +74,6 @@ class MemoTagInput extends StatefulWidget {
 
 class _MemoTagInputState extends State<MemoTagInput> {
   late List<String> _tags;
-  final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
   @override
@@ -88,71 +86,114 @@ class _MemoTagInputState extends State<MemoTagInput> {
   void didUpdateWidget(MemoTagInput oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.initialTags != widget.initialTags) {
-      setState(() {
-        _tags = List.from(widget.initialTags);
-      });
+      setState(() => _tags = List.from(widget.initialTags));
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
-  void _addTag() {
-    final text = _controller.text.trim().replaceAll('#', '');
-    if (text.isEmpty) return;
-    if (_tags.contains(text)) return;
-
-    setState(() {
-      _tags.add(text);
-    });
-    _controller.clear();
+  void _addTag(String text) {
+    final tag = text.trim().replaceAll('#', '');
+    if (tag.isEmpty || _tags.contains(tag)) return;
+    setState(() => _tags.add(tag));
     widget.onChanged(_tags);
-    _focusNode.requestFocus();
   }
 
   void _removeTag(String tag) {
-    setState(() {
-      _tags.remove(tag);
-    });
+    setState(() => _tags.remove(tag));
     widget.onChanged(_tags);
   }
 
   @override
   Widget build(BuildContext context) {
+    // 이미 추가된 태그는 후보에서 제외
+    final candidates = widget.suggestedTags
+        .where((t) => !_tags.contains(t))
+        .toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                focusNode: _focusNode,
-                decoration: InputDecoration(
-                  hintText: '태그',
-                  border: const OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppSizes.spaceM,
-                    vertical: AppSizes.spaceS,
+        Autocomplete<String>(
+          optionsBuilder: (textEditingValue) {
+            final input = textEditingValue.text.trim().replaceAll('#', '');
+            if (input.isEmpty) return const [];
+            return candidates
+                .where((t) => t.toLowerCase().contains(input.toLowerCase()))
+                .take(6);
+          },
+          onSelected: (tag) {
+            _addTag(tag);
+            _focusNode.requestFocus();
+          },
+          fieldViewBuilder: (context, controller, focusNode, onSubmitted) {
+            return Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      hintText: '태그 입력 후 추가',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceM,
+                        vertical: AppSizes.spaceS,
+                      ),
+                      isDense: true,
+                    ),
+                    onSubmitted: (value) {
+                      _addTag(value);
+                      controller.clear();
+                      focusNode.requestFocus();
+                    },
                   ),
-                  isDense: true,
                 ),
-                onSubmitted: (_) => _addTag(),
+                const SizedBox(width: AppSizes.spaceS),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    _addTag(controller.text);
+                    controller.clear();
+                    focusNode.requestFocus();
+                  },
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                  ),
+                ),
+              ],
+            );
+          },
+          optionsViewBuilder: (context, onSelected, options) {
+            return Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 280, maxHeight: 200),
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: options.length,
+                    itemBuilder: (_, index) {
+                      final tag = options.elementAt(index);
+                      return ListTile(
+                        dense: true,
+                        leading: const Icon(Icons.label_outline, size: AppSizes.iconSmall),
+                        title: Text(tag),
+                        onTap: () => onSelected(tag),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: AppSizes.spaceS),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _addTag,
-              style: IconButton.styleFrom(
-                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-              ),
-            ),
-          ],
+            );
+          },
         ),
         if (_tags.isNotEmpty) ...[
           const SizedBox(height: AppSizes.spaceS),
@@ -162,11 +203,14 @@ class _MemoTagInputState extends State<MemoTagInput> {
             children: _tags.map((tag) {
               return Chip(
                 label: Text(tag),
-                labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
-                deleteIcon: const Icon(Icons.close, size: AppSizes.iconSmall),
+                labelPadding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceXS),
+                deleteIcon:
+                    const Icon(Icons.close, size: AppSizes.iconSmall),
                 onDeleted: () => _removeTag(tag),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                visualDensity:
+                    const VisualDensity(horizontal: 0, vertical: -4),
               );
             }).toList(),
           ),

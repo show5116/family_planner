@@ -2269,6 +2269,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memo_categoryHint => '请输入类别（可选）';
 
   @override
+  String get memo_personal => '我的备忘录';
+
+  @override
   String get memo_tags => '标签';
 
   @override

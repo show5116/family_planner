@@ -49,11 +49,23 @@ class MemoList extends _$MemoList {
     return _items;
   }
 
+  bool _isLoadingMore = false;
+
   Future<void> loadMore() async {
-    if (!_hasMore) return;
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async => await _loadMemos(page: _currentPage + 1));
+    if (!_hasMore || _isLoadingMore) return;
+    _isLoadingMore = true;
+    try {
+      final next = await _loadMemos(page: _currentPage + 1);
+      state = AsyncValue.data(next);
+    } catch (e, st) {
+      // 추가 로드 실패 시 기존 데이터 유지하고 에러만 표시
+      state = AsyncValue.error(e, st);
+    } finally {
+      _isLoadingMore = false;
+    }
   }
+
+  bool get isLoadingMore => _isLoadingMore;
 
   Future<void> refresh() async {
     _currentPage = 1;
@@ -146,11 +158,20 @@ class MemoManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<MemoModel?> updateMemo(String id, UpdateMemoDto dto) async {
+  /// [refreshList]: true면 목록 전체 refresh (폼 저장), false면 로컬 교체만 (체크 토글)
+  Future<MemoModel?> updateMemo(
+    String id,
+    UpdateMemoDto dto, {
+    bool refreshList = false,
+  }) async {
     state = const AsyncValue.loading();
     try {
       final memo = await _repository.updateMemo(id, dto);
-      _ref.read(memoListProvider.notifier).afterUpdate(id, memo);
+      if (refreshList) {
+        await _ref.read(memoListProvider.notifier).refresh();
+      } else {
+        _ref.read(memoListProvider.notifier).afterUpdate(id, memo);
+      }
       _ref.invalidate(memoDetailProvider(id));
       state = const AsyncValue.data(null);
       return memo;

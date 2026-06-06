@@ -9,6 +9,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
+import 'package:family_planner/features/memo/presentation/widgets/link_preview_embed.dart';
 import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_delete_dialog.dart';
@@ -393,6 +394,9 @@ class _MemoViewerState extends State<_MemoViewer> {
         padding: EdgeInsets.zero,
         showCursor: false,
         checkBoxReadOnly: false,
+        embedBuilders: [
+          LinkPreviewEmbedBuilder(readOnly: true),
+        ],
         customLeadingBlockBuilder: (node, config) {
           final listAttr = config.attribute.value as String?;
           if (listAttr != 'unchecked' && listAttr != 'checked') return null;

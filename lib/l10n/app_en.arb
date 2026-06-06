@@ -905,6 +905,10 @@
   "memo_content": "Content",
   "memo_category": "Category",
   "memo_categoryHint": "Enter category (optional)",
+  "memo_personal": "My Memo",
+  "@memo_personal": {
+    "description": "Personal option label in memo form"
+  },
   "memo_tags": "Tags",
   "memo_tagsHint": "Add tags",
   "memo_author": "Author",

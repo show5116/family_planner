@@ -856,6 +856,10 @@
   "memo_content": "内容",
   "memo_category": "类别",
   "memo_categoryHint": "请输入类别（可选）",
+  "memo_personal": "我的备忘录",
+  "@memo_personal": {
+    "description": "备忘录创建页面个人选项标签"
+  },
   "memo_tags": "标签",
   "memo_tagsHint": "添加标签",
   "memo_author": "作者",

@@ -2283,6 +2283,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get memo_categoryHint => 'カテゴリーを入力してください（任意）';
 
   @override
+  String get memo_personal => 'マイメモ';
+
+  @override
   String get memo_tags => 'タグ';
 
   @override

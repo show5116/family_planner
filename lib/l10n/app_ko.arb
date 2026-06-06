@@ -919,6 +919,10 @@
   "memo_content": "내용",
   "memo_category": "카테고리",
   "memo_categoryHint": "카테고리를 입력하세요 (선택사항)",
+  "memo_personal": "나만의 메모",
+  "@memo_personal": {
+    "description": "메모 작성 화면 개인 옵션 라벨"
+  },
   "memo_tags": "태그",
   "memo_tagsHint": "태그를 추가하세요",
   "memo_author": "작성자",

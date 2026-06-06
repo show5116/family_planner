@@ -2337,6 +2337,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memo_categoryHint => 'Enter category (optional)';
 
   @override
+  String get memo_personal => 'My Memo';
+
+  @override
   String get memo_tags => 'Tags';
 
   @override

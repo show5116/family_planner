@@ -21,7 +21,6 @@ import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/app_search_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
-const _kTagChipLimit = 5;
 
 // ── 온보딩용 샘플 메모 ────────────────────────────────────────────────────────
 
@@ -67,7 +66,7 @@ class MemoListScreen extends ConsumerStatefulWidget {
 class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isSearching = false;
-  bool _tagsExpanded = false;
+  bool _pinnedCollapsed = false;
 
   String? _selectedTag;
 
@@ -266,36 +265,52 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   Widget _buildTagChips(List<String> tags) {
     if (tags.isEmpty) return const SizedBox.shrink();
 
-    final showAll = _tagsExpanded || tags.length <= _kTagChipLimit;
-    final visibleTags = showAll ? tags : tags.take(_kTagChipLimit).toList();
+    final hasSelection = _selectedTag != null;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.spaceM,
-        vertical: AppSizes.spaceXS,
-      ),
-      child: Wrap(
-        spacing: AppSizes.spaceS,
-        runSpacing: AppSizes.spaceXS,
+    return SizedBox(
+      height: 40,
+      child: Row(
         children: [
-          _chip(
-            label: '전체',
-            selected: _selectedTag == null,
-            onTap: () => _selectTag(null),
-          ),
-          ...visibleTags.map(
-            (tag) => _chip(
-              label: tag,
-              selected: _selectedTag == tag,
-              onTap: () => _selectTag(tag),
+          // 리셋 버튼
+          Padding(
+            padding: const EdgeInsets.only(left: AppSizes.spaceM),
+            child: IconButton(
+              tooltip: '태그 필터 초기화',
+              onPressed: () => _selectTag(null),
+              icon: Icon(
+                Icons.filter_alt_off_outlined,
+                size: AppSizes.iconSmall,
+                color: hasSelection
+                    ? Theme.of(context).colorScheme.primary
+                    : AppColors.textSecondary.withValues(alpha: 0.4),
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
             ),
           ),
-          if (tags.length > _kTagChipLimit)
-            _chip(
-              label: _tagsExpanded ? '접기' : '+${tags.length - _kTagChipLimit}개 더',
-              selected: false,
-              onTap: () => setState(() => _tagsExpanded = !_tagsExpanded),
+          const SizedBox(width: AppSizes.spaceXS),
+          // 구분선
+          Container(
+            width: 1,
+            height: 18,
+            color: Theme.of(context).dividerColor,
+          ),
+          // 태그 칩 1줄 가로 스크롤
+          Expanded(
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+              itemCount: tags.length,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSizes.spaceS),
+              itemBuilder: (_, index) => Center(
+                child: _chip(
+                  label: tags[index],
+                  selected: _selectedTag == tags[index],
+                  onTap: () => _selectTag(tags[index]),
+                ),
+              ),
             ),
+          ),
         ],
       ),
     );
@@ -345,7 +360,11 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
               },
               onClose: _toggleSearch,
             ),
-          if (!_isDemo) const _MemoGroupFilterBar(),
+          if (!_isDemo)
+            ColoredBox(
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+              child: const _MemoGroupFilterBar(),
+            ),
           if (!_isDemo) _buildTagChips(tagsAsync.valueOrNull ?? []),
           Expanded(
             child: _isDemo
@@ -361,15 +380,72 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
                           );
                         }
 
+                        final pinned = memos.where((m) => m.isPinned).toList();
+                        final normal = memos.where((m) => !m.isPinned).toList();
+                        final hasPinned = pinned.isNotEmpty;
+                        final collapseThreshold = 3;
+                        final showCollapse = hasPinned && pinned.length > collapseThreshold;
+                        final visiblePinned = (showCollapse && _pinnedCollapsed)
+                            ? pinned.take(collapseThreshold).toList()
+                            : pinned;
+
+                        // 섹션 구조를 flat list로 변환
+                        // _SectionHeader / MemoModel / _LoadMore 세 가지 타입
+                        final items = <Object>[];
+                        if (hasPinned) {
+                          items.add(_SectionHeader(
+                            label: '📌 고정된 메모',
+                            trailing: showCollapse
+                                ? _pinnedCollapsed
+                                    ? '펼치기 (${pinned.length - collapseThreshold}개 더)'
+                                    : '접기'
+                                : null,
+                            onTrailingTap: showCollapse
+                                ? () => setState(
+                                    () => _pinnedCollapsed = !_pinnedCollapsed)
+                                : null,
+                          ));
+                          items.addAll(visiblePinned);
+                          if (normal.isNotEmpty) {
+                            items.add(const _SectionHeader(label: '메모'));
+                          }
+                        }
+                        items.addAll(normal);
+
+                        final notifier = ref.read(memoListProvider.notifier);
+                        if (notifier.hasMore) items.add(_LoadMore());
+
                         return ListView.separated(
                           controller: _scrollController,
-                          padding: const EdgeInsets.all(AppSizes.spaceM),
-                          itemCount: memos.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: AppSizes.spaceM),
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSizes.spaceM,
+                            AppSizes.spaceM,
+                            AppSizes.spaceM,
+                            96,
+                          ),
+                          itemCount: items.length,
+                          separatorBuilder: (_, i) {
+                            // 섹션 헤더 앞뒤는 간격 없음
+                            final next = i + 1 < items.length ? items[i + 1] : null;
+                            if (items[i] is _SectionHeader || next is _SectionHeader) {
+                              return const SizedBox.shrink();
+                            }
+                            return const SizedBox(height: AppSizes.spaceM);
+                          },
                           itemBuilder: (context, index) {
-                            final memo = memos[index];
-                            return MemoCard(memo: memo);
+                            final item = items[index];
+                            if (item is _SectionHeader) {
+                              return _buildSectionHeader(context, item);
+                            }
+                            if (item is _LoadMore) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppSizes.spaceL),
+                                child: Center(
+                                    child: CircularProgressIndicator()),
+                              );
+                            }
+                            return MemoCard(memo: item as dynamic);
                           },
                         );
                       },
@@ -391,6 +467,50 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
               tooltip: l10n.memo_create,
               child: const Icon(Icons.add),
             ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context, _SectionHeader header) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: AppSizes.spaceM,
+        bottom: AppSizes.spaceS,
+      ),
+      child: Row(
+        children: [
+          Text(
+            header.label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+          if (header.trailing != null) ...[
+            const Spacer(),
+            GestureDetector(
+              onTap: header.onTrailingTap,
+              child: Row(
+                children: [
+                  Text(
+                    header.trailing!,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  const SizedBox(width: 2),
+                  Icon(
+                    _pinnedCollapsed
+                        ? Icons.keyboard_arrow_down
+                        : Icons.keyboard_arrow_up,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 
@@ -655,3 +775,19 @@ class _DemoChecklistDetailScreenState
     );
   }
 }
+
+// ── 섹션 구분용 내부 모델 ────────────────────────────────────────────────────
+
+class _SectionHeader {
+  final String label;
+  final String? trailing;
+  final VoidCallback? onTrailingTap;
+
+  const _SectionHeader({
+    required this.label,
+    this.trailing,
+    this.onTrailingTap,
+  });
+}
+
+class _LoadMore {}

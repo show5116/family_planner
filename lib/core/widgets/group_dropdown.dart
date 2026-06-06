@@ -23,6 +23,8 @@ class GroupDropdown extends StatelessWidget {
   final ValueChanged<String?> onChanged;
   final GroupDropdownStyle style;
   final bool showPersonalOption;
+  /// null이면 l10n.schedule_personal 사용
+  final String? personalLabel;
 
   const GroupDropdown({
     super.key,
@@ -31,6 +33,7 @@ class GroupDropdown extends StatelessWidget {
     required this.onChanged,
     this.style = GroupDropdownStyle.form,
     this.showPersonalOption = true,
+    this.personalLabel,
   });
 
   @override
@@ -65,7 +68,7 @@ class GroupDropdown extends StatelessWidget {
             children: [
               const Icon(Icons.person, size: 20),
               const SizedBox(width: AppSizes.spaceS),
-              Text(l10n.schedule_personal),
+              Text(personalLabel ?? l10n.schedule_personal),
             ],
           ),
         ),
