@@ -5806,6 +5806,68 @@ INVITE 타입의 PENDING 상태 초대 이메일을 재전송합니다
 
 ---
 
+### POST `memos/:id/lock`
+
+**요약:** 편집 잠금 획득 (편집 모드 진입 시 호출)
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Responses:**
+
+#### 200 - 잠금 획득 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
+}
+```
+
+#### 404 - 메모를 찾을 수 없습니다
+
+---
+
+### DELETE `memos/:id/lock`
+
+**요약:** 편집 잠금 해제 (편집 완료 또는 취소 시 호출)
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Responses:**
+
+#### 200 - 잠금 해제 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
+}
+```
+
+---
+
+### POST `memos/:id/lock/heartbeat`
+
+**요약:** 편집 잠금 TTL 갱신 (30초마다 호출)
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Responses:**
+
+#### 200 - 갱신 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
+}
+```
+
+---
+
 ## 미니게임
 
 **Base Path:** `/minigames`

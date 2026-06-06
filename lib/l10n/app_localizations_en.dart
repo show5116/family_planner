@@ -2452,6 +2452,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memo_checklistReset => 'Uncheck All';
 
   @override
+  String get memo_duplicate => 'Copy';
+
+  @override
   String get memo_checklistSelectAll => 'Select All';
 
   @override

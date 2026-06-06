@@ -897,6 +897,7 @@
   "memo_checklistAddHint": "请输入新项目",
   "memo_checklistEmpty": "暂无清单项目",
   "memo_checklistReset": "取消全选",
+  "memo_duplicate": "拷贝",
   "memo_checklistSelectAll": "全选",
   "memo_checklistDeleteItem": "删除项目",
   "memo_checklistEditItem": "编辑项目",

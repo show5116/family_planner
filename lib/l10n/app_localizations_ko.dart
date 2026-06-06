@@ -2401,6 +2401,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get memo_checklistReset => '전체 해제';
 
   @override
+  String get memo_duplicate => '복사';
+
+  @override
   String get memo_checklistSelectAll => '전체 선택';
 
   @override

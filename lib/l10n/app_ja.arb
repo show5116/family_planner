@@ -946,6 +946,7 @@
   "memo_checklistAddHint": "新しい項目を入力",
   "memo_checklistEmpty": "チェックリストの項目がありません",
   "memo_checklistReset": "全て解除",
+  "memo_duplicate": "コピー",
   "memo_checklistSelectAll": "全て選択",
   "memo_checklistDeleteItem": "項目を削除",
   "memo_checklistEditItem": "項目を編集",

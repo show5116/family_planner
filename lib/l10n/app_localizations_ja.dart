@@ -2397,6 +2397,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get memo_checklistReset => '全て解除';
 
   @override
+  String get memo_duplicate => 'コピー';
+
+  @override
   String get memo_checklistSelectAll => '全て選択';
 
   @override

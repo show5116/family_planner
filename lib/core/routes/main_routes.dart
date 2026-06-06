@@ -289,7 +289,11 @@ List<RouteBase> getMainRoutes() {
     GoRoute(
       path: AppRoutes.memoAdd,
       name: 'memoCreate',
-      builder: (context, state) => const MemoFormScreen(),
+      builder: (context, state) => MemoFormScreen(
+        initialData: state.extra is MemoDuplicateData
+            ? state.extra as MemoDuplicateData
+            : null,
+      ),
     ),
     GoRoute(
       path: AppRoutes.memoDetail,

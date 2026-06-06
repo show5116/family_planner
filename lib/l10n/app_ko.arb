@@ -960,6 +960,7 @@
   "memo_checklistAddHint": "새 항목을 입력하세요",
   "memo_checklistEmpty": "체크리스트 항목이 없습니다",
   "memo_checklistReset": "전체 해제",
+  "memo_duplicate": "복사",
   "memo_checklistSelectAll": "전체 선택",
   "memo_checklistDeleteItem": "항목 삭제",
   "memo_checklistEditItem": "항목 수정",

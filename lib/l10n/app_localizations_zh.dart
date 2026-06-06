@@ -2383,6 +2383,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memo_checklistReset => '取消全选';
 
   @override
+  String get memo_duplicate => '拷贝';
+
+  @override
   String get memo_checklistSelectAll => '全选';
 
   @override

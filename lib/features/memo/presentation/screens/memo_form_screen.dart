@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
 import 'package:family_planner/features/memo/data/repositories/link_preview_repository.dart';
+import 'package:family_planner/features/memo/data/repositories/memo_repository.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_tag_chips.dart';
 import 'package:family_planner/features/memo/presentation/widgets/memo_editor_toolbar.dart';
 import 'package:family_planner/features/memo/presentation/widgets/link_preview_embed.dart';
@@ -21,10 +23,25 @@ import 'package:family_planner/core/widgets/group_dropdown.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 
+/// 복제 시 초기값으로 전달하는 데이터 클래스
+class MemoDuplicateData {
+  final String title;
+  final String? content;
+  final List<String> tags;
+
+  const MemoDuplicateData({
+    required this.title,
+    this.content,
+    this.tags = const [],
+  });
+}
+
 class MemoFormScreen extends ConsumerStatefulWidget {
   final String? memoId;
+  /// 복제 시 초기 데이터 (생성 모드에서만 사용)
+  final MemoDuplicateData? initialData;
 
-  const MemoFormScreen({super.key, this.memoId});
+  const MemoFormScreen({super.key, this.memoId, this.initialData});
 
   @override
   ConsumerState<MemoFormScreen> createState() => _MemoFormScreenState();
@@ -51,6 +68,39 @@ class _MemoFormScreenState extends ConsumerState<MemoFormScreen>
   bool _isLoading = false;
   bool _isInitialized = false;
 
+  // 편집 잠금
+  // ignore: prefer_final_fields
+  bool _lockAcquired = false;
+  Timer? _heartbeatTimer;
+
+  Future<void> _acquireLock() async {
+    if (!_isEditMode) return;
+    try {
+      final repo = ref.read(memoRepositoryProvider);
+      await repo.acquireLock(widget.memoId!);
+      _lockAcquired = true;
+      _heartbeatTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+        ref.read(memoRepositoryProvider).heartbeat(widget.memoId!);
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+        );
+        context.pop();
+      }
+    }
+  }
+
+  void _releaseLock() {
+    _heartbeatTimer?.cancel();
+    _heartbeatTimer = null;
+    if (_lockAcquired && widget.memoId != null) {
+      _lockAcquired = false;
+      ref.read(memoRepositoryProvider).releaseLock(widget.memoId!);
+    }
+  }
+
 bool get _isEditMode => widget.memoId != null;
 
   @override
@@ -60,12 +110,30 @@ bool get _isEditMode => widget.memoId != null;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_isEditMode) {
         _loadMemoData();
+        _acquireLock();
       } else {
         _autoSelectGroup();
+        _applyInitialData();
         _attachEnterListener();
         setState(() => _isInitialized = true);
       }
     });
+  }
+
+  void _applyInitialData() {
+    final data = widget.initialData;
+    if (data == null) return;
+    _titleController.text = data.title;
+    _tags = List.of(data.tags);
+    if (data.content != null && data.content!.isNotEmpty) {
+      final doc = MemoEditorConverter.toDocument(data.content!);
+      _quillController.dispose();
+      _quillController = QuillController(
+        document: doc,
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+      _preloadInsertedUrls(data.content);
+    }
   }
 
   void _attachEnterListener() {
@@ -308,6 +376,7 @@ bool get _isEditMode => widget.memoId != null;
 
   @override
   void dispose() {
+    _releaseLock();
     _titleController.dispose();
     _focusNode.dispose();
     _scrollController.dispose();

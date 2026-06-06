@@ -4752,6 +4752,12 @@ abstract class AppLocalizations {
   /// **'전체 해제'**
   String get memo_checklistReset;
 
+  /// No description provided for @memo_duplicate.
+  ///
+  /// In ko, this message translates to:
+  /// **'복사'**
+  String get memo_duplicate;
+
   /// No description provided for @memo_checklistSelectAll.
   ///
   /// In ko, this message translates to:
