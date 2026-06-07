@@ -291,9 +291,10 @@ class FridgeRepository {
 
   Future<CartModel> bulkUpdateCartItems(BulkUpdateCartItemDto dto) async {
     try {
+      final jsonData = dto.toJson();
       final response = await _dio.patch(
         '/shopping/cart/items/bulk',
-        data: dto.toJson(),
+        data: jsonData,
       );
       return CartModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {

@@ -10,6 +10,7 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 
+
 class ShoppingHistoryDetailScreen extends ConsumerWidget {
   final String historyId;
   final String? groupId;
@@ -20,39 +21,18 @@ class ShoppingHistoryDetailScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(l10n.fridge_history_delete_confirm_title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.fridge_history_delete_confirm_body),
-            if (history.expense != null) ...[
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(ctx).colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.info_outline,
-                        size: 16,
-                        color: Theme.of(ctx).colorScheme.onSurfaceVariant),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        l10n.fridge_history_delete_expense_notice,
-                        style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(ctx).colorScheme.onSurfaceVariant),
-                      ),
-                    ),
-                  ],
-                ),
+        title: const Text('구매 이력 삭제'),
+        content: RichText(
+          text: TextSpan(
+            style: Theme.of(ctx).textTheme.bodyMedium,
+            children: const [
+              TextSpan(text: '이 장보기 기록을 삭제하시겠습니까?\n\n'),
+              TextSpan(
+                text: '가계부 지출 내역과 냉장고 보관 품목은 삭제되지 않고 유지됩니다.',
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ],
-          ],
+          ),
         ),
         actions: [
           TextButton(
@@ -104,69 +84,126 @@ class _HistoryDetail extends ConsumerWidget {
   final AppLocalizations l10n;
   const _HistoryDetail({required this.history, required this.l10n});
 
+  void _readdToCart(BuildContext context, WidgetRef ref) {
+    final entries = history.items
+        .map((item) => CartItemEntryDto(
+              name: item.name,
+              quantity: item.quantity,
+              unit: item.unit,
+              price: item.price,
+            ))
+        .toList();
+    final current = ref.read(cartPendingInsertsProvider);
+    ref.read(cartPendingInsertsProvider.notifier).state = [...current, ...entries];
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${history.items.length}개 항목을 장바구니에 담았습니다.')),
+    );
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dateStr =
         DateFormat('yyyy년 MM월 dd일 HH:mm').format(history.completedAt);
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+    return Column(
       children: [
-        Text(dateStr, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: AppSizes.spaceM),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            children: [
+              Text(dateStr, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: AppSizes.spaceM),
 
-        if (history.expense != null) ...[
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.receipt_outlined),
-              title: Text(
-                '${NumberFormat('#,###').format(history.expense!.amount)}원',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary),
-              ),
-              subtitle: history.expense!.description != null
-                  ? Text(history.expense!.description!)
-                  : null,
-              trailing: TextButton(
-                onPressed: () async {
-                  final expense = await ref
-                      .read(expenseByIdProvider(history.expense!.id).future);
-                  if (context.mounted) {
-                    context.push(AppRoutes.householdDetail,
-                        extra: {'expense': expense});
-                  }
-                },
-                child: Text(l10n.fridge_history_view_expense),
+              if (history.expense != null) ...[
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.receipt_outlined),
+                    title: Text(
+                      '${NumberFormat('#,###').format(history.expense!.amount)}원',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                    subtitle: history.expense!.description != null
+                        ? Text(history.expense!.description!)
+                        : null,
+                    trailing: TextButton(
+                      onPressed: () async {
+                        final expense = await ref
+                            .read(expenseByIdProvider(history.expense!.id).future);
+                        if (context.mounted) {
+                          context.push(AppRoutes.householdDetail,
+                              extra: {'expense': expense});
+                        }
+                      },
+                      child: Text(l10n.fridge_history_view_expense),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSizes.spaceM),
+              ],
+
+              Text(l10n.fridge_history_items_count(history.items.length),
+                  style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: AppSizes.spaceS),
+              ...history.items.map((item) => _HistoryItemTile(item: item)),
+            ],
+          ),
+        ),
+        // 장바구니 다시 담기 버튼
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+                AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM),
+            child: FilledButton.icon(
+              onPressed: () => _readdToCart(context, ref),
+              icon: const Icon(Icons.add_shopping_cart_outlined),
+              label: const Text('이 리스트 그대로 장바구니에 담기'),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
               ),
             ),
           ),
-          const SizedBox(height: AppSizes.spaceM),
-        ],
-
-        Text(l10n.fridge_history_items_count(history.items.length),
-            style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: AppSizes.spaceS),
-        ...history.items.map((item) => _HistoryItemTile(item: item)),
+        ),
       ],
     );
   }
 }
 
-class _HistoryItemTile extends StatelessWidget {
+class _HistoryItemTile extends ConsumerWidget {
   final ShoppingHistoryItemModel item;
   const _HistoryItemTile({required this.item});
 
+  void _addToCart(BuildContext context, WidgetRef ref) {
+    final current = ref.read(cartPendingInsertsProvider);
+    ref.read(cartPendingInsertsProvider.notifier).state = [
+      ...current,
+      CartItemEntryDto(name: item.name, quantity: item.quantity, unit: item.unit, price: item.price),
+    ];
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${item.name}을(를) 장바구니에 담았습니다.')),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final priceText = item.price != null
+        ? '${NumberFormat('#,###').format(item.price!.toInt())}원'
+        : null;
+
     return ListTile(
-      leading: Icon(
-        item.transferredToFridge
-            ? Icons.kitchen_outlined
-            : Icons.shopping_bag_outlined,
-        color: item.transferredToFridge
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.outline,
+      leading: Tooltip(
+        message: item.transferredToFridge ? '냉장고에 이관됨' : '이관 안 함',
+        child: Icon(
+          item.transferredToFridge
+              ? Icons.kitchen_outlined
+              : Icons.shopping_bag_outlined,
+          color: item.transferredToFridge
+              ? colorScheme.primary
+              : colorScheme.outline,
+        ),
       ),
       title: Text(item.name),
       subtitle: Text(
@@ -174,18 +211,25 @@ class _HistoryItemTile extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (item.price != null)
-            Text(
-              '${NumberFormat('#,###').format(item.price!.toInt())}원',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-            ),
-          if (item.transferredToFridge) ...[
-            if (item.price != null) const SizedBox(width: 4),
-            Icon(Icons.check_circle_outline,
-                color: Theme.of(context).colorScheme.primary, size: 18),
-          ],
+          priceText != null
+              ? Text(
+                  priceText,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.outline,
+                      ),
+                )
+              : Text(
+                  '가격 미입력',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.outlineVariant,
+                      ),
+                ),
+          const SizedBox(width: 4),
+          IconButton(
+            icon: const Icon(Icons.add_shopping_cart_outlined, size: 20),
+            tooltip: '장바구니에 담기',
+            onPressed: () => _addToCart(context, ref),
+          ),
         ],
       ),
     );
