@@ -190,6 +190,11 @@ const List<MerchantSample> kMerchantSamples = [
     icon: Icons.local_grocery_store_outlined,
     color: Color(0xFFE60012),
   ),
+  MerchantSample(
+    name: '코스트코',
+    icon: Icons.local_grocery_store_outlined,
+    color: Color(0xFF005DAA),
+  ),
   // 교통
   MerchantSample(
     name: 'T머니',

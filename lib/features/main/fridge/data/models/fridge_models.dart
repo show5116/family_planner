@@ -528,6 +528,7 @@ class CartItemEntryDto {
 // PATCH /shopping/cart/items/bulk
 class CartItemUpdateEntryDto {
   final String id;
+  final String? name;
   final int? quantity;
   final String? unit;
   final bool? isChecked;
@@ -536,6 +537,7 @@ class CartItemUpdateEntryDto {
 
   const CartItemUpdateEntryDto({
     required this.id,
+    this.name,
     this.quantity,
     this.unit,
     this.isChecked,
@@ -545,6 +547,7 @@ class CartItemUpdateEntryDto {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        if (name != null) 'name': name,
         if (quantity != null) 'quantity': quantity,
         if (unit != null) 'unit': unit,
         if (isChecked != null) 'isChecked': isChecked,
@@ -771,6 +774,7 @@ class ShoppingExpenseDto {
   final String? date;
   final String? description;
   final ExpenseCategory? category;
+  final String? merchantId;
 
   const ShoppingExpenseDto({
     this.amount,
@@ -778,6 +782,7 @@ class ShoppingExpenseDto {
     this.date,
     this.description,
     this.category,
+    this.merchantId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -787,6 +792,7 @@ class ShoppingExpenseDto {
         if (date != null) 'date': date,
         if (description != null) 'description': description,
         if (category != null) 'category': _categoryToString(category!),
+        if (merchantId != null) 'merchantId': merchantId,
       };
 
   static String _paymentMethodToString(PaymentMethod m) {
@@ -819,17 +825,20 @@ class ShoppingExpenseDto {
 class CompleteCartDto {
   final String groupId;
   final List<TransferItemDto> transfers;
+  final List<String>? excludes; // 장바구니에 잔류시킬 항목 ID 목록
   final ShoppingExpenseDto? expense;
 
   const CompleteCartDto({
     required this.groupId,
     required this.transfers,
+    this.excludes,
     this.expense,
   });
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
         'transfers': transfers.map((t) => t.toJson()).toList(),
+        if (excludes != null && excludes!.isNotEmpty) 'excludes': excludes,
         if (expense != null) 'expense': expense!.toJson(),
       };
 }

@@ -256,9 +256,15 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
   }
 
   void _showAddDialog(BuildContext context) {
-    showDialog<void>(
+    _showFrequentItemSheet(context, null);
+  }
+
+  void _showFrequentItemSheet(BuildContext context, FrequentItemModel? item) {
+    showModalBottomSheet<void>(
       context: context,
-      builder: (_) => const _FrequentItemFormDialog(),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => _FrequentItemFormSheet(item: item),
     );
   }
 }
@@ -299,10 +305,23 @@ class _OnboardingFrequentView extends StatelessWidget {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Switch(
-                    key: isFirst ? autoAddKey : null,
-                    value: item.autoAdd,
-                    onChanged: null,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '자동 추가',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: item.autoAdd
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
+                            ),
+                      ),
+                      Switch(
+                        key: isFirst ? autoAddKey : null,
+                        value: item.autoAdd,
+                        onChanged: null,
+                      ),
+                    ],
                   ),
                   IconButton(
                     key: isFirst ? addToCartKey : null,
@@ -475,14 +494,30 @@ class _FrequentItemTile extends ConsumerWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Tooltip(
-            message: l10n.fridge_frequent_auto_add,
-            child: Switch(
-              value: item.autoAdd,
-              onChanged: (v) => ref
-                  .read(frequentItemsProvider.notifier)
-                  .toggleAutoAdd(item.id, v),
-            ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.fridge_frequent_auto_add,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: item.autoAdd
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+              SizedBox(
+                height: 28,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Switch(
+                    value: item.autoAdd,
+                    onChanged: (v) => ref
+                        .read(frequentItemsProvider.notifier)
+                        .toggleAutoAdd(item.id, v),
+                  ),
+                ),
+              ),
+            ],
           ),
           IconButton(
             icon: const Icon(Icons.add_shopping_cart_outlined, size: 20),
@@ -532,9 +567,11 @@ class _FrequentItemTile extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     switch (action) {
       case _Action.edit:
-        await showDialog<void>(
+        await showModalBottomSheet<void>(
           context: context,
-          builder: (_) => _FrequentItemFormDialog(item: item),
+          isScrollControlled: true,
+          useSafeArea: true,
+          builder: (_) => _FrequentItemFormSheet(item: item),
         );
       case _Action.delete:
         final confirmed = await showDialog<bool>(
@@ -564,19 +601,19 @@ class _FrequentItemTile extends ConsumerWidget {
 
 enum _Action { edit, delete }
 
-// ── 자주 사는 항목 폼 ─────────────────────────────────────────────────────────────
+// ── 자주 사는 항목 폼 바텀 시트 ──────────────────────────────────────────────────
 
-class _FrequentItemFormDialog extends ConsumerStatefulWidget {
+class _FrequentItemFormSheet extends ConsumerStatefulWidget {
   final FrequentItemModel? item;
-  const _FrequentItemFormDialog({this.item});
+  const _FrequentItemFormSheet({this.item});
 
   @override
-  ConsumerState<_FrequentItemFormDialog> createState() =>
-      _FrequentItemFormDialogState();
+  ConsumerState<_FrequentItemFormSheet> createState() =>
+      _FrequentItemFormSheetState();
 }
 
-class _FrequentItemFormDialogState
-    extends ConsumerState<_FrequentItemFormDialog> {
+class _FrequentItemFormSheetState
+    extends ConsumerState<_FrequentItemFormSheet> {
   final _nameController = TextEditingController();
   final _unitController = TextEditingController();
   bool _autoAdd = false;
@@ -637,47 +674,96 @@ class _FrequentItemFormDialogState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isEdit = widget.item != null;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return AlertDialog(
-      title: Text(isEdit ? l10n.common_edit : l10n.fridge_frequent_add),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.92,
+      builder: (_, scrollController) => Column(
         children: [
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: l10n.fridge_item_name),
-            textCapitalization: TextCapitalization.sentences,
+          // 드래그 핸들
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.outlineVariant,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: AppSizes.spaceS),
-          TextField(
-            controller: _unitController,
-            decoration: InputDecoration(labelText: l10n.fridge_item_unit),
+          // 타이틀
+          Padding(
+            padding: const EdgeInsets.fromLTRB(AppSizes.spaceL, 0, AppSizes.spaceS, AppSizes.spaceM),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    isEdit ? l10n.common_edit : l10n.fridge_frequent_add,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: AppSizes.spaceS),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.fridge_frequent_auto_add,
-                style: Theme.of(context).textTheme.bodyMedium),
-            value: _autoAdd,
-            onChanged: (v) => setState(() => _autoAdd = v),
+          // 폼
+          Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              padding: EdgeInsets.fromLTRB(
+                AppSizes.spaceL,
+                0,
+                AppSizes.spaceL,
+                AppSizes.spaceL + bottomInset,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(labelText: l10n.fridge_item_name),
+                    textCapitalization: TextCapitalization.sentences,
+                    autofocus: widget.item == null,
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
+                  TextField(
+                    controller: _unitController,
+                    decoration: InputDecoration(labelText: l10n.fridge_item_unit),
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.fridge_frequent_auto_add,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    value: _autoAdd,
+                    onChanged: (v) => setState(() => _autoAdd = v),
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
+                  FilledButton(
+                    onPressed: _loading ? null : _submit,
+                    child: _loading
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2))
+                        : Text(isEdit ? l10n.common_save : l10n.common_add),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: _loading ? null : () => Navigator.pop(context),
-          child: Text(l10n.common_cancel),
-        ),
-        FilledButton(
-          onPressed: _loading ? null : _submit,
-          child: _loading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2))
-              : Text(isEdit ? l10n.common_save : l10n.common_add),
-        ),
-      ],
     );
   }
 }
