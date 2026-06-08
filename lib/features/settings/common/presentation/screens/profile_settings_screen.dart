@@ -7,7 +7,6 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/shared/widgets/scrollable_form_body.dart';
-import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -71,8 +70,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  final _storage = SecureStorageService();
-  Map<String, dynamic>? _userInfo;
+
 
   bool _obscureCurrentPassword = true;
   bool _obscureNewPassword = true;
@@ -86,7 +84,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initFromProvider());
   }
 
   @override
@@ -99,17 +97,15 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     super.dispose();
   }
 
-  Future<void> _loadUserInfo() async {
-    final userInfo = await _storage.getUserInfo();
-    if (mounted) {
-      setState(() {
-        _userInfo = userInfo;
-        _nameController.text = userInfo['name'] as String? ?? '';
-        _phoneNumberController.text = userInfo['phoneNumber'] as String? ?? '';
-        _hasPassword = userInfo['hasPassword'] as bool? ?? true;
-        _personalColor = ColorUtils.parseColor(userInfo['personalColor'] as String?);
-      });
-    }
+  void _initFromProvider() {
+    final userInfo = ref.read(authProvider).user;
+    if (userInfo == null || !mounted) return;
+    setState(() {
+      _nameController.text = userInfo['name'] as String? ?? '';
+      _phoneNumberController.text = userInfo['phoneNumber'] as String? ?? '';
+      _hasPassword = userInfo['hasPassword'] as bool? ?? true;
+      _personalColor = ColorUtils.parseColor(userInfo['personalColor'] as String?);
+    });
   }
 
   Future<void> _updateProfile() async {
@@ -166,9 +162,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
             backgroundColor: Colors.green,
           ),
         );
-
-        // 사용자 정보 재로드
-        await _loadUserInfo();
 
         // 비밀번호 변경 모드였다면 필드 초기화
         if (_isPasswordChangeMode) {
@@ -274,9 +267,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       // 프로필 사진 업로드
       await ref.read(authProvider.notifier).uploadProfilePhoto(bytes, fileName);
 
-      // 사용자 정보 재로드
-      await _loadUserInfo();
-
       setState(() => _isUploadingImage = false);
 
       if (mounted) {
@@ -303,7 +293,8 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profileImageUrl = _userInfo?['profileImageUrl'] as String?;
+    final userInfo = ref.watch(authProvider).user;
+    final profileImageUrl = userInfo?['profileImageUrl'] as String?;
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -372,7 +363,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                         ),
                         const SizedBox(height: AppSizes.spaceS),
                         Text(
-                          _userInfo?['email'] as String? ?? '',
+                          userInfo?['email'] as String? ?? '',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: Colors.grey[600]),
                         ),
