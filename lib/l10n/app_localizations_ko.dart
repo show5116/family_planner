@@ -4163,4 +4163,42 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get legal_privacyLastUpdated => '시행일: 2026년 6월 1일';
+
+  @override
+  String get shopping_history_delete_title => '구매 이력 삭제';
+
+  @override
+  String get shopping_history_delete_body => '이 장보기 기록을 삭제하시겠습니까?';
+
+  @override
+  String get shopping_history_delete_notice =>
+      '가계부 지출 내역과 냉장고 보관 품목은 삭제되지 않고 유지됩니다.';
+
+  @override
+  String get shopping_history_readd_all => '이 리스트 그대로 장바구니에 담기';
+
+  @override
+  String shopping_history_readd_all_snackbar(int count) {
+    return '$count개 항목을 장바구니에 담았습니다.';
+  }
+
+  @override
+  String shopping_history_readd_item_snackbar(String name) {
+    return '$name을(를) 장바구니에 담았습니다.';
+  }
+
+  @override
+  String get shopping_history_price_none => '가격 미입력';
+
+  @override
+  String get shopping_history_add_to_cart => '장바구니에 담기';
+
+  @override
+  String get shopping_history_fridge_transferred => '냉장고에 이관됨';
+
+  @override
+  String get shopping_history_fridge_not_transferred => '이관 안 함';
+
+  @override
+  String get shopping_complete_snackbar => '장보기가 완료되었습니다.';
 }

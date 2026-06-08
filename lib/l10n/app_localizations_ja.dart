@@ -4156,4 +4156,41 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get legal_privacyLastUpdated => '施行日: 2026年6月1日';
+
+  @override
+  String get shopping_history_delete_title => '購入履歴を削除';
+
+  @override
+  String get shopping_history_delete_body => 'このお買い物記録を削除しますか？';
+
+  @override
+  String get shopping_history_delete_notice => '家計簿の支出と冷蔵庫の保管品目は削除されずに残ります。';
+
+  @override
+  String get shopping_history_readd_all => 'このリストをそのままカートに入れる';
+
+  @override
+  String shopping_history_readd_all_snackbar(int count) {
+    return '$count件をカートに追加しました。';
+  }
+
+  @override
+  String shopping_history_readd_item_snackbar(String name) {
+    return '$nameをカートに追加しました。';
+  }
+
+  @override
+  String get shopping_history_price_none => '価格未入力';
+
+  @override
+  String get shopping_history_add_to_cart => 'カートに入れる';
+
+  @override
+  String get shopping_history_fridge_transferred => '冷蔵庫に移動済み';
+
+  @override
+  String get shopping_history_fridge_not_transferred => '移動なし';
+
+  @override
+  String get shopping_complete_snackbar => 'お買い物が完了しました。';
 }

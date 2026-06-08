@@ -1954,5 +1954,28 @@
   "legal_privacy_section7_title": "7. 施行日",
   "legal_privacy_section7_body": "本隐私政策自2026年6月1日起适用。",
 
-  "legal_privacyLastUpdated": "施行日：2026年6月1日"
+  "legal_privacyLastUpdated": "施行日：2026年6月1日",
+
+  "shopping_history_delete_title": "删除购物记录",
+  "@shopping_history_delete_title": { "description": "Delete confirmation dialog title" },
+  "shopping_history_delete_body": "确定要删除此购物记录吗？",
+  "@shopping_history_delete_body": { "description": "Delete confirmation body" },
+  "shopping_history_delete_notice": "家计簿支出记录和冰箱保管品目不会被删除。",
+  "@shopping_history_delete_notice": { "description": "Notice that expense/fridge data is retained" },
+  "shopping_history_readd_all": "将此列表全部加入购物车",
+  "@shopping_history_readd_all": { "description": "Re-add all history items to cart button" },
+  "shopping_history_readd_all_snackbar": "已将{count}件商品加入购物车。",
+  "@shopping_history_readd_all_snackbar": { "description": "Re-add all snackbar", "placeholders": { "count": { "type": "int" } } },
+  "shopping_history_readd_item_snackbar": "已将{name}加入购物车。",
+  "@shopping_history_readd_item_snackbar": { "description": "Re-add single item snackbar", "placeholders": { "name": { "type": "String" } } },
+  "shopping_history_price_none": "未填写价格",
+  "@shopping_history_price_none": { "description": "No price entered label" },
+  "shopping_history_add_to_cart": "加入购物车",
+  "@shopping_history_add_to_cart": { "description": "Add individual item to cart tooltip" },
+  "shopping_history_fridge_transferred": "已移入冰箱",
+  "@shopping_history_fridge_transferred": { "description": "Fridge transfer complete tooltip" },
+  "shopping_history_fridge_not_transferred": "未移入",
+  "@shopping_history_fridge_not_transferred": { "description": "Fridge not transferred tooltip" },
+  "shopping_complete_snackbar": "购物已完成。",
+  "@shopping_complete_snackbar": { "description": "Shopping complete snackbar" }
 }

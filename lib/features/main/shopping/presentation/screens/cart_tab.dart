@@ -8,6 +8,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
@@ -1717,7 +1718,8 @@ class _CompleteShoppingDialog extends ConsumerStatefulWidget {
 }
 
 class _CompleteShoppingDialogState
-    extends ConsumerState<_CompleteShoppingDialog> {
+    extends ConsumerState<_CompleteShoppingDialog>
+    with InterstitialAdMixin {
   // Step 1 상태
   final Map<String, String?> _transferMap = {}; // cartItemId → storageId | null
   final Set<String> _excludedSet = {}; // 이번 완료에서 제외할 cartItemId
@@ -1833,10 +1835,15 @@ class _CompleteShoppingDialogState
           ));
 
       if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('장보기가 완료되었습니다')),
-        );
+        final l10n = AppLocalizations.of(context)!;
+        showInterstitialThenNavigate(() {
+          if (mounted) {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.shopping_complete_snackbar)),
+            );
+          }
+        });
       }
     } catch (e) {
       if (mounted) {

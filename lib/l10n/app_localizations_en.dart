@@ -4248,4 +4248,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legal_privacyLastUpdated => 'Effective date: June 1, 2026';
+
+  @override
+  String get shopping_history_delete_title => 'Delete Purchase History';
+
+  @override
+  String get shopping_history_delete_body =>
+      'Are you sure you want to delete this shopping record?';
+
+  @override
+  String get shopping_history_delete_notice =>
+      'Expense records and fridge items will not be deleted.';
+
+  @override
+  String get shopping_history_readd_all => 'Add all items to cart';
+
+  @override
+  String shopping_history_readd_all_snackbar(int count) {
+    return 'Added $count items to cart.';
+  }
+
+  @override
+  String shopping_history_readd_item_snackbar(String name) {
+    return 'Added $name to cart.';
+  }
+
+  @override
+  String get shopping_history_price_none => 'No price';
+
+  @override
+  String get shopping_history_add_to_cart => 'Add to cart';
+
+  @override
+  String get shopping_history_fridge_transferred => 'Moved to fridge';
+
+  @override
+  String get shopping_history_fridge_not_transferred => 'Not transferred';
+
+  @override
+  String get shopping_complete_snackbar => 'Shopping completed.';
 }

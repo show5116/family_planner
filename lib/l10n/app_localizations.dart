@@ -8043,6 +8043,72 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'시행일: 2026년 6월 1일'**
   String get legal_privacyLastUpdated;
+
+  /// 구매 이력 삭제 확인 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 이력 삭제'**
+  String get shopping_history_delete_title;
+
+  /// 구매 이력 삭제 확인 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'이 장보기 기록을 삭제하시겠습니까?'**
+  String get shopping_history_delete_body;
+
+  /// 구매 이력 삭제 시 가계부/냉장고 데이터 유지 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 지출 내역과 냉장고 보관 품목은 삭제되지 않고 유지됩니다.'**
+  String get shopping_history_delete_notice;
+
+  /// 구매 이력 전체 장바구니 다시 담기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'이 리스트 그대로 장바구니에 담기'**
+  String get shopping_history_readd_all;
+
+  /// 전체 담기 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 항목을 장바구니에 담았습니다.'**
+  String shopping_history_readd_all_snackbar(int count);
+
+  /// 개별 담기 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에 담았습니다.'**
+  String shopping_history_readd_item_snackbar(String name);
+
+  /// 가격 미입력 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'가격 미입력'**
+  String get shopping_history_price_none;
+
+  /// 개별 항목 장바구니 담기 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니에 담기'**
+  String get shopping_history_add_to_cart;
+
+  /// 냉장고 이관 완료 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고에 이관됨'**
+  String get shopping_history_fridge_transferred;
+
+  /// 냉장고 미이관 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'이관 안 함'**
+  String get shopping_history_fridge_not_transferred;
+
+  /// 장보기 완료 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기가 완료되었습니다.'**
+  String get shopping_complete_snackbar;
 }
 
 class _AppLocalizationsDelegate

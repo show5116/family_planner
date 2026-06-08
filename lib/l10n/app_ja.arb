@@ -2011,5 +2011,28 @@
   "legal_privacy_section7_title": "7. 施行日",
   "legal_privacy_section7_body": "本プライバシーポリシーは2026年6月1日より適用されます。",
 
-  "legal_privacyLastUpdated": "施行日: 2026年6月1日"
+  "legal_privacyLastUpdated": "施行日: 2026年6月1日",
+
+  "shopping_history_delete_title": "購入履歴を削除",
+  "@shopping_history_delete_title": { "description": "Delete confirmation dialog title" },
+  "shopping_history_delete_body": "このお買い物記録を削除しますか？",
+  "@shopping_history_delete_body": { "description": "Delete confirmation body" },
+  "shopping_history_delete_notice": "家計簿の支出と冷蔵庫の保管品目は削除されずに残ります。",
+  "@shopping_history_delete_notice": { "description": "Notice that expense/fridge data is retained" },
+  "shopping_history_readd_all": "このリストをそのままカートに入れる",
+  "@shopping_history_readd_all": { "description": "Re-add all history items to cart button" },
+  "shopping_history_readd_all_snackbar": "{count}件をカートに追加しました。",
+  "@shopping_history_readd_all_snackbar": { "description": "Re-add all snackbar", "placeholders": { "count": { "type": "int" } } },
+  "shopping_history_readd_item_snackbar": "{name}をカートに追加しました。",
+  "@shopping_history_readd_item_snackbar": { "description": "Re-add single item snackbar", "placeholders": { "name": { "type": "String" } } },
+  "shopping_history_price_none": "価格未入力",
+  "@shopping_history_price_none": { "description": "No price entered label" },
+  "shopping_history_add_to_cart": "カートに入れる",
+  "@shopping_history_add_to_cart": { "description": "Add individual item to cart tooltip" },
+  "shopping_history_fridge_transferred": "冷蔵庫に移動済み",
+  "@shopping_history_fridge_transferred": { "description": "Fridge transfer complete tooltip" },
+  "shopping_history_fridge_not_transferred": "移動なし",
+  "@shopping_history_fridge_not_transferred": { "description": "Fridge not transferred tooltip" },
+  "shopping_complete_snackbar": "お買い物が完了しました。",
+  "@shopping_complete_snackbar": { "description": "Shopping complete snackbar" }
 }
