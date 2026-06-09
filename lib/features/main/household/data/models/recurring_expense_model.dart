@@ -15,6 +15,7 @@ class RecurringExpenseModel {
   final String? description;
   final int dayOfMonth; // 매달 발생 일 (1~31)
   final bool isActive;
+  final String? memberId; // 결제 주체 ID
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -32,6 +33,7 @@ class RecurringExpenseModel {
     this.description,
     required this.dayOfMonth,
     required this.isActive,
+    this.memberId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -57,6 +59,7 @@ class RecurringExpenseModel {
       description: json['description'] as String?,
       dayOfMonth: json['dayOfMonth'] as int,
       isActive: (json['isActive'] as bool?) ?? true,
+      memberId: json['memberId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -76,6 +79,7 @@ class RecurringExpenseModel {
     Object? description = _sentinel,
     int? dayOfMonth,
     bool? isActive,
+    Object? memberId = _sentinel,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -101,6 +105,7 @@ class RecurringExpenseModel {
           : description as String?,
       dayOfMonth: dayOfMonth ?? this.dayOfMonth,
       isActive: isActive ?? this.isActive,
+      memberId: memberId == _sentinel ? this.memberId : memberId as String?,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -159,6 +164,7 @@ class CreateRecurringExpenseDto {
   final String? merchantId;
   final String? description;
   final int dayOfMonth;
+  final String? memberId;
 
   const CreateRecurringExpenseDto({
     this.groupId,
@@ -171,6 +177,7 @@ class CreateRecurringExpenseDto {
     this.merchantId,
     this.description,
     required this.dayOfMonth,
+    this.memberId,
   });
 
   Map<String, dynamic> toJson() {
@@ -185,6 +192,7 @@ class CreateRecurringExpenseDto {
       if (merchantId != null) 'merchantId': merchantId,
       if (description != null) 'description': description,
       'dayOfMonth': dayOfMonth,
+      if (memberId != null) 'memberId': memberId,
     };
   }
 }
@@ -200,6 +208,7 @@ class UpdateRecurringExpenseDto {
   final Object? description; // String | null
   final int? dayOfMonth;
   final bool? isActive;
+  final Object? memberId; // String | null
 
   const UpdateRecurringExpenseDto({
     this.amount,
@@ -211,6 +220,7 @@ class UpdateRecurringExpenseDto {
     this.description = _sentinel,
     this.dayOfMonth,
     this.isActive,
+    this.memberId = _sentinel,
   });
 
   Map<String, dynamic> toJson() {
@@ -230,6 +240,7 @@ class UpdateRecurringExpenseDto {
       if (description != _sentinel) 'description': description as String?,
       if (dayOfMonth != null) 'dayOfMonth': dayOfMonth,
       if (isActive != null) 'isActive': isActive,
+      if (memberId != _sentinel) 'memberId': memberId as String?,
     };
   }
 }

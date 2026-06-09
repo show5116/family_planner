@@ -75,6 +75,7 @@ class ExpenseModel {
   final List<ExpenseModel> refunds; // 이 지출에 연결된 환불 목록
   final MerchantDto? merchant;
   final String? shoppingHistoryId; // 장보기 완료 시 자동 생성된 지출에만 존재
+  final String? memberId; // 결제 주체 ID
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -95,6 +96,7 @@ class ExpenseModel {
     this.refunds = const [],
     this.merchant,
     this.shoppingHistoryId,
+    this.memberId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -128,6 +130,7 @@ class ExpenseModel {
           ? MerchantDto.fromJson(json['merchant'] as Map<String, dynamic>)
           : null,
       shoppingHistoryId: json['shoppingHistoryId'] as String?,
+      memberId: json['memberId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -221,6 +224,7 @@ class ExpenseModel {
     List<ExpenseModel>? refunds,
     MerchantDto? merchant,
     String? shoppingHistoryId,
+    Object? memberId = _sentinel,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -247,6 +251,7 @@ class ExpenseModel {
       refunds: refunds ?? this.refunds,
       merchant: merchant ?? this.merchant,
       shoppingHistoryId: shoppingHistoryId ?? this.shoppingHistoryId,
+      memberId: memberId == _sentinel ? this.memberId : memberId as String?,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -267,6 +272,7 @@ class CreateExpenseDto {
   final String? merchantId;
   final IncomeCategory? incomeCategory; // 입금 카테고리 (type=INCOME 일 때)
   final String? refundedExpenseId; // 환불 대상 원본 지출 ID
+  final String? memberId; // 결제 주체 ID
 
   const CreateExpenseDto({
     this.groupId,
@@ -279,6 +285,7 @@ class CreateExpenseDto {
     this.merchantId,
     this.incomeCategory,
     this.refundedExpenseId,
+    this.memberId,
   });
 
   Map<String, dynamic> toJson() {
@@ -293,6 +300,7 @@ class CreateExpenseDto {
       if (merchantId != null) 'merchantId': merchantId,
       if (incomeCategory != null) 'incomeCategory': _incomeCategoryToString(incomeCategory!),
       if (refundedExpenseId != null) 'refundedExpenseId': refundedExpenseId,
+      if (memberId != null) 'memberId': memberId,
     };
   }
 }
@@ -310,6 +318,7 @@ class UpdateExpenseDto {
   final Object? incomeCategory; // IncomeCategory | null (null 전달 시 해제) — _sentinel 사용
   final Object? refundedExpenseId; // String | null (null 전달 시 연결 해제) — _sentinel 사용
   final bool? isConfirmed; // 실제 금액 확인 여부
+  final Object? memberId; // String | null (null 전달 시 해제) — _sentinel 사용
 
   const UpdateExpenseDto({
     this.type,
@@ -323,6 +332,7 @@ class UpdateExpenseDto {
     this.incomeCategory = _sentinel,
     this.refundedExpenseId = _sentinel,
     this.isConfirmed,
+    this.memberId = _sentinel,
   });
 
   Map<String, dynamic> toJson() {
@@ -342,6 +352,7 @@ class UpdateExpenseDto {
       if (refundedExpenseId != _sentinel)
         'refundedExpenseId': refundedExpenseId as String?,
       if (isConfirmed != null) 'isConfirmed': isConfirmed,
+      if (memberId != _sentinel) 'memberId': memberId as String?,
     };
   }
 }

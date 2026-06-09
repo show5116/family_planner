@@ -13,6 +13,8 @@ import 'package:family_planner/features/main/household/data/models/recurring_exp
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/main/household/providers/merchant_provider.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -45,6 +47,7 @@ class _RecurringExpenseFormScreenState
   String? _selectedMerchantId;
   int _dayOfMonth = 1;
   bool _isVariable = false;
+  String? _selectedMemberId;
 
   bool get _isEditMode => widget.recurringExpense != null;
 
@@ -62,6 +65,18 @@ class _RecurringExpenseFormScreenState
       _selectedMerchantId = e.merchantId;
       _dayOfMonth = e.dayOfMonth;
       _isVariable = e.isVariable;
+      _selectedMemberId = e.memberId;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isEditMode && _selectedMemberId == null) {
+      final authState = ref.read(authProvider);
+      if (authState.userId != null) {
+        _selectedMemberId = authState.userId;
+      }
     }
   }
 
@@ -179,6 +194,17 @@ class _RecurringExpenseFormScreenState
                             setState(() => _selectedMerchantId = id),
                       ),
                     ],
+                    // 그룹 모드에서만 결제 주체 선택
+                    if (effectiveGroupId != null) ...[
+                      const SizedBox(height: AppSizes.spaceM),
+                      _RecurringMemberSelector(
+                        groupId: effectiveGroupId,
+                        selectedUserId: _selectedMemberId,
+                        transactionType: _transactionType,
+                        onChanged: (userId) =>
+                            setState(() => _selectedMemberId = userId),
+                      ),
+                    ],
                     const SizedBox(height: AppSizes.spaceM),
                     // 매달 발생 일 — 그리드 바텀시트
                     _DayOfMonthGridSelector(
@@ -270,6 +296,7 @@ class _RecurringExpenseFormScreenState
             ? null
             : _descriptionController.text.trim(),
         dayOfMonth: _dayOfMonth,
+        memberId: _selectedMemberId,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)
@@ -298,6 +325,7 @@ class _RecurringExpenseFormScreenState
             ? null
             : _descriptionController.text.trim(),
         dayOfMonth: _dayOfMonth,
+        memberId: groupId != null ? _selectedMemberId : null,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)
@@ -1203,6 +1231,159 @@ class _DescriptionField extends StatelessWidget {
         border: const OutlineInputBorder(),
       ),
       maxLines: 2,
+    );
+  }
+}
+
+// ── 결제 주체 선택 (그룹 모드 전용) ───────────────────────────────────────
+class _RecurringMemberSelector extends ConsumerWidget {
+  final String groupId;
+  final String? selectedUserId;
+  final TransactionType transactionType;
+  final ValueChanged<String?> onChanged;
+
+  const _RecurringMemberSelector({
+    required this.groupId,
+    required this.selectedUserId,
+    required this.transactionType,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final membersAsync = ref.watch(groupMembersProvider(groupId));
+    final colorScheme = Theme.of(context).colorScheme;
+    final label = transactionType == TransactionType.income ? '받은 사람' : '결제한 사람';
+
+    return membersAsync.when(
+      data: (members) {
+        if (members.isEmpty) return const SizedBox.shrink();
+
+        final selected = members
+            .where((m) => m.user?.id == selectedUserId)
+            .firstOrNull;
+        final displayName = selected?.user?.name ?? '선택 안함';
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          onTap: () async {
+            final result = await showModalBottomSheet<String?>(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(AppSizes.radiusLarge)),
+              ),
+              builder: (ctx) => _RecurringMemberSheet(
+                members: members,
+                selectedUserId: selectedUserId,
+                title: label,
+              ),
+            );
+            if (!context.mounted) return;
+            if (result != _recurringMemberSheetClosed) onChanged(result);
+          },
+          child: InputDecorator(
+            decoration: InputDecoration(
+              labelText: label,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceS + 2,
+              ),
+              suffixIcon: const Icon(Icons.expand_more),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.person_outline,
+                  size: 20,
+                  color: selected != null ? colorScheme.primary : colorScheme.outline,
+                ),
+                const SizedBox(width: AppSizes.spaceS),
+                Text(
+                  displayName,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: selected != null ? null : colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
+const _recurringMemberSheetClosed = '__recurring_member_closed__';
+
+class _RecurringMemberSheet extends StatelessWidget {
+  final List<GroupMember> members;
+  final String? selectedUserId;
+  final String title;
+
+  const _RecurringMemberSheet({required this.members, this.selectedUserId, this.title = '멤버 선택'});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, AppSizes.spaceM, 0, AppSizes.spaceL),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 20),
+                    onPressed: () =>
+                        Navigator.of(context).pop(_recurringMemberSheetClosed),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            ...members.map((m) {
+              final isSelected = m.user?.id == selectedUserId;
+              final name = m.user?.name ?? '알 수 없음';
+              return ListTile(
+                leading: CircleAvatar(
+                  radius: 16,
+                  backgroundColor: colorScheme.primaryContainer,
+                  child: Text(
+                    name.isNotEmpty ? name[0] : '?',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                title: Text(name),
+                trailing: isSelected
+                    ? Icon(Icons.check, color: colorScheme.primary, size: 20)
+                    : null,
+                onTap: () => Navigator.of(context).pop(m.user?.id),
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 }
