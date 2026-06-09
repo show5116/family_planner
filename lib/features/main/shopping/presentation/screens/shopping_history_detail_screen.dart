@@ -10,7 +10,6 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 
-
 class ShoppingHistoryDetailScreen extends ConsumerWidget {
   final String historyId;
   final String? groupId;
@@ -21,15 +20,15 @@ class ShoppingHistoryDetailScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('구매 이력 삭제'),
+        title: Text(l10n.shopping_history_delete_title),
         content: RichText(
           text: TextSpan(
             style: Theme.of(ctx).textTheme.bodyMedium,
-            children: const [
-              TextSpan(text: '이 장보기 기록을 삭제하시겠습니까?\n\n'),
+            children: [
+              TextSpan(text: '${l10n.shopping_history_delete_body}\n\n'),
               TextSpan(
-                text: '가계부 지출 내역과 냉장고 보관 품목은 삭제되지 않고 유지됩니다.',
-                style: TextStyle(fontStyle: FontStyle.italic),
+                text: l10n.shopping_history_delete_notice,
+                style: const TextStyle(fontStyle: FontStyle.italic),
               ),
             ],
           ),
@@ -96,7 +95,7 @@ class _HistoryDetail extends ConsumerWidget {
     final current = ref.read(cartPendingInsertsProvider);
     ref.read(cartPendingInsertsProvider.notifier).state = [...current, ...entries];
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${history.items.length}개 항목을 장바구니에 담았습니다.')),
+      SnackBar(content: Text(l10n.shopping_history_readd_all_snackbar(history.items.length))),
     );
     context.pop();
   }
@@ -151,7 +150,6 @@ class _HistoryDetail extends ConsumerWidget {
             ],
           ),
         ),
-        // 장바구니 다시 담기 버튼
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(
@@ -159,7 +157,7 @@ class _HistoryDetail extends ConsumerWidget {
             child: FilledButton.icon(
               onPressed: () => _readdToCart(context, ref),
               icon: const Icon(Icons.add_shopping_cart_outlined),
-              label: const Text('이 리스트 그대로 장바구니에 담기'),
+              label: Text(l10n.shopping_history_readd_all),
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),
               ),
@@ -176,18 +174,20 @@ class _HistoryItemTile extends ConsumerWidget {
   const _HistoryItemTile({required this.item});
 
   void _addToCart(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final current = ref.read(cartPendingInsertsProvider);
     ref.read(cartPendingInsertsProvider.notifier).state = [
       ...current,
       CartItemEntryDto(name: item.name, quantity: item.quantity, unit: item.unit, price: item.price),
     ];
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${item.name}을(를) 장바구니에 담았습니다.')),
+      SnackBar(content: Text(l10n.shopping_history_readd_item_snackbar(item.name))),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final priceText = item.price != null
         ? '${NumberFormat('#,###').format(item.price!.toInt())}원'
@@ -195,7 +195,9 @@ class _HistoryItemTile extends ConsumerWidget {
 
     return ListTile(
       leading: Tooltip(
-        message: item.transferredToFridge ? '냉장고에 이관됨' : '이관 안 함',
+        message: item.transferredToFridge
+            ? l10n.shopping_history_fridge_transferred
+            : l10n.shopping_history_fridge_not_transferred,
         child: Icon(
           item.transferredToFridge
               ? Icons.kitchen_outlined
@@ -219,7 +221,7 @@ class _HistoryItemTile extends ConsumerWidget {
                       ),
                 )
               : Text(
-                  '가격 미입력',
+                  l10n.shopping_history_price_none,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.outlineVariant,
                       ),
@@ -227,7 +229,7 @@ class _HistoryItemTile extends ConsumerWidget {
           const SizedBox(width: 4),
           IconButton(
             icon: const Icon(Icons.add_shopping_cart_outlined, size: 20),
-            tooltip: '장바구니에 담기',
+            tooltip: l10n.shopping_history_add_to_cart,
             onPressed: () => _addToCart(context, ref),
           ),
         ],

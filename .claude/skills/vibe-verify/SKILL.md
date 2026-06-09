@@ -1,12 +1,12 @@
 ---
 name: vibe-verify
-description: 바이브코딩 파이프라인 검증 체크리스트를 실행합니다. 그룹 삭제 영향도, 로그아웃/계정 전환 캐시, 다국어 처리, 광고 적용, Android 하단 버튼 UI 겹침을 점검할 때 사용하세요. 예: "vibe-verify 실행", "배포 전 검증해줘", "검증 체크리스트 돌려줘"
+description: 바이브코딩 파이프라인 검증 체크리스트를 실행합니다. 그룹 삭제 영향도, 로그아웃/계정 전환 캐시, 다국어 처리, 광고 적용, Android 하단 버튼 UI 겹침, UI Invalidate 누락을 점검할 때 사용하세요. 예: "vibe-verify 실행", "배포 전 검증해줘", "검증 체크리스트 돌려줘"
 allowed-tools: Read, Grep, Glob, Bash(flutter:analyze)
 ---
 
 # Vibe Verify Skill
 
-배포 전 5개 영역을 자동 점검합니다.
+배포 전 6개 영역을 자동 점검합니다.
 
 ## 검증 영역
 
@@ -15,6 +15,7 @@ allowed-tools: Read, Grep, Glob, Bash(flutter:analyze)
 3. **다국어 처리** — ARB 키 누락, hardcoded 한국어 문자열
 4. **광고 적용** — 데이터 생성/수정 완료 시 전면 광고(InterstitialAdMixin) 미적용 화면 탐지
 5. **Android 하단 버튼 UI 겹침** — NavigationBar/시스템 제스처 영역 침범
+6. **UI Invalidate 누락** — 생성/수정 완료 후 관련 Provider invalidate/refresh 누락 여부
 
 ---
 
@@ -244,6 +245,55 @@ showInterstitialThenNavigate(() { if (mounted) context.pop(); });
 
 ---
 
+### 6단계 — UI Invalidate 누락
+
+**목적**: 생성/수정/삭제 완료 후 연관 Provider를 invalidate하지 않으면 이전 데이터가 화면에 그대로 남아 사용자가 새로고침 전까지 잘못된 정보를 보게 됩니다.
+
+**점검 방법**:
+```
+1. 저장 성공 직후 코드 패턴 탐지:
+   - Grep 패턴: "await.*notifier.*create\|await.*notifier.*update\|await.*notifier.*delete\|await.*repository.*create\|await.*repository.*update"
+   - 해당 블록 이후에 ref.invalidate / ref.refresh / state = 갱신이 있는지 확인
+
+2. 피처별 연관 Provider 체크리스트:
+   □ 목록 Provider: 생성/삭제 후 목록이 갱신되는가?
+     - 예: expenseProvider 생성 후 → householdStatisticsProvider invalidate 필요
+   □ 상세 Provider: 수정 후 상세 화면이 갱신되는가?
+     - 예: memoProvider 수정 후 → memoDetailProvider invalidate 필요
+   □ 집계/통계 Provider: CRUD 후 대시보드·통계가 갱신되는가?
+     - 예: 가계부 지출 추가 후 → dashboardHouseholdStatisticsProvider invalidate 필요
+   □ 연관 피처 Provider: 한 피처 변경이 다른 피처에 영향을 주는가?
+     - 예: 냉장고 이관 후 → storagesWithItemsProvider invalidate 필요
+
+3. 낙관적 업데이트(Optimistic Update) 패턴 확인:
+   - state를 로컬에서 먼저 바꾼 뒤 API 실패 시 롤백하는지 확인
+   - API 성공 후에도 서버 응답으로 state를 교체하는지 확인 (로컬값과 서버값 불일치 방지)
+
+4. 점검 기준 — 아래 중 하나라도 누락이면 이슈:
+   □ 생성 후: 목록 Provider에 새 항목이 나타나는가?
+   □ 수정 후: 상세 화면과 목록 모두 최신값을 보여주는가?
+   □ 삭제 후: 목록에서 해당 항목이 즉시 사라지는가?
+   □ 연관 집계: 통계/합계/카운트가 즉시 반영되는가?
+
+5. 피처별 알려진 연관관계 (점검 시 참고):
+   - 가계부 지출 CRUD → householdStatisticsProvider, dashboardHouseholdStatisticsProvider
+   - 냉장고 이관 완료 → storagesWithItemsProvider, shoppingHistoryProvider
+   - 장보기 완료 → cartProvider (re-fetch), storagesWithItemsProvider, shoppingHistoryProvider
+   - 저금통 입출금 → savingsGoalDetailProvider, savingsTransactionsProvider, assetStatisticsProvider
+   - 육아포인트 거래 → childcareAccountProvider, childcareTransactionsProvider
+   - 메모 핀 토글 → pinnedMemosProvider, dashboardMemosProvider
+```
+
+**리포트 형식**:
+```
+### UI Invalidate 누락
+✅ expense_form_screen.dart — 저장 후 householdStatisticsProvider invalidate 확인
+⚠️ memo_form_screen.dart — 수정 후 pinnedMemosProvider invalidate 누락 (핀 메모 목록 미갱신)
+❌ savings_form_screen.dart — 생성 후 assetStatisticsProvider invalidate 누락 (자산 합계 미반영)
+```
+
+---
+
 ## 최종 리포트 형식
 
 ```markdown
@@ -259,6 +309,7 @@ showInterstitialThenNavigate(() { if (mounted) context.pop(); });
 | 다국어 처리 | ✅/⚠️/❌ | N |
 | 광고 적용 | ✅/⚠️/❌ | N |
 | Android 하단 UI 겹침 | ✅/⚠️/❌ | N |
+| UI Invalidate 누락 | ✅/⚠️/❌ | N |
 
 ## 상세 이슈
 

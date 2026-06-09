@@ -2495,6 +2495,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_income => '收入';
 
   @override
+  String get household_revenue => '收入';
+
+  @override
   String get household_type => '类型';
 
   @override
@@ -2641,6 +2644,22 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_expense_total => '支出合计';
+
+  @override
+  String get household_recurring_income_total => '收入合计';
+
+  @override
+  String household_unpaid_recurring_expense(int count, String amount) {
+    return '支出$count笔 · ₩$amount';
+  }
+
+  @override
+  String household_unpaid_recurring_income(int count, String amount) {
+    return '收入$count笔 · ₩$amount';
+  }
+
+  @override
   String get household_recurring_top_category => '按类别分布';
 
   @override
@@ -2668,6 +2687,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_recurring_type_variable_desc => '每月发生但金额不固定（例：物业费）';
 
   @override
+  String get household_recurring_amount_variable_label => '基准金额（预估）';
+
+  @override
+  String get household_recurring_amount_variable_hint =>
+      '每月金额可能不同，实际支出后请修改并确认。';
+
+  @override
+  String get household_recurring_amount_fixed_hint => '每月将自动以此金额登记。';
+
+  @override
+  String get household_recurring_inactive => '已停用';
+
+  @override
+  String get household_recurring_add => '添加固定支出';
+
+  @override
+  String get household_recurring_edit => '编辑固定支出';
+
+  @override
+  String get household_recurring_title => '固定明细';
+
+  @override
+  String get household_recurring_add_title => '添加固定明细';
+
+  @override
+  String get household_recurring_edit_title => '编辑固定明细';
+
+  @override
+  String get household_recurring_day_of_month => '每月发生日';
+
+  @override
+  String household_recurring_day_of_month_value(int day) {
+    return '每月$day日';
+  }
+
+  @override
   String get household_estimated_amount => '预估金额';
 
   @override
@@ -2689,7 +2744,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_exclude_carryover => '排除结转';
 
   @override
-  String get household_unpaid_recurring_title => '本月剩余固定支出';
+  String get household_unpaid_recurring_title => '本月剩余固定明细';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {
@@ -4133,4 +4188,41 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get legal_privacyLastUpdated => '施行日：2026年6月1日';
+
+  @override
+  String get shopping_history_delete_title => '删除购物记录';
+
+  @override
+  String get shopping_history_delete_body => '确定要删除此购物记录吗？';
+
+  @override
+  String get shopping_history_delete_notice => '家计簿支出记录和冰箱保管品目不会被删除。';
+
+  @override
+  String get shopping_history_readd_all => '将此列表全部加入购物车';
+
+  @override
+  String shopping_history_readd_all_snackbar(int count) {
+    return '已将$count件商品加入购物车。';
+  }
+
+  @override
+  String shopping_history_readd_item_snackbar(String name) {
+    return '已将$name加入购物车。';
+  }
+
+  @override
+  String get shopping_history_price_none => '未填写价格';
+
+  @override
+  String get shopping_history_add_to_cart => '加入购物车';
+
+  @override
+  String get shopping_history_fridge_transferred => '已移入冰箱';
+
+  @override
+  String get shopping_history_fridge_not_transferred => '未移入';
+
+  @override
+  String get shopping_complete_snackbar => '购物已完成。';
 }

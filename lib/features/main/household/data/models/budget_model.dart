@@ -291,7 +291,7 @@ class BulkSetBudgetDto {
   Map<String, dynamic> toJson() => {
         if (groupId != null) 'groupId': groupId,
         'month': month,
-        if (total != null) 'total': total,
+        'total': total ?? 0,
         'categories': categories.map((c) => c.toJson()).toList(),
       };
 }
@@ -342,7 +342,7 @@ class BulkSetBudgetTemplateDto {
 
   Map<String, dynamic> toJson() => {
         if (groupId != null) 'groupId': groupId,
-        if (total != null) 'total': total,
+        'total': total ?? 0,
         'categories': categories.map((c) => c.toJson()).toList(),
       };
 }

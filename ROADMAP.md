@@ -9,10 +9,10 @@
 ## 📊 Progress Overview
 
 - **완료**: 11/21 기능 (52%)
-- **진행 중**: 5/21 기능 (24%)
-- **미시작**: 5/21 기능 (24%)
+- **진행 중**: 6/21 기능 (29%)
+- **미시작**: 4/21 기능 (19%)
 
-**마지막 업데이트**: 2026-04-14
+**마지막 업데이트**: 2026-06-08
 
 ---
 
@@ -51,6 +51,12 @@
 | 육아 포인트 | ✅ 완료 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
 | 미니게임 | ⬜ 시작 안함 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
 | 투표 | 🟨 진행 중 | [18-votes.md](docs/features/18-votes.md) | P2 |
+
+### Phase 6: 스마트 장보기 (Smart Shopping)
+
+| 기능 | 상태 | 문서 | 우선순위 |
+|------|------|------|----------|
+| 스마트 장보기 | 🟨 진행 중 | [22-shopping.md](docs/features/22-shopping.md) | P1 |
 
 ### Phase 5: 개선 및 확장 (Enhancement & Expansion)
 
@@ -97,6 +103,18 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-06-08
+- 🟨 **스마트 장보기 UX 대규모 개선** ([22-shopping.md](docs/features/22-shopping.md))
+  - 장보기 완료 폼 DraggableScrollableSheet 풀스크린 전환, 항목 제외(excludes) 기능
+  - 완료 후 서버 re-fetch로 제외 항목 UI 즉시 반영
+  - 냉장고 이관 Step2: 유통기한 추천 자동 매칭, 아코디언 자동 닫힘, 금액 입력 제거
+  - 가계부 등록에 소비처(merchant) 선택 추가 (코스트코 포함)
+  - 자주 사는 것 폼 AlertDialog → DraggableScrollableSheet 바텀시트 전환
+  - 자동 추가 토글에 라벨 + 색상 연동
+  - 구매 이력 상세: 개별/전체 장바구니 다시 담기(가격 포함), 삭제 확인 다이얼로그 개선
+  - 가격 null '가격 미입력' 표시, 냉장고 이관 체크 아이콘 툴팁으로 대체
+  - 무한 로딩 버그 수정(400 에러), Android SafeArea 처리
 
 ### 2026-04-14
 - ✅ **온보딩 & 튜토리얼** ([20-onboarding.md](docs/features/20-onboarding.md))

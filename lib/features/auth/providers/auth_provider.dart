@@ -347,13 +347,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 이전 계정의 캐시된 데이터 초기화
       _invalidateGroupProviders();
 
-      // 웹의 경우 토큰이 이미 저장됨, 사용자 정보 가져오기
-      if (kIsWeb && response.isNotEmpty) {
-        final userInfo = await _authService.getUserInfo();
-        state = state.copyWith(isAuthenticated: true, user: userInfo);
-      } else if (!kIsWeb) {
-        state = state.copyWith(isAuthenticated: true, user: response);
-      }
+      // auth/me로 정규화된 사용자 정보 조회 (로그인 응답 구조와 무관하게 일관된 flat 구조)
+      final userInfo = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: userInfo);
 
       // 구글 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
@@ -387,13 +383,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 이전 계정의 캐시된 데이터 초기화
       _invalidateGroupProviders();
 
-      // 웹의 경우 토큰이 이미 저장됨, 사용자 정보 가져오기
-      if (kIsWeb && response.isNotEmpty) {
-        final userInfo = await _authService.getUserInfo();
-        state = state.copyWith(isAuthenticated: true, user: userInfo);
-      } else if (!kIsWeb) {
-        state = state.copyWith(isAuthenticated: true, user: response);
-      }
+      // auth/me로 정규화된 사용자 정보 조회 (로그인 응답 구조와 무관하게 일관된 flat 구조)
+      final userInfo = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: userInfo);
 
       // 카카오 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();

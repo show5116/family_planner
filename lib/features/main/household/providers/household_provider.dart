@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/data/repositories/household_repository.dart';
 
@@ -129,11 +130,11 @@ final householdExpensesByMonthProvider =
       .getExpenses(groupId: groupId, month: month);
 });
 
-/// 고정 지출 목록 Provider (isRecurring=true)
+/// 고정지출 목록 Provider
 @riverpod
 class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   @override
-  Future<List<ExpenseModel>> build() async {
+  Future<List<RecurringExpenseModel>> build() async {
     final groupId = ref.watch(householdSelectedGroupIdProvider);
     final repository = ref.watch(householdRepositoryProvider);
     return repository.getRecurringExpenses(groupId: groupId);
@@ -149,12 +150,19 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
     });
   }
 
-  void addExpense(ExpenseModel expense) {
+  void addRecurring(RecurringExpenseModel item) {
     if (!state.hasValue) return;
-    state = AsyncValue.data([expense, ...state.value!]);
+    state = AsyncValue.data([item, ...state.value!]);
   }
 
-  void removeExpense(String id) {
+  void updateRecurring(RecurringExpenseModel item) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.map((e) => e.id == item.id ? item : e).toList(),
+    );
+  }
+
+  void removeRecurring(String id) {
     if (!state.hasValue) return;
     state = AsyncValue.data(
       state.value!.where((e) => e.id != id).toList(),
@@ -162,12 +170,11 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
   }
 }
 
-/// 선택된 달의 아직 치뤄지지 않은 고정 지출 목록 Provider
+/// 선택된 달의 아직 치뤄지지 않은 고정지출 목록 Provider
 ///
-/// 고정지출 원본 목록의 날짜(day)를 선택된 달로 환산했을 때
-/// 오늘 이후에 해당하는 항목 = 아직 발생하지 않은 고정지출.
+/// dayOfMonth를 선택된 달 날짜로 환산했을 때 오늘 이후인 항목만 반환.
 /// 미래 달이면 해당 달 전체 고정지출이 모두 포함됨.
-final householdUnpaidRecurringProvider = Provider<List<ExpenseModel>>((ref) {
+final householdUnpaidRecurringProvider = Provider<List<RecurringExpenseModel>>((ref) {
   final recurring = ref.watch(householdRecurringExpensesProvider).valueOrNull ?? [];
   final selectedMonth = ref.watch(householdSelectedMonthProvider);
   final now = DateTime.now();
@@ -179,17 +186,14 @@ final householdUnpaidRecurringProvider = Provider<List<ExpenseModel>>((ref) {
 
   return recurring
       .where((e) {
-        if (e.type != TransactionType.expense) return false;
-        // 원본 등록일(day)을 선택된 달 날짜로 환산
-        final dueDay = e.date.day;
+        if (!e.isActive) return false;
         final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
-        final effectiveDay = dueDay > lastDay ? lastDay : dueDay;
+        final effectiveDay = e.dayOfMonth > lastDay ? lastDay : e.dayOfMonth;
         final dueDate = DateTime(targetYear, targetMonth, effectiveDay);
-        // 오늘 이후인 항목만 (오늘 당일 포함)
         return !dueDate.isBefore(today);
       })
       .toList()
-    ..sort((a, b) => a.date.day.compareTo(b.date.day));
+    ..sort((a, b) => a.dayOfMonth.compareTo(b.dayOfMonth));
 });
 
 /// 지출 단건 조회 Provider (장보기 이력 → 가계부 이동 등에 사용)
@@ -301,9 +305,50 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
 
     // 통계 화면 월별 지출 목록 (카테고리 드릴다운용)
     _ref.invalidate(householdExpensesByMonthProvider);
+  }
 
-    // 고정지출 목록 (isRecurring 항목 변경 시 반영)
-    _ref.invalidate(householdRecurringExpensesProvider);
+  /// 고정지출 등록
+  Future<RecurringExpenseModel?> createRecurringExpense(
+      CreateRecurringExpenseDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final item = await _repository.createRecurringExpense(dto);
+      _ref.read(householdRecurringExpensesProvider.notifier).addRecurring(item);
+      state = const AsyncValue.data(null);
+      return item;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// 고정지출 수정
+  Future<RecurringExpenseModel?> updateRecurringExpense(
+      String id, UpdateRecurringExpenseDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final item = await _repository.updateRecurringExpense(id, dto);
+      _ref.read(householdRecurringExpensesProvider.notifier).updateRecurring(item);
+      state = const AsyncValue.data(null);
+      return item;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// 고정지출 삭제
+  Future<bool> deleteRecurringExpense(String id) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteRecurringExpense(id);
+      _ref.read(householdRecurringExpensesProvider.notifier).removeRecurring(id);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
   Future<BulkBudgetResult?> setBudgetBulk(BulkSetBudgetDto dto) async {

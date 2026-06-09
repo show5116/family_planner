@@ -226,7 +226,6 @@ class _ExpenseList extends ConsumerWidget {
                       AppRoutes.householdDetail,
                       extra: expense,
                     ),
-                    onDelete: () {},
                   );
                 },
               ),
@@ -346,7 +345,6 @@ class _MerchantExpenseList extends ConsumerWidget {
                   return ExpenseListItem(
                     expense: expense,
                     onTap: () => context.push(AppRoutes.householdDetail, extra: expense),
-                    onDelete: () {},
                   );
                 },
               ),

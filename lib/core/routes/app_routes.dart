@@ -33,6 +33,8 @@ class AppRoutes {
   static const String householdDetail = '/household/detail';
   static const String householdStatistics = '/household/statistics';
   static const String householdRecurring = '/household/recurring';
+  static const String householdRecurringAdd = '/household/recurring/add';
+  static const String householdRecurringEdit = '/household/recurring/edit';
   static const String householdMerchants = '/household/merchants';
   static const String householdCategoryExpenses = '/household/category-expenses';
   // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제

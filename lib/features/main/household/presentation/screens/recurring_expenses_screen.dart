@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -12,39 +13,38 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 class _RecurringSummary {
   final double totalExpense;
+  final double totalIncome;
   final int count;
   final List<MapEntry<ExpenseCategory, double>> categoryAmounts;
 
   const _RecurringSummary({
     required this.totalExpense,
+    required this.totalIncome,
     required this.count,
     required this.categoryAmounts,
   });
 
-  factory _RecurringSummary.from(List<ExpenseModel> expenses) {
-    final expenseOnly = expenses.where((e) => e.type == TransactionType.expense).toList();
-    // 가변 고정지출 미확인 상태면 예상 금액으로 합산
-    final total = expenseOnly.fold(0.0, (sum, e) {
-      final amt = (e.isVariableRecurring && !e.isConfirmed && e.estimatedAmount != null)
-          ? e.estimatedAmount!
-          : e.amount;
-      return sum + amt;
-    });
+  factory _RecurringSummary.from(List<RecurringExpenseModel> items) {
+    final expenseOnly =
+        items.where((e) => e.type == TransactionType.expense).toList();
+    final incomeOnly =
+        items.where((e) => e.type == TransactionType.income).toList();
+
+    final totalExpense = expenseOnly.fold(0.0, (sum, e) => sum + e.amount);
+    final totalIncome = incomeOnly.fold(0.0, (sum, e) => sum + e.amount);
 
     final categorySum = <ExpenseCategory, double>{};
     for (final e in expenseOnly) {
       final key = e.category ?? ExpenseCategory.other;
-      final amt = (e.isVariableRecurring && !e.isConfirmed && e.estimatedAmount != null)
-          ? e.estimatedAmount!
-          : e.amount;
-      categorySum[key] = (categorySum[key] ?? 0) + amt;
+      categorySum[key] = (categorySum[key] ?? 0) + e.amount;
     }
     final sorted = categorySum.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     return _RecurringSummary(
-      totalExpense: total,
-      count: expenses.length,
+      totalExpense: totalExpense,
+      totalIncome: totalIncome,
+      count: items.length,
       categoryAmounts: sorted,
     );
   }
@@ -71,7 +71,7 @@ class RecurringExpensesScreen extends ConsumerWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.household_recurring_expenses),
+            Text(l10n.household_recurring_title),
             if (groupName != null)
               Text(
                 groupName,
@@ -83,8 +83,8 @@ class RecurringExpensesScreen extends ConsumerWidget {
         ),
       ),
       body: recurringAsync.when(
-        data: (expenses) => _RecurringExpensesList(
-          expenses: expenses,
+        data: (items) => _RecurringList(
+          items: items,
           selectedGroupId: selectedGroupId,
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -103,45 +103,34 @@ class RecurringExpensesScreen extends ConsumerWidget {
           ),
         ),
       ),
-      floatingActionButton: selectedGroupId == null
-          ? null
-          : FloatingActionButton(
-              onPressed: () => context.push(
-                AppRoutes.householdAdd,
-                extra: {
-                  'groupId': selectedGroupId,
-                  'initialIsRecurring': true,
-                },
-              ),
-              child: const Icon(Icons.add),
-            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(
+          AppRoutes.householdRecurringAdd,
+          extra: {'groupId': selectedGroupId},
+        ),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
 
-class _RecurringExpensesList extends ConsumerWidget {
-  final List<ExpenseModel> expenses;
+class _RecurringList extends ConsumerWidget {
+  final List<RecurringExpenseModel> items;
   final String? selectedGroupId;
 
-  const _RecurringExpensesList({
-    required this.expenses,
-    required this.selectedGroupId,
-  });
+  const _RecurringList({required this.items, required this.selectedGroupId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
-    if (expenses.isEmpty) {
+    if (items.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.repeat,
-              size: 64,
-              color: Theme.of(context).colorScheme.outline,
-            ),
+            Icon(Icons.repeat, size: 64,
+                color: Theme.of(context).colorScheme.outline),
             const SizedBox(height: AppSizes.spaceM),
             Text(
               l10n.household_recurring_no_expenses,
@@ -154,38 +143,66 @@ class _RecurringExpensesList extends ConsumerWidget {
       );
     }
 
-    final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
-    final summary = _RecurringSummary.from(expenses);
+    final incomeItems = [...items.where((e) => e.type == TransactionType.income)]
+      ..sort((a, b) => a.dayOfMonth.compareTo(b.dayOfMonth));
+    final expenseItems = [...items.where((e) => e.type != TransactionType.income)]
+      ..sort((a, b) => a.dayOfMonth.compareTo(b.dayOfMonth));
+    final summary = _RecurringSummary.from(items);
+
+    // 섹션 구조: [summary, incomeHeader?, ...income, expenseHeader?, ...expense]
+    final listItems = <Object>[
+      summary,
+      if (incomeItems.isNotEmpty) _SectionType.income,
+      ...incomeItems,
+      if (expenseItems.isNotEmpty) _SectionType.expense,
+      ...expenseItems,
+    ];
 
     return RefreshIndicator(
       onRefresh: () =>
           ref.read(householdRecurringExpensesProvider.notifier).refresh(),
       child: ListView.builder(
         padding: const EdgeInsets.only(bottom: 80),
-        itemCount: sorted.length + 1,
+        itemCount: listItems.length,
         itemBuilder: (context, index) {
-          if (index == 0) {
-            return _RecurringSummaryCard(summary: summary);
+          final entry = listItems[index];
+          if (entry is _RecurringSummary) {
+            return _RecurringSummaryCard(summary: entry);
           }
-          final expense = sorted[index - 1];
-          return ExpenseListItem(
-            expense: expense,
-            onTap: () => context.push(
-              AppRoutes.householdDetail,
-              extra: expense,
+          if (entry is _SectionType) {
+            return _SectionHeader(type: entry, l10n: l10n);
+          }
+          final item = entry as RecurringExpenseModel;
+          return Dismissible(
+            key: ValueKey(item.id),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: AppSizes.spaceL),
+              color: Theme.of(context).colorScheme.error,
+              child: const Icon(Icons.delete_outline,
+                  color: Colors.white, size: 24),
             ),
-            onDelete: () => _confirmDelete(context, ref, l10n, expense),
+            confirmDismiss: (_) => _confirmDelete(context, ref, l10n, item),
+            onDismissed: (_) {},
+            child: _RecurringListItem(
+              item: item,
+              onTap: () => context.push(
+                AppRoutes.householdRecurringEdit,
+                extra: {'item': item, 'groupId': selectedGroupId},
+              ),
+            ),
           );
         },
       ),
     );
   }
 
-  Future<void> _confirmDelete(
+  Future<bool?> _confirmDelete(
     BuildContext context,
     WidgetRef ref,
     AppLocalizations l10n,
-    ExpenseModel expense,
+    RecurringExpenseModel item,
   ) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -199,37 +216,203 @@ class _RecurringExpensesList extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(
-              l10n.common_delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
+            child: Text(l10n.common_delete,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
     );
 
-    if (confirmed != true || !context.mounted) return;
+    if (confirmed != true || !context.mounted) return false;
 
     final success = await ref
         .read(householdManagementProvider.notifier)
-        .deleteExpense(expense.id);
+        .deleteRecurringExpense(item.id);
 
-    if (!context.mounted) return;
-
-    if (success) {
-      ref
-          .read(householdRecurringExpensesProvider.notifier)
-          .removeExpense(expense.id);
-    }
-
+    if (!context.mounted) return false;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(success ? l10n.household_delete_success : l10n.common_error),
+        content: Text(
+            success ? l10n.household_delete_success : l10n.common_error),
+      ),
+    );
+    return success;
+  }
+}
+
+// ── 섹션 타입 ──────────────────────────────────────────────────────────────
+enum _SectionType { income, expense }
+
+// ── 섹션 헤더 ──────────────────────────────────────────────────────────────
+class _SectionHeader extends StatelessWidget {
+  final _SectionType type;
+  final AppLocalizations l10n;
+
+  const _SectionHeader({required this.type, required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isIncome = type == _SectionType.income;
+    final color = isIncome ? Colors.teal : colorScheme.error;
+    final icon = isIncome ? Icons.savings_outlined : Icons.receipt_long_outlined;
+    final label = isIncome ? l10n.household_income : l10n.household_expense;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceXS),
+      child: Row(
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
+          ),
+        ],
       ),
     );
   }
 }
 
+// ── 고정지출 목록 아이템 ────────────────────────────────────────────────────
+class _RecurringListItem extends StatelessWidget {
+  final RecurringExpenseModel item;
+  final VoidCallback onTap;
+
+  const _RecurringListItem({
+    required this.item,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isIncome = item.type == TransactionType.income;
+    final color = isIncome ? Colors.teal : colorScheme.error;
+
+    // 아이콘: 카테고리 있으면 카테고리 아이콘, 없으면 수입=savings / 지출=payments
+    final IconData iconData;
+    final Color iconColor;
+    if (item.category != null) {
+      iconData = categoryIcon(item.category!);
+      iconColor = categoryColor(item.category!);
+    } else if (isIncome) {
+      iconData = Icons.savings_outlined;
+      iconColor = Colors.teal;
+    } else {
+      iconData = Icons.payments_outlined;
+      iconColor = colorScheme.error;
+    }
+
+    // subtitle: 카테고리명 또는 수입/지출 레이블
+    final String subtitle = item.category != null
+        ? categoryName(l10n, item.category!)
+        : (isIncome ? l10n.household_income : l10n.household_expense);
+
+    return ListTile(
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM, vertical: 2),
+      leading: CircleAvatar(
+        backgroundColor: iconColor.withValues(alpha: 0.1),
+        child: Icon(iconData, size: 20, color: iconColor),
+      ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              item.description?.isNotEmpty == true
+                  ? item.description!
+                  : subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: item.isActive ? null : colorScheme.outline,
+              ),
+            ),
+          ),
+          if (!item.isActive)
+            Container(
+              margin: const EdgeInsets.only(left: AppSizes.spaceS),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Text(
+                l10n.household_recurring_inactive,
+                style: textTheme.bodySmall
+                    ?.copyWith(color: colorScheme.outline, fontSize: 10),
+              ),
+            ),
+          if (item.isVariable)
+            Container(
+              margin: const EdgeInsets.only(left: AppSizes.spaceS),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: colorScheme.tertiaryContainer,
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Text(
+                l10n.household_recurring_variable,
+                style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onTertiaryContainer, fontSize: 10),
+              ),
+            ),
+        ],
+      ),
+      subtitle: Text(
+        // description이 있을 때만 카테고리명을 subtitle로
+        item.description?.isNotEmpty == true ? subtitle : '',
+        style: textTheme.bodySmall
+            ?.copyWith(color: colorScheme.onSurfaceVariant),
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            '${isIncome ? '+' : '-'}₩${_fmt(item.amount)}',
+            style: textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color,
+              fontStyle: item.isVariable ? FontStyle.italic : FontStyle.normal,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            l10n.household_recurring_day_of_month_value(item.dayOfMonth),
+            style: textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 11,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
+  }
+}
+
+// ── 요약 카드 ──────────────────────────────────────────────────────────────
 class _RecurringSummaryCard extends StatelessWidget {
   final _RecurringSummary summary;
 
@@ -260,25 +443,49 @@ class _RecurringSummaryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 월 합계 + 항목 수
               Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Text(
-                          l10n.household_recurring_total,
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.household_recurring_expense_total,
+                                style: textTheme.bodySmall?.copyWith(
+                                    color: colorScheme.error),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                '₩${_fmt(summary.totalExpense)}',
+                                style: textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.error,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '₩${_formatAmount(summary.totalExpense)}',
-                          style: textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.household_recurring_income_total,
+                                style: textTheme.bodySmall?.copyWith(
+                                    color: Colors.teal),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                '₩${_fmt(summary.totalIncome)}',
+                                style: textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -291,15 +498,15 @@ class _RecurringSummaryCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.radiusMedium),
                     ),
                     child: Column(
                       children: [
                         Text(
                           l10n.household_recurring_count,
                           style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSecondaryContainer,
-                          ),
+                              color: colorScheme.onSecondaryContainer),
                         ),
                         Text(
                           l10n.household_recurring_count_unit(summary.count),
@@ -313,7 +520,6 @@ class _RecurringSummaryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              // 카테고리별 분포
               if (summary.categoryAmounts.isNotEmpty) ...[
                 const SizedBox(height: AppSizes.spaceM),
                 Divider(color: colorScheme.outlineVariant, height: 1),
@@ -321,8 +527,7 @@ class _RecurringSummaryCard extends StatelessWidget {
                 Text(
                   l10n.household_recurring_top_category,
                   style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                      color: colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: AppSizes.spaceS),
                 ...summary.categoryAmounts.map(
@@ -341,15 +546,14 @@ class _RecurringSummaryCard extends StatelessWidget {
     );
   }
 
-  String _formatAmount(double amount) {
-    final intAmount = amount.toInt();
-    final str = intAmount.toString();
-    final buffer = StringBuffer();
+  String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
     for (var i = 0; i < str.length; i++) {
-      if (i > 0 && (str.length - i) % 3 == 0) buffer.write(',');
-      buffer.write(str[i]);
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
     }
-    return buffer.toString();
+    return buf.toString();
   }
 }
 
@@ -383,7 +587,8 @@ class _CategoryBar extends StatelessWidget {
             width: 72,
             child: Text(
               categoryName(l10n, category),
-              style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurface),
+              style:
+                  textTheme.bodySmall?.copyWith(color: colorScheme.onSurface),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -402,7 +607,7 @@ class _CategoryBar extends StatelessWidget {
           ),
           const SizedBox(width: AppSizes.spaceS),
           Text(
-            '₩${_formatAmount(amount)}',
+            '₩${_fmt(amount)}',
             style: textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
@@ -413,14 +618,13 @@ class _CategoryBar extends StatelessWidget {
     );
   }
 
-  String _formatAmount(double amount) {
-    final intAmount = amount.toInt();
-    final str = intAmount.toString();
-    final buffer = StringBuffer();
+  String _fmt(double amount) {
+    final str = amount.toInt().toString();
+    final buf = StringBuffer();
     for (var i = 0; i < str.length; i++) {
-      if (i > 0 && (str.length - i) % 3 == 0) buffer.write(',');
-      buffer.write(str[i]);
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
     }
-    return buffer.toString();
+    return buf.toString();
   }
 }

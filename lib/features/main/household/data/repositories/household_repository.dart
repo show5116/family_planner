@@ -6,6 +6,7 @@ import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/merchant_model.dart';
+import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 
 final householdRepositoryProvider = Provider<HouseholdRepository>((ref) {
@@ -47,22 +48,74 @@ class HouseholdRepository {
     }
   }
 
-  /// 고정 지출 목록 조회
-  Future<List<ExpenseModel>> getRecurringExpenses({String? groupId}) async {
+  /// 고정지출 목록 조회
+  Future<List<RecurringExpenseModel>> getRecurringExpenses({
+    String? groupId,
+    bool includeInactive = false,
+  }) async {
     try {
-      final response = await _dio.get('/household/expenses/recurring', queryParameters: {
+      final response = await _dio.get('/household/recurring-expenses', queryParameters: {
         if (groupId != null) 'groupId': groupId,
+        if (includeInactive) 'includeInactive': true,
       });
       final data = response.data;
       if (data is List) {
         return data
-            .map((e) => ExpenseModel.fromJson(e as Map<String, dynamic>))
+            .map((e) => RecurringExpenseModel.fromJson(e as Map<String, dynamic>))
             .toList();
       }
       return [];
     } on DioException catch (e) {
-      debugPrint('❌ [HouseholdRepository] 고정 지출 조회 실패: ${e.message}');
-      throw Exception('고정 지출 조회 실패: ${e.message}');
+      debugPrint('❌ [HouseholdRepository] 고정지출 조회 실패: ${e.message}');
+      throw Exception('고정지출 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 고정지출 상세 조회
+  Future<RecurringExpenseModel> getRecurringExpenseById(String id) async {
+    try {
+      final response = await _dio.get('/household/recurring-expenses/$id');
+      return RecurringExpenseModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('고정지출을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('접근 권한이 없습니다');
+      throw Exception('고정지출 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 고정지출 등록
+  Future<RecurringExpenseModel> createRecurringExpense(CreateRecurringExpenseDto dto) async {
+    try {
+      final response = await _dio.post('/household/recurring-expenses', data: dto.toJson());
+      return RecurringExpenseModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [HouseholdRepository] 고정지출 등록 실패: ${e.message}');
+      throw Exception('고정지출 등록 실패: ${e.message}');
+    }
+  }
+
+  /// 고정지출 수정
+  Future<RecurringExpenseModel> updateRecurringExpense(
+      String id, UpdateRecurringExpenseDto dto) async {
+    try {
+      final response =
+          await _dio.patch('/household/recurring-expenses/$id', data: dto.toJson());
+      return RecurringExpenseModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('고정지출을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('본인이 등록한 고정지출만 수정할 수 있습니다');
+      throw Exception('고정지출 수정 실패: ${e.message}');
+    }
+  }
+
+  /// 고정지출 삭제
+  Future<void> deleteRecurringExpense(String id) async {
+    try {
+      await _dio.delete('/household/recurring-expenses/$id');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('고정지출을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('본인이 등록한 고정지출만 삭제할 수 있습니다');
+      throw Exception('고정지출 삭제 실패: ${e.message}');
     }
   }
 

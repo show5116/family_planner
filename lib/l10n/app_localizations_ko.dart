@@ -2513,6 +2513,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_income => '입금';
 
   @override
+  String get household_revenue => '수입';
+
+  @override
   String get household_type => '유형';
 
   @override
@@ -2659,6 +2662,22 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_expense_total => '지출 합계';
+
+  @override
+  String get household_recurring_income_total => '수입 합계';
+
+  @override
+  String household_unpaid_recurring_expense(int count, String amount) {
+    return '지출 $count건 · ₩$amount';
+  }
+
+  @override
+  String household_unpaid_recurring_income(int count, String amount) {
+    return '수입 $count건 · ₩$amount';
+  }
+
+  @override
   String get household_recurring_top_category => '카테고리별 분포';
 
   @override
@@ -2687,6 +2706,42 @@ class AppLocalizationsKo extends AppLocalizations {
       '매월 발생하지만 금액이 달라집니다 (예: 관리비)';
 
   @override
+  String get household_recurring_amount_variable_label => '기준 금액 (예상)';
+
+  @override
+  String get household_recurring_amount_variable_hint =>
+      '매월 금액이 다를 수 있습니다. 실제 지출 발생 후 수정해 확정해주세요.';
+
+  @override
+  String get household_recurring_amount_fixed_hint => '매월 이 금액으로 자동 등록됩니다.';
+
+  @override
+  String get household_recurring_inactive => '비활성';
+
+  @override
+  String get household_recurring_add => '고정지출 추가';
+
+  @override
+  String get household_recurring_edit => '고정지출 수정';
+
+  @override
+  String get household_recurring_title => '고정 내역';
+
+  @override
+  String get household_recurring_add_title => '고정 내역 추가';
+
+  @override
+  String get household_recurring_edit_title => '고정 내역 수정';
+
+  @override
+  String get household_recurring_day_of_month => '매달 발생 일';
+
+  @override
+  String household_recurring_day_of_month_value(int day) {
+    return '매월 $day일';
+  }
+
+  @override
   String get household_estimated_amount => '예상 금액';
 
   @override
@@ -2708,7 +2763,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_exclude_carryover => '이월 제외';
 
   @override
-  String get household_unpaid_recurring_title => '이번 달 남은 고정 지출';
+  String get household_unpaid_recurring_title => '이번 달 남은 고정 내역';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {
@@ -4163,4 +4218,42 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get legal_privacyLastUpdated => '시행일: 2026년 6월 1일';
+
+  @override
+  String get shopping_history_delete_title => '구매 이력 삭제';
+
+  @override
+  String get shopping_history_delete_body => '이 장보기 기록을 삭제하시겠습니까?';
+
+  @override
+  String get shopping_history_delete_notice =>
+      '가계부 지출 내역과 냉장고 보관 품목은 삭제되지 않고 유지됩니다.';
+
+  @override
+  String get shopping_history_readd_all => '이 리스트 그대로 장바구니에 담기';
+
+  @override
+  String shopping_history_readd_all_snackbar(int count) {
+    return '$count개 항목을 장바구니에 담았습니다.';
+  }
+
+  @override
+  String shopping_history_readd_item_snackbar(String name) {
+    return '$name을(를) 장바구니에 담았습니다.';
+  }
+
+  @override
+  String get shopping_history_price_none => '가격 미입력';
+
+  @override
+  String get shopping_history_add_to_cart => '장바구니에 담기';
+
+  @override
+  String get shopping_history_fridge_transferred => '냉장고에 이관됨';
+
+  @override
+  String get shopping_history_fridge_not_transferred => '이관 안 함';
+
+  @override
+  String get shopping_complete_snackbar => '장보기가 완료되었습니다.';
 }

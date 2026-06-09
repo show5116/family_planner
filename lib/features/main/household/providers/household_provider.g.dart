@@ -444,16 +444,16 @@ final householdExpensesProvider =
 
 typedef _$HouseholdExpenses = AutoDisposeAsyncNotifier<List<ExpenseModel>>;
 String _$householdRecurringExpensesHash() =>
-    r'2f5e202430f9cbc47cc2b8c38ffd0e7a0976688c';
+    r'f537bdda80d450c619ea22dd75c1474eab77cb85';
 
-/// 고정 지출 목록 Provider (isRecurring=true)
+/// 고정지출 목록 Provider
 ///
 /// Copied from [HouseholdRecurringExpenses].
 @ProviderFor(HouseholdRecurringExpenses)
 final householdRecurringExpensesProvider =
     AutoDisposeAsyncNotifierProvider<
       HouseholdRecurringExpenses,
-      List<ExpenseModel>
+      List<RecurringExpenseModel>
     >.internal(
       HouseholdRecurringExpenses.new,
       name: r'householdRecurringExpensesProvider',
@@ -465,6 +465,6 @@ final householdRecurringExpensesProvider =
     );
 
 typedef _$HouseholdRecurringExpenses =
-    AutoDisposeAsyncNotifier<List<ExpenseModel>>;
+    AutoDisposeAsyncNotifier<List<RecurringExpenseModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

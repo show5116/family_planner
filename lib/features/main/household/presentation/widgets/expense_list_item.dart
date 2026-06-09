@@ -202,13 +202,11 @@ String paymentMethodName(AppLocalizations l10n, PaymentMethod? method) {
 class ExpenseListItem extends StatelessWidget {
   final ExpenseModel expense;
   final VoidCallback onTap;
-  final VoidCallback onDelete;
 
   const ExpenseListItem({
     super.key,
     required this.expense,
     required this.onTap,
-    required this.onDelete,
   });
 
   @override
@@ -290,7 +288,7 @@ class ExpenseListItem extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
-                        if (!isIncome && expense.isRecurring) ...[
+                        if (!isIncome && expense.recurringExpenseId != null) ...[
                           const SizedBox(width: AppSizes.spaceXS),
                           Icon(
                             Icons.repeat,
@@ -298,51 +296,19 @@ class ExpenseListItem extends StatelessWidget {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ],
-                        if (!isIncome && expense.isVariableRecurring) ...[
+                        if (!expense.isConfirmed) ...[
                           const SizedBox(width: 2),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 4, vertical: 1),
                             decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .tertiaryContainer,
+                              color: Theme.of(context).colorScheme.tertiaryContainer,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              AppLocalizations.of(context)!.household_variable_badge,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onTertiaryContainer,
-                                    fontSize: 10,
-                                  ),
-                            ),
-                          ),
-                        ],
-                        if (!isIncome && expense.isRecurring && !expense.isConfirmed) ...[
-                          const SizedBox(width: 2),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 4, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .errorContainer,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context)!.household_unconfirmed_badge,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onErrorContainer,
+                              l10n.household_unconfirmed_badge,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.onTertiaryContainer,
                                     fontSize: 10,
                                   ),
                             ),
@@ -394,18 +360,7 @@ class ExpenseListItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  if (expense.isVariableRecurring && !expense.isConfirmed &&
-                      expense.estimatedAmount != null)
-                    Text(
-                      '~₩${_formatAmount(expense.estimatedAmount!)}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: amountColor.withValues(alpha: 0.6),
-                            fontStyle: FontStyle.italic,
-                          ),
-                    )
-                  else
-                    Text(
+                  Text(
                       '$amountPrefix${_formatAmount(expense.amount)}',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
@@ -424,22 +379,6 @@ class ExpenseListItem extends StatelessWidget {
                         ),
                   ),
                 ],
-              ),
-              const SizedBox(width: AppSizes.spaceXS),
-              GestureDetector(
-                onTap: onDelete,
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Icon(
-                    Icons.delete_outline,
-                    size: 17,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outline
-                        .withValues(alpha: 0.45),
-                  ),
-                ),
               ),
             ],
           ),

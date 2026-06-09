@@ -4968,6 +4968,12 @@ abstract class AppLocalizations {
   /// **'입금'**
   String get household_income;
 
+  /// 거래 유형 탭 - 수입 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수입'**
+  String get household_revenue;
+
   /// 거래 유형 레이블
   ///
   /// In ko, this message translates to:
@@ -5256,6 +5262,30 @@ abstract class AppLocalizations {
   /// **'{count}건'**
   String household_recurring_count_unit(int count);
 
+  /// 고정 지출 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 합계'**
+  String get household_recurring_expense_total;
+
+  /// 고정 수입 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수입 합계'**
+  String get household_recurring_income_total;
+
+  /// 이번달 남은 고정 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 {count}건 · ₩{amount}'**
+  String household_unpaid_recurring_expense(int count, String amount);
+
+  /// 이번달 남은 고정 수입
+  ///
+  /// In ko, this message translates to:
+  /// **'수입 {count}건 · ₩{amount}'**
+  String household_unpaid_recurring_income(int count, String amount);
+
   /// 고정 지출 카테고리별 분포 레이블
   ///
   /// In ko, this message translates to:
@@ -5310,6 +5340,72 @@ abstract class AppLocalizations {
   /// **'매월 발생하지만 금액이 달라집니다 (예: 관리비)'**
   String get household_recurring_type_variable_desc;
 
+  /// 가변 고정지출 금액 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'기준 금액 (예상)'**
+  String get household_recurring_amount_variable_label;
+
+  /// 가변 금액 안내 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 금액이 다를 수 있습니다. 실제 지출 발생 후 수정해 확정해주세요.'**
+  String get household_recurring_amount_variable_hint;
+
+  /// 고정 금액 안내 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 이 금액으로 자동 등록됩니다.'**
+  String get household_recurring_amount_fixed_hint;
+
+  /// 고정지출 비활성 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'비활성'**
+  String get household_recurring_inactive;
+
+  /// 고정지출 추가 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정지출 추가'**
+  String get household_recurring_add;
+
+  /// 고정지출 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정지출 수정'**
+  String get household_recurring_edit;
+
+  /// 고정 내역 화면 제목 (수입/지출 모두 포함)
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 내역'**
+  String get household_recurring_title;
+
+  /// 고정 내역 추가 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 내역 추가'**
+  String get household_recurring_add_title;
+
+  /// 고정 내역 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 내역 수정'**
+  String get household_recurring_edit_title;
+
+  /// 매달 발생 일 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'매달 발생 일'**
+  String get household_recurring_day_of_month;
+
+  /// 매달 발생 일 값
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {day}일'**
+  String household_recurring_day_of_month_value(int day);
+
   /// 가변 고정 지출 예상 금액 레이블
   ///
   /// In ko, this message translates to:
@@ -5352,10 +5448,10 @@ abstract class AppLocalizations {
   /// **'이월 제외'**
   String get household_exclude_carryover;
 
-  /// 이번 달 아직 발생하지 않은 고정 지출 배너 제목
+  /// 이번 달 아직 발생하지 않은 고정 내역 배너 제목
   ///
   /// In ko, this message translates to:
-  /// **'이번 달 남은 고정 지출'**
+  /// **'이번 달 남은 고정 내역'**
   String get household_unpaid_recurring_title;
 
   /// 미치뤄진 고정 지출 건수 및 예상 합계
@@ -8043,6 +8139,72 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'시행일: 2026년 6월 1일'**
   String get legal_privacyLastUpdated;
+
+  /// 구매 이력 삭제 확인 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 이력 삭제'**
+  String get shopping_history_delete_title;
+
+  /// 구매 이력 삭제 확인 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'이 장보기 기록을 삭제하시겠습니까?'**
+  String get shopping_history_delete_body;
+
+  /// 구매 이력 삭제 시 가계부/냉장고 데이터 유지 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 지출 내역과 냉장고 보관 품목은 삭제되지 않고 유지됩니다.'**
+  String get shopping_history_delete_notice;
+
+  /// 구매 이력 전체 장바구니 다시 담기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'이 리스트 그대로 장바구니에 담기'**
+  String get shopping_history_readd_all;
+
+  /// 전체 담기 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 항목을 장바구니에 담았습니다.'**
+  String shopping_history_readd_all_snackbar(int count);
+
+  /// 개별 담기 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에 담았습니다.'**
+  String shopping_history_readd_item_snackbar(String name);
+
+  /// 가격 미입력 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'가격 미입력'**
+  String get shopping_history_price_none;
+
+  /// 개별 항목 장바구니 담기 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니에 담기'**
+  String get shopping_history_add_to_cart;
+
+  /// 냉장고 이관 완료 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고에 이관됨'**
+  String get shopping_history_fridge_transferred;
+
+  /// 냉장고 미이관 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'이관 안 함'**
+  String get shopping_history_fridge_not_transferred;
+
+  /// 장보기 완료 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기가 완료되었습니다.'**
+  String get shopping_complete_snackbar;
 }
 
 class _AppLocalizationsDelegate
