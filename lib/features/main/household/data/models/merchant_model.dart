@@ -96,6 +96,12 @@ const List<MerchantSample> kMerchantSamples = [
     appScheme: 'navershopping://',
   ),
   MerchantSample(
+    name: '마켓컬리',
+    icon: Icons.eco_outlined,
+    color: Color(0xFF5F0080),
+    appScheme: 'kurly://',
+  ),
+  MerchantSample(
     name: '11번가',
     icon: Icons.shopping_cart_outlined,
     color: Color(0xFFFF0000),

@@ -4968,6 +4968,12 @@ abstract class AppLocalizations {
   /// **'입금'**
   String get household_income;
 
+  /// 거래 유형 탭 - 수입 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수입'**
+  String get household_revenue;
+
   /// 거래 유형 레이블
   ///
   /// In ko, this message translates to:
@@ -5256,6 +5262,30 @@ abstract class AppLocalizations {
   /// **'{count}건'**
   String household_recurring_count_unit(int count);
 
+  /// 고정 지출 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 합계'**
+  String get household_recurring_expense_total;
+
+  /// 고정 수입 합계 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'수입 합계'**
+  String get household_recurring_income_total;
+
+  /// 이번달 남은 고정 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 {count}건 · ₩{amount}'**
+  String household_unpaid_recurring_expense(int count, String amount);
+
+  /// 이번달 남은 고정 수입
+  ///
+  /// In ko, this message translates to:
+  /// **'수입 {count}건 · ₩{amount}'**
+  String household_unpaid_recurring_income(int count, String amount);
+
   /// 고정 지출 카테고리별 분포 레이블
   ///
   /// In ko, this message translates to:
@@ -5310,6 +5340,72 @@ abstract class AppLocalizations {
   /// **'매월 발생하지만 금액이 달라집니다 (예: 관리비)'**
   String get household_recurring_type_variable_desc;
 
+  /// 가변 고정지출 금액 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'기준 금액 (예상)'**
+  String get household_recurring_amount_variable_label;
+
+  /// 가변 금액 안내 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 금액이 다를 수 있습니다. 실제 지출 발생 후 수정해 확정해주세요.'**
+  String get household_recurring_amount_variable_hint;
+
+  /// 고정 금액 안내 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 이 금액으로 자동 등록됩니다.'**
+  String get household_recurring_amount_fixed_hint;
+
+  /// 고정지출 비활성 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'비활성'**
+  String get household_recurring_inactive;
+
+  /// 고정지출 추가 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정지출 추가'**
+  String get household_recurring_add;
+
+  /// 고정지출 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정지출 수정'**
+  String get household_recurring_edit;
+
+  /// 고정 내역 화면 제목 (수입/지출 모두 포함)
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 내역'**
+  String get household_recurring_title;
+
+  /// 고정 내역 추가 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 내역 추가'**
+  String get household_recurring_add_title;
+
+  /// 고정 내역 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 내역 수정'**
+  String get household_recurring_edit_title;
+
+  /// 매달 발생 일 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'매달 발생 일'**
+  String get household_recurring_day_of_month;
+
+  /// 매달 발생 일 값
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {day}일'**
+  String household_recurring_day_of_month_value(int day);
+
   /// 가변 고정 지출 예상 금액 레이블
   ///
   /// In ko, this message translates to:
@@ -5352,10 +5448,10 @@ abstract class AppLocalizations {
   /// **'이월 제외'**
   String get household_exclude_carryover;
 
-  /// 이번 달 아직 발생하지 않은 고정 지출 배너 제목
+  /// 이번 달 아직 발생하지 않은 고정 내역 배너 제목
   ///
   /// In ko, this message translates to:
-  /// **'이번 달 남은 고정 지출'**
+  /// **'이번 달 남은 고정 내역'**
   String get household_unpaid_recurring_title;
 
   /// 미치뤄진 고정 지출 건수 및 예상 합계

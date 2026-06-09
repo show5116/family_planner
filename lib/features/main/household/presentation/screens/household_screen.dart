@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -214,20 +214,9 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         title: Text(l10n.household_title),
         actions: [
           IconButton(
-            key: _budgetKey,
-            icon: const Icon(Icons.account_balance_wallet_outlined),
-            tooltip: l10n.household_budget_set,
-            onPressed: () => showBudgetSettingSheet(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.storefront_outlined),
-            tooltip: l10n.household_merchants,
-            onPressed: () => context.push(AppRoutes.householdMerchants),
-          ),
-          IconButton(
             key: _recurringKey,
             icon: const Icon(Icons.repeat),
-            tooltip: l10n.household_recurring_expenses,
+            tooltip: l10n.household_recurring_title,
             onPressed: () => context.push(AppRoutes.householdRecurring),
           ),
           IconButton(
@@ -236,14 +225,23 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             tooltip: l10n.household_statistics,
             onPressed: () => context.push(AppRoutes.householdStatistics),
           ),
-          // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
-          // if (!kIsWeb && Platform.isAndroid)
-          //   IconButton(
-          //     icon: const Icon(Icons.receipt_long_outlined),
-          //     tooltip: l10n.household_settings_title,
-          //     onPressed: () => context.push(AppRoutes.householdSettings),
-          //   ),
-          AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
+          AppBarMoreMenu(
+            onReplayOnboarding: _replayOnboarding,
+            extraItems: [
+              MoreMenuItem(
+                id: 'budget',
+                icon: Icons.account_balance_wallet_outlined,
+                label: l10n.household_budget_set,
+                onTap: (_) => showBudgetSettingSheet(context),
+              ),
+              MoreMenuItem(
+                id: 'merchants',
+                icon: Icons.storefront_outlined,
+                label: l10n.household_merchants,
+                onTap: (ctx) => ctx.push(AppRoutes.householdMerchants),
+              ),
+            ],
+          ),
         ],
       ),
       body: Column(
@@ -269,7 +267,13 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             }
             return const _MonthlySummaryCard();
           }),
-          const _UnpaidRecurringBanner(),
+          Consumer(builder: (context, ref, _) {
+            final viewMode = ref.watch(householdViewModeProvider);
+            if (viewMode == HouseholdViewMode.calendar) {
+              return const SizedBox.shrink();
+            }
+            return const _UnpaidRecurringBanner();
+          }),
           Expanded(
             child: _ExpenseBody(
               selectedGroupId: selectedGroupId,
@@ -448,6 +452,14 @@ class _MonthlySummaryCard extends ConsumerWidget {
                       ),
                     ],
                   ),
+            // 예산 진척도 바 (예산이 설정된 경우)
+            if (stats.totalBudget > 0) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              _BudgetProgressBar(
+                spent: stats.totalExpense,
+                budget: stats.totalBudget,
+              ),
+            ],
             // 잔금이 있고 이번 달 또는 지난달일 때 이월 버튼
             if (isCurrentMonth && stats.hasIncome && stats.balance > 0) ...[
               const SizedBox(height: AppSizes.spaceS),
@@ -548,6 +560,82 @@ class _MonthlySummaryCard extends ConsumerWidget {
     for (var i = 0; i < str.length; i++) {
       if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
       buf.write(str[i]);
+    }
+    return buf.toString();
+  }
+}
+
+class _BudgetProgressBar extends StatelessWidget {
+  final double spent;
+  final double budget;
+
+  const _BudgetProgressBar({required this.spent, required this.budget});
+
+  @override
+  Widget build(BuildContext context) {
+    final rawRatio = spent / budget;
+    final ratio = rawRatio.clamp(0.0, 1.0);
+    final percent = (rawRatio * 100).toStringAsFixed(1);
+    final isOver = spent > budget;
+    final colorScheme = Theme.of(context).colorScheme;
+    final Color barColor;
+    if (isOver) {
+      barColor = colorScheme.error;
+    } else if (rawRatio >= 0.8) {
+      barColor = const Color(0xFFF59E0B); // amber-500
+    } else {
+      barColor = colorScheme.primary;
+    }
+    final textColor = colorScheme.onPrimaryContainer.withValues(alpha: 0.8);
+
+    final spentStr = _fmt(spent);
+    final budgetStr = _fmt(budget);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '예산 ₩$budgetStr 중 ₩$spentStr ($percent%) 사용',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: textColor,
+                    fontSize: 11,
+                  ),
+            ),
+            if (isOver)
+              Text(
+                '초과',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: colorScheme.error,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11,
+                    ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(2),
+          child: LinearProgressIndicator(
+            value: ratio,
+            minHeight: 4,
+            backgroundColor:
+                colorScheme.onPrimaryContainer.withValues(alpha: 0.15),
+            valueColor: AlwaysStoppedAnimation<Color>(barColor),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _fmt(double v) {
+    final s = v.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < s.length; i++) {
+      if (i > 0 && (s.length - i) % 3 == 0) buf.write(',');
+      buf.write(s[i]);
     }
     return buf.toString();
   }
@@ -1048,10 +1136,34 @@ class _DayGroup extends ConsumerWidget {
         ),
         const SizedBox(height: AppSizes.spaceXS),
         ...expenses.map(
-          (e) => ExpenseListItem(
-            expense: e,
-            onTap: () => onTap(e),
-            onDelete: () => onDelete(e),
+          (e) => Dismissible(
+            key: ValueKey(e.id),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: AppSizes.spaceL),
+              margin: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceXS,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+              ),
+              child: Icon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.onErrorContainer,
+                size: 22,
+              ),
+            ),
+            confirmDismiss: (_) async {
+              onDelete(e);
+              return false;
+            },
+            child: ExpenseListItem(
+              expense: e,
+              onTap: () => onTap(e),
+            ),
           ),
         ),
       ],
@@ -1089,13 +1201,14 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
-    // 예상 합계: 가변은 estimatedAmount, 고정은 amount
-    final total = unpaid.fold(0.0, (sum, e) {
-      final amt = (e.isVariableRecurring && e.estimatedAmount != null)
-          ? e.estimatedAmount!
-          : e.amount;
-      return sum + amt;
-    });
+    final expenseItems =
+        unpaid.where((e) => e.type == TransactionType.expense).toList();
+    final incomeItems =
+        unpaid.where((e) => e.type == TransactionType.income).toList();
+    final totalExpense =
+        expenseItems.fold(0.0, (sum, e) => sum + e.amount);
+    final totalIncome =
+        incomeItems.fold(0.0, (sum, e) => sum + e.amount);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -1113,11 +1226,11 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
             vertical: AppSizes.spaceS,
           ),
           decoration: BoxDecoration(
-            color: colorScheme.errorContainer.withValues(alpha: 0.6),
+            color: colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
             border: Border.all(
-              color: colorScheme.error.withValues(alpha: 0.3),
-              width: 0.5,
+              color: colorScheme.outlineVariant,
+              width: 1,
             ),
           ),
           child: Row(
@@ -1125,7 +1238,7 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
               Icon(
                 Icons.repeat_outlined,
                 size: 18,
-                color: colorScheme.error,
+                color: colorScheme.primary,
               ),
               const SizedBox(width: AppSizes.spaceS),
               Expanded(
@@ -1136,18 +1249,50 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
                       l10n.household_unpaid_recurring_title,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: colorScheme.onErrorContainer,
+                            color: colorScheme.onSurface,
                           ),
                     ),
-                    Text(
-                      l10n.household_unpaid_recurring_subtitle(
-                        unpaid.length,
-                        _fmtAmount(total),
-                      ),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onErrorContainer
-                                .withValues(alpha: 0.8),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        if (expenseItems.isNotEmpty)
+                          Text(
+                            l10n.household_unpaid_recurring_expense(
+                              expenseItems.length,
+                              _fmtAmount(totalExpense),
+                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  color: colorScheme.error,
+                                ),
                           ),
+                        if (expenseItems.isNotEmpty && incomeItems.isNotEmpty)
+                          Text(
+                            '  ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  color: colorScheme.onErrorContainer
+                                      .withValues(alpha: 0.5),
+                                ),
+                          ),
+                        if (incomeItems.isNotEmpty)
+                          Text(
+                            l10n.household_unpaid_recurring_income(
+                              incomeItems.length,
+                              _fmtAmount(totalIncome),
+                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  color: Colors.teal,
+                                ),
+                          ),
+                      ],
                     ),
                   ],
                 ),
@@ -1155,7 +1300,7 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
               Icon(
                 Icons.chevron_right,
                 size: 18,
-                color: colorScheme.onErrorContainer.withValues(alpha: 0.6),
+                color: colorScheme.onSurfaceVariant,
               ),
             ],
           ),

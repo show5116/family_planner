@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -154,7 +155,13 @@ class _HouseholdStatisticsScreenState
           controller: _tabController,
           children: [
             _MonthlyStatisticsTab(month: _selectedMonth),
-            _YearlyStatisticsTab(year: _selectedYear.toString()),
+            _YearlyStatisticsTab(
+              year: _selectedYear.toString(),
+              onMonthDrillDown: (month) {
+                setState(() => _selectedMonth = month);
+                _tabController.animateTo(0);
+              },
+            ),
           ],
         ),
       );
@@ -225,6 +232,8 @@ class _MonthlyStatisticsContentState
       ),
       children: [
         _TotalSummaryCard(stats: widget.stats),
+        const SizedBox(height: AppSizes.spaceM),
+        _MonthComparisonSection(month: widget.month),
         const SizedBox(height: AppSizes.spaceXS),
         Row(
           children: [
@@ -499,7 +508,7 @@ class _MonthlyStatisticsContentState
                 ],
               ),
               const SizedBox(height: AppSizes.spaceS),
-              ...filtered.map((e) => ExpenseListItem(expense: e, onTap: () {}, onDelete: () {})),
+              ...filtered.map((e) => ExpenseListItem(expense: e, onTap: () {})),
             ],
           );
         },
@@ -772,8 +781,8 @@ class _TotalSummaryCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: ratio,
-                  minHeight: 8,
-                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  minHeight: 10,
+                  backgroundColor: const Color(0xFFF0F4F8),
                   color: ratio >= 1.0
                       ? Theme.of(context).colorScheme.error
                       : ratio >= 0.8
@@ -866,12 +875,11 @@ class _CategoryStatItem extends StatelessWidget {
                 if (ratio != null) ...[
                   const SizedBox(height: 4),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(3),
                     child: LinearProgressIndicator(
                       value: ratio,
-                      minHeight: 4,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      minHeight: 7,
+                      backgroundColor: const Color(0xFFF0F4F8),
                       color: ratio >= 1.0
                           ? Theme.of(context).colorScheme.error
                           : color,
@@ -986,8 +994,9 @@ class _IncomeSummaryItem extends StatelessWidget {
 // 연간 통계 탭
 class _YearlyStatisticsTab extends ConsumerWidget {
   final String year;
+  final void Function(String month)? onMonthDrillDown;
 
-  const _YearlyStatisticsTab({required this.year});
+  const _YearlyStatisticsTab({required this.year, this.onMonthDrillDown});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -995,7 +1004,7 @@ class _YearlyStatisticsTab extends ConsumerWidget {
     final statsAsync = ref.watch(householdYearlyStatisticsProvider(year));
 
     return statsAsync.when(
-      data: (stats) => _YearlyStatisticsContent(stats: stats),
+      data: (stats) => _YearlyStatisticsContent(stats: stats, onMonthDrillDown: onMonthDrillDown),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(
         child: Column(
@@ -1017,15 +1026,27 @@ class _YearlyStatisticsTab extends ConsumerWidget {
 
 class _YearlyStatisticsContent extends StatelessWidget {
   final YearlyStatisticsModel stats;
+  final void Function(String month)? onMonthDrillDown;
 
-  const _YearlyStatisticsContent({required this.stats});
+  const _YearlyStatisticsContent({required this.stats, this.onMonthDrillDown});
 
   @override
   Widget build(BuildContext context) {
-    final maxMonthly = stats.months.isEmpty
+    final expenseMonths = stats.months.where((m) => m.totalExpense > 0).toList();
+    final monthCount = expenseMonths.isEmpty ? 1 : expenseMonths.length;
+    final avgExpense = stats.months.isEmpty
+        ? 0.0
+        : stats.totalExpense / monthCount;
+
+    // 아웃라이어 캡: 평균의 3배 초과 시 캡 처리
+    final capThreshold = avgExpense * 3.0;
+    // 캡 이후의 effective max (캡된 달은 capThreshold, 아닌 달은 실제 값)
+    final effectiveMax = stats.months.isEmpty
         ? 1.0
         : stats.months
-            .map((m) => m.totalExpense)
+            .map((m) => m.totalExpense > capThreshold && capThreshold > 0
+                ? capThreshold
+                : m.totalExpense)
             .reduce((a, b) => a > b ? a : b)
             .clamp(1.0, double.infinity);
 
@@ -1037,7 +1058,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
         bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
       ),
       children: [
-        // 연간 합계
+        // 연간 합계 카드
         Card(
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -1048,72 +1069,91 @@ class _YearlyStatisticsContent extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.spaceM),
-              child: stats.hasIncome
-                  ? Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${stats.year}년 총 입금', style: Theme.of(context).textTheme.bodySmall),
-                              Text(
-                                '₩${_fmt(stats.totalIncome)}',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green,
-                                    ),
-                              ),
-                            ],
+            child: stats.hasIncome
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${stats.year}년 총 입금', style: Theme.of(context).textTheme.bodySmall),
+                            Text(
+                              '₩${_fmt(stats.totalIncome)}',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('${stats.year}년 총 지출', style: Theme.of(context).textTheme.bodySmall),
+                            Text(
+                              '₩${_fmt(stats.totalExpense)}',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text('잔액', style: Theme.of(context).textTheme.bodySmall),
+                            Text(
+                              '₩${_fmt(stats.balance)}',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: stats.balance >= 0 ? Colors.green : Theme.of(context).colorScheme.error,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${stats.year}년 총 지출', style: Theme.of(context).textTheme.bodySmall),
+                            Text(
+                              '₩${_fmt(stats.totalExpense)}',
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('월평균', style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.outline,
+                          )),
+                          Text(
+                            '₩${_fmt(avgExpense)}',
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('${stats.year}년 총 지출', style: Theme.of(context).textTheme.bodySmall),
-                              Text(
-                                '₩${_fmt(stats.totalExpense)}',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).colorScheme.error,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text('잔액', style: Theme.of(context).textTheme.bodySmall),
-                              Text(
-                                '₩${_fmt(stats.balance)}',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: stats.balance >= 0 ? Colors.green : Theme.of(context).colorScheme.error,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${stats.year}년 총 지출', style: Theme.of(context).textTheme.bodySmall),
-                        Text(
-                          '₩${_fmt(stats.totalExpense)}',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                        ),
-                      ],
-                    ),
-            ),
+                        ],
+                      ),
+                    ],
+                  ),
           ),
         ),
         const SizedBox(height: AppSizes.spaceXS),
@@ -1133,17 +1173,30 @@ class _YearlyStatisticsContent extends StatelessWidget {
         const SizedBox(height: AppSizes.spaceM),
         // 월별 막대 차트
         if (stats.months.isNotEmpty) ...[
-          Text(
-            '월별 지출',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+          Row(
+            children: [
+              Text(
+                '월별 지출',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              if (stats.hasIncome)
+                Text(
+                  '월평균 ₩${_fmt(avgExpense)}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                 ),
+            ],
           ),
           const SizedBox(height: AppSizes.spaceS),
           ...stats.months.map(
             (m) => _MonthBarItem(
               monthData: m,
-              maxAmount: maxMonthly,
+              effectiveMax: effectiveMax,
+              capThreshold: capThreshold > 0 ? capThreshold : double.infinity,
+              avgExpense: avgExpense,
+              onTap: onMonthDrillDown != null ? () => onMonthDrillDown!(m.month) : null,
             ),
           ),
         ],
@@ -1165,53 +1218,118 @@ class _YearlyStatisticsContent extends StatelessWidget {
 
 class _MonthBarItem extends StatelessWidget {
   final MonthlyTotalModel monthData;
-  final double maxAmount;
+  final double effectiveMax;
+  final double capThreshold;
+  final double avgExpense;
+  final VoidCallback? onTap;
 
   const _MonthBarItem({
     required this.monthData,
-    required this.maxAmount,
+    required this.effectiveMax,
+    required this.capThreshold,
+    required this.avgExpense,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final ratio = maxAmount > 0 ? (monthData.totalExpense / maxAmount).clamp(0.0, 1.0) : 0.0;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final month = monthData.month.split('-')[1];
+    final expense = monthData.totalExpense;
+    final isCapped = expense > capThreshold && capThreshold < double.infinity;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 32,
-            child: Text(
-              '${int.parse(month)}월',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: ratio,
-                minHeight: 20,
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                color: Theme.of(context).colorScheme.primary,
+    // 캡 처리: 아웃라이어는 capThreshold 기준으로 비율 계산
+    final effectiveValue = isCapped ? capThreshold : expense;
+    // 최소 4% 보장 (금액이 있는 경우)
+    final rawRatio = effectiveMax > 0 ? effectiveValue / effectiveMax : 0.0;
+    final ratio = expense > 0 ? rawRatio.clamp(0.04, 1.0) : 0.0;
+
+    // 평균선 위치 (0~1)
+    final avgRatio = avgExpense > 0 && effectiveMax > 0
+        ? (avgExpense / effectiveMax).clamp(0.0, 1.0)
+        : 0.0;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 32,
+              child: Text(
+                '${int.parse(month)}월',
+                style: textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          SizedBox(
-            width: 80,
-            child: Text(
-              '₩${_fmt(monthData.totalExpense)}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.right,
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: CustomPaint(
+                foregroundPainter: _AvgLinePainter(
+                  avgRatio: avgRatio,
+                  color: colorScheme.outline.withValues(alpha: 0.6),
+                ),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: ratio,
+                        minHeight: 20,
+                        backgroundColor: const Color(0xFFF0F4F8),
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                    // 캡 표시
+                    if (isCapped)
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Text(
+                              '≫',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: AppSizes.spaceS),
+            SizedBox(
+              width: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (onTap != null)
+                    Icon(Icons.chevron_right, size: 14, color: colorScheme.outline),
+                  Flexible(
+                    child: Text(
+                      expense > 0 ? '₩${_fmt(expense)}' : '-',
+                      style: textTheme.bodySmall?.copyWith(
+                        fontWeight: isCapped ? FontWeight.bold : FontWeight.normal,
+                        color: isCapped ? colorScheme.error : null,
+                      ),
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1336,4 +1454,421 @@ class _IncomeCategoryStatItem extends StatelessWidget {
     }
     return buf.toString();
   }
+}
+
+// ── 지난달 비교 섹션 ──────────────────────────────────────────────────────
+class _MonthComparisonSection extends ConsumerWidget {
+  final String month;
+  const _MonthComparisonSection({required this.month});
+
+  String _prevMonth(String m) {
+    final parts = m.split('-');
+    var y = int.parse(parts[0]);
+    var mo = int.parse(parts[1]) - 1;
+    if (mo < 1) { mo = 12; y--; }
+    return '$y-${mo.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prev = _prevMonth(month);
+    final thisAsync = ref.watch(householdExpensesByMonthProvider(month));
+    final prevAsync = ref.watch(householdExpensesByMonthProvider(prev));
+
+    return switch ((thisAsync, prevAsync)) {
+      (AsyncData(:final value), AsyncData(value: final prevValue)) =>
+        _MonthComparisonContent(
+          month: month,
+          prevMonth: prev,
+          thisExpenses: value,
+          prevExpenses: prevValue,
+        ),
+      (AsyncLoading(), _) || (_, AsyncLoading()) => const SizedBox(height: 4),
+      _ => const SizedBox.shrink(),
+    };
+  }
+}
+
+class _MonthComparisonContent extends StatelessWidget {
+  final String month;
+  final String prevMonth;
+  final List<ExpenseModel> thisExpenses;
+  final List<ExpenseModel> prevExpenses;
+
+  const _MonthComparisonContent({
+    required this.month,
+    required this.prevMonth,
+    required this.thisExpenses,
+    required this.prevExpenses,
+  });
+
+  Map<int, double> _dailyExpense(List<ExpenseModel> expenses) {
+    final map = <int, double>{};
+    for (final e in expenses) {
+      if (e.type != TransactionType.expense) continue;
+      if (e.refundedExpenseId != null) continue;
+      if (e.category == ExpenseCategory.carryover) continue;
+      final day = e.date.day;
+      map[day] = (map[day] ?? 0) + e.amount;
+    }
+    return map;
+  }
+
+  String _fmt(double v) {
+    final s = v.toInt().toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < s.length; i++) {
+      if (i > 0 && (s.length - i) % 3 == 0) buf.write(',');
+      buf.write(s[i]);
+    }
+    return buf.toString();
+  }
+
+  String _labelMonth(String m) {
+    final p = m.split('-');
+    return '${int.parse(p[1])}월';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final thisDaily = _dailyExpense(thisExpenses);
+    final prevDaily = _dailyExpense(prevExpenses);
+
+    if (prevDaily.isEmpty) return const SizedBox.shrink();
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    final now = DateTime.now();
+    final monthParts = month.split('-');
+    final isCurrentMonth = int.parse(monthParts[0]) == now.year &&
+        int.parse(monthParts[1]) == now.month;
+    final compareDay = isCurrentMonth
+        ? now.day
+        : DateTime(int.parse(monthParts[0]), int.parse(monthParts[1]) + 1, 0).day;
+
+    // 누적 합계 계산
+    double thisCumulative = 0;
+    double prevCumulative = 0;
+    for (var d = 1; d <= compareDay; d++) {
+      thisCumulative += thisDaily[d] ?? 0;
+      prevCumulative += prevDaily[d] ?? 0;
+    }
+    final diff = thisCumulative - prevCumulative;
+    final isMore = diff > 0;
+
+    final prevParts = prevMonth.split('-');
+    final prevLastDay =
+        DateTime(int.parse(prevParts[0]), int.parse(prevParts[1]) + 1, 0).day;
+    final thisLastDay =
+        DateTime(int.parse(monthParts[0]), int.parse(monthParts[1]) + 1, 0).day;
+
+    // 누적 추이 포인트 생성 (day=0 → cumulative=0 포함)
+    final chartEndDay = isCurrentMonth ? compareDay : thisLastDay;
+    final thisSpots = <FlSpot>[];
+    final prevSpots = <FlSpot>[];
+    double tCum = 0;
+    double pCum = 0;
+    thisSpots.add(const FlSpot(0, 0));
+    prevSpots.add(const FlSpot(0, 0));
+    for (var d = 1; d <= chartEndDay; d++) {
+      tCum += thisDaily[d] ?? 0;
+      thisSpots.add(FlSpot(d.toDouble(), tCum));
+    }
+    for (var d = 1; d <= prevLastDay; d++) {
+      pCum += prevDaily[d] ?? 0;
+      prevSpots.add(FlSpot(d.toDouble(), pCum));
+    }
+
+    final maxCumulative = [
+      thisSpots.map((s) => s.y).fold(0.0, (a, b) => a > b ? a : b),
+      prevSpots.map((s) => s.y).fold(0.0, (a, b) => a > b ? a : b),
+    ].reduce((a, b) => a > b ? a : b);
+    final chartMaxY = maxCumulative == 0 ? 1.0 : maxCumulative * 1.15;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '지난달 비교',
+          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        Card(
+          elevation: 0,
+          color: colorScheme.surfaceContainerLow,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            side: BorderSide(color: colorScheme.outlineVariant, width: 0.5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            child: Column(
+              children: [
+                // ── 요약 수치 ──
+                Row(
+                  children: [
+                    Expanded(
+                      child: _CompareAmountTile(
+                        label: _labelMonth(month),
+                        amount: thisCumulative,
+                        color: colorScheme.primary,
+                        fmt: _fmt,
+                      ),
+                    ),
+                    Container(width: 1, height: 36, color: colorScheme.outlineVariant),
+                    Expanded(
+                      child: _CompareAmountTile(
+                        label: _labelMonth(prevMonth),
+                        amount: prevCumulative,
+                        color: colorScheme.outline,
+                        fmt: _fmt,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                Divider(color: colorScheme.outlineVariant, height: 1),
+                const SizedBox(height: AppSizes.spaceS),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      isMore ? Icons.trending_up : Icons.trending_down,
+                      size: 16,
+                      color: isMore ? colorScheme.error : Colors.teal,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      isCurrentMonth ? '$compareDay일 기준  ' : '말일 기준  ',
+                      style: textTheme.bodySmall
+                          ?.copyWith(color: colorScheme.onSurfaceVariant),
+                    ),
+                    Text(
+                      '₩${_fmt(diff.abs())} ${isMore ? '더 사용' : '덜 사용'}',
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isMore ? colorScheme.error : Colors.teal,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceM),
+                Divider(color: colorScheme.outlineVariant, height: 1),
+                const SizedBox(height: AppSizes.spaceM),
+                // ── 누적 추이 라인 차트 ──
+                Row(
+                  children: [
+                    Text('누적 지출 추이',
+                        style: textTheme.bodySmall
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    const Spacer(),
+                    _LegendLine(color: colorScheme.primary, label: _labelMonth(month), dashed: false),
+                    const SizedBox(width: AppSizes.spaceS),
+                    _LegendLine(
+                        color: colorScheme.outline.withValues(alpha: 0.6),
+                        label: _labelMonth(prevMonth),
+                        dashed: true),
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceM),
+                SizedBox(
+                  height: 160,
+                  child: LineChart(
+                    LineChartData(
+                      minX: 0,
+                      maxX: (chartEndDay > prevLastDay ? chartEndDay : prevLastDay).toDouble(),
+                      minY: 0,
+                      maxY: chartMaxY,
+                      lineTouchData: LineTouchData(
+                        touchTooltipData: LineTouchTooltipData(
+                          getTooltipColor: (_) => colorScheme.surfaceContainerHighest,
+                          getTooltipItems: (spots) => spots.map((spot) {
+                            final isThis = spot.barIndex == 0;
+                            final lbl = isThis ? _labelMonth(month) : _labelMonth(prevMonth);
+                            return LineTooltipItem(
+                              '$lbl ${spot.x.toInt()}일\n₩${_fmt(spot.y)}',
+                              textTheme.bodySmall!.copyWith(color: colorScheme.onSurface),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      titlesData: FlTitlesData(
+                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 5,
+                            getTitlesWidget: (value, meta) {
+                              final d = value.toInt();
+                              if (d == 0) return const SizedBox.shrink();
+                              if (d % 10 != 0 && d != 1) return const SizedBox.shrink();
+                              return Text('$d일',
+                                  style: textTheme.labelSmall?.copyWith(
+                                      color: colorScheme.onSurfaceVariant, fontSize: 9));
+                            },
+                          ),
+                        ),
+                      ),
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        horizontalInterval: chartMaxY / 4,
+                        getDrawingHorizontalLine: (_) => FlLine(
+                          color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                          strokeWidth: 0.5,
+                        ),
+                      ),
+                      borderData: FlBorderData(show: false),
+                      lineBarsData: [
+                        // 이번달 실선
+                        LineChartBarData(
+                          spots: thisSpots,
+                          isCurved: true,
+                          curveSmoothness: 0.3,
+                          color: colorScheme.primary,
+                          barWidth: 2.5,
+                          isStrokeCapRound: true,
+                          dotData: const FlDotData(show: false),
+                          belowBarData: BarAreaData(
+                            show: true,
+                            color: colorScheme.primary.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        // 지난달 점선
+                        LineChartBarData(
+                          spots: prevSpots,
+                          isCurved: true,
+                          curveSmoothness: 0.3,
+                          color: colorScheme.outline.withValues(alpha: 0.6),
+                          barWidth: 2,
+                          isStrokeCapRound: true,
+                          dashArray: [4, 4],
+                          dotData: const FlDotData(show: false),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSizes.spaceL),
+      ],
+    );
+  }
+}
+
+class _CompareAmountTile extends StatelessWidget {
+  final String label;
+  final double amount;
+  final Color color;
+  final String Function(double) fmt;
+
+  const _CompareAmountTile({
+    required this.label,
+    required this.amount,
+    required this.color,
+    required this.fmt,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      children: [
+        Text(label,
+            style: textTheme.bodySmall
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 4),
+        Text('₩${fmt(amount)}',
+            style: textTheme.titleSmall
+                ?.copyWith(fontWeight: FontWeight.bold, color: color)),
+      ],
+    );
+  }
+}
+
+class _LegendLine extends StatelessWidget {
+  final Color color;
+  final String label;
+  final bool dashed;
+
+  const _LegendLine({required this.color, required this.label, required this.dashed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CustomPaint(
+          size: const Size(16, 8),
+          painter: _LinePainter(color: color, dashed: dashed),
+        ),
+        const SizedBox(width: 4),
+        Text(label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
+      ],
+    );
+  }
+}
+
+class _LinePainter extends CustomPainter {
+  final Color color;
+  final bool dashed;
+
+  const _LinePainter({required this.color, required this.dashed});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    final y = size.height / 2;
+    if (!dashed) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    } else {
+      const dashLen = 3.0;
+      const gapLen = 3.0;
+      var x = 0.0;
+      while (x < size.width) {
+        canvas.drawLine(Offset(x, y), Offset((x + dashLen).clamp(0, size.width), y), paint);
+        x += dashLen + gapLen;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_LinePainter old) => old.color != color || old.dashed != dashed;
+}
+
+class _AvgLinePainter extends CustomPainter {
+  final double avgRatio;
+  final Color color;
+
+  const _AvgLinePainter({required this.avgRatio, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (avgRatio <= 0) return;
+    final x = size.width * avgRatio;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
+    const dashHeight = 3.0;
+    const gapHeight = 2.0;
+    double y = 0;
+    while (y < size.height) {
+      canvas.drawLine(Offset(x, y), Offset(x, (y + dashHeight).clamp(0, size.height)), paint);
+      y += dashHeight + gapHeight;
+    }
+  }
+
+  @override
+  bool shouldRepaint(_AvgLinePainter old) => old.avgRatio != avgRatio || old.color != color;
 }

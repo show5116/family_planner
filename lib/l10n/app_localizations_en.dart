@@ -2566,6 +2566,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_income => 'Income';
 
   @override
+  String get household_revenue => 'Revenue';
+
+  @override
   String get household_type => 'Type';
 
   @override
@@ -2712,6 +2715,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_expense_total => 'Total Expenses';
+
+  @override
+  String get household_recurring_income_total => 'Total Income';
+
+  @override
+  String household_unpaid_recurring_expense(int count, String amount) {
+    return '$count expense(s) · ₩$amount';
+  }
+
+  @override
+  String household_unpaid_recurring_income(int count, String amount) {
+    return '$count income item(s) · ₩$amount';
+  }
+
+  @override
   String get household_recurring_top_category => 'By Category';
 
   @override
@@ -2741,6 +2760,44 @@ class AppLocalizationsEn extends AppLocalizations {
       'Occurs monthly but the amount varies (e.g. maintenance fee)';
 
   @override
+  String get household_recurring_amount_variable_label =>
+      'Base Amount (Estimated)';
+
+  @override
+  String get household_recurring_amount_variable_hint =>
+      'Amount may vary each month. Edit and confirm after the actual charge.';
+
+  @override
+  String get household_recurring_amount_fixed_hint =>
+      'This amount will be automatically registered every month.';
+
+  @override
+  String get household_recurring_inactive => 'Inactive';
+
+  @override
+  String get household_recurring_add => 'Add Fixed Expense';
+
+  @override
+  String get household_recurring_edit => 'Edit Fixed Expense';
+
+  @override
+  String get household_recurring_title => 'Fixed Transactions';
+
+  @override
+  String get household_recurring_add_title => 'Add Fixed Transaction';
+
+  @override
+  String get household_recurring_edit_title => 'Edit Fixed Transaction';
+
+  @override
+  String get household_recurring_day_of_month => 'Day of Month';
+
+  @override
+  String household_recurring_day_of_month_value(int day) {
+    return '${day}th of each month';
+  }
+
+  @override
   String get household_estimated_amount => 'Estimated Amount';
 
   @override
@@ -2764,7 +2821,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_exclude_carryover => 'Exclude Carry-over';
 
   @override
-  String get household_unpaid_recurring_title => 'Remaining Fixed Expenses';
+  String get household_unpaid_recurring_title => 'Remaining Fixed Transactions';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/merchant_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/main/household/providers/merchant_provider.dart';
@@ -41,7 +42,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _estimatedAmountController = TextEditingController();
 
   late DateTime _selectedDate;
   TransactionType _transactionType = TransactionType.expense;
@@ -49,8 +49,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   PaymentMethod? _selectedPaymentMethod;
   String? _selectedMerchantId;
   IncomeCategory? _selectedIncomeCategory;
-  // none / fixed / variable
-  _RecurringType _recurringType = _RecurringType.none;
 
   bool get _isEditMode => widget.expense != null;
 
@@ -67,17 +65,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
       _selectedPaymentMethod = e.paymentMethod;
       _selectedMerchantId = e.merchant?.id;
       _selectedIncomeCategory = e.incomeCategory;
-      if (e.isRecurring) {
-        if (e.estimatedAmount != null) {
-          _recurringType = _RecurringType.variable;
-          _estimatedAmountController.text =
-              NumberFormat('#,###').format(e.estimatedAmount!.toInt());
-        } else {
-          _recurringType = _RecurringType.fixed;
-        }
-      } else {
-        _recurringType = _RecurringType.none;
-      }
     } else if (widget.refundedExpense != null) {
       // 환불 등록 모드: INCOME으로 고정, 금액·날짜·설명 기본값 채움
       final origin = widget.refundedExpense!;
@@ -88,7 +75,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
       _descriptionController.text = '환불';
     } else {
       _selectedDate = DateTime.now();
-      _recurringType = widget.initialIsRecurring ? _RecurringType.fixed : _RecurringType.none;
     }
   }
 
@@ -96,7 +82,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   void dispose() {
     _amountController.dispose();
     _descriptionController.dispose();
-    _estimatedAmountController.dispose();
     super.dispose();
   }
 
@@ -167,128 +152,109 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
                 context.push('$path$query');
               },
             ),
-          if (isLoading)
-            const Padding(
-              padding: EdgeInsets.all(AppSizes.spaceM),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              ),
-            )
-          else
-            TextButton(
-              onPressed: _submit,
-              style: TextButton.styleFrom(foregroundColor: Colors.white),
-              child: Text(l10n.common_save),
-            ),
         ],
       ),
       body: SafeArea(
         top: false,
         child: Form(
           key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
+          child: Column(
             children: [
-              _TypeToggle(
-                value: _transactionType,
-                onChanged: (v) => setState(() {
-                  _transactionType = v;
-                  if (v == TransactionType.income) {
-                    _selectedCategory = null;
-                    _selectedPaymentMethod = null;
-                    _recurringType = _RecurringType.none;
-                  } else {
-                    _selectedIncomeCategory = null;
-                  }
-                }),
-                incomeLabel: l10n.household_income,
-                expenseLabel: l10n.household_expense,
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  children: [
+                    _TypeToggle(
+                      value: _transactionType,
+                      onChanged: (v) => setState(() {
+                        _transactionType = v;
+                        if (v == TransactionType.income) {
+                          _selectedCategory = null;
+                          _selectedPaymentMethod = null;
+                        } else {
+                          _selectedIncomeCategory = null;
+                        }
+                      }),
+                      incomeLabel: l10n.household_revenue,
+                      expenseLabel: l10n.household_expense,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _AmountField(
+                      controller: _amountController,
+                      label: l10n.household_amount,
+                      hint: l10n.household_amount_hint,
+                      errorText: l10n.household_amount_required,
+                    ),
+                    if (_transactionType == TransactionType.income) ...[
+                      const SizedBox(height: AppSizes.spaceM),
+                      _IncomeCategoryBottomSheetSelector(
+                        selected: _selectedIncomeCategory,
+                        onChanged: (v) =>
+                            setState(() => _selectedIncomeCategory = v),
+                        label: l10n.household_income_category,
+                      ),
+                    ],
+                    if (_transactionType == TransactionType.expense) ...[
+                      const SizedBox(height: AppSizes.spaceM),
+                      _CategoryBottomSheetSelector(
+                        selected: _selectedCategory,
+                        onChanged: (v) =>
+                            setState(() => _selectedCategory = v),
+                        label: l10n.household_category,
+                      ),
+                      const SizedBox(height: AppSizes.spaceM),
+                      _PaymentMethodSelector(
+                        selected: _selectedPaymentMethod,
+                        onChanged: (v) =>
+                            setState(() => _selectedPaymentMethod = v),
+                        label: l10n.household_payment_method,
+                      ),
+                    ],
+                    const SizedBox(height: AppSizes.spaceM),
+                    _DateSelector(
+                      selectedDate: _selectedDate,
+                      onChanged: (v) => setState(() => _selectedDate = v),
+                      label: l10n.household_date,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    _DescriptionField(
+                      controller: _descriptionController,
+                      label: l10n.household_description,
+                      hint: l10n.household_description_hint,
+                    ),
+                    if (_transactionType == TransactionType.expense) ...[
+                      const SizedBox(height: AppSizes.spaceM),
+                      _MerchantSelector(
+                        selectedId: _selectedMerchantId,
+                        onChanged: (id) =>
+                            setState(() => _selectedMerchantId = id),
+                      ),
+                      // 환불된 지출 — 연결된 환불 목록 표시
+                      if (_isEditMode &&
+                          widget.expense!.refunds.isNotEmpty) ...[
+                        const SizedBox(height: AppSizes.spaceM),
+                        _RefundLinksSection(
+                          expense: widget.expense!,
+                          groupId: widget.groupId,
+                        ),
+                      ],
+                    ],
+                    // 환불 입금 — 원본 지출 연결 표시
+                    if (_isEditMode &&
+                        _transactionType == TransactionType.income &&
+                        widget.expense!.refundedExpenseId != null) ...[
+                      const SizedBox(height: AppSizes.spaceM),
+                      _RefundOriginSection(
+                        expense: widget.expense!,
+                        groupId: widget.groupId,
+                      ),
+                    ],
+                    const SizedBox(height: AppSizes.spaceM),
+                  ],
+                ),
               ),
-              const SizedBox(height: AppSizes.spaceM),
-              _AmountField(
-                controller: _amountController,
-                label: l10n.household_amount,
-                hint: l10n.household_amount_hint,
-                errorText: l10n.household_amount_required,
-              ),
-              if (_transactionType == TransactionType.income) ...[
-                const SizedBox(height: AppSizes.spaceM),
-                _IncomeCategorySelector(
-                  selected: _selectedIncomeCategory,
-                  onChanged: (v) => setState(() => _selectedIncomeCategory = v),
-                  label: l10n.household_income_category,
-                ),
-              ],
-              if (_transactionType == TransactionType.expense) ...[
-                const SizedBox(height: AppSizes.spaceM),
-                _CategorySelector(
-                  selected: _selectedCategory,
-                  onChanged: (v) => setState(() => _selectedCategory = v),
-                  label: l10n.household_category,
-                ),
-                const SizedBox(height: AppSizes.spaceM),
-                _PaymentMethodSelector(
-                  selected: _selectedPaymentMethod,
-                  onChanged: (v) => setState(() => _selectedPaymentMethod = v),
-                  label: l10n.household_payment_method,
-                ),
-              ],
-              const SizedBox(height: AppSizes.spaceM),
-              _DateSelector(
-                selectedDate: _selectedDate,
-                onChanged: (v) => setState(() => _selectedDate = v),
-                label: l10n.household_date,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-              _DescriptionField(
-                controller: _descriptionController,
-                label: l10n.household_description,
-                hint: l10n.household_description_hint,
-              ),
-              if (_transactionType == TransactionType.expense) ...[
-                const SizedBox(height: AppSizes.spaceM),
-                _MerchantSelector(
-                  selectedId: _selectedMerchantId,
-                  onChanged: (id) => setState(() => _selectedMerchantId = id),
-                ),
-                const SizedBox(height: AppSizes.spaceM),
-                _RecurringTypeSelector(
-                  value: _recurringType,
-                  onChanged: (v) => setState(() => _recurringType = v),
-                ),
-                if (_recurringType == _RecurringType.variable) ...[
-                  const SizedBox(height: AppSizes.spaceM),
-                  _AmountField(
-                    controller: _estimatedAmountController,
-                    label: l10n.household_estimated_amount,
-                    hint: l10n.household_estimated_amount_hint,
-                    errorText: l10n.household_estimated_amount_required,
-                  ),
-                ],
-                // 환불된 지출 — 연결된 환불 목록 표시
-                if (_isEditMode && widget.expense!.refunds.isNotEmpty) ...[
-                  const SizedBox(height: AppSizes.spaceM),
-                  _RefundLinksSection(
-                    expense: widget.expense!,
-                    groupId: widget.groupId,
-                  ),
-                ],
-              ],
-              // 환불 입금 — 원본 지출 연결 표시
-              if (_isEditMode &&
-                  _transactionType == TransactionType.income &&
-                  widget.expense!.refundedExpenseId != null) ...[
-                const SizedBox(height: AppSizes.spaceM),
-                _RefundOriginSection(
-                  expense: widget.expense!,
-                  groupId: widget.groupId,
-                ),
-              ],
+              // 하단 고정 저장 버튼
+              _BottomSaveButton(isLoading: isLoading, onPressed: _submit),
             ],
           ),
         ),
@@ -318,16 +284,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
         paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
         merchantId: _transactionType == TransactionType.income ? null : _selectedMerchantId,
         merchantIdExplicitNull: _transactionType == TransactionType.expense && _selectedMerchantId == null,
-        isRecurring: _transactionType == TransactionType.income
-            ? false
-            : _recurringType != _RecurringType.none,
-        estimatedAmount: (_transactionType == TransactionType.expense &&
-                _recurringType == _RecurringType.variable)
-            ? double.tryParse(
-                _estimatedAmountController.text.replaceAll(',', ''))
-            : null,
-        estimatedAmountExplicitNull: _transactionType == TransactionType.expense &&
-            _recurringType != _RecurringType.variable,
         incomeCategory: _transactionType == TransactionType.income
             ? _selectedIncomeCategory
             : null,
@@ -351,14 +307,6 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
             : _descriptionController.text.trim(),
         paymentMethod: _transactionType == TransactionType.income ? null : _selectedPaymentMethod,
         merchantId: _transactionType == TransactionType.income ? null : _selectedMerchantId,
-        isRecurring: _transactionType == TransactionType.income
-            ? false
-            : _recurringType != _RecurringType.none,
-        estimatedAmount: (_transactionType == TransactionType.expense &&
-                _recurringType == _RecurringType.variable)
-            ? double.tryParse(
-                _estimatedAmountController.text.replaceAll(',', ''))
-            : null,
         incomeCategory: _transactionType == TransactionType.income
             ? _selectedIncomeCategory
             : null,
@@ -465,13 +413,13 @@ class _ThousandsSeparatorFormatter extends TextInputFormatter {
   }
 }
 
-// 카테고리 선택
-class _CategorySelector extends StatelessWidget {
+// 카테고리 바텀시트 그리드 선택
+class _CategoryBottomSheetSelector extends StatelessWidget {
   final ExpenseCategory? selected;
   final ValueChanged<ExpenseCategory?> onChanged;
   final String label;
 
-  const _CategorySelector({
+  const _CategoryBottomSheetSelector({
     required this.selected,
     required this.onChanged,
     required this.label,
@@ -480,36 +428,132 @@ class _CategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return InputDecorator(
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceM,
-          vertical: AppSizes.spaceS,
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = selected != null ? categoryColor(selected) : colorScheme.outline;
+    final icon = selected != null ? categoryIcon(selected) : Icons.category_outlined;
+    final name = selected != null ? categoryName(l10n, selected) : l10n.household_category;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+      onTap: () async {
+        final result = await showModalBottomSheet<ExpenseCategory?>(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppSizes.radiusLarge)),
+          ),
+          builder: (ctx) => _ExpenseCategorySheet(selected: selected),
+        );
+        if (!context.mounted) return;
+        onChanged(result);
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS + 2,
+          ),
+          suffixIcon: const Icon(Icons.expand_more),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(name,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: selected != null ? null : colorScheme.onSurfaceVariant,
+                    )),
+          ],
         ),
       ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<ExpenseCategory?>(
-          value: selected,
-          isExpanded: true,
-          isDense: true,
-          hint: Text(l10n.household_category),
-          items: [
-            ...ExpenseCategory.values.map(
-              (c) => DropdownMenuItem(
-                value: c,
-                child: Row(
-                  children: [
-                    Icon(categoryIcon(c), size: 18, color: categoryColor(c)),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Text(categoryName(l10n, c)),
-                  ],
-                ),
+    );
+  }
+}
+
+class _ExpenseCategorySheet extends StatelessWidget {
+  final ExpenseCategory? selected;
+  const _ExpenseCategorySheet({this.selected});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final categories = ExpenseCategory.values;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+            AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceL),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+              child: Text(
+                l10n.household_category,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
+            const SizedBox(height: AppSizes.spaceM),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                mainAxisSpacing: AppSizes.spaceS,
+                crossAxisSpacing: AppSizes.spaceS,
+                childAspectRatio: 0.9,
+              ),
+              itemCount: categories.length,
+              itemBuilder: (ctx, i) {
+                final cat = categories[i];
+                final isSelected = cat == selected;
+                final color = categoryColor(cat);
+                return InkWell(
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                  onTap: () => Navigator.of(ctx).pop(cat),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? color.withValues(alpha: 0.15)
+                          : colorScheme.surfaceContainerHighest
+                              .withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                      border: isSelected
+                          ? Border.all(color: color, width: 1.5)
+                          : null,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(categoryIcon(cat), color: color, size: 26),
+                        const SizedBox(height: 4),
+                        Text(
+                          categoryName(l10n, cat),
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: isSelected ? color : colorScheme.onSurface,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
-          onChanged: onChanged,
         ),
       ),
     );
@@ -674,7 +718,7 @@ class _TypeToggle extends StatelessWidget {
   }
 }
 
-// 소비처 선택
+// 소비처 바텀시트 선택
 class _MerchantSelector extends ConsumerWidget {
   final String? selectedId;
   final ValueChanged<String?> onChanged;
@@ -688,61 +732,171 @@ class _MerchantSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final merchantsAsync = ref.watch(merchantsProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return merchantsAsync.when(
-      data: (merchants) => InputDecorator(
-        decoration: InputDecoration(
-          labelText: l10n.household_merchant_select,
-          border: const OutlineInputBorder(),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceM,
-            vertical: AppSizes.spaceS,
-          ),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.storefront_outlined, size: 18),
-            tooltip: l10n.household_merchants,
-            onPressed: () => context.push(AppRoutes.householdMerchants),
-          ),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String?>(
-            value: merchants.any((m) => m.id == selectedId) ? selectedId : null,
-            isExpanded: true,
-            isDense: true,
-            hint: Text(
-              merchants.isEmpty ? l10n.household_merchants_empty : l10n.household_merchant_none,
+      data: (merchants) {
+        final selectedName = merchants
+            .where((m) => m.id == selectedId)
+            .map((m) => m.name)
+            .firstOrNull;
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          onTap: () async {
+            final result = await showModalBottomSheet<String?>(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(AppSizes.radiusLarge)),
+              ),
+              builder: (ctx) => _MerchantSheet(
+                merchants: merchants,
+                selectedId: selectedId,
+              ),
+            );
+            if (!context.mounted) return;
+            // sheet는 _sentinel 값을 반환해 "선택 없음"과 "닫기"를 구분
+            if (result != _merchantSheetClosed) onChanged(result);
+          },
+          child: InputDecorator(
+            decoration: InputDecoration(
+              labelText: l10n.household_merchant_select,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceM,
+                vertical: AppSizes.spaceS + 2,
+              ),
+              suffixIcon: const Icon(Icons.expand_more),
             ),
-            items: [
-              DropdownMenuItem(
-                value: null,
-                child: Text(l10n.household_merchant_none),
-              ),
-              ...merchants.map(
-                (m) => DropdownMenuItem(
-                  value: m.id,
-                  child: Text(m.name),
+            child: Row(
+              children: [
+                Icon(Icons.storefront_outlined,
+                    size: 18,
+                    color: selectedName != null
+                        ? colorScheme.primary
+                        : colorScheme.outline),
+                const SizedBox(width: AppSizes.spaceS),
+                Expanded(
+                  child: Text(
+                    selectedName ?? l10n.household_merchant_none,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: selectedName != null
+                              ? null
+                              : colorScheme.onSurfaceVariant,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-            ],
-            onChanged: merchants.isEmpty ? null : onChanged,
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
       loading: () => const SizedBox.shrink(),
       error: (_, _) => const SizedBox.shrink(),
     );
   }
 }
 
-enum _RecurringType { none, fixed, variable }
+// "닫기(X 버튼)"와 "없음 선택"을 구분하기 위한 sentinel
+const _merchantSheetClosed = '__closed__';
 
-// 입금 카테고리 선택
-class _IncomeCategorySelector extends StatelessWidget {
+class _MerchantSheet extends StatelessWidget {
+  final List<MerchantModel> merchants;
+  final String? selectedId;
+
+  const _MerchantSheet({required this.merchants, this.selectedId});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, AppSizes.spaceM, 0, AppSizes.spaceL),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+              child: Row(
+                children: [
+                  Text(
+                    l10n.household_merchant_select,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.storefront_outlined, size: 20),
+                    tooltip: l10n.household_merchants,
+                    onPressed: () {
+                      Navigator.of(context).pop(_merchantSheetClosed);
+                      context.push(AppRoutes.householdMerchants);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            if (merchants.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(AppSizes.spaceL),
+                child: Text(
+                  l10n.household_merchants_empty,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              )
+            else ...[
+              // "없음" 옵션
+              ListTile(
+                leading: Icon(Icons.remove_circle_outline,
+                    color: colorScheme.outline, size: 20),
+                title: Text(l10n.household_merchant_none),
+                trailing: selectedId == null
+                    ? Icon(Icons.check, color: colorScheme.primary, size: 20)
+                    : null,
+                onTap: () => Navigator.of(context).pop(null),
+              ),
+              const Divider(height: 1, indent: AppSizes.spaceM),
+              ...merchants.map((m) {
+                final isSelected = m.id == selectedId;
+                return ListTile(
+                  leading: Icon(Icons.storefront,
+                      color: isSelected
+                          ? colorScheme.primary
+                          : colorScheme.onSurfaceVariant,
+                      size: 20),
+                  title: Text(m.name),
+                  trailing: isSelected
+                      ? Icon(Icons.check,
+                          color: colorScheme.primary, size: 20)
+                      : null,
+                  onTap: () => Navigator.of(context).pop(m.id),
+                );
+              }),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// 수입 카테고리 바텀시트 그리드 선택
+class _IncomeCategoryBottomSheetSelector extends StatelessWidget {
   final IncomeCategory? selected;
   final ValueChanged<IncomeCategory?> onChanged;
   final String label;
 
-  const _IncomeCategorySelector({
+  const _IncomeCategoryBottomSheetSelector({
     required this.selected,
     required this.onChanged,
     required this.label,
@@ -751,130 +905,191 @@ class _IncomeCategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return InputDecorator(
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceM,
-          vertical: AppSizes.spaceS,
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = selected != null
+        ? incomeCategoryColor(selected)
+        : colorScheme.outline;
+    final icon = selected != null
+        ? incomeCategoryIcon(selected)
+        : Icons.account_balance_wallet_outlined;
+    final name = selected != null
+        ? incomeCategoryName(l10n, selected)
+        : l10n.household_income_category;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+      onTap: () async {
+        final result = await showModalBottomSheet<IncomeCategory?>(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppSizes.radiusLarge)),
+          ),
+          builder: (ctx) => _IncomeCategorySheet(selected: selected),
+        );
+        if (!context.mounted) return;
+        onChanged(result);
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS + 2,
+          ),
+          suffixIcon: const Icon(Icons.expand_more),
         ),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<IncomeCategory?>(
-          value: selected,
-          isExpanded: true,
-          isDense: true,
-          hint: Text(label),
-          items: [
-            DropdownMenuItem(
-              value: null,
-              child: Text(l10n.household_income_category_other),
-            ),
-            ...IncomeCategory.values.map(
-              (c) => DropdownMenuItem(
-                value: c,
-                child: Row(
-                  children: [
-                    Icon(incomeCategoryIcon(c), size: 18,
-                        color: incomeCategoryColor(c)),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Text(incomeCategoryName(l10n, c)),
-                  ],
-                ),
-              ),
-            ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(name,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: selected != null
+                          ? null
+                          : colorScheme.onSurfaceVariant,
+                    )),
           ],
-          onChanged: onChanged,
         ),
       ),
     );
   }
 }
 
-// 고정 지출 유형 선택 (없음 / 고정 금액 / 가변 금액)
-class _RecurringTypeSelector extends StatelessWidget {
-  final _RecurringType value;
-  final ValueChanged<_RecurringType> onChanged;
+class _IncomeCategorySheet extends StatelessWidget {
+  final IncomeCategory? selected;
+  const _IncomeCategorySheet({this.selected});
 
-  const _RecurringTypeSelector({
-    required this.value,
-    required this.onChanged,
-  });
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final categories = IncomeCategory.values;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+            AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceL),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+              child: Text(
+                l10n.household_income_category,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
+              ),
+            ),
+            const SizedBox(height: AppSizes.spaceM),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                mainAxisSpacing: AppSizes.spaceS,
+                crossAxisSpacing: AppSizes.spaceS,
+                childAspectRatio: 0.9,
+              ),
+              itemCount: categories.length,
+              itemBuilder: (ctx, i) {
+                final cat = categories[i];
+                final isSelected = cat == selected;
+                final color = incomeCategoryColor(cat);
+                return InkWell(
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                  onTap: () => Navigator.of(ctx).pop(cat),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? color.withValues(alpha: 0.15)
+                          : colorScheme.surfaceContainerHighest
+                              .withValues(alpha: 0.5),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.radiusMedium),
+                      border: isSelected
+                          ? Border.all(color: color, width: 1.5)
+                          : null,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(incomeCategoryIcon(cat), color: color, size: 26),
+                        const SizedBox(height: 4),
+                        Text(
+                          incomeCategoryName(l10n, cat),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.copyWith(
+                                color: isSelected ? color : colorScheme.onSurface,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// 하단 고정 저장 버튼
+class _BottomSaveButton extends StatelessWidget {
+  final bool isLoading;
+  final VoidCallback onPressed;
+
+  const _BottomSaveButton({required this.isLoading, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        side: BorderSide(color: colorScheme.outlineVariant),
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        AppSizes.spaceS,
+        AppSizes.spaceM,
+        AppSizes.spaceM + MediaQuery.of(context).padding.bottom,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceM,
-          vertical: AppSizes.spaceS,
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border(
+          top: BorderSide(color: colorScheme.outlineVariant, width: 0.5),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.repeat,
-                    size: 18,
-                    color: value != _RecurringType.none
-                        ? colorScheme.primary
-                        : colorScheme.outline),
-                const SizedBox(width: AppSizes.spaceS),
-                Text(
-                  l10n.household_recurring_type_label,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            SegmentedButton<_RecurringType>(
-              segments: [
-                ButtonSegment(
-                  value: _RecurringType.none,
-                  label: Text(l10n.household_recurring_type_none),
-                ),
-                ButtonSegment(
-                  value: _RecurringType.fixed,
-                  label: Text(l10n.household_recurring_type_fixed),
-                  icon: const Icon(Icons.lock_outline, size: 14),
-                ),
-                ButtonSegment(
-                  value: _RecurringType.variable,
-                  label: Text(l10n.household_recurring_type_variable),
-                  icon: const Icon(Icons.tune, size: 14),
-                ),
-              ],
-              selected: {value},
-              onSelectionChanged: (s) => onChanged(s.first),
-              style: const ButtonStyle(
-                visualDensity: VisualDensity.compact,
-              ),
-            ),
-            const SizedBox(height: AppSizes.spaceXS),
-            if (value == _RecurringType.fixed)
-              Text(
-                l10n.household_recurring_type_fixed_desc,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-              )
-            else if (value == _RecurringType.variable)
-              Text(
-                l10n.household_recurring_type_variable_desc,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-              ),
-          ],
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        height: 52,
+        child: FilledButton(
+          onPressed: isLoading ? null : onPressed,
+          child: isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white),
+                )
+              : Text(l10n.common_save,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600)),
         ),
       ),
     );

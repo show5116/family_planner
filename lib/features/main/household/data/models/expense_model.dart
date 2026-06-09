@@ -68,10 +68,9 @@ class ExpenseModel {
   final DateTime date;
   final String? description;
   final PaymentMethod? paymentMethod;
-  final bool isRecurring;
-  final double? estimatedAmount; // 가변 고정 지출 예상 금액 (null이면 고정 금액 방식)
-  final bool isConfirmed; // 실제 금액 확인 여부 (가변 고정 지출에서 false = 예상 금액 상태)
   final IncomeCategory? incomeCategory; // 입금 카테고리 (type=INCOME 일 때)
+  final String? recurringExpenseId; // 연결된 고정지출 규칙 ID (스케줄러로 자동 생성된 경우)
+  final bool isConfirmed; // 실제 금액 확인 여부 (false = 가변 고정지출 자동 생성된 미확정 항목)
   final String? refundedExpenseId; // 환불 대상 원본 지출 ID
   final List<ExpenseModel> refunds; // 이 지출에 연결된 환불 목록
   final MerchantDto? merchant;
@@ -89,10 +88,9 @@ class ExpenseModel {
     required this.date,
     this.description,
     this.paymentMethod,
-    required this.isRecurring,
-    this.estimatedAmount,
-    this.isConfirmed = true,
     this.incomeCategory,
+    this.recurringExpenseId,
+    this.isConfirmed = true,
     this.refundedExpenseId,
     this.refunds = const [],
     this.merchant,
@@ -116,14 +114,11 @@ class ExpenseModel {
       paymentMethod: json['paymentMethod'] != null
           ? _parsePaymentMethod(json['paymentMethod'] as String)
           : null,
-      isRecurring: (json['isRecurring'] as bool?) ?? false,
-      estimatedAmount: json['estimatedAmount'] != null
-          ? double.tryParse(json['estimatedAmount'].toString())
-          : null,
-      isConfirmed: (json['isConfirmed'] as bool?) ?? true,
       incomeCategory: json['incomeCategory'] != null
           ? _parseIncomeCategory(json['incomeCategory'] as String)
           : null,
+      recurringExpenseId: json['recurringExpenseId'] as String?,
+      isConfirmed: (json['isConfirmed'] as bool?) ?? true,
       refundedExpenseId: json['refundedExpenseId'] as String?,
       refunds: (json['refunds'] as List<dynamic>?)
               ?.map((e) => ExpenseModel.fromJson(e as Map<String, dynamic>))
@@ -209,8 +204,6 @@ class ExpenseModel {
     }
   }
 
-  bool get isVariableRecurring => isRecurring && estimatedAmount != null;
-
   ExpenseModel copyWith({
     String? id,
     String? groupId,
@@ -221,10 +214,9 @@ class ExpenseModel {
     DateTime? date,
     String? description,
     PaymentMethod? paymentMethod,
-    bool? isRecurring,
-    Object? estimatedAmount = _sentinel,
-    bool? isConfirmed,
     Object? incomeCategory = _sentinel,
+    Object? recurringExpenseId = _sentinel,
+    bool? isConfirmed,
     Object? refundedExpenseId = _sentinel,
     List<ExpenseModel>? refunds,
     MerchantDto? merchant,
@@ -242,14 +234,13 @@ class ExpenseModel {
       date: date ?? this.date,
       description: description ?? this.description,
       paymentMethod: paymentMethod ?? this.paymentMethod,
-      isRecurring: isRecurring ?? this.isRecurring,
-      estimatedAmount: estimatedAmount == _sentinel
-          ? this.estimatedAmount
-          : estimatedAmount as double?,
-      isConfirmed: isConfirmed ?? this.isConfirmed,
       incomeCategory: incomeCategory == _sentinel
           ? this.incomeCategory
           : incomeCategory as IncomeCategory?,
+      recurringExpenseId: recurringExpenseId == _sentinel
+          ? this.recurringExpenseId
+          : recurringExpenseId as String?,
+      isConfirmed: isConfirmed ?? this.isConfirmed,
       refundedExpenseId: refundedExpenseId == _sentinel
           ? this.refundedExpenseId
           : refundedExpenseId as String?,
@@ -274,8 +265,6 @@ class CreateExpenseDto {
   final String? description;
   final PaymentMethod? paymentMethod;
   final String? merchantId;
-  final bool? isRecurring;
-  final double? estimatedAmount; // 가변 고정 지출 예상 금액
   final IncomeCategory? incomeCategory; // 입금 카테고리 (type=INCOME 일 때)
   final String? refundedExpenseId; // 환불 대상 원본 지출 ID
 
@@ -288,8 +277,6 @@ class CreateExpenseDto {
     this.description,
     this.paymentMethod,
     this.merchantId,
-    this.isRecurring,
-    this.estimatedAmount,
     this.incomeCategory,
     this.refundedExpenseId,
   });
@@ -304,8 +291,6 @@ class CreateExpenseDto {
       if (description != null) 'description': description,
       if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod!),
       if (merchantId != null) 'merchantId': merchantId,
-      if (isRecurring != null) 'isRecurring': isRecurring,
-      if (estimatedAmount != null) 'estimatedAmount': estimatedAmount,
       if (incomeCategory != null) 'incomeCategory': _incomeCategoryToString(incomeCategory!),
       if (refundedExpenseId != null) 'refundedExpenseId': refundedExpenseId,
     };
@@ -322,11 +307,9 @@ class UpdateExpenseDto {
   final PaymentMethod? paymentMethod;
   final String? merchantId; // null 전달 시 소비처 연결 해제
   final bool? merchantIdExplicitNull; // true면 merchantId: null 을 명시적으로 전송
-  final bool? isRecurring;
-  final Object? estimatedAmount; // double | null (null 전달 시 해제) — _sentinel 사용
-  final bool estimatedAmountExplicitNull;
   final Object? incomeCategory; // IncomeCategory | null (null 전달 시 해제) — _sentinel 사용
   final Object? refundedExpenseId; // String | null (null 전달 시 연결 해제) — _sentinel 사용
+  final bool? isConfirmed; // 실제 금액 확인 여부
 
   const UpdateExpenseDto({
     this.type,
@@ -337,11 +320,9 @@ class UpdateExpenseDto {
     this.paymentMethod,
     this.merchantId,
     this.merchantIdExplicitNull = false,
-    this.isRecurring,
-    this.estimatedAmount = _sentinel,
-    this.estimatedAmountExplicitNull = false,
     this.incomeCategory = _sentinel,
     this.refundedExpenseId = _sentinel,
+    this.isConfirmed,
   });
 
   Map<String, dynamic> toJson() {
@@ -354,15 +335,13 @@ class UpdateExpenseDto {
       if (paymentMethod != null) 'paymentMethod': _paymentMethodToString(paymentMethod!),
       if (merchantIdExplicitNull == true) 'merchantId': null
       else if (merchantId != null) 'merchantId': merchantId,
-      if (isRecurring != null) 'isRecurring': isRecurring,
-      if (estimatedAmountExplicitNull) 'estimatedAmount': null
-      else if (estimatedAmount != _sentinel) 'estimatedAmount': estimatedAmount,
       if (incomeCategory != _sentinel)
         'incomeCategory': incomeCategory != null
             ? _incomeCategoryToString(incomeCategory as IncomeCategory)
             : null,
       if (refundedExpenseId != _sentinel)
         'refundedExpenseId': refundedExpenseId as String?,
+      if (isConfirmed != null) 'isConfirmed': isConfirmed,
     };
   }
 }

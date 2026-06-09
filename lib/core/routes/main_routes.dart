@@ -16,6 +16,8 @@ import 'package:family_planner/features/main/household/data/models/expense_model
 import 'package:family_planner/features/main/household/presentation/screens/expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
+import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/screens/recurring_expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/merchants_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_category_expenses_screen.dart';
@@ -252,6 +254,27 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.householdRecurring,
       name: 'householdRecurring',
       builder: (context, state) => const RecurringExpensesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.householdRecurringAdd,
+      name: 'householdRecurringAdd',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return RecurringExpenseFormScreen(
+          groupId: extra['groupId'] as String?,
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.householdRecurringEdit,
+      name: 'householdRecurringEdit',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>;
+        return RecurringExpenseFormScreen(
+          recurringExpense: extra['item'] as RecurringExpenseModel,
+          groupId: extra['groupId'] as String?,
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.householdMerchants,

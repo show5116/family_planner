@@ -2513,6 +2513,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_income => '입금';
 
   @override
+  String get household_revenue => '수입';
+
+  @override
   String get household_type => '유형';
 
   @override
@@ -2659,6 +2662,22 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_expense_total => '지출 합계';
+
+  @override
+  String get household_recurring_income_total => '수입 합계';
+
+  @override
+  String household_unpaid_recurring_expense(int count, String amount) {
+    return '지출 $count건 · ₩$amount';
+  }
+
+  @override
+  String household_unpaid_recurring_income(int count, String amount) {
+    return '수입 $count건 · ₩$amount';
+  }
+
+  @override
   String get household_recurring_top_category => '카테고리별 분포';
 
   @override
@@ -2687,6 +2706,42 @@ class AppLocalizationsKo extends AppLocalizations {
       '매월 발생하지만 금액이 달라집니다 (예: 관리비)';
 
   @override
+  String get household_recurring_amount_variable_label => '기준 금액 (예상)';
+
+  @override
+  String get household_recurring_amount_variable_hint =>
+      '매월 금액이 다를 수 있습니다. 실제 지출 발생 후 수정해 확정해주세요.';
+
+  @override
+  String get household_recurring_amount_fixed_hint => '매월 이 금액으로 자동 등록됩니다.';
+
+  @override
+  String get household_recurring_inactive => '비활성';
+
+  @override
+  String get household_recurring_add => '고정지출 추가';
+
+  @override
+  String get household_recurring_edit => '고정지출 수정';
+
+  @override
+  String get household_recurring_title => '고정 내역';
+
+  @override
+  String get household_recurring_add_title => '고정 내역 추가';
+
+  @override
+  String get household_recurring_edit_title => '고정 내역 수정';
+
+  @override
+  String get household_recurring_day_of_month => '매달 발생 일';
+
+  @override
+  String household_recurring_day_of_month_value(int day) {
+    return '매월 $day일';
+  }
+
+  @override
   String get household_estimated_amount => '예상 금액';
 
   @override
@@ -2708,7 +2763,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_exclude_carryover => '이월 제외';
 
   @override
-  String get household_unpaid_recurring_title => '이번 달 남은 고정 지출';
+  String get household_unpaid_recurring_title => '이번 달 남은 고정 내역';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {

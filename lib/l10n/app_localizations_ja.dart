@@ -2509,6 +2509,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_income => '収入';
 
   @override
+  String get household_revenue => '収入';
+
+  @override
   String get household_type => '種別';
 
   @override
@@ -2655,6 +2658,22 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_expense_total => '支出合計';
+
+  @override
+  String get household_recurring_income_total => '収入合計';
+
+  @override
+  String household_unpaid_recurring_expense(int count, String amount) {
+    return '支出$count件 · ₩$amount';
+  }
+
+  @override
+  String household_unpaid_recurring_income(int count, String amount) {
+    return '収入$count件 · ₩$amount';
+  }
+
+  @override
   String get household_recurring_top_category => 'カテゴリ別内訳';
 
   @override
@@ -2683,6 +2702,42 @@ class AppLocalizationsJa extends AppLocalizations {
       '毎月発生しますが金額が変わります（例：管理費）';
 
   @override
+  String get household_recurring_amount_variable_label => '基準金額（目安）';
+
+  @override
+  String get household_recurring_amount_variable_hint =>
+      '毎月金額が異なる場合があります。実際の支出後に修正して確定してください。';
+
+  @override
+  String get household_recurring_amount_fixed_hint => '毎月この金額で自動登録されます。';
+
+  @override
+  String get household_recurring_inactive => '無効';
+
+  @override
+  String get household_recurring_add => '固定費を追加';
+
+  @override
+  String get household_recurring_edit => '固定費を編集';
+
+  @override
+  String get household_recurring_title => '固定内訳';
+
+  @override
+  String get household_recurring_add_title => '固定内訳を追加';
+
+  @override
+  String get household_recurring_edit_title => '固定内訳を編集';
+
+  @override
+  String get household_recurring_day_of_month => '毎月の発生日';
+
+  @override
+  String household_recurring_day_of_month_value(int day) {
+    return '毎月$day日';
+  }
+
+  @override
   String get household_estimated_amount => '予想金額';
 
   @override
@@ -2704,7 +2759,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_exclude_carryover => '繰越を除外';
 
   @override
-  String get household_unpaid_recurring_title => '今月の残り定期支出';
+  String get household_unpaid_recurring_title => '今月の残り固定内訳';
 
   @override
   String household_unpaid_recurring_subtitle(int count, String amount) {
