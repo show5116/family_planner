@@ -435,8 +435,8 @@ class ItemNamesNotifier extends AsyncNotifier<List<String>> {
 
     final itemNames = results[0] as List<String>;
     final presets = results[1] as List<ExpiryPresetModel>;
-    // category + keywords 모두 자동완성 후보에 포함
-    final presetNames = presets.expand((p) => [p.category, ...p.keywords]).toList();
+    // keyword + category 모두 자동완성 후보에 포함
+    final presetNames = presets.expand((p) => [p.keyword, p.category]).toList();
 
     final merged = {...itemNames, ...presetNames}.toList()..sort();
     return merged;
@@ -468,7 +468,7 @@ class ExpiryPresetsNotifier extends AsyncNotifier<List<ExpiryPresetModel>> {
         await ref.read(fridgeRepositoryProvider).upsertExpiryPreset(dto);
     final current = state.value ?? [];
     final idx = current.indexWhere(
-        (p) => p.category == updated.category && p.storageType == updated.storageType);
+        (p) => p.globalPresetId == updated.globalPresetId);
     if (idx >= 0) {
       final next = [...current];
       next[idx] = updated;

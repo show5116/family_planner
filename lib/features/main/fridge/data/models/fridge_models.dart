@@ -680,18 +680,20 @@ class BulkUpdateFridgeItemDto {
 // API 응답: { category, storageType(nullable), days, keywords(nullable), isCustom, customPresetId(nullable) }
 
 class ExpiryPresetModel {
+  final String globalPresetId;
   final String category;
+  final String keyword;
   final StorageType? storageType; // null = 보관방식 무관
   final int days;
-  final List<String> keywords; // 로컬 매칭용 키워드 목록
   final bool isCustom;
   final String? customPresetId; // 커스텀인 경우에만 존재 (DELETE 시 사용)
 
   const ExpiryPresetModel({
+    required this.globalPresetId,
     required this.category,
+    required this.keyword,
     this.storageType,
     required this.days,
-    this.keywords = const [],
     required this.isCustom,
     this.customPresetId,
   });
@@ -699,15 +701,13 @@ class ExpiryPresetModel {
   factory ExpiryPresetModel.fromJson(Map<String, dynamic> json) {
     final storageTypeRaw = json['storageType'];
     return ExpiryPresetModel(
+      globalPresetId: json['globalPresetId'] as String,
       category: json['category'] as String,
+      keyword: json['keyword'] as String,
       storageType: storageTypeRaw != null
           ? _parseStorageType(storageTypeRaw as String)
           : null,
       days: (json['days'] as num).toInt(),
-      keywords: (json['keywords'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
       isCustom: json['isCustom'] as bool,
       customPresetId: json['customPresetId'] as String?,
     );
@@ -716,22 +716,18 @@ class ExpiryPresetModel {
 
 class UpsertExpiryPresetDto {
   final String groupId;
-  final String category;
-  final StorageType? storageType;
+  final String globalPresetId;
   final int customDays;
 
   const UpsertExpiryPresetDto({
     required this.groupId,
-    required this.category,
-    this.storageType,
+    required this.globalPresetId,
     required this.customDays,
   });
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
-        'category': category,
-        'storageType':
-            storageType != null ? storageTypeToString(storageType!) : null,
+        'globalPresetId': globalPresetId,
         'customDays': customDays,
       };
 }

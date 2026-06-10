@@ -52,16 +52,9 @@ class _ExpiryPresetManagementScreenState
   }
 
   List<_PresetEntry> _buildEntries(List<ExpiryPresetModel> presets) {
-    final entries = <_PresetEntry>[];
-    for (final p in presets) {
-      if (p.keywords.isEmpty) {
-        entries.add(_PresetEntry(keyword: p.category, preset: p));
-      } else {
-        for (final kw in p.keywords) {
-          entries.add(_PresetEntry(keyword: kw, preset: p));
-        }
-      }
-    }
+    final entries = presets
+        .map((p) => _PresetEntry(keyword: p.keyword, preset: p))
+        .toList();
     entries.sort((a, b) => a.keyword.compareTo(b.keyword));
     return entries;
   }
@@ -121,99 +114,7 @@ class _ExpiryPresetManagementScreenState
     await ref.read(expiryPresetsProvider.notifier).upsert(
           UpsertExpiryPresetDto(
             groupId: groupId,
-            category: preset.category,
-            storageType: preset.storageType,
-            customDays: days,
-          ),
-        );
-  }
-
-  Future<void> _showAddDialog(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-    final categoryCtrl = TextEditingController();
-    final daysCtrl = TextEditingController();
-    StorageType? selectedStorage;
-
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setInner) => AlertDialog(
-          title: Text(l10n.fridge_preset_add_dialog_title),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: categoryCtrl,
-                decoration: InputDecoration(
-                  labelText: l10n.fridge_preset_category_input_label,
-                ),
-                autofocus: true,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-              DropdownButtonFormField<StorageType?>(
-                initialValue: selectedStorage,
-                decoration: InputDecoration(
-                  labelText: l10n.fridge_preset_storage_type_label,
-                ),
-                items: [
-                  DropdownMenuItem(
-                    value: null,
-                    child: Text('— (${l10n.fridge_storage_type_fridge} / ${l10n.fridge_storage_type_freezer} / ${l10n.fridge_storage_type_pantry})'),
-                  ),
-                  DropdownMenuItem(
-                    value: StorageType.fridge,
-                    child: Text(l10n.fridge_storage_type_fridge),
-                  ),
-                  DropdownMenuItem(
-                    value: StorageType.freezer,
-                    child: Text(l10n.fridge_storage_type_freezer),
-                  ),
-                  DropdownMenuItem(
-                    value: StorageType.pantry,
-                    child: Text(l10n.fridge_storage_type_pantry),
-                  ),
-                ],
-                onChanged: (v) => setInner(() => selectedStorage = v),
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-              TextField(
-                controller: daysCtrl,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  labelText: l10n.fridge_preset_days_input_label,
-                  suffixText: '일',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l10n.common_cancel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(l10n.common_save),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    if (confirmed != true || !context.mounted) return;
-    final category = categoryCtrl.text.trim();
-    final days = int.tryParse(daysCtrl.text);
-    if (category.isEmpty || days == null || days <= 0) return;
-
-    final groupId = ref.read(fridgeSelectedGroupIdProvider);
-    if (groupId == null) return;
-
-    await ref.read(expiryPresetsProvider.notifier).upsert(
-          UpsertExpiryPresetDto(
-            groupId: groupId,
-            category: category,
-            storageType: selectedStorage,
+            globalPresetId: preset.globalPresetId,
             customDays: days,
           ),
         );
@@ -255,10 +156,6 @@ class _ExpiryPresetManagementScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.fridge_preset_management_title),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddDialog(context),
-        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [

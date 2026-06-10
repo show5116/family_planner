@@ -88,16 +88,9 @@ class _ExpiryReferenceSelectorSheetState
   }
 
   List<_KeywordEntry> _buildEntries(List<ExpiryPresetModel> presets) {
-    final entries = <_KeywordEntry>[];
-    for (final preset in presets) {
-      if (preset.keywords.isEmpty) {
-        entries.add(_KeywordEntry(keyword: preset.category, preset: preset));
-      } else {
-        for (final kw in preset.keywords) {
-          entries.add(_KeywordEntry(keyword: kw, preset: preset));
-        }
-      }
-    }
+    final entries = presets
+        .map((p) => _KeywordEntry(keyword: p.keyword, preset: p))
+        .toList();
     // storageType 일치 항목 우선, 그 다음 keyword 가나다순
     entries.sort((a, b) {
       final aMatch = a.preset.storageType == widget.currentStorageType;

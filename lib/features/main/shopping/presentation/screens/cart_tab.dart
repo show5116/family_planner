@@ -2171,15 +2171,13 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
           .map((s) => s.type)
           .firstOrNull;
 
-      // 정확 일치 > 입력명이 키워드/카테고리를 포함 > 키워드/카테고리가 입력명을 포함
+      // 정확 일치 > 입력명이 keyword/category 포함 > keyword/category가 입력명 포함
       int score(ExpiryPresetModel p) {
+        final kw = p.keyword.toLowerCase();
         final cat = p.category.toLowerCase();
-        if (cat == q) return 3;
-        if (p.keywords.any((k) => k.toLowerCase() == q)) return 3;
-        if (q.contains(cat)) return 2;
-        if (p.keywords.any((k) => q.contains(k.toLowerCase()))) return 2;
-        if (cat.contains(q)) return 1;
-        if (p.keywords.any((k) => k.toLowerCase().contains(q))) return 1;
+        if (kw == q || cat == q) return 3;
+        if (q.contains(kw) || q.contains(cat)) return 2;
+        if (kw.contains(q) || cat.contains(q)) return 1;
         return 0;
       }
 
@@ -2190,8 +2188,8 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
             if (b == null) return p;
             final sb = score(b), sp = score(p);
             if (sp != sb) return sp > sb ? p : b;
-            // 점수 같으면 category 길이 짧은 것 (더 구체적)
-            return p.category.length < b.category.length ? p : b;
+            // 점수 같으면 keyword 길이 짧은 것 (더 구체적)
+            return p.keyword.length < b.keyword.length ? p : b;
           });
 
       // storageType 일치 우선 → storageType null(무관) → 전체 fallback
