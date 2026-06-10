@@ -293,6 +293,8 @@ List<RouteBase> getMainRoutes() {
           incomeCategory: extra['incomeCategory'] as IncomeCategory?,
           merchantId: extra['merchantId'] as String?,
           merchantName: extra['merchantName'] as String?,
+          memberId: extra['memberId'] as String?,
+          memberName: extra['memberName'] as String?,
         );
       },
     ),

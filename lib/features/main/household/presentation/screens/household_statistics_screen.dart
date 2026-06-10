@@ -200,7 +200,7 @@ class _MonthlyStatisticsTab extends ConsumerWidget {
   }
 }
 
-enum _StatViewMode { category, merchant, filter }
+enum _StatViewMode { category, merchant, member, filter }
 
 class _MonthlyStatisticsContent extends ConsumerStatefulWidget {
   final MonthlyStatisticsModel stats;
@@ -218,10 +218,12 @@ class _MonthlyStatisticsContentState
   _StatViewMode _viewMode = _StatViewMode.category;
   ExpenseCategory? _filterCategory;
   String? _filterMerchantId;
+  String? _filterMemberId; // null = 전체
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
 
     return ListView(
       padding: EdgeInsets.only(
@@ -240,7 +242,7 @@ class _MonthlyStatisticsContentState
             Icon(Icons.info_outline, size: 12, color: Theme.of(context).colorScheme.outline),
             const SizedBox(width: 4),
             Text(
-              '원금 및 이월 입금은 통계에서 제외됩니다',
+              '환불금 및 이월 입금은 통계에서 제외됩니다',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
                 fontSize: 11,
@@ -250,22 +252,33 @@ class _MonthlyStatisticsContentState
         ),
         const SizedBox(height: AppSizes.spaceM),
 
-        // 뷰 모드 세그먼트
+        // 뷰 모드 세그먼트 (아이콘 전용, 툴팁으로 설명)
         SegmentedButton<_StatViewMode>(
-          segments: const [
-            ButtonSegment(value: _StatViewMode.category, label: Text('카테고리별'), icon: Icon(Icons.pie_chart_outline, size: 16)),
-            ButtonSegment(value: _StatViewMode.merchant, label: Text('소비처별'), icon: Icon(Icons.storefront_outlined, size: 16)),
-            ButtonSegment(value: _StatViewMode.filter, label: Text('직접 필터링'), icon: Icon(Icons.filter_list, size: 16)),
+          segments: [
+            const ButtonSegment(
+              value: _StatViewMode.category,
+              icon: Tooltip(message: '카테고리별', child: Icon(Icons.pie_chart_outline, size: 18)),
+            ),
+            const ButtonSegment(
+              value: _StatViewMode.merchant,
+              icon: Tooltip(message: '소비처별', child: Icon(Icons.storefront_outlined, size: 18)),
+            ),
+            if (selectedGroupId != null)
+              const ButtonSegment(
+                value: _StatViewMode.member,
+                icon: Tooltip(message: '멤버별', child: Icon(Icons.people_outline, size: 18)),
+              ),
+            const ButtonSegment(
+              value: _StatViewMode.filter,
+              icon: Tooltip(message: '직접 필터링', child: Icon(Icons.filter_list, size: 18)),
+            ),
           ],
           selected: {_viewMode},
           onSelectionChanged: (s) => setState(() {
             _viewMode = s.first;
           }),
-          style: ButtonStyle(
+          style: const ButtonStyle(
             visualDensity: VisualDensity.compact,
-            textStyle: WidgetStateProperty.all(
-              const TextStyle(fontSize: 11),
-            ),
           ),
         ),
         const SizedBox(height: AppSizes.spaceM),
@@ -274,6 +287,8 @@ class _MonthlyStatisticsContentState
           ..._buildCategoryView(context, l10n)
         else if (_viewMode == _StatViewMode.merchant)
           ..._buildMerchantView(context, l10n)
+        else if (_viewMode == _StatViewMode.member)
+          ..._buildMemberView(context, l10n, selectedGroupId!)
         else
           ..._buildFilterView(context, l10n),
       ],
@@ -281,9 +296,97 @@ class _MonthlyStatisticsContentState
   }
 
   List<Widget> _buildCategoryView(BuildContext context, AppLocalizations l10n) {
-    // 입금 카테고리별 집계를 위해 지출 목록 로드
     final expensesAsync = ref.watch(householdExpensesByMonthProvider(widget.month));
 
+    // 멤버 필터가 적용된 경우 클라이언트 집계
+    if (_filterMemberId != null) {
+      return [
+        expensesAsync.when(
+          data: (allExpenses) {
+            final expenses = allExpenses.where((e) => e.memberId == _filterMemberId).toList();
+            final incomes = expenses.where((e) =>
+                e.type == TransactionType.income &&
+                e.refundedExpenseId == null &&
+                e.incomeCategory != IncomeCategory.carryover).toList();
+            final onlyExpenses = expenses.where((e) =>
+                e.type == TransactionType.expense).toList();
+
+            final totalIncome = incomes.fold<double>(0, (s, e) => s + e.amount);
+            final totalExpense = onlyExpenses.fold<double>(0, (s, e) => s + e.amount);
+
+            if (expenses.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSizes.spaceXL),
+                  child: Text(
+                    l10n.household_no_expenses,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+                  ),
+                ),
+              );
+            }
+
+            // 수입 집계
+            final incomeByCategory = <IncomeCategory, double>{};
+            for (final e in incomes) {
+              final cat = e.incomeCategory ?? IncomeCategory.otherIncome;
+              incomeByCategory[cat] = (incomeByCategory[cat] ?? 0) + e.amount;
+            }
+            final sortedIncomes = incomeByCategory.entries.toList()
+              ..sort((a, b) => b.value.compareTo(a.value));
+
+            // 지출 카테고리 집계
+            final expByCategory = <ExpenseCategory, _ClientCatStat>{};
+            for (final e in onlyExpenses) {
+              final cat = e.category ?? ExpenseCategory.other;
+              final prev = expByCategory[cat] ?? _ClientCatStat(cat, 0, 0);
+              expByCategory[cat] = _ClientCatStat(cat, prev.total + e.amount, prev.count + 1);
+            }
+            final sortedExpenses = expByCategory.values.toList()
+              ..sort((a, b) => b.total.compareTo(a.total));
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (incomes.isNotEmpty) ...[
+                  // 수입 요약
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(l10n.household_income, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                      Text('₩${_fmtAmount(totalIncome)}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.green)),
+                    ],
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  ...sortedIncomes.map((entry) => _IncomeCategoryStatItem(
+                    category: entry.key,
+                    amount: entry.value,
+                    totalIncome: totalIncome,
+                    month: widget.month,
+                  )),
+                  const SizedBox(height: AppSizes.spaceM),
+                ],
+                if (onlyExpenses.isNotEmpty) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('카테고리별 지출', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                      Text('₩${_fmtAmount(totalExpense)}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.error)),
+                    ],
+                  ),
+                  const SizedBox(height: AppSizes.spaceS),
+                  ...sortedExpenses.map((stat) => _ClientCategoryStatItem(stat: stat, totalExpense: totalExpense, month: widget.month)),
+                ],
+              ],
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, _) => Center(child: Text(l10n.common_error)),
+        ),
+      ];
+    }
+
+    // 전체 보기: 기존 서버 stats 사용
     return [
       if (widget.stats.hasIncome) ...[
         Text(
@@ -353,7 +456,10 @@ class _MonthlyStatisticsContentState
     return [
       expensesAsync.when(
         data: (expenses) {
-          final onlyExpenses = expenses.where((e) => e.type == TransactionType.expense).toList();
+          final filtered = _filterMemberId != null
+              ? expenses.where((e) => e.memberId == _filterMemberId).toList()
+              : expenses;
+          final onlyExpenses = filtered.where((e) => e.type == TransactionType.expense).toList();
           if (onlyExpenses.isEmpty) {
             return Center(
               child: Padding(
@@ -420,11 +526,135 @@ class _MonthlyStatisticsContentState
     ];
   }
 
+  List<Widget> _buildMemberView(BuildContext context, AppLocalizations l10n, String groupId) {
+    final membersAsync = ref.watch(groupMembersProvider(groupId));
+    final expensesAsync = ref.watch(householdExpensesByMonthProvider(widget.month));
+
+    return [
+      membersAsync.when(
+        data: (members) => expensesAsync.when(
+          data: (allExpenses) {
+            final onlyExpenses = allExpenses.where((e) => e.type == TransactionType.expense).toList();
+            if (onlyExpenses.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSizes.spaceXL),
+                  child: Text(
+                    l10n.household_no_expenses,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+                  ),
+                ),
+              );
+            }
+
+            // 멤버별 지출 집계
+            final memberTotals = <String, double>{};
+            final memberCounts = <String, int>{};
+            double unassignedTotal = 0;
+            int unassignedCount = 0;
+
+            for (final e in onlyExpenses) {
+              if (e.memberId == null) {
+                unassignedTotal += e.amount;
+                unassignedCount++;
+              } else {
+                memberTotals[e.memberId!] = (memberTotals[e.memberId!] ?? 0) + e.amount;
+                memberCounts[e.memberId!] = (memberCounts[e.memberId!] ?? 0) + 1;
+              }
+            }
+
+            final grandTotal = onlyExpenses.fold<double>(0, (s, e) => s + e.amount);
+
+            // 멤버 순서대로 정렬 (금액 내림차순)
+            final memberEntries = memberTotals.entries.toList()
+              ..sort((a, b) => b.value.compareTo(a.value));
+
+            // userId → 이름 매핑
+            final nameMap = {for (final m in members) (m.user?.id ?? m.userId): (m.user?.name ?? m.userId)};
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '멤버별 지출',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+                ...memberEntries.map((entry) {
+                  final ratio = grandTotal > 0 ? (entry.value / grandTotal).clamp(0.0, 1.0) : 0.0;
+                  final name = nameMap[entry.key] ?? entry.key;
+                  final count = memberCounts[entry.key] ?? 0;
+                  return _MemberExpenseStatItem(
+                    name: name,
+                    amount: entry.value,
+                    count: count,
+                    ratio: ratio,
+                    onTap: () => context.push(
+                      AppRoutes.householdCategoryExpenses,
+                      extra: {'month': widget.month, 'memberId': entry.key, 'memberName': name, 'category': null},
+                    ),
+                  );
+                }),
+                if (unassignedCount > 0)
+                  _MemberExpenseStatItem(
+                    name: '미지정',
+                    amount: unassignedTotal,
+                    count: unassignedCount,
+                    ratio: grandTotal > 0 ? (unassignedTotal / grandTotal).clamp(0.0, 1.0) : 0.0,
+                    isUnassigned: true,
+                    onTap: () => context.push(
+                      AppRoutes.householdCategoryExpenses,
+                      extra: {'month': widget.month, 'memberId': '', 'memberName': '미지정', 'category': null},
+                    ),
+                  ),
+              ],
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, _) => Center(child: Text(l10n.common_error)),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => Center(child: Text(l10n.common_error)),
+      ),
+    ];
+  }
+
   List<Widget> _buildFilterView(BuildContext context, AppLocalizations l10n) {
     final expensesAsync = ref.watch(householdExpensesByMonthProvider(widget.month));
     final merchantsAsync = ref.watch(merchantsProvider);
+    final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
 
     return [
+      // 멤버 필터 (그룹 모드)
+      if (selectedGroupId != null)
+        ref.watch(groupMembersProvider(selectedGroupId)).whenOrNull(
+          data: (members) {
+            if (members.length <= 1) return const SizedBox.shrink();
+            return Column(
+              children: [
+                _FilterDropdownRow(
+                  label: '멤버',
+                  child: DropdownButton<String?>(
+                    value: _filterMemberId,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    hint: const Text('전체'),
+                    items: [
+                      const DropdownMenuItem<String?>(value: null, child: Text('전체')),
+                      ...members.map((m) {
+                        final userId = m.user?.id ?? m.userId;
+                        final name = m.user?.name ?? userId;
+                        return DropdownMenuItem(value: userId, child: Text(name));
+                      }),
+                    ],
+                    onChanged: (v) => setState(() => _filterMemberId = v),
+                  ),
+                ),
+                const SizedBox(height: AppSizes.spaceS),
+              ],
+            );
+          },
+        ) ?? const SizedBox.shrink(),
       // 카테고리 필터
       _FilterDropdownRow(
         label: '카테고리',
@@ -468,6 +698,9 @@ class _MonthlyStatisticsContentState
       expensesAsync.when(
         data: (expenses) {
           var filtered = expenses.where((e) => e.type == TransactionType.expense).toList();
+          if (_filterMemberId != null) {
+            filtered = filtered.where((e) => e.memberId == _filterMemberId).toList();
+          }
           if (_filterCategory != null) {
             filtered = filtered.where((e) => e.category == _filterCategory).toList();
           }
@@ -519,6 +752,107 @@ class _MonthlyStatisticsContentState
   }
 
   String _fmtAmount(double amount) {
+    final i = amount.toInt();
+    final s = i.toString();
+    final buf = StringBuffer();
+    for (var j = 0; j < s.length; j++) {
+      if (j > 0 && (s.length - j) % 3 == 0) buf.write(',');
+      buf.write(s[j]);
+    }
+    return buf.toString();
+  }
+}
+
+/// 클라이언트 집계용 카테고리 통계 (memberId 필터 시 사용)
+class _ClientCatStat {
+  final ExpenseCategory category;
+  final double total;
+  final int count;
+
+  const _ClientCatStat(this.category, this.total, this.count);
+}
+
+class _ClientCategoryStatItem extends StatelessWidget {
+  final _ClientCatStat stat;
+  final double totalExpense;
+  final String month;
+
+  const _ClientCategoryStatItem({
+    required this.stat,
+    required this.totalExpense,
+    required this.month,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final color = categoryColor(stat.category);
+    final ratio = totalExpense > 0 ? (stat.total / totalExpense).clamp(0.0, 1.0) : 0.0;
+
+    return InkWell(
+      onTap: () => context.push(
+        AppRoutes.householdCategoryExpenses,
+        extra: {'category': stat.category, 'month': month},
+      ),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Icon(categoryIcon(stat.category), color: color, size: 18),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        categoryName(l10n, stat.category),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        '₩${_fmt(stat.total)}',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: LinearProgressIndicator(
+                      value: ratio,
+                      minHeight: 7,
+                      backgroundColor: const Color(0xFFF0F4F8),
+                      color: color,
+                    ),
+                  ),
+                  Text(
+                    '${stat.count}건 · ${(ratio * 100).toStringAsFixed(0)}%',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.outline),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
     final i = amount.toInt();
     final s = i.toString();
     final buf = StringBuffer();
@@ -610,6 +944,105 @@ class _MerchantStatItem extends StatelessWidget {
                 ),
                 Text(
                   '${stat.count}건',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.outline),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      ),
+    );
+  }
+
+  String _fmt(double amount) {
+    final i = amount.toInt();
+    final s = i.toString();
+    final buf = StringBuffer();
+    for (var j = 0; j < s.length; j++) {
+      if (j > 0 && (s.length - j) % 3 == 0) buf.write(',');
+      buf.write(s[j]);
+    }
+    return buf.toString();
+  }
+}
+
+class _MemberExpenseStatItem extends StatelessWidget {
+  final String name;
+  final double amount;
+  final int count;
+  final double ratio; // 전체 대비 비율
+  final bool isUnassigned;
+  final VoidCallback? onTap;
+
+  const _MemberExpenseStatItem({
+    required this.name,
+    required this.amount,
+    required this.count,
+    required this.ratio,
+    this.isUnassigned = false,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isUnassigned
+        ? Theme.of(context).colorScheme.outline
+        : Theme.of(context).colorScheme.primary;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+      padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+            ),
+            child: Icon(
+              isUnassigned ? Icons.person_outline : Icons.person,
+              color: color,
+              size: 18,
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      name,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      '₩${_fmt(amount)}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: ratio,
+                    minHeight: 7,
+                    backgroundColor: const Color(0xFFF0F4F8),
+                    color: color,
+                  ),
+                ),
+                Text(
+                  '$count건 · ${(ratio * 100).toStringAsFixed(0)}%',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.outline),
                 ),
               ],
@@ -1162,7 +1595,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
             Icon(Icons.info_outline, size: 12, color: Theme.of(context).colorScheme.outline),
             const SizedBox(width: 4),
             Text(
-              '원금 및 이월 입금은 통계에서 제외됩니다',
+              '환불금 및 이월 입금은 통계에서 제외됩니다',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
                 fontSize: 11,

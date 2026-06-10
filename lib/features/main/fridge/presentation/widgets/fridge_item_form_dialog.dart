@@ -156,17 +156,25 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
 
     final q = name.toLowerCase();
 
-    // 프리셋 매칭: category 또는 keywords 중 하나라도 q를 포함하면 후보
-    bool hits(ExpiryPresetModel p) =>
-        p.category.toLowerCase().contains(q) ||
-        p.keywords.any((k) => k.toLowerCase().contains(q));
+    // 정확 일치 > 입력명이 keyword/category 포함 > keyword/category가 입력명 포함
+    int score(ExpiryPresetModel p) {
+      final kw = p.keyword.toLowerCase();
+      final cat = p.category.toLowerCase();
+      if (kw == q || cat == q) return 3;
+      if (q.contains(kw) || q.contains(cat)) return 2;
+      if (kw.contains(q) || cat.contains(q)) return 1;
+      return 0;
+    }
 
-    // 매칭된 것 중 category 길이가 짧을수록 더 구체적인 매칭으로 우선
+    bool hits(ExpiryPresetModel p) => score(p) > 0;
+
     ExpiryPresetModel? best(Iterable<ExpiryPresetModel> candidates) =>
-        candidates.fold<ExpiryPresetModel?>(
-          null,
-          (b, p) => b == null || p.category.length < b.category.length ? p : b,
-        );
+        candidates.fold<ExpiryPresetModel?>(null, (b, p) {
+          if (b == null) return p;
+          final sb = score(b), sp = score(p);
+          if (sp != sb) return sp > sb ? p : b;
+          return p.keyword.length < b.keyword.length ? p : b;
+        });
 
     // 1) storageType 일치 우선, 2) storageType null(무관)도 허용, 3) 전체 fallback
     ExpiryPresetModel? match =

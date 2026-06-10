@@ -37,10 +37,12 @@ class _KeywordEntry {
 
 class ExpiryReferenceSelectorSheet extends ConsumerStatefulWidget {
   final StorageType currentStorageType;
+  final DateTime? baseDate;
 
   const ExpiryReferenceSelectorSheet({
     super.key,
     required this.currentStorageType,
+    this.baseDate,
   });
 
   @override
@@ -73,28 +75,22 @@ class _ExpiryReferenceSelectorSheetState
   // sheetContext: DraggableScrollableSheet builder의 context — 올바른 route를 닫음
   void _selectEntry(BuildContext sheetContext, _KeywordEntry entry) {
     final preset = entry.preset;
+    final base = widget.baseDate ?? DateTime.now();
     Navigator.pop(
       sheetContext,
       ExpiryReferenceResult(
         keyword: entry.keyword,
         storageType: preset.storageType ?? widget.currentStorageType,
         days: preset.days,
-        suggestedExpiresAt: DateTime.now().add(Duration(days: preset.days)),
+        suggestedExpiresAt: base.add(Duration(days: preset.days)),
       ),
     );
   }
 
   List<_KeywordEntry> _buildEntries(List<ExpiryPresetModel> presets) {
-    final entries = <_KeywordEntry>[];
-    for (final preset in presets) {
-      if (preset.keywords.isEmpty) {
-        entries.add(_KeywordEntry(keyword: preset.category, preset: preset));
-      } else {
-        for (final kw in preset.keywords) {
-          entries.add(_KeywordEntry(keyword: kw, preset: preset));
-        }
-      }
-    }
+    final entries = presets
+        .map((p) => _KeywordEntry(keyword: p.keyword, preset: p))
+        .toList();
     // storageType 일치 항목 우선, 그 다음 keyword 가나다순
     entries.sort((a, b) {
       final aMatch = a.preset.storageType == widget.currentStorageType;
