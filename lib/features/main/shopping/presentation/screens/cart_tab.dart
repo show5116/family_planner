@@ -12,6 +12,7 @@ import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/fridge/data/models/fridge_models.dart';
+import 'package:family_planner/features/main/fridge/presentation/widgets/expiry_reference_selector_sheet.dart';
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/providers/merchant_provider.dart';
@@ -567,7 +568,6 @@ class _CartTabState extends ConsumerState<CartTab>
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
       builder: (_) => _CompleteShoppingDialog(
         items: items,
         initialPrices: prices,
@@ -1723,6 +1723,7 @@ class _CompleteShoppingDialogState
   // Step 1 상태
   final Map<String, String?> _transferMap = {}; // cartItemId → storageId | null
   final Set<String> _excludedSet = {}; // 이번 완료에서 제외할 cartItemId
+  DateTime _completedAt = DateTime.now();
   bool _addExpense = false;
   final _amountController = TextEditingController();
   final _descController = TextEditingController(text: '마트 장보기');
@@ -1818,7 +1819,7 @@ class _CompleteShoppingDialogState
         expense = ShoppingExpenseDto(
           amount: (amount != null && amount > 0) ? amount : null,
           paymentMethod: _paymentMethod,
-          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          date: DateFormat('yyyy-MM-dd').format(_completedAt),
           description: _descController.text.trim().isEmpty
               ? null
               : _descController.text.trim(),
@@ -1829,6 +1830,7 @@ class _CompleteShoppingDialogState
 
       await ref.read(cartProvider.notifier).complete(CompleteCartDto(
             groupId: groupId ?? '',
+            completedAt: _completedAt.toUtc().toIso8601String(),
             transfers: transfers,
             excludes: _excludedSet.isEmpty ? null : _excludedSet.toList(),
             expense: expense,
@@ -1859,103 +1861,111 @@ class _CompleteShoppingDialogState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final mq = MediaQuery.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     final hasTransfer = _transferMap.values.any((v) => v != null);
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      minChildSize: 0.4,
-      maxChildSize: 0.95,
-      expand: false,
-      builder: (_, scrollController) => Column(
-        children: [
-          // 핸들
-          Padding(
-            padding: const EdgeInsets.only(top: AppSizes.spaceM, bottom: AppSizes.spaceS),
-            child: Center(
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: colorScheme.outlineVariant,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-          ),
-          // 제목
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceL),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _isStep2
-                        ? l10n.fridge_cart_complete_step2_title
-                        : l10n.fridge_cart_complete_title,
-                    style: Theme.of(context).textTheme.titleMedium,
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboardHeight),
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.4,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (_, scrollController) => Column(
+          children: [
+            // 핸들
+            Padding(
+              padding: const EdgeInsets.only(top: AppSizes.spaceM, bottom: AppSizes.spaceS),
+              child: Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colorScheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: _loading ? null : () => Navigator.pop(context),
-                  visualDensity: VisualDensity.compact,
-                ),
-              ],
+              ),
             ),
-          ),
-          const Divider(height: 1),
-          // 콘텐츠 스크롤 영역
-          Expanded(
-            child: SingleChildScrollView(
-              controller: scrollController,
+            // 제목
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceL),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _isStep2
+                          ? l10n.fridge_cart_complete_step2_title
+                          : l10n.fridge_cart_complete_title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: _loading ? null : () => Navigator.pop(context),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            // 콘텐츠 스크롤 영역
+            Expanded(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                padding: const EdgeInsets.fromLTRB(
+                  AppSizes.spaceL,
+                  AppSizes.spaceM,
+                  AppSizes.spaceL,
+                  AppSizes.spaceL,
+                ),
+                child: _isStep2
+                    ? _Step2Content(details: _details, l10n: l10n, completedAt: _completedAt)
+                    : _Step1Content(
+                        items: widget.items,
+                        transferMap: _transferMap,
+                        excludedSet: _excludedSet,
+                        completedAt: _completedAt,
+                        onCompletedAtChanged: (d) =>
+                            setState(() => _completedAt = d),
+                        addExpense: _addExpense,
+                        selectedMerchantId: _selectedMerchantId,
+                        amountController: _amountController,
+                        descController: _descController,
+                        paymentMethod: _paymentMethod,
+                        onTransferChanged: (id, storageId) =>
+                            setState(() => _transferMap[id] = storageId),
+                        onExcludeToggled: (id) => setState(() {
+                              if (_excludedSet.contains(id)) {
+                                _excludedSet.remove(id);
+                              } else {
+                                _excludedSet.add(id);
+                              }
+                              _syncAmountFromPrices();
+                            }),
+                        onAddExpenseChanged: (v) => setState(() {
+                              _addExpense = v;
+                              if (v) _syncAmountFromPrices();
+                            }),
+                        onPaymentMethodChanged: (v) =>
+                            setState(() => _paymentMethod = v),
+                        onMerchantChanged: (id) =>
+                            setState(() => _selectedMerchantId = id),
+                        l10n: l10n,
+                      ),
+              ),
+            ),
+            // 하단 버튼 영역
+            Padding(
               padding: EdgeInsets.fromLTRB(
                 AppSizes.spaceL,
-                AppSizes.spaceM,
+                AppSizes.spaceS,
                 AppSizes.spaceL,
-                mq.padding.bottom + AppSizes.spaceL,
-              ),
-              child: _isStep2
-                  ? _Step2Content(details: _details, l10n: l10n)
-                  : _Step1Content(
-                      items: widget.items,
-                      transferMap: _transferMap,
-                      excludedSet: _excludedSet,
-                      addExpense: _addExpense,
-                      selectedMerchantId: _selectedMerchantId,
-                      amountController: _amountController,
-                      descController: _descController,
-                      paymentMethod: _paymentMethod,
-                      onTransferChanged: (id, storageId) =>
-                          setState(() => _transferMap[id] = storageId),
-                      onExcludeToggled: (id) => setState(() {
-                            if (_excludedSet.contains(id)) {
-                              _excludedSet.remove(id);
-                            } else {
-                              _excludedSet.add(id);
-                            }
-                            _syncAmountFromPrices();
-                          }),
-                      onAddExpenseChanged: (v) => setState(() {
-                            _addExpense = v;
-                            if (v) _syncAmountFromPrices();
-                          }),
-                      onPaymentMethodChanged: (v) =>
-                          setState(() => _paymentMethod = v),
-                      onMerchantChanged: (id) =>
-                          setState(() => _selectedMerchantId = id),
-                      l10n: l10n,
-                    ),
-            ),
-          ),
-          // 하단 버튼 영역
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSizes.spaceL, AppSizes.spaceS, AppSizes.spaceL, AppSizes.spaceM,
+                AppSizes.spaceM + bottomPadding,
               ),
               child: Row(
                 children: [
@@ -1992,8 +2002,8 @@ class _CompleteShoppingDialogState
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -2005,6 +2015,8 @@ class _Step1Content extends ConsumerWidget {
   final List<CartItemModel> items;
   final Map<String, String?> transferMap;
   final Set<String> excludedSet;
+  final DateTime completedAt;
+  final ValueChanged<DateTime> onCompletedAtChanged;
   final bool addExpense;
   final String? selectedMerchantId;
   final TextEditingController amountController;
@@ -2021,6 +2033,8 @@ class _Step1Content extends ConsumerWidget {
     required this.items,
     required this.transferMap,
     required this.excludedSet,
+    required this.completedAt,
+    required this.onCompletedAtChanged,
     required this.addExpense,
     required this.selectedMerchantId,
     required this.amountController,
@@ -2055,6 +2069,32 @@ class _Step1Content extends ConsumerWidget {
               onExcludeToggled: () => onExcludeToggled(item.id),
               l10n: l10n,
             )),
+        const Divider(height: AppSizes.spaceL),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text('장보기 날짜',
+              style: Theme.of(context).textTheme.bodyMedium),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                DateFormat('yyyy년 MM월 dd일').format(completedAt),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(width: AppSizes.spaceXS),
+              const Icon(Icons.calendar_today_outlined, size: 18),
+            ],
+          ),
+          onTap: () async {
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: completedAt,
+              firstDate: DateTime.now().subtract(const Duration(days: 365)),
+              lastDate: DateTime.now(),
+            );
+            if (picked != null) onCompletedAtChanged(picked);
+          },
+        ),
         const Divider(height: AppSizes.spaceL),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
@@ -2102,8 +2142,13 @@ class _Step1Content extends ConsumerWidget {
 class _Step2Content extends ConsumerStatefulWidget {
   final List<_TransferDetail> details;
   final AppLocalizations l10n;
+  final DateTime completedAt;
 
-  const _Step2Content({required this.details, required this.l10n});
+  const _Step2Content({
+    required this.details,
+    required this.l10n,
+    required this.completedAt,
+  });
 
   @override
   ConsumerState<_Step2Content> createState() => _Step2ContentState();
@@ -2115,19 +2160,48 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
   // cartItemId → 추천 유통기한 일수
   final Map<String, int?> _suggestions = {};
 
-  void _matchAll(List<ExpiryPresetModel> presets) {
+  void _matchAll(List<ExpiryPresetModel> presets, List<StorageModel> storages) {
     if (presets.isEmpty) return;
     var changed = false;
     for (final d in widget.details) {
       if (_suggestions.containsKey(d.cartItem.id)) continue;
       final q = d.cartItem.name.trim().toLowerCase();
-      bool hits(ExpiryPresetModel p) =>
-          p.category.toLowerCase().contains(q) ||
-          p.keywords.any((k) => k.toLowerCase().contains(q));
-      final match = presets
-          .where(hits)
-          .fold<ExpiryPresetModel?>(null,
-              (b, p) => b == null || p.category.length < b.category.length ? p : b);
+      final storageType = storages
+          .where((s) => s.id == d.storageId)
+          .map((s) => s.type)
+          .firstOrNull;
+
+      // 정확 일치 > 입력명이 키워드/카테고리를 포함 > 키워드/카테고리가 입력명을 포함
+      int score(ExpiryPresetModel p) {
+        final cat = p.category.toLowerCase();
+        if (cat == q) return 3;
+        if (p.keywords.any((k) => k.toLowerCase() == q)) return 3;
+        if (q.contains(cat)) return 2;
+        if (p.keywords.any((k) => q.contains(k.toLowerCase()))) return 2;
+        if (cat.contains(q)) return 1;
+        if (p.keywords.any((k) => k.toLowerCase().contains(q))) return 1;
+        return 0;
+      }
+
+      bool hits(ExpiryPresetModel p) => score(p) > 0;
+
+      ExpiryPresetModel? best(Iterable<ExpiryPresetModel> candidates) =>
+          candidates.fold<ExpiryPresetModel?>(null, (b, p) {
+            if (b == null) return p;
+            final sb = score(b), sp = score(p);
+            if (sp != sb) return sp > sb ? p : b;
+            // 점수 같으면 category 길이 짧은 것 (더 구체적)
+            return p.category.length < b.category.length ? p : b;
+          });
+
+      // storageType 일치 우선 → storageType null(무관) → 전체 fallback
+      ExpiryPresetModel? match;
+      if (storageType != null) {
+        match = best(presets.where((p) => p.storageType == storageType && hits(p)));
+      }
+      match ??= best(presets.where((p) => p.storageType == null && hits(p)));
+      match ??= best(presets.where(hits));
+
       if (match != null) {
         _suggestions[d.cartItem.id] = match.days;
         changed = true;
@@ -2149,13 +2223,31 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
     });
   }
 
+  Future<void> _openReferenceSelector(
+      _TransferDetail detail, List<StorageModel> storages) async {
+    final storageType = storages
+        .where((s) => s.id == detail.storageId)
+        .map((s) => s.type)
+        .firstOrNull;
+    final result = await showModalBottomSheet<ExpiryReferenceResult>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => ExpiryReferenceSelectorSheet(
+        currentStorageType: storageType ?? StorageType.fridge,
+        baseDate: widget.completedAt,
+      ),
+    );
+    if (result == null || !mounted) return;
+    setState(() => detail.expiresAt = result.suggestedExpiresAt);
+  }
+
   Future<void> _pickDate(_TransferDetail detail) async {
+    final base = widget.completedAt;
     final picked = await showDatePicker(
       context: context,
-      initialDate:
-          detail.expiresAt ?? DateTime.now().add(const Duration(days: 7)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 3650)),
+      initialDate: detail.expiresAt ?? base.add(const Duration(days: 7)),
+      firstDate: base,
+      lastDate: base.add(const Duration(days: 3650)),
     );
     if (picked != null) setState(() => detail.expiresAt = picked);
   }
@@ -2164,14 +2256,16 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
   Widget build(BuildContext context) {
     final l10n = widget.l10n;
 
+    final storages = ref.watch(storagesProvider).value ?? [];
+
     ref.listen(expiryPresetsProvider, (_, next) {
       final presets = next.valueOrNull;
-      if (presets != null) _matchAll(presets);
+      if (presets != null) _matchAll(presets, storages);
     });
 
     // 이미 로드된 경우 즉시 매칭
     final loaded = ref.read(expiryPresetsProvider).valueOrNull;
-    if (loaded != null && _suggestions.isEmpty) _matchAll(loaded);
+    if (loaded != null && _suggestions.isEmpty) _matchAll(loaded, storages);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -2270,6 +2364,10 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                                 onPressed: () =>
                                     setState(() => d.expiresAt = null),
                               ),
+                            IconButton(
+                              icon: const Icon(Icons.search, size: 18),
+                              onPressed: () => _openReferenceSelector(d, storages),
+                            ),
                             const Icon(Icons.calendar_today_outlined,
                                 size: 18),
                           ],
@@ -2280,7 +2378,7 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                         _SuggestionChip(
                           days: _suggestions[d.cartItem.id]!,
                           onApply: () => setState(() {
-                            d.expiresAt = DateTime.now().add(
+                            d.expiresAt = widget.completedAt.add(
                                 Duration(days: _suggestions[d.cartItem.id]!));
                           }),
                         ),

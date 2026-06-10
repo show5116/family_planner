@@ -37,10 +37,12 @@ class _KeywordEntry {
 
 class ExpiryReferenceSelectorSheet extends ConsumerStatefulWidget {
   final StorageType currentStorageType;
+  final DateTime? baseDate;
 
   const ExpiryReferenceSelectorSheet({
     super.key,
     required this.currentStorageType,
+    this.baseDate,
   });
 
   @override
@@ -73,13 +75,14 @@ class _ExpiryReferenceSelectorSheetState
   // sheetContext: DraggableScrollableSheet builder의 context — 올바른 route를 닫음
   void _selectEntry(BuildContext sheetContext, _KeywordEntry entry) {
     final preset = entry.preset;
+    final base = widget.baseDate ?? DateTime.now();
     Navigator.pop(
       sheetContext,
       ExpiryReferenceResult(
         keyword: entry.keyword,
         storageType: preset.storageType ?? widget.currentStorageType,
         days: preset.days,
-        suggestedExpiresAt: DateTime.now().add(Duration(days: preset.days)),
+        suggestedExpiresAt: base.add(Duration(days: preset.days)),
       ),
     );
   }

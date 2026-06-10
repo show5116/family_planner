@@ -824,12 +824,14 @@ class ShoppingExpenseDto {
 
 class CompleteCartDto {
   final String groupId;
+  final String? completedAt; // ISO8601, 기본: 서버 현재 시각
   final List<TransferItemDto> transfers;
   final List<String>? excludes; // 장바구니에 잔류시킬 항목 ID 목록
   final ShoppingExpenseDto? expense;
 
   const CompleteCartDto({
     required this.groupId,
+    this.completedAt,
     required this.transfers,
     this.excludes,
     this.expense,
@@ -837,6 +839,7 @@ class CompleteCartDto {
 
   Map<String, dynamic> toJson() => {
         'groupId': groupId,
+        if (completedAt != null) 'completedAt': completedAt,
         'transfers': transfers.map((t) => t.toJson()).toList(),
         if (excludes != null && excludes!.isNotEmpty) 'excludes': excludes,
         if (expense != null) 'expense': expense!.toJson(),
