@@ -65,29 +65,23 @@ class AuthService extends ApiServiceBase {
   /// API 응답에서 사용자 정보 추출 및 저장
   Future<void> _saveUserInfoFromResponse(Map<String, dynamic> data) async {
     final user = data['user'] as Map<String, dynamic>?;
+    final src = user ?? data;
 
-    if (user != null) {
-      await _storage.saveUserInfo(
-        email: user['email'] as String?,
-        name: user['name'] as String?,
-        phoneNumber: user['phoneNumber'] as String?,
-        profileImageUrl: user['profileImageUrl'] as String?,
-        isAdmin: user['isAdmin'] as bool?,
-        hasPassword: user['hasPassword'] as bool?,
-        personalColor: user['personalColor'] as String?,
-      );
-    } else {
-      // user 키가 없는 경우, 최상위 레벨에서 직접 추출 시도
-      await _storage.saveUserInfo(
-        email: data['email'] as String?,
-        name: data['name'] as String?,
-        phoneNumber: data['phoneNumber'] as String?,
-        profileImageUrl: data['profileImageUrl'] as String?,
-        isAdmin: data['isAdmin'] as bool?,
-        hasPassword: data['hasPassword'] as bool?,
-        personalColor: data['personalColor'] as String?,
-      );
-    }
+    final rawDeleteAt = src['scheduledDeleteAt'];
+    final scheduledDeleteAt = rawDeleteAt?.toString();
+    final clearScheduledDeleteAt = rawDeleteAt == null;
+
+    await _storage.saveUserInfo(
+      email: src['email'] as String?,
+      name: src['name'] as String?,
+      phoneNumber: src['phoneNumber'] as String?,
+      profileImageUrl: src['profileImageUrl'] as String?,
+      isAdmin: src['isAdmin'] as bool?,
+      hasPassword: src['hasPassword'] as bool?,
+      personalColor: src['personalColor'] as String?,
+      scheduledDeleteAt: scheduledDeleteAt,
+      clearScheduledDeleteAt: clearScheduledDeleteAt,
+    );
   }
 
   /// 회원가입
@@ -545,6 +539,38 @@ class AuthService extends ApiServiceBase {
       }
 
       return data;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// 계정 삭제 예약 (7일 유예 후 완전 삭제)
+  Future<Map<String, dynamic>> scheduleDeleteAccount() async {
+    try {
+      final response = await apiClient.delete(ApiConstants.deleteAccount);
+      return handleResponse<Map<String, dynamic>>(response);
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// 계정 삭제 예약 취소
+  Future<Map<String, dynamic>> cancelDeleteAccount() async {
+    try {
+      final response = await apiClient.post(ApiConstants.cancelDeleteAccount);
+      final data = handleResponse<Map<String, dynamic>>(response);
+      await _storage.saveUserInfo(clearScheduledDeleteAt: true);
+      return data;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// 내 데이터 내보내기 (개인정보보호법 제35조)
+  Future<dynamic> exportMyData() async {
+    try {
+      final response = await apiClient.get(ApiConstants.exportMyData);
+      return response.data;
     } catch (e) {
       throw handleError(e);
     }

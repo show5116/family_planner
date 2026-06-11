@@ -8205,6 +8205,90 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'장보기가 완료되었습니다.'**
   String get shopping_complete_snackbar;
+
+  /// 계정 관리 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 관리'**
+  String get account_management_title;
+
+  /// 계정 삭제 예약 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제 예약'**
+  String get account_delete_schedule_title;
+
+  /// 계정 삭제 예약 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'7일 유예 후 모든 데이터 삭제'**
+  String get account_delete_schedule_subtitle;
+
+  /// 계정 삭제 예약 확인 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제를 예약하시겠습니까?'**
+  String get account_delete_schedule_confirm_title;
+
+  /// 계정 삭제 예약 확인 다이얼로그 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'7일 후 계정과 모든 데이터가 영구 삭제됩니다.\n유예 기간 중에는 취소할 수 있습니다.'**
+  String get account_delete_schedule_confirm_body;
+
+  /// 계정 삭제 예약 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제가 예약되었습니다. {date}에 삭제됩니다.'**
+  String account_delete_schedule_success(String date);
+
+  /// 계정 삭제 예약 취소 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제 예약 취소'**
+  String get account_cancel_delete_title;
+
+  /// 계정 삭제 취소 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'예약된 계정 삭제를 취소합니다'**
+  String get account_cancel_delete_subtitle;
+
+  /// 계정 삭제 취소 확인 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제 예약을 취소하시겠습니까?'**
+  String get account_cancel_delete_confirm_title;
+
+  /// 계정 삭제 취소 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제 예약이 취소되었습니다'**
+  String get account_cancel_delete_success;
+
+  /// 데이터 내보내기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'내 데이터 내보내기'**
+  String get account_export_data_title;
+
+  /// 데이터 내보내기 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 이메일로 데이터 사본을 보내드립니다'**
+  String get account_export_data_subtitle;
+
+  /// 데이터 내보내기 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'요청이 완료되었습니다. 이메일을 확인해 주세요.'**
+  String get account_export_data_success;
+
+  /// 계정 작업 실패 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다: {error}'**
+  String account_action_failed(String error);
 }
 
 class _AppLocalizationsDelegate

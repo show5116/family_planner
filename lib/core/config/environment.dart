@@ -29,13 +29,11 @@ class EnvironmentConfig {
   static String get apiBaseUrl {
     switch (_currentEnvironment) {
       case Environment.local:
-        return dotenv.get('API_BASE_URL_LOCAL', fallback: 'http://localhost:3000');
+        return '${dotenv.get('API_BASE_URL_LOCAL', fallback: 'http://localhost:3000')}/v1';
       case Environment.development:
-        return dotenv.get('API_BASE_URL_DEV',
-            fallback: 'https://familyplannerbackend-production.up.railway.app');
+        return '${dotenv.get('API_BASE_URL_DEV', fallback: 'https://familyplannerbackend-production.up.railway.app')}/v1';
       case Environment.production:
-        return dotenv.get('API_BASE_URL_PROD',
-            fallback: 'https://familyplannerbackend-production.up.railway.app');
+        return '${dotenv.get('API_BASE_URL_PROD', fallback: 'https://familyplannerbackend-production.up.railway.app')}/v1';
     }
   }
 

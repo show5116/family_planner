@@ -128,7 +128,11 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 
   /// GPS 위치를 서버에 저장 (날씨 알림 크론잡에서 사용)
+  /// 로그인된 상태에서만 전송합니다.
   Future<void> _updateUserLocation() async {
+    final isAuthenticated = ref.read(authProvider).isAuthenticated;
+    if (isAuthenticated != true) return;
+
     try {
       final latLon = await ref.read(locationProvider.future);
       await AuthService().updateLocation(lat: latLon.lat, lon: latLon.lon);

@@ -25,6 +25,7 @@ class SecureStorageService {
   static const String _userIsAdminKey = 'user_is_admin';
   static const String _userHasPasswordKey = 'user_has_password';
   static const String _userPersonalColorKey = 'user_personal_color';
+  static const String _userScheduledDeleteAtKey = 'user_scheduled_delete_at';
 
   /// Access Token 저장
   Future<void> saveAccessToken(String token) async {
@@ -67,6 +68,8 @@ class SecureStorageService {
     bool? isAdmin,
     bool? hasPassword,
     String? personalColor,
+    String? scheduledDeleteAt,
+    bool clearScheduledDeleteAt = false,
   }) async {
     if (email != null) {
       await _storage.write(key: _userEmailKey, value: email);
@@ -88,6 +91,11 @@ class SecureStorageService {
     }
     if (personalColor != null) {
       await _storage.write(key: _userPersonalColorKey, value: personalColor);
+    }
+    if (clearScheduledDeleteAt) {
+      await _storage.delete(key: _userScheduledDeleteAtKey);
+    } else if (scheduledDeleteAt != null) {
+      await _storage.write(key: _userScheduledDeleteAtKey, value: scheduledDeleteAt);
     }
   }
 
@@ -131,8 +139,8 @@ class SecureStorageService {
     final profileImageUrl = await getUserProfileImageUrl();
     final isAdmin = await getUserIsAdmin();
     final hasPassword = await getUserHasPassword();
-
     final personalColor = await _storage.read(key: _userPersonalColorKey);
+    final scheduledDeleteAt = await _storage.read(key: _userScheduledDeleteAtKey);
 
     return {
       'email': email,
@@ -142,6 +150,7 @@ class SecureStorageService {
       'isAdmin': isAdmin,
       'hasPassword': hasPassword,
       'personalColor': personalColor,
+      'scheduledDeleteAt': scheduledDeleteAt,
     };
   }
 
@@ -154,6 +163,7 @@ class SecureStorageService {
     await _storage.delete(key: _userIsAdminKey);
     await _storage.delete(key: _userHasPasswordKey);
     await _storage.delete(key: _userPersonalColorKey);
+    await _storage.delete(key: _userScheduledDeleteAtKey);
   }
 
   /// 모든 데이터 삭제
