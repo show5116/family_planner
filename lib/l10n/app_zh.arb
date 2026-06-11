@@ -35,6 +35,16 @@
   "common_back": "返回",
   "common_previous": "上一步",
   "common_all": "全部",
+  "common_view_all": "查看全部",
+  "common_all_groups": "所有群组",
+  "common_date_format": "{month}月{day}日",
+  "@common_date_format": {
+    "description": "날짜 표시 형식 (월, 일)",
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
   "common_apply": "应用",
   "@common_apply": { "description": "Apply button" },
 
@@ -616,6 +626,7 @@
   "schedule_delete": "删除日程",
   "schedule_detail": "日程详情",
   "schedule_allDay": "全天",
+  "schedule_filter_group_schedule": "群组日程",
   "schedule_loadError": "日程加载失败",
   "schedule_empty": "暂无日程",
   "schedule_createSuccess": "日程已创建",
@@ -886,6 +897,7 @@
   "memo_tagName": "标签名称",
   "memo_tagNameHint": "请输入标签名称",
   "memo_visibility": "可见性",
+  "memo_filter_personal_only": "仅个人备忘录",
   "memo_visibilityPrivate": "仅自己",
   "memo_visibilityGroup": "指定群组",
   "memo_groupSelect": "选择群组",
@@ -2009,5 +2021,34 @@
   "shopping_history_fridge_not_transferred": "未移入",
   "@shopping_history_fridge_not_transferred": { "description": "Fridge not transferred tooltip" },
   "shopping_complete_snackbar": "购物已完成。",
-  "@shopping_complete_snackbar": { "description": "Shopping complete snackbar" }
+  "@shopping_complete_snackbar": { "description": "Shopping complete snackbar" },
+
+  "account_management_title": "账户管理",
+  "@account_management_title": { "description": "Account management section title" },
+  "account_delete_schedule_title": "预约删除账户",
+  "@account_delete_schedule_title": { "description": "Schedule account deletion button" },
+  "account_delete_schedule_subtitle": "7天宽限期后删除所有数据",
+  "@account_delete_schedule_subtitle": { "description": "Schedule account deletion description" },
+  "account_delete_schedule_confirm_title": "确认预约删除账户？",
+  "@account_delete_schedule_confirm_title": { "description": "Confirm schedule deletion dialog title" },
+  "account_delete_schedule_confirm_body": "7天后账户和所有数据将被永久删除。\n宽限期内可以取消。",
+  "@account_delete_schedule_confirm_body": { "description": "Confirm schedule deletion dialog body" },
+  "account_delete_schedule_success": "账户删除已预约，将于{date}删除。",
+  "@account_delete_schedule_success": { "description": "Account deletion scheduled success message", "placeholders": { "date": { "type": "String" } } },
+  "account_cancel_delete_title": "取消账户删除预约",
+  "@account_cancel_delete_title": { "description": "Cancel account deletion button" },
+  "account_cancel_delete_subtitle": "取消已预约的账户删除",
+  "@account_cancel_delete_subtitle": { "description": "Cancel account deletion description" },
+  "account_cancel_delete_confirm_title": "确认取消账户删除预约？",
+  "@account_cancel_delete_confirm_title": { "description": "Confirm cancel deletion dialog title" },
+  "account_cancel_delete_success": "账户删除预约已取消",
+  "@account_cancel_delete_success": { "description": "Account deletion cancelled success message" },
+  "account_export_data_title": "导出我的数据",
+  "@account_export_data_title": { "description": "Export data button" },
+  "account_export_data_subtitle": "数据副本将发送至您的注册邮箱",
+  "@account_export_data_subtitle": { "description": "Export data description" },
+  "account_export_data_success": "请求已提交，请查收邮件。",
+  "@account_export_data_success": { "description": "Export data success message" },
+  "account_action_failed": "发生错误：{error}",
+  "@account_action_failed": { "description": "Account action failed message", "placeholders": { "error": { "type": "String" } } }
 }

@@ -226,6 +226,9 @@ class ApiClient {
                 final response = await _dio.fetch(options);
                 return handler.resolve(response);
               } catch (e) {
+                if (e is DioException) {
+                  return handler.reject(e);
+                }
                 return handler.reject(error);
               }
             } else {

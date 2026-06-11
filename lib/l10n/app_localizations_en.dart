@@ -4344,4 +4344,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shopping_complete_snackbar => 'Shopping completed.';
+
+  @override
+  String get account_management_title => 'Account Management';
+
+  @override
+  String get account_delete_schedule_title => 'Schedule Account Deletion';
+
+  @override
+  String get account_delete_schedule_subtitle =>
+      'All data deleted after 7-day grace period';
+
+  @override
+  String get account_delete_schedule_confirm_title =>
+      'Schedule account deletion?';
+
+  @override
+  String get account_delete_schedule_confirm_body =>
+      'Your account and all data will be permanently deleted after 7 days.\nYou can cancel during the grace period.';
+
+  @override
+  String account_delete_schedule_success(String date) {
+    return 'Account deletion scheduled. Will be deleted on $date.';
+  }
+
+  @override
+  String get account_cancel_delete_title => 'Cancel Account Deletion';
+
+  @override
+  String get account_cancel_delete_subtitle =>
+      'Cancel the scheduled account deletion';
+
+  @override
+  String get account_cancel_delete_confirm_title => 'Cancel account deletion?';
+
+  @override
+  String get account_cancel_delete_success =>
+      'Account deletion has been cancelled';
+
+  @override
+  String get account_export_data_title => 'Export My Data';
+
+  @override
+  String get account_export_data_subtitle =>
+      'A copy of your data will be sent to your registered email';
+
+  @override
+  String get account_export_data_success =>
+      'Request submitted. Please check your email.';
+
+  @override
+  String account_action_failed(String error) {
+    return 'An error occurred: $error';
+  }
 }

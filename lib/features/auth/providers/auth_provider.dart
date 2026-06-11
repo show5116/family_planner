@@ -48,6 +48,13 @@ class AuthState {
       (user?['user'] as Map<String, dynamic>?)?['id']?.toString() ??
       user?['id']?.toString();
 
+  /// 계정 삭제 예약 일시 (null이면 예약 없음)
+  DateTime? get scheduledDeleteAt {
+    final raw = user?['scheduledDeleteAt'];
+    if (raw == null) return null;
+    return DateTime.tryParse(raw.toString());
+  }
+
   AuthState copyWith({
     bool? isAuthenticated,
     Map<String, dynamic>? user,
@@ -518,6 +525,57 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // /auth/me 재호출로 최신 사용자 정보 갱신
       final user = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: user);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 계정 삭제 예약 (7일 유예)
+  /// 성공 시 scheduledDeleteAt(DateTime) 반환
+  Future<DateTime> scheduleDeleteAccount() async {
+    state = state.copyWith(error: null);
+
+    try {
+      final data = await _authService.scheduleDeleteAccount();
+      final scheduledAt = DateTime.parse(data['scheduledDeleteAt'] as String);
+      // user map에 scheduledDeleteAt 반영하여 즉시 UI에 표시
+      if (state.user != null) {
+        final updated = Map<String, dynamic>.from(state.user!);
+        updated['scheduledDeleteAt'] = data['scheduledDeleteAt'];
+        state = state.copyWith(user: updated);
+      }
+      return scheduledAt;
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 계정 삭제 예약 취소
+  Future<void> cancelDeleteAccount() async {
+    state = state.copyWith(error: null);
+
+    try {
+      await _authService.cancelDeleteAccount();
+      // user map에서 scheduledDeleteAt 제거하여 즉시 UI에 반영
+      if (state.user != null) {
+        final updated = Map<String, dynamic>.from(state.user!);
+        updated.remove('scheduledDeleteAt');
+        state = state.copyWith(user: updated);
+      }
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 내 데이터 내보내기
+  Future<dynamic> exportMyData() async {
+    state = state.copyWith(error: null);
+
+    try {
+      return await _authService.exportMyData();
     } catch (e) {
       state = state.copyWith(error: e.toString());
       rethrow;

@@ -66,20 +66,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get common_add_to_list => '添加到列表';
 
   @override
-  String get common_view_all => '전체보기';
+  String get common_view_all => '查看全部';
 
   @override
-  String get memo_filter_personal_only => '개인 메모만';
+  String get memo_filter_personal_only => '仅个人备忘录';
 
   @override
-  String get common_all_groups => '전체 그룹';
+  String get common_all_groups => '所有群组';
 
   @override
-  String get schedule_filter_group_schedule => '그룹 일정';
+  String get schedule_filter_group_schedule => '群组日程';
 
   @override
   String common_date_format(int month, int day) {
-    return '$month월 $day일';
+    return '$month月$day日';
   }
 
   @override
@@ -4225,4 +4225,51 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shopping_complete_snackbar => '购物已完成。';
+
+  @override
+  String get account_management_title => '账户管理';
+
+  @override
+  String get account_delete_schedule_title => '预约删除账户';
+
+  @override
+  String get account_delete_schedule_subtitle => '7天宽限期后删除所有数据';
+
+  @override
+  String get account_delete_schedule_confirm_title => '确认预约删除账户？';
+
+  @override
+  String get account_delete_schedule_confirm_body =>
+      '7天后账户和所有数据将被永久删除。\n宽限期内可以取消。';
+
+  @override
+  String account_delete_schedule_success(String date) {
+    return '账户删除已预约，将于$date删除。';
+  }
+
+  @override
+  String get account_cancel_delete_title => '取消账户删除预约';
+
+  @override
+  String get account_cancel_delete_subtitle => '取消已预约的账户删除';
+
+  @override
+  String get account_cancel_delete_confirm_title => '确认取消账户删除预约？';
+
+  @override
+  String get account_cancel_delete_success => '账户删除预约已取消';
+
+  @override
+  String get account_export_data_title => '导出我的数据';
+
+  @override
+  String get account_export_data_subtitle => '数据副本将发送至您的注册邮箱';
+
+  @override
+  String get account_export_data_success => '请求已提交，请查收邮件。';
+
+  @override
+  String account_action_failed(String error) {
+    return '发生错误：$error';
+  }
 }

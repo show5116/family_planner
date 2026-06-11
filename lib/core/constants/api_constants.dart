@@ -18,6 +18,9 @@ class ApiConstants {
   static const String updateProfile = '/auth/update-profile';
   static const String uploadProfilePhoto = '/auth/upload-profile-photo';
   static const String updateLocation = '/auth/location';
+  static const String deleteAccount = '/auth/me';
+  static const String cancelDeleteAccount = '/auth/me/cancel-delete';
+  static const String exportMyData = '/auth/me/export';
 
   // Social Login Endpoints
   static const String googleLogin = '/auth/google';

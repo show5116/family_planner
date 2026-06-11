@@ -4256,4 +4256,51 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shopping_complete_snackbar => '장보기가 완료되었습니다.';
+
+  @override
+  String get account_management_title => '계정 관리';
+
+  @override
+  String get account_delete_schedule_title => '계정 삭제 예약';
+
+  @override
+  String get account_delete_schedule_subtitle => '7일 유예 후 모든 데이터 삭제';
+
+  @override
+  String get account_delete_schedule_confirm_title => '계정 삭제를 예약하시겠습니까?';
+
+  @override
+  String get account_delete_schedule_confirm_body =>
+      '7일 후 계정과 모든 데이터가 영구 삭제됩니다.\n유예 기간 중에는 취소할 수 있습니다.';
+
+  @override
+  String account_delete_schedule_success(String date) {
+    return '계정 삭제가 예약되었습니다. $date에 삭제됩니다.';
+  }
+
+  @override
+  String get account_cancel_delete_title => '계정 삭제 예약 취소';
+
+  @override
+  String get account_cancel_delete_subtitle => '예약된 계정 삭제를 취소합니다';
+
+  @override
+  String get account_cancel_delete_confirm_title => '계정 삭제 예약을 취소하시겠습니까?';
+
+  @override
+  String get account_cancel_delete_success => '계정 삭제 예약이 취소되었습니다';
+
+  @override
+  String get account_export_data_title => '내 데이터 내보내기';
+
+  @override
+  String get account_export_data_subtitle => '등록된 이메일로 데이터 사본을 보내드립니다';
+
+  @override
+  String get account_export_data_success => '요청이 완료되었습니다. 이메일을 확인해 주세요.';
+
+  @override
+  String account_action_failed(String error) {
+    return '오류가 발생했습니다: $error';
+  }
 }

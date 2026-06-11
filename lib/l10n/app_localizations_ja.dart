@@ -4248,4 +4248,51 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get shopping_complete_snackbar => 'お買い物が完了しました。';
+
+  @override
+  String get account_management_title => 'アカウント管理';
+
+  @override
+  String get account_delete_schedule_title => 'アカウント削除の予約';
+
+  @override
+  String get account_delete_schedule_subtitle => '7日の猶予期間後にすべてのデータを削除';
+
+  @override
+  String get account_delete_schedule_confirm_title => 'アカウント削除を予約しますか？';
+
+  @override
+  String get account_delete_schedule_confirm_body =>
+      '7日後にアカウントとすべてのデータが完全に削除されます。\n猶予期間中はキャンセルできます。';
+
+  @override
+  String account_delete_schedule_success(String date) {
+    return 'アカウント削除が予約されました。$dateに削除されます。';
+  }
+
+  @override
+  String get account_cancel_delete_title => 'アカウント削除予約のキャンセル';
+
+  @override
+  String get account_cancel_delete_subtitle => '予約されたアカウント削除をキャンセルします';
+
+  @override
+  String get account_cancel_delete_confirm_title => 'アカウント削除予約をキャンセルしますか？';
+
+  @override
+  String get account_cancel_delete_success => 'アカウント削除予約がキャンセルされました';
+
+  @override
+  String get account_export_data_title => 'データのエクスポート';
+
+  @override
+  String get account_export_data_subtitle => '登録済みのメールアドレスにデータのコピーをお送りします';
+
+  @override
+  String get account_export_data_success => 'リクエストが完了しました。メールをご確認ください。';
+
+  @override
+  String account_action_failed(String error) {
+    return 'エラーが発生しました: $error';
+  }
 }

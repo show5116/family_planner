@@ -582,10 +582,201 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                           : Text(l10n.profile_save),
                     ),
                   ),
+
+                  const SizedBox(height: AppSizes.spaceXL),
+                  const Divider(),
+                  const SizedBox(height: AppSizes.spaceM),
+
+                  // 계정 관리 섹션
+                  Text(
+                    l10n.account_management_title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spaceM),
+
+                  // 데이터 내보내기
+                  _buildAccountTile(
+                    context,
+                    icon: Icons.download_outlined,
+                    title: l10n.account_export_data_title,
+                    subtitle: l10n.account_export_data_subtitle,
+                    onTap: _exportData,
+                  ),
+
+                  // 계정 삭제 예약 취소 — scheduledDeleteAt 있을 때만 표시
+                  if (ref.watch(authProvider).scheduledDeleteAt != null) ...[
+                    const SizedBox(height: AppSizes.spaceS),
+                    _buildAccountTile(
+                      context,
+                      icon: Icons.cancel_outlined,
+                      title: l10n.account_cancel_delete_title,
+                      subtitle: l10n.account_cancel_delete_subtitle,
+                      onTap: _cancelDeleteAccount,
+                    ),
+                  ],
+
+                  // 계정 삭제 예약 — scheduledDeleteAt 없을 때만 표시 (이미 예약 중이면 숨김)
+                  if (ref.watch(authProvider).scheduledDeleteAt == null) ...[
+                    const SizedBox(height: AppSizes.spaceS),
+                    _buildAccountTile(
+                      context,
+                      icon: Icons.delete_forever_outlined,
+                      title: l10n.account_delete_schedule_title,
+                      subtitle: l10n.account_delete_schedule_subtitle,
+                      onTap: _scheduleDeleteAccount,
+                      isDestructive: true,
+                    ),
+                  ],
+                  const SizedBox(height: AppSizes.spaceXL),
                 ],
                 ),
               ),
       ),
     );
+  }
+
+  Widget _buildAccountTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    final color = isDestructive ? Theme.of(context).colorScheme.error : null;
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(icon, color: color),
+      title: Text(title, style: TextStyle(color: color)),
+      subtitle: Text(subtitle),
+      trailing: Icon(Icons.chevron_right, color: color),
+      onTap: onTap,
+    );
+  }
+
+  Future<void> _scheduleDeleteAccount() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Theme.of(ctx).colorScheme.error),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.account_delete_schedule_confirm_title)),
+          ],
+        ),
+        content: Text(l10n.account_delete_schedule_confirm_body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+              foregroundColor: Theme.of(ctx).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.account_delete_schedule_title),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final scheduledAt = await ref.read(authProvider.notifier).scheduleDeleteAccount();
+      if (!mounted) return;
+      final dateStr = '${scheduledAt.year}-${scheduledAt.month.toString().padLeft(2, '0')}-${scheduledAt.day.toString().padLeft(2, '0')}';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.account_delete_schedule_success(dateStr))),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.account_action_failed(e.toString())),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _cancelDeleteAccount() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.account_cancel_delete_confirm_title),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.account_cancel_delete_title),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authProvider.notifier).cancelDeleteAccount();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.account_cancel_delete_success),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.account_action_failed(e.toString())),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _exportData() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authProvider.notifier).exportMyData();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.account_export_data_success),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.account_action_failed(e.toString())),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/shared/widgets/responsive_navigation.dart';
 import 'package:family_planner/features/home/presentation/screens/dashboard_tab.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
@@ -49,7 +50,72 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showCoachMark();
       FirebaseMessagingService.handlePendingNavigation();
+      _checkScheduledDeletion();
     });
+  }
+
+  void _checkScheduledDeletion() {
+    final scheduledAt = ref.read(authProvider).scheduledDeleteAt;
+    if (scheduledAt == null || !mounted) return;
+    _showDeletionBanner(scheduledAt);
+  }
+
+  void _showDeletionBanner(DateTime scheduledAt) {
+    final daysLeft = scheduledAt.difference(DateTime.now()).inDays + 1;
+    final dateStr =
+        '${scheduledAt.year}-${scheduledAt.month.toString().padLeft(2, '0')}-${scheduledAt.day.toString().padLeft(2, '0')}';
+
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      MaterialBanner(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        content: Text(
+          '계정이 $dateStr ($daysLeft일 후)에 삭제될 예정입니다.',
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+        leading: const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+        backgroundColor: Colors.orange.shade50,
+        actions: [
+          TextButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+            },
+            child: const Text('닫기'),
+          ),
+          TextButton(
+            onPressed: () async {
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              await _cancelScheduledDeletion();
+            },
+            child: const Text(
+              '삭제 취소',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _cancelScheduledDeletion() async {
+    if (!mounted) return;
+    try {
+      await ref.read(authProvider.notifier).cancelDeleteAccount();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('계정 삭제 예약이 취소되었습니다'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('오류가 발생했습니다: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:family_planner/features/notification/data/repositories/notificat
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_notifications_provider.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
+import 'package:family_planner/features/notification/presentation/widgets/location_permission_card.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_permission_card.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_settings_section.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
@@ -57,6 +58,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
           children: [
             // 알림 권한 상태 카드
             const NotificationPermissionCard(),
+            const SizedBox(height: AppSizes.spaceM),
+
+            // 위치 권한 상태 카드 (날씨 알림용)
+            const LocationPermissionCard(),
             const SizedBox(height: AppSizes.spaceL),
 
             // 알림 설정 섹션
