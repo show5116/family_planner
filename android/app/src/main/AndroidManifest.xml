@@ -82,10 +82,10 @@
         </service>
         -->
 
-        <!-- AdMob App ID (테스트용 — 프로덕션 배포 전 실제 ID로 교체) -->
+        <!-- AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-1069302827856916~8039075027"/>
 
         <!-- Firebase Cloud Messaging 설정 -->
         <meta-data

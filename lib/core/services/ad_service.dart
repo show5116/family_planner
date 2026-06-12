@@ -20,9 +20,9 @@ class _AdUnitIds {
   static const _iosTestRewarded = 'ca-app-pub-3940256099942544/1712485313';
 
   // Android 실제 Unit ID (프로덕션)
-  static const _androidBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _androidInterstitial = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _androidRewarded = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _androidBanner = 'ca-app-pub-1069302827856916/3716686636';
+  static const _androidInterstitial = 'ca-app-pub-1069302827856916/1525637563';
+  static const _androidRewarded = 'ca-app-pub-1069302827856916/7332793167';
 
   // iOS 실제 Unit ID (프로덕션)
   static const _iosBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
@@ -53,8 +53,7 @@ class AdService {
   bool _isInterstitialLoading = false;
   bool _isRewardedLoading = false;
 
-  /// 실제 Unit ID 발급 전까지 항상 테스트 광고 사용
-  bool useTestAds = true;
+  bool useTestAds = false;
 
   /// MobileAds SDK 초기화 (main.dart에서 호출)
   static Future<void> initialize() async {
