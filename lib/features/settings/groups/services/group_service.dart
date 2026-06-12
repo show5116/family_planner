@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/models/group_report.dart';
 import 'package:family_planner/features/settings/groups/models/join_request.dart';
 
 /// 그룹 관리 서비스
@@ -435,6 +436,40 @@ class GroupService {
         data: {'newOwnerId': newOwnerId},
       );
       return response.data as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 그룹원 신고
+  /// POST /groups/:id/members/:userId/report
+  Future<GroupReport> reportMember(
+    String groupId,
+    String userId, {
+    required ReportReason reason,
+    String? detail,
+  }) async {
+    try {
+      final response = await _apiClient.post(
+        '/groups/$groupId/members/$userId/report',
+        data: {
+          'reason': reason.toApiString(),
+          if (detail != null && detail.isNotEmpty) 'detail': detail,
+        },
+      );
+      return GroupReport.fromJson(response.data as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// 내가 신고한 목록 조회
+  /// GET /groups/my-reports
+  Future<List<GroupReport>> getMyReports() async {
+    try {
+      final response = await _apiClient.get('/groups/my-reports');
+      final List<dynamic> data = response.data as List<dynamic>;
+      return data.map((json) => GroupReport.fromJson(json as Map<String, dynamic>)).toList();
     } catch (e) {
       rethrow;
     }

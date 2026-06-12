@@ -4,6 +4,7 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/common_widgets.dart';
+import 'package:family_planner/features/settings/groups/presentation/widgets/report_member_dialog.dart';
 import 'package:family_planner/features/settings/groups/utils/group_utils.dart';
 
 /// 멤버 카드 위젯
@@ -43,8 +44,11 @@ class MemberCard extends StatelessWidget {
     final bool isCurrentUserOwner = group.myRole?.name == 'OWNER';
     final bool canTransfer = isCurrentUserOwner && !isCurrentUser && onTransferOwnership != null;
 
-    // 메뉴 표시 조건: MANAGE_MEMBER 권한이 있거나 그룹장 양도가 가능한 경우
-    final bool showMenu = canManage || canTransfer;
+    // 본인이 아닌 경우 신고 가능
+    final bool canReport = !isCurrentUser;
+
+    // 메뉴 표시 조건: MANAGE_MEMBER 권한이 있거나 그룹장 양도가 가능하거나 신고 가능한 경우
+    final bool showMenu = canManage || canTransfer || canReport;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -127,6 +131,15 @@ class MemberCard extends StatelessWidget {
                     onChangeRole();
                   } else if (value == 'transferOwnership') {
                     onTransferOwnership?.call();
+                  } else if (value == 'report') {
+                    showDialog<void>(
+                      context: context,
+                      builder: (_) => ReportMemberDialog(
+                        groupId: group.id,
+                        userId: member.userId,
+                        userName: member.user?.name ?? 'Unknown',
+                      ),
+                    );
                   }
                 },
                 itemBuilder: (context) => [
@@ -144,15 +157,39 @@ class MemberCard extends StatelessWidget {
                     ),
                   // 역할 변경 및 삭제 옵션 (MANAGE_MEMBER 권한 있는 경우)
                   if (canManage) ...[
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'changeRole',
-                      child: Text(l10n.group_role),
+                      child: Row(
+                        children: [
+                          Icon(Icons.manage_accounts_outlined, size: 20),
+                          SizedBox(width: 8),
+                          Text('역할 변경'),
+                        ],
+                      ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'remove',
-                      child: Text(l10n.group_delete),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_remove_outlined, size: 20, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text('멤버 탈퇴', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
                     ),
                   ],
+                  // 신고 옵션 (본인 제외 항상 표시)
+                  if (canReport)
+                    const PopupMenuItem(
+                      value: 'report',
+                      child: Row(
+                        children: [
+                          Icon(Icons.flag_outlined, size: 20, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text('신고하기', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
                 ],
               )
             : null,

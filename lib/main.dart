@@ -114,7 +114,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       // checkAuthStatus 완료 후 user 정보가 확정된 시점에 광고 설정 초기화
       AdService.instance.useTestAds = ref.read(useTestAdsProvider);
-      ref.listen(useTestAdsProvider, (_, useTest) {
+      ref.listenManual(useTestAdsProvider, (_, useTest) {
         AdService.instance.useTestAds = useTest;
       });
 

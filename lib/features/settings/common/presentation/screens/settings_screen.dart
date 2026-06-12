@@ -162,6 +162,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(),
 
+          // 신고 내역 섹션 (일반 유저)
+          _buildSectionHeader(context, '신고'),
+          _buildSettingTile(
+            context,
+            icon: Icons.flag_outlined,
+            title: '내 신고 내역',
+            subtitle: '내가 신고한 목록을 확인합니다',
+            onTap: () => context.push(AppRoutes.myGroupReports),
+          ),
+          const Divider(),
+
           // 운영자 전용 섹션 (관리자만 표시)
           if (isAdmin) ...[
             _buildSectionHeader(context, l10n.settings_adminMenu),
@@ -191,6 +202,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onTap: () {
                 context.push(AppRoutes.adminUserManagement);
               },
+            ),
+            _buildSettingTile(
+              context,
+              icon: Icons.report_outlined,
+              title: '신고 관리',
+              subtitle: '그룹원 신고 접수 및 처리',
+              onTap: () => context.push(AppRoutes.adminGroupReports),
             ),
             const Divider(),
           ],
