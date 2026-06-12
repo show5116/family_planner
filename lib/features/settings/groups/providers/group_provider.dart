@@ -4,6 +4,7 @@ import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/settings/groups/services/group_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/models/group_report.dart';
 import 'package:family_planner/features/settings/groups/models/join_request.dart';
 
 /// GroupService Provider
@@ -401,10 +402,37 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       rethrow;
     }
   }
+
+  /// 그룹원 신고
+  Future<GroupReport> reportMember(
+    String groupId,
+    String userId, {
+    required ReportReason reason,
+    String? detail,
+  }) async {
+    try {
+      final report = await _groupService.reportMember(
+        groupId,
+        userId,
+        reason: reason,
+        detail: detail,
+      );
+      _ref.invalidate(myReportsProvider);
+      return report;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 /// 그룹 관리 NotifierProvider
 final groupNotifierProvider = StateNotifierProvider<GroupNotifier, AsyncValue<List<Group>>>((ref) {
   final groupService = ref.watch(groupServiceProvider);
   return GroupNotifier(groupService, ref);
+});
+
+/// 내가 신고한 목록 Provider
+final myReportsProvider = FutureProvider<List<GroupReport>>((ref) async {
+  final groupService = ref.watch(groupServiceProvider);
+  return await groupService.getMyReports();
 });

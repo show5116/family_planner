@@ -6,6 +6,8 @@ import 'package:family_planner/features/settings/roles/presentation/screens/comm
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
 import 'package:family_planner/features/subscription/presentation/screens/admin_user_list_screen.dart';
 import 'package:family_planner/features/subscription/presentation/screens/admin_user_detail_screen.dart';
+import 'package:family_planner/features/settings/groups/presentation/screens/admin_report_list_screen.dart';
+import 'package:family_planner/features/settings/groups/presentation/screens/my_reports_screen.dart';
 
 /// 관리자 전용 라우트 목록
 ///
@@ -44,6 +46,16 @@ List<RouteBase> getAdminRoutes() {
         final user = state.extra as AdminUserDto;
         return AdminUserDetailScreen(user: user);
       },
+    ),
+    GoRoute(
+      path: AppRoutes.adminGroupReports,
+      name: 'adminGroupReports',
+      builder: (context, state) => const AdminReportListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.myGroupReports,
+      name: 'myGroupReports',
+      builder: (context, state) => const MyReportsScreen(),
     ),
   ];
 }
