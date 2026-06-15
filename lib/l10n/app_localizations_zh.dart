@@ -4272,4 +4272,54 @@ class AppLocalizationsZh extends AppLocalizations {
   String account_action_failed(String error) {
     return '发生错误：$error';
   }
+
+  @override
+  String get subscription_free_label => '免费计划';
+
+  @override
+  String get subscription_free_sublabel => '将显示广告';
+
+  @override
+  String get subscription_trial_label => '2周免费体验中';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return '$days天后切换为免费计划';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => '今天体验结束';
+
+  @override
+  String get subscription_ad_free_label => '去除广告';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return '至 $date';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => '正在无广告使用中';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return '至 $date';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => '正在使用所有功能';
+
+  @override
+  String get dashboard_trial_banner_title => '正在享受2周无广告免费体验';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return '$days天后切换为普通计划';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => '今天体验结束';
 }

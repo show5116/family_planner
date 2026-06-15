@@ -127,6 +127,8 @@ class DashboardTab extends ConsumerWidget {
             ),
           ),
         ),
+        // 2주 무료 체험 배너
+        const SliverToBoxAdapter(child: _TrialBannerCard()),
         // 대시보드 그리드
         SliverToBoxAdapter(
           child: Center(
@@ -308,6 +310,74 @@ class _DashboardGrid extends ConsumerWidget {
       spacing: spacing,
       runSpacing: spacing,
       children: activeWidgets,
+    );
+  }
+}
+
+/// 2주 무료 체험 배너 (체험 기간 중에만 표시)
+class _TrialBannerCard extends ConsumerWidget {
+  const _TrialBannerCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscription = ref.watch(subscriptionProvider).valueOrNull;
+    if (subscription == null || !subscription.isTrial) return const SizedBox.shrink();
+
+    final l10n = AppLocalizations.of(context)!;
+    final daysLeft = subscription.daysLeft;
+    final colorScheme = Theme.of(context).colorScheme;
+    final horizontalPadding = ResponsivePadding.getHorizontalPadding(context);
+    final maxWidth = Responsive.isDesktop(context) ? 1200.0 : double.infinity;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPadding,
+            0,
+            horizontalPadding,
+            AppSizes.spaceM,
+          ),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceM,
+              vertical: AppSizes.spaceS,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.card_giftcard_outlined, color: colorScheme.primary),
+                const SizedBox(width: AppSizes.spaceS),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.dashboard_trial_banner_title,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Text(
+                        daysLeft > 0 ? l10n.dashboard_trial_banner_sublabel_days(daysLeft) : l10n.dashboard_trial_banner_sublabel_today,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onPrimaryContainer,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

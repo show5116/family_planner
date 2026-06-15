@@ -4303,4 +4303,54 @@ class AppLocalizationsKo extends AppLocalizations {
   String account_action_failed(String error) {
     return '오류가 발생했습니다: $error';
   }
+
+  @override
+  String get subscription_free_label => '무료 플랜';
+
+  @override
+  String get subscription_free_sublabel => '광고가 표시됩니다';
+
+  @override
+  String get subscription_trial_label => '2주 무료 체험 중';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return '$days일 후 무료 플랜으로 전환됩니다';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => '오늘 체험이 종료됩니다';
+
+  @override
+  String get subscription_ad_free_label => '광고 제거';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return '$date 까지';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => '광고 없이 이용 중';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return '$date 까지';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => '모든 기능 이용 중';
+
+  @override
+  String get dashboard_trial_banner_title => '광고 없는 2주 무료 체험 중';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return '$days일 후 일반 플랜으로 전환됩니다';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => '오늘 체험이 종료됩니다';
 }

@@ -4295,4 +4295,54 @@ class AppLocalizationsJa extends AppLocalizations {
   String account_action_failed(String error) {
     return 'エラーが発生しました: $error';
   }
+
+  @override
+  String get subscription_free_label => '無料プラン';
+
+  @override
+  String get subscription_free_sublabel => '広告が表示されます';
+
+  @override
+  String get subscription_trial_label => '2週間無料体験中';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return '$days日後に無料プランに切り替わります';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => '本日で体験が終了します';
+
+  @override
+  String get subscription_ad_free_label => '広告非表示';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return '$date まで';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => '広告なしでご利用中';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return '$date まで';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => 'すべての機能をご利用中';
+
+  @override
+  String get dashboard_trial_banner_title => '広告なし2週間無料体験中';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return '$days日後に通常プランに切り替わります';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => '本日で体験が終了します';
 }

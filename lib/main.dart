@@ -111,7 +111,6 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await ref.read(authProvider.notifier).checkAuthStatus();
-      ref.read(subscriptionProvider.notifier).refresh();
 
       // checkAuthStatus 완료 후 user 정보가 확정된 시점에 광고 설정 초기화
       AdService.instance.useTestAds = ref.read(useTestAdsProvider);

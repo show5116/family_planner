@@ -4397,4 +4397,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String account_action_failed(String error) {
     return 'An error occurred: $error';
   }
+
+  @override
+  String get subscription_free_label => 'Free Plan';
+
+  @override
+  String get subscription_free_sublabel => 'Ads are displayed';
+
+  @override
+  String get subscription_trial_label => '2-Week Free Trial';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return 'Switches to free plan in $days days';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => 'Trial ends today';
+
+  @override
+  String get subscription_ad_free_label => 'Ad-Free';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return 'Until $date';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => 'Enjoying without ads';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return 'Until $date';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => 'Enjoying all features';
+
+  @override
+  String get dashboard_trial_banner_title => 'Enjoying 2-Week Ad-Free Trial';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return 'Switches to regular plan in $days days';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => 'Trial ends today';
 }

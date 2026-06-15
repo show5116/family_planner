@@ -10,6 +10,9 @@ import 'package:family_planner/features/subscription/data/repositories/subscript
 class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
   @override
   Future<SubscriptionModel> build() async {
+    // isAuthenticated만 select해서 user 객체 변경에 의한 불필요한 재빌드 방지
+    final isAuthenticated = ref.watch(authProvider.select((s) => s.isAuthenticated));
+    if (isAuthenticated != true) return SubscriptionModel.defaultFree();
     return _fetchFromServer();
   }
 

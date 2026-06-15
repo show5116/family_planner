@@ -8289,6 +8289,90 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'오류가 발생했습니다: {error}'**
   String account_action_failed(String error);
+
+  /// 무료 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'무료 플랜'**
+  String get subscription_free_label;
+
+  /// 무료 플랜 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'광고가 표시됩니다'**
+  String get subscription_free_sublabel;
+
+  /// 체험 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'2주 무료 체험 중'**
+  String get subscription_trial_label;
+
+  /// 체험 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 후 무료 플랜으로 전환됩니다'**
+  String subscription_trial_sublabel_days(int days);
+
+  /// 체험 당일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 체험이 종료됩니다'**
+  String get subscription_trial_sublabel_today;
+
+  /// 광고 제거 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 제거'**
+  String get subscription_ad_free_label;
+
+  /// 광고 제거 만료일
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 까지'**
+  String subscription_ad_free_sublabel_expires(String date);
+
+  /// 광고 제거 무기한 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 없이 이용 중'**
+  String get subscription_ad_free_sublabel_active;
+
+  /// 프리미엄 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'Premium'**
+  String get subscription_premium_label;
+
+  /// 프리미엄 만료일
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 까지'**
+  String subscription_premium_sublabel_expires(String date);
+
+  /// 프리미엄 무기한 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 기능 이용 중'**
+  String get subscription_premium_sublabel_active;
+
+  /// 대시보드 체험 배너 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 없는 2주 무료 체험 중'**
+  String get dashboard_trial_banner_title;
+
+  /// 대시보드 체험 배너 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 후 일반 플랜으로 전환됩니다'**
+  String dashboard_trial_banner_sublabel_days(int days);
+
+  /// 대시보드 체험 배너 당일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 체험이 종료됩니다'**
+  String get dashboard_trial_banner_sublabel_today;
 }
 
 class _AppLocalizationsDelegate
