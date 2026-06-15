@@ -93,10 +93,11 @@ class MyApp extends ConsumerStatefulWidget {
   ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     ApiClient.instance.onError = (String message) {
       scaffoldMessengerKey.currentState?.showSnackBar(
@@ -125,6 +126,21 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
       _updateUserLocation();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      AdService.instance.onAppPaused();
+    } else if (state == AppLifecycleState.resumed) {
+      AdService.instance.onAppResumed();
+    }
   }
 
   /// GPS 위치를 서버에 저장 (날씨 알림 크론잡에서 사용)

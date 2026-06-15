@@ -55,6 +55,37 @@ class AdService {
 
   bool useTestAds = false;
 
+  // 세션당 최대 노출 횟수
+  static const _maxPerSession = 3;
+  // 광고 사이 최소 간격
+  static const _minInterval = Duration(minutes: 3);
+  // 백그라운드 N분 이상이면 새 세션으로 간주
+  static const _sessionResetThreshold = Duration(minutes: 30);
+
+  int _sessionCount = 0;
+  DateTime? _lastInterstitialShownAt;
+  DateTime? _backgroundedAt;
+
+  /// 앱이 백그라운드로 진입할 때 호출 (main.dart의 WidgetsBindingObserver에서)
+  void onAppPaused() {
+    _backgroundedAt = DateTime.now();
+  }
+
+  /// 앱이 포그라운드로 복귀할 때 호출
+  void onAppResumed() {
+    if (_backgroundedAt != null &&
+        DateTime.now().difference(_backgroundedAt!) >= _sessionResetThreshold) {
+      _sessionCount = 0;
+    }
+    _backgroundedAt = null;
+  }
+
+  bool get _canShowInterstitial {
+    if (_sessionCount >= _maxPerSession) return false;
+    if (_lastInterstitialShownAt == null) return true;
+    return DateTime.now().difference(_lastInterstitialShownAt!) >= _minInterval;
+  }
+
   /// MobileAds SDK 초기화 (main.dart에서 호출)
   static Future<void> initialize() async {
     if (kIsWeb) return;
@@ -100,9 +131,9 @@ class AdService {
       return;
     }
 
-    if (_interstitialAd == null) {
+    if (!_canShowInterstitial || _interstitialAd == null) {
       onDismissed?.call();
-      preloadInterstitial();
+      if (_interstitialAd == null) preloadInterstitial();
       return;
     }
 
@@ -110,6 +141,8 @@ class AdService {
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
         _interstitialAd = null;
+        _lastInterstitialShownAt = DateTime.now();
+        _sessionCount++;
         onDismissed?.call();
         preloadInterstitial();
       },
