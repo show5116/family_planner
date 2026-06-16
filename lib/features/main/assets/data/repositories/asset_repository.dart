@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
@@ -133,7 +134,9 @@ class AssetRepository {
         '/assets/accounts/$accountId/records',
         data: dto.toJson(),
       );
-      return AssetRecordModel.fromJson(response.data as Map<String, dynamic>);
+      final record = AssetRecordModel.fromJson(response.data as Map<String, dynamic>);
+      await AnalyticsService.instance.logAssetRecordCreate();
+      return record;
     } on DioException catch (e) {
       if (e.response?.statusCode == 409) throw DuplicateRecordDateException();
       if (e.response?.statusCode == 404) throw Exception('계좌를 찾을 수 없습니다');

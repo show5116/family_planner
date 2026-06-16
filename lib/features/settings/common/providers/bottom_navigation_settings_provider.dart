@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 
 /// 하단 네비게이션 아이템 모델
 class NavigationItem {
@@ -191,7 +192,6 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
 
       if (settingsJson != null && settingsJson.isNotEmpty) {
         final slots = settingsJson.split(',');
-        // 유효성 검사: 3개의 슬롯이 모두 사용 가능한 메뉴인지 확인
         if (slots.length == 3 &&
             slots.every((id) => _availableItems.containsKey(id))) {
           state = state.copyWith(middleSlots: slots);
@@ -200,6 +200,12 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
     } catch (e) {
       debugPrint('하단 네비게이션 설정 불러오기 실패: $e');
     }
+
+    // 앱 실행 시 현재 탭 구성 스냅샷 전송 → 유저들이 실제로 유지 중인 탭 파악
+    await AnalyticsService.instance.logEvent(
+      'nav_slots_snapshot',
+      parameters: {'slots': state.middleSlots.join(',')},
+    );
   }
 
   /// 설정 저장하기
@@ -226,6 +232,10 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
 
     state = state.copyWith(middleSlots: slots);
     await _saveSettings();
+    await AnalyticsService.instance.logEvent(
+      'nav_reordered',
+      parameters: {'slots': slots.join(',')},
+    );
   }
 
   /// 특정 슬롯의 메뉴 변경
@@ -246,16 +256,23 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
     final existingIndex = slots.indexOf(newMenuId);
 
     if (existingIndex != -1 && existingIndex != slotIndex) {
-      // 기존 슬롯과 새 슬롯의 메뉴를 교체
       slots[existingIndex] = oldMenuId;
       slots[slotIndex] = newMenuId;
     } else {
-      // 단순 변경
       slots[slotIndex] = newMenuId;
     }
 
     state = state.copyWith(middleSlots: slots);
     await _saveSettings();
+    await AnalyticsService.instance.logEvent(
+      'nav_slot_changed',
+      parameters: {
+        'slot_index': slotIndex,
+        'old_menu': oldMenuId,
+        'new_menu': newMenuId,
+        'slots': slots.join(','),
+      },
+    );
   }
 
   /// 설정 초기화

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 
 /// 적립금 Repository Provider
@@ -74,7 +75,9 @@ class SavingsRepository {
         'depositDay': depositDay,
         'includeInAssets': includeInAssets,
       });
-      return SavingsGoalModel.fromJson(response.data as Map<String, dynamic>);
+      final goal = SavingsGoalModel.fromJson(response.data as Map<String, dynamic>);
+      await AnalyticsService.instance.logSavingsCreate();
+      return goal;
     } on DioException catch (e) {
       debugPrint('❌ [SavingsRepository] 적립 목표 생성 실패: ${e.message}');
       throw Exception('적립 목표 생성 실패: ${e.message}');

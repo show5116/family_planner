@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
 import 'package:family_planner/features/memo/data/dto/memo_dto.dart';
 
@@ -90,7 +91,9 @@ class MemoRepository {
   Future<MemoModel> createMemo(CreateMemoDto dto) async {
     try {
       final response = await _dio.post('/memos', data: dto.toJson());
-      return MemoModel.fromJson(response.data);
+      final memo = MemoModel.fromJson(response.data);
+      await AnalyticsService.instance.logMemoCreate();
+      return memo;
     } on DioException catch (e) {
       debugPrint('❌ [MemoRepository] 메모 생성 실패: ${e.message}');
       throw Exception('메모 작성 실패: ${e.message}');

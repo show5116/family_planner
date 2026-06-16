@@ -22,6 +22,7 @@ import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/onboarding/providers/onboarding_provider.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 
 /// 인증 상태
 class AuthState {
@@ -125,6 +126,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final userInfo = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: userInfo);
 
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('email');
+
       // 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
     } catch (e) {
@@ -144,6 +149,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _authService.register(email: email, password: password, name: name);
 
+      await AnalyticsService.instance.logSignUp('email');
       state = const AuthState();
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -189,6 +195,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _authService.logout();
     } catch (_) {}
+
+    await AnalyticsService.instance.logLogout();
+    await AnalyticsService.instance.clearUserId();
 
     // 성공/실패 무관하게 반드시 인증 상태 초기화
     state = const AuthState(isAuthenticated: false);
@@ -305,6 +314,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (user != null) {
         state = state.copyWith(isAuthenticated: true, user: user);
 
+        final uid = AuthState(isAuthenticated: true, user: user).userId;
+        if (uid != null) await AnalyticsService.instance.setUserId(uid);
+
         // 자동 로그인 성공 시 FCM 토큰 등록
         await _registerFcmToken();
       } else {
@@ -358,6 +370,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final userInfo = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: userInfo);
 
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('google');
+
       // 구글 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
     } catch (e) {
@@ -394,6 +410,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final userInfo = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: userInfo);
 
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('kakao');
+
       // 카카오 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
     } catch (e) {
@@ -423,6 +443,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       // pendingTempToken을 클리어하고 로그인 상태로 전환 → redirect가 홈으로 이동
       state = AuthState(isAuthenticated: true, user: userInfo);
+
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logSignUp('social');
 
       await _registerFcmToken();
     } catch (e) {

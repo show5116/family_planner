@@ -25,6 +25,7 @@ import 'package:family_planner/features/notification/data/services/local_notific
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/services/ad_service.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'firebase_options.dart';
 
@@ -54,6 +55,7 @@ void main() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await FirebaseMessagingService.initialize();
     await LocalNotificationService.initialize();
+    await AnalyticsService.instance.analytics.setAnalyticsCollectionEnabled(true);
   } catch (e) {
     debugPrint('❌ Firebase 초기화 실패: $e');
   }

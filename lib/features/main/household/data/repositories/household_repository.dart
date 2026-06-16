@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/merchant_model.dart';
@@ -135,7 +136,10 @@ class HouseholdRepository {
   Future<ExpenseModel> createExpense(CreateExpenseDto dto) async {
     try {
       final response = await _dio.post('/household/expenses', data: dto.toJson());
-      return ExpenseModel.fromJson(response.data as Map<String, dynamic>);
+      final expense = ExpenseModel.fromJson(response.data as Map<String, dynamic>);
+      final type = dto.toJson()['type'] as String? ?? 'EXPENSE';
+      await AnalyticsService.instance.logHouseholdEntryCreate(type.toLowerCase());
+      return expense;
     } on DioException catch (e) {
       debugPrint('❌ [HouseholdRepository] 지출 등록 실패: ${e.message}');
       throw Exception('지출 등록 실패: ${e.message}');

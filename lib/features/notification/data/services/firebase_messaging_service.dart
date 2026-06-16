@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:family_planner/core/routes/app_router.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/firebase_options.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
 import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
@@ -109,7 +110,8 @@ class FirebaseMessagingService {
     final context = AppRouter.navigatorKey.currentContext;
     if (context == null) return;
 
-    final category = data['category'] as String?;
+    final category = data['category'] as String? ?? 'unknown';
+    AnalyticsService.instance.logNotificationOpen(category);
     NotificationNavigationService.navigateByData(context, category, data);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/votes/data/models/vote_model.dart';
 
 // ─── DTOs ─────────────────────────────────────────────────────────────────────
@@ -102,7 +103,9 @@ class VoteRepository {
         '/votes/$groupId',
         data: dto.toJson(),
       );
-      return VoteModel.fromJson(response.data as Map<String, dynamic>);
+      final vote = VoteModel.fromJson(response.data as Map<String, dynamic>);
+      await AnalyticsService.instance.logVoteCreate();
+      return vote;
     } on DioException catch (e) {
       debugPrint('❌ [VoteRepository] 생성 실패: ${e.message}');
       throw Exception('투표 생성 실패: ${e.message}');

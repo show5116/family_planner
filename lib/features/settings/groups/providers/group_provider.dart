@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/settings/groups/services/group_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
@@ -98,6 +99,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       _ref.invalidate(myGroupsProvider);
       await loadGroups();
 
+      await AnalyticsService.instance.logGroupCreate();
       return newGroup;
     } catch (e) {
       rethrow;
@@ -163,6 +165,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       // 그룹 목록 새로고침 (이메일 초대인 경우 즉시 가입, 일반 요청인 경우 대기)
       await loadGroups();
 
+      await AnalyticsService.instance.logGroupJoinRequest();
       return result;
     } catch (e) {
       rethrow;
@@ -327,6 +330,7 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
       // 멤버 목록 및 가입 요청 목록 새로고침
       _ref.invalidate(groupMembersProvider(groupId));
       _ref.invalidate(groupJoinRequestsProvider(groupId));
+      await AnalyticsService.instance.logGroupJoinApproved();
     } catch (e) {
       rethrow;
     }
