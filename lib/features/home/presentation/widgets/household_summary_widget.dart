@@ -37,11 +37,13 @@ class HouseholdSummaryWidget extends ConsumerStatefulWidget {
 class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget> {
   // null = 초기값(첫 번째 그룹 자동 선택), _kPersonal = 개인, 그 외 = 그룹 ID
   String? _selectedGroupId;
+  late HouseholdWidgetViewMode _viewMode;
 
   @override
   void initState() {
     super.initState();
     _selectedGroupId = widget.initialSelectedGroupId;
+    _viewMode = widget.viewMode;
   }
 
   @override
@@ -49,6 +51,9 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
     super.didUpdateWidget(oldWidget);
     if (widget.initialSelectedGroupId != oldWidget.initialSelectedGroupId) {
       _selectedGroupId = widget.initialSelectedGroupId;
+    }
+    if (widget.viewMode != oldWidget.viewMode) {
+      _viewMode = widget.viewMode;
     }
   }
 
@@ -59,7 +64,10 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
     final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
     if (current == null) return;
     await ref.read(dashboardWidgetSettingsProvider.notifier).save(
-          current.copyWith(householdSelectedGroupId: _selectedGroupId),
+          current.copyWith(
+            householdSelectedGroupId: _selectedGroupId,
+            householdViewMode: _viewMode,
+          ),
         );
   }
 
@@ -76,8 +84,12 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
       builder: (context) => _HouseholdGroupPickerSheet(
         groups: groups,
         selectedGroupId: _selectedGroupId,
-        onApply: (groupId) {
-          setState(() => _selectedGroupId = groupId);
+        viewMode: _viewMode,
+        onApply: (groupId, viewMode) {
+          setState(() {
+            _selectedGroupId = groupId;
+            _viewMode = viewMode;
+          });
           _saveFilter();
           Navigator.pop(context);
         },
@@ -282,7 +294,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
           ),
           ],
           // budget 모드: 전체 예산 소진율 바 (입금 없을 때만)
-          if (!stats.hasIncome && widget.viewMode == HouseholdWidgetViewMode.budget && hasBudget) ...[
+          if (!stats.hasIncome && _viewMode == HouseholdWidgetViewMode.budget && hasBudget) ...[
             const SizedBox(height: AppSizes.spaceS),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -319,7 +331,7 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
             ),
           ],
           // category 모드: 카테고리별 지출 + 예산 소진율
-          if (widget.viewMode == HouseholdWidgetViewMode.category &&
+          if (_viewMode == HouseholdWidgetViewMode.category &&
               stats.categories.isNotEmpty) ...[
             const SizedBox(height: AppSizes.spaceM),
             const Divider(),
@@ -336,12 +348,14 @@ class _HouseholdGroupPickerSheet extends StatefulWidget {
   const _HouseholdGroupPickerSheet({
     required this.groups,
     required this.selectedGroupId,
+    required this.viewMode,
     required this.onApply,
   });
 
   final List<Group> groups;
   final String? selectedGroupId;
-  final void Function(String groupId) onApply;
+  final HouseholdWidgetViewMode viewMode;
+  final void Function(String groupId, HouseholdWidgetViewMode viewMode) onApply;
 
   @override
   State<_HouseholdGroupPickerSheet> createState() => _HouseholdGroupPickerSheetState();
@@ -349,6 +363,7 @@ class _HouseholdGroupPickerSheet extends StatefulWidget {
 
 class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> {
   late String _selectedGroupId;
+  late HouseholdWidgetViewMode _viewMode;
 
   @override
   void initState() {
@@ -356,10 +371,12 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
     // null(초기값)이면 첫 번째 그룹으로 기본 선택
     _selectedGroupId = widget.selectedGroupId ??
         (widget.groups.isNotEmpty ? widget.groups.first.id : _kPersonal);
+    _viewMode = widget.viewMode;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.of(context);
     return Padding(
       padding: EdgeInsets.only(bottom: mq.viewInsets.bottom + mq.padding.bottom),
@@ -382,8 +399,42 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
             padding: const EdgeInsets.fromLTRB(
               AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
             ),
-            child: Text(AppLocalizations.of(context)!.householdWidget_filterTitle, style: Theme.of(context).textTheme.titleLarge),
+            child: Text(l10n.householdWidget_filterTitle, style: Theme.of(context).textTheme.titleLarge),
           ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceL,
+              vertical: AppSizes.spaceS,
+            ),
+            child: Text(
+              '보기 모드',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceL),
+            child: SegmentedButton<HouseholdWidgetViewMode>(
+              segments: [
+                ButtonSegment(
+                  value: HouseholdWidgetViewMode.budget,
+                  label: Text(l10n.widgetSettings_viewBudget),
+                  icon: const Icon(Icons.account_balance_wallet_outlined),
+                ),
+                ButtonSegment(
+                  value: HouseholdWidgetViewMode.category,
+                  label: Text(l10n.widgetSettings_viewCategory),
+                  icon: const Icon(Icons.bar_chart),
+                ),
+              ],
+              selected: {_viewMode},
+              onSelectionChanged: (selected) =>
+                  setState(() => _viewMode = selected.first),
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
           const Divider(),
           RadioGroup<String>(
             groupValue: _selectedGroupId,
@@ -392,8 +443,8 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
               children: [
                 // 개인 옵션
                 RadioListTile<String>(
-                  title: Text(AppLocalizations.of(context)!.householdWidget_filterPersonal),
-                  subtitle: Text(AppLocalizations.of(context)!.householdWidget_filterPersonalSub),
+                  title: Text(l10n.householdWidget_filterPersonal),
+                  subtitle: Text(l10n.householdWidget_filterPersonalSub),
                   value: _kPersonal,
                 ),
                 if (widget.groups.isNotEmpty) const Divider(height: 1),
@@ -413,8 +464,8 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
             child: SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () => widget.onApply(_selectedGroupId),
-                child: Text(AppLocalizations.of(context)!.householdWidget_applyButton),
+                onPressed: () => widget.onApply(_selectedGroupId, _viewMode),
+                child: Text(l10n.householdWidget_applyButton),
               ),
             ),
           ),

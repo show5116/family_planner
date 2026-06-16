@@ -60,22 +60,6 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
     }
   }
 
-  /// 일정 뷰 모드 변경
-  void _changeScheduleViewMode(ScheduleViewMode mode) {
-    setState(() {
-      _settings = _settings.copyWith(scheduleViewMode: mode);
-    });
-    _saveSettings();
-  }
-
-  /// 할일 뷰 모드 변경
-  void _changeTodoViewMode(ScheduleViewMode mode) {
-    setState(() {
-      _settings = _settings.copyWith(todoViewMode: mode);
-    });
-    _saveSettings();
-  }
-
   /// 위젯 표시/숨김 토글
   void _toggleWidget(String widgetName, bool value) {
     setState(() {
@@ -329,10 +313,6 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
     required String description,
     required bool enabled,
   }) {
-    final isSchedule = widgetName == 'todaySchedule';
-    final isTodo = widgetName == 'todoSummary';
-    final isHousehold = widgetName == 'householdSummary';
-
     return Card(
       key: key,
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -400,61 +380,6 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
                 ),
               ],
             ),
-            // 일정 위젯 전용: 기간 선택 SegmentedButton
-            if (isSchedule && enabled) ...[
-              const SizedBox(height: AppSizes.spaceS),
-              SegmentedButton<ScheduleViewMode>(
-                segments: [
-                  ButtonSegment(value: ScheduleViewMode.today, label: Text(AppLocalizations.of(context)!.widgetSettings_viewToday)),
-                  ButtonSegment(value: ScheduleViewMode.week, label: Text(AppLocalizations.of(context)!.widgetSettings_viewWeek)),
-                  ButtonSegment(value: ScheduleViewMode.month, label: Text(AppLocalizations.of(context)!.widgetSettings_viewMonth)),
-                ],
-                selected: {_settings.scheduleViewMode},
-                onSelectionChanged: (selected) =>
-                    _changeScheduleViewMode(selected.first),
-              ),
-            ],
-            // 할일 위젯 전용: 기간 선택 SegmentedButton
-            if (isTodo && enabled) ...[
-              const SizedBox(height: AppSizes.spaceS),
-              SegmentedButton<ScheduleViewMode>(
-                segments: [
-                  ButtonSegment(value: ScheduleViewMode.today, label: Text(AppLocalizations.of(context)!.widgetSettings_viewToday)),
-                  ButtonSegment(value: ScheduleViewMode.week, label: Text(AppLocalizations.of(context)!.widgetSettings_viewWeek)),
-                  ButtonSegment(value: ScheduleViewMode.month, label: Text(AppLocalizations.of(context)!.widgetSettings_viewMonth)),
-                ],
-                selected: {_settings.todoViewMode},
-                onSelectionChanged: (selected) =>
-                    _changeTodoViewMode(selected.first),
-              ),
-            ],
-            // 가계관리 위젯 전용: 보기 모드 선택
-            if (isHousehold && enabled) ...[
-              const SizedBox(height: AppSizes.spaceS),
-              SegmentedButton<HouseholdWidgetViewMode>(
-                segments: [
-                  ButtonSegment(
-                    value: HouseholdWidgetViewMode.budget,
-                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewBudget),
-                    icon: const Icon(Icons.account_balance_wallet_outlined),
-                  ),
-                  ButtonSegment(
-                    value: HouseholdWidgetViewMode.category,
-                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewCategory),
-                    icon: const Icon(Icons.bar_chart),
-                  ),
-                ],
-                selected: {_settings.householdViewMode},
-                onSelectionChanged: (selected) {
-                  setState(() {
-                    _settings = _settings.copyWith(
-                      householdViewMode: selected.first,
-                    );
-                  });
-                  _saveSettings();
-                },
-              ),
-            ],
           ],
         ),
       ),

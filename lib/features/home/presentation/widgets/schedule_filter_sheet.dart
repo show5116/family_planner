@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/models/dashboard_widget_settings.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -12,12 +13,14 @@ class ScheduleFilterSheet extends StatefulWidget {
     required this.selectedGroupIds,
     required this.includePersonal,
     required this.onApply,
+    this.viewMode,
   });
 
   final List<Group> groups;
   final List<String>? selectedGroupIds;
   final bool includePersonal;
-  final void Function(List<String>? selectedGroupIds, bool includePersonal) onApply;
+  final ScheduleViewMode? viewMode;
+  final void Function(List<String>? selectedGroupIds, bool includePersonal, ScheduleViewMode? viewMode) onApply;
 
   @override
   State<ScheduleFilterSheet> createState() => _ScheduleFilterSheetState();
@@ -26,6 +29,7 @@ class ScheduleFilterSheet extends StatefulWidget {
 class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
   late List<String>? _selectedGroupIds;
   late bool _includePersonal;
+  late ScheduleViewMode? _viewMode;
 
   @override
   void initState() {
@@ -34,6 +38,7 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
         ? null
         : List<String>.from(widget.selectedGroupIds!);
     _includePersonal = widget.includePersonal;
+    _viewMode = widget.viewMode;
   }
 
   bool _isAllGroups() => _selectedGroupIds == null;
@@ -104,6 +109,44 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
             child: Text('필터', style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
+          if (_viewMode != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceL,
+                vertical: AppSizes.spaceS,
+              ),
+              child: Text(
+                '기간',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceL),
+              child: SegmentedButton<ScheduleViewMode>(
+                segments: [
+                  ButtonSegment(
+                    value: ScheduleViewMode.today,
+                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewToday),
+                  ),
+                  ButtonSegment(
+                    value: ScheduleViewMode.week,
+                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewWeek),
+                  ),
+                  ButtonSegment(
+                    value: ScheduleViewMode.month,
+                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewMonth),
+                  ),
+                ],
+                selected: {_viewMode!},
+                onSelectionChanged: (selected) =>
+                    setState(() => _viewMode = selected.first),
+              ),
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            const Divider(),
+          ],
           SwitchListTile(
             title: const Text('개인 일정'),
             subtitle: const Text('내 개인 일정 포함'),
@@ -152,7 +195,7 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () =>
-                    widget.onApply(_selectedGroupIds, _includePersonal),
+                    widget.onApply(_selectedGroupIds, _includePersonal, _viewMode),
                 child: const Text('적용'),
               ),
             ),
