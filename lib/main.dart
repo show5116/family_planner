@@ -55,7 +55,10 @@ void main() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await FirebaseMessagingService.initialize();
     await LocalNotificationService.initialize();
-    await AnalyticsService.instance.analytics.setAnalyticsCollectionEnabled(true);
+    // 프로덕션에서만 Analytics 수집 활성화
+    final isProduction = dotenv.get('ENVIRONMENT', fallback: 'local') == 'production';
+    await AnalyticsService.instance.analytics
+        .setAnalyticsCollectionEnabled(isProduction);
   } catch (e) {
     debugPrint('❌ Firebase 초기화 실패: $e');
   }
