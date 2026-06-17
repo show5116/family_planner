@@ -438,6 +438,12 @@ abstract class AppLocalizations {
   /// **'Kakao 로그인 실패'**
   String get auth_kakaoLoginFailed;
 
+  /// No description provided for @auth_appleLoginFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'Apple 로그인 실패'**
+  String get auth_appleLoginFailed;
+
   /// No description provided for @auth_signupSuccess.
   ///
   /// In ko, this message translates to:

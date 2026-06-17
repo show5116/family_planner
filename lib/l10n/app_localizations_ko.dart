@@ -179,6 +179,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakao 로그인 실패';
 
   @override
+  String get auth_appleLoginFailed => 'Apple 로그인 실패';
+
+  @override
   String get auth_signupSuccess => '회원가입 성공';
 
   @override

@@ -83,6 +83,7 @@
   "auth_loginFailedInvalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다",
   "auth_googleLoginFailed": "Google 로그인 실패",
   "auth_kakaoLoginFailed": "Kakao 로그인 실패",
+  "auth_appleLoginFailed": "Apple 로그인 실패",
   "auth_signupSuccess": "회원가입 성공",
   "auth_signupFailed": "회원가입 실패",
   "auth_logoutSuccess": "로그아웃 되었습니다",

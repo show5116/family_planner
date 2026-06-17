@@ -83,6 +83,7 @@
   "auth_loginFailedInvalidCredentials": "メールアドレスまたはパスワードが正しくありません",
   "auth_googleLoginFailed": "Googleログイン失敗",
   "auth_kakaoLoginFailed": "Kakaoログイン失敗",
+  "auth_appleLoginFailed": "Appleログイン失敗",
   "auth_signupSuccess": "登録成功",
   "auth_signupFailed": "登録失敗",
   "auth_logoutSuccess": "ログアウトしました",

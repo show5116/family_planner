@@ -83,6 +83,7 @@
   "auth_loginFailedInvalidCredentials": "Invalid email or password",
   "auth_googleLoginFailed": "Google login failed",
   "auth_kakaoLoginFailed": "Kakao login failed",
+  "auth_appleLoginFailed": "Apple login failed",
   "auth_signupSuccess": "Sign up successful",
   "auth_signupFailed": "Sign up failed",
   "auth_logoutSuccess": "You have been logged out",

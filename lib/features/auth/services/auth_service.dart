@@ -7,6 +7,7 @@ import 'package:family_planner/features/auth/services/oauth_callback_handler.dar
 import 'package:family_planner/core/services/secure_storage_service.dart';
 import 'package:family_planner/features/auth/services/google_auth_service.dart';
 import 'package:family_planner/features/auth/services/kakao_auth_service.dart';
+import 'package:family_planner/features/auth/services/apple_auth_service.dart';
 import 'package:family_planner/features/auth/services/oauth_web_service.dart';
 
 /// 인증 서비스
@@ -14,6 +15,7 @@ class AuthService extends ApiServiceBase {
   final _storage = SecureStorageService();
   final _googleAuthService = GoogleAuthService();
   final _kakaoAuthService = KakaoAuthService();
+  final _appleAuthService = AppleAuthService();
   final _oauthCallbackHandler = OAuthCallbackHandler();
 
   // ========== 공통 헬퍼 메서드 ==========
@@ -367,6 +369,32 @@ class AuthService extends ApiServiceBase {
     await _kakaoAuthService.signOut();
   }
 
+  // ========== Apple 로그인 (SDK 방식 - 모바일 전용) ==========
+
+  /// Apple 로그인 (SDK 방식 - iOS/macOS 전용)
+  ///
+  /// sign_in_with_apple SDK를 사용하여 Identity Token을 획득한 뒤 백엔드로 전송합니다.
+  /// 웹에서는 loginWithAppleOAuth()를 사용하세요.
+  Future<Map<String, dynamic>> loginWithApple() async {
+    try {
+      final identityToken = await _appleAuthService.signIn();
+
+      final response = await apiClient.post(
+        ApiConstants.appleMobileLogin,
+        data: {'identityToken': identityToken},
+      );
+
+      final data = handleResponse<Map<String, dynamic>>(response);
+
+      await _saveTokens(data);
+      await _saveUserInfoFromResponse(data);
+
+      return data;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
   // ========== 소셜 신규 가입 완료 ==========
 
   /// 소셜 신규 회원가입 완료 (약관 동의)
@@ -409,6 +437,26 @@ class AuthService extends ApiServiceBase {
       final tokens = await OAuthWebService.login(oauthUrl);
 
       // 웹: AccessToken은 저장, RefreshToken은 쿠키로 관리
+      if (tokens['accessToken'] != null) {
+        await apiClient.saveAccessToken(tokens['accessToken']!);
+      }
+
+      return tokens;
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  /// Apple OAuth URL 로그인 (웹 전용)
+  ///
+  /// 백엔드의 OAuth 페이지를 팝업 또는 브라우저로 열어 로그인합니다.
+  /// 모바일에서는 이 메서드 대신 loginWithApple() 사용 (SDK 방식)
+  Future<Map<String, dynamic>> loginWithAppleOAuth() async {
+    final oauthUrl = '${EnvironmentConfig.apiBaseUrl}/auth/apple';
+
+    try {
+      final tokens = await OAuthWebService.login(oauthUrl);
+
       if (tokens['accessToken'] != null) {
         await apiClient.saveAccessToken(tokens['accessToken']!);
       }

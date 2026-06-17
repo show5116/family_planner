@@ -29,6 +29,9 @@ class ApiConstants {
   static const String kakaoLogin = '/auth/kakao';
   static const String kakaoCallback = '/auth/kakao/callback';
   static const String kakaoMobileLogin = '/auth/kakao/mobile';
+  static const String appleLogin = '/auth/apple';
+  static const String appleCallback = '/auth/apple/callback';
+  static const String appleMobileLogin = '/auth/apple/mobile';
   static const String socialSignup = '/auth/social-signup';
 
   // User Endpoints

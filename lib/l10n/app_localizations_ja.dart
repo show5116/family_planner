@@ -179,6 +179,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakaoログイン失敗';
 
   @override
+  String get auth_appleLoginFailed => 'Appleログイン失敗';
+
+  @override
   String get auth_signupSuccess => '登録成功';
 
   @override

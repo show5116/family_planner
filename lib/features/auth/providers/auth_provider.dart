@@ -422,6 +422,42 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  /// Apple 로그인 (플랫폼별 자동 분기)
+  ///
+  /// - 웹: OAuth 팝업 방식
+  /// - 모바일(iOS/macOS): SDK 방식 (sign_in_with_apple)
+  Future<void> loginWithApple() async {
+    state = state.copyWith(error: null);
+
+    try {
+      final response = kIsWeb
+          ? await _authService.loginWithAppleOAuth()
+          : await _authService.loginWithApple();
+
+      if (_isPendingTerms(response)) {
+        state = state.copyWith(
+          pendingTempToken: response['tempToken'] as String,
+          clearPendingTempToken: false,
+        );
+        return;
+      }
+
+      _invalidateGroupProviders();
+
+      final userInfo = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: userInfo);
+
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('apple');
+
+      await _registerFcmToken();
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
   /// 소셜 신규 회원가입 완료 (약관 동의)
   Future<void> completeSocialSignup() async {
     final tempToken = state.pendingTempToken;

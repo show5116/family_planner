@@ -179,6 +179,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakao登录失败';
 
   @override
+  String get auth_appleLoginFailed => 'Apple登录失败';
+
+  @override
   String get auth_signupSuccess => '注册成功';
 
   @override
