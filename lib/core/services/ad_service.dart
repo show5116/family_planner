@@ -89,7 +89,10 @@ class AdService {
   /// MobileAds SDK 초기화 (main.dart에서 호출)
   static Future<void> initialize() async {
     if (kIsWeb) return;
-    await MobileAds.instance.initialize();
+    await MobileAds.instance.initialize().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () => InitializationStatus({}),
+    );
   }
 
   // ── 배너 광고 ─────────────────────────────────────────────

@@ -28,6 +28,19 @@
       ]
     },
     {
+      "name": "family_planner (iOS Simulator)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "4BE51488-3923-4189-BF6E-05442A351CCF",
+      "preLaunchTask": "boot-ios-simulator",
+      "args": [
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
+      ]
+    },
+    {
       "name": "family_planner (Mobile/Desktop)",
       "request": "launch",
       "type": "dart",

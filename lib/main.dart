@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -53,8 +55,6 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await FirebaseMessagingService.initialize();
-    await LocalNotificationService.initialize();
     // 프로덕션에서만 Analytics 수집 활성화
     final isProduction = dotenv.get('ENVIRONMENT', fallback: 'local') == 'production';
     await AnalyticsService.instance.analytics
@@ -67,6 +67,7 @@ void main() async {
     usePathUrlStrategy();
   }
 
+  // AdMob 초기화 (runApp 전, timeout 적용)
   await AdService.initialize();
 
   KakaoSdk.init(
@@ -76,13 +77,23 @@ void main() async {
 
   AuthRepository.initialize(appKey: EnvironmentConfig.kakaoJavaScriptAppKey);
 
-  const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'local');
+  const flavor = String.fromEnvironment('FLAVOR', defaultValue: '');
   if (flavor == 'prod') {
     EnvironmentConfig.setEnvironment(Environment.production);
   } else if (flavor == 'dev') {
     EnvironmentConfig.setEnvironment(Environment.development);
-  } else {
+  } else if (flavor == 'local') {
     EnvironmentConfig.setEnvironment(Environment.local);
+  } else {
+    // FLAVOR 미설정 시 .env의 ENVIRONMENT 값 사용
+    final envFromDotenv = dotenv.get('ENVIRONMENT', fallback: 'development');
+    if (envFromDotenv == 'production') {
+      EnvironmentConfig.setEnvironment(Environment.production);
+    } else if (envFromDotenv == 'local') {
+      EnvironmentConfig.setEnvironment(Environment.local);
+    } else {
+      EnvironmentConfig.setEnvironment(Environment.development);
+    }
   }
 
 
@@ -115,6 +126,10 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
+      unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
+      unawaited(LocalNotificationService.initialize().catchError((_) {}));
+
       await ref.read(authProvider.notifier).checkAuthStatus();
 
       // checkAuthStatus 완료 후 user 정보가 확정된 시점에 광고 설정 초기화

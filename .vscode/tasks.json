@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "boot-ios-simulator",
+      "type": "shell",
+      "command": "xcrun simctl boot '4BE51488-3923-4189-BF6E-05442A351CCF' 2>/dev/null || true && open -a Simulator",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    }
+  ]
+}

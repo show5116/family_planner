@@ -75,7 +75,7 @@ class DefaultFirebaseOptions {
         projectId: dotenv.get('FIREBASE_IOS_PROJECT_ID', fallback: ''),
         storageBucket: dotenv.get('FIREBASE_IOS_STORAGE_BUCKET', fallback: ''),
         iosBundleId: dotenv.get('FIREBASE_IOS_BUNDLE_ID',
-            fallback: 'com.example.familyPlanner'),
+            fallback: 'com.hmncorp.familyplanner'),
       );
 
   /// Web VAPID Key for Firebase Cloud Messaging
