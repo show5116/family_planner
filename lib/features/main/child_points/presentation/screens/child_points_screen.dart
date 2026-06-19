@@ -141,6 +141,10 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
   final _addChildKey = GlobalKey();
   final _accountCardKey = GlobalKey();
   final _savingsPlanKey = GlobalKey();
+  final _shopListKey = GlobalKey();
+  final _rulePlusKey = GlobalKey();
+  final _ruleMinusKey = GlobalKey();
+  final _ruleInfoKey = GlobalKey();
 
   TargetPosition? _keyToPosition(GlobalKey key) {
     final ctx = key.currentContext;
@@ -228,7 +232,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
-      alignSkip: Alignment.topRight,
+      alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase2,
       onSkip: () {
@@ -298,7 +302,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
-      alignSkip: Alignment.topRight,
+      alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase3Shop,
       onSkip: () {
@@ -319,15 +323,12 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
 
-    final w = MediaQuery.sizeOf(context).width;
-    final h = MediaQuery.sizeOf(context).height;
+    final shopPos = _keyToPosition(_shopListKey);
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'shop_tab_info',
-        targetPosition: TargetPosition(
-          Size(w - 32, 220),
-          Offset(16, h * 0.28),
-        ),
+        targetPosition: shopPos,
+        keyTarget: shopPos == null ? _shopListKey : null,
         shape: ShapeLightFocus.RRect,
         radius: 16,
         contents: [
@@ -351,7 +352,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
-      alignSkip: Alignment.topRight,
+      alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase3Rules,
       onSkip: () {
@@ -372,15 +373,15 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
 
-    final w = MediaQuery.sizeOf(context).width;
-    final h = MediaQuery.sizeOf(context).height;
+    final plusPos = _keyToPosition(_rulePlusKey);
+    final minusPos = _keyToPosition(_ruleMinusKey);
+    final infoPos = _keyToPosition(_ruleInfoKey);
+
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'rules_plus',
-        targetPosition: TargetPosition(
-          Size(w - 32, 60),
-          Offset(16, h * 0.28),
-        ),
+        targetPosition: plusPos,
+        keyTarget: plusPos == null ? _rulePlusKey : null,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [
@@ -388,8 +389,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '+ 포인트 규칙',
-              description:
-                  '좋은 행동을 했을 때 포인트를 지급해요.\n예: 숙제를 스스로 끝냈을 때 +10P',
+              description: '좋은 행동을 했을 때 포인트를 지급해요.\n예: 숙제를 스스로 끝냈을 때 +10P',
               icon: Icons.add_circle_outline,
               color: Colors.green.shade700,
             ),
@@ -398,10 +398,8 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       ),
       TargetFocus(
         identify: 'rules_minus',
-        targetPosition: TargetPosition(
-          Size(w - 32, 60),
-          Offset(16, h * 0.42),
-        ),
+        targetPosition: minusPos,
+        keyTarget: minusPos == null ? _ruleMinusKey : null,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [
@@ -409,8 +407,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '- 포인트 규칙',
-              description:
-                  '약속을 어겼을 때 포인트를 차감해요.\n예: 스마트폰을 1시간 이상 사용하면 -10P',
+              description: '약속을 어겼을 때 포인트를 차감해요.\n예: 스마트폰을 1시간 이상 사용하면 -10P',
               icon: Icons.remove_circle_outline,
               color: Colors.red,
             ),
@@ -419,10 +416,8 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       ),
       TargetFocus(
         identify: 'rules_info',
-        targetPosition: TargetPosition(
-          Size(w - 32, 60),
-          Offset(16, h * 0.55),
-        ),
+        targetPosition: infoPos,
+        keyTarget: infoPos == null ? _ruleInfoKey : null,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [
@@ -430,8 +425,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '일반 규칙',
-              description:
-                  '포인트 없이 약속만 기록해요.\n예: 이달 현금 출금은 최대 50P까지만 가능',
+              description: '포인트 없이 약속만 기록해요.\n예: 이달 현금 출금은 최대 50P까지만 가능',
               icon: Icons.info_outline,
               color: AppColors.primary,
             ),
@@ -446,7 +440,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
       textSkip: '건너뛰기',
-      alignSkip: Alignment.topRight,
+      alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _completeOnboarding,
       onSkip: () {
@@ -569,9 +563,13 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
                   ),
                   ShopTab(
                     demoItems: _isDemo ? _demoShopItems : null,
+                    demoShopKey: _isDemo ? _shopListKey : null,
                   ),
                   RulesTab(
                     demoRules: _isDemo ? _demoRules : null,
+                    demoPlusKey: _isDemo ? _rulePlusKey : null,
+                    demoMinusKey: _isDemo ? _ruleMinusKey : null,
+                    demoInfoKey: _isDemo ? _ruleInfoKey : null,
                   ),
                   const HistoryTab(),
                 ],

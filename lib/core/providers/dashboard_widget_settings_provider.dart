@@ -19,22 +19,25 @@ class DashboardWidgetSettingsNotifier
         : DashboardWidgetSettings.defaultSettings();
 
     // 앱 실행 시 현재 위젯 구성 스냅샷 전송 → 유저들이 실제로 유지 중인 상태 파악
-    await AnalyticsService.instance.logEvent(
-      'dashboard_widget_snapshot',
-      parameters: {
-        'weather': settings.showWeather,
-        'todaySchedule': settings.showTodaySchedule,
-        'todoSummary': settings.showTodoSummary,
-        'assetSummary': settings.showAssetSummary,
-        'memoSummary': settings.showMemoSummary,
-        'householdSummary': settings.showHouseholdSummary,
-        'investmentSummary': settings.showInvestmentSummary,
-        'childcareSummary': settings.showChildcareSummary,
-        'savingsSummary': settings.showSavingsSummary,
-        'fridgeSummary': settings.showFridgeSummary,
-        'order': settings.widgetOrder.join(','),
-      },
-    );
+    // bool → int 변환: iOS Firebase Analytics는 bool 타입 파라미터를 지원하지 않음
+    try {
+      await AnalyticsService.instance.logEvent(
+        'dashboard_widget_snapshot',
+        parameters: {
+          'weather': settings.showWeather ? 1 : 0,
+          'todaySchedule': settings.showTodaySchedule ? 1 : 0,
+          'todoSummary': settings.showTodoSummary ? 1 : 0,
+          'assetSummary': settings.showAssetSummary ? 1 : 0,
+          'memoSummary': settings.showMemoSummary ? 1 : 0,
+          'householdSummary': settings.showHouseholdSummary ? 1 : 0,
+          'investmentSummary': settings.showInvestmentSummary ? 1 : 0,
+          'childcareSummary': settings.showChildcareSummary ? 1 : 0,
+          'savingsSummary': settings.showSavingsSummary ? 1 : 0,
+          'fridgeSummary': settings.showFridgeSummary ? 1 : 0,
+          'order': settings.widgetOrder.join(','),
+        },
+      );
+    } catch (_) {}
 
     return settings;
   }
@@ -79,9 +82,9 @@ class DashboardWidgetSettingsNotifier
           'dashboard_widget_toggled',
           parameters: {
             'widget': entry.key,
-            'enabled': nextVal,
+            'enabled': nextVal ? 1 : 0,
           },
-        );
+        ).catchError((_) {});
       }
     }
   }

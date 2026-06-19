@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/budget_setting_sheet.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
@@ -17,6 +18,62 @@ import 'package:family_planner/features/settings/groups/providers/default_group_
 import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+
+// 온보딩용 샘플 통계 데이터
+final _demoStats = MonthlyStatisticsModel(
+  month: '2025-06',
+  totalIncome: 3000000,
+  totalExpense: 1870000,
+  balance: 1130000,
+  totalBudget: 2500000,
+  categories: [
+    CategoryStatModel(category: ExpenseCategory.food, total: 520000, count: 12),
+    CategoryStatModel(category: ExpenseCategory.groceries, total: 380000, count: 8),
+    CategoryStatModel(category: ExpenseCategory.transportation, total: 210000, count: 15),
+    CategoryStatModel(category: ExpenseCategory.living, total: 450000, count: 4),
+    CategoryStatModel(category: ExpenseCategory.leisure, total: 310000, count: 5),
+  ],
+);
+
+// 온보딩용 샘플 지출 내역
+final _now = DateTime(2025, 6, 19);
+final _demoExpenses = [
+  ExpenseModel(
+    id: '__demo_1__', groupId: '__demo__', userId: '__demo__',
+    type: TransactionType.income, amount: 3000000,
+    incomeCategory: IncomeCategory.salary,
+    date: DateTime(2025, 6, 5), description: '6월 급여',
+    createdAt: _now, updatedAt: _now,
+  ),
+  ExpenseModel(
+    id: '__demo_2__', groupId: '__demo__', userId: '__demo__',
+    type: TransactionType.expense, amount: 68000,
+    category: ExpenseCategory.food,
+    date: DateTime(2025, 6, 18), description: '저녁 외식',
+    createdAt: _now, updatedAt: _now,
+  ),
+  ExpenseModel(
+    id: '__demo_3__', groupId: '__demo__', userId: '__demo__',
+    type: TransactionType.expense, amount: 142000,
+    category: ExpenseCategory.groceries,
+    date: DateTime(2025, 6, 17), description: '마트 장보기',
+    createdAt: _now, updatedAt: _now,
+  ),
+  ExpenseModel(
+    id: '__demo_4__', groupId: '__demo__', userId: '__demo__',
+    type: TransactionType.expense, amount: 45000,
+    category: ExpenseCategory.transportation,
+    date: DateTime(2025, 6, 16), description: '주유',
+    createdAt: _now, updatedAt: _now,
+  ),
+  ExpenseModel(
+    id: '__demo_5__', groupId: '__demo__', userId: '__demo__',
+    type: TransactionType.expense, amount: 350000,
+    category: ExpenseCategory.living,
+    date: DateTime(2025, 6, 10), description: '전기/가스 요금',
+    createdAt: _now, updatedAt: _now,
+  ),
+];
 
 class HouseholdScreen extends ConsumerStatefulWidget {
   const HouseholdScreen({super.key});
@@ -30,7 +87,9 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   final _budgetKey = GlobalKey();
   final _recurringKey = GlobalKey();
   final _statisticsKey = GlobalKey();
+  final _moreMenuKey = GlobalKey();
   final _scrollController = ScrollController();
+  bool _isDemo = false;
   final _itemKeys = <String, GlobalKey>{};
   String? _selectedCalendarDate;
 
@@ -61,8 +120,15 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _initGroupFilter();
-      _showCoachMark();
+      await _maybeStartOnboarding();
     });
+  }
+
+  Future<void> _maybeStartOnboarding() async {
+    final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
+    if (completed || !mounted) return;
+    setState(() => _isDemo = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
   }
 
   Future<void> _initGroupFilter() async {
@@ -86,34 +152,53 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     return TargetPosition(box.size, offset);
   }
 
-  void _replayOnboarding() => _showCoachMark(force: true);
+  Future<void> _replayOnboarding() async {
+    await OnboardingService.resetCoachMark(CoachMarkKeys.household);
+    if (!mounted) return;
+    setState(() => _isDemo = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+  }
 
-  Future<void> _showCoachMark({bool force = false}) async {
-    if (!force) {
-      final completed =
-          await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
-      if (completed || !mounted) return;
-    }
+  Future<void> _showCoachMark() async {
     if (!mounted) return;
 
-    final budgetPos = _keyToPosition(_budgetKey);
+    final summaryPos = _keyToPosition(_budgetKey);
+    final moreMenuPos = _keyToPosition(_moreMenuKey);
     final recurringPos = _keyToPosition(_recurringKey);
     final statisticsPos = _keyToPosition(_statisticsKey);
     final fabPos = _keyToPosition(_fabKey);
 
     final targets = <TargetFocus>[
       TargetFocus(
+        identify: 'household_summary',
+        targetPosition: summaryPos,
+        keyTarget: summaryPos == null ? _budgetKey : null,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: '월간 요약',
+              description: '이번 달 수입·지출·잔액을 한눈에 확인하고,\n예산 대비 사용량을 진척도 바로 볼 수 있어요.',
+              icon: Icons.account_balance_wallet_outlined,
+              color: Colors.teal,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
         identify: 'household_budget',
-        targetPosition: budgetPos,
-        keyTarget: budgetPos == null ? _budgetKey : null,
+        targetPosition: moreMenuPos,
+        keyTarget: moreMenuPos == null ? _moreMenuKey : null,
         shape: ShapeLightFocus.Circle,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '예산 설정',
-              description: '월별 예산을 설정하면 지출 현황과\n남은 예산을 한눈에 확인할 수 있어요.',
-              icon: Icons.account_balance_wallet_outlined,
+              description: '여기 더보기 메뉴를 열면 월별 예산을\n카테고리별로 설정할 수 있어요.',
+              icon: Icons.more_vert,
               color: Colors.teal,
             ),
           ),
@@ -188,13 +273,16 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         ),
         child: const Text(
           '건너뛰기',
-          style: TextStyle(
-              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
-      onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.household),
+      onFinish: () {
+        OnboardingService.completeCoachMark(CoachMarkKeys.household);
+        if (mounted) setState(() => _isDemo = false);
+      },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.household);
+        if (mounted) setState(() => _isDemo = false);
         return true;
       },
       paddingFocus: 8,
@@ -226,6 +314,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             onPressed: () => context.push(AppRoutes.householdStatistics),
           ),
           AppBarMoreMenu(
+            key: _moreMenuKey,
             onReplayOnboarding: _replayOnboarding,
             extraItems: [
               MoreMenuItem(
@@ -257,29 +346,38 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
           ),
           const _ExcludeFilterBar(),
           // 뷰모드에 따라 요약카드 or 캘린더 표시
-          Consumer(builder: (context, ref, _) {
-            final viewMode = ref.watch(householdViewModeProvider);
-            if (viewMode == HouseholdViewMode.calendar) {
-              return _CalendarSummary(
-                selectedDateKey: _selectedCalendarDate,
-                onDateTap: (dateKey) => scrollToDate(dateKey),
-              );
-            }
-            return const _MonthlySummaryCard();
-          }),
-          Consumer(builder: (context, ref, _) {
-            final viewMode = ref.watch(householdViewModeProvider);
-            if (viewMode == HouseholdViewMode.calendar) {
-              return const SizedBox.shrink();
-            }
-            return const _UnpaidRecurringBanner();
-          }),
+          if (_isDemo)
+            KeyedSubtree(
+              key: _budgetKey,
+              child: _MonthlySummaryCard(demoStats: _demoStats),
+            )
+          else
+            Consumer(builder: (context, ref, _) {
+              final viewMode = ref.watch(householdViewModeProvider);
+              if (viewMode == HouseholdViewMode.calendar) {
+                return _CalendarSummary(
+                  selectedDateKey: _selectedCalendarDate,
+                  onDateTap: (dateKey) => scrollToDate(dateKey),
+                );
+              }
+              return KeyedSubtree(key: _budgetKey, child: const _MonthlySummaryCard());
+            }),
+          if (!_isDemo)
+            Consumer(builder: (context, ref, _) {
+              final viewMode = ref.watch(householdViewModeProvider);
+              if (viewMode == HouseholdViewMode.calendar) {
+                return const SizedBox.shrink();
+              }
+              return const _UnpaidRecurringBanner();
+            }),
           Expanded(
-            child: _ExpenseBody(
-              selectedGroupId: selectedGroupId,
-              scrollController: _scrollController,
-              itemKeys: _itemKeys,
-            ),
+            child: _isDemo
+                ? _DemoExpenseList(expenses: _demoExpenses)
+                : _ExpenseBody(
+                    selectedGroupId: selectedGroupId,
+                    scrollController: _scrollController,
+                    itemKeys: _itemKeys,
+                  ),
           ),
         ],
       ),
@@ -364,16 +462,22 @@ class _MonthNavigator extends ConsumerWidget {
 
 // 월간 요약 카드
 class _MonthlySummaryCard extends ConsumerWidget {
-  const _MonthlySummaryCard();
+  final MonthlyStatisticsModel? demoStats;
+
+  const _MonthlySummaryCard({this.demoStats});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+
+    if (demoStats != null) {
+      return _buildCard(context, ref, l10n, demoStats!, null, false);
+    }
+
     final statsAsync = ref.watch(householdMonthlyStatisticsProvider);
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
     final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
 
-    // 이번 달 또는 지난달일 때 이월 버튼 표시
     final now = DateTime.now();
     final currentMonth = '${now.year}-${now.month.toString().padLeft(2, '0')}';
     final prevMonth = now.month == 1
@@ -382,7 +486,24 @@ class _MonthlySummaryCard extends ConsumerWidget {
     final isCurrentMonth = selectedMonth == currentMonth || selectedMonth == prevMonth;
 
     return statsAsync.when(
-      data: (stats) => Container(
+      data: (stats) => _buildCard(context, ref, l10n, stats, selectedGroupId, isCurrentMonth),
+      loading: () => const Padding(
+        padding: EdgeInsets.all(AppSizes.spaceM),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildCard(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    MonthlyStatisticsModel stats,
+    String? selectedGroupId,
+    bool isCurrentMonth,
+  ) {
+    return Container(
         margin: const EdgeInsets.all(AppSizes.spaceM),
         padding: const EdgeInsets.all(AppSizes.spaceM),
         decoration: BoxDecoration(
@@ -475,7 +596,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                     context, ref, l10n,
                     balance: stats.balance,
                     groupId: selectedGroupId,
-                    currentMonth: selectedMonth,
+                    currentMonth: stats.month,
                   ),
                   icon: Icon(
                     Icons.arrow_forward,
@@ -498,13 +619,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
             ],
           ],
         ),
-      ),
-      loading: () => const Padding(
-        padding: EdgeInsets.all(AppSizes.spaceM),
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (_, _) => const SizedBox.shrink(),
-    );
+      );
   }
 
   Future<void> _showCarryOverDialog(
@@ -1416,6 +1531,42 @@ class _FilterChip extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// 온보딩 데모용 지출 목록
+class _DemoExpenseList extends StatelessWidget {
+  final List<ExpenseModel> expenses;
+
+  const _DemoExpenseList({required this.expenses});
+
+  @override
+  Widget build(BuildContext context) {
+    final sorted = [...expenses]..sort((a, b) => b.date.compareTo(a.date));
+    final grouped = <String, List<ExpenseModel>>{};
+    for (final e in sorted) {
+      final key =
+          '${e.date.year}-${e.date.month.toString().padLeft(2, '0')}-${e.date.day.toString().padLeft(2, '0')}';
+      grouped.putIfAbsent(key, () => []).add(e);
+    }
+    final dateKeys = grouped.keys.toList();
+
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: dateKeys.length,
+      padding: const EdgeInsets.only(bottom: 80),
+      itemBuilder: (context, index) {
+        final dateKey = dateKeys[index];
+        final dayExpenses = grouped[dateKey]!;
+        return _DayGroup(
+          dateKey: dateKey,
+          expenses: dayExpenses,
+          onTap: (_) {},
+          onDelete: (_) {},
+        );
+      },
     );
   }
 }

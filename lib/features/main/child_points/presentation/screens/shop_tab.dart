@@ -10,9 +10,10 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 포인트 상점 탭
 class ShopTab extends ConsumerWidget {
-  const ShopTab({super.key, this.demoItems});
+  const ShopTab({super.key, this.demoItems, this.demoShopKey});
 
   final List<ChildcareShopItem>? demoItems;
+  final GlobalKey? demoShopKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,14 +25,18 @@ class ShopTab extends ConsumerWidget {
         body: ListView(
           children: [
             const ShopGuide(hasItems: true),
-            ...demoItems!.map(
-              (item) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ShopItemListItem(item: item),
-                  const Divider(height: 1),
-                ],
-              ),
+            Column(
+              key: demoShopKey,
+              mainAxisSize: MainAxisSize.min,
+              children: demoItems!.map(
+                (item) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ShopItemListItem(item: item),
+                    const Divider(height: 1),
+                  ],
+                ),
+              ).toList(),
             ),
           ],
         ),
@@ -66,8 +71,7 @@ class ShopTab extends ConsumerWidget {
                 ),
                 SliverReorderableList(
                   itemCount: items.length,
-                  onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) newIndex--;
+                  onReorderItem: (oldIndex, newIndex) {
                     final updated = [...items];
                     final moved = updated.removeAt(oldIndex);
                     updated.insert(newIndex, moved);

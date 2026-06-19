@@ -60,6 +60,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
   final _participantsKey = GlobalKey();
 
   String? _previousGroupId;
+  StateController<String?>? _groupIdNotifier;
 
   @override
   void initState() {
@@ -69,6 +70,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
       _descriptionController.text = widget.task!.description ?? '';
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _groupIdNotifier = ref.read(selectedGroupIdProvider.notifier);
       _previousGroupId = ref.read(selectedGroupIdProvider);
       if (widget.task != null) {
         // 수정 모드: task의 groupId로 초기화
@@ -265,7 +268,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
   @override
   void dispose() {
     // 이전 그룹 선택 상태 복구
-    ref.read(selectedGroupIdProvider.notifier).state = _previousGroupId;
+    _groupIdNotifier?.state = _previousGroupId;
     _titleController.dispose();
     _descriptionController.dispose();
     _titleFocusNode.dispose();
