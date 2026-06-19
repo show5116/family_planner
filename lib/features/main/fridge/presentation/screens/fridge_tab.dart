@@ -157,7 +157,21 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
 
   void _startDemo() {
     _showDemo.value = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final animation = ModalRoute.of(context)?.animation;
+      if (animation == null || animation.isCompleted) {
+        _showCoachMark();
+      } else {
+        void listener(AnimationStatus status) {
+          if (status == AnimationStatus.completed) {
+            animation.removeStatusListener(listener);
+            if (mounted) _showCoachMark();
+          }
+        }
+        animation.addStatusListener(listener);
+      }
+    });
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {

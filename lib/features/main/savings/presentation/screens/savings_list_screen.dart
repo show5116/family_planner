@@ -117,7 +117,22 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
 
   void _startDemo() {
     _onboardingGoals.value = _demoGoals;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final animation = ModalRoute.of(context)?.animation;
+      if (animation == null || animation.isCompleted) {
+        _showCoachMark();
+      } else {
+        // 화면 전환 애니메이션이 끝난 뒤 포커스 위치를 읽어야 정확
+        void listener(AnimationStatus status) {
+          if (status == AnimationStatus.completed) {
+            animation.removeStatusListener(listener);
+            if (mounted) _showCoachMark();
+          }
+        }
+        animation.addStatusListener(listener);
+      }
+    });
   }
 
   void _goToDemo() {

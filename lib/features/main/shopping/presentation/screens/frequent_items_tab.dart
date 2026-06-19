@@ -51,12 +51,14 @@ class FrequentItemsTab extends ConsumerStatefulWidget {
   const FrequentItemsTab({
     super.key,
     this.onReplayOnboardingReady,
-    this.onStartOnboardingReady,
+    this.tutorialTrigger,
     this.onOnboardingFinished,
   });
 
   final void Function(VoidCallback replay)? onReplayOnboardingReady;
-  final void Function(VoidCallback start)? onStartOnboardingReady;
+  /// CartTab 온보딩 완료 후 ShoppingScreen이 이 탭의 튜토리얼을 시작할 때 사용.
+  /// false→true 전환으로 트리거되므로 탭이 늦게 빌드되어도 initState에서 감지 가능.
+  final ValueNotifier<bool>? tutorialTrigger;
   final VoidCallback? onOnboardingFinished;
 
   @override
@@ -72,19 +74,33 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
   final _firstItemKey = GlobalKey();
   final _autoAddKey = GlobalKey();
   final _addToCartKey = GlobalKey();
+  // 빌드 중 코치마크 중복 예약 방지 플래그
+  bool _coachMarkScheduled = false;
 
   @override
   void initState() {
     super.initState();
     widget.onReplayOnboardingReady?.call(replayOnboarding);
-    widget.onStartOnboardingReady?.call(_startDemo);
-    // 자동 시작 없음 — CartTab 온보딩 완료 후 ShoppingScreen 체인으로만 시작
+    widget.tutorialTrigger?.addListener(_onTutorialTrigger);
+    // 탭이 애니메이션 도중 늦게 빌드된 경우: 트리거가 이미 true이면 즉시 시작
+    if (widget.tutorialTrigger?.value == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _startDemo();
+      });
+    }
   }
 
   @override
   void dispose() {
+    widget.tutorialTrigger?.removeListener(_onTutorialTrigger);
     _showDemo.dispose();
     super.dispose();
+  }
+
+  void _onTutorialTrigger() {
+    if (widget.tutorialTrigger?.value == true && mounted) {
+      _startDemo();
+    }
   }
 
   void replayOnboarding() {
@@ -94,8 +110,10 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
   }
 
   void _startDemo() {
+    // _coachMarkScheduled를 초기화해 다음 빌드에서 코치마크를 예약하도록 허용
+    _coachMarkScheduled = false;
     _showDemo.value = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+    setState(() {}); // keep-alive 엘리먼트에 ValueNotifier 알림이 묵살될 때 대비
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {
@@ -239,6 +257,16 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
       valueListenable: _showDemo,
       builder: (context, isDemo, _) {
         if (isDemo) {
+          // 이 빌드에서 _OnboardingFrequentView가 렌더되므로,
+          // 다음 프레임에서는 GlobalKey가 반드시 트리에 존재함.
+          // 빌드 중 예약해야만 "키 빌드 → 코치마크" 순서가 보장됨.
+          if (!_coachMarkScheduled) {
+            _coachMarkScheduled = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _coachMarkScheduled = false;
+              if (mounted) _showCoachMark();
+            });
+          }
           return _OnboardingFrequentView(
             items: _demoFrequentItems,
             fabKey: _fabKey,
@@ -288,6 +316,7 @@ class _OnboardingFrequentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: AbsorbPointer(
@@ -306,20 +335,26 @@ class _OnboardingFrequentView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Column(
+                    key: isFirst ? autoAddKey : null,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '자동 추가',
+                        l10n.fridge_frequent_auto_add,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: item.autoAdd
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.outline,
                             ),
                       ),
-                      Switch(
-                        key: isFirst ? autoAddKey : null,
-                        value: item.autoAdd,
-                        onChanged: null,
+                      SizedBox(
+                        height: 28,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Switch(
+                            value: item.autoAdd,
+                            onChanged: null,
+                          ),
+                        ),
                       ),
                     ],
                   ),

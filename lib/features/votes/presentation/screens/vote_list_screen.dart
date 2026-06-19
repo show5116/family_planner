@@ -100,15 +100,6 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
 
   // ── 튜토리얼 ────────────────────────────────────────────────────────────────
 
-  TargetPosition? _keyToPosition(GlobalKey key) {
-    final ctx = key.currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
-    return TargetPosition(box.size, offset);
-  }
-
   Future<void> _maybeStartOnboarding() async {
     final completed =
         await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.votes);
@@ -127,16 +118,10 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
   Future<void> _showCoachMark() async {
     if (!mounted) return;
 
-    final groupPos = _keyToPosition(_groupDropdownKey);
-    final filterPos = _keyToPosition(_filterKey);
-    final cardPos = _keyToPosition(_firstCardKey);
-    final fabPos = _keyToPosition(_fabKey);
-
     final targets = <TargetFocus>[
       TargetFocus(
         identify: 'vote_group',
-        targetPosition: groupPos,
-        keyTarget: groupPos == null ? _groupDropdownKey : null,
+        keyTarget: _groupDropdownKey,
         shape: ShapeLightFocus.RRect,
         radius: 8,
         contents: [
@@ -153,8 +138,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
       ),
       TargetFocus(
         identify: 'vote_filter',
-        targetPosition: filterPos,
-        keyTarget: filterPos == null ? _filterKey : null,
+        keyTarget: _filterKey,
         shape: ShapeLightFocus.RRect,
         radius: 8,
         contents: [
@@ -171,8 +155,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
       ),
       TargetFocus(
         identify: 'vote_card',
-        targetPosition: cardPos,
-        keyTarget: cardPos == null ? _firstCardKey : null,
+        keyTarget: _firstCardKey,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [
@@ -189,8 +172,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
       ),
       TargetFocus(
         identify: 'vote_fab',
-        targetPosition: fabPos,
-        keyTarget: fabPos == null ? _fabKey : null,
+        keyTarget: _fabKey,
         shape: ShapeLightFocus.RRect,
         radius: 16,
         contents: [

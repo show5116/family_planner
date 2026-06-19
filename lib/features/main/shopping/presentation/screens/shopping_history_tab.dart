@@ -83,12 +83,14 @@ class ShoppingHistoryTab extends ConsumerStatefulWidget {
   const ShoppingHistoryTab({
     super.key,
     this.onReplayOnboardingReady,
-    this.onStartOnboardingReady,
+    this.tutorialTrigger,
     this.onOnboardingFinished,
   });
 
   final void Function(VoidCallback replay)? onReplayOnboardingReady;
-  final void Function(VoidCallback start)? onStartOnboardingReady;
+  /// FrequentItemsTab 온보딩 완료 후 ShoppingScreen이 이 탭의 튜토리얼을 시작할 때 사용.
+  /// false→true 전환으로 트리거되므로 탭이 늦게 빌드되어도 initState에서 감지 가능.
+  final ValueNotifier<bool>? tutorialTrigger;
   final VoidCallback? onOnboardingFinished;
 
   @override
@@ -107,14 +109,26 @@ class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab>
   void initState() {
     super.initState();
     widget.onReplayOnboardingReady?.call(replayOnboarding);
-    widget.onStartOnboardingReady?.call(_startDemo);
-    // 자동 시작 없음 — FrequentItemsTab 온보딩 완료 후 ShoppingScreen 체인으로만 시작
+    widget.tutorialTrigger?.addListener(_onTutorialTrigger);
+    // 탭이 애니메이션 도중 늦게 빌드된 경우: 트리거가 이미 true이면 즉시 시작
+    if (widget.tutorialTrigger?.value == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _startDemo();
+      });
+    }
   }
 
   @override
   void dispose() {
+    widget.tutorialTrigger?.removeListener(_onTutorialTrigger);
     _showDemo.dispose();
     super.dispose();
+  }
+
+  void _onTutorialTrigger() {
+    if (widget.tutorialTrigger?.value == true && mounted) {
+      _startDemo();
+    }
   }
 
   void replayOnboarding() {
@@ -125,7 +139,10 @@ class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab>
 
   void _startDemo() {
     _showDemo.value = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+    setState(() {}); // keep-alive 엘리먼트에 ValueNotifier 알림이 묵살될 때 대비
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _showCoachMark();
+    });
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {

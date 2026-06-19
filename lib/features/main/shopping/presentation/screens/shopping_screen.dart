@@ -29,8 +29,10 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
   VoidCallback? _replayFrequentOnboarding;
   VoidCallback? _replayHistoryOnboarding;
 
-  VoidCallback? _startFrequentOnboarding;
-  VoidCallback? _startHistoryOnboarding;
+  // ValueNotifier 트리거: false→true 전환으로 각 탭 튜토리얼을 시작.
+  // 콜백 방식과 달리 탭이 lazy하게 늦게 빌드되어도 initState에서 value를 체크해 즉시 시작 가능.
+  final _frequentTutorialTrigger = ValueNotifier<bool>(false);
+  final _historyTutorialTrigger = ValueNotifier<bool>(false);
 
   // 탭 전환 중 중복 호출 방지
   bool _transitioning = false;
@@ -60,6 +62,8 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
 
   @override
   void dispose() {
+    _frequentTutorialTrigger.dispose();
+    _historyTutorialTrigger.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -68,7 +72,7 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
   /// TabBarView 스와이프 애니메이션(300ms) + 렌더링 2프레임 대기
   Future<void> _switchTabAndStart(int targetIndex, VoidCallback startOnboarding) async {
     if (_transitioning || !mounted) return;
-    _transitioning = true;
+    setState(() => _transitioning = true);
 
     _tabController.animateTo(targetIndex);
 
@@ -86,8 +90,12 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
     });
     await completer.future;
 
-    if (mounted) startOnboarding();
-    _transitioning = false;
+    if (!mounted) {
+      _transitioning = false;
+      return;
+    }
+    startOnboarding();
+    setState(() => _transitioning = false);
   }
 
   void _replayCurrentTabOnboarding() {
@@ -132,30 +140,41 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          CartTab(
-            onReplayOnboardingReady: (replay) => _replayCartOnboarding = replay,
-            onOnboardingFinished: () => _switchTabAndStart(
-              1,
-              () => _startFrequentOnboarding?.call(),
+      body: AbsorbPointer(
+        absorbing: _transitioning,
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            CartTab(
+              onReplayOnboardingReady: (replay) => _replayCartOnboarding = replay,
+              onOnboardingFinished: () => _switchTabAndStart(
+                1,
+                () {
+                  // 이전 실행에서 true였을 경우를 대비해 false 초기화 후 트리거.
+                  // ValueNotifier는 동일 값이면 알림을 생략하므로 반드시 false→true 순서.
+                  _frequentTutorialTrigger.value = false;
+                  _frequentTutorialTrigger.value = true;
+                },
+              ),
             ),
-          ),
-          FrequentItemsTab(
-            onReplayOnboardingReady: (replay) => _replayFrequentOnboarding = replay,
-            onStartOnboardingReady: (start) => _startFrequentOnboarding = start,
-            onOnboardingFinished: () => _switchTabAndStart(
-              2,
-              () => _startHistoryOnboarding?.call(),
+            FrequentItemsTab(
+              onReplayOnboardingReady: (replay) => _replayFrequentOnboarding = replay,
+              tutorialTrigger: _frequentTutorialTrigger,
+              onOnboardingFinished: () => _switchTabAndStart(
+                2,
+                () {
+                  _historyTutorialTrigger.value = false;
+                  _historyTutorialTrigger.value = true;
+                },
+              ),
             ),
-          ),
-          ShoppingHistoryTab(
-            onReplayOnboardingReady: (replay) => _replayHistoryOnboarding = replay,
-            onStartOnboardingReady: (start) => _startHistoryOnboarding = start,
-            // 마지막 탭 — 체인 종료
-          ),
-        ],
+            ShoppingHistoryTab(
+              onReplayOnboardingReady: (replay) => _replayHistoryOnboarding = replay,
+              tutorialTrigger: _historyTutorialTrigger,
+              // 마지막 탭 — 체인 종료
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -14,19 +14,24 @@ class MerchantsScreen extends ConsumerStatefulWidget {
 }
 
 class _MerchantsScreenState extends ConsumerState<MerchantsScreen> {
+  // dispose()에서 ref는 이미 무효화돼 있으므로 notifier를 미리 저장해둠
+  Merchants? _notifier;
+
   @override
   void initState() {
     super.initState();
     // 화면이 열리는 순간 캐시 고정 — 통계 화면 등 다른 구독자가 없어도 데이터 유지
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(merchantsProvider.notifier).keepAlive();
+      if (!mounted) return;
+      _notifier = ref.read(merchantsProvider.notifier);
+      _notifier!.keepAlive();
     });
   }
 
   @override
   void dispose() {
-    // 화면을 완전히 나가면 캐시 해제 — 다음 진입 시 재조회
-    ref.read(merchantsProvider.notifier).releaseKeepAlive();
+    // ref.read()는 dispose() 시점에 이미 무효화됨 → 저장된 notifier 참조로 직접 해제
+    _notifier?.releaseKeepAlive();
     super.dispose();
   }
 
