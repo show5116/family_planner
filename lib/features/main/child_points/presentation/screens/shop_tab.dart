@@ -71,7 +71,7 @@ class ShopTab extends ConsumerWidget {
                 ),
                 SliverReorderableList(
                   itemCount: items.length,
-                  onReorderItem: (oldIndex, newIndex) {
+                  onReorder: (oldIndex, newIndex) {
                     final updated = [...items];
                     final moved = updated.removeAt(oldIndex);
                     updated.insert(newIndex, moved);
