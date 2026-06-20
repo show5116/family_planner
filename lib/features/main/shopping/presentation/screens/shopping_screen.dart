@@ -37,8 +37,6 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
   // 탭 전환 중 중복 호출 방지
   bool _transitioning = false;
 
-  static const _tabAnimationDuration = Duration(milliseconds: 300);
-
   @override
   void initState() {
     super.initState();
@@ -68,32 +66,43 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
     super.dispose();
   }
 
-  /// 탭 전환 후 충분히 안정된 시점에 콜백 실행
-  /// TabBarView 스와이프 애니메이션(300ms) + 렌더링 2프레임 대기
+  /// 탭 전환 후 animation.value가 targetIndex에 완전히 수렴한 뒤 콜백 실행.
+  /// 고정 딜레이 대신 실제 애니메이션 값을 감시해 기기 성능과 무관하게 안정적으로 동작.
   Future<void> _switchTabAndStart(int targetIndex, VoidCallback startOnboarding) async {
     if (_transitioning || !mounted) return;
     setState(() => _transitioning = true);
 
     _tabController.animateTo(targetIndex);
 
-    // 탭 전환 애니메이션 완료 대기
-    await Future.delayed(_tabAnimationDuration + const Duration(milliseconds: 50));
-    if (!mounted) {
-      _transitioning = false;
-      return;
+    // 탭 애니메이션 완료 대기: animation.value ≈ targetIndex 가 될 때까지 감시
+    final tabAnim = _tabController.animation;
+    if (tabAnim != null && (tabAnim.value - targetIndex).abs() > 0.005) {
+      final animCompleter = Completer<void>();
+      void onAnim() {
+        if ((tabAnim.value - targetIndex).abs() <= 0.005) {
+          tabAnim.removeListener(onAnim);
+          if (!animCompleter.isCompleted) animCompleter.complete();
+        }
+      }
+      tabAnim.addListener(onAnim);
+      // 타임아웃 500ms: 애니메이션이 비정상적으로 늦어지면 강제 진행
+      await animCompleter.future.timeout(
+        const Duration(milliseconds: 500),
+        onTimeout: () => tabAnim.removeListener(onAnim),
+      );
     }
+    if (!mounted) { _transitioning = false; return; }
 
-    // 렌더링 안정화: 2프레임 대기 (첫 프레임에 레이아웃, 둘째 프레임에 GlobalKey 위치 확정)
-    final completer = Completer<void>();
+    // 렌더링 안정화: 2프레임 대기 (레이아웃 → GlobalKey 위치 확정)
+    final renderCompleter = Completer<void>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => completer.complete());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!renderCompleter.isCompleted) renderCompleter.complete();
+      });
     });
-    await completer.future;
+    await renderCompleter.future;
 
-    if (!mounted) {
-      _transitioning = false;
-      return;
-    }
+    if (!mounted) { _transitioning = false; return; }
     startOnboarding();
     setState(() => _transitioning = false);
   }
