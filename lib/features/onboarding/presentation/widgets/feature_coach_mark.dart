@@ -125,7 +125,8 @@ class FeatureCoachMark {
         final key = t.keyTarget;
         if (key != null) {
           final ctx = key.currentContext;
-          if (ctx == null) return false;
+          // context가 null이면 아직 렌더되지 않은 탭의 위젯 — 탭 전환 후 필요 시 렌더되므로 통과
+          if (ctx == null) return true;
           final box = ctx.findRenderObject() as RenderBox?;
           return box != null && box.hasSize && box.size.width > 0 && box.size.height > 0;
         }
