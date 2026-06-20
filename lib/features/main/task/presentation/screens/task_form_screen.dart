@@ -267,8 +267,14 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
 
   @override
   void dispose() {
-    // 이전 그룹 선택 상태 복구
-    _groupIdNotifier?.state = _previousGroupId;
+    // 이전 그룹 선택 상태 복구 — dispose 중 리스너 예외를 피하기 위해 다음 프레임에서 실행
+    final notifier = _groupIdNotifier;
+    final previousId = _previousGroupId;
+    if (notifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifier.state = previousId;
+      });
+    }
     _titleController.dispose();
     _descriptionController.dispose();
     _titleFocusNode.dispose();

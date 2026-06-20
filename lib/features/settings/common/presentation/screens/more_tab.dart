@@ -14,6 +14,8 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+part '_more_onboarding.dart';
+
 /// 더보기 탭
 ///
 /// 사용자 프로필, 추가 기능 메뉴, 설정 메뉴를 표시합니다.
@@ -35,89 +37,13 @@ class _MoreTabState extends ConsumerState<MoreTab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
+    _scheduleCoachMark();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  TargetPosition? _keyToPosition(GlobalKey key) {
-    final ctx = key.currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
-    return TargetPosition(box.size, offset);
-  }
-
-  void _replayOnboarding() => _showCoachMark(force: true);
-
-  Future<void> _showCoachMark({bool force = false}) async {
-    final groupPos = _keyToPosition(_groupManagementKey);
-    final l10n = AppLocalizations.of(context)!;
-
-    await FeatureCoachMark.show(
-      context: context,
-      featureKey: CoachMarkKeys.more,
-      forceShow: force,
-      targets: [
-        TargetFocus(
-          identify: 'more_group',
-          targetPosition: groupPos,
-          keyTarget: groupPos == null ? _groupManagementKey : null,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: l10n.settings_groupManagementTitle,
-                description: l10n.more_coach_groupDesc,
-                icon: Icons.group_outlined,
-                color: Colors.blue,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'more_settings',
-          targetPosition: null, // beforeFocus 스크롤 후 재계산
-          keyTarget: _settingsKey,
-          shape: ShapeLightFocus.RRect,
-          radius: 8,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (_, _) => FeatureCoachMark.buildContent(
-                title: l10n.settings_title,
-                description: l10n.more_coach_settingsDesc,
-                icon: Icons.settings,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ],
-      beforeFocus: (target) async {
-        // 설정 항목 하이라이트 전에 스크롤하여 화면에 표시
-        if (target.identify == 'more_settings') {
-          final ctx = _settingsKey.currentContext;
-          if (ctx != null) {
-            await Scrollable.ensureVisible(
-              ctx,
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOut,
-              alignment: 0.5,
-            );
-            // 스크롤 완료 후 레이아웃 안정화 대기
-            await Future.delayed(const Duration(milliseconds: 100));
-          }
-        }
-      },
-    );
   }
 
   @override
