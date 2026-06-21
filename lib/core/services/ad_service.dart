@@ -25,9 +25,9 @@ class _AdUnitIds {
   static const _androidRewarded = 'ca-app-pub-1069302827856916/7332793167';
 
   // iOS 실제 Unit ID (프로덕션)
-  static const _iosBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _iosInterstitial = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _iosRewarded = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _iosBanner = 'ca-app-pub-1069302827856916/6981829987';
+  static const _iosInterstitial = 'ca-app-pub-1069302827856916/4790780911';
+  static const _iosRewarded = 'ca-app-pub-1069302827856916/6544101891';
 
   static bool get _isIos => defaultTargetPlatform == TargetPlatform.iOS;
 
