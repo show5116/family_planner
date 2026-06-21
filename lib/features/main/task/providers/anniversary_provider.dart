@@ -5,6 +5,14 @@ import 'package:family_planner/features/main/task/data/repositories/anniversary_
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
+/// 특정 기념일의 예정된 milestone Task 목록
+final upcomingMilestoneTasksProvider =
+    FutureProvider.family<List<MilestoneTaskItem>, String>(
+        (ref, anniversaryId) async {
+  final repository = ref.watch(anniversaryRepositoryProvider);
+  return repository.getUpcomingMilestoneTasks(anniversaryId);
+});
+
 /// 그룹별 기념일 목록 Provider
 final anniversariesProvider =
     FutureProvider.family<List<AnniversaryModel>, String>((ref, groupId) async {

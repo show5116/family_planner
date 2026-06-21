@@ -5,6 +5,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
 
+/// 예정된 milestone Task 경량 모델
+class MilestoneTaskItem {
+  final String id;
+  final String title;
+  final DateTime scheduledAt;
+  final int? daysUntilDue;
+  final int? offsetDays;
+  final String? offsetType;
+
+  const MilestoneTaskItem({
+    required this.id,
+    required this.title,
+    required this.scheduledAt,
+    this.daysUntilDue,
+    this.offsetDays,
+    this.offsetType,
+  });
+
+  factory MilestoneTaskItem.fromJson(Map<String, dynamic> json) {
+    return MilestoneTaskItem(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      scheduledAt: DateTime.parse(json['scheduledAt'] as String).toLocal(),
+      daysUntilDue: json['daysUntilDue'] as int?,
+      offsetDays: json['offsetDays'] as int?,
+      offsetType: json['offsetType'] as String?,
+    );
+  }
+}
+
 final anniversaryRepositoryProvider = Provider<AnniversaryRepository>((ref) {
   return AnniversaryRepository();
 });
@@ -41,6 +71,44 @@ class AnniversaryRepository {
       if (e.response?.statusCode == 404) throw Exception('기념일을 찾을 수 없습니다');
       if (e.response?.statusCode == 403) throw Exception('접근 권한이 없습니다');
       throw Exception('기념일 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 예정된 milestone Task 목록 조회 (특정 기념일에 연동된 미래 Task)
+  Future<List<MilestoneTaskItem>> getUpcomingMilestoneTasks(
+    String anniversaryId,
+  ) async {
+    try {
+      final today = DateTime.now();
+      final startDate =
+          '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+      final response = await _dio.get(
+        '/tasks',
+        queryParameters: {
+          'anniversaryId': anniversaryId,
+          'startDate': startDate,
+          'status': 'PENDING',
+          'limit': 10,
+        },
+      );
+
+      final data = response.data;
+      List<dynamic> items;
+      if (data is Map<String, dynamic> && data['data'] is List) {
+        items = data['data'] as List<dynamic>;
+      } else if (data is List) {
+        items = data;
+      } else {
+        return [];
+      }
+
+      return items
+          .map((e) => MilestoneTaskItem.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (e) {
+      debugPrint('❌ [AnniversaryRepository] milestone Task 조회 실패: ${e.message}');
+      throw Exception('milestone Task 조회 실패: ${e.message}');
     }
   }
 

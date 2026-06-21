@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
+import 'package:family_planner/features/main/task/data/repositories/anniversary_repository.dart';
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
 import 'package:family_planner/features/main/task/presentation/screens/anniversary/anniversary_form_dialog.dart';
 
@@ -79,6 +80,10 @@ class AnniversaryDetailScreen extends ConsumerWidget {
               _MilestoneSection(config: current.milestoneConfig!),
               const SizedBox(height: AppSizes.spaceL),
             ],
+
+            // 예정된 milestone 기념일 목록
+            _UpcomingMilestonesSection(anniversaryId: current.id),
+            const SizedBox(height: AppSizes.spaceL),
 
             // 등록일
             _InfoSection(
@@ -304,6 +309,90 @@ class _InfoSection extends StatelessWidget {
         const SizedBox(height: AppSizes.spaceXS),
         child,
       ],
+    );
+  }
+}
+
+// ── 예정된 milestone 기념일 섹션 ──────────────────────────────────────────────
+
+class _UpcomingMilestonesSection extends ConsumerWidget {
+  final String anniversaryId;
+  const _UpcomingMilestonesSection({required this.anniversaryId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(upcomingMilestoneTasksProvider(anniversaryId));
+
+    return async.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+      data: (items) {
+        if (items.isEmpty) return const SizedBox.shrink();
+        return _InfoSection(
+          title: '예정된 기념일',
+          child: Column(
+            children: items
+                .map((item) => _UpcomingMilestoneRow(item: item))
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _UpcomingMilestoneRow extends StatelessWidget {
+  final MilestoneTaskItem item;
+  const _UpcomingMilestoneRow({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final d = item.daysUntilDue;
+    final dLabel = d == null
+        ? ''
+        : d == 0
+            ? 'D-Day'
+            : 'D-$d';
+    final dateStr =
+        '${item.scheduledAt.year}.${item.scheduledAt.month.toString().padLeft(2, '0')}.${item.scheduledAt.day.toString().padLeft(2, '0')}';
+
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSizes.spaceS),
+      child: Row(
+        children: [
+          Icon(
+            Icons.event_outlined,
+            size: 16,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(width: AppSizes.spaceS),
+          Expanded(
+            child: Text(
+              '${item.title}  $dateStr',
+              style: theme.textTheme.bodyMedium,
+            ),
+          ),
+          if (dLabel.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSizes.spaceS,
+                vertical: 2,
+              ),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              child: Text(
+                dLabel,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
