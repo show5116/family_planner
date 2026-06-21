@@ -56,7 +56,7 @@ void main() async {
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     // 프로덕션에서만 Analytics 수집 활성화
-    final isProduction = dotenv.get('ENVIRONMENT', fallback: 'local') == 'production';
+    const isProduction = String.fromEnvironment('ENVIRONMENT', defaultValue: 'production') == 'production';
     await AnalyticsService.instance.analytics
         .setAnalyticsCollectionEnabled(isProduction);
   } catch (e) {
@@ -77,23 +77,13 @@ void main() async {
 
   AuthRepository.initialize(appKey: EnvironmentConfig.kakaoJavaScriptAppKey);
 
-  const flavor = String.fromEnvironment('FLAVOR', defaultValue: '');
-  if (flavor == 'prod') {
-    EnvironmentConfig.setEnvironment(Environment.production);
-  } else if (flavor == 'dev') {
-    EnvironmentConfig.setEnvironment(Environment.development);
-  } else if (flavor == 'local') {
+  const env = String.fromEnvironment('ENVIRONMENT', defaultValue: 'production');
+  if (env == 'local') {
     EnvironmentConfig.setEnvironment(Environment.local);
+  } else if (env == 'development') {
+    EnvironmentConfig.setEnvironment(Environment.development);
   } else {
-    // FLAVOR 미설정 시 .env의 ENVIRONMENT 값 사용
-    final envFromDotenv = dotenv.get('ENVIRONMENT', fallback: 'development');
-    if (envFromDotenv == 'production') {
-      EnvironmentConfig.setEnvironment(Environment.production);
-    } else if (envFromDotenv == 'local') {
-      EnvironmentConfig.setEnvironment(Environment.local);
-    } else {
-      EnvironmentConfig.setEnvironment(Environment.development);
-    }
+    EnvironmentConfig.setEnvironment(Environment.production);
   }
 
 

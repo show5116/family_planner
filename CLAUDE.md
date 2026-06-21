@@ -12,9 +12,14 @@ Flutter 기반 가족 플래너 애플리케이션 (Flutter 3.18+, Dart 3.10+)
 ## 주요 명령어
 
 ```bash
-# 실행
-flutter run -d chrome --web-port=3001  # 웹 (포트 3001 고정)
-flutter run -d windows                 # Windows
+# 실행 (개발 환경 - 반드시 --dart-define 포함)
+flutter run -d chrome --web-port=3001 --dart-define=ENVIRONMENT=development  # 웹 (포트 3001 고정)
+flutter run -d windows --dart-define=ENVIRONMENT=development                 # Windows
+flutter run --dart-define=ENVIRONMENT=development                            # iOS/Android
+
+# 배포 빌드 (기본값이 production이므로 dart-define 불필요)
+flutter build ipa --release                                                  # iOS App Store
+flutter build appbundle --release                                            # Android
 
 # 개발
 flutter analyze                        # 코드 분석
