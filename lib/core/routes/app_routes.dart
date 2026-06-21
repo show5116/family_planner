@@ -42,6 +42,7 @@ class AppRoutes {
   static const String calendarDetail = '/calendar/detail';
   static const String calendarAdd = '/calendar/add';
   static const String categoryManagement = '/calendar/categories';
+  static const String anniversaryManagement = '/calendar/anniversaries';
   static const String todoDetail = '/todo/detail';
   static const String todoAdd = '/todo/add';
   static const String childPoints = '/child-points';

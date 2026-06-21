@@ -26,6 +26,7 @@ import 'package:family_planner/features/main/household/presentation/screens/hous
 import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/anniversary_list_screen.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
 import 'package:family_planner/features/main/todo/presentation/screens/todo_tab.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
@@ -163,6 +164,11 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.categoryManagement,
       name: 'categoryManagement',
       builder: (context, state) => const CategoryManagementScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.anniversaryManagement,
+      name: 'anniversaryManagement',
+      builder: (context, state) => const AnniversaryListScreen(),
     ),
 
     // Todo Routes

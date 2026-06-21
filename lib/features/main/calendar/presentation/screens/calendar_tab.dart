@@ -94,6 +94,12 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
             onReplayOnboarding: _replayOnboarding,
             extraItems: [
               MoreMenuItem(
+                id: 'anniversaries',
+                icon: Icons.celebration_outlined,
+                label: '기념일 관리',
+                onTap: (ctx) => ctx.push('/calendar/anniversaries'),
+              ),
+              MoreMenuItem(
                 id: 'categories',
                 icon: Icons.category_outlined,
                 label: l10n.category_management,
