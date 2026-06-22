@@ -24,17 +24,8 @@ class DashboardWidgetSettingsNotifier
       await AnalyticsService.instance.logEvent(
         'dashboard_widget_snapshot',
         parameters: {
-          'weather': settings.showWeather ? 1 : 0,
-          'todaySchedule': settings.showTodaySchedule ? 1 : 0,
-          'todoSummary': settings.showTodoSummary ? 1 : 0,
-          'assetSummary': settings.showAssetSummary ? 1 : 0,
-          'memoSummary': settings.showMemoSummary ? 1 : 0,
-          'householdSummary': settings.showHouseholdSummary ? 1 : 0,
-          'investmentSummary': settings.showInvestmentSummary ? 1 : 0,
-          'childcareSummary': settings.showChildcareSummary ? 1 : 0,
-          'savingsSummary': settings.showSavingsSummary ? 1 : 0,
-          'fridgeSummary': settings.showFridgeSummary ? 1 : 0,
           'order': settings.widgetOrder.join(','),
+          'count': settings.widgetOrder.length,
         },
       );
     } catch (_) {}
@@ -63,29 +54,19 @@ class DashboardWidgetSettingsNotifier
     DashboardWidgetSettings prev,
     DashboardWidgetSettings next,
   ) {
-    final checks = {
-      'weather': (prev.showWeather, next.showWeather),
-      'todaySchedule': (prev.showTodaySchedule, next.showTodaySchedule),
-      'todoSummary': (prev.showTodoSummary, next.showTodoSummary),
-      'assetSummary': (prev.showAssetSummary, next.showAssetSummary),
-      'memoSummary': (prev.showMemoSummary, next.showMemoSummary),
-      'householdSummary': (prev.showHouseholdSummary, next.showHouseholdSummary),
-      'investmentSummary': (prev.showInvestmentSummary, next.showInvestmentSummary),
-      'childcareSummary': (prev.showChildcareSummary, next.showChildcareSummary),
-      'savingsSummary': (prev.showSavingsSummary, next.showSavingsSummary),
-      'fridgeSummary': (prev.showFridgeSummary, next.showFridgeSummary),
-    };
-    for (final entry in checks.entries) {
-      final (prevVal, nextVal) = entry.value;
-      if (prevVal != nextVal) {
-        AnalyticsService.instance.logEvent(
-          'dashboard_widget_toggled',
-          parameters: {
-            'widget': entry.key,
-            'enabled': nextVal ? 1 : 0,
-          },
-        ).catchError((_) {});
-      }
+    final prevSet = prev.widgetOrder.toSet();
+    final nextSet = next.widgetOrder.toSet();
+    for (final added in nextSet.difference(prevSet)) {
+      AnalyticsService.instance.logEvent(
+        'dashboard_widget_toggled',
+        parameters: {'widget': added, 'enabled': 1},
+      ).catchError((_) {});
+    }
+    for (final removed in prevSet.difference(nextSet)) {
+      AnalyticsService.instance.logEvent(
+        'dashboard_widget_toggled',
+        parameters: {'widget': removed, 'enabled': 0},
+      ).catchError((_) {});
     }
   }
 

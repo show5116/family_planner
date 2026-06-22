@@ -2,59 +2,61 @@ enum ScheduleViewMode { today, week, month }
 
 enum HouseholdWidgetViewMode { budget, category }
 
+/// 모든 싱글톤 위젯 키 (widgetOrder에 1개까지만 허용)
+const kSingletonWidgetKeys = {
+  'weather',
+  'fridgeSummary',
+  'todaySchedule',
+  'investmentSummary',
+  'todoSummary',
+  'assetSummary',
+  'memoSummary',
+  'householdSummary',
+  'childcareSummary',
+  'savingsSummary',
+  'anniversary',
+};
+
 /// 대시보드 위젯 설정 모델
 class DashboardWidgetSettings {
-  final bool showTodaySchedule;
-  final bool showInvestmentSummary;
-  final bool showTodoSummary;
-  final bool showAssetSummary;
-  final bool showMemoSummary;
-  final bool showWeather;
-  final bool showHouseholdSummary;
+  /// 활성화된 위젯의 순서 목록 (모두 싱글톤 키)
   final List<String> widgetOrder;
+
+  // 기념일 위젯에서 표시할 기념일 ID 목록
+  final List<String> anniversaryIds;
+
   // 일정 위젯 필터
   final ScheduleViewMode scheduleViewMode;
-  final List<String>? scheduleSelectedGroupIds; // null = 전체 그룹
+  final List<String>? scheduleSelectedGroupIds;
   final bool scheduleIncludePersonal;
   // 할일 위젯 필터
   final ScheduleViewMode todoViewMode;
-  final List<String>? todoSelectedGroupIds; // null = 전체 그룹
+  final List<String>? todoSelectedGroupIds;
   final bool todoIncludePersonal;
   // 자산 위젯 필터
-  final String? assetSelectedGroupId; // null = 첫 번째 그룹
+  final String? assetSelectedGroupId;
   // 메모 위젯 필터
-  final String? memoSelectedGroupId; // null = 전체 그룹
+  final String? memoSelectedGroupId;
   final bool memoPersonalOnly;
   // 가계관리 위젯 필터
-  final String? householdSelectedGroupId; // null = 첫 번째 그룹
+  final String? householdSelectedGroupId;
   final HouseholdWidgetViewMode householdViewMode;
   // 육아포인트 위젯
-  final bool showChildcareSummary;
-  final String? childcareSelectedGroupId; // null = 첫 번째 그룹
+  final String? childcareSelectedGroupId;
   // 저금통 위젯
-  final bool showSavingsSummary;
-  final String? savingsSelectedGroupId; // null = 첫 번째 그룹
+  final String? savingsSelectedGroupId;
   // 냉장고 유통기한 위젯
-  final bool showFridgeSummary;
-  final String? fridgeExpirySelectedGroupId; // null = 첫 번째 그룹
-  // 기념일 위젯
-  final bool showAnniversarySummary;
+  final String? fridgeExpirySelectedGroupId;
 
   const DashboardWidgetSettings({
-    this.showTodaySchedule = true,
-    this.showInvestmentSummary = true,
-    this.showTodoSummary = true,
-    this.showAssetSummary = true,
-    this.showMemoSummary = false,
-    this.showWeather = true,
-    this.showHouseholdSummary = false,
-    this.showChildcareSummary = false,
-    this.childcareSelectedGroupId,
-    this.showSavingsSummary = false,
-    this.savingsSelectedGroupId,
-    this.showFridgeSummary = true,
-    this.fridgeExpirySelectedGroupId,
-    this.showAnniversarySummary = false,
+    this.widgetOrder = const [
+      'weather',
+      'todaySchedule',
+      'householdSummary',
+      'investmentSummary',
+      'childcareSummary',
+    ],
+    this.anniversaryIds = const [],
     this.scheduleViewMode = ScheduleViewMode.today,
     this.scheduleSelectedGroupIds,
     this.scheduleIncludePersonal = true,
@@ -66,50 +68,18 @@ class DashboardWidgetSettings {
     this.memoPersonalOnly = false,
     this.householdSelectedGroupId,
     this.householdViewMode = HouseholdWidgetViewMode.budget,
-    this.widgetOrder = const [
-      'weather',
-      'fridgeSummary',
-      'todaySchedule',
-      'investmentSummary',
-      'todoSummary',
-      'assetSummary',
-      'memoSummary',
-      'householdSummary',
-      'childcareSummary',
-      'savingsSummary',
-      'anniversarySummary',
-    ],
+    this.childcareSelectedGroupId,
+    this.savingsSelectedGroupId,
+    this.fridgeExpirySelectedGroupId,
   });
 
   factory DashboardWidgetSettings.defaultSettings() {
     return const DashboardWidgetSettings();
   }
 
+  bool isActive(String key) => widgetOrder.contains(key);
+
   factory DashboardWidgetSettings.fromJson(Map<String, dynamic> json) {
-    const allWidgets = [
-      'weather',
-      'fridgeSummary',
-      'todaySchedule',
-      'investmentSummary',
-      'todoSummary',
-      'assetSummary',
-      'memoSummary',
-      'householdSummary',
-      'childcareSummary',
-      'savingsSummary',
-      'anniversarySummary',
-    ];
-
-    final savedOrder = (json['widgetOrder'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList() ??
-        List<String>.from(allWidgets);
-
-    final mergedOrder = [
-      ...savedOrder,
-      ...allWidgets.where((w) => !savedOrder.contains(w)),
-    ];
-
     ScheduleViewMode parseMode(String key) {
       final str = json[key] as String? ?? 'today';
       return ScheduleViewMode.values.firstWhere(
@@ -124,24 +94,100 @@ class DashboardWidgetSettings {
       return (raw as List<dynamic>).map((e) => e as String).toList();
     }
 
+    const legacyAll = [
+      'weather',
+      'fridgeSummary',
+      'todaySchedule',
+      'investmentSummary',
+      'todoSummary',
+      'assetSummary',
+      'memoSummary',
+      'householdSummary',
+      'childcareSummary',
+      'savingsSummary',
+    ];
+
+    List<String> widgetOrder;
+    List<String> anniversaryIds;
+
+    // anniversaryIds 파싱: 신규 필드 또는 구 anniversary:: 키에서 마이그레이션
+    final rawAnniversaryIds = json['anniversaryIds'];
+    if (rawAnniversaryIds != null) {
+      anniversaryIds = (rawAnniversaryIds as List<dynamic>)
+          .map((e) => e as String)
+          .toList();
+    } else {
+      // 구 포맷: widgetOrder 안의 anniversary::{id} 키에서 추출
+      final savedOrder = json['widgetOrder'] as List<dynamic>? ?? [];
+      anniversaryIds = savedOrder
+          .map((e) => e as String)
+          .where((k) => k.startsWith('anniversary::'))
+          .map((k) => k.substring('anniversary::'.length))
+          .toList();
+    }
+
+    if (json['widgetOrder'] != null) {
+      final saved = (json['widgetOrder'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList();
+
+      // anniversary:: 다중 키 → 단일 'anniversary' 키로 교체 (중복 제거)
+      List<String> normalized = [];
+      bool anniversaryInserted = false;
+      for (final k in saved) {
+        if (k.startsWith('anniversary::')) {
+          if (!anniversaryInserted) {
+            normalized.add('anniversary');
+            anniversaryInserted = true;
+          }
+        } else if (k != 'anniversarySummary') {
+          normalized.add(k);
+        }
+      }
+
+      // 레거시 싱글톤 키 병합
+      final merged = [
+        ...normalized,
+        ...legacyAll.where((w) => !normalized.contains(w)),
+      ];
+
+      final hasLegacyFlags = json.keys.any((k) => k.startsWith('show'));
+      if (hasLegacyFlags) {
+        final showFlags = <String, bool>{
+          'weather': json['showWeather'] as bool? ?? true,
+          'fridgeSummary': json['showFridgeSummary'] as bool? ?? true,
+          'todaySchedule': json['showTodaySchedule'] as bool? ?? true,
+          'investmentSummary': json['showInvestmentSummary'] as bool? ?? true,
+          'todoSummary': json['showTodoSummary'] as bool? ?? true,
+          'assetSummary': json['showAssetSummary'] as bool? ?? true,
+          'memoSummary': json['showMemoSummary'] as bool? ?? false,
+          'householdSummary': json['showHouseholdSummary'] as bool? ?? false,
+          'childcareSummary': json['showChildcareSummary'] as bool? ?? false,
+          'savingsSummary': json['showSavingsSummary'] as bool? ?? false,
+        };
+        widgetOrder = merged
+            .where((k) => !showFlags.containsKey(k) || (showFlags[k] ?? true))
+            .toList();
+      } else {
+        widgetOrder = merged;
+      }
+    } else {
+      widgetOrder = const [
+        'weather',
+        'todaySchedule',
+        'householdSummary',
+        'investmentSummary',
+        'childcareSummary',
+      ];
+    }
+
     return DashboardWidgetSettings(
-      showTodaySchedule: json['showTodaySchedule'] as bool? ?? true,
-      showInvestmentSummary: json['showInvestmentSummary'] as bool? ?? true,
-      showTodoSummary: json['showTodoSummary'] as bool? ?? true,
-      showAssetSummary: json['showAssetSummary'] as bool? ?? true,
-      showMemoSummary: json['showMemoSummary'] as bool? ?? false,
-      showWeather: json['showWeather'] as bool? ?? true,
-      showHouseholdSummary: json['showHouseholdSummary'] as bool? ?? false,
-      showChildcareSummary: json['showChildcareSummary'] as bool? ?? false,
-      childcareSelectedGroupId: json['childcareSelectedGroupId'] as String?,
-      showSavingsSummary: json['showSavingsSummary'] as bool? ?? false,
-      savingsSelectedGroupId: json['savingsSelectedGroupId'] as String?,
-      showFridgeSummary: json['showFridgeSummary'] as bool? ?? true,
-      fridgeExpirySelectedGroupId: json['fridgeExpirySelectedGroupId'] as String?,
-      showAnniversarySummary: json['showAnniversarySummary'] as bool? ?? false,
+      widgetOrder: widgetOrder,
+      anniversaryIds: anniversaryIds,
       scheduleViewMode: parseMode('scheduleViewMode'),
       scheduleSelectedGroupIds: parseGroupIds('scheduleSelectedGroupIds'),
-      scheduleIncludePersonal: json['scheduleIncludePersonal'] as bool? ?? true,
+      scheduleIncludePersonal:
+          json['scheduleIncludePersonal'] as bool? ?? true,
       todoViewMode: parseMode('todoViewMode'),
       todoSelectedGroupIds: parseGroupIds('todoSelectedGroupIds'),
       todoIncludePersonal: json['todoIncludePersonal'] as bool? ?? true,
@@ -153,26 +199,17 @@ class DashboardWidgetSettings {
         (e) => e.name == (json['householdViewMode'] as String? ?? ''),
         orElse: () => HouseholdWidgetViewMode.budget,
       ),
-      widgetOrder: mergedOrder,
+      childcareSelectedGroupId: json['childcareSelectedGroupId'] as String?,
+      savingsSelectedGroupId: json['savingsSelectedGroupId'] as String?,
+      fridgeExpirySelectedGroupId:
+          json['fridgeExpirySelectedGroupId'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'showTodaySchedule': showTodaySchedule,
-      'showInvestmentSummary': showInvestmentSummary,
-      'showTodoSummary': showTodoSummary,
-      'showAssetSummary': showAssetSummary,
-      'showMemoSummary': showMemoSummary,
-      'showWeather': showWeather,
-      'showHouseholdSummary': showHouseholdSummary,
-      'showChildcareSummary': showChildcareSummary,
-      'childcareSelectedGroupId': childcareSelectedGroupId,
-      'showSavingsSummary': showSavingsSummary,
-      'savingsSelectedGroupId': savingsSelectedGroupId,
-      'showFridgeSummary': showFridgeSummary,
-      'fridgeExpirySelectedGroupId': fridgeExpirySelectedGroupId,
-      'showAnniversarySummary': showAnniversarySummary,
+      'widgetOrder': widgetOrder,
+      'anniversaryIds': anniversaryIds,
       'scheduleViewMode': scheduleViewMode.name,
       'scheduleSelectedGroupIds': scheduleSelectedGroupIds,
       'scheduleIncludePersonal': scheduleIncludePersonal,
@@ -184,18 +221,15 @@ class DashboardWidgetSettings {
       'memoPersonalOnly': memoPersonalOnly,
       'householdSelectedGroupId': householdSelectedGroupId,
       'householdViewMode': householdViewMode.name,
-      'widgetOrder': widgetOrder,
+      'childcareSelectedGroupId': childcareSelectedGroupId,
+      'savingsSelectedGroupId': savingsSelectedGroupId,
+      'fridgeExpirySelectedGroupId': fridgeExpirySelectedGroupId,
     };
   }
 
   DashboardWidgetSettings copyWith({
-    bool? showTodaySchedule,
-    bool? showInvestmentSummary,
-    bool? showTodoSummary,
-    bool? showAssetSummary,
-    bool? showMemoSummary,
-    bool? showWeather,
-    bool? showHouseholdSummary,
+    List<String>? widgetOrder,
+    Object? anniversaryIds = _sentinel,
     ScheduleViewMode? scheduleViewMode,
     Object? scheduleSelectedGroupIds = _sentinel,
     bool? scheduleIncludePersonal,
@@ -207,30 +241,21 @@ class DashboardWidgetSettings {
     bool? memoPersonalOnly,
     Object? householdSelectedGroupId = _sentinel,
     HouseholdWidgetViewMode? householdViewMode,
-    bool? showChildcareSummary,
     Object? childcareSelectedGroupId = _sentinel,
-    bool? showSavingsSummary,
     Object? savingsSelectedGroupId = _sentinel,
-    bool? showFridgeSummary,
     Object? fridgeExpirySelectedGroupId = _sentinel,
-    bool? showAnniversarySummary,
-    List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
-      showTodaySchedule: showTodaySchedule ?? this.showTodaySchedule,
-      showInvestmentSummary: showInvestmentSummary ?? this.showInvestmentSummary,
-      showTodoSummary: showTodoSummary ?? this.showTodoSummary,
-      showAssetSummary: showAssetSummary ?? this.showAssetSummary,
-      showMemoSummary: showMemoSummary ?? this.showMemoSummary,
-      showWeather: showWeather ?? this.showWeather,
-      showHouseholdSummary: showHouseholdSummary ?? this.showHouseholdSummary,
-      showChildcareSummary: showChildcareSummary ?? this.showChildcareSummary,
-      showSavingsSummary: showSavingsSummary ?? this.showSavingsSummary,
+      widgetOrder: widgetOrder ?? this.widgetOrder,
+      anniversaryIds: anniversaryIds == _sentinel
+          ? this.anniversaryIds
+          : anniversaryIds as List<String>,
       scheduleViewMode: scheduleViewMode ?? this.scheduleViewMode,
       scheduleSelectedGroupIds: scheduleSelectedGroupIds == _sentinel
           ? this.scheduleSelectedGroupIds
           : scheduleSelectedGroupIds as List<String>?,
-      scheduleIncludePersonal: scheduleIncludePersonal ?? this.scheduleIncludePersonal,
+      scheduleIncludePersonal:
+          scheduleIncludePersonal ?? this.scheduleIncludePersonal,
       todoViewMode: todoViewMode ?? this.todoViewMode,
       todoSelectedGroupIds: todoSelectedGroupIds == _sentinel
           ? this.todoSelectedGroupIds
@@ -253,12 +278,9 @@ class DashboardWidgetSettings {
       savingsSelectedGroupId: savingsSelectedGroupId == _sentinel
           ? this.savingsSelectedGroupId
           : savingsSelectedGroupId as String?,
-      showFridgeSummary: showFridgeSummary ?? this.showFridgeSummary,
       fridgeExpirySelectedGroupId: fridgeExpirySelectedGroupId == _sentinel
           ? this.fridgeExpirySelectedGroupId
           : fridgeExpirySelectedGroupId as String?,
-      showAnniversarySummary: showAnniversarySummary ?? this.showAnniversarySummary,
-      widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }
 }

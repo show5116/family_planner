@@ -181,84 +181,66 @@ class _DashboardGrid extends ConsumerWidget {
     for (final widgetType in settings.widgetOrder) {
       Widget? widget;
 
-      switch (widgetType) {
-        case 'fridgeSummary':
-          if (settings.showFridgeSummary) {
+      if (widgetType == 'anniversary') {
+        widget = AnniversarySummaryWidget(
+          key: const ValueKey('anniversary'),
+          anniversaryIds: settings.anniversaryIds,
+        );
+      } else {
+        switch (widgetType) {
+          case 'fridgeSummary':
             widget = FridgeExpiryWidget(
               initialSelectedGroupId: settings.fridgeExpirySelectedGroupId,
             );
-          }
-          break;
-        case 'todaySchedule':
-          if (settings.showTodaySchedule) {
+            break;
+          case 'todaySchedule':
             widget = TodayScheduleWidget(
               viewMode: settings.scheduleViewMode,
               initialSelectedGroupIds: settings.scheduleSelectedGroupIds,
               initialIncludePersonal: settings.scheduleIncludePersonal,
             );
-          }
-          break;
-        case 'investmentSummary':
-          if (settings.showInvestmentSummary) {
+            break;
+          case 'investmentSummary':
             widget = const InvestmentSummaryWidget();
-          }
-          break;
-        case 'todoSummary':
-          if (settings.showTodoSummary) {
+            break;
+          case 'todoSummary':
             widget = TodoSummaryWidget(
               viewMode: settings.todoViewMode,
               initialSelectedGroupIds: settings.todoSelectedGroupIds,
               initialIncludePersonal: settings.todoIncludePersonal,
             );
-          }
-          break;
-        case 'assetSummary':
-          if (settings.showAssetSummary) {
+            break;
+          case 'assetSummary':
             widget = AssetSummaryWidget(
               initialSelectedGroupId: settings.assetSelectedGroupId,
             );
-          }
-          break;
-        case 'memoSummary':
-          if (settings.showMemoSummary) {
+            break;
+          case 'memoSummary':
             widget = MemoSummaryWidget(
               initialSelectedGroupId: settings.memoSelectedGroupId,
               initialPersonalOnly: settings.memoPersonalOnly,
             );
-          }
-          break;
-        case 'householdSummary':
-          if (settings.showHouseholdSummary) {
+            break;
+          case 'householdSummary':
             widget = HouseholdSummaryWidget(
               initialSelectedGroupId: settings.householdSelectedGroupId,
               viewMode: settings.householdViewMode,
             );
-          }
-          break;
-        case 'weather':
-          if (settings.showWeather) {
+            break;
+          case 'weather':
             widget = const WeatherWidget();
-          }
-          break;
-        case 'childcareSummary':
-          if (settings.showChildcareSummary) {
+            break;
+          case 'childcareSummary':
             widget = ChildcareSummaryWidget(
               initialSelectedGroupId: settings.childcareSelectedGroupId,
             );
-          }
-          break;
-        case 'savingsSummary':
-          if (settings.showSavingsSummary) {
+            break;
+          case 'savingsSummary':
             widget = SavingsSummaryWidget(
               initialSelectedGroupId: settings.savingsSelectedGroupId,
             );
-          }
-          break;
-        case 'anniversarySummary':
-          if (settings.showAnniversarySummary) {
-            widget = const AnniversarySummaryWidget();
-          }
-          break;
+            break;
+        }
       }
 
       if (widget != null) {

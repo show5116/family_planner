@@ -9,6 +9,7 @@ class DashboardCard extends StatelessWidget {
     required this.title,
     required this.child,
     this.icon,
+    this.leadingWidget,
     this.action,
     this.onTap,
   });
@@ -16,6 +17,8 @@ class DashboardCard extends StatelessWidget {
   final String title;
   final Widget child;
   final IconData? icon;
+  /// icon 대신 사용할 커스텀 위젯 (예: 이모지 텍스트). leadingWidget이 있으면 icon은 무시됩니다.
+  final Widget? leadingWidget;
   final Widget? action;
   final VoidCallback? onTap;
 
@@ -33,7 +36,10 @@ class DashboardCard extends StatelessWidget {
               // 헤더 (제목, 아이콘, 액션)
               Row(
                 children: [
-                  if (icon != null) ...[
+                  if (leadingWidget != null) ...[
+                    leadingWidget!,
+                    const SizedBox(width: AppSizes.spaceS),
+                  ] else if (icon != null) ...[
                     Icon(
                       icon,
                       size: AppSizes.iconMedium,

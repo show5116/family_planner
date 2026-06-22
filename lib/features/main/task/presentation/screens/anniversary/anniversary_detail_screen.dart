@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
 import 'package:family_planner/features/main/task/data/repositories/anniversary_repository.dart';
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
 import 'package:family_planner/features/main/task/presentation/screens/anniversary/anniversary_form_dialog.dart';
+
+const _weekdayLabels = ['월', '화', '수', '목', '금', '토', '일'];
+
+String _formatDateWithDay(DateTime date) {
+  final day = _weekdayLabels[date.weekday - 1];
+  return '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')} ($day)';
+}
 
 /// 기념일 상세 화면
 class AnniversaryDetailScreen extends ConsumerWidget {
@@ -23,6 +32,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 목록 provider에서 최신 데이터 구독 (수정 후 자동 반영)
     final listAsync = ref.watch(anniversaryManagementProvider(groupId));
+    final isLoading = listAsync.isLoading && listAsync.valueOrNull == null;
     final current = listAsync.valueOrNull
             ?.firstWhere((a) => a.id == anniversary.id,
                 orElse: () => anniversary) ??
@@ -32,8 +42,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
     final daysUntil = current.daysUntilNext;
     final daysSince = current.daysSince;
 
-    final dateStr =
-        '${current.date.year}.${current.date.month.toString().padLeft(2, '0')}.${current.date.day.toString().padLeft(2, '0')}';
+    final dateStr = _formatDateWithDay(current.date);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,20 +51,26 @@ class AnniversaryDetailScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.edit_outlined),
             tooltip: '수정',
-            onPressed: () => AnniversaryFormDialog.show(
-              context,
-              groupId: groupId,
-              anniversary: current,
-            ),
+            onPressed: isLoading
+                ? null
+                : () => AnniversaryFormDialog.show(
+                      context,
+                      groupId: groupId,
+                      anniversary: current,
+                    ),
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline, color: AppColors.error),
             tooltip: '삭제',
-            onPressed: () => _confirmDelete(context, ref, current),
+            onPressed: isLoading
+                ? null
+                : () => _confirmDelete(context, ref, current),
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.spaceL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,6 +117,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(
+
     BuildContext context,
     WidgetRef ref,
     AnniversaryModel current,
@@ -315,25 +331,67 @@ class _InfoSection extends StatelessWidget {
 
 // ── 예정된 milestone 기념일 섹션 ──────────────────────────────────────────────
 
-class _UpcomingMilestonesSection extends ConsumerWidget {
+const _kInitialLimit = 3;
+
+class _UpcomingMilestonesSection extends ConsumerStatefulWidget {
   final String anniversaryId;
   const _UpcomingMilestonesSection({required this.anniversaryId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(upcomingMilestoneTasksProvider(anniversaryId));
+  ConsumerState<_UpcomingMilestonesSection> createState() =>
+      _UpcomingMilestonesSectionState();
+}
+
+class _UpcomingMilestonesSectionState
+    extends ConsumerState<_UpcomingMilestonesSection> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final async = ref.watch(upcomingMilestoneTasksProvider(widget.anniversaryId));
 
     return async.when(
-      loading: () => const SizedBox.shrink(),
+      loading: () => const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.spaceM),
+        child: Center(child: CircularProgressIndicator()),
+      ),
       error: (_, _) => const SizedBox.shrink(),
       data: (items) {
         if (items.isEmpty) return const SizedBox.shrink();
+        final visible = _expanded ? items : items.take(_kInitialLimit).toList();
+        final hasMore = items.length > _kInitialLimit;
+
         return _InfoSection(
           title: '예정된 기념일',
           child: Column(
-            children: items
-                .map((item) => _UpcomingMilestoneRow(item: item))
-                .toList(),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...visible.asMap().entries.map((entry) {
+                final isLast = entry.key == visible.length - 1;
+                return Column(
+                  children: [
+                    _UpcomingMilestoneRow(item: entry.value),
+                    if (!isLast)
+                      const Divider(height: AppSizes.spaceL, thickness: 0.5),
+                  ],
+                );
+              }),
+              if (hasMore)
+                TextButton.icon(
+                  onPressed: () => setState(() => _expanded = !_expanded),
+                  icon: Icon(
+                    _expanded ? Icons.expand_less : Icons.expand_more,
+                    size: 16,
+                  ),
+                  label: Text(_expanded
+                      ? '접기'
+                      : '+ ${items.length - _kInitialLimit}개 더 보기'),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.only(top: AppSizes.spaceXS),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+            ],
           ),
         );
       },
@@ -348,50 +406,66 @@ class _UpcomingMilestoneRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final d = item.daysUntilDue;
-    final dLabel = d == null
-        ? ''
-        : d == 0
-            ? 'D-Day'
-            : 'D-$d';
-    final dateStr =
-        '${item.scheduledAt.year}.${item.scheduledAt.month.toString().padLeft(2, '0')}.${item.scheduledAt.day.toString().padLeft(2, '0')}';
+    final today = DateTime.now();
+    final scheduled = item.scheduledAt;
+    final d = DateTime(scheduled.year, scheduled.month, scheduled.day)
+        .difference(DateTime(today.year, today.month, today.day))
+        .inDays;
+    final dLabel = d == 0 ? 'D-Day' : d > 0 ? 'D-$d' : 'D+${-d}';
 
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSizes.spaceS),
-      child: Row(
-        children: [
-          Icon(
-            Icons.event_outlined,
-            size: 16,
-            color: theme.colorScheme.primary,
-          ),
-          const SizedBox(width: AppSizes.spaceS),
-          Expanded(
-            child: Text(
-              '${item.title}  $dateStr',
-              style: theme.textTheme.bodyMedium,
+    final badgeColor = d == 0
+        ? AppColors.error
+        : d > 0 && d <= 7
+            ? Colors.orange
+            : theme.colorScheme.primary;
+
+    return InkWell(
+      onTap: () => context.push(AppRoutes.todoDetail, extra: {
+        'taskId': item.id,
+        'task': null,
+      }),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.event_outlined, size: 16, color: theme.colorScheme.primary),
+            const SizedBox(width: AppSizes.spaceS),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.title, style: theme.textTheme.bodyMedium),
+                  Text(
+                    _formatDateWithDay(scheduled),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          if (dLabel.isNotEmpty)
             Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSizes.spaceS,
                 vertical: 2,
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
+                color: badgeColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                border: Border.all(color: badgeColor.withValues(alpha: 0.3)),
               ),
               child: Text(
                 dLabel,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: badgeColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
