@@ -2125,5 +2125,13 @@
   "dashboard_trial_banner_sublabel_days": "Switches to regular plan in {days} days",
   "@dashboard_trial_banner_sublabel_days": { "description": "Dashboard trial banner days remaining", "placeholders": { "days": { "type": "int" } } },
   "dashboard_trial_banner_sublabel_today": "Trial ends today",
-  "@dashboard_trial_banner_sublabel_today": { "description": "Dashboard trial banner ending today" }
+  "@dashboard_trial_banner_sublabel_today": { "description": "Dashboard trial banner ending today" },
+  "anniversary_widgetTitle": "Upcoming Anniversaries",
+  "@anniversary_widgetTitle": { "description": "Anniversary dashboard widget title" },
+  "anniversary_widgetEmpty": "No anniversaries registered",
+  "@anniversary_widgetEmpty": { "description": "Anniversary widget empty state message" },
+  "widgetSettings_anniversarySummary": "Anniversaries",
+  "@widgetSettings_anniversarySummary": { "description": "Widget settings - anniversary widget name" },
+  "widgetSettings_anniversarySummaryDesc": "Shows upcoming anniversaries and D-day countdown",
+  "@widgetSettings_anniversarySummaryDesc": { "description": "Widget settings - anniversary widget description" }
 }

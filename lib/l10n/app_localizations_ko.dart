@@ -4356,4 +4356,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get dashboard_trial_banner_sublabel_today => '오늘 체험이 종료됩니다';
+
+  @override
+  String get anniversary_widgetTitle => '다가오는 기념일';
+
+  @override
+  String get anniversary_widgetEmpty => '등록된 기념일이 없습니다';
+
+  @override
+  String get widgetSettings_anniversarySummary => '기념일';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc => '다가오는 기념일과 D-day를 표시합니다';
 }

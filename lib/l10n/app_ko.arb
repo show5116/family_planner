@@ -2139,5 +2139,13 @@
   "dashboard_trial_banner_sublabel_days": "{days}일 후 일반 플랜으로 전환됩니다",
   "@dashboard_trial_banner_sublabel_days": { "description": "대시보드 체험 배너 남은 일수", "placeholders": { "days": { "type": "int" } } },
   "dashboard_trial_banner_sublabel_today": "오늘 체험이 종료됩니다",
-  "@dashboard_trial_banner_sublabel_today": { "description": "대시보드 체험 배너 당일 안내" }
+  "@dashboard_trial_banner_sublabel_today": { "description": "대시보드 체험 배너 당일 안내" },
+  "anniversary_widgetTitle": "다가오는 기념일",
+  "@anniversary_widgetTitle": { "description": "기념일 대시보드 위젯 제목" },
+  "anniversary_widgetEmpty": "등록된 기념일이 없습니다",
+  "@anniversary_widgetEmpty": { "description": "기념일 위젯 빈 상태 메시지" },
+  "widgetSettings_anniversarySummary": "기념일",
+  "@widgetSettings_anniversarySummary": { "description": "위젯 설정 - 기념일 위젯 이름" },
+  "widgetSettings_anniversarySummaryDesc": "다가오는 기념일과 D-day를 표시합니다",
+  "@widgetSettings_anniversarySummaryDesc": { "description": "위젯 설정 - 기념일 위젯 설명" }
 }

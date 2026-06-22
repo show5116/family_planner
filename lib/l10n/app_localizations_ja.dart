@@ -4348,4 +4348,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get dashboard_trial_banner_sublabel_today => '本日で体験が終了します';
+
+  @override
+  String get anniversary_widgetTitle => '近づく記念日';
+
+  @override
+  String get anniversary_widgetEmpty => '登録された記念日がありません';
+
+  @override
+  String get widgetSettings_anniversarySummary => '記念日';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc =>
+      '近づく記念日とD-dayカウントダウンを表示します';
 }

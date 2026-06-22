@@ -8379,6 +8379,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'오늘 체험이 종료됩니다'**
   String get dashboard_trial_banner_sublabel_today;
+
+  /// 기념일 대시보드 위젯 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'다가오는 기념일'**
+  String get anniversary_widgetTitle;
+
+  /// 기념일 위젯 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 기념일이 없습니다'**
+  String get anniversary_widgetEmpty;
+
+  /// 위젯 설정 - 기념일 위젯 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일'**
+  String get widgetSettings_anniversarySummary;
+
+  /// 위젯 설정 - 기념일 위젯 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'다가오는 기념일과 D-day를 표시합니다'**
+  String get widgetSettings_anniversarySummaryDesc;
 }
 
 class _AppLocalizationsDelegate

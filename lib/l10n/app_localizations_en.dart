@@ -4450,4 +4450,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboard_trial_banner_sublabel_today => 'Trial ends today';
+
+  @override
+  String get anniversary_widgetTitle => 'Upcoming Anniversaries';
+
+  @override
+  String get anniversary_widgetEmpty => 'No anniversaries registered';
+
+  @override
+  String get widgetSettings_anniversarySummary => 'Anniversaries';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc =>
+      'Shows upcoming anniversaries and D-day countdown';
 }

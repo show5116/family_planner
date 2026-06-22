@@ -2125,5 +2125,13 @@
   "dashboard_trial_banner_sublabel_days": "{days}日後に通常プランに切り替わります",
   "@dashboard_trial_banner_sublabel_days": { "description": "ダッシュボード体験バナー残り日数", "placeholders": { "days": { "type": "int" } } },
   "dashboard_trial_banner_sublabel_today": "本日で体験が終了します",
-  "@dashboard_trial_banner_sublabel_today": { "description": "ダッシュボード体験バナー終了当日" }
+  "@dashboard_trial_banner_sublabel_today": { "description": "ダッシュボード体験バナー終了当日" },
+  "anniversary_widgetTitle": "近づく記念日",
+  "@anniversary_widgetTitle": { "description": "記念日ダッシュボードウィジェットタイトル" },
+  "anniversary_widgetEmpty": "登録された記念日がありません",
+  "@anniversary_widgetEmpty": { "description": "記念日ウィジェット空の状態メッセージ" },
+  "widgetSettings_anniversarySummary": "記念日",
+  "@widgetSettings_anniversarySummary": { "description": "ウィジェット設定 - 記念日ウィジェット名" },
+  "widgetSettings_anniversarySummaryDesc": "近づく記念日とD-dayカウントダウンを表示します",
+  "@widgetSettings_anniversarySummaryDesc": { "description": "ウィジェット設定 - 記念日ウィジェット説明" }
 }
