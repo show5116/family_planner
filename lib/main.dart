@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -65,6 +67,14 @@ void main() async {
 
   if (kIsWeb) {
     usePathUrlStrategy();
+  }
+
+  // ATT 동의 팝업 (iOS 전용, AdMob 초기화 전 반드시 선행)
+  if (!kIsWeb && Platform.isIOS) {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status == TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
   }
 
   // AdMob 초기화 (runApp 전, timeout 적용)
