@@ -24,6 +24,7 @@
 | [api-sync](api-sync/) | 백엔드 API 문서와 프론트엔드 동기화 확인 | "공지사항 API 동기화 확인해줘" |
 | [test-generate](test-generate/) | 테스트 코드 자동 생성 | "MemoProvider 테스트 생성해줘" |
 | [vibe-verify](vibe-verify/) | 배포 전 5개 영역 검증 (그룹삭제·캐시·i18n·광고·Android UI) | "배포 전 검증해줘", "vibe-verify 실행" |
+| [version-update](version-update/) | 버전 업그레이드 + 커밋 분석 + 패치노트 생성 + 기능 검증 통합 처리 | "버전 올려줘", "v1.1.0 배포 준비", "릴리즈 준비" |
 
 ### 💡 토큰 효율성 최적화
 

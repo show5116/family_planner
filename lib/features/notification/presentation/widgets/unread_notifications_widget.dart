@@ -346,6 +346,8 @@ class _NotificationItem extends StatelessWidget {
         return Icons.wallet_outlined;
       case NotificationCategory.system:
         return Icons.campaign_outlined;
+      case NotificationCategory.weather:
+        return Icons.wb_sunny_outlined;
     }
   }
 
@@ -368,6 +370,8 @@ class _NotificationItem extends StatelessWidget {
         return Colors.indigo;
       case NotificationCategory.system:
         return Colors.red;
+      case NotificationCategory.weather:
+        return Colors.lightBlue;
     }
   }
 }
