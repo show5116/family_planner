@@ -7,7 +7,7 @@ import 'package:family_planner/core/theme/app_theme.dart';
 class ThemeSettings {
   const ThemeSettings({
     this.variant = AppThemeVariant.blue,
-    this.mode = ThemeMode.system,
+    this.mode = ThemeMode.light,
   });
 
   final AppThemeVariant variant;
@@ -57,7 +57,7 @@ class ThemeSettingsNotifier extends StateNotifier<ThemeSettings> {
             (m) => m.toString() == modeStr,
             orElse: () => ThemeMode.system,
           )
-        : ThemeMode.system;
+        : ThemeMode.light;
 
     state = ThemeSettings(variant: variant, mode: mode);
   }
