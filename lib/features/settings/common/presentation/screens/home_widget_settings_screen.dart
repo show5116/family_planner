@@ -91,6 +91,9 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
         case 'fridgeSummary':
           _settings = _settings.copyWith(showFridgeSummary: value);
           break;
+        case 'anniversarySummary':
+          _settings = _settings.copyWith(showAnniversarySummary: value);
+          break;
         case 'weather':
           _settings = _settings.copyWith(showWeather: value);
           break;
@@ -190,6 +193,13 @@ class _HomeWidgetSettingsBodyState extends ConsumerState<_HomeWidgetSettingsBody
           'title': l10n.widgetSettings_weather,
           'description': l10n.widgetSettings_weatherDesc,
           'enabled': _settings.showWeather,
+        };
+      case 'anniversarySummary':
+        return {
+          'icon': Icons.celebration_outlined,
+          'title': l10n.widgetSettings_anniversarySummary,
+          'description': l10n.widgetSettings_anniversarySummaryDesc,
+          'enabled': _settings.showAnniversarySummary,
         };
       default:
         return {

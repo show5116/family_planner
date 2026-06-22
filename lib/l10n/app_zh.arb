@@ -2080,5 +2080,13 @@
   "dashboard_trial_banner_sublabel_days": "{days}天后切换为普通计划",
   "@dashboard_trial_banner_sublabel_days": { "description": "仪表板体验横幅剩余天数", "placeholders": { "days": { "type": "int" } } },
   "dashboard_trial_banner_sublabel_today": "今天体验结束",
-  "@dashboard_trial_banner_sublabel_today": { "description": "仪表板体验横幅结束当天" }
+  "@dashboard_trial_banner_sublabel_today": { "description": "仪表板体验横幅结束当天" },
+  "anniversary_widgetTitle": "即将到来的纪念日",
+  "@anniversary_widgetTitle": { "description": "纪念日仪表板小部件标题" },
+  "anniversary_widgetEmpty": "没有注册的纪念日",
+  "@anniversary_widgetEmpty": { "description": "纪念日小部件空状态消息" },
+  "widgetSettings_anniversarySummary": "纪念日",
+  "@widgetSettings_anniversarySummary": { "description": "小部件设置 - 纪念日小部件名称" },
+  "widgetSettings_anniversarySummaryDesc": "显示即将到来的纪念日和倒计时",
+  "@widgetSettings_anniversarySummaryDesc": { "description": "小部件设置 - 纪念日小部件描述" }
 }

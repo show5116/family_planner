@@ -32,7 +32,8 @@ class AppleAuthService {
 
   /// Apple Sign In 지원 여부 확인
   static Future<bool> isAvailable() async {
-    if (kIsWeb) return false;
+    if (kIsWeb) return true;
+    if (defaultTargetPlatform == TargetPlatform.android) return true;
     return await SignInWithApple.isAvailable();
   }
 }

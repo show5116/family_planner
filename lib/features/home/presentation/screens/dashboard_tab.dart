@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:family_planner/features/home/presentation/widgets/anniversary_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/fridge_expiry_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/investment_summary_widget.dart';
@@ -251,6 +252,11 @@ class _DashboardGrid extends ConsumerWidget {
             widget = SavingsSummaryWidget(
               initialSelectedGroupId: settings.savingsSelectedGroupId,
             );
+          }
+          break;
+        case 'anniversarySummary':
+          if (settings.showAnniversarySummary) {
+            widget = const AnniversarySummaryWidget();
           }
           break;
       }

@@ -425,11 +425,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Apple 로그인 (플랫폼별 자동 분기)
   ///
   /// - 웹: OAuth 팝업 방식
-  /// - 모바일(iOS/macOS): SDK 방식 (sign_in_with_apple)
+  /// - Android: OAuth 외부 브라우저 방식 (Deep Link로 콜백)
+  /// - iOS/macOS: SDK 방식 (sign_in_with_apple)
   Future<void> loginWithApple() async {
     state = state.copyWith(error: null);
 
     try {
+      // Android: 외부 브라우저로 Apple OAuth 페이지를 열고 Deep Link로 콜백 수신
+      // OAuthCallbackScreen이 accessToken을 받아 handleWebOAuthCallback을 호출한다
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        await _authService.loginWithAppleOAuth();
+        return;
+      }
+
       final response = kIsWeb
           ? await _authService.loginWithAppleOAuth()
           : await _authService.loginWithApple();

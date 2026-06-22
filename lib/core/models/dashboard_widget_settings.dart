@@ -37,6 +37,8 @@ class DashboardWidgetSettings {
   // 냉장고 유통기한 위젯
   final bool showFridgeSummary;
   final String? fridgeExpirySelectedGroupId; // null = 첫 번째 그룹
+  // 기념일 위젯
+  final bool showAnniversarySummary;
 
   const DashboardWidgetSettings({
     this.showTodaySchedule = true,
@@ -52,6 +54,7 @@ class DashboardWidgetSettings {
     this.savingsSelectedGroupId,
     this.showFridgeSummary = true,
     this.fridgeExpirySelectedGroupId,
+    this.showAnniversarySummary = false,
     this.scheduleViewMode = ScheduleViewMode.today,
     this.scheduleSelectedGroupIds,
     this.scheduleIncludePersonal = true,
@@ -74,6 +77,7 @@ class DashboardWidgetSettings {
       'householdSummary',
       'childcareSummary',
       'savingsSummary',
+      'anniversarySummary',
     ],
   });
 
@@ -93,6 +97,7 @@ class DashboardWidgetSettings {
       'householdSummary',
       'childcareSummary',
       'savingsSummary',
+      'anniversarySummary',
     ];
 
     final savedOrder = (json['widgetOrder'] as List<dynamic>?)
@@ -133,6 +138,7 @@ class DashboardWidgetSettings {
       savingsSelectedGroupId: json['savingsSelectedGroupId'] as String?,
       showFridgeSummary: json['showFridgeSummary'] as bool? ?? true,
       fridgeExpirySelectedGroupId: json['fridgeExpirySelectedGroupId'] as String?,
+      showAnniversarySummary: json['showAnniversarySummary'] as bool? ?? false,
       scheduleViewMode: parseMode('scheduleViewMode'),
       scheduleSelectedGroupIds: parseGroupIds('scheduleSelectedGroupIds'),
       scheduleIncludePersonal: json['scheduleIncludePersonal'] as bool? ?? true,
@@ -166,6 +172,7 @@ class DashboardWidgetSettings {
       'savingsSelectedGroupId': savingsSelectedGroupId,
       'showFridgeSummary': showFridgeSummary,
       'fridgeExpirySelectedGroupId': fridgeExpirySelectedGroupId,
+      'showAnniversarySummary': showAnniversarySummary,
       'scheduleViewMode': scheduleViewMode.name,
       'scheduleSelectedGroupIds': scheduleSelectedGroupIds,
       'scheduleIncludePersonal': scheduleIncludePersonal,
@@ -206,6 +213,7 @@ class DashboardWidgetSettings {
     Object? savingsSelectedGroupId = _sentinel,
     bool? showFridgeSummary,
     Object? fridgeExpirySelectedGroupId = _sentinel,
+    bool? showAnniversarySummary,
     List<String>? widgetOrder,
   }) {
     return DashboardWidgetSettings(
@@ -249,6 +257,7 @@ class DashboardWidgetSettings {
       fridgeExpirySelectedGroupId: fridgeExpirySelectedGroupId == _sentinel
           ? this.fridgeExpirySelectedGroupId
           : fridgeExpirySelectedGroupId as String?,
+      showAnniversarySummary: showAnniversarySummary ?? this.showAnniversarySummary,
       widgetOrder: widgetOrder ?? this.widgetOrder,
     );
   }

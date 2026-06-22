@@ -4325,4 +4325,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dashboard_trial_banner_sublabel_today => '今天体验结束';
+
+  @override
+  String get anniversary_widgetTitle => '即将到来的纪念日';
+
+  @override
+  String get anniversary_widgetEmpty => '没有注册的纪念日';
+
+  @override
+  String get widgetSettings_anniversarySummary => '纪念日';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc => '显示即将到来的纪念日和倒计时';
 }
