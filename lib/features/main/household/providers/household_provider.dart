@@ -174,8 +174,10 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
 ///
 /// dayOfMonth를 선택된 달 날짜로 환산했을 때 오늘 이후인 항목만 반환.
 /// 미래 달이면 해당 달 전체 고정지출이 모두 포함됨.
+/// 이미 이번 달에 트랜잭션이 생성된 규칙(recurringExpenseId 매칭)은 제외.
 final householdUnpaidRecurringProvider = Provider<List<RecurringExpenseModel>>((ref) {
   final recurring = ref.watch(householdRecurringExpensesProvider).valueOrNull ?? [];
+  final expenses = ref.watch(householdExpensesProvider).valueOrNull ?? [];
   final selectedMonth = ref.watch(householdSelectedMonthProvider);
   final now = DateTime.now();
 
@@ -184,9 +186,15 @@ final householdUnpaidRecurringProvider = Provider<List<RecurringExpenseModel>>((
   final targetMonth = int.parse(parts[1]);
   final today = DateTime(now.year, now.month, now.day);
 
+  final processedIds = expenses
+      .where((e) => e.recurringExpenseId != null)
+      .map((e) => e.recurringExpenseId!)
+      .toSet();
+
   return recurring
       .where((e) {
         if (!e.isActive) return false;
+        if (processedIds.contains(e.id)) return false;
         final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
         final effectiveDay = e.dayOfMonth > lastDay ? lastDay : e.dayOfMonth;
         final dueDate = DateTime(targetYear, targetMonth, effectiveDay);
