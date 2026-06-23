@@ -52,6 +52,7 @@ class AdminUserDto {
   }
 
   AdminUserDto copyWith({
+    bool? isAdmin,
     SubscriptionTier? subscriptionTier,
     DateTime? subscriptionExpiresAt,
     bool? isSubscriptionActive,
@@ -63,7 +64,7 @@ class AdminUserDto {
       id: id,
       name: name,
       email: email,
-      isAdmin: isAdmin,
+      isAdmin: isAdmin ?? this.isAdmin,
       subscriptionTier: subscriptionTier ?? this.subscriptionTier,
       subscriptionExpiresAt: clearExpiresAt
           ? null

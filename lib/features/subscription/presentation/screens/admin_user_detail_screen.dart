@@ -6,6 +6,172 @@ import 'package:family_planner/core/models/subscription_tier.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
 import 'package:family_planner/features/subscription/providers/admin_subscription_provider.dart';
 
+// ── 운영자 권한 카드 ──────────────────────────────────────────
+
+class _AdminRoleCard extends ConsumerWidget {
+  const _AdminRoleCard({required this.user});
+  final AdminUserDto user;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final roleState = ref.watch(adminUserAdminRoleProvider);
+    final isLoading = roleState is AsyncLoading;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.admin_panel_settings_outlined,
+                  color: user.isAdmin ? colorScheme.primary : null,
+                ),
+                const SizedBox(width: AppSizes.spaceS),
+                Text('운영자 권한', style: Theme.of(context).textTheme.titleSmall),
+                const Spacer(),
+                if (user.isAdmin)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '운영자',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const Divider(height: AppSizes.spaceL),
+            _InfoRow(
+              label: '현재 상태',
+              value: user.isAdmin ? '운영자' : '일반 사용자',
+              valueColor: user.isAdmin ? colorScheme.primary : null,
+            ),
+            const SizedBox(height: AppSizes.spaceL),
+            if (user.isAdmin)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: isLoading
+                      ? null
+                      : () => _onRevokeAdmin(context, ref),
+                  icon: isLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.remove_moderator_outlined),
+                  label: const Text('운영자 권한 회수'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.orange,
+                    side: const BorderSide(color: Colors.orange),
+                  ),
+                ),
+              )
+            else
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: isLoading
+                      ? null
+                      : () => _onGrantAdmin(context, ref),
+                  icon: isLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Icon(Icons.verified_user_outlined),
+                  label: const Text('운영자 권한 부여'),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onGrantAdmin(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('운영자 권한 부여'),
+        content: Text('${user.name} 에게 운영자 권한을 부여하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('부여'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final success =
+        await ref.read(adminUserAdminRoleProvider.notifier).grantAdmin(user.id);
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(success ? '운영자 권한이 부여되었습니다.' : '권한 부여 실패. 다시 시도해주세요.'),
+        backgroundColor: success ? null : Colors.red,
+      ),
+    );
+  }
+
+  Future<void> _onRevokeAdmin(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('운영자 권한 회수'),
+        content: Text('${user.name} 의 운영자 권한을 회수하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: Colors.orange),
+            child: const Text('회수'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final success = await ref
+        .read(adminUserAdminRoleProvider.notifier)
+        .revokeAdmin(user.id);
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            Text(success ? '운영자 권한이 회수되었습니다.' : '권한 회수 실패. 다시 시도해주세요.'),
+        backgroundColor: success ? null : Colors.red,
+      ),
+    );
+  }
+}
+
 class AdminUserDetailScreen extends ConsumerWidget {
   const AdminUserDetailScreen({super.key, required this.user});
 
@@ -30,6 +196,8 @@ class AdminUserDetailScreen extends ConsumerWidget {
           _SubscriptionCard(user: current),
           const SizedBox(height: AppSizes.spaceM),
           _AccountManagementCard(user: current),
+          const SizedBox(height: AppSizes.spaceM),
+          _AdminRoleCard(user: current),
           const SizedBox(height: AppSizes.spaceM),
           _ActivityCard(user: current),
         ],

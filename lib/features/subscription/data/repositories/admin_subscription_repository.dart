@@ -67,6 +67,20 @@ class AdminSubscriptionRepository {
       '/auth/admin/users/$userId/force',
     );
   }
+
+  /// 운영자 권한 부여
+  Future<void> grantAdmin(String userId) async {
+    await ApiClient.instance.dio.patch(
+      '/auth/admin/users/$userId/grant-admin',
+    );
+  }
+
+  /// 운영자 권한 회수
+  Future<void> revokeAdmin(String userId) async {
+    await ApiClient.instance.dio.patch(
+      '/auth/admin/users/$userId/revoke-admin',
+    );
+  }
 }
 
 final adminSubscriptionRepositoryProvider =
