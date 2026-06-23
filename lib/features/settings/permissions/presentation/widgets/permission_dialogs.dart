@@ -1,4 +1,5 @@
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
 import 'package:family_planner/features/settings/permissions/models/permission.dart';
 import 'package:family_planner/features/settings/permissions/providers/permission_management_provider.dart';
 import 'package:flutter/material.dart';
@@ -66,33 +67,35 @@ class PermissionCreateDialog {
                   ),
                   const SizedBox(height: AppSizes.spaceM),
                   // 카테고리 드롭다운
-                  DropdownButtonFormField<String>(
-                    initialValue: selectedCategory,
-                    decoration: InputDecoration(
-                      labelText: l10n.permission_category,
-                      border: const OutlineInputBorder(),
-                    ),
-                    items: [
-                      // 기존 카테고리들
-                      ...existingCategories.map(
-                        (category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
+                  FocusDismissDropdown(
+                    child: DropdownButtonFormField<String>(
+                      initialValue: selectedCategory,
+                      decoration: InputDecoration(
+                        labelText: l10n.permission_category,
+                        border: const OutlineInputBorder(),
+                      ),
+                      items: [
+                        // 기존 카테고리들
+                        ...existingCategories.map(
+                          (category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category),
+                          ),
                         ),
-                      ),
-                      // 마지막에 "직접 입력" 옵션 추가
-                      const DropdownMenuItem(
-                        value: _customCategoryValue,
-                        child: Text('+ 직접 입력'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          selectedCategory = value;
-                        });
-                      }
-                    },
+                        // 마지막에 "직접 입력" 옵션 추가
+                        const DropdownMenuItem(
+                          value: _customCategoryValue,
+                          child: Text('+ 직접 입력'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            selectedCategory = value;
+                          });
+                        }
+                      },
+                    ),
                   ),
                   // "직접 입력" 선택 시 텍스트 필드 표시
                   if (isCustom) ...[

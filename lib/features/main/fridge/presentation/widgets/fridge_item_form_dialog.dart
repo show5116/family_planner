@@ -198,6 +198,7 @@ class _FridgeItemFormDialogState extends ConsumerState<FridgeItemFormDialog> {
   }
 
   Future<void> _openReferenceSelector(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final result = await showModalBottomSheet<ExpiryReferenceResult>(
       context: context,
       isScrollControlled: true,
@@ -632,6 +633,7 @@ class _EditForm extends StatelessWidget {
   });
 
   Future<void> _pickDate(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final picked = await showDatePicker(
       context: context,
       initialDate: expiresAt ?? DateTime.now().add(const Duration(days: 7)),
@@ -787,6 +789,7 @@ class _AddForm extends ConsumerWidget {
   });
 
   Future<void> _pickDate(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final picked = await showDatePicker(
       context: context,
       initialDate: expiresAt ?? DateTime.now().add(const Duration(days: 7)),

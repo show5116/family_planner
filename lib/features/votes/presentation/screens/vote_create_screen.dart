@@ -84,6 +84,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
   }
 
   Future<void> _pickDeadline() async {
+    FocusScope.of(context).unfocus();
     final now = DateTime.now();
     final date = await showDatePicker(
       context: context,
