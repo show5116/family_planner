@@ -1384,6 +1384,7 @@ class _CarryOverBottomSheetState extends ConsumerState<_CarryOverBottomSheet> {
           groupId: widget.groupId,
           amount: amount,
           accountId: _selectedAccount!.id,
+          accountName: _selectedAccount!.name,
           currentBalance: _selectedAccount!.latestBalance,
           currentMonth: widget.currentMonth,
         );
@@ -1393,6 +1394,7 @@ class _CarryOverBottomSheetState extends ConsumerState<_CarryOverBottomSheet> {
           groupId: widget.groupId,
           amount: amount,
           savingsId: _selectedSavings!.id,
+          savingsName: _selectedSavings!.name,
           currentMonth: widget.currentMonth,
         );
         successMsg = l10n.household_transfer_success;
@@ -1498,6 +1500,7 @@ class _CarryOverBottomSheetState extends ConsumerState<_CarryOverBottomSheet> {
               _selectedAccount = null;
               _selectedSavings = null;
             }),
+            showSelectedIcon: false,
             style: const ButtonStyle(
               visualDensity: VisualDensity.compact,
             ),

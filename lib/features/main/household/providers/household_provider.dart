@@ -532,6 +532,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     required String? groupId,
     required double amount,
     required String accountId,
+    required String accountName,
     required double? currentBalance,
     required String currentMonth,
   }) async {
@@ -549,7 +550,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         amount: amount,
         category: ExpenseCategory.assetTransfer,
         date: dateStr,
-        description: '자산 이동',
+        description: '자산 이동 ($accountName)',
       ));
 
       final newBalance = (currentBalance ?? 0) + amount;
@@ -557,8 +558,9 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
             accountId,
             CreateAssetRecordDto(
               recordDate: dateStr,
-              inputMode: RecordInputMode.manual,
-              balance: newBalance,
+              inputMode: RecordInputMode.auto,
+              additionalPrincipal: amount,
+              currentBalance: newBalance,
             ),
           );
 
@@ -579,6 +581,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     required String? groupId,
     required double amount,
     required String savingsId,
+    required String savingsName,
     required String currentMonth,
   }) async {
     if (amount <= 0) return false;
@@ -595,7 +598,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         amount: amount,
         category: ExpenseCategory.assetTransfer,
         date: dateStr,
-        description: '저금통 이동',
+        description: '저금통 이동 ($savingsName)',
       ));
 
       await _ref.read(savingsRepositoryProvider).deposit(
