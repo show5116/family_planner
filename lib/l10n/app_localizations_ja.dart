@@ -2509,6 +2509,39 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_carry_over_no_balance => '繰越できる残高がありません';
 
   @override
+  String get household_balance_transfer => '残高を移動';
+
+  @override
+  String get household_carry_over_mode_next_month => '来月に繰越';
+
+  @override
+  String get household_carry_over_mode_asset => '資産口座';
+
+  @override
+  String get household_carry_over_mode_savings => '貯金箱';
+
+  @override
+  String get household_carry_over_amount_label => '金額';
+
+  @override
+  String get household_carry_over_amount_exceeded => '残高を超えることはできません';
+
+  @override
+  String get household_carry_over_select_account => '口座を選択してください';
+
+  @override
+  String get household_carry_over_select_savings => '貯金箱を選択してください';
+
+  @override
+  String get household_carry_over_no_accounts => '登録された口座がありません';
+
+  @override
+  String get household_carry_over_no_savings => '登録された貯金箱がありません';
+
+  @override
+  String get household_transfer_success => '資産移動が完了しました';
+
+  @override
   String get household_income => '収入';
 
   @override

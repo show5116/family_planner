@@ -4968,6 +4968,72 @@ abstract class AppLocalizations {
   /// **'이월할 잔금이 없습니다'**
   String get household_carry_over_no_balance;
 
+  /// 잔금 이동 진입 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'잔금 이동'**
+  String get household_balance_transfer;
+
+  /// 이월 방법: 다음 달 이월
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 달 이월'**
+  String get household_carry_over_mode_next_month;
+
+  /// 이월 방법: 자산 계좌로 이동
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 계좌'**
+  String get household_carry_over_mode_asset;
+
+  /// 이월 방법: 저금통으로 이동
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통'**
+  String get household_carry_over_mode_savings;
+
+  /// 이월 금액 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'금액'**
+  String get household_carry_over_amount_label;
+
+  /// 잔금 초과 오류 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'잔금을 초과할 수 없습니다'**
+  String get household_carry_over_amount_exceeded;
+
+  /// 자산 계좌 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌를 선택하세요'**
+  String get household_carry_over_select_account;
+
+  /// 저금통 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통을 선택하세요'**
+  String get household_carry_over_select_savings;
+
+  /// 계좌 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 계좌가 없습니다'**
+  String get household_carry_over_no_accounts;
+
+  /// 저금통 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 저금통이 없습니다'**
+  String get household_carry_over_no_savings;
+
+  /// 자산 이동 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 이동이 완료되었습니다'**
+  String get household_transfer_success;
+
   /// 입금 유형 레이블
   ///
   /// In ko, this message translates to:
