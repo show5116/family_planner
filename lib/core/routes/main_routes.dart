@@ -13,6 +13,7 @@ import 'package:family_planner/features/main/assets/presentation/screens/account
 import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/asset_statistics_screen.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/screens/expense_detail_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
@@ -238,6 +239,22 @@ List<RouteBase> getMainRoutes() {
     GoRoute(
       path: AppRoutes.householdDetail,
       name: 'householdDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        ExpenseModel? expense;
+        String? groupId;
+        if (extra is ExpenseModel) {
+          expense = extra;
+        } else if (extra is Map<String, dynamic>) {
+          expense = extra['expense'] as ExpenseModel?;
+          groupId = extra['groupId'] as String?;
+        }
+        return ExpenseDetailScreen(expense: expense!, groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.householdEdit,
+      name: 'householdEdit',
       builder: (context, state) {
         final extra = state.extra;
         ExpenseModel? expense;

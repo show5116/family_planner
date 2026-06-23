@@ -31,6 +31,7 @@ class AppRoutes {
   static const String household = '/household';
   static const String householdAdd = '/household/add';
   static const String householdDetail = '/household/detail';
+  static const String householdEdit = '/household/edit';
   static const String householdStatistics = '/household/statistics';
   static const String householdRecurring = '/household/recurring';
   static const String householdRecurringAdd = '/household/recurring/add';
