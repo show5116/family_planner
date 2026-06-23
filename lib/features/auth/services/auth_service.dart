@@ -400,11 +400,20 @@ class AuthService extends ApiServiceBase {
   /// 소셜 신규 회원가입 완료 (약관 동의)
   ///
   /// 소셜 로그인 응답에서 isNewUser: true + tempToken을 받은 경우 호출합니다.
-  Future<Map<String, dynamic>> socialSignup({required String tempToken}) async {
+  /// needsName: true이면 name 필수, needsEmail: true이면 email 선택 전달.
+  Future<Map<String, dynamic>> socialSignup({
+    required String tempToken,
+    String? name,
+    String? email,
+  }) async {
     try {
+      final body = <String, dynamic>{'tempToken': tempToken, 'agreedTerms': true};
+      if (name != null && name.isNotEmpty) body['name'] = name;
+      if (email != null && email.isNotEmpty) body['email'] = email;
+
       final response = await apiClient.post(
         ApiConstants.socialSignup,
-        data: {'tempToken': tempToken, 'agreedTerms': true},
+        data: body,
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);

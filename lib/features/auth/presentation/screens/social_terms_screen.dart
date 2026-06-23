@@ -84,6 +84,15 @@ class _SocialTermsScreenState extends ConsumerState<SocialTermsScreen> {
     setState(() => _isLoading = true);
 
     try {
+      final authState = ref.read(authProvider);
+
+      // name 또는 email 입력이 필요하면 SocialInfoScreen으로 이동
+      if (authState.needsName || authState.needsEmail) {
+        if (mounted) context.push(AppRoutes.socialInfo);
+        return;
+      }
+
+      // 추가 정보 없이 바로 가입 완료
       await ref.read(authProvider.notifier).completeSocialSignup();
     } catch (e) {
       if (mounted) {

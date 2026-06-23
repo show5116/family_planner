@@ -31,6 +31,8 @@ class AuthState {
     this.user,
     this.error,
     this.pendingTempToken,
+    this.needsName = false,
+    this.needsEmail = false,
   });
 
   final bool? isAuthenticated;
@@ -40,6 +42,12 @@ class AuthState {
   /// 소셜 신규 가입 시 약관 동의 대기 상태의 임시 토큰.
   /// null이 아니면 약관 동의 화면을 표시해야 한다.
   final String? pendingTempToken;
+
+  /// 소셜 신규 가입 시 이름 입력이 필요한 경우 true
+  final bool needsName;
+
+  /// 소셜 신규 가입 시 이메일 입력이 필요한 경우 true
+  final bool needsEmail;
 
   bool get isPendingTerms => pendingTempToken != null;
 
@@ -62,12 +70,16 @@ class AuthState {
     String? error,
     String? pendingTempToken,
     bool clearPendingTempToken = false,
+    bool? needsName,
+    bool? needsEmail,
   }) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       user: user ?? this.user,
       error: error,
       pendingTempToken: clearPendingTempToken ? null : (pendingTempToken ?? this.pendingTempToken),
+      needsName: needsName ?? this.needsName,
+      needsEmail: needsEmail ?? this.needsEmail,
     );
   }
 }
@@ -359,6 +371,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           pendingTempToken: response['tempToken'] as String,
           clearPendingTempToken: false,
+          needsName: response['needsName'] == true || response['needsName'] == 'true',
+          needsEmail: response['needsEmail'] == true || response['needsEmail'] == 'true',
         );
         return;
       }
@@ -399,6 +413,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           pendingTempToken: response['tempToken'] as String,
           clearPendingTempToken: false,
+          needsName: response['needsName'] == true || response['needsName'] == 'true',
+          needsEmail: response['needsEmail'] == true || response['needsEmail'] == 'true',
         );
         return;
       }
@@ -446,6 +462,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           pendingTempToken: response['tempToken'] as String,
           clearPendingTempToken: false,
+          needsName: response['needsName'] == true || response['needsName'] == 'true',
+          needsEmail: response['needsEmail'] == true || response['needsEmail'] == 'true',
         );
         return;
       }
@@ -466,8 +484,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  /// 소셜 신규 회원가입 완료 (약관 동의)
-  Future<void> completeSocialSignup() async {
+  /// 소셜 신규 회원가입 완료 (약관 동의 + 선택적 name/email)
+  Future<void> completeSocialSignup({String? name, String? email}) async {
     final tempToken = state.pendingTempToken;
     if (tempToken == null) return;
 
@@ -475,7 +493,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     try {
       // 토큰 저장 (socialSignup 내부에서 처리)
-      await _authService.socialSignup(tempToken: tempToken);
+      await _authService.socialSignup(tempToken: tempToken, name: name, email: email);
 
       _invalidateGroupProviders();
 
