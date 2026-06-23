@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_form_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -392,10 +393,12 @@ class _MonthlyDayPicker extends StatelessWidget {
       children: [
         Text(l10n.schedule_recurringMonthlyEveryMonth, style: theme.textTheme.bodyMedium),
         const SizedBox(width: AppSizes.spaceS),
-        DropdownButton<int>(
-          value: formState.monthlyDayOfMonth,
-          items: List.generate(31, (i) => i + 1).map((day) => DropdownMenuItem(value: day, child: Text('$day'))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyDayOfMonth(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.monthlyDayOfMonth,
+            items: List.generate(31, (i) => i + 1).map((day) => DropdownMenuItem(value: day, child: Text('$day'))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyDayOfMonth(value); },
+          ),
         ),
         const SizedBox(width: AppSizes.spaceS),
         Text(l10n.schedule_recurringDay, style: theme.textTheme.bodyMedium),
@@ -428,16 +431,20 @@ class _MonthlyWeekPicker extends StatelessWidget {
       children: [
         Text(l10n.schedule_recurringMonthlyEveryMonth, style: theme.textTheme.bodyMedium),
         const SizedBox(width: AppSizes.spaceS),
-        DropdownButton<int>(
-          value: formState.monthlyWeekOfMonth,
-          items: List.generate(5, (i) => i + 1).map((week) => DropdownMenuItem(value: week, child: Text(weekLabels[week - 1]))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyWeekOfMonth(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.monthlyWeekOfMonth,
+            items: List.generate(5, (i) => i + 1).map((week) => DropdownMenuItem(value: week, child: Text(weekLabels[week - 1]))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyWeekOfMonth(value); },
+          ),
         ),
         const SizedBox(width: AppSizes.spaceS),
-        DropdownButton<int>(
-          value: formState.monthlyDayOfWeek,
-          items: List.generate(7, (i) => i).map((day) => DropdownMenuItem(value: day, child: Text(dayLabels[day]))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyDayOfWeek(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.monthlyDayOfWeek,
+            items: List.generate(7, (i) => i).map((day) => DropdownMenuItem(value: day, child: Text(dayLabels[day]))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setMonthlyDayOfWeek(value); },
+          ),
         ),
       ],
     );
@@ -525,16 +532,20 @@ class _YearlyDayPicker extends StatelessWidget {
       children: [
         Text(l10n.schedule_recurringYearlyEveryYear, style: theme.textTheme.bodyMedium),
         const SizedBox(width: AppSizes.spaceS),
-        DropdownButton<int>(
-          value: formState.yearlyMonth,
-          items: List.generate(12, (i) => i + 1).map((month) => DropdownMenuItem(value: month, child: Text(monthLabels[month - 1]))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyMonth(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.yearlyMonth,
+            items: List.generate(12, (i) => i + 1).map((month) => DropdownMenuItem(value: month, child: Text(monthLabels[month - 1]))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyMonth(value); },
+          ),
         ),
         const SizedBox(width: AppSizes.spaceS),
-        DropdownButton<int>(
-          value: formState.yearlyDayOfMonth,
-          items: List.generate(31, (i) => i + 1).map((day) => DropdownMenuItem(value: day, child: Text('$day'))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfMonth(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.yearlyDayOfMonth,
+            items: List.generate(31, (i) => i + 1).map((day) => DropdownMenuItem(value: day, child: Text('$day'))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfMonth(value); },
+          ),
         ),
         const SizedBox(width: AppSizes.spaceS),
         Text(l10n.schedule_recurringDay, style: theme.textTheme.bodyMedium),
@@ -570,20 +581,26 @@ class _YearlyWeekPicker extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text(l10n.schedule_recurringYearlyEveryYear, style: theme.textTheme.bodyMedium),
-        DropdownButton<int>(
-          value: formState.yearlyMonth,
-          items: List.generate(12, (i) => i + 1).map((month) => DropdownMenuItem(value: month, child: Text(monthLabels[month - 1]))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyMonth(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.yearlyMonth,
+            items: List.generate(12, (i) => i + 1).map((month) => DropdownMenuItem(value: month, child: Text(monthLabels[month - 1]))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyMonth(value); },
+          ),
         ),
-        DropdownButton<int>(
-          value: formState.yearlyWeekOfMonth,
-          items: List.generate(5, (i) => i + 1).map((week) => DropdownMenuItem(value: week, child: Text(weekLabels[week - 1]))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyWeekOfMonth(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.yearlyWeekOfMonth,
+            items: List.generate(5, (i) => i + 1).map((week) => DropdownMenuItem(value: week, child: Text(weekLabels[week - 1]))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyWeekOfMonth(value); },
+          ),
         ),
-        DropdownButton<int>(
-          value: formState.yearlyDayOfWeek,
-          items: List.generate(7, (i) => i).map((day) => DropdownMenuItem(value: day, child: Text(dayLabels[day]))).toList(),
-          onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfWeek(value); },
+        FocusDismissDropdown(
+          child: DropdownButton<int>(
+            value: formState.yearlyDayOfWeek,
+            items: List.generate(7, (i) => i).map((day) => DropdownMenuItem(value: day, child: Text(dayLabels[day]))).toList(),
+            onChanged: readOnly ? null : (value) { if (value != null) formNotifier.setYearlyDayOfWeek(value); },
+          ),
         ),
       ],
     );

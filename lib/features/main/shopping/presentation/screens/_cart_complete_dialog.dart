@@ -791,23 +791,25 @@ class _TransferRow extends StatelessWidget {
             ),
           ),
           if (!excluded)
-            DropdownButton<String?>(
-              value: selectedStorageId,
-              hint: Text(l10n.fridge_cart_skip_transfer,
-                  style: textTheme.bodySmall),
-              underline: const SizedBox.shrink(),
-              items: [
-                DropdownMenuItem<String?>(
-                  value: null,
-                  child: Text(l10n.fridge_cart_skip_transfer,
-                      style: textTheme.bodySmall),
-                ),
-                ...storages.map((s) => DropdownMenuItem<String?>(
-                      value: s.id,
-                      child: Text(s.name, style: textTheme.bodySmall),
-                    )),
-              ],
-              onChanged: onChanged,
+            FocusDismissDropdown(
+              child: DropdownButton<String?>(
+                value: selectedStorageId,
+                hint: Text(l10n.fridge_cart_skip_transfer,
+                    style: textTheme.bodySmall),
+                underline: const SizedBox.shrink(),
+                items: [
+                  DropdownMenuItem<String?>(
+                    value: null,
+                    child: Text(l10n.fridge_cart_skip_transfer,
+                        style: textTheme.bodySmall),
+                  ),
+                  ...storages.map((s) => DropdownMenuItem<String?>(
+                        value: s.id,
+                        child: Text(s.name, style: textTheme.bodySmall),
+                      )),
+                ],
+                onChanged: onChanged,
+              ),
             ),
         ],
       ),
@@ -843,26 +845,28 @@ class _MerchantSelector extends ConsumerWidget {
             onPressed: () => context.push(AppRoutes.householdMerchants),
           ),
         ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String?>(
-            value: merchants.any((m) => m.id == selectedId) ? selectedId : null,
-            isExpanded: true,
-            isDense: true,
-            hint: Text(
-              merchants.isEmpty
-                  ? l10n.household_merchants_empty
-                  : l10n.household_merchant_none,
+        child: FocusDismissDropdown(
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String?>(
+              value: merchants.any((m) => m.id == selectedId) ? selectedId : null,
+              isExpanded: true,
+              isDense: true,
+              hint: Text(
+                merchants.isEmpty
+                    ? l10n.household_merchants_empty
+                    : l10n.household_merchant_none,
+              ),
+              items: [
+                DropdownMenuItem(
+                  value: null,
+                  child: Text(l10n.household_merchant_none),
+                ),
+                ...merchants.map(
+                  (m) => DropdownMenuItem(value: m.id, child: Text(m.name)),
+                ),
+              ],
+              onChanged: merchants.isEmpty ? null : onChanged,
             ),
-            items: [
-              DropdownMenuItem(
-                value: null,
-                child: Text(l10n.household_merchant_none),
-              ),
-              ...merchants.map(
-                (m) => DropdownMenuItem(value: m.id, child: Text(m.name)),
-              ),
-            ],
-            onChanged: merchants.isEmpty ? null : onChanged,
           ),
         ),
       ),

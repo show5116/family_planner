@@ -2513,6 +2513,39 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_carry_over_no_balance => '이월할 잔금이 없습니다';
 
   @override
+  String get household_balance_transfer => '잔금 이동';
+
+  @override
+  String get household_carry_over_mode_next_month => '다음 달 이월';
+
+  @override
+  String get household_carry_over_mode_asset => '자산 계좌';
+
+  @override
+  String get household_carry_over_mode_savings => '저금통';
+
+  @override
+  String get household_carry_over_amount_label => '금액';
+
+  @override
+  String get household_carry_over_amount_exceeded => '잔금을 초과할 수 없습니다';
+
+  @override
+  String get household_carry_over_select_account => '계좌를 선택하세요';
+
+  @override
+  String get household_carry_over_select_savings => '저금통을 선택하세요';
+
+  @override
+  String get household_carry_over_no_accounts => '등록된 계좌가 없습니다';
+
+  @override
+  String get household_carry_over_no_savings => '등록된 저금통이 없습니다';
+
+  @override
+  String get household_transfer_success => '자산 이동이 완료되었습니다';
+
+  @override
   String get household_income => '입금';
 
   @override

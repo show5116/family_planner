@@ -2,11 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
+import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
 import 'package:family_planner/features/main/household/data/repositories/household_repository.dart';
+import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
 
 part 'household_provider.g.dart';
 
@@ -174,8 +177,10 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
 ///
 /// dayOfMonth를 선택된 달 날짜로 환산했을 때 오늘 이후인 항목만 반환.
 /// 미래 달이면 해당 달 전체 고정지출이 모두 포함됨.
+/// 이미 이번 달에 트랜잭션이 생성된 규칙(recurringExpenseId 매칭)은 제외.
 final householdUnpaidRecurringProvider = Provider<List<RecurringExpenseModel>>((ref) {
   final recurring = ref.watch(householdRecurringExpensesProvider).valueOrNull ?? [];
+  final expenses = ref.watch(householdExpensesProvider).valueOrNull ?? [];
   final selectedMonth = ref.watch(householdSelectedMonthProvider);
   final now = DateTime.now();
 
@@ -184,9 +189,15 @@ final householdUnpaidRecurringProvider = Provider<List<RecurringExpenseModel>>((
   final targetMonth = int.parse(parts[1]);
   final today = DateTime(now.year, now.month, now.day);
 
+  final processedIds = expenses
+      .where((e) => e.recurringExpenseId != null)
+      .map((e) => e.recurringExpenseId!)
+      .toSet();
+
   return recurring
       .where((e) {
         if (!e.isActive) return false;
+        if (processedIds.contains(e.id)) return false;
         final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
         final effectiveDay = e.dayOfMonth > lastDay ? lastDay : e.dayOfMonth;
         final dueDate = DateTime(targetYear, targetMonth, effectiveDay);
@@ -506,6 +517,95 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
       _ref.invalidate(householdMonthlyStatisticsProvider);
       _ref.invalidate(dashboardHouseholdStatisticsProvider);
       // 현재 보고 있는 월이 이번 달이면 지출 목록도 갱신
+      _ref.read(householdExpensesProvider.notifier).refresh();
+
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  /// 자산 계좌로 이동: ASSET_TRANSFER 지출 + 자산 기록 업데이트
+  Future<bool> transferToAsset({
+    required String? groupId,
+    required double amount,
+    required String accountId,
+    required double? currentBalance,
+    required String currentMonth,
+  }) async {
+    if (amount <= 0) return false;
+
+    state = const AsyncValue.loading();
+    try {
+      final now = DateTime.now();
+      final dateStr =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+      await _repository.createExpense(CreateExpenseDto(
+        groupId: groupId,
+        type: TransactionType.expense,
+        amount: amount,
+        category: ExpenseCategory.assetTransfer,
+        date: dateStr,
+        description: '자산 이동',
+      ));
+
+      final newBalance = (currentBalance ?? 0) + amount;
+      await _ref.read(assetRepositoryProvider).createAssetRecord(
+            accountId,
+            CreateAssetRecordDto(
+              recordDate: dateStr,
+              inputMode: RecordInputMode.manual,
+              balance: newBalance,
+            ),
+          );
+
+      _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
+      _ref.read(householdExpensesProvider.notifier).refresh();
+
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  /// 저금통으로 이동: ASSET_TRANSFER 지출 + 저금통 입금
+  Future<bool> transferToSavings({
+    required String? groupId,
+    required double amount,
+    required String savingsId,
+    required String currentMonth,
+  }) async {
+    if (amount <= 0) return false;
+
+    state = const AsyncValue.loading();
+    try {
+      final now = DateTime.now();
+      final dateStr =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+      await _repository.createExpense(CreateExpenseDto(
+        groupId: groupId,
+        type: TransactionType.expense,
+        amount: amount,
+        category: ExpenseCategory.assetTransfer,
+        date: dateStr,
+        description: '저금통 이동',
+      ));
+
+      await _ref.read(savingsRepositoryProvider).deposit(
+            savingsId,
+            amount: amount,
+            description: '가계부 잔금 이동',
+          );
+
+      _ref.invalidate(householdMonthlyStatisticsProvider);
+      _ref.invalidate(dashboardHouseholdStatisticsProvider);
       _ref.read(householdExpensesProvider.notifier).refresh();
 
       state = const AsyncValue.data(null);

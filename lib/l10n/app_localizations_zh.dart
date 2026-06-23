@@ -2495,6 +2495,39 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_carry_over_no_balance => '没有可结转的余额';
 
   @override
+  String get household_balance_transfer => '余额转移';
+
+  @override
+  String get household_carry_over_mode_next_month => '结转下月';
+
+  @override
+  String get household_carry_over_mode_asset => '资产账户';
+
+  @override
+  String get household_carry_over_mode_savings => '存钱罐';
+
+  @override
+  String get household_carry_over_amount_label => '金额';
+
+  @override
+  String get household_carry_over_amount_exceeded => '不能超过可用余额';
+
+  @override
+  String get household_carry_over_select_account => '请选择账户';
+
+  @override
+  String get household_carry_over_select_savings => '请选择存钱罐';
+
+  @override
+  String get household_carry_over_no_accounts => '没有已注册的账户';
+
+  @override
+  String get household_carry_over_no_savings => '没有已注册的存钱罐';
+
+  @override
+  String get household_transfer_success => '资产转移完成';
+
+  @override
   String get household_income => '收入';
 
   @override

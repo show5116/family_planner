@@ -261,6 +261,7 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
   }
 
   Future<void> _selectPayDay() async {
+    FocusScope.of(context).unfocus();
     final current = int.tryParse(_payDayController.text) ?? 1;
     final picked = await showModalBottomSheet<int>(
       context: context,
@@ -272,6 +273,7 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
   }
 
   Future<void> _selectNegotiationDate() async {
+    FocusScope.of(context).unfocus();
     final picked = await showDatePicker(
       context: context,
       initialDate: _nextNegotiationDate ?? DateTime.now().add(const Duration(days: 365)),

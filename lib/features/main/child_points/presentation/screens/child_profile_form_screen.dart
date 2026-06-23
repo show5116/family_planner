@@ -113,6 +113,7 @@ class _ChildProfileFormScreenState
   }
 
   Future<void> _selectBirthDate() async {
+    FocusScope.of(context).unfocus();
     final initial = _selectedBirthDate ?? DateTime(2015);
     final picked = await showModalBottomSheet<DateTime>(
       context: context,

@@ -78,6 +78,7 @@ class LocationField extends StatelessWidget {
   });
 
   void _openSearch(BuildContext context) {
+    FocusScope.of(context).unfocus();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
