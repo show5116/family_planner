@@ -18,6 +18,7 @@ import 'package:family_planner/features/main/household/presentation/screens/expe
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/screens/recurring_expense_detail_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/merchants_screen.dart';
@@ -277,6 +278,17 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.householdRecurring,
       name: 'householdRecurring',
       builder: (context, state) => const RecurringExpensesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.householdRecurringDetail,
+      name: 'householdRecurringDetail',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return RecurringExpenseDetailScreen(
+          item: extra['item'] as RecurringExpenseModel,
+          groupId: extra['groupId'] as String?,
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.householdRecurringAdd,

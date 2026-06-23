@@ -640,3 +640,9 @@ final householdManagementProvider =
     ref,
   );
 });
+
+/// 고정지출 적용 내역 조회 Provider (가변이면 통계 포함)
+final recurringExpenseHistoryProvider =
+    FutureProvider.family<RecurringExpenseHistoryModel, String>((ref, id) async {
+  return ref.watch(householdRepositoryProvider).getRecurringExpenseHistory(id);
+});

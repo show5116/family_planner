@@ -120,6 +120,18 @@ class HouseholdRepository {
     }
   }
 
+  /// 고정지출 적용 내역 조회 (가변이면 통계 포함)
+  Future<RecurringExpenseHistoryModel> getRecurringExpenseHistory(String id) async {
+    try {
+      final response = await _dio.get('/household/recurring-expenses/$id/history');
+      return RecurringExpenseHistoryModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) throw Exception('고정지출을 찾을 수 없습니다');
+      if (e.response?.statusCode == 403) throw Exception('접근 권한이 없습니다');
+      throw Exception('적용 내역 조회 실패: ${e.message}');
+    }
+  }
+
   /// 지출 상세 조회
   Future<ExpenseModel> getExpenseById(String id) async {
     try {
