@@ -76,6 +76,7 @@ class ApiClient {
               options.path.contains('/auth/logout') ||
               options.path.contains('/auth/kakao') ||
               options.path.contains('/auth/google') ||
+              options.path.contains('/auth/apple') ||
               options.path.contains('/auth/social-signup');
 
           // 비공개 경로인데 토큰이 없으면 요청 즉시 취소 (로그아웃 후 잔여 rebuild 방어)
