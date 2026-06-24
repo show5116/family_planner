@@ -27,6 +27,40 @@ final selectedCategoryIdsProvider = StateProvider<List<String>>((ref) => []);
 /// 현재 선택된 그룹 ID Provider (카테고리 관리 등 단일 그룹 선택용)
 final selectedGroupIdProvider = StateProvider<String?>((ref) => null);
 
+/// 현재 선택된 주의 Task Provider (주간 타임테이블용)
+/// 선택된 날짜가 속한 주(일~토)의 모든 일정 반환
+final weekTasksProvider = Provider<List<TaskModel>>((ref) {
+  final selectedDate = ref.watch(selectedDateProvider);
+
+  // 주의 일요일(시작일) 계산
+  final dayOfWeek = selectedDate.weekday % 7; // 0=일, 1=월 ... 6=토
+  final weekStart = DateTime(selectedDate.year, selectedDate.month, selectedDate.day)
+      .subtract(Duration(days: dayOfWeek));
+  final weekEnd = weekStart.add(const Duration(days: 6));
+
+  // 주가 걸치는 월들의 task 수집 (최대 2개 월)
+  final startTasks =
+      ref.watch(monthlyTasksProvider(weekStart.year, weekStart.month)).valueOrNull ?? [];
+  final endTasks = (weekStart.month != weekEnd.month)
+      ? ref.watch(monthlyTasksProvider(weekEnd.year, weekEnd.month)).valueOrNull ?? []
+      : <TaskModel>[];
+
+  final allTasks = [...startTasks, ...endTasks];
+
+  return allTasks.where((task) {
+    if (task.type == TaskType.todoOnly) return false;
+    if (task.scheduledAt == null) return false;
+
+    final taskStart = DateTime(
+        task.scheduledAt!.year, task.scheduledAt!.month, task.scheduledAt!.day);
+    final taskEnd = task.dueAt != null
+        ? DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day)
+        : taskStart;
+
+    return !taskStart.isAfter(weekEnd) && !taskEnd.isBefore(weekStart);
+  }).toList();
+});
+
 /// 캘린더 검색 모드 활성화 여부
 final calendarSearchActiveProvider = StateProvider<bool>((ref) => false);
 

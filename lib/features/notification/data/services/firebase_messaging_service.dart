@@ -16,6 +16,13 @@ class FirebaseMessagingService {
   // 앱 종료 상태에서 탭한 메시지 — 앱 초기화 완료 후 처리
   static Map<String, dynamic>? _pendingNavigationData;
 
+  // 토큰 갱신 시 호출할 콜백 — 로그인 성공 후 fcm_token_provider가 주입
+  static Future<void> Function(String)? _onTokenRefreshCallback;
+
+  static void setOnTokenRefreshCallback(Future<void> Function(String)? callback) {
+    _onTokenRefreshCallback = callback;
+  }
+
   /// Firebase Messaging 초기화
   static Future<void> initialize() async {
     try {
@@ -32,7 +39,7 @@ class FirebaseMessagingService {
 
       // 토큰 갱신 리스너
       _messaging.onTokenRefresh.listen((newToken) {
-        // TODO: 백엔드에 새 토큰 전송
+        _onTokenRefreshCallback?.call(newToken);
       });
 
       // 포그라운드 메시지 핸들러

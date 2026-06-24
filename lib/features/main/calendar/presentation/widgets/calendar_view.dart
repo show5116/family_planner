@@ -180,6 +180,12 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       // 캘린더 포맷 변경 시
       onFormatChanged: widget.onFormatChanged,
 
+      // 2주 보기 제거 — 월간/주간만 허용
+      availableCalendarFormats: const {
+        CalendarFormat.month: '월',
+        CalendarFormat.week: '주',
+      },
+
       // 일정 데이터 로드 (해당 날짜의 Task 목록)
       eventLoader: (day) => _getEventsForDay(day),
 
@@ -194,6 +200,9 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
 
       // 캘린더 빌더
       calendarBuilders: _buildCalendarBuilders(),
+
+      // 셀 높이: 날짜 숫자(30px) + 칩 3줄(각 15px) + 여백
+      rowHeight: 82.0,
 
       // 제스처 및 애니메이션
       availableGestures: AvailableGestures.all,
@@ -353,94 +362,171 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
         final dateKey = DateTime(date.year, date.month, date.day);
         final slotMap = _multiDaySlotMap[dateKey] ?? {};
 
-        // 멀티데이 이벤트와 단일 이벤트 분리
+        // 멀티데이/단일 분리
         final multiDayEvents = <TaskModel>[];
         final singleDayEvents = <TaskModel>[];
-
         for (final task in events) {
-          final position = _getMultiDayPosition(task, date);
-          if (position == MultiDayPosition.single) {
-            singleDayEvents.add(task);
-          } else {
-            multiDayEvents.add(task);
-          }
+          final pos = _getMultiDayPosition(task, date);
+          (pos == MultiDayPosition.single ? singleDayEvents : multiDayEvents)
+              .add(task);
         }
 
-        // 슬롯 번호 → task 맵 구성 (최대 2슬롯)
-        final slotToTask = <int, TaskModel>{};
+        // ── 슬롯 할당 ──────────────────────────────────────────────
+        const kMaxSlots = 3;
+        const kBarH = 13.0;
+        const kSlotH = kBarH + 2.0; // 위아래 1px 여백
+
+        final totalEvents = multiDayEvents.length + singleDayEvents.length;
+        // 이벤트가 슬롯 수 초과 시 마지막 슬롯을 "+N 더" 칩으로 예약
+        final kFillSlots = totalEvents > kMaxSlots ? kMaxSlots - 1 : kMaxSlots;
+
+        final slotTask = <int, TaskModel>{};
         for (final task in multiDayEvents) {
-          final slot = slotMap[task.id];
-          if (slot != null && slot < 2) {
-            slotToTask[slot] = task;
-          }
+          final s = slotMap[task.id];
+          if (s != null && s < kFillSlots) slotTask[s] = task;
         }
-        // 각 슬롯을 개별 Positioned로 배치 — 절대 위치 고정으로 날짜 간 높이 일치
-        const barHeight = 4.0;
-        const barVerticalMargin = 1.0;
-        const barSlotHeight = barHeight + barVerticalMargin * 2;
+        int singleIdx = 0;
+        for (int s = 0; s < kFillSlots && singleIdx < singleDayEvents.length; s++) {
+          if (!slotTask.containsKey(s)) slotTask[s] = singleDayEvents[singleIdx++];
+        }
 
-        final bars = <Widget>[
-          for (int slot = 0; slot < 2; slot++)
-            if (slotToTask.containsKey(slot))
-              Positioned(
-                left: 0,
-                right: 0,
-                // slot 0은 bottom 기준 위쪽, slot 1은 바로 아래
-                bottom: 1 + (1 - slot) * barSlotHeight,
-                child: _buildMultiDayBar(
-                  _getMultiDayPosition(slotToTask[slot]!, date),
-                  _taskColor(slotToTask[slot]!),
+        final hiddenCount = totalEvents - slotTask.length;
+
+        // ── 렌더링 ─────────────────────────────────────────────────
+        // 셀 너비: 화면 너비 / 7 (table_calendar 기본 레이아웃 기준)
+        final cellW = MediaQuery.of(context).size.width / 7;
+
+        final chips = <Widget>[];
+        for (int slot = 0; slot < kMaxSlots; slot++) {
+          if (!slotTask.containsKey(slot)) continue;
+          final task = slotTask[slot]!;
+          final pos = _getMultiDayPosition(task, date);
+          final bottom = 2.0 + (kMaxSlots - 1 - slot) * kSlotH;
+
+          if (pos == MultiDayPosition.single) {
+            // 단일 이벤트 칩
+            final c = _taskColor(task);
+            chips.add(Positioned(
+              left: 0, right: 0, bottom: bottom,
+              child: Container(
+                height: kBarH,
+                margin: const EdgeInsets.symmetric(horizontal: 2),
+                decoration: BoxDecoration(
+                  color: c.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(kBarH / 2),
+                  border: Border.all(color: c.withValues(alpha: 0.6), width: 0.5),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  task.title,
+                  style: TextStyle(
+                    fontSize: 9.5, fontWeight: FontWeight.w600,
+                    color: c, height: 1.1,
+                  ),
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
                 ),
               ),
-        ];
+            ));
+          } else {
+            // 멀티데이 바
+            // colIndex: 0=일, 1=월 … 6=토 (startingDayOfWeek.sunday 기준)
+            final colIndex = date.weekday % 7;
+            final isBarStart =
+                pos == MultiDayPosition.start || colIndex == 0;
 
-        // 멀티데이 바가 없으면 단일 마커만
-        if (bars.isEmpty && singleDayEvents.isEmpty) return null;
+            if (!isBarStart) {
+              // middle/end이고 행의 첫 셀이 아닌 경우:
+              // start 셀의 overflow가 이 영역을 덮으므로 투명 플레이스홀더만 둠
+              chips.add(Positioned(
+                left: 0, right: 0, bottom: bottom,
+                child: const SizedBox(height: kBarH),
+              ));
+              continue;
+            }
 
-        return Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          top: 0,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              ...bars,
-              if (singleDayEvents.isNotEmpty)
-                Positioned(
-                  bottom: 1,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // 최대 2개 점 표시
-                      ...singleDayEvents.take(2).map((task) => Container(
-                            width: 6,
-                            height: 6,
-                            margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                            decoration: BoxDecoration(
-                              color: _taskColor(task),
-                              shape: BoxShape.circle,
-                            ),
-                          )),
-                      // 3개 이상이면 나머지 개수를 숫자로 표시
-                      if (singleDayEvents.length > 2)
-                        Container(
-                          margin: const EdgeInsets.only(left: 1),
-                          child: Text(
-                            '+${singleDayEvents.length - 2}',
-                            style: const TextStyle(
-                              fontSize: 7,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ),
-                    ],
+            // 이 셀부터 이벤트가 몇 칸 남았는지 계산
+            final daysLeftInRow = 7 - colIndex;
+            final today = DateTime(date.year, date.month, date.day);
+            final eventEnd = DateTime(
+                task.dueAt!.year, task.dueAt!.month, task.dueAt!.day);
+            final daysToEnd = eventEnd.difference(today).inDays + 1;
+            final span = daysToEnd < daysLeftInRow ? daysToEnd : daysLeftInRow;
+            final endsThisRow = daysToEnd <= daysLeftInRow;
+
+            final leftM = pos == MultiDayPosition.start ? 2.0 : 0.0;
+            final rightM = endsThisRow ? 2.0 : 0.0;
+            final barW = span * cellW - leftM - rightM;
+
+            final lr = pos == MultiDayPosition.start ? kBarH / 2 : 0.0;
+            final rr = endsThisRow ? kBarH / 2 : 0.0;
+            final c = _taskColor(task);
+
+            chips.add(Positioned(
+              left: leftM, width: barW, bottom: bottom,
+              child: Container(
+                height: kBarH,
+                decoration: BoxDecoration(
+                  color: c,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(lr),
+                    bottomLeft: Radius.circular(lr),
+                    topRight: Radius.circular(rr),
+                    bottomRight: Radius.circular(rr),
                   ),
                 ),
-            ],
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  task.title,
+                  style: const TextStyle(
+                    fontSize: 9.5, fontWeight: FontWeight.w600,
+                    color: Colors.white, height: 1.1,
+                  ),
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ));
+          }
+        }
+
+        // +N 더 칩: 슬롯 kMaxSlots-1 위치에 정식 칩으로 표시 (겹침 없음)
+        if (hiddenCount > 0) {
+          const overflowSlot = kMaxSlots - 1;
+          chips.add(Positioned(
+            left: 0,
+            right: 0,
+            bottom: 2.0 + (kMaxSlots - 1 - overflowSlot) * kSlotH, // = 2
+            child: Container(
+              height: kBarH,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              decoration: BoxDecoration(
+                color: AppColors.textSecondary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(kBarH / 2),
+                border: Border.all(
+                  color: AppColors.textSecondary.withValues(alpha: 0.25),
+                  width: 0.5,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                '+$hiddenCount개',
+                style: const TextStyle(
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+          ));
+        }
+
+        if (chips.isEmpty) return null;
+
+        return Positioned.fill(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: chips,
           ),
         );
       },
@@ -511,87 +597,50 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     );
 
     if (isSelected) {
-      return Center(
-        child: Container(
-          width: 34,
-          height: 34,
-          decoration: const BoxDecoration(
-            color: AppColors.primary,
-            shape: BoxShape.circle,
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Container(
+            width: 26,
+            height: 26,
+            decoration: const BoxDecoration(
+              color: AppColors.primary,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: dayContent,
           ),
-          alignment: Alignment.center,
-          child: dayContent,
         ),
       );
     }
 
     if (isToday) {
-      return Center(
-        child: Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.3),
-            shape: BoxShape.circle,
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Container(
+            width: 26,
+            height: 26,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: dayContent,
           ),
-          alignment: Alignment.center,
-          child: dayContent,
         ),
       );
     }
 
-    return Center(child: dayContent);
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: dayContent,
+      ),
+    );
   }
 
-  /// 멀티데이 이벤트 바 빌더
-  Widget _buildMultiDayBar(MultiDayPosition position, Color color) {
-    const barHeight = 4.0;
-    const verticalMargin = 1.0;
-
-    switch (position) {
-      case MultiDayPosition.start:
-        return Container(
-          height: barHeight,
-          margin: const EdgeInsets.only(
-              left: 4, right: 0, top: verticalMargin, bottom: verticalMargin),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(barHeight / 2),
-              bottomLeft: Radius.circular(barHeight / 2),
-            ),
-          ),
-        );
-      case MultiDayPosition.middle:
-        return Container(
-          height: barHeight,
-          margin: const EdgeInsets.only(
-              left: 0, right: 0, top: verticalMargin, bottom: verticalMargin),
-          decoration: BoxDecoration(color: color),
-        );
-      case MultiDayPosition.end:
-        return Container(
-          height: barHeight,
-          margin: const EdgeInsets.only(
-              left: 0, right: 4, top: verticalMargin, bottom: verticalMargin),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(barHeight / 2),
-              bottomRight: Radius.circular(barHeight / 2),
-            ),
-          ),
-        );
-      case MultiDayPosition.single:
-        return Container(
-          height: barHeight,
-          margin: const EdgeInsets.symmetric(
-              horizontal: 4, vertical: verticalMargin),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(barHeight / 2),
-          ),
-        );
-    }
-  }
 }

@@ -31,50 +31,44 @@ class TaskTypeSection extends StatelessWidget {
         Card(
           elevation: 0,
           color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          child: Column(
-            children: [
-              RadioListTile<TaskType>(
-                title: Text(l10n.schedule_taskTypeCalendarOnly),
-                subtitle: Text(
-                  l10n.schedule_taskTypeCalendarOnlyDesc,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+          child: RadioGroup<TaskType>(
+            groupValue: formState.taskType,
+            onChanged: (value) {
+              if (value != null) formNotifier.setTaskType(value);
+            },
+            child: Column(
+              children: [
+                RadioListTile<TaskType>(
+                  title: Text(l10n.schedule_taskTypeCalendarOnly),
+                  subtitle: Text(
+                    l10n.schedule_taskTypeCalendarOnlyDesc,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                  ),
+                  value: TaskType.calendarOnly,
+                  secondary: const Icon(Icons.calendar_today),
                 ),
-                value: TaskType.calendarOnly,
-                groupValue: formState.taskType,
-                onChanged: (value) {
-                  if (value != null) formNotifier.setTaskType(value);
-                },
-                secondary: const Icon(Icons.calendar_today),
-              ),
-              const Divider(height: 1),
-              RadioListTile<TaskType>(
-                title: Text(l10n.schedule_taskTypeTodoLinked),
-                subtitle: Text(
-                  l10n.schedule_taskTypeTodoLinkedDesc,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                const Divider(height: 1),
+                RadioListTile<TaskType>(
+                  title: Text(l10n.schedule_taskTypeTodoLinked),
+                  subtitle: Text(
+                    l10n.schedule_taskTypeTodoLinkedDesc,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                  ),
+                  value: TaskType.todoLinked,
+                  secondary: const Icon(Icons.checklist),
                 ),
-                value: TaskType.todoLinked,
-                groupValue: formState.taskType,
-                onChanged: (value) {
-                  if (value != null) formNotifier.setTaskType(value);
-                },
-                secondary: const Icon(Icons.checklist),
-              ),
-              const Divider(height: 1),
-              RadioListTile<TaskType>(
-                title: Text(l10n.schedule_taskTypeTodoOnly),
-                subtitle: Text(
-                  l10n.schedule_taskTypeTodoOnlyDesc,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                const Divider(height: 1),
+                RadioListTile<TaskType>(
+                  title: Text(l10n.schedule_taskTypeTodoOnly),
+                  subtitle: Text(
+                    l10n.schedule_taskTypeTodoOnlyDesc,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
+                  ),
+                  value: TaskType.todoOnly,
+                  secondary: const Icon(Icons.task_alt),
                 ),
-                value: TaskType.todoOnly,
-                groupValue: formState.taskType,
-                onChanged: (value) {
-                  if (value != null) formNotifier.setTaskType(value);
-                },
-                secondary: const Icon(Icons.task_alt),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

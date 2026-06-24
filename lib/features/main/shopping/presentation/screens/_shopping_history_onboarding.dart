@@ -79,7 +79,7 @@ extension _ShoppingHistoryOnboarding on _ShoppingHistoryTabState {
   void _startDemo() {
     _coachMarkScheduled = false;
     _showDemo.value = true;
-    setState(() {});
+    setState(() {}); // ignore: invalid_use_of_protected_member
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {

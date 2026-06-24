@@ -93,6 +93,13 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
 	<key>GIDClientID</key>
 	<string>324185071750-21ke4mpb2ar5kmvqnbo6kgqtrjoecl2j.apps.googleusercontent.com</string>
 	<key>UIBackgroundModes</key>

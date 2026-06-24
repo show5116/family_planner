@@ -18,6 +18,7 @@ import 'package:family_planner/features/main/calendar/presentation/widgets/task_
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_bar.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_search_results.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/calendar_group_selector.dart';
+import 'package:family_planner/features/main/calendar/presentation/widgets/week_timetable_view.dart';
 import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 
 part '_calendar_onboarding.dart';
@@ -118,33 +119,61 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                 const Expanded(child: CalendarSearchResults()),
               ],
             )
-          : CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: _CalendarGroupFilterBar()),
+          : _calendarFormat == CalendarFormat.week
+              ? Column(
+                  children: [
+                    _CalendarGroupFilterBar(),
+                    if (ref.watch(calendarSearchActiveProvider))
+                      const CalendarSearchBar(),
+                    // 주간 포맷 토글 + 내비게이션을 위해 CalendarView 유지 (헤더만 노출)
+                    CalendarView(
+                      key: _calendarKey,
+                      tasksAsync: tasksAsync,
+                      focusedDay: _focusedDay,
+                      selectedDay: _selectedDay,
+                      calendarFormat: _calendarFormat,
+                      onDaySelected: _onDaySelected,
+                      onPageChanged: _onPageChanged,
+                      onFormatChanged: _onFormatChanged,
+                    ),
+                    const Divider(height: 1),
+                    // 주간 타임테이블 (CalendarView 헤더가 이미 있으므로 헤더 숨김)
+                    Expanded(
+                      child: WeekTimetableView(
+                        selectedDate: selectedDate,
+                        onDaySelected: _onDaySelected,
+                        showDayHeader: false,
+                      ),
+                    ),
+                  ],
+                )
+              : CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(child: _CalendarGroupFilterBar()),
 
-                if (ref.watch(calendarSearchActiveProvider))
-                  const SliverToBoxAdapter(child: CalendarSearchBar()),
+                    if (ref.watch(calendarSearchActiveProvider))
+                      const SliverToBoxAdapter(child: CalendarSearchBar()),
 
-                // 월간 캘린더
-                SliverToBoxAdapter(
-                  child: CalendarView(
-                    key: _calendarKey,
-                    tasksAsync: tasksAsync,
-                    focusedDay: _focusedDay,
-                    selectedDay: _selectedDay,
-                    calendarFormat: _calendarFormat,
-                    onDaySelected: _onDaySelected,
-                    onPageChanged: _onPageChanged,
-                    onFormatChanged: _onFormatChanged,
-                  ),
+                    // 월간 캘린더
+                    SliverToBoxAdapter(
+                      child: CalendarView(
+                        key: _calendarKey,
+                        tasksAsync: tasksAsync,
+                        focusedDay: _focusedDay,
+                        selectedDay: _selectedDay,
+                        calendarFormat: _calendarFormat,
+                        onDaySelected: _onDaySelected,
+                        onPageChanged: _onPageChanged,
+                        onFormatChanged: _onFormatChanged,
+                      ),
+                    ),
+
+                    const SliverToBoxAdapter(child: Divider(height: 1)),
+
+                    // 선택된 날짜 일정 목록
+                    SliverTaskListSection(selectedDate: selectedDate),
+                  ],
                 ),
-
-                const SliverToBoxAdapter(child: Divider(height: 1)),
-
-                // 선택된 날짜 일정 목록
-                SliverTaskListSection(selectedDate: selectedDate),
-              ],
-            ),
       floatingActionButton: ref.watch(calendarSearchQueryProvider) != null
           ? null
           : FloatingActionButton(

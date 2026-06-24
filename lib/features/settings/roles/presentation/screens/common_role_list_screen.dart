@@ -83,7 +83,7 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
       itemCount: roles.length,
       buildDefaultDragHandles: false,
       proxyDecorator: buildReorderableProxyDecorator,
-      onReorder: _handleReorder,
+      onReorderItem: _handleReorder,
       itemBuilder: (context, index) {
         final role = roles[index];
         return RoleCard(
@@ -105,9 +105,6 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
     setState(() {
       _reorderedRoles ??= List.from(roles);
 
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
       final item = _reorderedRoles!.removeAt(oldIndex);
       _reorderedRoles!.insert(newIndex, item);
       _hasChanges = true;

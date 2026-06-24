@@ -109,8 +109,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                   padding: const EdgeInsets.all(AppSizes.spaceM),
                   buildDefaultDragHandles: false,
                   proxyDecorator: buildReorderableProxyDecorator,
-                  onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) newIndex -= 1;
+                  onReorderItem: (oldIndex, newIndex) {
                     setState(() {
                       _reorderedGroups ??= List.from(displayGroups);
                       final item = _reorderedGroups!.removeAt(oldIndex);

@@ -80,7 +80,6 @@ class _HomeWidgetSettingsBodyState
 
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
-      if (newIndex > oldIndex) newIndex -= 1;
       final item = _order.removeAt(oldIndex);
       _order.insert(newIndex, item);
     });
@@ -244,7 +243,7 @@ class _HomeWidgetSettingsBodyState
                     buildDefaultDragHandles: false,
                     proxyDecorator: buildReorderableProxyDecorator,
                     itemCount: _order.length,
-                    onReorder: _onReorder,
+                    onReorderItem: _onReorder,
                     header: Column(
                       children: [
                         _buildInfoHeader(context),

@@ -71,7 +71,7 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
   Future<void> _maybeStartOnboarding() async {
     final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
     if (completed || !mounted) return;
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final animation = ModalRoute.of(context)?.animation;
@@ -92,7 +92,7 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
   Future<void> _replayOnboarding() async {
     await OnboardingService.resetCoachMark(CoachMarkKeys.household);
     if (!mounted) return;
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final animation = ModalRoute.of(context)?.animation;
@@ -229,11 +229,11 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
       ),
       onFinish: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.household);
-        if (mounted) setState(() => _isDemo = false);
+        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
       },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.household);
-        if (mounted) setState(() => _isDemo = false);
+        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
         return true;
       },
       paddingFocus: 8,

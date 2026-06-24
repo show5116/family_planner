@@ -8,7 +8,7 @@ void main() {
     // .env 파일 읽기
     final envFile = File('.env');
     if (!envFile.existsSync()) {
-      print('❌ .env 파일을 찾을 수 없습니다.');
+      print('❌ .env 파일을 찾을 수 없습니다.'); // ignore: avoid_print
       exit(1);
     }
 
@@ -43,7 +43,7 @@ void main() {
         storageBucket == null ||
         messagingSenderId == null ||
         appId == null) {
-      print('❌ .env 파일에 필수 Firebase Web 설정이 없습니다.');
+      print('❌ .env 파일에 필수 Firebase Web 설정이 없습니다.'); // ignore: avoid_print
       exit(1);
     }
 
@@ -94,10 +94,10 @@ try {
     final outputFile = File('web/firebase-messaging-sw.js');
     outputFile.writeAsStringSync(swContent);
 
-    print('✅ firebase-messaging-sw.js 파일이 성공적으로 생성되었습니다.');
-    print('   경로: ${outputFile.absolute.path}');
+    print('✅ firebase-messaging-sw.js 파일이 성공적으로 생성되었습니다.'); // ignore: avoid_print
+    print('   경로: ${outputFile.absolute.path}'); // ignore: avoid_print
   } catch (e) {
-    print('❌ 오류 발생: $e');
+    print('❌ 오류 발생: $e'); // ignore: avoid_print
     exit(1);
   }
 }

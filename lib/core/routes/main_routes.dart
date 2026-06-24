@@ -30,7 +30,9 @@ import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
 import 'package:family_planner/features/main/task/presentation/screens/anniversary_list_screen.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/task_detail_screen.dart';
 import 'package:family_planner/features/main/todo/presentation/screens/todo_tab.dart';
+import 'package:family_planner/features/main/todo/presentation/screens/todo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
 import 'package:family_planner/features/main/investment/presentation/screens/indicator_detail_screen.dart';
@@ -154,6 +156,20 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final extra = state.extra;
         if (extra is Map<String, dynamic>) {
+          return TaskDetailScreen(
+            taskId: extra['taskId'] as String?,
+            task: extra['task'] as TaskModel?,
+          );
+        }
+        return const TaskDetailScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.calendarEdit,
+      name: 'calendarEdit',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is Map<String, dynamic>) {
           return TaskFormScreen(
             taskId: extra['taskId'] as String?,
             task: extra['task'] as TaskModel?,
@@ -199,6 +215,20 @@ List<RouteBase> getMainRoutes() {
     GoRoute(
       path: AppRoutes.todoDetail,
       name: 'todoDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is Map<String, dynamic>) {
+          return TodoDetailScreen(
+            taskId: extra['taskId'] as String?,
+            task: extra['task'] as TaskModel?,
+          );
+        }
+        return const TodoDetailScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.todoEdit,
+      name: 'todoEdit',
       builder: (context, state) {
         final extra = state.extra;
         if (extra is Map<String, dynamic>) {

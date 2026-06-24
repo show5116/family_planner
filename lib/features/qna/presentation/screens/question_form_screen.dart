@@ -278,8 +278,8 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                   ),
             ),
             value: visibility,
-            groupValue: _selectedVisibility,
-            onChanged: (value) {
+            groupValue: _selectedVisibility, // ignore: deprecated_member_use
+            onChanged: (value) { // ignore: deprecated_member_use
               if (value != null) {
                 setState(() {
                   _selectedVisibility = value;

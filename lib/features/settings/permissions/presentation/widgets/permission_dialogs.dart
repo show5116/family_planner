@@ -189,7 +189,7 @@ class PermissionCreateDialog {
   ) async {
     try {
       final notifier = ref.read(permissionManagementProvider.notifier);
-      final createdPermission = await notifier.createPermission(
+      await notifier.createPermission(
         code: code,
         name: name,
         description: description,
@@ -345,7 +345,7 @@ class PermissionEditDialog {
   ) async {
     try {
       final notifier = ref.read(permissionManagementProvider.notifier);
-      final updatedPermission = await notifier.updatePermission(
+      await notifier.updatePermission(
         permission.id,
         name: name,
         description: description,
