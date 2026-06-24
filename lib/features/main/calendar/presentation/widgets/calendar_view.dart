@@ -28,6 +28,10 @@ class CalendarView extends ConsumerStatefulWidget {
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<DateTime> onPageChanged;
   final ValueChanged<CalendarFormat> onFormatChanged;
+  /// 헤더의 뷰 모드 버튼 탭 시 호출 (null이면 기본 table_calendar 포맷 버튼 사용)
+  final VoidCallback? onViewModeTap;
+  /// 헤더에 표시할 현재 뷰 모드 레이블 (null이면 기본 포맷 버튼 사용)
+  final String? viewModeLabel;
 
   const CalendarView({
     super.key,
@@ -38,6 +42,8 @@ class CalendarView extends ConsumerStatefulWidget {
     required this.onDaySelected,
     required this.onPageChanged,
     required this.onFormatChanged,
+    this.onViewModeTap,
+    this.viewModeLabel,
   });
 
   @override
@@ -180,11 +186,10 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       // 캘린더 포맷 변경 시
       onFormatChanged: widget.onFormatChanged,
 
-      // 2주 보기 제거 — 월간/주간만 허용
-      availableCalendarFormats: const {
-        CalendarFormat.month: '월',
-        CalendarFormat.week: '주',
-      },
+      // 뷰 모드 버튼이 있으면 포맷 버튼 숨김
+      availableCalendarFormats: widget.onViewModeTap != null
+          ? const {CalendarFormat.month: '', CalendarFormat.week: ''}
+          : const {CalendarFormat.month: '월', CalendarFormat.week: '주'},
 
       // 일정 데이터 로드 (해당 날짜의 Task 목록)
       eventLoader: (day) => _getEventsForDay(day),
@@ -286,7 +291,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
   /// 헤더 스타일
   HeaderStyle _buildHeaderStyle() {
     return HeaderStyle(
-      formatButtonVisible: true,
+      formatButtonVisible: widget.onViewModeTap == null,
       titleCentered: true,
       formatButtonShowsNext: false,
       formatButtonDecoration: BoxDecoration(
@@ -321,6 +326,47 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
   /// 캘린더 빌더
   CalendarBuilders<TaskModel> _buildCalendarBuilders() {
     return CalendarBuilders(
+      // 커스텀 헤더 타이틀 (뷰 모드 버튼 포함)
+      headerTitleBuilder: widget.onViewModeTap != null
+          ? (context, day) {
+              final locale = Localizations.localeOf(context).toString();
+              final title = DateFormat.yMMMM(locale).format(day);
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(width: 6),
+                  GestureDetector(
+                    onTap: widget.onViewModeTap,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.divider),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.viewModeLabel ?? '월',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(width: 2),
+                          const Icon(Icons.arrow_drop_down, size: 14),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+          : null,
+
       // 요일 헤더 빌더 (토요일 파란색, 일요일 빨간색)
       dowBuilder: (context, day) {
         final text =

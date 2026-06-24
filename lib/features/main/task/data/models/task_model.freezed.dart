@@ -2036,6 +2036,7 @@ mixin _$CreateTaskDto {
   TaskPriority? get priority => throw _privateConstructorUsedError;
   String? get categoryId => throw _privateConstructorUsedError;
   String? get groupId => throw _privateConstructorUsedError;
+  bool get allDay => throw _privateConstructorUsedError;
   String? get scheduledAt => throw _privateConstructorUsedError;
   String? get dueAt => throw _privateConstructorUsedError;
   RecurringRuleDto? get recurring => throw _privateConstructorUsedError;
@@ -2067,6 +2068,7 @@ abstract class $CreateTaskDtoCopyWith<$Res> {
     TaskPriority? priority,
     String? categoryId,
     String? groupId,
+    bool allDay,
     String? scheduledAt,
     String? dueAt,
     RecurringRuleDto? recurring,
@@ -2099,6 +2101,7 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
     Object? priority = freezed,
     Object? categoryId = freezed,
     Object? groupId = freezed,
+    Object? allDay = null,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? recurring = freezed,
@@ -2135,6 +2138,10 @@ class _$CreateTaskDtoCopyWithImpl<$Res, $Val extends CreateTaskDto>
                 ? _value.groupId
                 : groupId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            allDay: null == allDay
+                ? _value.allDay
+                : allDay // ignore: cast_nullable_to_non_nullable
+                      as bool,
             scheduledAt: freezed == scheduledAt
                 ? _value.scheduledAt
                 : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -2192,6 +2199,7 @@ abstract class _$$CreateTaskDtoImplCopyWith<$Res>
     TaskPriority? priority,
     String? categoryId,
     String? groupId,
+    bool allDay,
     String? scheduledAt,
     String? dueAt,
     RecurringRuleDto? recurring,
@@ -2224,6 +2232,7 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
     Object? priority = freezed,
     Object? categoryId = freezed,
     Object? groupId = freezed,
+    Object? allDay = null,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? recurring = freezed,
@@ -2260,6 +2269,10 @@ class __$$CreateTaskDtoImplCopyWithImpl<$Res>
             ? _value.groupId
             : groupId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        allDay: null == allDay
+            ? _value.allDay
+            : allDay // ignore: cast_nullable_to_non_nullable
+                  as bool,
         scheduledAt: freezed == scheduledAt
             ? _value.scheduledAt
             : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -2296,6 +2309,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
     this.priority,
     this.categoryId,
     this.groupId,
+    this.allDay = false,
     this.scheduledAt,
     this.dueAt,
     this.recurring,
@@ -2321,6 +2335,9 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
   final String? categoryId;
   @override
   final String? groupId;
+  @override
+  @JsonKey()
+  final bool allDay;
   @override
   final String? scheduledAt;
   @override
@@ -2349,7 +2366,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
 
   @override
   String toString() {
-    return 'CreateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, groupId: $groupId, scheduledAt: $scheduledAt, dueAt: $dueAt, recurring: $recurring, reminders: $reminders, participantIds: $participantIds)';
+    return 'CreateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, groupId: $groupId, allDay: $allDay, scheduledAt: $scheduledAt, dueAt: $dueAt, recurring: $recurring, reminders: $reminders, participantIds: $participantIds)';
   }
 
   @override
@@ -2368,6 +2385,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
             (identical(other.groupId, groupId) || other.groupId == groupId) &&
+            (identical(other.allDay, allDay) || other.allDay == allDay) &&
             (identical(other.scheduledAt, scheduledAt) ||
                 other.scheduledAt == scheduledAt) &&
             (identical(other.dueAt, dueAt) || other.dueAt == dueAt) &&
@@ -2394,6 +2412,7 @@ class _$CreateTaskDtoImpl implements _CreateTaskDto {
     priority,
     categoryId,
     groupId,
+    allDay,
     scheduledAt,
     dueAt,
     recurring,
@@ -2424,6 +2443,7 @@ abstract class _CreateTaskDto implements CreateTaskDto {
     final TaskPriority? priority,
     final String? categoryId,
     final String? groupId,
+    final bool allDay,
     final String? scheduledAt,
     final String? dueAt,
     final RecurringRuleDto? recurring,
@@ -2448,6 +2468,8 @@ abstract class _CreateTaskDto implements CreateTaskDto {
   String? get categoryId;
   @override
   String? get groupId;
+  @override
+  bool get allDay;
   @override
   String? get scheduledAt;
   @override
@@ -2479,6 +2501,7 @@ mixin _$UpdateTaskDto {
   TaskType? get type => throw _privateConstructorUsedError;
   TaskPriority? get priority => throw _privateConstructorUsedError;
   String? get categoryId => throw _privateConstructorUsedError;
+  bool? get allDay => throw _privateConstructorUsedError;
   String? get scheduledAt => throw _privateConstructorUsedError;
   String? get dueAt => throw _privateConstructorUsedError;
   List<String>? get participantIds => throw _privateConstructorUsedError;
@@ -2508,6 +2531,7 @@ abstract class $UpdateTaskDtoCopyWith<$Res> {
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
+    bool? allDay,
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
@@ -2536,6 +2560,7 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
     Object? type = freezed,
     Object? priority = freezed,
     Object? categoryId = freezed,
+    Object? allDay = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? participantIds = freezed,
@@ -2567,6 +2592,10 @@ class _$UpdateTaskDtoCopyWithImpl<$Res, $Val extends UpdateTaskDto>
                 ? _value.categoryId
                 : categoryId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            allDay: freezed == allDay
+                ? _value.allDay
+                : allDay // ignore: cast_nullable_to_non_nullable
+                      as bool?,
             scheduledAt: freezed == scheduledAt
                 ? _value.scheduledAt
                 : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -2605,6 +2634,7 @@ abstract class _$$UpdateTaskDtoImplCopyWith<$Res>
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
+    bool? allDay,
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,
@@ -2632,6 +2662,7 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
     Object? type = freezed,
     Object? priority = freezed,
     Object? categoryId = freezed,
+    Object? allDay = freezed,
     Object? scheduledAt = freezed,
     Object? dueAt = freezed,
     Object? participantIds = freezed,
@@ -2663,6 +2694,10 @@ class __$$UpdateTaskDtoImplCopyWithImpl<$Res>
             ? _value.categoryId
             : categoryId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        allDay: freezed == allDay
+            ? _value.allDay
+            : allDay // ignore: cast_nullable_to_non_nullable
+                  as bool?,
         scheduledAt: freezed == scheduledAt
             ? _value.scheduledAt
             : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -2694,6 +2729,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     this.type,
     this.priority,
     this.categoryId,
+    this.allDay,
     this.scheduledAt,
     this.dueAt,
     final List<String>? participantIds,
@@ -2716,6 +2752,8 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
   final TaskPriority? priority;
   @override
   final String? categoryId;
+  @override
+  final bool? allDay;
   @override
   final String? scheduledAt;
   @override
@@ -2742,7 +2780,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
 
   @override
   String toString() {
-    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds, reminders: $reminders)';
+    return 'UpdateTaskDto(title: $title, description: $description, location: $location, type: $type, priority: $priority, categoryId: $categoryId, allDay: $allDay, scheduledAt: $scheduledAt, dueAt: $dueAt, participantIds: $participantIds, reminders: $reminders)';
   }
 
   @override
@@ -2760,6 +2798,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
                 other.priority == priority) &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
+            (identical(other.allDay, allDay) || other.allDay == allDay) &&
             (identical(other.scheduledAt, scheduledAt) ||
                 other.scheduledAt == scheduledAt) &&
             (identical(other.dueAt, dueAt) || other.dueAt == dueAt) &&
@@ -2783,6 +2822,7 @@ class _$UpdateTaskDtoImpl implements _UpdateTaskDto {
     type,
     priority,
     categoryId,
+    allDay,
     scheduledAt,
     dueAt,
     const DeepCollectionEquality().hash(_participantIds),
@@ -2811,6 +2851,7 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
     final TaskType? type,
     final TaskPriority? priority,
     final String? categoryId,
+    final bool? allDay,
     final String? scheduledAt,
     final String? dueAt,
     final List<String>? participantIds,
@@ -2832,6 +2873,8 @@ abstract class _UpdateTaskDto implements UpdateTaskDto {
   TaskPriority? get priority;
   @override
   String? get categoryId;
+  @override
+  bool? get allDay;
   @override
   String? get scheduledAt;
   @override

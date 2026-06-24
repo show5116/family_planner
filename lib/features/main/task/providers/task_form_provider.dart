@@ -46,6 +46,7 @@ class TaskFormState with _$TaskFormState {
     TimeOfDay? startTime,
     TimeOfDay? dueTime,
     @Default(false) bool hasDueDate,
+    @Default(false) bool allDay,
 
     // 일정 속성
     @Default(TaskType.calendarOnly) TaskType taskType,
@@ -103,6 +104,9 @@ class TaskFormState with _$TaskFormState {
   // ============ DTO 변환 로직 (캡슐화) ============
 
   DateTime get scheduledDateTime {
+    if (allDay) {
+      return DateTime(startDate.year, startDate.month, startDate.day);
+    }
     return DateTime(
       startDate.year,
       startDate.month,
@@ -114,6 +118,9 @@ class TaskFormState with _$TaskFormState {
 
   DateTime? get dueDateTime {
     if (!hasDueDate || dueDate == null) return null;
+    if (allDay) {
+      return DateTime(dueDate!.year, dueDate!.month, dueDate!.day);
+    }
     return DateTime(
       dueDate!.year,
       dueDate!.month,
@@ -211,6 +218,7 @@ class TaskFormState with _$TaskFormState {
       priority: priority,
       categoryId: selectedCategory?.id,
       groupId: groupId,
+      allDay: allDay,
       scheduledAt: scheduledDateTime.toUtc().toIso8601String(),
       dueAt: dueDateTime?.toUtc().toIso8601String(),
       recurring: recurringDto,
@@ -230,6 +238,7 @@ class TaskFormState with _$TaskFormState {
       type: taskType,
       priority: priority,
       categoryId: selectedCategory?.id,
+      allDay: allDay,
       scheduledAt: scheduledDateTime.toUtc().toIso8601String(),
       dueAt: dueDateTime?.toUtc().toIso8601String(),
       participantIds: groupId != null && selectedParticipantIds.isNotEmpty
@@ -439,6 +448,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       skipWeekends: skipWeekends,
       skipHolidays: skipHolidays,
       skipBehavior: skipBehavior,
+      allDay: task.allDay,
       selectedCategory: task.category,
       selectedParticipantIds: task.participants.map((p) => p.userId).toList(),
       editingTask: task,
@@ -476,6 +486,10 @@ class TaskFormNotifier extends _$TaskFormNotifier {
   }
 
   // ============ 날짜/시간 업데이트 ============
+
+  void setAllDay(bool value) {
+    state = state.copyWith(allDay: value);
+  }
 
   void setStartDate(DateTime value) {
     DateTime? newDueDate = state.dueDate;

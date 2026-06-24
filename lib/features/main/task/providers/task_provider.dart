@@ -73,6 +73,13 @@ final todoSearchActiveProvider = StateProvider<bool>((ref) => false);
 /// 할일 검색 쿼리 Provider
 final todoSearchQueryProvider = StateProvider<String?>((ref) => null);
 
+/// 캘린더 뷰 모드 (일/주/월/연도)
+enum CalendarViewMode { day, week, month, year }
+
+/// 캘린더 뷰 모드 Provider
+final calendarViewModeProvider =
+    StateProvider<CalendarViewMode>((ref) => CalendarViewMode.month);
+
 /// Todo 뷰 모드 (날짜별 보기 / 모아 보기)
 enum TodoViewMode { byDate, overview }
 

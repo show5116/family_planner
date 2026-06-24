@@ -157,6 +157,7 @@ _$CreateTaskDtoImpl _$$CreateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
       categoryId: json['categoryId'] as String?,
       groupId: json['groupId'] as String?,
+      allDay: json['allDay'] as bool? ?? false,
       scheduledAt: json['scheduledAt'] as String?,
       dueAt: json['dueAt'] as String?,
       recurring: json['recurring'] == null
@@ -181,6 +182,7 @@ Map<String, dynamic> _$$CreateTaskDtoImplToJson(_$CreateTaskDtoImpl instance) =>
       'priority': _$TaskPriorityEnumMap[instance.priority],
       'categoryId': instance.categoryId,
       'groupId': instance.groupId,
+      'allDay': instance.allDay,
       'scheduledAt': instance.scheduledAt,
       'dueAt': instance.dueAt,
       'recurring': instance.recurring,
@@ -211,6 +213,7 @@ _$UpdateTaskDtoImpl _$$UpdateTaskDtoImplFromJson(Map<String, dynamic> json) =>
       type: $enumDecodeNullable(_$TaskTypeEnumMap, json['type']),
       priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
       categoryId: json['categoryId'] as String?,
+      allDay: json['allDay'] as bool?,
       scheduledAt: json['scheduledAt'] as String?,
       dueAt: json['dueAt'] as String?,
       participantIds: (json['participantIds'] as List<dynamic>?)
@@ -229,6 +232,7 @@ Map<String, dynamic> _$$UpdateTaskDtoImplToJson(_$UpdateTaskDtoImpl instance) =>
       'type': _$TaskTypeEnumMap[instance.type],
       'priority': _$TaskPriorityEnumMap[instance.priority],
       'categoryId': instance.categoryId,
+      'allDay': instance.allDay,
       'scheduledAt': instance.scheduledAt,
       'dueAt': instance.dueAt,
       'participantIds': instance.participantIds,

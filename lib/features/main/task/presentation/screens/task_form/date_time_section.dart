@@ -29,6 +29,17 @@ class DateTimeSection extends StatelessWidget {
         padding: const EdgeInsets.all(AppSizes.spaceM),
         child: Column(
           children: [
+            // 종일 토글
+            SwitchListTile(
+              title: Text(l10n.schedule_allDay),
+              secondary: const Icon(Icons.wb_sunny_outlined),
+              value: formState.allDay,
+              onChanged: formNotifier.setAllDay,
+              contentPadding: EdgeInsets.zero,
+            ),
+
+            const Divider(),
+
             // 시작 날짜
             ListTile(
               leading: const Icon(Icons.calendar_today),
@@ -39,17 +50,19 @@ class DateTimeSection extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
             ),
 
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.access_time),
-              title: Text(l10n.schedule_startTime),
-              subtitle: Text(formState.startTime != null
-                  ? timeFormat.format(DateTime(2000, 1, 1, formState.startTime!.hour, formState.startTime!.minute))
-                  : '-'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _selectTime(context, isStart: true),
-              contentPadding: EdgeInsets.zero,
-            ),
+            if (!formState.allDay) ...[
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.access_time),
+                title: Text(l10n.schedule_startTime),
+                subtitle: Text(formState.startTime != null
+                    ? timeFormat.format(DateTime(2000, 1, 1, formState.startTime!.hour, formState.startTime!.minute))
+                    : '-'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _selectTime(context, isStart: true),
+                contentPadding: EdgeInsets.zero,
+              ),
+            ],
 
             const Divider(),
 
@@ -72,17 +85,19 @@ class DateTimeSection extends StatelessWidget {
                 onTap: () => _selectDate(context, isStart: false),
                 contentPadding: EdgeInsets.zero,
               ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.access_time_filled),
-                title: Text(l10n.schedule_dueTime),
-                subtitle: Text(formState.dueTime != null
-                    ? timeFormat.format(DateTime(2000, 1, 1, formState.dueTime!.hour, formState.dueTime!.minute))
-                    : '-'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => _selectTime(context, isStart: false),
-                contentPadding: EdgeInsets.zero,
-              ),
+              if (!formState.allDay) ...[
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.access_time_filled),
+                  title: Text(l10n.schedule_dueTime),
+                  subtitle: Text(formState.dueTime != null
+                      ? timeFormat.format(DateTime(2000, 1, 1, formState.dueTime!.hour, formState.dueTime!.minute))
+                      : '-'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _selectTime(context, isStart: false),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
             ],
           ],
         ),

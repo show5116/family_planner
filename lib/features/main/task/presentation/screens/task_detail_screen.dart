@@ -489,6 +489,52 @@ class _DateTimeDisplay extends StatelessWidget {
       return Text(l10n.todo_noDueDate, style: theme.textTheme.bodyMedium);
     }
 
+    if (task.allDay) {
+      final hasDueDate = dueAt != null;
+      final hasDifferentDays = scheduled != null &&
+          dueAt != null &&
+          DateTime(scheduled.year, scheduled.month, scheduled.day) !=
+              DateTime(dueAt.year, dueAt.month, dueAt.day);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                scheduled != null ? dateFormat.format(scheduled) : dateFormat.format(dueAt!),
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  l10n.schedule_allDay,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (hasDueDate && hasDifferentDays) ...[
+            const SizedBox(height: AppSizes.spaceXS),
+            Text(
+              '~ ${dateFormat.format(dueAt)}',
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+          if (task.daysUntilDue != null) ...[
+            const SizedBox(height: AppSizes.spaceXS),
+            _DdayBadge(days: task.daysUntilDue!),
+          ],
+        ],
+      );
+    }
+
     final hasTimeRange = scheduled != null;
     final hasDueDate = dueAt != null;
     final hasDifferentDays = scheduled != null &&
