@@ -43,10 +43,12 @@ class AppRoutes {
   // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
   // static const String householdSettings = '/household/settings';
   static const String calendarDetail = '/calendar/detail';
+  static const String calendarEdit = '/calendar/edit';
   static const String calendarAdd = '/calendar/add';
   static const String categoryManagement = '/calendar/categories';
   static const String anniversaryManagement = '/calendar/anniversaries';
   static const String todoDetail = '/todo/detail';
+  static const String todoEdit = '/todo/edit';
   static const String todoAdd = '/todo/add';
   static const String childPoints = '/child-points';
   static const String childPointsDetail = '/child-points/detail';
