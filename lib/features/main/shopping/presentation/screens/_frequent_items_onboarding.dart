@@ -50,7 +50,8 @@ extension _FrequentItemsOnboarding on _FrequentItemsTabState {
     // _coachMarkScheduled를 초기화해 다음 빌드에서 코치마크를 예약하도록 허용
     _coachMarkScheduled = false;
     _showDemo.value = true;
-    setState(() {}); // keep-alive 엘리먼트에 ValueNotifier 알림이 묵살될 때 대비
+    // keep-alive 엘리먼트에 ValueNotifier 알림이 묵살될 때 대비
+    setState(() {}); // ignore: invalid_use_of_protected_member
   }
 
   TargetPosition? _keyToPosition(GlobalKey key) {

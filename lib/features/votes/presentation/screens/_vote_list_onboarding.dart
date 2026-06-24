@@ -50,14 +50,14 @@ extension _VoteListOnboarding on _VoteListScreenState {
     final completed =
         await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.votes);
     if (!mounted || completed) return;
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     _scheduleCoachMark();
   }
 
   Future<void> _replayOnboarding() async {
     await OnboardingService.resetCoachMark(CoachMarkKeys.votes);
     if (!mounted) return;
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     _scheduleCoachMark();
   }
 
@@ -165,11 +165,11 @@ extension _VoteListOnboarding on _VoteListScreenState {
       skipWidget: _skipWidget,
       onFinish: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.votes);
-        if (mounted) setState(() => _isDemo = false);
+        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
       },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.votes);
-        if (mounted) setState(() => _isDemo = false);
+        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
         return true;
       },
       paddingFocus: 8,

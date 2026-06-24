@@ -214,8 +214,7 @@ class _AssetListState extends ConsumerState<_AssetList> {
                       SliverReorderableList(
                         itemCount: displayAccounts.length,
                         proxyDecorator: buildReorderableProxyDecorator,
-                        onReorder: (oldIndex, newIndex) {
-                          if (newIndex > oldIndex) newIndex -= 1;
+                        onReorderItem: (oldIndex, newIndex) {
                           setState(() {
                             _reorderedAccounts ??= List.from(displayAccounts);
                             final item =

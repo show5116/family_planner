@@ -441,7 +441,7 @@ class _MemoViewerState extends State<_MemoViewer> {
         embedBuilders: [
           LinkPreviewEmbedBuilder(readOnly: true),
         ],
-        customLeadingBlockBuilder: (node, config) {
+        customLeadingBlockBuilder: (node, config) { // ignore: experimental_member_use
           final listAttr = config.attribute.value as String?;
           if (listAttr != 'unchecked' && listAttr != 'checked') return null;
           return QuillCheckboxPoint(

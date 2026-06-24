@@ -19,14 +19,14 @@ extension _AssetOnboarding on _AssetScreenState {
   Future<void> _maybeStartOnboarding() async {
     final completed = await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.assets);
     if (completed || !mounted) return;
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     _scheduleCoachMark();
   }
 
   Future<void> _replayOnboarding() async {
     await OnboardingService.resetCoachMark(CoachMarkKeys.assets);
     if (!mounted) return;
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     _scheduleCoachMark();
   }
 
@@ -50,7 +50,7 @@ extension _AssetOnboarding on _AssetScreenState {
 
   void _goToDemo() {
     if (!mounted) return;
-    setState(() => _isDemo = false);
+    setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -142,11 +142,11 @@ extension _AssetOnboarding on _AssetScreenState {
       },
       onFinish: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.assets);
-        if (mounted) setState(() => _isDemo = false);
+        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
       },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.assets);
-        if (mounted) setState(() => _isDemo = false);
+        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
         return true;
       },
       paddingFocus: 8,

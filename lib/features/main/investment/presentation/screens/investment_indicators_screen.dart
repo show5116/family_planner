@@ -282,8 +282,7 @@ class _IndicatorListBody extends ConsumerWidget {
               buildDefaultDragHandles: false,
               proxyDecorator: buildReorderableProxyDecorator,
               itemCount: bookmarked.length,
-              onReorder: (oldIndex, newIndex) {
-                if (newIndex > oldIndex) newIndex -= 1;
+              onReorderItem: (oldIndex, newIndex) {
                 ref
                     .read(indicatorsProvider.notifier)
                     .reorderBookmarks(oldIndex, newIndex);

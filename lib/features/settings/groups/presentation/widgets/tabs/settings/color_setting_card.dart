@@ -36,7 +36,7 @@ class ColorSettingCard extends StatelessWidget {
         return currentMember.customColor ?? group.defaultColor;
       },
       loading: () => group.defaultColor,
-      error: (_, __) => group.defaultColor,
+      error: (_, _) => group.defaultColor,
     );
 
     final Color displayColor =
@@ -45,7 +45,7 @@ class ColorSettingCard extends StatelessWidget {
       data: (members) =>
           members.isNotEmpty && members.first.customColor != null,
       loading: () => false,
-      error: (_, __) => false,
+      error: (_, _) => false,
     );
 
     return Card(

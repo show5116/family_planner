@@ -123,7 +123,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
   }
 
   void _startDemo() {
-    setState(() => _isDemo = true);
+    setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final animation = ModalRoute.of(context)?.animation;
@@ -142,7 +142,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
   }
 
   void _endDemo() {
-    if (mounted) setState(() => _isDemo = false);
+    if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
   }
 
   void _replayOnboarding() {

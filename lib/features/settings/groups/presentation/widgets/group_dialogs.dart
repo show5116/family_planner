@@ -253,8 +253,8 @@ class GroupDialogs {
                       title: Text(GroupUtils.getRoleName(l10n, role.name)),
                       subtitle: Text(role.name),
                       value: role.id,
-                      groupValue: selectedRoleId,
-                      onChanged: (value) {
+                      groupValue: selectedRoleId, // ignore: deprecated_member_use
+                      onChanged: (value) { // ignore: deprecated_member_use
                         setState(() {
                           selectedRoleId = value;
                         });

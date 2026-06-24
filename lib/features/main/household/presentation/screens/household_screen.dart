@@ -615,7 +615,7 @@ class _ExpenseBody extends ConsumerWidget {
             itemCount: dateKeys.length,
             padding: const EdgeInsets.only(bottom: 80),
             // 월 전체 아이템을 미리 렌더링해두어 캘린더 탭 스크롤이 정확히 동작
-            cacheExtent: 8000,
+            cacheExtent: 8000, // ignore: deprecated_member_use
             itemBuilder: (context, index) {
               final dateKey = dateKeys[index];
               final dayExpenses = grouped[dateKey]!;
@@ -1606,8 +1606,8 @@ class _CarryOverTargetList<T> extends StatelessWidget {
           final sub = getSubtitle(item);
           return RadioListTile<String>(
             value: getId(item),
-            groupValue: selectedId,
-            onChanged: (_) => onSelect(item),
+            groupValue: selectedId, // ignore: deprecated_member_use
+            onChanged: (_) => onSelect(item), // ignore: deprecated_member_use
             title: Text(getTitle(item),
                 style: Theme.of(context).textTheme.bodyMedium),
             subtitle: sub != null

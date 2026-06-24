@@ -369,8 +369,7 @@ class _RuleSectionState extends State<_RuleSection> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: rules.length,
-            onReorder: (oldIndex, newIndex) {
-              if (newIndex > oldIndex) newIndex--;
+            onReorderItem: (oldIndex, newIndex) {
               final updated = [...rules];
               final moved = updated.removeAt(oldIndex);
               updated.insert(newIndex, moved);
