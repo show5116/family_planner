@@ -126,7 +126,15 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
 
   void _openFullForm() {
     Navigator.pop(context);
-    context.push('/calendar/add', extra: _startTime);
+    context.push('/calendar/add', extra: {
+      'date': _startTime,
+      'title': _titleController.text.trim(),
+      'endTime': _endTime,
+      'taskType': _taskType,
+      'groupId': _groupId,
+      'hasGroupId': true,
+      'reminders': List<int>.from(_selectedMinutes),
+    });
   }
 
   Future<void> _pickTime(bool isStart) async {

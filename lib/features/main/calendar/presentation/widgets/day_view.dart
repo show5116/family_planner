@@ -129,6 +129,7 @@ class _DayViewState extends ConsumerState<DayView> {
             child: _DayTimeGrid(
               date: selectedDay,
               tasks: timedTasks,
+              scrollController: _scrollController,
               onTaskTap: (task) => context.push('/calendar/detail', extra: {
                 'taskId': task.id,
                 'task': task,
@@ -383,11 +384,13 @@ class _DayTimeGrid extends ConsumerWidget {
   final List<TaskModel> tasks;
   final ValueChanged<TaskModel> onTaskTap;
   final void Function(DateTime dateTime)? onEmptyTap;
+  final ScrollController scrollController;
 
   const _DayTimeGrid({
     required this.date,
     required this.tasks,
     required this.onTaskTap,
+    required this.scrollController,
     this.onEmptyTap,
   });
 
@@ -414,10 +417,7 @@ class _DayTimeGrid extends ConsumerWidget {
             // ── 현재 시간 표시선 ───────────────────────────────────
             if (isToday) ..._buildCurrentTimeLine(now, gridWidth),
 
-            // ── 일정 블록 ─────────────────────────────────────────
-            ..._buildTaskBlocks(context, gridWidth, groups, personalHex),
-
-            // ── 빈 영역 탭 핸들러 (일정 블록 위 translucent — 빈 곳만 반응) ──
+            // ── 빈 영역 탭 핸들러 (일정 블록 아래 — 빈 곳만 반응) ──
             if (onEmptyTap != null)
               Positioned.fill(
                 child: GestureDetector(
@@ -435,6 +435,9 @@ class _DayTimeGrid extends ConsumerWidget {
                   },
                 ),
               ),
+
+            // ── 일정 블록 (오버레이 위 — 일정 영역 탭을 흡수) ───────
+            ..._buildTaskBlocks(context, gridWidth, groups, personalHex, scrollController),
           ],
         ),
       );
@@ -516,6 +519,7 @@ class _DayTimeGrid extends ConsumerWidget {
     double gridWidth,
     List<Group> groups,
     String? personalHex,
+    ScrollController scrollController,
   ) {
     if (tasks.isEmpty) return [];
 
@@ -551,8 +555,7 @@ class _DayTimeGrid extends ConsumerWidget {
 
       final info = overlap[task.id] ?? (col: 0, total: 1);
       final colWidth = (gridWidth - horizontalPadding * 2) / info.total;
-      final blockLeft =
-          _kTimeLabelWidth + horizontalPadding + info.col * colWidth;
+      final blockLeft = _kTimeLabelWidth + horizontalPadding + info.col * colWidth;
 
       final isEndDay = task.dueAt != null &&
           DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day) ==
@@ -563,9 +566,7 @@ class _DayTimeGrid extends ConsumerWidget {
       final roundTop = isStartDay || !isMultiDay;
       final roundBottom = !isMultiDay || isEndDay;
 
-      final showTime = isStartDay && blockHeight > _kMinBlockHeight + 14;
-      final titleMaxLines =
-          isStartDay && blockHeight > _kMinBlockHeight + 24 ? 2 : 1;
+      final titleMaxLines = blockHeight > _kMinBlockHeight + 16 ? 2 : 1;
 
       final color = ColorUtils.taskColor(
         groupId: task.groupId,
@@ -584,7 +585,7 @@ class _DayTimeGrid extends ConsumerWidget {
           child: Container(
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
+              color: color.withValues(alpha: 0.82),
               borderRadius: BorderRadius.vertical(
                 top: roundTop
                     ? const Radius.circular(AppSizes.radiusSmall)
@@ -593,41 +594,41 @@ class _DayTimeGrid extends ConsumerWidget {
                     ? const Radius.circular(AppSizes.radiusSmall)
                     : Radius.zero,
               ),
-              border: Border(
-                left: BorderSide(color: color, width: 3),
-                top: roundTop
-                    ? BorderSide.none
-                    : BorderSide(
-                        color: color.withValues(alpha: 0.2), width: 0.5),
-              ),
+              border: roundTop
+                  ? null
+                  : Border(top: BorderSide(color: color.withValues(alpha: 0.4), width: 0.5)),
             ),
-            padding: const EdgeInsets.only(left: 5, top: 2, right: 3, bottom: 2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isStartDay)
-                  Text(
-                    task.title,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.w700,
+            padding: EdgeInsets.zero,
+            child: ListenableBuilder(
+              listenable: scrollController,
+              builder: (context, _) {
+                if (!isStartDay) return const SizedBox.shrink();
+                final scrollOffset = scrollController.hasClients
+                    ? scrollController.offset
+                    : 0.0;
+                final stickyOffset =
+                    (scrollOffset - topOffset).clamp(0.0, blockHeight - 20);
+                return Stack(
+                  children: [
+                    Positioned(
+                      top: stickyOffset + 2,
+                      left: 4,
+                      right: 3,
+                      child: Text(
+                        task.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
                           fontSize: 11,
-                          height: 1.2,
+                          height: 1.25,
                         ),
-                    maxLines: titleMaxLines,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                if (showTime)
-                  Text(
-                    '${scheduledAt.hour.toString().padLeft(2, '0')}:${scheduledAt.minute.toString().padLeft(2, '0')}',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: color.withValues(alpha: 0.7),
-                          fontSize: 10,
-                          height: 1.2,
-                        ),
-                  ),
-              ],
+                        maxLines: titleMaxLines,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
