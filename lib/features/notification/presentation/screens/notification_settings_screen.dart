@@ -11,6 +11,7 @@ import 'package:family_planner/features/notification/providers/unread_count_prov
 import 'package:family_planner/features/notification/presentation/widgets/location_permission_card.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_permission_card.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_settings_section.dart';
+import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 알림 설정 화면
@@ -75,9 +76,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
             const SizedBox(height: AppSizes.spaceL),
 
             // 테스트 알림 버튼 (운영자 전용)
-            _TestNotificationTile(
-              onTap: () => _sendTestNotification(context, ref),
-            ),
+            if (ref.watch(isAdminProvider))
+              _TestNotificationTile(
+                onTap: () => _sendTestNotification(context, ref),
+              ),
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
