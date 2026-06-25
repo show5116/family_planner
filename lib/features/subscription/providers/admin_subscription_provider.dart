@@ -253,3 +253,59 @@ final adminUserDeleteProvider =
     AsyncNotifierProvider<AdminUserDeleteNotifier, void>(
   AdminUserDeleteNotifier.new,
 );
+
+// ── 운영자 권한 관리 ──────────────────────────────────────────
+
+class AdminUserAdminRoleNotifier extends AsyncNotifier<void> {
+  @override
+  Future<void> build() async {}
+
+  Future<bool> grantAdmin(String userId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() async {
+      final repo = ref.read(adminSubscriptionRepositoryProvider);
+      await repo.grantAdmin(userId);
+    });
+    state = const AsyncData(null);
+
+    if (result is AsyncData) {
+      _updateIsAdmin(userId, isAdmin: true);
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> revokeAdmin(String userId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() async {
+      final repo = ref.read(adminSubscriptionRepositoryProvider);
+      await repo.revokeAdmin(userId);
+    });
+    state = const AsyncData(null);
+
+    if (result is AsyncData) {
+      _updateIsAdmin(userId, isAdmin: false);
+      return true;
+    }
+    return false;
+  }
+
+  void _updateIsAdmin(String userId, {required bool isAdmin}) {
+    final current = ref
+        .read(adminUserListProvider)
+        .valueOrNull
+        ?.items
+        .where((u) => u.id == userId)
+        .firstOrNull;
+    if (current != null) {
+      ref
+          .read(adminUserListProvider.notifier)
+          .updateUserInList(current.copyWith(isAdmin: isAdmin));
+    }
+  }
+}
+
+final adminUserAdminRoleProvider =
+    AsyncNotifierProvider<AdminUserAdminRoleNotifier, void>(
+  AdminUserAdminRoleNotifier.new,
+);

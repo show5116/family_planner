@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:family_planner/features/home/presentation/widgets/anniversary_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/fridge_expiry_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/investment_summary_widget.dart';
@@ -127,6 +128,8 @@ class DashboardTab extends ConsumerWidget {
             ),
           ),
         ),
+        // 2주 무료 체험 배너
+        const SliverToBoxAdapter(child: _TrialBannerCard()),
         // 대시보드 그리드
         SliverToBoxAdapter(
           child: Center(
@@ -178,79 +181,66 @@ class _DashboardGrid extends ConsumerWidget {
     for (final widgetType in settings.widgetOrder) {
       Widget? widget;
 
-      switch (widgetType) {
-        case 'fridgeSummary':
-          if (settings.showFridgeSummary) {
+      if (widgetType == 'anniversary') {
+        widget = AnniversarySummaryWidget(
+          key: const ValueKey('anniversary'),
+          anniversaryIds: settings.anniversaryIds,
+        );
+      } else {
+        switch (widgetType) {
+          case 'fridgeSummary':
             widget = FridgeExpiryWidget(
               initialSelectedGroupId: settings.fridgeExpirySelectedGroupId,
             );
-          }
-          break;
-        case 'todaySchedule':
-          if (settings.showTodaySchedule) {
+            break;
+          case 'todaySchedule':
             widget = TodayScheduleWidget(
               viewMode: settings.scheduleViewMode,
               initialSelectedGroupIds: settings.scheduleSelectedGroupIds,
               initialIncludePersonal: settings.scheduleIncludePersonal,
             );
-          }
-          break;
-        case 'investmentSummary':
-          if (settings.showInvestmentSummary) {
+            break;
+          case 'investmentSummary':
             widget = const InvestmentSummaryWidget();
-          }
-          break;
-        case 'todoSummary':
-          if (settings.showTodoSummary) {
+            break;
+          case 'todoSummary':
             widget = TodoSummaryWidget(
               viewMode: settings.todoViewMode,
               initialSelectedGroupIds: settings.todoSelectedGroupIds,
               initialIncludePersonal: settings.todoIncludePersonal,
             );
-          }
-          break;
-        case 'assetSummary':
-          if (settings.showAssetSummary) {
+            break;
+          case 'assetSummary':
             widget = AssetSummaryWidget(
               initialSelectedGroupId: settings.assetSelectedGroupId,
             );
-          }
-          break;
-        case 'memoSummary':
-          if (settings.showMemoSummary) {
+            break;
+          case 'memoSummary':
             widget = MemoSummaryWidget(
               initialSelectedGroupId: settings.memoSelectedGroupId,
               initialPersonalOnly: settings.memoPersonalOnly,
             );
-          }
-          break;
-        case 'householdSummary':
-          if (settings.showHouseholdSummary) {
+            break;
+          case 'householdSummary':
             widget = HouseholdSummaryWidget(
               initialSelectedGroupId: settings.householdSelectedGroupId,
               viewMode: settings.householdViewMode,
             );
-          }
-          break;
-        case 'weather':
-          if (settings.showWeather) {
+            break;
+          case 'weather':
             widget = const WeatherWidget();
-          }
-          break;
-        case 'childcareSummary':
-          if (settings.showChildcareSummary) {
+            break;
+          case 'childcareSummary':
             widget = ChildcareSummaryWidget(
               initialSelectedGroupId: settings.childcareSelectedGroupId,
             );
-          }
-          break;
-        case 'savingsSummary':
-          if (settings.showSavingsSummary) {
+            break;
+          case 'savingsSummary':
             widget = SavingsSummaryWidget(
               initialSelectedGroupId: settings.savingsSelectedGroupId,
             );
-          }
-          break;
+            break;
+        }
       }
 
       if (widget != null) {
@@ -308,6 +298,74 @@ class _DashboardGrid extends ConsumerWidget {
       spacing: spacing,
       runSpacing: spacing,
       children: activeWidgets,
+    );
+  }
+}
+
+/// 2주 무료 체험 배너 (체험 기간 중에만 표시)
+class _TrialBannerCard extends ConsumerWidget {
+  const _TrialBannerCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscription = ref.watch(subscriptionProvider).valueOrNull;
+    if (subscription == null || !subscription.isTrial) return const SizedBox.shrink();
+
+    final l10n = AppLocalizations.of(context)!;
+    final daysLeft = subscription.daysLeft;
+    final colorScheme = Theme.of(context).colorScheme;
+    final horizontalPadding = ResponsivePadding.getHorizontalPadding(context);
+    final maxWidth = Responsive.isDesktop(context) ? 1200.0 : double.infinity;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPadding,
+            0,
+            horizontalPadding,
+            AppSizes.spaceM,
+          ),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceM,
+              vertical: AppSizes.spaceS,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.card_giftcard_outlined, color: colorScheme.primary),
+                const SizedBox(width: AppSizes.spaceS),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.dashboard_trial_banner_title,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Text(
+                        daysLeft > 0 ? l10n.dashboard_trial_banner_sublabel_days(daysLeft) : l10n.dashboard_trial_banner_sublabel_today,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onPrimaryContainer,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

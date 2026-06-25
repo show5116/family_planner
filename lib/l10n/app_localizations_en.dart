@@ -179,6 +179,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakao login failed';
 
   @override
+  String get auth_appleLoginFailed => 'Apple login failed';
+
+  @override
   String get auth_signupSuccess => 'Sign up successful';
 
   @override
@@ -2563,6 +2566,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_carry_over_no_balance => 'No balance to carry over';
 
   @override
+  String get household_balance_transfer => 'Transfer Balance';
+
+  @override
+  String get household_carry_over_mode_next_month => 'Next Month';
+
+  @override
+  String get household_carry_over_mode_asset => 'Asset Account';
+
+  @override
+  String get household_carry_over_mode_savings => 'Piggy Bank';
+
+  @override
+  String get household_carry_over_amount_label => 'Amount';
+
+  @override
+  String get household_carry_over_amount_exceeded =>
+      'Cannot exceed available balance';
+
+  @override
+  String get household_carry_over_select_account => 'Select an account';
+
+  @override
+  String get household_carry_over_select_savings => 'Select a piggy bank';
+
+  @override
+  String get household_carry_over_no_accounts => 'No accounts registered';
+
+  @override
+  String get household_carry_over_no_savings => 'No piggy banks registered';
+
+  @override
+  String get household_transfer_success => 'Transfer completed successfully';
+
+  @override
   String get household_income => 'Income';
 
   @override
@@ -4397,4 +4434,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String account_action_failed(String error) {
     return 'An error occurred: $error';
   }
+
+  @override
+  String get subscription_free_label => 'Free Plan';
+
+  @override
+  String get subscription_free_sublabel => 'Ads are displayed';
+
+  @override
+  String get subscription_trial_label => '2-Week Free Trial';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return 'Switches to free plan in $days days';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => 'Trial ends today';
+
+  @override
+  String get subscription_ad_free_label => 'Ad-Free';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return 'Until $date';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => 'Enjoying without ads';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return 'Until $date';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => 'Enjoying all features';
+
+  @override
+  String get dashboard_trial_banner_title => 'Enjoying 2-Week Ad-Free Trial';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return 'Switches to regular plan in $days days';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => 'Trial ends today';
+
+  @override
+  String get anniversary_widgetTitle => 'Upcoming Anniversaries';
+
+  @override
+  String get anniversary_widgetEmpty => 'No anniversaries registered';
+
+  @override
+  String get widgetSettings_anniversarySummary => 'Anniversaries';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc =>
+      'Shows upcoming anniversaries and D-day countdown';
 }

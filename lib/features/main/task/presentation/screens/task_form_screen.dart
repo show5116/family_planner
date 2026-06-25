@@ -34,6 +34,13 @@ class TaskFormScreen extends ConsumerStatefulWidget {
   final TaskType? initialTaskType;
   final bool isOnboarding;
 
+  // 약식 생성창에서 넘어올 때 전달되는 초기값
+  final String? initialTitle;
+  final DateTime? initialEndTime;
+  final String? initialGroupId;
+  final bool hasInitialGroupId;
+  final List<int>? initialReminders;
+
   const TaskFormScreen({
     super.key,
     this.taskId,
@@ -41,6 +48,11 @@ class TaskFormScreen extends ConsumerStatefulWidget {
     this.initialDate,
     this.initialTaskType,
     this.isOnboarding = false,
+    this.initialTitle,
+    this.initialEndTime,
+    this.initialGroupId,
+    this.hasInitialGroupId = false,
+    this.initialReminders,
   });
 
   @override
@@ -60,6 +72,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
   final _participantsKey = GlobalKey();
 
   String? _previousGroupId;
+  StateController<String?>? _groupIdNotifier;
 
   @override
   void initState() {
@@ -69,10 +82,15 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
       _descriptionController.text = widget.task!.description ?? '';
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _groupIdNotifier = ref.read(selectedGroupIdProvider.notifier);
       _previousGroupId = ref.read(selectedGroupIdProvider);
       if (widget.task != null) {
         // 수정 모드: task의 groupId로 초기화
         ref.read(selectedGroupIdProvider.notifier).state = widget.task!.groupId;
+      } else if (widget.hasInitialGroupId) {
+        // 약식 창에서 넘어온 경우: 선택된 그룹 그대로 사용
+        ref.read(selectedGroupIdProvider.notifier).state = widget.initialGroupId;
       } else {
         // 신규 모드: 현재 필터에서 그룹 자동 선택
         final filterIds = ref.read(selectedGroupIdsProvider);
@@ -92,6 +110,41 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           }
         }
       }
+
+      // 약식 창에서 넘어온 초기값 적용
+      if (widget.initialTitle?.isNotEmpty == true) {
+        _titleController.text = widget.initialTitle!;
+      }
+      if (widget.initialDate != null || widget.initialEndTime != null) {
+        final notifier = ref.read(taskFormNotifierProvider(
+          taskId: widget.taskId,
+          task: widget.task,
+          initialDate: widget.initialDate,
+          initialTaskType: widget.initialTaskType,
+        ).notifier);
+        if (widget.initialDate != null) {
+          notifier.setStartTime(TimeOfDay.fromDateTime(widget.initialDate!));
+        }
+        if (widget.initialEndTime != null) {
+          notifier.setHasDueDate(true);
+          notifier.setDueDate(widget.initialEndTime!);
+          notifier.setDueTime(TimeOfDay.fromDateTime(widget.initialEndTime!));
+        }
+        for (final minutes in widget.initialReminders ?? []) {
+          notifier.addReminder(minutes);
+        }
+      } else if (widget.initialReminders?.isNotEmpty == true) {
+        final notifier = ref.read(taskFormNotifierProvider(
+          taskId: widget.taskId,
+          task: widget.task,
+          initialDate: widget.initialDate,
+          initialTaskType: widget.initialTaskType,
+        ).notifier);
+        for (final minutes in widget.initialReminders!) {
+          notifier.addReminder(minutes);
+        }
+      }
+
       // 상세 API 로드 (reminders + groupId 재확인)
       if (widget.taskId != null) {
         _loadDetail();
@@ -264,8 +317,14 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
 
   @override
   void dispose() {
-    // 이전 그룹 선택 상태 복구
-    ref.read(selectedGroupIdProvider.notifier).state = _previousGroupId;
+    // 이전 그룹 선택 상태 복구 — dispose 중 리스너 예외를 피하기 위해 다음 프레임에서 실행
+    final notifier = _groupIdNotifier;
+    final previousId = _previousGroupId;
+    if (notifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifier.state = previousId;
+      });
+    }
     _titleController.dispose();
     _descriptionController.dispose();
     _titleFocusNode.dispose();

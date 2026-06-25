@@ -8,6 +8,7 @@ import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
+import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
 
 class AccountFormScreen extends ConsumerStatefulWidget {
   final String? groupId;
@@ -116,19 +117,21 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
               const SizedBox(height: AppSizes.spaceM),
 
               // 계좌 유형
-              DropdownButtonFormField<AccountType>(
-                initialValue: _selectedType,
-                decoration: InputDecoration(
-                  labelText: l10n.asset_account_type,
-                  border: const OutlineInputBorder(),
+              FocusDismissDropdown(
+                child: DropdownButtonFormField<AccountType>(
+                  initialValue: _selectedType,
+                  decoration: InputDecoration(
+                    labelText: l10n.asset_account_type,
+                    border: const OutlineInputBorder(),
+                  ),
+                  items: AccountType.values
+                      .map((t) => DropdownMenuItem(
+                            value: t,
+                            child: Text(accountTypeLabel(l10n, t)),
+                          ))
+                      .toList(),
+                  onChanged: (v) => setState(() => _selectedType = v ?? AccountType.savings),
                 ),
-                items: AccountType.values
-                    .map((t) => DropdownMenuItem(
-                          value: t,
-                          child: Text(accountTypeLabel(l10n, t)),
-                        ))
-                    .toList(),
-                onChanged: (v) => setState(() => _selectedType = v ?? AccountType.savings),
               ),
               const SizedBox(height: AppSizes.spaceM),
 

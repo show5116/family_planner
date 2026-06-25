@@ -159,10 +159,12 @@ class MemoManagementNotifier extends StateNotifier<AsyncValue<void>> {
   }
 
   /// [refreshList]: true면 목록 전체 refresh (폼 저장), false면 로컬 교체만 (체크 토글)
+  /// [refreshDetail]: false면 detail provider를 invalidate하지 않음 (체크 토글 시 깜빡임 방지)
   Future<MemoModel?> updateMemo(
     String id,
     UpdateMemoDto dto, {
     bool refreshList = false,
+    bool refreshDetail = true,
   }) async {
     state = const AsyncValue.loading();
     try {
@@ -172,7 +174,9 @@ class MemoManagementNotifier extends StateNotifier<AsyncValue<void>> {
       } else {
         _ref.read(memoListProvider.notifier).afterUpdate(id, memo);
       }
-      _ref.invalidate(memoDetailProvider(id));
+      if (refreshDetail) {
+        _ref.invalidate(memoDetailProvider(id));
+      }
       state = const AsyncValue.data(null);
       return memo;
     } catch (e, st) {

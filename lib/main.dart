@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -25,6 +29,7 @@ import 'package:family_planner/features/notification/data/services/local_notific
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/services/ad_service.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'firebase_options.dart';
 
@@ -52,8 +57,10 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await FirebaseMessagingService.initialize();
-    await LocalNotificationService.initialize();
+    // 프로덕션에서만 Analytics 수집 활성화
+    const isProduction = String.fromEnvironment('ENVIRONMENT', defaultValue: 'production') == 'production';
+    await AnalyticsService.instance.analytics
+        .setAnalyticsCollectionEnabled(isProduction);
   } catch (e) {
     debugPrint('❌ Firebase 초기화 실패: $e');
   }
@@ -62,6 +69,15 @@ void main() async {
     usePathUrlStrategy();
   }
 
+  // ATT 동의 팝업 (iOS 전용, AdMob 초기화 전 반드시 선행)
+  if (!kIsWeb && Platform.isIOS) {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status == TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
+  }
+
+  // AdMob 초기화 (runApp 전, timeout 적용)
   await AdService.initialize();
 
   KakaoSdk.init(
@@ -71,13 +87,13 @@ void main() async {
 
   AuthRepository.initialize(appKey: EnvironmentConfig.kakaoJavaScriptAppKey);
 
-  const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'local');
-  if (flavor == 'prod') {
-    EnvironmentConfig.setEnvironment(Environment.production);
-  } else if (flavor == 'dev') {
+  const env = String.fromEnvironment('ENVIRONMENT', defaultValue: 'production');
+  if (env == 'local') {
+    EnvironmentConfig.setEnvironment(Environment.local);
+  } else if (env == 'development') {
     EnvironmentConfig.setEnvironment(Environment.development);
   } else {
-    EnvironmentConfig.setEnvironment(Environment.local);
+    EnvironmentConfig.setEnvironment(Environment.production);
   }
 
 
@@ -93,10 +109,11 @@ class MyApp extends ConsumerStatefulWidget {
   ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     ApiClient.instance.onError = (String message) {
       scaffoldMessengerKey.currentState?.showSnackBar(
@@ -109,8 +126,11 @@ class _MyAppState extends ConsumerState<MyApp> {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
+      unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
+      unawaited(LocalNotificationService.initialize().catchError((_) {}));
+
       await ref.read(authProvider.notifier).checkAuthStatus();
-      ref.read(subscriptionProvider.notifier).refresh();
 
       // checkAuthStatus 완료 후 user 정보가 확정된 시점에 광고 설정 초기화
       AdService.instance.useTestAds = ref.read(useTestAdsProvider);
@@ -125,6 +145,21 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
       _updateUserLocation();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      AdService.instance.onAppPaused();
+    } else if (state == AppLifecycleState.resumed) {
+      AdService.instance.onAppResumed();
+    }
   }
 
   /// GPS 위치를 서버에 저장 (날씨 알림 크론잡에서 사용)

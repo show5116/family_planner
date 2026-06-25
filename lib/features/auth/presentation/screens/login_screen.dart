@@ -10,6 +10,7 @@ import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:flutter/gestures.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/auth/services/apple_auth_service.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_app_bar.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_link_row.dart';
 import 'package:family_planner/shared/widgets/app_divider.dart';
@@ -30,6 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isAppleAvailable = false;
   late final TapGestureRecognizer _termsRecognizer;
   late final TapGestureRecognizer _privacyRecognizer;
 
@@ -38,6 +40,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.initState();
     _termsRecognizer = TapGestureRecognizer()..onTap = () => context.push(AppRoutes.termsOfService);
     _privacyRecognizer = TapGestureRecognizer()..onTap = () => context.push(AppRoutes.privacyPolicy);
+    _checkAppleAvailability();
+  }
+
+  Future<void> _checkAppleAvailability() async {
+    final available = await AppleAuthService.isAvailable();
+    if (mounted) setState(() => _isAppleAvailable = available);
   }
 
   @override
@@ -121,6 +129,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l10n.auth_googleLoginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleAppleLogin() async {
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _isLoading = true);
+
+    try {
+      await ref.read(authProvider.notifier).loginWithApple();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.auth_appleLoginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -345,6 +373,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           label: l10n.auth_continueWithGoogle,
           onPressed: _isLoading ? null : _handleGoogleLogin,
         ),
+        if (_isAppleAvailable) ...[
+          const SizedBox(height: AppSizes.spaceM),
+          SocialLoginButton(
+            icon: Icons.apple,
+            label: l10n.auth_continueWithApple,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            onPressed: _isLoading ? null : _handleAppleLogin,
+          ),
+        ],
         // TODO: 카카오 사업자 동의항목(이메일) 심사 승인 후 활성화
         // const SizedBox(height: AppSizes.spaceM),
         // SocialLoginButton(

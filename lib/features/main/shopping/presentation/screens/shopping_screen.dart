@@ -29,13 +29,13 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
   VoidCallback? _replayFrequentOnboarding;
   VoidCallback? _replayHistoryOnboarding;
 
-  VoidCallback? _startFrequentOnboarding;
-  VoidCallback? _startHistoryOnboarding;
+  // ValueNotifier 트리거: false→true 전환으로 각 탭 튜토리얼을 시작.
+  // 콜백 방식과 달리 탭이 lazy하게 늦게 빌드되어도 initState에서 value를 체크해 즉시 시작 가능.
+  final _frequentTutorialTrigger = ValueNotifier<bool>(false);
+  final _historyTutorialTrigger = ValueNotifier<bool>(false);
 
   // 탭 전환 중 중복 호출 방지
   bool _transitioning = false;
-
-  static const _tabAnimationDuration = Duration(milliseconds: 300);
 
   @override
   void initState() {
@@ -60,34 +60,51 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
 
   @override
   void dispose() {
+    _frequentTutorialTrigger.dispose();
+    _historyTutorialTrigger.dispose();
     _tabController.dispose();
     super.dispose();
   }
 
-  /// 탭 전환 후 충분히 안정된 시점에 콜백 실행
-  /// TabBarView 스와이프 애니메이션(300ms) + 렌더링 2프레임 대기
+  /// 탭 전환 후 animation.value가 targetIndex에 완전히 수렴한 뒤 콜백 실행.
+  /// 고정 딜레이 대신 실제 애니메이션 값을 감시해 기기 성능과 무관하게 안정적으로 동작.
   Future<void> _switchTabAndStart(int targetIndex, VoidCallback startOnboarding) async {
     if (_transitioning || !mounted) return;
-    _transitioning = true;
+    setState(() => _transitioning = true);
 
     _tabController.animateTo(targetIndex);
 
-    // 탭 전환 애니메이션 완료 대기
-    await Future.delayed(_tabAnimationDuration + const Duration(milliseconds: 50));
-    if (!mounted) {
-      _transitioning = false;
-      return;
+    // 탭 애니메이션 완료 대기: animation.value ≈ targetIndex 가 될 때까지 감시
+    final tabAnim = _tabController.animation;
+    if (tabAnim != null && (tabAnim.value - targetIndex).abs() > 0.005) {
+      final animCompleter = Completer<void>();
+      void onAnim() {
+        if ((tabAnim.value - targetIndex).abs() <= 0.005) {
+          tabAnim.removeListener(onAnim);
+          if (!animCompleter.isCompleted) animCompleter.complete();
+        }
+      }
+      tabAnim.addListener(onAnim);
+      // 타임아웃 500ms: 애니메이션이 비정상적으로 늦어지면 강제 진행
+      await animCompleter.future.timeout(
+        const Duration(milliseconds: 500),
+        onTimeout: () => tabAnim.removeListener(onAnim),
+      );
     }
+    if (!mounted) { _transitioning = false; return; }
 
-    // 렌더링 안정화: 2프레임 대기 (첫 프레임에 레이아웃, 둘째 프레임에 GlobalKey 위치 확정)
-    final completer = Completer<void>();
+    // 렌더링 안정화: 2프레임 대기 (레이아웃 → GlobalKey 위치 확정)
+    final renderCompleter = Completer<void>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => completer.complete());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!renderCompleter.isCompleted) renderCompleter.complete();
+      });
     });
-    await completer.future;
+    await renderCompleter.future;
 
-    if (mounted) startOnboarding();
-    _transitioning = false;
+    if (!mounted) { _transitioning = false; return; }
+    startOnboarding();
+    setState(() => _transitioning = false);
   }
 
   void _replayCurrentTabOnboarding() {
@@ -132,30 +149,41 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          CartTab(
-            onReplayOnboardingReady: (replay) => _replayCartOnboarding = replay,
-            onOnboardingFinished: () => _switchTabAndStart(
-              1,
-              () => _startFrequentOnboarding?.call(),
+      body: AbsorbPointer(
+        absorbing: _transitioning,
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            CartTab(
+              onReplayOnboardingReady: (replay) => _replayCartOnboarding = replay,
+              onOnboardingFinished: () => _switchTabAndStart(
+                1,
+                () {
+                  // 이전 실행에서 true였을 경우를 대비해 false 초기화 후 트리거.
+                  // ValueNotifier는 동일 값이면 알림을 생략하므로 반드시 false→true 순서.
+                  _frequentTutorialTrigger.value = false;
+                  _frequentTutorialTrigger.value = true;
+                },
+              ),
             ),
-          ),
-          FrequentItemsTab(
-            onReplayOnboardingReady: (replay) => _replayFrequentOnboarding = replay,
-            onStartOnboardingReady: (start) => _startFrequentOnboarding = start,
-            onOnboardingFinished: () => _switchTabAndStart(
-              2,
-              () => _startHistoryOnboarding?.call(),
+            FrequentItemsTab(
+              onReplayOnboardingReady: (replay) => _replayFrequentOnboarding = replay,
+              tutorialTrigger: _frequentTutorialTrigger,
+              onOnboardingFinished: () => _switchTabAndStart(
+                2,
+                () {
+                  _historyTutorialTrigger.value = false;
+                  _historyTutorialTrigger.value = true;
+                },
+              ),
             ),
-          ),
-          ShoppingHistoryTab(
-            onReplayOnboardingReady: (replay) => _replayHistoryOnboarding = replay,
-            onStartOnboardingReady: (start) => _startHistoryOnboarding = start,
-            // 마지막 탭 — 체인 종료
-          ),
-        ],
+            ShoppingHistoryTab(
+              onReplayOnboardingReady: (replay) => _replayHistoryOnboarding = replay,
+              tutorialTrigger: _historyTutorialTrigger,
+              // 마지막 탭 — 체인 종료
+            ),
+          ],
+        ),
       ),
     );
   }

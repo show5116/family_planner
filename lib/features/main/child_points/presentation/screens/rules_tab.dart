@@ -10,9 +10,18 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 규칙 탭
 class RulesTab extends ConsumerWidget {
-  const RulesTab({super.key, this.demoRules});
+  const RulesTab({
+    super.key,
+    this.demoRules,
+    this.demoPlusKey,
+    this.demoMinusKey,
+    this.demoInfoKey,
+  });
 
   final List<ChildcareRule>? demoRules;
+  final GlobalKey? demoPlusKey;
+  final GlobalKey? demoMinusKey;
+  final GlobalKey? demoInfoKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,11 +40,20 @@ class RulesTab extends ConsumerWidget {
           children: [
             const RulesGuide(hasRules: true),
             if (plusRules.isNotEmpty)
-              _DemoRuleSection(type: ChildcareRuleType.plus, rules: plusRules),
+              KeyedSubtree(
+                key: demoPlusKey,
+                child: _DemoRuleSection(type: ChildcareRuleType.plus, rules: plusRules),
+              ),
             if (minusRules.isNotEmpty)
-              _DemoRuleSection(type: ChildcareRuleType.minus, rules: minusRules),
+              KeyedSubtree(
+                key: demoMinusKey,
+                child: _DemoRuleSection(type: ChildcareRuleType.minus, rules: minusRules),
+              ),
             if (infoRules.isNotEmpty)
-              _DemoRuleSection(type: ChildcareRuleType.info, rules: infoRules),
+              KeyedSubtree(
+                key: demoInfoKey,
+                child: _DemoRuleSection(type: ChildcareRuleType.info, rules: infoRules),
+              ),
           ],
         ),
       );
@@ -351,8 +369,7 @@ class _RuleSectionState extends State<_RuleSection> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: rules.length,
-            onReorder: (oldIndex, newIndex) {
-              if (newIndex > oldIndex) newIndex--;
+            onReorderItem: (oldIndex, newIndex) {
               final updated = [...rules];
               final moved = updated.removeAt(oldIndex);
               updated.insert(newIndex, moved);

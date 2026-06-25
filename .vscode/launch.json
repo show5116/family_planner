@@ -8,6 +8,7 @@
       "deviceId": "chrome",
       "args": [
         "--web-port=3001",
+        "--dart-define=ENVIRONMENT=local",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
         "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
         "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
@@ -21,6 +22,21 @@
       "deviceId": "edge",
       "args": [
         "--web-port=3001",
+        "--dart-define=ENVIRONMENT=local",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
+      ]
+    },
+    {
+      "name": "family_planner (iOS Simulator)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "4BE51488-3923-4189-BF6E-05442A351CCF",
+      "preLaunchTask": "boot-ios-simulator",
+      "args": [
+        "--dart-define=ENVIRONMENT=development",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
         "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
         "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
@@ -32,6 +48,7 @@
       "request": "launch",
       "type": "dart",
       "args": [
+        "--dart-define=ENVIRONMENT=local",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
         "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
         "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
@@ -45,6 +62,7 @@
       "flutterMode": "profile",
       "args": [
         "--web-port=3001",
+        "--dart-define=ENVIRONMENT=local",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
         "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
         "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
@@ -58,6 +76,7 @@
       "flutterMode": "release",
       "args": [
         "--web-port=3001",
+        "--dart-define=ENVIRONMENT=production",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
         "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
         "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",

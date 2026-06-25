@@ -20,14 +20,14 @@ class _AdUnitIds {
   static const _iosTestRewarded = 'ca-app-pub-3940256099942544/1712485313';
 
   // Android 실제 Unit ID (프로덕션)
-  static const _androidBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _androidInterstitial = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _androidRewarded = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _androidBanner = 'ca-app-pub-1069302827856916/3716686636';
+  static const _androidInterstitial = 'ca-app-pub-1069302827856916/1525637563';
+  static const _androidRewarded = 'ca-app-pub-1069302827856916/7332793167';
 
   // iOS 실제 Unit ID (프로덕션)
-  static const _iosBanner = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _iosInterstitial = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
-  static const _iosRewarded = 'ca-app-pub-XXXXXXXXXX/XXXXXXXXXX';
+  static const _iosBanner = 'ca-app-pub-1069302827856916/6981829987';
+  static const _iosInterstitial = 'ca-app-pub-1069302827856916/4790780911';
+  static const _iosRewarded = 'ca-app-pub-1069302827856916/6544101891';
 
   static bool get _isIos => defaultTargetPlatform == TargetPlatform.iOS;
 
@@ -53,13 +53,46 @@ class AdService {
   bool _isInterstitialLoading = false;
   bool _isRewardedLoading = false;
 
-  /// 실제 Unit ID 발급 전까지 항상 테스트 광고 사용
-  bool useTestAds = true;
+  bool useTestAds = false;
+
+  // 세션당 최대 노출 횟수
+  static const _maxPerSession = 3;
+  // 광고 사이 최소 간격
+  static const _minInterval = Duration(minutes: 3);
+  // 백그라운드 N분 이상이면 새 세션으로 간주
+  static const _sessionResetThreshold = Duration(minutes: 30);
+
+  int _sessionCount = 0;
+  DateTime? _lastInterstitialShownAt;
+  DateTime? _backgroundedAt;
+
+  /// 앱이 백그라운드로 진입할 때 호출 (main.dart의 WidgetsBindingObserver에서)
+  void onAppPaused() {
+    _backgroundedAt = DateTime.now();
+  }
+
+  /// 앱이 포그라운드로 복귀할 때 호출
+  void onAppResumed() {
+    if (_backgroundedAt != null &&
+        DateTime.now().difference(_backgroundedAt!) >= _sessionResetThreshold) {
+      _sessionCount = 0;
+    }
+    _backgroundedAt = null;
+  }
+
+  bool get _canShowInterstitial {
+    if (_sessionCount >= _maxPerSession) return false;
+    if (_lastInterstitialShownAt == null) return true;
+    return DateTime.now().difference(_lastInterstitialShownAt!) >= _minInterval;
+  }
 
   /// MobileAds SDK 초기화 (main.dart에서 호출)
   static Future<void> initialize() async {
     if (kIsWeb) return;
-    await MobileAds.instance.initialize();
+    await MobileAds.instance.initialize().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () => InitializationStatus({}),
+    );
   }
 
   // ── 배너 광고 ─────────────────────────────────────────────
@@ -101,9 +134,9 @@ class AdService {
       return;
     }
 
-    if (_interstitialAd == null) {
+    if (!_canShowInterstitial || _interstitialAd == null) {
       onDismissed?.call();
-      preloadInterstitial();
+      if (_interstitialAd == null) preloadInterstitial();
       return;
     }
 
@@ -111,6 +144,8 @@ class AdService {
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
         _interstitialAd = null;
+        _lastInterstitialShownAt = DateTime.now();
+        _sessionCount++;
         onDismissed?.call();
         preloadInterstitial();
       },

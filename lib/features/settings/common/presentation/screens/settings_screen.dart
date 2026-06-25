@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/models/subscription_tier.dart';
+import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
@@ -100,6 +102,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       body: ListView(
         children: [
+          // 구독 상태 카드
+          _SubscriptionCard(),
           // 화면 설정 섹션
           _buildSectionHeader(context, l10n.settings_screenSettings),
           _buildSettingTile(
@@ -325,6 +329,104 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
+    );
+  }
+}
+
+class _SubscriptionCard extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscriptionAsync = ref.watch(subscriptionProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return subscriptionAsync.when(
+      skipLoadingOnReload: true,
+      loading: () => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
+      data: (subscription) {
+        final l10n = AppLocalizations.of(context)!;
+        final tier = subscription.tier;
+        final isTrial = subscription.isTrial;
+        final daysLeft = subscription.daysLeft;
+        final expiresAt = subscription.expiresAt;
+
+        String formatDate(DateTime dt) =>
+            '${dt.year}.${dt.month.toString().padLeft(2, '0')}.${dt.day.toString().padLeft(2, '0')}';
+
+        final (IconData icon, Color color, String label, String sublabel) = switch (tier) {
+          SubscriptionTier.free => (
+              Icons.sentiment_neutral_outlined,
+              Colors.grey,
+              l10n.subscription_free_label,
+              l10n.subscription_free_sublabel,
+            ),
+          SubscriptionTier.adFree when isTrial => (
+              Icons.card_giftcard_outlined,
+              colorScheme.primary,
+              l10n.subscription_trial_label,
+              daysLeft > 0
+                  ? l10n.subscription_trial_sublabel_days(daysLeft)
+                  : l10n.subscription_trial_sublabel_today,
+            ),
+          SubscriptionTier.adFree => (
+              Icons.block_outlined,
+              Colors.blue,
+              l10n.subscription_ad_free_label,
+              expiresAt != null
+                  ? l10n.subscription_ad_free_sublabel_expires(formatDate(expiresAt))
+                  : l10n.subscription_ad_free_sublabel_active,
+            ),
+          SubscriptionTier.premium => (
+              Icons.workspace_premium_outlined,
+              const Color(0xFFFF9800),
+              l10n.subscription_premium_label,
+              expiresAt != null
+                  ? l10n.subscription_premium_sublabel_expires(formatDate(expiresAt))
+                  : l10n.subscription_premium_sublabel_active,
+            ),
+        };
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSizes.spaceM,
+            AppSizes.spaceL,
+            AppSizes.spaceM,
+            AppSizes.spaceS,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.08),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
+              borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: color, size: 32),
+                const SizedBox(width: AppSizes.spaceM),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    Text(
+                      sublabel,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

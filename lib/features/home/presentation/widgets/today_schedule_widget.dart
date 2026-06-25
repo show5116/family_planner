@@ -33,12 +33,14 @@ class TodayScheduleWidget extends ConsumerStatefulWidget {
 class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
   late List<String>? _selectedGroupIds;
   late bool _includePersonal;
+  late ScheduleViewMode _viewMode;
 
   @override
   void initState() {
     super.initState();
     _selectedGroupIds = widget.initialSelectedGroupIds;
     _includePersonal = widget.initialIncludePersonal;
+    _viewMode = widget.viewMode;
   }
 
   @override
@@ -50,11 +52,14 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
     if (widget.initialIncludePersonal != oldWidget.initialIncludePersonal) {
       _includePersonal = widget.initialIncludePersonal;
     }
+    if (widget.viewMode != oldWidget.viewMode) {
+      _viewMode = widget.viewMode;
+    }
   }
 
   String _title(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    switch (widget.viewMode) {
+    switch (_viewMode) {
       case ScheduleViewMode.today:
         return l10n.home_todaySchedule;
       case ScheduleViewMode.week:
@@ -66,7 +71,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
 
   String _emptyMessage(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    switch (widget.viewMode) {
+    switch (_viewMode) {
       case ScheduleViewMode.today:
         return l10n.widgetSettings_scheduleEmptyToday;
       case ScheduleViewMode.week:
@@ -81,6 +86,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
     if (current == null) return;
     await ref.read(dashboardWidgetSettingsProvider.notifier).save(
           current.copyWith(
+            scheduleViewMode: _viewMode,
             scheduleSelectedGroupIds: _selectedGroupIds,
             scheduleIncludePersonal: _includePersonal,
           ),
@@ -102,10 +108,12 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
         groups: groups,
         selectedGroupIds: _selectedGroupIds,
         includePersonal: _includePersonal,
-        onApply: (selectedGroupIds, includePersonal) {
+        viewMode: _viewMode,
+        onApply: (selectedGroupIds, includePersonal, viewMode) {
           setState(() {
             _selectedGroupIds = selectedGroupIds;
             _includePersonal = includePersonal;
+            if (viewMode != null) _viewMode = viewMode;
           });
           _saveFilter();
           Navigator.pop(context);
@@ -115,11 +123,11 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
   }
 
   @override
-  Widget build(BuildContext context, ) {
+  Widget build(BuildContext context) {
     final hasGroups = (ref.watch(myGroupsProvider).valueOrNull ?? []).isNotEmpty;
     final tasksAsync = ref.watch(
       dashboardTodayTasksProvider(
-        mode: widget.viewMode,
+        mode: _viewMode,
         selectedGroupIds: _selectedGroupIds,
         includePersonal: _includePersonal,
       ),
@@ -169,7 +177,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
         error: (_, _) => _EmptyState(message: _emptyMessage(context)),
         data: (tasks) {
           if (tasks.isEmpty) return _EmptyState(message: _emptyMessage(context));
-          final showDate = widget.viewMode != ScheduleViewMode.today;
+          final showDate = _viewMode != ScheduleViewMode.today;
           return Column(
             children: tasks
                 .take(5)

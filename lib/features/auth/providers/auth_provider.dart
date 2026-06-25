@@ -22,6 +22,7 @@ import 'package:family_planner/features/memo/providers/memo_provider.dart';
 import 'package:family_planner/features/main/investment/providers/indicator_provider.dart';
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/onboarding/providers/onboarding_provider.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 
 /// 인증 상태
 class AuthState {
@@ -30,6 +31,8 @@ class AuthState {
     this.user,
     this.error,
     this.pendingTempToken,
+    this.needsName = false,
+    this.needsEmail = false,
   });
 
   final bool? isAuthenticated;
@@ -39,6 +42,12 @@ class AuthState {
   /// 소셜 신규 가입 시 약관 동의 대기 상태의 임시 토큰.
   /// null이 아니면 약관 동의 화면을 표시해야 한다.
   final String? pendingTempToken;
+
+  /// 소셜 신규 가입 시 이름 입력이 필요한 경우 true
+  final bool needsName;
+
+  /// 소셜 신규 가입 시 이메일 입력이 필요한 경우 true
+  final bool needsEmail;
 
   bool get isPendingTerms => pendingTempToken != null;
 
@@ -61,12 +70,16 @@ class AuthState {
     String? error,
     String? pendingTempToken,
     bool clearPendingTempToken = false,
+    bool? needsName,
+    bool? needsEmail,
   }) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       user: user ?? this.user,
       error: error,
       pendingTempToken: clearPendingTempToken ? null : (pendingTempToken ?? this.pendingTempToken),
+      needsName: needsName ?? this.needsName,
+      needsEmail: needsEmail ?? this.needsEmail,
     );
   }
 }
@@ -125,6 +138,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final userInfo = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: userInfo);
 
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('email');
+
       // 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
     } catch (e) {
@@ -144,6 +161,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _authService.register(email: email, password: password, name: name);
 
+      await AnalyticsService.instance.logSignUp('email');
       state = const AuthState();
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -189,6 +207,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _authService.logout();
     } catch (_) {}
+
+    await AnalyticsService.instance.logLogout();
+    await AnalyticsService.instance.clearUserId();
 
     // 성공/실패 무관하게 반드시 인증 상태 초기화
     state = const AuthState(isAuthenticated: false);
@@ -305,6 +326,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (user != null) {
         state = state.copyWith(isAuthenticated: true, user: user);
 
+        final uid = AuthState(isAuthenticated: true, user: user).userId;
+        if (uid != null) await AnalyticsService.instance.setUserId(uid);
+
         // 자동 로그인 성공 시 FCM 토큰 등록
         await _registerFcmToken();
       } else {
@@ -347,6 +371,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           pendingTempToken: response['tempToken'] as String,
           clearPendingTempToken: false,
+          needsName: response['needsName'] == true || response['needsName'] == 'true',
+          needsEmail: response['needsEmail'] == true || response['needsEmail'] == 'true',
         );
         return;
       }
@@ -357,6 +383,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // auth/me로 정규화된 사용자 정보 조회 (로그인 응답 구조와 무관하게 일관된 flat 구조)
       final userInfo = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: userInfo);
+
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('google');
 
       // 구글 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
@@ -383,6 +413,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           pendingTempToken: response['tempToken'] as String,
           clearPendingTempToken: false,
+          needsName: response['needsName'] == true || response['needsName'] == 'true',
+          needsEmail: response['needsEmail'] == true || response['needsEmail'] == 'true',
         );
         return;
       }
@@ -394,6 +426,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final userInfo = await _authService.getUserInfo();
       state = state.copyWith(isAuthenticated: true, user: userInfo);
 
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('kakao');
+
       // 카카오 로그인 성공 후 FCM 토큰 등록
       await _registerFcmToken();
     } catch (e) {
@@ -402,8 +438,54 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  /// 소셜 신규 회원가입 완료 (약관 동의)
-  Future<void> completeSocialSignup() async {
+  /// Apple 로그인 (플랫폼별 자동 분기)
+  ///
+  /// - 웹: OAuth 팝업 방식
+  /// - Android: OAuth 외부 브라우저 방식 (Deep Link로 콜백)
+  /// - iOS/macOS: SDK 방식 (sign_in_with_apple)
+  Future<void> loginWithApple() async {
+    state = state.copyWith(error: null);
+
+    try {
+      // Android: 외부 브라우저로 Apple OAuth 페이지를 열고 Deep Link로 콜백 수신
+      // OAuthCallbackScreen이 accessToken을 받아 handleWebOAuthCallback을 호출한다
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        await _authService.loginWithAppleOAuth();
+        return;
+      }
+
+      final response = kIsWeb
+          ? await _authService.loginWithAppleOAuth()
+          : await _authService.loginWithApple();
+
+      if (_isPendingTerms(response)) {
+        state = state.copyWith(
+          pendingTempToken: response['tempToken'] as String,
+          clearPendingTempToken: false,
+          needsName: response['needsName'] == true || response['needsName'] == 'true',
+          needsEmail: response['needsEmail'] == true || response['needsEmail'] == 'true',
+        );
+        return;
+      }
+
+      _invalidateGroupProviders();
+
+      final userInfo = await _authService.getUserInfo();
+      state = state.copyWith(isAuthenticated: true, user: userInfo);
+
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logLogin('apple');
+
+      await _registerFcmToken();
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// 소셜 신규 회원가입 완료 (약관 동의 + 선택적 name/email)
+  Future<void> completeSocialSignup({String? name, String? email}) async {
     final tempToken = state.pendingTempToken;
     if (tempToken == null) return;
 
@@ -411,7 +493,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     try {
       // 토큰 저장 (socialSignup 내부에서 처리)
-      await _authService.socialSignup(tempToken: tempToken);
+      await _authService.socialSignup(tempToken: tempToken, name: name, email: email);
 
       _invalidateGroupProviders();
 
@@ -423,6 +505,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       // pendingTempToken을 클리어하고 로그인 상태로 전환 → redirect가 홈으로 이동
       state = AuthState(isAuthenticated: true, user: userInfo);
+
+      final uid = AuthState(isAuthenticated: true, user: userInfo).userId;
+      if (uid != null) await AnalyticsService.instance.setUserId(uid);
+      await AnalyticsService.instance.logSignUp('social');
 
       await _registerFcmToken();
     } catch (e) {

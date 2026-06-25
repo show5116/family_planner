@@ -100,9 +100,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
       itemCount: displayRoles.length,
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
       proxyDecorator: buildReorderableProxyDecorator,
-      onReorder: (oldIndex, newIndex) {
-        if (newIndex > oldIndex) newIndex -= 1;
-
+      onReorderItem: (oldIndex, newIndex) {
         // 이동 대상(oldIndex)이나 목적지(newIndex) 중 하나라도 고정 항목이면 무시
         final movingRole = displayRoles[oldIndex];
         final targetRole = displayRoles[newIndex];

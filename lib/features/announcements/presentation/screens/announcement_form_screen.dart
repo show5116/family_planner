@@ -11,6 +11,7 @@ import 'package:family_planner/features/announcements/utils/announcement_categor
 import 'package:family_planner/shared/widgets/rich_text_editor.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/services/storage_service.dart';
+import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
 
 /// 공지사항 작성/수정 화면 (ADMIN 전용)
 class AnnouncementFormScreen extends ConsumerStatefulWidget {
@@ -138,40 +139,42 @@ class _AnnouncementFormScreenState
             const SizedBox(height: AppSizes.spaceL),
 
             // 카테고리 선택
-            DropdownButtonFormField<AnnouncementCategory>(
-              initialValue: _category,
-              decoration: InputDecoration(
-                labelText: l10n.announcement_category,
-                hintText: l10n.announcement_categoryHint,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                DropdownMenuItem<AnnouncementCategory>(
-                  value: null,
-                  child: Text(l10n.announcement_category_none),
+            FocusDismissDropdown(
+              child: DropdownButtonFormField<AnnouncementCategory>(
+                initialValue: _category,
+                decoration: InputDecoration(
+                  labelText: l10n.announcement_category,
+                  hintText: l10n.announcement_categoryHint,
+                  border: const OutlineInputBorder(),
                 ),
-                ...AnnouncementCategory.values.map((category) {
-                  return DropdownMenuItem<AnnouncementCategory>(
-                    value: category,
-                    child: Row(
-                      children: [
-                        Icon(
-                          category.icon,
-                          size: AppSizes.iconSmall,
-                          color: category.color,
-                        ),
-                        const SizedBox(width: AppSizes.spaceS),
-                        Text(category.displayName(l10n)),
-                      ],
-                    ),
-                  );
-                }),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _category = value;
-                });
-              },
+                items: [
+                  DropdownMenuItem<AnnouncementCategory>(
+                    value: null,
+                    child: Text(l10n.announcement_category_none),
+                  ),
+                  ...AnnouncementCategory.values.map((category) {
+                    return DropdownMenuItem<AnnouncementCategory>(
+                      value: category,
+                      child: Row(
+                        children: [
+                          Icon(
+                            category.icon,
+                            size: AppSizes.iconSmall,
+                            color: category.color,
+                          ),
+                          const SizedBox(width: AppSizes.spaceS),
+                          Text(category.displayName(l10n)),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _category = value;
+                  });
+                },
+              ),
             ),
             const SizedBox(height: AppSizes.spaceL),
 

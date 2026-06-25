@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
 import 'package:family_planner/core/services/ad_service.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/subscription/data/models/subscription_model.dart';
@@ -10,6 +11,9 @@ import 'package:family_planner/features/subscription/data/repositories/subscript
 class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
   @override
   Future<SubscriptionModel> build() async {
+    // isAuthenticated만 select해서 user 객체 변경에 의한 불필요한 재빌드 방지
+    final isAuthenticated = ref.watch(authProvider.select((s) => s.isAuthenticated));
+    if (isAuthenticated != true) return SubscriptionModel.defaultFree();
     return _fetchFromServer();
   }
 
@@ -31,11 +35,14 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(subscriptionRepositoryProvider);
-      return repo.verify(
+      final result = await repo.verify(
         tier: tier,
         expiresAt: expiresAt,
         purchaseToken: purchaseToken,
       );
+      await AnalyticsService.instance.logSubscriptionPurchase(tier.name);
+      await AnalyticsService.instance.setSubscriptionTier(tier.name);
+      return result;
     });
   }
 
@@ -44,7 +51,10 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(subscriptionRepositoryProvider);
-      return repo.restore();
+      final result = await repo.restore();
+      await AnalyticsService.instance.logSubscriptionRestore(result.tier.name);
+      await AnalyticsService.instance.setSubscriptionTier(result.tier.name);
+      return result;
     });
   }
 

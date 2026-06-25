@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:family_planner/core/routes/app_router.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/firebase_options.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
 import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
@@ -14,6 +15,18 @@ class FirebaseMessagingService {
 
   // 앱 종료 상태에서 탭한 메시지 — 앱 초기화 완료 후 처리
   static Map<String, dynamic>? _pendingNavigationData;
+
+  // 토큰 갱신 시 호출할 콜백 — 로그인 성공 후 fcm_token_provider가 주입
+  static Future<void> Function(String)? _onTokenRefreshCallback;
+  static String? _cachedToken;
+
+  static void setOnTokenRefreshCallback(Future<void> Function(String)? callback) {
+    _onTokenRefreshCallback = callback;
+    // 콜백 등록 시점에 이미 발급된 토큰이 있으면 즉시 전달
+    if (callback != null && _cachedToken != null) {
+      callback(_cachedToken!);
+    }
+  }
 
   /// Firebase Messaging 초기화
   static Future<void> initialize() async {
@@ -26,12 +39,13 @@ class FirebaseMessagingService {
         provisional: false,
       );
 
-      // FCM 토큰 가져오기
-      await getToken();
+      // FCM 토큰 가져오기 및 캐시
+      _cachedToken = await getToken();
 
       // 토큰 갱신 리스너
       _messaging.onTokenRefresh.listen((newToken) {
-        // TODO: 백엔드에 새 토큰 전송
+        _cachedToken = newToken;
+        _onTokenRefreshCallback?.call(newToken);
       });
 
       // 포그라운드 메시지 핸들러
@@ -74,6 +88,7 @@ class FirebaseMessagingService {
         return await _messaging.getToken();
       }
     } catch (e) {
+      debugPrint('FCM 토큰 발급 실패: $e');
       return null;
     }
   }
@@ -109,7 +124,8 @@ class FirebaseMessagingService {
     final context = AppRouter.navigatorKey.currentContext;
     if (context == null) return;
 
-    final category = data['category'] as String?;
+    final category = data['category'] as String? ?? 'unknown';
+    AnalyticsService.instance.logNotificationOpen(category);
     NotificationNavigationService.navigateByData(context, category, data);
   }
 }

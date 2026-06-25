@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>324185071750-21ke4mpb2ar5kmvqnbo6kgqtrjoecl2j.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.324185071750-21ke4mpb2ar5kmvqnbo6kgqtrjoecl2j</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>324185071750-707f7orbaa4pfi7fjpliqkvkqol6h18i.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDoR38uYICTRPub8U6a_QO93BQmOgCGdVA</string>
 	<key>GCM_SENDER_ID</key>
@@ -9,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.familyPlanner</string>
+	<string>com.hmncorp.familyPlanner</string>
 	<key>PROJECT_ID</key>
 	<string>family-planner-ab6e5</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:324185071750:ios:186a428a0f6c0c7548b107</string>
+	<string>1:324185071750:ios:dae1c6fcfe5bb0c348b107</string>
 </dict>
 </plist>

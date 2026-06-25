@@ -438,6 +438,12 @@ abstract class AppLocalizations {
   /// **'Kakao 로그인 실패'**
   String get auth_kakaoLoginFailed;
 
+  /// No description provided for @auth_appleLoginFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'Apple 로그인 실패'**
+  String get auth_appleLoginFailed;
+
   /// No description provided for @auth_signupSuccess.
   ///
   /// In ko, this message translates to:
@@ -4962,6 +4968,72 @@ abstract class AppLocalizations {
   /// **'이월할 잔금이 없습니다'**
   String get household_carry_over_no_balance;
 
+  /// 잔금 이동 진입 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'잔금 이동'**
+  String get household_balance_transfer;
+
+  /// 이월 방법: 다음 달 이월
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 달 이월'**
+  String get household_carry_over_mode_next_month;
+
+  /// 이월 방법: 자산 계좌로 이동
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 계좌'**
+  String get household_carry_over_mode_asset;
+
+  /// 이월 방법: 저금통으로 이동
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통'**
+  String get household_carry_over_mode_savings;
+
+  /// 이월 금액 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'금액'**
+  String get household_carry_over_amount_label;
+
+  /// 잔금 초과 오류 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'잔금을 초과할 수 없습니다'**
+  String get household_carry_over_amount_exceeded;
+
+  /// 자산 계좌 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌를 선택하세요'**
+  String get household_carry_over_select_account;
+
+  /// 저금통 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통을 선택하세요'**
+  String get household_carry_over_select_savings;
+
+  /// 계좌 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 계좌가 없습니다'**
+  String get household_carry_over_no_accounts;
+
+  /// 저금통 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 저금통이 없습니다'**
+  String get household_carry_over_no_savings;
+
+  /// 자산 이동 성공 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 이동이 완료되었습니다'**
+  String get household_transfer_success;
+
   /// 입금 유형 레이블
   ///
   /// In ko, this message translates to:
@@ -8289,6 +8361,114 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'오류가 발생했습니다: {error}'**
   String account_action_failed(String error);
+
+  /// 무료 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'무료 플랜'**
+  String get subscription_free_label;
+
+  /// 무료 플랜 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'광고가 표시됩니다'**
+  String get subscription_free_sublabel;
+
+  /// 체험 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'2주 무료 체험 중'**
+  String get subscription_trial_label;
+
+  /// 체험 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 후 무료 플랜으로 전환됩니다'**
+  String subscription_trial_sublabel_days(int days);
+
+  /// 체험 당일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 체험이 종료됩니다'**
+  String get subscription_trial_sublabel_today;
+
+  /// 광고 제거 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 제거'**
+  String get subscription_ad_free_label;
+
+  /// 광고 제거 만료일
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 까지'**
+  String subscription_ad_free_sublabel_expires(String date);
+
+  /// 광고 제거 무기한 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 없이 이용 중'**
+  String get subscription_ad_free_sublabel_active;
+
+  /// 프리미엄 구독 티어 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'Premium'**
+  String get subscription_premium_label;
+
+  /// 프리미엄 만료일
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 까지'**
+  String subscription_premium_sublabel_expires(String date);
+
+  /// 프리미엄 무기한 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 기능 이용 중'**
+  String get subscription_premium_sublabel_active;
+
+  /// 대시보드 체험 배너 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 없는 2주 무료 체험 중'**
+  String get dashboard_trial_banner_title;
+
+  /// 대시보드 체험 배너 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 후 일반 플랜으로 전환됩니다'**
+  String dashboard_trial_banner_sublabel_days(int days);
+
+  /// 대시보드 체험 배너 당일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 체험이 종료됩니다'**
+  String get dashboard_trial_banner_sublabel_today;
+
+  /// 기념일 대시보드 위젯 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'다가오는 기념일'**
+  String get anniversary_widgetTitle;
+
+  /// 기념일 위젯 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 기념일이 없습니다'**
+  String get anniversary_widgetEmpty;
+
+  /// 위젯 설정 - 기념일 위젯 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일'**
+  String get widgetSettings_anniversarySummary;
+
+  /// 위젯 설정 - 기념일 위젯 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'다가오는 기념일과 D-day를 표시합니다'**
+  String get widgetSettings_anniversarySummaryDesc;
 }
 
 class _AppLocalizationsDelegate

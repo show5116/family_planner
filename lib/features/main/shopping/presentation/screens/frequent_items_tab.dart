@@ -10,40 +10,7 @@ import 'package:family_planner/features/main/fridge/providers/fridge_provider.da
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 
-// ── 온보딩 샘플 데이터 ──────────────────────────────────────────────────────────
-
-final _demoFrequentItems = [
-  FrequentItemModel(
-    id: '__demo_freq_1__',
-    groupId: '__demo__',
-    name: '우유',
-    defaultUnit: '개',
-    autoAdd: true,
-    sortOrder: 0,
-    createdAt: DateTime(2025, 1, 1),
-    updatedAt: DateTime(2025, 1, 1),
-  ),
-  FrequentItemModel(
-    id: '__demo_freq_2__',
-    groupId: '__demo__',
-    name: '계란',
-    defaultUnit: '판',
-    autoAdd: false,
-    sortOrder: 1,
-    createdAt: DateTime(2025, 1, 2),
-    updatedAt: DateTime(2025, 1, 2),
-  ),
-  FrequentItemModel(
-    id: '__demo_freq_3__',
-    groupId: '__demo__',
-    name: '두부',
-    defaultUnit: null,
-    autoAdd: false,
-    sortOrder: 2,
-    createdAt: DateTime(2025, 1, 3),
-    updatedAt: DateTime(2025, 1, 3),
-  ),
-];
+part '_frequent_items_onboarding.dart';
 
 // ── 탭 ─────────────────────────────────────────────────────────────────────────
 
@@ -51,12 +18,14 @@ class FrequentItemsTab extends ConsumerStatefulWidget {
   const FrequentItemsTab({
     super.key,
     this.onReplayOnboardingReady,
-    this.onStartOnboardingReady,
+    this.tutorialTrigger,
     this.onOnboardingFinished,
   });
 
   final void Function(VoidCallback replay)? onReplayOnboardingReady;
-  final void Function(VoidCallback start)? onStartOnboardingReady;
+  /// CartTab 온보딩 완료 후 ShoppingScreen이 이 탭의 튜토리얼을 시작할 때 사용.
+  /// false→true 전환으로 트리거되므로 탭이 늦게 빌드되어도 initState에서 감지 가능.
+  final ValueNotifier<bool>? tutorialTrigger;
   final VoidCallback? onOnboardingFinished;
 
   @override
@@ -72,164 +41,27 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
   final _firstItemKey = GlobalKey();
   final _autoAddKey = GlobalKey();
   final _addToCartKey = GlobalKey();
+  // 빌드 중 코치마크 중복 예약 방지 플래그
+  bool _coachMarkScheduled = false;
 
   @override
   void initState() {
     super.initState();
     widget.onReplayOnboardingReady?.call(replayOnboarding);
-    widget.onStartOnboardingReady?.call(_startDemo);
-    // 자동 시작 없음 — CartTab 온보딩 완료 후 ShoppingScreen 체인으로만 시작
+    widget.tutorialTrigger?.addListener(_onTutorialTrigger);
+    // 탭이 애니메이션 도중 늦게 빌드된 경우: 트리거가 이미 true이면 즉시 시작
+    if (widget.tutorialTrigger?.value == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _startDemo();
+      });
+    }
   }
 
   @override
   void dispose() {
+    widget.tutorialTrigger?.removeListener(_onTutorialTrigger);
     _showDemo.dispose();
     super.dispose();
-  }
-
-  void replayOnboarding() {
-    OnboardingService.resetCoachMark(CoachMarkKeys.frequentItems).then((_) {
-      if (mounted) _startDemo();
-    });
-  }
-
-  void _startDemo() {
-    _showDemo.value = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showCoachMark());
-  }
-
-  TargetPosition? _keyToPosition(GlobalKey key) {
-    final ctx = key.currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
-    return TargetPosition(box.size, offset);
-  }
-
-  Future<void> _showCoachMark() async {
-    if (!mounted) return;
-
-    final fabPos = _keyToPosition(_fabKey);
-    final firstItemPos = _keyToPosition(_firstItemKey);
-    final autoAddPos = _keyToPosition(_autoAddKey);
-    final addToCartPos = _keyToPosition(_addToCartKey);
-
-    final l10n = AppLocalizations.of(context)!;
-
-    final targets = <TargetFocus>[
-      // 1. 추가 FAB
-      TargetFocus(
-        identify: 'frequent_fab',
-        targetPosition: fabPos,
-        keyTarget: fabPos == null ? _fabKey : null,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: l10n.fridge_frequent_coach_fabTitle,
-              description: l10n.fridge_frequent_coach_fabDesc,
-              icon: Icons.add,
-              color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
-      // 2. 첫 번째 항목 타일
-      TargetFocus(
-        identify: 'frequent_item',
-        targetPosition: firstItemPos,
-        keyTarget: firstItemPos == null ? _firstItemKey : null,
-        shape: ShapeLightFocus.RRect,
-        radius: 8,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: l10n.fridge_frequent_coach_itemTitle,
-              description: l10n.fridge_frequent_coach_itemDesc,
-              icon: Icons.star_outline,
-              color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
-      // 3. 자동 추가 스위치
-      TargetFocus(
-        identify: 'frequent_auto_add',
-        targetPosition: autoAddPos,
-        keyTarget: autoAddPos == null ? _autoAddKey : null,
-        shape: ShapeLightFocus.RRect,
-        radius: 20,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: l10n.fridge_frequent_coach_autoAddTitle,
-              description: l10n.fridge_frequent_coach_autoAddDesc,
-              icon: Icons.kitchen_outlined,
-              color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
-      // 4. 장바구니에 담기 버튼
-      TargetFocus(
-        identify: 'frequent_add_to_cart',
-        targetPosition: addToCartPos,
-        keyTarget: addToCartPos == null ? _addToCartKey : null,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: l10n.fridge_frequent_coach_addToCartTitle,
-              description: l10n.fridge_frequent_coach_addToCartDesc,
-              icon: Icons.add_shopping_cart_outlined,
-              color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
-    ];
-
-    await FeatureCoachMark.waitForTargets(targets, context);
-    if (!mounted) return;
-
-    TutorialCoachMark(
-      targets: FeatureCoachMark.refreshPositions(targets),
-      colorShadow: AppColors.textPrimary,
-      opacityShadow: 0.85,
-      textSkip: l10n.fridge_frequent_coach_skip,
-      alignSkip: Alignment.topRight,
-      skipWidget: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white30),
-        ),
-        child: Text(
-          l10n.fridge_frequent_coach_skip,
-          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-        ),
-      ),
-      onFinish: () {
-        OnboardingService.completeCoachMark(CoachMarkKeys.frequentItems);
-        _showDemo.value = false;
-        widget.onOnboardingFinished?.call();
-      },
-      onSkip: () {
-        OnboardingService.completeCoachMark(CoachMarkKeys.frequentItems);
-        _showDemo.value = false;
-        widget.onOnboardingFinished?.call();
-        return true;
-      },
-      paddingFocus: 8,
-      focusAnimationDuration: const Duration(milliseconds: 300),
-      pulseAnimationDuration: const Duration(milliseconds: 800),
-    ).show(context: context);
   }
 
   @override
@@ -239,6 +71,15 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
       valueListenable: _showDemo,
       builder: (context, isDemo, _) {
         if (isDemo) {
+          // 이 빌드에서 _OnboardingFrequentView가 렌더되므로,
+          // 다음 프레임에서는 GlobalKey가 반드시 트리에 존재함.
+          // 빌드 중 예약해야만 "키 빌드 → 코치마크" 순서가 보장됨.
+          if (!_coachMarkScheduled) {
+            _coachMarkScheduled = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _showCoachMark();
+            });
+          }
           return _OnboardingFrequentView(
             items: _demoFrequentItems,
             fabKey: _fabKey,
@@ -265,82 +106,6 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
       isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => _FrequentItemFormSheet(item: item),
-    );
-  }
-}
-
-// ── 온보딩 전용 뷰 ──────────────────────────────────────────────────────────────
-
-class _OnboardingFrequentView extends StatelessWidget {
-  final List<FrequentItemModel> items;
-  final GlobalKey fabKey;
-  final GlobalKey firstItemKey;
-  final GlobalKey autoAddKey;
-  final GlobalKey addToCartKey;
-
-  const _OnboardingFrequentView({
-    required this.items,
-    required this.fabKey,
-    required this.firstItemKey,
-    required this.autoAddKey,
-    required this.addToCartKey,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: AbsorbPointer(
-        child: ListView.builder(
-          padding: const EdgeInsets.only(bottom: 80),
-          itemCount: items.length,
-          itemBuilder: (_, i) {
-            final item = items[i];
-            final isFirst = i == 0;
-
-            return ListTile(
-              key: isFirst ? firstItemKey : null,
-              title: Text(item.name, style: Theme.of(context).textTheme.bodyLarge),
-              subtitle: item.defaultUnit != null ? Text(item.defaultUnit!) : null,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '자동 추가',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: item.autoAdd
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.outline,
-                            ),
-                      ),
-                      Switch(
-                        key: isFirst ? autoAddKey : null,
-                        value: item.autoAdd,
-                        onChanged: null,
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    key: isFirst ? addToCartKey : null,
-                    icon: const Icon(Icons.add_shopping_cart_outlined, size: 20),
-                    onPressed: null,
-                  ),
-                  const Icon(Icons.more_vert, size: 20),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        key: fabKey,
-        heroTag: 'frequent_demo_add',
-        onPressed: null,
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

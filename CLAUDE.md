@@ -12,9 +12,14 @@ Flutter 기반 가족 플래너 애플리케이션 (Flutter 3.18+, Dart 3.10+)
 ## 주요 명령어
 
 ```bash
-# 실행
-flutter run -d chrome --web-port=3001  # 웹 (포트 3001 고정)
-flutter run -d windows                 # Windows
+# 실행 (개발 환경 - 반드시 --dart-define 포함)
+flutter run -d chrome --web-port=3001 --dart-define=ENVIRONMENT=development  # 웹 (포트 3001 고정)
+flutter run -d windows --dart-define=ENVIRONMENT=development                 # Windows
+flutter run --dart-define=ENVIRONMENT=development                            # iOS/Android
+
+# 배포 빌드 (기본값이 production이므로 dart-define 불필요)
+flutter build ipa --release                                                  # iOS App Store
+flutter build appbundle --release                                            # Android
 
 # 개발
 flutter analyze                        # 코드 분석
@@ -24,7 +29,7 @@ flutter clean && flutter pub get       # 클린 빌드
 
 ## Claude Skills 🤖
 
-프로젝트에는 반복 작업을 자동화하는 **6개의 Claude Skills**가 설정되어 있습니다.
+프로젝트에는 반복 작업을 자동화하는 **7개의 Claude Skills**가 설정되어 있습니다.
 
 ### 자동 실행 Skills (P0 - 최우선)
 
@@ -47,6 +52,8 @@ flutter clean && flutter pub get       # 클린 빌드
   - 사용: "공지사항 API 동기화 확인해줘"
 - 🧪 **test-generate**: 테스트 코드 자동 생성
   - 사용: "AnnouncementListScreen 테스트 생성해줘"
+- 🚀 **version-update**: 버전 업그레이드 + 패치노트 생성 + 기능 검증 통합 처리
+  - 사용: "v1.1.0으로 버전 올려줘", "릴리즈 준비해줘"
 
 ### 토큰 효율성 최적화
 

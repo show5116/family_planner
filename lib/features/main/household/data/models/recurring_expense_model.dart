@@ -152,6 +152,74 @@ class RecurringExpenseModel {
 
 const _sentinel = Object();
 
+/// 고정지출 적용 내역 항목 (최신순)
+class RecurringExpenseHistoryItemDto {
+  final String id;
+  final DateTime date;
+  final double amount;
+  final bool isConfirmed;
+
+  const RecurringExpenseHistoryItemDto({
+    required this.id,
+    required this.date,
+    required this.amount,
+    required this.isConfirmed,
+  });
+
+  factory RecurringExpenseHistoryItemDto.fromJson(Map<String, dynamic> json) {
+    return RecurringExpenseHistoryItemDto(
+      id: json['id'] as String,
+      date: DateTime.parse(json['date'] as String).toLocal(),
+      amount: double.parse(json['amount'].toString()),
+      isConfirmed: (json['isConfirmed'] as bool?) ?? true,
+    );
+  }
+}
+
+/// 고정지출 적용 내역 조회 응답 모델
+/// history는 모든 고정지출에 포함, 통계(average/min/max)는 isVariable=true일 때만 존재
+class RecurringExpenseHistoryModel {
+  final String recurringExpenseId;
+  final bool isVariable;
+  final List<RecurringExpenseHistoryItemDto> history;
+  final double? averageAmount;
+  final double? totalAmount;
+  final double? minAmount;
+  final double? maxAmount;
+
+  const RecurringExpenseHistoryModel({
+    required this.recurringExpenseId,
+    required this.isVariable,
+    required this.history,
+    this.averageAmount,
+    this.totalAmount,
+    this.minAmount,
+    this.maxAmount,
+  });
+
+  factory RecurringExpenseHistoryModel.fromJson(Map<String, dynamic> json) {
+    return RecurringExpenseHistoryModel(
+      recurringExpenseId: json['recurringExpenseId'] as String,
+      isVariable: (json['isVariable'] as bool?) ?? false,
+      history: (json['history'] as List<dynamic>)
+          .map((e) => RecurringExpenseHistoryItemDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      averageAmount: json['averageAmount'] != null
+          ? double.parse(json['averageAmount'].toString())
+          : null,
+      totalAmount: json['totalAmount'] != null
+          ? double.parse(json['totalAmount'].toString())
+          : null,
+      minAmount: json['minAmount'] != null
+          ? double.parse(json['minAmount'].toString())
+          : null,
+      maxAmount: json['maxAmount'] != null
+          ? double.parse(json['maxAmount'].toString())
+          : null,
+    );
+  }
+}
+
 /// 고정지출 생성 DTO
 class CreateRecurringExpenseDto {
   final String? groupId;

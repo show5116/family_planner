@@ -12,6 +12,7 @@ import 'package:family_planner/features/auth/presentation/screens/splash_screen.
 import 'package:family_planner/features/auth/presentation/screens/terms_of_service_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/privacy_policy_screen.dart';
 import 'package:family_planner/features/auth/presentation/screens/social_terms_screen.dart';
+import 'package:family_planner/features/auth/presentation/screens/social_info_screen.dart';
 
 /// 인증 관련 라우트 목록
 ///
@@ -91,6 +92,11 @@ List<RouteBase> getAuthRoutes() {
         }
         return SocialTermsScreen(webTempToken: tempToken);
       },
+    ),
+    GoRoute(
+      path: AppRoutes.socialInfo,
+      name: 'socialInfo',
+      builder: (context, state) => const SocialInfoScreen(),
     ),
     GoRoute(
       path: AppRoutes.oauthCallback,

@@ -15,6 +15,7 @@ class FcmToken extends _$FcmToken {
   Future<String?> build() async {
     // FCM 토큰 가져오기만 수행 (백엔드 등록은 하지 않음)
     // 백엔드 등록은 로그인 성공 후 refreshToken()을 통해 명시적으로 수행
+    ref.onDispose(() => FirebaseMessagingService.setOnTokenRefreshCallback(null));
     return await FirebaseMessagingService.getToken();
   }
 
@@ -37,7 +38,13 @@ class FcmToken extends _$FcmToken {
     if (newToken != null) {
       await _registerToken(newToken);
       state = AsyncValue.data(newToken);
+      FirebaseMessagingService.setOnTokenRefreshCallback(_onTokenRefreshed);
     }
+  }
+
+  Future<void> _onTokenRefreshed(String newToken) async {
+    await _registerToken(newToken);
+    state = AsyncValue.data(newToken);
   }
 
   /// 토큰 삭제

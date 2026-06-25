@@ -179,6 +179,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakao登录失败';
 
   @override
+  String get auth_appleLoginFailed => 'Apple登录失败';
+
+  @override
   String get auth_signupSuccess => '注册成功';
 
   @override
@@ -2492,6 +2495,39 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_carry_over_no_balance => '没有可结转的余额';
 
   @override
+  String get household_balance_transfer => '余额转移';
+
+  @override
+  String get household_carry_over_mode_next_month => '结转下月';
+
+  @override
+  String get household_carry_over_mode_asset => '资产账户';
+
+  @override
+  String get household_carry_over_mode_savings => '存钱罐';
+
+  @override
+  String get household_carry_over_amount_label => '金额';
+
+  @override
+  String get household_carry_over_amount_exceeded => '不能超过可用余额';
+
+  @override
+  String get household_carry_over_select_account => '请选择账户';
+
+  @override
+  String get household_carry_over_select_savings => '请选择存钱罐';
+
+  @override
+  String get household_carry_over_no_accounts => '没有已注册的账户';
+
+  @override
+  String get household_carry_over_no_savings => '没有已注册的存钱罐';
+
+  @override
+  String get household_transfer_success => '资产转移完成';
+
+  @override
   String get household_income => '收入';
 
   @override
@@ -4272,4 +4308,66 @@ class AppLocalizationsZh extends AppLocalizations {
   String account_action_failed(String error) {
     return '发生错误：$error';
   }
+
+  @override
+  String get subscription_free_label => '免费计划';
+
+  @override
+  String get subscription_free_sublabel => '将显示广告';
+
+  @override
+  String get subscription_trial_label => '2周免费体验中';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return '$days天后切换为免费计划';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => '今天体验结束';
+
+  @override
+  String get subscription_ad_free_label => '去除广告';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return '至 $date';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => '正在无广告使用中';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return '至 $date';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => '正在使用所有功能';
+
+  @override
+  String get dashboard_trial_banner_title => '正在享受2周无广告免费体验';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return '$days天后切换为普通计划';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => '今天体验结束';
+
+  @override
+  String get anniversary_widgetTitle => '即将到来的纪念日';
+
+  @override
+  String get anniversary_widgetEmpty => '没有注册的纪念日';
+
+  @override
+  String get widgetSettings_anniversarySummary => '纪念日';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc => '显示即将到来的纪念日和倒计时';
 }

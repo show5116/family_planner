@@ -5,7 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
+import 'package:family_planner/features/main/assets/data/models/account_model.dart';
+import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
+import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
+import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/budget_setting_sheet.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
@@ -17,6 +22,8 @@ import 'package:family_planner/features/settings/groups/providers/default_group_
 import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+
+part '_household_onboarding.dart';
 
 class HouseholdScreen extends ConsumerStatefulWidget {
   const HouseholdScreen({super.key});
@@ -30,7 +37,9 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
   final _budgetKey = GlobalKey();
   final _recurringKey = GlobalKey();
   final _statisticsKey = GlobalKey();
+  final _moreMenuKey = GlobalKey();
   final _scrollController = ScrollController();
+  bool _isDemo = false;
   final _itemKeys = <String, GlobalKey>{};
   String? _selectedCalendarDate;
 
@@ -61,7 +70,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _initGroupFilter();
-      _showCoachMark();
+      await _maybeStartOnboarding();
     });
   }
 
@@ -75,132 +84,6 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
         ? defaultId
         : groups.first.id;
     ref.read(householdSelectedGroupIdProvider.notifier).state = resolved;
-  }
-
-  TargetPosition? _keyToPosition(GlobalKey key) {
-    final ctx = key.currentContext;
-    if (ctx == null) return null;
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null) return null;
-    final offset = box.localToGlobal(Offset.zero);
-    return TargetPosition(box.size, offset);
-  }
-
-  void _replayOnboarding() => _showCoachMark(force: true);
-
-  Future<void> _showCoachMark({bool force = false}) async {
-    if (!force) {
-      final completed =
-          await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.household);
-      if (completed || !mounted) return;
-    }
-    if (!mounted) return;
-
-    final budgetPos = _keyToPosition(_budgetKey);
-    final recurringPos = _keyToPosition(_recurringKey);
-    final statisticsPos = _keyToPosition(_statisticsKey);
-    final fabPos = _keyToPosition(_fabKey);
-
-    final targets = <TargetFocus>[
-      TargetFocus(
-        identify: 'household_budget',
-        targetPosition: budgetPos,
-        keyTarget: budgetPos == null ? _budgetKey : null,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '예산 설정',
-              description: '월별 예산을 설정하면 지출 현황과\n남은 예산을 한눈에 확인할 수 있어요.',
-              icon: Icons.account_balance_wallet_outlined,
-              color: Colors.teal,
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: 'household_recurring',
-        targetPosition: recurringPos,
-        keyTarget: recurringPos == null ? _recurringKey : null,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '고정 지출',
-              description: '월세, 구독료 등 매달 반복되는 지출을\n등록하면 자동으로 기록해 드려요.',
-              icon: Icons.repeat,
-              color: Colors.indigo,
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: 'household_statistics',
-        targetPosition: statisticsPos,
-        keyTarget: statisticsPos == null ? _statisticsKey : null,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '통계',
-              description: '카테고리별 지출 비율과 월별 추이를\n차트로 확인할 수 있어요.',
-              icon: Icons.bar_chart,
-              color: Colors.purple,
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: 'household_fab',
-        targetPosition: fabPos,
-        keyTarget: fabPos == null ? _fabKey : null,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '지출/수입 추가',
-              description: '새 지출이나 수입을 기록하세요.\n그룹별로 나눠서 관리할 수 있어요.',
-              icon: Icons.add,
-              color: Colors.orange,
-            ),
-          ),
-        ],
-      ),
-    ];
-    await FeatureCoachMark.waitForTargets(targets, context);
-    if (!mounted) return;
-    TutorialCoachMark(
-      targets: FeatureCoachMark.refreshPositions(targets),
-      colorShadow: const Color(0xFF212121),
-      opacityShadow: 0.85,
-      textSkip: '건너뛰기',
-      alignSkip: Alignment.bottomLeft,
-      skipWidget: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white30),
-        ),
-        child: const Text(
-          '건너뛰기',
-          style: TextStyle(
-              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-        ),
-      ),
-      onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.household),
-      onSkip: () {
-        OnboardingService.completeCoachMark(CoachMarkKeys.household);
-        return true;
-      },
-      paddingFocus: 8,
-      focusAnimationDuration: const Duration(milliseconds: 300),
-      pulseAnimationDuration: const Duration(milliseconds: 800),
-    ).show(context: context);
   }
 
   @override
@@ -226,6 +109,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             onPressed: () => context.push(AppRoutes.householdStatistics),
           ),
           AppBarMoreMenu(
+            key: _moreMenuKey,
             onReplayOnboarding: _replayOnboarding,
             extraItems: [
               MoreMenuItem(
@@ -257,29 +141,38 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
           ),
           const _ExcludeFilterBar(),
           // 뷰모드에 따라 요약카드 or 캘린더 표시
-          Consumer(builder: (context, ref, _) {
-            final viewMode = ref.watch(householdViewModeProvider);
-            if (viewMode == HouseholdViewMode.calendar) {
-              return _CalendarSummary(
-                selectedDateKey: _selectedCalendarDate,
-                onDateTap: (dateKey) => scrollToDate(dateKey),
-              );
-            }
-            return const _MonthlySummaryCard();
-          }),
-          Consumer(builder: (context, ref, _) {
-            final viewMode = ref.watch(householdViewModeProvider);
-            if (viewMode == HouseholdViewMode.calendar) {
-              return const SizedBox.shrink();
-            }
-            return const _UnpaidRecurringBanner();
-          }),
+          if (_isDemo)
+            KeyedSubtree(
+              key: _budgetKey,
+              child: _MonthlySummaryCard(demoStats: _demoStats),
+            )
+          else
+            Consumer(builder: (context, ref, _) {
+              final viewMode = ref.watch(householdViewModeProvider);
+              if (viewMode == HouseholdViewMode.calendar) {
+                return _CalendarSummary(
+                  selectedDateKey: _selectedCalendarDate,
+                  onDateTap: (dateKey) => scrollToDate(dateKey),
+                );
+              }
+              return KeyedSubtree(key: _budgetKey, child: const _MonthlySummaryCard());
+            }),
+          if (!_isDemo)
+            Consumer(builder: (context, ref, _) {
+              final viewMode = ref.watch(householdViewModeProvider);
+              if (viewMode == HouseholdViewMode.calendar) {
+                return const SizedBox.shrink();
+              }
+              return const _UnpaidRecurringBanner();
+            }),
           Expanded(
-            child: _ExpenseBody(
-              selectedGroupId: selectedGroupId,
-              scrollController: _scrollController,
-              itemKeys: _itemKeys,
-            ),
+            child: _isDemo
+                ? _DemoExpenseList(expenses: _demoExpenses)
+                : _ExpenseBody(
+                    selectedGroupId: selectedGroupId,
+                    scrollController: _scrollController,
+                    itemKeys: _itemKeys,
+                  ),
           ),
         ],
       ),
@@ -364,16 +257,22 @@ class _MonthNavigator extends ConsumerWidget {
 
 // 월간 요약 카드
 class _MonthlySummaryCard extends ConsumerWidget {
-  const _MonthlySummaryCard();
+  final MonthlyStatisticsModel? demoStats;
+
+  const _MonthlySummaryCard({this.demoStats});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+
+    if (demoStats != null) {
+      return _buildCard(context, ref, l10n, demoStats!, null, false);
+    }
+
     final statsAsync = ref.watch(householdMonthlyStatisticsProvider);
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
     final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
 
-    // 이번 달 또는 지난달일 때 이월 버튼 표시
     final now = DateTime.now();
     final currentMonth = '${now.year}-${now.month.toString().padLeft(2, '0')}';
     final prevMonth = now.month == 1
@@ -382,7 +281,24 @@ class _MonthlySummaryCard extends ConsumerWidget {
     final isCurrentMonth = selectedMonth == currentMonth || selectedMonth == prevMonth;
 
     return statsAsync.when(
-      data: (stats) => Container(
+      data: (stats) => _buildCard(context, ref, l10n, stats, selectedGroupId, isCurrentMonth),
+      loading: () => const Padding(
+        padding: EdgeInsets.all(AppSizes.spaceM),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildCard(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    MonthlyStatisticsModel stats,
+    String? selectedGroupId,
+    bool isCurrentMonth,
+  ) {
+    return Container(
         margin: const EdgeInsets.all(AppSizes.spaceM),
         padding: const EdgeInsets.all(AppSizes.spaceM),
         decoration: BoxDecoration(
@@ -471,19 +387,19 @@ class _MonthlySummaryCard extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextButton.icon(
-                  onPressed: () => _showCarryOverDialog(
-                    context, ref, l10n,
+                  onPressed: () => _showCarryOverBottomSheet(
+                    context,
                     balance: stats.balance,
                     groupId: selectedGroupId,
-                    currentMonth: selectedMonth,
+                    currentMonth: stats.month,
                   ),
                   icon: Icon(
-                    Icons.arrow_forward,
+                    Icons.swap_horiz,
                     size: 16,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   label: Text(
-                    l10n.household_carry_over,
+                    l10n.household_balance_transfer,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w600,
@@ -498,70 +414,25 @@ class _MonthlySummaryCard extends ConsumerWidget {
             ],
           ],
         ),
-      ),
-      loading: () => const Padding(
-        padding: EdgeInsets.all(AppSizes.spaceM),
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (_, _) => const SizedBox.shrink(),
-    );
+      );
   }
 
-  Future<void> _showCarryOverDialog(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations l10n, {
+  Future<void> _showCarryOverBottomSheet(
+    BuildContext context, {
     required double balance,
     required String? groupId,
     required String currentMonth,
   }) async {
-    final amountStr = _fmtAmount(balance);
-    final confirmed = await showDialog<bool>(
+    await showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.household_carry_over_title),
-        content: Text(l10n.household_carry_over_desc(amountStr)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.common_cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.household_carry_over),
-          ),
-        ],
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => _CarryOverBottomSheet(
+        balance: balance,
+        groupId: groupId,
+        currentMonth: currentMonth,
       ),
     );
-
-    if (confirmed != true || !context.mounted) return;
-
-    final success = await ref
-        .read(householdManagementProvider.notifier)
-        .carryOverBalance(
-          groupId: groupId,
-          balance: balance,
-          currentMonth: currentMonth,
-        );
-
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          success ? l10n.household_carry_over_success : l10n.common_error,
-        ),
-      ),
-    );
-  }
-
-  String _fmtAmount(double amount) {
-    final str = amount.toInt().toString();
-    final buf = StringBuffer();
-    for (var i = 0; i < str.length; i++) {
-      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
-      buf.write(str[i]);
-    }
-    return buf.toString();
   }
 }
 
@@ -744,7 +615,7 @@ class _ExpenseBody extends ConsumerWidget {
             itemCount: dateKeys.length,
             padding: const EdgeInsets.only(bottom: 80),
             // 월 전체 아이템을 미리 렌더링해두어 캘린더 탭 스크롤이 정확히 동작
-            cacheExtent: 8000,
+            cacheExtent: 8000, // ignore: deprecated_member_use
             itemBuilder: (context, index) {
               final dateKey = dateKeys[index];
               final dayExpenses = grouped[dateKey]!;
@@ -1415,6 +1286,341 @@ class _FilterChip extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── 잔금 이동 바텀시트 ──────────────────────────────────────────────────────────
+
+enum _CarryOverMode { nextMonth, asset, savings }
+
+class _CarryOverBottomSheet extends ConsumerStatefulWidget {
+  const _CarryOverBottomSheet({
+    required this.balance,
+    required this.groupId,
+    required this.currentMonth,
+  });
+
+  final double balance;
+  final String? groupId;
+  final String currentMonth;
+
+  @override
+  ConsumerState<_CarryOverBottomSheet> createState() =>
+      _CarryOverBottomSheetState();
+}
+
+class _CarryOverBottomSheetState extends ConsumerState<_CarryOverBottomSheet> {
+  late final TextEditingController _amountController;
+  _CarryOverMode _mode = _CarryOverMode.nextMonth;
+  AccountModel? _selectedAccount;
+  SavingsGoalModel? _selectedSavings;
+  bool _isSubmitting = false;
+  List<AccountModel> _accounts = [];
+  List<SavingsGoalModel> _savingsGoals = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController(
+      text: widget.balance.toInt().toString(),
+    );
+    _loadOptions();
+  }
+
+  Future<void> _loadOptions() async {
+    if (widget.groupId == null) return;
+    try {
+      final results = await Future.wait([
+        ref.read(assetRepositoryProvider).getAccounts(groupId: widget.groupId!),
+        ref.read(savingsRepositoryProvider).getGoals(widget.groupId!),
+      ]);
+      if (!mounted) return;
+      setState(() {
+        _accounts = results[0] as List<AccountModel>;
+        _savingsGoals = (results[1] as List<SavingsGoalModel>)
+            .where((g) => g.status == SavingsGoalStatus.active)
+            .toList();
+      });
+    } catch (_) {}
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  double get _parsedAmount =>
+      double.tryParse(_amountController.text.replaceAll(',', '')) ?? 0;
+
+  bool get _isValid {
+    final a = _parsedAmount;
+    if (a <= 0 || a > widget.balance) return false;
+    if (_mode == _CarryOverMode.asset && _selectedAccount == null) return false;
+    if (_mode == _CarryOverMode.savings && _selectedSavings == null) return false;
+    return true;
+  }
+
+  Future<void> _onConfirm() async {
+    setState(() => _isSubmitting = true);
+    final amount = _parsedAmount;
+    final notifier = ref.read(householdManagementProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
+    bool success;
+    String successMsg;
+
+    switch (_mode) {
+      case _CarryOverMode.nextMonth:
+        success = await notifier.carryOverBalance(
+          groupId: widget.groupId,
+          balance: amount,
+          currentMonth: widget.currentMonth,
+        );
+        successMsg = l10n.household_carry_over_success;
+      case _CarryOverMode.asset:
+        success = await notifier.transferToAsset(
+          groupId: widget.groupId,
+          amount: amount,
+          accountId: _selectedAccount!.id,
+          accountName: _selectedAccount!.name,
+          currentBalance: _selectedAccount!.latestBalance,
+          currentMonth: widget.currentMonth,
+        );
+        successMsg = l10n.household_transfer_success;
+      case _CarryOverMode.savings:
+        success = await notifier.transferToSavings(
+          groupId: widget.groupId,
+          amount: amount,
+          savingsId: _selectedSavings!.id,
+          savingsName: _selectedSavings!.name,
+          currentMonth: widget.currentMonth,
+        );
+        successMsg = l10n.household_transfer_success;
+    }
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(success ? successMsg : l10n.common_error)),
+    );
+    if (success) Navigator.pop(context);
+    setState(() => _isSubmitting = false);
+  }
+
+  String _fmt(int value) {
+    final str = value.toString();
+    final buf = StringBuffer();
+    for (var i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final amountError = _parsedAmount > widget.balance
+        ? l10n.household_carry_over_amount_exceeded
+        : null;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSizes.spaceL,
+        right: AppSizes.spaceL,
+        top: AppSizes.spaceM,
+        bottom: MediaQuery.viewInsetsOf(context).bottom + AppSizes.spaceL,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          Text(
+            l10n.household_balance_transfer,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+          Text(
+            '${l10n.household_balance}: ₩${_fmt(widget.balance.toInt())}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          TextField(
+            controller: _amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: l10n.household_carry_over_amount_label,
+              suffix: Text('원',
+                  style: Theme.of(context).textTheme.bodyMedium),
+              errorText: amountError,
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          SegmentedButton<_CarryOverMode>(
+            segments: [
+              ButtonSegment(
+                value: _CarryOverMode.nextMonth,
+                label: Text(l10n.household_carry_over_mode_next_month,
+                    overflow: TextOverflow.ellipsis),
+              ),
+              ButtonSegment(
+                value: _CarryOverMode.asset,
+                label: Text(l10n.household_carry_over_mode_asset,
+                    overflow: TextOverflow.ellipsis),
+              ),
+              ButtonSegment(
+                value: _CarryOverMode.savings,
+                label: Text(l10n.household_carry_over_mode_savings,
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ],
+            selected: {_mode},
+            onSelectionChanged: (s) => setState(() {
+              _mode = s.first;
+              _selectedAccount = null;
+              _selectedSavings = null;
+            }),
+            showSelectedIcon: false,
+            style: const ButtonStyle(
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
+          if (_mode == _CarryOverMode.asset) ...[
+            const SizedBox(height: AppSizes.spaceS),
+            _CarryOverTargetList<AccountModel>(
+              items: _accounts,
+              emptyText: l10n.household_carry_over_no_accounts,
+              selectedId: _selectedAccount?.id,
+              getId: (a) => a.id,
+              getTitle: (a) => a.name,
+              getSubtitle: (a) => a.latestBalance != null
+                  ? '₩${_fmt(a.latestBalance!.toInt())}'
+                  : null,
+              onSelect: (a) => setState(() => _selectedAccount = a),
+            ),
+          ],
+          if (_mode == _CarryOverMode.savings) ...[
+            const SizedBox(height: AppSizes.spaceS),
+            _CarryOverTargetList<SavingsGoalModel>(
+              items: _savingsGoals,
+              emptyText: l10n.household_carry_over_no_savings,
+              selectedId: _selectedSavings?.id,
+              getId: (g) => g.id,
+              getTitle: (g) => g.name,
+              getSubtitle: (g) =>
+                  '₩${_fmt(g.currentAmount.toInt())} / '
+                  '${g.targetAmount != null ? '₩${_fmt(g.targetAmount!.toInt())}' : '∞'}',
+              onSelect: (g) => setState(() => _selectedSavings = g),
+            ),
+          ],
+          const SizedBox(height: AppSizes.spaceM),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed:
+                      _isSubmitting ? null : () => Navigator.pop(context),
+                  child: Text(l10n.common_cancel),
+                ),
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+              Expanded(
+                child: FilledButton(
+                  onPressed: (_isValid && !_isSubmitting) ? _onConfirm : null,
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(l10n.household_balance_transfer),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CarryOverTargetList<T> extends StatelessWidget {
+  const _CarryOverTargetList({
+    required this.items,
+    required this.emptyText,
+    required this.selectedId,
+    required this.getId,
+    required this.getTitle,
+    required this.getSubtitle,
+    required this.onSelect,
+  });
+
+  final List<T> items;
+  final String emptyText;
+  final String? selectedId;
+  final String Function(T) getId;
+  final String Function(T) getTitle;
+  final String? Function(T) getSubtitle;
+  final void Function(T) onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    if (items.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
+        child: Text(
+          emptyText,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      );
+    }
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 200),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: items.length,
+        itemBuilder: (_, i) {
+          final item = items[i];
+          final sub = getSubtitle(item);
+          return RadioListTile<String>(
+            value: getId(item),
+            groupValue: selectedId, // ignore: deprecated_member_use
+            onChanged: (_) => onSelect(item), // ignore: deprecated_member_use
+            title: Text(getTitle(item),
+                style: Theme.of(context).textTheme.bodyMedium),
+            subtitle: sub != null
+                ? Text(sub,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant,
+                        ))
+                : null,
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+          );
+        },
       ),
     );
   }

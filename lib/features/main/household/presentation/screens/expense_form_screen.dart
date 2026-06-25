@@ -17,6 +17,7 @@ import 'package:family_planner/features/settings/groups/models/group_member.dart
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
+import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
 
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   /// null이면 추가 모드, non-null이면 수정 모드
@@ -466,6 +467,7 @@ class _CategoryBottomSheetSelector extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
       onTap: () async {
+        FocusScope.of(context).unfocus();
         final result = await showModalBottomSheet<ExpenseCategory?>(
           context: context,
           isScrollControlled: true,
@@ -605,34 +607,36 @@ class _PaymentMethodSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return InputDecorator(
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.spaceM,
-          vertical: AppSizes.spaceS,
+    return FocusDismissDropdown(
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
         ),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<PaymentMethod?>(
-          value: selected,
-          isExpanded: true,
-          isDense: true,
-          hint: Text(l10n.household_payment_other),
-          items: [
-            DropdownMenuItem(
-              value: null,
-              child: Text(l10n.household_payment_other),
-            ),
-            ...PaymentMethod.values.map(
-              (m) => DropdownMenuItem(
-                value: m,
-                child: Text(paymentMethodName(l10n, m)),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<PaymentMethod?>(
+            value: selected,
+            isExpanded: true,
+            isDense: true,
+            hint: Text(l10n.household_payment_other),
+            items: [
+              DropdownMenuItem(
+                value: null,
+                child: Text(l10n.household_payment_other),
               ),
-            ),
-          ],
-          onChanged: onChanged,
+              ...PaymentMethod.values.map(
+                (m) => DropdownMenuItem(
+                  value: m,
+                  child: Text(paymentMethodName(l10n, m)),
+                ),
+              ),
+            ],
+            onChanged: onChanged,
+          ),
         ),
       ),
     );
@@ -655,6 +659,7 @@ class _DateSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
+        FocusScope.of(context).unfocus();
         final picked = await showDatePicker(
           context: context,
           initialDate: selectedDate,
@@ -774,6 +779,7 @@ class _MerchantSelector extends ConsumerWidget {
         return InkWell(
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
           onTap: () async {
+            FocusScope.of(context).unfocus();
             final result = await showModalBottomSheet<String?>(
               context: context,
               isScrollControlled: true,
@@ -949,6 +955,7 @@ class _IncomeCategoryBottomSheetSelector extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
       onTap: () async {
+        FocusScope.of(context).unfocus();
         final result = await showModalBottomSheet<IncomeCategory?>(
           context: context,
           isScrollControlled: true,
@@ -1307,6 +1314,7 @@ class _MemberSelector extends ConsumerWidget {
         return InkWell(
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
           onTap: () async {
+            FocusScope.of(context).unfocus();
             final result = await showModalBottomSheet<String?>(
               context: context,
               isScrollControlled: true,

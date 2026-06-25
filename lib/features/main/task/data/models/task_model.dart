@@ -173,6 +173,7 @@ class TaskModel {
   final TaskType? type;
   final TaskPriority? priority;
   final CategoryModel? category;
+  final bool allDay;
   final DateTime? scheduledAt;
   final DateTime? dueAt;
   final int? daysUntilDue;
@@ -193,6 +194,7 @@ class TaskModel {
     this.type,
     this.priority,
     this.category,
+    this.allDay = false,
     this.scheduledAt,
     this.dueAt,
     this.daysUntilDue,
@@ -256,6 +258,7 @@ class TaskModel {
       category: json['category'] != null
           ? CategoryModel.fromJson(json['category'] as Map<String, dynamic>)
           : null,
+      allDay: json['allDay'] as bool? ?? false,
       scheduledAt: rawScheduledAt?.toLocal(),
       dueAt: json['dueAt'] != null
           ? DateTime.parse(json['dueAt'] as String).toLocal()
@@ -286,6 +289,7 @@ class TaskModel {
     TaskType? type,
     TaskPriority? priority,
     CategoryModel? category,
+    bool? allDay,
     DateTime? scheduledAt,
     DateTime? dueAt,
     int? daysUntilDue,
@@ -306,6 +310,7 @@ class TaskModel {
       type: type ?? this.type,
       priority: priority ?? this.priority,
       category: category ?? this.category,
+      allDay: allDay ?? this.allDay,
       scheduledAt: scheduledAt ?? this.scheduledAt,
       dueAt: dueAt ?? this.dueAt,
       daysUntilDue: daysUntilDue ?? this.daysUntilDue,
@@ -455,6 +460,7 @@ class CreateTaskDto with _$CreateTaskDto {
     TaskPriority? priority,
     String? categoryId,
     String? groupId,
+    @Default(false) bool allDay,
     String? scheduledAt,
     String? dueAt,
     RecurringRuleDto? recurring,
@@ -476,6 +482,7 @@ class UpdateTaskDto with _$UpdateTaskDto {
     TaskType? type,
     TaskPriority? priority,
     String? categoryId,
+    bool? allDay,
     String? scheduledAt,
     String? dueAt,
     List<String>? participantIds,

@@ -271,7 +271,7 @@
 
 ```json
 {
-  "currentPassword": "currentPassword123!", // 현재 비밀번호 (필수) (string)
+  "currentPassword": "currentPassword123!", // 현재 비밀번호 (LOCAL 로그인 사용자만 필수) (string?)
   "name": "홍길동", // 이름 (string?)
   "phoneNumber": "010-1234-5678", // 전화번호 (string?)
   "newPassword": "newPassword123!", // 새 비밀번호 (선택, 변경 시에만) (string?)
@@ -316,6 +316,14 @@
 **설명:**
 프로필 사진을 업로드합니다. 이미지는 자동으로 300x300px로 최적화되며, 기존 사진이 있으면 삭제됩니다.
 
+**Request Body:**
+
+```json
+{
+  "photo": "" // 프로필 사진 파일 (JPEG, PNG 등) (string)
+}
+```
+
 **Responses:**
 
 #### 201 - 프로필 사진 업로드 성공
@@ -328,12 +336,26 @@
 
 **요약:** Google 모바일 로그인 (ID Token)
 
+**Request Body:**
+
+```json
+{
+  "idToken": "" // Google ID Token (string)
+}
+```
+
 **Responses:**
 
 #### 200 - Google 모바일 로그인 성공, 토큰 반환
 
 ```json
 {
+  "isNewUser": false, // 신규 유저 여부 (boolean)
+  "accessToken": "", // Access Token (기존 유저) (string?)
+  "refreshToken": "", // Refresh Token (기존 유저) (string?)
+  "tempToken": "", // 임시 토큰 (신규 유저, 10분 유효) (string?)
+  "needsName": true, // 이름 입력 필요 여부 (신규 유저, 소셜에서 이름을 받지 못한 경우) (boolean?)
+  "needsEmail": true, // 이메일 입력 필요 여부 (신규 유저, 이메일 없거나 Apple 비공개 이메일인 경우) (boolean?)
   "user": {
     "id": "user_clxxx123", // 사용자 ID (string)
     "email": "user@example.com", // 이메일 (string)
@@ -347,7 +369,7 @@
     "createdAt": "2024-01-01T00:00:00.000Z", // 생성 일시 (Date)
     "updatedAt": "2024-01-01T00:00:00.000Z", // 수정 일시 (Date)
     "scheduledDeleteAt": "2024-01-08T00:00:00.000Z" // 계정 삭제 예정 일시 (null이면 삭제 예약 없음) (Date | null)
-  } // 사용자 정보 (UserDto)
+  } // 사용자 정보 (기존 유저) (UserDto?)
 }
 ```
 
@@ -394,12 +416,26 @@
 
 **요약:** Kakao 모바일 로그인 (액세스 토큰)
 
+**Request Body:**
+
+```json
+{
+  "accessToken": "" // Kakao 액세스 토큰 (string)
+}
+```
+
 **Responses:**
 
 #### 200 - Kakao 모바일 로그인 성공, 토큰 반환
 
 ```json
 {
+  "isNewUser": false, // 신규 유저 여부 (boolean)
+  "accessToken": "", // Access Token (기존 유저) (string?)
+  "refreshToken": "", // Refresh Token (기존 유저) (string?)
+  "tempToken": "", // 임시 토큰 (신규 유저, 10분 유효) (string?)
+  "needsName": true, // 이름 입력 필요 여부 (신규 유저, 소셜에서 이름을 받지 못한 경우) (boolean?)
+  "needsEmail": true, // 이메일 입력 필요 여부 (신규 유저, 이메일 없거나 Apple 비공개 이메일인 경우) (boolean?)
   "user": {
     "id": "user_clxxx123", // 사용자 ID (string)
     "email": "user@example.com", // 이메일 (string)
@@ -413,7 +449,7 @@
     "createdAt": "2024-01-01T00:00:00.000Z", // 생성 일시 (Date)
     "updatedAt": "2024-01-01T00:00:00.000Z", // 수정 일시 (Date)
     "scheduledDeleteAt": "2024-01-08T00:00:00.000Z" // 계정 삭제 예정 일시 (null이면 삭제 예약 없음) (Date | null)
-  } // 사용자 정보 (UserDto)
+  } // 사용자 정보 (기존 유저) (UserDto?)
 }
 ```
 
@@ -456,9 +492,101 @@
 
 ---
 
+### POST `auth/apple/mobile`
+
+**요약:** Apple 모바일 로그인 (Identity Token)
+
+**Request Body:**
+
+```json
+{
+  "identityToken": "", // Apple Identity Token (string)
+  "name": "" // 사용자 이름 (최초 로그인 시에만 전달) (string?)
+}
+```
+
+**Responses:**
+
+#### 200 - Apple 모바일 로그인 성공, 토큰 반환
+
+```json
+{
+  "isNewUser": false, // 신규 유저 여부 (boolean)
+  "accessToken": "", // Access Token (기존 유저) (string?)
+  "refreshToken": "", // Refresh Token (기존 유저) (string?)
+  "tempToken": "", // 임시 토큰 (신규 유저, 10분 유효) (string?)
+  "needsName": true, // 이름 입력 필요 여부 (신규 유저, 소셜에서 이름을 받지 못한 경우) (boolean?)
+  "needsEmail": true, // 이메일 입력 필요 여부 (신규 유저, 이메일 없거나 Apple 비공개 이메일인 경우) (boolean?)
+  "user": {
+    "id": "user_clxxx123", // 사용자 ID (string)
+    "email": "user@example.com", // 이메일 (string)
+    "name": "홍길동", // 사용자 이름 (string)
+    "isEmailVerified": true, // 이메일 인증 여부 (boolean)
+    "isAdmin": false, // 운영자 여부 (boolean)
+    "profileImageUrl": "https://r2.yourdomain.com/profiles/google-123456.jpg", // 프로필 이미지 URL (R2 public URL) (string?)
+    "phoneNumber": "010-1234-5678", // 전화번호 (string?)
+    "personalColor": "#FF5733", // 개인 색상 (HEX 코드) (string?)
+    "socialProvider": "google", // 소셜 로그인 제공자 (string?)
+    "createdAt": "2024-01-01T00:00:00.000Z", // 생성 일시 (Date)
+    "updatedAt": "2024-01-01T00:00:00.000Z", // 수정 일시 (Date)
+    "scheduledDeleteAt": "2024-01-08T00:00:00.000Z" // 계정 삭제 예정 일시 (null이면 삭제 예약 없음) (Date | null)
+  } // 사용자 정보 (기존 유저) (UserDto?)
+}
+```
+
+#### 401 - 유효하지 않은 Identity Token
+
+---
+
+### GET `auth/apple`
+
+**요약:** Apple 로그인 시작
+
+**인증/권한:**
+
+- AppleAuthGuard
+
+**Responses:**
+
+#### 302 - Apple OAuth 페이지로 리다이렉트
+
+---
+
+### POST `auth/apple/callback`
+
+**요약:** Apple 로그인 콜백 (Apple은 POST로 전송)
+
+**인증/권한:**
+
+- AppleAuthGuard
+
+**Responses:**
+
+#### 200 - Apple 로그인 성공, 토큰 반환
+
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyXzEyMyIsImlhdCI6MTYxNjIzOTAyMn0...", // Access Token (JWT) (string)
+  "refreshToken": "refresh_token_abc123def456" // Refresh Token (RTR 방식) (string)
+}
+```
+
+---
+
 ### POST `auth/social-signup`
 
 **요약:** 소셜 신규 회원가입 완료 (약관 동의)
+
+**Request Body:**
+
+```json
+{
+  "tempToken": "", // 소셜 로그인 임시 토큰 (string)
+  "agreedTerms": false, // 개인정보처리방침 동의 여부 (boolean)
+  "name": "", // 사용자 이름 (needsName: true일 때 필수) (string?)
+  "email": "" // 이메일 (needsEmail: true일 때 선택, 미입력 시 비공개로 가입) (string?)
+}
+```
 
 **Responses:**
 
@@ -562,11 +690,11 @@
 
 ### DELETE `auth/admin/users/:userId`
 
-**요약:** 계정 삭제 예약 (운영자 전용, 7일 유예)
+**요약:** 계정 삭제 예약 (슈퍼 어드민 전용, 7일 유예)
 
 **인증/권한:**
 
-- AdminGuard
+- SuperAdminGuard
 
 **Path Parameters:**
 
@@ -587,11 +715,11 @@
 
 ### POST `auth/admin/users/:userId/cancel-delete`
 
-**요약:** 계정 삭제 예약 취소 (운영자 전용)
+**요약:** 계정 삭제 예약 취소 (슈퍼 어드민 전용)
 
 **인증/권한:**
 
-- AdminGuard
+- SuperAdminGuard
 
 **Path Parameters:**
 
@@ -611,11 +739,11 @@
 
 ### DELETE `auth/admin/users/:userId/force`
 
-**요약:** 삭제 예약 계정 즉시 완전 삭제 (운영자 전용)
+**요약:** 삭제 예약 계정 즉시 완전 삭제 (슈퍼 어드민 전용)
 
 **인증/권한:**
 
-- AdminGuard
+- SuperAdminGuard
 
 **Path Parameters:**
 
@@ -628,6 +756,54 @@
 ```json
 {
   "message": "계정이 즉시 삭제되었습니다" // 응답 메시지 (string)
+}
+```
+
+---
+
+### PATCH `auth/admin/users/:userId/grant-admin`
+
+**요약:** 운영자 권한 부여 (슈퍼 어드민 전용)
+
+**인증/권한:**
+
+- SuperAdminGuard
+
+**Path Parameters:**
+
+- `userId` (`string`)
+
+**Responses:**
+
+#### 200 - 운영자 권한 부여 성공
+
+```json
+{
+  "message": "운영자 권한이 부여되었습니다" // 응답 메시지 (string)
+}
+```
+
+---
+
+### PATCH `auth/admin/users/:userId/revoke-admin`
+
+**요약:** 운영자 권한 회수 (슈퍼 어드민 전용)
+
+**인증/권한:**
+
+- SuperAdminGuard
+
+**Path Parameters:**
+
+- `userId` (`string`)
+
+**Responses:**
+
+#### 200 - 운영자 권한 회수 성공
+
+```json
+{
+  "message": "운영자 권한이 회수되었습니다" // 응답 메시지 (string)
 }
 ```
 

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "324185071750-2krfrmbjjd5ce72i557s5gf51qchg0gm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hmncorp.familyplanner",
+            "certificate_hash": "237cc5d09f2bb2568c2048c83be86a066bb9bcd2"
+          }
+        },
+        {
           "client_id": "324185071750-r0mdf8gjs1eqkfhch8vdv87ctanh9193.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -37,6 +45,13 @@
             {
               "client_id": "324185071750-78gonhb873sobeondd0pcg5f0rvv7btc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "324185071750-21ke4mpb2ar5kmvqnbo6kgqtrjoecl2j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hmncorp.familyPlanner"
+              }
             }
           ]
         }
@@ -74,6 +89,13 @@
             {
               "client_id": "324185071750-78gonhb873sobeondd0pcg5f0rvv7btc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "324185071750-21ke4mpb2ar5kmvqnbo6kgqtrjoecl2j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hmncorp.familyPlanner"
+              }
             }
           ]
         }

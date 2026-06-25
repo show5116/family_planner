@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 
 /// Task Repository Provider
@@ -117,7 +118,9 @@ class TaskRepository {
   Future<TaskModel> createTask(CreateTaskDto dto) async {
     try {
       final response = await _dio.post('/tasks', data: dto.toJson());
-      return TaskModel.fromJson(response.data as Map<String, dynamic>);
+      final task = TaskModel.fromJson(response.data as Map<String, dynamic>);
+      await AnalyticsService.instance.logCalendarEventCreate();
+      return task;
     } on DioException catch (e) {
       debugPrint('❌ [TaskRepository] Task 생성 실패: ${e.message}');
       throw Exception('일정 생성 실패: ${e.message}');

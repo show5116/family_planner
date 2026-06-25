@@ -174,7 +174,7 @@ class GroupRoleCreateDialog {
   ) async {
     try {
       final notifier = ref.read(groupNotifierProvider.notifier);
-      final createdRole = await notifier.createGroupRole(
+      await notifier.createGroupRole(
         groupId,
         name: name,
         permissions: permissions,
@@ -371,7 +371,7 @@ class GroupRoleEditDialog {
   ) async {
     try {
       final notifier = ref.read(groupNotifierProvider.notifier);
-      final updatedRole = await notifier.updateGroupRole(
+      await notifier.updateGroupRole(
         groupId,
         roleId,
         name: name,

@@ -188,7 +188,7 @@ class _RecurringList extends ConsumerWidget {
             child: _RecurringListItem(
               item: item,
               onTap: () => context.push(
-                AppRoutes.householdRecurringEdit,
+                AppRoutes.householdRecurringDetail,
                 extra: {'item': item, 'groupId': selectedGroupId},
               ),
             ),

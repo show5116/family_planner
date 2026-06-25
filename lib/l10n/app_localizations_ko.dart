@@ -179,6 +179,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakao 로그인 실패';
 
   @override
+  String get auth_appleLoginFailed => 'Apple 로그인 실패';
+
+  @override
   String get auth_signupSuccess => '회원가입 성공';
 
   @override
@@ -2510,6 +2513,39 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_carry_over_no_balance => '이월할 잔금이 없습니다';
 
   @override
+  String get household_balance_transfer => '잔금 이동';
+
+  @override
+  String get household_carry_over_mode_next_month => '다음 달 이월';
+
+  @override
+  String get household_carry_over_mode_asset => '자산 계좌';
+
+  @override
+  String get household_carry_over_mode_savings => '저금통';
+
+  @override
+  String get household_carry_over_amount_label => '금액';
+
+  @override
+  String get household_carry_over_amount_exceeded => '잔금을 초과할 수 없습니다';
+
+  @override
+  String get household_carry_over_select_account => '계좌를 선택하세요';
+
+  @override
+  String get household_carry_over_select_savings => '저금통을 선택하세요';
+
+  @override
+  String get household_carry_over_no_accounts => '등록된 계좌가 없습니다';
+
+  @override
+  String get household_carry_over_no_savings => '등록된 저금통이 없습니다';
+
+  @override
+  String get household_transfer_success => '자산 이동이 완료되었습니다';
+
+  @override
   String get household_income => '입금';
 
   @override
@@ -4303,4 +4339,66 @@ class AppLocalizationsKo extends AppLocalizations {
   String account_action_failed(String error) {
     return '오류가 발생했습니다: $error';
   }
+
+  @override
+  String get subscription_free_label => '무료 플랜';
+
+  @override
+  String get subscription_free_sublabel => '광고가 표시됩니다';
+
+  @override
+  String get subscription_trial_label => '2주 무료 체험 중';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return '$days일 후 무료 플랜으로 전환됩니다';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => '오늘 체험이 종료됩니다';
+
+  @override
+  String get subscription_ad_free_label => '광고 제거';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return '$date 까지';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => '광고 없이 이용 중';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return '$date 까지';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => '모든 기능 이용 중';
+
+  @override
+  String get dashboard_trial_banner_title => '광고 없는 2주 무료 체험 중';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return '$days일 후 일반 플랜으로 전환됩니다';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => '오늘 체험이 종료됩니다';
+
+  @override
+  String get anniversary_widgetTitle => '다가오는 기념일';
+
+  @override
+  String get anniversary_widgetEmpty => '등록된 기념일이 없습니다';
+
+  @override
+  String get widgetSettings_anniversarySummary => '기념일';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc => '다가오는 기념일과 D-day를 표시합니다';
 }

@@ -64,13 +64,6 @@ const _allowedStyleProperties = {
   'border-radius',
 };
 
-/// 허용된 프로토콜 목록
-const _allowedProtocols = {
-  'http',
-  'https',
-  'mailto',
-};
-
 /// HTML 새니타이저 클래스
 class HtmlSanitizer {
   /// HTML 콘텐츠를 새니타이징 (위험한 요소 제거)

@@ -179,6 +179,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_kakaoLoginFailed => 'Kakaoログイン失敗';
 
   @override
+  String get auth_appleLoginFailed => 'Appleログイン失敗';
+
+  @override
   String get auth_signupSuccess => '登録成功';
 
   @override
@@ -2506,6 +2509,39 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_carry_over_no_balance => '繰越できる残高がありません';
 
   @override
+  String get household_balance_transfer => '残高を移動';
+
+  @override
+  String get household_carry_over_mode_next_month => '来月に繰越';
+
+  @override
+  String get household_carry_over_mode_asset => '資産口座';
+
+  @override
+  String get household_carry_over_mode_savings => '貯金箱';
+
+  @override
+  String get household_carry_over_amount_label => '金額';
+
+  @override
+  String get household_carry_over_amount_exceeded => '残高を超えることはできません';
+
+  @override
+  String get household_carry_over_select_account => '口座を選択してください';
+
+  @override
+  String get household_carry_over_select_savings => '貯金箱を選択してください';
+
+  @override
+  String get household_carry_over_no_accounts => '登録された口座がありません';
+
+  @override
+  String get household_carry_over_no_savings => '登録された貯金箱がありません';
+
+  @override
+  String get household_transfer_success => '資産移動が完了しました';
+
+  @override
   String get household_income => '収入';
 
   @override
@@ -4295,4 +4331,67 @@ class AppLocalizationsJa extends AppLocalizations {
   String account_action_failed(String error) {
     return 'エラーが発生しました: $error';
   }
+
+  @override
+  String get subscription_free_label => '無料プラン';
+
+  @override
+  String get subscription_free_sublabel => '広告が表示されます';
+
+  @override
+  String get subscription_trial_label => '2週間無料体験中';
+
+  @override
+  String subscription_trial_sublabel_days(int days) {
+    return '$days日後に無料プランに切り替わります';
+  }
+
+  @override
+  String get subscription_trial_sublabel_today => '本日で体験が終了します';
+
+  @override
+  String get subscription_ad_free_label => '広告非表示';
+
+  @override
+  String subscription_ad_free_sublabel_expires(String date) {
+    return '$date まで';
+  }
+
+  @override
+  String get subscription_ad_free_sublabel_active => '広告なしでご利用中';
+
+  @override
+  String get subscription_premium_label => 'Premium';
+
+  @override
+  String subscription_premium_sublabel_expires(String date) {
+    return '$date まで';
+  }
+
+  @override
+  String get subscription_premium_sublabel_active => 'すべての機能をご利用中';
+
+  @override
+  String get dashboard_trial_banner_title => '広告なし2週間無料体験中';
+
+  @override
+  String dashboard_trial_banner_sublabel_days(int days) {
+    return '$days日後に通常プランに切り替わります';
+  }
+
+  @override
+  String get dashboard_trial_banner_sublabel_today => '本日で体験が終了します';
+
+  @override
+  String get anniversary_widgetTitle => '近づく記念日';
+
+  @override
+  String get anniversary_widgetEmpty => '登録された記念日がありません';
+
+  @override
+  String get widgetSettings_anniversarySummary => '記念日';
+
+  @override
+  String get widgetSettings_anniversarySummaryDesc =>
+      '近づく記念日とD-dayカウントダウンを表示します';
 }

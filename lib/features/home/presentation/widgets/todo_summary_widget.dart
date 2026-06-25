@@ -33,12 +33,14 @@ class TodoSummaryWidget extends ConsumerStatefulWidget {
 class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
   late List<String>? _selectedGroupIds;
   late bool _includePersonal;
+  late ScheduleViewMode _viewMode;
 
   @override
   void initState() {
     super.initState();
     _selectedGroupIds = widget.initialSelectedGroupIds;
     _includePersonal = widget.initialIncludePersonal;
+    _viewMode = widget.viewMode;
   }
 
   @override
@@ -50,11 +52,14 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     if (widget.initialIncludePersonal != oldWidget.initialIncludePersonal) {
       _includePersonal = widget.initialIncludePersonal;
     }
+    if (widget.viewMode != oldWidget.viewMode) {
+      _viewMode = widget.viewMode;
+    }
   }
 
   String _title(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    switch (widget.viewMode) {
+    switch (_viewMode) {
       case ScheduleViewMode.today:
         return l10n.todo_widgetTitleToday;
       case ScheduleViewMode.week:
@@ -66,7 +71,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
 
   String _emptyMessage(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    switch (widget.viewMode) {
+    switch (_viewMode) {
       case ScheduleViewMode.today:
         return l10n.todo_emptyToday;
       case ScheduleViewMode.week:
@@ -81,6 +86,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     if (current == null) return;
     await ref.read(dashboardWidgetSettingsProvider.notifier).save(
           current.copyWith(
+            todoViewMode: _viewMode,
             todoSelectedGroupIds: _selectedGroupIds,
             todoIncludePersonal: _includePersonal,
           ),
@@ -102,10 +108,12 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
         groups: groups,
         selectedGroupIds: _selectedGroupIds,
         includePersonal: _includePersonal,
-        onApply: (selectedGroupIds, includePersonal) {
+        viewMode: _viewMode,
+        onApply: (selectedGroupIds, includePersonal, viewMode) {
           setState(() {
             _selectedGroupIds = selectedGroupIds;
             _includePersonal = includePersonal;
+            if (viewMode != null) _viewMode = viewMode;
           });
           _saveFilter();
           Navigator.pop(context);
@@ -119,7 +127,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     final hasGroups = (ref.watch(myGroupsProvider).valueOrNull ?? []).isNotEmpty;
     final todosAsync = ref.watch(
       dashboardTodoTasksProvider(
-        mode: widget.viewMode,
+        mode: _viewMode,
         selectedGroupIds: _selectedGroupIds,
         includePersonal: _includePersonal,
       ),

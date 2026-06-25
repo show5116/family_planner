@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -32,9 +34,15 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
   String? _loadedContent;
   bool _hasUnsavedChanges = false;
   bool _isSaving = false;
+  bool _pendingSave = false;
+  Timer? _debounce;
 
   @override
   void dispose() {
+    _debounce?.cancel();
+    if (_hasUnsavedChanges && !_isSaving) {
+      _save(); // fire-and-forget: ref is still valid at dispose time
+    }
     _quillController?.dispose();
     super.dispose();
   }
@@ -56,29 +64,51 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
   }
 
   void _onCheckboxChanged() {
+    _scheduleAutoSave();
+  }
+
+  void _scheduleAutoSave() {
     if (!_hasUnsavedChanges) {
       setState(() => _hasUnsavedChanges = true);
     }
+    if (_isSaving) {
+      // API 호출 중이면 타이머 대신 플래그만 세움 — 완료 후 자동 재실행
+      _pendingSave = true;
+      return;
+    }
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 1500), () {
+      if (mounted && _hasUnsavedChanges) _save();
+    });
   }
 
   Future<void> _save() async {
     final controller = _quillController;
     if (controller == null || _isSaving) return;
 
-    setState(() => _isSaving = true);
+    _isSaving = true;
+    if (mounted) setState(() {});
     try {
       final deltaJson = MemoEditorConverter.fromDocument(controller.document);
       final result = await ref.read(memoManagementProvider.notifier).updateMemo(
             widget.memoId,
             UpdateMemoDto(content: deltaJson, format: 'DELTA'),
+            refreshDetail: false,
           );
-      if (result != null && mounted) {
-        setState(() => _hasUnsavedChanges = false);
-        // _loadedContent를 새 content로 갱신해서 _initController가 재초기화하지 않도록
-        _loadedContent = deltaJson;
+      if (result != null) {
+        // refreshDetail: false이므로 provider는 구버전 유지 → _loadedContent 갱신 금지
+        // (_loadedContent != memo.content 불일치로 _initController가 컨트롤러를 재초기화하는 것 방지)
+        _hasUnsavedChanges = false;
+        if (mounted) setState(() {});
       }
     } finally {
-      if (mounted) setState(() => _isSaving = false);
+      _isSaving = false;
+      if (_pendingSave && mounted) {
+        _pendingSave = false;
+        _scheduleAutoSave();
+      } else if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -92,25 +122,18 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
       appBar: AppBar(
         title: Text(l10n.memo_detail),
         actions: [
-          // 저장 버튼 — 변경사항 있을 때만 활성화
-          if (_hasUnsavedChanges)
-            _isSaving
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.check),
-                    tooltip: '저장',
-                    onPressed: _save,
-                  ),
+          if (_isSaving)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              ),
+            ),
 
           memoAsync.valueOrNull != null
               ? IconButton(
@@ -181,7 +204,7 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
                   if (total > 0) ...[
                     const SizedBox(height: AppSizes.spaceM),
                     _ChecklistProgressBar(
-                      checked: _hasUnsavedChanges
+                      checked: controller != null
                           ? _countChecked(controller)
                           : checked,
                       total: total,
@@ -252,7 +275,7 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
         }
         offset += insert.length;
       }
-      setState(() => _hasUnsavedChanges = true);
+      _scheduleAutoSave();
     } catch (_) {}
   }
 
@@ -418,7 +441,7 @@ class _MemoViewerState extends State<_MemoViewer> {
         embedBuilders: [
           LinkPreviewEmbedBuilder(readOnly: true),
         ],
-        customLeadingBlockBuilder: (node, config) {
+        customLeadingBlockBuilder: (node, config) { // ignore: experimental_member_use
           final listAttr = config.attribute.value as String?;
           if (listAttr != 'unchecked' && listAttr != 'checked') return null;
           return QuillCheckboxPoint(

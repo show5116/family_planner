@@ -13,10 +13,12 @@ import 'package:family_planner/features/main/assets/presentation/screens/account
 import 'package:family_planner/features/main/assets/presentation/screens/asset_screen.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/asset_statistics_screen.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/screens/expense_detail_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/household_statistics_screen.dart';
 import 'package:family_planner/features/main/household/data/models/recurring_expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/screens/recurring_expense_detail_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expense_form_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/recurring_expenses_screen.dart';
 import 'package:family_planner/features/main/household/presentation/screens/merchants_screen.dart';
@@ -26,8 +28,11 @@ import 'package:family_planner/features/main/household/presentation/screens/hous
 import 'package:family_planner/features/main/calendar/presentation/screens/calendar_tab.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/presentation/screens/category_management_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/anniversary_list_screen.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form_screen.dart';
+import 'package:family_planner/features/main/task/presentation/screens/task_detail_screen.dart';
 import 'package:family_planner/features/main/todo/presentation/screens/todo_tab.dart';
+import 'package:family_planner/features/main/todo/presentation/screens/todo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_detail_screen.dart';
 import 'package:family_planner/features/memo/presentation/screens/memo_form_screen.dart';
 import 'package:family_planner/features/main/investment/presentation/screens/indicator_detail_screen.dart';
@@ -136,18 +141,53 @@ List<RouteBase> getMainRoutes() {
         final extra = state.extra;
         DateTime? initialDate;
         bool isOnboarding = false;
+        String? initialTitle;
+        DateTime? initialEndTime;
+        TaskType? initialTaskType;
+        String? initialGroupId;
+        bool hasInitialGroupId = false;
+        List<int>? initialReminders;
         if (extra is DateTime) {
           initialDate = extra;
         } else if (extra is Map<String, dynamic>) {
           initialDate = extra['date'] as DateTime?;
           isOnboarding = extra['isOnboarding'] as bool? ?? false;
+          initialTitle = extra['title'] as String?;
+          initialEndTime = extra['endTime'] as DateTime?;
+          initialTaskType = extra['taskType'] as TaskType?;
+          initialGroupId = extra['groupId'] as String?;
+          hasInitialGroupId = extra['hasGroupId'] as bool? ?? false;
+          initialReminders = (extra['reminders'] as List?)?.cast<int>();
         }
-        return TaskFormScreen(initialDate: initialDate, isOnboarding: isOnboarding);
+        return TaskFormScreen(
+          initialDate: initialDate,
+          isOnboarding: isOnboarding,
+          initialTitle: initialTitle,
+          initialEndTime: initialEndTime,
+          initialTaskType: initialTaskType,
+          initialGroupId: initialGroupId,
+          hasInitialGroupId: hasInitialGroupId,
+          initialReminders: initialReminders,
+        );
       },
     ),
     GoRoute(
       path: AppRoutes.calendarDetail,
       name: 'calendarDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is Map<String, dynamic>) {
+          return TaskDetailScreen(
+            taskId: extra['taskId'] as String?,
+            task: extra['task'] as TaskModel?,
+          );
+        }
+        return const TaskDetailScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.calendarEdit,
+      name: 'calendarEdit',
       builder: (context, state) {
         final extra = state.extra;
         if (extra is Map<String, dynamic>) {
@@ -163,6 +203,11 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.categoryManagement,
       name: 'categoryManagement',
       builder: (context, state) => const CategoryManagementScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.anniversaryManagement,
+      name: 'anniversaryManagement',
+      builder: (context, state) => const AnniversaryListScreen(),
     ),
 
     // Todo Routes
@@ -191,6 +236,20 @@ List<RouteBase> getMainRoutes() {
     GoRoute(
       path: AppRoutes.todoDetail,
       name: 'todoDetail',
+      builder: (context, state) {
+        final extra = state.extra;
+        if (extra is Map<String, dynamic>) {
+          return TodoDetailScreen(
+            taskId: extra['taskId'] as String?,
+            task: extra['task'] as TaskModel?,
+          );
+        }
+        return const TodoDetailScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.todoEdit,
+      name: 'todoEdit',
       builder: (context, state) {
         final extra = state.extra;
         if (extra is Map<String, dynamic>) {
@@ -242,6 +301,22 @@ List<RouteBase> getMainRoutes() {
           expense = extra['expense'] as ExpenseModel?;
           groupId = extra['groupId'] as String?;
         }
+        return ExpenseDetailScreen(expense: expense!, groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.householdEdit,
+      name: 'householdEdit',
+      builder: (context, state) {
+        final extra = state.extra;
+        ExpenseModel? expense;
+        String? groupId;
+        if (extra is ExpenseModel) {
+          expense = extra;
+        } else if (extra is Map<String, dynamic>) {
+          expense = extra['expense'] as ExpenseModel?;
+          groupId = extra['groupId'] as String?;
+        }
         return ExpenseFormScreen(expense: expense, groupId: groupId);
       },
     ),
@@ -254,6 +329,17 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.householdRecurring,
       name: 'householdRecurring',
       builder: (context, state) => const RecurringExpensesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.householdRecurringDetail,
+      name: 'householdRecurringDetail',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return RecurringExpenseDetailScreen(
+          item: extra['item'] as RecurringExpenseModel,
+          groupId: extra['groupId'] as String?,
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.householdRecurringAdd,

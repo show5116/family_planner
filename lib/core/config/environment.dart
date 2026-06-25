@@ -5,7 +5,7 @@ enum Environment { local, development, production }
 
 /// 환경 설정 관리 클래스
 class EnvironmentConfig {
-  static Environment _currentEnvironment = Environment.development;
+  static Environment _currentEnvironment = Environment.production;
 
   /// 현재 환경 설정
   static Environment get currentEnvironment => _currentEnvironment;

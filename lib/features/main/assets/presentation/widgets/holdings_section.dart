@@ -203,8 +203,7 @@ class HoldingsSection extends ConsumerWidget {
                       onDelete: () => _confirmDelete(context, ref, l10n, h),
                     );
                   },
-                  onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) newIndex--;
+                  onReorderItem: (oldIndex, newIndex) {
                     final reordered = [...holdings];
                     reordered.insert(newIndex, reordered.removeAt(oldIndex));
                     ref.read(holdingsProvider(accountId).notifier).reorder(reordered);

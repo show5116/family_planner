@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 
 // ─── DTOs ───────────────────────────────────────────────────────────────────
@@ -361,7 +362,10 @@ class ChildcareRepository {
         '/childcare/accounts/$accountId/transactions',
         data: dto.toJson(),
       );
-      return ChildcareTransaction.fromJson(response.data as Map<String, dynamic>);
+      final tx = ChildcareTransaction.fromJson(response.data as Map<String, dynamic>);
+      final type = dto.toJson()['type'] as String? ?? 'unknown';
+      await AnalyticsService.instance.logChildPointTransaction(type.toLowerCase());
+      return tx;
     } on DioException catch (e) {
       debugPrint('❌ [ChildcareRepository] 거래 추가 실패: ${e.message}');
       throw Exception('거래 추가 실패: ${e.message}');

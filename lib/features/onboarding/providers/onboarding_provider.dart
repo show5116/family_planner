@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/core/services/analytics_service.dart';
 
 /// 온보딩 완료 여부 상태
 ///
@@ -18,6 +19,7 @@ class OnboardingNotifier extends StateNotifier<bool?> {
   /// 온보딩 완료 처리
   Future<void> complete() async {
     await OnboardingService.completeOnboarding();
+    await AnalyticsService.instance.logOnboardingComplete();
     state = true;
   }
 }

@@ -165,14 +165,10 @@ class _PermissionManagementScreenState
       itemCount: permissions.length,
       buildDefaultDragHandles: false, // 기본 드래그 핸들 비활성화
       proxyDecorator: buildReorderableProxyDecorator,
-      onReorder: (oldIndex, newIndex) {
+      onReorderItem: (oldIndex, newIndex) {
         setState(() {
-          // 처음 변경 시 복사본 생성
           _reorderedPermissions ??= List.from(permissions);
 
-          if (newIndex > oldIndex) {
-            newIndex -= 1;
-          }
           final item = _reorderedPermissions!.removeAt(oldIndex);
           _reorderedPermissions!.insert(newIndex, item);
 
