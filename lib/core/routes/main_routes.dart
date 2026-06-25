@@ -141,13 +141,34 @@ List<RouteBase> getMainRoutes() {
         final extra = state.extra;
         DateTime? initialDate;
         bool isOnboarding = false;
+        String? initialTitle;
+        DateTime? initialEndTime;
+        TaskType? initialTaskType;
+        String? initialGroupId;
+        bool hasInitialGroupId = false;
+        List<int>? initialReminders;
         if (extra is DateTime) {
           initialDate = extra;
         } else if (extra is Map<String, dynamic>) {
           initialDate = extra['date'] as DateTime?;
           isOnboarding = extra['isOnboarding'] as bool? ?? false;
+          initialTitle = extra['title'] as String?;
+          initialEndTime = extra['endTime'] as DateTime?;
+          initialTaskType = extra['taskType'] as TaskType?;
+          initialGroupId = extra['groupId'] as String?;
+          hasInitialGroupId = extra['hasGroupId'] as bool? ?? false;
+          initialReminders = (extra['reminders'] as List?)?.cast<int>();
         }
-        return TaskFormScreen(initialDate: initialDate, isOnboarding: isOnboarding);
+        return TaskFormScreen(
+          initialDate: initialDate,
+          isOnboarding: isOnboarding,
+          initialTitle: initialTitle,
+          initialEndTime: initialEndTime,
+          initialTaskType: initialTaskType,
+          initialGroupId: initialGroupId,
+          hasInitialGroupId: hasInitialGroupId,
+          initialReminders: initialReminders,
+        );
       },
     ),
     GoRoute(
