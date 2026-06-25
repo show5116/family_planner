@@ -69,11 +69,16 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // 인증이 필요 없는 경로 (로그인/회원가입/리프레시)
+          // 인증이 필요 없는 경로 (로그인/회원가입/리프레시/비밀번호찾기 등)
           final isPublicPath = options.path.contains('/auth/login') ||
+              options.path.contains('/auth/signup') ||
               options.path.contains('/auth/register') ||
               options.path.contains('/auth/refresh') ||
               options.path.contains('/auth/logout') ||
+              options.path.contains('/auth/verify-email') ||
+              options.path.contains('/auth/resend-verification') ||
+              options.path.contains('/auth/request-password-reset') ||
+              options.path.contains('/auth/reset-password') ||
               options.path.contains('/auth/kakao') ||
               options.path.contains('/auth/google') ||
               options.path.contains('/auth/apple') ||
