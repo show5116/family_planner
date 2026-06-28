@@ -69,14 +69,6 @@ void main() async {
     usePathUrlStrategy();
   }
 
-  // ATT 동의 팝업 (iOS 전용, AdMob 초기화 전 반드시 선행)
-  if (!kIsWeb && Platform.isIOS) {
-    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-    if (status == TrackingStatus.notDetermined) {
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    }
-  }
-
   // AdMob 초기화 (runApp 전, timeout 적용)
   await AdService.initialize();
 
@@ -126,6 +118,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // ATT 동의 팝업 (iOS 전용, runApp 후 UIViewController 준비된 시점에 요청)
+      if (!kIsWeb && Platform.isIOS) {
+        final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+        if (status == TrackingStatus.notDetermined) {
+          await AppTrackingTransparency.requestTrackingAuthorization();
+        }
+      }
+
       // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
       unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
       unawaited(LocalNotificationService.initialize().catchError((_) {}));
