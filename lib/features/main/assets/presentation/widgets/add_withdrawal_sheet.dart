@@ -75,7 +75,9 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
         left: AppSizes.spaceM,
         right: AppSizes.spaceM,
         top: AppSizes.spaceM,
-        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spaceM,
+        bottom: MediaQuery.of(context).viewInsets.bottom +
+            MediaQuery.of(context).padding.bottom +
+            AppSizes.spaceM,
       ),
       child: Form(
         key: _formKey,
