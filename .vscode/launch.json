@@ -30,6 +30,20 @@
       ]
     },
     {
+      "name": "family_planner (Android Emulator)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator",
+      "preLaunchTask": "boot-android-emulator",
+      "args": [
+        "--dart-define=ENVIRONMENT=development",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
+        "--dart-define=KAKAO_JS_APP_KEY=${env:KAKAO_JS_APP_KEY}",
+        "--dart-define=EMAILJS_SERVICE_ID=${env:EMAILJS_SERVICE_ID}",
+        "--dart-define=EMAILJS_PUBLIC_KEY=${env:EMAILJS_PUBLIC_KEY}"
+      ]
+    },
+    {
       "name": "family_planner (iOS Simulator)",
       "request": "launch",
       "type": "dart",
