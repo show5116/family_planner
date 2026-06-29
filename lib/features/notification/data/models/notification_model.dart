@@ -22,6 +22,8 @@ enum NotificationCategory {
   system, // 시스템
   @JsonValue('WEATHER')
   weather, // 날씨
+  @JsonValue('FRIDGE')
+  fridge, // 냉장고
 }
 
 /// 알림 모델
@@ -49,19 +51,23 @@ class NotificationModel with _$NotificationModel {
         case 'CHILDCARE': return NotificationCategory.childcare;
         case 'GROUP': return NotificationCategory.group;
         case 'SAVINGS': return NotificationCategory.savings;
+        case 'WEATHER': return NotificationCategory.weather;
+        case 'FRIDGE': return NotificationCategory.fridge;
         default: return NotificationCategory.system;
       }
     }
 
     return NotificationModel(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
+      id: json['id'] as String? ?? '',
+      userId: json['userId'] as String? ?? '',
       category: parseCategory(json['category'] as String?),
-      title: json['title'] as String,
-      body: json['body'] as String,
+      title: json['title'] as String? ?? '',
+      body: json['body'] as String? ?? '',
       data: json['data'] as Map<String, dynamic>?,
       isRead: json['isRead'] as bool? ?? false,
-      sentAt: DateTime.parse(json['sentAt'] as String).toLocal(),
+      sentAt: json['sentAt'] != null
+          ? DateTime.parse(json['sentAt'] as String).toLocal()
+          : DateTime.now(),
       readAt: json['readAt'] != null
           ? DateTime.parse(json['readAt'] as String).toLocal()
           : null,
