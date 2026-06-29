@@ -57,10 +57,11 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    // 프로덕션에서만 Analytics 수집 활성화
+    // 웹은 measurementId 없이 Analytics 초기화 시 에러 발생하므로 비활성화
+    // 모바일은 프로덕션에서만 수집 활성화
     const isProduction = String.fromEnvironment('ENVIRONMENT', defaultValue: 'production') == 'production';
     await AnalyticsService.instance.analytics
-        .setAnalyticsCollectionEnabled(isProduction);
+        .setAnalyticsCollectionEnabled(!kIsWeb && isProduction);
   } catch (e) {
     debugPrint('❌ Firebase 초기화 실패: $e');
   }
