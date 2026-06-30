@@ -16,6 +16,8 @@ import 'package:family_planner/features/main/fridge/data/models/fridge_models.da
 import 'package:family_planner/features/main/fridge/presentation/widgets/expiry_reference_selector_sheet.dart';
 import 'package:family_planner/features/main/fridge/providers/fridge_provider.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/data/models/merchant_model.dart';
+import 'package:family_planner/features/main/household/data/repositories/household_repository.dart';
 import 'package:family_planner/features/main/household/providers/merchant_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
