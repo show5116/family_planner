@@ -13,7 +13,6 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   static const String oauthCallback = '/auth/callback';
   static const String socialTerms = '/auth/terms';
-  static const String socialInfo = '/auth/terms/info';
 
   // Main Routes
   static const String home = '/';

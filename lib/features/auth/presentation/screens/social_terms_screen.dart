@@ -84,15 +84,9 @@ class _SocialTermsScreenState extends ConsumerState<SocialTermsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final authState = ref.read(authProvider);
-
-      // name 또는 email 입력이 필요하면 SocialInfoScreen으로 이동
-      if (authState.needsName || authState.needsEmail) {
-        if (mounted) context.push(AppRoutes.socialInfo);
-        return;
-      }
-
-      // 추가 정보 없이 바로 가입 완료
+      // Apple Sign In 가이드라인 준수: 소셜에서 제공한 정보 외에 이름/이메일을
+      // 별도로 입력받지 않는다. 누락된 정보는 백엔드 기본값('사용자'/비공개)으로 가입하고
+      // 가입 후 프로필 화면에서 자유롭게 수정하도록 안내한다.
       await ref.read(authProvider.notifier).completeSocialSignup();
     } catch (e) {
       if (mounted) {

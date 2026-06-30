@@ -24,10 +24,9 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
     return null;
   }
 
-  // 소셜 신규 가입 약관 동의 대기 상태 → 약관 동의/정보 입력 화면 유지 (열람 페이지 포함)
+  // 소셜 신규 가입 약관 동의 대기 상태 → 약관 동의 화면 유지 (열람 페이지 포함)
   if (authState.isPendingTerms) {
     if (currentLocation == AppRoutes.socialTerms ||
-        currentLocation == AppRoutes.socialInfo ||
         currentLocation == AppRoutes.termsOfService ||
         currentLocation == AppRoutes.privacyPolicy) {
       return null;
@@ -72,16 +71,14 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
     // 온보딩 로드 중(null)이면 splash 유지
     // 단, 소셜 약관 동의 완료 직후에는 splash로 보내지 않음 (checkAuthStatus 재호출 방지)
     if (onboardingCompleted == null) {
-      if (currentLocation == AppRoutes.socialTerms ||
-          currentLocation == AppRoutes.socialInfo) {
+      if (currentLocation == AppRoutes.socialTerms) {
         return null;
       }
       return isSplashPage ? null : AppRoutes.splash;
     }
 
-    // 소셜 약관 동의 / 정보 입력 완료 후 → 홈으로
-    if (currentLocation == AppRoutes.socialTerms ||
-        currentLocation == AppRoutes.socialInfo) {
+    // 소셜 약관 동의 완료 후 → 홈으로
+    if (currentLocation == AppRoutes.socialTerms) {
       return onboardingCompleted ? AppRoutes.home : AppRoutes.onboarding;
     }
 

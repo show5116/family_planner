@@ -91,6 +91,9 @@ class NotificationNavigationService {
 
       case NotificationCategory.weather:
         return _navigateToWeather(context);
+
+      case NotificationCategory.fridge:
+        return _navigateToFridge(context, data);
     }
   }
 
@@ -205,6 +208,15 @@ class NotificationNavigationService {
     return true;
   }
 
+  /// 냉장고 화면으로 이동
+  static bool _navigateToFridge(
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) {
+    context.push(AppRoutes.fridge);
+    return true;
+  }
+
   /// 시스템 알림 화면으로 이동 (공지사항, QnA 등)
   static bool _navigateToSystem(
     BuildContext context,
@@ -252,6 +264,8 @@ class NotificationNavigationService {
         return NotificationCategory.system;
       case 'WEATHER':
         return NotificationCategory.weather;
+      case 'FRIDGE':
+        return NotificationCategory.fridge;
       default:
         return null;
     }

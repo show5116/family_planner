@@ -2,6 +2,33 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "boot-android-emulator",
+      "type": "shell",
+      "command": "cmd",
+      "args": ["/c", "start", "", "%LOCALAPPDATA%\\Android\\Sdk\\emulator\\emulator", "-avd", "Medium_Phone_API_36.1", "-no-snapshot-load"],
+      "options": {
+        "shell": {
+          "executable": "cmd.exe",
+          "args": ["/d", "/c"]
+        }
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Boot completed"
+        }
+      }
+    },
+    {
       "label": "boot-ios-simulator",
       "type": "shell",
       "command": "xcrun simctl boot '4BE51488-3923-4189-BF6E-05442A351CCF' 2>/dev/null || true && open -a Simulator && xcrun simctl bootstatus '4BE51488-3923-4189-BF6E-05442A351CCF' -b",

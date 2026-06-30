@@ -132,6 +132,7 @@ class DashboardWidgetSettings {
           .toList();
 
       // anniversary:: 다중 키 → 단일 'anniversary' 키로 교체 (중복 제거)
+      // 구버전 'anniversarySummary' 키도 제거
       List<String> normalized = [];
       bool anniversaryInserted = false;
       for (final k in saved) {
@@ -145,14 +146,15 @@ class DashboardWidgetSettings {
         }
       }
 
-      // 레거시 싱글톤 키 병합
-      final merged = [
-        ...normalized,
-        ...legacyAll.where((w) => !normalized.contains(w)),
-      ];
-
+      // 구버전 show* 플래그로 저장된 포맷 마이그레이션
       final hasLegacyFlags = json.keys.any((k) => k.startsWith('show'));
       if (hasLegacyFlags) {
+        // 레거시 포맷: widgetOrder가 없고 show* 플래그로만 관리되던 시절의 데이터
+        // normalized가 비어있을 수 있으므로 legacyAll 전체에서 show 플래그로 필터링
+        final merged = [
+          ...normalized,
+          ...legacyAll.where((w) => !normalized.contains(w)),
+        ];
         final showFlags = <String, bool>{
           'weather': json['showWeather'] as bool? ?? true,
           'fridgeSummary': json['showFridgeSummary'] as bool? ?? true,
@@ -169,7 +171,8 @@ class DashboardWidgetSettings {
             .where((k) => !showFlags.containsKey(k) || (showFlags[k] ?? true))
             .toList();
       } else {
-        widgetOrder = merged;
+        // 현재 포맷: widgetOrder 그대로 사용
+        widgetOrder = normalized;
       }
     } else {
       widgetOrder = const [

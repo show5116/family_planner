@@ -228,11 +228,13 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
     Map<int, AsyncValue<IndicatorHistoryModel>> histories,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-    final periods = widget.assetPoints.map((p) => p.period).toList();
+    final sortedPoints = [...widget.assetPoints]
+      ..sort((a, b) => a.period.compareTo(b.period));
+    final periods = sortedPoints.map((p) => p.period).toList();
 
     // 내 자산 기준(원화) 맵
     final myAssetMap = {
-      for (final p in widget.assetPoints) p.period: p.balance,
+      for (final p in sortedPoints) p.period: p.balance,
     };
     final myNorm = _normalize(periods, myAssetMap);
 

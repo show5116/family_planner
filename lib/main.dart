@@ -57,24 +57,17 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    // 프로덕션에서만 Analytics 수집 활성화
+    // 웹은 measurementId 없이 Analytics 초기화 시 에러 발생하므로 비활성화
+    // 모바일은 프로덕션에서만 수집 활성화
     const isProduction = String.fromEnvironment('ENVIRONMENT', defaultValue: 'production') == 'production';
     await AnalyticsService.instance.analytics
-        .setAnalyticsCollectionEnabled(isProduction);
+        .setAnalyticsCollectionEnabled(!kIsWeb && isProduction);
   } catch (e) {
     debugPrint('❌ Firebase 초기화 실패: $e');
   }
 
   if (kIsWeb) {
     usePathUrlStrategy();
-  }
-
-  // ATT 동의 팝업 (iOS 전용, AdMob 초기화 전 반드시 선행)
-  if (!kIsWeb && Platform.isIOS) {
-    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-    if (status == TrackingStatus.notDetermined) {
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    }
   }
 
   // AdMob 초기화 (runApp 전, timeout 적용)
@@ -126,6 +119,14 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // ATT 동의 팝업 (iOS 전용, runApp 후 UIViewController 준비된 시점에 요청)
+      if (!kIsWeb && Platform.isIOS) {
+        final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+        if (status == TrackingStatus.notDetermined) {
+          await AppTrackingTransparency.requestTrackingAuthorization();
+        }
+      }
+
       // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
       unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
       unawaited(LocalNotificationService.initialize().catchError((_) {}));
