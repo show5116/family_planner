@@ -819,6 +819,13 @@ class _TransferRow extends StatelessWidget {
 
 // ── 소비처 선택 ───────────────────────────────────────────────────────────────────
 
+// 장보기 그룹 기준으로 소비처를 가져오는 전용 provider (householdSelectedGroupIdProvider와 무관)
+final _shoppingMerchantsProvider =
+    FutureProvider.autoDispose.family<List<MerchantModel>, String>(
+  (ref, groupId) =>
+      ref.watch(householdRepositoryProvider).getMerchants(groupId: groupId),
+);
+
 class _MerchantSelector extends ConsumerWidget {
   final String? selectedId;
   final ValueChanged<String?> onChanged;
@@ -828,7 +835,10 @@ class _MerchantSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final merchantsAsync = ref.watch(merchantsProvider);
+    final groupId = ref.watch(fridgeSelectedGroupIdProvider);
+    final merchantsAsync = groupId != null
+        ? ref.watch(_shoppingMerchantsProvider(groupId))
+        : ref.watch(merchantsProvider);
 
     return merchantsAsync.when(
       data: (merchants) => InputDecorator(
