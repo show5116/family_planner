@@ -377,11 +377,14 @@ class AuthService extends ApiServiceBase {
   /// 웹에서는 loginWithAppleOAuth()를 사용하세요.
   Future<Map<String, dynamic>> loginWithApple() async {
     try {
-      final identityToken = await _appleAuthService.signIn();
+      final result = await _appleAuthService.signIn();
 
       final response = await apiClient.post(
         ApiConstants.appleMobileLogin,
-        data: {'identityToken': identityToken},
+        data: {
+          'identityToken': result.identityToken,
+          if (result.fullName != null) 'name': result.fullName,
+        },
       );
 
       final data = handleResponse<Map<String, dynamic>>(response);

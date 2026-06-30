@@ -377,6 +377,8 @@ class _NotificationPopupItem extends StatelessWidget {
         return Icons.campaign_outlined;
       case NotificationCategory.weather:
         return Icons.wb_sunny_outlined;
+      case NotificationCategory.fridge:
+        return Icons.kitchen_outlined;
     }
   }
 
@@ -401,6 +403,8 @@ class _NotificationPopupItem extends StatelessWidget {
         return Colors.red;
       case NotificationCategory.weather:
         return Colors.lightBlue;
+      case NotificationCategory.fridge:
+        return Colors.cyan;
     }
   }
 }

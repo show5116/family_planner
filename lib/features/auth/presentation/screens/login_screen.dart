@@ -9,6 +9,8 @@ import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/core/services/api_service_base.dart';
 import 'package:family_planner/shared/widgets/app_logo.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/services/apple_auth_service.dart';
 import 'package:family_planner/features/auth/presentation/widgets/auth_app_bar.dart';
@@ -139,6 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleAppleLogin() async {
+    if (_isLoading) return;
     final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
 
@@ -369,18 +372,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Column(
       children: [
         SocialLoginButton(
-          icon: Icons.g_mobiledata,
+          iconWidget: SvgPicture.asset('assets/icons/google_logo.svg'),
           label: l10n.auth_continueWithGoogle,
+          backgroundColor: Colors.white,
+          textColor: const Color(0xFF3C4043),
+          borderColor: const Color(0xFF747775),
           onPressed: _isLoading ? null : _handleGoogleLogin,
         ),
         if (_isAppleAvailable) ...[
           const SizedBox(height: AppSizes.spaceM),
-          SocialLoginButton(
-            icon: Icons.apple,
-            label: l10n.auth_continueWithApple,
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-            onPressed: _isLoading ? null : _handleAppleLogin,
+          SignInWithAppleButton(
+            text: l10n.auth_continueWithApple,
+            height: AppSizes.buttonHeightLarge,
+            style: SignInWithAppleButtonStyle.black,
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            onPressed: _handleAppleLogin,
           ),
         ],
         // TODO: 카카오 사업자 동의항목(이메일) 심사 승인 후 활성화

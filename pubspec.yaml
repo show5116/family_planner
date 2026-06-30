@@ -79,6 +79,9 @@ dependencies:
   kakao_flutter_sdk: ^1.9.6
   sign_in_with_apple: ^6.1.3
 
+  # SVG (Google 공식 브랜딩 로고 렌더링용)
+  flutter_svg: ^2.0.17
+
   # Deep Linking & External URLs
   url_launcher: ^6.3.1
   app_links: ^6.3.2
