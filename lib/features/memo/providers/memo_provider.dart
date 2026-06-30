@@ -190,6 +190,7 @@ class MemoManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       await _repository.deleteMemo(id);
       _ref.read(memoListProvider.notifier).afterDelete(id);
+      _ref.invalidate(pinnedMemosProvider);
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {

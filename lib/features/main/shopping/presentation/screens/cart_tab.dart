@@ -667,6 +667,7 @@ class _CartTabState extends ConsumerState<CartTab>
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       builder: (_) => _CompleteShoppingDialog(
         items: items,
         initialPrices: prices,
