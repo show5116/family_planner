@@ -41,16 +41,15 @@ class EnvironmentConfig {
   ///
   /// 백엔드가 OAuth 인증 후 이 URL로 리다이렉트합니다.
   /// - 로컬: localhost:3001 (웹)
-  /// - 개발: dev Netlify 사이트
-  /// - 프로덕션: 실제 도메인 (웹), Universal/App Links (모바일)
+  /// - 개발/프로덕션: 실제 도메인 (웹), Universal/App Links (모바일)
   static String get frontendUrl {
     switch (_currentEnvironment) {
       case Environment.local:
         return 'http://localhost:3001';
       case Environment.development:
-        return 'https://family-planner-web.netlify.app/';
+        return 'https://app.familyplanner.hmncorp.org/';
       case Environment.production:
-        return 'https://family-planner-web.netlify.app/';
+        return 'https://app.familyplanner.hmncorp.org/';
     }
   }
 
