@@ -40,6 +40,16 @@ class MemoEditorToolbar extends StatelessWidget {
     return val == 'unchecked' || val == 'checked';
   }
 
+  Future<void> _pasteWithFormat(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final pasted = await controller.clipboardPaste();
+    if (!pasted) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('클립보드 붙여넣기에 실패했습니다.')),
+      );
+    }
+  }
+
   Future<void> _showLinkDialog(BuildContext context) async {
     // 클립보드에 URL이 있으면 바로 사용, 없으면 입력창
     final clipboard = await Clipboard.getData(Clipboard.kTextPlain);
@@ -126,6 +136,14 @@ class MemoEditorToolbar extends StatelessWidget {
                   onPressed: _toggleChecklist,
                 ),
               ),
+
+              // 서식 유지 붙여넣기 (웹 Ctrl+V 서식 유실 대응)
+              _ToolbarBtn(
+                icon: const Icon(Icons.content_paste_go, size: 18),
+                tooltip: '서식 유지 붙여넣기',
+                onPressed: () => _pasteWithFormat(context),
+              ),
+              _divider(context),
 
               // 하이퍼링크 — 텍스트 선택 시에만 활성화
               if (onLinkPreview != null) ...[

@@ -3,6 +3,20 @@ import 'package:flutter_quill/flutter_quill.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 
+/// 클립보드 서식(HTML)을 우선 시도하여 붙여넣기 (웹 Ctrl+V 서식 유실 대응)
+Future<void> _pasteWithFormat(
+  BuildContext context,
+  QuillController controller,
+) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final pasted = await controller.clipboardPaste();
+  if (!pasted) {
+    messenger.showSnackBar(
+      const SnackBar(content: Text('클립보드 붙여넣기에 실패했습니다.')),
+    );
+  }
+}
+
 /// 간소화 툴바 (Q&A용)
 ///
 /// 굵게, 리스트, 이미지만 지원하는 간단한 툴바입니다.
@@ -67,6 +81,14 @@ class SimpleEditorToolbar extends StatelessWidget {
               isActive:
                   controller.getSelectionStyle().attributes.containsKey('list'),
               onPressed: () => controller.formatSelection(Attribute.ul),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+
+            // 서식 유지 붙여넣기 (웹 Ctrl+V 서식 유실 대응)
+            _ToolbarButton(
+              icon: Icons.content_paste_go,
+              tooltip: '서식 유지 붙여넣기',
+              onPressed: () => _pasteWithFormat(context, controller),
             ),
 
             const Spacer(),
@@ -141,21 +163,25 @@ class FullEditorToolbar extends StatelessWidget {
             showSearchButton: false,
             showSubscript: false,
             showSuperscript: false,
-            customButtons: onImagePressed != null
-                ? [
-                    QuillToolbarCustomButtonOptions(
-                      icon: isUploadingImage
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.image, size: 18),
-                      tooltip: '이미지 첨부',
-                      onPressed: onImagePressed,
-                    ),
-                  ]
-                : [],
+            customButtons: [
+              if (onImagePressed != null)
+                QuillToolbarCustomButtonOptions(
+                  icon: isUploadingImage
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.image, size: 18),
+                  tooltip: '이미지 첨부',
+                  onPressed: onImagePressed,
+                ),
+              QuillToolbarCustomButtonOptions(
+                icon: const Icon(Icons.content_paste_go, size: 18),
+                tooltip: '서식 유지 붙여넣기',
+                onPressed: () => _pasteWithFormat(context, controller),
+              ),
+            ],
           ),
         ),
       ),
