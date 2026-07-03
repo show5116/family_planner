@@ -2,6 +2,9 @@
 class AppRoutes {
   AppRoutes._(); // Private constructor
 
+  // Deep Link Routes (공개 접근 가능)
+  static const String invite = '/invite';
+
   // Onboarding Routes
   static const String onboarding = '/onboarding';
 

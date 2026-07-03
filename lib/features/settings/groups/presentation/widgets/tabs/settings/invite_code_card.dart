@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/services/share_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 
@@ -135,6 +136,13 @@ class InviteCodeCard extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.copy),
                   onPressed: () => _copyInviteCode(context, l10n),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  onPressed: () => ShareService.shareInviteLink(
+                    inviteCode: group.inviteCode,
+                    groupName: group.name,
+                  ),
                 ),
               ],
             ),

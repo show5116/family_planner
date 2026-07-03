@@ -43,6 +43,7 @@ String? handleRouterRedirect(BuildContext context, GoRouterState state, Ref ref)
   final isPublicPage = [
     AppRoutes.termsOfService,
     AppRoutes.privacyPolicy,
+    AppRoutes.invite,
   ].contains(currentLocation);
 
   if (isPublicPage) return null;

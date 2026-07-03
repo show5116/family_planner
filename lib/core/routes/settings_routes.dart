@@ -9,6 +9,7 @@ import 'package:family_planner/features/settings/common/presentation/screens/pro
 import 'package:family_planner/features/settings/groups/presentation/screens/group_detail_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/group_list_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/my_join_requests_screen.dart';
+import 'package:family_planner/features/settings/groups/presentation/screens/invite_landing_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_settings_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_history_screen.dart';
 
@@ -70,6 +71,14 @@ List<RouteBase> getSettingsRoutes() {
       builder: (context, state) {
         final groupId = state.pathParameters['id']!;
         return GroupDetailScreen(groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.invite,
+      name: 'invite',
+      builder: (context, state) {
+        final code = state.uri.queryParameters['code'] ?? '';
+        return InviteLandingScreen(inviteCode: code);
       },
     ),
     GoRoute(

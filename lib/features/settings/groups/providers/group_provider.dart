@@ -8,6 +8,9 @@ import 'package:family_planner/features/settings/groups/models/group_member.dart
 import 'package:family_planner/features/settings/groups/models/group_report.dart';
 import 'package:family_planner/features/settings/groups/models/join_request.dart';
 
+/// 로그인 전 딥링크로 진입한 초대 코드를 보관 (로그인 후 재처리)
+final pendingInviteCodeProvider = StateProvider<String?>((ref) => null);
+
 /// GroupService Provider
 final groupServiceProvider = Provider<GroupService>((ref) {
   return GroupService(ApiClient.instance);
