@@ -351,20 +351,6 @@ class GroupNotifier extends StateNotifier<AsyncValue<List<Group>>> {
     }
   }
 
-  /// 이메일로 초대
-  Future<Map<String, dynamic>> inviteByEmail(String groupId, String email) async {
-    try {
-      final result = await _groupService.inviteByEmail(groupId, email);
-
-      // 가입 요청 목록 새로고침
-      _ref.invalidate(groupJoinRequestsProvider(groupId));
-
-      return result;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   /// 초대 취소
   Future<void> cancelInvite(String groupId, String requestId) async {
     try {

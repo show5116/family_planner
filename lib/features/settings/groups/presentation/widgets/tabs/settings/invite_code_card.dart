@@ -10,14 +10,11 @@ class InviteCodeCard extends StatelessWidget {
   final Group group;
   final bool canManage;
   final VoidCallback onRegenerateCode;
-  final VoidCallback? onInviteByEmail;
-
   const InviteCodeCard({
     super.key,
     required this.group,
     required this.canManage,
     required this.onRegenerateCode,
-    this.onInviteByEmail,
   });
 
   bool get _isExpired => DateTime.now().isAfter(group.inviteCodeExpiresAt);
@@ -173,12 +170,6 @@ class InviteCodeCard extends StatelessWidget {
                     icon: const Icon(Icons.refresh),
                     label: Text(l10n.group_regenerateCode),
                   ),
-                  if (onInviteByEmail != null)
-                    TextButton.icon(
-                      onPressed: onInviteByEmail,
-                      icon: const Icon(Icons.email_outlined),
-                      label: Text(l10n.group_inviteByEmail),
-                    ),
                 ],
               ),
             ],

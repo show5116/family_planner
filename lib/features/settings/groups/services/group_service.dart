@@ -362,23 +362,6 @@ class GroupService {
     }
   }
 
-  /// 이메일로 그룹 초대
-  /// POST /groups/:id/invite-by-email
-  Future<Map<String, dynamic>> inviteByEmail(
-    String groupId,
-    String email,
-  ) async {
-    try {
-      final response = await _apiClient.post(
-        '/groups/$groupId/invite-by-email',
-        data: {'email': email},
-      );
-      return response.data as Map<String, dynamic>;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   /// 초대 취소
   /// DELETE /groups/:id/invites/:requestId
   Future<void> cancelInvite(

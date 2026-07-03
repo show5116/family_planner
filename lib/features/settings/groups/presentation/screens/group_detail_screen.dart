@@ -307,12 +307,6 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         l10n,
         widget.groupId,
       ),
-      onInviteByEmail: () => GroupDialogs.showInviteMemberDialog(
-        context,
-        ref,
-        l10n,
-        widget.groupId,
-      ),
       onColorChange: (color) => _updateColor(color),
       onResetColor: () => _resetColor(),
     );
@@ -365,19 +359,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final l10n = AppLocalizations.of(context)!;
     final tabIndex = _tabController.index;
 
-    if (tabIndex == 0 && canManage) {
-      // 멤버 탭 - 멤버 초대 버튼
-      return FloatingActionButton.extended(
-        onPressed: () => GroupDialogs.showInviteMemberDialog(
-          context,
-          ref,
-          l10n,
-          widget.groupId,
-        ),
-        icon: const Icon(Icons.person_add),
-        label: Text(l10n.group_inviteMembers),
-      );
-    } else if (tabIndex == 2 && canManageRole) {
+    if (tabIndex == 2 && canManageRole) {
       // 역할 탭 - 역할 추가 버튼
       return FloatingActionButton.extended(
         key: _fabKey,
