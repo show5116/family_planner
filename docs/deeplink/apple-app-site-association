@@ -4,7 +4,7 @@
       {
         "appIDs": ["RBUS4CRV79.com.hmncorp.familyplanner"],
         "components": [
-          { "/": "/*" }
+          { "/": "/dl/*" }
         ]
       }
     ]

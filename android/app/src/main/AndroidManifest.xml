@@ -39,14 +39,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- App Domain Deep Link (Universal) -->
+            <!-- App Domain Deep Link (/dl/* 경로만 처리) -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="familyplanner.hmncorp.org" />
+                    android:host="familyplanner.hmncorp.org"
+                    android:pathPrefix="/dl/" />
             </intent-filter>
 
             <!-- OAuth Callback Deep Link (App Links) -->

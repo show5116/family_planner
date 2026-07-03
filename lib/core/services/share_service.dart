@@ -4,7 +4,7 @@ import 'package:share_plus/share_plus.dart';
 class ShareService {
   ShareService._();
 
-  static const _baseUrl = 'https://familyplanner.hmncorp.org';
+  static const _baseUrl = 'https://familyplanner.hmncorp.org/dl';
 
   /// 초대 링크 공유
   static Future<void> shareInviteLink({

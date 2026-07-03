@@ -47,11 +47,14 @@ class DeepLinkService {
 
   void _handleUri(Uri uri) {
     if (uri.host != _appDomain) return;
+    if (!uri.path.startsWith('/dl')) return;
 
     final context = AppRouter.navigatorKey.currentContext;
     if (context == null) return;
 
-    final path = uri.path.isEmpty ? '/' : uri.path;
+    // /dl prefix 제거 후 GoRouter에 전달
+    final strippedPath = uri.path.replaceFirst('/dl', '');
+    final path = strippedPath.isEmpty ? '/' : strippedPath;
     final query = uri.query.isNotEmpty ? '?${uri.query}' : '';
     GoRouter.of(context).go('$path$query');
   }
