@@ -23,6 +23,7 @@ import 'package:family_planner/features/auth/providers/auth_provider.dart';
 // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
 // import 'package:family_planner/features/main/household/providers/household_auto_settings_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
+import 'package:family_planner/core/services/deep_link_service.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
@@ -130,6 +131,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
       unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
       unawaited(LocalNotificationService.initialize().catchError((_) {}));
+      unawaited(DeepLinkService().init().catchError((_) {}));
 
       await ref.read(authProvider.notifier).checkAuthStatus();
 

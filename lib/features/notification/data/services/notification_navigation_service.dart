@@ -260,6 +260,8 @@ class NotificationNavigationService {
         return NotificationCategory.childcare;
       case 'GROUP':
         return NotificationCategory.group;
+      case 'SAVINGS':
+        return NotificationCategory.savings;
       case 'SYSTEM':
         return NotificationCategory.system;
       case 'WEATHER':
