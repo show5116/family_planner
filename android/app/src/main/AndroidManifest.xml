@@ -39,6 +39,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
+            <!-- App Domain Deep Link (/dl/* 경로만 처리) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="familyplanner.hmncorp.org"
+                    android:pathPrefix="/dl/" />
+            </intent-filter>
+
             <!-- OAuth Callback Deep Link (App Links) -->
             <!--
                 프로덕션 환경에서는 yourdomain.com을 실제 도메인으로 변경하세요.

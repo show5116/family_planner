@@ -85,6 +85,7 @@ dependencies:
   # Deep Linking & External URLs
   url_launcher: ^6.3.1
   app_links: ^6.3.2
+  share_plus: ^10.1.4
 
   # Secure Storage
   flutter_secure_storage: ^9.2.2

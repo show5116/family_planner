@@ -22,6 +22,8 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 import 'package:family_planner/features/settings/common/providers/bottom_navigation_settings_provider.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
+import 'package:family_planner/core/services/deep_link_service.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/navigation_label_helper.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -50,8 +52,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showCoachMark();
       FirebaseMessagingService.handlePendingNavigation();
+      DeepLinkService.handlePendingDeepLink();
+      _handlePendingInvite();
       _checkScheduledDeletion();
     });
+  }
+
+  void _handlePendingInvite() {
+    final code = ref.read(pendingInviteCodeProvider);
+    if (code == null || !mounted) return;
+    context.push('${AppRoutes.invite}?code=$code');
   }
 
   void _checkScheduledDeletion() {

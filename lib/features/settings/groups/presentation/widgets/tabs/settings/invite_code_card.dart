@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/services/share_service.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 
@@ -9,14 +10,11 @@ class InviteCodeCard extends StatelessWidget {
   final Group group;
   final bool canManage;
   final VoidCallback onRegenerateCode;
-  final VoidCallback? onInviteByEmail;
-
   const InviteCodeCard({
     super.key,
     required this.group,
     required this.canManage,
     required this.onRegenerateCode,
-    this.onInviteByEmail,
   });
 
   bool get _isExpired => DateTime.now().isAfter(group.inviteCodeExpiresAt);
@@ -136,6 +134,13 @@ class InviteCodeCard extends StatelessWidget {
                   icon: const Icon(Icons.copy),
                   onPressed: () => _copyInviteCode(context, l10n),
                 ),
+                IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  onPressed: () => ShareService.shareInviteLink(
+                    inviteCode: group.inviteCode,
+                    groupName: group.name,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: AppSizes.spaceS),
@@ -165,12 +170,6 @@ class InviteCodeCard extends StatelessWidget {
                     icon: const Icon(Icons.refresh),
                     label: Text(l10n.group_regenerateCode),
                   ),
-                  if (onInviteByEmail != null)
-                    TextButton.icon(
-                      onPressed: onInviteByEmail,
-                      icon: const Icon(Icons.email_outlined),
-                      label: Text(l10n.group_inviteByEmail),
-                    ),
                 ],
               ),
             ],
