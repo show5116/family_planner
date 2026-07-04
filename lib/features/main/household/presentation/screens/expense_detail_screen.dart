@@ -78,11 +78,14 @@ class _ExpenseDetailScreenState extends ConsumerState<ExpenseDetailScreen>
     }
   }
 
-  void _onEdit() {
-    context.push(
+  Future<void> _onEdit() async {
+    final result = await context.push<ExpenseModel>(
       AppRoutes.householdEdit,
       extra: {'expense': _expense, 'groupId': widget.groupId},
     );
+    if (result != null && mounted) {
+      setState(() => _expense = result);
+    }
   }
 
   @override
