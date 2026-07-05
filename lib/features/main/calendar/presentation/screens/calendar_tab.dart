@@ -37,17 +37,29 @@ class CalendarTab extends ConsumerStatefulWidget {
 class _CalendarTabState extends ConsumerState<CalendarTab> {
   CalendarViewMode _viewMode = CalendarViewMode.month;
 
+  /// 월간 뷰 안에서 달력 그리드 자체의 표시 포맷 (세로 스와이프로 월⇄주 축소/확장).
+  /// 상단 뷰 모드 배지(_viewMode)와 별개로, "월" 뷰 모드 안에서 그리드 높이만 조절하는 용도.
+  CalendarFormat _monthGridFormat = CalendarFormat.month;
+
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   final _fabKey = GlobalKey();
   final _calendarKey = GlobalKey();
+  final _monthScrollController = ScrollController();
+  final _taskListAnchorKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _selectedDay = DateTime.now();
     _scheduleCoachMark();
+  }
+
+  @override
+  void dispose() {
+    _monthScrollController.dispose();
+    super.dispose();
   }
 
   String get _viewModeLabel {
@@ -200,6 +212,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
       case CalendarViewMode.month:
         return CustomScrollView(
+          controller: _monthScrollController,
           slivers: [
             SliverToBoxAdapter(child: _CalendarGroupFilterBar()),
 
@@ -212,7 +225,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                 tasksAsync: tasksAsync,
                 focusedDay: _focusedDay,
                 selectedDay: _selectedDay,
-                calendarFormat: CalendarFormat.month,
+                calendarFormat: _monthGridFormat,
                 onDaySelected: _onDaySelected,
                 onPageChanged: _onPageChanged,
                 onFormatChanged: _onCalendarFormatChanged,
@@ -223,6 +236,10 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
             const SliverToBoxAdapter(child: Divider(height: 1)),
 
+            SliverToBoxAdapter(
+              key: _taskListAnchorKey,
+              child: const SizedBox.shrink(),
+            ),
             SliverTaskListSection(selectedDate: selectedDate),
           ],
         );
@@ -264,6 +281,21 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       _focusedDay = selectedDay;
     });
     ref.read(selectedDateProvider.notifier).state = selectedDay;
+
+    // 월간 뷰에서는 그리드에 가려 상세 목록이 화면 밖에 있을 수 있으므로
+    // 날짜 선택 시 상세 섹션이 보이는 위치까지 자동 스크롤한다.
+    if (_viewMode == CalendarViewMode.month) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final anchorContext = _taskListAnchorKey.currentContext;
+        if (anchorContext == null) return;
+        Scrollable.ensureVisible(
+          anchorContext,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          alignment: 0.0,
+        );
+      });
+    }
   }
 
   void _onPageChanged(DateTime focusedDay) {
@@ -276,12 +308,19 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
   }
 
   void _onCalendarFormatChanged(CalendarFormat format) {
-    // onViewModeTap 사용 시 table_calendar 내부 토글은 무시
+    // 월간 뷰 안에서는 세로 스와이프로 그리드를 월⇄주로 접고 펼 수 있게 반영한다.
+    // (상단 뷰 모드 배지는 그대로 "월"을 유지 — _viewMode는 변경하지 않음)
+    if (_viewMode != CalendarViewMode.month) return;
+    if (_monthGridFormat == format) return;
+    setState(() => _monthGridFormat = format);
   }
 
   void _onViewModeChanged(CalendarViewMode mode) {
     if (_viewMode == mode) return;
-    setState(() => _viewMode = mode);
+    setState(() {
+      _viewMode = mode;
+      _monthGridFormat = CalendarFormat.month;
+    });
     ref.read(calendarViewModeProvider.notifier).state = mode;
   }
 
