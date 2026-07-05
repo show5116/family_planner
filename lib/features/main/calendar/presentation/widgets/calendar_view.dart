@@ -210,7 +210,9 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
       rowHeight: 82.0,
 
       // 제스처 및 애니메이션
-      availableGestures: AvailableGestures.all,
+      // 세로 스와이프(월⇄주 포맷 전환)는 끄고 가로 스와이프(월 이동)만 남겨,
+      // 그리드 위에서의 세로 드래그가 부모 CustomScrollView의 페이지 스크롤로 전달되게 한다.
+      availableGestures: AvailableGestures.horizontalSwipe,
       pageAnimationEnabled: true,
     );
   }
