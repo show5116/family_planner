@@ -370,12 +370,18 @@ class _RecurringListItem extends StatelessWidget {
             ),
         ],
       ),
-      subtitle: Text(
-        // description이 있을 때만 카테고리명을 subtitle로
-        item.description?.isNotEmpty == true ? subtitle : '',
-        style: textTheme.bodySmall
-            ?.copyWith(color: colorScheme.onSurfaceVariant),
-      ),
+      subtitle: item.totalMonths != null && item.endDate != null
+          ? Text(
+              '${item.endDate!.year}.${item.endDate!.month.toString().padLeft(2, '0')}까지',
+              style: textTheme.bodySmall
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
+            )
+          : Text(
+              // description이 있을 때만 카테고리명을 subtitle로
+              item.description?.isNotEmpty == true ? subtitle : '',
+              style: textTheme.bodySmall
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
+            ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,

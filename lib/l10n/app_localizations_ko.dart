@@ -2778,6 +2778,50 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_backfill_toggle => '이전 지출도 등록하기';
+
+  @override
+  String get household_recurring_backfill_hint =>
+      '시작 월을 선택하면 오늘까지의 지출 내역이 함께 생성돼요';
+
+  @override
+  String get household_recurring_start_month => '시작 월';
+
+  @override
+  String get household_recurring_end_option => '반복 종료';
+
+  @override
+  String get household_recurring_end_indefinite => '무기한';
+
+  @override
+  String get household_recurring_end_fixed_months => '개월 수 지정';
+
+  @override
+  String get household_recurring_total_months_label => '총 개월 수';
+
+  @override
+  String get household_recurring_total_months_hint => '예: 24';
+
+  @override
+  String get household_recurring_total_months_required => '개월 수를 입력해주세요';
+
+  @override
+  String household_recurring_end_date_info(
+    String endMonth,
+    int current,
+    int total,
+  ) {
+    return '$endMonth까지 ($current/$total개월차)';
+  }
+
+  @override
+  String get household_recurring_indefinite => '무기한 반복';
+
+  @override
+  String get household_recurring_edit_backfill_notice =>
+      '시작 월/개월 수를 변경해도 과거 지출은 다시 생성되지 않아요. 소급 생성은 등록 시에만 적용됩니다.';
+
+  @override
   String get household_estimated_amount => '예상 금액';
 
   @override

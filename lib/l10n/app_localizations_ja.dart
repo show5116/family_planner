@@ -2774,6 +2774,50 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_backfill_toggle => '過去の支出も登録する';
+
+  @override
+  String get household_recurring_backfill_hint =>
+      '開始月を選択すると、今日までの支出履歴が一緒に作成されます';
+
+  @override
+  String get household_recurring_start_month => '開始月';
+
+  @override
+  String get household_recurring_end_option => '繰り返しの終了';
+
+  @override
+  String get household_recurring_end_indefinite => '無期限';
+
+  @override
+  String get household_recurring_end_fixed_months => '月数を指定';
+
+  @override
+  String get household_recurring_total_months_label => '合計月数';
+
+  @override
+  String get household_recurring_total_months_hint => '例: 24';
+
+  @override
+  String get household_recurring_total_months_required => '月数を入力してください';
+
+  @override
+  String household_recurring_end_date_info(
+    String endMonth,
+    int current,
+    int total,
+  ) {
+    return '$endMonthまで（$totalヶ月中$currentヶ月目）';
+  }
+
+  @override
+  String get household_recurring_indefinite => '無期限に繰り返し';
+
+  @override
+  String get household_recurring_edit_backfill_notice =>
+      '開始月や合計月数を変更しても、過去の支出は再生成されません。遡及生成は登録時のみ適用されます。';
+
+  @override
   String get household_estimated_amount => '予想金額';
 
   @override

@@ -5478,6 +5478,82 @@ abstract class AppLocalizations {
   /// **'매월 {day}일'**
   String household_recurring_day_of_month_value(int day);
 
+  /// 소급 등록 토글 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 지출도 등록하기'**
+  String get household_recurring_backfill_toggle;
+
+  /// 소급 등록 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'시작 월을 선택하면 오늘까지의 지출 내역이 함께 생성돼요'**
+  String get household_recurring_backfill_hint;
+
+  /// 고정지출 시작 월 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'시작 월'**
+  String get household_recurring_start_month;
+
+  /// 반복 종료 옵션 선택 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 종료'**
+  String get household_recurring_end_option;
+
+  /// 무기한 반복 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'무기한'**
+  String get household_recurring_end_indefinite;
+
+  /// 개월 수 지정 옵션 (할부 등)
+  ///
+  /// In ko, this message translates to:
+  /// **'개월 수 지정'**
+  String get household_recurring_end_fixed_months;
+
+  /// 총 반복 개월 수 입력 레이블
+  ///
+  /// In ko, this message translates to:
+  /// **'총 개월 수'**
+  String get household_recurring_total_months_label;
+
+  /// 총 반복 개월 수 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 24'**
+  String get household_recurring_total_months_hint;
+
+  /// 총 반복 개월 수 필수 입력 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'개월 수를 입력해주세요'**
+  String get household_recurring_total_months_required;
+
+  /// 종료 예정 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'{endMonth}까지 ({current}/{total}개월차)'**
+  String household_recurring_end_date_info(
+    String endMonth,
+    int current,
+    int total,
+  );
+
+  /// 무기한 반복 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'무기한 반복'**
+  String get household_recurring_indefinite;
+
+  /// 수정 화면 소급 재실행 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'시작 월/개월 수를 변경해도 과거 지출은 다시 생성되지 않아요. 소급 생성은 등록 시에만 적용됩니다.'**
+  String get household_recurring_edit_backfill_notice;
+
   /// 가변 고정 지출 예상 금액 레이블
   ///
   /// In ko, this message translates to:
