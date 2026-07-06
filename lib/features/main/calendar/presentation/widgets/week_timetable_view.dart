@@ -130,9 +130,17 @@ class _WeekTimetableViewState extends ConsumerState<WeekTimetableView> {
               viewModeLabel: widget.viewModeLabel,
             ),
 
-          // 헤더 행: [빈칸] | [일] | [월] | [화] | [수] | [목] | [금] | [토]
+          // 요일 헤더: 시간 그리드와 동일한 timeW/dayW 좌표계를 쓰는 절대좌표 그리드
           if (widget.showDayHeader)
-            _buildDayHeaderRow(weekDays, timeW, dayW, divColor, theme),
+            _DayHeaderGrid(
+              weekDays: weekDays,
+              selectedDate: widget.selectedDate,
+              timeW: timeW,
+              dayW: dayW,
+              divColor: divColor,
+              theme: theme,
+              onDaySelected: widget.onDaySelected,
+            ),
 
           if (allDayTasks.isNotEmpty) ...[
             _AllDayRow(
@@ -176,111 +184,9 @@ class _WeekTimetableViewState extends ConsumerState<WeekTimetableView> {
     });
   }
 
-  // ── 헤더 행 빌더 ────────────────────────────────────────────────────────────
-  // 8칸 Row: [빈칸(border.right)] + [요일 셀(Expanded) × 7]
-  // border.right으로 시간열/일요일 경계를 실제 셀 경계로 표현
-  Widget _buildDayHeaderRow(
-    List<DateTime> weekDays,
-    double timeW,
-    double dayW,
-    Color divColor,
-    ThemeData theme,
-  ) {
-    const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-    final today = DateTime.now();
-    final todayKey = DateTime(today.year, today.month, today.day);
-    final selKey = DateTime(
-        widget.selectedDate.year, widget.selectedDate.month, widget.selectedDate.day);
-
-    return SizedBox(
-      height: _kDayHeaderHeight,
-      child: Row(
-        children: [
-          // 열 0: 빈 칸 — border.right이 시간열/일요일 경계선
-          Container(
-            width: timeW,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              border: Border(
-                right: BorderSide(color: divColor, width: 0.5),
-                bottom: BorderSide(color: divColor, width: 0.5),
-              ),
-            ),
-          ),
-          // 열 1~7: 요일/날짜 셀
-          ...weekDays.asMap().entries.map((e) {
-            final i = e.key;
-            final day = e.value;
-            final dayKey = DateTime(day.year, day.month, day.day);
-            final isToday = dayKey == todayKey;
-            final isSelected = dayKey == selKey;
-            final textColor = i == 0
-                ? AppColors.error
-                : i == 6
-                    ? AppColors.primary
-                    : theme.colorScheme.onSurface;
-
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => widget.onDaySelected(day),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    border: Border(
-                      right: i < 6
-                          ? BorderSide(color: divColor, width: 0.5)
-                          : BorderSide.none,
-                      bottom: BorderSide(color: divColor, width: 0.5),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        dayNames[i],
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: textColor.withValues(alpha: 0.7),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.primary
-                              : isToday
-                                  ? AppColors.primary.withValues(alpha: 0.15)
-                                  : Colors.transparent,
-                          shape: BoxShape.circle,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '${day.day}',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isSelected
-                                ? Colors.white
-                                : isToday
-                                    ? AppColors.primary
-                                    : textColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
   // ── 시간 그리드 빌더 ─────────────────────────────────────────────────────────
-  // Column(Row × 24): 각 Row = [시간칸(border.right)] + [날짜칸(Expanded) × 7]
-  // Positioned 수직선 제거 — 셀 border.right으로 열 경계 표현
+  // 가로선 24개 + 세로선 7개를 모두 Positioned 절대좌표로 그려
+  // _DayHeaderGrid와 동일한 timeW/dayW 좌표계를 공유 (헤더-그리드 경계 어긋남 방지)
   Widget _buildTimeGrid(
     BuildContext context, {
     required List<DateTime> weekDays,
@@ -299,48 +205,43 @@ class _WeekTimetableViewState extends ConsumerState<WeekTimetableView> {
       height: 24 * _kHourHeight,
       child: Stack(
         children: [
-          // 그리드 배경: Column(Row × 24)
-          Column(
-            children: List.generate(24, (hour) => SizedBox(
+          // 그리드 배경 — 헤더와 동일한 timeW/dayW 좌표계의 절대좌표 선으로 통일
+          // 가로선(매 시간) + 시간 레이블
+          ...List.generate(24, (hour) => Positioned(
+            left: 0,
+            right: 0,
+            top: hour * _kHourHeight,
+            child: Container(
               height: _kHourHeight,
-              child: Row(
-                children: [
-                  // 시간 레이블 칸 (border.right = 시간열/일요일 실제 경계)
-                  Container(
-                    width: timeW,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: divColor, width: 0.5),
-                        right: BorderSide(color: divColor, width: 0.5),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(top: 2, right: 4),
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      '${hour.toString().padLeft(2, '0')}:00',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
-                      ),
+              alignment: Alignment.topLeft,
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: divColor, width: 0.5)),
+              ),
+              child: SizedBox(
+                width: timeW,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2, right: 4),
+                  child: Text(
+                    '${hour.toString().padLeft(2, '0')}:00',
+                    textAlign: TextAlign.right,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: 10,
                     ),
                   ),
-                  // 날짜 칸 7개 (border.right = 각 요일 경계)
-                  ...List.generate(7, (i) => Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: divColor, width: 0.5),
-                          right: i < 6
-                              ? BorderSide(color: divColor, width: 0.5)
-                              : BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  )),
-                ],
+                ),
               ),
-            )),
-          ),
+            ),
+          )),
+          // 세로선(시간열/일요일 경계 + 요일 간 경계 6개) — 헤더와 동일한 dayW 계산 공유
+          ...List.generate(7, (i) => Positioned(
+            left: timeW + dayW * i,
+            top: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Container(width: 0.5, color: divColor),
+            ),
+          )),
 
           // 현재 시간 표시선
           ..._buildCurrentTimeLine(now, todayKey, weekDays, timeW, dayW),
@@ -609,6 +510,124 @@ class _WeekTimetableViewState extends ConsumerState<WeekTimetableView> {
     return {
       for (final task in sorted) task.id: (col: taskCol[task.id]!, total: total),
     };
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// 요일 헤더 그리드 (시간 그리드와 동일한 timeW/dayW 절대좌표 좌표계 공유)
+// ──────────────────────────────────────────────────────────────────────────────
+
+class _DayHeaderGrid extends StatelessWidget {
+  final List<DateTime> weekDays;
+  final DateTime selectedDate;
+  final double timeW;
+  final double dayW;
+  final Color divColor;
+  final ThemeData theme;
+  final ValueChanged<DateTime> onDaySelected;
+
+  const _DayHeaderGrid({
+    required this.weekDays,
+    required this.selectedDate,
+    required this.timeW,
+    required this.dayW,
+    required this.divColor,
+    required this.theme,
+    required this.onDaySelected,
+  });
+
+  static const _dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+  @override
+  Widget build(BuildContext context) {
+    final today = DateTime.now();
+    final todayKey = DateTime(today.year, today.month, today.day);
+    final selKey =
+        DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+
+    return SizedBox(
+      height: _kDayHeaderHeight,
+      child: Stack(
+        children: [
+          // 배경 + 하단 경계선
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                border: Border(bottom: BorderSide(color: divColor, width: 0.5)),
+              ),
+            ),
+          ),
+          // 세로 구분선(시간열/일요일 경계 + 요일 간 경계) — 그리드와 동일 좌표
+          ...List.generate(7, (i) => Positioned(
+            left: timeW + dayW * i,
+            top: 0,
+            bottom: 0,
+            child: Container(width: 0.5, color: divColor),
+          )),
+          // 요일/날짜 셀
+          ...weekDays.asMap().entries.map((e) {
+            final i = e.key;
+            final day = e.value;
+            final dayKey = DateTime(day.year, day.month, day.day);
+            final isToday = dayKey == todayKey;
+            final isSelected = dayKey == selKey;
+            final textColor = i == 0
+                ? AppColors.error
+                : i == 6
+                    ? AppColors.primary
+                    : theme.colorScheme.onSurface;
+
+            return Positioned(
+              left: timeW + dayW * i,
+              width: dayW,
+              top: 0,
+              bottom: 0,
+              child: GestureDetector(
+                onTap: () => onDaySelected(day),
+                behavior: HitTestBehavior.opaque,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _dayNames[i],
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: textColor.withValues(alpha: 0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primary
+                            : isToday
+                                ? AppColors.primary.withValues(alpha: 0.15)
+                                : Colors.transparent,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${day.day}',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isSelected
+                              ? Colors.white
+                              : isToday
+                                  ? AppColors.primary
+                                  : textColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
 

@@ -24,6 +24,25 @@ class RecurringExpenseDetailScreen extends ConsumerWidget {
 
   String _fmt(double amount) => NumberFormat('#,###').format(amount.toInt());
 
+  String _endDateInfo(AppLocalizations l10n, RecurringExpenseModel item) {
+    if (item.totalMonths == null || item.startDate == null) {
+      return l10n.household_recurring_indefinite;
+    }
+    final start = item.startDate!;
+    final now = DateTime.now();
+    final elapsedMonths =
+        (now.year - start.year) * 12 + (now.month - start.month) + 1;
+    final current = elapsedMonths.clamp(1, item.totalMonths!);
+    final endMonth = item.endDate != null
+        ? '${item.endDate!.year}.${item.endDate!.month.toString().padLeft(2, '0')}'
+        : '';
+    return l10n.household_recurring_end_date_info(
+      endMonth,
+      current,
+      item.totalMonths!,
+    );
+  }
+
   Future<void> _onDelete(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
@@ -253,6 +272,11 @@ class RecurringExpenseDetailScreen extends ConsumerWidget {
                       label: isIncome ? '받는 사람' : '결제하는 사람',
                     ),
                   ],
+                  const Divider(height: 1, indent: AppSizes.spaceM),
+                  _KvRow(
+                    label: l10n.household_recurring_end_option,
+                    value: _endDateInfo(l10n, item),
+                  ),
                 ],
               ),
             ),

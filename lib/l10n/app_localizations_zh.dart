@@ -2759,6 +2759,49 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_backfill_toggle => '同时登记以前的支出';
+
+  @override
+  String get household_recurring_backfill_hint => '选择开始月份后，将同时生成截至今天的支出记录';
+
+  @override
+  String get household_recurring_start_month => '开始月份';
+
+  @override
+  String get household_recurring_end_option => '重复结束';
+
+  @override
+  String get household_recurring_end_indefinite => '无限期';
+
+  @override
+  String get household_recurring_end_fixed_months => '指定月数';
+
+  @override
+  String get household_recurring_total_months_label => '总月数';
+
+  @override
+  String get household_recurring_total_months_hint => '例如：24';
+
+  @override
+  String get household_recurring_total_months_required => '请输入月数';
+
+  @override
+  String household_recurring_end_date_info(
+    String endMonth,
+    int current,
+    int total,
+  ) {
+    return '至$endMonth（共$total个月中的第$current个月）';
+  }
+
+  @override
+  String get household_recurring_indefinite => '无限期重复';
+
+  @override
+  String get household_recurring_edit_backfill_notice =>
+      '更改开始月份或总月数不会重新生成过去的支出记录。追溯生成仅在首次登记时进行。';
+
+  @override
   String get household_estimated_amount => '预估金额';
 
   @override

@@ -2835,6 +2835,52 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get household_recurring_backfill_toggle =>
+      'Also register past expenses';
+
+  @override
+  String get household_recurring_backfill_hint =>
+      'Choosing a start month will also create expense records up to today';
+
+  @override
+  String get household_recurring_start_month => 'Start month';
+
+  @override
+  String get household_recurring_end_option => 'End recurrence';
+
+  @override
+  String get household_recurring_end_indefinite => 'Indefinite';
+
+  @override
+  String get household_recurring_end_fixed_months => 'Set number of months';
+
+  @override
+  String get household_recurring_total_months_label => 'Total months';
+
+  @override
+  String get household_recurring_total_months_hint => 'e.g. 24';
+
+  @override
+  String get household_recurring_total_months_required =>
+      'Please enter the number of months';
+
+  @override
+  String household_recurring_end_date_info(
+    String endMonth,
+    int current,
+    int total,
+  ) {
+    return 'Until $endMonth ($current/$total months)';
+  }
+
+  @override
+  String get household_recurring_indefinite => 'Repeats indefinitely';
+
+  @override
+  String get household_recurring_edit_backfill_notice =>
+      'Changing the start month or total months won\'t recreate past expenses. Backfilling only happens when the item is first created.';
+
+  @override
   String get household_estimated_amount => 'Estimated Amount';
 
   @override

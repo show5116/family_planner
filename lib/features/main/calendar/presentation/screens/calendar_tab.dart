@@ -42,12 +42,20 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
   final _fabKey = GlobalKey();
   final _calendarKey = GlobalKey();
+  final _monthScrollController = ScrollController();
+  final _taskListAnchorKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _selectedDay = DateTime.now();
     _scheduleCoachMark();
+  }
+
+  @override
+  void dispose() {
+    _monthScrollController.dispose();
+    super.dispose();
   }
 
   String get _viewModeLabel {
@@ -200,6 +208,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
       case CalendarViewMode.month:
         return CustomScrollView(
+          controller: _monthScrollController,
           slivers: [
             SliverToBoxAdapter(child: _CalendarGroupFilterBar()),
 
@@ -223,6 +232,10 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
 
             const SliverToBoxAdapter(child: Divider(height: 1)),
 
+            SliverToBoxAdapter(
+              key: _taskListAnchorKey,
+              child: const SizedBox.shrink(),
+            ),
             SliverTaskListSection(selectedDate: selectedDate),
           ],
         );
@@ -264,6 +277,21 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
       _focusedDay = selectedDay;
     });
     ref.read(selectedDateProvider.notifier).state = selectedDay;
+
+    // 월간 뷰에서는 그리드에 가려 상세 목록이 화면 밖에 있을 수 있으므로
+    // 날짜 선택 시 상세 섹션이 보이는 위치까지 자동 스크롤한다.
+    if (_viewMode == CalendarViewMode.month) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final anchorContext = _taskListAnchorKey.currentContext;
+        if (anchorContext == null) return;
+        Scrollable.ensureVisible(
+          anchorContext,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          alignment: 0.0,
+        );
+      });
+    }
   }
 
   void _onPageChanged(DateTime focusedDay) {

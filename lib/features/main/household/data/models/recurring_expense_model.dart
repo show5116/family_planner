@@ -14,6 +14,9 @@ class RecurringExpenseModel {
   final String? merchantId;
   final String? description;
   final int dayOfMonth; // 매달 발생 일 (1~31)
+  final DateTime? startDate; // 시작 월 (소급 생성 및 종료 시점 계산 기준)
+  final int? totalMonths; // 총 반복 개월 수 (null이면 무기한)
+  final DateTime? endDate; // 종료 예정 월 (계산값, 무기한이면 null)
   final bool isActive;
   final String? memberId; // 결제 주체 ID
   final DateTime createdAt;
@@ -32,6 +35,9 @@ class RecurringExpenseModel {
     this.merchantId,
     this.description,
     required this.dayOfMonth,
+    this.startDate,
+    this.totalMonths,
+    this.endDate,
     required this.isActive,
     this.memberId,
     required this.createdAt,
@@ -58,6 +64,13 @@ class RecurringExpenseModel {
       merchantId: json['merchantId'] as String?,
       description: json['description'] as String?,
       dayOfMonth: json['dayOfMonth'] as int,
+      startDate: json['startDate'] != null
+          ? DateTime.parse(json['startDate'] as String).toLocal()
+          : null,
+      totalMonths: json['totalMonths'] as int?,
+      endDate: json['endDate'] != null
+          ? DateTime.parse(json['endDate'] as String).toLocal()
+          : null,
       isActive: (json['isActive'] as bool?) ?? true,
       memberId: json['memberId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
@@ -78,6 +91,9 @@ class RecurringExpenseModel {
     Object? merchantId = _sentinel,
     Object? description = _sentinel,
     int? dayOfMonth,
+    Object? startDate = _sentinel,
+    Object? totalMonths = _sentinel,
+    Object? endDate = _sentinel,
     bool? isActive,
     Object? memberId = _sentinel,
     DateTime? createdAt,
@@ -104,6 +120,9 @@ class RecurringExpenseModel {
           ? this.description
           : description as String?,
       dayOfMonth: dayOfMonth ?? this.dayOfMonth,
+      startDate: startDate == _sentinel ? this.startDate : startDate as DateTime?,
+      totalMonths: totalMonths == _sentinel ? this.totalMonths : totalMonths as int?,
+      endDate: endDate == _sentinel ? this.endDate : endDate as DateTime?,
       isActive: isActive ?? this.isActive,
       memberId: memberId == _sentinel ? this.memberId : memberId as String?,
       createdAt: createdAt ?? this.createdAt,
@@ -232,6 +251,8 @@ class CreateRecurringExpenseDto {
   final String? merchantId;
   final String? description;
   final int dayOfMonth;
+  final String? startDate; // YYYY-MM-DD
+  final int? totalMonths;
   final String? memberId;
 
   const CreateRecurringExpenseDto({
@@ -245,6 +266,8 @@ class CreateRecurringExpenseDto {
     this.merchantId,
     this.description,
     required this.dayOfMonth,
+    this.startDate,
+    this.totalMonths,
     this.memberId,
   });
 
@@ -260,6 +283,8 @@ class CreateRecurringExpenseDto {
       if (merchantId != null) 'merchantId': merchantId,
       if (description != null) 'description': description,
       'dayOfMonth': dayOfMonth,
+      if (startDate != null) 'startDate': startDate,
+      if (totalMonths != null) 'totalMonths': totalMonths,
       if (memberId != null) 'memberId': memberId,
     };
   }
@@ -275,6 +300,8 @@ class UpdateRecurringExpenseDto {
   final Object? merchantId; // String | null
   final Object? description; // String | null
   final int? dayOfMonth;
+  final String? startDate; // YYYY-MM-DD
+  final Object? totalMonths; // int | null
   final bool? isActive;
   final Object? memberId; // String | null
 
@@ -287,6 +314,8 @@ class UpdateRecurringExpenseDto {
     this.merchantId = _sentinel,
     this.description = _sentinel,
     this.dayOfMonth,
+    this.startDate,
+    this.totalMonths = _sentinel,
     this.isActive,
     this.memberId = _sentinel,
   });
@@ -307,6 +336,8 @@ class UpdateRecurringExpenseDto {
       if (merchantId != _sentinel) 'merchantId': merchantId as String?,
       if (description != _sentinel) 'description': description as String?,
       if (dayOfMonth != null) 'dayOfMonth': dayOfMonth,
+      if (startDate != null) 'startDate': startDate,
+      if (totalMonths != _sentinel) 'totalMonths': totalMonths as int?,
       if (isActive != null) 'isActive': isActive,
       if (memberId != _sentinel) 'memberId': memberId as String?,
     };

@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/announcements/data/models/announcement_model.dart';
 import 'package:family_planner/features/announcements/utils/announcement_category_helper.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/editor/utils/html_utils.dart';
 
 /// 공지사항 카드 위젯
 class AnnouncementCard extends StatelessWidget {
@@ -18,36 +19,6 @@ class AnnouncementCard extends StatelessWidget {
     required this.announcement,
     required this.isAdmin,
   });
-
-  /// 마크다운 구조 제거 (미리보기용)
-  String _stripMarkdown(String markdown) {
-    return markdown
-        // 헤더 제거 (# ## ### 등)
-        .replaceAll(RegExp(r'^#+\s+', multiLine: true), '')
-        // 볼드/이탤릭 제거 (**text**, *text*, __text__, _text_)
-        .replaceAll(RegExp(r'\*\*([^*]+)\*\*'), r'$1')
-        .replaceAll(RegExp(r'__([^_]+)__'), r'$1')
-        .replaceAll(RegExp(r'\*([^*]+)\*'), r'$1')
-        .replaceAll(RegExp(r'_([^_]+)_'), r'$1')
-        // 링크 제거 [text](url)
-        .replaceAll(RegExp(r'\[([^\]]+)\]\([^)]+\)'), r'$1')
-        // 코드 블록 제거 ```code```
-        .replaceAll(RegExp(r'```[^`]*```'), '')
-        // 인라인 코드 제거 `code`
-        .replaceAll(RegExp(r'`([^`]+)`'), r'$1')
-        // 리스트 마커 제거 (-, *, +)
-        .replaceAll(RegExp(r'^[\-\*\+]\s+', multiLine: true), '')
-        // 숫자 리스트 마커 제거 (1. 2. 등)
-        .replaceAll(RegExp(r'^\d+\.\s+', multiLine: true), '')
-        // 인용 제거 (>)
-        .replaceAll(RegExp(r'^>\s+', multiLine: true), '')
-        // 구분선 제거 (---, ***)
-        .replaceAll(RegExp(r'^[\-\*]{3,}$', multiLine: true), '')
-        // 연속된 공백/줄바꿈을 하나로
-        .replaceAll(RegExp(r'\n+'), ' ')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +150,7 @@ class AnnouncementCard extends StatelessWidget {
 
   Widget _buildContentPreview(BuildContext context) {
     return Text(
-      _stripMarkdown(announcement.content),
+      stripHtmlTags(announcement.content),
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AppColors.textSecondary,
           ),

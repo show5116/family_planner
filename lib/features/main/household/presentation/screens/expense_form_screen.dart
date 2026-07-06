@@ -53,6 +53,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
   String? _selectedMerchantId;
   IncomeCategory? _selectedIncomeCategory;
   String? _selectedMemberId; // 결제 주체 (그룹 모드 전용)
+  ExpenseModel? _updatedExpense;
 
   bool get _isEditMode => widget.expense != null;
 
@@ -322,6 +323,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
           .read(householdManagementProvider.notifier)
           .updateExpense(widget.expense!.id, dto);
       success = result != null;
+      _updatedExpense = result;
     } else {
       final groupId = widget.groupId ??
           ref.read(householdSelectedGroupIdProvider);
@@ -357,7 +359,11 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
       ),
     );
 
-    if (success) showInterstitialThenNavigate(() { if (mounted) Navigator.of(context).pop(); });
+    if (success) {
+      showInterstitialThenNavigate(() {
+        if (mounted) Navigator.of(context).pop(_updatedExpense);
+      });
+    }
   }
 }
 

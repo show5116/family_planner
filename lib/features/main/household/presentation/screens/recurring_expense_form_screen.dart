@@ -40,6 +40,7 @@ class _RecurringExpenseFormScreenState
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _totalMonthsController = TextEditingController();
 
   TransactionType _transactionType = TransactionType.expense;
   ExpenseCategory? _selectedCategory;
@@ -49,6 +50,10 @@ class _RecurringExpenseFormScreenState
   int _dayOfMonth = 1;
   bool _isVariable = false;
   String? _selectedMemberId;
+
+  bool _backfillEnabled = false;
+  DateTime? _startMonth;
+  bool _limitedMonths = false;
 
   bool get _isEditMode => widget.recurringExpense != null;
 
@@ -67,6 +72,12 @@ class _RecurringExpenseFormScreenState
       _dayOfMonth = e.dayOfMonth;
       _isVariable = e.isVariable;
       _selectedMemberId = e.memberId;
+      _startMonth = e.startDate;
+      _backfillEnabled = e.startDate != null;
+      _limitedMonths = e.totalMonths != null;
+      if (e.totalMonths != null) {
+        _totalMonthsController.text = e.totalMonths.toString();
+      }
     }
   }
 
@@ -85,6 +96,7 @@ class _RecurringExpenseFormScreenState
   void dispose() {
     _amountController.dispose();
     _descriptionController.dispose();
+    _totalMonthsController.dispose();
     super.dispose();
   }
 
@@ -213,6 +225,39 @@ class _RecurringExpenseFormScreenState
                       onChanged: (v) => setState(() => _dayOfMonth = v),
                     ),
                     const SizedBox(height: AppSizes.spaceM),
+                    if (!_isEditMode) ...[
+                      _BackfillToggle(
+                        enabled: _backfillEnabled,
+                        startMonth: _startMonth,
+                        onEnabledChanged: (v) => setState(() {
+                          _backfillEnabled = v;
+                          if (!v && !_limitedMonths) _startMonth = null;
+                          if (v && _startMonth == null) {
+                            final now = DateTime.now();
+                            _startMonth = DateTime(now.year, now.month, 1);
+                          }
+                        }),
+                        onMonthChanged: (v) => setState(() => _startMonth = v),
+                      ),
+                      const SizedBox(height: AppSizes.spaceM),
+                    ],
+                    _RecurringEndOptionField(
+                      limited: _limitedMonths,
+                      controller: _totalMonthsController,
+                      onLimitedChanged: (v) => setState(() {
+                        _limitedMonths = v;
+                        if (v && _startMonth == null) {
+                          final now = DateTime.now();
+                          _startMonth = DateTime(now.year, now.month, 1);
+                        }
+                        if (!v && !_backfillEnabled) _startMonth = null;
+                      }),
+                    ),
+                    if (_isEditMode) ...[
+                      const SizedBox(height: AppSizes.spaceM),
+                      _EditBackfillNotice(),
+                    ],
+                    const SizedBox(height: AppSizes.spaceM),
                     _DescriptionField(
                       controller: _descriptionController,
                       label: l10n.household_description,
@@ -270,11 +315,19 @@ class _RecurringExpenseFormScreenState
     if (success) context.pop();
   }
 
+  String? _formatStartDate(DateTime? date) {
+    if (date == null) return null;
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-01';
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
     final l10n = AppLocalizations.of(context)!;
     final amount = double.parse(_amountController.text.replaceAll(',', ''));
+    final totalMonths = _limitedMonths
+        ? int.tryParse(_totalMonthsController.text.trim())
+        : null;
 
     bool success;
 
@@ -297,6 +350,8 @@ class _RecurringExpenseFormScreenState
             ? null
             : _descriptionController.text.trim(),
         dayOfMonth: _dayOfMonth,
+        startDate: _formatStartDate(_startMonth),
+        totalMonths: totalMonths,
         memberId: _selectedMemberId,
       );
       final result = await ref
@@ -326,6 +381,8 @@ class _RecurringExpenseFormScreenState
             ? null
             : _descriptionController.text.trim(),
         dayOfMonth: _dayOfMonth,
+        startDate: _formatStartDate(_startMonth),
+        totalMonths: totalMonths,
         memberId: groupId != null ? _selectedMemberId : null,
       );
       final result = await ref
@@ -1127,6 +1184,255 @@ class _DayOfMonthSheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ── 소급 등록(이전 지출도 등록) 토글 + 시작 월 선택 ─────────────────────────
+class _BackfillToggle extends StatelessWidget {
+  final bool enabled;
+  final DateTime? startMonth;
+  final ValueChanged<bool> onEnabledChanged;
+  final ValueChanged<DateTime> onMonthChanged;
+
+  const _BackfillToggle({
+    required this.enabled,
+    required this.startMonth,
+    required this.onEnabledChanged,
+    required this.onMonthChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: Column(
+        children: [
+          SwitchListTile(
+            value: enabled,
+            onChanged: onEnabledChanged,
+            title: Text(
+              l10n.household_recurring_backfill_toggle,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            subtitle: Text(
+              l10n.household_recurring_backfill_hint,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+            ),
+            secondary: Icon(
+              Icons.history_toggle_off,
+              color: enabled ? colorScheme.primary : colorScheme.outline,
+            ),
+          ),
+          if (enabled) ...[
+            const Divider(height: 1, indent: AppSizes.spaceM),
+            Padding(
+              padding: const EdgeInsets.all(AppSizes.spaceM),
+              child: _MonthPickerField(
+                label: l10n.household_recurring_start_month,
+                value: startMonth,
+                onChanged: onMonthChanged,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── 월 피커 입력 필드 ────────────────────────────────────────────────────────
+class _MonthPickerField extends StatelessWidget {
+  final String label;
+  final DateTime? value;
+  final ValueChanged<DateTime> onChanged;
+
+  const _MonthPickerField({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final text = value != null
+        ? '${value!.year}.${value!.month.toString().padLeft(2, '0')}'
+        : '';
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+      onTap: () async {
+        final now = DateTime.now();
+        final initial = value ?? DateTime(now.year, now.month, 1);
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: initial,
+          firstDate: DateTime(now.year - 10, 1, 1),
+          lastDate: DateTime(now.year + 10, 12, 31),
+          initialDatePickerMode: DatePickerMode.year,
+          helpText: label,
+        );
+        if (picked != null) {
+          onChanged(DateTime(picked.year, picked.month, 1));
+        }
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS + 2,
+          ),
+          suffixIcon: const Icon(Icons.calendar_month_outlined),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.event, size: 18, color: colorScheme.primary),
+            const SizedBox(width: AppSizes.spaceS),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── 반복 종료 옵션 (무기한 / 개월 수 지정) ──────────────────────────────────
+class _RecurringEndOptionField extends StatelessWidget {
+  final bool limited;
+  final TextEditingController controller;
+  final ValueChanged<bool> onLimitedChanged;
+
+  const _RecurringEndOptionField({
+    required this.limited,
+    required this.controller,
+    required this.onLimitedChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.household_recurring_end_option,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            RadioGroup<bool>(
+              groupValue: limited,
+              onChanged: (v) => onLimitedChanged(v ?? false),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<bool>(
+                      value: false,
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      title: Text(
+                        l10n.household_recurring_end_indefinite,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<bool>(
+                      value: true,
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      title: Text(
+                        l10n.household_recurring_end_fixed_months,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (limited) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: InputDecoration(
+                  labelText: l10n.household_recurring_total_months_label,
+                  hintText: l10n.household_recurring_total_months_hint,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: (v) {
+                  if (!limited) return null;
+                  if (v == null || v.trim().isEmpty) {
+                    return l10n.household_recurring_total_months_required;
+                  }
+                  final n = int.tryParse(v.trim());
+                  if (n == null || n <= 0) {
+                    return l10n.household_recurring_total_months_required;
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── 수정 화면 소급 재실행 안 됨 안내 ────────────────────────────────────────
+class _EditBackfillNotice extends StatelessWidget {
+  const _EditBackfillNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.info_outline, size: 14, color: colorScheme.outline),
+        const SizedBox(width: AppSizes.spaceXS),
+        Expanded(
+          child: Text(
+            l10n.household_recurring_edit_backfill_notice,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colorScheme.outline,
+                ),
+          ),
+        ),
+      ],
     );
   }
 }

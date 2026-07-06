@@ -302,10 +302,20 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
   /// 지출 생성/수정/삭제 후 관련 provider 일괄 갱신
   void _invalidateAll({ExpenseModel? expense, bool isNew = false}) {
     // 메인 지출 목록 (낙관적 업데이트)
-    if (expense != null && isNew) {
-      _ref.read(householdExpensesProvider.notifier).addExpense(expense);
-    } else if (expense != null) {
-      _ref.read(householdExpensesProvider.notifier).updateExpense(expense);
+    if (expense != null) {
+      final selectedMonth = _ref.read(householdSelectedMonthProvider);
+      final expenseMonth =
+          '${expense.date.year}-${expense.date.month.toString().padLeft(2, '0')}';
+
+      if (expenseMonth != selectedMonth) {
+        // 현재 조회 중인 월과 다른 월의 항목이면, 리스트에 끼워 넣는 대신
+        // 조회 월을 해당 항목의 월로 전환해 자연스럽게 이동시킴
+        _ref.read(householdSelectedMonthProvider.notifier).state = expenseMonth;
+      } else if (isNew) {
+        _ref.read(householdExpensesProvider.notifier).addExpense(expense);
+      } else {
+        _ref.read(householdExpensesProvider.notifier).updateExpense(expense);
+      }
     }
 
     // 월간/연간 통계 (양쪽 provider 모두)

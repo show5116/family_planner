@@ -205,15 +205,17 @@ class _ScheduleItem extends ConsumerWidget {
       groups: groups,
       personalColorHex: personalHex,
     );
+    final l10n = AppLocalizations.of(context)!;
     String timeText;
     if (task.scheduledAt == null) {
       timeText = '-';
     } else {
       final dt = task.scheduledAt!;
-      final hhmm =
-          '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-      final dateStr = AppLocalizations.of(context)!.common_date_format(dt.month, dt.day);
-      timeText = showDate ? '$dateStr $hhmm' : hhmm;
+      final timePart = task.allDay
+          ? l10n.schedule_allDay
+          : '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+      final dateStr = l10n.common_date_format(dt.month, dt.day);
+      timeText = showDate ? '$dateStr $timePart' : timePart;
     }
 
     return Padding(
