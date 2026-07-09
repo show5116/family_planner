@@ -54,6 +54,7 @@ import 'package:family_planner/features/main/fridge/presentation/screens/fridge_
 import 'package:family_planner/features/main/fridge/presentation/screens/expiry_preset_management_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_history_detail_screen.dart';
+import 'package:family_planner/features/subscription/presentation/screens/subscription_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -587,6 +588,13 @@ List<RouteBase> getMainRoutes() {
         final groupId = state.uri.queryParameters['groupId'];
         return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
       },
+    ),
+
+    // Subscription Routes (구독 관리)
+    GoRoute(
+      path: AppRoutes.subscription,
+      name: 'subscription',
+      builder: (context, state) => const SubscriptionScreen(),
     ),
   ];
 }

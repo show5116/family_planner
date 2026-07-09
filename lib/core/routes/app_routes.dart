@@ -78,6 +78,7 @@ class AppRoutes {
   static const String notificationHistory = '/settings/notifications/history';
   static const String theme = '/settings/theme';
   static const String language = '/settings/language';
+  static const String subscription = '/settings/subscription';
 
   // Admin Routes
   static const String permissionManagement = '/settings/permissions';

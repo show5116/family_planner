@@ -4445,4 +4445,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get widgetSettings_anniversarySummaryDesc => '다가오는 기념일과 D-day를 표시합니다';
+
+  @override
+  String get subscription_manage_title => '구독 관리';
+
+  @override
+  String get subscription_screen_title => '구독 관리';
+
+  @override
+  String get subscription_current_plan_label => '현재 플랜';
+
+  @override
+  String get subscription_active_status_label => '활성 여부';
+
+  @override
+  String get subscription_active => '활성';
+
+  @override
+  String get subscription_inactive => '비활성';
+
+  @override
+  String get subscription_expires_at_label => '만료일';
+
+  @override
+  String get subscription_products_section_title => '구독 상품';
+
+  @override
+  String get subscription_purchase_button => '구독하기';
+
+  @override
+  String get subscription_restore_button => '구독 복원';
+
+  @override
+  String get subscription_purchase_success => '구독이 완료되었습니다.';
+
+  @override
+  String get subscription_verify_failed_title => '구매 확인 실패';
+
+  @override
+  String get subscription_verify_failed_message =>
+      '이미 사용된 구매이거나 검증에 실패했습니다. 문제가 지속되면 고객센터에 문의해주세요.';
+
+  @override
+  String get subscription_verify_network_error =>
+      '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get subscription_restore_success => '구독이 복원되었습니다.';
+
+  @override
+  String get subscription_product_not_found =>
+      '구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.';
 }

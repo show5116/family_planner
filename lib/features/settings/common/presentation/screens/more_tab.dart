@@ -111,6 +111,13 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                 onTap: () => context.push(AppRoutes.votes),
               ),
               const Divider(),
+              // 고정 메뉴: 구독 관리
+              MenuListTile(
+                icon: Icons.workspace_premium_outlined,
+                title: l10n.subscription_manage_title,
+                onTap: () => context.push(AppRoutes.subscription),
+              ),
+              const Divider(),
               // 고정 메뉴: 공지사항, QnA
               MenuListTile(
                 icon: Icons.campaign,

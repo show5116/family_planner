@@ -126,6 +126,9 @@ dependencies:
   app_tracking_transparency: ^2.0.6
   package_info_plus: ^8.3.0
 
+  # In-App Purchase
+  in_app_purchase: ^3.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

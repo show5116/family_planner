@@ -4413,4 +4413,52 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get widgetSettings_anniversarySummaryDesc => '显示即将到来的纪念日和倒计时';
+
+  @override
+  String get subscription_manage_title => '订阅管理';
+
+  @override
+  String get subscription_screen_title => '订阅管理';
+
+  @override
+  String get subscription_current_plan_label => '当前套餐';
+
+  @override
+  String get subscription_active_status_label => '活跃状态';
+
+  @override
+  String get subscription_active => '活跃';
+
+  @override
+  String get subscription_inactive => '未激活';
+
+  @override
+  String get subscription_expires_at_label => '到期日';
+
+  @override
+  String get subscription_products_section_title => '订阅商品';
+
+  @override
+  String get subscription_purchase_button => '订阅';
+
+  @override
+  String get subscription_restore_button => '恢复购买';
+
+  @override
+  String get subscription_purchase_success => '订阅已完成。';
+
+  @override
+  String get subscription_verify_failed_title => '购买验证失败';
+
+  @override
+  String get subscription_verify_failed_message => '该购买已被使用或验证失败。如问题持续，请联系客服。';
+
+  @override
+  String get subscription_verify_network_error => '发生网络错误。请稍后重试。';
+
+  @override
+  String get subscription_restore_success => '订阅已恢复。';
+
+  @override
+  String get subscription_product_not_found => '订阅商品正在准备中。请稍后重试。';
 }

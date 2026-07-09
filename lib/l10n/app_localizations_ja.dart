@@ -4438,4 +4438,55 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get widgetSettings_anniversarySummaryDesc =>
       '近づく記念日とD-dayカウントダウンを表示します';
+
+  @override
+  String get subscription_manage_title => 'サブスクリプション管理';
+
+  @override
+  String get subscription_screen_title => 'サブスクリプション管理';
+
+  @override
+  String get subscription_current_plan_label => '現在のプラン';
+
+  @override
+  String get subscription_active_status_label => '有効状態';
+
+  @override
+  String get subscription_active => '有効';
+
+  @override
+  String get subscription_inactive => '無効';
+
+  @override
+  String get subscription_expires_at_label => '有効期限';
+
+  @override
+  String get subscription_products_section_title => 'サブスクリプション商品';
+
+  @override
+  String get subscription_purchase_button => '購読する';
+
+  @override
+  String get subscription_restore_button => '購入を復元';
+
+  @override
+  String get subscription_purchase_success => '購読が完了しました。';
+
+  @override
+  String get subscription_verify_failed_title => '購入確認に失敗しました';
+
+  @override
+  String get subscription_verify_failed_message =>
+      '既に使用された購入か、検証に失敗しました。問題が続く場合はサポートにお問い合わせください。';
+
+  @override
+  String get subscription_verify_network_error =>
+      'ネットワークエラーが発生しました。しばらくしてからもう一度お試しください。';
+
+  @override
+  String get subscription_restore_success => 'サブスクリプションが復元されました。';
+
+  @override
+  String get subscription_product_not_found =>
+      'サブスクリプション商品を準備中です。しばらくしてからもう一度お試しください。';
 }

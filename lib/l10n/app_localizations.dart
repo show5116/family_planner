@@ -8545,6 +8545,102 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'다가오는 기념일과 D-day를 표시합니다'**
   String get widgetSettings_anniversarySummaryDesc;
+
+  /// 더보기 탭의 구독 관리 메뉴 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리'**
+  String get subscription_manage_title;
+
+  /// 구독 관리 화면 AppBar 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리'**
+  String get subscription_screen_title;
+
+  /// 구독 관리 화면 현재 플랜 섹션 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 플랜'**
+  String get subscription_current_plan_label;
+
+  /// 구독 활성 여부 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'활성 여부'**
+  String get subscription_active_status_label;
+
+  /// 구독 활성 상태 값
+  ///
+  /// In ko, this message translates to:
+  /// **'활성'**
+  String get subscription_active;
+
+  /// 구독 비활성 상태 값
+  ///
+  /// In ko, this message translates to:
+  /// **'비활성'**
+  String get subscription_inactive;
+
+  /// 구독 만료일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'만료일'**
+  String get subscription_expires_at_label;
+
+  /// 구독 상품 목록 섹션 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 상품'**
+  String get subscription_products_section_title;
+
+  /// 구독 구매 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'구독하기'**
+  String get subscription_purchase_button;
+
+  /// 구독 복원 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 복원'**
+  String get subscription_restore_button;
+
+  /// 구독 구매 성공 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'구독이 완료되었습니다.'**
+  String get subscription_purchase_success;
+
+  /// 구매 검증 실패(422) 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 확인 실패'**
+  String get subscription_verify_failed_title;
+
+  /// 구매 검증 실패(422) 다이얼로그 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 사용된 구매이거나 검증에 실패했습니다. 문제가 지속되면 고객센터에 문의해주세요.'**
+  String get subscription_verify_failed_message;
+
+  /// 구매 검증 중 네트워크 오류 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'**
+  String get subscription_verify_network_error;
+
+  /// 구독 복원 성공 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'구독이 복원되었습니다.'**
+  String get subscription_restore_success;
+
+  /// 스토어에서 상품을 찾을 수 없을 때 안내 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.'**
+  String get subscription_product_not_found;
 }
 
 class _AppLocalizationsDelegate

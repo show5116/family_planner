@@ -4543,4 +4543,55 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get widgetSettings_anniversarySummaryDesc =>
       'Shows upcoming anniversaries and D-day countdown';
+
+  @override
+  String get subscription_manage_title => 'Manage Subscription';
+
+  @override
+  String get subscription_screen_title => 'Manage Subscription';
+
+  @override
+  String get subscription_current_plan_label => 'Current Plan';
+
+  @override
+  String get subscription_active_status_label => 'Status';
+
+  @override
+  String get subscription_active => 'Active';
+
+  @override
+  String get subscription_inactive => 'Inactive';
+
+  @override
+  String get subscription_expires_at_label => 'Expires';
+
+  @override
+  String get subscription_products_section_title => 'Subscription Plans';
+
+  @override
+  String get subscription_purchase_button => 'Subscribe';
+
+  @override
+  String get subscription_restore_button => 'Restore Purchases';
+
+  @override
+  String get subscription_purchase_success => 'Subscription completed.';
+
+  @override
+  String get subscription_verify_failed_title => 'Purchase Verification Failed';
+
+  @override
+  String get subscription_verify_failed_message =>
+      'This purchase was already used or failed verification. Please contact support if the issue persists.';
+
+  @override
+  String get subscription_verify_network_error =>
+      'A network error occurred. Please try again later.';
+
+  @override
+  String get subscription_restore_success => 'Subscription restored.';
+
+  @override
+  String get subscription_product_not_found =>
+      'Subscription plans are being prepared. Please try again later.';
 }
