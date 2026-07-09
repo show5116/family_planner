@@ -9,6 +9,7 @@ import 'package:family_planner/features/settings/common/presentation/screens/pro
 import 'package:family_planner/features/settings/groups/presentation/screens/group_detail_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/group_list_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/my_join_requests_screen.dart';
+import 'package:family_planner/features/settings/groups/presentation/screens/my_reports_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/invite_landing_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_settings_screen.dart';
 import 'package:family_planner/features/notification/presentation/screens/notification_history_screen.dart';
@@ -64,6 +65,13 @@ List<RouteBase> getSettingsRoutes() {
       path: AppRoutes.groupMyJoinRequests,
       name: 'groupMyJoinRequests',
       builder: (context, state) => const MyJoinRequestsScreen(),
+    ),
+    // 정적 경로이므로 동적 경로인 groupDetail('/settings/groups/:id')보다 먼저 등록해야
+    // go_router가 'my-reports'를 :id 파라미터로 오인해 매칭하지 않음
+    GoRoute(
+      path: AppRoutes.myGroupReports,
+      name: 'myGroupReports',
+      builder: (context, state) => const MyReportsScreen(),
     ),
     GoRoute(
       path: AppRoutes.groupDetail,
