@@ -53,40 +53,43 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('알림 설정')),
-      body: settingsAsync.when(
-        data: (settings) => ListView(
-          padding: const EdgeInsets.all(AppSizes.spaceM),
-          children: [
-            // 알림 권한 상태 카드
-            const NotificationPermissionCard(),
-            const SizedBox(height: AppSizes.spaceM),
+      body: SafeArea(
+        top: false,
+        child: settingsAsync.when(
+          data: (settings) => ListView(
+            padding: const EdgeInsets.all(AppSizes.spaceM),
+            children: [
+              // 알림 권한 상태 카드
+              const NotificationPermissionCard(),
+              const SizedBox(height: AppSizes.spaceM),
 
-            // 위치 권한 상태 카드 (날씨 알림용)
-            const LocationPermissionCard(),
-            const SizedBox(height: AppSizes.spaceL),
+              // 위치 권한 상태 카드 (날씨 알림용)
+              const LocationPermissionCard(),
+              const SizedBox(height: AppSizes.spaceL),
 
-            // 알림 설정 섹션
-            NotificationSettingsSection(settings: settings),
-            const SizedBox(height: AppSizes.spaceL),
+              // 알림 설정 섹션
+              NotificationSettingsSection(settings: settings),
+              const SizedBox(height: AppSizes.spaceL),
 
-            // 알림 히스토리 버튼
-            _NotificationHistoryTile(
-              onTap: () => context.push(AppRoutes.notificationHistory),
-            ),
-            const SizedBox(height: AppSizes.spaceL),
-
-            // 테스트 알림 버튼 (운영자 전용)
-            if (ref.watch(isAdminProvider))
-              _TestNotificationTile(
-                onTap: () => _sendTestNotification(context, ref),
+              // 알림 히스토리 버튼
+              _NotificationHistoryTile(
+                onTap: () => context.push(AppRoutes.notificationHistory),
               ),
-          ],
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => AppErrorState(
-          error: error,
-          title: '알림 설정을 불러올 수 없습니다',
-          onRetry: () => ref.invalidate(notificationSettingsProvider),
+              const SizedBox(height: AppSizes.spaceL),
+
+              // 테스트 알림 버튼 (운영자 전용)
+              if (ref.watch(isAdminProvider))
+                _TestNotificationTile(
+                  onTap: () => _sendTestNotification(context, ref),
+                ),
+            ],
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, _) => AppErrorState(
+            error: error,
+            title: '알림 설정을 불러올 수 없습니다',
+            onRetry: () => ref.invalidate(notificationSettingsProvider),
+          ),
         ),
       ),
     );
