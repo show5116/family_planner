@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/home/presentation/widgets/anniversary_summary_widget.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/home/presentation/widgets/fridge_expiry_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/investment_summary_widget.dart';
@@ -60,6 +61,8 @@ class DashboardTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final unreadCountAsync = ref.watch(unreadCountProvider);
+    // 홈 화면(OS) 위젯 데이터 동기화 (대시보드 진입 시 1회, keepAlive 없어 재진입마다 실행)
+    ref.watch(dashboardWidgetSyncProvider);
 
     return Scaffold(
       appBar: AppBar(

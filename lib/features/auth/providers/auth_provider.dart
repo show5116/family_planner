@@ -23,6 +23,7 @@ import 'package:family_planner/features/main/investment/providers/indicator_prov
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/onboarding/providers/onboarding_provider.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
+import 'package:family_planner/core/services/home_widget_service.dart';
 
 /// 인증 상태
 class AuthState {
@@ -198,6 +199,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     await AnalyticsService.instance.logLogout();
     await AnalyticsService.instance.clearUserId();
+
+    // 로그아웃 후 홈 화면(OS) 위젯에 이전 계정 일정이 남지 않도록 캐시 삭제
+    try {
+      await HomeWidgetService.clear();
+    } catch (_) {}
 
     // 성공/실패 무관하게 반드시 인증 상태 초기화
     state = const AuthState(isAuthenticated: false);

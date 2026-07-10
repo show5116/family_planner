@@ -128,6 +128,7 @@ dependencies:
 
   # In-App Purchase
   in_app_purchase: ^3.3.0
+  home_widget: ^0.9.3
 
 dev_dependencies:
   flutter_test:

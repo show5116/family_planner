@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:family_planner/core/services/home_widget_service.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/data/repositories/task_repository.dart';
@@ -740,6 +743,7 @@ class TaskManagementNotifier extends StateNotifier<AsyncValue<void>> {
   void _invalidateDashboard() {
     _ref.invalidate(dashboardTodayTasksProvider);
     _ref.invalidate(dashboardTodoTasksProvider);
+    unawaited(HomeWidgetService.syncFromServer(_ref));
   }
 
   /// Task 생성
