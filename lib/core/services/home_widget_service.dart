@@ -23,9 +23,13 @@ class HomeWidgetService {
 
   static const String _todayTasksKey = 'today_tasks';
   static const String _monthTasksKey = 'month_tasks';
+  static const String _groupsKey = 'widget_groups';
   static const String _lastSyncedAtKey = 'last_synced_at';
 
   /// 오늘 일정 동기화
+  ///
+  /// 각 항목에 groupId를 포함시켜, 위젯이 인스턴스별 그룹 필터 설정에 따라
+  /// 클라이언트(네이티브)에서 재필터링할 수 있도록 한다.
   static Future<void> syncTodayTasks({
     required List<TaskModel> tasks,
     required List<Group> groups,
@@ -34,11 +38,12 @@ class HomeWidgetService {
     await HomeWidget.setAppGroupId(appGroupId);
 
     final payload = tasks
-        .take(10)
+        .take(30)
         .map((task) => _taskToWidgetJson(task, groups, personalColorHex))
         .toList();
 
     await HomeWidget.saveWidgetData<String>(_todayTasksKey, jsonEncode(payload));
+    await _syncGroupList(groups);
     await HomeWidget.saveWidgetData<String>(
       _lastSyncedAtKey,
       DateTime.now().toIso8601String(),
@@ -47,48 +52,68 @@ class HomeWidgetService {
     await _updateWidgets();
   }
 
-  /// 이번달 일정 동기화 (달력 dot 표시 + 오늘 일정 리스트용)
+  /// 지난달/이번달/다음달 일정 동기화 (달력 dot 표시 + 위젯 내 월 이동/날짜 선택용)
+  ///
+  /// 위젯이 오프라인으로 이전/다음달 버튼 및 날짜 선택에 즉시 반응하도록,
+  /// 이번달 기준 -1 ~ +1 범위의 월을 한 번에 저장한다. 각 entry에 일정 상세
+  /// (id/title/시간/색상 등)까지 포함해, 위젯이 날짜를 탭했을 때 서버 호출 없이
+  /// 그 날짜의 일정 목록을 바로 그릴 수 있도록 한다.
   static Future<void> syncMonthTasks({
-    required int year,
-    required int month,
-    required List<TaskModel> tasks,
+    required Map<DateTime, List<TaskModel>> tasksByMonth,
     required List<Group> groups,
     String? personalColorHex,
   }) async {
     await HomeWidget.setAppGroupId(appGroupId);
 
-    final markedDates = <String>{};
-    for (final task in tasks) {
-      if (task.type == TaskType.todoOnly) continue;
-      if (task.scheduledAt == null) continue;
+    final months = tasksByMonth.entries.map((monthEntry) {
+      final year = monthEntry.key.year;
+      final month = monthEntry.key.month;
+      final entries = <Map<String, dynamic>>[];
 
-      final start = DateTime(
-        task.scheduledAt!.year,
-        task.scheduledAt!.month,
-        task.scheduledAt!.day,
-      );
-      final end = task.dueAt != null
-          ? DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day)
-          : start;
+      for (final task in monthEntry.value) {
+        if (task.type == TaskType.todoOnly) continue;
+        if (task.scheduledAt == null) continue;
 
-      for (var d = start; !d.isAfter(end); d = d.add(const Duration(days: 1))) {
-        markedDates.add(_dateKey(d));
+        final start = DateTime(
+          task.scheduledAt!.year,
+          task.scheduledAt!.month,
+          task.scheduledAt!.day,
+        );
+        final end = task.dueAt != null
+            ? DateTime(task.dueAt!.year, task.dueAt!.month, task.dueAt!.day)
+            : start;
+
+        final taskJson = _taskToWidgetJson(task, groups, personalColorHex);
+        for (var d = start; !d.isAfter(end); d = d.add(const Duration(days: 1))) {
+          entries.add({'date': _dateKey(d), ...taskJson});
+        }
       }
-    }
 
-    final payload = {
-      'year': year,
-      'month': month,
-      'markedDates': markedDates.toList()..sort(),
-    };
+      return {'year': year, 'month': month, 'entries': entries};
+    }).toList();
+
+    final payload = {'months': months};
 
     await HomeWidget.saveWidgetData<String>(_monthTasksKey, jsonEncode(payload));
+    await _syncGroupList(groups);
     await HomeWidget.saveWidgetData<String>(
       _lastSyncedAtKey,
       DateTime.now().toIso8601String(),
     );
 
     await _updateWidgets();
+  }
+
+  /// 위젯 Configuration 화면(그룹 선택)에서 사용할 그룹 목록 동기화
+  static Future<void> _syncGroupList(List<Group> groups) async {
+    final payload = groups
+        .map((g) => {
+              'id': g.id,
+              'name': g.name,
+              'colorHex': ColorUtils.colorToHex(ColorUtils.groupColor(g)),
+            })
+        .toList();
+    await HomeWidget.saveWidgetData<String>(_groupsKey, jsonEncode(payload));
   }
 
   /// 서버에서 오늘 일정 + 이번달 일정을 다시 조회해 위젯 데이터를 동기화한다.
@@ -109,6 +134,11 @@ class HomeWidgetService {
 
     final groupIds = groups.map((g) => g.id).toList();
 
+    // 위젯 내 월 이동(이전/다음달) 버튼이 오프라인으로 동작하도록 -1 ~ +1 범위를 함께 동기화
+    final targetMonths = [-1, 0, 1]
+        .map((offset) => DateTime(now.year, now.month + offset))
+        .toList();
+
     final results = await Future.wait([
       repository.getTasks(
         view: 'calendar',
@@ -118,12 +148,13 @@ class HomeWidgetService {
         endDate: todayEnd,
         limit: 50,
       ),
-      repository.getCalendarTasks(
-        year: now.year,
-        month: now.month,
-        groupIds: groupIds,
-        includePersonal: true,
-      ),
+      for (final target in targetMonths)
+        repository.getCalendarTasks(
+          year: target.year,
+          month: target.month,
+          groupIds: groupIds,
+          includePersonal: true,
+        ),
     ]);
 
     final todayTasks = (results[0] as TaskListResponse).data
@@ -132,7 +163,11 @@ class HomeWidgetService {
         if (b.scheduledAt == null) return -1;
         return a.scheduledAt!.compareTo(b.scheduledAt!);
       });
-    final monthTasks = results[1] as List<TaskModel>;
+
+    final tasksByMonth = <DateTime, List<TaskModel>>{
+      for (var i = 0; i < targetMonths.length; i++)
+        targetMonths[i]: results[i + 1] as List<TaskModel>,
+    };
 
     await syncTodayTasks(
       tasks: todayTasks,
@@ -140,9 +175,7 @@ class HomeWidgetService {
       personalColorHex: personalColorHex,
     );
     await syncMonthTasks(
-      year: now.year,
-      month: now.month,
-      tasks: monthTasks,
+      tasksByMonth: tasksByMonth,
       groups: groups,
       personalColorHex: personalColorHex,
     );
@@ -153,6 +186,7 @@ class HomeWidgetService {
     await HomeWidget.setAppGroupId(appGroupId);
     await HomeWidget.saveWidgetData<String>(_todayTasksKey, jsonEncode([]));
     await HomeWidget.saveWidgetData<String>(_monthTasksKey, jsonEncode({}));
+    await HomeWidget.saveWidgetData<String>(_groupsKey, jsonEncode([]));
     await HomeWidget.saveWidgetData<String>(_lastSyncedAtKey, '');
     await _updateWidgets();
   }
@@ -187,11 +221,13 @@ class HomeWidgetService {
     );
 
     return {
+      'id': task.id,
       'title': task.title,
       'scheduledAt': task.scheduledAt?.toIso8601String(),
       'allDay': task.allDay,
       'colorHex': ColorUtils.colorToHex(color),
       'isCompleted': task.isCompleted,
+      'groupId': task.groupId,
     };
   }
 }

@@ -1,32 +1,87 @@
+import AppIntents
 import WidgetKit
 import SwiftUI
 
 struct MonthCalendarEntry: TimelineEntry {
     let date: Date
-    let monthData: MonthScheduleData?
-    let todayItems: [ScheduleItem]
+    let monthData: MonthScheduleData
+    let selectedDate: String
+    let selectedItems: [ScheduleItem]
+    let filter: WidgetScheduleFilter
 }
 
-struct MonthCalendarProvider: TimelineProvider {
+struct MonthCalendarProvider: AppIntentTimelineProvider {
+    typealias Intent = ScheduleWidgetConfigurationIntent
+    typealias Entry = MonthCalendarEntry
+
     func placeholder(in context: Context) -> MonthCalendarEntry {
-        MonthCalendarEntry(date: Date(), monthData: nil, todayItems: [])
-    }
-
-    func getSnapshot(in context: Context, completion: @escaping (MonthCalendarEntry) -> Void) {
-        completion(currentEntry())
-    }
-
-    func getTimeline(in context: Context, completion: @escaping (Timeline<MonthCalendarEntry>) -> Void) {
-        completion(Timeline(entries: [currentEntry()], policy: .atEnd))
-    }
-
-    private func currentEntry() -> MonthCalendarEntry {
-        MonthCalendarEntry(
-            date: Date(),
-            monthData: ScheduleWidgetData.readMonthTasks(),
-            todayItems: ScheduleWidgetData.readTodayTasks()
+        let now = Date()
+        let calendar = Calendar.current
+        let placeholderMonth = MonthScheduleData(
+            year: calendar.component(.year, from: now),
+            month: calendar.component(.month, from: now),
+            entries: []
+        )
+        return MonthCalendarEntry(
+            date: now,
+            monthData: placeholderMonth,
+            selectedDate: dateKey(now),
+            selectedItems: [],
+            filter: .all
         )
     }
+
+    func snapshot(for configuration: ScheduleWidgetConfigurationIntent, in context: Context) async -> MonthCalendarEntry {
+        currentEntry(configuration)
+    }
+
+    func timeline(for configuration: ScheduleWidgetConfigurationIntent, in context: Context) async -> Timeline<MonthCalendarEntry> {
+        Timeline(entries: [currentEntry(configuration)], policy: .atEnd)
+    }
+
+    private func currentEntry(_ configuration: ScheduleWidgetConfigurationIntent) -> MonthCalendarEntry {
+        let filter = configuration.resolvedFilter()
+        let offset = WidgetMonthOffsetStore.getOffset()
+        let calendar = Calendar.current
+        let now = Date()
+        let target = calendar.date(byAdding: .month, value: offset, to: now) ?? now
+        let year = calendar.component(.year, from: target)
+        let month = calendar.component(.month, from: target)
+
+        let monthData = ScheduleWidgetData.readMonth(year: year, month: month)
+        let todayKey = dateKey(now)
+        let selectedDate = WidgetSelectedDateStore.getSelectedDate() ?? todayKey
+        let selectedItems = selectedDate == todayKey
+            ? ScheduleWidgetData.readTodayTasks().applyFilter(filter)
+            : monthData.items(forDate: selectedDate, filter: filter)
+
+        return MonthCalendarEntry(
+            date: Date(),
+            monthData: monthData,
+            selectedDate: selectedDate,
+            selectedItems: selectedItems,
+            filter: filter
+        )
+    }
+}
+
+private func dateKey(_ date: Date) -> String {
+    let calendar = Calendar.current
+    let year = calendar.component(.year, from: date)
+    let month = calendar.component(.month, from: date)
+    let day = calendar.component(.day, from: date)
+    return String(format: "%04d-%02d-%02d", year, month, day)
+}
+
+/// "2026-07-15" -> 오늘이면 "오늘 일정", 아니면 "7월 15일 일정"
+private func selectedDateLabel(_ selected: String) -> String {
+    let parts = selected.split(separator: "-")
+    guard parts.count == 3 else { return "일정" }
+    if selected == dateKey(Date()) {
+        return "오늘 일정"
+    }
+    guard let month = Int(parts[1]), let day = Int(parts[2]) else { return "일정" }
+    return "\(month)월 \(day)일 일정"
 }
 
 private enum CalendarPalette {
@@ -42,40 +97,68 @@ struct MonthCalendarEntryView: View {
     var entry: MonthCalendarProvider.Entry
 
     private var calendar: Calendar { Calendar.current }
-    private var year: Int { entry.monthData?.year ?? calendar.component(.year, from: Date()) }
-    private var month: Int { entry.monthData?.month ?? calendar.component(.month, from: Date()) }
-    private var markedDates: Set<String> { Set(entry.monthData?.markedDates ?? []) }
+    private var year: Int { entry.monthData.year }
+    private var month: Int { entry.monthData.month }
+    private var markedDates: Set<String> { entry.monthData.markedDates(entry.filter) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("\(String(year))년 \(month)월")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundColor(CalendarPalette.textPrimary)
+            HStack {
+                Button(intent: ChangeMonthIntent(delta: -1)) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(CalendarPalette.textSecondary)
+                }
+                .buttonStyle(.plain)
 
-            CalendarGridView(year: year, month: month, markedDates: markedDates)
+                Link(destination: URL(string: "familyplanner://widget/calendar")!) {
+                    Text("\(String(year))년 \(month)월")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(CalendarPalette.textPrimary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Button(intent: ChangeMonthIntent(delta: 1)) {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(CalendarPalette.textSecondary)
+                }
+                .buttonStyle(.plain)
+
+                Link(destination: URL(string: "familyplanner://widget/add")!) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.accentColor)
+                }
+                .padding(.leading, 4)
+            }
+
+            CalendarGridView(year: year, month: month, selectedDate: entry.selectedDate, markedDates: markedDates)
 
             Rectangle()
                 .fill(CalendarPalette.divider)
                 .frame(height: 1)
 
-            Text("오늘 일정")
+            Text(selectedDateLabel(entry.selectedDate))
                 .font(.system(size: 13, weight: .bold))
                 .foregroundColor(CalendarPalette.textPrimary)
 
-            if entry.todayItems.isEmpty {
-                Text("오늘 일정이 없습니다")
+            if entry.selectedItems.isEmpty {
+                Text("일정이 없습니다")
                     .font(.system(size: 12))
                     .foregroundColor(CalendarPalette.textSecondary)
             } else {
-                ForEach(entry.todayItems.prefix(3), id: \.title) { item in
-                    HStack(spacing: 8) {
-                        Circle()
-                            .fill(Color(hex: item.colorHex))
-                            .frame(width: 6, height: 6)
-                        Text(item.title)
-                            .font(.system(size: 12))
-                            .foregroundColor(CalendarPalette.textPrimary)
-                            .lineLimit(1)
+                ForEach(entry.selectedItems.prefix(3), id: \.id) { item in
+                    Link(destination: URL(string: "familyplanner://widget/task?id=\(item.id)")!) {
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(Color(hex: item.colorHex))
+                                .frame(width: 6, height: 6)
+                            Text(item.title)
+                                .font(.system(size: 12))
+                                .foregroundColor(CalendarPalette.textPrimary)
+                                .lineLimit(1)
+                        }
                     }
                 }
             }
@@ -90,6 +173,7 @@ struct MonthCalendarEntryView: View {
 private struct CalendarGridView: View {
     let year: Int
     let month: Int
+    let selectedDate: String
     let markedDates: Set<String>
 
     private var calendar: Calendar { Calendar.current }
@@ -153,11 +237,15 @@ private struct CalendarGridView: View {
                         if day < 1 || day > daysInMonth {
                             Spacer().frame(maxWidth: .infinity, minHeight: 26)
                         } else {
-                            DayCell(
-                                day: day,
-                                isToday: todayDay == day,
-                                hasSchedule: markedDates.contains(dateKey(day))
-                            )
+                            Button(intent: SelectDateIntent(dateKey: dateKey(day))) {
+                                DayCell(
+                                    day: day,
+                                    isToday: todayDay == day,
+                                    isSelected: selectedDate == dateKey(day),
+                                    hasSchedule: markedDates.contains(dateKey(day))
+                                )
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -169,18 +257,25 @@ private struct CalendarGridView: View {
 private struct DayCell: View {
     let day: Int
     let isToday: Bool
+    let isSelected: Bool
     let hasSchedule: Bool
+
+    private var background: Color {
+        if isSelected { return CalendarPalette.todayBg }
+        if isToday { return CalendarPalette.todayBg.opacity(0.35) }
+        return .clear
+    }
 
     var body: some View {
         VStack(spacing: 1) {
             Text("\(day)")
-                .font(.system(size: 12, weight: isToday ? .bold : .regular))
-                .foregroundColor(isToday ? .white : CalendarPalette.textPrimary)
+                .font(.system(size: 12, weight: isToday || isSelected ? .bold : .regular))
+                .foregroundColor(isSelected ? .white : CalendarPalette.textPrimary)
                 .frame(width: 22, height: 22)
-                .background(isToday ? CalendarPalette.todayBg : Color.clear)
+                .background(background)
                 .clipShape(Circle())
             Circle()
-                .fill(hasSchedule && !isToday ? CalendarPalette.dot : Color.clear)
+                .fill(hasSchedule && !isSelected ? CalendarPalette.dot : Color.clear)
                 .frame(width: 4, height: 4)
         }
         .frame(maxWidth: .infinity, minHeight: 26)
@@ -191,7 +286,11 @@ struct MonthCalendarWidget: Widget {
     let kind: String = "MonthCalendarWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: MonthCalendarProvider()) { entry in
+        AppIntentConfiguration(
+            kind: kind,
+            intent: ScheduleWidgetConfigurationIntent.self,
+            provider: MonthCalendarProvider()
+        ) { entry in
             MonthCalendarEntryView(entry: entry)
         }
         .configurationDisplayName("이번달 달력")

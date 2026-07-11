@@ -10,6 +10,7 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
@@ -42,8 +43,11 @@ class ScheduleListWidget : GlanceAppWidget() {
     override val stateDefinition = HomeWidgetGlanceStateDefinition()
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val widgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
+        val filter = WidgetFilterStore.getFilter(context, widgetId)
+
         provideContent {
-            val items = ScheduleWidgetData.readTodayTasks(context)
+            val items = ScheduleWidgetData.readTodayTasks(context).applyFilter(filter)
             ScheduleListContent(context, items)
         }
     }
@@ -55,13 +59,29 @@ private fun ScheduleListContent(context: Context, items: List<ScheduleItem>) {
         modifier = GlanceModifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(12.dp)
-            .clickable(onClick = actionStartActivity<MainActivity>(context, Uri.parse("familyplanner://widget/calendar"))),
+            .padding(12.dp),
     ) {
-        Text(
-            "오늘 일정",
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = solidColor(Color(0xFF212121))),
-        )
+        Row(
+            modifier = GlanceModifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Vertical.CenterVertically,
+        ) {
+            Text(
+                "오늘 일정",
+                modifier = GlanceModifier
+                    .defaultWeight()
+                    .clickable(
+                        onClick = actionStartActivity<MainActivity>(context, Uri.parse("familyplanner://widget/calendar")),
+                    ),
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = solidColor(Color(0xFF212121))),
+            )
+            Text(
+                "+",
+                modifier = GlanceModifier.clickable(
+                    onClick = actionStartActivity<MainActivity>(context, Uri.parse("familyplanner://widget/add")),
+                ),
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = solidColor(Color(0xFF1A73E8))),
+            )
+        }
         Spacer(modifier = GlanceModifier.height(8.dp))
 
         if (items.isEmpty()) {
@@ -70,15 +90,23 @@ private fun ScheduleListContent(context: Context, items: List<ScheduleItem>) {
                 style = TextStyle(fontSize = 13.sp, color = solidColor(Color(0xFF9E9E9E))),
             )
         } else {
-            items.take(5).forEach { item -> ScheduleRow(item) }
+            items.take(5).forEach { item -> ScheduleRow(context, item) }
         }
     }
 }
 
 @Composable
-private fun ScheduleRow(item: ScheduleItem) {
+private fun ScheduleRow(context: Context, item: ScheduleItem) {
     Row(
-        modifier = GlanceModifier.fillMaxWidth().padding(vertical = 4.dp),
+        modifier = GlanceModifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable(
+                onClick = actionStartActivity<MainActivity>(
+                    context,
+                    Uri.parse("familyplanner://widget/task?id=${item.id}"),
+                ),
+            ),
         verticalAlignment = Alignment.Vertical.CenterVertically,
     ) {
         val dotColor = try {
