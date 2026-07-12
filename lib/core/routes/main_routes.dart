@@ -6,6 +6,10 @@ import 'package:family_planner/features/main/child_points/presentation/screens/c
 import 'package:family_planner/features/main/child_points/presentation/screens/child_link_user_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/child_profile_form_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/transaction_form_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_list_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_form_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_detail_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart'
     show AccountDetailByIdScreen, AccountDetailScreen;
@@ -509,6 +513,44 @@ List<RouteBase> getMainRoutes() {
         final extra = state.extra as Map<String, dynamic>?;
         final accountId = extra?['accountId'] as String? ?? '';
         return TransactionFormScreen(accountId: accountId);
+      },
+    ),
+
+    // Routine Routes (루틴)
+    GoRoute(
+      path: AppRoutes.routines,
+      name: 'routines',
+      builder: (context, state) => const RoutineListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineAdd,
+      name: 'routineAdd',
+      builder: (context, state) => const RoutineFormScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineEdit,
+      name: 'routineEdit',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final routineId = extra?['routineId'] as String? ?? '';
+        return RoutineFormScreen(routineId: routineId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.routineDetail,
+      name: 'routineDetail',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final routineId = extra?['routineId'] as String? ?? '';
+        return RoutineDetailScreen(routineId: routineId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.routineGroupMembers,
+      name: 'routineGroupMembers',
+      builder: (context, state) {
+        final groupId = state.pathParameters['groupId'] ?? '';
+        return RoutineGroupMembersScreen(groupId: groupId);
       },
     ),
 

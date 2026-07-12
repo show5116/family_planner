@@ -30,6 +30,7 @@
 | 🟨 | 투표 | [18-votes.md](docs/features/18-votes.md) |
 | ✅ | 적립금 관리 | [19-savings.md](docs/features/19-savings.md) |
 | ✅ | 온보딩 & 튜토리얼 | [20-onboarding.md](docs/features/20-onboarding.md) |
+| 🟨 | 루틴(습관) 관리 | [23-routine.md](docs/features/23-routine.md) |
 
 ---
 

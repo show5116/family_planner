@@ -4489,4 +4489,136 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get subscription_product_not_found =>
       'サブスクリプション商品を準備中です。しばらくしてからもう一度お試しください。';
+
+  @override
+  String get routine_title => 'ルーティン';
+
+  @override
+  String get routine_list_empty => '登録されたルーティンがありません';
+
+  @override
+  String get routine_add => 'ルーティン追加';
+
+  @override
+  String get routine_edit => 'ルーティン編集';
+
+  @override
+  String get routine_delete => 'ルーティン削除';
+
+  @override
+  String get routine_delete_confirm => 'このルーティンを削除しますか?';
+
+  @override
+  String get routine_field_title => 'タイトル';
+
+  @override
+  String get routine_field_title_hint => '例: 朝のストレッチ';
+
+  @override
+  String get routine_field_emoji => '絵文字';
+
+  @override
+  String get routine_field_color => '色';
+
+  @override
+  String get routine_field_target_count => '週間目標回数';
+
+  @override
+  String get routine_field_start_date => '開始日';
+
+  @override
+  String get routine_field_end_date => '終了日（任意）';
+
+  @override
+  String get routine_field_end_date_none => '無期限';
+
+  @override
+  String get routine_save => '保存';
+
+  @override
+  String get routine_check => 'チェック';
+
+  @override
+  String get routine_uncheck => 'チェック取り消し';
+
+  @override
+  String get routine_check_already => 'すでにチェック済みです';
+
+  @override
+  String get routine_check_future_date => '未来の日付はチェックできません';
+
+  @override
+  String get routine_check_error => 'チェックに失敗しました';
+
+  @override
+  String get routine_tab_heatmap => 'カレンダー';
+
+  @override
+  String get routine_tab_stats => '統計';
+
+  @override
+  String get routine_tab_share => '共有';
+
+  @override
+  String get routine_streak_current_days => '現在の連続日数';
+
+  @override
+  String get routine_streak_longest_days => '最長連続日数';
+
+  @override
+  String get routine_streak_current_weeks => '現在の連続週数';
+
+  @override
+  String get routine_streak_longest_weeks => '最長連続週数';
+
+  @override
+  String get routine_this_week_progress => '今週の進捗';
+
+  @override
+  String get routine_rate_period_week => '週';
+
+  @override
+  String get routine_rate_period_month => '月';
+
+  @override
+  String get routine_rate_period_custom => '期間指定';
+
+  @override
+  String get routine_rate_achievement => '達成率';
+
+  @override
+  String get routine_share_title => '共有グループ管理';
+
+  @override
+  String get routine_share_add => 'グループに共有';
+
+  @override
+  String get routine_share_remove => '共有解除';
+
+  @override
+  String get routine_share_remove_confirm => 'このグループとの共有を解除しますか?';
+
+  @override
+  String get routine_share_empty => '共有されたグループがありません';
+
+  @override
+  String get routine_share_select_group => '共有するグループを選択';
+
+  @override
+  String get routine_group_members_title => 'グループメンバーのルーティン状況';
+
+  @override
+  String get routine_group_members_empty => '共有されたルーティンがありません';
+
+  @override
+  String get routine_sort_order_updated => '順序が変更されました';
+
+  @override
+  String get routine_error_generic => 'エラーが発生しました';
+
+  @override
+  String get widgetSettings_routineSummary => '今日のルーティン';
+
+  @override
+  String get nav_routines => 'ルーティン';
 }

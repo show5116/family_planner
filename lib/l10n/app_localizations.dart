@@ -8641,6 +8641,270 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.'**
   String get subscription_product_not_found;
+
+  /// 루틴 메인 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴'**
+  String get routine_title;
+
+  /// 루틴 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 루틴이 없습니다'**
+  String get routine_list_empty;
+
+  /// 루틴 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 추가'**
+  String get routine_add;
+
+  /// 루틴 수정 버튼/타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 수정'**
+  String get routine_edit;
+
+  /// 루틴 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 삭제'**
+  String get routine_delete;
+
+  /// 루틴 삭제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 루틴을 삭제하시겠습니까?'**
+  String get routine_delete_confirm;
+
+  /// 루틴 제목 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get routine_field_title;
+
+  /// 루틴 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 아침 스트레칭'**
+  String get routine_field_title_hint;
+
+  /// 루틴 이모지 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지'**
+  String get routine_field_emoji;
+
+  /// 루틴 색상 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'색상'**
+  String get routine_field_color;
+
+  /// 주간 목표 체크 횟수 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'주 목표 횟수'**
+  String get routine_field_target_count;
+
+  /// 루틴 시작일 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'시작일'**
+  String get routine_field_start_date;
+
+  /// 루틴 종료일 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'종료일 (선택)'**
+  String get routine_field_end_date;
+
+  /// 종료일 미지정 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'무기한'**
+  String get routine_field_end_date_none;
+
+  /// 루틴 저장 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get routine_save;
+
+  /// 루틴 체크 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'체크'**
+  String get routine_check;
+
+  /// 루틴 체크 취소 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'체크 취소'**
+  String get routine_uncheck;
+
+  /// 중복 체크(409) 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 체크했습니다'**
+  String get routine_check_already;
+
+  /// 미래 날짜 체크(400) 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'미래 날짜는 체크할 수 없습니다'**
+  String get routine_check_future_date;
+
+  /// 체크 처리 실패 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'체크에 실패했습니다'**
+  String get routine_check_error;
+
+  /// 루틴 상세 히트맵 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'달력'**
+  String get routine_tab_heatmap;
+
+  /// 루틴 상세 통계 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get routine_tab_stats;
+
+  /// 루틴 상세 공유 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'공유'**
+  String get routine_tab_share;
+
+  /// 현재 연속 체크 일수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 연속 일수'**
+  String get routine_streak_current_days;
+
+  /// 최장 연속 체크 일수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 연속 일수'**
+  String get routine_streak_longest_days;
+
+  /// 현재 연속 달성 주 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 연속 주'**
+  String get routine_streak_current_weeks;
+
+  /// 최장 연속 달성 주 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 연속 주'**
+  String get routine_streak_longest_weeks;
+
+  /// 이번 주 진행 상황 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 진행'**
+  String get routine_this_week_progress;
+
+  /// 달성률 기간 단위 - 주
+  ///
+  /// In ko, this message translates to:
+  /// **'주'**
+  String get routine_rate_period_week;
+
+  /// 달성률 기간 단위 - 월
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get routine_rate_period_month;
+
+  /// 달성률 기간 단위 - 커스텀
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 지정'**
+  String get routine_rate_period_custom;
+
+  /// 기간별 달성률 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'달성률'**
+  String get routine_rate_achievement;
+
+  /// 루틴 공유 그룹 관리 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 그룹 관리'**
+  String get routine_share_title;
+
+  /// 그룹 공유 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹에 공유'**
+  String get routine_share_add;
+
+  /// 그룹 공유 해제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 해제'**
+  String get routine_share_remove;
+
+  /// 그룹 공유 해제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 그룹과의 공유를 해제하시겠습니까?'**
+  String get routine_share_remove_confirm;
+
+  /// 공유 그룹 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'공유된 그룹이 없습니다'**
+  String get routine_share_empty;
+
+  /// 공유 그룹 선택 시트 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'공유할 그룹 선택'**
+  String get routine_share_select_group;
+
+  /// 그룹원 루틴 현황 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원 루틴 현황'**
+  String get routine_group_members_title;
+
+  /// 그룹원 루틴 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'공유된 루틴이 없습니다'**
+  String get routine_group_members_empty;
+
+  /// 루틴 순서 변경 완료 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'순서가 변경되었습니다'**
+  String get routine_sort_order_updated;
+
+  /// 루틴 관련 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get routine_error_generic;
+
+  /// 홈 위젯 설정 - 루틴 요약 위젯 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 루틴'**
+  String get widgetSettings_routineSummary;
+
+  /// 루틴 네비게이션 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴'**
+  String get nav_routines;
 }
 
 class _AppLocalizationsDelegate

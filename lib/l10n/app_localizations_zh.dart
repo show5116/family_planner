@@ -4461,4 +4461,136 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get subscription_product_not_found => '订阅商品正在准备中。请稍后重试。';
+
+  @override
+  String get routine_title => '习惯';
+
+  @override
+  String get routine_list_empty => '还没有习惯';
+
+  @override
+  String get routine_add => '添加习惯';
+
+  @override
+  String get routine_edit => '编辑习惯';
+
+  @override
+  String get routine_delete => '删除习惯';
+
+  @override
+  String get routine_delete_confirm => '确定要删除这个习惯吗?';
+
+  @override
+  String get routine_field_title => '标题';
+
+  @override
+  String get routine_field_title_hint => '例如: 晨间拉伸';
+
+  @override
+  String get routine_field_emoji => '表情符号';
+
+  @override
+  String get routine_field_color => '颜色';
+
+  @override
+  String get routine_field_target_count => '每周目标次数';
+
+  @override
+  String get routine_field_start_date => '开始日期';
+
+  @override
+  String get routine_field_end_date => '结束日期（可选）';
+
+  @override
+  String get routine_field_end_date_none => '无限期';
+
+  @override
+  String get routine_save => '保存';
+
+  @override
+  String get routine_check => '打卡';
+
+  @override
+  String get routine_uncheck => '取消打卡';
+
+  @override
+  String get routine_check_already => '今天已经打过卡了';
+
+  @override
+  String get routine_check_future_date => '无法为未来日期打卡';
+
+  @override
+  String get routine_check_error => '打卡失败';
+
+  @override
+  String get routine_tab_heatmap => '日历';
+
+  @override
+  String get routine_tab_stats => '统计';
+
+  @override
+  String get routine_tab_share => '共享';
+
+  @override
+  String get routine_streak_current_days => '当前连续天数';
+
+  @override
+  String get routine_streak_longest_days => '最长连续天数';
+
+  @override
+  String get routine_streak_current_weeks => '当前连续周数';
+
+  @override
+  String get routine_streak_longest_weeks => '最长连续周数';
+
+  @override
+  String get routine_this_week_progress => '本周进度';
+
+  @override
+  String get routine_rate_period_week => '周';
+
+  @override
+  String get routine_rate_period_month => '月';
+
+  @override
+  String get routine_rate_period_custom => '自定义期间';
+
+  @override
+  String get routine_rate_achievement => '达成率';
+
+  @override
+  String get routine_share_title => '共享群组管理';
+
+  @override
+  String get routine_share_add => '共享给群组';
+
+  @override
+  String get routine_share_remove => '取消共享';
+
+  @override
+  String get routine_share_remove_confirm => '确定要取消与该群组的共享吗?';
+
+  @override
+  String get routine_share_empty => '尚未共享给任何群组';
+
+  @override
+  String get routine_share_select_group => '选择要共享的群组';
+
+  @override
+  String get routine_group_members_title => '群组成员习惯状况';
+
+  @override
+  String get routine_group_members_empty => '没有共享的习惯';
+
+  @override
+  String get routine_sort_order_updated => '顺序已更新';
+
+  @override
+  String get routine_error_generic => '发生错误';
+
+  @override
+  String get widgetSettings_routineSummary => '今日习惯';
+
+  @override
+  String get nav_routines => '习惯';
 }

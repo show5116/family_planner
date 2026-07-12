@@ -4594,4 +4594,137 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscription_product_not_found =>
       'Subscription plans are being prepared. Please try again later.';
+
+  @override
+  String get routine_title => 'Routines';
+
+  @override
+  String get routine_list_empty => 'No routines yet';
+
+  @override
+  String get routine_add => 'Add Routine';
+
+  @override
+  String get routine_edit => 'Edit Routine';
+
+  @override
+  String get routine_delete => 'Delete Routine';
+
+  @override
+  String get routine_delete_confirm => 'Delete this routine?';
+
+  @override
+  String get routine_field_title => 'Title';
+
+  @override
+  String get routine_field_title_hint => 'e.g. Morning stretch';
+
+  @override
+  String get routine_field_emoji => 'Emoji';
+
+  @override
+  String get routine_field_color => 'Color';
+
+  @override
+  String get routine_field_target_count => 'Weekly target count';
+
+  @override
+  String get routine_field_start_date => 'Start date';
+
+  @override
+  String get routine_field_end_date => 'End date (optional)';
+
+  @override
+  String get routine_field_end_date_none => 'No end date';
+
+  @override
+  String get routine_save => 'Save';
+
+  @override
+  String get routine_check => 'Check';
+
+  @override
+  String get routine_uncheck => 'Uncheck';
+
+  @override
+  String get routine_check_already => 'Already checked';
+
+  @override
+  String get routine_check_future_date => 'Cannot check a future date';
+
+  @override
+  String get routine_check_error => 'Failed to check';
+
+  @override
+  String get routine_tab_heatmap => 'Calendar';
+
+  @override
+  String get routine_tab_stats => 'Stats';
+
+  @override
+  String get routine_tab_share => 'Share';
+
+  @override
+  String get routine_streak_current_days => 'Current day streak';
+
+  @override
+  String get routine_streak_longest_days => 'Longest day streak';
+
+  @override
+  String get routine_streak_current_weeks => 'Current week streak';
+
+  @override
+  String get routine_streak_longest_weeks => 'Longest week streak';
+
+  @override
+  String get routine_this_week_progress => 'This week\'s progress';
+
+  @override
+  String get routine_rate_period_week => 'Week';
+
+  @override
+  String get routine_rate_period_month => 'Month';
+
+  @override
+  String get routine_rate_period_custom => 'Custom range';
+
+  @override
+  String get routine_rate_achievement => 'Achievement rate';
+
+  @override
+  String get routine_share_title => 'Manage Shared Groups';
+
+  @override
+  String get routine_share_add => 'Share with group';
+
+  @override
+  String get routine_share_remove => 'Unshare';
+
+  @override
+  String get routine_share_remove_confirm =>
+      'Unshare this routine from the group?';
+
+  @override
+  String get routine_share_empty => 'Not shared with any group';
+
+  @override
+  String get routine_share_select_group => 'Select a group to share with';
+
+  @override
+  String get routine_group_members_title => 'Group Members\' Routines';
+
+  @override
+  String get routine_group_members_empty => 'No shared routines';
+
+  @override
+  String get routine_sort_order_updated => 'Order updated';
+
+  @override
+  String get routine_error_generic => 'Something went wrong';
+
+  @override
+  String get widgetSettings_routineSummary => 'Today\'s Routines';
+
+  @override
+  String get nav_routines => 'Routines';
 }

@@ -4496,4 +4496,136 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get subscription_product_not_found =>
       '구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get routine_title => '루틴';
+
+  @override
+  String get routine_list_empty => '등록된 루틴이 없습니다';
+
+  @override
+  String get routine_add => '루틴 추가';
+
+  @override
+  String get routine_edit => '루틴 수정';
+
+  @override
+  String get routine_delete => '루틴 삭제';
+
+  @override
+  String get routine_delete_confirm => '이 루틴을 삭제하시겠습니까?';
+
+  @override
+  String get routine_field_title => '제목';
+
+  @override
+  String get routine_field_title_hint => '예: 아침 스트레칭';
+
+  @override
+  String get routine_field_emoji => '이모지';
+
+  @override
+  String get routine_field_color => '색상';
+
+  @override
+  String get routine_field_target_count => '주 목표 횟수';
+
+  @override
+  String get routine_field_start_date => '시작일';
+
+  @override
+  String get routine_field_end_date => '종료일 (선택)';
+
+  @override
+  String get routine_field_end_date_none => '무기한';
+
+  @override
+  String get routine_save => '저장';
+
+  @override
+  String get routine_check => '체크';
+
+  @override
+  String get routine_uncheck => '체크 취소';
+
+  @override
+  String get routine_check_already => '이미 체크했습니다';
+
+  @override
+  String get routine_check_future_date => '미래 날짜는 체크할 수 없습니다';
+
+  @override
+  String get routine_check_error => '체크에 실패했습니다';
+
+  @override
+  String get routine_tab_heatmap => '달력';
+
+  @override
+  String get routine_tab_stats => '통계';
+
+  @override
+  String get routine_tab_share => '공유';
+
+  @override
+  String get routine_streak_current_days => '현재 연속 일수';
+
+  @override
+  String get routine_streak_longest_days => '최장 연속 일수';
+
+  @override
+  String get routine_streak_current_weeks => '현재 연속 주';
+
+  @override
+  String get routine_streak_longest_weeks => '최장 연속 주';
+
+  @override
+  String get routine_this_week_progress => '이번 주 진행';
+
+  @override
+  String get routine_rate_period_week => '주';
+
+  @override
+  String get routine_rate_period_month => '월';
+
+  @override
+  String get routine_rate_period_custom => '기간 지정';
+
+  @override
+  String get routine_rate_achievement => '달성률';
+
+  @override
+  String get routine_share_title => '공유 그룹 관리';
+
+  @override
+  String get routine_share_add => '그룹에 공유';
+
+  @override
+  String get routine_share_remove => '공유 해제';
+
+  @override
+  String get routine_share_remove_confirm => '이 그룹과의 공유를 해제하시겠습니까?';
+
+  @override
+  String get routine_share_empty => '공유된 그룹이 없습니다';
+
+  @override
+  String get routine_share_select_group => '공유할 그룹 선택';
+
+  @override
+  String get routine_group_members_title => '그룹원 루틴 현황';
+
+  @override
+  String get routine_group_members_empty => '공유된 루틴이 없습니다';
+
+  @override
+  String get routine_sort_order_updated => '순서가 변경되었습니다';
+
+  @override
+  String get routine_error_generic => '오류가 발생했습니다';
+
+  @override
+  String get widgetSettings_routineSummary => '오늘의 루틴';
+
+  @override
+  String get nav_routines => '루틴';
 }

@@ -138,6 +138,8 @@ class _HomeWidgetSettingsBodyState
         return l10n.widgetSettings_savingsSummary;
       case 'anniversary':
         return '기념일';
+      case 'routineSummary':
+        return l10n.widgetSettings_routineSummary;
       default:
         return key;
     }
@@ -167,6 +169,8 @@ class _HomeWidgetSettingsBodyState
         return Icons.savings;
       case 'anniversary':
         return Icons.celebration_outlined;
+      case 'routineSummary':
+        return Icons.check_circle_outline;
       default:
         return Icons.widgets_outlined;
     }
@@ -709,6 +713,7 @@ class _AddWidgetSheet extends ConsumerWidget {
     ('childcareSummary', Icons.child_care, '육아포인트'),
     ('savingsSummary', Icons.savings, '저금통'),
     ('anniversary', Icons.celebration_outlined, '기념일'),
+    ('routineSummary', Icons.check_circle_outline, '루틴'),
   ];
 
   @override

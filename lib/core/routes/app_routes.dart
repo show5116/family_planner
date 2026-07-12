@@ -58,6 +58,11 @@ class AppRoutes {
   static const String childPointsAllowancePlan = '/child-points/allowance-plan';
   static const String childPointsLinkUser = '/child-points/link-user';
   static const String childPointsTransactionAdd = '/child-points/transactions/add';
+  static const String routines = '/routines';
+  static const String routineAdd = '/routines/add';
+  static const String routineEdit = '/routines/edit';
+  static const String routineDetail = '/routines/detail';
+  static const String routineGroupMembers = '/routines/groups/:groupId/members';
   static const String memo = '/memo';
   static const String memoAdd = '/memo/add';
   static const String memoDetail = '/memo/:id';
