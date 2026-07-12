@@ -143,6 +143,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get auth_or => '或';
 
   @override
+  String get auth_testAccountLoginOwner => '使用测试账号登录（群组所有者）';
+
+  @override
+  String get auth_testAccountLoginMember => '使用测试账号登录（群组成员）';
+
+  @override
   String get auth_emailHint => '请输入邮箱';
 
   @override

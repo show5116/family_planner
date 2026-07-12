@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:family_planner/core/config/environment.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
@@ -120,6 +121,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _handleTestAccountLogin(String email) async {
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _isLoading = true);
+
+    try {
+      await ref
+          .read(authProvider.notifier)
+          .login(
+            email: email,
+            password: EnvironmentConfig.testAccountPassword,
+          );
+
+      if (mounted) {
+        context.go(AppRoutes.home);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.auth_loginFailed}: ${ErrorHandler.getErrorMessage(e)}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _handleGoogleLogin() async {
     final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
@@ -220,6 +250,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     _buildSocialLoginButtons(l10n),
                     const SizedBox(height: AppSizes.spaceM),
                     _buildSocialLoginConsent(l10n),
+                    if (EnvironmentConfig.isTestAccountLoginEnabled) ...[
+                      const SizedBox(height: AppSizes.spaceL),
+                      _buildTestAccountLoginButtons(l10n),
+                    ],
                     const SizedBox(height: AppSizes.spaceL),
                     AuthLinkRow(
                       text: l10n.auth_noAccount,
@@ -365,6 +399,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ],
       ),
       textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _buildTestAccountLoginButtons(AppLocalizations l10n) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              animationDuration: Duration.zero,
+              minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            icon: const Icon(Icons.bug_report_outlined),
+            onPressed: _isLoading
+                ? null
+                : () => _handleTestAccountLogin(EnvironmentConfig.testOwnerAccountEmail),
+            label: Text(l10n.auth_testAccountLoginOwner),
+          ),
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              animationDuration: Duration.zero,
+              minimumSize: const Size(double.infinity, AppSizes.buttonHeightLarge),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            icon: const Icon(Icons.bug_report_outlined),
+            onPressed: _isLoading
+                ? null
+                : () => _handleTestAccountLogin(EnvironmentConfig.testMemberAccountEmail),
+            label: Text(l10n.auth_testAccountLoginMember),
+          ),
+        ),
+      ],
     );
   }
 

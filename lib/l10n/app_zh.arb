@@ -62,6 +62,14 @@
   "auth_continueWithKakao": "使用Kakao继续",
   "auth_continueWithApple": "使用Apple继续",
   "auth_or": "或",
+  "auth_testAccountLoginOwner": "使用测试账号登录（群组所有者）",
+  "@auth_testAccountLoginOwner": {
+    "description": "登录页面的测试账号（群组所有者）登录按钮文本（仅限local/development环境）"
+  },
+  "auth_testAccountLoginMember": "使用测试账号登录（群组成员）",
+  "@auth_testAccountLoginMember": {
+    "description": "登录页面的测试账号（群组成员）登录按钮文本（仅限local/development环境）"
+  },
 
   "auth_emailHint": "请输入邮箱",
   "auth_passwordHint": "请输入密码",

@@ -143,6 +143,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_or => '또는';
 
   @override
+  String get auth_testAccountLoginOwner => '테스트 계정으로 로그인 (그룹 소유자)';
+
+  @override
+  String get auth_testAccountLoginMember => '테스트 계정으로 로그인 (그룹 멤버)';
+
+  @override
   String get auth_emailHint => '이메일을 입력해주세요';
 
   @override

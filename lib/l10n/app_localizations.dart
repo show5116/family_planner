@@ -366,6 +366,18 @@ abstract class AppLocalizations {
   /// **'또는'**
   String get auth_or;
 
+  /// 로그인 화면의 테스트 계정(그룹 소유자) 로그인 버튼 텍스트 (local/development 환경 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 계정으로 로그인 (그룹 소유자)'**
+  String get auth_testAccountLoginOwner;
+
+  /// 로그인 화면의 테스트 계정(그룹 멤버) 로그인 버튼 텍스트 (local/development 환경 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 계정으로 로그인 (그룹 멤버)'**
+  String get auth_testAccountLoginMember;
+
   /// No description provided for @auth_emailHint.
   ///
   /// In ko, this message translates to:

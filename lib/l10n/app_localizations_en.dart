@@ -143,6 +143,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_or => 'or';
 
   @override
+  String get auth_testAccountLoginOwner =>
+      'Log in as test account (group owner)';
+
+  @override
+  String get auth_testAccountLoginMember =>
+      'Log in as test account (group member)';
+
+  @override
   String get auth_emailHint => 'Enter your email';
 
   @override

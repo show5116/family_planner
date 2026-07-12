@@ -143,6 +143,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_or => 'または';
 
   @override
+  String get auth_testAccountLoginOwner => 'テストアカウントでログイン（グループオーナー）';
+
+  @override
+  String get auth_testAccountLoginMember => 'テストアカウントでログイン（グループメンバー）';
+
+  @override
   String get auth_emailHint => 'メールアドレスを入力してください';
 
   @override

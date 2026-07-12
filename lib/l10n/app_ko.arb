@@ -68,6 +68,14 @@
   "auth_continueWithKakao": "Kakao로 계속하기",
   "auth_continueWithApple": "Apple로 계속하기",
   "auth_or": "또는",
+  "auth_testAccountLoginOwner": "테스트 계정으로 로그인 (그룹 소유자)",
+  "@auth_testAccountLoginOwner": {
+    "description": "로그인 화면의 테스트 계정(그룹 소유자) 로그인 버튼 텍스트 (local/development 환경 전용)"
+  },
+  "auth_testAccountLoginMember": "테스트 계정으로 로그인 (그룹 멤버)",
+  "@auth_testAccountLoginMember": {
+    "description": "로그인 화면의 테스트 계정(그룹 멤버) 로그인 버튼 텍스트 (local/development 환경 전용)"
+  },
 
   "auth_emailHint": "이메일을 입력해주세요",
   "auth_passwordHint": "비밀번호를 입력해주세요",

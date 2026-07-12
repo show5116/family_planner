@@ -68,6 +68,14 @@
   "auth_continueWithKakao": "Kakaoで続ける",
   "auth_continueWithApple": "Appleで続ける",
   "auth_or": "または",
+  "auth_testAccountLoginOwner": "テストアカウントでログイン（グループオーナー）",
+  "@auth_testAccountLoginOwner": {
+    "description": "ログイン画面のテストアカウント（グループオーナー）ログインボタンテキスト（local/development環境専用）"
+  },
+  "auth_testAccountLoginMember": "テストアカウントでログイン（グループメンバー）",
+  "@auth_testAccountLoginMember": {
+    "description": "ログイン画面のテストアカウント（グループメンバー）ログインボタンテキスト（local/development環境専用）"
+  },
 
   "auth_emailHint": "メールアドレスを入力してください",
   "auth_passwordHint": "パスワードを入力してください",

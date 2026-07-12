@@ -68,6 +68,14 @@
   "auth_continueWithKakao": "Continue with Kakao",
   "auth_continueWithApple": "Continue with Apple",
   "auth_or": "or",
+  "auth_testAccountLoginOwner": "Log in as test account (group owner)",
+  "@auth_testAccountLoginOwner": {
+    "description": "Test account (group owner) login button text on the login screen (local/development only)"
+  },
+  "auth_testAccountLoginMember": "Log in as test account (group member)",
+  "@auth_testAccountLoginMember": {
+    "description": "Test account (group member) login button text on the login screen (local/development only)"
+  },
 
   "auth_emailHint": "Enter your email",
   "auth_passwordHint": "Enter your password",
