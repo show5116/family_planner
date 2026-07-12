@@ -17,7 +17,6 @@ import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.action.actionStartActivity as glanceActionStartActivity
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
@@ -383,7 +382,9 @@ class ChangeMonthAction : ActionCallback {
         WidgetMonthOffsetStore.changeOffset(context, widgetId, delta)
         // 다른 달로 이동하면 이전에 선택해 둔 날짜는 더 이상 유효하지 않으므로 초기화한다
         WidgetSelectedDateStore.clearSelectedDate(context, widgetId)
-        MonthCalendarWidget().updateAll(context)
+        // updateAll은 이 위젯 종류의 모든 인스턴스를 갱신해 불필요하게 느려지므로,
+        // 실제로 조작한 인스턴스(glanceId)만 갱신한다
+        MonthCalendarWidget().update(context, glanceId)
     }
 }
 
@@ -402,6 +403,7 @@ class SelectDateAction : ActionCallback {
         val dateKey = parameters[dateKeyKey] ?: return
         val widgetId = parameters[widgetIdKey] ?: return
         WidgetSelectedDateStore.setSelectedDate(context, widgetId, dateKey)
-        MonthCalendarWidget().updateAll(context)
+        // updateAll 대신 실제로 탭한 인스턴스(glanceId)만 갱신해 반응 지연을 줄인다
+        MonthCalendarWidget().update(context, glanceId)
     }
 }
