@@ -140,7 +140,12 @@ class RoutineShareTab extends ConsumerWidget {
                       ),
                     )
                   : ListView(
-                      padding: const EdgeInsets.all(AppSizes.spaceM),
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSizes.spaceM,
+                        AppSizes.spaceM,
+                        AppSizes.spaceM,
+                        AppSizes.spaceS,
+                      ),
                       children: shares.map((share) {
                         return RoutineShareGroupTile(
                           share: share,

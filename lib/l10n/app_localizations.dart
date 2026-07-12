@@ -8894,6 +8894,18 @@ abstract class AppLocalizations {
   /// **'공유된 루틴이 없습니다'**
   String get routine_group_members_empty;
 
+  /// 루틴 목록에서 공유받은 그룹을 선택하는 진입점 (버튼/시트 타이틀)
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 루틴 볼 그룹 선택'**
+  String get routine_shared_group_select;
+
+  /// 공유 루틴 그룹 선택 시트에서 속한 그룹이 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'속한 그룹이 없습니다'**
+  String get routine_shared_group_empty;
+
   /// 루틴 순서 변경 완료 스낵바
   ///
   /// In ko, this message translates to:

@@ -4725,6 +4725,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_group_members_empty => 'No shared routines';
 
   @override
+  String get routine_shared_group_select =>
+      'Select group to view shared routines';
+
+  @override
+  String get routine_shared_group_empty => 'You don\'t belong to any group';
+
+  @override
   String get routine_sort_order_updated => 'Order updated';
 
   @override

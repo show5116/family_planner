@@ -30,7 +30,12 @@ class _RoutineStatsTabState extends ConsumerState<RoutineStatsTab> {
     );
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+      padding: EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

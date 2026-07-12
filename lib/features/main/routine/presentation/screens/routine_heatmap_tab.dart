@@ -57,8 +57,13 @@ class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
       ),
     );
 
-    return Padding(
-      padding: const EdgeInsets.all(AppSizes.spaceM),
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+      ),
       child: heatmapAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) => Center(child: Text(l10n.routine_error_generic)),

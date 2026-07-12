@@ -4624,6 +4624,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_group_members_empty => '공유된 루틴이 없습니다';
 
   @override
+  String get routine_shared_group_select => '공유 루틴 볼 그룹 선택';
+
+  @override
+  String get routine_shared_group_empty => '속한 그룹이 없습니다';
+
+  @override
   String get routine_sort_order_updated => '순서가 변경되었습니다';
 
   @override

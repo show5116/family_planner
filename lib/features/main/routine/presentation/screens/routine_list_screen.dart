@@ -8,6 +8,8 @@ import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
+import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 루틴 목록 화면 (오늘 체크 리스트)
@@ -65,14 +67,85 @@ class RoutineListScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _showSharedGroupPicker(
+    BuildContext context,
+    List<Group> groups,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radiusMedium),
+        ),
+      ),
+      builder: (sheetContext) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.5,
+        maxChildSize: 0.9,
+        builder: (ctx, scrollController) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSizes.spaceL,
+                AppSizes.spaceM,
+                AppSizes.spaceL,
+                AppSizes.spaceS,
+              ),
+              child: Text(
+                l10n.routine_shared_group_select,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: groups.isEmpty
+                  ? Center(child: Text(l10n.routine_shared_group_empty))
+                  : ListView(
+                      controller: scrollController,
+                      children: groups.map((group) {
+                        return ListTile(
+                          leading: const Icon(Icons.group_outlined),
+                          title: Text(group.name),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            Navigator.pop(sheetContext);
+                            context.push(
+                              AppRoutes.routineGroupMembers.replaceFirst(
+                                ':groupId',
+                                group.id,
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final routinesAsync = ref.watch(routineListProvider);
+    final myGroups = ref.watch(myGroupsProvider).valueOrNull ?? [];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.routine_title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.groups_outlined),
+            tooltip: l10n.routine_shared_group_select,
+            onPressed: () => _showSharedGroupPicker(context, myGroups),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(AppRoutes.routineAdd),

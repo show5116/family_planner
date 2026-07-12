@@ -150,6 +150,12 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
       icon: Icons.shopping_cart_outlined,
       selectedIcon: Icons.shopping_cart,
     ),
+    'routines': NavigationItem(
+      id: 'routines',
+      label: '루틴',
+      icon: Icons.check_circle_outline,
+      selectedIcon: Icons.check_circle,
+    ),
   };
 
   // 기본 중간 슬롯 (자산, 일정, 할일)

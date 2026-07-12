@@ -4589,6 +4589,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_group_members_empty => '没有共享的习惯';
 
   @override
+  String get routine_shared_group_select => '选择要查看共享习惯的群组';
+
+  @override
+  String get routine_shared_group_empty => '尚未加入任何群组';
+
+  @override
   String get routine_sort_order_updated => '顺序已更新';
 
   @override

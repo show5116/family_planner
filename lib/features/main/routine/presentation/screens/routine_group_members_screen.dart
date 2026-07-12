@@ -37,7 +37,12 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
+            padding: EdgeInsets.fromLTRB(
+              AppSizes.spaceM,
+              AppSizes.spaceM,
+              AppSizes.spaceM,
+              AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+            ),
             itemCount: withRoutines.length,
             itemBuilder: (context, index) {
               final member = withRoutines[index];

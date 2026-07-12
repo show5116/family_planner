@@ -184,6 +184,8 @@ class _MoreTabState extends ConsumerState<MoreTab> {
         context.push(AppRoutes.calendar);
       case 'todo':
         context.push(AppRoutes.todo);
+      case 'routines':
+        context.push(AppRoutes.routines);
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.common_comingSoon)),

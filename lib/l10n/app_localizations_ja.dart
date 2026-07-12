@@ -4617,6 +4617,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_group_members_empty => '共有されたルーティンがありません';
 
   @override
+  String get routine_shared_group_select => '共有ルーティンを見るグループを選択';
+
+  @override
+  String get routine_shared_group_empty => '所属しているグループがありません';
+
+  @override
   String get routine_sort_order_updated => '順序が変更されました';
 
   @override

@@ -15,6 +15,7 @@ import 'package:family_planner/features/memo/presentation/screens/memo_list_scre
 import 'package:family_planner/features/main/savings/presentation/screens/savings_list_screen.dart';
 import 'package:family_planner/features/main/fridge/presentation/screens/fridge_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_list_screen.dart';
 import 'package:family_planner/features/minigame/presentation/screens/mini_games_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/more_tab.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -182,6 +183,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return AppRoutes.fridge;
       case 'shopping':
         return AppRoutes.shopping;
+      case 'routines':
+        return AppRoutes.routines;
       default:
         return null;
     }
@@ -375,6 +378,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return const FridgeScreen();
       case 'shopping':
         return const ShoppingScreen();
+      case 'routines':
+        return const RoutineListScreen();
       case 'more':
         return const MoreTab();
       default:
