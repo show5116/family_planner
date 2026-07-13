@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 루틴 목록의 개별 카드 (체크 토글 포함)
-class RoutineListItem extends StatelessWidget {
+class RoutineListItem extends StatefulWidget {
   const RoutineListItem({
     super.key,
     required this.routine,
@@ -19,14 +20,21 @@ class RoutineListItem extends StatelessWidget {
   final VoidCallback onToggleCheck;
   final Widget? dragHandle;
 
+  @override
+  State<RoutineListItem> createState() => _RoutineListItemState();
+}
+
+class _RoutineListItemState extends State<RoutineListItem> {
+  Routine get routine => widget.routine;
+  VoidCallback get onTap => widget.onTap;
+  VoidCallback get onToggleCheck => widget.onToggleCheck;
+  Widget? get dragHandle => widget.dragHandle;
+
   Color _accentColor(BuildContext context) {
-    if (routine.color == null) return Theme.of(context).colorScheme.primary;
-    try {
-      final hex = routine.color!.replaceFirst('#', '');
-      return Color(int.parse('FF$hex', radix: 16));
-    } catch (_) {
-      return Theme.of(context).colorScheme.primary;
-    }
+    return AppColors.parseHex(
+      routine.color,
+      fallback: Theme.of(context).colorScheme.primary,
+    );
   }
 
   @override
@@ -90,13 +98,23 @@ class RoutineListItem extends StatelessWidget {
               IconButton(
                 iconSize: 28,
                 onPressed: onToggleCheck,
-                icon: Icon(
-                  routine.checkedToday
-                      ? Icons.check_circle
-                      : Icons.radio_button_unchecked,
-                  color: routine.checkedToday
-                      ? accent
-                      : colorScheme.onSurfaceVariant,
+                icon: TweenAnimationBuilder<double>(
+                  key: ValueKey(routine.checkedToday),
+                  tween: Tween(begin: 0.6, end: 1.0),
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.elasticOut,
+                  builder: (context, scale, child) => Transform.scale(
+                    scale: scale,
+                    child: child,
+                  ),
+                  child: Icon(
+                    routine.checkedToday
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    color: routine.checkedToday
+                        ? accent
+                        : colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],

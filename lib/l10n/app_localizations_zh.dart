@@ -4475,6 +4475,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_list_empty => '还没有习惯';
 
   @override
+  String get routine_list_empty_subtitle => '添加一个想每天坚持的习惯\n持续打卡累积连续记录吧';
+
+  @override
   String get routine_add => '添加习惯';
 
   @override
@@ -4529,6 +4532,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_check_error => '打卡失败';
 
   @override
+  String routine_streak_celebration(int days) {
+    return '🔥 连续$days天达成!';
+  }
+
+  @override
   String get routine_tab_heatmap => '日历';
 
   @override
@@ -4551,6 +4559,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_this_week_progress => '本周进度';
+
+  @override
+  String get routine_weekly_strip_title => '最近8周达成情况';
 
   @override
   String get routine_rate_period_week => '周';

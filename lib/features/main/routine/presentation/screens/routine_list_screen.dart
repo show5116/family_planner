@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/routine/providers/routine_provider.
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_empty_state.dart';
 
 /// 루틴 목록 화면 (오늘 체크 리스트)
 class RoutineListScreen extends ConsumerWidget {
@@ -22,12 +23,23 @@ class RoutineListScreen extends ConsumerWidget {
     Routine routine,
   ) async {
     final l10n = AppLocalizations.of(context)!;
-    final success = await ref
+    final result = await ref
         .read(routineManagementProvider.notifier)
         .toggleCheck(routine.id, routine.checkedToday);
-    if (!success && context.mounted) {
+    if (!context.mounted) return;
+
+    if (!result.success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.routine_check_error)),
+      );
+    } else if (result.streakIncreased && result.currentStreakDays != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.routine_streak_celebration(result.currentStreakDays!),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
       );
     }
   }
@@ -156,12 +168,14 @@ class RoutineListScreen extends ConsumerWidget {
         error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
         data: (routines) {
           if (routines.isEmpty) {
-            return Center(
-              child: Text(
-                l10n.routine_list_empty,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+            return AppEmptyState(
+              icon: Icons.checklist_outlined,
+              message: l10n.routine_list_empty,
+              subtitle: l10n.routine_list_empty_subtitle,
+              action: FilledButton.icon(
+                onPressed: () => context.push(AppRoutes.routineAdd),
+                icon: const Icon(Icons.add),
+                label: Text(l10n.routine_add),
               ),
             );
           }

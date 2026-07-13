@@ -8,11 +8,14 @@ class RoutineHeatmapCalendar extends StatefulWidget {
     required this.checkedDates,
     required this.onMonthChanged,
     this.accentColor,
+    this.startDate,
   });
 
   final Set<DateTime> checkedDates;
   final ValueChanged<DateTime> onMonthChanged;
   final Color? accentColor;
+  /// 루틴 시작일 이전 날짜는 비활성 상태로 표시
+  final DateTime? startDate;
 
   @override
   State<RoutineHeatmapCalendar> createState() =>
@@ -31,6 +34,14 @@ class _RoutineHeatmapCalendarState extends State<RoutineHeatmapCalendar> {
   bool _isChecked(DateTime day) {
     return widget.checkedDates.any((d) =>
         d.year == day.year && d.month == day.month && d.day == day.day);
+  }
+
+  bool _isBeforeStart(DateTime day) {
+    final start = widget.startDate;
+    if (start == null) return false;
+    final startDate = DateTime(start.year, start.month, start.day);
+    final compareDay = DateTime(day.year, day.month, day.day);
+    return compareDay.isBefore(startDate);
   }
 
   @override
@@ -54,10 +65,16 @@ class _RoutineHeatmapCalendarState extends State<RoutineHeatmapCalendar> {
       calendarBuilders: CalendarBuilders(
         defaultBuilder: (context, day, focusedDay) {
           final checked = _isChecked(day);
+          final beforeStart = _isBeforeStart(day);
+          final onSurface = Theme.of(context).colorScheme.onSurface;
           return Container(
             margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: checked ? accent : accent.withValues(alpha: 0.08),
+              color: checked
+                  ? accent
+                  : beforeStart
+                      ? onSurface.withValues(alpha: 0.03)
+                      : accent.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -66,7 +83,9 @@ class _RoutineHeatmapCalendarState extends State<RoutineHeatmapCalendar> {
               style: TextStyle(
                 color: checked
                     ? Colors.white
-                    : Theme.of(context).colorScheme.onSurface,
+                    : beforeStart
+                        ? onSurface.withValues(alpha: 0.3)
+                        : onSurface,
                 fontWeight: checked ? FontWeight.bold : FontWeight.normal,
               ),
             ),

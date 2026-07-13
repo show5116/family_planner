@@ -6,6 +6,19 @@ import 'package:family_planner/features/main/routine/data/repositories/routine_r
 
 part 'routine_provider.g.dart';
 
+/// 체크 토글 결과 (축하 마이크로 인터랙션 판단용)
+class RoutineCheckResult {
+  final bool success;
+  final bool streakIncreased;
+  final int? currentStreakDays;
+
+  const RoutineCheckResult({
+    required this.success,
+    this.streakIncreased = false,
+    this.currentStreakDays,
+  });
+}
+
 // ── 루틴 목록 ─────────────────────────────────────────────────────────────────
 
 /// 활성 루틴 목록 Provider
@@ -140,6 +153,17 @@ Future<List<RoutineGroupMemberRoutines>> routineGroupMembers(
   return repository.getGroupMembers(groupId);
 }
 
+/// 특정 그룹원의 공유 루틴 상세 조회
+@riverpod
+Future<List<Routine>> routineGroupMemberDetail(
+  Ref ref,
+  String groupId,
+  String userId,
+) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getGroupMemberDetail(groupId, userId);
+}
+
 // ── 대시보드 요약 ─────────────────────────────────────────────────────────────
 
 @riverpod
@@ -217,27 +241,52 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  /// 체크 토글 (낙관적 업데이트, 파생 통계는 invalidate로 재조회)
-  Future<bool> toggleCheck(String routineId, bool currentlyChecked) async {
+  /// 체크 토글 (낙관적 업데이트, 파생 통계는 invalidate 후 재조회해 스트릭 갱신 여부 판단)
+  Future<RoutineCheckResult> toggleCheck(
+    String routineId,
+    bool currentlyChecked,
+  ) async {
     _ref.read(routineListProvider.notifier).setCheckedToday(
           routineId,
           !currentlyChecked,
         );
+
+    final previousStreak =
+        _ref.read(routineStreakProvider(routineId)).valueOrNull;
+
     try {
       if (currentlyChecked) {
         await _repository.uncheckRoutine(routineId);
       } else {
         await _repository.checkRoutine(routineId, const CheckRoutineDto());
       }
-      _ref.invalidate(routineStreakProvider(routineId));
       _ref.invalidate(routineSummaryProvider);
-      return true;
+
+      // 체크(해제 아님) 성공 시에만 스트릭 갱신 여부를 비교해 축하 신호 반환
+      var streakIncreased = false;
+      int? newStreakDays;
+      if (!currentlyChecked) {
+        final newStreak = await _ref.refresh(
+          routineStreakProvider(routineId).future,
+        );
+        newStreakDays = newStreak.currentStreakDays;
+        streakIncreased = previousStreak == null ||
+            newStreak.currentStreakDays > previousStreak.currentStreakDays;
+      } else {
+        _ref.invalidate(routineStreakProvider(routineId));
+      }
+
+      return RoutineCheckResult(
+        success: true,
+        streakIncreased: streakIncreased,
+        currentStreakDays: newStreakDays,
+      );
     } catch (e) {
       _ref.read(routineListProvider.notifier).setCheckedToday(
             routineId,
             currentlyChecked,
           );
-      return false;
+      return const RoutineCheckResult(success: false);
     }
   }
 

@@ -56,4 +56,28 @@ class AppColors {
     Color(0xFF3F51B5), // Indigo
     Color(0xFF009688), // Teal
   ];
+
+  // Routine Color Presets (사용자가 루틴 아이덴티티 색상으로 선택하는 팔레트)
+  static const List<String> routineColorPresets = [
+    '#EF4444',
+    '#F97316',
+    '#F59E0B',
+    '#84CC16',
+    '#22C55E',
+    '#06B6D4',
+    '#3B82F6',
+    '#6366F1',
+    '#A855F7',
+    '#EC4899',
+  ];
+
+  /// "#RRGGBB" 형식의 HEX 문자열을 Color로 변환. 파싱 실패 시 [fallback] 반환.
+  static Color parseHex(String? hex, {Color fallback = primary}) {
+    if (hex == null) return fallback;
+    try {
+      return Color(int.parse('FF${hex.replaceFirst('#', '')}', radix: 16));
+    } catch (_) {
+      return fallback;
+    }
+  }
 }

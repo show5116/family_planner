@@ -19,12 +19,23 @@ class RoutineSummaryWidget extends ConsumerWidget {
     RoutineSummaryItem item,
   ) async {
     final l10n = AppLocalizations.of(context)!;
-    final success = await ref
+    final result = await ref
         .read(routineManagementProvider.notifier)
         .toggleCheck(item.routineId, item.checkedToday);
-    if (!success && context.mounted) {
+    if (!context.mounted) return;
+
+    if (!result.success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.routine_check_error)),
+      );
+    } else if (result.streakIncreased && result.currentStreakDays != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.routine_streak_celebration(result.currentStreakDays!),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
       );
     }
   }

@@ -4610,6 +4610,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_list_empty => 'No routines yet';
 
   @override
+  String get routine_list_empty_subtitle =>
+      'Add a habit you want to repeat every day\nand build a streak by checking it off consistently';
+
+  @override
   String get routine_add => 'Add Routine';
 
   @override
@@ -4664,6 +4668,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_check_error => 'Failed to check';
 
   @override
+  String routine_streak_celebration(int days) {
+    return '🔥 $days-day streak!';
+  }
+
+  @override
   String get routine_tab_heatmap => 'Calendar';
 
   @override
@@ -4686,6 +4695,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routine_this_week_progress => 'This week\'s progress';
+
+  @override
+  String get routine_weekly_strip_title => 'Last 8 weeks';
 
   @override
   String get routine_rate_period_week => 'Week';

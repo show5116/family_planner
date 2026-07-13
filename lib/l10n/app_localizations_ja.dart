@@ -4503,6 +4503,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_list_empty => '登録されたルーティンがありません';
 
   @override
+  String get routine_list_empty_subtitle =>
+      '毎日繰り返したい習慣を登録して\nコツコツチェックしながらストリークを積み上げましょう';
+
+  @override
   String get routine_add => 'ルーティン追加';
 
   @override
@@ -4557,6 +4561,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_check_error => 'チェックに失敗しました';
 
   @override
+  String routine_streak_celebration(int days) {
+    return '🔥 $days日連続達成!';
+  }
+
+  @override
   String get routine_tab_heatmap => 'カレンダー';
 
   @override
@@ -4579,6 +4588,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_this_week_progress => '今週の進捗';
+
+  @override
+  String get routine_weekly_strip_title => '直近8週間の達成状況';
 
   @override
   String get routine_rate_period_week => '週';

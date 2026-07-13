@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_empty_state.dart';
 
 /// 그룹원별 공유 루틴 현황 화면 (읽기 전용)
 class RoutineGroupMembersScreen extends ConsumerWidget {
@@ -26,13 +28,9 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
           final withRoutines =
               members.where((m) => m.routines.isNotEmpty).toList();
           if (withRoutines.isEmpty) {
-            return Center(
-              child: Text(
-                l10n.routine_group_members_empty,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-              ),
+            return AppEmptyState(
+              icon: Icons.groups_outlined,
+              message: l10n.routine_group_members_empty,
             );
           }
 
@@ -46,7 +44,7 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
             itemCount: withRoutines.length,
             itemBuilder: (context, index) {
               final member = withRoutines[index];
-              return _MemberSection(member: member);
+              return _MemberSection(groupId: groupId, member: member);
             },
           );
         },
@@ -56,77 +54,201 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
 }
 
 class _MemberSection extends StatelessWidget {
-  const _MemberSection({required this.member});
+  const _MemberSection({required this.groupId, required this.member});
 
+  final String groupId;
   final RoutineGroupMemberRoutines member;
+
+  void _showMemberDetail(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radiusMedium),
+        ),
+      ),
+      builder: (_) => _MemberDetailSheet(
+        groupId: groupId,
+        userId: member.userId,
+        userName: member.userName,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primaryContainer,
-                  child: Text(
-                    member.userName.isNotEmpty ? member.userName[0] : '?',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSizes.spaceS),
-                Text(
-                  member.userName,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSizes.spaceS),
-            const Divider(height: 1),
-            ...member.routines.map((routine) {
-              final progress = routine.checkedToday;
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSizes.spaceS,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      routine.emoji ?? '✅',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(width: AppSizes.spaceS),
-                    Expanded(
-                      child: Text(
-                        routine.title,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
+      child: InkWell(
+        onTap: () => _showMemberDetail(context),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.spaceM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                    child: Text(
+                      member.userName.isNotEmpty ? member.userName[0] : '?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color:
+                            Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
-                    Icon(
-                      progress
-                          ? Icons.check_circle
-                          : Icons.radio_button_unchecked,
-                      color: progress
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurfaceVariant,
-                      size: 20,
+                  ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Expanded(
+                    child: Text(
+                      member.userName,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                  ],
-                ),
-              );
-            }),
-          ],
+                  ),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.spaceS),
+              const Divider(height: 1),
+              ...member.routines.map((routine) {
+                final progress = routine.checkedToday;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSizes.spaceS,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        routine.emoji ?? '✅',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(width: AppSizes.spaceS),
+                      Expanded(
+                        child: Text(
+                          routine.title,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Icon(
+                        progress
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        color: progress
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+/// 그룹원 상세 바텀시트 (루틴별 진행 정보)
+class _MemberDetailSheet extends ConsumerWidget {
+  const _MemberDetailSheet({
+    required this.groupId,
+    required this.userId,
+    required this.userName,
+  });
+
+  final String groupId;
+  final String userId;
+  final String userName;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final detailAsync =
+        ref.watch(routineGroupMemberDetailProvider(groupId, userId));
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      maxChildSize: 0.9,
+      builder: (context, scrollController) => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.spaceL,
+              AppSizes.spaceM,
+              AppSizes.spaceL,
+              AppSizes.spaceS,
+            ),
+            child: Text(
+              userName,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          const Divider(height: 1),
+          Expanded(
+            child: detailAsync.when(
+              loading: () =>
+                  const Center(child: CircularProgressIndicator()),
+              error: (_, _) =>
+                  Center(child: Text(l10n.routine_error_generic)),
+              data: (routines) {
+                if (routines.isEmpty) {
+                  return AppEmptyState(
+                    icon: Icons.checklist_outlined,
+                    message: l10n.routine_group_members_empty,
+                  );
+                }
+                return ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  itemCount: routines.length,
+                  itemBuilder: (context, index) {
+                    final routine = routines[index];
+                    final progress = routine.checkedToday;
+                    return Card(
+                      margin:
+                          const EdgeInsets.only(bottom: AppSizes.spaceS),
+                      child: ListTile(
+                        leading: Text(
+                          routine.emoji ?? '✅',
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        title: Text(routine.title),
+                        subtitle: routine.targetCount != null
+                            ? Text(
+                                '${l10n.routine_this_week_progress}: ${routine.targetCount}${l10n.routine_field_target_count}',
+                              )
+                            : null,
+                        trailing: Icon(
+                          progress
+                              ? Icons.check_circle
+                              : Icons.radio_button_unchecked,
+                          color: progress
+                              ? AppColors.success
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

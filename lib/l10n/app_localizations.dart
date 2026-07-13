@@ -8666,6 +8666,12 @@ abstract class AppLocalizations {
   /// **'등록된 루틴이 없습니다'**
   String get routine_list_empty;
 
+  /// 루틴 목록 빈 상태 부가 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 반복하고 싶은 습관을 등록하고\n꾸준히 체크하며 스트릭을 쌓아보세요'**
+  String get routine_list_empty_subtitle;
+
   /// 루틴 추가 버튼
   ///
   /// In ko, this message translates to:
@@ -8774,6 +8780,12 @@ abstract class AppLocalizations {
   /// **'체크에 실패했습니다'**
   String get routine_check_error;
 
+  /// 체크 후 스트릭이 갱신되었을 때 축하 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'🔥 {days}일 연속 달성!'**
+  String routine_streak_celebration(int days);
+
   /// 루틴 상세 히트맵 탭
   ///
   /// In ko, this message translates to:
@@ -8821,6 +8833,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'이번 주 진행'**
   String get routine_this_week_progress;
+
+  /// 히트맵 탭 주간 달성 스트립 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 8주 달성 현황'**
+  String get routine_weekly_strip_title;
 
   /// 달성률 기간 단위 - 주
   ///

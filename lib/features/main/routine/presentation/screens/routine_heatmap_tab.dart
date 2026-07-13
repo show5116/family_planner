@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_heatmap_calendar.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_weekly_strip.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
@@ -38,12 +40,7 @@ class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
 
   Color? _accentColor() {
     if (widget.routine.color == null) return null;
-    try {
-      final hex = widget.routine.color!.replaceFirst('#', '');
-      return Color(int.parse('FF$hex', radix: 16));
-    } catch (_) {
-      return null;
-    }
+    return AppColors.parseHex(widget.routine.color);
   }
 
   @override
@@ -71,12 +68,24 @@ class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
           final checkedDates = heatmap.checkedDates
               .map((s) => DateTime.parse(s))
               .toSet();
-          return RoutineHeatmapCalendar(
-            checkedDates: checkedDates,
-            accentColor: _accentColor(),
-            onMonthChanged: (month) {
-              setState(() => _setRangeForMonth(month));
-            },
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RoutineHeatmapCalendar(
+                checkedDates: checkedDates,
+                accentColor: _accentColor(),
+                startDate: widget.routine.startDate,
+                onMonthChanged: (month) {
+                  setState(() => _setRangeForMonth(month));
+                },
+              ),
+              const SizedBox(height: AppSizes.spaceL),
+              RoutineWeeklyStrip(
+                routineId: widget.routine.id,
+                targetCount: widget.routine.targetCount,
+                accentColor: _accentColor(),
+              ),
+            ],
           );
         },
       ),

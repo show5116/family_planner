@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
-
-const List<String> _kColorPresets = [
-  '#EF4444',
-  '#F97316',
-  '#F59E0B',
-  '#84CC16',
-  '#22C55E',
-  '#06B6D4',
-  '#3B82F6',
-  '#6366F1',
-  '#A855F7',
-  '#EC4899',
-];
 
 /// 루틴 생성/수정 폼 (routineId가 null이면 생성 모드)
 class RoutineFormScreen extends ConsumerStatefulWidget {
@@ -170,8 +158,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           Wrap(
             spacing: AppSizes.spaceS,
             runSpacing: AppSizes.spaceS,
-            children: _kColorPresets.map((hex) {
-              final color = Color(int.parse('FF${hex.replaceFirst('#', '')}', radix: 16));
+            children: AppColors.routineColorPresets.map((hex) {
+              final color = AppColors.parseHex(hex);
               final selected = _selectedColor == hex;
               return InkWell(
                 onTap: () => setState(() => _selectedColor = hex),

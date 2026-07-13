@@ -4510,6 +4510,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_list_empty => '등록된 루틴이 없습니다';
 
   @override
+  String get routine_list_empty_subtitle =>
+      '매일 반복하고 싶은 습관을 등록하고\n꾸준히 체크하며 스트릭을 쌓아보세요';
+
+  @override
   String get routine_add => '루틴 추가';
 
   @override
@@ -4564,6 +4568,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_check_error => '체크에 실패했습니다';
 
   @override
+  String routine_streak_celebration(int days) {
+    return '🔥 $days일 연속 달성!';
+  }
+
+  @override
   String get routine_tab_heatmap => '달력';
 
   @override
@@ -4586,6 +4595,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_this_week_progress => '이번 주 진행';
+
+  @override
+  String get routine_weekly_strip_title => '최근 8주 달성 현황';
 
   @override
   String get routine_rate_period_week => '주';
