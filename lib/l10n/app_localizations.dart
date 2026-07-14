@@ -8947,6 +8947,66 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'루틴'**
   String get nav_routines;
+
+  /// 루틴 상세 배지 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'배지'**
+  String get routine_tab_badges;
+
+  /// 배지 목록 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'내 배지'**
+  String get routine_badges_title;
+
+  /// 루틴별 배지 목록이 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 획득한 배지가 없습니다'**
+  String get routine_badges_empty;
+
+  /// 배지 획득 축하 다이얼로그 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'배지 획득!'**
+  String get routine_badge_earned_title;
+
+  /// 배지 획득 축하 다이얼로그 확인 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'확인'**
+  String get routine_badge_earned_confirm;
+
+  /// 랭킹보드 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 랭킹보드'**
+  String get routine_leaderboard_title;
+
+  /// 랭킹보드 정렬 기준 - 체크 횟수
+  ///
+  /// In ko, this message translates to:
+  /// **'체크 횟수'**
+  String get routine_leaderboard_metric_checkCount;
+
+  /// 랭킹보드 정렬 기준 - 달성률
+  ///
+  /// In ko, this message translates to:
+  /// **'달성률'**
+  String get routine_leaderboard_metric_achievementRate;
+
+  /// 랭킹보드에 표시할 순위가 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'공유된 루틴이 있는 그룹원이 없습니다'**
+  String get routine_leaderboard_empty;
+
+  /// 랭킹보드 체크 횟수 뒤에 붙는 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'회'**
+  String get routine_leaderboard_check_count_suffix;
 }
 
 class _AppLocalizationsDelegate

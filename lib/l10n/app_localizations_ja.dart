@@ -4645,4 +4645,34 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get nav_routines => 'ルーティン';
+
+  @override
+  String get routine_tab_badges => 'バッジ';
+
+  @override
+  String get routine_badges_title => 'マイバッジ';
+
+  @override
+  String get routine_badges_empty => 'まだ獲得したバッジがありません';
+
+  @override
+  String get routine_badge_earned_title => 'バッジ獲得!';
+
+  @override
+  String get routine_badge_earned_confirm => '確認';
+
+  @override
+  String get routine_leaderboard_title => 'グループランキング';
+
+  @override
+  String get routine_leaderboard_metric_checkCount => 'チェック回数';
+
+  @override
+  String get routine_leaderboard_metric_achievementRate => '達成率';
+
+  @override
+  String get routine_leaderboard_empty => '共有ルーティンのあるグループメンバーがいません';
+
+  @override
+  String get routine_leaderboard_check_count_suffix => '回';
 }

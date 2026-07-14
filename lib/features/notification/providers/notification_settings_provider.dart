@@ -47,6 +47,8 @@ class NotificationSettings extends _$NotificationSettings {
     bool? systemEnabled,
     bool? weatherEnabled,
     int? weatherAlertHour,
+    bool? routineEnabled,
+    int? routineReminderHour,
   }) async {
     final current = await future;
     final updated = current.copyWith(
@@ -60,6 +62,8 @@ class NotificationSettings extends _$NotificationSettings {
       systemEnabled: systemEnabled ?? current.systemEnabled,
       weatherEnabled: weatherEnabled ?? current.weatherEnabled,
       weatherAlertHour: weatherAlertHour ?? current.weatherAlertHour,
+      routineEnabled: routineEnabled ?? current.routineEnabled,
+      routineReminderHour: routineReminderHour ?? current.routineReminderHour,
     );
 
     // 로컬 저장
@@ -99,6 +103,14 @@ class NotificationSettings extends _$NotificationSettings {
           category: 'WEATHER',
           enabled: weatherEnabled ?? current.weatherEnabled,
           weatherAlertHour: weatherAlertHour,
+        );
+      }
+      // routineEnabled 또는 routineReminderHour 변경 시 ROUTINE 카테고리로 전송
+      if (routineEnabled != null || routineReminderHour != null) {
+        await repository.updateSetting(
+          category: 'ROUTINE',
+          enabled: routineEnabled ?? current.routineEnabled,
+          routineReminderHour: routineReminderHour,
         );
       }
 

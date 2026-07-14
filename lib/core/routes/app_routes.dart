@@ -63,6 +63,8 @@ class AppRoutes {
   static const String routineEdit = '/routines/edit';
   static const String routineDetail = '/routines/detail';
   static const String routineGroupMembers = '/routines/groups/:groupId/members';
+  static const String routineBadges = '/routines/badges';
+  static const String routineLeaderboard = '/routines/groups/:groupId/leaderboard';
   static const String memo = '/memo';
   static const String memoAdd = '/memo/add';
   static const String memoDetail = '/memo/:id';

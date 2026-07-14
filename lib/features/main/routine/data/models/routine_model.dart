@@ -132,6 +132,7 @@ class RoutineLog {
   final DateTime checkedDate;
   final String? note;
   final DateTime createdAt;
+  final List<UserRoutineBadge> newlyEarnedBadges;
 
   const RoutineLog({
     required this.id,
@@ -139,6 +140,7 @@ class RoutineLog {
     required this.checkedDate,
     this.note,
     required this.createdAt,
+    this.newlyEarnedBadges = const [],
   });
 
   factory RoutineLog.fromJson(Map<String, dynamic> json) {
@@ -148,6 +150,93 @@ class RoutineLog {
       checkedDate: DateTime.parse(json['checkedDate'] as String).toLocal(),
       note: json['note'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      newlyEarnedBadges: (json['newlyEarnedBadges'] as List<dynamic>? ?? [])
+          .map((e) => UserRoutineBadge.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+/// 배지 판정 기준 타입
+enum BadgeCriteriaType {
+  streakDays,
+  streakWeeks,
+  totalChecks;
+
+  static BadgeCriteriaType fromString(String? value) {
+    switch (value) {
+      case 'STREAK_WEEKS':
+        return BadgeCriteriaType.streakWeeks;
+      case 'TOTAL_CHECKS':
+        return BadgeCriteriaType.totalChecks;
+      case 'STREAK_DAYS':
+      default:
+        return BadgeCriteriaType.streakDays;
+    }
+  }
+}
+
+/// 배지 카탈로그 항목
+class RoutineBadge {
+  final String id;
+  final String code;
+  final String title;
+  final String? description;
+  final String? iconEmoji;
+  final BadgeCriteriaType criteriaType;
+  final int criteriaValue;
+
+  const RoutineBadge({
+    required this.id,
+    required this.code,
+    required this.title,
+    this.description,
+    this.iconEmoji,
+    required this.criteriaType,
+    required this.criteriaValue,
+  });
+
+  factory RoutineBadge.fromJson(Map<String, dynamic> json) {
+    return RoutineBadge(
+      id: json['id'] as String,
+      code: json['code'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      iconEmoji: json['iconEmoji'] as String?,
+      criteriaType: BadgeCriteriaType.fromString(
+        json['criteriaType'] as String?,
+      ),
+      criteriaValue: json['criteriaValue'] as int? ?? 0,
+    );
+  }
+}
+
+/// 사용자가 획득한 배지 기록
+class UserRoutineBadge {
+  final String id;
+  final String badgeId;
+  final RoutineBadge badge;
+  final String? routineId;
+  final String? routineTitle;
+  final DateTime earnedAt;
+
+  const UserRoutineBadge({
+    required this.id,
+    required this.badgeId,
+    required this.badge,
+    this.routineId,
+    this.routineTitle,
+    required this.earnedAt,
+  });
+
+  factory UserRoutineBadge.fromJson(Map<String, dynamic> json) {
+    return UserRoutineBadge(
+      id: json['id'] as String,
+      badgeId: json['badgeId'] as String,
+      badge: RoutineBadge.fromJson(json['badge'] as Map<String, dynamic>),
+      routineId: json['routineId'] as String?,
+      routineTitle: json['routineTitle'] as String?,
+      earnedAt: DateTime.parse(json['earnedAt'] as String).toLocal(),
     );
   }
 }
@@ -343,6 +432,75 @@ class RoutineGroupMemberRoutines {
       userName: json['userName'] as String,
       routines: (json['routines'] as List<dynamic>? ?? [])
           .map((e) => Routine.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
+/// 랭킹보드 집계 기간
+enum LeaderboardPeriod {
+  week,
+  month;
+
+  String toJsonString() => name;
+}
+
+/// 랭킹보드 정렬 기준
+enum LeaderboardMetric {
+  checkCount,
+  achievementRate;
+
+  String toJsonString() => name;
+}
+
+/// 랭킹보드 항목
+class LeaderboardEntry {
+  final int rank;
+  final String userId;
+  final String userName;
+  final int checkCount;
+  final num achievementRate;
+
+  const LeaderboardEntry({
+    required this.rank,
+    required this.userId,
+    required this.userName,
+    required this.checkCount,
+    required this.achievementRate,
+  });
+
+  factory LeaderboardEntry.fromJson(Map<String, dynamic> json) {
+    return LeaderboardEntry(
+      rank: json['rank'] as int,
+      userId: json['userId'] as String,
+      userName: json['userName'] as String,
+      checkCount: json['checkCount'] as int? ?? 0,
+      achievementRate: json['achievementRate'] as num? ?? 0,
+    );
+  }
+}
+
+/// 그룹 랭킹보드
+class RoutineLeaderboard {
+  final String groupId;
+  final String period;
+  final String metric;
+  final List<LeaderboardEntry> rankings;
+
+  const RoutineLeaderboard({
+    required this.groupId,
+    required this.period,
+    required this.metric,
+    required this.rankings,
+  });
+
+  factory RoutineLeaderboard.fromJson(Map<String, dynamic> json) {
+    return RoutineLeaderboard(
+      groupId: json['groupId'] as String,
+      period: json['period'] as String,
+      metric: json['metric'] as String,
+      rankings: (json['rankings'] as List<dynamic>? ?? [])
+          .map((e) => LeaderboardEntry.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }

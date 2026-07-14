@@ -4652,4 +4652,34 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nav_routines => '루틴';
+
+  @override
+  String get routine_tab_badges => '배지';
+
+  @override
+  String get routine_badges_title => '내 배지';
+
+  @override
+  String get routine_badges_empty => '아직 획득한 배지가 없습니다';
+
+  @override
+  String get routine_badge_earned_title => '배지 획득!';
+
+  @override
+  String get routine_badge_earned_confirm => '확인';
+
+  @override
+  String get routine_leaderboard_title => '그룹 랭킹보드';
+
+  @override
+  String get routine_leaderboard_metric_checkCount => '체크 횟수';
+
+  @override
+  String get routine_leaderboard_metric_achievementRate => '달성률';
+
+  @override
+  String get routine_leaderboard_empty => '공유된 루틴이 있는 그룹원이 없습니다';
+
+  @override
+  String get routine_leaderboard_check_count_suffix => '회';
 }

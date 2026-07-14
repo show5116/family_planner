@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
@@ -28,6 +29,8 @@ class RoutineSummaryWidget extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.routine_check_error)),
       );
+    } else if (result.newlyEarnedBadges.isNotEmpty) {
+      await showRoutineBadgeCelebration(context, result.newlyEarnedBadges);
     } else if (result.streakIncreased && result.currentStreakDays != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

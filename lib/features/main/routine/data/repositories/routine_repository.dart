@@ -351,4 +351,76 @@ class RoutineRepository {
       throw Exception('루틴 요약 조회 실패: ${e.message}');
     }
   }
+
+  // ── 배지 ──────────────────────────────────────────────────────────────────
+
+  Future<List<RoutineBadge>> getBadgeCatalog() async {
+    try {
+      final response = await _dio.get('/routines/badges');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => RoutineBadge.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 배지 카탈로그 조회 실패: ${e.message}');
+      throw Exception('배지 카탈로그 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<List<UserRoutineBadge>> getMyBadges() async {
+    try {
+      final response = await _dio.get('/routines/me/badges');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => UserRoutineBadge.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 내 배지 목록 조회 실패: ${e.message}');
+      throw Exception('내 배지 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<List<UserRoutineBadge>> getRoutineBadges(String id) async {
+    try {
+      final response = await _dio.get('/routines/$id/badges');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => UserRoutineBadge.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴별 배지 조회 실패: ${e.message}');
+      throw Exception('루틴별 배지 조회 실패: ${e.message}');
+    }
+  }
+
+  // ── 랭킹보드 ──────────────────────────────────────────────────────────────
+
+  Future<RoutineLeaderboard> getLeaderboard(
+    String groupId, {
+    required LeaderboardPeriod period,
+    required LeaderboardMetric metric,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/routines/groups/$groupId/leaderboard',
+        queryParameters: {
+          'period': period.toJsonString(),
+          'metric': metric.toJsonString(),
+        },
+      );
+      return RoutineLeaderboard.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 랭킹보드 조회 실패: ${e.message}');
+      throw Exception('랭킹보드 조회 실패: ${e.message}');
+    }
+  }
 }

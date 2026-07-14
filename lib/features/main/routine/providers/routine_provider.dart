@@ -11,11 +11,13 @@ class RoutineCheckResult {
   final bool success;
   final bool streakIncreased;
   final int? currentStreakDays;
+  final List<UserRoutineBadge> newlyEarnedBadges;
 
   const RoutineCheckResult({
     required this.success,
     this.streakIncreased = false,
     this.currentStreakDays,
+    this.newlyEarnedBadges = const [],
   });
 }
 
@@ -172,6 +174,42 @@ Future<List<RoutineSummaryItem>> routineSummary(Ref ref) async {
   return repository.getSummary();
 }
 
+// ── 배지 ──────────────────────────────────────────────────────────────────────
+
+/// 전체 배지 카탈로그 (마스터 데이터)
+@riverpod
+Future<List<RoutineBadge>> routineBadgeCatalog(Ref ref) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getBadgeCatalog();
+}
+
+/// 내가 획득한 통산 배지 목록
+@riverpod
+Future<List<UserRoutineBadge>> routineMyBadges(Ref ref) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getMyBadges();
+}
+
+/// 특정 루틴에서 획득한 배지 목록
+@riverpod
+Future<List<UserRoutineBadge>> routineBadges(Ref ref, String routineId) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getRoutineBadges(routineId);
+}
+
+// ── 랭킹보드 ──────────────────────────────────────────────────────────────────
+
+@riverpod
+Future<RoutineLeaderboard> routineLeaderboard(
+  Ref ref,
+  String groupId, {
+  required LeaderboardPeriod period,
+  required LeaderboardMetric metric,
+}) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getLeaderboard(groupId, period: period, metric: metric);
+}
+
 // ── 관리 Notifier ─────────────────────────────────────────────────────────────
 
 /// 루틴 관리 Notifier (생성/수정/삭제/체크/공유)
@@ -255,12 +293,21 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         _ref.read(routineStreakProvider(routineId)).valueOrNull;
 
     try {
+      var newlyEarnedBadges = const <UserRoutineBadge>[];
       if (currentlyChecked) {
         await _repository.uncheckRoutine(routineId);
       } else {
-        await _repository.checkRoutine(routineId, const CheckRoutineDto());
+        final log = await _repository.checkRoutine(
+          routineId,
+          const CheckRoutineDto(),
+        );
+        newlyEarnedBadges = log.newlyEarnedBadges;
       }
       _ref.invalidate(routineSummaryProvider);
+      if (newlyEarnedBadges.isNotEmpty) {
+        _ref.invalidate(routineMyBadgesProvider);
+        _ref.invalidate(routineBadgesProvider(routineId));
+      }
 
       // 체크(해제 아님) 성공 시에만 스트릭 갱신 여부를 비교해 축하 신호 반환
       var streakIncreased = false;
@@ -280,6 +327,7 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         success: true,
         streakIncreased: streakIncreased,
         currentStreakDays: newStreakDays,
+        newlyEarnedBadges: newlyEarnedBadges,
       );
     } catch (e) {
       _ref.read(routineListProvider.notifier).setCheckedToday(

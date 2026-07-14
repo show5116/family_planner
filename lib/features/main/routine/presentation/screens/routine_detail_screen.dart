@@ -3,13 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_heatmap_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_share_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_stats_tab.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
-/// 루틴 상세 화면 셸 (히트맵/통계/공유 3탭)
+/// 루틴 상세 화면 셸 (히트맵/통계/배지/공유 4탭)
 class RoutineDetailScreen extends ConsumerWidget {
   const RoutineDetailScreen({super.key, required this.routineId});
 
@@ -55,7 +56,7 @@ class RoutineDetailScreen extends ConsumerWidget {
     final detailAsync = ref.watch(routineDetailProvider(routineId));
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -75,9 +76,12 @@ class RoutineDetailScreen extends ConsumerWidget {
             ),
           ],
           bottom: TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
             tabs: [
               Tab(text: l10n.routine_tab_heatmap),
               Tab(text: l10n.routine_tab_stats),
+              Tab(text: l10n.routine_tab_badges),
               Tab(text: l10n.routine_tab_share),
             ],
           ),
@@ -89,6 +93,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             children: [
               RoutineHeatmapTab(routine: routine),
               RoutineStatsTab(routineId: routineId),
+              RoutineBadgesTab(routineId: routineId),
               RoutineShareTab(routineId: routineId),
             ],
           ),

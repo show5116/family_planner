@@ -4616,4 +4616,34 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nav_routines => '习惯';
+
+  @override
+  String get routine_tab_badges => '徽章';
+
+  @override
+  String get routine_badges_title => '我的徽章';
+
+  @override
+  String get routine_badges_empty => '尚未获得任何徽章';
+
+  @override
+  String get routine_badge_earned_title => '获得徽章!';
+
+  @override
+  String get routine_badge_earned_confirm => '确定';
+
+  @override
+  String get routine_leaderboard_title => '群组排行榜';
+
+  @override
+  String get routine_leaderboard_metric_checkCount => '打卡次数';
+
+  @override
+  String get routine_leaderboard_metric_achievementRate => '达成率';
+
+  @override
+  String get routine_leaderboard_empty => '没有共享习惯的群组成员';
+
+  @override
+  String get routine_leaderboard_check_count_suffix => '次';
 }

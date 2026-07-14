@@ -6,6 +6,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
@@ -32,6 +33,8 @@ class RoutineListScreen extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.routine_check_error)),
       );
+    } else if (result.newlyEarnedBadges.isNotEmpty) {
+      await showRoutineBadgeCelebration(context, result.newlyEarnedBadges);
     } else if (result.streakIncreased && result.currentStreakDays != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -152,6 +155,11 @@ class RoutineListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.routine_title),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.emoji_events_outlined),
+            tooltip: l10n.routine_badges_title,
+            onPressed: () => context.push(AppRoutes.routineBadges),
+          ),
           IconButton(
             icon: const Icon(Icons.groups_outlined),
             tooltip: l10n.routine_shared_group_select,

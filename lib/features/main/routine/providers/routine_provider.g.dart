@@ -800,6 +800,345 @@ final routineSummaryProvider =
 // ignore: unused_element
 typedef RoutineSummaryRef =
     AutoDisposeFutureProviderRef<List<RoutineSummaryItem>>;
+String _$routineBadgeCatalogHash() =>
+    r'4a5460770c2bed6473343588c14f51e37400ed62';
+
+/// 전체 배지 카탈로그 (마스터 데이터)
+///
+/// Copied from [routineBadgeCatalog].
+@ProviderFor(routineBadgeCatalog)
+final routineBadgeCatalogProvider =
+    AutoDisposeFutureProvider<List<RoutineBadge>>.internal(
+      routineBadgeCatalog,
+      name: r'routineBadgeCatalogProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineBadgeCatalogHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineBadgeCatalogRef =
+    AutoDisposeFutureProviderRef<List<RoutineBadge>>;
+String _$routineMyBadgesHash() => r'77138e59542f6cc532ce25705a088614fe1bfc13';
+
+/// 내가 획득한 통산 배지 목록
+///
+/// Copied from [routineMyBadges].
+@ProviderFor(routineMyBadges)
+final routineMyBadgesProvider =
+    AutoDisposeFutureProvider<List<UserRoutineBadge>>.internal(
+      routineMyBadges,
+      name: r'routineMyBadgesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineMyBadgesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineMyBadgesRef =
+    AutoDisposeFutureProviderRef<List<UserRoutineBadge>>;
+String _$routineBadgesHash() => r'668d4bc44e04cfa0ef74e52ebe1d4ee71ed347df';
+
+/// 특정 루틴에서 획득한 배지 목록
+///
+/// Copied from [routineBadges].
+@ProviderFor(routineBadges)
+const routineBadgesProvider = RoutineBadgesFamily();
+
+/// 특정 루틴에서 획득한 배지 목록
+///
+/// Copied from [routineBadges].
+class RoutineBadgesFamily extends Family<AsyncValue<List<UserRoutineBadge>>> {
+  /// 특정 루틴에서 획득한 배지 목록
+  ///
+  /// Copied from [routineBadges].
+  const RoutineBadgesFamily();
+
+  /// 특정 루틴에서 획득한 배지 목록
+  ///
+  /// Copied from [routineBadges].
+  RoutineBadgesProvider call(String routineId) {
+    return RoutineBadgesProvider(routineId);
+  }
+
+  @override
+  RoutineBadgesProvider getProviderOverride(
+    covariant RoutineBadgesProvider provider,
+  ) {
+    return call(provider.routineId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineBadgesProvider';
+}
+
+/// 특정 루틴에서 획득한 배지 목록
+///
+/// Copied from [routineBadges].
+class RoutineBadgesProvider
+    extends AutoDisposeFutureProvider<List<UserRoutineBadge>> {
+  /// 특정 루틴에서 획득한 배지 목록
+  ///
+  /// Copied from [routineBadges].
+  RoutineBadgesProvider(String routineId)
+    : this._internal(
+        (ref) => routineBadges(ref as RoutineBadgesRef, routineId),
+        from: routineBadgesProvider,
+        name: r'routineBadgesProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineBadgesHash,
+        dependencies: RoutineBadgesFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineBadgesFamily._allTransitiveDependencies,
+        routineId: routineId,
+      );
+
+  RoutineBadgesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.routineId,
+  }) : super.internal();
+
+  final String routineId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<UserRoutineBadge>> Function(RoutineBadgesRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineBadgesProvider._internal(
+        (ref) => create(ref as RoutineBadgesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        routineId: routineId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<UserRoutineBadge>> createElement() {
+    return _RoutineBadgesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineBadgesProvider && other.routineId == routineId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, routineId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineBadgesRef on AutoDisposeFutureProviderRef<List<UserRoutineBadge>> {
+  /// The parameter `routineId` of this provider.
+  String get routineId;
+}
+
+class _RoutineBadgesProviderElement
+    extends AutoDisposeFutureProviderElement<List<UserRoutineBadge>>
+    with RoutineBadgesRef {
+  _RoutineBadgesProviderElement(super.provider);
+
+  @override
+  String get routineId => (origin as RoutineBadgesProvider).routineId;
+}
+
+String _$routineLeaderboardHash() =>
+    r'ae8bd652ad3b2ead1971d5b74405714938e1aa8c';
+
+/// See also [routineLeaderboard].
+@ProviderFor(routineLeaderboard)
+const routineLeaderboardProvider = RoutineLeaderboardFamily();
+
+/// See also [routineLeaderboard].
+class RoutineLeaderboardFamily extends Family<AsyncValue<RoutineLeaderboard>> {
+  /// See also [routineLeaderboard].
+  const RoutineLeaderboardFamily();
+
+  /// See also [routineLeaderboard].
+  RoutineLeaderboardProvider call(
+    String groupId, {
+    required LeaderboardPeriod period,
+    required LeaderboardMetric metric,
+  }) {
+    return RoutineLeaderboardProvider(groupId, period: period, metric: metric);
+  }
+
+  @override
+  RoutineLeaderboardProvider getProviderOverride(
+    covariant RoutineLeaderboardProvider provider,
+  ) {
+    return call(
+      provider.groupId,
+      period: provider.period,
+      metric: provider.metric,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineLeaderboardProvider';
+}
+
+/// See also [routineLeaderboard].
+class RoutineLeaderboardProvider
+    extends AutoDisposeFutureProvider<RoutineLeaderboard> {
+  /// See also [routineLeaderboard].
+  RoutineLeaderboardProvider(
+    String groupId, {
+    required LeaderboardPeriod period,
+    required LeaderboardMetric metric,
+  }) : this._internal(
+         (ref) => routineLeaderboard(
+           ref as RoutineLeaderboardRef,
+           groupId,
+           period: period,
+           metric: metric,
+         ),
+         from: routineLeaderboardProvider,
+         name: r'routineLeaderboardProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$routineLeaderboardHash,
+         dependencies: RoutineLeaderboardFamily._dependencies,
+         allTransitiveDependencies:
+             RoutineLeaderboardFamily._allTransitiveDependencies,
+         groupId: groupId,
+         period: period,
+         metric: metric,
+       );
+
+  RoutineLeaderboardProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+    required this.period,
+    required this.metric,
+  }) : super.internal();
+
+  final String groupId;
+  final LeaderboardPeriod period;
+  final LeaderboardMetric metric;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineLeaderboard> Function(RoutineLeaderboardRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineLeaderboardProvider._internal(
+        (ref) => create(ref as RoutineLeaderboardRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+        period: period,
+        metric: metric,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineLeaderboard> createElement() {
+    return _RoutineLeaderboardProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineLeaderboardProvider &&
+        other.groupId == groupId &&
+        other.period == period &&
+        other.metric == metric;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+    hash = _SystemHash.combine(hash, period.hashCode);
+    hash = _SystemHash.combine(hash, metric.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineLeaderboardRef
+    on AutoDisposeFutureProviderRef<RoutineLeaderboard> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+
+  /// The parameter `period` of this provider.
+  LeaderboardPeriod get period;
+
+  /// The parameter `metric` of this provider.
+  LeaderboardMetric get metric;
+}
+
+class _RoutineLeaderboardProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineLeaderboard>
+    with RoutineLeaderboardRef {
+  _RoutineLeaderboardProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineLeaderboardProvider).groupId;
+  @override
+  LeaderboardPeriod get period => (origin as RoutineLeaderboardProvider).period;
+  @override
+  LeaderboardMetric get metric => (origin as RoutineLeaderboardProvider).metric;
+}
+
 String _$routineListHash() => r'70ffc896fbc405a4e3a7b82d11db7d9de2d340ac';
 
 /// 활성 루틴 목록 Provider

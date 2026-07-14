@@ -4754,4 +4754,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nav_routines => 'Routines';
+
+  @override
+  String get routine_tab_badges => 'Badges';
+
+  @override
+  String get routine_badges_title => 'My Badges';
+
+  @override
+  String get routine_badges_empty => 'No badges earned yet';
+
+  @override
+  String get routine_badge_earned_title => 'Badge Earned!';
+
+  @override
+  String get routine_badge_earned_confirm => 'OK';
+
+  @override
+  String get routine_leaderboard_title => 'Group Leaderboard';
+
+  @override
+  String get routine_leaderboard_metric_checkCount => 'Check Count';
+
+  @override
+  String get routine_leaderboard_metric_achievementRate => 'Achievement Rate';
+
+  @override
+  String get routine_leaderboard_empty =>
+      'No group members with shared routines';
+
+  @override
+  String get routine_leaderboard_check_count_suffix => '';
 }

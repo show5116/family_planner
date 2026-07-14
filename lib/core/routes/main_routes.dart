@@ -10,6 +10,8 @@ import 'package:family_planner/features/main/routine/presentation/screens/routin
 import 'package:family_planner/features/main/routine/presentation/screens/routine_form_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_leaderboard_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart'
     show AccountDetailByIdScreen, AccountDetailScreen;
@@ -551,6 +553,19 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final groupId = state.pathParameters['groupId'] ?? '';
         return RoutineGroupMembersScreen(groupId: groupId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.routineBadges,
+      name: 'routineBadges',
+      builder: (context, state) => const RoutineBadgesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineLeaderboard,
+      name: 'routineLeaderboard',
+      builder: (context, state) {
+        final groupId = state.pathParameters['groupId'] ?? '';
+        return RoutineLeaderboardScreen(groupId: groupId);
       },
     ),
 
