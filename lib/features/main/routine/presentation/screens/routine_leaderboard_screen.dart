@@ -7,6 +7,7 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 그룹 랭킹보드 화면 (공유된 루틴 기준 체크 횟수/달성률 순위)
 class RoutineLeaderboardScreen extends ConsumerStatefulWidget {
@@ -33,13 +34,12 @@ class _RoutineLeaderboardScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final leaderboardAsync = ref.watch(
-      routineLeaderboardProvider(
-        widget.groupId,
-        period: _period,
-        metric: _metric,
-      ),
+    final leaderboardProviderArg = routineLeaderboardProvider(
+      widget.groupId,
+      period: _period,
+      metric: _metric,
     );
+    final leaderboardAsync = ref.watch(leaderboardProviderArg);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.routine_leaderboard_title)),
@@ -88,8 +88,11 @@ class _RoutineLeaderboardScreenState
           Expanded(
             child: leaderboardAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, _) =>
-                  Center(child: Text(l10n.routine_error_generic)),
+              error: (error, _) => AppErrorState(
+                error: error,
+                title: l10n.routine_error_generic,
+                onRetry: () => ref.invalidate(leaderboardProviderArg),
+              ),
               data: (leaderboard) {
                 if (leaderboard.rankings.isEmpty) {
                   return AppEmptyState(

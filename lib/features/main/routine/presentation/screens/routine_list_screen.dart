@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
@@ -9,14 +11,32 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
+
+part '_routine_list_onboarding.dart';
 
 /// 루틴 목록 화면 (오늘 체크 리스트)
-class RoutineListScreen extends ConsumerWidget {
+class RoutineListScreen extends ConsumerStatefulWidget {
   const RoutineListScreen({super.key});
+
+  @override
+  ConsumerState<RoutineListScreen> createState() => _RoutineListScreenState();
+}
+
+class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
+  final _addButtonKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowOnboarding());
+  }
 
   Future<void> _toggleCheck(
     BuildContext context,
@@ -146,7 +166,7 @@ class RoutineListScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final routinesAsync = ref.watch(routineListProvider);
     final myGroups = ref.watch(myGroupsProvider).valueOrNull ?? [];
@@ -168,12 +188,17 @@ class RoutineListScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        key: _addButtonKey,
         onPressed: () => context.push(AppRoutes.routineAdd),
         child: const Icon(Icons.add),
       ),
       body: routinesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+        error: (error, _) => AppErrorState(
+          error: error,
+          title: l10n.routine_error_generic,
+          onRetry: () => ref.read(routineListProvider.notifier).refresh(),
+        ),
         data: (routines) {
           if (routines.isEmpty) {
             return AppEmptyState(

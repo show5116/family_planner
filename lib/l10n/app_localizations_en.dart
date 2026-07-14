@@ -4632,7 +4632,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_field_title_hint => 'e.g. Morning stretch';
 
   @override
+  String get routine_field_title_required => 'Please enter a title';
+
+  @override
+  String get routine_field_title_too_long =>
+      'Title must be 100 characters or fewer';
+
+  @override
   String get routine_field_emoji => 'Emoji';
+
+  @override
+  String get routine_field_emoji_helper => 'Enter a single emoji (e.g. 🏃)';
 
   @override
   String get routine_field_color => 'Color';

@@ -10,6 +10,7 @@ import 'package:family_planner/features/main/routine/providers/routine_provider.
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 상세 - 공유 그룹 관리 탭
 class RoutineShareTab extends ConsumerWidget {
@@ -123,7 +124,12 @@ class RoutineShareTab extends ConsumerWidget {
 
     return sharesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+      error: (error, _) => AppErrorState(
+        error: error,
+        title: l10n.routine_error_generic,
+        onRetry: () =>
+            ref.read(routineSharesProvider(routineId).notifier).refresh(),
+      ),
       data: (shares) {
         return Column(
           children: [

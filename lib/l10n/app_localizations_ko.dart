@@ -4532,7 +4532,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_field_title_hint => '예: 아침 스트레칭';
 
   @override
+  String get routine_field_title_required => '제목을 입력해주세요';
+
+  @override
+  String get routine_field_title_too_long => '제목은 100자 이내로 입력해주세요';
+
+  @override
   String get routine_field_emoji => '이모지';
+
+  @override
+  String get routine_field_emoji_helper => '이모지 하나를 입력해주세요 (예: 🏃)';
 
   @override
   String get routine_field_color => '색상';

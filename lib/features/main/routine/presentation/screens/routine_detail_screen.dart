@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/routine/presentation/screens/routin
 import 'package:family_planner/features/main/routine/presentation/screens/routine_stats_tab.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 상세 화면 셸 (히트맵/통계/배지/공유 4탭)
 class RoutineDetailScreen extends ConsumerWidget {
@@ -88,7 +89,11 @@ class RoutineDetailScreen extends ConsumerWidget {
         ),
         body: detailAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+          error: (error, _) => AppErrorState(
+            error: error,
+            title: l10n.routine_error_generic,
+            onRetry: () => ref.invalidate(routineDetailProvider(routineId)),
+          ),
           data: (routine) => TabBarView(
             children: [
               RoutineHeatmapTab(routine: routine),

@@ -7,6 +7,7 @@ import 'package:family_planner/features/main/routine/presentation/widgets/routin
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_streak_card.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 상세 - 통계(스트릭 + 달성률) 탭
 class RoutineStatsTab extends ConsumerStatefulWidget {
@@ -24,10 +25,11 @@ class _RoutineStatsTabState extends ConsumerState<RoutineStatsTab> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final streakAsync = ref.watch(routineStreakProvider(widget.routineId));
-    final rateAsync = ref.watch(
-      routineRateProvider(widget.routineId, period: _period),
-    );
+    final streakProviderArg = routineStreakProvider(widget.routineId);
+    final streakAsync = ref.watch(streakProviderArg);
+    final rateProviderArg =
+        routineRateProvider(widget.routineId, period: _period);
+    final rateAsync = ref.watch(rateProviderArg);
 
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
@@ -41,13 +43,21 @@ class _RoutineStatsTabState extends ConsumerState<RoutineStatsTab> {
         children: [
           streakAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+            error: (error, _) => AppErrorState(
+              error: error,
+              title: l10n.routine_error_generic,
+              onRetry: () => ref.invalidate(streakProviderArg),
+            ),
             data: (streak) => RoutineStreakCard(streak: streak),
           ),
           const SizedBox(height: AppSizes.spaceM),
           rateAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+            error: (error, _) => AppErrorState(
+              error: error,
+              title: l10n.routine_error_generic,
+              onRetry: () => ref.invalidate(rateProviderArg),
+            ),
             data: (rate) => RoutineRateCard(
               rate: rate,
               period: _period,

@@ -8,6 +8,7 @@ import 'package:family_planner/features/main/routine/presentation/widgets/routin
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_weekly_strip.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 상세 - 히트맵(달력) 탭
 class RoutineHeatmapTab extends ConsumerStatefulWidget {
@@ -46,13 +47,12 @@ class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final heatmapAsync = ref.watch(
-      routineHeatmapProvider(
-        widget.routine.id,
-        fromDate: _fmt(_from),
-        toDate: _fmt(_to),
-      ),
+    final heatmapProviderArg = routineHeatmapProvider(
+      widget.routine.id,
+      fromDate: _fmt(_from),
+      toDate: _fmt(_to),
     );
+    final heatmapAsync = ref.watch(heatmapProviderArg);
 
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
@@ -63,7 +63,11 @@ class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
       ),
       child: heatmapAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+        error: (error, _) => AppErrorState(
+          error: error,
+          title: l10n.routine_error_generic,
+          onRetry: () => ref.invalidate(heatmapProviderArg),
+        ),
         data: (heatmap) {
           final checkedDates = heatmap.checkedDates
               .map((s) => DateTime.parse(s))

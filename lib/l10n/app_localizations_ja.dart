@@ -4525,7 +4525,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_field_title_hint => '例: 朝のストレッチ';
 
   @override
+  String get routine_field_title_required => 'タイトルを入力してください';
+
+  @override
+  String get routine_field_title_too_long => 'タイトルは100文字以内で入力してください';
+
+  @override
   String get routine_field_emoji => '絵文字';
+
+  @override
+  String get routine_field_emoji_helper => '絵文字を1つ入力してください(例: 🏃)';
 
   @override
   String get routine_field_color => '色';

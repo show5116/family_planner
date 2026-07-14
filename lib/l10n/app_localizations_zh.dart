@@ -4496,7 +4496,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_field_title_hint => '例如: 晨间拉伸';
 
   @override
+  String get routine_field_title_required => '请输入标题';
+
+  @override
+  String get routine_field_title_too_long => '标题请控制在100字以内';
+
+  @override
   String get routine_field_emoji => '表情符号';
+
+  @override
+  String get routine_field_emoji_helper => '请输入一个表情符号(例如: 🏃)';
 
   @override
   String get routine_field_color => '颜色';

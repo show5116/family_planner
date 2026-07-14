@@ -6,6 +6,7 @@ import 'package:family_planner/core/utils/extensions.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 내 배지 목록 화면 (전체 카탈로그 + 획득 여부 표시)
 class RoutineBadgesScreen extends ConsumerWidget {
@@ -21,7 +22,11 @@ class RoutineBadgesScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.routine_badges_title)),
       body: catalogAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+        error: (error, _) => AppErrorState(
+          error: error,
+          title: l10n.routine_error_generic,
+          onRetry: () => ref.invalidate(routineBadgeCatalogProvider),
+        ),
         data: (catalog) {
           if (catalog.isEmpty) {
             return AppEmptyState(

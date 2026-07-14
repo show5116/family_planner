@@ -8708,11 +8708,29 @@ abstract class AppLocalizations {
   /// **'예: 아침 스트레칭'**
   String get routine_field_title_hint;
 
+  /// 제목 미입력 시 유효성 검사 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get routine_field_title_required;
+
+  /// 제목 길이 초과 시 유효성 검사 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'제목은 100자 이내로 입력해주세요'**
+  String get routine_field_title_too_long;
+
   /// 루틴 이모지 입력 필드 라벨
   ///
   /// In ko, this message translates to:
   /// **'이모지'**
   String get routine_field_emoji;
+
+  /// 이모지 입력 필드 도움말
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지 하나를 입력해주세요 (예: 🏃)'**
+  String get routine_field_emoji_helper;
 
   /// 루틴 색상 선택 필드 라벨
   ///

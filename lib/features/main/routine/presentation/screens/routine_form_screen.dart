@@ -7,6 +7,7 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 생성/수정 폼 (routineId가 null이면 생성 모드)
 class RoutineFormScreen extends ConsumerStatefulWidget {
@@ -137,12 +138,20 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
         children: [
           TextFormField(
             controller: _titleController,
+            maxLength: 100,
             decoration: InputDecoration(
               labelText: l10n.routine_field_title,
               hintText: l10n.routine_field_title_hint,
             ),
-            validator: (value) =>
-                (value == null || value.trim().isEmpty) ? l10n.routine_field_title : null,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return l10n.routine_field_title_required;
+              }
+              if (value.trim().length > 100) {
+                return l10n.routine_field_title_too_long;
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSizes.spaceM),
           TextFormField(
@@ -150,6 +159,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             maxLength: 4,
             decoration: InputDecoration(
               labelText: l10n.routine_field_emoji,
+              helperText: l10n.routine_field_emoji_helper,
             ),
           ),
           const SizedBox(height: AppSizes.spaceS),
@@ -266,7 +276,12 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
       appBar: AppBar(title: Text(l10n.routine_edit)),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+        error: (error, _) => AppErrorState(
+          error: error,
+          title: l10n.routine_error_generic,
+          onRetry: () =>
+              ref.invalidate(routineDetailProvider(widget.routineId!)),
+        ),
         data: (routine) {
           _initFromRoutine(routine);
           return _buildForm(context);

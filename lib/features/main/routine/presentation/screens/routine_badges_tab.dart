@@ -6,6 +6,7 @@ import 'package:family_planner/core/utils/extensions.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 상세 - 배지 탭 (해당 루틴 기준으로 획득한 배지 목록)
 class RoutineBadgesTab extends ConsumerWidget {
@@ -20,7 +21,11 @@ class RoutineBadgesTab extends ConsumerWidget {
 
     return badgesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+      error: (error, _) => AppErrorState(
+        error: error,
+        title: l10n.routine_error_generic,
+        onRetry: () => ref.invalidate(routineBadgesProvider(routineId)),
+      ),
       data: (badges) {
         if (badges.isEmpty) {
           return AppEmptyState(

@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 그룹원별 공유 루틴 현황 화면 (읽기 전용)
 class RoutineGroupMembersScreen extends ConsumerWidget {
@@ -36,7 +37,11 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
       ),
       body: membersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l10n.routine_error_generic)),
+        error: (error, _) => AppErrorState(
+          error: error,
+          title: l10n.routine_error_generic,
+          onRetry: () => ref.invalidate(routineGroupMembersProvider(groupId)),
+        ),
         data: (members) {
           final withRoutines =
               members.where((m) => m.routines.isNotEmpty).toList();
@@ -225,8 +230,9 @@ class _MemberDetailSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final detailAsync =
-        ref.watch(routineGroupMemberDetailProvider(groupId, userId));
+    final detailProviderArg =
+        routineGroupMemberDetailProvider(groupId, userId);
+    final detailAsync = ref.watch(detailProviderArg);
 
     return DraggableScrollableSheet(
       expand: false,
@@ -251,8 +257,11 @@ class _MemberDetailSheet extends ConsumerWidget {
             child: detailAsync.when(
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
-              error: (_, _) =>
-                  Center(child: Text(l10n.routine_error_generic)),
+              error: (error, _) => AppErrorState(
+                error: error,
+                title: l10n.routine_error_generic,
+                onRetry: () => ref.invalidate(detailProviderArg),
+              ),
               data: (routines) {
                 if (routines.isEmpty) {
                   return AppEmptyState(

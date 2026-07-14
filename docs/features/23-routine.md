@@ -28,6 +28,9 @@
 - ✅ 그룹원 현황 화면에 루틴별 스트릭 배지(🔥N) 노출
 - ✅ 그룹 랭킹보드 화면 (체크 횟수/달성률 기준, 주/월 토글, 그룹원 현황 화면에서 진입)
 - ✅ 알림 설정에 루틴 카테고리 추가 (미체크 리마인드 시각 설정)
+- ✅ 전 화면 공통 에러 상태(AppErrorState) 적용 — 재시도 버튼으로 즉시 재조회 가능
+- ✅ 생성/수정 폼 유효성 검사 보강 (제목 100자 제한, 명확한 에러 메시지, 이모지 필드 도움말)
+- ✅ 루틴 목록 화면 첫 진입 코치마크 (루틴 추가 버튼 안내, 1회만 노출)
 
 ## 데이터 모델
 - ✅ 루틴 모델 (Routine) — title, emoji, color, frequencyType, targetCount, startDate, endDate, isActive, sortOrder, checkedToday
@@ -110,6 +113,8 @@
 - 홈 대시보드 위젯: `lib/features/home/presentation/widgets/routine_summary_widget.dart`
 - 알림 설정: `lib/features/notification/data/models/notification_settings_model.dart`, `notification_settings_provider.dart`, `notification_settings_section.dart` (routineEnabled/routineReminderHour 확장)
 - 백엔드 API 제안 문서(작성 시점 미구현이었으나 현재 배지/랭킹보드/알림 3종 모두 구현 완료): `docs/api-proposals/routine-gamification.md`
+- 목록 온보딩: `lib/features/main/routine/presentation/screens/_routine_list_onboarding.dart`
+- 유닛 테스트: `test/features/main/routine/routine_provider_test.dart` (체크 낙관적 업데이트/롤백, 체크취소, 스트릭 갱신 감지, 배지 전달 5건)
 
 ## 노트
 - 1차 릴리스는 `frequencyType = WEEKLY_COUNT`(주 N회, 요일 무관)만 지원. `DAILY`/`DAYS_OF_WEEK`는 백엔드 스키마상 확장 여지만 마련됨.
@@ -124,3 +129,6 @@
 - 축하 UI 우선순위: 배지 획득 > 스트릭 갱신(둘 다 해당되면 배지 다이얼로그만 표시, 스트릭 스낵바는 생략) — 같은 체크 한 번에 두 축하가 동시에 뜨는 것을 방지.
 - 랭킹보드는 그룹에 루틴을 공유한 사용자만 집계 대상(비공유 = 참여 안 함 의사표시로 존중, 백엔드 정책). checkCount/achievementRate 둘 다 응답에 항상 포함되므로 프론트에서 metric 토글 시 재조회 없이 정렬 기준만 바꿔도 되지만, 현재 구현은 provider 파라미터 변경으로 재조회하는 단순한 방식을 사용(캐싱 최적화는 후속 과제).
 - 그룹원끼리 서로의 미체크를 알리는 알림은 이번 범위에 포함되지 않음(사회적 압박 우려로 백엔드에서 보류 결정).
+- 에러 화면은 전부 `lib/shared/widgets/app_error_state.dart`의 `AppErrorState`(다른 기능에서 이미 쓰던 공용 위젯)로 통일 — 함수형 provider는 `ref.invalidate(...)`, AsyncNotifier는 각자의 `refresh()`를 재시도 콜백으로 연결.
+- 프로젝트에 mocktail 등 mocking 패키지가 없어, provider 테스트는 `RoutineRepository`를 상속한 Fake 구현체로 `routineRepositoryProvider`를 오버라이드하는 방식을 사용. `RoutineRepository()` 기본 생성자가 `ApiClient.instance`(dotenv 기반 설정)를 초기화하므로, 테스트 `setUpAll`에서 `dotenv.testLoad(fileInput: '')`로 빈 환경을 미리 로드해야 함.
+- 온보딩은 루틴 목록 화면(추가 버튼 대상)에만 단일 타겟으로 추가 — child_points처럼 가짜 데이터를 활용한 다단계 데모 온보딩은 이번 스코프에서 제외(실제 데이터가 있는 화면이라 데모 모드 없이도 핵심 개념 안내 목적은 충족).
