@@ -1,7 +1,16 @@
 # 23. 루틴(습관) 관리 🟨
 
 ## 상태
-🟨 진행 중 (1차 구현 + 2차 UX 고도화 + 게이미피케이션(배지/랭킹보드/알림) 구현 완료)
+🟨 진행 중 (1차 구현 + 2차 UX 고도화 + 게이미피케이션(배지/랭킹보드/알림) + 루틴(습관 묶음) 구현 완료)
+
+## 용어 재정의 (중요)
+기존에는 "루틴"이 개별 항목(체크 대상 하나) 하나를 가리켰다. 백엔드에 여러 항목을 묶는 상위 개념(`RoutineGroup`)이 추가되면서 사용자 대면 용어를 재정의했다:
+- **루틴**: 이제 습관 묶음(`RoutineGroup`)을 가리킨다. 화면 최상위 명칭("루틴" 탭/화면 타이틀)도 그대로 "루틴" 유지.
+- **습관**: 기존에 "루틴"이라 부르던 개별 체크 대상(`Routine` 모델)을 가리킨다. 소속 루틴(그룹)이 없으면 "독립 습관".
+
+코드 심볼(클래스명 `Routine`/`RoutineGroup`, 파일명, provider명)은 API 문서 그대로 유지하고 **바꾸지 않았다** — 화면에 노출되는 l10n 문구만 새 용어로 교체했다. 따라서 코드를 읽을 때 `Routine` 클래스가 화면상 "습관"으로 표시된다는 점에 주의.
+
+기존 "그룹"(가족/친구 그룹, `Group` 모델·`RoutineShare`·`routine_group_members_screen.dart` 등)은 이번 재정의와 무관하며 그대로 "그룹"이라는 단어를 계속 사용한다. `RoutineGroupMemberRoutines`(가족그룹 멤버별 습관 목록)와 신규 `RoutineGroup`(습관 묶음)은 이름이 비슷하지만 서로 다른 개념이므로 혼동하지 않도록 주의.
 
 ---
 
@@ -30,15 +39,22 @@
 - ✅ 알림 설정에 루틴 카테고리 추가 (미체크 리마인드 시각 설정)
 - ✅ 전 화면 공통 에러 상태(AppErrorState) 적용 — 재시도 버튼으로 즉시 재조회 가능
 - ✅ 생성/수정 폼 유효성 검사 보강 (제목 100자 제한, 명확한 에러 메시지, 이모지 필드 도움말)
-- ✅ 루틴 목록 화면 첫 진입 코치마크 (루틴 추가 버튼 안내, 1회만 노출)
+- ✅ 루틴 목록 화면 첫 진입 코치마크 (습관 추가 버튼 안내, 1회만 노출)
+- ✅ 루틴(습관 묶음) 섹션 UI — 목록 화면에서 접기/펼치기 가능한 섹션으로 표시(헤더: 이모지+제목+오늘 진행률 pill "2/3"+수정/삭제 메뉴), 소속 습관은 섹션 내부에서 드래그 정렬
+- ✅ 독립 습관(소속 루틴 없음) 섹션 — 루틴 섹션들 아래에 별도 헤더로 구분 표시
+- ✅ 루틴(습관 묶음) 생성/수정 다이얼로그 (제목, 이모지 프리셋, 색상 프리셋) — 목록 화면 AppBar에서 진입
+- ✅ 루틴 삭제 시 확인 다이얼로그에 "소속 습관은 삭제되지 않고 독립 습관으로 남는다" 안내 포함
+- ✅ 습관 생성/수정 폼에 "소속 루틴" 드롭다운 추가 (없음/각 루틴 선택, 수정 시 소속 해제 가능)
 
 ## 데이터 모델
-- ✅ 루틴 모델 (Routine) — title, emoji, color, frequencyType, targetCount, startDate, endDate, isActive, sortOrder, checkedToday
+- ✅ 습관 모델 (Routine) — title, emoji, color, frequencyType, targetCount, startDate, endDate, isActive, sortOrder, checkedToday, **routineGroupId**(소속 루틴 ID, null이면 독립 습관)
+- ✅ 루틴(습관 묶음) 모델 (RoutineGroup) — id, title, emoji, color, sortOrder, todayProgress(checked/total)
+- ✅ 루틴 상세 모델 (RoutineGroupDetail) — RoutineGroup + 소속 습관 목록(routines)
 - ✅ 체크 로그 모델 (RoutineLog)
-- ✅ 그룹 공유 모델 (RoutineShare)
+- ✅ 그룹 공유 모델 (RoutineShare) — 가족그룹 공유용, RoutineGroup(습관 묶음)과 무관
 - ✅ 반복 타입 (RoutineFrequencyType — 1차는 weeklyCount만 사용)
 - ✅ 통계 응답 모델 (RoutineHeatmap, RoutineStreak, RoutineRate, RoutineSummaryItem)
-- ✅ 그룹원별 루틴 목록 모델 (RoutineGroupMemberRoutines)
+- ✅ 가족그룹 멤버별 습관 목록 모델 (RoutineGroupMemberRoutines) — 이름이 RoutineGroup과 비슷하지만 가족그룹 공유 기능 전용, 무관한 별개 개념
 - ✅ 배지 모델 (RoutineBadge, UserRoutineBadge, BadgeCriteriaType) — RoutineLog에 newlyEarnedBadges 필드 추가
 - ✅ 랭킹보드 모델 (RoutineLeaderboard, LeaderboardEntry, LeaderboardPeriod, LeaderboardMetric)
 
@@ -56,6 +72,10 @@
 - ✅ 체크 시 신규 배지 자동 판정 (백엔드가 판정, 체크 응답에 결과 포함)
 - ✅ 그룹 랭킹보드 조회 (공유한 루틴 소유자만 집계, 비공유자는 미노출)
 - ✅ 루틴 알림 설정 (미체크 리마인드/배지 획득/주간 요약 — 발송 로직은 백엔드 담당)
+- ✅ 루틴(습관 묶음) 등록/수정/삭제 (soft delete, 삭제 시 소속 습관은 그룹 소속만 해제되고 유지)
+- ✅ 루틴별 오늘 진행률(todayProgress: checked/total) 조회 — 목록/생성/수정/순서변경 응답에 공통 포함
+- ✅ 습관 생성/수정 시 소속 루틴 지정·변경·해제 (routineGroupId, PATCH 시 null 전달로 해제)
+- ✅ 루틴 순서 일괄 변경 (드래그, 낙관적 반영 + 실패 시 롤백) — 습관 순서 변경과 별도 API
 
 ## API 연동
 - ✅ `POST /routines` — 루틴 생성
@@ -80,6 +100,12 @@
 - ✅ `GET /routines/:id/badges` — 특정 루틴에서 획득한 배지 목록
 - ✅ `GET /routines/groups/:groupId/leaderboard` — 그룹 랭킹보드
 - ✅ `PUT /notifications/settings` (category: ROUTINE, routineReminderHour) — 루틴 알림 설정
+- ✅ `POST routines/routine-groups` — 루틴 생성
+- ✅ `GET routines/routine-groups` — 내 루틴 목록 (오늘 진행률 포함)
+- ✅ `PATCH routines/routine-groups/sort-order` — 루틴 순서 일괄 변경
+- ✅ `GET routines/routine-groups/:id` — 루틴 상세 (그룹 메타 + 소속 습관 목록)
+- ✅ `PATCH routines/routine-groups/:id` — 루틴 수정 (title/emoji/color)
+- ✅ `DELETE routines/routine-groups/:id` — 루틴 삭제 (soft delete)
 
 ## 상태 관리
 - ✅ RoutineList Provider (@riverpod AsyncNotifier) — 목록 조회, 낙관적 체크/순서변경 반영
@@ -92,6 +118,9 @@
 - ✅ routineBadgeCatalogProvider / routineMyBadgesProvider / routineBadgesProvider(routineId) (함수형 @riverpod)
 - ✅ routineLeaderboardProvider(groupId, period, metric) (함수형 @riverpod)
 - ✅ NotificationSettings Provider(기존) — routineEnabled/routineReminderHour 필드 확장
+- ✅ RoutineGroupList Provider (@riverpod AsyncNotifier) — 루틴 목록 조회, upsert/remove/reorder
+- ✅ RoutineGroupDetailNotifier Provider (@riverpod AsyncNotifier, family: groupId) — 루틴 상세(소속 습관 포함)
+- ✅ RoutineGroupManagementNotifier (StateNotifier) — 루틴 생성/수정/삭제/순서변경 통합. 습관 쪽 `RoutineManagementNotifier`도 습관의 소속 루틴이 바뀌면 관련 RoutineGroup provider들을 invalidate
 
 ---
 
@@ -109,12 +138,12 @@
 - 배지 탭: `lib/features/main/routine/presentation/screens/routine_badges_tab.dart`
 - 내 배지 목록 화면: `lib/features/main/routine/presentation/screens/routine_badges_screen.dart`
 - 랭킹보드 화면: `lib/features/main/routine/presentation/screens/routine_leaderboard_screen.dart`
-- 위젯: `lib/features/main/routine/presentation/widgets/` (routine_list_item, routine_heatmap_calendar, routine_streak_card, routine_rate_card, routine_share_group_tile, routine_weekly_strip, routine_badge_celebration_dialog)
+- 위젯: `lib/features/main/routine/presentation/widgets/` (routine_list_item, routine_heatmap_calendar, routine_streak_card, routine_rate_card, routine_share_group_tile, routine_weekly_strip, routine_badge_celebration_dialog, **routine_group_section**(루틴 섹션 접기/펼치기+드래그정렬), **routine_group_form_dialog**(루틴 생성/수정 다이얼로그))
 - 홈 대시보드 위젯: `lib/features/home/presentation/widgets/routine_summary_widget.dart`
 - 알림 설정: `lib/features/notification/data/models/notification_settings_model.dart`, `notification_settings_provider.dart`, `notification_settings_section.dart` (routineEnabled/routineReminderHour 확장)
 - 백엔드 API 제안 문서(작성 시점 미구현이었으나 현재 배지/랭킹보드/알림 3종 모두 구현 완료): `docs/api-proposals/routine-gamification.md`
 - 목록 온보딩: `lib/features/main/routine/presentation/screens/_routine_list_onboarding.dart`
-- 유닛 테스트: `test/features/main/routine/routine_provider_test.dart` (체크 낙관적 업데이트/롤백, 체크취소, 스트릭 갱신 감지, 배지 전달 5건)
+- 유닛 테스트: `test/features/main/routine/routine_provider_test.dart` (체크 낙관적 업데이트/롤백, 체크취소, 스트릭 갱신 감지, 배지 전달 5건 + 루틴 목록 조회/생성/삭제 3건)
 
 ## 노트
 - 1차 릴리스는 `frequencyType = WEEKLY_COUNT`(주 N회, 요일 무관)만 지원. `DAILY`/`DAYS_OF_WEEK`는 백엔드 스키마상 확장 여지만 마련됨.
@@ -132,3 +161,6 @@
 - 에러 화면은 전부 `lib/shared/widgets/app_error_state.dart`의 `AppErrorState`(다른 기능에서 이미 쓰던 공용 위젯)로 통일 — 함수형 provider는 `ref.invalidate(...)`, AsyncNotifier는 각자의 `refresh()`를 재시도 콜백으로 연결.
 - 프로젝트에 mocktail 등 mocking 패키지가 없어, provider 테스트는 `RoutineRepository`를 상속한 Fake 구현체로 `routineRepositoryProvider`를 오버라이드하는 방식을 사용. `RoutineRepository()` 기본 생성자가 `ApiClient.instance`(dotenv 기반 설정)를 초기화하므로, 테스트 `setUpAll`에서 `dotenv.testLoad(fileInput: '')`로 빈 환경을 미리 로드해야 함.
 - 온보딩은 루틴 목록 화면(추가 버튼 대상)에만 단일 타겟으로 추가 — child_points처럼 가짜 데이터를 활용한 다단계 데모 온보딩은 이번 스코프에서 제외(실제 데이터가 있는 화면이라 데모 모드 없이도 핵심 개념 안내 목적은 충족).
+- 루틴(습관 묶음) 목록은 별도 API 호출로 그룹핑하지 않고, 프론트에서 `routineListProvider`(전체 습관) 결과를 `routineGroupId`로 그룹핑해 렌더링한다 — `GET /routines?routineGroupId=`(그룹별 필터) API는 존재하지만 목록 화면 용도로는 사용하지 않음.
+- 루틴 그룹 내 습관 순서 변경은 그룹 전용 정렬 API가 없어 기존 `PATCH routines/sort-order`(습관 순서 API)를 그대로 사용한다. 그룹 간 순서 변경은 별도의 `PATCH routines/routine-groups/sort-order`를 사용.
+- `PATCH routines/routine-groups/:id`/`PATCH /routines/:id`의 실제 요청 바디 필드는 자동 생성된 `docs/api/routines.md`에 일부 누락되어 있었음(PartialType 상속 필드가 문서화 도구에서 빠짐) — 백엔드 DTO 소스(`family_planner_back_end/src/routine/dto/`)를 직접 대조해 확정. 향후 이 문서가 다시 갱신될 때도 PartialType을 쓰는 Update DTO는 문서만으로 판단하지 말고 소스 확인을 권장.

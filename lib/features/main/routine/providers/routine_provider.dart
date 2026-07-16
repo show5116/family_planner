@@ -76,6 +76,66 @@ class RoutineList extends _$RoutineList {
   }
 }
 
+// ── 루틴(습관 묶음) 목록/상세 ─────────────────────────────────────────────────
+
+/// 루틴(습관 묶음) 목록 Provider
+@riverpod
+class RoutineGroupList extends _$RoutineGroupList {
+  @override
+  Future<List<RoutineGroup>> build() async {
+    final repository = ref.watch(routineRepositoryProvider);
+    return repository.getRoutineGroups();
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return ref.read(routineRepositoryProvider).getRoutineGroups();
+    });
+  }
+
+  void upsertGroup(RoutineGroup group) {
+    if (!state.hasValue) return;
+    final list = state.value!;
+    final index = list.indexWhere((g) => g.id == group.id);
+    if (index == -1) {
+      state = AsyncValue.data([...list, group]);
+    } else {
+      final updated = [...list];
+      updated[index] = group;
+      state = AsyncValue.data(updated);
+    }
+  }
+
+  void removeGroup(String groupId) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.where((g) => g.id != groupId).toList(),
+    );
+  }
+
+  void reorder(List<RoutineGroup> reordered) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(reordered);
+  }
+}
+
+@riverpod
+class RoutineGroupDetailNotifier extends _$RoutineGroupDetailNotifier {
+  @override
+  Future<RoutineGroupDetail> build(String groupId) async {
+    final repository = ref.watch(routineRepositoryProvider);
+    return repository.getRoutineGroupDetail(groupId);
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return ref.read(routineRepositoryProvider).getRoutineGroupDetail(groupId);
+    });
+  }
+}
+
 // ── 루틴 상세 ─────────────────────────────────────────────────────────────────
 
 @riverpod
@@ -225,6 +285,10 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       final routine = await _repository.createRoutine(dto);
       _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      if (routine.routineGroupId != null) {
+        _ref.invalidate(routineGroupListProvider);
+        _ref.invalidate(routineGroupDetailNotifierProvider(routine.routineGroupId!));
+      }
       state = const AsyncValue.data(null);
       return routine;
     } catch (e, st) {
@@ -236,9 +300,28 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
   Future<Routine?> updateRoutine(String id, UpdateRoutineDto dto) async {
     state = const AsyncValue.loading();
     try {
+      final existingRoutines = _ref.read(routineListProvider).valueOrNull;
+      String? previousGroupId;
+      if (existingRoutines != null) {
+        for (final r in existingRoutines) {
+          if (r.id == id) {
+            previousGroupId = r.routineGroupId;
+            break;
+          }
+        }
+      }
       final routine = await _repository.updateRoutine(id, dto);
       _ref.read(routineListProvider.notifier).upsertRoutine(routine);
       _ref.read(routineDetailProvider(id).notifier).setRoutine(routine);
+      if (dto.routineGroupId != null || dto.clearRoutineGroupId) {
+        _ref.invalidate(routineGroupListProvider);
+        if (previousGroupId != null) {
+          _ref.invalidate(routineGroupDetailNotifierProvider(previousGroupId));
+        }
+        if (routine.routineGroupId != null) {
+          _ref.invalidate(routineGroupDetailNotifierProvider(routine.routineGroupId!));
+        }
+      }
       state = const AsyncValue.data(null);
       return routine;
     } catch (e, st) {
@@ -309,6 +392,21 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         _ref.invalidate(routineBadgesProvider(routineId));
       }
 
+      final checkedRoutines = _ref.read(routineListProvider).valueOrNull;
+      String? groupId;
+      if (checkedRoutines != null) {
+        for (final r in checkedRoutines) {
+          if (r.id == routineId) {
+            groupId = r.routineGroupId;
+            break;
+          }
+        }
+      }
+      if (groupId != null) {
+        _ref.invalidate(routineGroupListProvider);
+        _ref.invalidate(routineGroupDetailNotifierProvider(groupId));
+      }
+
       // 체크(해제 아님) 성공 시에만 스트릭 갱신 여부를 비교해 축하 신호 반환
       var streakIncreased = false;
       int? newStreakDays;
@@ -371,6 +469,88 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
 final routineManagementProvider =
     StateNotifierProvider<RoutineManagementNotifier, AsyncValue<void>>((ref) {
   return RoutineManagementNotifier(
+    ref.watch(routineRepositoryProvider),
+    ref,
+  );
+});
+
+/// 루틴(습관 묶음) 관리 Notifier (생성/수정/삭제/순서변경)
+class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
+  final RoutineRepository _repository;
+  final Ref _ref;
+
+  RoutineGroupManagementNotifier(this._repository, this._ref)
+      : super(const AsyncValue.data(null));
+
+  Future<RoutineGroup?> createRoutineGroup(CreateRoutineGroupDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final group = await _repository.createRoutineGroup(dto);
+      _ref.read(routineGroupListProvider.notifier).upsertGroup(group);
+      state = const AsyncValue.data(null);
+      return group;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<RoutineGroup?> updateRoutineGroup(
+    String id,
+    UpdateRoutineGroupDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final group = await _repository.updateRoutineGroup(id, dto);
+      _ref.read(routineGroupListProvider.notifier).upsertGroup(group);
+      _ref.invalidate(routineGroupDetailNotifierProvider(id));
+      state = const AsyncValue.data(null);
+      return group;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// 그룹 삭제. 소속 습관은 백엔드에서 그룹 소속만 해제되어 유지되므로
+  /// 습관 목록도 함께 refresh해 독립 습관 섹션으로 옮겨진 상태를 반영한다.
+  Future<bool> deleteRoutineGroup(String id) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteRoutineGroup(id);
+      _ref.read(routineGroupListProvider.notifier).removeGroup(id);
+      await _ref.read(routineListProvider.notifier).refresh();
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  /// 그룹 순서 변경 (낙관적 반영, 실패 시 롤백)
+  Future<void> reorderGroups(List<RoutineGroup> reordered) async {
+    _ref.read(routineGroupListProvider.notifier).reorder(reordered);
+    try {
+      await _repository.updateRoutineGroupSortOrder(
+        reordered
+            .asMap()
+            .entries
+            .map((e) => RoutineGroupSortOrderItemDto(
+                  id: e.value.id,
+                  sortOrder: e.key,
+                ))
+            .toList(),
+      );
+    } catch (_) {
+      _ref.read(routineGroupListProvider.notifier).refresh();
+    }
+  }
+}
+
+final routineGroupManagementProvider = StateNotifierProvider<
+    RoutineGroupManagementNotifier, AsyncValue<void>>((ref) {
+  return RoutineGroupManagementNotifier(
     ref.watch(routineRepositoryProvider),
     ref,
   );

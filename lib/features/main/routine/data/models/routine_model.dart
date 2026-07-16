@@ -43,7 +43,7 @@ class ThisWeekProgress {
   }
 }
 
-/// 루틴 모델
+/// 습관 모델 (여러 습관을 묶으면 루틴(RoutineGroup)이 된다)
 class Routine {
   final String id;
   final String title;
@@ -56,6 +56,7 @@ class Routine {
   final bool isActive;
   final int sortOrder;
   final bool checkedToday;
+  final String? routineGroupId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -71,6 +72,7 @@ class Routine {
     required this.isActive,
     required this.sortOrder,
     required this.checkedToday,
+    this.routineGroupId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -92,6 +94,7 @@ class Routine {
       isActive: json['isActive'] as bool? ?? true,
       sortOrder: json['sortOrder'] as int? ?? 0,
       checkedToday: json['checkedToday'] as bool? ?? false,
+      routineGroupId: json['routineGroupId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -106,6 +109,7 @@ class Routine {
     bool? isActive,
     int? sortOrder,
     bool? checkedToday,
+    String? routineGroupId,
   }) {
     return Routine(
       id: id,
@@ -119,8 +123,98 @@ class Routine {
       isActive: isActive ?? this.isActive,
       sortOrder: sortOrder ?? this.sortOrder,
       checkedToday: checkedToday ?? this.checkedToday,
+      routineGroupId: routineGroupId ?? this.routineGroupId,
       createdAt: createdAt,
       updatedAt: updatedAt,
+    );
+  }
+}
+
+/// 루틴(습관 묶음)의 오늘 진행 상황
+class RoutineGroupProgress {
+  final int checked;
+  final int total;
+
+  const RoutineGroupProgress({required this.checked, required this.total});
+
+  factory RoutineGroupProgress.fromJson(Map<String, dynamic> json) {
+    return RoutineGroupProgress(
+      checked: json['checked'] as int? ?? 0,
+      total: json['total'] as int? ?? 0,
+    );
+  }
+}
+
+/// 루틴(습관 묶음) 모델
+class RoutineGroup {
+  final String id;
+  final String title;
+  final String? emoji;
+  final String? color;
+  final int sortOrder;
+  final RoutineGroupProgress todayProgress;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const RoutineGroup({
+    required this.id,
+    required this.title,
+    this.emoji,
+    this.color,
+    required this.sortOrder,
+    required this.todayProgress,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory RoutineGroup.fromJson(Map<String, dynamic> json) {
+    return RoutineGroup(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      emoji: json['emoji'] as String?,
+      color: json['color'] as String?,
+      sortOrder: json['sortOrder'] as int? ?? 0,
+      todayProgress: RoutineGroupProgress.fromJson(
+        json['todayProgress'] as Map<String, dynamic>? ?? const {},
+      ),
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
+
+  RoutineGroup copyWith({
+    String? title,
+    String? emoji,
+    String? color,
+    int? sortOrder,
+    RoutineGroupProgress? todayProgress,
+  }) {
+    return RoutineGroup(
+      id: id,
+      title: title ?? this.title,
+      emoji: emoji ?? this.emoji,
+      color: color ?? this.color,
+      sortOrder: sortOrder ?? this.sortOrder,
+      todayProgress: todayProgress ?? this.todayProgress,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+/// 루틴(습관 묶음) 상세 - 소속 습관 목록 포함
+class RoutineGroupDetail {
+  final RoutineGroup group;
+  final List<Routine> routines;
+
+  const RoutineGroupDetail({required this.group, required this.routines});
+
+  factory RoutineGroupDetail.fromJson(Map<String, dynamic> json) {
+    return RoutineGroupDetail(
+      group: RoutineGroup.fromJson(json),
+      routines: (json['routines'] as List<dynamic>? ?? [])
+          .map((e) => Routine.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 }
@@ -414,7 +508,7 @@ class RoutineSummaryItem {
   }
 }
 
-/// 그룹원별 공유 루틴 목록
+/// 가족그룹 멤버별 공유 습관 목록 (가족그룹 공유 기능용, RoutineGroup(습관 묶음)과 무관)
 class RoutineGroupMemberRoutines {
   final String userId;
   final String userName;

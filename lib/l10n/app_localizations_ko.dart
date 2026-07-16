@@ -4507,23 +4507,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_title => '루틴';
 
   @override
-  String get routine_list_empty => '등록된 루틴이 없습니다';
+  String get routine_list_empty => '등록된 습관이 없습니다';
 
   @override
   String get routine_list_empty_subtitle =>
       '매일 반복하고 싶은 습관을 등록하고\n꾸준히 체크하며 스트릭을 쌓아보세요';
 
   @override
-  String get routine_add => '루틴 추가';
+  String get routine_add => '습관 추가';
 
   @override
-  String get routine_edit => '루틴 수정';
+  String get routine_edit => '습관 수정';
 
   @override
-  String get routine_delete => '루틴 삭제';
+  String get routine_delete => '습관 삭제';
 
   @override
-  String get routine_delete_confirm => '이 루틴을 삭제하시겠습니까?';
+  String get routine_delete_confirm => '이 습관을 삭제하시겠습니까?';
 
   @override
   String get routine_field_title => '제목';
@@ -4539,6 +4539,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_field_emoji => '이모지';
+
+  @override
+  String get routine_field_emoji_custom => '직접 입력';
 
   @override
   String get routine_field_emoji_helper => '이모지 하나를 입력해주세요 (예: 🏃)';
@@ -4557,6 +4560,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_field_end_date_none => '무기한';
+
+  @override
+  String get routine_field_group => '소속 루틴';
+
+  @override
+  String get routine_field_group_none => '없음 (독립 습관)';
 
   @override
   String get routine_save => '저장';
@@ -4691,4 +4700,29 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_leaderboard_check_count_suffix => '회';
+
+  @override
+  String get routine_group_add => '루틴 추가';
+
+  @override
+  String get routine_group_edit => '루틴 수정';
+
+  @override
+  String get routine_group_delete => '루틴 삭제';
+
+  @override
+  String get routine_group_delete_confirm =>
+      '이 루틴을 삭제하시겠습니까?\n소속된 습관은 삭제되지 않고 독립 습관으로 남습니다.';
+
+  @override
+  String get routine_group_field_title_hint => '예: 아침 루틴';
+
+  @override
+  String get routine_group_save => '저장';
+
+  @override
+  String get routine_group_standalone_section_title => '독립 습관';
+
+  @override
+  String get routine_group_error_generic => '오류가 발생했습니다';
 }

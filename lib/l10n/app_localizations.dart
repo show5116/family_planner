@@ -8660,49 +8660,49 @@ abstract class AppLocalizations {
   /// **'루틴'**
   String get routine_title;
 
-  /// 루틴 목록 비어있을 때 안내
+  /// 습관 목록 비어있을 때 안내
   ///
   /// In ko, this message translates to:
-  /// **'등록된 루틴이 없습니다'**
+  /// **'등록된 습관이 없습니다'**
   String get routine_list_empty;
 
-  /// 루틴 목록 빈 상태 부가 설명
+  /// 습관 목록 빈 상태 부가 설명
   ///
   /// In ko, this message translates to:
   /// **'매일 반복하고 싶은 습관을 등록하고\n꾸준히 체크하며 스트릭을 쌓아보세요'**
   String get routine_list_empty_subtitle;
 
-  /// 루틴 추가 버튼
+  /// 습관 추가 버튼
   ///
   /// In ko, this message translates to:
-  /// **'루틴 추가'**
+  /// **'습관 추가'**
   String get routine_add;
 
-  /// 루틴 수정 버튼/타이틀
+  /// 습관 수정 버튼/타이틀
   ///
   /// In ko, this message translates to:
-  /// **'루틴 수정'**
+  /// **'습관 수정'**
   String get routine_edit;
 
-  /// 루틴 삭제 버튼
+  /// 습관 삭제 버튼
   ///
   /// In ko, this message translates to:
-  /// **'루틴 삭제'**
+  /// **'습관 삭제'**
   String get routine_delete;
 
-  /// 루틴 삭제 확인 다이얼로그
+  /// 습관 삭제 확인 다이얼로그
   ///
   /// In ko, this message translates to:
-  /// **'이 루틴을 삭제하시겠습니까?'**
+  /// **'이 습관을 삭제하시겠습니까?'**
   String get routine_delete_confirm;
 
-  /// 루틴 제목 입력 필드 라벨
+  /// 습관 제목 입력 필드 라벨
   ///
   /// In ko, this message translates to:
   /// **'제목'**
   String get routine_field_title;
 
-  /// 루틴 제목 입력 힌트
+  /// 습관 제목 입력 힌트
   ///
   /// In ko, this message translates to:
   /// **'예: 아침 스트레칭'**
@@ -8720,11 +8720,17 @@ abstract class AppLocalizations {
   /// **'제목은 100자 이내로 입력해주세요'**
   String get routine_field_title_too_long;
 
-  /// 루틴 이모지 입력 필드 라벨
+  /// 습관 이모지 입력 필드 라벨
   ///
   /// In ko, this message translates to:
   /// **'이모지'**
   String get routine_field_emoji;
+
+  /// 이모지 직접 입력 필드 라벨 (프리셋에 없는 이모지용)
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 입력'**
+  String get routine_field_emoji_custom;
 
   /// 이모지 입력 필드 도움말
   ///
@@ -8732,7 +8738,7 @@ abstract class AppLocalizations {
   /// **'이모지 하나를 입력해주세요 (예: 🏃)'**
   String get routine_field_emoji_helper;
 
-  /// 루틴 색상 선택 필드 라벨
+  /// 습관 색상 선택 필드 라벨
   ///
   /// In ko, this message translates to:
   /// **'색상'**
@@ -8744,13 +8750,13 @@ abstract class AppLocalizations {
   /// **'주 목표 횟수'**
   String get routine_field_target_count;
 
-  /// 루틴 시작일 필드 라벨
+  /// 습관 시작일 필드 라벨
   ///
   /// In ko, this message translates to:
   /// **'시작일'**
   String get routine_field_start_date;
 
-  /// 루틴 종료일 필드 라벨
+  /// 습관 종료일 필드 라벨
   ///
   /// In ko, this message translates to:
   /// **'종료일 (선택)'**
@@ -8762,19 +8768,31 @@ abstract class AppLocalizations {
   /// **'무기한'**
   String get routine_field_end_date_none;
 
-  /// 루틴 저장 버튼
+  /// 습관이 소속될 루틴(묶음) 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'소속 루틴'**
+  String get routine_field_group;
+
+  /// 소속 루틴 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'없음 (독립 습관)'**
+  String get routine_field_group_none;
+
+  /// 습관 저장 버튼
   ///
   /// In ko, this message translates to:
   /// **'저장'**
   String get routine_save;
 
-  /// 루틴 체크 액션
+  /// 습관 체크 액션
   ///
   /// In ko, this message translates to:
   /// **'체크'**
   String get routine_check;
 
-  /// 루틴 체크 취소 액션
+  /// 습관 체크 취소 액션
   ///
   /// In ko, this message translates to:
   /// **'체크 취소'**
@@ -9025,6 +9043,54 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'회'**
   String get routine_leaderboard_check_count_suffix;
+
+  /// 루틴(습관 묶음) 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 추가'**
+  String get routine_group_add;
+
+  /// 루틴(습관 묶음) 수정 버튼/타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 수정'**
+  String get routine_group_edit;
+
+  /// 루틴(습관 묶음) 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 삭제'**
+  String get routine_group_delete;
+
+  /// 루틴 삭제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 루틴을 삭제하시겠습니까?\n소속된 습관은 삭제되지 않고 독립 습관으로 남습니다.'**
+  String get routine_group_delete_confirm;
+
+  /// 루틴 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 아침 루틴'**
+  String get routine_group_field_title_hint;
+
+  /// 루틴 저장 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get routine_group_save;
+
+  /// 루틴에 소속되지 않은 습관 섹션 헤더
+  ///
+  /// In ko, this message translates to:
+  /// **'독립 습관'**
+  String get routine_group_standalone_section_title;
+
+  /// 루틴 관련 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get routine_group_error_generic;
 }
 
 class _AppLocalizationsDelegate

@@ -4469,7 +4469,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscription_product_not_found => '订阅商品正在准备中。请稍后重试。';
 
   @override
-  String get routine_title => '习惯';
+  String get routine_title => '日常习惯';
 
   @override
   String get routine_list_empty => '还没有习惯';
@@ -4505,6 +4505,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_field_emoji => '表情符号';
 
   @override
+  String get routine_field_emoji_custom => '自定义输入';
+
+  @override
   String get routine_field_emoji_helper => '请输入一个表情符号(例如: 🏃)';
 
   @override
@@ -4521,6 +4524,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_field_end_date_none => '无限期';
+
+  @override
+  String get routine_field_group => '所属日程';
+
+  @override
+  String get routine_field_group_none => '无(独立习惯)';
 
   @override
   String get routine_save => '保存';
@@ -4624,7 +4633,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get widgetSettings_routineSummary => '今日习惯';
 
   @override
-  String get nav_routines => '习惯';
+  String get nav_routines => '日常习惯';
 
   @override
   String get routine_tab_badges => '徽章';
@@ -4655,4 +4664,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_leaderboard_check_count_suffix => '次';
+
+  @override
+  String get routine_group_add => '添加日程';
+
+  @override
+  String get routine_group_edit => '编辑日程';
+
+  @override
+  String get routine_group_delete => '删除日程';
+
+  @override
+  String get routine_group_delete_confirm => '确定要删除这个日程吗?\n其中的习惯不会被删除，将变为独立习惯。';
+
+  @override
+  String get routine_group_field_title_hint => '例如: 晨间日程';
+
+  @override
+  String get routine_group_save => '保存';
+
+  @override
+  String get routine_group_standalone_section_title => '独立习惯';
+
+  @override
+  String get routine_group_error_generic => '发生错误';
 }

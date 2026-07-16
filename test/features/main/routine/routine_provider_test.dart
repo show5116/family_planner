@@ -41,6 +41,23 @@ RoutineStreak _buildStreak({
   );
 }
 
+RoutineGroup _buildGroup({
+  String id = 'group-1',
+  String title = '아침 루틴',
+  int checked = 0,
+  int total = 0,
+}) {
+  final now = _fixedDate();
+  return RoutineGroup(
+    id: id,
+    title: title,
+    sortOrder: 0,
+    todayProgress: RoutineGroupProgress(checked: checked, total: total),
+    createdAt: now,
+    updatedAt: now,
+  );
+}
+
 UserRoutineBadge _buildBadge(String code) {
   return UserRoutineBadge(
     id: 'badge-record-$code',
@@ -60,6 +77,7 @@ UserRoutineBadge _buildBadge(String code) {
 class _FakeRoutineRepository extends RoutineRepository {
   _FakeRoutineRepository({
     List<Routine>? routines,
+    this.groups = const [],
     this.checkShouldThrow = false,
     this.newlyEarnedBadgesOnCheck = const [],
     this.streakAfterCheck,
@@ -67,6 +85,7 @@ class _FakeRoutineRepository extends RoutineRepository {
   }) : _routines = routines ?? [_buildRoutine()];
 
   final List<Routine> _routines;
+  final List<RoutineGroup> groups;
   final bool checkShouldThrow;
   final List<UserRoutineBadge> newlyEarnedBadgesOnCheck;
   final RoutineStreak? streakAfterCheck;
@@ -75,9 +94,32 @@ class _FakeRoutineRepository extends RoutineRepository {
   int checkCallCount = 0;
   int uncheckCallCount = 0;
   int getStreakCallCount = 0;
+  int deleteRoutineGroupCallCount = 0;
 
   @override
   Future<List<Routine>> getRoutines({bool? isActive}) async => _routines;
+
+  @override
+  Future<List<RoutineGroup>> getRoutineGroups() async => groups;
+
+  @override
+  Future<RoutineGroup> createRoutineGroup(CreateRoutineGroupDto dto) async {
+    return RoutineGroup(
+      id: 'group-new',
+      title: dto.title,
+      emoji: dto.emoji,
+      color: dto.color,
+      sortOrder: groups.length,
+      todayProgress: const RoutineGroupProgress(checked: 0, total: 0),
+      createdAt: _fixedDate(),
+      updatedAt: _fixedDate(),
+    );
+  }
+
+  @override
+  Future<void> deleteRoutineGroup(String id) async {
+    deleteRoutineGroupCallCount++;
+  }
 
   @override
   Future<RoutineLog> checkRoutine(String id, CheckRoutineDto dto) async {
@@ -249,6 +291,71 @@ void main() {
           .toggleCheck('routine-1', false);
 
       expect(result.newlyEarnedBadges, [badge]);
+    });
+  });
+
+  group('RoutineGroupList / RoutineGroupManagementNotifier', () {
+    test('그룹 목록을 로드하면 오늘 진행률을 포함한 RoutineGroup 목록을 반환한다', () async {
+      final repository = _FakeRoutineRepository(
+        groups: [_buildGroup(checked: 1, total: 3)],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final groups = await container.read(routineGroupListProvider.future);
+
+      expect(groups.single.id, 'group-1');
+      expect(groups.single.todayProgress.checked, 1);
+      expect(groups.single.todayProgress.total, 3);
+    });
+
+    test('그룹 생성 성공 시 목록에 새 그룹이 추가된다', () async {
+      final repository = _FakeRoutineRepository(groups: const []);
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineGroupListProvider.future);
+
+      final created = await container
+          .read(routineGroupManagementProvider.notifier)
+          .createRoutineGroup(const CreateRoutineGroupDto(title: '저녁 루틴'));
+
+      expect(created, isNotNull);
+      final groups = container.read(routineGroupListProvider).value!;
+      expect(groups.single.title, '저녁 루틴');
+    });
+
+    test('그룹 삭제 성공 시 목록에서 제거되고 습관 목록도 refresh된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [_buildRoutine()],
+        groups: [_buildGroup()],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineGroupListProvider.future);
+      await container.read(routineListProvider.future);
+
+      final success = await container
+          .read(routineGroupManagementProvider.notifier)
+          .deleteRoutineGroup('group-1');
+
+      expect(success, isTrue);
+      expect(repository.deleteRoutineGroupCallCount, 1);
+      final groups = container.read(routineGroupListProvider).value!;
+      expect(groups, isEmpty);
     });
   });
 }

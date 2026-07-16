@@ -4500,23 +4500,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_title => 'ルーティン';
 
   @override
-  String get routine_list_empty => '登録されたルーティンがありません';
+  String get routine_list_empty => '登録された習慣がありません';
 
   @override
   String get routine_list_empty_subtitle =>
       '毎日繰り返したい習慣を登録して\nコツコツチェックしながらストリークを積み上げましょう';
 
   @override
-  String get routine_add => 'ルーティン追加';
+  String get routine_add => '習慣追加';
 
   @override
-  String get routine_edit => 'ルーティン編集';
+  String get routine_edit => '習慣編集';
 
   @override
-  String get routine_delete => 'ルーティン削除';
+  String get routine_delete => '習慣削除';
 
   @override
-  String get routine_delete_confirm => 'このルーティンを削除しますか?';
+  String get routine_delete_confirm => 'この習慣を削除しますか?';
 
   @override
   String get routine_field_title => 'タイトル';
@@ -4532,6 +4532,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_field_emoji => '絵文字';
+
+  @override
+  String get routine_field_emoji_custom => '直接入力';
 
   @override
   String get routine_field_emoji_helper => '絵文字を1つ入力してください(例: 🏃)';
@@ -4550,6 +4553,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_field_end_date_none => '無期限';
+
+  @override
+  String get routine_field_group => '所属ルーティン';
+
+  @override
+  String get routine_field_group_none => 'なし(独立した習慣)';
 
   @override
   String get routine_save => '保存';
@@ -4684,4 +4693,29 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_leaderboard_check_count_suffix => '回';
+
+  @override
+  String get routine_group_add => 'ルーティン追加';
+
+  @override
+  String get routine_group_edit => 'ルーティン編集';
+
+  @override
+  String get routine_group_delete => 'ルーティン削除';
+
+  @override
+  String get routine_group_delete_confirm =>
+      'このルーティンを削除しますか?\n所属する習慣は削除されず、独立した習慣として残ります。';
+
+  @override
+  String get routine_group_field_title_hint => '例: 朝のルーティン';
+
+  @override
+  String get routine_group_save => '保存';
+
+  @override
+  String get routine_group_standalone_section_title => '独立した習慣';
+
+  @override
+  String get routine_group_error_generic => 'エラーが発生しました';
 }

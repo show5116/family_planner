@@ -4607,23 +4607,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_title => 'Routines';
 
   @override
-  String get routine_list_empty => 'No routines yet';
+  String get routine_list_empty => 'No habits yet';
 
   @override
   String get routine_list_empty_subtitle =>
       'Add a habit you want to repeat every day\nand build a streak by checking it off consistently';
 
   @override
-  String get routine_add => 'Add Routine';
+  String get routine_add => 'Add Habit';
 
   @override
-  String get routine_edit => 'Edit Routine';
+  String get routine_edit => 'Edit Habit';
 
   @override
-  String get routine_delete => 'Delete Routine';
+  String get routine_delete => 'Delete Habit';
 
   @override
-  String get routine_delete_confirm => 'Delete this routine?';
+  String get routine_delete_confirm => 'Delete this habit?';
 
   @override
   String get routine_field_title => 'Title';
@@ -4642,6 +4642,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_field_emoji => 'Emoji';
 
   @override
+  String get routine_field_emoji_custom => 'Custom';
+
+  @override
   String get routine_field_emoji_helper => 'Enter a single emoji (e.g. 🏃)';
 
   @override
@@ -4658,6 +4661,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routine_field_end_date_none => 'No end date';
+
+  @override
+  String get routine_field_group => 'Routine';
+
+  @override
+  String get routine_field_group_none => 'None (standalone habit)';
 
   @override
   String get routine_save => 'Save';
@@ -4795,4 +4804,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routine_leaderboard_check_count_suffix => '';
+
+  @override
+  String get routine_group_add => 'Add Routine';
+
+  @override
+  String get routine_group_edit => 'Edit Routine';
+
+  @override
+  String get routine_group_delete => 'Delete Routine';
+
+  @override
+  String get routine_group_delete_confirm =>
+      'Delete this routine?\nHabits in it won\'t be deleted and will become standalone habits.';
+
+  @override
+  String get routine_group_field_title_hint => 'e.g. Morning Routine';
+
+  @override
+  String get routine_group_save => 'Save';
+
+  @override
+  String get routine_group_standalone_section_title => 'Standalone Habits';
+
+  @override
+  String get routine_group_error_generic => 'Something went wrong';
 }

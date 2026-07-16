@@ -79,6 +79,9 @@ class RoutineDetailScreen extends ConsumerWidget {
           bottom: TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.start,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            indicatorColor: Colors.white,
             tabs: [
               Tab(text: l10n.routine_tab_heatmap),
               Tab(text: l10n.routine_tab_stats),

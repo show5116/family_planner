@@ -7,7 +7,7 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 
 // ─── DTOs ───────────────────────────────────────────────────────────────────
 
-/// 루틴 생성 DTO
+/// 습관 생성 DTO
 class CreateRoutineDto {
   final String title;
   final String? emoji;
@@ -16,6 +16,7 @@ class CreateRoutineDto {
   final int? targetCount;
   final String startDate; // YYYY-MM-DD
   final String? endDate; // YYYY-MM-DD
+  final String? routineGroupId; // 소속시킬 루틴 ID (없으면 독립 습관)
 
   const CreateRoutineDto({
     required this.title,
@@ -25,6 +26,7 @@ class CreateRoutineDto {
     this.targetCount,
     required this.startDate,
     this.endDate,
+    this.routineGroupId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -36,10 +38,11 @@ class CreateRoutineDto {
         if (targetCount != null) 'targetCount': targetCount,
         'startDate': startDate,
         if (endDate != null) 'endDate': endDate,
+        if (routineGroupId != null) 'routineGroupId': routineGroupId,
       };
 }
 
-/// 루틴 수정 DTO (부분 업데이트)
+/// 습관 수정 DTO (부분 업데이트)
 class UpdateRoutineDto {
   final String? title;
   final String? emoji;
@@ -47,6 +50,11 @@ class UpdateRoutineDto {
   final int? targetCount;
   final String? endDate;
   final bool? isActive;
+  final String? routineGroupId;
+
+  /// routineGroupId를 명시적으로 null 전달(그룹 소속 해제)할지 여부.
+  /// false면 routineGroupId 필드 자체를 요청에서 생략(미변경).
+  final bool clearRoutineGroupId;
 
   const UpdateRoutineDto({
     this.title,
@@ -55,6 +63,8 @@ class UpdateRoutineDto {
     this.targetCount,
     this.endDate,
     this.isActive,
+    this.routineGroupId,
+    this.clearRoutineGroupId = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -64,6 +74,9 @@ class UpdateRoutineDto {
         if (targetCount != null) 'targetCount': targetCount,
         if (endDate != null) 'endDate': endDate,
         if (isActive != null) 'isActive': isActive,
+        if (routineGroupId != null) 'routineGroupId': routineGroupId,
+        if (clearRoutineGroupId && routineGroupId == null)
+          'routineGroupId': null,
       };
 }
 
@@ -97,6 +110,49 @@ class CreateRoutineShareDto {
   const CreateRoutineShareDto({required this.groupId});
 
   Map<String, dynamic> toJson() => {'groupId': groupId};
+}
+
+/// 루틴(습관 묶음) 생성 DTO
+class CreateRoutineGroupDto {
+  final String title;
+  final String? emoji;
+  final String? color;
+
+  const CreateRoutineGroupDto({required this.title, this.emoji, this.color});
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        if (emoji != null) 'emoji': emoji,
+        if (color != null) 'color': color,
+      };
+}
+
+/// 루틴(습관 묶음) 수정 DTO (부분 업데이트)
+class UpdateRoutineGroupDto {
+  final String? title;
+  final String? emoji;
+  final String? color;
+
+  const UpdateRoutineGroupDto({this.title, this.emoji, this.color});
+
+  Map<String, dynamic> toJson() => {
+        if (title != null) 'title': title,
+        if (emoji != null) 'emoji': emoji,
+        if (color != null) 'color': color,
+      };
+}
+
+/// 루틴(습관 묶음) 순서 변경 항목 DTO
+class RoutineGroupSortOrderItemDto {
+  final String id;
+  final int sortOrder;
+
+  const RoutineGroupSortOrderItemDto({
+    required this.id,
+    required this.sortOrder,
+  });
+
+  Map<String, dynamic> toJson() => {'id': id, 'sortOrder': sortOrder};
 }
 
 // ─── Repository ─────────────────────────────────────────────────────────────
@@ -399,6 +455,88 @@ class RoutineRepository {
     } on DioException catch (e) {
       debugPrint('❌ [RoutineRepository] 루틴별 배지 조회 실패: ${e.message}');
       throw Exception('루틴별 배지 조회 실패: ${e.message}');
+    }
+  }
+
+  // ── 루틴(습관 묶음) ───────────────────────────────────────────────────────
+
+  Future<RoutineGroup> createRoutineGroup(CreateRoutineGroupDto dto) async {
+    try {
+      final response = await _dio.post(
+        '/routines/routine-groups',
+        data: dto.toJson(),
+      );
+      return RoutineGroup.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 생성 실패: ${e.message}');
+      throw Exception('루틴 생성 실패: ${e.message}');
+    }
+  }
+
+  Future<List<RoutineGroup>> getRoutineGroups() async {
+    try {
+      final response = await _dio.get('/routines/routine-groups');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => RoutineGroup.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 목록 조회 실패: ${e.message}');
+      throw Exception('루틴 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<void> updateRoutineGroupSortOrder(
+    List<RoutineGroupSortOrderItemDto> items,
+  ) async {
+    try {
+      await _dio.patch(
+        '/routines/routine-groups/sort-order',
+        data: {'items': items.map((e) => e.toJson()).toList()},
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 순서 변경 실패: ${e.message}');
+      throw Exception('루틴 순서 변경 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineGroupDetail> getRoutineGroupDetail(String id) async {
+    try {
+      final response = await _dio.get('/routines/routine-groups/$id');
+      return RoutineGroupDetail.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 상세 조회 실패: ${e.message}');
+      throw Exception('루틴 상세 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineGroup> updateRoutineGroup(
+    String id,
+    UpdateRoutineGroupDto dto,
+  ) async {
+    try {
+      final response = await _dio.patch(
+        '/routines/routine-groups/$id',
+        data: dto.toJson(),
+      );
+      return RoutineGroup.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 수정 실패: ${e.message}');
+      throw Exception('루틴 수정 실패: ${e.message}');
+    }
+  }
+
+  Future<void> deleteRoutineGroup(String id) async {
+    try {
+      await _dio.delete('/routines/routine-groups/$id');
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 삭제 실패: ${e.message}');
+      throw Exception('루틴 삭제 실패: ${e.message}');
     }
   }
 

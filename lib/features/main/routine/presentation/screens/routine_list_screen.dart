@@ -9,6 +9,8 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_form_dialog.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_section.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -102,6 +104,51 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     }
   }
 
+  Future<void> _showGroupForm(
+    BuildContext context, {
+    RoutineGroup? group,
+  }) async {
+    await showDialog<RoutineGroup>(
+      context: context,
+      builder: (context) => RoutineGroupFormDialog(group: group),
+    );
+  }
+
+  Future<void> _confirmDeleteGroup(
+    BuildContext context,
+    WidgetRef ref,
+    RoutineGroup group,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.routine_group_delete),
+        content: Text(l10n.routine_group_delete_confirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.routine_group_delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final success = await ref
+        .read(routineGroupManagementProvider.notifier)
+        .deleteRoutineGroup(group.id);
+    if (!success && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.routine_group_error_generic)),
+      );
+    }
+  }
+
   Future<void> _showSharedGroupPicker(
     BuildContext context,
     List<Group> groups,
@@ -165,16 +212,64 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
+  Widget _buildStandaloneItem(
+    BuildContext context,
+    List<Routine> standaloneRoutines,
+    int index,
+  ) {
+    final routine = standaloneRoutines[index];
+    return Dismissible(
+      key: ValueKey(routine.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) async {
+        await _confirmDelete(context, ref, routine);
+        return false;
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: AppSizes.spaceL),
+        margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.errorContainer,
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        ),
+        child: Icon(
+          Icons.delete_outline,
+          color: Theme.of(context).colorScheme.onErrorContainer,
+        ),
+      ),
+      child: RoutineListItem(
+        key: ValueKey('${routine.id}_content'),
+        routine: routine,
+        dragHandle: ReorderableDragStartListener(
+          index: index,
+          child: const DragHandleIcon(),
+        ),
+        onTap: () => context.push(
+          AppRoutes.routineDetail,
+          extra: {'routineId': routine.id},
+        ),
+        onToggleCheck: () => _toggleCheck(context, ref, routine),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final routinesAsync = ref.watch(routineListProvider);
+    final groupsAsync = ref.watch(routineGroupListProvider);
     final myGroups = ref.watch(myGroupsProvider).valueOrNull ?? [];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.routine_title),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.playlist_add),
+            tooltip: l10n.routine_group_add,
+            onPressed: () => _showGroupForm(context),
+          ),
           IconButton(
             icon: const Icon(Icons.emoji_events_outlined),
             tooltip: l10n.routine_badges_title,
@@ -200,7 +295,11 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
           onRetry: () => ref.read(routineListProvider.notifier).refresh(),
         ),
         data: (routines) {
-          if (routines.isEmpty) {
+          final groups = groupsAsync.valueOrNull ?? [];
+          final standaloneRoutines =
+              routines.where((r) => r.routineGroupId == null).toList();
+
+          if (routines.isEmpty && groups.isEmpty) {
             return AppEmptyState(
               icon: Icons.checklist_outlined,
               message: l10n.routine_list_empty,
@@ -214,63 +313,76 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
           }
 
           return RefreshIndicator(
-            onRefresh: () => ref.read(routineListProvider.notifier).refresh(),
-            child: ReorderableListView.builder(
+            onRefresh: () async {
+              await ref.read(routineListProvider.notifier).refresh();
+              await ref.read(routineGroupListProvider.notifier).refresh();
+            },
+            child: ListView(
               padding: EdgeInsets.fromLTRB(
                 AppSizes.spaceM,
                 AppSizes.spaceM,
                 AppSizes.spaceM,
                 AppSizes.spaceM + MediaQuery.paddingOf(context).bottom + 72,
               ),
-              buildDefaultDragHandles: false,
-              proxyDecorator: buildReorderableProxyDecorator,
-              itemCount: routines.length,
-              onReorderItem: (oldIndex, newIndex) {
-                final reordered = [...routines];
-                final item = reordered.removeAt(oldIndex);
-                reordered.insert(newIndex, item);
-                ref
-                    .read(routineManagementProvider.notifier)
-                    .reorder(reordered);
-              },
-              itemBuilder: (context, index) {
-                final routine = routines[index];
-                return Dismissible(
-                  key: ValueKey(routine.id),
-                  direction: DismissDirection.endToStart,
-                  confirmDismiss: (_) async {
-                    await _confirmDelete(context, ref, routine);
-                    return false;
-                  },
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: AppSizes.spaceL),
-                    margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.radiusMedium),
-                    ),
-                    child: Icon(
-                      Icons.delete_outline,
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                    ),
-                  ),
-                  child: RoutineListItem(
-                    key: ValueKey('${routine.id}_content'),
-                    routine: routine,
-                    dragHandle: ReorderableDragStartListener(
-                      index: index,
-                      child: const DragHandleIcon(),
-                    ),
-                    onTap: () => context.push(
+              children: [
+                for (final group in groups)
+                  RoutineGroupSection(
+                    key: ValueKey(group.id),
+                    group: group,
+                    routines: routines
+                        .where((r) => r.routineGroupId == group.id)
+                        .toList(),
+                    onTapRoutine: (routine) => context.push(
                       AppRoutes.routineDetail,
                       extra: {'routineId': routine.id},
                     ),
-                    onToggleCheck: () => _toggleCheck(context, ref, routine),
+                    onToggleCheck: (routine) =>
+                        _toggleCheck(context, ref, routine),
+                    onReorderRoutines: (reordered) => ref
+                        .read(routineManagementProvider.notifier)
+                        .reorder(reordered),
+                    onEditGroup: () =>
+                        _showGroupForm(context, group: group),
+                    onDeleteGroup: () =>
+                        _confirmDeleteGroup(context, ref, group),
                   ),
-                );
-              },
+                if (standaloneRoutines.isNotEmpty) ...[
+                  if (groups.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSizes.spaceS,
+                      ),
+                      child: Text(
+                        l10n.routine_group_standalone_section_title,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ReorderableListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    buildDefaultDragHandles: false,
+                    proxyDecorator: buildReorderableProxyDecorator,
+                    itemCount: standaloneRoutines.length,
+                    onReorderItem: (oldIndex, newIndex) {
+                      final reordered = [...standaloneRoutines];
+                      final item = reordered.removeAt(oldIndex);
+                      reordered.insert(newIndex, item);
+                      ref
+                          .read(routineManagementProvider.notifier)
+                          .reorder(reordered);
+                    },
+                    itemBuilder: (context, index) => Padding(
+                      key: ValueKey('${standaloneRoutines[index].id}_wrap'),
+                      padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
+                      child: _buildStandaloneItem(
+                        context,
+                        standaloneRoutines,
+                        index,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           );
         },

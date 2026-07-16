@@ -9,6 +9,12 @@ import 'package:family_planner/features/main/routine/providers/routine_provider.
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 
+/// 습관 추적에 자주 쓰이는 이모지 프리셋
+const List<String> _kEmojiPresets = [
+  '🏃', '💪', '🧘', '📚', '💧', '🥗',
+  '😴', '🚭', '💊', '✍️', '🎯', '🧹',
+];
+
 /// 루틴 생성/수정 폼 (routineId가 null이면 생성 모드)
 class RoutineFormScreen extends ConsumerStatefulWidget {
   const RoutineFormScreen({super.key, this.routineId});
@@ -28,6 +34,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
   int _targetCount = 3;
   DateTime _startDate = DateTime.now();
   DateTime? _endDate;
+  String? _selectedGroupId;
   bool _initialized = false;
   bool _saving = false;
 
@@ -49,6 +56,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     _targetCount = routine.targetCount ?? 3;
     _startDate = routine.startDate;
     _endDate = routine.endDate;
+    _selectedGroupId = routine.routineGroupId;
   }
 
   String _formatDate(DateTime date) {
@@ -92,6 +100,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           color: _selectedColor,
           targetCount: _targetCount,
           endDate: _endDate != null ? _formatDate(_endDate!) : null,
+          routineGroupId: _selectedGroupId,
+          clearRoutineGroupId: _selectedGroupId == null,
         ),
       );
     } else {
@@ -104,6 +114,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           targetCount: _targetCount,
           startDate: _formatDate(_startDate),
           endDate: _endDate != null ? _formatDate(_endDate!) : null,
+          routineGroupId: _selectedGroupId,
         ),
       );
     }
@@ -154,11 +165,44 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             },
           ),
           const SizedBox(height: AppSizes.spaceM),
+          Text(l10n.routine_field_emoji, style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: AppSizes.spaceS),
+          Wrap(
+            spacing: AppSizes.spaceS,
+            runSpacing: AppSizes.spaceS,
+            children: _kEmojiPresets.map((emoji) {
+              final selected = _emojiController.text == emoji;
+              return InkWell(
+                onTap: () => setState(() => _emojiController.text = emoji),
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? Theme.of(context).colorScheme.primaryContainer
+                        : Theme.of(context).colorScheme.surfaceContainerHighest,
+                    shape: BoxShape.circle,
+                    border: selected
+                        ? Border.all(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2,
+                          )
+                        : null,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(emoji, style: const TextStyle(fontSize: 18)),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
           TextFormField(
             controller: _emojiController,
             maxLength: 4,
+            onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
-              labelText: l10n.routine_field_emoji,
+              labelText: l10n.routine_field_emoji_custom,
               helperText: l10n.routine_field_emoji_helper,
             ),
           ),
@@ -243,6 +287,44 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
                   )
                 : const Icon(Icons.calendar_today_outlined),
             onTap: _pickEndDate,
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          Consumer(
+            builder: (context, ref, _) {
+              final groupsAsync = ref.watch(routineGroupListProvider);
+              return groupsAsync.when(
+                loading: () => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
+                data: (groups) {
+                  final validGroupId =
+                      groups.any((g) => g.id == _selectedGroupId)
+                          ? _selectedGroupId
+                          : null;
+                  return DropdownButtonFormField<String?>(
+                    initialValue: validGroupId,
+                    decoration: InputDecoration(
+                      labelText: l10n.routine_field_group,
+                    ),
+                    items: [
+                      DropdownMenuItem<String?>(
+                        value: null,
+                        child: Text(l10n.routine_field_group_none),
+                      ),
+                      ...groups.map(
+                        (group) => DropdownMenuItem<String?>(
+                          value: group.id,
+                          child: Text(
+                            '${group.emoji ?? ''} ${group.title}'.trim(),
+                          ),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) =>
+                        setState(() => _selectedGroupId = value),
+                  );
+                },
+              );
+            },
           ),
           const SizedBox(height: AppSizes.spaceL),
           FilledButton(

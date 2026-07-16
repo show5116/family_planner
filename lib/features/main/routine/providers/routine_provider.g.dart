@@ -1157,6 +1157,176 @@ final routineListProvider =
     );
 
 typedef _$RoutineList = AutoDisposeAsyncNotifier<List<Routine>>;
+String _$routineGroupListHash() => r'863f511ae247fb2e88f971b6c8e8209cb733b955';
+
+/// 루틴(습관 묶음) 목록 Provider
+///
+/// Copied from [RoutineGroupList].
+@ProviderFor(RoutineGroupList)
+final routineGroupListProvider =
+    AutoDisposeAsyncNotifierProvider<
+      RoutineGroupList,
+      List<RoutineGroup>
+    >.internal(
+      RoutineGroupList.new,
+      name: r'routineGroupListProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineGroupListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$RoutineGroupList = AutoDisposeAsyncNotifier<List<RoutineGroup>>;
+String _$routineGroupDetailNotifierHash() =>
+    r'd34dd306aaf48f51a2ff150d0d13d50e96a4b3e3';
+
+abstract class _$RoutineGroupDetailNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<RoutineGroupDetail> {
+  late final String groupId;
+
+  FutureOr<RoutineGroupDetail> build(String groupId);
+}
+
+/// See also [RoutineGroupDetailNotifier].
+@ProviderFor(RoutineGroupDetailNotifier)
+const routineGroupDetailNotifierProvider = RoutineGroupDetailNotifierFamily();
+
+/// See also [RoutineGroupDetailNotifier].
+class RoutineGroupDetailNotifierFamily
+    extends Family<AsyncValue<RoutineGroupDetail>> {
+  /// See also [RoutineGroupDetailNotifier].
+  const RoutineGroupDetailNotifierFamily();
+
+  /// See also [RoutineGroupDetailNotifier].
+  RoutineGroupDetailNotifierProvider call(String groupId) {
+    return RoutineGroupDetailNotifierProvider(groupId);
+  }
+
+  @override
+  RoutineGroupDetailNotifierProvider getProviderOverride(
+    covariant RoutineGroupDetailNotifierProvider provider,
+  ) {
+    return call(provider.groupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineGroupDetailNotifierProvider';
+}
+
+/// See also [RoutineGroupDetailNotifier].
+class RoutineGroupDetailNotifierProvider
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          RoutineGroupDetailNotifier,
+          RoutineGroupDetail
+        > {
+  /// See also [RoutineGroupDetailNotifier].
+  RoutineGroupDetailNotifierProvider(String groupId)
+    : this._internal(
+        () => RoutineGroupDetailNotifier()..groupId = groupId,
+        from: routineGroupDetailNotifierProvider,
+        name: r'routineGroupDetailNotifierProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineGroupDetailNotifierHash,
+        dependencies: RoutineGroupDetailNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineGroupDetailNotifierFamily._allTransitiveDependencies,
+        groupId: groupId,
+      );
+
+  RoutineGroupDetailNotifierProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+  }) : super.internal();
+
+  final String groupId;
+
+  @override
+  FutureOr<RoutineGroupDetail> runNotifierBuild(
+    covariant RoutineGroupDetailNotifier notifier,
+  ) {
+    return notifier.build(groupId);
+  }
+
+  @override
+  Override overrideWith(RoutineGroupDetailNotifier Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineGroupDetailNotifierProvider._internal(
+        () => create()..groupId = groupId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<
+    RoutineGroupDetailNotifier,
+    RoutineGroupDetail
+  >
+  createElement() {
+    return _RoutineGroupDetailNotifierProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineGroupDetailNotifierProvider &&
+        other.groupId == groupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineGroupDetailNotifierRef
+    on AutoDisposeAsyncNotifierProviderRef<RoutineGroupDetail> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+}
+
+class _RoutineGroupDetailNotifierProviderElement
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          RoutineGroupDetailNotifier,
+          RoutineGroupDetail
+        >
+    with RoutineGroupDetailNotifierRef {
+  _RoutineGroupDetailNotifierProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineGroupDetailNotifierProvider).groupId;
+}
+
 String _$routineDetailHash() => r'bd961b012fbcf0cac77a1ce1769c4c4bc7fbf044';
 
 abstract class _$RoutineDetail
