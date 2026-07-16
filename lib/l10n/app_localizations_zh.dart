@@ -4688,4 +4688,194 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_group_error_generic => '发生错误';
+
+  @override
+  String get routine_field_memo => '备注';
+
+  @override
+  String get routine_field_memo_hint => '为这个习惯添加说明';
+
+  @override
+  String get routine_field_importance => '重要程度';
+
+  @override
+  String get routine_importance_low => '低';
+
+  @override
+  String get routine_importance_medium => '中';
+
+  @override
+  String get routine_importance_high => '高';
+
+  @override
+  String get routine_field_time_filter => '时间段';
+
+  @override
+  String get routine_time_filter_morning => '上午';
+
+  @override
+  String get routine_time_filter_afternoon => '下午';
+
+  @override
+  String get routine_time_filter_evening => '晚上';
+
+  @override
+  String get routine_time_filter_none => '不指定';
+
+  @override
+  String get routine_field_category => '分类';
+
+  @override
+  String get routine_field_category_none => '未分类';
+
+  @override
+  String get routine_category_title => '分类';
+
+  @override
+  String get routine_category_add => '添加分类';
+
+  @override
+  String get routine_category_edit => '编辑分类';
+
+  @override
+  String get routine_category_delete => '删除分类';
+
+  @override
+  String get routine_category_delete_confirm =>
+      '确定要删除这个分类吗?\n其中的习惯不会被删除，将变为未分类。';
+
+  @override
+  String get routine_category_save => '保存';
+
+  @override
+  String get routine_category_field_title_hint => '例如: 规律生活';
+
+  @override
+  String get routine_category_error_generic => '发生错误';
+
+  @override
+  String get routine_category_empty => '还没有分类';
+
+  @override
+  String get routine_category_filter_all => '全部';
+
+  @override
+  String get routine_field_record_type => '记录方式';
+
+  @override
+  String get routine_record_type_boolean => '简单打卡';
+
+  @override
+  String get routine_record_type_text => '文本';
+
+  @override
+  String get routine_record_type_time => '时刻';
+
+  @override
+  String get routine_record_type_numeric => '数值';
+
+  @override
+  String get routine_record_type_readonly_hint => '记录方式创建后无法更改';
+
+  @override
+  String get routine_check_dialog_title => '记录输入';
+
+  @override
+  String get routine_check_dialog_text_label => '内容';
+
+  @override
+  String get routine_check_dialog_numeric_label => '数值';
+
+  @override
+  String get routine_check_dialog_time_label => '时刻';
+
+  @override
+  String get routine_check_dialog_confirm => '打卡';
+
+  @override
+  String get routine_check_dialog_cancel => '取消';
+
+  @override
+  String get routine_status_active => '进行中';
+
+  @override
+  String get routine_status_paused => '已暂停';
+
+  @override
+  String get routine_status_ended => '已结束';
+
+  @override
+  String get routine_pause => '暂停';
+
+  @override
+  String get routine_pause_confirm => '确定要暂停这个习惯吗?\n暂停期间无法打卡。';
+
+  @override
+  String get routine_resume => '恢复';
+
+  @override
+  String get routine_resume_success => '已恢复';
+
+  @override
+  String get routine_pause_error => '暂停失败';
+
+  @override
+  String get routine_resume_error => '恢复失败';
+
+  @override
+  String get routine_end => '结束';
+
+  @override
+  String get routine_end_confirm => '确定要结束这个习惯吗?\n打卡记录将被保留。';
+
+  @override
+  String get routine_frequency_type_daily => '每天';
+
+  @override
+  String get routine_frequency_type_weekly => '每周';
+
+  @override
+  String get routine_frequency_type_monthly => '每月';
+
+  @override
+  String get routine_weekly_mode_count_only => '每周N次';
+
+  @override
+  String get routine_weekly_mode_fixed_days => '指定星期';
+
+  @override
+  String get routine_field_target_days => '重复星期';
+
+  @override
+  String get routine_day_sun => '日';
+
+  @override
+  String get routine_day_mon => '一';
+
+  @override
+  String get routine_day_tue => '二';
+
+  @override
+  String get routine_day_wed => '三';
+
+  @override
+  String get routine_day_thu => '四';
+
+  @override
+  String get routine_day_fri => '五';
+
+  @override
+  String get routine_day_sat => '六';
+
+  @override
+  String get routine_error_weekly_mode_required => '请选择每周重复方式';
+
+  @override
+  String get routine_error_weekly_target_required => '请设置每周目标次数';
+
+  @override
+  String get routine_error_fixed_days_required => '请至少选择一个重复星期';
+
+  @override
+  String get routine_error_monthly_target_required => '请设置每月目标次数';
 }

@@ -11,17 +11,38 @@ DateTime _fixedDate() => DateTime(2026, 7, 1);
 Routine _buildRoutine({
   String id = 'routine-1',
   bool checkedToday = false,
+  RoutineStatus status = RoutineStatus.active,
+  RoutineRecordType recordType = RoutineRecordType.boolean_,
+  String? routineGroupId,
 }) {
   final now = _fixedDate();
   return Routine(
     id: id,
     title: '아침 스트레칭',
-    frequencyType: RoutineFrequencyType.weeklyCount,
+    importance: RoutineImportance.medium,
+    recordType: recordType,
+    status: status,
+    frequencyType: RoutineFrequencyType.weekly,
+    weeklyMode: RoutineWeeklyMode.countOnly,
     targetCount: 3,
     startDate: now,
-    isActive: true,
     sortOrder: 0,
     checkedToday: checkedToday,
+    routineGroupId: routineGroupId,
+    createdAt: now,
+    updatedAt: now,
+  );
+}
+
+RoutineCategory _buildCategory({
+  String id = 'category-1',
+  String title = '규칙적인 삶',
+}) {
+  final now = _fixedDate();
+  return RoutineCategory(
+    id: id,
+    title: title,
+    sortOrder: 0,
     createdAt: now,
     updatedAt: now,
   );
@@ -78,6 +99,7 @@ class _FakeRoutineRepository extends RoutineRepository {
   _FakeRoutineRepository({
     List<Routine>? routines,
     this.groups = const [],
+    this.categories = const [],
     this.checkShouldThrow = false,
     this.newlyEarnedBadgesOnCheck = const [],
     this.streakAfterCheck,
@@ -86,6 +108,7 @@ class _FakeRoutineRepository extends RoutineRepository {
 
   final List<Routine> _routines;
   final List<RoutineGroup> groups;
+  final List<RoutineCategory> categories;
   final bool checkShouldThrow;
   final List<UserRoutineBadge> newlyEarnedBadgesOnCheck;
   final RoutineStreak? streakAfterCheck;
@@ -95,9 +118,22 @@ class _FakeRoutineRepository extends RoutineRepository {
   int uncheckCallCount = 0;
   int getStreakCallCount = 0;
   int deleteRoutineGroupCallCount = 0;
+  int pauseCallCount = 0;
+  int resumeCallCount = 0;
+  int deleteRoutineCategoryCallCount = 0;
+  CheckRoutineDto? lastCheckDto;
 
   @override
-  Future<List<Routine>> getRoutines({bool? isActive}) async => _routines;
+  Future<List<Routine>> getRoutines({
+    RoutineStatus? status,
+    String? routineGroupId,
+    String? categoryId,
+  }) async =>
+      _routines;
+
+  @override
+  Future<Routine> getRoutine(String id) async =>
+      _routines.firstWhere((r) => r.id == id);
 
   @override
   Future<List<RoutineGroup>> getRoutineGroups() async => groups;
@@ -122,8 +158,46 @@ class _FakeRoutineRepository extends RoutineRepository {
   }
 
   @override
+  Future<List<RoutineCategory>> getRoutineCategories() async => categories;
+
+  @override
+  Future<RoutineCategory> createRoutineCategory(
+    CreateRoutineCategoryDto dto,
+  ) async {
+    return RoutineCategory(
+      id: 'category-new',
+      title: dto.title,
+      emoji: dto.emoji,
+      color: dto.color,
+      sortOrder: categories.length,
+      createdAt: _fixedDate(),
+      updatedAt: _fixedDate(),
+    );
+  }
+
+  @override
+  Future<void> deleteRoutineCategory(String id) async {
+    deleteRoutineCategoryCallCount++;
+  }
+
+  @override
+  Future<Routine> pauseRoutine(String id) async {
+    pauseCallCount++;
+    final routine = _routines.firstWhere((r) => r.id == id);
+    return routine.copyWith(status: RoutineStatus.paused);
+  }
+
+  @override
+  Future<Routine> resumeRoutine(String id) async {
+    resumeCallCount++;
+    final routine = _routines.firstWhere((r) => r.id == id);
+    return routine.copyWith(status: RoutineStatus.active);
+  }
+
+  @override
   Future<RoutineLog> checkRoutine(String id, CheckRoutineDto dto) async {
     checkCallCount++;
+    lastCheckDto = dto;
     if (checkShouldThrow) {
       throw Exception('네트워크 오류');
     }
@@ -131,6 +205,9 @@ class _FakeRoutineRepository extends RoutineRepository {
       id: 'log-1',
       routineId: id,
       checkedDate: _fixedDate(),
+      textValue: dto.textValue,
+      numericValue: dto.numericValue,
+      timeValue: dto.timeValue,
       createdAt: _fixedDate(),
       newlyEarnedBadges: newlyEarnedBadgesOnCheck,
     );
@@ -356,6 +433,214 @@ void main() {
       expect(repository.deleteRoutineGroupCallCount, 1);
       final groups = container.read(routineGroupListProvider).value!;
       expect(groups, isEmpty);
+    });
+  });
+
+  group('RoutineList.build', () {
+    test('status 파라미터 없이 조회한다 (ACTIVE+PAUSED 모두 노출, ENDED는 서버가 제외)', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [
+          _buildRoutine(id: 'r1', status: RoutineStatus.active),
+          _buildRoutine(id: 'r2', status: RoutineStatus.paused),
+        ],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final routines = await container.read(routineListProvider.future);
+
+      expect(routines.length, 2);
+      expect(routines.map((r) => r.status),
+          containsAll([RoutineStatus.active, RoutineStatus.paused]));
+    });
+  });
+
+  group('RoutineManagementNotifier.toggleCheck (recordType별 값 전달)', () {
+    test('TEXT 습관 체크 시 textValue가 DTO에 담겨 전달된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [
+          _buildRoutine(checkedToday: false, recordType: RoutineRecordType.text),
+        ],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineListProvider.future);
+
+      await container
+          .read(routineManagementProvider.notifier)
+          .toggleCheck('routine-1', false, textValue: '컨디션 좋음');
+
+      expect(repository.lastCheckDto?.textValue, '컨디션 좋음');
+      expect(repository.lastCheckDto?.numericValue, isNull);
+      expect(repository.lastCheckDto?.timeValue, isNull);
+    });
+
+    test('NUMERIC 습관 체크 시 numericValue가 DTO에 담겨 전달된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [
+          _buildRoutine(
+            checkedToday: false,
+            recordType: RoutineRecordType.numeric,
+          ),
+        ],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineListProvider.future);
+
+      await container
+          .read(routineManagementProvider.notifier)
+          .toggleCheck('routine-1', false, numericValue: 12);
+
+      expect(repository.lastCheckDto?.numericValue, 12);
+    });
+
+    test('TIME 습관 체크 시 timeValue가 DTO에 담겨 전달된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [
+          _buildRoutine(checkedToday: false, recordType: RoutineRecordType.time),
+        ],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineListProvider.future);
+
+      await container
+          .read(routineManagementProvider.notifier)
+          .toggleCheck('routine-1', false, timeValue: '07:30');
+
+      expect(repository.lastCheckDto?.timeValue, '07:30');
+    });
+  });
+
+  group('RoutineManagementNotifier.pauseRoutine / resumeRoutine', () {
+    test('일시정지 성공 시 목록 항목의 status가 paused로 갱신된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [_buildRoutine(status: RoutineStatus.active)],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineListProvider.future);
+
+      final result = await container
+          .read(routineManagementProvider.notifier)
+          .pauseRoutine('routine-1');
+
+      expect(result?.status, RoutineStatus.paused);
+      expect(repository.pauseCallCount, 1);
+      final routines = container.read(routineListProvider).value!;
+      expect(routines.single.status, RoutineStatus.paused);
+    });
+
+    test('재개 성공 시 목록 항목의 status가 active로 갱신된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [_buildRoutine(status: RoutineStatus.paused)],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineListProvider.future);
+
+      final result = await container
+          .read(routineManagementProvider.notifier)
+          .resumeRoutine('routine-1');
+
+      expect(result?.status, RoutineStatus.active);
+      expect(repository.resumeCallCount, 1);
+      final routines = container.read(routineListProvider).value!;
+      expect(routines.single.status, RoutineStatus.active);
+    });
+  });
+
+  group('RoutineCategoryList / RoutineCategoryManagementNotifier', () {
+    test('카테고리 목록을 로드한다', () async {
+      final repository = _FakeRoutineRepository(
+        categories: [_buildCategory(title: '규칙적인 삶')],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final categories =
+          await container.read(routineCategoryListProvider.future);
+
+      expect(categories.single.title, '규칙적인 삶');
+    });
+
+    test('카테고리 생성 성공 시 목록에 추가된다', () async {
+      final repository = _FakeRoutineRepository(categories: const []);
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineCategoryListProvider.future);
+
+      final created = await container
+          .read(routineCategoryManagementProvider.notifier)
+          .createRoutineCategory(const CreateRoutineCategoryDto(title: '건강'));
+
+      expect(created, isNotNull);
+      final categories = container.read(routineCategoryListProvider).value!;
+      expect(categories.single.title, '건강');
+    });
+
+    test('카테고리 삭제 성공 시 목록에서 제거되고 습관 목록도 refresh된다', () async {
+      final repository = _FakeRoutineRepository(
+        routines: [_buildRoutine()],
+        categories: [_buildCategory()],
+      );
+      final container = ProviderContainer(
+        overrides: [
+          routineRepositoryProvider.overrideWithValue(repository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(routineCategoryListProvider.future);
+      await container.read(routineListProvider.future);
+
+      final success = await container
+          .read(routineCategoryManagementProvider.notifier)
+          .deleteRoutineCategory('category-1');
+
+      expect(success, isTrue);
+      expect(repository.deleteRoutineCategoryCallCount, 1);
+      final categories = container.read(routineCategoryListProvider).value!;
+      expect(categories, isEmpty);
     });
   });
 }

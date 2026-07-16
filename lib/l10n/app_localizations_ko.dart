@@ -4725,4 +4725,194 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_group_error_generic => '오류가 발생했습니다';
+
+  @override
+  String get routine_field_memo => '메모';
+
+  @override
+  String get routine_field_memo_hint => '이 습관에 대한 설명을 남겨보세요';
+
+  @override
+  String get routine_field_importance => '중요도';
+
+  @override
+  String get routine_importance_low => '낮음';
+
+  @override
+  String get routine_importance_medium => '보통';
+
+  @override
+  String get routine_importance_high => '높음';
+
+  @override
+  String get routine_field_time_filter => '시간대';
+
+  @override
+  String get routine_time_filter_morning => '오전';
+
+  @override
+  String get routine_time_filter_afternoon => '오후';
+
+  @override
+  String get routine_time_filter_evening => '저녁';
+
+  @override
+  String get routine_time_filter_none => '지정 안 함';
+
+  @override
+  String get routine_field_category => '카테고리';
+
+  @override
+  String get routine_field_category_none => '미분류';
+
+  @override
+  String get routine_category_title => '카테고리';
+
+  @override
+  String get routine_category_add => '카테고리 추가';
+
+  @override
+  String get routine_category_edit => '카테고리 수정';
+
+  @override
+  String get routine_category_delete => '카테고리 삭제';
+
+  @override
+  String get routine_category_delete_confirm =>
+      '이 카테고리를 삭제하시겠습니까?\n소속 습관은 삭제되지 않고 미분류로 남습니다.';
+
+  @override
+  String get routine_category_save => '저장';
+
+  @override
+  String get routine_category_field_title_hint => '예: 규칙적인 삶';
+
+  @override
+  String get routine_category_error_generic => '오류가 발생했습니다';
+
+  @override
+  String get routine_category_empty => '등록된 카테고리가 없습니다';
+
+  @override
+  String get routine_category_filter_all => '전체';
+
+  @override
+  String get routine_field_record_type => '기록 방식';
+
+  @override
+  String get routine_record_type_boolean => '단순 체크';
+
+  @override
+  String get routine_record_type_text => '텍스트';
+
+  @override
+  String get routine_record_type_time => '시각';
+
+  @override
+  String get routine_record_type_numeric => '수치';
+
+  @override
+  String get routine_record_type_readonly_hint => '기록 방식은 생성 후 변경할 수 없습니다';
+
+  @override
+  String get routine_check_dialog_title => '기록 입력';
+
+  @override
+  String get routine_check_dialog_text_label => '내용';
+
+  @override
+  String get routine_check_dialog_numeric_label => '수치';
+
+  @override
+  String get routine_check_dialog_time_label => '시각';
+
+  @override
+  String get routine_check_dialog_confirm => '체크';
+
+  @override
+  String get routine_check_dialog_cancel => '취소';
+
+  @override
+  String get routine_status_active => '활성';
+
+  @override
+  String get routine_status_paused => '일시정지';
+
+  @override
+  String get routine_status_ended => '종료';
+
+  @override
+  String get routine_pause => '일시정지';
+
+  @override
+  String get routine_pause_confirm => '이 습관을 일시정지하시겠습니까?\n일시정지 중에는 체크할 수 없습니다.';
+
+  @override
+  String get routine_resume => '재개';
+
+  @override
+  String get routine_resume_success => '재개되었습니다';
+
+  @override
+  String get routine_pause_error => '일시정지에 실패했습니다';
+
+  @override
+  String get routine_resume_error => '재개에 실패했습니다';
+
+  @override
+  String get routine_end => '종료';
+
+  @override
+  String get routine_end_confirm => '이 습관을 종료하시겠습니까?\n체크 기록은 보존됩니다.';
+
+  @override
+  String get routine_frequency_type_daily => '일간';
+
+  @override
+  String get routine_frequency_type_weekly => '주간';
+
+  @override
+  String get routine_frequency_type_monthly => '월간';
+
+  @override
+  String get routine_weekly_mode_count_only => '주 N회';
+
+  @override
+  String get routine_weekly_mode_fixed_days => '요일 지정';
+
+  @override
+  String get routine_field_target_days => '반복 요일';
+
+  @override
+  String get routine_day_sun => '일';
+
+  @override
+  String get routine_day_mon => '월';
+
+  @override
+  String get routine_day_tue => '화';
+
+  @override
+  String get routine_day_wed => '수';
+
+  @override
+  String get routine_day_thu => '목';
+
+  @override
+  String get routine_day_fri => '금';
+
+  @override
+  String get routine_day_sat => '토';
+
+  @override
+  String get routine_error_weekly_mode_required => '주 반복 방식을 선택해주세요';
+
+  @override
+  String get routine_error_weekly_target_required => '주 목표 횟수를 선택해주세요';
+
+  @override
+  String get routine_error_fixed_days_required => '반복할 요일을 1개 이상 선택해주세요';
+
+  @override
+  String get routine_error_monthly_target_required => '월 목표 횟수를 선택해주세요';
 }

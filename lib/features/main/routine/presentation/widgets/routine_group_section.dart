@@ -18,15 +18,26 @@ class RoutineGroupSection extends StatefulWidget {
     required this.onReorderRoutines,
     required this.onEditGroup,
     required this.onDeleteGroup,
+    this.onEditRoutine,
+    this.onPauseRoutine,
+    this.onResumeRoutine,
   });
 
   final RoutineGroup group;
   final List<Routine> routines;
   final void Function(Routine) onTapRoutine;
-  final void Function(Routine) onToggleCheck;
+  final Future<void> Function(
+    Routine, {
+    String? textValue,
+    num? numericValue,
+    String? timeValue,
+  }) onToggleCheck;
   final void Function(List<Routine>) onReorderRoutines;
   final VoidCallback onEditGroup;
   final VoidCallback onDeleteGroup;
+  final void Function(Routine)? onEditRoutine;
+  final void Function(Routine)? onPauseRoutine;
+  final void Function(Routine)? onResumeRoutine;
 
   @override
   State<RoutineGroupSection> createState() => _RoutineGroupSectionState();
@@ -146,7 +157,22 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
                         child: const DragHandleIcon(),
                       ),
                       onTap: () => widget.onTapRoutine(routine),
-                      onToggleCheck: () => widget.onToggleCheck(routine),
+                      onToggleCheck: ({textValue, numericValue, timeValue}) =>
+                          widget.onToggleCheck(
+                        routine,
+                        textValue: textValue,
+                        numericValue: numericValue,
+                        timeValue: timeValue,
+                      ),
+                      onEdit: widget.onEditRoutine != null
+                          ? () => widget.onEditRoutine!(routine)
+                          : null,
+                      onPause: widget.onPauseRoutine != null
+                          ? () => widget.onPauseRoutine!(routine)
+                          : null,
+                      onResume: widget.onResumeRoutine != null
+                          ? () => widget.onResumeRoutine!(routine)
+                          : null,
                     ),
                   );
                 },

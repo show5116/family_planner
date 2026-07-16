@@ -4829,4 +4829,201 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routine_group_error_generic => 'Something went wrong';
+
+  @override
+  String get routine_field_memo => 'Memo';
+
+  @override
+  String get routine_field_memo_hint => 'Add a note about this habit';
+
+  @override
+  String get routine_field_importance => 'Importance';
+
+  @override
+  String get routine_importance_low => 'Low';
+
+  @override
+  String get routine_importance_medium => 'Medium';
+
+  @override
+  String get routine_importance_high => 'High';
+
+  @override
+  String get routine_field_time_filter => 'Time of Day';
+
+  @override
+  String get routine_time_filter_morning => 'Morning';
+
+  @override
+  String get routine_time_filter_afternoon => 'Afternoon';
+
+  @override
+  String get routine_time_filter_evening => 'Evening';
+
+  @override
+  String get routine_time_filter_none => 'Not set';
+
+  @override
+  String get routine_field_category => 'Category';
+
+  @override
+  String get routine_field_category_none => 'Uncategorized';
+
+  @override
+  String get routine_category_title => 'Categories';
+
+  @override
+  String get routine_category_add => 'Add Category';
+
+  @override
+  String get routine_category_edit => 'Edit Category';
+
+  @override
+  String get routine_category_delete => 'Delete Category';
+
+  @override
+  String get routine_category_delete_confirm =>
+      'Delete this category?\nHabits in it won\'t be deleted and will become uncategorized.';
+
+  @override
+  String get routine_category_save => 'Save';
+
+  @override
+  String get routine_category_field_title_hint => 'e.g. Healthy Living';
+
+  @override
+  String get routine_category_error_generic => 'Something went wrong';
+
+  @override
+  String get routine_category_empty => 'No categories yet';
+
+  @override
+  String get routine_category_filter_all => 'All';
+
+  @override
+  String get routine_field_record_type => 'Record Type';
+
+  @override
+  String get routine_record_type_boolean => 'Simple check';
+
+  @override
+  String get routine_record_type_text => 'Text';
+
+  @override
+  String get routine_record_type_time => 'Time';
+
+  @override
+  String get routine_record_type_numeric => 'Number';
+
+  @override
+  String get routine_record_type_readonly_hint =>
+      'Record type can\'t be changed after creation';
+
+  @override
+  String get routine_check_dialog_title => 'Log Entry';
+
+  @override
+  String get routine_check_dialog_text_label => 'Content';
+
+  @override
+  String get routine_check_dialog_numeric_label => 'Value';
+
+  @override
+  String get routine_check_dialog_time_label => 'Time';
+
+  @override
+  String get routine_check_dialog_confirm => 'Check';
+
+  @override
+  String get routine_check_dialog_cancel => 'Cancel';
+
+  @override
+  String get routine_status_active => 'Active';
+
+  @override
+  String get routine_status_paused => 'Paused';
+
+  @override
+  String get routine_status_ended => 'Ended';
+
+  @override
+  String get routine_pause => 'Pause';
+
+  @override
+  String get routine_pause_confirm =>
+      'Pause this habit?\nYou won\'t be able to check it while paused.';
+
+  @override
+  String get routine_resume => 'Resume';
+
+  @override
+  String get routine_resume_success => 'Resumed';
+
+  @override
+  String get routine_pause_error => 'Failed to pause';
+
+  @override
+  String get routine_resume_error => 'Failed to resume';
+
+  @override
+  String get routine_end => 'End';
+
+  @override
+  String get routine_end_confirm =>
+      'End this habit?\nCheck history will be preserved.';
+
+  @override
+  String get routine_frequency_type_daily => 'Daily';
+
+  @override
+  String get routine_frequency_type_weekly => 'Weekly';
+
+  @override
+  String get routine_frequency_type_monthly => 'Monthly';
+
+  @override
+  String get routine_weekly_mode_count_only => 'N times/week';
+
+  @override
+  String get routine_weekly_mode_fixed_days => 'Specific days';
+
+  @override
+  String get routine_field_target_days => 'Repeat Days';
+
+  @override
+  String get routine_day_sun => 'Sun';
+
+  @override
+  String get routine_day_mon => 'Mon';
+
+  @override
+  String get routine_day_tue => 'Tue';
+
+  @override
+  String get routine_day_wed => 'Wed';
+
+  @override
+  String get routine_day_thu => 'Thu';
+
+  @override
+  String get routine_day_fri => 'Fri';
+
+  @override
+  String get routine_day_sat => 'Sat';
+
+  @override
+  String get routine_error_weekly_mode_required =>
+      'Please choose a weekly repeat mode';
+
+  @override
+  String get routine_error_weekly_target_required =>
+      'Please set a weekly target count';
+
+  @override
+  String get routine_error_fixed_days_required =>
+      'Please select at least one day';
+
+  @override
+  String get routine_error_monthly_target_required =>
+      'Please set a monthly target count';
 }

@@ -4718,4 +4718,194 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_group_error_generic => 'エラーが発生しました';
+
+  @override
+  String get routine_field_memo => 'メモ';
+
+  @override
+  String get routine_field_memo_hint => 'この習慣についての説明を残してみましょう';
+
+  @override
+  String get routine_field_importance => '重要度';
+
+  @override
+  String get routine_importance_low => '低い';
+
+  @override
+  String get routine_importance_medium => '普通';
+
+  @override
+  String get routine_importance_high => '高い';
+
+  @override
+  String get routine_field_time_filter => '時間帯';
+
+  @override
+  String get routine_time_filter_morning => '午前';
+
+  @override
+  String get routine_time_filter_afternoon => '午後';
+
+  @override
+  String get routine_time_filter_evening => '夕方';
+
+  @override
+  String get routine_time_filter_none => '指定なし';
+
+  @override
+  String get routine_field_category => 'カテゴリー';
+
+  @override
+  String get routine_field_category_none => '未分類';
+
+  @override
+  String get routine_category_title => 'カテゴリー';
+
+  @override
+  String get routine_category_add => 'カテゴリー追加';
+
+  @override
+  String get routine_category_edit => 'カテゴリー編集';
+
+  @override
+  String get routine_category_delete => 'カテゴリー削除';
+
+  @override
+  String get routine_category_delete_confirm =>
+      'このカテゴリーを削除しますか?\n所属する習慣は削除されず、未分類として残ります。';
+
+  @override
+  String get routine_category_save => '保存';
+
+  @override
+  String get routine_category_field_title_hint => '例: 規則正しい生活';
+
+  @override
+  String get routine_category_error_generic => 'エラーが発生しました';
+
+  @override
+  String get routine_category_empty => '登録されたカテゴリーがありません';
+
+  @override
+  String get routine_category_filter_all => 'すべて';
+
+  @override
+  String get routine_field_record_type => '記録方式';
+
+  @override
+  String get routine_record_type_boolean => 'シンプルチェック';
+
+  @override
+  String get routine_record_type_text => 'テキスト';
+
+  @override
+  String get routine_record_type_time => '時刻';
+
+  @override
+  String get routine_record_type_numeric => '数値';
+
+  @override
+  String get routine_record_type_readonly_hint => '記録方式は作成後に変更できません';
+
+  @override
+  String get routine_check_dialog_title => '記録入力';
+
+  @override
+  String get routine_check_dialog_text_label => '内容';
+
+  @override
+  String get routine_check_dialog_numeric_label => '数値';
+
+  @override
+  String get routine_check_dialog_time_label => '時刻';
+
+  @override
+  String get routine_check_dialog_confirm => 'チェック';
+
+  @override
+  String get routine_check_dialog_cancel => 'キャンセル';
+
+  @override
+  String get routine_status_active => '有効';
+
+  @override
+  String get routine_status_paused => '一時停止';
+
+  @override
+  String get routine_status_ended => '終了';
+
+  @override
+  String get routine_pause => '一時停止';
+
+  @override
+  String get routine_pause_confirm => 'この習慣を一時停止しますか?\n一時停止中はチェックできません。';
+
+  @override
+  String get routine_resume => '再開';
+
+  @override
+  String get routine_resume_success => '再開しました';
+
+  @override
+  String get routine_pause_error => '一時停止に失敗しました';
+
+  @override
+  String get routine_resume_error => '再開に失敗しました';
+
+  @override
+  String get routine_end => '終了';
+
+  @override
+  String get routine_end_confirm => 'この習慣を終了しますか?\nチェック記録は保存されます。';
+
+  @override
+  String get routine_frequency_type_daily => '毎日';
+
+  @override
+  String get routine_frequency_type_weekly => '毎週';
+
+  @override
+  String get routine_frequency_type_monthly => '毎月';
+
+  @override
+  String get routine_weekly_mode_count_only => '週N回';
+
+  @override
+  String get routine_weekly_mode_fixed_days => '曜日指定';
+
+  @override
+  String get routine_field_target_days => '反復曜日';
+
+  @override
+  String get routine_day_sun => '日';
+
+  @override
+  String get routine_day_mon => '月';
+
+  @override
+  String get routine_day_tue => '火';
+
+  @override
+  String get routine_day_wed => '水';
+
+  @override
+  String get routine_day_thu => '木';
+
+  @override
+  String get routine_day_fri => '金';
+
+  @override
+  String get routine_day_sat => '土';
+
+  @override
+  String get routine_error_weekly_mode_required => '週反復方式を選択してください';
+
+  @override
+  String get routine_error_weekly_target_required => '週目標回数を選択してください';
+
+  @override
+  String get routine_error_fixed_days_required => '反復する曜日を1つ以上選択してください';
+
+  @override
+  String get routine_error_monthly_target_required => '月目標回数を選択してください';
 }

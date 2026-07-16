@@ -9091,6 +9091,384 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'오류가 발생했습니다'**
   String get routine_group_error_generic;
+
+  /// 습관 메모 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'메모'**
+  String get routine_field_memo;
+
+  /// 메모 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관에 대한 설명을 남겨보세요'**
+  String get routine_field_memo_hint;
+
+  /// 습관 중요도 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'중요도'**
+  String get routine_field_importance;
+
+  /// 중요도 - 낮음
+  ///
+  /// In ko, this message translates to:
+  /// **'낮음'**
+  String get routine_importance_low;
+
+  /// 중요도 - 보통
+  ///
+  /// In ko, this message translates to:
+  /// **'보통'**
+  String get routine_importance_medium;
+
+  /// 중요도 - 높음
+  ///
+  /// In ko, this message translates to:
+  /// **'높음'**
+  String get routine_importance_high;
+
+  /// 시간대 분류 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'시간대'**
+  String get routine_field_time_filter;
+
+  /// 시간대 - 오전
+  ///
+  /// In ko, this message translates to:
+  /// **'오전'**
+  String get routine_time_filter_morning;
+
+  /// 시간대 - 오후
+  ///
+  /// In ko, this message translates to:
+  /// **'오후'**
+  String get routine_time_filter_afternoon;
+
+  /// 시간대 - 저녁
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁'**
+  String get routine_time_filter_evening;
+
+  /// 시간대 미지정 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'지정 안 함'**
+  String get routine_time_filter_none;
+
+  /// 습관 카테고리 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get routine_field_category;
+
+  /// 카테고리 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'미분류'**
+  String get routine_field_category_none;
+
+  /// 카테고리 관리 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get routine_category_title;
+
+  /// 카테고리 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 추가'**
+  String get routine_category_add;
+
+  /// 카테고리 수정 버튼/타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 수정'**
+  String get routine_category_edit;
+
+  /// 카테고리 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 삭제'**
+  String get routine_category_delete;
+
+  /// 카테고리 삭제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 카테고리를 삭제하시겠습니까?\n소속 습관은 삭제되지 않고 미분류로 남습니다.'**
+  String get routine_category_delete_confirm;
+
+  /// 카테고리 저장 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get routine_category_save;
+
+  /// 카테고리 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 규칙적인 삶'**
+  String get routine_category_field_title_hint;
+
+  /// 카테고리 관련 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get routine_category_error_generic;
+
+  /// 카테고리 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 카테고리가 없습니다'**
+  String get routine_category_empty;
+
+  /// 카테고리 필터 칩 - 전체
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get routine_category_filter_all;
+
+  /// 기록 방식 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 방식'**
+  String get routine_field_record_type;
+
+  /// 기록 방식 - 단순 체크
+  ///
+  /// In ko, this message translates to:
+  /// **'단순 체크'**
+  String get routine_record_type_boolean;
+
+  /// 기록 방식 - 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'텍스트'**
+  String get routine_record_type_text;
+
+  /// 기록 방식 - 시각
+  ///
+  /// In ko, this message translates to:
+  /// **'시각'**
+  String get routine_record_type_time;
+
+  /// 기록 방식 - 수치
+  ///
+  /// In ko, this message translates to:
+  /// **'수치'**
+  String get routine_record_type_numeric;
+
+  /// 수정 화면에서 기록 방식이 읽기 전용임을 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 방식은 생성 후 변경할 수 없습니다'**
+  String get routine_record_type_readonly_hint;
+
+  /// 체크 값 입력 다이얼로그 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 입력'**
+  String get routine_check_dialog_title;
+
+  /// 텍스트 기록 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get routine_check_dialog_text_label;
+
+  /// 수치 기록 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'수치'**
+  String get routine_check_dialog_numeric_label;
+
+  /// 시각 기록 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'시각'**
+  String get routine_check_dialog_time_label;
+
+  /// 체크 값 입력 다이얼로그 확인 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'체크'**
+  String get routine_check_dialog_confirm;
+
+  /// 체크 값 입력 다이얼로그 취소 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get routine_check_dialog_cancel;
+
+  /// 루틴 상태 - 활성
+  ///
+  /// In ko, this message translates to:
+  /// **'활성'**
+  String get routine_status_active;
+
+  /// 루틴 상태 - 일시정지
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get routine_status_paused;
+
+  /// 루틴 상태 - 종료
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get routine_status_ended;
+
+  /// 일시정지 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get routine_pause;
+
+  /// 일시정지 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관을 일시정지하시겠습니까?\n일시정지 중에는 체크할 수 없습니다.'**
+  String get routine_pause_confirm;
+
+  /// 재개 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'재개'**
+  String get routine_resume;
+
+  /// 재개 성공 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'재개되었습니다'**
+  String get routine_resume_success;
+
+  /// 일시정지 실패 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지에 실패했습니다'**
+  String get routine_pause_error;
+
+  /// 재개 실패 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'재개에 실패했습니다'**
+  String get routine_resume_error;
+
+  /// 습관 종료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get routine_end;
+
+  /// 습관 종료 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관을 종료하시겠습니까?\n체크 기록은 보존됩니다.'**
+  String get routine_end_confirm;
+
+  /// 반복 타입 - 일간
+  ///
+  /// In ko, this message translates to:
+  /// **'일간'**
+  String get routine_frequency_type_daily;
+
+  /// 반복 타입 - 주간
+  ///
+  /// In ko, this message translates to:
+  /// **'주간'**
+  String get routine_frequency_type_weekly;
+
+  /// 반복 타입 - 월간
+  ///
+  /// In ko, this message translates to:
+  /// **'월간'**
+  String get routine_frequency_type_monthly;
+
+  /// 주 반복 방식 - 요일 무관 주 N회
+  ///
+  /// In ko, this message translates to:
+  /// **'주 N회'**
+  String get routine_weekly_mode_count_only;
+
+  /// 주 반복 방식 - 특정 요일 지정
+  ///
+  /// In ko, this message translates to:
+  /// **'요일 지정'**
+  String get routine_weekly_mode_fixed_days;
+
+  /// 반복 요일 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 요일'**
+  String get routine_field_target_days;
+
+  /// 요일 축약 - 일요일
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get routine_day_sun;
+
+  /// 요일 축약 - 월요일
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get routine_day_mon;
+
+  /// 요일 축약 - 화요일
+  ///
+  /// In ko, this message translates to:
+  /// **'화'**
+  String get routine_day_tue;
+
+  /// 요일 축약 - 수요일
+  ///
+  /// In ko, this message translates to:
+  /// **'수'**
+  String get routine_day_wed;
+
+  /// 요일 축약 - 목요일
+  ///
+  /// In ko, this message translates to:
+  /// **'목'**
+  String get routine_day_thu;
+
+  /// 요일 축약 - 금요일
+  ///
+  /// In ko, this message translates to:
+  /// **'금'**
+  String get routine_day_fri;
+
+  /// 요일 축약 - 토요일
+  ///
+  /// In ko, this message translates to:
+  /// **'토'**
+  String get routine_day_sat;
+
+  /// 주간 반복인데 weeklyMode 미선택 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'주 반복 방식을 선택해주세요'**
+  String get routine_error_weekly_mode_required;
+
+  /// 주 N회인데 목표 횟수 미입력 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'주 목표 횟수를 선택해주세요'**
+  String get routine_error_weekly_target_required;
+
+  /// 요일지정인데 요일 미선택 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'반복할 요일을 1개 이상 선택해주세요'**
+  String get routine_error_fixed_days_required;
+
+  /// 월간인데 목표 횟수 미입력 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'월 목표 횟수를 선택해주세요'**
+  String get routine_error_monthly_target_required;
 }
 
 class _AppLocalizationsDelegate

@@ -12,8 +12,15 @@ class CreateRoutineDto {
   final String title;
   final String? emoji;
   final String? color;
+  final String? memo;
+  final RoutineImportance? importance;
+  final RoutineTimeFilter? timeFilter;
+  final String? categoryId;
+  final RoutineRecordType? recordType;
   final RoutineFrequencyType? frequencyType;
+  final RoutineWeeklyMode? weeklyMode;
   final int? targetCount;
+  final List<int>? targetDays;
   final String startDate; // YYYY-MM-DD
   final String? endDate; // YYYY-MM-DD
   final String? routineGroupId; // 소속시킬 루틴 ID (없으면 독립 습관)
@@ -22,8 +29,15 @@ class CreateRoutineDto {
     required this.title,
     this.emoji,
     this.color,
+    this.memo,
+    this.importance,
+    this.timeFilter,
+    this.categoryId,
+    this.recordType,
     this.frequencyType,
+    this.weeklyMode,
     this.targetCount,
+    this.targetDays,
     required this.startDate,
     this.endDate,
     this.routineGroupId,
@@ -33,9 +47,16 @@ class CreateRoutineDto {
         'title': title,
         if (emoji != null) 'emoji': emoji,
         if (color != null) 'color': color,
+        if (memo != null) 'memo': memo,
+        if (importance != null) 'importance': importance!.toJsonString(),
+        if (timeFilter != null) 'timeFilter': timeFilter!.toJsonString(),
+        if (categoryId != null) 'categoryId': categoryId,
+        if (recordType != null) 'recordType': recordType!.toJsonString(),
         if (frequencyType != null)
           'frequencyType': frequencyType!.toJsonString(),
+        if (weeklyMode != null) 'weeklyMode': weeklyMode!.toJsonString(),
         if (targetCount != null) 'targetCount': targetCount,
+        if (targetDays != null) 'targetDays': targetDays,
         'startDate': startDate,
         if (endDate != null) 'endDate': endDate,
         if (routineGroupId != null) 'routineGroupId': routineGroupId,
@@ -47,33 +68,58 @@ class UpdateRoutineDto {
   final String? title;
   final String? emoji;
   final String? color;
+  final String? memo;
+  final RoutineImportance? importance;
+  final RoutineTimeFilter? timeFilter;
+  final String? categoryId;
+  final RoutineFrequencyType? frequencyType;
+  final RoutineWeeklyMode? weeklyMode;
   final int? targetCount;
+  final List<int>? targetDays;
   final String? endDate;
-  final bool? isActive;
   final String? routineGroupId;
 
   /// routineGroupId를 명시적으로 null 전달(그룹 소속 해제)할지 여부.
   /// false면 routineGroupId 필드 자체를 요청에서 생략(미변경).
   final bool clearRoutineGroupId;
 
+  /// categoryId를 명시적으로 null 전달(카테고리 소속 해제)할지 여부.
+  /// false면 categoryId 필드 자체를 요청에서 생략(미변경).
+  final bool clearCategoryId;
+
   const UpdateRoutineDto({
     this.title,
     this.emoji,
     this.color,
+    this.memo,
+    this.importance,
+    this.timeFilter,
+    this.categoryId,
+    this.frequencyType,
+    this.weeklyMode,
     this.targetCount,
+    this.targetDays,
     this.endDate,
-    this.isActive,
     this.routineGroupId,
     this.clearRoutineGroupId = false,
+    this.clearCategoryId = false,
   });
 
   Map<String, dynamic> toJson() => {
         if (title != null) 'title': title,
         if (emoji != null) 'emoji': emoji,
         if (color != null) 'color': color,
+        if (memo != null) 'memo': memo,
+        if (importance != null) 'importance': importance!.toJsonString(),
+        if (timeFilter != null) 'timeFilter': timeFilter!.toJsonString(),
+        if (categoryId != null) 'categoryId': categoryId,
+        if (clearCategoryId && categoryId == null) 'categoryId': null,
+        if (frequencyType != null)
+          'frequencyType': frequencyType!.toJsonString(),
+        if (weeklyMode != null) 'weeklyMode': weeklyMode!.toJsonString(),
         if (targetCount != null) 'targetCount': targetCount,
+        if (targetDays != null) 'targetDays': targetDays,
         if (endDate != null) 'endDate': endDate,
-        if (isActive != null) 'isActive': isActive,
         if (routineGroupId != null) 'routineGroupId': routineGroupId,
         if (clearRoutineGroupId && routineGroupId == null)
           'routineGroupId': null,
@@ -84,12 +130,24 @@ class UpdateRoutineDto {
 class CheckRoutineDto {
   final String? date; // YYYY-MM-DD, 미지정 시 오늘
   final String? note;
+  final String? textValue;
+  final num? numericValue;
+  final String? timeValue;
 
-  const CheckRoutineDto({this.date, this.note});
+  const CheckRoutineDto({
+    this.date,
+    this.note,
+    this.textValue,
+    this.numericValue,
+    this.timeValue,
+  });
 
   Map<String, dynamic> toJson() => {
         if (date != null) 'date': date,
         if (note != null) 'note': note,
+        if (textValue != null) 'textValue': textValue,
+        if (numericValue != null) 'numericValue': numericValue,
+        if (timeValue != null) 'timeValue': timeValue,
       };
 }
 
@@ -155,6 +213,53 @@ class RoutineGroupSortOrderItemDto {
   Map<String, dynamic> toJson() => {'id': id, 'sortOrder': sortOrder};
 }
 
+/// 루틴 카테고리 생성 DTO
+class CreateRoutineCategoryDto {
+  final String title;
+  final String? emoji;
+  final String? color;
+
+  const CreateRoutineCategoryDto({
+    required this.title,
+    this.emoji,
+    this.color,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        if (emoji != null) 'emoji': emoji,
+        if (color != null) 'color': color,
+      };
+}
+
+/// 루틴 카테고리 수정 DTO (부분 업데이트)
+class UpdateRoutineCategoryDto {
+  final String? title;
+  final String? emoji;
+  final String? color;
+
+  const UpdateRoutineCategoryDto({this.title, this.emoji, this.color});
+
+  Map<String, dynamic> toJson() => {
+        if (title != null) 'title': title,
+        if (emoji != null) 'emoji': emoji,
+        if (color != null) 'color': color,
+      };
+}
+
+/// 루틴 카테고리 순서 변경 항목 DTO
+class RoutineCategorySortOrderItemDto {
+  final String id;
+  final int sortOrder;
+
+  const RoutineCategorySortOrderItemDto({
+    required this.id,
+    required this.sortOrder,
+  });
+
+  Map<String, dynamic> toJson() => {'id': id, 'sortOrder': sortOrder};
+}
+
 // ─── Repository ─────────────────────────────────────────────────────────────
 
 final routineRepositoryProvider = Provider<RoutineRepository>((ref) {
@@ -178,11 +283,19 @@ class RoutineRepository {
     }
   }
 
-  Future<List<Routine>> getRoutines({bool? isActive}) async {
+  Future<List<Routine>> getRoutines({
+    RoutineStatus? status,
+    String? routineGroupId,
+    String? categoryId,
+  }) async {
     try {
       final response = await _dio.get(
         '/routines',
-        queryParameters: {if (isActive != null) 'isActive': isActive},
+        queryParameters: {
+          if (status != null) 'status': status.toJsonString(),
+          if (routineGroupId != null) 'routineGroupId': routineGroupId,
+          if (categoryId != null) 'categoryId': categoryId,
+        },
       );
       final data = response.data;
       if (data is List) {
@@ -217,12 +330,33 @@ class RoutineRepository {
     }
   }
 
+  /// 루틴 종료 (soft delete, 체크 기록은 보존)
   Future<void> deleteRoutine(String id) async {
     try {
       await _dio.delete('/routines/$id');
     } on DioException catch (e) {
-      debugPrint('❌ [RoutineRepository] 루틴 삭제 실패: ${e.message}');
-      throw Exception('루틴 삭제 실패: ${e.message}');
+      debugPrint('❌ [RoutineRepository] 루틴 종료 실패: ${e.message}');
+      throw Exception('루틴 종료 실패: ${e.message}');
+    }
+  }
+
+  Future<Routine> pauseRoutine(String id) async {
+    try {
+      final response = await _dio.patch('/routines/$id/pause');
+      return Routine.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 일시정지 실패: ${e.message}');
+      throw Exception('루틴 일시정지 실패: ${e.message}');
+    }
+  }
+
+  Future<Routine> resumeRoutine(String id) async {
+    try {
+      final response = await _dio.patch('/routines/$id/resume');
+      return Routine.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 재개 실패: ${e.message}');
+      throw Exception('루틴 재개 실패: ${e.message}');
     }
   }
 
@@ -537,6 +671,90 @@ class RoutineRepository {
     } on DioException catch (e) {
       debugPrint('❌ [RoutineRepository] 루틴 삭제 실패: ${e.message}');
       throw Exception('루틴 삭제 실패: ${e.message}');
+    }
+  }
+
+  // ── 루틴 카테고리 ─────────────────────────────────────────────────────────
+
+  Future<RoutineCategory> createRoutineCategory(
+    CreateRoutineCategoryDto dto,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/routines/categories',
+        data: dto.toJson(),
+      );
+      return RoutineCategory.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 카테고리 생성 실패: ${e.message}');
+      throw Exception('카테고리 생성 실패: ${e.message}');
+    }
+  }
+
+  Future<List<RoutineCategory>> getRoutineCategories() async {
+    try {
+      final response = await _dio.get('/routines/categories');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => RoutineCategory.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 카테고리 목록 조회 실패: ${e.message}');
+      throw Exception('카테고리 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<void> updateRoutineCategorySortOrder(
+    List<RoutineCategorySortOrderItemDto> items,
+  ) async {
+    try {
+      await _dio.patch(
+        '/routines/categories/sort-order',
+        data: {'items': items.map((e) => e.toJson()).toList()},
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 카테고리 순서 변경 실패: ${e.message}');
+      throw Exception('카테고리 순서 변경 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineCategoryDetail> getRoutineCategoryDetail(String id) async {
+    try {
+      final response = await _dio.get('/routines/categories/$id');
+      return RoutineCategoryDetail.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 카테고리 상세 조회 실패: ${e.message}');
+      throw Exception('카테고리 상세 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineCategory> updateRoutineCategory(
+    String id,
+    UpdateRoutineCategoryDto dto,
+  ) async {
+    try {
+      final response = await _dio.patch(
+        '/routines/categories/$id',
+        data: dto.toJson(),
+      );
+      return RoutineCategory.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 카테고리 수정 실패: ${e.message}');
+      throw Exception('카테고리 수정 실패: ${e.message}');
+    }
+  }
+
+  Future<void> deleteRoutineCategory(String id) async {
+    try {
+      await _dio.delete('/routines/categories/$id');
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 카테고리 삭제 실패: ${e.message}');
+      throw Exception('카테고리 삭제 실패: ${e.message}');
     }
   }
 

@@ -1,18 +1,18 @@
-/// 루틴 반복 타입 (1차: WEEKLY_COUNT만 지원)
+/// 루틴 반복 타입
 enum RoutineFrequencyType {
-  weeklyCount,
   daily,
-  daysOfWeek;
+  weekly,
+  monthly;
 
   static RoutineFrequencyType fromString(String? value) {
     switch (value) {
       case 'DAILY':
         return RoutineFrequencyType.daily;
-      case 'DAYS_OF_WEEK':
-        return RoutineFrequencyType.daysOfWeek;
-      case 'WEEKLY_COUNT':
+      case 'MONTHLY':
+        return RoutineFrequencyType.monthly;
+      case 'WEEKLY':
       default:
-        return RoutineFrequencyType.weeklyCount;
+        return RoutineFrequencyType.weekly;
     }
   }
 
@@ -20,10 +20,162 @@ enum RoutineFrequencyType {
     switch (this) {
       case RoutineFrequencyType.daily:
         return 'DAILY';
-      case RoutineFrequencyType.daysOfWeek:
-        return 'DAYS_OF_WEEK';
-      case RoutineFrequencyType.weeklyCount:
-        return 'WEEKLY_COUNT';
+      case RoutineFrequencyType.weekly:
+        return 'WEEKLY';
+      case RoutineFrequencyType.monthly:
+        return 'MONTHLY';
+    }
+  }
+}
+
+/// 주 반복 세부 방식 (frequencyType=WEEKLY일 때 사용)
+enum RoutineWeeklyMode {
+  countOnly,
+  fixedDays;
+
+  static RoutineWeeklyMode? fromString(String? value) {
+    switch (value) {
+      case 'FIXED_DAYS':
+        return RoutineWeeklyMode.fixedDays;
+      case 'COUNT_ONLY':
+        return RoutineWeeklyMode.countOnly;
+      default:
+        return null;
+    }
+  }
+
+  String toJsonString() {
+    switch (this) {
+      case RoutineWeeklyMode.countOnly:
+        return 'COUNT_ONLY';
+      case RoutineWeeklyMode.fixedDays:
+        return 'FIXED_DAYS';
+    }
+  }
+}
+
+/// 루틴 중요도
+enum RoutineImportance {
+  low,
+  medium,
+  high;
+
+  static RoutineImportance fromString(String? value) {
+    switch (value) {
+      case 'LOW':
+        return RoutineImportance.low;
+      case 'HIGH':
+        return RoutineImportance.high;
+      case 'MEDIUM':
+      default:
+        return RoutineImportance.medium;
+    }
+  }
+
+  String toJsonString() {
+    switch (this) {
+      case RoutineImportance.low:
+        return 'LOW';
+      case RoutineImportance.medium:
+        return 'MEDIUM';
+      case RoutineImportance.high:
+        return 'HIGH';
+    }
+  }
+}
+
+/// 시간대 분류 (알림과 무관한 분류용)
+enum RoutineTimeFilter {
+  morning,
+  afternoon,
+  evening;
+
+  static RoutineTimeFilter? fromString(String? value) {
+    switch (value) {
+      case 'MORNING':
+        return RoutineTimeFilter.morning;
+      case 'AFTERNOON':
+        return RoutineTimeFilter.afternoon;
+      case 'EVENING':
+        return RoutineTimeFilter.evening;
+      default:
+        return null;
+    }
+  }
+
+  String toJsonString() {
+    switch (this) {
+      case RoutineTimeFilter.morning:
+        return 'MORNING';
+      case RoutineTimeFilter.afternoon:
+        return 'AFTERNOON';
+      case RoutineTimeFilter.evening:
+        return 'EVENING';
+    }
+  }
+}
+
+/// 기록 방식 (BOOLEAN=단순 체크, TEXT=텍스트, TIME=시각, NUMERIC=수치)
+enum RoutineRecordType {
+  boolean_,
+  text,
+  time,
+  numeric;
+
+  static RoutineRecordType fromString(String? value) {
+    switch (value) {
+      case 'TEXT':
+        return RoutineRecordType.text;
+      case 'TIME':
+        return RoutineRecordType.time;
+      case 'NUMERIC':
+        return RoutineRecordType.numeric;
+      case 'BOOLEAN':
+      default:
+        return RoutineRecordType.boolean_;
+    }
+  }
+
+  String toJsonString() {
+    switch (this) {
+      case RoutineRecordType.boolean_:
+        return 'BOOLEAN';
+      case RoutineRecordType.text:
+        return 'TEXT';
+      case RoutineRecordType.time:
+        return 'TIME';
+      case RoutineRecordType.numeric:
+        return 'NUMERIC';
+    }
+  }
+}
+
+/// 루틴 상태
+enum RoutineStatus {
+  active,
+  paused,
+  ended;
+
+  static RoutineStatus fromString(String? value) {
+    switch (value) {
+      case 'PAUSED':
+        return RoutineStatus.paused;
+      case 'ENDED':
+        return RoutineStatus.ended;
+      case 'ACTIVE':
+      default:
+        return RoutineStatus.active;
+    }
+  }
+
+  String toJsonString() {
+    switch (this) {
+      case RoutineStatus.active:
+        return 'ACTIVE';
+      case RoutineStatus.paused:
+        return 'PAUSED';
+      case RoutineStatus.ended:
+        return 'ENDED';
     }
   }
 }
@@ -49,11 +201,18 @@ class Routine {
   final String title;
   final String? emoji;
   final String? color;
+  final String? memo;
+  final RoutineImportance importance;
+  final RoutineTimeFilter? timeFilter;
+  final String? categoryId;
+  final RoutineRecordType recordType;
+  final RoutineStatus status;
   final RoutineFrequencyType frequencyType;
+  final RoutineWeeklyMode? weeklyMode;
   final int? targetCount;
+  final List<int>? targetDays;
   final DateTime startDate;
   final DateTime? endDate;
-  final bool isActive;
   final int sortOrder;
   final bool checkedToday;
   final String? routineGroupId;
@@ -65,11 +224,18 @@ class Routine {
     required this.title,
     this.emoji,
     this.color,
+    this.memo,
+    required this.importance,
+    this.timeFilter,
+    this.categoryId,
+    required this.recordType,
+    required this.status,
     required this.frequencyType,
+    this.weeklyMode,
     this.targetCount,
+    this.targetDays,
     required this.startDate,
     this.endDate,
-    required this.isActive,
     required this.sortOrder,
     required this.checkedToday,
     this.routineGroupId,
@@ -83,15 +249,24 @@ class Routine {
       title: json['title'] as String,
       emoji: json['emoji'] as String?,
       color: json['color'] as String?,
+      memo: json['memo'] as String?,
+      importance: RoutineImportance.fromString(json['importance'] as String?),
+      timeFilter: RoutineTimeFilter.fromString(json['timeFilter'] as String?),
+      categoryId: json['categoryId'] as String?,
+      recordType: RoutineRecordType.fromString(json['recordType'] as String?),
+      status: RoutineStatus.fromString(json['status'] as String?),
       frequencyType: RoutineFrequencyType.fromString(
         json['frequencyType'] as String?,
       ),
+      weeklyMode: RoutineWeeklyMode.fromString(json['weeklyMode'] as String?),
       targetCount: json['targetCount'] as int?,
+      targetDays: (json['targetDays'] as List<dynamic>?)
+          ?.map((e) => e as int)
+          .toList(),
       startDate: DateTime.parse(json['startDate'] as String).toLocal(),
       endDate: json['endDate'] != null
           ? DateTime.parse(json['endDate'] as String).toLocal()
           : null,
-      isActive: json['isActive'] as bool? ?? true,
       sortOrder: json['sortOrder'] as int? ?? 0,
       checkedToday: json['checkedToday'] as bool? ?? false,
       routineGroupId: json['routineGroupId'] as String?,
@@ -104,9 +279,14 @@ class Routine {
     String? title,
     String? emoji,
     String? color,
+    String? memo,
+    RoutineImportance? importance,
+    RoutineTimeFilter? timeFilter,
+    String? categoryId,
     int? targetCount,
+    List<int>? targetDays,
     DateTime? endDate,
-    bool? isActive,
+    RoutineStatus? status,
     int? sortOrder,
     bool? checkedToday,
     String? routineGroupId,
@@ -116,11 +296,18 @@ class Routine {
       title: title ?? this.title,
       emoji: emoji ?? this.emoji,
       color: color ?? this.color,
+      memo: memo ?? this.memo,
+      importance: importance ?? this.importance,
+      timeFilter: timeFilter ?? this.timeFilter,
+      categoryId: categoryId ?? this.categoryId,
+      recordType: recordType,
+      status: status ?? this.status,
       frequencyType: frequencyType,
+      weeklyMode: weeklyMode,
       targetCount: targetCount ?? this.targetCount,
+      targetDays: targetDays ?? this.targetDays,
       startDate: startDate,
       endDate: endDate ?? this.endDate,
-      isActive: isActive ?? this.isActive,
       sortOrder: sortOrder ?? this.sortOrder,
       checkedToday: checkedToday ?? this.checkedToday,
       routineGroupId: routineGroupId ?? this.routineGroupId,
@@ -219,12 +406,82 @@ class RoutineGroupDetail {
   }
 }
 
+/// 루틴 카테고리 (단순 태그, 진행률 없음 — RoutineGroup(습관 묶음)과 구분되는 별개 개념)
+class RoutineCategory {
+  final String id;
+  final String title;
+  final String? emoji;
+  final String? color;
+  final int sortOrder;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const RoutineCategory({
+    required this.id,
+    required this.title,
+    this.emoji,
+    this.color,
+    required this.sortOrder,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory RoutineCategory.fromJson(Map<String, dynamic> json) {
+    return RoutineCategory(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      emoji: json['emoji'] as String?,
+      color: json['color'] as String?,
+      sortOrder: json['sortOrder'] as int? ?? 0,
+      createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
+      updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
+    );
+  }
+
+  RoutineCategory copyWith({
+    String? title,
+    String? emoji,
+    String? color,
+    int? sortOrder,
+  }) {
+    return RoutineCategory(
+      id: id,
+      title: title ?? this.title,
+      emoji: emoji ?? this.emoji,
+      color: color ?? this.color,
+      sortOrder: sortOrder ?? this.sortOrder,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+/// 루틴 카테고리 상세 - 소속 습관 목록 포함
+class RoutineCategoryDetail {
+  final RoutineCategory category;
+  final List<Routine> routines;
+
+  const RoutineCategoryDetail({required this.category, required this.routines});
+
+  factory RoutineCategoryDetail.fromJson(Map<String, dynamic> json) {
+    return RoutineCategoryDetail(
+      category: RoutineCategory.fromJson(json),
+      routines: (json['routines'] as List<dynamic>? ?? [])
+          .map((e) => Routine.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+}
+
 /// 루틴 체크 로그
 class RoutineLog {
   final String id;
   final String routineId;
   final DateTime checkedDate;
   final String? note;
+  final String? textValue;
+  final num? numericValue;
+  final String? timeValue;
   final DateTime createdAt;
   final List<UserRoutineBadge> newlyEarnedBadges;
 
@@ -233,6 +490,9 @@ class RoutineLog {
     required this.routineId,
     required this.checkedDate,
     this.note,
+    this.textValue,
+    this.numericValue,
+    this.timeValue,
     required this.createdAt,
     this.newlyEarnedBadges = const [],
   });
@@ -243,6 +503,9 @@ class RoutineLog {
       routineId: json['routineId'] as String,
       checkedDate: DateTime.parse(json['checkedDate'] as String).toLocal(),
       note: json['note'] as String?,
+      textValue: json['textValue'] as String?,
+      numericValue: json['numericValue'] as num?,
+      timeValue: json['timeValue'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       newlyEarnedBadges: (json['newlyEarnedBadges'] as List<dynamic>? ?? [])
           .map((e) => UserRoutineBadge.fromJson(e as Map<String, dynamic>))

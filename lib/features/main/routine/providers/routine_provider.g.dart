@@ -1139,9 +1139,9 @@ class _RoutineLeaderboardProviderElement
   LeaderboardMetric get metric => (origin as RoutineLeaderboardProvider).metric;
 }
 
-String _$routineListHash() => r'70ffc896fbc405a4e3a7b82d11db7d9de2d340ac';
+String _$routineListHash() => r'4bc36e1f815fab731176240a7262aaa8852d0777';
 
-/// 활성 루틴 목록 Provider
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외)
 ///
 /// Copied from [RoutineList].
 @ProviderFor(RoutineList)
@@ -1602,5 +1602,27 @@ class _RoutineSharesProviderElement
   String get routineId => (origin as RoutineSharesProvider).routineId;
 }
 
+String _$routineCategoryListHash() =>
+    r'a7d1b4e5cadd7dec33b7582546e1a494bdd058f5';
+
+/// 루틴 카테고리 목록 Provider
+///
+/// Copied from [RoutineCategoryList].
+@ProviderFor(RoutineCategoryList)
+final routineCategoryListProvider =
+    AutoDisposeAsyncNotifierProvider<
+      RoutineCategoryList,
+      List<RoutineCategory>
+    >.internal(
+      RoutineCategoryList.new,
+      name: r'routineCategoryListProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineCategoryListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$RoutineCategoryList = AutoDisposeAsyncNotifier<List<RoutineCategory>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

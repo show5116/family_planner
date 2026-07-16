@@ -23,19 +23,19 @@ class RoutineCheckResult {
 
 // ── 루틴 목록 ─────────────────────────────────────────────────────────────────
 
-/// 활성 루틴 목록 Provider
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외)
 @riverpod
 class RoutineList extends _$RoutineList {
   @override
   Future<List<Routine>> build() async {
     final repository = ref.watch(routineRepositoryProvider);
-    return repository.getRoutines(isActive: true);
+    return repository.getRoutines();
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      return ref.read(routineRepositoryProvider).getRoutines(isActive: true);
+      return ref.read(routineRepositoryProvider).getRoutines();
     });
   }
 
@@ -343,6 +343,34 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
+  Future<Routine?> pauseRoutine(String id) async {
+    state = const AsyncValue.loading();
+    try {
+      final routine = await _repository.pauseRoutine(id);
+      _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      _ref.read(routineDetailProvider(id).notifier).setRoutine(routine);
+      state = const AsyncValue.data(null);
+      return routine;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<Routine?> resumeRoutine(String id) async {
+    state = const AsyncValue.loading();
+    try {
+      final routine = await _repository.resumeRoutine(id);
+      _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      _ref.read(routineDetailProvider(id).notifier).setRoutine(routine);
+      state = const AsyncValue.data(null);
+      return routine;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
   /// 순서 변경 (낙관적 반영, 실패 시 롤백)
   Future<void> reorder(List<Routine> reordered) async {
     _ref.read(routineListProvider.notifier).reorder(reordered);
@@ -365,8 +393,11 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
   /// 체크 토글 (낙관적 업데이트, 파생 통계는 invalidate 후 재조회해 스트릭 갱신 여부 판단)
   Future<RoutineCheckResult> toggleCheck(
     String routineId,
-    bool currentlyChecked,
-  ) async {
+    bool currentlyChecked, {
+    String? textValue,
+    num? numericValue,
+    String? timeValue,
+  }) async {
     _ref.read(routineListProvider.notifier).setCheckedToday(
           routineId,
           !currentlyChecked,
@@ -382,7 +413,11 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
       } else {
         final log = await _repository.checkRoutine(
           routineId,
-          const CheckRoutineDto(),
+          CheckRoutineDto(
+            textValue: textValue,
+            numericValue: numericValue,
+            timeValue: timeValue,
+          ),
         );
         newlyEarnedBadges = log.newlyEarnedBadges;
       }
@@ -551,6 +586,133 @@ class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
 final routineGroupManagementProvider = StateNotifierProvider<
     RoutineGroupManagementNotifier, AsyncValue<void>>((ref) {
   return RoutineGroupManagementNotifier(
+    ref.watch(routineRepositoryProvider),
+    ref,
+  );
+});
+
+// ── 루틴 카테고리 ─────────────────────────────────────────────────────────────
+
+/// 루틴 카테고리 목록 Provider
+@riverpod
+class RoutineCategoryList extends _$RoutineCategoryList {
+  @override
+  Future<List<RoutineCategory>> build() async {
+    final repository = ref.watch(routineRepositoryProvider);
+    return repository.getRoutineCategories();
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return ref.read(routineRepositoryProvider).getRoutineCategories();
+    });
+  }
+
+  void upsertCategory(RoutineCategory category) {
+    if (!state.hasValue) return;
+    final list = state.value!;
+    final index = list.indexWhere((c) => c.id == category.id);
+    if (index == -1) {
+      state = AsyncValue.data([...list, category]);
+    } else {
+      final updated = [...list];
+      updated[index] = category;
+      state = AsyncValue.data(updated);
+    }
+  }
+
+  void removeCategory(String categoryId) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(
+      state.value!.where((c) => c.id != categoryId).toList(),
+    );
+  }
+
+  void reorder(List<RoutineCategory> reordered) {
+    if (!state.hasValue) return;
+    state = AsyncValue.data(reordered);
+  }
+}
+
+/// 루틴 카테고리 관리 Notifier (생성/수정/삭제/순서변경)
+class RoutineCategoryManagementNotifier
+    extends StateNotifier<AsyncValue<void>> {
+  final RoutineRepository _repository;
+  final Ref _ref;
+
+  RoutineCategoryManagementNotifier(this._repository, this._ref)
+      : super(const AsyncValue.data(null));
+
+  Future<RoutineCategory?> createRoutineCategory(
+    CreateRoutineCategoryDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final category = await _repository.createRoutineCategory(dto);
+      _ref.read(routineCategoryListProvider.notifier).upsertCategory(category);
+      state = const AsyncValue.data(null);
+      return category;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<RoutineCategory?> updateRoutineCategory(
+    String id,
+    UpdateRoutineCategoryDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final category = await _repository.updateRoutineCategory(id, dto);
+      _ref.read(routineCategoryListProvider.notifier).upsertCategory(category);
+      state = const AsyncValue.data(null);
+      return category;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// 카테고리 삭제. 소속 습관은 백엔드에서 categoryId만 해제되어 유지되므로
+  /// 습관 목록도 함께 refresh한다.
+  Future<bool> deleteRoutineCategory(String id) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteRoutineCategory(id);
+      _ref.read(routineCategoryListProvider.notifier).removeCategory(id);
+      await _ref.read(routineListProvider.notifier).refresh();
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<void> reorderCategories(List<RoutineCategory> reordered) async {
+    _ref.read(routineCategoryListProvider.notifier).reorder(reordered);
+    try {
+      await _repository.updateRoutineCategorySortOrder(
+        reordered
+            .asMap()
+            .entries
+            .map((e) => RoutineCategorySortOrderItemDto(
+                  id: e.value.id,
+                  sortOrder: e.key,
+                ))
+            .toList(),
+      );
+    } catch (_) {
+      _ref.read(routineCategoryListProvider.notifier).refresh();
+    }
+  }
+}
+
+final routineCategoryManagementProvider = StateNotifierProvider<
+    RoutineCategoryManagementNotifier, AsyncValue<void>>((ref) {
+  return RoutineCategoryManagementNotifier(
     ref.watch(routineRepositoryProvider),
     ref,
   );
