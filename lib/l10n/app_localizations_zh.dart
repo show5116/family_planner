@@ -4878,4 +4878,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_error_monthly_target_required => '请设置每月目标次数';
+
+  @override
+  String get emoji_picker_more => '更多表情符号';
+
+  @override
+  String get emoji_picker_custom_selected => '已选择预设外的表情符号';
 }

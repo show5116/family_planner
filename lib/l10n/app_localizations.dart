@@ -9469,6 +9469,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'월 목표 횟수를 선택해주세요'**
   String get routine_error_monthly_target_required;
+
+  /// 공용 이모지 선택 필드의 '전체 이모지 보기' 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'더 많은 이모지'**
+  String get emoji_picker_more;
+
+  /// 프리셋에 없는 이모지를 바텀시트에서 선택했을 때 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'프리셋 외 이모지가 선택되었습니다'**
+  String get emoji_picker_custom_selected;
 }
 
 class _AppLocalizationsDelegate

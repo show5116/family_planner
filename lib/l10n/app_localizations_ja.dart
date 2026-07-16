@@ -4908,4 +4908,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_error_monthly_target_required => '月目標回数を選択してください';
+
+  @override
+  String get emoji_picker_more => 'もっと見る';
+
+  @override
+  String get emoji_picker_custom_selected => 'プリセット以外の絵文字が選択されています';
 }

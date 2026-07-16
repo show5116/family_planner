@@ -2458,5 +2458,10 @@
   "routine_error_fixed_days_required": "请至少选择一个重复星期",
   "@routine_error_fixed_days_required": { "description": "指定星期但未选择星期时的错误" },
   "routine_error_monthly_target_required": "请设置每月目标次数",
-  "@routine_error_monthly_target_required": { "description": "每月但未输入目标次数时的错误" }
+  "@routine_error_monthly_target_required": { "description": "每月但未输入目标次数时的错误" },
+
+  "emoji_picker_more": "更多表情符号",
+  "@emoji_picker_more": { "description": "通用表情符号选择字段的“查看全部表情符号”按钮提示" },
+  "emoji_picker_custom_selected": "已选择预设外的表情符号",
+  "@emoji_picker_custom_selected": { "description": "在底部弹窗中选择了预设之外的表情符号时的提示文字" }
 }

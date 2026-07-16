@@ -8,6 +8,7 @@ import 'package:family_planner/features/main/routine/data/repositories/routine_r
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
+import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
 
 /// 습관 추적에 자주 쓰이는 이모지 프리셋
 const List<String> _kEmojiPresets = [
@@ -28,9 +29,9 @@ class RoutineFormScreen extends ConsumerStatefulWidget {
 class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  final _emojiController = TextEditingController();
   final _memoController = TextEditingController();
 
+  String? _emoji;
   String? _selectedColor;
   RoutineFrequencyType _frequencyType = RoutineFrequencyType.weekly;
   RoutineWeeklyMode? _weeklyMode = RoutineWeeklyMode.countOnly;
@@ -52,7 +53,6 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
   @override
   void dispose() {
     _titleController.dispose();
-    _emojiController.dispose();
     _memoController.dispose();
     super.dispose();
   }
@@ -61,7 +61,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     if (_initialized) return;
     _initialized = true;
     _titleController.text = routine.title;
-    _emojiController.text = routine.emoji ?? '';
+    _emoji = routine.emoji;
     _memoController.text = routine.memo ?? '';
     _selectedColor = routine.color;
     _frequencyType = routine.frequencyType;
@@ -215,7 +215,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
 
     final notifier = ref.read(routineManagementProvider.notifier);
     final title = _titleController.text.trim();
-    final emoji = _emojiController.text.trim();
+    final emoji = _emoji;
     final memo = _memoController.text.trim();
     final frequencyFields = _buildFrequencyFields();
 
@@ -224,7 +224,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
         widget.routineId!,
         UpdateRoutineDto(
           title: title,
-          emoji: emoji.isEmpty ? null : emoji,
+          emoji: (emoji == null || emoji.isEmpty) ? null : emoji,
           color: _selectedColor,
           memo: memo.isEmpty ? null : memo,
           importance: _importance,
@@ -244,7 +244,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
       await notifier.createRoutine(
         CreateRoutineDto(
           title: title,
-          emoji: emoji.isEmpty ? null : emoji,
+          emoji: (emoji == null || emoji.isEmpty) ? null : emoji,
           color: _selectedColor,
           memo: memo.isEmpty ? null : memo,
           importance: _importance,
@@ -307,46 +307,11 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             },
           ),
           const SizedBox(height: AppSizes.spaceM),
-          Text(l10n.routine_field_emoji, style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: AppSizes.spaceS),
-          Wrap(
-            spacing: AppSizes.spaceS,
-            runSpacing: AppSizes.spaceS,
-            children: _kEmojiPresets.map((emoji) {
-              final selected = _emojiController.text == emoji;
-              return InkWell(
-                onTap: () => setState(() => _emojiController.text = emoji),
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: selected
-                        ? Theme.of(context).colorScheme.primaryContainer
-                        : Theme.of(context).colorScheme.surfaceContainerHighest,
-                    shape: BoxShape.circle,
-                    border: selected
-                        ? Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2,
-                          )
-                        : null,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(emoji, style: const TextStyle(fontSize: 18)),
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: AppSizes.spaceS),
-          TextFormField(
-            controller: _emojiController,
-            maxLength: 4,
-            onChanged: (_) => setState(() {}),
-            decoration: InputDecoration(
-              labelText: l10n.routine_field_emoji_custom,
-              helperText: l10n.routine_field_emoji_helper,
-            ),
+          EmojiPickerField(
+            label: l10n.routine_field_emoji,
+            presets: _kEmojiPresets,
+            selectedEmoji: _emoji,
+            onChanged: (emoji) => setState(() => _emoji = emoji),
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(l10n.routine_field_color, style: Theme.of(context).textTheme.labelLarge),

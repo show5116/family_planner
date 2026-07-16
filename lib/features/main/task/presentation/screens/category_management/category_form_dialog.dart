@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
 
 /// 카테고리 추가/수정 다이얼로그
 class CategoryFormDialog extends StatefulWidget {
@@ -191,42 +191,11 @@ class _EmojiSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.category_emoji,
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
-        const SizedBox(height: AppSizes.spaceS),
-        Wrap(
-          spacing: AppSizes.spaceXS,
-          runSpacing: AppSizes.spaceXS,
-          children: _emojiOptions.map((emoji) {
-            final isSelected = selectedEmoji == emoji;
-            return GestureDetector(
-              onTap: () => onEmojiSelected(emoji),
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppColors.primary.withValues(alpha: 0.2)
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: isSelected ? AppColors.primary : AppColors.divider,
-                    width: isSelected ? 2 : 1,
-                  ),
-                  borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                ),
-                child: Center(
-                  child: Text(emoji, style: const TextStyle(fontSize: 20)),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+    return EmojiPickerField(
+      label: l10n.category_emoji,
+      presets: _emojiOptions,
+      selectedEmoji: selectedEmoji,
+      onChanged: onEmojiSelected,
     );
   }
 }

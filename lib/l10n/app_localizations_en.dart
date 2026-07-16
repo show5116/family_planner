@@ -5026,4 +5026,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get routine_error_monthly_target_required =>
       'Please set a monthly target count';
+
+  @override
+  String get emoji_picker_more => 'More emojis';
+
+  @override
+  String get emoji_picker_custom_selected => 'A custom emoji is selected';
 }

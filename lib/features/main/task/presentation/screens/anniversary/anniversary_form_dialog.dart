@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
+import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
 
 /// 기념일 생성/수정 다이얼로그
 class AnniversaryFormDialog extends ConsumerStatefulWidget {
@@ -256,40 +257,7 @@ class _AnniversaryFormDialogState
   }
 
   Future<void> _pickEmoji() async {
-    // 간단한 이모지 선택 — 자주 쓰는 기념일 이모지 목록
-    const emojis = [
-      '🎂', '💑', '💍', '💕', '🥂', '🎊', '🎉', '❤️',
-      '👨‍👩‍👧', '👨‍👩‍👦', '🏠', '✈️', '🎓', '🌸', '🎁', '⭐',
-    ];
-    final picked = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('이모지 선택'),
-        contentPadding: const EdgeInsets.all(AppSizes.spaceM),
-        content: Wrap(
-          spacing: AppSizes.spaceS,
-          runSpacing: AppSizes.spaceS,
-          children: emojis
-              .map(
-                (e) => InkWell(
-                  onTap: () => Navigator.of(ctx).pop(e),
-                  borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.spaceS),
-                    child: Text(e, style: const TextStyle(fontSize: 28)),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(null),
-            child: const Text('취소'),
-          ),
-        ],
-      ),
-    );
+    final picked = await showEmojiPickerBottomSheet(context);
     if (picked != null) setState(() => _emoji = picked);
   }
 }

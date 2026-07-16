@@ -7,6 +7,7 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
 
 const List<String> _kCategoryEmojiPresets = [
   '📅', '💼', '🏃', '💪', '🧘', '📚',
@@ -30,9 +31,7 @@ class _RoutineCategoryFormDialogState
   late final _titleController = TextEditingController(
     text: widget.category?.title ?? '',
   );
-  late final _emojiController = TextEditingController(
-    text: widget.category?.emoji ?? '',
-  );
+  late String? _emoji = widget.category?.emoji;
   late String? _selectedColor = widget.category?.color;
   bool _saving = false;
 
@@ -41,7 +40,6 @@ class _RoutineCategoryFormDialogState
   @override
   void dispose() {
     _titleController.dispose();
-    _emojiController.dispose();
     super.dispose();
   }
 
@@ -51,7 +49,7 @@ class _RoutineCategoryFormDialogState
 
     final notifier = ref.read(routineCategoryManagementProvider.notifier);
     final title = _titleController.text.trim();
-    final emoji = _emojiController.text.trim();
+    final emoji = _emoji;
 
     final RoutineCategory? result;
     if (_isEditing) {
@@ -59,7 +57,7 @@ class _RoutineCategoryFormDialogState
         widget.category!.id,
         UpdateRoutineCategoryDto(
           title: title,
-          emoji: emoji.isEmpty ? null : emoji,
+          emoji: (emoji == null || emoji.isEmpty) ? null : emoji,
           color: _selectedColor,
         ),
       );
@@ -67,7 +65,7 @@ class _RoutineCategoryFormDialogState
       result = await notifier.createRoutineCategory(
         CreateRoutineCategoryDto(
           title: title,
-          emoji: emoji.isEmpty ? null : emoji,
+          emoji: (emoji == null || emoji.isEmpty) ? null : emoji,
           color: _selectedColor,
         ),
       );
@@ -117,46 +115,11 @@ class _RoutineCategoryFormDialogState
                 },
               ),
               const SizedBox(height: AppSizes.spaceM),
-              Text(l10n.routine_field_emoji, style: Theme.of(context).textTheme.labelLarge),
-              const SizedBox(height: AppSizes.spaceS),
-              Wrap(
-                spacing: AppSizes.spaceS,
-                runSpacing: AppSizes.spaceS,
-                children: _kCategoryEmojiPresets.map((emoji) {
-                  final selected = _emojiController.text == emoji;
-                  return InkWell(
-                    onTap: () => setState(() => _emojiController.text = emoji),
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? Theme.of(context).colorScheme.primaryContainer
-                            : Theme.of(context).colorScheme.surfaceContainerHighest,
-                        shape: BoxShape.circle,
-                        border: selected
-                            ? Border.all(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 2,
-                              )
-                            : null,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(emoji, style: const TextStyle(fontSize: 18)),
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: AppSizes.spaceS),
-              TextFormField(
-                controller: _emojiController,
-                maxLength: 4,
-                onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  labelText: l10n.routine_field_emoji_custom,
-                  helperText: l10n.routine_field_emoji_helper,
-                ),
+              EmojiPickerField(
+                label: l10n.routine_field_emoji,
+                presets: _kCategoryEmojiPresets,
+                selectedEmoji: _emoji,
+                onChanged: (emoji) => setState(() => _emoji = emoji),
               ),
               const SizedBox(height: AppSizes.spaceS),
               Text(l10n.routine_field_color, style: Theme.of(context).textTheme.labelLarge),

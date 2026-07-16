@@ -30,9 +30,9 @@ extension _RoutineListOnboarding on _RoutineListScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '루틴 만들기',
+              title: '습관/루틴 만들기',
               description:
-                  '매일 반복하고 싶은 습관을 등록해보세요.\n체크할 때마다 스트릭이 쌓이고\n배지도 획득할 수 있어요.',
+                  '매일 반복하고 싶은 습관을 등록해보세요.\n여러 습관을 묶어 루틴으로 만들 수도 있어요.\n체크할 때마다 스트릭이 쌓이고\n배지도 획득할 수 있어요.',
               icon: Icons.add_circle_outline,
               color: AppColors.warning,
             ),

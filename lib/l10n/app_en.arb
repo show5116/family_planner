@@ -2503,5 +2503,10 @@
   "routine_error_fixed_days_required": "Please select at least one day",
   "@routine_error_fixed_days_required": { "description": "Error when no days selected for fixed-days weekly" },
   "routine_error_monthly_target_required": "Please set a monthly target count",
-  "@routine_error_monthly_target_required": { "description": "Error when target count missing for monthly" }
+  "@routine_error_monthly_target_required": { "description": "Error when target count missing for monthly" },
+
+  "emoji_picker_more": "More emojis",
+  "@emoji_picker_more": { "description": "Tooltip for the 'browse all emojis' button on the shared emoji picker field" },
+  "emoji_picker_custom_selected": "A custom emoji is selected",
+  "@emoji_picker_custom_selected": { "description": "Shown when an emoji outside the presets was picked from the bottom sheet" }
 }

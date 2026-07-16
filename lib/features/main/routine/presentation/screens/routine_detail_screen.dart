@@ -10,6 +10,7 @@ import 'package:family_planner/features/main/routine/presentation/screens/routin
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
+import 'package:family_planner/shared/widgets/app_tab_bar.dart';
 
 /// 루틴 상세 화면 셸 (히트맵/통계/배지/공유 4탭)
 class RoutineDetailScreen extends ConsumerWidget {
@@ -76,18 +77,19 @@ class RoutineDetailScreen extends ConsumerWidget {
               onPressed: () => _confirmDelete(context, ref),
             ),
           ],
-          bottom: TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: l10n.routine_tab_heatmap),
-              Tab(text: l10n.routine_tab_stats),
-              Tab(text: l10n.routine_tab_badges),
-              Tab(text: l10n.routine_tab_share),
-            ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: Builder(
+              builder: (context) => AppTabBar(
+                controller: DefaultTabController.of(context),
+                tabs: [
+                  l10n.routine_tab_heatmap,
+                  l10n.routine_tab_stats,
+                  l10n.routine_tab_badges,
+                  l10n.routine_tab_share,
+                ],
+              ),
+            ),
           ),
         ),
         body: detailAsync.when(

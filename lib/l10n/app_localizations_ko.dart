@@ -4915,4 +4915,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_error_monthly_target_required => '월 목표 횟수를 선택해주세요';
+
+  @override
+  String get emoji_picker_more => '더 많은 이모지';
+
+  @override
+  String get emoji_picker_custom_selected => '프리셋 외 이모지가 선택되었습니다';
 }

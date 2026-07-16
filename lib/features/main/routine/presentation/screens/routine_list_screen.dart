@@ -149,6 +149,53 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     }
   }
 
+  Future<void> _showAddPicker(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final buttonBox =
+        _addButtonKey.currentContext!.findRenderObject() as RenderBox;
+    final overlayBox =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final buttonTopLeft =
+        buttonBox.localToGlobal(Offset.zero, ancestor: overlayBox);
+    final position = RelativeRect.fromLTRB(
+      buttonTopLeft.dx,
+      buttonTopLeft.dy - AppSizes.spaceS,
+      overlayBox.size.width - buttonTopLeft.dx - buttonBox.size.width,
+      overlayBox.size.height - buttonTopLeft.dy,
+    );
+
+    final selected = await showMenu<String>(
+      context: context,
+      position: position,
+      items: [
+        PopupMenuItem(
+          value: 'routine',
+          child: ListTile(
+            leading: const Icon(Icons.check_circle_outline),
+            title: Text(l10n.routine_add),
+            contentPadding: EdgeInsets.zero,
+          ),
+        ),
+        PopupMenuItem(
+          value: 'group',
+          child: ListTile(
+            leading: const Icon(Icons.playlist_add),
+            title: Text(l10n.routine_group_add),
+            contentPadding: EdgeInsets.zero,
+          ),
+        ),
+      ],
+    );
+
+    if (!context.mounted || selected == null) return;
+    if (selected == 'routine') {
+      context.push(AppRoutes.routineAdd);
+    } else {
+      _showGroupForm(context);
+    }
+  }
+
   Future<void> _showGroupForm(
     BuildContext context, {
     RoutineGroup? group,
@@ -452,11 +499,6 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         title: Text(l10n.routine_title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.playlist_add),
-            tooltip: l10n.routine_group_add,
-            onPressed: () => _showGroupForm(context),
-          ),
-          IconButton(
             icon: const Icon(Icons.emoji_events_outlined),
             tooltip: l10n.routine_badges_title,
             onPressed: () => context.push(AppRoutes.routineBadges),
@@ -470,7 +512,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         key: _addButtonKey,
-        onPressed: () => context.push(AppRoutes.routineAdd),
+        onPressed: () => _showAddPicker(context),
         child: const Icon(Icons.add),
       ),
       body: Column(

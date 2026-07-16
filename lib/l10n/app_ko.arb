@@ -2517,5 +2517,10 @@
   "routine_error_fixed_days_required": "반복할 요일을 1개 이상 선택해주세요",
   "@routine_error_fixed_days_required": { "description": "요일지정인데 요일 미선택 시 에러" },
   "routine_error_monthly_target_required": "월 목표 횟수를 선택해주세요",
-  "@routine_error_monthly_target_required": { "description": "월간인데 목표 횟수 미입력 시 에러" }
+  "@routine_error_monthly_target_required": { "description": "월간인데 목표 횟수 미입력 시 에러" },
+
+  "emoji_picker_more": "더 많은 이모지",
+  "@emoji_picker_more": { "description": "공용 이모지 선택 필드의 '전체 이모지 보기' 버튼 툴팁" },
+  "emoji_picker_custom_selected": "프리셋 외 이모지가 선택되었습니다",
+  "@emoji_picker_custom_selected": { "description": "프리셋에 없는 이모지를 바텀시트에서 선택했을 때 안내 문구" }
 }

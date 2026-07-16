@@ -2503,5 +2503,10 @@
   "routine_error_fixed_days_required": "反復する曜日を1つ以上選択してください",
   "@routine_error_fixed_days_required": { "description": "曜日指定で曜日未選択時のエラー" },
   "routine_error_monthly_target_required": "月目標回数を選択してください",
-  "@routine_error_monthly_target_required": { "description": "月間で目標回数未入力時のエラー" }
+  "@routine_error_monthly_target_required": { "description": "月間で目標回数未入力時のエラー" },
+
+  "emoji_picker_more": "もっと見る",
+  "@emoji_picker_more": { "description": "共通絵文字選択フィールドの「すべての絵文字を見る」ボタンのツールチップ" },
+  "emoji_picker_custom_selected": "プリセット以外の絵文字が選択されています",
+  "@emoji_picker_custom_selected": { "description": "ボトムシートでプリセットにない絵文字を選択した際の案内文" }
 }
