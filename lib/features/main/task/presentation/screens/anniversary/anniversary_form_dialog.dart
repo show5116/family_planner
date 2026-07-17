@@ -147,41 +147,19 @@ class _AnniversaryFormDialogState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 이모지 + 이름
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 이모지 버튼
-                InkWell(
-                  onTap: _pickEmoji,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                  child: Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      _emoji ?? '🎂',
-                      style: const TextStyle(fontSize: 26),
-                    ),
-                  ),
+            EmojiPickerField(
+              selectedEmoji: _emoji,
+              placeholderIcon: Icons.cake_outlined,
+              onChanged: (emoji) => setState(() => _emoji = emoji),
+              titleField: TextField(
+                controller: _titleController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: '기념일 이름',
+                  hintText: '예: 결혼기념일',
                 ),
-                const SizedBox(width: AppSizes.spaceM),
-                // 이름
-                Expanded(
-                  child: TextField(
-                    controller: _titleController,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      labelText: '기념일 이름',
-                      hintText: '예: 결혼기념일',
-                    ),
-                    textInputAction: TextInputAction.done,
-                  ),
-                ),
-              ],
+                textInputAction: TextInputAction.done,
+              ),
             ),
             const SizedBox(height: AppSizes.spaceL),
             // 날짜 선택
@@ -254,10 +232,5 @@ class _AnniversaryFormDialogState
         ),
       ],
     );
-  }
-
-  Future<void> _pickEmoji() async {
-    final picked = await showEmojiPickerBottomSheet(context);
-    if (picked != null) setState(() => _emoji = picked);
   }
 }

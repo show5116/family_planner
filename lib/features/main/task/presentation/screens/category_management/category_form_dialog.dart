@@ -60,28 +60,20 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 카테고리 이름
-              _NameField(
-                controller: _nameController,
-                l10n: l10n,
+              // 이모지 + 카테고리 이름
+              EmojiPickerField(
+                selectedEmoji: _selectedEmoji,
+                onChanged: (emoji) => setState(() => _selectedEmoji = emoji),
+                titleField: _NameField(
+                  controller: _nameController,
+                  l10n: l10n,
+                ),
               ),
               const SizedBox(height: AppSizes.spaceM),
 
               // 설명
               _DescriptionField(
                 controller: _descriptionController,
-                l10n: l10n,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 이모지 선택
-              _EmojiSelector(
-                selectedEmoji: _selectedEmoji,
-                onEmojiSelected: (emoji) {
-                  setState(() {
-                    _selectedEmoji = _selectedEmoji == emoji ? null : emoji;
-                  });
-                },
                 l10n: l10n,
               ),
             ],
@@ -167,35 +159,6 @@ class _DescriptionField extends StatelessWidget {
       ),
       maxLength: 50,
       maxLines: 2,
-    );
-  }
-}
-
-/// 이모지 선택 위젯
-class _EmojiSelector extends StatelessWidget {
-  final String? selectedEmoji;
-  final ValueChanged<String> onEmojiSelected;
-  final AppLocalizations l10n;
-
-  const _EmojiSelector({
-    required this.selectedEmoji,
-    required this.onEmojiSelected,
-    required this.l10n,
-  });
-
-  // 미리 정의된 이모지 목록
-  static const List<String> _emojiOptions = [
-    '💼', '📅', '🏠', '💪', '📚', '🎉', '✈️', '🍽️',
-    '💰', '🏥', '🛒', '🎨', '🎵', '⚽', '🐾', '❤️',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return EmojiPickerField(
-      label: l10n.category_emoji,
-      presets: _emojiOptions,
-      selectedEmoji: selectedEmoji,
-      onChanged: onEmojiSelected,
     );
   }
 }

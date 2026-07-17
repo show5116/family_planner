@@ -80,4 +80,13 @@ class AppColors {
       return fallback;
     }
   }
+
+  /// Color를 "#RRGGBB" 형식의 HEX 문자열로 변환.
+  static String toHex(Color color) {
+    int channel(double c) => (c * 255.0).round().clamp(0, 255);
+    final r = channel(color.r).toRadixString(16).padLeft(2, '0');
+    final g = channel(color.g).toRadixString(16).padLeft(2, '0');
+    final b = channel(color.b).toRadixString(16).padLeft(2, '0');
+    return '#$r$g$b'.toUpperCase();
+  }
 }

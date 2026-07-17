@@ -3,18 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/widgets/color_picker.dart' as color_picker;
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
-
-/// 습관 추적에 자주 쓰이는 이모지 프리셋
-const List<String> _kEmojiPresets = [
-  '🏃', '💪', '🧘', '📚', '💧', '🥗',
-  '😴', '🚭', '💊', '✍️', '🎯', '🧹',
-];
 
 /// 루틴 생성/수정 폼 (routineId가 null이면 생성 모드)
 class RoutineFormScreen extends ConsumerStatefulWidget {
@@ -289,61 +284,37 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
         ),
         children: [
-          TextFormField(
-            controller: _titleController,
-            maxLength: 100,
-            decoration: InputDecoration(
-              labelText: l10n.routine_field_title,
-              hintText: l10n.routine_field_title_hint,
-            ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return l10n.routine_field_title_required;
-              }
-              if (value.trim().length > 100) {
-                return l10n.routine_field_title_too_long;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSizes.spaceM),
           EmojiPickerField(
-            label: l10n.routine_field_emoji,
-            presets: _kEmojiPresets,
             selectedEmoji: _emoji,
             onChanged: (emoji) => setState(() => _emoji = emoji),
+            titleField: TextFormField(
+              controller: _titleController,
+              maxLength: 100,
+              decoration: InputDecoration(
+                labelText: l10n.routine_field_title,
+                hintText: l10n.routine_field_title_hint,
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return l10n.routine_field_title_required;
+                }
+                if (value.trim().length > 100) {
+                  return l10n.routine_field_title_too_long;
+                }
+                return null;
+              },
+            ),
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(l10n.routine_field_color, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: AppSizes.spaceS),
-          Wrap(
-            spacing: AppSizes.spaceS,
-            runSpacing: AppSizes.spaceS,
-            children: AppColors.routineColorPresets.map((hex) {
-              final color = AppColors.parseHex(hex);
-              final selected = _selectedColor == hex;
-              return InkWell(
-                onTap: () => setState(() => _selectedColor = hex),
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                    border: selected
-                        ? Border.all(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            width: 2,
-                          )
-                        : null,
-                  ),
-                  child: selected
-                      ? const Icon(Icons.check, color: Colors.white, size: 18)
-                      : null,
-                ),
-              );
-            }).toList(),
+          color_picker.ColorPicker(
+            selectedColor: AppColors.parseHex(_selectedColor),
+            availableColors: AppColors.routineColorPresets
+                .map((hex) => AppColors.parseHex(hex))
+                .toList(),
+            onColorSelected: (color) =>
+                setState(() => _selectedColor = AppColors.toHex(color)),
           ),
           const SizedBox(height: AppSizes.spaceL),
           SegmentedButton<RoutineFrequencyType>(
