@@ -172,7 +172,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
 
   /// 반복주기 조합에 맞는 필드만 골라 반환 (백엔드 검증 규칙과 정확히 대응)
   ({RoutineWeeklyMode? weeklyMode, int? targetCount, List<int>? targetDays})
-      _buildFrequencyFields() {
+  _buildFrequencyFields() {
     switch (_frequencyType) {
       case RoutineFrequencyType.daily:
         return (weeklyMode: null, targetCount: null, targetDays: null);
@@ -263,9 +263,9 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
 
     final state = ref.read(routineManagementProvider);
     if (state.hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_error_generic)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_error_generic)));
       return;
     }
 
@@ -307,7 +307,10 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             ),
           ),
           const SizedBox(height: AppSizes.spaceS),
-          Text(l10n.routine_field_color, style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            l10n.routine_field_color,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: AppSizes.spaceS),
           color_picker.ColorPicker(
             selectedColor: AppColors.parseHex(_selectedColor),
@@ -374,7 +377,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 IconButton(
-                  onPressed: _targetCount <
+                  onPressed:
+                      _targetCount <
                           (_frequencyType == RoutineFrequencyType.monthly
                               ? 31
                               : 7)
@@ -394,29 +398,30 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             const SizedBox(height: AppSizes.spaceS),
             Wrap(
               spacing: AppSizes.spaceS,
-              children: [
-                (0, l10n.routine_day_sun),
-                (1, l10n.routine_day_mon),
-                (2, l10n.routine_day_tue),
-                (3, l10n.routine_day_wed),
-                (4, l10n.routine_day_thu),
-                (5, l10n.routine_day_fri),
-                (6, l10n.routine_day_sat),
-              ].map((entry) {
-                final (day, label) = entry;
-                final selected = _targetDays.contains(day);
-                return FilterChip(
-                  label: Text(label),
-                  selected: selected,
-                  onSelected: (value) => setState(() {
-                    if (value) {
-                      _targetDays.add(day);
-                    } else {
-                      _targetDays.remove(day);
-                    }
-                  }),
-                );
-              }).toList(),
+              children:
+                  [
+                    (0, l10n.routine_day_sun),
+                    (1, l10n.routine_day_mon),
+                    (2, l10n.routine_day_tue),
+                    (3, l10n.routine_day_wed),
+                    (4, l10n.routine_day_thu),
+                    (5, l10n.routine_day_fri),
+                    (6, l10n.routine_day_sat),
+                  ].map((entry) {
+                    final (day, label) = entry;
+                    final selected = _targetDays.contains(day);
+                    return FilterChip(
+                      label: Text(label),
+                      selected: selected,
+                      onSelected: (value) => setState(() {
+                        if (value) {
+                          _targetDays.add(day);
+                        } else {
+                          _targetDays.remove(day);
+                        }
+                      }),
+                    );
+                  }).toList(),
             ),
           ],
           if (_frequencyError != null) ...[
@@ -437,7 +442,10 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             ),
           ),
           const SizedBox(height: AppSizes.spaceM),
-          Text(l10n.routine_field_importance, style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            l10n.routine_field_importance,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: AppSizes.spaceS),
           SegmentedButton<RoutineImportance>(
             segments: [
@@ -458,26 +466,36 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             onSelectionChanged: (s) => setState(() => _importance = s.first),
           ),
           const SizedBox(height: AppSizes.spaceM),
-          Text(l10n.routine_field_time_filter, style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            l10n.routine_field_time_filter,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: AppSizes.spaceS),
           Wrap(
             spacing: AppSizes.spaceS,
-            children: [
-              (null, l10n.routine_time_filter_none),
-              (RoutineTimeFilter.morning, l10n.routine_time_filter_morning),
-              (RoutineTimeFilter.afternoon, l10n.routine_time_filter_afternoon),
-              (RoutineTimeFilter.evening, l10n.routine_time_filter_evening),
-            ].map((entry) {
-              final (value, label) = entry;
-              return ChoiceChip(
-                label: Text(label),
-                selected: _timeFilter == value,
-                onSelected: (_) => setState(() => _timeFilter = value),
-              );
-            }).toList(),
+            children:
+                [
+                  (null, l10n.routine_time_filter_none),
+                  (RoutineTimeFilter.morning, l10n.routine_time_filter_morning),
+                  (
+                    RoutineTimeFilter.afternoon,
+                    l10n.routine_time_filter_afternoon,
+                  ),
+                  (RoutineTimeFilter.evening, l10n.routine_time_filter_evening),
+                ].map((entry) {
+                  final (value, label) = entry;
+                  return ChoiceChip(
+                    label: Text(label),
+                    selected: _timeFilter == value,
+                    onSelected: (_) => setState(() => _timeFilter = value),
+                  );
+                }).toList(),
           ),
           const SizedBox(height: AppSizes.spaceM),
-          Text(l10n.routine_field_record_type, style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            l10n.routine_field_record_type,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: AppSizes.spaceS),
           if (!_isEditing)
             SegmentedButton<RoutineRecordType>(
@@ -508,8 +526,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             Text(
               l10n.routine_record_type_readonly_hint,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
           const SizedBox(height: AppSizes.spaceM),
@@ -547,8 +565,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
                 data: (groups) {
                   final validGroupId =
                       groups.any((g) => g.id == _selectedGroupId)
-                          ? _selectedGroupId
-                          : null;
+                      ? _selectedGroupId
+                      : null;
                   return DropdownButtonFormField<String?>(
                     initialValue: validGroupId,
                     decoration: InputDecoration(
@@ -585,8 +603,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
                 data: (categories) {
                   final validCategoryId =
                       categories.any((c) => c.id == _selectedCategoryId)
-                          ? _selectedCategoryId
-                          : null;
+                      ? _selectedCategoryId
+                      : null;
                   return DropdownButtonFormField<String?>(
                     initialValue: validCategoryId,
                     decoration: InputDecoration(
@@ -601,8 +619,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
                         (category) => DropdownMenuItem<String?>(
                           value: category.id,
                           child: Text(
-                            '${category.emoji ?? ''} ${category.title}'
-                                .trim(),
+                            '${category.emoji ?? ''} ${category.title}'.trim(),
                           ),
                         ),
                       ),
@@ -626,15 +643,18 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     if (!_isEditing) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.routine_add)),
-        body: Column(
-          children: [
-            Expanded(child: _buildForm(context)),
-            FormBottomBar(
-              label: l10n.routine_save,
-              isLoading: _saving,
-              onPressed: _save,
-            ),
-          ],
+        body: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              Expanded(child: _buildForm(context)),
+              FormBottomBar(
+                label: l10n.routine_save,
+                isLoading: _saving,
+                onPressed: _save,
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -652,15 +672,18 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
         ),
         data: (routine) {
           _initFromRoutine(routine);
-          return Column(
-            children: [
-              Expanded(child: _buildForm(context)),
-              FormBottomBar(
-                label: l10n.routine_save,
-                isLoading: _saving,
-                onPressed: _save,
-              ),
-            ],
+          return SafeArea(
+            top: false,
+            child: Column(
+              children: [
+                Expanded(child: _buildForm(context)),
+                FormBottomBar(
+                  label: l10n.routine_save,
+                  isLoading: _saving,
+                  onPressed: _save,
+                ),
+              ],
+            ),
           );
         },
       ),

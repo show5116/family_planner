@@ -153,160 +153,165 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(AppSizes.spaceM),
-                children: [
-                  // 이름
-                  TextFormField(
-                    controller: _nameCtrl,
-                    decoration: const InputDecoration(
-                      labelText: '목표 이름 *',
-                      border: OutlineInputBorder(),
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  children: [
+                    // 이름
+                    TextFormField(
+                      controller: _nameCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '목표 이름 *',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? '목표 이름을 입력해 주세요'
+                          : null,
+                      textInputAction: TextInputAction.next,
                     ),
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? '목표 이름을 입력해 주세요'
-                        : null,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
+                    const SizedBox(height: AppSizes.spaceM),
 
-                  // 설명
-                  TextFormField(
-                    controller: _descCtrl,
-                    decoration: const InputDecoration(
-                      labelText: '설명 (선택)',
-                      border: OutlineInputBorder(),
+                    // 설명
+                    TextFormField(
+                      controller: _descCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '설명 (선택)',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 2,
+                      textInputAction: TextInputAction.next,
                     ),
-                    maxLines: 2,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
+                    const SizedBox(height: AppSizes.spaceM),
 
-                  // 목표 금액
-                  TextFormField(
-                    controller: _targetCtrl,
-                    decoration: const InputDecoration(
-                      labelText: '목표 금액 (선택, 원)',
-                      border: OutlineInputBorder(),
-                      hintText: '예: 1000000',
-                      helperText: '목표 금액을 지정하지 않으면 비상금·계처럼 계속 모아서 사용할 수 있어요.',
-                      helperMaxLines: 2,
+                    // 목표 금액
+                    TextFormField(
+                      controller: _targetCtrl,
+                      decoration: const InputDecoration(
+                        labelText: '목표 금액 (선택, 원)',
+                        border: OutlineInputBorder(),
+                        hintText: '예: 1000000',
+                        helperText: '목표 금액을 지정하지 않으면 비상금·계처럼 계속 모아서 사용할 수 있어요.',
+                        helperMaxLines: 2,
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (v) {
+                        if (v == null || v.trim().isEmpty) return null;
+                        final parsed = double.tryParse(
+                          v.trim().replaceAll(',', ''),
+                        );
+                        if (parsed == null || parsed <= 0)
+                          return '올바른 금액을 입력해 주세요';
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
                     ),
-                    keyboardType: TextInputType.number,
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) return null;
-                      final parsed = double.tryParse(
-                        v.trim().replaceAll(',', ''),
-                      );
-                      if (parsed == null || parsed <= 0)
-                        return '올바른 금액을 입력해 주세요';
-                      return null;
-                    },
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
+                    const SizedBox(height: AppSizes.spaceM),
 
-                  // 자동 적립 스위치
-                  Card(
-                    margin: EdgeInsets.zero,
-                    child: SwitchListTile(
-                      title: const Text('자동 적립'),
-                      subtitle: const Text('매월 자동으로 적립합니다'),
-                      value: _autoDeposit,
-                      activeThumbColor: AppColors.investment,
-                      onChanged: (v) => setState(() => _autoDeposit = v),
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.spaceM),
-
-                  // 월 적립금 + 적립일 (autoDeposit=true 시만 표시)
-                  AnimatedCrossFade(
-                    firstChild: Padding(
-                      padding: const EdgeInsets.only(top: AppSizes.spaceXS),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _monthlyCtrl,
-                            decoration: const InputDecoration(
-                              labelText: '월 적립금 (원)',
-                              border: OutlineInputBorder(),
-                              hintText: '예: 100000',
-                            ),
-                            keyboardType: TextInputType.number,
-                            validator: (v) {
-                              if (!_autoDeposit) return null;
-                              if (v == null || v.trim().isEmpty)
-                                return '월 적립금을 입력해 주세요';
-                              final parsed = double.tryParse(
-                                v.trim().replaceAll(',', ''),
-                              );
-                              if (parsed == null || parsed <= 0)
-                                return '올바른 금액을 입력해 주세요';
-                              return null;
-                            },
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(height: AppSizes.spaceM),
-                          TextFormField(
-                            controller: _depositDayCtrl,
-                            decoration: const InputDecoration(
-                              labelText: '매달 적립일 (1~31일)',
-                              border: OutlineInputBorder(),
-                              hintText: '예: 25',
-                              helperText: '해당 월에 날짜가 없으면 말일에 자동 처리돼요.',
-                            ),
-                            keyboardType: TextInputType.number,
-                            validator: (v) {
-                              if (!_autoDeposit) return null;
-                              final parsed = int.tryParse(v?.trim() ?? '');
-                              if (parsed == null || parsed < 1 || parsed > 31) {
-                                return '1~31 사이의 날짜를 입력해 주세요';
-                              }
-                              return null;
-                            },
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) => _submit(),
-                          ),
-                        ],
+                    // 자동 적립 스위치
+                    Card(
+                      margin: EdgeInsets.zero,
+                      child: SwitchListTile(
+                        title: const Text('자동 적립'),
+                        subtitle: const Text('매월 자동으로 적립합니다'),
+                        value: _autoDeposit,
+                        activeThumbColor: AppColors.investment,
+                        onChanged: (v) => setState(() => _autoDeposit = v),
                       ),
                     ),
-                    secondChild: const SizedBox.shrink(),
-                    crossFadeState: _autoDeposit
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond,
-                    duration: const Duration(milliseconds: 200),
-                  ),
+                    const SizedBox(height: AppSizes.spaceM),
 
-                  const SizedBox(height: AppSizes.spaceM),
-
-                  // 자산 통계 연동
-                  Card(
-                    margin: EdgeInsets.zero,
-                    child: SwitchListTile(
-                      title: const Text('자산 통계에 포함'),
-                      subtitle: const Text('자산 현황에서 적립금 잔액을 함께 확인할 수 있어요'),
-                      value: _includeInAssets,
-                      activeThumbColor: AppColors.investment,
-                      onChanged: (v) => setState(() => _includeInAssets = v),
+                    // 월 적립금 + 적립일 (autoDeposit=true 시만 표시)
+                    AnimatedCrossFade(
+                      firstChild: Padding(
+                        padding: const EdgeInsets.only(top: AppSizes.spaceXS),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _monthlyCtrl,
+                              decoration: const InputDecoration(
+                                labelText: '월 적립금 (원)',
+                                border: OutlineInputBorder(),
+                                hintText: '예: 100000',
+                              ),
+                              keyboardType: TextInputType.number,
+                              validator: (v) {
+                                if (!_autoDeposit) return null;
+                                if (v == null || v.trim().isEmpty)
+                                  return '월 적립금을 입력해 주세요';
+                                final parsed = double.tryParse(
+                                  v.trim().replaceAll(',', ''),
+                                );
+                                if (parsed == null || parsed <= 0)
+                                  return '올바른 금액을 입력해 주세요';
+                                return null;
+                              },
+                              textInputAction: TextInputAction.next,
+                            ),
+                            const SizedBox(height: AppSizes.spaceM),
+                            TextFormField(
+                              controller: _depositDayCtrl,
+                              decoration: const InputDecoration(
+                                labelText: '매달 적립일 (1~31일)',
+                                border: OutlineInputBorder(),
+                                hintText: '예: 25',
+                                helperText: '해당 월에 날짜가 없으면 말일에 자동 처리돼요.',
+                              ),
+                              keyboardType: TextInputType.number,
+                              validator: (v) {
+                                if (!_autoDeposit) return null;
+                                final parsed = int.tryParse(v?.trim() ?? '');
+                                if (parsed == null ||
+                                    parsed < 1 ||
+                                    parsed > 31) {
+                                  return '1~31 사이의 날짜를 입력해 주세요';
+                                }
+                                return null;
+                              },
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) => _submit(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      secondChild: const SizedBox.shrink(),
+                      crossFadeState: _autoDeposit
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      duration: const Duration(milliseconds: 200),
                     ),
-                  ),
-                ],
+
+                    const SizedBox(height: AppSizes.spaceM),
+
+                    // 자산 통계 연동
+                    Card(
+                      margin: EdgeInsets.zero,
+                      child: SwitchListTile(
+                        title: const Text('자산 통계에 포함'),
+                        subtitle: const Text('자산 현황에서 적립금 잔액을 함께 확인할 수 있어요'),
+                        value: _includeInAssets,
+                        activeThumbColor: AppColors.investment,
+                        onChanged: (v) => setState(() => _includeInAssets = v),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          FormBottomBar(
-            label: _isEdit ? '수정 완료' : '저금통 추가',
-            isLoading: _loading,
-            onPressed: _submit,
-            backgroundColor: AppColors.investment,
-            foregroundColor: Colors.white,
-          ),
-        ],
+            FormBottomBar(
+              label: _isEdit ? '수정 완료' : '저금통 추가',
+              isLoading: _loading,
+              onPressed: _submit,
+              backgroundColor: AppColors.investment,
+              foregroundColor: Colors.white,
+            ),
+          ],
+        ),
       ),
     );
   }

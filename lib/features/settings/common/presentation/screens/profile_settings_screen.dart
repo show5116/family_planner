@@ -301,153 +301,91 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profile_title)),
-      body: Column(
-        children: [
-          Expanded(
-            child: ScrollableFormBody(
-              maxWidth: 600,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // 프로필 이미지 미리보기 및 업로드
-                    Center(
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              profileImageUrl != null &&
-                                      profileImageUrl.isNotEmpty
-                                  ? CircleAvatar(
-                                      radius: 60,
-                                      backgroundImage: networkImageProvider(
-                                        profileImageUrl,
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Expanded(
+              child: ScrollableFormBody(
+                maxWidth: 600,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 프로필 이미지 미리보기 및 업로드
+                      Center(
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                profileImageUrl != null &&
+                                        profileImageUrl.isNotEmpty
+                                    ? CircleAvatar(
+                                        radius: 60,
+                                        backgroundImage: networkImageProvider(
+                                          profileImageUrl,
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 60,
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 60,
+                                          color: Colors.grey[400],
+                                        ),
                                       ),
-                                    )
-                                  : CircleAvatar(
+                                if (_isUploadingImage)
+                                  const Positioned.fill(
+                                    child: CircleAvatar(
                                       radius: 60,
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 60,
-                                        color: Colors.grey[400],
+                                      backgroundColor: Colors.black54,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
                                       ),
                                     ),
-                              if (_isUploadingImage)
-                                const Positioned.fill(
+                                  ),
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
                                   child: CircleAvatar(
-                                    radius: 60,
-                                    backgroundColor: Colors.black54,
-                                    child: CircularProgressIndicator(
+                                    radius: 20,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.camera_alt,
+                                        size: 20,
+                                      ),
                                       color: Colors.white,
+                                      onPressed: _isUploadingImage
+                                          ? null
+                                          : _uploadProfilePhoto,
+                                      padding: EdgeInsets.zero,
                                     ),
                                   ),
                                 ),
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.camera_alt,
-                                      size: 20,
-                                    ),
-                                    color: Colors.white,
-                                    onPressed: _isUploadingImage
-                                        ? null
-                                        : _uploadProfilePhoto,
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSizes.spaceS),
-                          Text(
-                            userInfo?['email'] as String? ?? '',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.spaceXL),
-
-                    // 이름 입력
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: l10n.profile_name,
-                        prefixIcon: const Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.radiusMedium,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return l10n.profile_nameRequired;
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-
-                    // 전화번호 입력
-                    TextFormField(
-                      controller: _phoneNumberController,
-                      decoration: InputDecoration(
-                        labelText: l10n.profile_phoneNumber,
-                        prefixIcon: const Icon(Icons.phone_outlined),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.radiusMedium,
-                          ),
-                        ),
-                        helperText: l10n.profile_phoneNumberHint,
-                      ),
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [PhoneNumberFormatter()],
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-
-                    // 개인 색상
-                    _buildPersonalColorSection(context),
-                    const SizedBox(height: AppSizes.spaceL),
-
-                    // 현재 비밀번호 (항상 표시, 필수)
-                    if (_hasPassword) ...[
-                      Text(
-                        l10n.profile_currentPassword,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: AppSizes.spaceS),
-                      TextFormField(
-                        controller: _currentPasswordController,
-                        obscureText: _obscureCurrentPassword,
-                        decoration: InputDecoration(
-                          labelText: l10n.profile_currentPassword,
-                          prefixIcon: const Icon(Icons.lock_outlined),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureCurrentPassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
+                              ],
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureCurrentPassword =
-                                    !_obscureCurrentPassword;
-                              });
-                            },
-                          ),
+                            const SizedBox(height: AppSizes.spaceS),
+                            Text(
+                              userInfo?['email'] as String? ?? '',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSizes.spaceXL),
+
+                      // 이름 입력
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: l10n.profile_name,
+                          prefixIcon: const Icon(Icons.person_outlined),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(
                               AppSizes.radiusMedium,
@@ -455,180 +393,248 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                           ),
                         ),
                         validator: (value) {
-                          if (_hasPassword &&
-                              (value == null || value.isEmpty)) {
-                            return l10n.profile_currentPasswordRequired;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: AppSizes.spaceL),
-                    ],
-
-                    // 비밀번호 변경 섹션
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10n.profile_changePassword,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Switch(
-                          value: _isPasswordChangeMode,
-                          onChanged: (value) {
-                            setState(() {
-                              _isPasswordChangeMode = value;
-                              if (!value) {
-                                _newPasswordController.clear();
-                                _confirmPasswordController.clear();
-                              }
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSizes.spaceS),
-
-                    if (_isPasswordChangeMode) ...[
-                      // 새 비밀번호
-                      TextFormField(
-                        controller: _newPasswordController,
-                        obscureText: _obscureNewPassword,
-                        decoration: InputDecoration(
-                          labelText: l10n.profile_newPassword,
-                          prefixIcon: const Icon(Icons.lock_outlined),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureNewPassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureNewPassword = !_obscureNewPassword;
-                              });
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppSizes.radiusMedium,
-                            ),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (_isPasswordChangeMode &&
-                              (value == null || value.isEmpty)) {
-                            return l10n.profile_newPasswordRequired;
-                          }
-                          if (_isPasswordChangeMode && value!.length < 6) {
-                            return l10n.profile_newPasswordMinLength;
+                          if (value == null || value.isEmpty) {
+                            return l10n.profile_nameRequired;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: AppSizes.spaceM),
 
-                      // 새 비밀번호 확인
+                      // 전화번호 입력
                       TextFormField(
-                        controller: _confirmPasswordController,
-                        obscureText: _obscureConfirmPassword,
+                        controller: _phoneNumberController,
                         decoration: InputDecoration(
-                          labelText: l10n.profile_confirmNewPassword,
-                          prefixIcon: const Icon(Icons.lock_outlined),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureConfirmPassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureConfirmPassword =
-                                    !_obscureConfirmPassword;
-                              });
-                            },
-                          ),
+                          labelText: l10n.profile_phoneNumber,
+                          prefixIcon: const Icon(Icons.phone_outlined),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(
                               AppSizes.radiusMedium,
                             ),
                           ),
+                          helperText: l10n.profile_phoneNumberHint,
                         ),
-                        validator: (value) {
-                          if (_isPasswordChangeMode &&
-                              (value == null || value.isEmpty)) {
-                            return l10n.profile_confirmNewPasswordRequired;
-                          }
-                          if (_isPasswordChangeMode &&
-                              value != _newPasswordController.text) {
-                            return l10n.profile_passwordsDoNotMatch;
-                          }
-                          return null;
-                        },
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [PhoneNumberFormatter()],
                       ),
+                      const SizedBox(height: AppSizes.spaceM),
+
+                      // 개인 색상
+                      _buildPersonalColorSection(context),
                       const SizedBox(height: AppSizes.spaceL),
-                    ],
 
-                    const SizedBox(height: AppSizes.spaceXL),
-                    const Divider(),
-                    const SizedBox(height: AppSizes.spaceM),
+                      // 현재 비밀번호 (항상 표시, 필수)
+                      if (_hasPassword) ...[
+                        Text(
+                          l10n.profile_currentPassword,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: AppSizes.spaceS),
+                        TextFormField(
+                          controller: _currentPasswordController,
+                          obscureText: _obscureCurrentPassword,
+                          decoration: InputDecoration(
+                            labelText: l10n.profile_currentPassword,
+                            prefixIcon: const Icon(Icons.lock_outlined),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureCurrentPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureCurrentPassword =
+                                      !_obscureCurrentPassword;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusMedium,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (_hasPassword &&
+                                (value == null || value.isEmpty)) {
+                              return l10n.profile_currentPasswordRequired;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: AppSizes.spaceL),
+                      ],
 
-                    // 계정 관리 섹션
-                    Text(
-                      l10n.account_management_title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
+                      // 비밀번호 변경 섹션
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.profile_changePassword,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Switch(
+                            value: _isPasswordChangeMode,
+                            onChanged: (value) {
+                              setState(() {
+                                _isPasswordChangeMode = value;
+                                if (!value) {
+                                  _newPasswordController.clear();
+                                  _confirmPasswordController.clear();
+                                }
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: AppSizes.spaceM),
-
-                    // 데이터 내보내기
-                    _buildAccountTile(
-                      context,
-                      icon: Icons.download_outlined,
-                      title: l10n.account_export_data_title,
-                      subtitle: l10n.account_export_data_subtitle,
-                      onTap: _exportData,
-                    ),
-
-                    // 계정 삭제 예약 취소 — scheduledDeleteAt 있을 때만 표시
-                    if (ref.watch(authProvider).scheduledDeleteAt != null) ...[
                       const SizedBox(height: AppSizes.spaceS),
+
+                      if (_isPasswordChangeMode) ...[
+                        // 새 비밀번호
+                        TextFormField(
+                          controller: _newPasswordController,
+                          obscureText: _obscureNewPassword,
+                          decoration: InputDecoration(
+                            labelText: l10n.profile_newPassword,
+                            prefixIcon: const Icon(Icons.lock_outlined),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureNewPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureNewPassword = !_obscureNewPassword;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusMedium,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (_isPasswordChangeMode &&
+                                (value == null || value.isEmpty)) {
+                              return l10n.profile_newPasswordRequired;
+                            }
+                            if (_isPasswordChangeMode && value!.length < 6) {
+                              return l10n.profile_newPasswordMinLength;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: AppSizes.spaceM),
+
+                        // 새 비밀번호 확인
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: _obscureConfirmPassword,
+                          decoration: InputDecoration(
+                            labelText: l10n.profile_confirmNewPassword,
+                            prefixIcon: const Icon(Icons.lock_outlined),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureConfirmPassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
+                                });
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusMedium,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (_isPasswordChangeMode &&
+                                (value == null || value.isEmpty)) {
+                              return l10n.profile_confirmNewPasswordRequired;
+                            }
+                            if (_isPasswordChangeMode &&
+                                value != _newPasswordController.text) {
+                              return l10n.profile_passwordsDoNotMatch;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: AppSizes.spaceL),
+                      ],
+
+                      const SizedBox(height: AppSizes.spaceXL),
+                      const Divider(),
+                      const SizedBox(height: AppSizes.spaceM),
+
+                      // 계정 관리 섹션
+                      Text(
+                        l10n.account_management_title,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      const SizedBox(height: AppSizes.spaceM),
+
+                      // 데이터 내보내기
                       _buildAccountTile(
                         context,
-                        icon: Icons.cancel_outlined,
-                        title: l10n.account_cancel_delete_title,
-                        subtitle: l10n.account_cancel_delete_subtitle,
-                        onTap: _cancelDeleteAccount,
+                        icon: Icons.download_outlined,
+                        title: l10n.account_export_data_title,
+                        subtitle: l10n.account_export_data_subtitle,
+                        onTap: _exportData,
                       ),
-                    ],
 
-                    // 계정 삭제 예약 — scheduledDeleteAt 없을 때만 표시 (이미 예약 중이면 숨김)
-                    if (ref.watch(authProvider).scheduledDeleteAt == null) ...[
-                      const SizedBox(height: AppSizes.spaceS),
-                      _buildAccountTile(
-                        context,
-                        icon: Icons.delete_forever_outlined,
-                        title: l10n.account_delete_schedule_title,
-                        subtitle: l10n.account_delete_schedule_subtitle,
-                        onTap: _scheduleDeleteAccount,
-                        isDestructive: true,
-                      ),
+                      // 계정 삭제 예약 취소 — scheduledDeleteAt 있을 때만 표시
+                      if (ref.watch(authProvider).scheduledDeleteAt !=
+                          null) ...[
+                        const SizedBox(height: AppSizes.spaceS),
+                        _buildAccountTile(
+                          context,
+                          icon: Icons.cancel_outlined,
+                          title: l10n.account_cancel_delete_title,
+                          subtitle: l10n.account_cancel_delete_subtitle,
+                          onTap: _cancelDeleteAccount,
+                        ),
+                      ],
+
+                      // 계정 삭제 예약 — scheduledDeleteAt 없을 때만 표시 (이미 예약 중이면 숨김)
+                      if (ref.watch(authProvider).scheduledDeleteAt ==
+                          null) ...[
+                        const SizedBox(height: AppSizes.spaceS),
+                        _buildAccountTile(
+                          context,
+                          icon: Icons.delete_forever_outlined,
+                          title: l10n.account_delete_schedule_title,
+                          subtitle: l10n.account_delete_schedule_subtitle,
+                          onTap: _scheduleDeleteAccount,
+                          isDestructive: true,
+                        ),
+                      ],
+                      const SizedBox(height: AppSizes.spaceXL),
                     ],
-                    const SizedBox(height: AppSizes.spaceXL),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-          FormBottomBar(
-            label: l10n.profile_save,
-            isLoading: _isLoading,
-            onPressed: _updateProfile,
-          ),
-        ],
+            FormBottomBar(
+              label: l10n.profile_save,
+              isLoading: _isLoading,
+              onPressed: _updateProfile,
+            ),
+          ],
+        ),
       ),
     );
   }
