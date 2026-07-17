@@ -36,32 +36,33 @@ class EmojiPickerField extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final hasEmoji = selectedEmoji != null && selectedEmoji!.isNotEmpty;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        InkWell(
-          onTap: () => _openPicker(context),
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              shape: BoxShape.circle,
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InkWell(
+            onTap: () => _openPicker(context),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+            child: Container(
+              width: 56,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              ),
+              alignment: Alignment.center,
+              child: hasEmoji
+                  ? Text(selectedEmoji!, style: const TextStyle(fontSize: 22))
+                  : Icon(
+                      placeholderIcon,
+                      size: 22,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
             ),
-            alignment: Alignment.center,
-            child: hasEmoji
-                ? Text(selectedEmoji!, style: const TextStyle(fontSize: 20))
-                : Icon(
-                    placeholderIcon,
-                    size: 20,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
           ),
-        ),
-        const SizedBox(width: AppSizes.spaceS),
-        Expanded(child: titleField),
-      ],
+          const SizedBox(width: AppSizes.spaceS),
+          Expanded(child: titleField),
+        ],
+      ),
     );
   }
 }

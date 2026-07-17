@@ -231,27 +231,37 @@ class _CategoryBar extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           if (hasRecent)
-            Tooltip(
-              message: l10n.emoji_picker_category_recent,
-              child: IconButton(
-                icon: Icon(Icons.history, color: colorScheme.onSurfaceVariant),
-                onPressed: () => onCategoryTap(_recentSectionIndex),
+            Expanded(
+              child: Tooltip(
+                message: l10n.emoji_picker_category_recent,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: Icon(
+                    Icons.history,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: () => onCategoryTap(_recentSectionIndex),
+                ),
               ),
             ),
           for (final category in EmojiCategory.values)
-            Tooltip(
-              message: _categoryLabel(l10n, category),
-              child: IconButton(
-                icon: Icon(
-                  _categoryIcon(category),
-                  color: colorScheme.onSurfaceVariant,
+            Expanded(
+              child: Tooltip(
+                message: _categoryLabel(l10n, category),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: Icon(
+                    _categoryIcon(category),
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: () => onCategoryTap(category.index),
                 ),
-                onPressed: () => onCategoryTap(category.index),
               ),
             ),
         ],
