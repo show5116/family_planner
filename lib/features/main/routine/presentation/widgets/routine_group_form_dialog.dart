@@ -27,7 +27,7 @@ class _RoutineGroupFormDialogState
   late final _titleController = TextEditingController(
     text: widget.group?.title ?? '',
   );
-  late String? _emoji = widget.group?.emoji;
+  late String? _emoji = widget.group?.emoji ?? '✅';
   late String? _selectedColor = widget.group?.color;
   bool _saving = false;
 
@@ -72,9 +72,9 @@ class _RoutineGroupFormDialogState
 
     final l10n = AppLocalizations.of(context)!;
     if (result == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_group_error_generic)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_group_error_generic)));
       return;
     }
 
@@ -86,7 +86,9 @@ class _RoutineGroupFormDialogState
     final l10n = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      title: Text(_isEditing ? l10n.routine_group_edit : l10n.routine_group_add),
+      title: Text(
+        _isEditing ? l10n.routine_group_edit : l10n.routine_group_add,
+      ),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -96,27 +98,26 @@ class _RoutineGroupFormDialogState
             children: [
               EmojiPickerField(
                 selectedEmoji: _emoji,
-                onChanged: (emoji) => setState(() => _emoji = emoji),
-                titleField: TextFormField(
-                  controller: _titleController,
-                  maxLength: 100,
-                  decoration: InputDecoration(
-                    labelText: l10n.routine_field_title,
-                    hintText: l10n.routine_group_field_title_hint,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return l10n.routine_field_title_required;
-                    }
-                    if (value.trim().length > 100) {
-                      return l10n.routine_field_title_too_long;
-                    }
-                    return null;
-                  },
-                ),
+                onEmojiChanged: (emoji) => setState(() => _emoji = emoji),
+                controller: _titleController,
+                maxLength: 100,
+                labelText: l10n.routine_field_title,
+                hintText: l10n.routine_group_field_title_hint,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return l10n.routine_field_title_required;
+                  }
+                  if (value.trim().length > 100) {
+                    return l10n.routine_field_title_too_long;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: AppSizes.spaceS),
-              Text(l10n.routine_field_color, style: Theme.of(context).textTheme.labelLarge),
+              Text(
+                l10n.routine_field_color,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               const SizedBox(height: AppSizes.spaceS),
               color_picker.ColorPicker(
                 selectedColor: AppColors.parseHex(_selectedColor),

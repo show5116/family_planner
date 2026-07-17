@@ -10,11 +10,7 @@ class CategoryFormDialog extends StatefulWidget {
   final CategoryModel? category;
   final AppLocalizations l10n;
 
-  const CategoryFormDialog({
-    super.key,
-    this.category,
-    required this.l10n,
-  });
+  const CategoryFormDialog({super.key, this.category, required this.l10n});
 
   @override
   State<CategoryFormDialog> createState() => _CategoryFormDialogState();
@@ -63,19 +59,23 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
               // 이모지 + 카테고리 이름
               EmojiPickerField(
                 selectedEmoji: _selectedEmoji,
-                onChanged: (emoji) => setState(() => _selectedEmoji = emoji),
-                titleField: _NameField(
-                  controller: _nameController,
-                  l10n: l10n,
-                ),
+                onEmojiChanged: (emoji) =>
+                    setState(() => _selectedEmoji = emoji),
+                controller: _nameController,
+                maxLength: 20,
+                labelText: l10n.category_name,
+                hintText: l10n.category_nameHint,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return l10n.category_nameRequired;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: AppSizes.spaceM),
 
               // 설명
-              _DescriptionField(
-                controller: _descriptionController,
-                l10n: l10n,
-              ),
+              _DescriptionField(controller: _descriptionController, l10n: l10n),
             ],
           ),
         ),
@@ -108,45 +108,12 @@ class _CategoryFormDialogState extends State<CategoryFormDialog> {
   }
 }
 
-/// 카테고리 이름 입력 필드
-class _NameField extends StatelessWidget {
-  final TextEditingController controller;
-  final AppLocalizations l10n;
-
-  const _NameField({
-    required this.controller,
-    required this.l10n,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: l10n.category_name,
-        hintText: l10n.category_nameHint,
-        border: const OutlineInputBorder(),
-      ),
-      maxLength: 20,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return l10n.category_nameRequired;
-        }
-        return null;
-      },
-    );
-  }
-}
-
 /// 카테고리 설명 입력 필드
 class _DescriptionField extends StatelessWidget {
   final TextEditingController controller;
   final AppLocalizations l10n;
 
-  const _DescriptionField({
-    required this.controller,
-    required this.l10n,
-  });
+  const _DescriptionField({required this.controller, required this.l10n});
 
   @override
   Widget build(BuildContext context) {

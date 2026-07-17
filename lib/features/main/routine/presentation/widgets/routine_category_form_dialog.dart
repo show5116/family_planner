@@ -27,7 +27,7 @@ class _RoutineCategoryFormDialogState
   late final _titleController = TextEditingController(
     text: widget.category?.title ?? '',
   );
-  late String? _emoji = widget.category?.emoji;
+  late String? _emoji = widget.category?.emoji ?? '✅';
   late String? _selectedColor = widget.category?.color;
   bool _saving = false;
 
@@ -98,24 +98,23 @@ class _RoutineCategoryFormDialogState
             children: [
               EmojiPickerField(
                 selectedEmoji: _emoji,
-                onChanged: (emoji) => setState(() => _emoji = emoji),
-                titleField: TextFormField(
-                  controller: _titleController,
-                  maxLength: 50,
-                  decoration: InputDecoration(
-                    labelText: l10n.routine_field_title,
-                    hintText: l10n.routine_category_field_title_hint,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return l10n.routine_field_title_required;
-                    }
-                    return null;
-                  },
-                ),
+                onEmojiChanged: (emoji) => setState(() => _emoji = emoji),
+                controller: _titleController,
+                maxLength: 50,
+                labelText: l10n.routine_field_title,
+                hintText: l10n.routine_category_field_title_hint,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return l10n.routine_field_title_required;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: AppSizes.spaceS),
-              Text(l10n.routine_field_color, style: Theme.of(context).textTheme.labelLarge),
+              Text(
+                l10n.routine_field_color,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               const SizedBox(height: AppSizes.spaceS),
               color_picker.ColorPicker(
                 selectedColor: AppColors.parseHex(_selectedColor),

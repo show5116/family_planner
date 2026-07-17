@@ -24,10 +24,8 @@ class AnniversaryFormDialog extends ConsumerStatefulWidget {
   }) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AnniversaryFormDialog(
-        groupId: groupId,
-        anniversary: anniversary,
-      ),
+      builder: (ctx) =>
+          AnniversaryFormDialog(groupId: groupId, anniversary: anniversary),
     );
     return result ?? false;
   }
@@ -37,8 +35,7 @@ class AnniversaryFormDialog extends ConsumerStatefulWidget {
       _AnniversaryFormDialogState();
 }
 
-class _AnniversaryFormDialogState
-    extends ConsumerState<AnniversaryFormDialog> {
+class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
   late final TextEditingController _titleController;
   late DateTime _selectedDate;
   String? _emoji;
@@ -80,16 +77,17 @@ class _AnniversaryFormDialogState
   Future<void> _submit() async {
     final title = _titleController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('기념일 이름을 입력해 주세요')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('기념일 이름을 입력해 주세요')));
       return;
     }
 
     setState(() => _isSubmitting = true);
 
-    final notifier =
-        ref.read(anniversaryManagementProvider(widget.groupId).notifier);
+    final notifier = ref.read(
+      anniversaryManagementProvider(widget.groupId).notifier,
+    );
 
     final milestoneConfig = (_every100Days || _everyYear)
         ? MilestoneConfig(every100Days: _every100Days, everyYear: _everyYear)
@@ -150,16 +148,12 @@ class _AnniversaryFormDialogState
             EmojiPickerField(
               selectedEmoji: _emoji,
               placeholderIcon: Icons.cake_outlined,
-              onChanged: (emoji) => setState(() => _emoji = emoji),
-              titleField: TextField(
-                controller: _titleController,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  labelText: '기념일 이름',
-                  hintText: '예: 결혼기념일',
-                ),
-                textInputAction: TextInputAction.done,
-              ),
+              onEmojiChanged: (emoji) => setState(() => _emoji = emoji),
+              controller: _titleController,
+              autofocus: true,
+              labelText: '기념일 이름',
+              hintText: '예: 결혼기념일',
+              textInputAction: TextInputAction.done,
             ),
             const SizedBox(height: AppSizes.spaceL),
             // 날짜 선택
@@ -217,7 +211,9 @@ class _AnniversaryFormDialogState
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(false),
+          onPressed: _isSubmitting
+              ? null
+              : () => Navigator.of(context).pop(false),
           child: const Text('취소'),
         ),
         FilledButton(

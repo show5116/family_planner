@@ -27,7 +27,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
   final _titleController = TextEditingController();
   final _memoController = TextEditingController();
 
-  String? _emoji;
+  String? _emoji = '✅';
   String? _selectedColor;
   RoutineFrequencyType _frequencyType = RoutineFrequencyType.weekly;
   RoutineWeeklyMode? _weeklyMode = RoutineWeeklyMode.countOnly;
@@ -287,24 +287,20 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
         children: [
           EmojiPickerField(
             selectedEmoji: _emoji,
-            onChanged: (emoji) => setState(() => _emoji = emoji),
-            titleField: TextFormField(
-              controller: _titleController,
-              maxLength: 100,
-              decoration: InputDecoration(
-                labelText: l10n.routine_field_title,
-                hintText: l10n.routine_field_title_hint,
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return l10n.routine_field_title_required;
-                }
-                if (value.trim().length > 100) {
-                  return l10n.routine_field_title_too_long;
-                }
-                return null;
-              },
-            ),
+            onEmojiChanged: (emoji) => setState(() => _emoji = emoji),
+            controller: _titleController,
+            maxLength: 100,
+            labelText: l10n.routine_field_title,
+            hintText: l10n.routine_field_title_hint,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return l10n.routine_field_title_required;
+              }
+              if (value.trim().length > 100) {
+                return l10n.routine_field_title_too_long;
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
