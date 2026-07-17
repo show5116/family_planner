@@ -18,6 +18,7 @@ import 'package:family_planner/features/settings/groups/models/group_member.dart
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
+import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
 class RecurringExpenseFormScreen extends ConsumerStatefulWidget {
   /// null이면 추가 모드, non-null이면 수정 모드
@@ -120,15 +121,17 @@ class _RecurringExpenseFormScreenState
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_isEditMode
-                ? l10n.household_recurring_edit_title
-                : l10n.household_recurring_add_title),
+            Text(
+              _isEditMode
+                  ? l10n.household_recurring_edit_title
+                  : l10n.household_recurring_add_title,
+            ),
             if (groupName != null)
               Text(
                 groupName,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white70,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.white70),
               ),
           ],
         ),
@@ -189,8 +192,7 @@ class _RecurringExpenseFormScreenState
                       const SizedBox(height: AppSizes.spaceM),
                       _CategoryBottomSheetSelector(
                         selected: _selectedCategory,
-                        onChanged: (v) =>
-                            setState(() => _selectedCategory = v),
+                        onChanged: (v) => setState(() => _selectedCategory = v),
                         label: l10n.household_category,
                       ),
                       const SizedBox(height: AppSizes.spaceM),
@@ -273,7 +275,7 @@ class _RecurringExpenseFormScreenState
                 ),
               ),
               // 하단 고정 저장 버튼
-              _BottomSaveButton(isLoading: isLoading, onPressed: _submit),
+              FormBottomBar(isLoading: isLoading, onPressed: _submit),
             ],
           ),
         ),
@@ -281,7 +283,10 @@ class _RecurringExpenseFormScreenState
     );
   }
 
-  Future<void> _confirmDelete(BuildContext context, AppLocalizations l10n) async {
+  Future<void> _confirmDelete(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -310,7 +315,11 @@ class _RecurringExpenseFormScreenState
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(success ? l10n.household_delete_success : l10n.common_error)),
+      SnackBar(
+        content: Text(
+          success ? l10n.household_delete_success : l10n.common_error,
+        ),
+      ),
     );
     if (success) context.pop();
   }
@@ -335,8 +344,9 @@ class _RecurringExpenseFormScreenState
       final dto = UpdateRecurringExpenseDto(
         amount: amount,
         isVariable: _isVariable,
-        category:
-            _transactionType == TransactionType.income ? null : _selectedCategory,
+        category: _transactionType == TransactionType.income
+            ? null
+            : _selectedCategory,
         incomeCategory: _transactionType == TransactionType.income
             ? _selectedIncomeCategory
             : null,
@@ -366,8 +376,9 @@ class _RecurringExpenseFormScreenState
         type: _transactionType,
         amount: amount,
         isVariable: _isVariable,
-        category:
-            _transactionType == TransactionType.income ? null : _selectedCategory,
+        category: _transactionType == TransactionType.income
+            ? null
+            : _selectedCategory,
         incomeCategory: _transactionType == TransactionType.income
             ? _selectedIncomeCategory
             : null,
@@ -395,7 +406,9 @@ class _RecurringExpenseFormScreenState
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(success ? l10n.household_save_success : l10n.common_error),
+        content: Text(
+          success ? l10n.household_save_success : l10n.common_error,
+        ),
       ),
     );
 
@@ -496,7 +509,9 @@ class _ThousandsSeparatorFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isEmpty) return newValue;
     final number = int.tryParse(newValue.text.replaceAll(',', ''));
     if (number == null) return oldValue;
@@ -524,8 +539,12 @@ class _CategoryBottomSheetSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final color = selected != null ? categoryColor(selected) : colorScheme.outline;
-    final icon = selected != null ? categoryIcon(selected) : Icons.category_outlined;
+    final color = selected != null
+        ? categoryColor(selected)
+        : colorScheme.outline;
+    final icon = selected != null
+        ? categoryIcon(selected)
+        : Icons.category_outlined;
     final name = selected != null
         ? categoryName(l10n, selected)
         : l10n.household_category;
@@ -539,7 +558,8 @@ class _CategoryBottomSheetSelector extends StatelessWidget {
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppSizes.radiusLarge)),
+              top: Radius.circular(AppSizes.radiusLarge),
+            ),
           ),
           builder: (ctx) => _ExpenseCategorySheet(selected: selected),
         );
@@ -560,10 +580,12 @@ class _CategoryBottomSheetSelector extends StatelessWidget {
           children: [
             Icon(icon, size: 20, color: color),
             const SizedBox(width: AppSizes.spaceS),
-            Text(name,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: selected != null ? null : colorScheme.onSurfaceVariant,
-                    )),
+            Text(
+              name,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: selected != null ? null : colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -584,20 +606,22 @@ class _ExpenseCategorySheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-            AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceL),
+          AppSizes.spaceM,
+          AppSizes.spaceM,
+          AppSizes.spaceM,
+          AppSizes.spaceL,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
               child: Text(
                 l10n.household_category,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: AppSizes.spaceM),
@@ -616,17 +640,18 @@ class _ExpenseCategorySheet extends StatelessWidget {
                 final isSelected = cat == selected;
                 final color = categoryColor(cat);
                 return InkWell(
-                  borderRadius:
-                      BorderRadius.circular(AppSizes.radiusMedium),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                   onTap: () => Navigator.of(ctx).pop(cat),
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected
                           ? color.withValues(alpha: 0.15)
-                          : colorScheme.surfaceContainerHighest
-                              .withValues(alpha: 0.5),
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.radiusMedium),
+                          : colorScheme.surfaceContainerHighest.withValues(
+                              alpha: 0.5,
+                            ),
+                      borderRadius: BorderRadius.circular(
+                        AppSizes.radiusMedium,
+                      ),
                       border: isSelected
                           ? Border.all(color: color, width: 1.5)
                           : null,
@@ -638,15 +663,15 @@ class _ExpenseCategorySheet extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           categoryName(l10n, cat),
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: isSelected
-                                        ? color
-                                        : colorScheme.onSurface,
-                                    fontWeight: isSelected
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                  ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: isSelected
+                                    ? color
+                                    : colorScheme.onSurface,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -680,8 +705,9 @@ class _IncomeCategoryBottomSheetSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final color =
-        selected != null ? incomeCategoryColor(selected) : colorScheme.outline;
+    final color = selected != null
+        ? incomeCategoryColor(selected)
+        : colorScheme.outline;
     final icon = selected != null
         ? incomeCategoryIcon(selected)
         : Icons.account_balance_wallet_outlined;
@@ -698,7 +724,8 @@ class _IncomeCategoryBottomSheetSelector extends StatelessWidget {
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppSizes.radiusLarge)),
+              top: Radius.circular(AppSizes.radiusLarge),
+            ),
           ),
           builder: (ctx) => _IncomeCategorySheet(selected: selected),
         );
@@ -719,12 +746,12 @@ class _IncomeCategoryBottomSheetSelector extends StatelessWidget {
           children: [
             Icon(icon, size: 20, color: color),
             const SizedBox(width: AppSizes.spaceS),
-            Text(name,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: selected != null
-                          ? null
-                          : colorScheme.onSurfaceVariant,
-                    )),
+            Text(
+              name,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: selected != null ? null : colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -745,20 +772,22 @@ class _IncomeCategorySheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-            AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceL),
+          AppSizes.spaceM,
+          AppSizes.spaceM,
+          AppSizes.spaceM,
+          AppSizes.spaceL,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
               child: Text(
                 l10n.household_income_category,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: AppSizes.spaceM),
@@ -777,17 +806,18 @@ class _IncomeCategorySheet extends StatelessWidget {
                 final isSelected = cat == selected;
                 final color = incomeCategoryColor(cat);
                 return InkWell(
-                  borderRadius:
-                      BorderRadius.circular(AppSizes.radiusMedium),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                   onTap: () => Navigator.of(ctx).pop(cat),
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected
                           ? color.withValues(alpha: 0.15)
-                          : colorScheme.surfaceContainerHighest
-                              .withValues(alpha: 0.5),
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.radiusMedium),
+                          : colorScheme.surfaceContainerHighest.withValues(
+                              alpha: 0.5,
+                            ),
+                      borderRadius: BorderRadius.circular(
+                        AppSizes.radiusMedium,
+                      ),
                       border: isSelected
                           ? Border.all(color: color, width: 1.5)
                           : null,
@@ -799,15 +829,15 @@ class _IncomeCategorySheet extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           incomeCategoryName(l10n, cat),
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: isSelected
-                                        ? color
-                                        : colorScheme.onSurface,
-                                    fontWeight: isSelected
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                  ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: isSelected
+                                    ? color
+                                    : colorScheme.onSurface,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -857,11 +887,16 @@ class _PaymentMethodSelector extends StatelessWidget {
             isDense: true,
             hint: Text(l10n.household_payment_other),
             items: [
-              DropdownMenuItem(value: null, child: Text(l10n.household_payment_other)),
-              ...PaymentMethod.values.map((m) => DropdownMenuItem(
-                    value: m,
-                    child: Text(paymentMethodName(l10n, m)),
-                  )),
+              DropdownMenuItem(
+                value: null,
+                child: Text(l10n.household_payment_other),
+              ),
+              ...PaymentMethod.values.map(
+                (m) => DropdownMenuItem(
+                  value: m,
+                  child: Text(paymentMethodName(l10n, m)),
+                ),
+              ),
             ],
             onChanged: onChanged,
           ),
@@ -900,12 +935,11 @@ class _MerchantSelector extends ConsumerWidget {
               isScrollControlled: true,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(AppSizes.radiusLarge)),
+                  top: Radius.circular(AppSizes.radiusLarge),
+                ),
               ),
-              builder: (ctx) => _MerchantSheet(
-                merchants: merchants,
-                selectedId: selectedId,
-              ),
+              builder: (ctx) =>
+                  _MerchantSheet(merchants: merchants, selectedId: selectedId),
             );
             if (!context.mounted) return;
             if (result != _merchantSheetClosed) onChanged(result);
@@ -922,20 +956,22 @@ class _MerchantSelector extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.storefront_outlined,
-                    size: 18,
-                    color: selectedName != null
-                        ? colorScheme.primary
-                        : colorScheme.outline),
+                Icon(
+                  Icons.storefront_outlined,
+                  size: 18,
+                  color: selectedName != null
+                      ? colorScheme.primary
+                      : colorScheme.outline,
+                ),
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: Text(
                     selectedName ?? l10n.household_merchant_none,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: selectedName != null
-                              ? null
-                              : colorScheme.onSurfaceVariant,
-                        ),
+                      color: selectedName != null
+                          ? null
+                          : colorScheme.onSurfaceVariant,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -965,7 +1001,12 @@ class _MerchantSheet extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, AppSizes.spaceM, 0, AppSizes.spaceL),
+        padding: const EdgeInsets.fromLTRB(
+          0,
+          AppSizes.spaceM,
+          0,
+          AppSizes.spaceL,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -975,10 +1016,9 @@ class _MerchantSheet extends StatelessWidget {
                 children: [
                   Text(
                     l10n.household_merchant_select,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
@@ -999,14 +1039,17 @@ class _MerchantSheet extends StatelessWidget {
                 child: Text(
                   l10n.household_merchants_empty,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               )
             else ...[
               ListTile(
-                leading: Icon(Icons.remove_circle_outline,
-                    color: colorScheme.outline, size: 20),
+                leading: Icon(
+                  Icons.remove_circle_outline,
+                  color: colorScheme.outline,
+                  size: 20,
+                ),
                 title: Text(l10n.household_merchant_none),
                 trailing: selectedId == null
                     ? Icon(Icons.check, color: colorScheme.primary, size: 20)
@@ -1017,11 +1060,13 @@ class _MerchantSheet extends StatelessWidget {
               ...merchants.map((m) {
                 final isSelected = m.id == selectedId;
                 return ListTile(
-                  leading: Icon(Icons.storefront,
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.onSurfaceVariant,
-                      size: 20),
+                  leading: Icon(
+                    Icons.storefront,
+                    color: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
                   title: Text(m.name),
                   trailing: isSelected
                       ? Icon(Icons.check, color: colorScheme.primary, size: 20)
@@ -1042,8 +1087,7 @@ class _DayOfMonthGridSelector extends StatelessWidget {
   final int value;
   final ValueChanged<int> onChanged;
 
-  const _DayOfMonthGridSelector(
-      {required this.value, required this.onChanged});
+  const _DayOfMonthGridSelector({required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -1059,7 +1103,8 @@ class _DayOfMonthGridSelector extends StatelessWidget {
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppSizes.radiusLarge)),
+              top: Radius.circular(AppSizes.radiusLarge),
+            ),
           ),
           builder: (ctx) => _DayOfMonthSheet(selected: value),
         );
@@ -1077,15 +1122,14 @@ class _DayOfMonthGridSelector extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.event_repeat,
-                size: 18, color: colorScheme.primary),
+            Icon(Icons.event_repeat, size: 18, color: colorScheme.primary),
             const SizedBox(width: AppSizes.spaceS),
             Text(
               l10n.household_recurring_day_of_month_value(value),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -1106,20 +1150,22 @@ class _DayOfMonthSheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-            AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceL),
+          AppSizes.spaceM,
+          AppSizes.spaceM,
+          AppSizes.spaceM,
+          AppSizes.spaceL,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
               child: Text(
                 l10n.household_recurring_day_of_month,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: AppSizes.spaceM),
@@ -1145,26 +1191,27 @@ class _DayOfMonthSheet extends StatelessWidget {
                       color: isSelected
                           ? colorScheme.primary
                           : isLate
-                              ? colorScheme.surfaceContainerHighest
-                                  .withValues(alpha: 0.4)
-                              : colorScheme.surfaceContainerHighest
-                                  .withValues(alpha: 0.6),
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.radiusSmall),
+                          ? colorScheme.surfaceContainerHighest.withValues(
+                              alpha: 0.4,
+                            )
+                          : colorScheme.surfaceContainerHighest.withValues(
+                              alpha: 0.6,
+                            ),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       '$day',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: isSelected
-                                ? colorScheme.onPrimary
-                                : isLate
-                                    ? colorScheme.outline
-                                    : colorScheme.onSurface,
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
+                        color: isSelected
+                            ? colorScheme.onPrimary
+                            : isLate
+                            ? colorScheme.outline
+                            : colorScheme.onSurface,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
                     ),
                   ),
                 );
@@ -1172,13 +1219,12 @@ class _DayOfMonthSheet extends StatelessWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXS),
               child: Text(
                 '* 29~31일은 해당 월에 없으면 말일 처리됩니다',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.outline,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: colorScheme.outline),
               ),
             ),
           ],
@@ -1225,8 +1271,8 @@ class _BackfillToggle extends StatelessWidget {
             subtitle: Text(
               l10n.household_recurring_backfill_hint,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
             secondary: Icon(
               Icons.history_toggle_off,
@@ -1303,9 +1349,9 @@ class _MonthPickerField extends StatelessWidget {
             Text(
               text,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -1344,9 +1390,9 @@ class _RecurringEndOptionField extends StatelessWidget {
           children: [
             Text(
               l10n.household_recurring_end_option,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: AppSizes.spaceS),
             RadioGroup<bool>(
@@ -1427,9 +1473,9 @@ class _EditBackfillNotice extends StatelessWidget {
         Expanded(
           child: Text(
             l10n.household_recurring_edit_backfill_notice,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.outline,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: colorScheme.outline),
           ),
         ),
       ],
@@ -1469,9 +1515,9 @@ class _AmountHintBanner extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: color),
             ),
           ),
         ],
@@ -1509,9 +1555,9 @@ class _VariableToggle extends StatelessWidget {
           value
               ? l10n.household_recurring_type_variable_desc
               : l10n.household_recurring_type_fixed_desc,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         secondary: Icon(
           Icons.tune,
@@ -1566,7 +1612,9 @@ class _RecurringMemberSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final membersAsync = ref.watch(groupMembersProvider(groupId));
     final colorScheme = Theme.of(context).colorScheme;
-    final label = transactionType == TransactionType.income ? '받은 사람' : '결제한 사람';
+    final label = transactionType == TransactionType.income
+        ? '받은 사람'
+        : '결제한 사람';
 
     return membersAsync.when(
       data: (members) {
@@ -1586,7 +1634,8 @@ class _RecurringMemberSelector extends ConsumerWidget {
               isScrollControlled: true,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(AppSizes.radiusLarge)),
+                  top: Radius.circular(AppSizes.radiusLarge),
+                ),
               ),
               builder: (ctx) => _RecurringMemberSheet(
                 members: members,
@@ -1612,14 +1661,18 @@ class _RecurringMemberSelector extends ConsumerWidget {
                 Icon(
                   Icons.person_outline,
                   size: 20,
-                  color: selected != null ? colorScheme.primary : colorScheme.outline,
+                  color: selected != null
+                      ? colorScheme.primary
+                      : colorScheme.outline,
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
                   displayName,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: selected != null ? null : colorScheme.onSurfaceVariant,
-                      ),
+                    color: selected != null
+                        ? null
+                        : colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -1639,7 +1692,11 @@ class _RecurringMemberSheet extends StatelessWidget {
   final String? selectedUserId;
   final String title;
 
-  const _RecurringMemberSheet({required this.members, this.selectedUserId, this.title = '멤버 선택'});
+  const _RecurringMemberSheet({
+    required this.members,
+    this.selectedUserId,
+    this.title = '멤버 선택',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1647,7 +1704,12 @@ class _RecurringMemberSheet extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, AppSizes.spaceM, 0, AppSizes.spaceL),
+        padding: const EdgeInsets.fromLTRB(
+          0,
+          AppSizes.spaceM,
+          0,
+          AppSizes.spaceL,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1657,10 +1719,9 @@ class _RecurringMemberSheet extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
@@ -1696,54 +1757,6 @@ class _RecurringMemberSheet extends StatelessWidget {
               );
             }),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── 하단 고정 저장 버튼 ────────────────────────────────────────────────────
-class _BottomSaveButton extends StatelessWidget {
-  final bool isLoading;
-  final VoidCallback onPressed;
-
-  const _BottomSaveButton(
-      {required this.isLoading, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        AppSizes.spaceM,
-        AppSizes.spaceS,
-        AppSizes.spaceM,
-        AppSizes.spaceM + MediaQuery.of(context).padding.bottom,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-              color: colorScheme.outlineVariant, width: 0.5),
-        ),
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: FilledButton(
-          onPressed: isLoading ? null : onPressed,
-          child: isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Colors.white),
-                )
-              : Text(l10n.common_save,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600)),
         ),
       ),
     );

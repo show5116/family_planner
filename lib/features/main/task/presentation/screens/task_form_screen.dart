@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -90,7 +90,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
         ref.read(selectedGroupIdProvider.notifier).state = widget.task!.groupId;
       } else if (widget.hasInitialGroupId) {
         // 약식 창에서 넘어온 경우: 선택된 그룹 그대로 사용
-        ref.read(selectedGroupIdProvider.notifier).state = widget.initialGroupId;
+        ref.read(selectedGroupIdProvider.notifier).state =
+            widget.initialGroupId;
       } else {
         // 신규 모드: 현재 필터에서 그룹 자동 선택
         final filterIds = ref.read(selectedGroupIdsProvider);
@@ -116,12 +117,14 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
         _titleController.text = widget.initialTitle!;
       }
       if (widget.initialDate != null || widget.initialEndTime != null) {
-        final notifier = ref.read(taskFormNotifierProvider(
-          taskId: widget.taskId,
-          task: widget.task,
-          initialDate: widget.initialDate,
-          initialTaskType: widget.initialTaskType,
-        ).notifier);
+        final notifier = ref.read(
+          taskFormNotifierProvider(
+            taskId: widget.taskId,
+            task: widget.task,
+            initialDate: widget.initialDate,
+            initialTaskType: widget.initialTaskType,
+          ).notifier,
+        );
         if (widget.initialDate != null) {
           notifier.setStartTime(TimeOfDay.fromDateTime(widget.initialDate!));
         }
@@ -134,12 +137,14 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           notifier.addReminder(minutes);
         }
       } else if (widget.initialReminders?.isNotEmpty == true) {
-        final notifier = ref.read(taskFormNotifierProvider(
-          taskId: widget.taskId,
-          task: widget.task,
-          initialDate: widget.initialDate,
-          initialTaskType: widget.initialTaskType,
-        ).notifier);
+        final notifier = ref.read(
+          taskFormNotifierProvider(
+            taskId: widget.taskId,
+            task: widget.task,
+            initialDate: widget.initialDate,
+            initialTaskType: widget.initialTaskType,
+          ).notifier,
+        );
         for (final minutes in widget.initialReminders!) {
           notifier.addReminder(minutes);
         }
@@ -166,17 +171,16 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
       ref.read(selectedGroupIdProvider.notifier).state = detail.task.groupId;
 
       // reminders 적용
-      final reminders = detail.reminders
-          .map((r) => r.offsetMinutes)
-          .toSet()
-          .toList()
-        ..sort();
-      final notifier = ref.read(taskFormNotifierProvider(
-        taskId: widget.taskId,
-        task: widget.task,
-        initialDate: widget.initialDate,
-        initialTaskType: widget.initialTaskType,
-      ).notifier);
+      final reminders =
+          detail.reminders.map((r) => r.offsetMinutes).toSet().toList()..sort();
+      final notifier = ref.read(
+        taskFormNotifierProvider(
+          taskId: widget.taskId,
+          task: widget.task,
+          initialDate: widget.initialDate,
+          initialTaskType: widget.initialTaskType,
+        ).notifier,
+      );
       for (final minutes in reminders) {
         notifier.addReminder(minutes);
       }
@@ -289,10 +293,15 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
         ),
         child: const Text(
           '건너뛰기',
-          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
-      onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.calendarForm),
+      onFinish: () =>
+          OnboardingService.completeCoachMark(CoachMarkKeys.calendarForm),
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.calendarForm);
         return true;
@@ -336,22 +345,28 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
     final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(selectedGroupIdProvider);
 
-    final formState = ref.watch(taskFormNotifierProvider(
-      taskId: widget.taskId,
-      task: widget.task,
-      initialDate: widget.initialDate,
-      initialTaskType: widget.initialTaskType,
-    ));
-    final formNotifier = ref.read(taskFormNotifierProvider(
-      taskId: widget.taskId,
-      task: widget.task,
-      initialDate: widget.initialDate,
-      initialTaskType: widget.initialTaskType,
-    ).notifier);
+    final formState = ref.watch(
+      taskFormNotifierProvider(
+        taskId: widget.taskId,
+        task: widget.task,
+        initialDate: widget.initialDate,
+        initialTaskType: widget.initialTaskType,
+      ),
+    );
+    final formNotifier = ref.read(
+      taskFormNotifierProvider(
+        taskId: widget.taskId,
+        task: widget.task,
+        initialDate: widget.initialDate,
+        initialTaskType: widget.initialTaskType,
+      ).notifier,
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(formState.isEditMode ? l10n.schedule_edit : l10n.schedule_add),
+        title: Text(
+          formState.isEditMode ? l10n.schedule_edit : l10n.schedule_add,
+        ),
         actions: [
           if (formState.isEditMode)
             IconButton(
@@ -363,44 +378,111 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
       ),
       body: SafeArea(
         top: false,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.spaceL),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GroupSelector(formNotifier: formNotifier, isReadOnly: formState.isEditMode),
-                const SizedBox(height: AppSizes.spaceL),
-                TitleField(key: _titleFieldKey, controller: _titleController, formNotifier: formNotifier, focusNode: _titleFocusNode),
-                const SizedBox(height: AppSizes.spaceL),
-                DateTimeSection(key: _dateTimeKey, formState: formState, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceL),
-                CategorySection(formState: formState, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceL),
-                TaskTypeSection(key: _taskTypeKey, formState: formState, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceL),
-                PrioritySection(formState: formState, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceL),
-                if (selectedGroupId != null) ...[
-                  ParticipantsSection(key: _participantsKey, groupId: selectedGroupId, formState: formState, formNotifier: formNotifier),
-                  const SizedBox(height: AppSizes.spaceL),
-                ],
-                RecurringSection(formState: formState, formNotifier: formNotifier, readOnly: formState.isEditMode),
-                const SizedBox(height: AppSizes.spaceL),
-                ReminderSection(formState: formState, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceL),
-                LocationField(location: formState.location, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceL),
-                DescriptionField(controller: _descriptionController, formNotifier: formNotifier),
-                const SizedBox(height: AppSizes.spaceXL),
-                SubmitButton(
-                  formState: formState,
-                  onPressed: () => _handleSubmit(formState, formNotifier, selectedGroupId, l10n),
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppSizes.spaceL),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GroupSelector(
+                        formNotifier: formNotifier,
+                        isReadOnly: formState.isEditMode,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      TitleField(
+                        key: _titleFieldKey,
+                        controller: _titleController,
+                        formNotifier: formNotifier,
+                        focusNode: _titleFocusNode,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      DateTimeSection(
+                        key: _dateTimeKey,
+                        formState: formState,
+                        formNotifier: formNotifier,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      CategorySection(
+                        formState: formState,
+                        formNotifier: formNotifier,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      TaskTypeSection(
+                        key: _taskTypeKey,
+                        formState: formState,
+                        formNotifier: formNotifier,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      PrioritySection(
+                        formState: formState,
+                        formNotifier: formNotifier,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      if (selectedGroupId != null) ...[
+                        ParticipantsSection(
+                          key: _participantsKey,
+                          groupId: selectedGroupId,
+                          formState: formState,
+                          formNotifier: formNotifier,
+                        ),
+                        const SizedBox(height: AppSizes.spaceL),
+                      ],
+                      RecurringSection(
+                        formState: formState,
+                        formNotifier: formNotifier,
+                        readOnly: formState.isEditMode,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      ReminderSection(
+                        formState: formState,
+                        formNotifier: formNotifier,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      LocationField(
+                        location: formState.location,
+                        formNotifier: formNotifier,
+                      ),
+                      const SizedBox(height: AppSizes.spaceL),
+                      DescriptionField(
+                        controller: _descriptionController,
+                        formNotifier: formNotifier,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                AppSizes.spaceL,
+                AppSizes.spaceS,
+                AppSizes.spaceL,
+                AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                border: Border(
+                  top: BorderSide(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              child: SubmitButton(
+                formState: formState,
+                onPressed: () => _handleSubmit(
+                  formState,
+                  formNotifier,
+                  selectedGroupId,
+                  l10n,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -426,7 +508,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
         'title_required' => l10n.schedule_titleRequired,
         _ => validationError,
       };
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
 
@@ -439,21 +523,33 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
         }
         await formNotifier.updateTask(groupId, updateScope: updateScope);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_updateSuccess)));
-          showInterstitialThenNavigate(() { if (mounted) context.pop(); });
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.schedule_updateSuccess)));
+          showInterstitialThenNavigate(() {
+            if (mounted) context.pop();
+          });
         }
       } else {
         await formNotifier.createTask(groupId);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_createSuccess)));
-          showInterstitialThenNavigate(() { if (mounted) context.pop(); });
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.schedule_createSuccess)));
+          showInterstitialThenNavigate(() {
+            if (mounted) context.pop();
+          });
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(formState.isEditMode ? '${l10n.schedule_updateError}: $e' : '${l10n.schedule_createError}: $e'),
+            content: Text(
+              formState.isEditMode
+                  ? '${l10n.schedule_updateError}: $e'
+                  : '${l10n.schedule_createError}: $e',
+            ),
             backgroundColor: AppColors.error,
           ),
         );
@@ -461,7 +557,11 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
     }
   }
 
-  Future<void> _handleDelete(TaskFormNotifier formNotifier, TaskFormState formState, AppLocalizations l10n) async {
+  Future<void> _handleDelete(
+    TaskFormNotifier formNotifier,
+    TaskFormState formState,
+    AppLocalizations l10n,
+  ) async {
     final isRecurring = formState.editingTask?.recurring != null;
 
     String? deleteScope;
@@ -476,7 +576,10 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           title: Text(l10n.schedule_deleteDialogTitle),
           content: Text(l10n.schedule_deleteDialogMessage),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.common_cancel)),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.common_cancel),
+            ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
@@ -492,13 +595,18 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
     try {
       await formNotifier.deleteTask(deleteScope: deleteScope);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.schedule_deleteSuccess)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.schedule_deleteSuccess)));
         context.pop();
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.schedule_deleteError}: $e'), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text('${l10n.schedule_deleteError}: $e'),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }

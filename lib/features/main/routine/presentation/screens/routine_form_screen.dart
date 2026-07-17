@@ -10,6 +10,7 @@ import 'package:family_planner/features/main/routine/providers/routine_provider.
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
+import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
 /// 루틴 생성/수정 폼 (routineId가 null이면 생성 모드)
 class RoutineFormScreen extends ConsumerStatefulWidget {
@@ -613,17 +614,6 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
               );
             },
           ),
-          const SizedBox(height: AppSizes.spaceL),
-          FilledButton(
-            onPressed: _saving ? null : _save,
-            child: _saving
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(l10n.routine_save),
-          ),
         ],
       ),
     );
@@ -636,7 +626,16 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     if (!_isEditing) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.routine_add)),
-        body: _buildForm(context),
+        body: Column(
+          children: [
+            Expanded(child: _buildForm(context)),
+            FormBottomBar(
+              label: l10n.routine_save,
+              isLoading: _saving,
+              onPressed: _save,
+            ),
+          ],
+        ),
       );
     }
 
@@ -653,7 +652,16 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
         ),
         data: (routine) {
           _initFromRoutine(routine);
-          return _buildForm(context);
+          return Column(
+            children: [
+              Expanded(child: _buildForm(context)),
+              FormBottomBar(
+                label: l10n.routine_save,
+                isLoading: _saving,
+                onPressed: _save,
+              ),
+            ],
+          );
         },
       ),
     );

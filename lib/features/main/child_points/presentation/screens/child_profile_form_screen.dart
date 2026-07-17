@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +7,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/child_points/data/repositories/childcare_repository.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
+import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
 /// 자녀 프로필 등록 화면 (앱 계정 없이 이름+생년월일만)
 class ChildProfileFormScreen extends ConsumerStatefulWidget {
@@ -34,9 +35,12 @@ class _ChildProfileFormScreenState
 
   @override
   Widget build(BuildContext context) {
-    final groupName = ref.watch(myGroupsProvider).whenOrNull(
-      data: (groups) => groups.where((g) => g.id == widget.groupId).firstOrNull?.name,
-    );
+    final groupName = ref
+        .watch(myGroupsProvider)
+        .whenOrNull(
+          data: (groups) =>
+              groups.where((g) => g.id == widget.groupId).firstOrNull?.name,
+        );
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +51,9 @@ class _ChildProfileFormScreenState
             if (groupName != null)
               Text(
                 groupName,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.white70),
               ),
           ],
         ),
@@ -58,55 +64,59 @@ class _ChildProfileFormScreenState
       ),
       body: SafeArea(
         top: false,
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: '자녀 이름',
-                  hintText: '예: 김민준',
-                  prefixIcon: Icon(Icons.person),
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: '자녀 이름',
+                        hintText: '예: 김민준',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (v) => v == null || v.trim().isEmpty
+                          ? '자녀 이름을 입력해주세요'
+                          : null,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+                    InkWell(
+                      onTap: _selectBirthDate,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: '생년월일',
+                          prefixIcon: Icon(Icons.cake),
+                        ),
+                        child: Text(
+                          _selectedBirthDate != null
+                              ? DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(_selectedBirthDate!)
+                              : '날짜를 선택하세요',
+                          style: _selectedBirthDate != null
+                              ? Theme.of(context).textTheme.bodyMedium
+                              : Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).hintColor,
+                                ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                validator: (v) =>
-                    v == null || v.trim().isEmpty ? '자녀 이름을 입력해주세요' : null,
               ),
-              const SizedBox(height: AppSizes.spaceM),
-              InkWell(
-                onTap: _selectBirthDate,
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: '생년월일',
-                    prefixIcon: Icon(Icons.cake),
-                  ),
-                  child: Text(
-                    _selectedBirthDate != null
-                        ? DateFormat('yyyy-MM-dd').format(_selectedBirthDate!)
-                        : '날짜를 선택하세요',
-                    style: _selectedBirthDate != null
-                        ? Theme.of(context).textTheme.bodyMedium
-                        : Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Theme.of(context).hintColor),
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceXL),
-              FilledButton(
-                onPressed: _isSubmitting ? null : _handleSubmit,
-                child: _isSubmitting
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('자녀 프로필 등록'),
-              ),
-            ],
-          ),
+            ),
+            FormBottomBar(
+              label: '자녀 프로필 등록',
+              isLoading: _isSubmitting,
+              onPressed: _handleSubmit,
+            ),
+          ],
         ),
       ),
     );
@@ -127,9 +137,9 @@ class _ChildProfileFormScreenState
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedBirthDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('생년월일을 선택해주세요')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('생년월일을 선택해주세요')));
       return;
     }
 
@@ -149,14 +159,14 @@ class _ChildProfileFormScreenState
     setState(() => _isSubmitting = false);
 
     if (result != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('자녀 프로필이 등록되었습니다')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('자녀 프로필이 등록되었습니다')));
       context.pop(result);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('등록에 실패했습니다. 다시 시도해주세요')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('등록에 실패했습니다. 다시 시도해주세요')));
     }
   }
 }
@@ -204,8 +214,7 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
     super.dispose();
   }
 
-  int _daysInMonth(int year, int month) =>
-      DateTime(year, month + 1, 0).day;
+  int _daysInMonth(int year, int month) => DateTime(year, month + 1, 0).day;
 
   void _onYearChanged(int index) {
     final newYear = _firstYear + index;
@@ -262,8 +271,8 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(context)
-                      .pop(DateTime(_year, _month, _day)),
+                  onPressed: () =>
+                      Navigator.of(context).pop(DateTime(_year, _month, _day)),
                   child: const Text('확인'),
                 ),
               ],
@@ -341,18 +350,17 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
             onTap: isSelected
                 ? null
                 : () => controller.animateToItem(
-                      index,
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOut,
-                    ),
+                    index,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                  ),
             child: Center(
               child: Text(
                 labelBuilder(index),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: isSelected ? selectedColor : null,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
+                  color: isSelected ? selectedColor : null,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
             ),
           );

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +10,7 @@ import 'package:family_planner/features/qna/providers/qna_provider.dart';
 import 'package:family_planner/features/qna/utils/qna_utils.dart';
 import 'package:family_planner/shared/widgets/rich_text_editor.dart';
 import 'package:family_planner/core/services/storage_service.dart';
+import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
 /// 질문 작성/수정 화면
 class QuestionFormScreen extends ConsumerStatefulWidget {
@@ -19,11 +20,7 @@ class QuestionFormScreen extends ConsumerStatefulWidget {
   /// 수정할 질문 데이터 (수정 모드)
   final QuestionModel? question;
 
-  const QuestionFormScreen({
-    super.key,
-    this.questionId,
-    this.question,
-  });
+  const QuestionFormScreen({super.key, this.questionId, this.question});
 
   @override
   ConsumerState<QuestionFormScreen> createState() => _QuestionFormScreenState();
@@ -60,80 +57,70 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditMode ? '질문 수정' : '질문 작성'),
-      ),
+      appBar: AppBar(title: Text(_isEditMode ? '질문 수정' : '질문 작성')),
       body: SafeArea(
         top: false,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.spaceL),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 안내 메시지
-                if (!_isEditMode) ...[
-                  _buildInfoCard(),
-                  const SizedBox(height: AppSizes.spaceL),
-                ],
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppSizes.spaceL),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 안내 메시지
+                      if (!_isEditMode) ...[
+                        _buildInfoCard(),
+                        const SizedBox(height: AppSizes.spaceL),
+                      ],
 
-                // 카테고리 선택
-                _buildCategorySection(),
-                const SizedBox(height: AppSizes.spaceL),
+                      // 카테고리 선택
+                      _buildCategorySection(),
+                      const SizedBox(height: AppSizes.spaceL),
 
-                // 공개/비공개 선택
-                _buildVisibilitySection(),
-                const SizedBox(height: AppSizes.spaceL),
+                      // 공개/비공개 선택
+                      _buildVisibilitySection(),
+                      const SizedBox(height: AppSizes.spaceL),
 
-                // 제목 입력
-                _buildTitleField(),
-                const SizedBox(height: AppSizes.spaceL),
+                      // 제목 입력
+                      _buildTitleField(),
+                      const SizedBox(height: AppSizes.spaceL),
 
-                // 내용 입력 (리치 텍스트 에디터 - 간소화 모드)
-                RichTextEditor(
-                  controller: _contentController,
-                  labelText: '내용',
-                  hintText: '질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.',
-                  minLines: 15,
-                  maxLines: 30,
-                  simpleMode: true,
-                  imageUploadType: EditorImageType.qna,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return '내용을 입력해주세요';
-                    }
-                    if (value.trim().length < 10) {
-                      return '내용은 10자 이상 입력해주세요';
-                    }
-                    if (value.length > 5000) {
-                      return '내용은 5000자를 초과할 수 없습니다';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: AppSizes.spaceXL),
-
-                // 제출 버튼
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _handleSubmit,
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSizes.spaceM),
-                      child: Text(
-                        _isEditMode ? '수정 완료' : '질문 등록',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      // 내용 입력 (리치 텍스트 에디터 - 간소화 모드)
+                      RichTextEditor(
+                        controller: _contentController,
+                        labelText: '내용',
+                        hintText:
+                            '질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.',
+                        minLines: 15,
+                        maxLines: 30,
+                        simpleMode: true,
+                        imageUploadType: EditorImageType.qna,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return '내용을 입력해주세요';
+                          }
+                          if (value.trim().length < 10) {
+                            return '내용은 10자 이상 입력해주세요';
+                          }
+                          if (value.length > 5000) {
+                            return '내용은 5000자를 초과할 수 없습니다';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+            FormBottomBar(
+              label: _isEditMode ? '수정 완료' : '질문 등록',
+              onPressed: _handleSubmit,
+            ),
+          ],
         ),
       ),
     );
@@ -175,17 +162,17 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                   Text(
                     '질문 작성 안내',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: AppSizes.spaceXS),
                   Text(
                     '• 질문은 관리자가 확인 후 답변드립니다.\n• 답변은 알림으로 안내됩니다.\n• 대기 중 상태에서만 수정/삭제 가능합니다.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.primary.withValues(alpha: 0.8),
-                          height: 1.5,
-                        ),
+                      color: AppColors.primary.withValues(alpha: 0.8),
+                      height: 1.5,
+                    ),
                   ),
                 ],
               ),
@@ -203,9 +190,9 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
       children: [
         Text(
           '카테고리',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSizes.spaceM),
         Wrap(
@@ -253,9 +240,9 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
       children: [
         Text(
           '공개 설정',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSizes.spaceM),
         ...QuestionVisibility.values.map((visibility) {
@@ -273,13 +260,14 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
             ),
             subtitle: Text(
               visibility.description,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
             value: visibility,
             groupValue: _selectedVisibility, // ignore: deprecated_member_use
-            onChanged: (value) { // ignore: deprecated_member_use
+            onChanged: (value) {
+              // ignore: deprecated_member_use
               if (value != null) {
                 setState(() {
                   _selectedVisibility = value;
@@ -336,9 +324,9 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
             .updateQuestion(widget.questionId!, dto);
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('질문이 수정되었습니다')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('질문이 수정되었습니다')));
           context.pop();
         }
       } else {

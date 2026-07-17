@@ -9,6 +9,7 @@ import 'package:family_planner/features/settings/groups/providers/group_provider
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
+import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
 class AccountFormScreen extends ConsumerStatefulWidget {
   final String? groupId;
@@ -35,10 +36,12 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.account?.name ?? '');
-    _institutionController =
-        TextEditingController(text: widget.account?.institution ?? '');
-    _accountNumberController =
-        TextEditingController(text: widget.account?.accountNumber ?? '');
+    _institutionController = TextEditingController(
+      text: widget.account?.institution ?? '',
+    );
+    _accountNumberController = TextEditingController(
+      text: widget.account?.accountNumber ?? '',
+    );
     _selectedType = widget.account?.type ?? AccountType.savings;
     _reminderDay = widget.account?.recordReminderDay;
   }
@@ -55,10 +58,14 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final managementState = ref.watch(assetManagementProvider);
-    final effectiveGroupId = widget.groupId ?? ref.watch(assetSelectedGroupIdProvider);
-    final groupName = ref.watch(myGroupsProvider).whenOrNull(
-      data: (groups) => groups.where((g) => g.id == effectiveGroupId).firstOrNull?.name,
-    );
+    final effectiveGroupId =
+        widget.groupId ?? ref.watch(assetSelectedGroupIdProvider);
+    final groupName = ref
+        .watch(myGroupsProvider)
+        .whenOrNull(
+          data: (groups) =>
+              groups.where((g) => g.id == effectiveGroupId).firstOrNull?.name,
+        );
 
     return Scaffold(
       appBar: AppBar(
@@ -69,95 +76,97 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
             if (groupName != null)
               Text(
                 groupName,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.white70),
               ),
           ],
         ),
       ),
       body: SafeArea(
         top: false,
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
-            children: [
-              // 계좌명
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.asset_account_name,
-                  hintText: l10n.asset_account_name_hint,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? l10n.asset_account_name_required : null,
-              ),
-              const SizedBox(height: AppSizes.spaceM),
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  children: [
+                    // 계좌명
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: l10n.asset_account_name,
+                        hintText: l10n.asset_account_name_hint,
+                        border: const OutlineInputBorder(),
+                      ),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? l10n.asset_account_name_required
+                          : null,
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
 
-              // 금융기관 (선택)
-              TextFormField(
-                controller: _institutionController,
-                decoration: InputDecoration(
-                  labelText: '${l10n.asset_institution} (${l10n.common_optional})',
-                  hintText: l10n.asset_institution_hint,
-                  border: const OutlineInputBorder(),
+                    // 금융기관 (선택)
+                    TextFormField(
+                      controller: _institutionController,
+                      decoration: InputDecoration(
+                        labelText:
+                            '${l10n.asset_institution} (${l10n.common_optional})',
+                        hintText: l10n.asset_institution_hint,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+
+                    // 계좌번호 (선택)
+                    TextFormField(
+                      controller: _accountNumberController,
+                      decoration: InputDecoration(
+                        labelText: l10n.asset_account_number,
+                        hintText: l10n.asset_account_number_hint,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+
+                    // 계좌 유형
+                    FocusDismissDropdown(
+                      child: DropdownButtonFormField<AccountType>(
+                        initialValue: _selectedType,
+                        decoration: InputDecoration(
+                          labelText: l10n.asset_account_type,
+                          border: const OutlineInputBorder(),
+                        ),
+                        items: AccountType.values
+                            .map(
+                              (t) => DropdownMenuItem(
+                                value: t,
+                                child: Text(accountTypeLabel(l10n, t)),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (v) => setState(
+                          () => _selectedType = v ?? AccountType.savings,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceM),
+
+                    // 알림 일자
+                    _ReminderDayField(
+                      value: _reminderDay,
+                      onChanged: (v) => setState(() => _reminderDay = v),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 계좌번호 (선택)
-              TextFormField(
-                controller: _accountNumberController,
-                decoration: InputDecoration(
-                  labelText: l10n.asset_account_number,
-                  hintText: l10n.asset_account_number_hint,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 계좌 유형
-              FocusDismissDropdown(
-                child: DropdownButtonFormField<AccountType>(
-                  initialValue: _selectedType,
-                  decoration: InputDecoration(
-                    labelText: l10n.asset_account_type,
-                    border: const OutlineInputBorder(),
-                  ),
-                  items: AccountType.values
-                      .map((t) => DropdownMenuItem(
-                            value: t,
-                            child: Text(accountTypeLabel(l10n, t)),
-                          ))
-                      .toList(),
-                  onChanged: (v) => setState(() => _selectedType = v ?? AccountType.savings),
-                ),
-              ),
-              const SizedBox(height: AppSizes.spaceM),
-
-              // 알림 일자
-              _ReminderDayField(
-                value: _reminderDay,
-                onChanged: (v) => setState(() => _reminderDay = v),
-              ),
-              const SizedBox(height: AppSizes.spaceL),
-
-              // 저장 버튼
-              ElevatedButton(
-                onPressed: managementState.isLoading ? null : _submit,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
-                ),
-                child: managementState.isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(l10n.common_save),
-              ),
-            ],
-          ),
+            ),
+            FormBottomBar(
+              isLoading: managementState.isLoading,
+              onPressed: _submit,
+            ),
+          ],
         ),
       ),
     );
@@ -175,7 +184,9 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
     AccountModel? result;
 
     if (_isEdit) {
-      result = await ref.read(assetManagementProvider.notifier).updateAccount(
+      result = await ref
+          .read(assetManagementProvider.notifier)
+          .updateAccount(
             widget.account!.id,
             UpdateAccountDto(
               name: name,
@@ -187,11 +198,12 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
             ),
           );
     } else {
-      final groupId =
-          widget.groupId ?? ref.read(assetSelectedGroupIdProvider);
+      final groupId = widget.groupId ?? ref.read(assetSelectedGroupIdProvider);
       if (groupId == null) return;
 
-      result = await ref.read(assetManagementProvider.notifier).createAccount(
+      result = await ref
+          .read(assetManagementProvider.notifier)
+          .createAccount(
             CreateAccountDto(
               groupId: groupId,
               name: name,
@@ -206,16 +218,16 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
     if (!mounted) return;
 
     if (result != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.asset_save_success)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.asset_save_success)));
       showInterstitialThenNavigate(() {
         if (mounted) Navigator.of(context).pop(result);
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.common_error)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.common_error)));
     }
   }
 }
@@ -244,15 +256,15 @@ class _ReminderDayField extends StatelessWidget {
                   Text(
                     '기록 알림',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '매월 지정한 날짜에 자산 기록 입력 알림을 보내드립니다.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
                   ),
                 ],
               ),
@@ -287,8 +299,8 @@ class _ReminderDayField extends StatelessWidget {
                 Text(
                   '알림 날짜',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
@@ -313,8 +325,8 @@ class _ReminderDayField extends StatelessWidget {
           Text(
             '29~31일은 해당 월에 없는 경우 말일에 발송됩니다.',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
+              color: Theme.of(context).colorScheme.outline,
+            ),
           ),
         ],
       ],
