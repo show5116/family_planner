@@ -108,14 +108,19 @@ class _EmojiPickerSheetState extends State<EmojiPickerSheet> {
     widget.onSelected(emoji);
   }
 
-  List<_Section> _buildSections(AppLocalizations l10n, List<EmojiEntry> entries) {
+  List<_Section> _buildSections(
+    AppLocalizations l10n,
+    List<EmojiEntry> entries,
+  ) {
     final sections = <_Section>[];
     if (_query.isEmpty && _recent.isNotEmpty) {
-      sections.add(_Section(
-        label: l10n.emoji_picker_category_recent,
-        categoryIndex: _recentSectionIndex,
-        chars: _recent,
-      ));
+      sections.add(
+        _Section(
+          label: l10n.emoji_picker_category_recent,
+          categoryIndex: _recentSectionIndex,
+          chars: _recent,
+        ),
+      );
     }
     for (final category in EmojiCategory.values) {
       final chars = entries
@@ -123,11 +128,13 @@ class _EmojiPickerSheetState extends State<EmojiPickerSheet> {
           .map((e) => e.char)
           .toList();
       if (chars.isEmpty) continue;
-      sections.add(_Section(
-        label: _categoryLabel(l10n, category),
-        categoryIndex: category.index,
-        chars: chars,
-      ));
+      sections.add(
+        _Section(
+          label: _categoryLabel(l10n, category),
+          categoryIndex: category.index,
+          chars: chars,
+        ),
+      );
     }
     return sections;
   }
@@ -268,15 +275,12 @@ class _EmojiGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return ListView.builder(
+    return CustomScrollView(
       controller: scrollController,
-      itemCount: sections.length,
-      itemBuilder: (context, sectionIndex) {
-        final section = sections[sectionIndex];
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
+      slivers: [
+        for (final section in sections) ...[
+          SliverToBoxAdapter(
+            child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSizes.spaceM,
                 AppSizes.spaceS,
@@ -286,19 +290,18 @@ class _EmojiGrid extends StatelessWidget {
               child: Text(
                 section.label,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+            sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: _gridColumns,
               ),
-              itemCount: section.chars.length,
-              itemBuilder: (context, i) {
+              delegate: SliverChildBuilderDelegate((context, i) {
                 final char = section.chars[i];
                 return InkWell(
                   borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
@@ -307,11 +310,11 @@ class _EmojiGrid extends StatelessWidget {
                     child: Text(char, style: const TextStyle(fontSize: 24)),
                   ),
                 );
-              },
+              }, childCount: section.chars.length),
             ),
-          ],
-        );
-      },
+          ),
+        ],
+      ],
     );
   }
 }
