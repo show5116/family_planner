@@ -1,8 +1,8 @@
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as picker;
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/emoji_data/emoji_picker_sheet.dart';
 
 /// 자주 쓰이는 이모지 프리셋 + "전체 이모지" 바텀시트 진입점을 함께 제공하는
 /// 공용 이모지 선택 필드. 프리셋을 탭하거나 바텀시트에서 고르면 [onChanged]가
@@ -148,17 +148,9 @@ Future<String?> showEmojiPickerBottomSheet(BuildContext context) {
       minChildSize: 0.4,
       builder: (ctx, scrollController) => SafeArea(
         top: false,
-        child: picker.EmojiPicker(
-          onEmojiSelected: (category, emoji) {
-            Navigator.of(sheetContext).pop(emoji.emoji);
-          },
-          config: const picker.Config(
-            height: double.infinity,
-            emojiViewConfig: picker.EmojiViewConfig(
-              columns: 8,
-              emojiSizeMax: 28,
-            ),
-          ),
+        child: EmojiPickerSheet(
+          scrollController: scrollController,
+          onSelected: (emoji) => Navigator.of(sheetContext).pop(emoji),
         ),
       ),
     ),

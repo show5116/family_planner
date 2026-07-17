@@ -4884,4 +4884,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get emoji_picker_custom_selected => '已选择预设外的表情符号';
+
+  @override
+  String get emoji_picker_search_hint => '搜索表情符号';
+
+  @override
+  String get emoji_picker_no_result => '没有找到结果';
+
+  @override
+  String get emoji_picker_category_recent => '最近使用';
+
+  @override
+  String get emoji_picker_category_smileys => '表情';
+
+  @override
+  String get emoji_picker_category_animals => '动物';
+
+  @override
+  String get emoji_picker_category_foods => '食物';
+
+  @override
+  String get emoji_picker_category_travel => '旅行';
+
+  @override
+  String get emoji_picker_category_activities => '活动';
+
+  @override
+  String get emoji_picker_category_objects => '物品';
+
+  @override
+  String get emoji_picker_category_symbols => '符号';
+
+  @override
+  String get emoji_picker_category_flags => '旗帜';
 }

@@ -4914,4 +4914,37 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get emoji_picker_custom_selected => 'プリセット以外の絵文字が選択されています';
+
+  @override
+  String get emoji_picker_search_hint => '絵文字を検索';
+
+  @override
+  String get emoji_picker_no_result => '検索結果がありません';
+
+  @override
+  String get emoji_picker_category_recent => '最近使った項目';
+
+  @override
+  String get emoji_picker_category_smileys => '表情';
+
+  @override
+  String get emoji_picker_category_animals => '動物';
+
+  @override
+  String get emoji_picker_category_foods => '食べ物';
+
+  @override
+  String get emoji_picker_category_travel => '旅行';
+
+  @override
+  String get emoji_picker_category_activities => 'アクティビティ';
+
+  @override
+  String get emoji_picker_category_objects => '物';
+
+  @override
+  String get emoji_picker_category_symbols => '記号';
+
+  @override
+  String get emoji_picker_category_flags => '旗';
 }

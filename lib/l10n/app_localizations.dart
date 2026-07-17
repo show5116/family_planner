@@ -9481,6 +9481,72 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'프리셋 외 이모지가 선택되었습니다'**
   String get emoji_picker_custom_selected;
+
+  /// 이모지 검색창 placeholder
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지 검색'**
+  String get emoji_picker_search_hint;
+
+  /// 이모지 검색 결과가 없을 때 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get emoji_picker_no_result;
+
+  /// 최근 사용 이모지 카테고리 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 사용'**
+  String get emoji_picker_category_recent;
+
+  /// 이모지 카테고리 - 표정
+  ///
+  /// In ko, this message translates to:
+  /// **'표정'**
+  String get emoji_picker_category_smileys;
+
+  /// 이모지 카테고리 - 동물
+  ///
+  /// In ko, this message translates to:
+  /// **'동물'**
+  String get emoji_picker_category_animals;
+
+  /// 이모지 카테고리 - 음식
+  ///
+  /// In ko, this message translates to:
+  /// **'음식'**
+  String get emoji_picker_category_foods;
+
+  /// 이모지 카테고리 - 여행
+  ///
+  /// In ko, this message translates to:
+  /// **'여행'**
+  String get emoji_picker_category_travel;
+
+  /// 이모지 카테고리 - 활동
+  ///
+  /// In ko, this message translates to:
+  /// **'활동'**
+  String get emoji_picker_category_activities;
+
+  /// 이모지 카테고리 - 사물
+  ///
+  /// In ko, this message translates to:
+  /// **'사물'**
+  String get emoji_picker_category_objects;
+
+  /// 이모지 카테고리 - 기호
+  ///
+  /// In ko, this message translates to:
+  /// **'기호'**
+  String get emoji_picker_category_symbols;
+
+  /// 이모지 카테고리 - 깃발
+  ///
+  /// In ko, this message translates to:
+  /// **'깃발'**
+  String get emoji_picker_category_flags;
 }
 
 class _AppLocalizationsDelegate

@@ -5032,4 +5032,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emoji_picker_custom_selected => 'A custom emoji is selected';
+
+  @override
+  String get emoji_picker_search_hint => 'Search emoji';
+
+  @override
+  String get emoji_picker_no_result => 'No results found';
+
+  @override
+  String get emoji_picker_category_recent => 'Recent';
+
+  @override
+  String get emoji_picker_category_smileys => 'Smileys';
+
+  @override
+  String get emoji_picker_category_animals => 'Animals';
+
+  @override
+  String get emoji_picker_category_foods => 'Food';
+
+  @override
+  String get emoji_picker_category_travel => 'Travel';
+
+  @override
+  String get emoji_picker_category_activities => 'Activities';
+
+  @override
+  String get emoji_picker_category_objects => 'Objects';
+
+  @override
+  String get emoji_picker_category_symbols => 'Symbols';
+
+  @override
+  String get emoji_picker_category_flags => 'Flags';
 }

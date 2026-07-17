@@ -4921,4 +4921,37 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get emoji_picker_custom_selected => '프리셋 외 이모지가 선택되었습니다';
+
+  @override
+  String get emoji_picker_search_hint => '이모지 검색';
+
+  @override
+  String get emoji_picker_no_result => '검색 결과가 없습니다';
+
+  @override
+  String get emoji_picker_category_recent => '최근 사용';
+
+  @override
+  String get emoji_picker_category_smileys => '표정';
+
+  @override
+  String get emoji_picker_category_animals => '동물';
+
+  @override
+  String get emoji_picker_category_foods => '음식';
+
+  @override
+  String get emoji_picker_category_travel => '여행';
+
+  @override
+  String get emoji_picker_category_activities => '활동';
+
+  @override
+  String get emoji_picker_category_objects => '사물';
+
+  @override
+  String get emoji_picker_category_symbols => '기호';
+
+  @override
+  String get emoji_picker_category_flags => '깃발';
 }

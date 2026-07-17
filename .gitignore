@@ -4,6 +4,9 @@
 *.pyc
 *.swp
 .DS_Store
+
+# 이모지 데이터 생성 스크립트(tool/generate_emoji_data.dart)의 다운로드/복사 캐시
+tool/emoji_data_cache/
 .atom/
 .build/
 .buildlog/
