@@ -23,8 +23,8 @@ import 'package:family_planner/features/main/task/presentation/screens/task_form
 import 'package:family_planner/features/main/task/presentation/screens/task_form/participants_section.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form/reminder_section.dart';
 import 'package:family_planner/features/main/task/presentation/screens/task_form/text_input_fields.dart';
-import 'package:family_planner/features/main/task/presentation/screens/task_form/submit_button.dart';
 import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
+import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
 /// 일정 추가/수정 화면
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -456,31 +456,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                AppSizes.spaceL,
-                AppSizes.spaceS,
-                AppSizes.spaceL,
-                AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                border: Border(
-                  top: BorderSide(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: SubmitButton(
-                formState: formState,
-                onPressed: () => _handleSubmit(
-                  formState,
-                  formNotifier,
-                  selectedGroupId,
-                  l10n,
-                ),
-              ),
+            FormBottomBar(
+              label: formState.isEditMode
+                  ? l10n.common_save
+                  : l10n.schedule_add,
+              isLoading: formState.isSubmitting,
+              onPressed: () =>
+                  _handleSubmit(formState, formNotifier, selectedGroupId, l10n),
             ),
           ],
         ),
