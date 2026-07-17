@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/core/widgets/color_picker.dart' as color_picker;
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
+import 'package:family_planner/shared/widgets/color_picker_row.dart';
 import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
 import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
@@ -303,12 +303,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             },
           ),
           const SizedBox(height: AppSizes.spaceS),
-          Text(
-            l10n.routine_field_color,
-            style: Theme.of(context).textTheme.labelLarge,
-          ),
-          const SizedBox(height: AppSizes.spaceS),
-          color_picker.ColorPicker(
+          ColorPickerRow(
+            label: l10n.routine_field_color,
             selectedColor: AppColors.parseHex(_selectedColor),
             availableColors: AppColors.routineColorPresets
                 .map((hex) => AppColors.parseHex(hex))
