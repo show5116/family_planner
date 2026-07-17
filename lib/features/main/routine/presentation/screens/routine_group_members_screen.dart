@@ -43,8 +43,9 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(routineGroupMembersProvider(groupId)),
         ),
         data: (members) {
-          final withRoutines =
-              members.where((m) => m.routines.isNotEmpty).toList();
+          final withRoutines = members
+              .where((m) => m.routines.isNotEmpty)
+              .toList();
           if (withRoutines.isEmpty) {
             return AppEmptyState(
               icon: Icons.groups_outlined,
@@ -111,14 +112,14 @@ class _MemberSection extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primaryContainer,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer,
                     child: Text(
                       member.userName.isNotEmpty ? member.userName[0] : '?',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color:
-                            Theme.of(context).colorScheme.onPrimaryContainer,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
                   ),
@@ -157,7 +158,8 @@ class _MemberRoutineTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = routine.checkedToday;
-    final streakDays = ref
+    final streakDays =
+        ref
             .watch(routineStreakProvider(routine.id))
             .valueOrNull
             ?.currentStreakDays ??
@@ -167,10 +169,9 @@ class _MemberRoutineTile extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
       child: Row(
         children: [
-          Text(
-            routine.emoji ?? '✅',
-            style: const TextStyle(fontSize: 18),
-          ),
+          (routine.emoji != null && routine.emoji!.isNotEmpty)
+              ? Text(routine.emoji!, style: const TextStyle(fontSize: 18))
+              : const Icon(Icons.check_circle_outline, size: 18),
           const SizedBox(width: AppSizes.spaceS),
           Expanded(
             child: Text(
@@ -207,9 +208,9 @@ class _StreakBadge extends StatelessWidget {
       child: Text(
         '🔥 $streakDays',
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppColors.warning,
-              fontWeight: FontWeight.bold,
-            ),
+          color: AppColors.warning,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -230,8 +231,7 @@ class _MemberDetailSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final detailProviderArg =
-        routineGroupMemberDetailProvider(groupId, userId);
+    final detailProviderArg = routineGroupMemberDetailProvider(groupId, userId);
     final detailAsync = ref.watch(detailProviderArg);
 
     return DraggableScrollableSheet(
@@ -255,8 +255,7 @@ class _MemberDetailSheet extends ConsumerWidget {
           const Divider(height: 1),
           Expanded(
             child: detailAsync.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => AppErrorState(
                 error: error,
                 title: l10n.routine_error_generic,
@@ -274,9 +273,7 @@ class _MemberDetailSheet extends ConsumerWidget {
                   padding: const EdgeInsets.all(AppSizes.spaceM),
                   itemCount: routines.length,
                   itemBuilder: (context, index) {
-                    return _MemberDetailRoutineCard(
-                      routine: routines[index],
-                    );
+                    return _MemberDetailRoutineCard(routine: routines[index]);
                   },
                 );
               },
@@ -298,7 +295,8 @@ class _MemberDetailRoutineCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final progress = routine.checkedToday;
-    final streakDays = ref
+    final streakDays =
+        ref
             .watch(routineStreakProvider(routine.id))
             .valueOrNull
             ?.currentStreakDays ??
@@ -307,10 +305,9 @@ class _MemberDetailRoutineCard extends ConsumerWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceS),
       child: ListTile(
-        leading: Text(
-          routine.emoji ?? '✅',
-          style: const TextStyle(fontSize: 20),
-        ),
+        leading: (routine.emoji != null && routine.emoji!.isNotEmpty)
+            ? Text(routine.emoji!, style: const TextStyle(fontSize: 20))
+            : const Icon(Icons.check_circle_outline, size: 20),
         title: Text(routine.title),
         subtitle: routine.targetCount != null
             ? Text(

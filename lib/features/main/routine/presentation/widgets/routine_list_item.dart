@@ -25,7 +25,8 @@ class RoutineListItem extends StatefulWidget {
     String? textValue,
     num? numericValue,
     String? timeValue,
-  }) onToggleCheck;
+  })
+  onToggleCheck;
   final VoidCallback? onEdit;
   final VoidCallback? onPause;
   final VoidCallback? onResume;
@@ -84,10 +85,16 @@ class _RoutineListItemState extends State<RoutineListItem> {
                     borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                   ),
                   alignment: Alignment.center,
-                  child: Text(
-                    routine.emoji ?? '✅',
-                    style: const TextStyle(fontSize: 20),
-                  ),
+                  child: (routine.emoji != null && routine.emoji!.isNotEmpty)
+                      ? Text(
+                          routine.emoji!,
+                          style: const TextStyle(fontSize: 20),
+                        )
+                      : Icon(
+                          Icons.check_circle_outline,
+                          size: 20,
+                          color: accent,
+                        ),
                 ),
                 const SizedBox(width: AppSizes.spaceM),
                 Expanded(
@@ -116,9 +123,7 @@ class _RoutineListItemState extends State<RoutineListItem> {
                               ),
                               child: Text(
                                 l10n.routine_status_paused,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
+                                style: Theme.of(context).textTheme.labelSmall
                                     ?.copyWith(
                                       color: colorScheme.onSurfaceVariant,
                                     ),
@@ -130,9 +135,7 @@ class _RoutineListItemState extends State<RoutineListItem> {
                       if (progress != null)
                         Text(
                           '${l10n.routine_this_week_progress}: $progress',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                     ],
@@ -146,10 +149,8 @@ class _RoutineListItemState extends State<RoutineListItem> {
                     tween: Tween(begin: 0.6, end: 1.0),
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.elasticOut,
-                    builder: (context, scale, child) => Transform.scale(
-                      scale: scale,
-                      child: child,
-                    ),
+                    builder: (context, scale, child) =>
+                        Transform.scale(scale: scale, child: child),
                     child: Icon(
                       routine.checkedToday
                           ? Icons.check_circle
@@ -206,11 +207,15 @@ class _RoutineListItemState extends State<RoutineListItem> {
   }
 
   Future<void> _handleToggleCheck() async {
-    if (routine.checkedToday || routine.recordType == RoutineRecordType.boolean_) {
+    if (routine.checkedToday ||
+        routine.recordType == RoutineRecordType.boolean_) {
       await widget.onToggleCheck();
       return;
     }
-    final value = await showRoutineCheckValueDialog(context, routine.recordType);
+    final value = await showRoutineCheckValueDialog(
+      context,
+      routine.recordType,
+    );
     if (value == null || !mounted) return;
     await widget.onToggleCheck(
       textValue: value.textValue,
