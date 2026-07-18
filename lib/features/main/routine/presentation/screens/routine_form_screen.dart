@@ -215,9 +215,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     final emoji = _emoji;
     final memo = _memoController.text.trim();
     final frequencyFields = _buildFrequencyFields();
-    // TODO: 백엔드가 categoryIds(다중) API를 지원하면 첫 번째 값만 보내는
-    // 이 어댑터를 제거하고 categoryIds를 그대로 전달하도록 교체한다.
-    final categoryId = _selectedCategoryIds.firstOrNull;
+    final categoryIds = _selectedCategoryIds.toList();
 
     if (_isEditing) {
       await notifier.updateRoutine(
@@ -236,8 +234,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           endDate: _endDate != null ? _formatDate(_endDate!) : null,
           routineGroupId: _selectedGroupId,
           clearRoutineGroupId: _selectedGroupId == null,
-          categoryId: categoryId,
-          clearCategoryId: categoryId == null,
+          categoryIds: categoryIds,
         ),
       );
     } else {
@@ -249,7 +246,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           memo: memo.isEmpty ? null : memo,
           importance: _importance,
           timeFilter: _timeFilter,
-          categoryId: categoryId,
+          categoryIds: categoryIds,
           recordType: _recordType,
           frequencyType: _frequencyType,
           weeklyMode: frequencyFields.weeklyMode,
