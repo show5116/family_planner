@@ -51,7 +51,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     String? timeValue,
   }) async {
     final l10n = AppLocalizations.of(context)!;
-    final result = await ref.read(routineManagementProvider.notifier).toggleCheck(
+    final result = await ref
+        .read(routineManagementProvider.notifier)
+        .toggleCheck(
           routine.id,
           routine.checkedToday,
           textValue: textValue,
@@ -61,9 +63,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     if (!context.mounted) return;
 
     if (!result.success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_check_error)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_check_error)));
     } else if (result.newlyEarnedBadges.isNotEmpty) {
       await showRoutineBadgeCelebration(context, result.newlyEarnedBadges);
     } else if (result.streakIncreased && result.currentStreakDays != null) {
@@ -107,9 +109,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         .read(routineManagementProvider.notifier)
         .deleteRoutine(routine.id);
     if (!success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_error_generic)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_error_generic)));
     }
   }
 
@@ -123,9 +125,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         .read(routineManagementProvider.notifier)
         .pauseRoutine(routine.id);
     if (result == null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_pause_error)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_pause_error)));
     }
   }
 
@@ -139,13 +141,13 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         .read(routineManagementProvider.notifier)
         .resumeRoutine(routine.id);
     if (result != null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_resume_success)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_resume_success)));
     } else if (result == null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_resume_error)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_resume_error)));
     }
   }
 
@@ -156,8 +158,10 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         _addButtonKey.currentContext!.findRenderObject() as RenderBox;
     final overlayBox =
         Overlay.of(context).context.findRenderObject() as RenderBox;
-    final buttonTopLeft =
-        buttonBox.localToGlobal(Offset.zero, ancestor: overlayBox);
+    final buttonTopLeft = buttonBox.localToGlobal(
+      Offset.zero,
+      ancestor: overlayBox,
+    );
     final position = RelativeRect.fromLTRB(
       buttonTopLeft.dx,
       buttonTopLeft.dy - AppSizes.spaceS,
@@ -283,9 +287,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         .read(routineGroupManagementProvider.notifier)
         .deleteRoutineGroup(group.id);
     if (!success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_group_error_generic)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_group_error_generic)));
     }
   }
 
@@ -426,24 +430,22 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
             onSelected: (_) => setState(() => _selectedCategoryId = null),
           ),
           const SizedBox(width: AppSizes.spaceS),
-          ...categories.expand((category) => [
-                GestureDetector(
-                  onLongPress: () => _showCategoryActionsSheet(
-                    context,
-                    category,
+          ...categories.expand(
+            (category) => [
+              GestureDetector(
+                onLongPress: () => _showCategoryActionsSheet(context, category),
+                child: ChoiceChip(
+                  label: Text(
+                    '${category.emoji ?? ''} ${category.title}'.trim(),
                   ),
-                  child: ChoiceChip(
-                    label: Text(
-                      '${category.emoji ?? ''} ${category.title}'.trim(),
-                    ),
-                    selected: _selectedCategoryId == category.id,
-                    onSelected: (_) => setState(
-                      () => _selectedCategoryId = category.id,
-                    ),
-                  ),
+                  selected: _selectedCategoryId == category.id,
+                  onSelected: (_) =>
+                      setState(() => _selectedCategoryId = category.id),
                 ),
-                const SizedBox(width: AppSizes.spaceS),
-              ]),
+              ),
+              const SizedBox(width: AppSizes.spaceS),
+            ],
+          ),
           ActionChip(
             avatar: const Icon(Icons.add, size: 18),
             label: Text(l10n.routine_category_add),
@@ -517,12 +519,11 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       ),
       body: Column(
         children: [
-          if (categoriesAsync.valueOrNull?.isNotEmpty ?? false)
-            _buildCategoryFilterRow(
-              context,
-              l10n,
-              categoriesAsync.value!,
-            ),
+          _buildCategoryFilterRow(
+            context,
+            l10n,
+            categoriesAsync.valueOrNull ?? [],
+          ),
           Expanded(
             child: routinesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -536,8 +537,8 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                 final filteredRoutines = _selectedCategoryId == null
                     ? routines
                     : routines
-                        .where((r) => r.categoryId == _selectedCategoryId)
-                        .toList();
+                          .where((r) => r.categoryId == _selectedCategoryId)
+                          .toList();
                 final standaloneRoutines = filteredRoutines
                     .where((r) => r.routineGroupId == null)
                     .toList();
@@ -558,9 +559,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                 return RefreshIndicator(
                   onRefresh: () async {
                     await ref.read(routineListProvider.notifier).refresh();
-                    await ref
-                        .read(routineGroupListProvider.notifier)
-                        .refresh();
+                    await ref.read(routineGroupListProvider.notifier).refresh();
                   },
                   child: ListView(
                     padding: EdgeInsets.fromLTRB(
@@ -586,20 +585,20 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                               AppRoutes.routineDetail,
                               extra: {'routineId': routine.id},
                             ),
-                            onToggleCheck: (
-                              routine, {
-                              textValue,
-                              numericValue,
-                              timeValue,
-                            }) =>
-                                _toggleCheck(
-                              context,
-                              ref,
-                              routine,
-                              textValue: textValue,
-                              numericValue: numericValue,
-                              timeValue: timeValue,
-                            ),
+                            onToggleCheck:
+                                (
+                                  routine, {
+                                  textValue,
+                                  numericValue,
+                                  timeValue,
+                                }) => _toggleCheck(
+                                  context,
+                                  ref,
+                                  routine,
+                                  textValue: textValue,
+                                  numericValue: numericValue,
+                                  timeValue: timeValue,
+                                ),
                             onReorderRoutines: (reordered) => ref
                                 .read(routineManagementProvider.notifier)
                                 .reorder(reordered),
@@ -645,8 +644,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                             key: ValueKey(
                               '${standaloneRoutines[index].id}_wrap',
                             ),
-                            padding:
-                                const EdgeInsets.only(bottom: AppSizes.spaceM),
+                            padding: const EdgeInsets.only(
+                              bottom: AppSizes.spaceM,
+                            ),
                             child: _buildStandaloneItem(
                               context,
                               standaloneRoutines,
