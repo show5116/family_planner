@@ -50,6 +50,7 @@ class _RoutineLeaderboardScreenState
             child: Column(
               children: [
                 SegmentedButton<LeaderboardPeriod>(
+                  showSelectedIcon: false,
                   segments: [
                     ButtonSegment(
                       value: LeaderboardPeriod.week,
@@ -66,6 +67,7 @@ class _RoutineLeaderboardScreenState
                 ),
                 const SizedBox(height: AppSizes.spaceS),
                 SegmentedButton<LeaderboardMetric>(
+                  showSelectedIcon: false,
                   segments: [
                     ButtonSegment(
                       value: LeaderboardMetric.checkCount,
@@ -115,17 +117,20 @@ class _RoutineLeaderboardScreenState
                       margin: const EdgeInsets.only(bottom: AppSizes.spaceS),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: medalColor ??
-                              Theme.of(context).colorScheme.surfaceContainerHighest,
+                          backgroundColor:
+                              medalColor ??
+                              Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
                           child: Text(
                             '${entry.rank}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: medalColor != null
                                   ? Colors.white
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
+                                  : Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ),
@@ -140,10 +145,8 @@ class _RoutineLeaderboardScreenState
                             ),
                             Text(
                               '${entry.achievementRate}%',
-                              style:
-                                  Theme.of(context).textTheme.labelSmall?.copyWith(
-                                        color: AppColors.success,
-                                      ),
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(color: AppColors.success),
                             ),
                           ],
                         ),

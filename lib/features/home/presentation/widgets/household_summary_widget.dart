@@ -31,10 +31,12 @@ class HouseholdSummaryWidget extends ConsumerStatefulWidget {
   final HouseholdWidgetViewMode viewMode;
 
   @override
-  ConsumerState<HouseholdSummaryWidget> createState() => _HouseholdSummaryWidgetState();
+  ConsumerState<HouseholdSummaryWidget> createState() =>
+      _HouseholdSummaryWidgetState();
 }
 
-class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget> {
+class _HouseholdSummaryWidgetState
+    extends ConsumerState<HouseholdSummaryWidget> {
   // null = 초기값(첫 번째 그룹 자동 선택), _kPersonal = 개인, 그 외 = 그룹 ID
   String? _selectedGroupId;
   late HouseholdWidgetViewMode _viewMode;
@@ -63,7 +65,9 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
   Future<void> _saveFilter() async {
     final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
     if (current == null) return;
-    await ref.read(dashboardWidgetSettingsProvider.notifier).save(
+    await ref
+        .read(dashboardWidgetSettingsProvider.notifier)
+        .save(
           current.copyWith(
             householdSelectedGroupId: _selectedGroupId,
             householdViewMode: _viewMode,
@@ -123,7 +127,8 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
           ),
         ),
       ),
-      error: (e, _) => _buildCard(context, groups, _emptyStats(), hasActiveFilter),
+      error: (e, _) =>
+          _buildCard(context, groups, _emptyStats(), hasActiveFilter),
       data: (stats) => _buildCard(context, groups, stats, hasActiveFilter),
     );
   }
@@ -153,7 +158,9 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
     final title = l10n.widgetSettings_householdSummary;
 
     final hasBudget = stats.totalBudget > 0;
-    final budgetRatio = hasBudget ? (stats.totalExpense / stats.totalBudget).clamp(0.0, 1.0) : null;
+    final budgetRatio = hasBudget
+        ? (stats.totalExpense / stats.totalBudget).clamp(0.0, 1.0)
+        : null;
     final isOverBudget = hasBudget && stats.totalExpense > stats.totalBudget;
     final remaining = stats.totalBudget - stats.totalExpense;
 
@@ -185,7 +192,8 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
               // 대시보드에서 선택한 그룹을 통계 화면에 동기화
               final effectiveGroupId = _isPersonal
                   ? null
-                  : (_selectedGroupId ?? (groups.isNotEmpty ? groups.first.id : null));
+                  : (_selectedGroupId ??
+                        (groups.isNotEmpty ? groups.first.id : null));
               ref.read(householdSelectedGroupIdProvider.notifier).state =
                   effectiveGroupId;
               context.push(AppRoutes.householdStatistics);
@@ -209,12 +217,13 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                       Text(
                         l10n.householdWidget_incomeLabel(monthLabel),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       Text(
                         '+${stats.totalIncome.toCurrency()}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             ),
@@ -229,12 +238,13 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                       Text(
                         l10n.householdWidget_expenseLabel(monthLabel),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       Text(
                         stats.totalExpense.toCurrency(),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: AppColors.error,
                             ),
@@ -249,14 +259,17 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                       Text(
                         l10n.householdWidget_balance,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       Text(
                         stats.balance.toCurrency(),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: stats.balance >= 0 ? Colors.green : AppColors.error,
+                              color: stats.balance >= 0
+                                  ? Colors.green
+                                  : AppColors.error,
                             ),
                       ),
                     ],
@@ -265,43 +278,47 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
               ],
             ),
           ] else ...[
-          // 입금 없을 때: 기존 지출 헤더
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.householdWidget_expenseLabel(monthLabel),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            // 입금 없을 때: 기존 지출 헤더
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.householdWidget_expenseLabel(monthLabel),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                if (hasBudget)
+                  Text(
+                    l10n.householdWidget_budget(stats.totalBudget.toCurrency()),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            Text(
+              stats.totalExpense.toCurrency(),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: isOverBudget ? AppColors.error : AppColors.primary,
               ),
-              if (hasBudget)
-                Text(
-                  l10n.householdWidget_budget(stats.totalBudget.toCurrency()),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-            ],
-          ),
-          const SizedBox(height: AppSizes.spaceS),
-          Text(
-            stats.totalExpense.toCurrency(),
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isOverBudget ? AppColors.error : AppColors.primary,
-                ),
-          ),
+            ),
           ],
           // budget 모드: 전체 예산 소진율 바 (입금 없을 때만)
-          if (!stats.hasIncome && _viewMode == HouseholdWidgetViewMode.budget && hasBudget) ...[
+          if (!stats.hasIncome &&
+              _viewMode == HouseholdWidgetViewMode.budget &&
+              hasBudget) ...[
             const SizedBox(height: AppSizes.spaceS),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: budgetRatio,
                 minHeight: 8,
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   isOverBudget ? AppColors.error : AppColors.success,
                 ),
@@ -314,18 +331,22 @@ class _HouseholdSummaryWidgetState extends ConsumerState<HouseholdSummaryWidget>
                 Text(
                   l10n.householdWidget_budgetUsed((budgetRatio! * 100).toInt()),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: isOverBudget ? AppColors.error : AppColors.success,
-                      ),
+                    color: isOverBudget ? AppColors.error : AppColors.success,
+                  ),
                 ),
                 Text(
                   isOverBudget
-                      ? l10n.householdWidget_budgetOver((stats.totalExpense - stats.totalBudget).toCurrency())
-                      : l10n.householdWidget_budgetRemaining(remaining.toCurrency()),
+                      ? l10n.householdWidget_budgetOver(
+                          (stats.totalExpense - stats.totalBudget).toCurrency(),
+                        )
+                      : l10n.householdWidget_budgetRemaining(
+                          remaining.toCurrency(),
+                        ),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: isOverBudget
-                            ? AppColors.error
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: isOverBudget
+                        ? AppColors.error
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -358,10 +379,12 @@ class _HouseholdGroupPickerSheet extends StatefulWidget {
   final void Function(String groupId, HouseholdWidgetViewMode viewMode) onApply;
 
   @override
-  State<_HouseholdGroupPickerSheet> createState() => _HouseholdGroupPickerSheetState();
+  State<_HouseholdGroupPickerSheet> createState() =>
+      _HouseholdGroupPickerSheetState();
 }
 
-class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> {
+class _HouseholdGroupPickerSheetState
+    extends State<_HouseholdGroupPickerSheet> {
   late String _selectedGroupId;
   late HouseholdWidgetViewMode _viewMode;
 
@@ -369,7 +392,8 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
   void initState() {
     super.initState();
     // null(초기값)이면 첫 번째 그룹으로 기본 선택
-    _selectedGroupId = widget.selectedGroupId ??
+    _selectedGroupId =
+        widget.selectedGroupId ??
         (widget.groups.isNotEmpty ? widget.groups.first.id : _kPersonal);
     _viewMode = widget.viewMode;
   }
@@ -379,7 +403,9 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
     final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.of(context);
     return Padding(
-      padding: EdgeInsets.only(bottom: mq.viewInsets.bottom + mq.padding.bottom),
+      padding: EdgeInsets.only(
+        bottom: mq.viewInsets.bottom + mq.padding.bottom,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,9 +423,15 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
+              AppSizes.spaceL,
+              AppSizes.spaceM,
+              AppSizes.spaceL,
+              AppSizes.spaceS,
             ),
-            child: Text(l10n.householdWidget_filterTitle, style: Theme.of(context).textTheme.titleLarge),
+            child: Text(
+              l10n.householdWidget_filterTitle,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
           const Divider(),
           Padding(
@@ -410,13 +442,14 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
             child: Text(
               '보기 모드',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceL),
             child: SegmentedButton<HouseholdWidgetViewMode>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
                   value: HouseholdWidgetViewMode.budget,
@@ -449,17 +482,22 @@ class _HouseholdGroupPickerSheetState extends State<_HouseholdGroupPickerSheet> 
                 ),
                 if (widget.groups.isNotEmpty) const Divider(height: 1),
                 // 그룹 목록
-                ...widget.groups.map((group) => RadioListTile<String>(
-                      title: Text(group.name),
-                      value: group.id,
-                    )),
+                ...widget.groups.map(
+                  (group) => RadioListTile<String>(
+                    title: Text(group.name),
+                    value: group.id,
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(height: AppSizes.spaceS),
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceL, 0, AppSizes.spaceL, AppSizes.spaceL,
+              AppSizes.spaceL,
+              0,
+              AppSizes.spaceL,
+              AppSizes.spaceL,
             ),
             child: SizedBox(
               width: double.infinity,
@@ -480,7 +518,10 @@ class _CategoryDistribution extends StatelessWidget {
 
   final List<CategoryStatModel> categories;
 
-  static String _categoryLabel(BuildContext context, ExpenseCategory? category) {
+  static String _categoryLabel(
+    BuildContext context,
+    ExpenseCategory? category,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     switch (category) {
       case ExpenseCategory.transportation:
@@ -539,8 +580,7 @@ class _CategoryDistribution extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sorted = [...categories]
-      ..sort((a, b) => b.total.compareTo(a.total));
+    final sorted = [...categories]..sort((a, b) => b.total.compareTo(a.total));
     final top = sorted.toList();
     if (top.isEmpty || top.fold<double>(0, (s, c) => s + c.total) == 0) {
       return const SizedBox.shrink();
@@ -552,13 +592,14 @@ class _CategoryDistribution extends StatelessWidget {
         Text(
           AppLocalizations.of(context)!.householdWidget_categoryTitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: AppSizes.spaceS),
         ...top.map((cat) {
           final color = _categoryColor(cat.category);
-          final hasBudget = cat.budget != null && cat.budget! > 0 && cat.budgetRatio != null;
+          final hasBudget =
+              cat.budget != null && cat.budget! > 0 && cat.budgetRatio != null;
           final barValue = hasBudget
               ? (cat.budgetRatio! / 100.0).clamp(0.0, 1.0)
               : null;
@@ -589,16 +630,16 @@ class _CategoryDistribution extends StatelessWidget {
                     Text(
                       cat.total.toCurrency(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: isOverBudget ? AppColors.error : null,
-                          ),
+                        fontWeight: FontWeight.w600,
+                        color: isOverBudget ? AppColors.error : null,
+                      ),
                     ),
                     if (hasBudget) ...[
                       Text(
                         ' / ${cat.budget!.toCurrency()}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ],
@@ -610,21 +651,30 @@ class _CategoryDistribution extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: barValue,
                       minHeight: 6,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
                       valueColor: AlwaysStoppedAnimation<Color>(barColor),
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     isOverBudget
-                        ? AppLocalizations.of(context)!.householdWidget_categoryOver((cat.total - cat.budget!).toCurrency())
-                        : AppLocalizations.of(context)!.householdWidget_categoryUsed((barValue * 100).toInt()),
+                        ? AppLocalizations.of(
+                            context,
+                          )!.householdWidget_categoryOver(
+                            (cat.total - cat.budget!).toCurrency(),
+                          )
+                        : AppLocalizations.of(
+                            context,
+                          )!.householdWidget_categoryUsed(
+                            (barValue * 100).toInt(),
+                          ),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: isOverBudget
-                              ? AppColors.error
-                              : Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      color: isOverBudget
+                          ? AppColors.error
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ],

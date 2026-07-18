@@ -43,6 +43,7 @@ class HistoryTab extends ConsumerWidget {
             children: [
               // 월별/연도별 토글
               SegmentedButton<HistoryViewMode>(
+                showSelectedIcon: false,
                 segments: const [
                   ButtonSegment(
                     value: HistoryViewMode.monthly,
@@ -82,8 +83,8 @@ class HistoryTab extends ConsumerWidget {
                         ? _formatMonth(selectedMonth)
                         : selectedYear,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   IconButton(
                     onPressed: () => mode == HistoryViewMode.monthly
@@ -222,11 +223,17 @@ class _MonthlySummaryCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, 0),
+        AppSizes.spaceM,
+        AppSizes.spaceS,
+        AppSizes.spaceM,
+        0,
+      ),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
           child: Row(
             children: [
               _SummaryItem(
@@ -235,7 +242,11 @@ class _MonthlySummaryCard extends StatelessWidget {
                 color: Colors.green,
               ),
               const SizedBox(width: AppSizes.spaceM),
-              Container(width: 1, height: 32, color: colorScheme.outlineVariant),
+              Container(
+                width: 1,
+                height: 32,
+                color: colorScheme.outlineVariant,
+              ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
                 label: '지출',
@@ -243,7 +254,11 @@ class _MonthlySummaryCard extends StatelessWidget {
                 color: colorScheme.error,
               ),
               const SizedBox(width: AppSizes.spaceM),
-              Container(width: 1, height: 32, color: colorScheme.outlineVariant),
+              Container(
+                width: 1,
+                height: 32,
+                color: colorScheme.outlineVariant,
+              ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
                 label: '순변동',
@@ -282,11 +297,17 @@ class _YearlySummaryCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          AppSizes.spaceM, AppSizes.spaceS, AppSizes.spaceM, 0),
+        AppSizes.spaceM,
+        AppSizes.spaceS,
+        AppSizes.spaceM,
+        0,
+      ),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceS,
+          ),
           child: Row(
             children: [
               _SummaryItem(
@@ -295,7 +316,11 @@ class _YearlySummaryCard extends StatelessWidget {
                 color: Colors.green,
               ),
               const SizedBox(width: AppSizes.spaceM),
-              Container(width: 1, height: 32, color: colorScheme.outlineVariant),
+              Container(
+                width: 1,
+                height: 32,
+                color: colorScheme.outlineVariant,
+              ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
                 label: '연간 지출',
@@ -303,7 +328,11 @@ class _YearlySummaryCard extends StatelessWidget {
                 color: colorScheme.error,
               ),
               const SizedBox(width: AppSizes.spaceM),
-              Container(width: 1, height: 32, color: colorScheme.outlineVariant),
+              Container(
+                width: 1,
+                height: 32,
+                color: colorScheme.outlineVariant,
+              ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
                 label: '순변동',
@@ -319,8 +348,11 @@ class _YearlySummaryCard extends StatelessWidget {
 }
 
 class _SummaryItem extends StatelessWidget {
-  const _SummaryItem(
-      {required this.label, required this.value, required this.color});
+  const _SummaryItem({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   final String label;
   final String value;
@@ -332,15 +364,22 @@ class _SummaryItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(value,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: color, fontWeight: FontWeight.bold),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );
@@ -397,7 +436,12 @@ class _BalanceLineChart extends StatelessWidget {
 
     final spots = <FlSpot>[];
     for (int d = 1; d <= lastDay; d++) {
-      spots.add(FlSpot(d.toDouble(), (dailyBalance[d] ?? runningBalance).clamp(0, double.infinity)));
+      spots.add(
+        FlSpot(
+          d.toDouble(),
+          (dailyBalance[d] ?? runningBalance).clamp(0, double.infinity),
+        ),
+      );
     }
 
     if (spots.isEmpty) return const SizedBox.shrink();
@@ -411,15 +455,22 @@ class _BalanceLineChart extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceS),
+            AppSizes.spaceS,
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceS,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: AppSizes.spaceS),
-                child: Text('잔액 추이',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold)),
+                child: Text(
+                  '잔액 추이',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: AppSizes.spaceS),
               SizedBox(
@@ -431,9 +482,13 @@ class _BalanceLineChart extends StatelessWidget {
                     gridData: FlGridData(
                       show: true,
                       drawVerticalLine: false,
-                      horizontalInterval: maxY > 0 ? (maxY / 3).ceilToDouble() : 10,
+                      horizontalInterval: maxY > 0
+                          ? (maxY / 3).ceilToDouble()
+                          : 10,
                       getDrawingHorizontalLine: (_) => FlLine(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.5,
+                        ),
                         strokeWidth: 1,
                       ),
                     ),
@@ -446,9 +501,11 @@ class _BalanceLineChart extends StatelessWidget {
                           interval: maxY > 0 ? (maxY / 3).ceilToDouble() : 10,
                           getTitlesWidget: (v, _) => Text(
                             '${v.toInt()}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontSize: 9,
-                                color: colorScheme.onSurfaceVariant),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontSize: 9,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
                           ),
                         ),
                       ),
@@ -458,16 +515,20 @@ class _BalanceLineChart extends StatelessWidget {
                           interval: (lastDay / 4).ceilToDouble(),
                           getTitlesWidget: (v, _) => Text(
                             '${v.toInt()}일',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontSize: 9,
-                                color: colorScheme.onSurfaceVariant),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontSize: 9,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
                           ),
                         ),
                       ),
                       rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false)),
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
                       topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false)),
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
                     ),
                     lineBarsData: [
                       LineChartBarData(
@@ -482,10 +543,10 @@ class _BalanceLineChart extends StatelessWidget {
                               dailyNet.containsKey(spot.x.toInt()),
                           getDotPainter: (_, spot, barData, index) =>
                               FlDotCirclePainter(
-                            radius: 3,
-                            color: colorScheme.primary,
-                            strokeWidth: 0,
-                          ),
+                                radius: 3,
+                                color: colorScheme.primary,
+                                strokeWidth: 0,
+                              ),
                         ),
                         belowBarData: BarAreaData(
                           show: true,
@@ -495,16 +556,19 @@ class _BalanceLineChart extends StatelessWidget {
                     ],
                     lineTouchData: LineTouchData(
                       touchTooltipData: LineTouchTooltipData(
-                        getTooltipColor: (_) => colorScheme.surfaceContainerHighest,
+                        getTooltipColor: (_) =>
+                            colorScheme.surfaceContainerHighest,
                         getTooltipItems: (spots) => spots
-                            .map((s) => LineTooltipItem(
-                                  '${s.y.toInt()}P',
-                                  TextStyle(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ))
+                            .map(
+                              (s) => LineTooltipItem(
+                                '${s.y.toInt()}P',
+                                TextStyle(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
@@ -522,10 +586,7 @@ class _BalanceLineChart extends StatelessWidget {
 // ── 연간 월별 수입/지출 막대 차트 ────────────────────────────────────────────
 
 class _YearlyBarChart extends StatefulWidget {
-  const _YearlyBarChart({
-    required this.transactions,
-    required this.year,
-  });
+  const _YearlyBarChart({required this.transactions, required this.year});
 
   final List<ChildcareTransaction> transactions;
   final String year;
@@ -568,7 +629,9 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
         barRods: [
           BarChartRodData(
             toY: value,
-            color: value > 0 ? color : colorScheme.outlineVariant.withValues(alpha: 0.3),
+            color: value > 0
+                ? color
+                : colorScheme.outlineVariant.withValues(alpha: 0.3),
             width: 14,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
           ),
@@ -581,7 +644,11 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceS, AppSizes.spaceM, AppSizes.spaceM, AppSizes.spaceS),
+            AppSizes.spaceS,
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceS,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -589,12 +656,16 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: AppSizes.spaceS),
-                    child: Text('월별 현황',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.bold)),
+                    child: Text(
+                      '월별 현황',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   const Spacer(),
                   SegmentedButton<bool>(
+                    showSelectedIcon: false,
                     segments: const [
                       ButtonSegment(value: true, label: Text('수입')),
                       ButtonSegment(value: false, label: Text('지출')),
@@ -619,9 +690,13 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                     gridData: FlGridData(
                       show: true,
                       drawVerticalLine: false,
-                      horizontalInterval: maxVal > 0 ? (maxVal / 3).ceilToDouble() : 10,
+                      horizontalInterval: maxVal > 0
+                          ? (maxVal / 3).ceilToDouble()
+                          : 10,
                       getDrawingHorizontalLine: (_) => FlLine(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.5,
+                        ),
                         strokeWidth: 1,
                       ),
                     ),
@@ -631,12 +706,16 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                         sideTitles: SideTitles(
                           showTitles: true,
                           reservedSize: 40,
-                          interval: maxVal > 0 ? (maxVal / 3).ceilToDouble() : 10,
+                          interval: maxVal > 0
+                              ? (maxVal / 3).ceilToDouble()
+                              : 10,
                           getTitlesWidget: (v, _) => Text(
                             '${v.toInt()}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontSize: 9,
-                                color: colorScheme.onSurfaceVariant),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontSize: 9,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
                           ),
                         ),
                       ),
@@ -645,29 +724,34 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                           showTitles: true,
                           getTitlesWidget: (v, _) => Text(
                             '${v.toInt()}월',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontSize: 9,
-                                color: colorScheme.onSurfaceVariant),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontSize: 9,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
                           ),
                         ),
                       ),
                       rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false)),
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
                       topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false)),
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
                     ),
                     barTouchData: BarTouchData(
                       touchTooltipData: BarTouchTooltipData(
-                        getTooltipColor: (_) => colorScheme.surfaceContainerHighest,
+                        getTooltipColor: (_) =>
+                            colorScheme.surfaceContainerHighest,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) =>
                             BarTooltipItem(
-                          '${rod.toY.toInt()}P',
-                          TextStyle(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
+                              '${rod.toY.toInt()}P',
+                              TextStyle(
+                                color: colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
                       ),
                     ),
                   ),
@@ -742,7 +826,8 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
               child: Text(
                 _showIncome ? '이번 달 수입 내역이 없습니다' : '이번 달 지출 내역이 없습니다',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant),
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ),
@@ -760,7 +845,10 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
         radius: 40,
         title: pct >= 8 ? '${pct.toStringAsFixed(0)}%' : '',
         titleStyle: const TextStyle(
-            fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       );
     }).toList();
 
@@ -774,11 +862,15 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
             children: [
               Row(
                 children: [
-                  Text('유형별 분포',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.bold)),
+                  Text(
+                    '유형별 분포',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const Spacer(),
                   SegmentedButton<bool>(
+                    showSelectedIcon: false,
                     segments: const [
                       ButtonSegment(value: true, label: Text('수입')),
                       ButtonSegment(value: false, label: Text('지출')),
@@ -812,8 +904,7 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: byType.entries.map((e) {
-                        final color =
-                            _typeColors[e.key] ?? colorScheme.primary;
+                        final color = _typeColors[e.key] ?? colorScheme.primary;
                         final label = _typeLabels[e.key] ?? '기타';
                         final pct = e.value / total * 100;
                         return Padding(
@@ -824,21 +915,21 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
                                 width: 8,
                                 height: 8,
                                 decoration: BoxDecoration(
-                                    color: color, shape: BoxShape.circle),
+                                  color: color,
+                                  shape: BoxShape.circle,
+                                ),
                               ),
                               const SizedBox(width: 6),
                               Expanded(
-                                child: Text(label,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall,
-                                    overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  label,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               Text(
                                 '${e.value.toInt()}P',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
+                                style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(width: 4),
@@ -846,11 +937,10 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
                                 width: 32,
                                 child: Text(
                                   '${pct.toStringAsFixed(0)}%',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
+                                  style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(
-                                          color: colorScheme.onSurfaceVariant),
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
                                   textAlign: TextAlign.end,
                                 ),
                               ),

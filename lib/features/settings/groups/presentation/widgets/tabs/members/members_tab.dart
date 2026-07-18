@@ -65,6 +65,7 @@ class _MembersTabState extends ConsumerState<MembersTab> {
               vertical: AppSizes.spaceS,
             ),
             child: SegmentedButton<bool>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment<bool>(
                   value: false,
@@ -98,10 +99,8 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   Widget _buildMembersList(String? currentUserId) {
     return widget.membersAsync.when(
       loading: () => const LoadingView(),
-      error: (error, stack) => ErrorView(
-        message: error.toString(),
-        onRetry: widget.onRetry,
-      ),
+      error: (error, stack) =>
+          ErrorView(message: error.toString(), onRetry: widget.onRetry),
       data: (members) {
         if (members.isEmpty) {
           return const EmptyView(
@@ -151,10 +150,8 @@ class _MembersTabState extends ConsumerState<MembersTab> {
 
     return widget.joinRequestsAsync.when(
       loading: () => const LoadingView(),
-      error: (error, stack) => ErrorView(
-        message: error.toString(),
-        onRetry: widget.onRetry,
-      ),
+      error: (error, stack) =>
+          ErrorView(message: error.toString(), onRetry: widget.onRetry),
       data: (requests) {
         if (requests.isEmpty) {
           return EmptyView(

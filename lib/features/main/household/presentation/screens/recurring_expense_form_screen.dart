@@ -433,6 +433,7 @@ class _TypeToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedButton<TransactionType>(
+      showSelectedIcon: false,
       segments: [
         ButtonSegment(
           value: TransactionType.expense,

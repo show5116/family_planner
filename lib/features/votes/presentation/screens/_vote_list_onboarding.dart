@@ -19,9 +19,27 @@ final _demoVotes = [
     creatorName: '엄마',
     createdAt: _demoNow.subtract(const Duration(hours: 5)),
     options: [
-      const VoteOptionModel(id: 'o1', label: '한강공원', count: 2, isSelected: true, voters: ['엄마', '아빠']),
-      const VoteOptionModel(id: 'o2', label: '놀이동산', count: 1, isSelected: false, voters: ['민준']),
-      const VoteOptionModel(id: 'o3', label: '동물원', count: 0, isSelected: false, voters: []),
+      const VoteOptionModel(
+        id: 'o1',
+        label: '한강공원',
+        count: 2,
+        isSelected: true,
+        voters: ['엄마', '아빠'],
+      ),
+      const VoteOptionModel(
+        id: 'o2',
+        label: '놀이동산',
+        count: 1,
+        isSelected: false,
+        voters: ['민준'],
+      ),
+      const VoteOptionModel(
+        id: 'o3',
+        label: '동물원',
+        count: 0,
+        isSelected: false,
+        voters: [],
+      ),
     ],
   ),
   VoteModel(
@@ -38,17 +56,36 @@ final _demoVotes = [
     creatorName: '아빠',
     createdAt: _demoNow.subtract(const Duration(days: 1)),
     options: [
-      const VoteOptionModel(id: 'o4', label: '치킨', count: 3, isSelected: false, voters: []),
-      const VoteOptionModel(id: 'o5', label: '피자', count: 2, isSelected: false, voters: []),
-      const VoteOptionModel(id: 'o6', label: '삼겹살', count: 1, isSelected: false, voters: []),
+      const VoteOptionModel(
+        id: 'o4',
+        label: '치킨',
+        count: 3,
+        isSelected: false,
+        voters: [],
+      ),
+      const VoteOptionModel(
+        id: 'o5',
+        label: '피자',
+        count: 2,
+        isSelected: false,
+        voters: [],
+      ),
+      const VoteOptionModel(
+        id: 'o6',
+        label: '삼겹살',
+        count: 1,
+        isSelected: false,
+        voters: [],
+      ),
     ],
   ),
 ];
 
 extension _VoteListOnboarding on _VoteListScreenState {
   Future<void> _maybeStartOnboarding() async {
-    final completed =
-        await OnboardingService.isCoachMarkCompleted(CoachMarkKeys.votes);
+    final completed = await OnboardingService.isCoachMarkCompleted(
+      CoachMarkKeys.votes,
+    );
     if (!mounted || completed) return;
     setState(() => _isDemo = true); // ignore: invalid_use_of_protected_member
     _scheduleCoachMark();
@@ -74,6 +111,7 @@ extension _VoteListOnboarding on _VoteListScreenState {
             if (mounted) _showCoachMark();
           }
         }
+
         animation.addStatusListener(listener);
       }
     });
@@ -93,7 +131,8 @@ extension _VoteListOnboarding on _VoteListScreenState {
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '그룹 선택',
-              description: '투표는 그룹 단위로 진행돼요.\n그룹을 선택하면 해당 그룹의\n투표 목록을 확인할 수 있어요.',
+              description:
+                  '투표는 그룹 단위로 진행돼요.\n그룹을 선택하면 해당 그룹의\n투표 목록을 확인할 수 있어요.',
               icon: Icons.group_outlined,
               color: Colors.teal,
             ),
@@ -127,7 +166,8 @@ extension _VoteListOnboarding on _VoteListScreenState {
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '투표 카드',
-              description: '카드를 탭하면 선택지에 투표할 수 있어요.\n그룹 멤버 모두가 참여할 수 있고\n결과는 실시간으로 확인할 수 있어요.',
+              description:
+                  '카드를 탭하면 선택지에 투표할 수 있어요.\n그룹 멤버 모두가 참여할 수 있고\n결과는 실시간으로 확인할 수 있어요.',
               icon: Icons.how_to_vote_outlined,
               color: Colors.orange,
             ),
@@ -144,7 +184,8 @@ extension _VoteListOnboarding on _VoteListScreenState {
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
               title: '새 투표 만들기',
-              description: '+ 버튼을 눌러 새 투표를 만들어보세요.\n단일/복수 선택, 익명 투표,\n마감 시각 설정도 지원해요.',
+              description:
+                  '+ 버튼을 눌러 새 투표를 만들어보세요.\n단일/복수 선택, 익명 투표,\n마감 시각 설정도 지원해요.',
               icon: Icons.add_circle_outline,
               color: Colors.purple,
             ),
@@ -165,11 +206,17 @@ extension _VoteListOnboarding on _VoteListScreenState {
       skipWidget: _skipWidget,
       onFinish: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.votes);
-        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
+        if (mounted) {
+          // ignore: invalid_use_of_protected_member
+          setState(() => _isDemo = false);
+        }
       },
       onSkip: () {
         OnboardingService.completeCoachMark(CoachMarkKeys.votes);
-        if (mounted) setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
+        if (mounted) {
+          // ignore: invalid_use_of_protected_member
+          setState(() => _isDemo = false);
+        }
         return true;
       },
       paddingFocus: 8,
@@ -179,18 +226,21 @@ extension _VoteListOnboarding on _VoteListScreenState {
   }
 
   Widget get _skipWidget => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white30),
-        ),
-        child: const Text(
-          '건너뛰기',
-          style: TextStyle(
-              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: 0.15),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.white30),
+    ),
+    child: const Text(
+      '건너뛰기',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+  );
 }
 
 // ─── 온보딩 전용 뷰 ───────────────────────────────────────────────────────────
@@ -216,17 +266,23 @@ class _DemoVoteBody extends StatelessWidget {
           child: Padding(
             key: groupBarKey,
             padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+              horizontal: AppSizes.spaceM,
+              vertical: AppSizes.spaceS,
+            ),
             child: Row(
               children: [
-                Icon(Icons.group_outlined,
-                    size: 18, color: colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.group_outlined,
+                  size: 18,
+                  color: colorScheme.onSurfaceVariant,
+                ),
                 const SizedBox(width: AppSizes.spaceS),
-                Text('우리 가족',
-                    style: Theme.of(context).textTheme.bodyMedium),
+                Text('우리 가족', style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 4),
-                Icon(Icons.arrow_drop_down,
-                    color: colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ],
             ),
           ),
@@ -236,8 +292,11 @@ class _DemoVoteBody extends StatelessWidget {
           child: Padding(
             key: filterKey,
             padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+              horizontal: AppSizes.spaceM,
+              vertical: AppSizes.spaceS,
+            ),
             child: SegmentedButton<int>(
+              showSelectedIcon: false,
               segments: const [
                 ButtonSegment(value: 0, label: Text('전체')),
                 ButtonSegment(value: 1, label: Text('진행중')),
@@ -245,8 +304,7 @@ class _DemoVoteBody extends StatelessWidget {
               ],
               selected: const {0},
               onSelectionChanged: (_) {},
-              style: const ButtonStyle(
-                  visualDensity: VisualDensity.compact),
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
             ),
           ),
         ),
@@ -255,8 +313,7 @@ class _DemoVoteBody extends StatelessWidget {
           child: ListView.separated(
             padding: const EdgeInsets.all(AppSizes.spaceM),
             itemCount: _demoVotes.length,
-            separatorBuilder: (_, _) =>
-                const SizedBox(height: AppSizes.spaceM),
+            separatorBuilder: (_, _) => const SizedBox(height: AppSizes.spaceM),
             itemBuilder: (_, index) => _VoteCard(
               key: index == 0 ? firstCardKey : null,
               vote: _demoVotes[index],

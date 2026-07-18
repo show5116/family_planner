@@ -39,6 +39,7 @@ class RoutineRateCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SegmentedButton<RoutineRatePeriod>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
                   value: RoutineRatePeriod.week,
@@ -86,16 +87,16 @@ class RoutineRateCard extends StatelessWidget {
                       children: [
                         Text(
                           '${rate.achievementRate}%',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: gaugeColor,
                               ),
                         ),
                         Text(
                           l10n.routine_rate_achievement,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -115,8 +116,8 @@ class RoutineRateCard extends StatelessWidget {
               child: Text(
                 '${rate.from} ~ ${rate.to}',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],

@@ -26,10 +26,20 @@ part '_todo_onboarding.dart';
 enum TodoViewType { kanban, list }
 
 /// 현재 뷰 타입 Provider
-final todoViewTypeProvider = StateProvider<TodoViewType>((ref) => TodoViewType.kanban);
+final todoViewTypeProvider = StateProvider<TodoViewType>(
+  (ref) => TodoViewType.kanban,
+);
 
 /// 모아 보기 섹션 타입
-enum _OverviewSection { overdue, today, tomorrow, thisWeek, nextWeek, later, noDueDate }
+enum _OverviewSection {
+  overdue,
+  today,
+  tomorrow,
+  thisWeek,
+  nextWeek,
+  later,
+  noDueDate,
+}
 
 /// 할일 관리 탭
 class TodoTab extends ConsumerStatefulWidget {
@@ -50,7 +60,9 @@ class _TodoTabState extends ConsumerState<TodoTab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeStartOnboarding());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _maybeStartOnboarding(),
+    );
   }
 
   @override
@@ -70,7 +82,8 @@ class _TodoTabState extends ConsumerState<TodoTab> {
 
     final dateTasksAsync = ref.watch(todoSelectedDateTasksProvider);
     final overviewAsync = ref.watch(todoOverviewTasksProvider);
-    final isLoading = (dateTasksAsync.isLoading && dateTasksAsync.hasValue) ||
+    final isLoading =
+        (dateTasksAsync.isLoading && dateTasksAsync.hasValue) ||
         (overviewAsync.isLoading && overviewAsync.hasValue);
 
     // 모바일에서는 항상 리스트 뷰 사용
@@ -104,10 +117,11 @@ class _TodoTabState extends ConsumerState<TodoTab> {
                       ? l10n.todo_viewList
                       : l10n.todo_viewKanban,
                   onPressed: () {
-                    ref.read(todoViewTypeProvider.notifier).state =
-                        viewType == TodoViewType.kanban
-                            ? TodoViewType.list
-                            : TodoViewType.kanban;
+                    ref
+                        .read(todoViewTypeProvider.notifier)
+                        .state = viewType == TodoViewType.kanban
+                        ? TodoViewType.list
+                        : TodoViewType.kanban;
                   },
                 ),
               if (!isDemo)
@@ -184,7 +198,8 @@ class _TodoTabState extends ConsumerState<TodoTab> {
               ],
             ],
           ),
-          floatingActionButton: (isDemo || ref.watch(todoSearchQueryProvider) == null)
+          floatingActionButton:
+              (isDemo || ref.watch(todoSearchQueryProvider) == null)
               ? FloatingActionButton(
                   key: _fabKey,
                   heroTag: 'todo_fab',
@@ -204,10 +219,7 @@ class _ViewModeToggle extends ConsumerWidget {
   final TodoViewMode viewMode;
   final AppLocalizations l10n;
 
-  const _ViewModeToggle({
-    required this.viewMode,
-    required this.l10n,
-  });
+  const _ViewModeToggle({required this.viewMode, required this.l10n});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -220,6 +232,7 @@ class _ViewModeToggle extends ConsumerWidget {
         children: [
           Expanded(
             child: SegmentedButton<TodoViewMode>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
                   value: TodoViewMode.byDate,
@@ -253,10 +266,7 @@ class _DateViewContent extends ConsumerWidget {
   final TodoViewType effectiveViewType;
   final AppLocalizations l10n;
 
-  const _DateViewContent({
-    required this.effectiveViewType,
-    required this.l10n,
-  });
+  const _DateViewContent({required this.effectiveViewType, required this.l10n});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -270,34 +280,34 @@ class _DateViewContent extends ConsumerWidget {
           child: isRefreshing
               ? const Center(child: CircularProgressIndicator())
               : RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(todoTasksProvider(page: 1));
-            },
-            child: selectedDateTasksAsync.when(
-              data: (tasks) {
-                if (tasks.isEmpty) {
-                  return _EmptyState(l10n: l10n);
-                }
-                return effectiveViewType == TodoViewType.kanban
-                    ? _KanbanView(tasks: tasks)
-                    : _ListView(tasks: tasks);
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => _ErrorState(
-                error: error.toString(),
-                onRetry: () {
-                  ref.invalidate(todoTasksProvider(page: 1));
-                },
-                l10n: l10n,
-              ),
-            ),
-          ),
+                  onRefresh: () async {
+                    ref.invalidate(todoTasksProvider(page: 1));
+                  },
+                  child: selectedDateTasksAsync.when(
+                    data: (tasks) {
+                      if (tasks.isEmpty) {
+                        return _EmptyState(l10n: l10n);
+                      }
+                      return effectiveViewType == TodoViewType.kanban
+                          ? _KanbanView(tasks: tasks)
+                          : _ListView(tasks: tasks);
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => _ErrorState(
+                      error: error.toString(),
+                      onRetry: () {
+                        ref.invalidate(todoTasksProvider(page: 1));
+                      },
+                      l10n: l10n,
+                    ),
+                  ),
+                ),
         ),
       ],
     );
   }
 }
-
 
 /// 모아 보기 헤더 (완료 포함 체크박스)
 class _OverviewHeader extends ConsumerWidget {
@@ -314,19 +324,22 @@ class _OverviewHeader extends ConsumerWidget {
         horizontal: AppSizes.spaceM,
         vertical: AppSizes.spaceS,
       ),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Row(
         children: [
           Text(
             l10n.todo_viewOverview,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           InkWell(
             onTap: () {
-              ref.read(showCompletedTodosProvider.notifier).state = !showCompleted;
+              ref.read(showCompletedTodosProvider.notifier).state =
+                  !showCompleted;
             },
             borderRadius: BorderRadius.circular(4),
             child: Row(
@@ -338,7 +351,8 @@ class _OverviewHeader extends ConsumerWidget {
                   child: Checkbox(
                     value: showCompleted,
                     onChanged: (value) {
-                      ref.read(showCompletedTodosProvider.notifier).state = value ?? false;
+                      ref.read(showCompletedTodosProvider.notifier).state =
+                          value ?? false;
                     },
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -433,7 +447,11 @@ class _FilterSortBar extends ConsumerWidget {
     );
   }
 
-  void _showStatusFilterMenu(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  void _showStatusFilterMenu(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     final current = ref.read(todoFilterStatusProvider);
     showModalBottomSheet(
       context: context,
@@ -450,25 +468,31 @@ class _FilterSortBar extends ConsumerWidget {
                 Navigator.pop(context);
               },
             ),
-            ...TaskStatus.values.map((status) => ListTile(
-              leading: Icon(
-                _getStatusIconData(status),
-                color: _getStatusColorValue(status),
+            ...TaskStatus.values.map(
+              (status) => ListTile(
+                leading: Icon(
+                  _getStatusIconData(status),
+                  color: _getStatusColorValue(status),
+                ),
+                title: Text(_getStatusLabel(l10n, status)),
+                selected: current == status,
+                onTap: () {
+                  ref.read(todoFilterStatusProvider.notifier).state = status;
+                  Navigator.pop(context);
+                },
               ),
-              title: Text(_getStatusLabel(l10n, status)),
-              selected: current == status,
-              onTap: () {
-                ref.read(todoFilterStatusProvider.notifier).state = status;
-                Navigator.pop(context);
-              },
-            )),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _showPriorityFilterMenu(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  void _showPriorityFilterMenu(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     final current = ref.read(todoFilterPriorityProvider);
     showModalBottomSheet(
       context: context,
@@ -485,40 +509,48 @@ class _FilterSortBar extends ConsumerWidget {
                 Navigator.pop(context);
               },
             ),
-            ...TaskPriority.values.map((priority) => ListTile(
-              leading: Icon(
-                Icons.flag,
-                color: _getPriorityColor(priority),
+            ...TaskPriority.values.map(
+              (priority) => ListTile(
+                leading: Icon(Icons.flag, color: _getPriorityColor(priority)),
+                title: Text(_getPriorityLabel(l10n, priority)),
+                selected: current == priority,
+                onTap: () {
+                  ref.read(todoFilterPriorityProvider.notifier).state =
+                      priority;
+                  Navigator.pop(context);
+                },
               ),
-              title: Text(_getPriorityLabel(l10n, priority)),
-              selected: current == priority,
-              onTap: () {
-                ref.read(todoFilterPriorityProvider.notifier).state = priority;
-                Navigator.pop(context);
-              },
-            )),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _showSortMenu(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  void _showSortMenu(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     final current = ref.read(todoSortByProvider);
     showModalBottomSheet(
       context: context,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: TodoSortBy.values.map((sort) => ListTile(
-            leading: Icon(_getSortIcon(sort)),
-            title: Text(_getSortLabel(l10n, sort)),
-            selected: current == sort,
-            onTap: () {
-              ref.read(todoSortByProvider.notifier).state = sort;
-              Navigator.pop(context);
-            },
-          )).toList(),
+          children: TodoSortBy.values
+              .map(
+                (sort) => ListTile(
+                  leading: Icon(_getSortIcon(sort)),
+                  title: Text(_getSortLabel(l10n, sort)),
+                  selected: current == sort,
+                  onTap: () {
+                    ref.read(todoSortByProvider.notifier).state = sort;
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+              .toList(),
         ),
       ),
     );
@@ -526,70 +558,104 @@ class _FilterSortBar extends ConsumerWidget {
 
   String _getStatusLabel(AppLocalizations l10n, TaskStatus status) {
     switch (status) {
-      case TaskStatus.pending: return l10n.todo_statusPending;
-      case TaskStatus.inProgress: return l10n.todo_statusInProgress;
-      case TaskStatus.completed: return l10n.todo_statusCompleted;
-      case TaskStatus.hold: return l10n.todo_statusHold;
-      case TaskStatus.drop: return l10n.todo_statusDrop;
-      case TaskStatus.failed: return l10n.todo_statusFailed;
+      case TaskStatus.pending:
+        return l10n.todo_statusPending;
+      case TaskStatus.inProgress:
+        return l10n.todo_statusInProgress;
+      case TaskStatus.completed:
+        return l10n.todo_statusCompleted;
+      case TaskStatus.hold:
+        return l10n.todo_statusHold;
+      case TaskStatus.drop:
+        return l10n.todo_statusDrop;
+      case TaskStatus.failed:
+        return l10n.todo_statusFailed;
     }
   }
 
   String _getPriorityLabel(AppLocalizations l10n, TaskPriority priority) {
     switch (priority) {
-      case TaskPriority.low: return l10n.todo_priorityLow;
-      case TaskPriority.medium: return l10n.todo_priorityMedium;
-      case TaskPriority.high: return l10n.todo_priorityHigh;
-      case TaskPriority.urgent: return l10n.todo_priorityUrgent;
+      case TaskPriority.low:
+        return l10n.todo_priorityLow;
+      case TaskPriority.medium:
+        return l10n.todo_priorityMedium;
+      case TaskPriority.high:
+        return l10n.todo_priorityHigh;
+      case TaskPriority.urgent:
+        return l10n.todo_priorityUrgent;
     }
   }
 
   Color _getPriorityColor(TaskPriority priority) {
     switch (priority) {
-      case TaskPriority.low: return AppColors.textSecondary;
-      case TaskPriority.medium: return AppColors.primary;
-      case TaskPriority.high: return AppColors.warning;
-      case TaskPriority.urgent: return AppColors.error;
+      case TaskPriority.low:
+        return AppColors.textSecondary;
+      case TaskPriority.medium:
+        return AppColors.primary;
+      case TaskPriority.high:
+        return AppColors.warning;
+      case TaskPriority.urgent:
+        return AppColors.error;
     }
   }
 
   String _getSortLabel(AppLocalizations l10n, TodoSortBy sort) {
     switch (sort) {
-      case TodoSortBy.status: return l10n.todo_sortByStatus;
-      case TodoSortBy.priority: return l10n.todo_sortByPriority;
-      case TodoSortBy.dueDate: return l10n.todo_sortByDueDate;
-      case TodoSortBy.createdAt: return l10n.todo_sortByCreatedAt;
+      case TodoSortBy.status:
+        return l10n.todo_sortByStatus;
+      case TodoSortBy.priority:
+        return l10n.todo_sortByPriority;
+      case TodoSortBy.dueDate:
+        return l10n.todo_sortByDueDate;
+      case TodoSortBy.createdAt:
+        return l10n.todo_sortByCreatedAt;
     }
   }
 
   IconData _getSortIcon(TodoSortBy sort) {
     switch (sort) {
-      case TodoSortBy.status: return Icons.flag_outlined;
-      case TodoSortBy.priority: return Icons.priority_high;
-      case TodoSortBy.dueDate: return Icons.event;
-      case TodoSortBy.createdAt: return Icons.access_time;
+      case TodoSortBy.status:
+        return Icons.flag_outlined;
+      case TodoSortBy.priority:
+        return Icons.priority_high;
+      case TodoSortBy.dueDate:
+        return Icons.event;
+      case TodoSortBy.createdAt:
+        return Icons.access_time;
     }
   }
 
   IconData _getStatusIconData(TaskStatus status) {
     switch (status) {
-      case TaskStatus.pending: return Icons.radio_button_unchecked;
-      case TaskStatus.inProgress: return Icons.play_circle_outline;
-      case TaskStatus.completed: return Icons.check_circle;
-      case TaskStatus.hold: return Icons.pause_circle_outline;
-      case TaskStatus.drop: return Icons.remove_circle_outline;
-      case TaskStatus.failed: return Icons.error_outline;
+      case TaskStatus.pending:
+        return Icons.radio_button_unchecked;
+      case TaskStatus.inProgress:
+        return Icons.play_circle_outline;
+      case TaskStatus.completed:
+        return Icons.check_circle;
+      case TaskStatus.hold:
+        return Icons.pause_circle_outline;
+      case TaskStatus.drop:
+        return Icons.remove_circle_outline;
+      case TaskStatus.failed:
+        return Icons.error_outline;
     }
   }
 
   Color _getStatusColorValue(TaskStatus status) {
     switch (status) {
-      case TaskStatus.pending: return AppColors.textSecondary;
-      case TaskStatus.inProgress: return AppColors.primary;
-      case TaskStatus.completed: return AppColors.success;
-      case TaskStatus.hold: return AppColors.warning;
-      case TaskStatus.drop: return AppColors.textSecondary;
-      case TaskStatus.failed: return AppColors.error;
+      case TaskStatus.pending:
+        return AppColors.textSecondary;
+      case TaskStatus.inProgress:
+        return AppColors.primary;
+      case TaskStatus.completed:
+        return AppColors.success;
+      case TaskStatus.hold:
+        return AppColors.warning;
+      case TaskStatus.drop:
+        return AppColors.textSecondary;
+      case TaskStatus.failed:
+        return AppColors.error;
     }
   }
 }
@@ -611,11 +677,7 @@ class _FilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionChip(
-      avatar: Icon(
-        icon,
-        size: 16,
-        color: isActive ? AppColors.primary : null,
-      ),
+      avatar: Icon(icon, size: 16, color: isActive ? AppColors.primary : null),
       label: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -624,9 +686,7 @@ class _FilterChip extends StatelessWidget {
         ),
       ),
       visualDensity: VisualDensity.compact,
-      side: isActive
-          ? const BorderSide(color: AppColors.primary)
-          : null,
+      side: isActive ? const BorderSide(color: AppColors.primary) : null,
       onPressed: onTap,
     );
   }
@@ -688,7 +748,11 @@ class _OverviewListView extends ConsumerWidget {
               continue;
             }
 
-            final normalizedDue = DateTime(dueDate.year, dueDate.month, dueDate.day);
+            final normalizedDue = DateTime(
+              dueDate.year,
+              dueDate.month,
+              dueDate.day,
+            );
 
             if (normalizedDue.isBefore(today)) {
               sections[_OverviewSection.overdue]!.add(task);
@@ -717,7 +781,10 @@ class _OverviewListView extends ConsumerWidget {
 
           return ListView.builder(
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            itemCount: activeSections.fold<int>(0, (sum, e) => sum + 1 + e.value.length),
+            itemCount: activeSections.fold<int>(
+              0,
+              (sum, e) => sum + 1 + e.value.length,
+            ),
             itemBuilder: (context, index) {
               // 섹션과 아이템 인덱스 계산
               int currentIndex = 0;
@@ -747,17 +814,19 @@ class _OverviewListView extends ConsumerWidget {
                     child: TodoListItem(
                       task: task,
                       onTap: () {
-                        context.push('/todo/detail', extra: {
-                          'taskId': task.id,
-                          'task': task,
-                        });
+                        context.push(
+                          '/todo/detail',
+                          extra: {'taskId': task.id, 'task': task},
+                        );
                       },
                       onStatusChange: (newStatus) {
-                        ref.read(taskManagementProvider.notifier).updateStatus(
-                          task.id,
-                          newStatus,
-                          task.scheduledAt ?? task.dueAt ?? DateTime.now(),
-                        );
+                        ref
+                            .read(taskManagementProvider.notifier)
+                            .updateStatus(
+                              task.id,
+                              newStatus,
+                              task.scheduledAt ?? task.dueAt ?? DateTime.now(),
+                            );
                         ref.invalidate(todoOverviewTasksProvider);
                       },
                     ),
@@ -857,19 +926,39 @@ class _OverviewSectionHeader extends StatelessWidget {
   (String, IconData, Color) _getSectionInfo() {
     switch (section) {
       case _OverviewSection.overdue:
-        return (l10n.todo_overviewOverdue, Icons.warning_amber, AppColors.error);
+        return (
+          l10n.todo_overviewOverdue,
+          Icons.warning_amber,
+          AppColors.error,
+        );
       case _OverviewSection.today:
         return (l10n.todo_overviewToday, Icons.today, AppColors.primary);
       case _OverviewSection.tomorrow:
         return (l10n.todo_overviewTomorrow, Icons.event, AppColors.secondary);
       case _OverviewSection.thisWeek:
-        return (l10n.todo_overviewThisWeek, Icons.date_range, AppColors.primary);
+        return (
+          l10n.todo_overviewThisWeek,
+          Icons.date_range,
+          AppColors.primary,
+        );
       case _OverviewSection.nextWeek:
-        return (l10n.todo_overviewNextWeek, Icons.calendar_month, AppColors.textSecondary);
+        return (
+          l10n.todo_overviewNextWeek,
+          Icons.calendar_month,
+          AppColors.textSecondary,
+        );
       case _OverviewSection.later:
-        return (l10n.todo_overviewLater, Icons.schedule, AppColors.textSecondary);
+        return (
+          l10n.todo_overviewLater,
+          Icons.schedule,
+          AppColors.textSecondary,
+        );
       case _OverviewSection.noDueDate:
-        return (l10n.todo_overviewNoDueDate, Icons.event_busy, AppColors.textSecondary);
+        return (
+          l10n.todo_overviewNoDueDate,
+          Icons.event_busy,
+          AppColors.textSecondary,
+        );
     }
   }
 }
@@ -879,10 +968,7 @@ class _SelectedDateHeader extends ConsumerWidget {
   final DateTime selectedDate;
   final AppLocalizations l10n;
 
-  const _SelectedDateHeader({
-    required this.selectedDate,
-    required this.l10n,
-  });
+  const _SelectedDateHeader({required this.selectedDate, required this.l10n});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -906,14 +992,16 @@ class _SelectedDateHeader extends ConsumerWidget {
         horizontal: AppSizes.spaceM,
         vertical: AppSizes.spaceS,
       ),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: Row(
         children: [
           Text(
             '${selectedDate.month}월 ${selectedDate.day}일 (${dayNames[selectedDate.weekday % 7]})',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           if (isToday) ...[
             const SizedBox(width: AppSizes.spaceS),
@@ -936,7 +1024,8 @@ class _SelectedDateHeader extends ConsumerWidget {
           // 완료된 항목 보기 체크박스
           InkWell(
             onTap: () {
-              ref.read(showCompletedTodosProvider.notifier).state = !showCompleted;
+              ref.read(showCompletedTodosProvider.notifier).state =
+                  !showCompleted;
             },
             borderRadius: BorderRadius.circular(4),
             child: Row(
@@ -948,7 +1037,8 @@ class _SelectedDateHeader extends ConsumerWidget {
                   child: Checkbox(
                     value: showCompleted,
                     onChanged: (value) {
-                      ref.read(showCompletedTodosProvider.notifier).state = value ?? false;
+                      ref.read(showCompletedTodosProvider.notifier).state =
+                          value ?? false;
                     },
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -996,10 +1086,10 @@ class _KanbanView extends ConsumerWidget {
             color: AppColors.textSecondary,
             tasks: pendingTasks,
             onTaskTap: (task) {
-              context.push('/todo/detail', extra: {
-                'taskId': task.id,
-                'task': task,
-              });
+              context.push(
+                '/todo/detail',
+                extra: {'taskId': task.id, 'task': task},
+              );
             },
             onStatusChange: (task, status) {
               _updateStatus(ref, task, status);
@@ -1017,10 +1107,10 @@ class _KanbanView extends ConsumerWidget {
             color: AppColors.primary,
             tasks: inProgressTasks,
             onTaskTap: (task) {
-              context.push('/todo/detail', extra: {
-                'taskId': task.id,
-                'task': task,
-              });
+              context.push(
+                '/todo/detail',
+                extra: {'taskId': task.id, 'task': task},
+              );
             },
             onStatusChange: (task, status) {
               _updateStatus(ref, task, status);
@@ -1038,10 +1128,10 @@ class _KanbanView extends ConsumerWidget {
             color: AppColors.success,
             tasks: completedTasks,
             onTaskTap: (task) {
-              context.push('/todo/detail', extra: {
-                'taskId': task.id,
-                'task': task,
-              });
+              context.push(
+                '/todo/detail',
+                extra: {'taskId': task.id, 'task': task},
+              );
             },
             onStatusChange: (task, status) {
               _updateStatus(ref, task, status);
@@ -1058,11 +1148,13 @@ class _KanbanView extends ConsumerWidget {
   }
 
   void _updateStatus(WidgetRef ref, TaskModel task, TaskStatus status) {
-    ref.read(taskManagementProvider.notifier).updateStatus(
-      task.id,
-      status,
-      task.scheduledAt ?? task.dueAt ?? DateTime.now(),
-    );
+    ref
+        .read(taskManagementProvider.notifier)
+        .updateStatus(
+          task.id,
+          status,
+          task.scheduledAt ?? task.dueAt ?? DateTime.now(),
+        );
     ref.invalidate(todoTasksProvider(page: 1));
   }
 }
@@ -1083,10 +1175,14 @@ class _ListView extends ConsumerWidget {
     // 필터 적용
     var filteredTasks = List<TaskModel>.from(tasks);
     if (filterStatus != null) {
-      filteredTasks = filteredTasks.where((t) => t.status == filterStatus).toList();
+      filteredTasks = filteredTasks
+          .where((t) => t.status == filterStatus)
+          .toList();
     }
     if (filterPriority != null) {
-      filteredTasks = filteredTasks.where((t) => t.priority == filterPriority).toList();
+      filteredTasks = filteredTasks
+          .where((t) => t.priority == filterPriority)
+          .toList();
     }
 
     if (filteredTasks.isEmpty) {
@@ -1094,7 +1190,8 @@ class _ListView extends ConsumerWidget {
     }
 
     // 정렬 적용
-    final sortedTasks = filteredTasks..sort((a, b) => _compareTasks(a, b, sortBy));
+    final sortedTasks = filteredTasks
+      ..sort((a, b) => _compareTasks(a, b, sortBy));
 
     return ListView.builder(
       padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -1103,8 +1200,8 @@ class _ListView extends ConsumerWidget {
         final task = sortedTasks[index];
 
         // 섹션 헤더 표시 (상태별)
-        final showHeader = index == 0 ||
-            sortedTasks[index - 1].status != task.status;
+        final showHeader =
+            index == 0 || sortedTasks[index - 1].status != task.status;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1124,17 +1221,19 @@ class _ListView extends ConsumerWidget {
               child: TodoListItem(
                 task: task,
                 onTap: () {
-                  context.push('/todo/detail', extra: {
-                    'taskId': task.id,
-                    'task': task,
-                  });
+                  context.push(
+                    '/todo/detail',
+                    extra: {'taskId': task.id, 'task': task},
+                  );
                 },
                 onStatusChange: (newStatus) {
-                  ref.read(taskManagementProvider.notifier).updateStatus(
-                    task.id,
-                    newStatus,
-                    task.scheduledAt ?? task.dueAt ?? DateTime.now(),
-                  );
+                  ref
+                      .read(taskManagementProvider.notifier)
+                      .updateStatus(
+                        task.id,
+                        newStatus,
+                        task.scheduledAt ?? task.dueAt ?? DateTime.now(),
+                      );
                   ref.invalidate(todoTasksProvider(page: 1));
                 },
               ),
@@ -1292,9 +1391,9 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceM),
           Text(
             l10n.todo_noTodos,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -1334,9 +1433,9 @@ class _ErrorState extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceS),
           Text(
             error,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSizes.spaceM),
@@ -1368,7 +1467,8 @@ class _TodoGroupFilterBar extends ConsumerWidget {
             savedKey: 'todo_group_filter',
             onMultiFilterChanged: (sel) {
               ref.read(selectedGroupIdsProvider.notifier).state = sel.groupIds;
-              ref.read(includePersonalProvider.notifier).state = sel.includePersonal;
+              ref.read(includePersonalProvider.notifier).state =
+                  sel.includePersonal;
             },
           ),
         ),
@@ -1394,7 +1494,9 @@ class _TodoGroupFilterBar extends ConsumerWidget {
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusLarge)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radiusLarge),
+        ),
       ),
       builder: (context) => CategoryFilterSheet(groups: groups),
     );
@@ -1446,9 +1548,9 @@ class _TodoSearchResults extends ConsumerWidget {
             const SizedBox(height: AppSizes.spaceM),
             Text(
               l10n.todo_searchHint,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -1471,8 +1573,8 @@ class _TodoSearchResults extends ConsumerWidget {
                 Text(
                   l10n.todo_searchNoResults,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -1490,16 +1592,17 @@ class _TodoSearchResults extends ConsumerWidget {
               ),
               child: Text(
                 l10n.todo_searchResultCount(tasks.length),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
               ),
             ),
             // 결과 목록
             Expanded(
               child: ListView.separated(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceM,
+                ),
                 itemCount: tasks.length,
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: AppSizes.spaceS),
@@ -1508,13 +1611,15 @@ class _TodoSearchResults extends ConsumerWidget {
                   return TodoListItem(
                     task: task,
                     onTap: () {
-                      context.push('/todo/detail', extra: {
-                        'taskId': task.id,
-                        'task': task,
-                      });
+                      context.push(
+                        '/todo/detail',
+                        extra: {'taskId': task.id, 'task': task},
+                      );
                     },
                     onStatusChange: (newStatus) {
-                      ref.read(taskManagementProvider.notifier).updateStatus(
+                      ref
+                          .read(taskManagementProvider.notifier)
+                          .updateStatus(
                             task.id,
                             newStatus,
                             task.scheduledAt ?? task.dueAt ?? DateTime.now(),

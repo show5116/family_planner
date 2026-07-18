@@ -70,11 +70,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        actions: [
-          AppBarMoreMenu(
-            onReplayOnboarding: _replayOnboarding,
-          ),
-        ],
+        actions: [AppBarMoreMenu(onReplayOnboarding: _replayOnboarding)],
       ),
       floatingActionButton: FloatingActionButton(
         key: _fabKey,
@@ -93,24 +89,32 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
                   key: _groupDropdownKey,
                   selectedGroupId: selectedGroupId,
                   onChanged: (value) {
-                    ref.read(voteSelectedGroupIdProvider.notifier).state = value;
+                    ref.read(voteSelectedGroupIdProvider.notifier).state =
+                        value;
                   },
                 ),
                 if (selectedGroupId != null)
                   Padding(
                     key: _filterKey,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.spaceM, vertical: AppSizes.spaceS),
+                      horizontal: AppSizes.spaceM,
+                      vertical: AppSizes.spaceS,
+                    ),
                     child: SegmentedButton<VoteStatusFilter>(
+                      showSelectedIcon: false,
                       segments: const [
                         ButtonSegment(
-                            value: VoteStatusFilter.all, label: Text('전체')),
+                          value: VoteStatusFilter.all,
+                          label: Text('전체'),
+                        ),
                         ButtonSegment(
-                            value: VoteStatusFilter.ongoing,
-                            label: Text('진행중')),
+                          value: VoteStatusFilter.ongoing,
+                          label: Text('진행중'),
+                        ),
                         ButtonSegment(
-                            value: VoteStatusFilter.closed,
-                            label: Text('종료됨')),
+                          value: VoteStatusFilter.closed,
+                          label: Text('종료됨'),
+                        ),
                       ],
                       selected: {statusFilter},
                       onSelectionChanged: (val) {
@@ -149,7 +153,8 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
                               );
                             },
                             loading: () => const Center(
-                                child: CircularProgressIndicator()),
+                              child: CircularProgressIndicator(),
+                            ),
                             error: (e, _) => AppErrorState(
                               error: e,
                               title: '투표 목록을 불러오지 못했습니다',
@@ -184,10 +189,10 @@ class _VoteCard extends StatelessWidget {
         onTap: isDemo
             ? null
             : () => context.push(
-                  AppRoutes.voteDetail
-                      .replaceFirst(':groupId', vote.groupId)
-                      .replaceFirst(':voteId', vote.id),
-                ),
+                AppRoutes.voteDetail
+                    .replaceFirst(':groupId', vote.groupId)
+                    .replaceFirst(':voteId', vote.id),
+              ),
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.spaceM),
           child: Column(
@@ -198,8 +203,9 @@ class _VoteCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       vote.title,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -212,8 +218,9 @@ class _VoteCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   vote.description!,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -221,32 +228,44 @@ class _VoteCard extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceS),
               Row(
                 children: [
-                  Icon(Icons.person_outline,
-                      size: 14, color: colorScheme.onSurfaceVariant),
+                  Icon(
+                    Icons.person_outline,
+                    size: 14,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     vote.creatorName,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: colorScheme.onSurfaceVariant),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(width: AppSizes.spaceM),
-                  Icon(Icons.how_to_vote_outlined,
-                      size: 14, color: colorScheme.onSurfaceVariant),
+                  Icon(
+                    Icons.how_to_vote_outlined,
+                    size: 14,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${vote.totalVoters}명 참여',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: colorScheme.onSurfaceVariant),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   if (vote.hasVoted) ...[
                     const SizedBox(width: AppSizes.spaceM),
-                    Icon(Icons.check_circle_outline,
-                        size: 14, color: colorScheme.primary),
+                    Icon(
+                      Icons.check_circle_outline,
+                      size: 14,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '참여함',
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: colorScheme.primary),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.primary,
+                      ),
                     ),
                   ],
                 ],
@@ -255,8 +274,11 @@ class _VoteCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.schedule,
-                        size: 14, color: colorScheme.onSurfaceVariant),
+                    Icon(
+                      Icons.schedule,
+                      size: 14,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       _formatDeadline(vote.endsAt!),

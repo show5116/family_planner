@@ -42,15 +42,15 @@ class _StorageFormDialogState extends ConsumerState<StorageFormDialog> {
     try {
       final groupId = ref.read(fridgeSelectedGroupIdProvider);
       if (widget.storage == null) {
-        await ref.read(storagesProvider.notifier).create(
-              CreateStorageDto(
-                groupId: groupId ?? '',
-                name: name,
-                type: _type,
-              ),
+        await ref
+            .read(storagesProvider.notifier)
+            .create(
+              CreateStorageDto(groupId: groupId ?? '', name: name, type: _type),
             );
       } else {
-        await ref.read(storagesProvider.notifier).edit(
+        await ref
+            .read(storagesProvider.notifier)
+            .edit(
               widget.storage!.id,
               UpdateStorageDto(name: name, type: _type),
             );
@@ -89,12 +89,13 @@ class _StorageFormDialogState extends ConsumerState<StorageFormDialog> {
             Text(
               _errorMsg!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
           ],
           const SizedBox(height: AppSizes.spaceM),
           SegmentedButton<StorageType>(
+            showSelectedIcon: false,
             segments: [
               ButtonSegment(
                 value: StorageType.fridge,

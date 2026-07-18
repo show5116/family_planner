@@ -24,10 +24,13 @@ class PrioritySection extends StatelessWidget {
       children: [
         Text(
           l10n.schedule_priority,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         SegmentedButton<TaskPriority>(
+          showSelectedIcon: false,
           segments: [
             ButtonSegment(
               value: TaskPriority.low,
@@ -51,7 +54,8 @@ class PrioritySection extends StatelessWidget {
             ),
           ],
           selected: {formState.priority},
-          onSelectionChanged: (selected) => formNotifier.setPriority(selected.first),
+          onSelectionChanged: (selected) =>
+              formNotifier.setPriority(selected.first),
         ),
       ],
     );

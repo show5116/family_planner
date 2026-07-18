@@ -314,6 +314,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           ),
           const SizedBox(height: AppSizes.spaceL),
           SegmentedButton<RoutineFrequencyType>(
+            showSelectedIcon: false,
             segments: [
               ButtonSegment(
                 value: RoutineFrequencyType.daily,
@@ -334,6 +335,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           if (_frequencyType == RoutineFrequencyType.weekly) ...[
             const SizedBox(height: AppSizes.spaceS),
             SegmentedButton<RoutineWeeklyMode>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
                   value: RoutineWeeklyMode.countOnly,
@@ -440,6 +442,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           ),
           const SizedBox(height: AppSizes.spaceS),
           SegmentedButton<RoutineImportance>(
+            showSelectedIcon: false,
             segments: [
               ButtonSegment(
                 value: RoutineImportance.low,
@@ -491,6 +494,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           const SizedBox(height: AppSizes.spaceS),
           if (!_isEditing)
             SegmentedButton<RoutineRecordType>(
+              showSelectedIcon: false,
               segments: [
                 ButtonSegment(
                   value: RoutineRecordType.boolean_,
