@@ -466,25 +466,28 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: AppSizes.spaceS),
-          Wrap(
-            spacing: AppSizes.spaceS,
-            children:
-                [
-                  (null, l10n.routine_time_filter_none),
-                  (RoutineTimeFilter.morning, l10n.routine_time_filter_morning),
-                  (
-                    RoutineTimeFilter.afternoon,
-                    l10n.routine_time_filter_afternoon,
-                  ),
-                  (RoutineTimeFilter.evening, l10n.routine_time_filter_evening),
-                ].map((entry) {
-                  final (value, label) = entry;
-                  return ChoiceChip(
-                    label: Text(label),
-                    selected: _timeFilter == value,
-                    onSelected: (_) => setState(() => _timeFilter = value),
-                  );
-                }).toList(),
+          SegmentedButton<RoutineTimeFilter?>(
+            showSelectedIcon: false,
+            segments: [
+              ButtonSegment(
+                value: null,
+                label: Text(l10n.routine_time_filter_none),
+              ),
+              ButtonSegment(
+                value: RoutineTimeFilter.morning,
+                label: Text(l10n.routine_time_filter_morning),
+              ),
+              ButtonSegment(
+                value: RoutineTimeFilter.afternoon,
+                label: Text(l10n.routine_time_filter_afternoon),
+              ),
+              ButtonSegment(
+                value: RoutineTimeFilter.evening,
+                label: Text(l10n.routine_time_filter_evening),
+              ),
+            ],
+            selected: {_timeFilter},
+            onSelectionChanged: (s) => setState(() => _timeFilter = s.first),
           ),
           const SizedBox(height: AppSizes.spaceM),
           Text(
