@@ -4790,6 +4790,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_category_filter_all => 'すべて';
 
   @override
+  String get routine_category_picker_title => 'カテゴリーを選択';
+
+  @override
+  String get routine_category_edit_mode => '編集';
+
+  @override
+  String get routine_category_edit_mode_done => '完了';
+
+  @override
+  String get routine_category_reorder_hint => '長押しして並べ替えできます';
+
+  @override
+  String get routine_category_select_done => '選択完了';
+
+  @override
+  String get routine_category_none_selected => 'カテゴリーを選択';
+
+  @override
   String get routine_field_record_type => '記録方式';
 
   @override

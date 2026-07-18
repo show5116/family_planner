@@ -205,6 +205,10 @@ class Routine {
   final RoutineImportance importance;
   final RoutineTimeFilter? timeFilter;
   final String? categoryId;
+
+  /// 1:N 카테고리 다중 선택 (백엔드가 categoryIds를 지원하기 전까지는
+  /// fromJson에서 categoryId 단일 값으로부터 파생됨)
+  final List<String> categoryIds;
   final RoutineRecordType recordType;
   final RoutineStatus status;
   final RoutineFrequencyType frequencyType;
@@ -228,6 +232,7 @@ class Routine {
     required this.importance,
     this.timeFilter,
     this.categoryId,
+    this.categoryIds = const [],
     required this.recordType,
     required this.status,
     required this.frequencyType,
@@ -244,6 +249,8 @@ class Routine {
   });
 
   factory Routine.fromJson(Map<String, dynamic> json) {
+    final categoryId = json['categoryId'] as String?;
+    final categoryIdsRaw = json['categoryIds'] as List<dynamic>?;
     return Routine(
       id: json['id'] as String,
       title: json['title'] as String,
@@ -252,7 +259,10 @@ class Routine {
       memo: json['memo'] as String?,
       importance: RoutineImportance.fromString(json['importance'] as String?),
       timeFilter: RoutineTimeFilter.fromString(json['timeFilter'] as String?),
-      categoryId: json['categoryId'] as String?,
+      categoryId: categoryId,
+      categoryIds: categoryIdsRaw != null
+          ? categoryIdsRaw.map((e) => e as String).toList()
+          : (categoryId != null ? [categoryId] : const []),
       recordType: RoutineRecordType.fromString(json['recordType'] as String?),
       status: RoutineStatus.fromString(json['status'] as String?),
       frequencyType: RoutineFrequencyType.fromString(
@@ -283,6 +293,7 @@ class Routine {
     RoutineImportance? importance,
     RoutineTimeFilter? timeFilter,
     String? categoryId,
+    List<String>? categoryIds,
     int? targetCount,
     List<int>? targetDays,
     DateTime? endDate,
@@ -300,6 +311,7 @@ class Routine {
       importance: importance ?? this.importance,
       timeFilter: timeFilter ?? this.timeFilter,
       categoryId: categoryId ?? this.categoryId,
+      categoryIds: categoryIds ?? this.categoryIds,
       recordType: recordType,
       status: status ?? this.status,
       frequencyType: frequencyType,

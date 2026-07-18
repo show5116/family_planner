@@ -9230,6 +9230,42 @@ abstract class AppLocalizations {
   /// **'전체'**
   String get routine_category_filter_all;
 
+  /// 카테고리 다중 선택 바텀시트 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 선택'**
+  String get routine_category_picker_title;
+
+  /// 카테고리 바텀시트 편집 모드 진입 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'편집'**
+  String get routine_category_edit_mode;
+
+  /// 카테고리 바텀시트 편집 모드 종료(완료) 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'완료'**
+  String get routine_category_edit_mode_done;
+
+  /// 카테고리 편집 모드에서 드래그 정렬 가능함을 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'길게 눌러 순서를 변경하세요'**
+  String get routine_category_reorder_hint;
+
+  /// 카테고리 다중 선택 바텀시트 닫기(선택 완료) 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'선택 완료'**
+  String get routine_category_select_done;
+
+  /// 폼 화면에서 카테고리를 하나도 선택하지 않았을 때의 플레이스홀더
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 선택'**
+  String get routine_category_none_selected;
+
   /// 기록 방식 필드 라벨
   ///
   /// In ko, this message translates to:

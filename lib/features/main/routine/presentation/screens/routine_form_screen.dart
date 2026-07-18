@@ -5,6 +5,7 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_category_picker_sheet.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
@@ -36,7 +37,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
   DateTime _startDate = DateTime.now();
   DateTime? _endDate;
   String? _selectedGroupId;
-  String? _selectedCategoryId;
+  Set<String> _selectedCategoryIds = {};
   RoutineImportance _importance = RoutineImportance.medium;
   RoutineTimeFilter? _timeFilter;
   RoutineRecordType _recordType = RoutineRecordType.boolean_;
@@ -67,7 +68,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     _startDate = routine.startDate;
     _endDate = routine.endDate;
     _selectedGroupId = routine.routineGroupId;
-    _selectedCategoryId = routine.categoryId;
+    _selectedCategoryIds = routine.categoryIds.toSet();
     _importance = routine.importance;
     _timeFilter = routine.timeFilter;
     _recordType = routine.recordType;
@@ -214,6 +215,9 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     final emoji = _emoji;
     final memo = _memoController.text.trim();
     final frequencyFields = _buildFrequencyFields();
+    // TODO: 백엔드가 categoryIds(다중) API를 지원하면 첫 번째 값만 보내는
+    // 이 어댑터를 제거하고 categoryIds를 그대로 전달하도록 교체한다.
+    final categoryId = _selectedCategoryIds.firstOrNull;
 
     if (_isEditing) {
       await notifier.updateRoutine(
@@ -232,8 +236,8 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           endDate: _endDate != null ? _formatDate(_endDate!) : null,
           routineGroupId: _selectedGroupId,
           clearRoutineGroupId: _selectedGroupId == null,
-          categoryId: _selectedCategoryId,
-          clearCategoryId: _selectedCategoryId == null,
+          categoryId: categoryId,
+          clearCategoryId: categoryId == null,
         ),
       );
     } else {
@@ -245,7 +249,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           memo: memo.isEmpty ? null : memo,
           importance: _importance,
           timeFilter: _timeFilter,
-          categoryId: _selectedCategoryId,
+          categoryId: categoryId,
           recordType: _recordType,
           frequencyType: _frequencyType,
           weeklyMode: frequencyFields.weeklyMode,
@@ -593,40 +597,65 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
             },
           ),
           const SizedBox(height: AppSizes.spaceM),
+          Text(
+            l10n.routine_field_category,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: AppSizes.spaceS),
           Consumer(
             builder: (context, ref, _) {
               final categoriesAsync = ref.watch(routineCategoryListProvider);
-              return categoriesAsync.when(
-                loading: () => const SizedBox.shrink(),
-                error: (_, _) => const SizedBox.shrink(),
-                data: (categories) {
-                  final validCategoryId =
-                      categories.any((c) => c.id == _selectedCategoryId)
-                      ? _selectedCategoryId
-                      : null;
-                  return DropdownButtonFormField<String?>(
-                    initialValue: validCategoryId,
-                    decoration: InputDecoration(
-                      labelText: l10n.routine_field_category,
-                    ),
-                    items: [
-                      DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text(l10n.routine_field_category_none),
-                      ),
-                      ...categories.map(
-                        (category) => DropdownMenuItem<String?>(
-                          value: category.id,
-                          child: Text(
-                            '${category.emoji ?? ''} ${category.title}'.trim(),
-                          ),
-                        ),
-                      ),
-                    ],
-                    onChanged: (value) =>
-                        setState(() => _selectedCategoryId = value),
+              final categories = categoriesAsync.valueOrNull ?? [];
+              final selected = categories
+                  .where((c) => _selectedCategoryIds.contains(c.id))
+                  .toList();
+              return InkWell(
+                borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                onTap: () async {
+                  final result = await showRoutineCategoryPickerSheet(
+                    context,
+                    selectedIds: _selectedCategoryIds,
                   );
+                  if (mounted) {
+                    setState(() => _selectedCategoryIds = result);
+                  }
                 },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceM,
+                    vertical: AppSizes.spaceS,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                  ),
+                  child: selected.isEmpty
+                      ? Text(
+                          l10n.routine_category_none_selected,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: Theme.of(context).hintColor),
+                        )
+                      : Wrap(
+                          spacing: AppSizes.spaceXS,
+                          runSpacing: AppSizes.spaceXS,
+                          children: selected
+                              .map(
+                                (category) => Chip(
+                                  label: Text(
+                                    '${category.emoji ?? ''} ${category.title}'
+                                        .trim(),
+                                  ),
+                                  visualDensity: VisualDensity.compact,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                ),
               );
             },
           ),

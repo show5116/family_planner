@@ -4901,6 +4901,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_category_filter_all => 'All';
 
   @override
+  String get routine_category_picker_title => 'Select Categories';
+
+  @override
+  String get routine_category_edit_mode => 'Edit';
+
+  @override
+  String get routine_category_edit_mode_done => 'Done';
+
+  @override
+  String get routine_category_reorder_hint => 'Press and hold to reorder';
+
+  @override
+  String get routine_category_select_done => 'Done';
+
+  @override
+  String get routine_category_none_selected => 'Select category';
+
+  @override
   String get routine_field_record_type => 'Record Type';
 
   @override

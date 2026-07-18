@@ -4760,6 +4760,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_category_filter_all => '全部';
 
   @override
+  String get routine_category_picker_title => '选择分类';
+
+  @override
+  String get routine_category_edit_mode => '编辑';
+
+  @override
+  String get routine_category_edit_mode_done => '完成';
+
+  @override
+  String get routine_category_reorder_hint => '长按可调整顺序';
+
+  @override
+  String get routine_category_select_done => '选择完成';
+
+  @override
+  String get routine_category_none_selected => '选择分类';
+
+  @override
   String get routine_field_record_type => '记录方式';
 
   @override

@@ -9,7 +9,6 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
-import 'package:family_planner/features/main/routine/presentation/widgets/routine_category_form_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_form_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_section.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
@@ -210,54 +209,6 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
-  Future<void> _showCategoryForm(
-    BuildContext context, {
-    RoutineCategory? category,
-  }) async {
-    await showDialog<RoutineCategory>(
-      context: context,
-      builder: (context) => RoutineCategoryFormDialog(category: category),
-    );
-  }
-
-  Future<void> _confirmDeleteCategory(
-    BuildContext context,
-    WidgetRef ref,
-    RoutineCategory category,
-  ) async {
-    final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.routine_category_delete),
-        content: Text(l10n.routine_category_delete_confirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.routine_category_delete),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
-
-    final success = await ref
-        .read(routineCategoryManagementProvider.notifier)
-        .deleteRoutineCategory(category.id);
-    if (!success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_category_error_generic)),
-      );
-    }
-    if (_selectedCategoryId == category.id && mounted) {
-      setState(() => _selectedCategoryId = null);
-    }
-  }
-
   Future<void> _confirmDeleteGroup(
     BuildContext context,
     WidgetRef ref,
@@ -416,6 +367,14 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     AppLocalizations l10n,
     List<RoutineCategory> categories,
   ) {
+    // 선택된 필터가 삭제된 카테고리를 가리키면 무효화한다(다른 화면의
+    // 카테고리 편집 바텀시트에서 삭제된 경우 대비).
+    if (_selectedCategoryId != null &&
+        !categories.any((c) => c.id == _selectedCategoryId)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _selectedCategoryId = null);
+      });
+    }
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(
@@ -432,58 +391,16 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
           const SizedBox(width: AppSizes.spaceS),
           ...categories.expand(
             (category) => [
-              GestureDetector(
-                onLongPress: () => _showCategoryActionsSheet(context, category),
-                child: ChoiceChip(
-                  label: Text(
-                    '${category.emoji ?? ''} ${category.title}'.trim(),
-                  ),
-                  selected: _selectedCategoryId == category.id,
-                  onSelected: (_) =>
-                      setState(() => _selectedCategoryId = category.id),
-                ),
+              ChoiceChip(
+                label: Text('${category.emoji ?? ''} ${category.title}'.trim()),
+                selected: _selectedCategoryId == category.id,
+                onSelected: (_) =>
+                    setState(() => _selectedCategoryId = category.id),
               ),
               const SizedBox(width: AppSizes.spaceS),
             ],
           ),
-          ActionChip(
-            avatar: const Icon(Icons.add, size: 18),
-            label: Text(l10n.routine_category_add),
-            onPressed: () => _showCategoryForm(context),
-          ),
         ],
-      ),
-    );
-  }
-
-  Future<void> _showCategoryActionsSheet(
-    BuildContext context,
-    RoutineCategory category,
-  ) async {
-    final l10n = AppLocalizations.of(context)!;
-    await showModalBottomSheet<void>(
-      context: context,
-      builder: (sheetContext) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.edit_outlined),
-              title: Text(l10n.routine_category_edit),
-              onTap: () {
-                Navigator.pop(sheetContext);
-                _showCategoryForm(context, category: category);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.delete_outline),
-              title: Text(l10n.routine_category_delete),
-              onTap: () {
-                Navigator.pop(sheetContext);
-                _confirmDeleteCategory(context, ref, category);
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -537,7 +454,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                 final filteredRoutines = _selectedCategoryId == null
                     ? routines
                     : routines
-                          .where((r) => r.categoryId == _selectedCategoryId)
+                          .where(
+                            (r) => r.categoryIds.contains(_selectedCategoryId),
+                          )
                           .toList();
                 final standaloneRoutines = filteredRoutines
                     .where((r) => r.routineGroupId == null)

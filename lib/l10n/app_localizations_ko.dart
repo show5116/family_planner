@@ -4797,6 +4797,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_category_filter_all => '전체';
 
   @override
+  String get routine_category_picker_title => '카테고리 선택';
+
+  @override
+  String get routine_category_edit_mode => '편집';
+
+  @override
+  String get routine_category_edit_mode_done => '완료';
+
+  @override
+  String get routine_category_reorder_hint => '길게 눌러 순서를 변경하세요';
+
+  @override
+  String get routine_category_select_done => '선택 완료';
+
+  @override
+  String get routine_category_none_selected => '카테고리 선택';
+
+  @override
   String get routine_field_record_type => '기록 방식';
 
   @override
