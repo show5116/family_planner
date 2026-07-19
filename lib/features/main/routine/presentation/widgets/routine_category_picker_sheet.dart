@@ -249,6 +249,7 @@ class _RoutineCategoryPickerSheetState
       scrollController: scrollController,
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
       itemCount: categories.length,
+      buildDefaultDragHandles: false,
       onReorderItem: (oldIndex, newIndex) =>
           _reorder(categories, oldIndex, newIndex),
       proxyDecorator: buildReorderableProxyDecorator,
@@ -256,7 +257,10 @@ class _RoutineCategoryPickerSheetState
         final category = categories[index];
         return ListTile(
           key: ValueKey(category.id),
-          leading: const DragHandleIcon(),
+          leading: ReorderableDragStartListener(
+            index: index,
+            child: const DragHandleIcon(),
+          ),
           title: Text('${category.emoji ?? ''} ${category.title}'.trim()),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
