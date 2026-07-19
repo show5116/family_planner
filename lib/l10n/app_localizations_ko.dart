@@ -4806,7 +4806,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_category_edit_mode_done => '완료';
 
   @override
-  String get routine_category_reorder_hint => '길게 눌러 순서를 변경하세요';
+  String get routine_category_reorder_hint => '핸들을 눌러 순서를 변경하세요';
 
   @override
   String get routine_category_select_done => '선택 완료';

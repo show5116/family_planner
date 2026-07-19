@@ -2426,7 +2426,7 @@
   "@routine_category_edit_mode": { "description": "Button to enter edit mode in the category bottom sheet" },
   "routine_category_edit_mode_done": "Done",
   "@routine_category_edit_mode_done": { "description": "Button to exit edit mode in the category bottom sheet" },
-  "routine_category_reorder_hint": "Press and hold to reorder",
+  "routine_category_reorder_hint": "Press the handle to reorder",
   "@routine_category_reorder_hint": { "description": "Hint that drag-to-reorder is available in edit mode" },
   "routine_category_select_done": "Done",
   "@routine_category_select_done": { "description": "Button to close the category multi-select bottom sheet" },

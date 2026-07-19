@@ -4910,7 +4910,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_category_edit_mode_done => 'Done';
 
   @override
-  String get routine_category_reorder_hint => 'Press and hold to reorder';
+  String get routine_category_reorder_hint => 'Press the handle to reorder';
 
   @override
   String get routine_category_select_done => 'Done';

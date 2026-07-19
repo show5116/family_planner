@@ -2381,7 +2381,7 @@
   "@routine_category_edit_mode": { "description": "分类底部弹窗中进入编辑模式的按钮" },
   "routine_category_edit_mode_done": "完成",
   "@routine_category_edit_mode_done": { "description": "分类底部弹窗中退出编辑模式的按钮" },
-  "routine_category_reorder_hint": "长按可调整顺序",
+  "routine_category_reorder_hint": "按住手柄可调整顺序",
   "@routine_category_reorder_hint": { "description": "提示编辑模式下可拖动排序" },
   "routine_category_select_done": "选择完成",
   "@routine_category_select_done": { "description": "关闭分类多选底部弹窗的按钮" },

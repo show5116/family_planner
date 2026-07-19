@@ -9248,10 +9248,10 @@ abstract class AppLocalizations {
   /// **'완료'**
   String get routine_category_edit_mode_done;
 
-  /// 카테고리 편집 모드에서 드래그 정렬 가능함을 안내
+  /// 카테고리 편집 모드에서 핸들 아이콘을 눌러 드래그 정렬 가능함을 안내
   ///
   /// In ko, this message translates to:
-  /// **'길게 눌러 순서를 변경하세요'**
+  /// **'핸들을 눌러 순서를 변경하세요'**
   String get routine_category_reorder_hint;
 
   /// 카테고리 다중 선택 바텀시트 닫기(선택 완료) 버튼

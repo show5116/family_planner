@@ -4769,7 +4769,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_category_edit_mode_done => '完成';
 
   @override
-  String get routine_category_reorder_hint => '长按可调整顺序';
+  String get routine_category_reorder_hint => '按住手柄可调整顺序';
 
   @override
   String get routine_category_select_done => '选择完成';
