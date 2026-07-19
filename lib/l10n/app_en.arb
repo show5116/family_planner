@@ -2224,6 +2224,8 @@
 
   "routine_title": "Routines",
   "@routine_title": { "description": "Routine main title" },
+  "routine_date_today": "Today",
+  "@routine_date_today": { "description": "Button to jump back to today in the routine list date picker" },
   "routine_list_empty": "No habits yet",
   "@routine_list_empty": { "description": "Shown when habit list is empty" },
   "routine_list_empty_subtitle": "Add a habit you want to repeat every day\nand build a streak by checking it off consistently",

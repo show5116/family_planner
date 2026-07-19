@@ -4500,6 +4500,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_title => 'ルーティン';
 
   @override
+  String get routine_date_today => '今日';
+
+  @override
   String get routine_list_empty => '登録された習慣がありません';
 
   @override

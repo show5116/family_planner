@@ -2179,6 +2179,8 @@
 
   "routine_title": "日常习惯",
   "@routine_title": { "description": "日常习惯主标题" },
+  "routine_date_today": "今天",
+  "@routine_date_today": { "description": "日常习惯列表日期选择器中返回今天的按钮" },
   "routine_list_empty": "还没有习惯",
   "@routine_list_empty": { "description": "习惯列表为空时的提示" },
   "routine_list_empty_subtitle": "添加一个想每天坚持的习惯\n持续打卡累积连续记录吧",

@@ -8660,6 +8660,12 @@ abstract class AppLocalizations {
   /// **'루틴'**
   String get routine_title;
 
+  /// 루틴 목록 날짜 선택기에서 오늘로 돌아가는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get routine_date_today;
+
   /// 습관 목록 비어있을 때 안내
   ///
   /// In ko, this message translates to:

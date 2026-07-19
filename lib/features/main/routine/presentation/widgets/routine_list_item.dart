@@ -141,25 +141,11 @@ class _RoutineListItemState extends State<RoutineListItem> {
                     ],
                   ),
                 ),
-                IconButton(
-                  iconSize: 28,
-                  onPressed: canCheck ? _handleToggleCheck : null,
-                  icon: TweenAnimationBuilder<double>(
-                    key: ValueKey(routine.checkedToday),
-                    tween: Tween(begin: 0.6, end: 1.0),
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.elasticOut,
-                    builder: (context, scale, child) =>
-                        Transform.scale(scale: scale, child: child),
-                    child: Icon(
-                      routine.checkedToday
-                          ? Icons.check_circle
-                          : Icons.radio_button_unchecked,
-                      color: routine.checkedToday
-                          ? accent
-                          : colorScheme.onSurfaceVariant,
-                    ),
-                  ),
+                _CheckIndicator(
+                  routine: routine,
+                  accent: accent,
+                  enabled: canCheck,
+                  onTap: _handleToggleCheck,
                 ),
                 if (widget.onEdit != null ||
                     widget.onPause != null ||
@@ -221,6 +207,99 @@ class _RoutineListItemState extends State<RoutineListItem> {
       textValue: value.textValue,
       numericValue: value.numericValue,
       timeValue: value.timeValue,
+    );
+  }
+}
+
+/// 체크 여부/기록값을 recordType에 맞게 보여주는 인디케이터.
+/// BOOLEAN=체크 아이콘, TEXT/NUMERIC/TIME=실제 기록값을 배지로 표시.
+class _CheckIndicator extends StatelessWidget {
+  const _CheckIndicator({
+    required this.routine,
+    required this.accent,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final Routine routine;
+  final Color accent;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  String? get _valueLabel {
+    final log = routine.checkedLog;
+    if (log == null) return null;
+    switch (routine.recordType) {
+      case RoutineRecordType.text:
+        return log.textValue;
+      case RoutineRecordType.numeric:
+        return log.numericValue != null ? '${log.numericValue}' : null;
+      case RoutineRecordType.time:
+        return log.timeValue;
+      case RoutineRecordType.boolean_:
+        return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final checked = routine.checkedToday;
+    final valueLabel = checked ? _valueLabel : null;
+
+    final icon = TweenAnimationBuilder<double>(
+      key: ValueKey(checked),
+      tween: Tween(begin: 0.6, end: 1.0),
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.elasticOut,
+      builder: (context, scale, child) =>
+          Transform.scale(scale: scale, child: child),
+      child: Icon(
+        checked ? Icons.check_circle : Icons.radio_button_unchecked,
+        color: checked ? accent : colorScheme.onSurfaceVariant,
+      ),
+    );
+
+    if (valueLabel == null || valueLabel.isEmpty) {
+      return IconButton(
+        iconSize: 28,
+        onPressed: enabled ? onTap : null,
+        icon: icon,
+      );
+    }
+
+    return InkWell(
+      onTap: enabled ? onTap : null,
+      borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceS,
+          vertical: 4,
+        ),
+        constraints: const BoxConstraints(maxWidth: 88),
+        decoration: BoxDecoration(
+          color: accent.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.check_circle, size: 16, color: accent),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                valueLabel,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: accent,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

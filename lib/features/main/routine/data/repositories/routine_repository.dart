@@ -279,6 +279,7 @@ class RoutineRepository {
     RoutineStatus? status,
     String? routineGroupId,
     String? categoryId,
+    String? date,
   }) async {
     try {
       final response = await _dio.get(
@@ -287,6 +288,7 @@ class RoutineRepository {
           if (status != null) 'status': status.toJsonString(),
           if (routineGroupId != null) 'routineGroupId': routineGroupId,
           if (categoryId != null) 'categoryId': categoryId,
+          if (date != null) 'date': date,
         },
       );
       final data = response.data;

@@ -1139,24 +1139,167 @@ class _RoutineLeaderboardProviderElement
   LeaderboardMetric get metric => (origin as RoutineLeaderboardProvider).metric;
 }
 
-String _$routineListHash() => r'4bc36e1f815fab731176240a7262aaa8852d0777';
+String _$routineListHash() => r'78cc6d536930e5295de7ea9a59f7763937635af2';
 
-/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외)
+abstract class _$RoutineList
+    extends BuildlessAutoDisposeAsyncNotifier<List<Routine>> {
+  late final String? date;
+
+  FutureOr<List<Routine>> build(String? date);
+}
+
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
 ///
 /// Copied from [RoutineList].
 @ProviderFor(RoutineList)
-final routineListProvider =
-    AutoDisposeAsyncNotifierProvider<RoutineList, List<Routine>>.internal(
-      RoutineList.new,
-      name: r'routineListProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$routineListHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+const routineListProvider = RoutineListFamily();
 
-typedef _$RoutineList = AutoDisposeAsyncNotifier<List<Routine>>;
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
+///
+/// Copied from [RoutineList].
+class RoutineListFamily extends Family<AsyncValue<List<Routine>>> {
+  /// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+  /// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+  /// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+  /// 재조회 없이 즉시 표시된다.
+  ///
+  /// Copied from [RoutineList].
+  const RoutineListFamily();
+
+  /// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+  /// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+  /// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+  /// 재조회 없이 즉시 표시된다.
+  ///
+  /// Copied from [RoutineList].
+  RoutineListProvider call(String? date) {
+    return RoutineListProvider(date);
+  }
+
+  @override
+  RoutineListProvider getProviderOverride(
+    covariant RoutineListProvider provider,
+  ) {
+    return call(provider.date);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineListProvider';
+}
+
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
+///
+/// Copied from [RoutineList].
+class RoutineListProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<RoutineList, List<Routine>> {
+  /// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+  /// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+  /// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+  /// 재조회 없이 즉시 표시된다.
+  ///
+  /// Copied from [RoutineList].
+  RoutineListProvider(String? date)
+    : this._internal(
+        () => RoutineList()..date = date,
+        from: routineListProvider,
+        name: r'routineListProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineListHash,
+        dependencies: RoutineListFamily._dependencies,
+        allTransitiveDependencies: RoutineListFamily._allTransitiveDependencies,
+        date: date,
+      );
+
+  RoutineListProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.date,
+  }) : super.internal();
+
+  final String? date;
+
+  @override
+  FutureOr<List<Routine>> runNotifierBuild(covariant RoutineList notifier) {
+    return notifier.build(date);
+  }
+
+  @override
+  Override overrideWith(RoutineList Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineListProvider._internal(
+        () => create()..date = date,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        date: date,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<RoutineList, List<Routine>>
+  createElement() {
+    return _RoutineListProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineListProvider && other.date == date;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, date.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineListRef on AutoDisposeAsyncNotifierProviderRef<List<Routine>> {
+  /// The parameter `date` of this provider.
+  String? get date;
+}
+
+class _RoutineListProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<RoutineList, List<Routine>>
+    with RoutineListRef {
+  _RoutineListProviderElement(super.provider);
+
+  @override
+  String? get date => (origin as RoutineListProvider).date;
+}
+
 String _$routineGroupListHash() => r'863f511ae247fb2e88f971b6c8e8209cb733b955';
 
 /// 루틴(습관 묶음) 목록 Provider

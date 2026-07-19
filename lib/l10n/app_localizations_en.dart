@@ -4607,6 +4607,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_title => 'Routines';
 
   @override
+  String get routine_date_today => 'Today';
+
+  @override
   String get routine_list_empty => 'No habits yet';
 
   @override

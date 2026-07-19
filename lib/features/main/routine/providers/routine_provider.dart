@@ -23,19 +23,27 @@ class RoutineCheckResult {
 
 // ── 루틴 목록 ─────────────────────────────────────────────────────────────────
 
-/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외)
+/// 루틴 목록 화면에서 현재 선택된 날짜 (YYYY-MM-DD, null이면 오늘).
+/// RoutineManagementNotifier가 낙관적 업데이트를 적용할 routineListProvider
+/// family 인스턴스를 찾을 때 이 값을 함께 사용한다.
+final selectedRoutineDateProvider = StateProvider<String?>((ref) => null);
+
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
 @riverpod
 class RoutineList extends _$RoutineList {
   @override
-  Future<List<Routine>> build() async {
+  Future<List<Routine>> build(String? date) async {
     final repository = ref.watch(routineRepositoryProvider);
-    return repository.getRoutines();
+    return repository.getRoutines(date: date);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      return ref.read(routineRepositoryProvider).getRoutines();
+      return ref.read(routineRepositoryProvider).getRoutines(date: date);
     });
   }
 
@@ -64,13 +72,26 @@ class RoutineList extends _$RoutineList {
     state = AsyncValue.data(reordered);
   }
 
-  /// 체크 상태 낙관적 반영
-  void setCheckedToday(String routineId, bool checked) {
+  /// 체크 상태 낙관적 반영. [checkedLog]는 체크 시 낙관적으로 표시할 기록값,
+  /// 체크 해제 시에는 null을 전달하면 되고 [checked]가 false면 자동으로
+  /// checkedLog도 함께 지워진다.
+  void setCheckedToday(
+    String routineId,
+    bool checked, {
+    RoutineCheckedLog? checkedLog,
+  }) {
     if (!state.hasValue) return;
     state = AsyncValue.data(
       state.value!
-          .map((r) =>
-              r.id == routineId ? r.copyWith(checkedToday: checked) : r)
+          .map(
+            (r) => r.id == routineId
+                ? r.copyWith(
+                    checkedToday: checked,
+                    checkedLog: checked ? checkedLog : null,
+                    clearCheckedLog: !checked,
+                  )
+                : r,
+          )
           .toList(),
     );
   }
@@ -278,16 +299,22 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
   final Ref _ref;
 
   RoutineManagementNotifier(this._repository, this._ref)
-      : super(const AsyncValue.data(null));
+    : super(const AsyncValue.data(null));
+
+  String? get _selectedDate => _ref.read(selectedRoutineDateProvider);
 
   Future<Routine?> createRoutine(CreateRoutineDto dto) async {
     state = const AsyncValue.loading();
     try {
       final routine = await _repository.createRoutine(dto);
-      _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      _ref
+          .read(routineListProvider(_selectedDate).notifier)
+          .upsertRoutine(routine);
       if (routine.routineGroupId != null) {
         _ref.invalidate(routineGroupListProvider);
-        _ref.invalidate(routineGroupDetailNotifierProvider(routine.routineGroupId!));
+        _ref.invalidate(
+          routineGroupDetailNotifierProvider(routine.routineGroupId!),
+        );
       }
       state = const AsyncValue.data(null);
       return routine;
@@ -300,7 +327,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
   Future<Routine?> updateRoutine(String id, UpdateRoutineDto dto) async {
     state = const AsyncValue.loading();
     try {
-      final existingRoutines = _ref.read(routineListProvider).valueOrNull;
+      final existingRoutines = _ref
+          .read(routineListProvider(_selectedDate))
+          .valueOrNull;
       String? previousGroupId;
       if (existingRoutines != null) {
         for (final r in existingRoutines) {
@@ -311,7 +340,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         }
       }
       final routine = await _repository.updateRoutine(id, dto);
-      _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      _ref
+          .read(routineListProvider(_selectedDate).notifier)
+          .upsertRoutine(routine);
       _ref.read(routineDetailProvider(id).notifier).setRoutine(routine);
       if (dto.routineGroupId != null || dto.clearRoutineGroupId) {
         _ref.invalidate(routineGroupListProvider);
@@ -319,7 +350,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
           _ref.invalidate(routineGroupDetailNotifierProvider(previousGroupId));
         }
         if (routine.routineGroupId != null) {
-          _ref.invalidate(routineGroupDetailNotifierProvider(routine.routineGroupId!));
+          _ref.invalidate(
+            routineGroupDetailNotifierProvider(routine.routineGroupId!),
+          );
         }
       }
       state = const AsyncValue.data(null);
@@ -334,7 +367,7 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       await _repository.deleteRoutine(id);
-      _ref.read(routineListProvider.notifier).removeRoutine(id);
+      _ref.read(routineListProvider(_selectedDate).notifier).removeRoutine(id);
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
@@ -347,7 +380,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       final routine = await _repository.pauseRoutine(id);
-      _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      _ref
+          .read(routineListProvider(_selectedDate).notifier)
+          .upsertRoutine(routine);
       _ref.read(routineDetailProvider(id).notifier).setRoutine(routine);
       state = const AsyncValue.data(null);
       return routine;
@@ -361,7 +396,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
     try {
       final routine = await _repository.resumeRoutine(id);
-      _ref.read(routineListProvider.notifier).upsertRoutine(routine);
+      _ref
+          .read(routineListProvider(_selectedDate).notifier)
+          .upsertRoutine(routine);
       _ref.read(routineDetailProvider(id).notifier).setRoutine(routine);
       state = const AsyncValue.data(null);
       return routine;
@@ -373,20 +410,19 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
 
   /// 순서 변경 (낙관적 반영, 실패 시 롤백)
   Future<void> reorder(List<Routine> reordered) async {
-    _ref.read(routineListProvider.notifier).reorder(reordered);
+    _ref.read(routineListProvider(_selectedDate).notifier).reorder(reordered);
     try {
       await _repository.updateSortOrder(
         reordered
             .asMap()
             .entries
-            .map((e) => RoutineSortOrderItemDto(
-                  id: e.value.id,
-                  sortOrder: e.key,
-                ))
+            .map(
+              (e) => RoutineSortOrderItemDto(id: e.value.id, sortOrder: e.key),
+            )
             .toList(),
       );
     } catch (_) {
-      _ref.read(routineListProvider.notifier).refresh();
+      _ref.read(routineListProvider(_selectedDate).notifier).refresh();
     }
   }
 
@@ -398,22 +434,33 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     num? numericValue,
     String? timeValue,
   }) async {
-    _ref.read(routineListProvider.notifier).setCheckedToday(
+    _ref
+        .read(routineListProvider(_selectedDate).notifier)
+        .setCheckedToday(
           routineId,
           !currentlyChecked,
+          checkedLog: currentlyChecked
+              ? null
+              : RoutineCheckedLog(
+                  textValue: textValue,
+                  numericValue: numericValue,
+                  timeValue: timeValue,
+                ),
         );
 
-    final previousStreak =
-        _ref.read(routineStreakProvider(routineId)).valueOrNull;
+    final previousStreak = _ref
+        .read(routineStreakProvider(routineId))
+        .valueOrNull;
 
     try {
       var newlyEarnedBadges = const <UserRoutineBadge>[];
       if (currentlyChecked) {
-        await _repository.uncheckRoutine(routineId);
+        await _repository.uncheckRoutine(routineId, date: _selectedDate);
       } else {
         final log = await _repository.checkRoutine(
           routineId,
           CheckRoutineDto(
+            date: _selectedDate,
             textValue: textValue,
             numericValue: numericValue,
             timeValue: timeValue,
@@ -427,7 +474,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         _ref.invalidate(routineBadgesProvider(routineId));
       }
 
-      final checkedRoutines = _ref.read(routineListProvider).valueOrNull;
+      final checkedRoutines = _ref
+          .read(routineListProvider(_selectedDate))
+          .valueOrNull;
       String? groupId;
       if (checkedRoutines != null) {
         for (final r in checkedRoutines) {
@@ -450,7 +499,8 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
           routineStreakProvider(routineId).future,
         );
         newStreakDays = newStreak.currentStreakDays;
-        streakIncreased = previousStreak == null ||
+        streakIncreased =
+            previousStreak == null ||
             newStreak.currentStreakDays > previousStreak.currentStreakDays;
       } else {
         _ref.invalidate(routineStreakProvider(routineId));
@@ -463,10 +513,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         newlyEarnedBadges: newlyEarnedBadges,
       );
     } catch (e) {
-      _ref.read(routineListProvider.notifier).setCheckedToday(
-            routineId,
-            currentlyChecked,
-          );
+      _ref
+          .read(routineListProvider(_selectedDate).notifier)
+          .setCheckedToday(routineId, currentlyChecked);
       return const RoutineCheckResult(success: false);
     }
   }
@@ -503,11 +552,11 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
 
 final routineManagementProvider =
     StateNotifierProvider<RoutineManagementNotifier, AsyncValue<void>>((ref) {
-  return RoutineManagementNotifier(
-    ref.watch(routineRepositoryProvider),
-    ref,
-  );
-});
+      return RoutineManagementNotifier(
+        ref.watch(routineRepositoryProvider),
+        ref,
+      );
+    });
 
 /// 루틴(습관 묶음) 관리 Notifier (생성/수정/삭제/순서변경)
 class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
@@ -515,7 +564,7 @@ class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
   final Ref _ref;
 
   RoutineGroupManagementNotifier(this._repository, this._ref)
-      : super(const AsyncValue.data(null));
+    : super(const AsyncValue.data(null));
 
   Future<RoutineGroup?> createRoutineGroup(CreateRoutineGroupDto dto) async {
     state = const AsyncValue.loading();
@@ -554,7 +603,13 @@ class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
     try {
       await _repository.deleteRoutineGroup(id);
       _ref.read(routineGroupListProvider.notifier).removeGroup(id);
-      await _ref.read(routineListProvider.notifier).refresh();
+      await _ref
+          .read(
+            routineListProvider(
+              _ref.read(selectedRoutineDateProvider),
+            ).notifier,
+          )
+          .refresh();
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
@@ -571,10 +626,12 @@ class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
         reordered
             .asMap()
             .entries
-            .map((e) => RoutineGroupSortOrderItemDto(
-                  id: e.value.id,
-                  sortOrder: e.key,
-                ))
+            .map(
+              (e) => RoutineGroupSortOrderItemDto(
+                id: e.value.id,
+                sortOrder: e.key,
+              ),
+            )
             .toList(),
       );
     } catch (_) {
@@ -583,13 +640,15 @@ class RoutineGroupManagementNotifier extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final routineGroupManagementProvider = StateNotifierProvider<
-    RoutineGroupManagementNotifier, AsyncValue<void>>((ref) {
-  return RoutineGroupManagementNotifier(
-    ref.watch(routineRepositoryProvider),
-    ref,
-  );
-});
+final routineGroupManagementProvider =
+    StateNotifierProvider<RoutineGroupManagementNotifier, AsyncValue<void>>((
+      ref,
+    ) {
+      return RoutineGroupManagementNotifier(
+        ref.watch(routineRepositoryProvider),
+        ref,
+      );
+    });
 
 // ── 루틴 카테고리 ─────────────────────────────────────────────────────────────
 
@@ -642,7 +701,7 @@ class RoutineCategoryManagementNotifier
   final Ref _ref;
 
   RoutineCategoryManagementNotifier(this._repository, this._ref)
-      : super(const AsyncValue.data(null));
+    : super(const AsyncValue.data(null));
 
   Future<RoutineCategory?> createRoutineCategory(
     CreateRoutineCategoryDto dto,
@@ -682,7 +741,13 @@ class RoutineCategoryManagementNotifier
     try {
       await _repository.deleteRoutineCategory(id);
       _ref.read(routineCategoryListProvider.notifier).removeCategory(id);
-      await _ref.read(routineListProvider.notifier).refresh();
+      await _ref
+          .read(
+            routineListProvider(
+              _ref.read(selectedRoutineDateProvider),
+            ).notifier,
+          )
+          .refresh();
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
@@ -698,10 +763,12 @@ class RoutineCategoryManagementNotifier
         reordered
             .asMap()
             .entries
-            .map((e) => RoutineCategorySortOrderItemDto(
-                  id: e.value.id,
-                  sortOrder: e.key,
-                ))
+            .map(
+              (e) => RoutineCategorySortOrderItemDto(
+                id: e.value.id,
+                sortOrder: e.key,
+              ),
+            )
             .toList(),
       );
     } catch (_) {
@@ -710,10 +777,12 @@ class RoutineCategoryManagementNotifier
   }
 }
 
-final routineCategoryManagementProvider = StateNotifierProvider<
-    RoutineCategoryManagementNotifier, AsyncValue<void>>((ref) {
-  return RoutineCategoryManagementNotifier(
-    ref.watch(routineRepositoryProvider),
-    ref,
-  );
-});
+final routineCategoryManagementProvider =
+    StateNotifierProvider<RoutineCategoryManagementNotifier, AsyncValue<void>>((
+      ref,
+    ) {
+      return RoutineCategoryManagementNotifier(
+        ref.watch(routineRepositoryProvider),
+        ref,
+      );
+    });

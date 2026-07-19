@@ -180,6 +180,30 @@ enum RoutineStatus {
   }
 }
 
+/// 조회 기준 날짜의 실제 체크 기록값 (recordType별 값 중 하나만 유효)
+class RoutineCheckedLog {
+  final String? note;
+  final String? textValue;
+  final num? numericValue;
+  final String? timeValue;
+
+  const RoutineCheckedLog({
+    this.note,
+    this.textValue,
+    this.numericValue,
+    this.timeValue,
+  });
+
+  factory RoutineCheckedLog.fromJson(Map<String, dynamic> json) {
+    return RoutineCheckedLog(
+      note: json['note'] as String?,
+      textValue: json['textValue'] as String?,
+      numericValue: json['numericValue'] as num?,
+      timeValue: json['timeValue'] as String?,
+    );
+  }
+}
+
 /// 이번 주 진행 상황 (체크 횟수 / 목표 횟수)
 class ThisWeekProgress {
   final int checked;
@@ -217,6 +241,10 @@ class Routine {
   final DateTime? endDate;
   final int sortOrder;
   final bool checkedToday;
+
+  /// 조회 기준 날짜(GET routines의 date 쿼리, 미지정 시 오늘)의 실제 기록값.
+  /// 체크 안 했으면 null.
+  final RoutineCheckedLog? checkedLog;
   final String? routineGroupId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -240,6 +268,7 @@ class Routine {
     this.endDate,
     required this.sortOrder,
     required this.checkedToday,
+    this.checkedLog,
     this.routineGroupId,
     required this.createdAt,
     required this.updatedAt,
@@ -273,6 +302,11 @@ class Routine {
           : null,
       sortOrder: json['sortOrder'] as int? ?? 0,
       checkedToday: json['checkedToday'] as bool? ?? false,
+      checkedLog: json['checkedLog'] != null
+          ? RoutineCheckedLog.fromJson(
+              json['checkedLog'] as Map<String, dynamic>,
+            )
+          : null,
       routineGroupId: json['routineGroupId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
@@ -293,6 +327,8 @@ class Routine {
     RoutineStatus? status,
     int? sortOrder,
     bool? checkedToday,
+    RoutineCheckedLog? checkedLog,
+    bool clearCheckedLog = false,
     String? routineGroupId,
   }) {
     return Routine(
@@ -314,6 +350,7 @@ class Routine {
       endDate: endDate ?? this.endDate,
       sortOrder: sortOrder ?? this.sortOrder,
       checkedToday: checkedToday ?? this.checkedToday,
+      checkedLog: clearCheckedLog ? null : (checkedLog ?? this.checkedLog),
       routineGroupId: routineGroupId ?? this.routineGroupId,
       createdAt: createdAt,
       updatedAt: updatedAt,

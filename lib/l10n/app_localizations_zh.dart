@@ -4472,6 +4472,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_title => '日常习惯';
 
   @override
+  String get routine_date_today => '今天';
+
+  @override
   String get routine_list_empty => '还没有习惯';
 
   @override

@@ -128,8 +128,8 @@ class _FakeRoutineRepository extends RoutineRepository {
     RoutineStatus? status,
     String? routineGroupId,
     String? categoryId,
-  }) async =>
-      _routines;
+    String? date,
+  }) async => _routines;
 
   @override
   Future<Routine> getRoutine(String id) async =>
@@ -254,21 +254,19 @@ void main() {
         streakAfterCheck: _buildStreak(currentStreakDays: 1),
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
       // 목록을 먼저 로드해 초기 상태를 만든다
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final result = await container
           .read(routineManagementProvider.notifier)
           .toggleCheck('routine-1', false);
 
       expect(result.success, isTrue);
-      final routines = container.read(routineListProvider).value!;
+      final routines = container.read(routineListProvider(null)).value!;
       expect(routines.single.checkedToday, isTrue);
       expect(repository.checkCallCount, 1);
       expect(repository.uncheckCallCount, 0);
@@ -280,22 +278,23 @@ void main() {
         checkShouldThrow: true,
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final result = await container
           .read(routineManagementProvider.notifier)
           .toggleCheck('routine-1', false);
 
       expect(result.success, isFalse);
-      final routines = container.read(routineListProvider).value!;
-      expect(routines.single.checkedToday, isFalse,
-          reason: '체크 API 실패 시 낙관적 업데이트가 롤백되어야 한다');
+      final routines = container.read(routineListProvider(null)).value!;
+      expect(
+        routines.single.checkedToday,
+        isFalse,
+        reason: '체크 API 실패 시 낙관적 업데이트가 롤백되어야 한다',
+      );
     });
 
     test('체크 취소 시 uncheckRoutine이 호출되고 checkedToday가 false로 반영된다', () async {
@@ -303,13 +302,11 @@ void main() {
         routines: [_buildRoutine(checkedToday: true)],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final result = await container
           .read(routineManagementProvider.notifier)
@@ -318,7 +315,7 @@ void main() {
       expect(result.success, isTrue);
       expect(repository.uncheckCallCount, 1);
       expect(repository.checkCallCount, 0);
-      final routines = container.read(routineListProvider).value!;
+      final routines = container.read(routineListProvider(null)).value!;
       expect(routines.single.checkedToday, isFalse);
     });
 
@@ -329,13 +326,11 @@ void main() {
         streakAfterCheck: _buildStreak(currentStreakDays: 5),
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
       // 체크 전 스트릭을 미리 4일로 캐싱
       await container.read(routineStreakProvider('routine-1').future);
 
@@ -355,13 +350,11 @@ void main() {
         streakAfterCheck: _buildStreak(currentStreakDays: 7),
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final result = await container
           .read(routineManagementProvider.notifier)
@@ -377,9 +370,7 @@ void main() {
         groups: [_buildGroup(checked: 1, total: 3)],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
@@ -393,9 +384,7 @@ void main() {
     test('그룹 생성 성공 시 목록에 새 그룹이 추가된다', () async {
       final repository = _FakeRoutineRepository(groups: const []);
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
@@ -416,14 +405,12 @@ void main() {
         groups: [_buildGroup()],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
       await container.read(routineGroupListProvider.future);
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final success = await container
           .read(routineGroupManagementProvider.notifier)
@@ -445,17 +432,17 @@ void main() {
         ],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      final routines = await container.read(routineListProvider.future);
+      final routines = await container.read(routineListProvider(null).future);
 
       expect(routines.length, 2);
-      expect(routines.map((r) => r.status),
-          containsAll([RoutineStatus.active, RoutineStatus.paused]));
+      expect(
+        routines.map((r) => r.status),
+        containsAll([RoutineStatus.active, RoutineStatus.paused]),
+      );
     });
   });
 
@@ -463,17 +450,18 @@ void main() {
     test('TEXT 습관 체크 시 textValue가 DTO에 담겨 전달된다', () async {
       final repository = _FakeRoutineRepository(
         routines: [
-          _buildRoutine(checkedToday: false, recordType: RoutineRecordType.text),
+          _buildRoutine(
+            checkedToday: false,
+            recordType: RoutineRecordType.text,
+          ),
         ],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       await container
           .read(routineManagementProvider.notifier)
@@ -494,13 +482,11 @@ void main() {
         ],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       await container
           .read(routineManagementProvider.notifier)
@@ -512,17 +498,18 @@ void main() {
     test('TIME 습관 체크 시 timeValue가 DTO에 담겨 전달된다', () async {
       final repository = _FakeRoutineRepository(
         routines: [
-          _buildRoutine(checkedToday: false, recordType: RoutineRecordType.time),
+          _buildRoutine(
+            checkedToday: false,
+            recordType: RoutineRecordType.time,
+          ),
         ],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       await container
           .read(routineManagementProvider.notifier)
@@ -538,13 +525,11 @@ void main() {
         routines: [_buildRoutine(status: RoutineStatus.active)],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final result = await container
           .read(routineManagementProvider.notifier)
@@ -552,7 +537,7 @@ void main() {
 
       expect(result?.status, RoutineStatus.paused);
       expect(repository.pauseCallCount, 1);
-      final routines = container.read(routineListProvider).value!;
+      final routines = container.read(routineListProvider(null)).value!;
       expect(routines.single.status, RoutineStatus.paused);
     });
 
@@ -561,13 +546,11 @@ void main() {
         routines: [_buildRoutine(status: RoutineStatus.paused)],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final result = await container
           .read(routineManagementProvider.notifier)
@@ -575,7 +558,7 @@ void main() {
 
       expect(result?.status, RoutineStatus.active);
       expect(repository.resumeCallCount, 1);
-      final routines = container.read(routineListProvider).value!;
+      final routines = container.read(routineListProvider(null)).value!;
       expect(routines.single.status, RoutineStatus.active);
     });
   });
@@ -586,14 +569,13 @@ void main() {
         categories: [_buildCategory(title: '규칙적인 삶')],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
-      final categories =
-          await container.read(routineCategoryListProvider.future);
+      final categories = await container.read(
+        routineCategoryListProvider.future,
+      );
 
       expect(categories.single.title, '규칙적인 삶');
     });
@@ -601,9 +583,7 @@ void main() {
     test('카테고리 생성 성공 시 목록에 추가된다', () async {
       final repository = _FakeRoutineRepository(categories: const []);
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
@@ -624,14 +604,12 @@ void main() {
         categories: [_buildCategory()],
       );
       final container = ProviderContainer(
-        overrides: [
-          routineRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
       await container.read(routineCategoryListProvider.future);
-      await container.read(routineListProvider.future);
+      await container.read(routineListProvider(null).future);
 
       final success = await container
           .read(routineCategoryManagementProvider.notifier)

@@ -2224,6 +2224,8 @@
 
   "routine_title": "ルーティン",
   "@routine_title": { "description": "ルーティンメインタイトル" },
+  "routine_date_today": "今日",
+  "@routine_date_today": { "description": "ルーティン一覧の日付選択で今日に戻るボタン" },
   "routine_list_empty": "登録された習慣がありません",
   "@routine_list_empty": { "description": "習慣リストが空の場合の案内" },
   "routine_list_empty_subtitle": "毎日繰り返したい習慣を登録して\nコツコツチェックしながらストリークを積み上げましょう",

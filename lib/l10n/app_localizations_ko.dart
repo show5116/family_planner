@@ -4507,6 +4507,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_title => '루틴';
 
   @override
+  String get routine_date_today => '오늘';
+
+  @override
   String get routine_list_empty => '등록된 습관이 없습니다';
 
   @override

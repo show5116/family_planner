@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
@@ -34,6 +35,45 @@ class RoutineListScreen extends ConsumerStatefulWidget {
 class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   final _addButtonKey = GlobalKey();
   String? _selectedCategoryId;
+  DateTime _selectedDate = DateTime.now();
+  late DateTime _visibleMonth = DateTime(
+    _selectedDate.year,
+    _selectedDate.month,
+  );
+
+  bool get _isToday => _isSameDay(_selectedDate, DateTime.now());
+
+  String? get _selectedDateParam =>
+      _isToday ? null : _formatDate(_selectedDate);
+
+  static bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  static String _formatDate(DateTime date) =>
+      '${date.year.toString().padLeft(4, '0')}-'
+      '${date.month.toString().padLeft(2, '0')}-'
+      '${date.day.toString().padLeft(2, '0')}';
+
+  /// 선택된 날짜가 속한 주의 월요일
+  DateTime get _weekStart {
+    final weekday = _selectedDate.weekday; // 1=월 ~ 7=일
+    return DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    ).subtract(Duration(days: weekday - 1));
+  }
+
+  void _setSelectedDate(DateTime date) {
+    setState(() {
+      _selectedDate = date;
+      _visibleMonth = DateTime(date.year, date.month);
+    });
+    Future.microtask(() {
+      if (!mounted) return;
+      ref.read(selectedRoutineDateProvider.notifier).state = _selectedDateParam;
+    });
+  }
 
   @override
   void initState() {
@@ -362,6 +402,119 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
+  Widget _buildDateNavigator(BuildContext context, AppLocalizations l10n) {
+    final locale = Localizations.localeOf(context).toString();
+    final monthLabel = DateFormat.yMMMM(locale).format(_visibleMonth);
+    final weekDays = List.generate(7, (i) => _weekStart.add(Duration(days: i)));
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.spaceM,
+            vertical: AppSizes.spaceXS,
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                visualDensity: VisualDensity.compact,
+                onPressed: () => _setSelectedDate(
+                  DateTime(_visibleMonth.year, _visibleMonth.month - 1, 1),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    monthLabel,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                visualDensity: VisualDensity.compact,
+                onPressed: () => _setSelectedDate(
+                  DateTime(_visibleMonth.year, _visibleMonth.month + 1, 1),
+                ),
+              ),
+              if (!_isToday)
+                TextButton(
+                  onPressed: () => _setSelectedDate(DateTime.now()),
+                  child: Text(l10n.routine_date_today),
+                ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS),
+          child: Row(
+            children: weekDays.map((day) {
+              final selected = _isSameDay(day, _selectedDate);
+              final isTodayMarker = _isSameDay(day, DateTime.now());
+              return Expanded(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                  onTap: () => _setSelectedDate(day),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                      vertical: AppSizes.spaceXS,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSizes.spaceXS,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(
+                        AppSizes.radiusMedium,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          DateFormat.E(locale).format(day),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: selected
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${day.day}',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: selected
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : (isTodayMarker
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.primary
+                                          : null),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        const Divider(height: 1),
+      ],
+    );
+  }
+
   Widget _buildCategoryFilterRow(
     BuildContext context,
     AppLocalizations l10n,
@@ -408,7 +561,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final routinesAsync = ref.watch(routineListProvider);
+    final routinesAsync = ref.watch(routineListProvider(_selectedDateParam));
     final groupsAsync = ref.watch(routineGroupListProvider);
     final categoriesAsync = ref.watch(routineCategoryListProvider);
     final myGroups = ref.watch(myGroupsProvider).valueOrNull ?? [];
@@ -436,6 +589,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       ),
       body: Column(
         children: [
+          _buildDateNavigator(context, l10n),
           _buildCategoryFilterRow(
             context,
             l10n,
@@ -447,7 +601,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
               error: (error, _) => AppErrorState(
                 error: error,
                 title: l10n.routine_error_generic,
-                onRetry: () => ref.read(routineListProvider.notifier).refresh(),
+                onRetry: () => ref
+                    .read(routineListProvider(_selectedDateParam).notifier)
+                    .refresh(),
               ),
               data: (routines) {
                 final groups = groupsAsync.valueOrNull ?? [];
@@ -477,7 +633,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
 
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await ref.read(routineListProvider.notifier).refresh();
+                    await ref
+                        .read(routineListProvider(_selectedDateParam).notifier)
+                        .refresh();
                     await ref.read(routineGroupListProvider.notifier).refresh();
                   },
                   child: ListView(
