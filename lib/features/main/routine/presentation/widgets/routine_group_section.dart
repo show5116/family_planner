@@ -31,7 +31,8 @@ class RoutineGroupSection extends StatefulWidget {
     String? textValue,
     num? numericValue,
     String? timeValue,
-  }) onToggleCheck;
+  })
+  onToggleCheck;
   final void Function(List<Routine>) onReorderRoutines;
   final VoidCallback onEditGroup;
   final VoidCallback onDeleteGroup;
@@ -54,7 +55,12 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
       widget.group.color,
       fallback: colorScheme.primary,
     );
-    final progress = widget.group.todayProgress;
+    // 서버가 내려주는 group.todayProgress는 그룹 전체 기준(오늘 고정)이라
+    // 카테고리 필터나 날짜 선택이 적용된 현재 목록과 맞지 않을 수 있다.
+    // 실제로 화면에 보이는 widget.routines 기준으로 다시 계산해 항상
+    // 표시되는 항목 수와 일치하도록 한다.
+    final checkedCount = widget.routines.where((r) => r.checkedToday).length;
+    final totalCount = widget.routines.length;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
@@ -72,31 +78,37 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
               child: Row(
                 children: [
                   if (widget.group.emoji != null) ...[
-                    Text(widget.group.emoji!, style: const TextStyle(fontSize: 18)),
+                    Text(
+                      widget.group.emoji!,
+                      style: const TextStyle(fontSize: 18),
+                    ),
                     const SizedBox(width: AppSizes.spaceS),
                   ],
                   Expanded(
                     child: Text(
                       widget.group.title,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: accent,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: accent,
+                        fontWeight: FontWeight.bold,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      '${progress.checked}/${progress.total}',
+                      '$checkedCount/$totalCount',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: accent,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: accent,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   PopupMenuButton<String>(
@@ -121,7 +133,9 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
                     ],
                   ),
                   Icon(
-                    _expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    _expanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     size: 18,
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -159,11 +173,11 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
                       onTap: () => widget.onTapRoutine(routine),
                       onToggleCheck: ({textValue, numericValue, timeValue}) =>
                           widget.onToggleCheck(
-                        routine,
-                        textValue: textValue,
-                        numericValue: numericValue,
-                        timeValue: timeValue,
-                      ),
+                            routine,
+                            textValue: textValue,
+                            numericValue: numericValue,
+                            timeValue: timeValue,
+                          ),
                       onEdit: widget.onEditRoutine != null
                           ? () => widget.onEditRoutine!(routine)
                           : null,

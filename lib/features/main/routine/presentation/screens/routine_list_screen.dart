@@ -69,10 +69,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       _selectedDate = date;
       _visibleMonth = DateTime(date.year, date.month);
     });
-    Future.microtask(() {
-      if (!mounted) return;
-      ref.read(selectedRoutineDateProvider.notifier).state = _selectedDateParam;
-    });
+    ref.read(selectedRoutineDateProvider.notifier).state = _selectedDateParam;
   }
 
   @override
@@ -649,7 +646,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                     ),
                     children: [
                       for (final group in groups)
-                        if (routines
+                        if (filteredRoutines
                             .where((r) => r.routineGroupId == group.id)
                             .isNotEmpty)
                           RoutineGroupSection(
