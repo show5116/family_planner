@@ -2376,6 +2376,12 @@
   "@routine_group_save": { "description": "ルーティン保存ボタン" },
   "routine_group_standalone_section_title": "独立した習慣",
   "@routine_group_standalone_section_title": { "description": "ルーティンに所属しない習慣のセクションヘッダー" },
+  "routine_table_header_number": "番号",
+  "@routine_table_header_number": { "description": "習慣表ヘッダー - 番号列" },
+  "routine_table_header_habit": "習慣",
+  "@routine_table_header_habit": { "description": "習慣表ヘッダー - 習慣列" },
+  "routine_table_header_check": "チェック",
+  "@routine_table_header_check": { "description": "習慣表ヘッダー - チェック列" },
   "routine_group_error_generic": "エラーが発生しました",
   "@routine_group_error_generic": { "description": "ルーティン関連の一般エラーメッセージ" },
 

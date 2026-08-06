@@ -19,6 +19,7 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 
@@ -345,25 +346,22 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
-  Widget _buildStandaloneGrid(
+  Widget _buildStandaloneTable(
     BuildContext context,
     List<Routine> standaloneRoutines,
   ) {
-    return GridView.builder(
+    return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: AppSizes.spaceS,
-        crossAxisSpacing: AppSizes.spaceS,
-        childAspectRatio: 1.4,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
       itemCount: standaloneRoutines.length,
+      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final routine = standaloneRoutines[index];
         return RoutineListItem(
           key: ValueKey(routine.id),
           routine: routine,
+          rowNumber: index + 1,
           onTap: () => context.push(
             AppRoutes.routineDetail,
             extra: {'routineId': routine.id},
@@ -406,11 +404,18 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       },
       itemBuilder: (context, index) {
         final routine = standaloneRoutines[index];
-        return Padding(
+        return Container(
           key: ValueKey(routine.id),
-          padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+            ),
+          ),
           child: RoutineListItem(
             routine: routine,
+            rowNumber: index + 1,
             isEditing: true,
             dragHandle: ReorderableDragStartListener(
               index: index,
@@ -603,24 +608,31 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       appBar: AppBar(
         title: Text(l10n.routine_title),
         actions: [
-          TextButton(
+          IconButton(
+            icon: Icon(_isReordering ? Icons.check : Icons.swap_vert),
+            tooltip: _isReordering
+                ? l10n.routine_reorder_done
+                : l10n.routine_reorder,
             onPressed: () => setState(() => _isReordering = !_isReordering),
-            child: Text(
-              _isReordering ? l10n.routine_reorder_done : l10n.routine_reorder,
-            ),
           ),
-          if (!_isReordering) ...[
-            IconButton(
-              icon: const Icon(Icons.emoji_events_outlined),
-              tooltip: l10n.routine_badges_title,
-              onPressed: () => context.push(AppRoutes.routineBadges),
+          if (!_isReordering)
+            AppBarMoreMenu(
+              onReplayOnboarding: _showCoachMark,
+              extraItems: [
+                MoreMenuItem(
+                  id: 'badges',
+                  icon: Icons.emoji_events_outlined,
+                  label: l10n.routine_badges_title,
+                  onTap: (ctx) => ctx.push(AppRoutes.routineBadges),
+                ),
+                MoreMenuItem(
+                  id: 'shared_group',
+                  icon: Icons.groups_outlined,
+                  label: l10n.routine_shared_group_select,
+                  onTap: (ctx) => _showSharedGroupPicker(ctx, myGroups),
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.groups_outlined),
-              tooltip: l10n.routine_shared_group_select,
-              onPressed: () => _showSharedGroupPicker(context, myGroups),
-            ),
-          ],
         ],
       ),
       floatingActionButton: _isReordering
@@ -747,10 +759,11 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
+                        buildRoutineTableHeader(context),
                         if (_isReordering)
                           _buildStandaloneEditList(context, standaloneRoutines)
                         else
-                          _buildStandaloneGrid(context, standaloneRoutines),
+                          _buildStandaloneTable(context, standaloneRoutines),
                       ],
                     ],
                   ),

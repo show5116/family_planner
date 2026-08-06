@@ -2376,6 +2376,12 @@
   "@routine_group_save": { "description": "Save routine button" },
   "routine_group_standalone_section_title": "Standalone Habits",
   "@routine_group_standalone_section_title": { "description": "Section header for habits not in a routine" },
+  "routine_table_header_number": "No.",
+  "@routine_table_header_number": { "description": "Habit table header - number column" },
+  "routine_table_header_habit": "Habit",
+  "@routine_table_header_habit": { "description": "Habit table header - habit column" },
+  "routine_table_header_check": "Check",
+  "@routine_table_header_check": { "description": "Habit table header - check column" },
   "routine_group_error_generic": "Something went wrong",
   "@routine_group_error_generic": { "description": "Generic routine error message" },
 

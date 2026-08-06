@@ -2390,6 +2390,12 @@
   "@routine_group_save": { "description": "루틴 저장 버튼" },
   "routine_group_standalone_section_title": "독립 습관",
   "@routine_group_standalone_section_title": { "description": "루틴에 소속되지 않은 습관 섹션 헤더" },
+  "routine_table_header_number": "번호",
+  "@routine_table_header_number": { "description": "습관 표 헤더 - 번호 컬럼" },
+  "routine_table_header_habit": "습관",
+  "@routine_table_header_habit": { "description": "습관 표 헤더 - 습관 컬럼" },
+  "routine_table_header_check": "체크",
+  "@routine_table_header_check": { "description": "습관 표 헤더 - 체크 컬럼" },
   "routine_group_error_generic": "오류가 발생했습니다",
   "@routine_group_error_generic": { "description": "루틴 관련 일반 에러 메시지" },
 

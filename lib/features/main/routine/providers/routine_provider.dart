@@ -67,9 +67,20 @@ class RoutineList extends _$RoutineList {
     );
   }
 
+  /// [reordered]는 재정렬 대상 부분집합(같은 그룹 또는 독립 습관)만 담고
+  /// 있을 수 있다. 전체 목록에서 해당 id들의 위치만 [reordered] 순서로
+  /// 바꿔치기하고, 나머지 항목(다른 그룹 등)은 그대로 유지한다.
   void reorder(List<Routine> reordered) {
     if (!state.hasValue) return;
-    state = AsyncValue.data(reordered);
+    final list = state.value!;
+    final reorderedIds = reordered.map((r) => r.id).toSet();
+    final reorderedQueue = [...reordered];
+    final updated = list
+        .map(
+          (r) => reorderedIds.contains(r.id) ? reorderedQueue.removeAt(0) : r,
+        )
+        .toList();
+    state = AsyncValue.data(updated);
   }
 
   /// 체크 상태 낙관적 반영. [checkedLog]는 체크 시 낙관적으로 표시할 기록값,

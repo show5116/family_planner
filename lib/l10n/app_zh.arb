@@ -2331,6 +2331,12 @@
   "@routine_group_save": { "description": "保存日程按钮" },
   "routine_group_standalone_section_title": "独立习惯",
   "@routine_group_standalone_section_title": { "description": "未归入任何日程的习惯分组标题" },
+  "routine_table_header_number": "编号",
+  "@routine_table_header_number": { "description": "习惯表格表头 - 编号列" },
+  "routine_table_header_habit": "习惯",
+  "@routine_table_header_habit": { "description": "习惯表格表头 - 习惯列" },
+  "routine_table_header_check": "打卡",
+  "@routine_table_header_check": { "description": "习惯表格表头 - 打卡列" },
   "routine_group_error_generic": "发生错误",
   "@routine_group_error_generic": { "description": "日程相关通用错误消息" },
 

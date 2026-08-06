@@ -4726,6 +4726,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_group_standalone_section_title => '独立した習慣';
 
   @override
+  String get routine_table_header_number => '番号';
+
+  @override
+  String get routine_table_header_habit => '習慣';
+
+  @override
+  String get routine_table_header_check => 'チェック';
+
+  @override
   String get routine_group_error_generic => 'エラーが発生しました';
 
   @override

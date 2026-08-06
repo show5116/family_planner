@@ -4733,6 +4733,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_group_standalone_section_title => '독립 습관';
 
   @override
+  String get routine_table_header_number => '번호';
+
+  @override
+  String get routine_table_header_habit => '습관';
+
+  @override
+  String get routine_table_header_check => '체크';
+
+  @override
   String get routine_group_error_generic => '오류가 발생했습니다';
 
   @override

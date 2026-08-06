@@ -4696,6 +4696,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_group_standalone_section_title => '独立习惯';
 
   @override
+  String get routine_table_header_number => '编号';
+
+  @override
+  String get routine_table_header_habit => '习惯';
+
+  @override
+  String get routine_table_header_check => '打卡';
+
+  @override
   String get routine_group_error_generic => '发生错误';
 
   @override

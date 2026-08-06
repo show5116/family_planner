@@ -4837,6 +4837,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_group_standalone_section_title => 'Standalone Habits';
 
   @override
+  String get routine_table_header_number => 'No.';
+
+  @override
+  String get routine_table_header_habit => 'Habit';
+
+  @override
+  String get routine_table_header_check => 'Check';
+
+  @override
   String get routine_group_error_generic => 'Something went wrong';
 
   @override

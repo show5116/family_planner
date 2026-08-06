@@ -9104,6 +9104,24 @@ abstract class AppLocalizations {
   /// **'독립 습관'**
   String get routine_group_standalone_section_title;
 
+  /// 습관 표 헤더 - 번호 컬럼
+  ///
+  /// In ko, this message translates to:
+  /// **'번호'**
+  String get routine_table_header_number;
+
+  /// 습관 표 헤더 - 습관 컬럼
+  ///
+  /// In ko, this message translates to:
+  /// **'습관'**
+  String get routine_table_header_habit;
+
+  /// 습관 표 헤더 - 체크 컬럼
+  ///
+  /// In ko, this message translates to:
+  /// **'체크'**
+  String get routine_table_header_check;
+
   /// 루틴 관련 일반 에러 메시지
   ///
   /// In ko, this message translates to:
