@@ -317,7 +317,24 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
   Future<Routine?> createRoutine(CreateRoutineDto dto) async {
     state = const AsyncValue.loading();
     try {
-      final routine = await _repository.createRoutine(dto);
+      var routine = await _repository.createRoutine(dto);
+      // 서버가 신규 루틴에 부여하는 sortOrder가 "마지막"이 아닐 수 있어
+      // (재조회 시 중간에 끼는 현상), 같은 그룹(또는 독립 습관) 내 현재
+      // 최댓값+1로 명시 고정해 항상 맨 끝에 오도록 보정한다.
+      final siblings = _ref
+          .read(routineListProvider(_selectedDate))
+          .valueOrNull
+          ?.where((r) => r.routineGroupId == routine.routineGroupId);
+      final maxSortOrder = siblings == null || siblings.isEmpty
+          ? -1
+          : siblings.map((r) => r.sortOrder).reduce((a, b) => a > b ? a : b);
+      if (routine.sortOrder <= maxSortOrder) {
+        final fixedSortOrder = maxSortOrder + 1;
+        await _repository.updateSortOrder([
+          RoutineSortOrderItemDto(id: routine.id, sortOrder: fixedSortOrder),
+        ]);
+        routine = routine.copyWith(sortOrder: fixedSortOrder);
+      }
       _ref
           .read(routineListProvider(_selectedDate).notifier)
           .upsertRoutine(routine);
