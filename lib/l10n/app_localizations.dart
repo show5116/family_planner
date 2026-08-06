@@ -8666,6 +8666,18 @@ abstract class AppLocalizations {
   /// **'오늘'**
   String get routine_date_today;
 
+  /// 루틴 목록 순서변경 편집 모드 진입 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'순서변경'**
+  String get routine_reorder;
+
+  /// 루틴 목록 순서변경 편집 모드 종료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'완료'**
+  String get routine_reorder_done;
+
   /// 습관 목록 비어있을 때 안내
   ///
   /// In ko, this message translates to:

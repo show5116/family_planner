@@ -6,7 +6,7 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_check_value_dialog.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
-/// 루틴 목록의 개별 카드 (체크 토글 포함)
+/// 루틴 그리드의 개별 카드 (체크 토글 포함, 세로형 레이아웃)
 class RoutineListItem extends StatefulWidget {
   const RoutineListItem({
     super.key,
@@ -16,7 +16,9 @@ class RoutineListItem extends StatefulWidget {
     this.onEdit,
     this.onPause,
     this.onResume,
+    this.onDelete,
     this.dragHandle,
+    this.isEditing = false,
   });
 
   final Routine routine;
@@ -30,7 +32,12 @@ class RoutineListItem extends StatefulWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onPause;
   final VoidCallback? onResume;
+  final VoidCallback? onDelete;
   final Widget? dragHandle;
+
+  /// 순서변경 편집 모드 여부. true면 체크/메뉴가 비활성화되고
+  /// 드래그 핸들이 강조 표시된다.
+  final bool isEditing;
 
   @override
   State<RoutineListItem> createState() => _RoutineListItemState();
@@ -57,133 +64,144 @@ class _RoutineListItemState extends State<RoutineListItem> {
         ? '${routine.targetCount}${l10n.routine_field_target_count}'
         : null;
     final isPaused = routine.status == RoutineStatus.paused;
-    final canCheck = routine.status == RoutineStatus.active;
+    final canCheck =
+        routine.status == RoutineStatus.active && !widget.isEditing;
 
     return Opacity(
       opacity: isPaused ? 0.55 : 1.0,
       child: Card(
-        margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: onTap,
+          onTap: widget.isEditing ? null : onTap,
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceM,
-              vertical: AppSizes.spaceS,
-            ),
-            child: Row(
+            padding: const EdgeInsets.all(AppSizes.spaceS),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (dragHandle != null) ...[
-                  dragHandle!,
-                  const SizedBox(width: AppSizes.spaceS),
-                ],
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: accent.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                  ),
-                  alignment: Alignment.center,
-                  child: (routine.emoji != null && routine.emoji!.isNotEmpty)
-                      ? Text(
-                          routine.emoji!,
-                          style: const TextStyle(fontSize: 20),
-                        )
-                      : Icon(
-                          Icons.check_circle_outline,
-                          size: 20,
-                          color: accent,
-                        ),
-                ),
-                const SizedBox(width: AppSizes.spaceM),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              routine.title,
-                              style: Theme.of(context).textTheme.titleMedium,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                Row(
+                  children: [
+                    if (widget.isEditing && dragHandle != null) ...[
+                      dragHandle!,
+                      const SizedBox(width: AppSizes.spaceXS),
+                    ],
+                    Expanded(
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: accent.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusSmall,
                           ),
-                          if (isPaused) ...[
-                            const SizedBox(width: AppSizes.spaceS),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 1,
+                        ),
+                        alignment: Alignment.center,
+                        child:
+                            (routine.emoji != null && routine.emoji!.isNotEmpty)
+                            ? Text(
+                                routine.emoji!,
+                                style: const TextStyle(fontSize: 18),
+                              )
+                            : Icon(
+                                Icons.check_circle_outline,
+                                size: 18,
+                                color: accent,
                               ),
-                              decoration: BoxDecoration(
-                                color: colorScheme.surfaceContainerHighest,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                l10n.routine_status_paused,
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      color: colorScheme.onSurfaceVariant,
-                                    ),
-                              ),
+                      ),
+                    ),
+                    if (!widget.isEditing &&
+                        (widget.onEdit != null ||
+                            widget.onPause != null ||
+                            widget.onResume != null ||
+                            widget.onDelete != null))
+                      PopupMenuButton<String>(
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 18,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        onSelected: (value) {
+                          switch (value) {
+                            case 'edit':
+                              widget.onEdit?.call();
+                            case 'pause':
+                              widget.onPause?.call();
+                            case 'resume':
+                              widget.onResume?.call();
+                            case 'delete':
+                              widget.onDelete?.call();
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          if (widget.onEdit != null)
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: Text(l10n.routine_edit),
                             ),
-                          ],
+                          if (isPaused && widget.onResume != null)
+                            PopupMenuItem(
+                              value: 'resume',
+                              child: Text(l10n.routine_resume),
+                            ),
+                          if (!isPaused && widget.onPause != null)
+                            PopupMenuItem(
+                              value: 'pause',
+                              child: Text(l10n.routine_pause),
+                            ),
+                          if (widget.onDelete != null)
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: Text(l10n.routine_end),
+                            ),
                         ],
                       ),
-                      if (progress != null)
-                        Text(
-                          '${l10n.routine_this_week_progress}: $progress',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: colorScheme.onSurfaceVariant),
-                        ),
-                    ],
+                  ],
+                ),
+                const SizedBox(height: AppSizes.spaceXS),
+                Text(
+                  routine.title,
+                  style: Theme.of(context).textTheme.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                if (isPaused) ...[
+                  const SizedBox(height: 2),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      l10n.routine_status_paused,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
-                ),
-                _CheckIndicator(
-                  routine: routine,
-                  accent: accent,
-                  enabled: canCheck,
-                  onTap: _handleToggleCheck,
-                ),
-                if (widget.onEdit != null ||
-                    widget.onPause != null ||
-                    widget.onResume != null)
-                  PopupMenuButton<String>(
-                    icon: Icon(
-                      Icons.more_vert,
-                      size: 18,
+                ] else if (progress != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    '${l10n.routine_this_week_progress}: $progress',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
-                    onSelected: (value) {
-                      switch (value) {
-                        case 'edit':
-                          widget.onEdit?.call();
-                        case 'pause':
-                          widget.onPause?.call();
-                        case 'resume':
-                          widget.onResume?.call();
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      if (widget.onEdit != null)
-                        PopupMenuItem(
-                          value: 'edit',
-                          child: Text(l10n.routine_edit),
-                        ),
-                      if (isPaused && widget.onResume != null)
-                        PopupMenuItem(
-                          value: 'resume',
-                          child: Text(l10n.routine_resume),
-                        ),
-                      if (!isPaused && widget.onPause != null)
-                        PopupMenuItem(
-                          value: 'pause',
-                          child: Text(l10n.routine_pause),
-                        ),
-                    ],
                   ),
+                ],
+                const SizedBox(height: AppSizes.spaceXS),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: _CheckIndicator(
+                    routine: routine,
+                    accent: accent,
+                    enabled: canCheck,
+                    onTap: _handleToggleCheck,
+                  ),
+                ),
               ],
             ),
           ),
@@ -262,7 +280,8 @@ class _CheckIndicator extends StatelessWidget {
 
     if (valueLabel == null || valueLabel.isEmpty) {
       return IconButton(
-        iconSize: 28,
+        iconSize: 26,
+        visualDensity: VisualDensity.compact,
         onPressed: enabled ? onTap : null,
         icon: icon,
       );
@@ -276,7 +295,6 @@ class _CheckIndicator extends StatelessWidget {
           horizontal: AppSizes.spaceS,
           vertical: 4,
         ),
-        constraints: const BoxConstraints(maxWidth: 88),
         decoration: BoxDecoration(
           color: accent.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
@@ -284,12 +302,12 @@ class _CheckIndicator extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle, size: 16, color: accent),
+            Icon(Icons.check_circle, size: 14, color: accent),
             const SizedBox(width: 4),
             Flexible(
               child: Text(
                 valueLabel,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: accent,
                   fontWeight: FontWeight.bold,
                 ),

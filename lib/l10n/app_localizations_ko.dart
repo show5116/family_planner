@@ -4510,6 +4510,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_date_today => '오늘';
 
   @override
+  String get routine_reorder => '순서변경';
+
+  @override
+  String get routine_reorder_done => '완료';
+
+  @override
   String get routine_list_empty => '등록된 습관이 없습니다';
 
   @override

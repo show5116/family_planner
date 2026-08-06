@@ -4610,6 +4610,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_date_today => 'Today';
 
   @override
+  String get routine_reorder => 'Reorder';
+
+  @override
+  String get routine_reorder_done => 'Done';
+
+  @override
   String get routine_list_empty => 'No habits yet';
 
   @override

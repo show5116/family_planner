@@ -35,6 +35,7 @@ class RoutineListScreen extends ConsumerStatefulWidget {
 class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   final _addButtonKey = GlobalKey();
   String? _selectedCategoryId;
+  bool _isReordering = false;
   DateTime _selectedDate = DateTime.now();
   late DateTime _visibleMonth = DateTime(
     _selectedDate.year,
@@ -344,58 +345,93 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
-  Widget _buildStandaloneItem(
+  Widget _buildStandaloneGrid(
     BuildContext context,
     List<Routine> standaloneRoutines,
-    int index,
   ) {
-    final routine = standaloneRoutines[index];
-    return Dismissible(
-      key: ValueKey(routine.id),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (_) async {
-        await _confirmDelete(context, ref, routine);
-        return false;
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: AppSizes.spaceS,
+        crossAxisSpacing: AppSizes.spaceS,
+        childAspectRatio: 1.4,
+      ),
+      itemCount: standaloneRoutines.length,
+      itemBuilder: (context, index) {
+        final routine = standaloneRoutines[index];
+        return RoutineListItem(
+          key: ValueKey(routine.id),
+          routine: routine,
+          onTap: () => context.push(
+            AppRoutes.routineDetail,
+            extra: {'routineId': routine.id},
+          ),
+          onToggleCheck: ({textValue, numericValue, timeValue}) => _toggleCheck(
+            context,
+            ref,
+            routine,
+            textValue: textValue,
+            numericValue: numericValue,
+            timeValue: timeValue,
+          ),
+          onEdit: () => context.push(
+            AppRoutes.routineEdit,
+            extra: {'routineId': routine.id},
+          ),
+          onPause: () => _pauseRoutine(context, ref, routine),
+          onResume: () => _resumeRoutine(context, ref, routine),
+          onDelete: () => _confirmDelete(context, ref, routine),
+        );
       },
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: AppSizes.spaceL),
-        margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer,
-          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        ),
-        child: Icon(
-          Icons.delete_outline,
-          color: Theme.of(context).colorScheme.onErrorContainer,
-        ),
-      ),
-      child: RoutineListItem(
-        key: ValueKey('${routine.id}_content'),
-        routine: routine,
-        dragHandle: ReorderableDragStartListener(
-          index: index,
-          child: const DragHandleIcon(),
-        ),
-        onTap: () => context.push(
-          AppRoutes.routineDetail,
-          extra: {'routineId': routine.id},
-        ),
-        onToggleCheck: ({textValue, numericValue, timeValue}) => _toggleCheck(
-          context,
-          ref,
-          routine,
-          textValue: textValue,
-          numericValue: numericValue,
-          timeValue: timeValue,
-        ),
-        onEdit: () => context.push(
-          AppRoutes.routineEdit,
-          extra: {'routineId': routine.id},
-        ),
-        onPause: () => _pauseRoutine(context, ref, routine),
-        onResume: () => _resumeRoutine(context, ref, routine),
-      ),
+    );
+  }
+
+  Widget _buildStandaloneEditList(
+    BuildContext context,
+    List<Routine> standaloneRoutines,
+  ) {
+    return ReorderableListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
+      proxyDecorator: buildReorderableProxyDecorator,
+      itemCount: standaloneRoutines.length,
+      onReorderItem: (oldIndex, newIndex) {
+        final reordered = [...standaloneRoutines];
+        final item = reordered.removeAt(oldIndex);
+        reordered.insert(newIndex, item);
+        ref.read(routineManagementProvider.notifier).reorder(reordered);
+      },
+      itemBuilder: (context, index) {
+        final routine = standaloneRoutines[index];
+        return Padding(
+          key: ValueKey(routine.id),
+          padding: const EdgeInsets.only(bottom: AppSizes.spaceM),
+          child: RoutineListItem(
+            routine: routine,
+            isEditing: true,
+            dragHandle: ReorderableDragStartListener(
+              index: index,
+              child: const DragHandleIcon(),
+            ),
+            onTap: () => context.push(
+              AppRoutes.routineDetail,
+              extra: {'routineId': routine.id},
+            ),
+            onToggleCheck: ({textValue, numericValue, timeValue}) =>
+                _toggleCheck(
+                  context,
+                  ref,
+                  routine,
+                  textValue: textValue,
+                  numericValue: numericValue,
+                  timeValue: timeValue,
+                ),
+          ),
+        );
+      },
     );
   }
 
@@ -567,23 +603,33 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       appBar: AppBar(
         title: Text(l10n.routine_title),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.emoji_events_outlined),
-            tooltip: l10n.routine_badges_title,
-            onPressed: () => context.push(AppRoutes.routineBadges),
+          TextButton(
+            onPressed: () => setState(() => _isReordering = !_isReordering),
+            child: Text(
+              _isReordering ? l10n.routine_reorder_done : l10n.routine_reorder,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.groups_outlined),
-            tooltip: l10n.routine_shared_group_select,
-            onPressed: () => _showSharedGroupPicker(context, myGroups),
-          ),
+          if (!_isReordering) ...[
+            IconButton(
+              icon: const Icon(Icons.emoji_events_outlined),
+              tooltip: l10n.routine_badges_title,
+              onPressed: () => context.push(AppRoutes.routineBadges),
+            ),
+            IconButton(
+              icon: const Icon(Icons.groups_outlined),
+              tooltip: l10n.routine_shared_group_select,
+              onPressed: () => _showSharedGroupPicker(context, myGroups),
+            ),
+          ],
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        key: _addButtonKey,
-        onPressed: () => _showAddPicker(context),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _isReordering
+          ? null
+          : FloatingActionButton(
+              key: _addButtonKey,
+              onPressed: () => _showAddPicker(context),
+              child: const Icon(Icons.add),
+            ),
       body: Column(
         children: [
           _buildDateNavigator(context, l10n),
@@ -688,6 +734,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                                 _pauseRoutine(context, ref, routine),
                             onResumeRoutine: (routine) =>
                                 _resumeRoutine(context, ref, routine),
+                            isEditing: _isReordering,
                           ),
                       if (standaloneRoutines.isNotEmpty) ...[
                         if (groups.isNotEmpty)
@@ -700,34 +747,10 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
-                        ReorderableListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          buildDefaultDragHandles: false,
-                          proxyDecorator: buildReorderableProxyDecorator,
-                          itemCount: standaloneRoutines.length,
-                          onReorderItem: (oldIndex, newIndex) {
-                            final reordered = [...standaloneRoutines];
-                            final item = reordered.removeAt(oldIndex);
-                            reordered.insert(newIndex, item);
-                            ref
-                                .read(routineManagementProvider.notifier)
-                                .reorder(reordered);
-                          },
-                          itemBuilder: (context, index) => Padding(
-                            key: ValueKey(
-                              '${standaloneRoutines[index].id}_wrap',
-                            ),
-                            padding: const EdgeInsets.only(
-                              bottom: AppSizes.spaceM,
-                            ),
-                            child: _buildStandaloneItem(
-                              context,
-                              standaloneRoutines,
-                              index,
-                            ),
-                          ),
-                        ),
+                        if (_isReordering)
+                          _buildStandaloneEditList(context, standaloneRoutines)
+                        else
+                          _buildStandaloneGrid(context, standaloneRoutines),
                       ],
                     ],
                   ),

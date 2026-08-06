@@ -4503,6 +4503,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_date_today => '今日';
 
   @override
+  String get routine_reorder => '並べ替え';
+
+  @override
+  String get routine_reorder_done => '完了';
+
+  @override
   String get routine_list_empty => '登録された習慣がありません';
 
   @override

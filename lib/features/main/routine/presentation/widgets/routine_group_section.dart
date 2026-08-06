@@ -7,7 +7,12 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
-/// 루틴(습관 묶음) 섹션 - 접기/펼치기 + 오늘 진행률 pill + 소속 습관 드래그 정렬
+/// 루틴(습관 묶음) 섹션 - 접기/펼치기 + 오늘 진행률 pill + 소속 습관 그리드
+///
+/// [isEditing]이 false면 소속 습관을 격자 그리드로 보여준다(읽기 전용,
+/// 탭하면 체크/상세이동만 가능). true면 세로 1열 리스트로 전환되고
+/// 드래그로 순서를 바꿀 수 있다(그리드는 드래그 재정렬을 공식 지원하지
+/// 않아 편집 중에만 리스트 레이아웃을 임시로 사용).
 class RoutineGroupSection extends StatefulWidget {
   const RoutineGroupSection({
     super.key,
@@ -21,6 +26,7 @@ class RoutineGroupSection extends StatefulWidget {
     this.onEditRoutine,
     this.onPauseRoutine,
     this.onResumeRoutine,
+    this.isEditing = false,
   });
 
   final RoutineGroup group;
@@ -39,6 +45,7 @@ class RoutineGroupSection extends StatefulWidget {
   final void Function(Routine)? onEditRoutine;
   final void Function(Routine)? onPauseRoutine;
   final void Function(Routine)? onResumeRoutine;
+  final bool isEditing;
 
   @override
   State<RoutineGroupSection> createState() => _RoutineGroupSectionState();
@@ -111,27 +118,28 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
                       ),
                     ),
                   ),
-                  PopupMenuButton<String>(
-                    icon: Icon(
-                      Icons.more_vert,
-                      size: 18,
-                      color: colorScheme.onSurfaceVariant,
+                  if (!widget.isEditing)
+                    PopupMenuButton<String>(
+                      icon: Icon(
+                        Icons.more_vert,
+                        size: 18,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      onSelected: (value) {
+                        if (value == 'edit') widget.onEditGroup();
+                        if (value == 'delete') widget.onDeleteGroup();
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 'edit',
+                          child: Text(l10n.routine_group_edit),
+                        ),
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: Text(l10n.routine_group_delete),
+                        ),
+                      ],
                     ),
-                    onSelected: (value) {
-                      if (value == 'edit') widget.onEditGroup();
-                      if (value == 'delete') widget.onDeleteGroup();
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Text(l10n.routine_group_edit),
-                      ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Text(l10n.routine_group_delete),
-                      ),
-                    ],
-                  ),
                   Icon(
                     _expanded
                         ? Icons.keyboard_arrow_up
@@ -147,54 +155,90 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
             Divider(height: 1, color: colorScheme.outlineVariant),
             Padding(
               padding: const EdgeInsets.all(AppSizes.spaceS),
-              child: ReorderableListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                buildDefaultDragHandles: false,
-                proxyDecorator: buildReorderableProxyDecorator,
-                itemCount: widget.routines.length,
-                onReorderItem: (oldIndex, newIndex) {
-                  final updated = [...widget.routines];
-                  final moved = updated.removeAt(oldIndex);
-                  updated.insert(newIndex, moved);
-                  widget.onReorderRoutines(updated);
-                },
-                itemBuilder: (context, index) {
-                  final routine = widget.routines[index];
-                  return Padding(
-                    key: ValueKey(routine.id),
-                    padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
-                    child: RoutineListItem(
-                      routine: routine,
-                      dragHandle: ReorderableDragStartListener(
-                        index: index,
-                        child: const DragHandleIcon(),
-                      ),
-                      onTap: () => widget.onTapRoutine(routine),
-                      onToggleCheck: ({textValue, numericValue, timeValue}) =>
-                          widget.onToggleCheck(
-                            routine,
-                            textValue: textValue,
-                            numericValue: numericValue,
-                            timeValue: timeValue,
-                          ),
-                      onEdit: widget.onEditRoutine != null
-                          ? () => widget.onEditRoutine!(routine)
-                          : null,
-                      onPause: widget.onPauseRoutine != null
-                          ? () => widget.onPauseRoutine!(routine)
-                          : null,
-                      onResume: widget.onResumeRoutine != null
-                          ? () => widget.onResumeRoutine!(routine)
-                          : null,
-                    ),
-                  );
-                },
-              ),
+              child: widget.isEditing
+                  ? _buildEditList(context)
+                  : _buildGrid(context),
             ),
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildGrid(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: AppSizes.spaceS,
+        crossAxisSpacing: AppSizes.spaceS,
+        childAspectRatio: 1.4,
+      ),
+      itemCount: widget.routines.length,
+      itemBuilder: (context, index) {
+        final routine = widget.routines[index];
+        return RoutineListItem(
+          key: ValueKey(routine.id),
+          routine: routine,
+          onTap: () => widget.onTapRoutine(routine),
+          onToggleCheck: ({textValue, numericValue, timeValue}) =>
+              widget.onToggleCheck(
+                routine,
+                textValue: textValue,
+                numericValue: numericValue,
+                timeValue: timeValue,
+              ),
+          onEdit: widget.onEditRoutine != null
+              ? () => widget.onEditRoutine!(routine)
+              : null,
+          onPause: widget.onPauseRoutine != null
+              ? () => widget.onPauseRoutine!(routine)
+              : null,
+          onResume: widget.onResumeRoutine != null
+              ? () => widget.onResumeRoutine!(routine)
+              : null,
+        );
+      },
+    );
+  }
+
+  Widget _buildEditList(BuildContext context) {
+    return ReorderableListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
+      proxyDecorator: buildReorderableProxyDecorator,
+      itemCount: widget.routines.length,
+      onReorderItem: (oldIndex, newIndex) {
+        final updated = [...widget.routines];
+        final moved = updated.removeAt(oldIndex);
+        updated.insert(newIndex, moved);
+        widget.onReorderRoutines(updated);
+      },
+      itemBuilder: (context, index) {
+        final routine = widget.routines[index];
+        return Padding(
+          key: ValueKey(routine.id),
+          padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
+          child: RoutineListItem(
+            routine: routine,
+            isEditing: true,
+            dragHandle: ReorderableDragStartListener(
+              index: index,
+              child: const DragHandleIcon(),
+            ),
+            onTap: () => widget.onTapRoutine(routine),
+            onToggleCheck: ({textValue, numericValue, timeValue}) =>
+                widget.onToggleCheck(
+                  routine,
+                  textValue: textValue,
+                  numericValue: numericValue,
+                  timeValue: timeValue,
+                ),
+          ),
+        );
+      },
     );
   }
 }
