@@ -330,6 +330,7 @@ class Routine {
     RoutineCheckedLog? checkedLog,
     bool clearCheckedLog = false,
     String? routineGroupId,
+    bool clearRoutineGroupId = false,
   }) {
     return Routine(
       id: id,
@@ -351,7 +352,9 @@ class Routine {
       sortOrder: sortOrder ?? this.sortOrder,
       checkedToday: checkedToday ?? this.checkedToday,
       checkedLog: clearCheckedLog ? null : (checkedLog ?? this.checkedLog),
-      routineGroupId: routineGroupId ?? this.routineGroupId,
+      routineGroupId: clearRoutineGroupId
+          ? null
+          : (routineGroupId ?? this.routineGroupId),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

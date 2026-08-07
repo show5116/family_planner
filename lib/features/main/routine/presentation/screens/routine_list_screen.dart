@@ -7,9 +7,10 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
+import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_drag_reorder.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_form_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_section.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
@@ -37,6 +38,12 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   final _addButtonKey = GlobalKey();
   String? _selectedCategoryId;
   bool _isReordering = false;
+
+  /// 편집(순서변경/소속이동) 모드 동안의 로컬 임시 목록. null이면 편집 중이
+  /// 아니라는 뜻이며, 이 경우 서버 상태(routines)를 그대로 사용한다.
+  /// 드래그는 이 목록만 바꾸고, "완료"를 눌러야 서버에 일괄 반영된다.
+  List<Routine>? _draftRoutines;
+  bool _savingDraft = false;
   DateTime _selectedDate = DateTime.now();
   late DateTime _visibleMonth = DateTime(
     _selectedDate.year,
@@ -151,6 +158,134 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text(l10n.routine_error_generic)));
     }
+  }
+
+  /// 편집(순서변경/이동) 모드 진입. 서버 상태를 로컬 draft로 복사한다.
+  void _enterReorderMode(List<Routine> routines) {
+    setState(() {
+      _draftRoutines = [...routines];
+      _isReordering = true;
+      // 편집 모드에서는 필터로 숨겨진 루틴도 드래그 대상이 될 수 있어야
+      // 하므로 진입 시 카테고리 필터를 해제한다.
+      _selectedCategoryId = null;
+    });
+  }
+
+  /// draft를 버리고 편집 모드를 나간다(서버 상태는 그대로).
+  void _cancelReorderMode() {
+    setState(() {
+      _draftRoutines = null;
+      _isReordering = false;
+    });
+  }
+
+  /// draft와 서버 상태를 비교해 바뀐 부분(소속 이동 / 순서)만 서버에
+  /// 일괄 반영한 뒤 편집 모드를 나간다.
+  Future<void> _commitDraft(BuildContext context) async {
+    final draft = _draftRoutines;
+    if (draft == null) return;
+    final original =
+        ref.read(routineListProvider(_selectedDateParam)).valueOrNull ?? [];
+    final originalById = {for (final r in original) r.id: r};
+
+    setState(() => _savingDraft = true);
+    final notifier = ref.read(routineManagementProvider.notifier);
+
+    // 1) 소속(그룹) 이동
+    for (final routine in draft) {
+      final before = originalById[routine.id];
+      if (before == null || before.routineGroupId == routine.routineGroupId) {
+        continue;
+      }
+      await notifier.updateRoutine(
+        routine.id,
+        UpdateRoutineDto(
+          routineGroupId: routine.routineGroupId,
+          clearRoutineGroupId: routine.routineGroupId == null,
+        ),
+      );
+    }
+
+    // 2) 순서: 그룹별(그리고 독립 습관)로 나눠 최종 순서를 그대로 반영.
+    // draft는 이동 직후에도 정렬 순서를 유지하고 있으므로 그룹별로 필터링한
+    // 부분 리스트를 그대로 넘기면 된다.
+    final scopeIds = <String?>{for (final r in draft) r.routineGroupId};
+    for (final scopeId in scopeIds) {
+      final scoped = draft.where((r) => r.routineGroupId == scopeId).toList();
+      await notifier.reorder(scoped);
+    }
+
+    if (!context.mounted) return;
+    setState(() {
+      _savingDraft = false;
+      _draftRoutines = null;
+      _isReordering = false;
+    });
+  }
+
+  /// [payload]의 루틴을 draft 안에서 [targetGroupId] 그룹으로 옮긴다
+  /// (null이면 독립 습관으로), [targetIndex] 위치(그 스코프 내 0-based)에 삽입.
+  void _moveRoutineInDraft(
+    RoutineDragPayload payload,
+    String? targetGroupId,
+    int targetIndex,
+  ) {
+    final draft = _draftRoutines;
+    if (draft == null) return;
+    final oldIndex = draft.indexWhere((r) => r.id == payload.routine.id);
+    if (oldIndex == -1) return;
+
+    // targetIndex는 이동 전(자기 자신이 아직 그 스코프에 남아 있는 상태)
+    // 기준으로 계산된 위치다. 같은 스코프 내에서 자기 자신보다 뒤로
+    // 옮기는 경우, 제거로 인해 한 칸씩 당겨지므로 보정이 필요하다.
+    final sameScope = payload.sourceGroupId == targetGroupId;
+    final scopedOldIndex = sameScope
+        ? draft
+              .where((r) => r.routineGroupId == targetGroupId)
+              .toList()
+              .indexWhere((r) => r.id == payload.routine.id)
+        : -1;
+    final adjustedTargetIndex = (sameScope && scopedOldIndex < targetIndex)
+        ? targetIndex - 1
+        : targetIndex;
+
+    setState(() {
+      final updated = [...draft];
+      final moved = updated
+          .removeAt(oldIndex)
+          .copyWith(
+            routineGroupId: targetGroupId,
+            clearRoutineGroupId: targetGroupId == null,
+          );
+
+      // adjustedTargetIndex는 대상 스코프(같은 routineGroupId) 내에서의
+      // 위치이므로, 전체 리스트에서 그 스코프의 해당 항목 앞에 삽입한다.
+      final scoped = updated
+          .where((r) => r.routineGroupId == targetGroupId)
+          .toList();
+      if (adjustedTargetIndex >= scoped.length) {
+        updated.add(moved);
+      } else {
+        final insertBefore = scoped[adjustedTargetIndex];
+        final insertAt = updated.indexWhere((r) => r.id == insertBefore.id);
+        updated.insert(insertAt, moved);
+      }
+      _draftRoutines = updated;
+    });
+  }
+
+  /// [reorderedScope]는 같은 스코프(그룹 또는 독립 습관) 안에서 순서만 바뀐
+  /// 부분 리스트. draft 전체에서 그 id들의 위치에 새 순서를 채워 넣는다.
+  void _reorderInDraft(List<Routine> reorderedScope) {
+    final draft = _draftRoutines;
+    if (draft == null) return;
+    setState(() {
+      final ids = reorderedScope.map((r) => r.id).toSet();
+      final queue = [...reorderedScope];
+      _draftRoutines = draft
+          .map((r) => ids.contains(r.id) ? queue.removeAt(0) : r)
+          .toList();
+    });
   }
 
   Future<void> _pauseRoutine(
@@ -390,53 +525,38 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     BuildContext context,
     List<Routine> standaloneRoutines,
   ) {
-    return ReorderableListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      buildDefaultDragHandles: false,
-      proxyDecorator: buildReorderableProxyDecorator,
-      itemCount: standaloneRoutines.length,
-      onReorderItem: (oldIndex, newIndex) {
-        final reordered = [...standaloneRoutines];
-        final item = reordered.removeAt(oldIndex);
-        reordered.insert(newIndex, item);
-        ref.read(routineManagementProvider.notifier).reorder(reordered);
-      },
-      itemBuilder: (context, index) {
-        final routine = standaloneRoutines[index];
-        return Container(
-          key: ValueKey(routine.id),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).colorScheme.outlineVariant,
-              ),
-            ),
-          ),
-          child: RoutineListItem(
-            routine: routine,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var index = 0; index < standaloneRoutines.length; index++)
+          DraggableRoutineRow(
+            key: ValueKey(standaloneRoutines[index].id),
+            routine: standaloneRoutines[index],
             rowNumber: index + 1,
-            isEditing: true,
-            dragHandle: ReorderableDragStartListener(
-              index: index,
-              child: const DragHandleIcon(),
-            ),
+            groupId: null,
             onTap: () => context.push(
               AppRoutes.routineDetail,
-              extra: {'routineId': routine.id},
+              extra: {'routineId': standaloneRoutines[index].id},
             ),
             onToggleCheck: ({textValue, numericValue, timeValue}) =>
                 _toggleCheck(
                   context,
                   ref,
-                  routine,
+                  standaloneRoutines[index],
                   textValue: textValue,
                   numericValue: numericValue,
                   timeValue: timeValue,
                 ),
+            onDropBefore: (payload) =>
+                _moveRoutineInDraft(payload, null, index),
+            onDropAfter: (payload) =>
+                _moveRoutineInDraft(payload, null, index + 1),
           ),
-        );
-      },
+        TrailingRoutineDropSlot(
+          onAccept: (payload) =>
+              _moveRoutineInDraft(payload, null, standaloneRoutines.length),
+        ),
+      ],
     );
   }
 
@@ -608,12 +728,28 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       appBar: AppBar(
         title: Text(l10n.routine_title),
         actions: [
+          if (_isReordering)
+            IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: MaterialLocalizations.of(context).cancelButtonLabel,
+              onPressed: _savingDraft ? null : _cancelReorderMode,
+            ),
           IconButton(
-            icon: Icon(_isReordering ? Icons.check : Icons.swap_vert),
+            icon: _savingDraft
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(_isReordering ? Icons.check : Icons.swap_vert),
             tooltip: _isReordering
                 ? l10n.routine_reorder_done
                 : l10n.routine_reorder,
-            onPressed: () => setState(() => _isReordering = !_isReordering),
+            onPressed: _savingDraft
+                ? null
+                : () => _isReordering
+                      ? _commitDraft(context)
+                      : _enterReorderMode(routinesAsync.valueOrNull ?? []),
           ),
           if (!_isReordering)
             AppBarMoreMenu(
@@ -642,135 +778,178 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
               onPressed: () => _showAddPicker(context),
               child: const Icon(Icons.add),
             ),
-      body: Column(
+      body: Stack(
         children: [
-          _buildDateNavigator(context, l10n),
-          _buildCategoryFilterRow(
-            context,
-            l10n,
-            categoriesAsync.valueOrNull ?? [],
-          ),
-          Expanded(
-            child: routinesAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => AppErrorState(
-                error: error,
-                title: l10n.routine_error_generic,
-                onRetry: () => ref
-                    .read(routineListProvider(_selectedDateParam).notifier)
-                    .refresh(),
+          Column(
+            children: [
+              _buildDateNavigator(context, l10n),
+              _buildCategoryFilterRow(
+                context,
+                l10n,
+                categoriesAsync.valueOrNull ?? [],
               ),
-              data: (routines) {
-                final groups = groupsAsync.valueOrNull ?? [];
-                final filteredRoutines = _selectedCategoryId == null
-                    ? routines
-                    : routines
-                          .where(
-                            (r) => r.categoryIds.contains(_selectedCategoryId),
-                          )
-                          .toList();
-                final standaloneRoutines = filteredRoutines
-                    .where((r) => r.routineGroupId == null)
-                    .toList();
-
-                if (routines.isEmpty && groups.isEmpty) {
-                  return AppEmptyState(
-                    icon: Icons.checklist_outlined,
-                    message: l10n.routine_list_empty,
-                    subtitle: l10n.routine_list_empty_subtitle,
-                    action: FilledButton.icon(
-                      onPressed: () => context.push(AppRoutes.routineAdd),
-                      icon: const Icon(Icons.add),
-                      label: Text(l10n.routine_add),
-                    ),
-                  );
-                }
-
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await ref
+              Expanded(
+                child: routinesAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, _) => AppErrorState(
+                    error: error,
+                    title: l10n.routine_error_generic,
+                    onRetry: () => ref
                         .read(routineListProvider(_selectedDateParam).notifier)
-                        .refresh();
-                    await ref.read(routineGroupListProvider.notifier).refresh();
-                  },
-                  child: ListView(
-                    padding: EdgeInsets.fromLTRB(
-                      AppSizes.spaceM,
-                      AppSizes.spaceM,
-                      AppSizes.spaceM,
-                      AppSizes.spaceM +
-                          MediaQuery.paddingOf(context).bottom +
-                          72,
-                    ),
-                    children: [
-                      for (final group in groups)
-                        if (filteredRoutines
-                            .where((r) => r.routineGroupId == group.id)
-                            .isNotEmpty)
-                          RoutineGroupSection(
-                            key: ValueKey(group.id),
-                            group: group,
-                            routines: filteredRoutines
-                                .where((r) => r.routineGroupId == group.id)
-                                .toList(),
-                            onTapRoutine: (routine) => context.push(
-                              AppRoutes.routineDetail,
-                              extra: {'routineId': routine.id},
-                            ),
-                            onToggleCheck:
-                                (
-                                  routine, {
-                                  textValue,
-                                  numericValue,
-                                  timeValue,
-                                }) => _toggleCheck(
-                                  context,
-                                  ref,
-                                  routine,
-                                  textValue: textValue,
-                                  numericValue: numericValue,
-                                  timeValue: timeValue,
-                                ),
-                            onReorderRoutines: (reordered) => ref
-                                .read(routineManagementProvider.notifier)
-                                .reorder(reordered),
-                            onEditGroup: () =>
-                                _showGroupForm(context, group: group),
-                            onDeleteGroup: () =>
-                                _confirmDeleteGroup(context, ref, group),
-                            onEditRoutine: (routine) => context.push(
-                              AppRoutes.routineEdit,
-                              extra: {'routineId': routine.id},
-                            ),
-                            onPauseRoutine: (routine) =>
-                                _pauseRoutine(context, ref, routine),
-                            onResumeRoutine: (routine) =>
-                                _resumeRoutine(context, ref, routine),
-                            isEditing: _isReordering,
-                          ),
-                      if (standaloneRoutines.isNotEmpty) ...[
-                        if (groups.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: AppSizes.spaceS,
-                            ),
-                            child: Text(
-                              l10n.routine_group_standalone_section_title,
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                          ),
-                        buildRoutineTableHeader(context),
-                        if (_isReordering)
-                          _buildStandaloneEditList(context, standaloneRoutines)
-                        else
-                          _buildStandaloneTable(context, standaloneRoutines),
-                      ],
-                    ],
+                        .refresh(),
                   ),
-                );
-              },
-            ),
+                  data: (routines) {
+                    final groups = groupsAsync.valueOrNull ?? [];
+                    // 편집(순서변경/이동) 모드 중에는 로컬 draft를 화면에 반영하고,
+                    // "완료"를 눌러야 서버에 일괄 커밋한다.
+                    final effectiveRoutines = _isReordering
+                        ? (_draftRoutines ?? routines)
+                        : routines;
+                    final filteredRoutines = _selectedCategoryId == null
+                        ? effectiveRoutines
+                        : effectiveRoutines
+                              .where(
+                                (r) =>
+                                    r.categoryIds.contains(_selectedCategoryId),
+                              )
+                              .toList();
+                    final standaloneRoutines = filteredRoutines
+                        .where((r) => r.routineGroupId == null)
+                        .toList();
+
+                    if (routines.isEmpty && groups.isEmpty) {
+                      return AppEmptyState(
+                        icon: Icons.checklist_outlined,
+                        message: l10n.routine_list_empty,
+                        subtitle: l10n.routine_list_empty_subtitle,
+                        action: FilledButton.icon(
+                          onPressed: () => context.push(AppRoutes.routineAdd),
+                          icon: const Icon(Icons.add),
+                          label: Text(l10n.routine_add),
+                        ),
+                      );
+                    }
+
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await ref
+                            .read(
+                              routineListProvider(_selectedDateParam).notifier,
+                            )
+                            .refresh();
+                        await ref
+                            .read(routineGroupListProvider.notifier)
+                            .refresh();
+                      },
+                      child: ListView(
+                        padding: EdgeInsets.fromLTRB(
+                          AppSizes.spaceM,
+                          AppSizes.spaceM,
+                          AppSizes.spaceM,
+                          AppSizes.spaceM +
+                              MediaQuery.paddingOf(context).bottom +
+                              72,
+                        ),
+                        children: [
+                          for (final group in groups)
+                            if (_isReordering ||
+                                filteredRoutines
+                                    .where((r) => r.routineGroupId == group.id)
+                                    .isNotEmpty)
+                              RoutineGroupSection(
+                                key: ValueKey(group.id),
+                                group: group,
+                                routines: filteredRoutines
+                                    .where((r) => r.routineGroupId == group.id)
+                                    .toList(),
+                                onTapRoutine: (routine) => context.push(
+                                  AppRoutes.routineDetail,
+                                  extra: {'routineId': routine.id},
+                                ),
+                                onToggleCheck:
+                                    (
+                                      routine, {
+                                      textValue,
+                                      numericValue,
+                                      timeValue,
+                                    }) => _toggleCheck(
+                                      context,
+                                      ref,
+                                      routine,
+                                      textValue: textValue,
+                                      numericValue: numericValue,
+                                      timeValue: timeValue,
+                                    ),
+                                onReorderRoutines: (reordered) =>
+                                    _reorderInDraft(reordered),
+                                onMoveRoutine: (payload, targetIndex) =>
+                                    _moveRoutineInDraft(
+                                      payload,
+                                      group.id,
+                                      targetIndex,
+                                    ),
+                                onEditGroup: () =>
+                                    _showGroupForm(context, group: group),
+                                onDeleteGroup: () =>
+                                    _confirmDeleteGroup(context, ref, group),
+                                onEditRoutine: (routine) => context.push(
+                                  AppRoutes.routineEdit,
+                                  extra: {'routineId': routine.id},
+                                ),
+                                onPauseRoutine: (routine) =>
+                                    _pauseRoutine(context, ref, routine),
+                                onResumeRoutine: (routine) =>
+                                    _resumeRoutine(context, ref, routine),
+                                isEditing: _isReordering,
+                              ),
+                          if (standaloneRoutines.isNotEmpty ||
+                              _isReordering) ...[
+                            if (groups.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppSizes.spaceS,
+                                ),
+                                child: Text(
+                                  l10n.routine_group_standalone_section_title,
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                ),
+                              ),
+                            buildRoutineTableHeader(context),
+                            if (_isReordering)
+                              DroppableRoutineSection(
+                                groupId: null,
+                                onDropToEnd: (payload) => _moveRoutineInDraft(
+                                  payload,
+                                  null,
+                                  standaloneRoutines.length,
+                                ),
+                                child: _buildStandaloneEditList(
+                                  context,
+                                  standaloneRoutines,
+                                ),
+                              )
+                            else
+                              _buildStandaloneTable(
+                                context,
+                                standaloneRoutines,
+                              ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
+          if (_savingDraft)
+            const Positioned.fill(
+              child: ColoredBox(
+                color: Colors.black26,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ),
         ],
       ),
     );

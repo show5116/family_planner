@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_drag_reorder.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 루틴(습관 묶음) 섹션 - 접기/펼치기 + 오늘 진행률 pill + 소속 습관 표
 ///
 /// 소속 습관을 번호|시간대|습관|체크 4컬럼의 표 형태로 보여준다.
-/// [isEditing]이 true면 각 행에 드래그 핸들이 표시되고 드래그로
-/// 순서를 바꿀 수 있다(평소엔 읽기 전용, 탭하면 체크/상세이동만 가능).
+/// [isEditing]이 true면 각 행에 드래그 핸들이 표시되고, 드래그로 같은
+/// 그룹 내 순서를 바꾸거나 다른 그룹/독립 습관 섹션으로 옮길 수 있다
+/// (평소엔 읽기 전용, 탭하면 체크/상세이동만 가능).
 class RoutineGroupSection extends StatefulWidget {
   const RoutineGroupSection({
     super.key,
@@ -20,6 +21,7 @@ class RoutineGroupSection extends StatefulWidget {
     required this.onTapRoutine,
     required this.onToggleCheck,
     required this.onReorderRoutines,
+    required this.onMoveRoutine,
     required this.onEditGroup,
     required this.onDeleteGroup,
     this.onEditRoutine,
@@ -39,6 +41,11 @@ class RoutineGroupSection extends StatefulWidget {
   })
   onToggleCheck;
   final void Function(List<Routine>) onReorderRoutines;
+
+  /// 다른 섹션에서 이 그룹으로 루틴이 드롭됐을 때 호출.
+  /// [targetIndex]는 이 그룹 내에서 삽입될 위치(0-based).
+  final void Function(RoutineDragPayload payload, int targetIndex)
+  onMoveRoutine;
   final VoidCallback onEditGroup;
   final VoidCallback onDeleteGroup;
   final void Function(Routine)? onEditRoutine;
@@ -68,7 +75,7 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
     final checkedCount = widget.routines.where((r) => r.checkedToday).length;
     final totalCount = widget.routines.length;
 
-    return Card(
+    final card = Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -158,6 +165,14 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
         ],
       ),
     );
+
+    if (!widget.isEditing) return card;
+    return DroppableRoutineSection(
+      groupId: widget.group.id,
+      onDropToEnd: (payload) =>
+          widget.onMoveRoutine(payload, widget.routines.length),
+      child: card,
+    );
   }
 
   Widget _buildTable(BuildContext context) {
@@ -196,49 +211,50 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
   }
 
   Widget _buildEditList(BuildContext context) {
-    return ReorderableListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      buildDefaultDragHandles: false,
-      proxyDecorator: buildReorderableProxyDecorator,
-      itemCount: widget.routines.length,
-      onReorderItem: (oldIndex, newIndex) {
-        final updated = [...widget.routines];
-        final moved = updated.removeAt(oldIndex);
-        updated.insert(newIndex, moved);
-        widget.onReorderRoutines(updated);
-      },
-      itemBuilder: (context, index) {
-        final routine = widget.routines[index];
-        return Container(
-          key: ValueKey(routine.id),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).colorScheme.outlineVariant,
-              ),
-            ),
-          ),
-          child: RoutineListItem(
-            routine: routine,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var index = 0; index < widget.routines.length; index++)
+          DraggableRoutineRow(
+            key: ValueKey(widget.routines[index].id),
+            routine: widget.routines[index],
             rowNumber: index + 1,
-            isEditing: true,
-            dragHandle: ReorderableDragStartListener(
-              index: index,
-              child: const DragHandleIcon(),
-            ),
-            onTap: () => widget.onTapRoutine(routine),
+            groupId: widget.group.id,
+            onTap: () => widget.onTapRoutine(widget.routines[index]),
             onToggleCheck: ({textValue, numericValue, timeValue}) =>
                 widget.onToggleCheck(
-                  routine,
+                  widget.routines[index],
                   textValue: textValue,
                   numericValue: numericValue,
                   timeValue: timeValue,
                 ),
+            onDropBefore: (payload) => _handleDrop(payload, index),
+            onDropAfter: (payload) => _handleDrop(payload, index + 1),
           ),
-        );
-      },
+        TrailingRoutineDropSlot(
+          onAccept: (payload) => _handleDrop(payload, widget.routines.length),
+        ),
+      ],
     );
+  }
+
+  /// [targetIndex] 위치(0-based, 삽입될 자리)에 [payload]를 놓는다.
+  /// 같은 그룹 내에서 온 것이면 순서변경, 다른 섹션에서 온 것이면 이 그룹으로
+  /// 이동시키되 이동 직후 목표 위치로 재정렬한다.
+  void _handleDrop(RoutineDragPayload payload, int targetIndex) {
+    if (payload.sourceGroupId == widget.group.id) {
+      final oldIndex = widget.routines.indexWhere(
+        (r) => r.id == payload.routine.id,
+      );
+      if (oldIndex == -1) return;
+      final updated = [...widget.routines];
+      final moved = updated.removeAt(oldIndex);
+      final insertAt = oldIndex < targetIndex ? targetIndex - 1 : targetIndex;
+      updated.insert(insertAt, moved);
+      widget.onReorderRoutines(updated);
+    } else {
+      widget.onMoveRoutine(payload, targetIndex);
+    }
   }
 }
 
