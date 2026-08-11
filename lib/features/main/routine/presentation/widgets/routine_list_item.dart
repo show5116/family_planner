@@ -20,6 +20,7 @@ class RoutineListItem extends StatefulWidget {
     this.onDelete,
     this.dragHandle,
     this.isEditing = false,
+    this.periodProgress,
   });
 
   final Routine routine;
@@ -36,6 +37,10 @@ class RoutineListItem extends StatefulWidget {
   final VoidCallback? onResume;
   final VoidCallback? onDelete;
   final Widget? dragHandle;
+
+  /// 주간/월간 목표(targetCount)가 있는 습관의 이번 기간 진행 상황.
+  /// null이면 목표가 없거나 아직 로드되지 않은 것.
+  final RoutinePeriodProgress? periodProgress;
 
   /// 순서변경 편집 모드 여부. true면 체크/메뉴가 비활성화되고
   /// 드래그 핸들이 표시된다.
@@ -70,6 +75,17 @@ class _RoutineListItemState extends State<RoutineListItem> {
     }
   }
 
+  /// 주간/월간 목표 진행 상황을 "3/5주", "4/8월" 형식의 짧은 라벨로 만든다.
+  /// 목표(targetCount)가 없는 습관이거나 진행 데이터가 아직 없으면 null.
+  String? _periodProgressLabel(AppLocalizations l10n) {
+    final progress = widget.periodProgress;
+    if (progress == null) return null;
+    final periodUnit = routine.frequencyType == RoutineFrequencyType.monthly
+        ? l10n.routine_rate_period_month
+        : l10n.routine_rate_period_week;
+    return '${progress.checked}/${progress.target}$periodUnit';
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -79,6 +95,7 @@ class _RoutineListItemState extends State<RoutineListItem> {
     final canCheck =
         routine.status == RoutineStatus.active && !widget.isEditing;
     final timeLabel = _timeFilterLabel(l10n);
+    final progressLabel = _periodProgressLabel(l10n);
 
     return Opacity(
       opacity: isPaused ? 0.55 : 1.0,
@@ -146,6 +163,13 @@ class _RoutineListItemState extends State<RoutineListItem> {
                     if (isPaused)
                       Text(
                         l10n.routine_status_paused,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      )
+                    else if (progressLabel != null)
+                      Text(
+                        progressLabel,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),

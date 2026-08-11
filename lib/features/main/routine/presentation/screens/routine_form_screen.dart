@@ -231,6 +231,11 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           weeklyMode: frequencyFields.weeklyMode,
           targetCount: frequencyFields.targetCount,
           targetDays: frequencyFields.targetDays,
+          // 반복주기 조합을 바꾸면 이전 조합 전용 필드(예: WEEKLY의
+          // weeklyMode)가 서버에 남아있으면 안 되므로 명시적으로 지운다.
+          clearWeeklyMode: frequencyFields.weeklyMode == null,
+          clearTargetCount: frequencyFields.targetCount == null,
+          clearTargetDays: frequencyFields.targetDays == null,
           endDate: _endDate != null ? _formatDate(_endDate!) : null,
           routineGroupId: _selectedGroupId,
           clearRoutineGroupId: _selectedGroupId == null,
@@ -356,7 +361,9 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
               (_frequencyType == RoutineFrequencyType.weekly &&
                   _weeklyMode == RoutineWeeklyMode.countOnly)) ...[
             Text(
-              l10n.routine_field_target_count,
+              _frequencyType == RoutineFrequencyType.monthly
+                  ? l10n.routine_field_target_count_month
+                  : l10n.routine_field_target_count,
               style: Theme.of(context).textTheme.labelLarge,
             ),
             Row(

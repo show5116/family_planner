@@ -311,7 +311,9 @@ class _MemberDetailRoutineCard extends ConsumerWidget {
         title: Text(routine.title),
         subtitle: routine.targetCount != null
             ? Text(
-                '${l10n.routine_this_week_progress}: ${routine.targetCount}${l10n.routine_field_target_count}',
+                routine.frequencyType == RoutineFrequencyType.monthly
+                    ? '${l10n.routine_this_month_progress}: ${routine.targetCount}${l10n.routine_field_target_count_month}'
+                    : '${l10n.routine_this_week_progress}: ${routine.targetCount}${l10n.routine_field_target_count}',
               )
             : null,
         trailing: Row(

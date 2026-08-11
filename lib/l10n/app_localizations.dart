@@ -8768,6 +8768,18 @@ abstract class AppLocalizations {
   /// **'주 목표 횟수'**
   String get routine_field_target_count;
 
+  /// 월간 목표 체크 횟수 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월 목표 횟수'**
+  String get routine_field_target_count_month;
+
+  /// 이번 달 진행 상황 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 진행'**
+  String get routine_this_month_progress;
+
   /// 습관 시작일 필드 라벨
   ///
   /// In ko, this message translates to:

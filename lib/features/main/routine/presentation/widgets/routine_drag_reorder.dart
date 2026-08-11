@@ -35,6 +35,7 @@ class DraggableRoutineRow extends StatefulWidget {
     required this.onToggleCheck,
     required this.onDropBefore,
     required this.onDropAfter,
+    this.periodProgress,
   });
 
   final Routine routine;
@@ -53,6 +54,8 @@ class DraggableRoutineRow extends StatefulWidget {
 
   /// 이 행 뒤에 [payload]가 드롭됐을 때 호출된다.
   final void Function(RoutineDragPayload payload) onDropAfter;
+
+  final RoutinePeriodProgress? periodProgress;
 
   @override
   State<DraggableRoutineRow> createState() => _DraggableRoutineRowState();
@@ -123,6 +126,7 @@ class _DraggableRoutineRowState extends State<DraggableRoutineRow> {
                 ),
                 onTap: widget.onTap,
                 onToggleCheck: widget.onToggleCheck,
+                periodProgress: widget.periodProgress,
               ),
             ),
             _InsertionLine(visible: active && _hoveringTop == false),
@@ -398,6 +402,7 @@ class StandaloneRoutineRow extends StatelessWidget {
     required this.rowNumber,
     required this.onTap,
     required this.onToggleCheck,
+    this.periodProgress,
   });
 
   final Routine routine;
@@ -409,6 +414,7 @@ class StandaloneRoutineRow extends StatelessWidget {
     String? timeValue,
   })
   onToggleCheck;
+  final RoutinePeriodProgress? periodProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -429,6 +435,7 @@ class StandaloneRoutineRow extends StatelessWidget {
               isEditing: true,
               onTap: onTap,
               onToggleCheck: onToggleCheck,
+              periodProgress: periodProgress,
             ),
           ),
           Padding(

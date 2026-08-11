@@ -635,6 +635,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     Map<String, RoutineGroup> groupById,
     Map<String, Routine> standaloneById,
     List<Routine> filteredRoutines,
+    Map<String, RoutinePeriodProgress> progressByRoutineId,
   ) {
     final routineId = RoutineSectionOrderStore.decodeStandaloneRoutineId(
       sectionKey,
@@ -682,6 +683,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
             onPause: () => _pauseRoutine(context, ref, routine),
             onResume: () => _resumeRoutine(context, ref, routine),
             onDelete: () => _confirmDelete(context, ref, routine),
+            periodProgress: progressByRoutineId[routine.id],
           ),
         );
       }
@@ -690,6 +692,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
         routine,
         rowNumber,
         sectionOrder,
+        progressByRoutineId[routine.id],
       );
     }
 
@@ -735,6 +738,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       onDropSectionAfter: _isReordering
           ? (payload) => _moveSectionInDraft(payload, index + 1)
           : null,
+      progressByRoutineId: progressByRoutineId,
     );
   }
 
@@ -746,6 +750,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     Routine routine,
     int rowNumber,
     List<String> sectionOrder,
+    RoutinePeriodProgress? periodProgress,
   ) {
     final payload = RoutineSectionDragPayload.standaloneRoutine(routine);
     final key = payload.encode();
@@ -771,6 +776,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
           numericValue: numericValue,
           timeValue: timeValue,
         ),
+        periodProgress: periodProgress,
       ),
     );
   }
@@ -938,6 +944,13 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     final groupsAsync = ref.watch(routineGroupListProvider);
     final categoriesAsync = ref.watch(routineCategoryListProvider);
     final myGroups = ref.watch(myGroupsProvider).valueOrNull ?? [];
+    // 주간/월간 목표(targetCount) 진행 상황. 습관명 아래 보조텍스트로 표시.
+    final summaryItems = ref.watch(routineSummaryProvider).valueOrNull ?? [];
+    final progressByRoutineId = <String, RoutinePeriodProgress>{
+      for (final item in summaryItems)
+        if (item.thisWeekProgress != null || item.thisMonthProgress != null)
+          item.routineId: (item.thisWeekProgress ?? item.thisMonthProgress)!,
+    };
 
     return Scaffold(
       appBar: AppBar(
@@ -1093,6 +1106,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                               groupById,
                               standaloneById,
                               filteredRoutines,
+                              progressByRoutineId,
                             ),
                         ],
                       ),

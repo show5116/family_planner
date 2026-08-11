@@ -4663,6 +4663,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_field_target_count => 'Weekly target count';
 
   @override
+  String get routine_field_target_count_month => 'Monthly target count';
+
+  @override
+  String get routine_this_month_progress => 'This month\'s progress';
+
+  @override
   String get routine_field_start_date => 'Start date';
 
   @override

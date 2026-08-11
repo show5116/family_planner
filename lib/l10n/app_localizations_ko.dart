@@ -4562,6 +4562,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_field_target_count => '주 목표 횟수';
 
   @override
+  String get routine_field_target_count_month => '월 목표 횟수';
+
+  @override
+  String get routine_this_month_progress => '이번 달 진행';
+
+  @override
   String get routine_field_start_date => '시작일';
 
   @override

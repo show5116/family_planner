@@ -87,6 +87,18 @@ class UpdateRoutineDto {
   /// false면 routineGroupId 필드 자체를 요청에서 생략(미변경).
   final bool clearRoutineGroupId;
 
+  /// weeklyMode/targetCount/targetDays를 명시적으로 null 전달(반복주기
+  /// 조합 전환 시 이전 값 제거)할지 여부. false면 해당 필드를 요청에서
+  /// 생략(미변경)한다.
+  ///
+  /// 예: WEEKLY+COUNT_ONLY(targetCount=3) 루틴을 MONTHLY로 바꾸면
+  /// weeklyMode는 더 이상 의미가 없으므로 반드시 null로 명시 전송해야
+  /// 한다. 필드를 생략하면 서버에 예전 weeklyMode가 남아 frequencyType과
+  /// 모순된 조합이 되어 검증 에러가 난다.
+  final bool clearWeeklyMode;
+  final bool clearTargetCount;
+  final bool clearTargetDays;
+
   const UpdateRoutineDto({
     this.title,
     this.emoji,
@@ -102,6 +114,9 @@ class UpdateRoutineDto {
     this.endDate,
     this.routineGroupId,
     this.clearRoutineGroupId = false,
+    this.clearWeeklyMode = false,
+    this.clearTargetCount = false,
+    this.clearTargetDays = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -113,9 +128,18 @@ class UpdateRoutineDto {
     if (timeFilter != null) 'timeFilter': timeFilter!.toJsonString(),
     if (categoryIds != null) 'categoryIds': categoryIds,
     if (frequencyType != null) 'frequencyType': frequencyType!.toJsonString(),
-    if (weeklyMode != null) 'weeklyMode': weeklyMode!.toJsonString(),
-    if (targetCount != null) 'targetCount': targetCount,
-    if (targetDays != null) 'targetDays': targetDays,
+    if (weeklyMode != null)
+      'weeklyMode': weeklyMode!.toJsonString()
+    else if (clearWeeklyMode)
+      'weeklyMode': null,
+    if (targetCount != null)
+      'targetCount': targetCount
+    else if (clearTargetCount)
+      'targetCount': null,
+    if (targetDays != null)
+      'targetDays': targetDays
+    else if (clearTargetDays)
+      'targetDays': null,
     if (endDate != null) 'endDate': endDate,
     if (routineGroupId != null) 'routineGroupId': routineGroupId,
     if (clearRoutineGroupId && routineGroupId == null) 'routineGroupId': null,

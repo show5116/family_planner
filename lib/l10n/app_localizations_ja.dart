@@ -4555,6 +4555,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_field_target_count => '週間目標回数';
 
   @override
+  String get routine_field_target_count_month => '月間目標回数';
+
+  @override
+  String get routine_this_month_progress => '今月の進捗';
+
+  @override
   String get routine_field_start_date => '開始日';
 
   @override

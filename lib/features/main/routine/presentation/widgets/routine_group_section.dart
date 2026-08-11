@@ -31,10 +31,15 @@ class RoutineGroupSection extends StatefulWidget {
     this.isEditing = false,
     this.onDropSectionBefore,
     this.onDropSectionAfter,
+    this.progressByRoutineId = const {},
   });
 
   final RoutineGroup group;
   final List<Routine> routines;
+
+  /// 루틴 id별 주간/월간 목표 진행 상황(대시보드 요약 API 기반). 항목이
+  /// 없으면 그 습관은 목표가 없거나 진행 데이터가 아직 로드되지 않은 것.
+  final Map<String, RoutinePeriodProgress> progressByRoutineId;
   final void Function(Routine) onTapRoutine;
   final Future<void> Function(
     Routine, {
@@ -249,6 +254,7 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
           onResume: widget.onResumeRoutine != null
               ? () => widget.onResumeRoutine!(routine)
               : null,
+          periodProgress: widget.progressByRoutineId[routine.id],
         );
       },
     );

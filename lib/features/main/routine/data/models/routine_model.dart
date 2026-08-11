@@ -204,15 +204,15 @@ class RoutineCheckedLog {
   }
 }
 
-/// 이번 주 진행 상황 (체크 횟수 / 목표 횟수)
-class ThisWeekProgress {
+/// 기간(주간 또는 월간) 진행 상황 (체크 횟수 / 목표 횟수)
+class RoutinePeriodProgress {
   final int checked;
   final int target;
 
-  const ThisWeekProgress({required this.checked, required this.target});
+  const RoutinePeriodProgress({required this.checked, required this.target});
 
-  factory ThisWeekProgress.fromJson(Map<String, dynamic> json) {
-    return ThisWeekProgress(
+  factory RoutinePeriodProgress.fromJson(Map<String, dynamic> json) {
+    return RoutinePeriodProgress(
       checked: json['checked'] as int? ?? 0,
       target: json['target'] as int? ?? 0,
     );
@@ -702,7 +702,7 @@ class RoutineStreak {
   final int longestStreakWeeks;
   final int currentStreakDays;
   final int longestStreakDays;
-  final ThisWeekProgress thisWeekProgress;
+  final RoutinePeriodProgress thisWeekProgress;
 
   const RoutineStreak({
     required this.routineId,
@@ -720,7 +720,7 @@ class RoutineStreak {
       longestStreakWeeks: json['longestStreakWeeks'] as int? ?? 0,
       currentStreakDays: json['currentStreakDays'] as int? ?? 0,
       longestStreakDays: json['longestStreakDays'] as int? ?? 0,
-      thisWeekProgress: ThisWeekProgress.fromJson(
+      thisWeekProgress: RoutinePeriodProgress.fromJson(
         json['thisWeekProgress'] as Map<String, dynamic>? ?? const {},
       ),
     );
@@ -772,14 +772,19 @@ class RoutineRate {
   }
 }
 
-/// 대시보드 위젯용 루틴 요약 항목
+/// 대시보드 위젯용 루틴 요약 항목.
+///
+/// [thisWeekProgress]/[thisMonthProgress]는 루틴의 frequencyType에 따라
+/// 둘 중 하나만 채워진다: MONTHLY 루틴은 thisMonthProgress만, 그 외
+/// (DAILY/WEEKLY)는 thisWeekProgress만 값이 있고 나머지는 null.
 class RoutineSummaryItem {
   final String routineId;
   final String title;
   final String? emoji;
   final bool checkedToday;
   final int currentStreakDays;
-  final ThisWeekProgress thisWeekProgress;
+  final RoutinePeriodProgress? thisWeekProgress;
+  final RoutinePeriodProgress? thisMonthProgress;
 
   const RoutineSummaryItem({
     required this.routineId,
@@ -787,7 +792,8 @@ class RoutineSummaryItem {
     this.emoji,
     required this.checkedToday,
     required this.currentStreakDays,
-    required this.thisWeekProgress,
+    this.thisWeekProgress,
+    this.thisMonthProgress,
   });
 
   factory RoutineSummaryItem.fromJson(Map<String, dynamic> json) {
@@ -797,9 +803,16 @@ class RoutineSummaryItem {
       emoji: json['emoji'] as String?,
       checkedToday: json['checkedToday'] as bool? ?? false,
       currentStreakDays: json['currentStreakDays'] as int? ?? 0,
-      thisWeekProgress: ThisWeekProgress.fromJson(
-        json['thisWeekProgress'] as Map<String, dynamic>? ?? const {},
-      ),
+      thisWeekProgress: json['thisWeekProgress'] != null
+          ? RoutinePeriodProgress.fromJson(
+              json['thisWeekProgress'] as Map<String, dynamic>,
+            )
+          : null,
+      thisMonthProgress: json['thisMonthProgress'] != null
+          ? RoutinePeriodProgress.fromJson(
+              json['thisMonthProgress'] as Map<String, dynamic>,
+            )
+          : null,
     );
   }
 
@@ -811,6 +824,7 @@ class RoutineSummaryItem {
       checkedToday: checkedToday ?? this.checkedToday,
       currentStreakDays: currentStreakDays,
       thisWeekProgress: thisWeekProgress,
+      thisMonthProgress: thisMonthProgress,
     );
   }
 }

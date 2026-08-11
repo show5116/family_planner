@@ -4526,6 +4526,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_field_target_count => '每周目标次数';
 
   @override
+  String get routine_field_target_count_month => '每月目标次数';
+
+  @override
+  String get routine_this_month_progress => '本月进度';
+
+  @override
   String get routine_field_start_date => '开始日期';
 
   @override
