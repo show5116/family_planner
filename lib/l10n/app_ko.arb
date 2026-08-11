@@ -2363,6 +2363,15 @@
   "@routine_tab_badges": { "description": "루틴 상세 배지 탭" },
   "routine_badges_title": "내 배지",
   "@routine_badges_title": { "description": "배지 목록 화면 타이틀" },
+  "routine_overview_title": "통계",
+  "@routine_overview_title": { "description": "전체 루틴 통합 통계 화면 타이틀" },
+  "routine_overview_heatmap_title": "전체 습관 달성 현황",
+  "@routine_overview_heatmap_title": { "description": "통합 히트맵 캘린더 섹션 제목" },
+  "routine_overview_total_routines": "전체 습관 {count}개 기준",
+  "@routine_overview_total_routines": {
+    "description": "통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구",
+    "placeholders": { "count": { "type": "int" } }
+  },
   "routine_badges_empty": "아직 획득한 배지가 없습니다",
   "@routine_badges_empty": { "description": "루틴별 배지 목록이 비어있을 때 안내" },
   "routine_badge_earned_title": "배지 획득!",

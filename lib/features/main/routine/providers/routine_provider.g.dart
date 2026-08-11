@@ -800,6 +800,140 @@ final routineSummaryProvider =
 // ignore: unused_element
 typedef RoutineSummaryRef =
     AutoDisposeFutureProviderRef<List<RoutineSummaryItem>>;
+String _$routineOverviewHash() => r'687a608e4b1a23239332affd3d98be383a342aa1';
+
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+///
+/// Copied from [routineOverview].
+@ProviderFor(routineOverview)
+const routineOverviewProvider = RoutineOverviewFamily();
+
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+///
+/// Copied from [routineOverview].
+class RoutineOverviewFamily extends Family<AsyncValue<RoutineOverview>> {
+  /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  ///
+  /// Copied from [routineOverview].
+  const RoutineOverviewFamily();
+
+  /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  ///
+  /// Copied from [routineOverview].
+  RoutineOverviewProvider call({required RoutineOverviewPeriod period}) {
+    return RoutineOverviewProvider(period: period);
+  }
+
+  @override
+  RoutineOverviewProvider getProviderOverride(
+    covariant RoutineOverviewProvider provider,
+  ) {
+    return call(period: provider.period);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineOverviewProvider';
+}
+
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+///
+/// Copied from [routineOverview].
+class RoutineOverviewProvider
+    extends AutoDisposeFutureProvider<RoutineOverview> {
+  /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  ///
+  /// Copied from [routineOverview].
+  RoutineOverviewProvider({required RoutineOverviewPeriod period})
+    : this._internal(
+        (ref) => routineOverview(ref as RoutineOverviewRef, period: period),
+        from: routineOverviewProvider,
+        name: r'routineOverviewProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineOverviewHash,
+        dependencies: RoutineOverviewFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineOverviewFamily._allTransitiveDependencies,
+        period: period,
+      );
+
+  RoutineOverviewProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.period,
+  }) : super.internal();
+
+  final RoutineOverviewPeriod period;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineOverview> Function(RoutineOverviewRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineOverviewProvider._internal(
+        (ref) => create(ref as RoutineOverviewRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        period: period,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineOverview> createElement() {
+    return _RoutineOverviewProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineOverviewProvider && other.period == period;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, period.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineOverviewRef on AutoDisposeFutureProviderRef<RoutineOverview> {
+  /// The parameter `period` of this provider.
+  RoutineOverviewPeriod get period;
+}
+
+class _RoutineOverviewProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineOverview>
+    with RoutineOverviewRef {
+  _RoutineOverviewProviderElement(super.provider);
+
+  @override
+  RoutineOverviewPeriod get period =>
+      (origin as RoutineOverviewProvider).period;
+}
+
 String _$routineBadgeCatalogHash() =>
     r'4a5460770c2bed6473343588c14f51e37400ed62';
 
@@ -1139,7 +1273,7 @@ class _RoutineLeaderboardProviderElement
   LeaderboardMetric get metric => (origin as RoutineLeaderboardProvider).metric;
 }
 
-String _$routineListHash() => r'78cc6d536930e5295de7ea9a59f7763937635af2';
+String _$routineListHash() => r'b404e54302a51d416963fe8c0abc798b5d703c8b';
 
 abstract class _$RoutineList
     extends BuildlessAutoDisposeAsyncNotifier<List<Routine>> {

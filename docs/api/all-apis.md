@@ -7800,9 +7800,46 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
       "thisWeekProgress": {
         "checked": 0,
         "target": 0
-      } // 이번 주 진행 상황 (ThisWeekProgressDto)
+      }, // 이번 주 진행 상황 (frequencyType=MONTHLY인 루틴은 null) (ThisWeekProgressDto | null)
+      "thisMonthProgress": {
+        "checked": 0,
+        "target": 0
+      } // 이번 달 진행 상황 (frequencyType=MONTHLY인 루틴만 값이 있음) (ThisWeekProgressDto | null)
     }
   ] // 루틴별 오늘/스트릭 요약 (RoutineSummaryItemDto[])
+}
+```
+
+---
+
+### GET `routines/stats/overview`
+
+**요약:** 전체 루틴 대시보드 요약 (달성률 + 날짜별 히트맵)
+
+**Query Parameters:**
+
+- `period` (`OverviewPeriod`): 기간 단위
+
+**Responses:**
+
+#### 200 - 전체 루틴 개요 조회 성공
+
+```json
+{
+  "period": "", // 기간 단위 (string)
+  "from": "", // 조회 시작일 (string)
+  "to": "", // 조회 종료일 (string)
+  "totalRoutines": 0, // 집계 대상 루틴 수 (ACTIVE + PAUSED) (number)
+  "totalChecked": 0, // 기간 내 실제 체크 횟수 합계 (전체 루틴) (number)
+  "totalExpected": 0, // 기간 내 기대 체크 횟수 합계 (전체 루틴) (number)
+  "achievementRate": 81, // 달성률 (%), totalChecked / totalExpected (number)
+  "heatmap": [
+    {
+      "date": "", // 날짜 (YYYY-MM-DD) (string)
+      "checkedCount": 0, // 해당 날짜에 체크된 루틴 수 (number)
+      "totalCount": 0 // 해당 날짜에 활성 상태였던(일시정지 제외) 루틴 수 (number)
+    }
+  ] // 날짜별 체크 현황 히트맵 (period와 동일한 기간) (OverviewHeatmapDayDto[])
 }
 ```
 

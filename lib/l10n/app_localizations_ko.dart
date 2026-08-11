@@ -4693,6 +4693,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_badges_title => '내 배지';
 
   @override
+  String get routine_overview_title => '통계';
+
+  @override
+  String get routine_overview_heatmap_title => '전체 습관 달성 현황';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return '전체 습관 $count개 기준';
+  }
+
+  @override
   String get routine_badges_empty => '아직 획득한 배지가 없습니다';
 
   @override

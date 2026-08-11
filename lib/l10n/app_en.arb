@@ -2349,6 +2349,15 @@
   "@routine_tab_badges": { "description": "Routine detail badges tab" },
   "routine_badges_title": "My Badges",
   "@routine_badges_title": { "description": "Badge list screen title" },
+  "routine_overview_title": "Statistics",
+  "@routine_overview_title": { "description": "Overall routine statistics screen title" },
+  "routine_overview_heatmap_title": "Overall Completion Heatmap",
+  "@routine_overview_heatmap_title": { "description": "Combined heatmap calendar section title" },
+  "routine_overview_total_routines": "Based on {count} habits",
+  "@routine_overview_total_routines": {
+    "description": "Shows the number of habits included in the overall achievement rate",
+    "placeholders": { "count": { "type": "int" } }
+  },
   "routine_badges_empty": "No badges earned yet",
   "@routine_badges_empty": { "description": "Shown when a routine's badge list is empty" },
   "routine_badge_earned_title": "Badge Earned!",

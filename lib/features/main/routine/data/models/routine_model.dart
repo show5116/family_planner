@@ -772,6 +772,79 @@ class RoutineRate {
   }
 }
 
+/// 전체 루틴 개요 조회 기간 단위 (week/month 둘만 지원, custom 없음)
+enum RoutineOverviewPeriod {
+  week,
+  month;
+
+  String toJsonString() => name;
+}
+
+/// 통합 히트맵의 하루치 데이터. [checkedCount]/[totalCount]로 그날의
+/// 전체 완료율을 계산해 색상 농도로 표시하는 데 쓴다.
+class RoutineOverviewHeatmapDay {
+  final String date;
+  final int checkedCount;
+  final int totalCount;
+
+  const RoutineOverviewHeatmapDay({
+    required this.date,
+    required this.checkedCount,
+    required this.totalCount,
+  });
+
+  double get ratio => totalCount > 0 ? checkedCount / totalCount : 0.0;
+
+  factory RoutineOverviewHeatmapDay.fromJson(Map<String, dynamic> json) {
+    return RoutineOverviewHeatmapDay(
+      date: json['date'] as String,
+      checkedCount: json['checkedCount'] as int? ?? 0,
+      totalCount: json['totalCount'] as int? ?? 0,
+    );
+  }
+}
+
+/// 전체 루틴 대시보드 요약 (달성률 + 날짜별 통합 히트맵)
+class RoutineOverview {
+  final String period;
+  final String from;
+  final String to;
+  final int totalRoutines;
+  final int totalChecked;
+  final int totalExpected;
+  final num achievementRate;
+  final List<RoutineOverviewHeatmapDay> heatmap;
+
+  const RoutineOverview({
+    required this.period,
+    required this.from,
+    required this.to,
+    required this.totalRoutines,
+    required this.totalChecked,
+    required this.totalExpected,
+    required this.achievementRate,
+    required this.heatmap,
+  });
+
+  factory RoutineOverview.fromJson(Map<String, dynamic> json) {
+    return RoutineOverview(
+      period: json['period'] as String,
+      from: json['from'] as String,
+      to: json['to'] as String,
+      totalRoutines: json['totalRoutines'] as int? ?? 0,
+      totalChecked: json['totalChecked'] as int? ?? 0,
+      totalExpected: json['totalExpected'] as int? ?? 0,
+      achievementRate: json['achievementRate'] as num? ?? 0,
+      heatmap: (json['heatmap'] as List<dynamic>? ?? [])
+          .map(
+            (e) =>
+                RoutineOverviewHeatmapDay.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+  }
+}
+
 /// 대시보드 위젯용 루틴 요약 항목.
 ///
 /// [thisWeekProgress]/[thisMonthProgress]는 루틴의 frequencyType에 따라

@@ -2304,6 +2304,15 @@
   "@routine_tab_badges": { "description": "习惯详情徽章标签页" },
   "routine_badges_title": "我的徽章",
   "@routine_badges_title": { "description": "徽章列表页面标题" },
+  "routine_overview_title": "统计",
+  "@routine_overview_title": { "description": "全部习惯汇总统计页面标题" },
+  "routine_overview_heatmap_title": "全部习惯完成情况",
+  "@routine_overview_heatmap_title": { "description": "汇总热力图日历区域标题" },
+  "routine_overview_total_routines": "基于全部 {count} 个习惯",
+  "@routine_overview_total_routines": {
+    "description": "汇总达成率卡片中显示统计对象习惯数量的文案",
+    "placeholders": { "count": { "type": "int" } }
+  },
   "routine_badges_empty": "尚未获得任何徽章",
   "@routine_badges_empty": { "description": "习惯徽章列表为空时的提示" },
   "routine_badge_earned_title": "获得徽章!",

@@ -4657,6 +4657,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_badges_title => '我的徽章';
 
   @override
+  String get routine_overview_title => '统计';
+
+  @override
+  String get routine_overview_heatmap_title => '全部习惯完成情况';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return '基于全部 $count 个习惯';
+  }
+
+  @override
   String get routine_badges_empty => '尚未获得任何徽章';
 
   @override

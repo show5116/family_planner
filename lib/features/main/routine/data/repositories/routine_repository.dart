@@ -567,6 +567,21 @@ class RoutineRepository {
     }
   }
 
+  Future<RoutineOverview> getOverview({
+    required RoutineOverviewPeriod period,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/routines/stats/overview',
+        queryParameters: {'period': period.toJsonString()},
+      );
+      return RoutineOverview.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 전체 루틴 개요 조회 실패: ${e.message}');
+      throw Exception('전체 루틴 개요 조회 실패: ${e.message}');
+    }
+  }
+
   // ── 배지 ──────────────────────────────────────────────────────────────────
 
   Future<List<RoutineBadge>> getBadgeCatalog() async {

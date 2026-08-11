@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/routine/presentation/screens/routin
 import 'package:family_planner/features/main/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_overview_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_leaderboard_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart'
@@ -353,9 +354,7 @@ List<RouteBase> getMainRoutes() {
       name: 'householdRecurringAdd',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>? ?? {};
-        return RecurringExpenseFormScreen(
-          groupId: extra['groupId'] as String?,
-        );
+        return RecurringExpenseFormScreen(groupId: extra['groupId'] as String?);
       },
     ),
     GoRoute(
@@ -561,6 +560,11 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) => const RoutineBadgesScreen(),
     ),
     GoRoute(
+      path: AppRoutes.routineOverview,
+      name: 'routineOverview',
+      builder: (context, state) => const RoutineOverviewScreen(),
+    ),
+    GoRoute(
       path: AppRoutes.routineLeaderboard,
       name: 'routineLeaderboard',
       builder: (context, state) {
@@ -634,7 +638,10 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final historyId = state.pathParameters['historyId']!;
         final groupId = state.uri.queryParameters['groupId'];
-        return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
+        return ShoppingHistoryDetailScreen(
+          historyId: historyId,
+          groupId: groupId,
+        );
       },
     ),
     GoRoute(
@@ -643,7 +650,10 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final historyId = state.pathParameters['historyId']!;
         final groupId = state.uri.queryParameters['groupId'];
-        return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
+        return ShoppingHistoryDetailScreen(
+          historyId: historyId,
+          groupId: groupId,
+        );
       },
     ),
 

@@ -9026,6 +9026,24 @@ abstract class AppLocalizations {
   /// **'내 배지'**
   String get routine_badges_title;
 
+  /// 전체 루틴 통합 통계 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get routine_overview_title;
+
+  /// 통합 히트맵 캘린더 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 습관 달성 현황'**
+  String get routine_overview_heatmap_title;
+
+  /// 통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 습관 {count}개 기준'**
+  String routine_overview_total_routines(int count);
+
   /// 루틴별 배지 목록이 비어있을 때 안내
   ///
   /// In ko, this message translates to:

@@ -266,6 +266,16 @@ Future<List<RoutineSummaryItem>> routineSummary(Ref ref) async {
   return repository.getSummary();
 }
 
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+@riverpod
+Future<RoutineOverview> routineOverview(
+  Ref ref, {
+  required RoutineOverviewPeriod period,
+}) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getOverview(period: period);
+}
+
 // ── 배지 ──────────────────────────────────────────────────────────────────────
 
 /// 전체 배지 카탈로그 (마스터 데이터)

@@ -4796,6 +4796,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_badges_title => 'My Badges';
 
   @override
+  String get routine_overview_title => 'Statistics';
+
+  @override
+  String get routine_overview_heatmap_title => 'Overall Completion Heatmap';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return 'Based on $count habits';
+  }
+
+  @override
   String get routine_badges_empty => 'No badges earned yet';
 
   @override

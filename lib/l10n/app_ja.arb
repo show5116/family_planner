@@ -2349,6 +2349,15 @@
   "@routine_tab_badges": { "description": "ルーティン詳細バッジタブ" },
   "routine_badges_title": "マイバッジ",
   "@routine_badges_title": { "description": "バッジ一覧画面タイトル" },
+  "routine_overview_title": "統計",
+  "@routine_overview_title": { "description": "全体ルーティン統合統計画面タイトル" },
+  "routine_overview_heatmap_title": "全体習慣達成状況",
+  "@routine_overview_heatmap_title": { "description": "統合ヒートマップカレンダーセクションタイトル" },
+  "routine_overview_total_routines": "全体習慣{count}個基準",
+  "@routine_overview_total_routines": {
+    "description": "統合達成率カードに集計対象の習慣数を表示する文言",
+    "placeholders": { "count": { "type": "int" } }
+  },
   "routine_badges_empty": "まだ獲得したバッジがありません",
   "@routine_badges_empty": { "description": "ルーティン別バッジリストが空の場合の案内" },
   "routine_badge_earned_title": "バッジ獲得!",

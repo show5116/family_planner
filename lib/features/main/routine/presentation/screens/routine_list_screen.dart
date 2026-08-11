@@ -987,10 +987,10 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
               onReplayOnboarding: _showCoachMark,
               extraItems: [
                 MoreMenuItem(
-                  id: 'badges',
-                  icon: Icons.emoji_events_outlined,
-                  label: l10n.routine_badges_title,
-                  onTap: (ctx) => ctx.push(AppRoutes.routineBadges),
+                  id: 'overview',
+                  icon: Icons.bar_chart_outlined,
+                  label: l10n.routine_overview_title,
+                  onTap: (ctx) => ctx.push(AppRoutes.routineOverview),
                 ),
                 MoreMenuItem(
                   id: 'shared_group',

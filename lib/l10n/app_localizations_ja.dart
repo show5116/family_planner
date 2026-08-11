@@ -4686,6 +4686,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_badges_title => 'マイバッジ';
 
   @override
+  String get routine_overview_title => '統計';
+
+  @override
+  String get routine_overview_heatmap_title => '全体習慣達成状況';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return '全体習慣$count個基準';
+  }
+
+  @override
   String get routine_badges_empty => 'まだ獲得したバッジがありません';
 
   @override
