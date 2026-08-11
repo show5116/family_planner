@@ -9,6 +9,7 @@ import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
+import 'package:family_planner/features/main/routine/data/routine_section_order_store.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_drag_reorder.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_form_dialog.dart';
@@ -43,6 +44,16 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   /// 아니라는 뜻이며, 이 경우 서버 상태(routines)를 그대로 사용한다.
   /// 드래그는 이 목록만 바꾸고, "완료"를 눌러야 서버에 일괄 반영된다.
   List<Routine>? _draftRoutines;
+
+  /// 편집 모드 동안의 로컬 임시 "섹션"(루틴 그룹 카드 + 독립 습관 각각)
+  /// 순서. 항목은 그룹 id 또는 [RoutineSectionOrderStore.encodeStandalone]
+  /// 로 인코딩된 값.
+  List<String>? _draftSectionOrder;
+
+  /// 편집 중이 아닐 때(읽기 모드) 화면에 쓰는 섹션 순서 캐시. 매 build마다
+  /// SharedPreferences를 비동기로 읽을 수 없어 initState에서 한 번 로드해
+  /// 둔다.
+  List<String>? _cachedSectionOrder;
   bool _savingDraft = false;
   DateTime _selectedDate = DateTime.now();
   late DateTime _visibleMonth = DateTime(
@@ -85,6 +96,13 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowOnboarding());
+    _loadCachedSectionOrder();
+  }
+
+  Future<void> _loadCachedSectionOrder() async {
+    final order = await RoutineSectionOrderStore.load();
+    if (!mounted) return;
+    setState(() => _cachedSectionOrder = order);
   }
 
   Future<void> _toggleCheck(
@@ -161,9 +179,23 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   }
 
   /// 편집(순서변경/이동) 모드 진입. 서버 상태를 로컬 draft로 복사한다.
-  void _enterReorderMode(List<Routine> routines) {
+  Future<void> _enterReorderMode(
+    List<Routine> routines,
+    List<RoutineGroup> groups,
+  ) async {
+    final savedOrder = await RoutineSectionOrderStore.load();
+    if (!mounted) return;
+    final standaloneIds = routines
+        .where((r) => r.routineGroupId == null)
+        .map((r) => r.id)
+        .toList();
     setState(() {
       _draftRoutines = [...routines];
+      _draftSectionOrder = _resolveSectionOrder(
+        savedOrder,
+        groups,
+        standaloneIds,
+      );
       _isReordering = true;
       // 편집 모드에서는 필터로 숨겨진 루틴도 드래그 대상이 될 수 있어야
       // 하므로 진입 시 카테고리 필터를 해제한다.
@@ -171,19 +203,57 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     });
   }
 
+  /// 저장된 섹션 순서를 현재 그룹/독립 습관 목록과 맞춰 정리한다: 저장된
+  /// 순서를 우선하되, 새로 생긴 그룹·독립 습관은 끝에 추가하고 삭제된
+  /// 항목은 제거한다. 그룹 id와 독립 습관 항목([RoutineSectionOrderStore.
+  /// encodeStandalone])이 자유롭게 섞여 순서를 이룬다.
+  List<String> _resolveSectionOrder(
+    List<String> savedOrder,
+    List<RoutineGroup> groups,
+    List<String> standaloneRoutineIds,
+  ) {
+    final groupIds = groups.map((g) => g.id).toSet();
+    final standaloneItems = standaloneRoutineIds
+        .map(RoutineSectionOrderStore.encodeStandalone)
+        .toSet();
+    final resolved = <String>[
+      for (final id in savedOrder)
+        if (groupIds.contains(id) || standaloneItems.contains(id)) id,
+    ];
+    final seen = resolved.toSet();
+    for (final group in groups) {
+      if (!seen.contains(group.id)) {
+        resolved.add(group.id);
+        seen.add(group.id);
+      }
+    }
+    for (final item in standaloneItems) {
+      if (!seen.contains(item)) {
+        resolved.add(item);
+        seen.add(item);
+      }
+    }
+    return resolved;
+  }
+
   /// draft를 버리고 편집 모드를 나간다(서버 상태는 그대로).
   void _cancelReorderMode() {
     setState(() {
       _draftRoutines = null;
+      _draftSectionOrder = null;
       _isReordering = false;
     });
   }
 
-  /// draft와 서버 상태를 비교해 바뀐 부분(소속 이동 / 순서)만 서버에
-  /// 일괄 반영한 뒤 편집 모드를 나간다.
-  Future<void> _commitDraft(BuildContext context) async {
+  /// draft와 서버 상태를 비교해 바뀐 부분(소속 이동 / 순서 / 섹션 순서)만
+  /// 서버·로컬에 일괄 반영한 뒤 편집 모드를 나간다.
+  Future<void> _commitDraft(
+    BuildContext context,
+    List<RoutineGroup> groups,
+  ) async {
     final draft = _draftRoutines;
-    if (draft == null) return;
+    final sectionOrder = _draftSectionOrder;
+    if (draft == null || sectionOrder == null) return;
     final original =
         ref.read(routineListProvider(_selectedDateParam)).valueOrNull ?? [];
     final originalById = {for (final r in original) r.id: r};
@@ -215,10 +285,29 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       await notifier.reorder(scoped);
     }
 
+    // 3) 섹션 순서: 서버에는 그룹끼리의 순서만 반영하고, 독립 습관 각각이
+    // 그 사이 어디에 오는지는 서버 개념이 없으므로 기기 로컬에 저장한다.
+    final groupOrderIds = sectionOrder.where(
+      (id) => RoutineSectionOrderStore.decodeStandaloneRoutineId(id) == null,
+    );
+    final groupById = {for (final g in groups) g.id: g};
+    final reorderedGroups = [
+      for (final id in groupOrderIds)
+        if (groupById[id] != null) groupById[id]!,
+    ];
+    if (reorderedGroups.length > 1) {
+      await ref
+          .read(routineGroupManagementProvider.notifier)
+          .reorderGroups(reorderedGroups);
+    }
+    await RoutineSectionOrderStore.save(sectionOrder);
+
     if (!context.mounted) return;
     setState(() {
       _savingDraft = false;
       _draftRoutines = null;
+      _draftSectionOrder = null;
+      _cachedSectionOrder = sectionOrder;
       _isReordering = false;
     });
   }
@@ -285,6 +374,60 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       _draftRoutines = draft
           .map((r) => ids.contains(r.id) ? queue.removeAt(0) : r)
           .toList();
+    });
+  }
+
+  /// 최상위 목록에서 그룹 카드 또는 독립 습관 행([payload])을
+  /// [targetIndex] 위치(0-based, 이동 전 순서 기준)로 옮긴다. 독립 습관을
+  /// 다른 그룹 안에서 이 화면으로 처음 끌어왔다면(sectionOrder에 아직 없는
+  /// 경우) 새로 끼워 넣는다.
+  void _moveSectionInDraft(RoutineSectionDragPayload payload, int targetIndex) {
+    final order = _draftSectionOrder;
+    if (order == null) return;
+    final key = payload.encode();
+    final oldIndex = order.indexOf(key);
+    final adjustedTargetIndex = (oldIndex != -1 && oldIndex < targetIndex)
+        ? targetIndex - 1
+        : targetIndex;
+    setState(() {
+      final updated = [...order];
+      if (oldIndex != -1) updated.removeAt(oldIndex);
+      updated.insert(adjustedTargetIndex.clamp(0, updated.length), key);
+      _draftSectionOrder = updated;
+      // 독립 습관 섹션 핸들로 그룹에서 끄집어내 다른 위치로 옮긴 경우,
+      // 그 습관의 routineGroupId도 함께 독립으로 갱신한다.
+      if (!payload.isGroup) {
+        final draft = _draftRoutines;
+        if (draft == null) return;
+        _draftRoutines = draft
+            .map(
+              (r) => r.id == payload.routine!.id
+                  ? r.copyWith(clearRoutineGroupId: true)
+                  : r,
+            )
+            .toList();
+      }
+    });
+  }
+
+  /// 독립 습관 섹션(핸들)이 [targetGroupId] 그룹 카드 위에 드롭됐을 때,
+  /// 그 습관을 이 그룹으로 편입시키고 sectionOrder에서 제거한다.
+  void _moveStandaloneToGroup(
+    RoutineSectionDragPayload payload,
+    String targetGroupId,
+  ) {
+    final draft = _draftRoutines;
+    final order = _draftSectionOrder;
+    if (draft == null || order == null || payload.routine == null) return;
+    setState(() {
+      _draftRoutines = draft
+          .map(
+            (r) => r.id == payload.routine!.id
+                ? r.copyWith(routineGroupId: targetGroupId)
+                : r,
+          )
+          .toList();
+      _draftSectionOrder = order.where((id) => id != payload.encode()).toList();
     });
   }
 
@@ -481,27 +624,92 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
-  Widget _buildStandaloneTable(
+  /// sectionOrder의 [index]번째 항목([sectionKey])을 그룹 카드 또는 독립
+  /// 습관 행으로 렌더링한다. 편집 모드가 아니면 드래그 없이 읽기 전용으로
+  /// 표시된다.
+  Widget _buildSectionItem(
     BuildContext context,
-    List<Routine> standaloneRoutines,
+    String sectionKey,
+    int index,
+    List<String> sectionOrder,
+    Map<String, RoutineGroup> groupById,
+    Map<String, Routine> standaloneById,
+    List<Routine> filteredRoutines,
   ) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
-      itemCount: standaloneRoutines.length,
-      separatorBuilder: (_, _) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        final routine = standaloneRoutines[index];
-        return RoutineListItem(
-          key: ValueKey(routine.id),
-          routine: routine,
-          rowNumber: index + 1,
-          onTap: () => context.push(
-            AppRoutes.routineDetail,
-            extra: {'routineId': routine.id},
+    final routineId = RoutineSectionOrderStore.decodeStandaloneRoutineId(
+      sectionKey,
+    );
+    if (routineId != null) {
+      final routine = standaloneById[routineId];
+      if (routine == null) return const SizedBox.shrink();
+      final rowNumber = sectionOrder
+          .take(index + 1)
+          .where(
+            (id) =>
+                RoutineSectionOrderStore.decodeStandaloneRoutineId(id) != null,
+          )
+          .length;
+      if (!_isReordering) {
+        return Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+            ),
           ),
-          onToggleCheck: ({textValue, numericValue, timeValue}) => _toggleCheck(
+          child: RoutineListItem(
+            key: ValueKey(routine.id),
+            routine: routine,
+            rowNumber: rowNumber,
+            onTap: () => context.push(
+              AppRoutes.routineDetail,
+              extra: {'routineId': routine.id},
+            ),
+            onToggleCheck: ({textValue, numericValue, timeValue}) =>
+                _toggleCheck(
+                  context,
+                  ref,
+                  routine,
+                  textValue: textValue,
+                  numericValue: numericValue,
+                  timeValue: timeValue,
+                ),
+            onEdit: () => context.push(
+              AppRoutes.routineEdit,
+              extra: {'routineId': routine.id},
+            ),
+            onPause: () => _pauseRoutine(context, ref, routine),
+            onResume: () => _resumeRoutine(context, ref, routine),
+            onDelete: () => _confirmDelete(context, ref, routine),
+          ),
+        );
+      }
+      return _buildStandaloneRoutineSection(
+        context,
+        routine,
+        rowNumber,
+        sectionOrder,
+      );
+    }
+
+    final group = groupById[sectionKey];
+    if (group == null) return const SizedBox.shrink();
+    final groupRoutines = filteredRoutines
+        .where((r) => r.routineGroupId == sectionKey)
+        .toList();
+    if (!_isReordering && groupRoutines.isEmpty) return const SizedBox.shrink();
+
+    return RoutineGroupSection(
+      key: ValueKey(sectionKey),
+      group: group,
+      routines: groupRoutines,
+      onTapRoutine: (routine) => context.push(
+        AppRoutes.routineDetail,
+        extra: {'routineId': routine.id},
+      ),
+      onToggleCheck: (routine, {textValue, numericValue, timeValue}) =>
+          _toggleCheck(
             context,
             ref,
             routine,
@@ -509,54 +717,61 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
             numericValue: numericValue,
             timeValue: timeValue,
           ),
-          onEdit: () => context.push(
-            AppRoutes.routineEdit,
-            extra: {'routineId': routine.id},
-          ),
-          onPause: () => _pauseRoutine(context, ref, routine),
-          onResume: () => _resumeRoutine(context, ref, routine),
-          onDelete: () => _confirmDelete(context, ref, routine),
-        );
-      },
+      onReorderRoutines: (reordered) => _reorderInDraft(reordered),
+      onMoveRoutine: (payload, targetIndex) =>
+          _moveRoutineInDraft(payload, sectionKey, targetIndex),
+      onMoveStandaloneRoutine: (payload) =>
+          _moveStandaloneToGroup(payload, sectionKey),
+      onEditGroup: () => _showGroupForm(context, group: group),
+      onDeleteGroup: () => _confirmDeleteGroup(context, ref, group),
+      onEditRoutine: (routine) =>
+          context.push(AppRoutes.routineEdit, extra: {'routineId': routine.id}),
+      onPauseRoutine: (routine) => _pauseRoutine(context, ref, routine),
+      onResumeRoutine: (routine) => _resumeRoutine(context, ref, routine),
+      isEditing: _isReordering,
+      onDropSectionBefore: _isReordering
+          ? (payload) => _moveSectionInDraft(payload, index)
+          : null,
+      onDropSectionAfter: _isReordering
+          ? (payload) => _moveSectionInDraft(payload, index + 1)
+          : null,
     );
   }
 
-  Widget _buildStandaloneEditList(
+  /// 편집 모드의 독립 습관 행 하나. 그룹 카드와 동급인 최상위 섹션으로
+  /// 취급되어, [DraggableSection]으로 감싸 다른 그룹/독립 습관 사이 어디로
+  ///든 옮기거나 그룹으로 편입시킬 수 있다.
+  Widget _buildStandaloneRoutineSection(
     BuildContext context,
-    List<Routine> standaloneRoutines,
+    Routine routine,
+    int rowNumber,
+    List<String> sectionOrder,
   ) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (var index = 0; index < standaloneRoutines.length; index++)
-          DraggableRoutineRow(
-            key: ValueKey(standaloneRoutines[index].id),
-            routine: standaloneRoutines[index],
-            rowNumber: index + 1,
-            groupId: null,
-            onTap: () => context.push(
-              AppRoutes.routineDetail,
-              extra: {'routineId': standaloneRoutines[index].id},
-            ),
-            onToggleCheck: ({textValue, numericValue, timeValue}) =>
-                _toggleCheck(
-                  context,
-                  ref,
-                  standaloneRoutines[index],
-                  textValue: textValue,
-                  numericValue: numericValue,
-                  timeValue: timeValue,
-                ),
-            onDropBefore: (payload) =>
-                _moveRoutineInDraft(payload, null, index),
-            onDropAfter: (payload) =>
-                _moveRoutineInDraft(payload, null, index + 1),
-          ),
-        TrailingRoutineDropSlot(
-          onAccept: (payload) =>
-              _moveRoutineInDraft(payload, null, standaloneRoutines.length),
+    final payload = RoutineSectionDragPayload.standaloneRoutine(routine);
+    final key = payload.encode();
+    return DraggableSection(
+      sectionKey: key,
+      onDropBefore: (dropped) =>
+          _moveSectionInDraft(dropped, sectionOrder.indexOf(key)),
+      onDropAfter: (dropped) =>
+          _moveSectionInDraft(dropped, sectionOrder.indexOf(key) + 1),
+      child: StandaloneRoutineRow(
+        key: ValueKey(routine.id),
+        routine: routine,
+        rowNumber: rowNumber,
+        onTap: () => context.push(
+          AppRoutes.routineDetail,
+          extra: {'routineId': routine.id},
         ),
-      ],
+        onToggleCheck: ({textValue, numericValue, timeValue}) => _toggleCheck(
+          context,
+          ref,
+          routine,
+          textValue: textValue,
+          numericValue: numericValue,
+          timeValue: timeValue,
+        ),
+      ),
     );
   }
 
@@ -748,8 +963,11 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
             onPressed: _savingDraft
                 ? null
                 : () => _isReordering
-                      ? _commitDraft(context)
-                      : _enterReorderMode(routinesAsync.valueOrNull ?? []),
+                      ? _commitDraft(context, groupsAsync.valueOrNull ?? [])
+                      : _enterReorderMode(
+                          routinesAsync.valueOrNull ?? [],
+                          groupsAsync.valueOrNull ?? [],
+                        ),
           ),
           if (!_isReordering)
             AppBarMoreMenu(
@@ -817,6 +1035,20 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                     final standaloneRoutines = filteredRoutines
                         .where((r) => r.routineGroupId == null)
                         .toList();
+                    final groupById = {for (final g in groups) g.id: g};
+                    final standaloneById = {
+                      for (final r in standaloneRoutines) r.id: r,
+                    };
+                    // 편집 모드에서는 draft 섹션 순서를, 평소엔 캐시된 순서를
+                    // 쓴다(RoutineListScreen이 최초 빌드 때 로드해 둔다).
+                    final baseOrder = _isReordering
+                        ? (_draftSectionOrder ?? const <String>[])
+                        : (_cachedSectionOrder ?? const <String>[]);
+                    final sectionOrder = _resolveSectionOrder(
+                      baseOrder,
+                      groups,
+                      standaloneRoutines.map((r) => r.id).toList(),
+                    );
 
                     if (routines.isEmpty && groups.isEmpty) {
                       return AppEmptyState(
@@ -852,89 +1084,16 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                               72,
                         ),
                         children: [
-                          for (final group in groups)
-                            if (_isReordering ||
-                                filteredRoutines
-                                    .where((r) => r.routineGroupId == group.id)
-                                    .isNotEmpty)
-                              RoutineGroupSection(
-                                key: ValueKey(group.id),
-                                group: group,
-                                routines: filteredRoutines
-                                    .where((r) => r.routineGroupId == group.id)
-                                    .toList(),
-                                onTapRoutine: (routine) => context.push(
-                                  AppRoutes.routineDetail,
-                                  extra: {'routineId': routine.id},
-                                ),
-                                onToggleCheck:
-                                    (
-                                      routine, {
-                                      textValue,
-                                      numericValue,
-                                      timeValue,
-                                    }) => _toggleCheck(
-                                      context,
-                                      ref,
-                                      routine,
-                                      textValue: textValue,
-                                      numericValue: numericValue,
-                                      timeValue: timeValue,
-                                    ),
-                                onReorderRoutines: (reordered) =>
-                                    _reorderInDraft(reordered),
-                                onMoveRoutine: (payload, targetIndex) =>
-                                    _moveRoutineInDraft(
-                                      payload,
-                                      group.id,
-                                      targetIndex,
-                                    ),
-                                onEditGroup: () =>
-                                    _showGroupForm(context, group: group),
-                                onDeleteGroup: () =>
-                                    _confirmDeleteGroup(context, ref, group),
-                                onEditRoutine: (routine) => context.push(
-                                  AppRoutes.routineEdit,
-                                  extra: {'routineId': routine.id},
-                                ),
-                                onPauseRoutine: (routine) =>
-                                    _pauseRoutine(context, ref, routine),
-                                onResumeRoutine: (routine) =>
-                                    _resumeRoutine(context, ref, routine),
-                                isEditing: _isReordering,
-                              ),
-                          if (standaloneRoutines.isNotEmpty ||
-                              _isReordering) ...[
-                            if (groups.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: AppSizes.spaceS,
-                                ),
-                                child: Text(
-                                  l10n.routine_group_standalone_section_title,
-                                  style: Theme.of(context).textTheme.labelLarge,
-                                ),
-                              ),
-                            buildRoutineTableHeader(context),
-                            if (_isReordering)
-                              DroppableRoutineSection(
-                                groupId: null,
-                                onDropToEnd: (payload) => _moveRoutineInDraft(
-                                  payload,
-                                  null,
-                                  standaloneRoutines.length,
-                                ),
-                                child: _buildStandaloneEditList(
-                                  context,
-                                  standaloneRoutines,
-                                ),
-                              )
-                            else
-                              _buildStandaloneTable(
-                                context,
-                                standaloneRoutines,
-                              ),
-                          ],
+                          for (var i = 0; i < sectionOrder.length; i++)
+                            _buildSectionItem(
+                              context,
+                              sectionOrder[i],
+                              i,
+                              sectionOrder,
+                              groupById,
+                              standaloneById,
+                              filteredRoutines,
+                            ),
                         ],
                       ),
                     );

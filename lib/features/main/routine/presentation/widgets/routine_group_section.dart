@@ -22,12 +22,15 @@ class RoutineGroupSection extends StatefulWidget {
     required this.onToggleCheck,
     required this.onReorderRoutines,
     required this.onMoveRoutine,
+    required this.onMoveStandaloneRoutine,
     required this.onEditGroup,
     required this.onDeleteGroup,
     this.onEditRoutine,
     this.onPauseRoutine,
     this.onResumeRoutine,
     this.isEditing = false,
+    this.onDropSectionBefore,
+    this.onDropSectionAfter,
   });
 
   final RoutineGroup group;
@@ -46,6 +49,11 @@ class RoutineGroupSection extends StatefulWidget {
   /// [targetIndex]는 이 그룹 내에서 삽입될 위치(0-based).
   final void Function(RoutineDragPayload payload, int targetIndex)
   onMoveRoutine;
+
+  /// 독립 습관 섹션(핸들)이 이 그룹 카드 위에 드롭됐을 때 호출. 그 습관을
+  /// 이 그룹 맨 끝으로 편입시킨다.
+  final void Function(RoutineSectionDragPayload payload)
+  onMoveStandaloneRoutine;
   final VoidCallback onEditGroup;
   final VoidCallback onDeleteGroup;
   final void Function(Routine)? onEditRoutine;
@@ -53,12 +61,26 @@ class RoutineGroupSection extends StatefulWidget {
   final void Function(Routine)? onResumeRoutine;
   final bool isEditing;
 
+  /// 다른 섹션이 이 섹션 앞/뒤에 드롭됐을 때 호출(섹션 자체의 순서 변경).
+  final void Function(RoutineSectionDragPayload payload)? onDropSectionBefore;
+  final void Function(RoutineSectionDragPayload payload)? onDropSectionAfter;
+
   @override
   State<RoutineGroupSection> createState() => _RoutineGroupSectionState();
 }
 
 class _RoutineGroupSectionState extends State<RoutineGroupSection> {
   bool _expanded = true;
+
+  @override
+  void didUpdateWidget(covariant RoutineGroupSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 편집(순서변경/이동) 모드에 들어가면 접혀 있던 그룹도 강제로 펼쳐서,
+    // 습관 목록 영역(그룹으로 편입시키는 드롭 타겟)이 항상 보이게 한다.
+    if (widget.isEditing && !oldWidget.isEditing) {
+      _expanded = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,104 +97,126 @@ class _RoutineGroupSectionState extends State<RoutineGroupSection> {
     final checkedCount = widget.routines.where((r) => r.checkedToday).length;
     final totalCount = widget.routines.length;
 
+    Widget header = InkWell(
+      onTap: () => setState(() => _expanded = !_expanded),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceM,
+          vertical: AppSizes.spaceS,
+        ),
+        child: Row(
+          children: [
+            if (widget.group.emoji != null) ...[
+              Text(widget.group.emoji!, style: const TextStyle(fontSize: 18)),
+              const SizedBox(width: AppSizes.spaceS),
+            ],
+            Expanded(
+              child: Text(
+                widget.group.title,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: accent,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                '$checkedCount/$totalCount',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: accent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            if (widget.isEditing) ...[
+              const SizedBox(width: AppSizes.spaceS),
+              GroupSectionDragHandle(groupId: widget.group.id),
+            ],
+            if (!widget.isEditing)
+              PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_vert,
+                  size: 18,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                onSelected: (value) {
+                  if (value == 'edit') widget.onEditGroup();
+                  if (value == 'delete') widget.onDeleteGroup();
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Text(l10n.routine_group_edit),
+                  ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(l10n.routine_group_delete),
+                  ),
+                ],
+              ),
+            Icon(
+              _expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+              size: 18,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // 편집 모드에서는 헤더(제목 영역)만 "섹션 순서변경" 드래그 타겟이고,
+    // 카드 몸통(습관 목록 영역)은 "이 그룹으로 습관 편입" 드롭 타겟이다.
+    // 두 영역을 겹치지 않게 분리해야 카드 몸통 위에서 섹션 순서변경
+    // 삽입줄이 카드에 가려 반응하지 않는 문제가 없다.
+    if (widget.isEditing &&
+        widget.onDropSectionBefore != null &&
+        widget.onDropSectionAfter != null) {
+      header = DraggableSection(
+        sectionKey: widget.group.id,
+        onDropBefore: widget.onDropSectionBefore!,
+        onDropAfter: widget.onDropSectionAfter!,
+        child: header,
+      );
+    }
+
+    final body = _expanded
+        ? Column(
+            children: [
+              Divider(height: 1, color: colorScheme.outlineVariant),
+              if (widget.routines.isNotEmpty) buildRoutineTableHeader(context),
+              widget.isEditing ? _buildEditList(context) : _buildTable(context),
+            ],
+          )
+        : const SizedBox.shrink();
+
     final card = Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: () => setState(() => _expanded = !_expanded),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSizes.spaceM,
-                vertical: AppSizes.spaceS,
-              ),
-              child: Row(
-                children: [
-                  if (widget.group.emoji != null) ...[
-                    Text(
-                      widget.group.emoji!,
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(width: AppSizes.spaceS),
-                  ],
-                  Expanded(
-                    child: Text(
-                      widget.group.title,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: accent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      '$checkedCount/$totalCount',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: accent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  if (!widget.isEditing)
-                    PopupMenuButton<String>(
-                      icon: Icon(
-                        Icons.more_vert,
-                        size: 18,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      onSelected: (value) {
-                        if (value == 'edit') widget.onEditGroup();
-                        if (value == 'delete') widget.onDeleteGroup();
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'edit',
-                          child: Text(l10n.routine_group_edit),
-                        ),
-                        PopupMenuItem(
-                          value: 'delete',
-                          child: Text(l10n.routine_group_delete),
-                        ),
-                      ],
-                    ),
-                  Icon(
-                    _expanded
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (_expanded) ...[
-            Divider(height: 1, color: colorScheme.outlineVariant),
-            if (widget.routines.isNotEmpty) buildRoutineTableHeader(context),
-            widget.isEditing ? _buildEditList(context) : _buildTable(context),
-          ],
+          header,
+          if (widget.isEditing)
+            DroppableRoutineSection(
+              groupId: widget.group.id,
+              onDropToEnd: (payload) =>
+                  widget.onMoveRoutine(payload, widget.routines.length),
+              onDropSectionToEnd: widget.onMoveStandaloneRoutine,
+              child: body,
+            )
+          else
+            body,
         ],
       ),
     );
 
-    if (!widget.isEditing) return card;
-    return DroppableRoutineSection(
-      groupId: widget.group.id,
-      onDropToEnd: (payload) =>
-          widget.onMoveRoutine(payload, widget.routines.length),
-      child: card,
-    );
+    return card;
   }
 
   Widget _buildTable(BuildContext context) {

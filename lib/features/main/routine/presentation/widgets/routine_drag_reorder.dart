@@ -211,43 +211,241 @@ class _RowDropSlot extends StatelessWidget {
   }
 }
 
-/// 그룹 섹션 또는 독립 습관 섹션 전체를 감싸는 드롭 영역. 행 사이가 아닌
-/// 섹션의 빈 공간(헤더 등)에 드롭되면 해당 섹션 맨 끝으로 이동시킨다.
+/// 그룹 섹션(카드) 전체를 감싸는 드롭 영역. 카드의 빈 공간(헤더 등)에
+/// 드롭되면 이 그룹 맨 끝으로 습관을 편입시킨다. 습관 행의 드래그 핸들
+/// ([RoutineDragPayload])뿐 아니라, 독립 습관 섹션의 드래그 핸들
+/// ([RoutineSectionDragPayload.standaloneRoutine])도 동일하게 받아
+/// 그룹으로 편입시킬 수 있다.
 class DroppableRoutineSection extends StatelessWidget {
   const DroppableRoutineSection({
     super.key,
     required this.groupId,
     required this.onDropToEnd,
+    required this.onDropSectionToEnd,
     required this.child,
   });
 
-  /// 이 섹션의 소속 그룹 id (null이면 독립 습관 섹션).
+  /// 이 섹션의 소속 그룹 id (null이면 독립 습관 섹션 — 이 경우 습관 행
+  /// 드래그로는 이 위젯을 쓰지 않으므로 [onDropToEnd]는 호출되지 않는다).
   final String? groupId;
   final void Function(RoutineDragPayload payload) onDropToEnd;
+
+  /// 독립 습관 섹션(핸들)이 이 그룹 카드 위에 드롭됐을 때 호출된다.
+  final void Function(RoutineSectionDragPayload payload) onDropSectionToEnd;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return DragTarget<RoutineDragPayload>(
-      onWillAcceptWithDetails: (details) =>
-          details.data.sourceGroupId != groupId,
-      onAcceptWithDetails: (details) => onDropToEnd(details.data),
-      builder: (context, candidateData, rejectedData) {
-        final active = candidateData.isNotEmpty;
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            border: active
-                ? Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  )
-                : null,
-          ),
-          child: child,
+    return DragTarget<RoutineSectionDragPayload>(
+      onWillAcceptWithDetails: (details) => !details.data.isGroup,
+      onAcceptWithDetails: (details) => onDropSectionToEnd(details.data),
+      builder: (context, sectionCandidates, _) {
+        return DragTarget<RoutineDragPayload>(
+          onWillAcceptWithDetails: (details) =>
+              details.data.sourceGroupId != groupId,
+          onAcceptWithDetails: (details) => onDropToEnd(details.data),
+          builder: (context, candidateData, rejectedData) {
+            final active =
+                candidateData.isNotEmpty || sectionCandidates.isNotEmpty;
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 120),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                border: active
+                    ? Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      )
+                    : null,
+              ),
+              child: child,
+            );
+          },
         );
       },
+    );
+  }
+}
+
+/// 편집 모드 최상위 목록에서 "섹션"(루틴 그룹 카드 또는 독립 습관 하나)의
+/// 순서를 나타내는 항목. 그룹은 [groupId]에, 독립 습관은 [routine]에 값이
+/// 들어있다(항상 정확히 하나만).
+class RoutineSectionDragPayload {
+  const RoutineSectionDragPayload.group(this.groupId) : routine = null;
+
+  const RoutineSectionDragPayload.standaloneRoutine(this.routine)
+    : groupId = null;
+
+  final String? groupId;
+  final Routine? routine;
+
+  /// 이 섹션이 그룹 카드인지 여부. false면 독립 습관 행.
+  bool get isGroup => groupId != null;
+
+  /// 최상위 sectionOrder 문자열 표현. 그룹이면 그룹 id 그대로, 독립 습관
+  /// 이면 [RoutineSectionOrderStore.encodeStandalone]로 인코딩된 값과
+  /// 같은 규칙을 [encode]를 통해 만든다.
+  String encode() => groupId ?? 'routine:${routine!.id}';
+}
+
+/// 섹션(그룹 카드 또는 독립 습관 행) 전체를 드래그로 순서 변경할 수 있게
+/// 감싸는 래퍼. [child] 위/아래에 드롭하면 그 섹션 앞/뒤로 옮겨진다.
+/// 드래그는 [child] 내부의 드래그 핸들(그룹 헤더 아이콘, 또는 독립 습관
+/// 행의 핸들)을 잡았을 때만 시작된다(카드/행 전체가 아니라 핸들 하나).
+class DraggableSection extends StatefulWidget {
+  const DraggableSection({
+    super.key,
+    required this.sectionKey,
+    required this.onDropBefore,
+    required this.onDropAfter,
+    required this.child,
+  });
+
+  /// 이 섹션의 sectionOrder 문자열 표현(자기 자신 위 드롭 무시용).
+  final String sectionKey;
+
+  /// 이 섹션 앞에 [payload]가 드롭됐을 때 호출된다.
+  final void Function(RoutineSectionDragPayload payload) onDropBefore;
+
+  /// 이 섹션 뒤에 [payload]가 드롭됐을 때 호출된다.
+  final void Function(RoutineSectionDragPayload payload) onDropAfter;
+
+  final Widget child;
+
+  @override
+  State<DraggableSection> createState() => _DraggableSectionState();
+}
+
+class _DraggableSectionState extends State<DraggableSection> {
+  bool? _hoveringTop;
+
+  bool _isTopHalf(Offset globalOffset) {
+    final box = context.findRenderObject() as RenderBox;
+    final localY = box.globalToLocal(globalOffset).dy;
+    return localY < box.size.height / 2;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<RoutineSectionDragPayload>(
+      onWillAcceptWithDetails: (details) =>
+          details.data.encode() != widget.sectionKey,
+      onMove: (details) =>
+          setState(() => _hoveringTop = _isTopHalf(details.offset)),
+      onLeave: (_) => setState(() => _hoveringTop = null),
+      onAcceptWithDetails: (details) {
+        final isTop = _isTopHalf(details.offset);
+        setState(() => _hoveringTop = null);
+        if (isTop) {
+          widget.onDropBefore(details.data);
+        } else {
+          widget.onDropAfter(details.data);
+        }
+      },
+      builder: (context, candidateData, rejectedData) {
+        final active = candidateData.isNotEmpty;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _InsertionLine(visible: active && _hoveringTop == true),
+            widget.child,
+            _InsertionLine(visible: active && _hoveringTop == false),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// 그룹 카드 헤더에 붙이는 드래그 핸들(6점 아이콘). 이걸 잡고 끌면 그룹
+/// 섹션 전체(카드)가 다른 그룹/독립 습관 사이로 이동한다.
+class GroupSectionDragHandle extends StatelessWidget {
+  const GroupSectionDragHandle({super.key, required this.groupId});
+
+  final String groupId;
+
+  @override
+  Widget build(BuildContext context) {
+    return LongPressDraggable<RoutineSectionDragPayload>(
+      data: RoutineSectionDragPayload.group(groupId),
+      axis: Axis.vertical,
+      feedback: Material(
+        elevation: 6,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: const Padding(
+          padding: EdgeInsets.all(AppSizes.spaceS),
+          child: Icon(Icons.drag_indicator),
+        ),
+      ),
+      childWhenDragging: const Opacity(
+        opacity: 0.3,
+        child: Icon(Icons.drag_indicator),
+      ),
+      child: const Icon(Icons.drag_indicator),
+    );
+  }
+}
+
+/// 편집 모드에서 그룹에 속하지 않은 독립 습관 하나를 나타내는 행. 카드
+/// 없이 다른 그룹 카드들과 동급으로 최상위 목록에 섞여 렌더링되며, 오른쪽
+/// 끝의 섹션 드래그 핸들을 잡으면 이 습관 하나가 그룹들/다른 독립 습관
+/// 사이 어디로든 옮겨지거나 특정 그룹으로 편입될 수 있다.
+class StandaloneRoutineRow extends StatelessWidget {
+  const StandaloneRoutineRow({
+    super.key,
+    required this.routine,
+    required this.rowNumber,
+    required this.onTap,
+    required this.onToggleCheck,
+  });
+
+  final Routine routine;
+  final int rowNumber;
+  final VoidCallback onTap;
+  final Future<void> Function({
+    String? textValue,
+    num? numericValue,
+    String? timeValue,
+  })
+  onToggleCheck;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: RoutineListItem(
+              routine: routine,
+              rowNumber: rowNumber,
+              isEditing: true,
+              onTap: onTap,
+              onToggleCheck: onToggleCheck,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: AppSizes.spaceS),
+            child: LongPressDraggable<RoutineSectionDragPayload>(
+              data: RoutineSectionDragPayload.standaloneRoutine(routine),
+              axis: Axis.vertical,
+              feedback: _DragFeedback(routine: routine),
+              childWhenDragging: const Opacity(
+                opacity: 0.3,
+                child: Icon(Icons.drag_indicator),
+              ),
+              child: const Icon(Icons.drag_indicator),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
