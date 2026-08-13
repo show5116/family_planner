@@ -4663,6 +4663,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_overview_heatmap_title => '全部习惯完成情况';
 
   @override
+  String get routine_overview_previous_period => '上一期间';
+
+  @override
+  String get routine_overview_next_period => '下一期间';
+
+  @override
+  String get routine_overview_today => '回到今天';
+
+  @override
+  String get routine_overview_weekly_title => '本周各习惯完成情况';
+
+  @override
+  String get routine_overview_achieved => '已达成';
+
+  @override
+  String get routine_overview_not_achieved => '未达成';
+
+  @override
   String routine_overview_total_routines(int count) {
     return '基于全部 $count 个习惯';
   }

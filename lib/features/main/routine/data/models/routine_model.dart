@@ -804,6 +804,42 @@ class RoutineOverviewHeatmapDay {
   }
 }
 
+/// 루틴별 주간 체크 현황(period=week일 때만 존재). [targetCount]는
+/// WEEKLY+FIXED_DAYS는 targetDays.length, 그 외 WEEKLY는 targetCount이며,
+/// MONTHLY 루틴은 주간 목표 개념이 없어 null.
+class RoutineOverviewRoutineBreakdown {
+  final String routineId;
+  final String title;
+  final String? emoji;
+  final int? targetCount;
+  final List<String> checkedDates;
+
+  const RoutineOverviewRoutineBreakdown({
+    required this.routineId,
+    required this.title,
+    this.emoji,
+    this.targetCount,
+    required this.checkedDates,
+  });
+
+  /// 이 주에 목표를 달성했는지. targetCount가 없는(MONTHLY) 루틴은
+  /// 판정 기준이 없으므로 null.
+  bool? get achievedThisWeek =>
+      targetCount == null ? null : checkedDates.length >= targetCount!;
+
+  factory RoutineOverviewRoutineBreakdown.fromJson(Map<String, dynamic> json) {
+    return RoutineOverviewRoutineBreakdown(
+      routineId: json['routineId'] as String,
+      title: json['title'] as String,
+      emoji: json['emoji'] as String?,
+      targetCount: json['targetCount'] as int?,
+      checkedDates: (json['checkedDates'] as List<dynamic>? ?? [])
+          .map((e) => e as String)
+          .toList(),
+    );
+  }
+}
+
 /// 전체 루틴 대시보드 요약 (달성률 + 날짜별 통합 히트맵)
 class RoutineOverview {
   final String period;
@@ -815,6 +851,9 @@ class RoutineOverview {
   final num achievementRate;
   final List<RoutineOverviewHeatmapDay> heatmap;
 
+  /// period=week일 때만 값 존재, month일 때는 null.
+  final List<RoutineOverviewRoutineBreakdown>? routineBreakdown;
+
   const RoutineOverview({
     required this.period,
     required this.from,
@@ -824,6 +863,7 @@ class RoutineOverview {
     required this.totalExpected,
     required this.achievementRate,
     required this.heatmap,
+    this.routineBreakdown,
   });
 
   factory RoutineOverview.fromJson(Map<String, dynamic> json) {
@@ -839,6 +879,13 @@ class RoutineOverview {
           .map(
             (e) =>
                 RoutineOverviewHeatmapDay.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+      routineBreakdown: (json['routineBreakdown'] as List<dynamic>?)
+          ?.map(
+            (e) => RoutineOverviewRoutineBreakdown.fromJson(
+              e as Map<String, dynamic>,
+            ),
           )
           .toList(),
     );

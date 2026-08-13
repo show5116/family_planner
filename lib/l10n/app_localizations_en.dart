@@ -4802,6 +4802,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_overview_heatmap_title => 'Overall Completion Heatmap';
 
   @override
+  String get routine_overview_previous_period => 'Previous period';
+
+  @override
+  String get routine_overview_next_period => 'Next period';
+
+  @override
+  String get routine_overview_today => 'Today';
+
+  @override
+  String get routine_overview_weekly_title => 'This Week\'s Habit Performance';
+
+  @override
+  String get routine_overview_achieved => 'Achieved';
+
+  @override
+  String get routine_overview_not_achieved => 'Not Achieved';
+
+  @override
   String routine_overview_total_routines(int count) {
     return 'Based on $count habits';
   }

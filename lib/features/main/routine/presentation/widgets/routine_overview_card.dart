@@ -8,17 +8,22 @@ import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 전체 루틴 통합 달성률 카드 (기간 선택 + 원형 게이지). [RoutineRateCard]와
 /// 같은 형태지만 전체 루틴 합산 데이터([RoutineOverview])를 사용한다.
+///
+/// [showGauge]가 false면(주간 모드) 기간 선택 토글만 보여주고 게이지 이하는
+/// 숨긴다 — 주간 모드는 [RoutineOverviewWeeklyBreakdown]이 대신 표시한다.
 class RoutineOverviewCard extends StatelessWidget {
   const RoutineOverviewCard({
     super.key,
     required this.overview,
     required this.period,
     required this.onPeriodChanged,
+    this.showGauge = true,
   });
 
   final RoutineOverview overview;
   final RoutineOverviewPeriod period;
   final ValueChanged<RoutineOverviewPeriod> onPeriodChanged;
+  final bool showGauge;
 
   Color _gaugeColor(num achievementRate) {
     if (achievementRate >= 80) return AppColors.success;
@@ -54,82 +59,84 @@ class RoutineOverviewCard extends StatelessWidget {
               selected: {period},
               onSelectionChanged: (selected) => onPeriodChanged(selected.first),
             ),
-            const SizedBox(height: AppSizes.spaceL),
-            Center(
-              child: SizedBox(
-                width: 160,
-                height: 160,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    PieChart(
-                      PieChartData(
-                        startDegreeOffset: -90,
-                        sectionsSpace: 0,
-                        centerSpaceRadius: 56,
-                        sections: [
-                          PieChartSectionData(
-                            value: ratio,
-                            color: gaugeColor,
-                            radius: 22,
-                            showTitle: false,
+            if (showGauge) ...[
+              const SizedBox(height: AppSizes.spaceL),
+              Center(
+                child: SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      PieChart(
+                        PieChartData(
+                          startDegreeOffset: -90,
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 56,
+                          sections: [
+                            PieChartSectionData(
+                              value: ratio,
+                              color: gaugeColor,
+                              radius: 22,
+                              showTitle: false,
+                            ),
+                            PieChartSectionData(
+                              value: 1 - ratio,
+                              color: colorScheme.surfaceContainerHighest,
+                              radius: 22,
+                              showTitle: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${overview.achievementRate}%',
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: gaugeColor,
+                                ),
                           ),
-                          PieChartSectionData(
-                            value: 1 - ratio,
-                            color: colorScheme.surfaceContainerHighest,
-                            radius: 22,
-                            showTitle: false,
+                          Text(
+                            l10n.routine_rate_achievement,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.onSurfaceVariant),
                           ),
                         ],
                       ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '${overview.achievementRate}%',
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: gaugeColor,
-                              ),
-                        ),
-                        Text(
-                          l10n.routine_rate_achievement,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: colorScheme.onSurfaceVariant),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: AppSizes.spaceM),
-            Center(
-              child: Text(
-                '${overview.totalChecked} / ${overview.totalExpected}',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            const SizedBox(height: AppSizes.spaceXS),
-            Center(
-              child: Text(
-                l10n.routine_overview_total_routines(overview.totalRoutines),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+              const SizedBox(height: AppSizes.spaceM),
+              Center(
+                child: Text(
+                  '${overview.totalChecked} / ${overview.totalExpected}',
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
-            ),
-            const SizedBox(height: AppSizes.spaceXS),
-            Center(
-              child: Text(
-                '${overview.from} ~ ${overview.to}',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+              const SizedBox(height: AppSizes.spaceXS),
+              Center(
+                child: Text(
+                  l10n.routine_overview_total_routines(overview.totalRoutines),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: AppSizes.spaceXS),
+              Center(
+                child: Text(
+                  '${overview.from} ~ ${overview.to}',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

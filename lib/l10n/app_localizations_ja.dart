@@ -4692,6 +4692,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_overview_heatmap_title => '全体習慣達成状況';
 
   @override
+  String get routine_overview_previous_period => '前の期間';
+
+  @override
+  String get routine_overview_next_period => '次の期間';
+
+  @override
+  String get routine_overview_today => '今日へ';
+
+  @override
+  String get routine_overview_weekly_title => '今週の習慣別遂行状況';
+
+  @override
+  String get routine_overview_achieved => '達成';
+
+  @override
+  String get routine_overview_not_achieved => '未達成';
+
+  @override
   String routine_overview_total_routines(int count) {
     return '全体習慣$count個基準';
   }

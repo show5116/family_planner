@@ -800,35 +800,46 @@ final routineSummaryProvider =
 // ignore: unused_element
 typedef RoutineSummaryRef =
     AutoDisposeFutureProviderRef<List<RoutineSummaryItem>>;
-String _$routineOverviewHash() => r'687a608e4b1a23239332affd3d98be383a342aa1';
+String _$routineOverviewHash() => r'4781007f53a3c70662fcb2e63ad434a08e4ddc87';
 
 /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
 ///
 /// Copied from [routineOverview].
 @ProviderFor(routineOverview)
 const routineOverviewProvider = RoutineOverviewFamily();
 
 /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
 ///
 /// Copied from [routineOverview].
 class RoutineOverviewFamily extends Family<AsyncValue<RoutineOverview>> {
   /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  /// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+  /// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
   ///
   /// Copied from [routineOverview].
   const RoutineOverviewFamily();
 
   /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  /// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+  /// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
   ///
   /// Copied from [routineOverview].
-  RoutineOverviewProvider call({required RoutineOverviewPeriod period}) {
-    return RoutineOverviewProvider(period: period);
+  RoutineOverviewProvider call({
+    required RoutineOverviewPeriod period,
+    String? fromDate,
+  }) {
+    return RoutineOverviewProvider(period: period, fromDate: fromDate);
   }
 
   @override
   RoutineOverviewProvider getProviderOverride(
     covariant RoutineOverviewProvider provider,
   ) {
-    return call(period: provider.period);
+    return call(period: provider.period, fromDate: provider.fromDate);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -847,26 +858,37 @@ class RoutineOverviewFamily extends Family<AsyncValue<RoutineOverview>> {
 }
 
 /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
 ///
 /// Copied from [routineOverview].
 class RoutineOverviewProvider
     extends AutoDisposeFutureProvider<RoutineOverview> {
   /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  /// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+  /// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
   ///
   /// Copied from [routineOverview].
-  RoutineOverviewProvider({required RoutineOverviewPeriod period})
-    : this._internal(
-        (ref) => routineOverview(ref as RoutineOverviewRef, period: period),
-        from: routineOverviewProvider,
-        name: r'routineOverviewProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$routineOverviewHash,
-        dependencies: RoutineOverviewFamily._dependencies,
-        allTransitiveDependencies:
-            RoutineOverviewFamily._allTransitiveDependencies,
-        period: period,
-      );
+  RoutineOverviewProvider({
+    required RoutineOverviewPeriod period,
+    String? fromDate,
+  }) : this._internal(
+         (ref) => routineOverview(
+           ref as RoutineOverviewRef,
+           period: period,
+           fromDate: fromDate,
+         ),
+         from: routineOverviewProvider,
+         name: r'routineOverviewProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$routineOverviewHash,
+         dependencies: RoutineOverviewFamily._dependencies,
+         allTransitiveDependencies:
+             RoutineOverviewFamily._allTransitiveDependencies,
+         period: period,
+         fromDate: fromDate,
+       );
 
   RoutineOverviewProvider._internal(
     super._createNotifier, {
@@ -876,9 +898,11 @@ class RoutineOverviewProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.period,
+    required this.fromDate,
   }) : super.internal();
 
   final RoutineOverviewPeriod period;
+  final String? fromDate;
 
   @override
   Override overrideWith(
@@ -894,6 +918,7 @@ class RoutineOverviewProvider
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         period: period,
+        fromDate: fromDate,
       ),
     );
   }
@@ -905,13 +930,16 @@ class RoutineOverviewProvider
 
   @override
   bool operator ==(Object other) {
-    return other is RoutineOverviewProvider && other.period == period;
+    return other is RoutineOverviewProvider &&
+        other.period == period &&
+        other.fromDate == fromDate;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, period.hashCode);
+    hash = _SystemHash.combine(hash, fromDate.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -922,6 +950,9 @@ class RoutineOverviewProvider
 mixin RoutineOverviewRef on AutoDisposeFutureProviderRef<RoutineOverview> {
   /// The parameter `period` of this provider.
   RoutineOverviewPeriod get period;
+
+  /// The parameter `fromDate` of this provider.
+  String? get fromDate;
 }
 
 class _RoutineOverviewProviderElement
@@ -932,6 +963,8 @@ class _RoutineOverviewProviderElement
   @override
   RoutineOverviewPeriod get period =>
       (origin as RoutineOverviewProvider).period;
+  @override
+  String? get fromDate => (origin as RoutineOverviewProvider).fromDate;
 }
 
 String _$routineBadgeCatalogHash() =>

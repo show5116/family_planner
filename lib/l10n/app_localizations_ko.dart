@@ -4699,6 +4699,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_overview_heatmap_title => '전체 습관 달성 현황';
 
   @override
+  String get routine_overview_previous_period => '이전 기간';
+
+  @override
+  String get routine_overview_next_period => '다음 기간';
+
+  @override
+  String get routine_overview_today => '오늘로';
+
+  @override
+  String get routine_overview_weekly_title => '이번 주 습관별 수행 현황';
+
+  @override
+  String get routine_overview_achieved => '달성';
+
+  @override
+  String get routine_overview_not_achieved => '미달성';
+
+  @override
   String routine_overview_total_routines(int count) {
     return '전체 습관 $count개 기준';
   }

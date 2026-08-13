@@ -9038,6 +9038,42 @@ abstract class AppLocalizations {
   /// **'전체 습관 달성 현황'**
   String get routine_overview_heatmap_title;
 
+  /// 통계 화면 이전 주/달 이동 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 기간'**
+  String get routine_overview_previous_period;
+
+  /// 통계 화면 다음 주/달 이동 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 기간'**
+  String get routine_overview_next_period;
+
+  /// 통계 화면에서 현재 주/달로 돌아가는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘로'**
+  String get routine_overview_today;
+
+  /// 주간 모드 습관별 7일 그리드 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 습관별 수행 현황'**
+  String get routine_overview_weekly_title;
+
+  /// 주간 목표를 달성한 습관 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'달성'**
+  String get routine_overview_achieved;
+
+  /// 주간 목표를 달성하지 못한 습관 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'미달성'**
+  String get routine_overview_not_achieved;
+
   /// 통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구
   ///
   /// In ko, this message translates to:

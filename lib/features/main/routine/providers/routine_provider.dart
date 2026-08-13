@@ -267,13 +267,16 @@ Future<List<RoutineSummaryItem>> routineSummary(Ref ref) async {
 }
 
 /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
 @riverpod
 Future<RoutineOverview> routineOverview(
   Ref ref, {
   required RoutineOverviewPeriod period,
+  String? fromDate,
 }) async {
   final repository = ref.watch(routineRepositoryProvider);
-  return repository.getOverview(period: period);
+  return repository.getOverview(period: period, from: fromDate);
 }
 
 // ── 배지 ──────────────────────────────────────────────────────────────────────

@@ -569,11 +569,15 @@ class RoutineRepository {
 
   Future<RoutineOverview> getOverview({
     required RoutineOverviewPeriod period,
+    String? from,
   }) async {
     try {
       final response = await _dio.get(
         '/routines/stats/overview',
-        queryParameters: {'period': period.toJsonString()},
+        queryParameters: {
+          'period': period.toJsonString(),
+          if (from != null) 'from': from,
+        },
       );
       return RoutineOverview.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
