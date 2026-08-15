@@ -1,12 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/weather/models/weather_model.dart';
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 
 /// 날씨 상세 화면
@@ -17,6 +19,8 @@ class WeatherDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final weatherAsync = ref.watch(weatherProvider);
     final forecastAsync = ref.watch(weatherForecastProvider);
+    final isFallbackLocation =
+        ref.watch(locationProvider).valueOrNull?.isFallback ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,6 +55,17 @@ class WeatherDetailScreen extends ConsumerWidget {
             bottom: AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
           ),
           children: [
+            if (isFallbackLocation) ...[
+              _FallbackLocationCard(
+                onEnableLocation: () async {
+                  await Geolocator.requestPermission();
+                  ref.invalidate(locationProvider);
+                  ref.invalidate(weatherProvider);
+                  ref.invalidate(weatherForecastProvider);
+                },
+              ),
+              const SizedBox(height: AppSizes.spaceM),
+            ],
             // 현재 날씨 섹션
             weatherAsync.when(
               loading: () => const Center(
@@ -659,6 +674,45 @@ class _DayCardState extends State<_DayCard> {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+// ─── 위치 폴백 안내 카드 ─────────────────────────────────────────────────────────
+
+class _FallbackLocationCard extends StatelessWidget {
+  const _FallbackLocationCard({required this.onEnableLocation});
+
+  final VoidCallback onEnableLocation;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.4),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSizes.spaceM),
+        child: Row(
+          children: [
+            Icon(
+              Icons.location_off_outlined,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(width: AppSizes.spaceM),
+            Expanded(
+              child: Text(
+                l10n.weather_fallbackLocationNotice,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            const SizedBox(width: AppSizes.spaceS),
+            TextButton(
+              onPressed: onEnableLocation,
+              child: Text(l10n.weather_enableLocationAction),
+            ),
+          ],
+        ),
       ),
     );
   }

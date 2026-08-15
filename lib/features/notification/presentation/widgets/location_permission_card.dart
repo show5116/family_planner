@@ -74,7 +74,9 @@ class _LocationPermissionCardState
       // 권한 허용 즉시 서버에 위치 전송
       try {
         final latLon = await ref.read(locationProvider.future);
-        await AuthService().updateLocation(lat: latLon.lat, lon: latLon.lon);
+        if (!latLon.isFallback) {
+          await AuthService().updateLocation(lat: latLon.lat, lon: latLon.lon);
+        }
       } catch (_) {}
 
       if (mounted) {

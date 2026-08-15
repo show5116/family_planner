@@ -1840,6 +1840,8 @@
   "weather_errorMessage": "无法加载天气信息",
   "weather_dustFine": "PM10",
   "weather_dustUltraFine": "PM2.5",
+  "weather_fallbackLocationNotice": "无法获取当前位置，正在显示首尔的天气",
+  "weather_enableLocationAction": "允许位置权限",
 
   "investment_widgetTitle": "投资指标",
   "investment_errorMessage": "无法加载数据",

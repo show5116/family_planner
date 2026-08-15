@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 
-const _defaultLatLon = LatLon(lat: 37.5665, lon: 126.9780); // 서울 기본값
+const _defaultLatLon = LatLon(lat: 37.5665, lon: 126.9780, isFallback: true); // 서울 기본값
 
 Future<LatLon> getWebLocation() async {
   try {

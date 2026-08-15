@@ -1885,6 +1885,8 @@
   "weather_errorMessage": "Unable to load weather information",
   "weather_dustFine": "PM10",
   "weather_dustUltraFine": "PM2.5",
+  "weather_fallbackLocationNotice": "Couldn't get your current location — showing weather for Seoul instead",
+  "weather_enableLocationAction": "Allow location access",
 
   "investment_widgetTitle": "Investment Indicators",
   "investment_errorMessage": "Unable to load data",

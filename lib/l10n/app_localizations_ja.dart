@@ -3849,6 +3849,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get weather_dustUltraFine => 'PM2.5';
 
   @override
+  String get weather_fallbackLocationNotice => '現在地を取得できなかったため、ソウルの天気を表示しています';
+
+  @override
+  String get weather_enableLocationAction => '位置情報の権限を許可する';
+
+  @override
   String get investment_widgetTitle => '投資指標';
 
   @override

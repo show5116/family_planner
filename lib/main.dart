@@ -175,6 +175,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
     try {
       final latLon = await ref.read(locationProvider.future);
+      if (latLon.isFallback) return; // GPS 실패 시 서울 기본값을 실제 위치로 저장하지 않음
       await AuthService().updateLocation(lat: latLon.lat, lon: latLon.lon);
     } catch (_) {
       // 위치 권한 거부 등 실패 시 조용히 무시

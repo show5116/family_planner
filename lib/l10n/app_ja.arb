@@ -1885,6 +1885,8 @@
   "weather_errorMessage": "天気情報を読み込めません",
   "weather_dustFine": "PM10",
   "weather_dustUltraFine": "PM2.5",
+  "weather_fallbackLocationNotice": "現在地を取得できなかったため、ソウルの天気を表示しています",
+  "weather_enableLocationAction": "位置情報の権限を許可する",
 
   "investment_widgetTitle": "投資指標",
   "investment_errorMessage": "データを読み込めません",

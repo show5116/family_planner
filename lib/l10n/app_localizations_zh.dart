@@ -3825,6 +3825,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get weather_dustUltraFine => 'PM2.5';
 
   @override
+  String get weather_fallbackLocationNotice => '无法获取当前位置，正在显示首尔的天气';
+
+  @override
+  String get weather_enableLocationAction => '允许位置权限';
+
+  @override
   String get investment_widgetTitle => '投资指标';
 
   @override

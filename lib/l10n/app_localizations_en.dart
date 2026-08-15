@@ -3936,6 +3936,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weather_dustUltraFine => 'PM2.5';
 
   @override
+  String get weather_fallbackLocationNotice =>
+      'Couldn\'t get your current location — showing weather for Seoul instead';
+
+  @override
+  String get weather_enableLocationAction => 'Allow location access';
+
+  @override
   String get investment_widgetTitle => 'Investment Indicators';
 
   @override

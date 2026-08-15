@@ -7502,6 +7502,18 @@ abstract class AppLocalizations {
   /// **'초미세'**
   String get weather_dustUltraFine;
 
+  /// No description provided for @weather_fallbackLocationNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 위치를 가져오지 못해 서울 날씨를 표시하고 있습니다'**
+  String get weather_fallbackLocationNotice;
+
+  /// No description provided for @weather_enableLocationAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 권한 허용하기'**
+  String get weather_enableLocationAction;
+
   /// No description provided for @investment_widgetTitle.
   ///
   /// In ko, this message translates to:

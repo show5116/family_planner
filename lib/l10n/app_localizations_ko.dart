@@ -3856,6 +3856,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get weather_dustUltraFine => '초미세';
 
   @override
+  String get weather_fallbackLocationNotice =>
+      '현재 위치를 가져오지 못해 서울 날씨를 표시하고 있습니다';
+
+  @override
+  String get weather_enableLocationAction => '위치 권한 허용하기';
+
+  @override
   String get investment_widgetTitle => '투자 지표';
 
   @override
