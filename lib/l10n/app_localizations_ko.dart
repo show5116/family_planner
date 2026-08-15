@@ -4705,7 +4705,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_overview_next_period => '다음 기간';
 
   @override
-  String get routine_overview_today => '오늘로';
+  String get routine_overview_this_week => '금주로';
+
+  @override
+  String get routine_overview_this_month => '이번 달로';
 
   @override
   String get routine_overview_weekly_title => '이번 주 습관별 수행 현황';
@@ -4715,6 +4718,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_overview_not_achieved => '미달성';
+
+  @override
+  String get routine_overview_total_checked => '총 체크';
 
   @override
   String routine_overview_total_routines(int count) {

@@ -79,6 +79,11 @@ class RoutineOverviewWeeklyBreakdown extends StatelessWidget {
                     count: notAchieved,
                     color: AppColors.error,
                   ),
+                  _CountTile(
+                    label: l10n.routine_overview_total_checked,
+                    count: overview.totalChecked,
+                    color: colorScheme.primary,
+                  ),
                 ],
               ),
             ],

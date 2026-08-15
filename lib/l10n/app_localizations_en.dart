@@ -4808,7 +4808,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_overview_next_period => 'Next period';
 
   @override
-  String get routine_overview_today => 'Today';
+  String get routine_overview_this_week => 'This Week';
+
+  @override
+  String get routine_overview_this_month => 'This Month';
 
   @override
   String get routine_overview_weekly_title => 'This Week\'s Habit Performance';
@@ -4818,6 +4821,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routine_overview_not_achieved => 'Not Achieved';
+
+  @override
+  String get routine_overview_total_checked => 'Total Checked';
 
   @override
   String routine_overview_total_routines(int count) {

@@ -4698,7 +4698,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_overview_next_period => '次の期間';
 
   @override
-  String get routine_overview_today => '今日へ';
+  String get routine_overview_this_week => '今週へ';
+
+  @override
+  String get routine_overview_this_month => '今月へ';
 
   @override
   String get routine_overview_weekly_title => '今週の習慣別遂行状況';
@@ -4708,6 +4711,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_overview_not_achieved => '未達成';
+
+  @override
+  String get routine_overview_total_checked => '合計チェック';
 
   @override
   String routine_overview_total_routines(int count) {

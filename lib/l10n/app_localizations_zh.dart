@@ -4669,7 +4669,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_overview_next_period => '下一期间';
 
   @override
-  String get routine_overview_today => '回到今天';
+  String get routine_overview_this_week => '回到本周';
+
+  @override
+  String get routine_overview_this_month => '回到本月';
 
   @override
   String get routine_overview_weekly_title => '本周各习惯完成情况';
@@ -4679,6 +4682,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_overview_not_achieved => '未达成';
+
+  @override
+  String get routine_overview_total_checked => '总打卡次数';
 
   @override
   String routine_overview_total_routines(int count) {
