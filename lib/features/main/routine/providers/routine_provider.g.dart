@@ -967,6 +967,50 @@ class _RoutineOverviewProviderElement
   String? get fromDate => (origin as RoutineOverviewProvider).fromDate;
 }
 
+String _$routineSettingsHash() => r'6cd4acea59e95c8d208f50eefd2bff48fa137746';
+
+/// 사용자의 일일 목표 설정(현재값). 과거 기간의 통계를 표시할 때는 이
+/// 값이 아니라 `RoutineOverview.dailyGoalCount`를 써야 한다 — 서버가
+/// 목표 변경 이력을 보존하므로 과거 기간은 그때의 목표로 판정된다.
+///
+/// Copied from [routineSettings].
+@ProviderFor(routineSettings)
+final routineSettingsProvider =
+    AutoDisposeFutureProvider<RoutineSettings>.internal(
+      routineSettings,
+      name: r'routineSettingsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineSettingsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineSettingsRef = AutoDisposeFutureProviderRef<RoutineSettings>;
+String _$routineDailyStreakHash() =>
+    r'c797dc426ce471027ed9b07aef701374e797d33e';
+
+/// 일일 목표 기준 전체 연속 달성 스트릭 + 최근 14일 집계
+///
+/// Copied from [routineDailyStreak].
+@ProviderFor(routineDailyStreak)
+final routineDailyStreakProvider =
+    AutoDisposeFutureProvider<RoutineDailyStreak>.internal(
+      routineDailyStreak,
+      name: r'routineDailyStreakProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineDailyStreakHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineDailyStreakRef =
+    AutoDisposeFutureProviderRef<RoutineDailyStreak>;
 String _$routineBadgeCatalogHash() =>
     r'4a5460770c2bed6473343588c14f51e37400ed62';
 

@@ -2371,6 +2371,81 @@
   "@routine_overview_not_achieved": { "description": "Count of habits that did not meet their weekly target" },
   "routine_overview_total_checked": "Total Checked",
   "@routine_overview_total_checked": { "description": "Total number of checks across all habits in weekly mode" },
+  "routine_daily_goal_title": "Today's Goal",
+  "@routine_daily_goal_title": { "description": "Daily goal settings screen title" },
+  "routine_daily_goal_setting": "Set Daily Goal",
+  "@routine_daily_goal_setting": { "description": "More menu entry for daily goal settings" },
+  "routine_daily_goal_mode_all": "Complete Everything",
+  "@routine_daily_goal_mode_all": { "description": "ALL goal mode option label" },
+  "routine_daily_goal_mode_all_desc": "Check off every habit scheduled for the day",
+  "@routine_daily_goal_mode_all_desc": { "description": "ALL mode description" },
+  "routine_daily_goal_mode_count": "Set a Daily Target",
+  "@routine_daily_goal_mode_count": { "description": "COUNT goal mode option label" },
+  "routine_daily_goal_mode_count_desc": "Hit your chosen number and the day counts as a win",
+  "@routine_daily_goal_mode_count_desc": { "description": "COUNT mode description" },
+  "routine_daily_goal_count_label": "{count} of {total} habits",
+  "@routine_daily_goal_count_label": {
+    "description": "Current slider value for goal count",
+    "placeholders": { "total": { "type": "int" }, "count": { "type": "int" } }
+  },
+  "routine_daily_goal_encourage": "{count} a day and you have succeeded",
+  "@routine_daily_goal_encourage": {
+    "description": "Encouraging line under the goal slider",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_exceeds_total": "Your goal is higher than the number of habits you have. Add more habits or lower the goal.",
+  "@routine_daily_goal_exceeds_total": { "description": "Shown when goal count exceeds total habits" },
+  "routine_daily_goal_today_progress": "Today {checked} / {target}",
+  "@routine_daily_goal_today_progress": {
+    "description": "Today's goal progress (checked / target)",
+    "placeholders": { "checked": { "type": "int" }, "target": { "type": "int" } }
+  },
+  "routine_daily_goal_achieved_today": "Goal reached today!",
+  "@routine_daily_goal_achieved_today": { "description": "Shown when today's goal is met" },
+  "routine_daily_goal_bonus": "Bonus +{count}",
+  "@routine_daily_goal_bonus": {
+    "description": "Extra checks beyond the goal",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_streak": "{days}-day streak",
+  "@routine_daily_goal_streak": {
+    "description": "Daily goal streak length",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "routine_daily_goal_streak_longest": "Best {days} days",
+  "@routine_daily_goal_streak_longest": {
+    "description": "Longest daily goal streak",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "routine_daily_goal_rate": "Goal Achievement",
+  "@routine_daily_goal_rate": { "description": "Daily goal achievement rate label on stats screen" },
+  "routine_daily_goal_achieved_days": "{achieved} of {total} days",
+  "@routine_daily_goal_achieved_days": {
+    "description": "Days the goal was met within the period",
+    "placeholders": { "achieved": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "routine_daily_goal_saved": "Goal saved",
+  "@routine_daily_goal_saved": { "description": "Snackbar after saving goal" },
+  "routine_daily_goal_raise_title": "Ready to aim higher?",
+  "@routine_daily_goal_raise_title": { "description": "Raise goal suggestion dialog title" },
+  "routine_daily_goal_raise_body": "You have been passing your goal often these past two weeks, averaging {average} a day.\n\nShall we raise your daily goal from {current} to {suggested}?",
+  "@routine_daily_goal_raise_body": {
+    "description": "Raise goal suggestion body",
+    "placeholders": { "average": { "type": "int" }, "current": { "type": "int" }, "suggested": { "type": "int" } }
+  },
+  "routine_daily_goal_raise_accept": "Raise it",
+  "@routine_daily_goal_raise_accept": { "description": "Accept raising the goal" },
+  "routine_daily_goal_keep": "Keep it as is",
+  "@routine_daily_goal_keep": { "description": "Decline a goal adjustment" },
+  "routine_daily_goal_lower_title": "Want to ease off for now?",
+  "@routine_daily_goal_lower_title": { "description": "Lower goal suggestion dialog title" },
+  "routine_daily_goal_lower_body": "Busy stretch lately? There is no need to push.\n\nYou could drop your daily goal from {current} to {suggested}. You can always raise it again.",
+  "@routine_daily_goal_lower_body": {
+    "description": "Lower goal suggestion body",
+    "placeholders": { "current": { "type": "int" }, "suggested": { "type": "int" } }
+  },
+  "routine_daily_goal_lower_accept": "Lower it",
+  "@routine_daily_goal_lower_accept": { "description": "Accept lowering the goal" },
   "routine_overview_total_routines": "Based on {count} habits",
   "@routine_overview_total_routines": {
     "description": "Shows the number of habits included in the overall achievement rate",

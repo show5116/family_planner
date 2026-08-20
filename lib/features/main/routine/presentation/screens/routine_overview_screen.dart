@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_goal_summary_card.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_overview_card.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_overview_heatmap_calendar.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_overview_weekly_breakdown.dart';
@@ -106,6 +107,10 @@ class _RoutineOverviewScreenState extends ConsumerState<RoutineOverviewScreen> {
                   overview: overview,
                   period: _period,
                   isCurrent: _anchorDate == null,
+                  // 스트릭은 오늘 기준 지표라 현재 기간을 볼 때만 의미가 있다.
+                  dailyStreak: _anchorDate == null
+                      ? ref.watch(routineDailyStreakProvider).valueOrNull
+                      : null,
                   onPeriodChanged: _setPeriod,
                   onPrevious: () => _shift(-1),
                   onNext: () => _shift(1),
@@ -129,6 +134,7 @@ class _RoutineOverviewContent extends StatelessWidget {
     required this.overview,
     required this.period,
     required this.isCurrent,
+    required this.dailyStreak,
     required this.onPeriodChanged,
     required this.onPrevious,
     required this.onNext,
@@ -138,6 +144,7 @@ class _RoutineOverviewContent extends StatelessWidget {
   final RoutineOverview overview;
   final RoutineOverviewPeriod period;
   final bool isCurrent;
+  final RoutineDailyStreak? dailyStreak;
   final ValueChanged<RoutineOverviewPeriod> onPeriodChanged;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
@@ -167,6 +174,8 @@ class _RoutineOverviewContent extends StatelessWidget {
           onNext: onNext,
           onResetToCurrent: onResetToCurrent,
         ),
+        const SizedBox(height: AppSizes.spaceM),
+        RoutineGoalSummaryCard(overview: overview, dailyStreak: dailyStreak),
         const SizedBox(height: AppSizes.spaceM),
         if (isWeekly)
           RoutineOverviewWeeklyBreakdown(overview: overview)

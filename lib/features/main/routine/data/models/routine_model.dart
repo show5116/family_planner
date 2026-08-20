@@ -787,10 +787,15 @@ class RoutineOverviewHeatmapDay {
   final int checkedCount;
   final int totalCount;
 
+  /// 그날의 일일 목표 달성 여부. 대상 습관이 0개였던 날은 집계 대상이
+  /// 아니므로 null.
+  final bool? goalAchieved;
+
   const RoutineOverviewHeatmapDay({
     required this.date,
     required this.checkedCount,
     required this.totalCount,
+    this.goalAchieved,
   });
 
   double get ratio => totalCount > 0 ? checkedCount / totalCount : 0.0;
@@ -800,6 +805,7 @@ class RoutineOverviewHeatmapDay {
       date: json['date'] as String,
       checkedCount: json['checkedCount'] as int? ?? 0,
       totalCount: json['totalCount'] as int? ?? 0,
+      goalAchieved: json['goalAchieved'] as bool?,
     );
   }
 }
@@ -854,6 +860,21 @@ class RoutineOverview {
   /// period=week일 때만 값 존재, month일 때는 null.
   final List<RoutineOverviewRoutineBreakdown>? routineBreakdown;
 
+  /// 조회 기간 마지막 날(to) 기준으로 유효했던 일일 목표 설정. 과거
+  /// 기간을 조회하면 현재 설정과 다를 수 있으므로, 목표 개수를 화면에
+  /// 표시할 때는 반드시 이 값을 써야 한다(설정 화면의 현재값이 아니라).
+  final RoutineDailyGoalMode dailyGoalMode;
+  final int? dailyGoalCount;
+
+  /// 기간 내 일일 목표를 달성한 날 수
+  final int goalAchievedDays;
+
+  /// 기간 내 집계 대상 일수. 대상 습관이 0개였던 날은 제외되고, 진행
+  /// 중인 기간은 오늘까지의 경과 일수만 센다(남은 날이 미달성으로
+  /// 잡히지 않도록).
+  final int goalTotalDays;
+  final num goalAchievementRate;
+
   const RoutineOverview({
     required this.period,
     required this.from,
@@ -864,6 +885,11 @@ class RoutineOverview {
     required this.achievementRate,
     required this.heatmap,
     this.routineBreakdown,
+    this.dailyGoalMode = RoutineDailyGoalMode.all,
+    this.dailyGoalCount,
+    this.goalAchievedDays = 0,
+    this.goalTotalDays = 0,
+    this.goalAchievementRate = 0,
   });
 
   factory RoutineOverview.fromJson(Map<String, dynamic> json) {
@@ -888,6 +914,13 @@ class RoutineOverview {
             ),
           )
           .toList(),
+      dailyGoalMode: RoutineDailyGoalMode.fromString(
+        json['dailyGoalMode'] as String?,
+      ),
+      dailyGoalCount: json['dailyGoalCount'] as int?,
+      goalAchievedDays: json['goalAchievedDays'] as int? ?? 0,
+      goalTotalDays: json['goalTotalDays'] as int? ?? 0,
+      goalAchievementRate: json['goalAchievementRate'] as num? ?? 0,
     );
   }
 }
@@ -1037,6 +1070,120 @@ class RoutineLeaderboard {
       rankings: (json['rankings'] as List<dynamic>? ?? [])
           .map((e) => LeaderboardEntry.fromJson(e as Map<String, dynamic>))
           .toList(),
+    );
+  }
+}
+
+// ─── 일일 목표 ───────────────────────────────────────────────────────────────
+
+/// 일일 목표 모드. [all]은 그날 대상 습관을 전부 체크해야 달성(기존 동작),
+/// [count]는 설정한 개수만 채우면 달성.
+enum RoutineDailyGoalMode {
+  all,
+  count;
+
+  static RoutineDailyGoalMode fromString(String? value) {
+    switch (value) {
+      case 'COUNT':
+        return RoutineDailyGoalMode.count;
+      case 'ALL':
+      default:
+        return RoutineDailyGoalMode.all;
+    }
+  }
+
+  String toJsonString() => this == RoutineDailyGoalMode.count ? 'COUNT' : 'ALL';
+}
+
+/// 사용자의 루틴 일일 목표 설정
+class RoutineSettings {
+  final RoutineDailyGoalMode dailyGoalMode;
+
+  /// COUNT 모드일 때의 목표 개수. ALL 모드면 null.
+  final int? dailyGoalCount;
+
+  const RoutineSettings({required this.dailyGoalMode, this.dailyGoalCount});
+
+  bool get isCountMode => dailyGoalMode == RoutineDailyGoalMode.count;
+
+  factory RoutineSettings.fromJson(Map<String, dynamic> json) {
+    return RoutineSettings(
+      dailyGoalMode: RoutineDailyGoalMode.fromString(
+        json['dailyGoalMode'] as String?,
+      ),
+      dailyGoalCount: json['dailyGoalCount'] as int?,
+    );
+  }
+
+  RoutineSettings copyWith({
+    RoutineDailyGoalMode? dailyGoalMode,
+    int? dailyGoalCount,
+  }) {
+    return RoutineSettings(
+      dailyGoalMode: dailyGoalMode ?? this.dailyGoalMode,
+      dailyGoalCount: dailyGoalCount ?? this.dailyGoalCount,
+    );
+  }
+}
+
+/// 최근 14일 집계. 목표 상향/하향 제안 여부를 판단하는 데 쓴다.
+class RoutineRecent14Days {
+  final int achievedDays;
+  final int exceededDays;
+
+  /// 집계 대상 일수(대상 습관이 0개였던 날 제외). 0일 수 있으므로
+  /// 비율 계산 시 반드시 확인해야 한다.
+  final int totalDays;
+  final num averageCheckedCount;
+
+  const RoutineRecent14Days({
+    required this.achievedDays,
+    required this.exceededDays,
+    required this.totalDays,
+    required this.averageCheckedCount,
+  });
+
+  factory RoutineRecent14Days.fromJson(Map<String, dynamic> json) {
+    return RoutineRecent14Days(
+      achievedDays: json['achievedDays'] as int? ?? 0,
+      exceededDays: json['exceededDays'] as int? ?? 0,
+      totalDays: json['totalDays'] as int? ?? 0,
+      averageCheckedCount: json['averageCheckedCount'] as num? ?? 0,
+    );
+  }
+}
+
+/// 일일 목표 기준 전체 연속 달성 스트릭. 습관 개별 스트릭
+/// ([RoutineStreak])과 달리 "오늘의 목표를 달성한 날"을 세는 지표다.
+class RoutineDailyStreak {
+  final int currentStreakDays;
+  final int longestStreakDays;
+  final bool todayAchieved;
+  final int todayCheckedCount;
+
+  /// 오늘 기준 목표 개수. ALL 모드면 오늘 대상 습관 수.
+  final int todayTargetCount;
+  final RoutineRecent14Days recent14Days;
+
+  const RoutineDailyStreak({
+    required this.currentStreakDays,
+    required this.longestStreakDays,
+    required this.todayAchieved,
+    required this.todayCheckedCount,
+    required this.todayTargetCount,
+    required this.recent14Days,
+  });
+
+  factory RoutineDailyStreak.fromJson(Map<String, dynamic> json) {
+    return RoutineDailyStreak(
+      currentStreakDays: json['currentStreakDays'] as int? ?? 0,
+      longestStreakDays: json['longestStreakDays'] as int? ?? 0,
+      todayAchieved: json['todayAchieved'] as bool? ?? false,
+      todayCheckedCount: json['todayCheckedCount'] as int? ?? 0,
+      todayTargetCount: json['todayTargetCount'] as int? ?? 0,
+      recent14Days: RoutineRecent14Days.fromJson(
+        json['recent14Days'] as Map<String, dynamic>? ?? const {},
+      ),
     );
   }
 }

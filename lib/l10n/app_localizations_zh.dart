@@ -4693,6 +4693,100 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_overview_total_checked => '总打卡次数';
 
   @override
+  String get routine_daily_goal_title => '今日目标';
+
+  @override
+  String get routine_daily_goal_setting => '设置今日目标';
+
+  @override
+  String get routine_daily_goal_mode_all => '每天全部完成';
+
+  @override
+  String get routine_daily_goal_mode_all_desc => '当天所有习惯都打卡才算达成';
+
+  @override
+  String get routine_daily_goal_mode_count => '设定每日目标数量';
+
+  @override
+  String get routine_daily_goal_mode_count_desc => '达到设定的数量，这一天就算成功';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '$total个习惯中的$count个';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '每天$count个就算成功';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total => '目标数量超过了现有习惯数。可以添加更多习惯或降低目标';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return '今日 $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => '今日目标达成！';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return '额外 +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '连续达成$days天';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return '最长$days天';
+  }
+
+  @override
+  String get routine_daily_goal_rate => '目标达成率';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved天 / $total天 达成';
+  }
+
+  @override
+  String get routine_daily_goal_saved => '目标已保存';
+
+  @override
+  String get routine_daily_goal_raise_title => '要提高目标吗？';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return '最近两周你经常超额完成目标，平均每天完成$average个。\n\n要把每日目标从$current个提高到$suggested个吗？';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => '提高目标';
+
+  @override
+  String get routine_daily_goal_keep => '保持现状';
+
+  @override
+  String get routine_daily_goal_lower_title => '要暂时降低目标吗？';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return '最近有点忙吗？不用勉强自己。\n\n可以把每日目标从$current个降到$suggested个，随时都能再调高。';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => '降低目标';
+
+  @override
   String routine_overview_total_routines(int count) {
     return '基于全部 $count 个习惯';
   }

@@ -279,6 +279,24 @@ Future<RoutineOverview> routineOverview(
   return repository.getOverview(period: period, from: fromDate);
 }
 
+// ── 일일 목표 ─────────────────────────────────────────────────────────────────
+
+/// 사용자의 일일 목표 설정(현재값). 과거 기간의 통계를 표시할 때는 이
+/// 값이 아니라 `RoutineOverview.dailyGoalCount`를 써야 한다 — 서버가
+/// 목표 변경 이력을 보존하므로 과거 기간은 그때의 목표로 판정된다.
+@riverpod
+Future<RoutineSettings> routineSettings(Ref ref) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getSettings();
+}
+
+/// 일일 목표 기준 전체 연속 달성 스트릭 + 최근 14일 집계
+@riverpod
+Future<RoutineDailyStreak> routineDailyStreak(Ref ref) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getDailyStreak();
+}
+
 // ── 배지 ──────────────────────────────────────────────────────────────────────
 
 /// 전체 배지 카탈로그 (마스터 데이터)
@@ -493,6 +511,8 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
         newlyEarnedBadges = log.newlyEarnedBadges;
       }
       _ref.invalidate(routineSummaryProvider);
+      // 체크 개수가 바뀌면 오늘의 일일 목표 진행/달성 여부도 달라진다.
+      _ref.invalidate(routineDailyStreakProvider);
       if (newlyEarnedBadges.isNotEmpty) {
         _ref.invalidate(routineMyBadgesProvider);
         _ref.invalidate(routineBadgesProvider(routineId));
@@ -570,6 +590,23 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return false;
+    }
+  }
+
+  /// 일일 목표 설정 변경. 목표가 바뀌면 달성 판정 기준 자체가 달라지므로
+  /// 스트릭/통계 관련 provider를 모두 무효화한다.
+  Future<RoutineSettings?> updateSettings(UpdateRoutineSettingsDto dto) async {
+    state = const AsyncValue.loading();
+    try {
+      final settings = await _repository.updateSettings(dto);
+      _ref.invalidate(routineSettingsProvider);
+      _ref.invalidate(routineDailyStreakProvider);
+      _ref.invalidate(routineOverviewProvider);
+      state = const AsyncValue.data(null);
+      return settings;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
     }
   }
 }

@@ -9098,6 +9098,150 @@ abstract class AppLocalizations {
   /// **'총 체크'**
   String get routine_overview_total_checked;
 
+  /// 일일 목표 설정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표'**
+  String get routine_daily_goal_title;
+
+  /// 더보기 메뉴에서 일일 목표 설정으로 진입하는 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표 설정'**
+  String get routine_daily_goal_setting;
+
+  /// 일일 목표 모드 ALL 선택지 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 전부 하기'**
+  String get routine_daily_goal_mode_all;
+
+  /// ALL 모드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그날 해야 할 습관을 모두 체크해야 달성이에요'**
+  String get routine_daily_goal_mode_all_desc;
+
+  /// 일일 목표 모드 COUNT 선택지 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'하루 목표 개수 정하기'**
+  String get routine_daily_goal_mode_count;
+
+  /// COUNT 모드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'정한 개수만 채우면 그날은 성공이에요'**
+  String get routine_daily_goal_mode_count_desc;
+
+  /// 목표 개수 슬라이더 위에 표시되는 현재 선택값
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 {total}개 중 {count}개'**
+  String routine_daily_goal_count_label(int total, int count);
+
+  /// 목표 개수 슬라이더 아래 격려 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'하루 {count}개면 성공이에요'**
+  String routine_daily_goal_encourage(int count);
+
+  /// 목표 개수가 전체 습관 수보다 클 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'지금 등록된 습관보다 목표가 많아요. 습관을 더 추가하거나 목표를 낮춰보세요'**
+  String get routine_daily_goal_exceeds_total;
+
+  /// 오늘의 목표 진행 상황 (체크 수 / 목표 수)
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 {checked} / {target}'**
+  String routine_daily_goal_today_progress(int checked, int target);
+
+  /// 오늘 목표를 달성했을 때 표시 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 목표 달성!'**
+  String get routine_daily_goal_achieved_today;
+
+  /// 목표를 초과 달성했을 때 추가 체크 수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스 +{count}'**
+  String routine_daily_goal_bonus(int count);
+
+  /// 일일 목표 연속 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 연속 달성'**
+  String routine_daily_goal_streak(int days);
+
+  /// 역대 최장 연속 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 {days}일'**
+  String routine_daily_goal_streak_longest(int days);
+
+  /// 통계 화면 일일 목표 달성률 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 달성률'**
+  String get routine_daily_goal_rate;
+
+  /// 기간 내 목표 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{achieved}일 / {total}일 달성'**
+  String routine_daily_goal_achieved_days(int achieved, int total);
+
+  /// 목표 저장 성공 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'목표를 저장했어요'**
+  String get routine_daily_goal_saved;
+
+  /// 목표 상향 제안 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표를 올려볼까요?'**
+  String get routine_daily_goal_raise_title;
+
+  /// 목표 상향 제안 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 2주 동안 목표를 자주 넘었어요. 요즘 하루 평균 {average}개를 하고 계세요.\n\n하루 목표를 {current}개에서 {suggested}개로 올려볼까요?'**
+  String routine_daily_goal_raise_body(int average, int current, int suggested);
+
+  /// 목표 상향 수락 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'올릴게요'**
+  String get routine_daily_goal_raise_accept;
+
+  /// 목표 조정 제안 거절 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'지금이 좋아요'**
+  String get routine_daily_goal_keep;
+
+  /// 목표 하향 제안 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표를 잠시 낮춰볼까요?'**
+  String get routine_daily_goal_lower_title;
+
+  /// 목표 하향 제안 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'요즘 조금 바쁘신가요? 무리하지 않아도 괜찮아요.\n\n하루 목표를 {current}개에서 {suggested}개로 낮춰도 좋아요. 언제든 다시 올릴 수 있어요.'**
+  String routine_daily_goal_lower_body(int current, int suggested);
+
+  /// 목표 하향 수락 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'낮출게요'**
+  String get routine_daily_goal_lower_accept;
+
   /// 통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구
   ///
   /// In ko, this message translates to:

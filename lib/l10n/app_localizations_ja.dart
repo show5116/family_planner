@@ -4722,6 +4722,101 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_overview_total_checked => '合計チェック';
 
   @override
+  String get routine_daily_goal_title => '今日の目標';
+
+  @override
+  String get routine_daily_goal_setting => '今日の目標を設定';
+
+  @override
+  String get routine_daily_goal_mode_all => '毎日すべて行う';
+
+  @override
+  String get routine_daily_goal_mode_all_desc => 'その日の習慣をすべてチェックすると達成です';
+
+  @override
+  String get routine_daily_goal_mode_count => '1日の目標数を決める';
+
+  @override
+  String get routine_daily_goal_mode_count_desc => '決めた数を満たせばその日は成功です';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '習慣$total個のうち$count個';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '1日$count個で成功です';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total =>
+      '登録中の習慣より目標が多いです。習慣を追加するか目標を下げてみましょう';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return '今日 $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => '今日の目標達成！';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return 'ボーナス +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '$days日連続達成';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return '最長$days日';
+  }
+
+  @override
+  String get routine_daily_goal_rate => '目標達成率';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved日 / $total日 達成';
+  }
+
+  @override
+  String get routine_daily_goal_saved => '目標を保存しました';
+
+  @override
+  String get routine_daily_goal_raise_title => '目標を上げてみませんか？';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return 'この2週間、目標をよく超えています。最近は1日平均$average個こなしています。\n\n1日の目標を$current個から$suggested個に上げてみませんか？';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => '上げる';
+
+  @override
+  String get routine_daily_goal_keep => '今のままでいい';
+
+  @override
+  String get routine_daily_goal_lower_title => '少し目標を下げますか？';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return '最近お忙しいですか？無理をしなくても大丈夫です。\n\n1日の目標を$current個から$suggested個に下げてもいいですよ。いつでも元に戻せます。';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => '下げる';
+
+  @override
   String routine_overview_total_routines(int count) {
     return '全体習慣$count個基準';
   }

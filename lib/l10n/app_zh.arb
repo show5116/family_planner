@@ -2326,6 +2326,81 @@
   "@routine_overview_not_achieved": { "description": "未达成本周目标的习惯数量标签" },
   "routine_overview_total_checked": "总打卡次数",
   "@routine_overview_total_checked": { "description": "周模式下所有习惯的总打卡次数标签" },
+  "routine_daily_goal_title": "今日目标",
+  "@routine_daily_goal_title": { "description": "每日目标设置页标题" },
+  "routine_daily_goal_setting": "设置今日目标",
+  "@routine_daily_goal_setting": { "description": "更多菜单中进入每日目标设置的项目" },
+  "routine_daily_goal_mode_all": "每天全部完成",
+  "@routine_daily_goal_mode_all": { "description": "每日目标模式ALL的选项标签" },
+  "routine_daily_goal_mode_all_desc": "当天所有习惯都打卡才算达成",
+  "@routine_daily_goal_mode_all_desc": { "description": "ALL模式说明" },
+  "routine_daily_goal_mode_count": "设定每日目标数量",
+  "@routine_daily_goal_mode_count": { "description": "每日目标模式COUNT的选项标签" },
+  "routine_daily_goal_mode_count_desc": "达到设定的数量，这一天就算成功",
+  "@routine_daily_goal_mode_count_desc": { "description": "COUNT模式说明" },
+  "routine_daily_goal_count_label": "{total}个习惯中的{count}个",
+  "@routine_daily_goal_count_label": {
+    "description": "目标数量滑块的当前值",
+    "placeholders": { "total": { "type": "int" }, "count": { "type": "int" } }
+  },
+  "routine_daily_goal_encourage": "每天{count}个就算成功",
+  "@routine_daily_goal_encourage": {
+    "description": "目标数量滑块下方的鼓励文案",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_exceeds_total": "目标数量超过了现有习惯数。可以添加更多习惯或降低目标",
+  "@routine_daily_goal_exceeds_total": { "description": "目标数量超过习惯总数时的提示" },
+  "routine_daily_goal_today_progress": "今日 {checked} / {target}",
+  "@routine_daily_goal_today_progress": {
+    "description": "今日目标进度（打卡数／目标数）",
+    "placeholders": { "checked": { "type": "int" }, "target": { "type": "int" } }
+  },
+  "routine_daily_goal_achieved_today": "今日目标达成！",
+  "@routine_daily_goal_achieved_today": { "description": "今日达成目标时的文案" },
+  "routine_daily_goal_bonus": "额外 +{count}",
+  "@routine_daily_goal_bonus": {
+    "description": "超出目标的额外打卡数",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_streak": "连续达成{days}天",
+  "@routine_daily_goal_streak": {
+    "description": "每日目标连续达成天数",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "routine_daily_goal_streak_longest": "最长{days}天",
+  "@routine_daily_goal_streak_longest": {
+    "description": "历史最长连续达成天数",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "routine_daily_goal_rate": "目标达成率",
+  "@routine_daily_goal_rate": { "description": "统计页每日目标达成率标签" },
+  "routine_daily_goal_achieved_days": "{achieved}天 / {total}天 达成",
+  "@routine_daily_goal_achieved_days": {
+    "description": "期间内达成目标的天数",
+    "placeholders": { "achieved": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "routine_daily_goal_saved": "目标已保存",
+  "@routine_daily_goal_saved": { "description": "保存目标成功的提示" },
+  "routine_daily_goal_raise_title": "要提高目标吗？",
+  "@routine_daily_goal_raise_title": { "description": "提高目标建议对话框标题" },
+  "routine_daily_goal_raise_body": "最近两周你经常超额完成目标，平均每天完成{average}个。\n\n要把每日目标从{current}个提高到{suggested}个吗？",
+  "@routine_daily_goal_raise_body": {
+    "description": "提高目标建议正文",
+    "placeholders": { "average": { "type": "int" }, "current": { "type": "int" }, "suggested": { "type": "int" } }
+  },
+  "routine_daily_goal_raise_accept": "提高目标",
+  "@routine_daily_goal_raise_accept": { "description": "接受提高目标的按钮" },
+  "routine_daily_goal_keep": "保持现状",
+  "@routine_daily_goal_keep": { "description": "拒绝调整目标的按钮" },
+  "routine_daily_goal_lower_title": "要暂时降低目标吗？",
+  "@routine_daily_goal_lower_title": { "description": "降低目标建议对话框标题" },
+  "routine_daily_goal_lower_body": "最近有点忙吗？不用勉强自己。\n\n可以把每日目标从{current}个降到{suggested}个，随时都能再调高。",
+  "@routine_daily_goal_lower_body": {
+    "description": "降低目标建议正文",
+    "placeholders": { "current": { "type": "int" }, "suggested": { "type": "int" } }
+  },
+  "routine_daily_goal_lower_accept": "降低目标",
+  "@routine_daily_goal_lower_accept": { "description": "接受降低目标的按钮" },
   "routine_overview_total_routines": "基于全部 {count} 个习惯",
   "@routine_overview_total_routines": {
     "description": "汇总达成率卡片中显示统计对象习惯数量的文案",

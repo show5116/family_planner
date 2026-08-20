@@ -11,7 +11,9 @@ import 'package:family_planner/features/main/routine/data/models/routine_model.d
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
 import 'package:family_planner/features/main/routine/data/routine_section_order_store.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_badge_celebration_dialog.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_daily_goal_bar.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_drag_reorder.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_goal_suggestion_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_form_dialog.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_group_section.dart';
 import 'package:family_planner/features/main/routine/presentation/widgets/routine_list_item.dart';
@@ -97,6 +99,25 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowOnboarding());
     _loadCachedSectionOrder();
+    _scheduleGoalSuggestionCheck();
+  }
+
+  /// 목표 조정 제안은 설정과 최근 기록이 모두 로드된 뒤에야 판단할 수 있어,
+  /// 두 provider의 future를 기다린 다음 실행한다.
+  Future<void> _scheduleGoalSuggestionCheck() async {
+    try {
+      await Future.wait([
+        ref.read(routineSettingsProvider.future),
+        ref.read(routineDailyStreakProvider.future),
+        ref.read(routineListProvider(null).future),
+      ]);
+    } catch (_) {
+      // 통계 로드 실패는 제안을 건너뛰는 것으로 충분하다(사용자에게
+      // 별도 에러를 띄울 성격의 기능이 아님).
+      return;
+    }
+    if (!mounted) return;
+    await _maybeSuggestGoalAdjustment();
   }
 
   Future<void> _loadCachedSectionOrder() async {
@@ -937,6 +958,56 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     );
   }
 
+  /// 오늘의 목표 진행 바. 설정이 없거나 오늘 대상 습관이 0개면 아무것도
+  /// 그리지 않는다(위젯 내부에서 판단).
+  Widget _buildDailyGoalBar() {
+    final streak = ref.watch(routineDailyStreakProvider).valueOrNull;
+    if (streak == null) return const SizedBox.shrink();
+    return RoutineDailyGoalBar(
+      streak: streak,
+      onTap: () => context.push(AppRoutes.routineDailyGoal),
+    );
+  }
+
+  /// 최근 기록을 보고 목표 상향/하향을 제안한다. 사용자가 설정 화면을
+  /// 스스로 찾아가지 않아도 목표가 현실에 맞게 조정되도록 하는 장치다.
+  Future<void> _maybeSuggestGoalAdjustment() async {
+    if (!await RoutineGoalSuggestionCooldown.canShow()) return;
+    if (!mounted) return;
+
+    final settings = ref.read(routineSettingsProvider).valueOrNull;
+    final streak = ref.read(routineDailyStreakProvider).valueOrNull;
+    final routines = ref.read(routineListProvider(null)).valueOrNull;
+    if (settings == null || streak == null) return;
+
+    final suggestion = evaluateGoalSuggestion(
+      settings: settings,
+      streak: streak,
+      totalRoutines: routines?.length ?? 0,
+    );
+    if (suggestion == null || !mounted) return;
+
+    await RoutineGoalSuggestionCooldown.markShown();
+    if (!mounted) return;
+    final accepted = await showRoutineGoalSuggestionDialog(context, suggestion);
+    if (accepted == null || !mounted) return;
+
+    await ref
+        .read(routineManagementProvider.notifier)
+        .updateSettings(
+          UpdateRoutineSettingsDto(
+            dailyGoalMode: RoutineDailyGoalMode.count,
+            dailyGoalCount: accepted,
+          ),
+        );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.routine_daily_goal_saved),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -983,15 +1054,21 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                         ),
           ),
           if (!_isReordering)
+            IconButton(
+              icon: const Icon(Icons.flag_outlined),
+              tooltip: l10n.routine_daily_goal_setting,
+              onPressed: () => context.push(AppRoutes.routineDailyGoal),
+            ),
+          if (!_isReordering)
+            IconButton(
+              icon: const Icon(Icons.bar_chart_outlined),
+              tooltip: l10n.routine_overview_title,
+              onPressed: () => context.push(AppRoutes.routineOverview),
+            ),
+          if (!_isReordering)
             AppBarMoreMenu(
               onReplayOnboarding: _showCoachMark,
               extraItems: [
-                MoreMenuItem(
-                  id: 'overview',
-                  icon: Icons.bar_chart_outlined,
-                  label: l10n.routine_overview_title,
-                  onTap: (ctx) => ctx.push(AppRoutes.routineOverview),
-                ),
                 MoreMenuItem(
                   id: 'shared_group',
                   icon: Icons.groups_outlined,
@@ -1014,6 +1091,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
           Column(
             children: [
               _buildDateNavigator(context, l10n),
+              // 일일 목표 진행 바는 "오늘"을 보고 있을 때만 의미가 있다.
+              // 과거 날짜를 조회 중일 때는 오늘의 진행을 띄우면 혼란스럽다.
+              if (_isToday && !_isReordering) _buildDailyGoalBar(),
               _buildCategoryFilterRow(
                 context,
                 l10n,

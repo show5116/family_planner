@@ -2385,6 +2385,81 @@
   "@routine_overview_not_achieved": { "description": "주간 목표를 달성하지 못한 습관 수 라벨" },
   "routine_overview_total_checked": "총 체크",
   "@routine_overview_total_checked": { "description": "주간 모드에서 전체 습관의 체크된 총 횟수 라벨" },
+  "routine_daily_goal_title": "오늘의 목표",
+  "@routine_daily_goal_title": { "description": "일일 목표 설정 화면 제목" },
+  "routine_daily_goal_setting": "오늘의 목표 설정",
+  "@routine_daily_goal_setting": { "description": "더보기 메뉴에서 일일 목표 설정으로 진입하는 항목" },
+  "routine_daily_goal_mode_all": "매일 전부 하기",
+  "@routine_daily_goal_mode_all": { "description": "일일 목표 모드 ALL 선택지 라벨" },
+  "routine_daily_goal_mode_all_desc": "그날 해야 할 습관을 모두 체크해야 달성이에요",
+  "@routine_daily_goal_mode_all_desc": { "description": "ALL 모드 설명" },
+  "routine_daily_goal_mode_count": "하루 목표 개수 정하기",
+  "@routine_daily_goal_mode_count": { "description": "일일 목표 모드 COUNT 선택지 라벨" },
+  "routine_daily_goal_mode_count_desc": "정한 개수만 채우면 그날은 성공이에요",
+  "@routine_daily_goal_mode_count_desc": { "description": "COUNT 모드 설명" },
+  "routine_daily_goal_count_label": "습관 {total}개 중 {count}개",
+  "@routine_daily_goal_count_label": {
+    "description": "목표 개수 슬라이더 위에 표시되는 현재 선택값",
+    "placeholders": { "total": { "type": "int" }, "count": { "type": "int" } }
+  },
+  "routine_daily_goal_encourage": "하루 {count}개면 성공이에요",
+  "@routine_daily_goal_encourage": {
+    "description": "목표 개수 슬라이더 아래 격려 문구",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_exceeds_total": "지금 등록된 습관보다 목표가 많아요. 습관을 더 추가하거나 목표를 낮춰보세요",
+  "@routine_daily_goal_exceeds_total": { "description": "목표 개수가 전체 습관 수보다 클 때 안내" },
+  "routine_daily_goal_today_progress": "오늘 {checked} / {target}",
+  "@routine_daily_goal_today_progress": {
+    "description": "오늘의 목표 진행 상황 (체크 수 / 목표 수)",
+    "placeholders": { "checked": { "type": "int" }, "target": { "type": "int" } }
+  },
+  "routine_daily_goal_achieved_today": "오늘 목표 달성!",
+  "@routine_daily_goal_achieved_today": { "description": "오늘 목표를 달성했을 때 표시 문구" },
+  "routine_daily_goal_bonus": "보너스 +{count}",
+  "@routine_daily_goal_bonus": {
+    "description": "목표를 초과 달성했을 때 추가 체크 수 표시",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_streak": "{days}일 연속 달성",
+  "@routine_daily_goal_streak": {
+    "description": "일일 목표 연속 달성 일수",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "routine_daily_goal_streak_longest": "최장 {days}일",
+  "@routine_daily_goal_streak_longest": {
+    "description": "역대 최장 연속 달성 일수",
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "routine_daily_goal_rate": "목표 달성률",
+  "@routine_daily_goal_rate": { "description": "통계 화면 일일 목표 달성률 라벨" },
+  "routine_daily_goal_achieved_days": "{achieved}일 / {total}일 달성",
+  "@routine_daily_goal_achieved_days": {
+    "description": "기간 내 목표 달성 일수",
+    "placeholders": { "achieved": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "routine_daily_goal_saved": "목표를 저장했어요",
+  "@routine_daily_goal_saved": { "description": "목표 저장 성공 스낵바" },
+  "routine_daily_goal_raise_title": "목표를 올려볼까요?",
+  "@routine_daily_goal_raise_title": { "description": "목표 상향 제안 다이얼로그 제목" },
+  "routine_daily_goal_raise_body": "최근 2주 동안 목표를 자주 넘었어요. 요즘 하루 평균 {average}개를 하고 계세요.\n\n하루 목표를 {current}개에서 {suggested}개로 올려볼까요?",
+  "@routine_daily_goal_raise_body": {
+    "description": "목표 상향 제안 본문",
+    "placeholders": { "average": { "type": "int" }, "current": { "type": "int" }, "suggested": { "type": "int" } }
+  },
+  "routine_daily_goal_raise_accept": "올릴게요",
+  "@routine_daily_goal_raise_accept": { "description": "목표 상향 수락 버튼" },
+  "routine_daily_goal_keep": "지금이 좋아요",
+  "@routine_daily_goal_keep": { "description": "목표 조정 제안 거절 버튼" },
+  "routine_daily_goal_lower_title": "목표를 잠시 낮춰볼까요?",
+  "@routine_daily_goal_lower_title": { "description": "목표 하향 제안 다이얼로그 제목" },
+  "routine_daily_goal_lower_body": "요즘 조금 바쁘신가요? 무리하지 않아도 괜찮아요.\n\n하루 목표를 {current}개에서 {suggested}개로 낮춰도 좋아요. 언제든 다시 올릴 수 있어요.",
+  "@routine_daily_goal_lower_body": {
+    "description": "목표 하향 제안 본문",
+    "placeholders": { "current": { "type": "int" }, "suggested": { "type": "int" } }
+  },
+  "routine_daily_goal_lower_accept": "낮출게요",
+  "@routine_daily_goal_lower_accept": { "description": "목표 하향 수락 버튼" },
   "routine_overview_total_routines": "전체 습관 {count}개 기준",
   "@routine_overview_total_routines": {
     "description": "통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구",

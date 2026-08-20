@@ -4730,6 +4730,101 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_overview_total_checked => '총 체크';
 
   @override
+  String get routine_daily_goal_title => '오늘의 목표';
+
+  @override
+  String get routine_daily_goal_setting => '오늘의 목표 설정';
+
+  @override
+  String get routine_daily_goal_mode_all => '매일 전부 하기';
+
+  @override
+  String get routine_daily_goal_mode_all_desc => '그날 해야 할 습관을 모두 체크해야 달성이에요';
+
+  @override
+  String get routine_daily_goal_mode_count => '하루 목표 개수 정하기';
+
+  @override
+  String get routine_daily_goal_mode_count_desc => '정한 개수만 채우면 그날은 성공이에요';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '습관 $total개 중 $count개';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '하루 $count개면 성공이에요';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total =>
+      '지금 등록된 습관보다 목표가 많아요. 습관을 더 추가하거나 목표를 낮춰보세요';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return '오늘 $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => '오늘 목표 달성!';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return '보너스 +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '$days일 연속 달성';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return '최장 $days일';
+  }
+
+  @override
+  String get routine_daily_goal_rate => '목표 달성률';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved일 / $total일 달성';
+  }
+
+  @override
+  String get routine_daily_goal_saved => '목표를 저장했어요';
+
+  @override
+  String get routine_daily_goal_raise_title => '목표를 올려볼까요?';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return '최근 2주 동안 목표를 자주 넘었어요. 요즘 하루 평균 $average개를 하고 계세요.\n\n하루 목표를 $current개에서 $suggested개로 올려볼까요?';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => '올릴게요';
+
+  @override
+  String get routine_daily_goal_keep => '지금이 좋아요';
+
+  @override
+  String get routine_daily_goal_lower_title => '목표를 잠시 낮춰볼까요?';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return '요즘 조금 바쁘신가요? 무리하지 않아도 괜찮아요.\n\n하루 목표를 $current개에서 $suggested개로 낮춰도 좋아요. 언제든 다시 올릴 수 있어요.';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => '낮출게요';
+
+  @override
   String routine_overview_total_routines(int count) {
     return '전체 습관 $count개 기준';
   }

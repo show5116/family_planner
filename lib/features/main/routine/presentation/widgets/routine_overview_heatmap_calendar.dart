@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 
 /// 전체 루틴 통합 히트맵 캘린더. [RoutineHeatmapCalendar]와 달리 하루
@@ -55,6 +56,10 @@ class _RoutineOverviewHeatmapCalendarState
       final data = _dayByDate[_key(day)];
       final ratio = data?.ratio ?? 0.0;
       final hasData = data != null && data.totalCount > 0;
+      // 목표를 달성한 날은 농도와 무관하게 한눈에 구분되도록 테두리를 준다.
+      // 비율제 목표에서는 "전부 채우지 않아도 성공한 날"이 생기는데, 농도만
+      // 보면 그날이 성공이었는지 알 수 없다.
+      final goalAchieved = data?.goalAchieved ?? false;
       return Container(
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -62,7 +67,11 @@ class _RoutineOverviewHeatmapCalendarState
               ? accent.withValues(alpha: 0.15 + ratio * 0.85)
               : onSurface.withValues(alpha: 0.03),
           shape: BoxShape.circle,
-          border: isToday ? Border.all(color: accent, width: 2) : null,
+          border: isToday
+              ? Border.all(color: accent, width: 2)
+              : goalAchieved
+              ? Border.all(color: AppColors.success, width: 2)
+              : null,
         ),
         alignment: Alignment.center,
         child: Text(

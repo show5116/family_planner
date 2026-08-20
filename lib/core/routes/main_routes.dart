@@ -11,6 +11,7 @@ import 'package:family_planner/features/main/routine/presentation/screens/routin
 import 'package:family_planner/features/main/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_daily_goal_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_overview_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_leaderboard_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
@@ -563,6 +564,11 @@ List<RouteBase> getMainRoutes() {
       path: AppRoutes.routineOverview,
       name: 'routineOverview',
       builder: (context, state) => const RoutineOverviewScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineDailyGoal,
+      name: 'routineDailyGoal',
+      builder: (context, state) => const RoutineDailyGoalScreen(),
     ),
     GoRoute(
       path: AppRoutes.routineLeaderboard,

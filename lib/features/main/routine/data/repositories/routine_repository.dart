@@ -276,6 +276,23 @@ class RoutineCategorySortOrderItemDto {
   Map<String, dynamic> toJson() => {'id': id, 'sortOrder': sortOrder};
 }
 
+/// 일일 목표 설정 변경 DTO (부분 업데이트)
+class UpdateRoutineSettingsDto {
+  final RoutineDailyGoalMode? dailyGoalMode;
+
+  /// dailyGoalMode=COUNT일 때의 목표 개수(1 이상). ALL로 바꿀 때 생략하면
+  /// 서버가 기존 값을 유지하므로, 다시 COUNT로 되돌릴 때 이전 목표가
+  /// 복원된다.
+  final int? dailyGoalCount;
+
+  const UpdateRoutineSettingsDto({this.dailyGoalMode, this.dailyGoalCount});
+
+  Map<String, dynamic> toJson() => {
+    if (dailyGoalMode != null) 'dailyGoalMode': dailyGoalMode!.toJsonString(),
+    if (dailyGoalCount != null) 'dailyGoalCount': dailyGoalCount,
+  };
+}
+
 // ─── Repository ─────────────────────────────────────────────────────────────
 
 final routineRepositoryProvider = Provider<RoutineRepository>((ref) {
@@ -583,6 +600,41 @@ class RoutineRepository {
     } on DioException catch (e) {
       debugPrint('❌ [RoutineRepository] 전체 루틴 개요 조회 실패: ${e.message}');
       throw Exception('전체 루틴 개요 조회 실패: ${e.message}');
+    }
+  }
+
+  // ── 일일 목표 ─────────────────────────────────────────────────────────────
+
+  Future<RoutineSettings> getSettings() async {
+    try {
+      final response = await _dio.get('/routines/settings');
+      return RoutineSettings.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 설정 조회 실패: ${e.message}');
+      throw Exception('루틴 설정 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineSettings> updateSettings(UpdateRoutineSettingsDto dto) async {
+    try {
+      final response = await _dio.patch(
+        '/routines/settings',
+        data: dto.toJson(),
+      );
+      return RoutineSettings.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 루틴 설정 변경 실패: ${e.message}');
+      throw Exception('루틴 설정 변경 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineDailyStreak> getDailyStreak() async {
+    try {
+      final response = await _dio.get('/routines/stats/daily-streak');
+      return RoutineDailyStreak.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 일일 목표 스트릭 조회 실패: ${e.message}');
+      throw Exception('일일 목표 스트릭 조회 실패: ${e.message}');
     }
   }
 

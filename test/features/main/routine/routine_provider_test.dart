@@ -58,7 +58,7 @@ RoutineStreak _buildStreak({
     longestStreakWeeks: 0,
     currentStreakDays: currentStreakDays,
     longestStreakDays: currentStreakDays,
-    thisWeekProgress: const ThisWeekProgress(checked: 0, target: 3),
+    thisWeekProgress: const RoutinePeriodProgress(checked: 0, target: 3),
   );
 }
 
@@ -159,6 +159,23 @@ class _FakeRoutineRepository extends RoutineRepository {
 
   @override
   Future<List<RoutineCategory>> getRoutineCategories() async => categories;
+
+  /// 체크 시 routineDailyStreakProvider가 무효화되면서 호출된다. 스텁을
+  /// 두지 않으면 실제 네트워크(ApiClient)를 타서 테스트가 깨진다.
+  @override
+  Future<RoutineDailyStreak> getDailyStreak() async => const RoutineDailyStreak(
+    currentStreakDays: 0,
+    longestStreakDays: 0,
+    todayAchieved: false,
+    todayCheckedCount: 0,
+    todayTargetCount: 0,
+    recent14Days: RoutineRecent14Days(
+      achievedDays: 0,
+      exceededDays: 0,
+      totalDays: 0,
+      averageCheckedCount: 0,
+    ),
+  );
 
   @override
   Future<RoutineCategory> createRoutineCategory(

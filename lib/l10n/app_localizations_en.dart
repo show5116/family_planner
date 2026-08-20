@@ -4833,6 +4833,103 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_overview_total_checked => 'Total Checked';
 
   @override
+  String get routine_daily_goal_title => 'Today\'s Goal';
+
+  @override
+  String get routine_daily_goal_setting => 'Set Daily Goal';
+
+  @override
+  String get routine_daily_goal_mode_all => 'Complete Everything';
+
+  @override
+  String get routine_daily_goal_mode_all_desc =>
+      'Check off every habit scheduled for the day';
+
+  @override
+  String get routine_daily_goal_mode_count => 'Set a Daily Target';
+
+  @override
+  String get routine_daily_goal_mode_count_desc =>
+      'Hit your chosen number and the day counts as a win';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '$count of $total habits';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '$count a day and you have succeeded';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total =>
+      'Your goal is higher than the number of habits you have. Add more habits or lower the goal.';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return 'Today $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => 'Goal reached today!';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return 'Bonus +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '$days-day streak';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return 'Best $days days';
+  }
+
+  @override
+  String get routine_daily_goal_rate => 'Goal Achievement';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved of $total days';
+  }
+
+  @override
+  String get routine_daily_goal_saved => 'Goal saved';
+
+  @override
+  String get routine_daily_goal_raise_title => 'Ready to aim higher?';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return 'You have been passing your goal often these past two weeks, averaging $average a day.\n\nShall we raise your daily goal from $current to $suggested?';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => 'Raise it';
+
+  @override
+  String get routine_daily_goal_keep => 'Keep it as is';
+
+  @override
+  String get routine_daily_goal_lower_title => 'Want to ease off for now?';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return 'Busy stretch lately? There is no need to push.\n\nYou could drop your daily goal from $current to $suggested. You can always raise it again.';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => 'Lower it';
+
+  @override
   String routine_overview_total_routines(int count) {
     return 'Based on $count habits';
   }
