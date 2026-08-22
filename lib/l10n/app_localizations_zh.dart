@@ -4699,18 +4699,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_daily_goal_setting => '设置今日目标';
 
   @override
-  String get routine_daily_goal_mode_all => '每天全部完成';
-
-  @override
-  String get routine_daily_goal_mode_all_desc => '当天所有习惯都打卡才算达成';
-
-  @override
-  String get routine_daily_goal_mode_count => '设定每日目标数量';
-
-  @override
-  String get routine_daily_goal_mode_count_desc => '达到设定的数量，这一天就算成功';
-
-  @override
   String routine_daily_goal_count_label(int total, int count) {
     return '$total个习惯中的$count个';
   }
@@ -4785,6 +4773,43 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routine_daily_goal_lower_accept => '降低目标';
+
+  @override
+  String get routine_daily_goal_included_section => '计入目标的习惯';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '$included个习惯计入目标统计';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => '每天进行的习惯';
+
+  @override
+  String get routine_daily_goal_group_periodic => '定期进行的习惯';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      '开启后会按每天都要完成来计算。每周3次的习惯开启后，即使完成了3次，剩余日期仍会显示为未完成';
+
+  @override
+  String get routine_daily_goal_freq_daily => '每天';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '每周$count次';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '每月$count次';
+  }
+
+  @override
+  String get routine_daily_goal_no_included => '还没有习惯计入目标。请在下方开启';
+
+  @override
+  String get routine_daily_goal_no_routines => '还没有添加习惯';
 
   @override
   String routine_overview_total_routines(int count) {

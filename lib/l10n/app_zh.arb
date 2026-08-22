@@ -2330,14 +2330,6 @@
   "@routine_daily_goal_title": { "description": "每日目标设置页标题" },
   "routine_daily_goal_setting": "设置今日目标",
   "@routine_daily_goal_setting": { "description": "更多菜单中进入每日目标设置的项目" },
-  "routine_daily_goal_mode_all": "每天全部完成",
-  "@routine_daily_goal_mode_all": { "description": "每日目标模式ALL的选项标签" },
-  "routine_daily_goal_mode_all_desc": "当天所有习惯都打卡才算达成",
-  "@routine_daily_goal_mode_all_desc": { "description": "ALL模式说明" },
-  "routine_daily_goal_mode_count": "设定每日目标数量",
-  "@routine_daily_goal_mode_count": { "description": "每日目标模式COUNT的选项标签" },
-  "routine_daily_goal_mode_count_desc": "达到设定的数量，这一天就算成功",
-  "@routine_daily_goal_mode_count_desc": { "description": "COUNT模式说明" },
   "routine_daily_goal_count_label": "{total}个习惯中的{count}个",
   "@routine_daily_goal_count_label": {
     "description": "目标数量滑块的当前值",
@@ -2401,6 +2393,35 @@
   },
   "routine_daily_goal_lower_accept": "降低目标",
   "@routine_daily_goal_lower_accept": { "description": "接受降低目标的按钮" },
+  "routine_daily_goal_included_section": "计入目标的习惯",
+  "@routine_daily_goal_included_section": { "description": "选择计入每日目标的习惯的区块标题" },
+  "routine_daily_goal_included_summary": "{included}个习惯计入目标统计",
+  "@routine_daily_goal_included_summary": {
+    "description": "计入统计的习惯数量摘要",
+    "placeholders": { "included": { "type": "int" } }
+  },
+  "routine_daily_goal_group_daily": "每天进行的习惯",
+  "@routine_daily_goal_group_daily": { "description": "DAILY习惯分组标题" },
+  "routine_daily_goal_group_periodic": "定期进行的习惯",
+  "@routine_daily_goal_group_periodic": { "description": "WEEKLY/MONTHLY习惯分组标题" },
+  "routine_daily_goal_periodic_hint": "开启后会按每天都要完成来计算。每周3次的习惯开启后，即使完成了3次，剩余日期仍会显示为未完成",
+  "@routine_daily_goal_periodic_hint": { "description": "包含定期习惯时的权衡说明" },
+  "routine_daily_goal_freq_daily": "每天",
+  "@routine_daily_goal_freq_daily": { "description": "周期标签 - 每天" },
+  "routine_daily_goal_freq_weekly_count": "每周{count}次",
+  "@routine_daily_goal_freq_weekly_count": {
+    "description": "周期标签 - 每周N次",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_freq_monthly_count": "每月{count}次",
+  "@routine_daily_goal_freq_monthly_count": {
+    "description": "周期标签 - 每月N次",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_no_included": "还没有习惯计入目标。请在下方开启",
+  "@routine_daily_goal_no_included": { "description": "没有包含任何习惯时的提示" },
+  "routine_daily_goal_no_routines": "还没有添加习惯",
+  "@routine_daily_goal_no_routines": { "description": "完全没有习惯时的提示" },
   "routine_overview_total_routines": "基于全部 {count} 个习惯",
   "@routine_overview_total_routines": {
     "description": "汇总达成率卡片中显示统计对象习惯数量的文案",

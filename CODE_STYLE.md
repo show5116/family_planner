@@ -2,6 +2,8 @@
 
 Family Planner 프로젝트의 필수 코드 컨벤션
 
+> UI/디자인 컨벤션(색상·간격·화면 구조)은 [DESIGN.md](DESIGN.md)를 참고한다.
+
 ---
 
 ## 1. Import 규칙

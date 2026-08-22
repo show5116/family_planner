@@ -240,6 +240,10 @@ class Routine {
   final DateTime startDate;
   final DateTime? endDate;
   final int sortOrder;
+
+  /// 일일 목표 집계에 이 습관을 포함할지 여부. 주 N회/월 N회 습관은 매일
+  /// 수행 대상이 아니라 기본적으로 제외된다(서버 기본값: DAILY만 true).
+  final bool includeInDailyGoal;
   final bool checkedToday;
 
   /// 조회 기준 날짜(GET routines의 date 쿼리, 미지정 시 오늘)의 실제 기록값.
@@ -267,6 +271,7 @@ class Routine {
     required this.startDate,
     this.endDate,
     required this.sortOrder,
+    this.includeInDailyGoal = true,
     required this.checkedToday,
     this.checkedLog,
     this.routineGroupId,
@@ -301,6 +306,7 @@ class Routine {
           ? DateTime.parse(json['endDate'] as String).toLocal()
           : null,
       sortOrder: json['sortOrder'] as int? ?? 0,
+      includeInDailyGoal: json['includeInDailyGoal'] as bool? ?? true,
       checkedToday: json['checkedToday'] as bool? ?? false,
       checkedLog: json['checkedLog'] != null
           ? RoutineCheckedLog.fromJson(
@@ -326,6 +332,7 @@ class Routine {
     DateTime? endDate,
     RoutineStatus? status,
     int? sortOrder,
+    bool? includeInDailyGoal,
     bool? checkedToday,
     RoutineCheckedLog? checkedLog,
     bool clearCheckedLog = false,
@@ -350,6 +357,7 @@ class Routine {
       startDate: startDate,
       endDate: endDate ?? this.endDate,
       sortOrder: sortOrder ?? this.sortOrder,
+      includeInDailyGoal: includeInDailyGoal ?? this.includeInDailyGoal,
       checkedToday: checkedToday ?? this.checkedToday,
       checkedLog: clearCheckedLog ? null : (checkedLog ?? this.checkedLog),
       routineGroupId: clearRoutineGroupId

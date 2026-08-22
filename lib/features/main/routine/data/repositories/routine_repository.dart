@@ -276,6 +276,22 @@ class RoutineCategorySortOrderItemDto {
   Map<String, dynamic> toJson() => {'id': id, 'sortOrder': sortOrder};
 }
 
+/// 루틴별 일일 목표 포함 여부 일괄 변경 항목
+class DailyGoalInclusionItemDto {
+  final String id;
+  final bool includeInDailyGoal;
+
+  const DailyGoalInclusionItemDto({
+    required this.id,
+    required this.includeInDailyGoal,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'includeInDailyGoal': includeInDailyGoal,
+  };
+}
+
 /// 일일 목표 설정 변경 DTO (부분 업데이트)
 class UpdateRoutineSettingsDto {
   final RoutineDailyGoalMode? dailyGoalMode;
@@ -625,6 +641,24 @@ class RoutineRepository {
     } on DioException catch (e) {
       debugPrint('❌ [RoutineRepository] 루틴 설정 변경 실패: ${e.message}');
       throw Exception('루틴 설정 변경 실패: ${e.message}');
+    }
+  }
+
+  /// 루틴별 일일 목표 포함 여부 일괄 변경.
+  ///
+  /// 응답 형태(단일/배열)가 문서상 명확하지 않아 방어적으로 처리하고,
+  /// 호출부는 반환값을 신뢰하지 않고 목록을 refresh하는 것을 권장한다.
+  Future<void> updateDailyGoalInclusions(
+    List<DailyGoalInclusionItemDto> items,
+  ) async {
+    try {
+      await _dio.patch(
+        '/routines/daily-goal-inclusions',
+        data: {'items': items.map((e) => e.toJson()).toList()},
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 일일 목표 포함 여부 변경 실패: ${e.message}');
+      throw Exception('일일 목표 포함 여부 변경 실패: ${e.message}');
     }
   }
 

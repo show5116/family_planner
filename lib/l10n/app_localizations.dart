@@ -9110,30 +9110,6 @@ abstract class AppLocalizations {
   /// **'오늘의 목표 설정'**
   String get routine_daily_goal_setting;
 
-  /// 일일 목표 모드 ALL 선택지 라벨
-  ///
-  /// In ko, this message translates to:
-  /// **'매일 전부 하기'**
-  String get routine_daily_goal_mode_all;
-
-  /// ALL 모드 설명
-  ///
-  /// In ko, this message translates to:
-  /// **'그날 해야 할 습관을 모두 체크해야 달성이에요'**
-  String get routine_daily_goal_mode_all_desc;
-
-  /// 일일 목표 모드 COUNT 선택지 라벨
-  ///
-  /// In ko, this message translates to:
-  /// **'하루 목표 개수 정하기'**
-  String get routine_daily_goal_mode_count;
-
-  /// COUNT 모드 설명
-  ///
-  /// In ko, this message translates to:
-  /// **'정한 개수만 채우면 그날은 성공이에요'**
-  String get routine_daily_goal_mode_count_desc;
-
   /// 목표 개수 슬라이더 위에 표시되는 현재 선택값
   ///
   /// In ko, this message translates to:
@@ -9241,6 +9217,66 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'낮출게요'**
   String get routine_daily_goal_lower_accept;
+
+  /// 일일 목표 집계 대상 습관 선택 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표에 포함할 습관'**
+  String get routine_daily_goal_included_section;
+
+  /// 집계에 포함된 습관 수 요약
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 {included}개가 목표 집계에 포함돼요'**
+  String routine_daily_goal_included_summary(int included);
+
+  /// DAILY 습관 그룹 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 하는 습관'**
+  String get routine_daily_goal_group_daily;
+
+  /// WEEKLY/MONTHLY 습관 그룹 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'주기적으로 하는 습관'**
+  String get routine_daily_goal_group_periodic;
+
+  /// 주기 습관을 포함할 때의 트레이드오프 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'켜면 매일 해야 하는 것으로 계산돼요. 주 3회 습관을 켜면 3회를 다 채운 뒤에도 남은 날에 미완료로 남아요'**
+  String get routine_daily_goal_periodic_hint;
+
+  /// 주기 배지 - 매일
+  ///
+  /// In ko, this message translates to:
+  /// **'매일'**
+  String get routine_daily_goal_freq_daily;
+
+  /// 주기 배지 - 주 N회
+  ///
+  /// In ko, this message translates to:
+  /// **'주 {count}회'**
+  String routine_daily_goal_freq_weekly_count(int count);
+
+  /// 주기 배지 - 월 N회
+  ///
+  /// In ko, this message translates to:
+  /// **'월 {count}회'**
+  String routine_daily_goal_freq_monthly_count(int count);
+
+  /// 포함된 습관이 0개일 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'목표에 포함된 습관이 없어요. 아래에서 습관을 켜주세요'**
+  String get routine_daily_goal_no_included;
+
+  /// 습관이 하나도 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 습관이 없어요'**
+  String get routine_daily_goal_no_routines;
 
   /// 통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구
   ///

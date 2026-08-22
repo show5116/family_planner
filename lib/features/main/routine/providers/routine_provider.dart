@@ -593,6 +593,26 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
+  /// 루틴별 일일 목표 포함 여부 일괄 변경. 집계 대상이 바뀌므로 목록과
+  /// 스트릭/통계를 모두 갱신한다.
+  Future<bool> updateDailyGoalInclusions(
+    List<DailyGoalInclusionItemDto> items,
+  ) async {
+    if (items.isEmpty) return true;
+    state = const AsyncValue.loading();
+    try {
+      await _repository.updateDailyGoalInclusions(items);
+      _ref.invalidate(routineListProvider);
+      _ref.invalidate(routineDailyStreakProvider);
+      _ref.invalidate(routineOverviewProvider);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
   /// 일일 목표 설정 변경. 목표가 바뀌면 달성 판정 기준 자체가 달라지므로
   /// 스트릭/통계 관련 provider를 모두 무효화한다.
   Future<RoutineSettings?> updateSettings(UpdateRoutineSettingsDto dto) async {

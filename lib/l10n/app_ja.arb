@@ -2375,14 +2375,6 @@
   "@routine_daily_goal_title": { "description": "日次目標設定画面のタイトル" },
   "routine_daily_goal_setting": "今日の目標を設定",
   "@routine_daily_goal_setting": { "description": "その他メニューから日次目標設定へ入る項目" },
-  "routine_daily_goal_mode_all": "毎日すべて行う",
-  "@routine_daily_goal_mode_all": { "description": "日次目標モードALLの選択肢ラベル" },
-  "routine_daily_goal_mode_all_desc": "その日の習慣をすべてチェックすると達成です",
-  "@routine_daily_goal_mode_all_desc": { "description": "ALLモードの説明" },
-  "routine_daily_goal_mode_count": "1日の目標数を決める",
-  "@routine_daily_goal_mode_count": { "description": "日次目標モードCOUNTの選択肢ラベル" },
-  "routine_daily_goal_mode_count_desc": "決めた数を満たせばその日は成功です",
-  "@routine_daily_goal_mode_count_desc": { "description": "COUNTモードの説明" },
   "routine_daily_goal_count_label": "習慣{total}個のうち{count}個",
   "@routine_daily_goal_count_label": {
     "description": "目標数スライダーの現在値",
@@ -2446,6 +2438,35 @@
   },
   "routine_daily_goal_lower_accept": "下げる",
   "@routine_daily_goal_lower_accept": { "description": "目標引き下げを受け入れるボタン" },
+  "routine_daily_goal_included_section": "目標に含める習慣",
+  "@routine_daily_goal_included_section": { "description": "日次目標の集計対象habit選択セクションのタイトル" },
+  "routine_daily_goal_included_summary": "習慣{included}個が目標の集計に含まれます",
+  "@routine_daily_goal_included_summary": {
+    "description": "集計に含まれる習慣数の要約",
+    "placeholders": { "included": { "type": "int" } }
+  },
+  "routine_daily_goal_group_daily": "毎日行う習慣",
+  "@routine_daily_goal_group_daily": { "description": "DAILY習慣グループのタイトル" },
+  "routine_daily_goal_group_periodic": "定期的に行う習慣",
+  "@routine_daily_goal_group_periodic": { "description": "WEEKLY/MONTHLY習慣グループのタイトル" },
+  "routine_daily_goal_periodic_hint": "オンにすると毎日行うものとして計算されます。週3回の習慣をオンにすると、3回を達成した後も残りの日は未完了として残ります",
+  "@routine_daily_goal_periodic_hint": { "description": "定期習慣を含める場合のトレードオフ案内" },
+  "routine_daily_goal_freq_daily": "毎日",
+  "@routine_daily_goal_freq_daily": { "description": "周期バッジ - 毎日" },
+  "routine_daily_goal_freq_weekly_count": "週{count}回",
+  "@routine_daily_goal_freq_weekly_count": {
+    "description": "周期バッジ - 週N回",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_freq_monthly_count": "月{count}回",
+  "@routine_daily_goal_freq_monthly_count": {
+    "description": "周期バッジ - 月N回",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_no_included": "目標に含まれる習慣がありません。下からオンにしてください",
+  "@routine_daily_goal_no_included": { "description": "含まれる習慣が0個の場合の案内" },
+  "routine_daily_goal_no_routines": "登録された習慣がありません",
+  "@routine_daily_goal_no_routines": { "description": "習慣が一つもない場合の案内" },
   "routine_overview_total_routines": "全体習慣{count}個基準",
   "@routine_overview_total_routines": {
     "description": "統合達成率カードに集計対象の習慣数を表示する文言",

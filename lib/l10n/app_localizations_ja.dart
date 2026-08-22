@@ -4728,18 +4728,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_daily_goal_setting => '今日の目標を設定';
 
   @override
-  String get routine_daily_goal_mode_all => '毎日すべて行う';
-
-  @override
-  String get routine_daily_goal_mode_all_desc => 'その日の習慣をすべてチェックすると達成です';
-
-  @override
-  String get routine_daily_goal_mode_count => '1日の目標数を決める';
-
-  @override
-  String get routine_daily_goal_mode_count_desc => '決めた数を満たせばその日は成功です';
-
-  @override
   String routine_daily_goal_count_label(int total, int count) {
     return '習慣$total個のうち$count個';
   }
@@ -4815,6 +4803,43 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get routine_daily_goal_lower_accept => '下げる';
+
+  @override
+  String get routine_daily_goal_included_section => '目標に含める習慣';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '習慣$included個が目標の集計に含まれます';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => '毎日行う習慣';
+
+  @override
+  String get routine_daily_goal_group_periodic => '定期的に行う習慣';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      'オンにすると毎日行うものとして計算されます。週3回の習慣をオンにすると、3回を達成した後も残りの日は未完了として残ります';
+
+  @override
+  String get routine_daily_goal_freq_daily => '毎日';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '週$count回';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '月$count回';
+  }
+
+  @override
+  String get routine_daily_goal_no_included => '目標に含まれる習慣がありません。下からオンにしてください';
+
+  @override
+  String get routine_daily_goal_no_routines => '登録された習慣がありません';
 
   @override
   String routine_overview_total_routines(int count) {

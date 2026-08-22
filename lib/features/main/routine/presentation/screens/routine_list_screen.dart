@@ -983,7 +983,8 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     final suggestion = evaluateGoalSuggestion(
       settings: settings,
       streak: streak,
-      totalRoutines: routines?.length ?? 0,
+      includedRoutines:
+          routines?.where((r) => r.includeInDailyGoal).length ?? 0,
     );
     if (suggestion == null || !mounted) return;
 

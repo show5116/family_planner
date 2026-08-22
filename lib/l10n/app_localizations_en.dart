@@ -4839,20 +4839,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_daily_goal_setting => 'Set Daily Goal';
 
   @override
-  String get routine_daily_goal_mode_all => 'Complete Everything';
-
-  @override
-  String get routine_daily_goal_mode_all_desc =>
-      'Check off every habit scheduled for the day';
-
-  @override
-  String get routine_daily_goal_mode_count => 'Set a Daily Target';
-
-  @override
-  String get routine_daily_goal_mode_count_desc =>
-      'Hit your chosen number and the day counts as a win';
-
-  @override
   String routine_daily_goal_count_label(int total, int count) {
     return '$count of $total habits';
   }
@@ -4928,6 +4914,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routine_daily_goal_lower_accept => 'Lower it';
+
+  @override
+  String get routine_daily_goal_included_section =>
+      'Habits Counted Toward Your Goal';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '$included habits count toward your goal';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => 'Everyday Habits';
+
+  @override
+  String get routine_daily_goal_group_periodic => 'Periodic Habits';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      'Turning this on treats it as an everyday habit. A 3-times-a-week habit will still show as incomplete on the remaining days once you have done all 3.';
+
+  @override
+  String get routine_daily_goal_freq_daily => 'Daily';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '${count}x per week';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '${count}x per month';
+  }
+
+  @override
+  String get routine_daily_goal_no_included =>
+      'No habits are counted toward your goal yet. Turn some on below.';
+
+  @override
+  String get routine_daily_goal_no_routines =>
+      'You have not added any habits yet';
 
   @override
   String routine_overview_total_routines(int count) {

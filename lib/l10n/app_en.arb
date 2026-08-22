@@ -2375,14 +2375,6 @@
   "@routine_daily_goal_title": { "description": "Daily goal settings screen title" },
   "routine_daily_goal_setting": "Set Daily Goal",
   "@routine_daily_goal_setting": { "description": "More menu entry for daily goal settings" },
-  "routine_daily_goal_mode_all": "Complete Everything",
-  "@routine_daily_goal_mode_all": { "description": "ALL goal mode option label" },
-  "routine_daily_goal_mode_all_desc": "Check off every habit scheduled for the day",
-  "@routine_daily_goal_mode_all_desc": { "description": "ALL mode description" },
-  "routine_daily_goal_mode_count": "Set a Daily Target",
-  "@routine_daily_goal_mode_count": { "description": "COUNT goal mode option label" },
-  "routine_daily_goal_mode_count_desc": "Hit your chosen number and the day counts as a win",
-  "@routine_daily_goal_mode_count_desc": { "description": "COUNT mode description" },
   "routine_daily_goal_count_label": "{count} of {total} habits",
   "@routine_daily_goal_count_label": {
     "description": "Current slider value for goal count",
@@ -2446,6 +2438,35 @@
   },
   "routine_daily_goal_lower_accept": "Lower it",
   "@routine_daily_goal_lower_accept": { "description": "Accept lowering the goal" },
+  "routine_daily_goal_included_section": "Habits Counted Toward Your Goal",
+  "@routine_daily_goal_included_section": { "description": "Section title for choosing habits included in the daily goal" },
+  "routine_daily_goal_included_summary": "{included} habits count toward your goal",
+  "@routine_daily_goal_included_summary": {
+    "description": "Summary of how many habits are included",
+    "placeholders": { "included": { "type": "int" } }
+  },
+  "routine_daily_goal_group_daily": "Everyday Habits",
+  "@routine_daily_goal_group_daily": { "description": "DAILY habit group title" },
+  "routine_daily_goal_group_periodic": "Periodic Habits",
+  "@routine_daily_goal_group_periodic": { "description": "WEEKLY/MONTHLY habit group title" },
+  "routine_daily_goal_periodic_hint": "Turning this on treats it as an everyday habit. A 3-times-a-week habit will still show as incomplete on the remaining days once you have done all 3.",
+  "@routine_daily_goal_periodic_hint": { "description": "Trade-off note for including periodic habits" },
+  "routine_daily_goal_freq_daily": "Daily",
+  "@routine_daily_goal_freq_daily": { "description": "Frequency badge - daily" },
+  "routine_daily_goal_freq_weekly_count": "{count}x per week",
+  "@routine_daily_goal_freq_weekly_count": {
+    "description": "Frequency badge - N times per week",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_freq_monthly_count": "{count}x per month",
+  "@routine_daily_goal_freq_monthly_count": {
+    "description": "Frequency badge - N times per month",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "routine_daily_goal_no_included": "No habits are counted toward your goal yet. Turn some on below.",
+  "@routine_daily_goal_no_included": { "description": "Shown when no habits are included" },
+  "routine_daily_goal_no_routines": "You have not added any habits yet",
+  "@routine_daily_goal_no_routines": { "description": "Shown when there are no habits at all" },
   "routine_overview_total_routines": "Based on {count} habits",
   "@routine_overview_total_routines": {
     "description": "Shows the number of habits included in the overall achievement rate",

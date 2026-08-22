@@ -103,7 +103,8 @@ class RoutineDailyGoalBar extends StatelessWidget {
 }
 
 /// 진행 바 본체. 목표 달성 전까지는 primary 색으로 차오르고, 달성하면
-/// success 색으로 바뀐다. 초과 달성분이 있으면 바 끝에 금색 구간을 덧댄다.
+/// success 색으로 바뀐다. 목표를 초과 달성하면 금색(warning)으로 표시해
+/// "더 했다"는 신호를 준다.
 class _GoalProgressTrack extends StatelessWidget {
   const _GoalProgressTrack({
     required this.baseRatio,
@@ -118,41 +119,19 @@ class _GoalProgressTrack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    const height = 10.0;
+    final valueColor = hasBonus
+        ? AppColors.warning
+        : achieved
+        ? AppColors.success
+        : colorScheme.primary;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(height / 2),
-      child: SizedBox(
-        height: height,
-        child: Stack(
-          children: [
-            Container(color: colorScheme.surfaceContainerHighest),
-            FractionallySizedBox(
-              widthFactor: baseRatio,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-                color: achieved ? AppColors.success : colorScheme.primary,
-              ),
-            ),
-            // 초과 달성 표시. 바가 이미 가득 찬 상태라 별도 구간을 그릴
-            // 자리가 없으므로, 금색 스트라이프를 덧대 "더 했다"는 신호만 준다.
-            if (hasBonus)
-              Align(
-                alignment: Alignment.centerRight,
-                child: FractionallySizedBox(
-                  widthFactor: 0.18,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppColors.success, AppColors.warning],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: LinearProgressIndicator(
+        value: baseRatio,
+        minHeight: 8,
+        backgroundColor: colorScheme.surfaceContainerHighest,
+        valueColor: AlwaysStoppedAnimation(valueColor),
       ),
     );
   }

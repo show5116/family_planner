@@ -32,7 +32,10 @@ class RoutineGoalSuggestion {
 RoutineGoalSuggestion? evaluateGoalSuggestion({
   required RoutineSettings settings,
   required RoutineDailyStreak streak,
-  required int totalRoutines,
+
+  /// 일일 목표 집계에 **포함된** 습관 수. 상향 제안의 상한이 된다 —
+  /// 포함 습관보다 큰 목표는 영원히 달성할 수 없기 때문이다.
+  required int includedRoutines,
 }) {
   if (!settings.isCountMode) return null;
   final current = settings.dailyGoalCount;
@@ -46,9 +49,11 @@ RoutineGoalSuggestion? evaluateGoalSuggestion({
   if (recent.exceededDays >= 10) {
     // 평균 수행량과 목표+2 중 낮은 쪽으로 제안해 무리한 상향을 피한다.
     final average = recent.averageCheckedCount.round();
+    // 포함 습관 수를 넘어서는 목표는 달성 자체가 불가능하므로 제안하지 않는다.
+    if (includedRoutines > 0 && current >= includedRoutines) return null;
     final suggested = (average < current + 2 ? average : current + 2).clamp(
       current + 1,
-      totalRoutines > 0 ? totalRoutines : current + 2,
+      includedRoutines > 0 ? includedRoutines : current + 2,
     );
     if (suggested <= current) return null;
     return RoutineGoalSuggestion(
@@ -62,6 +67,8 @@ RoutineGoalSuggestion? evaluateGoalSuggestion({
   // 하향: 달성률이 30% 미만이면 목표가 버거운 상태로 본다.
   final achievedRatio = recent.achievedDays / recent.totalDays;
   if (achievedRatio < 0.3) {
+    // 이미 목표가 1이면 더 낮출 수 없다(clamp 범위가 뒤집히므로 먼저 걸러낸다).
+    if (current <= 1) return null;
     final average = recent.averageCheckedCount.round();
     // 평균 수행량 언저리로 낮춰야 "이 정도면 할 만하다"는 감각이 생긴다.
     final suggested = (average > 0 ? average : current - 2).clamp(

@@ -100,7 +100,7 @@ class RoutineGoalSummaryCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
               child: LinearProgressIndicator(
                 value: (rate / 100).clamp(0.0, 1.0).toDouble(),
                 minHeight: 8,
@@ -112,14 +112,12 @@ class RoutineGoalSummaryCard extends StatelessWidget {
               const SizedBox(height: AppSizes.spaceM),
               Row(
                 children: [
-                  const Text('🔥', style: TextStyle(fontSize: 16)),
-                  const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    l10n.routine_daily_goal_streak(
-                      dailyStreak!.currentStreakDays,
-                    ),
+                    '🔥 '
+                    '${l10n.routine_daily_goal_streak(dailyStreak!.currentStreakDays)}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: AppColors.warning,
                     ),
                   ),
                   const Spacer(),

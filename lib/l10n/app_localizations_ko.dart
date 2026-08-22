@@ -4736,18 +4736,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_daily_goal_setting => '오늘의 목표 설정';
 
   @override
-  String get routine_daily_goal_mode_all => '매일 전부 하기';
-
-  @override
-  String get routine_daily_goal_mode_all_desc => '그날 해야 할 습관을 모두 체크해야 달성이에요';
-
-  @override
-  String get routine_daily_goal_mode_count => '하루 목표 개수 정하기';
-
-  @override
-  String get routine_daily_goal_mode_count_desc => '정한 개수만 채우면 그날은 성공이에요';
-
-  @override
   String routine_daily_goal_count_label(int total, int count) {
     return '습관 $total개 중 $count개';
   }
@@ -4823,6 +4811,43 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routine_daily_goal_lower_accept => '낮출게요';
+
+  @override
+  String get routine_daily_goal_included_section => '목표에 포함할 습관';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '습관 $included개가 목표 집계에 포함돼요';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => '매일 하는 습관';
+
+  @override
+  String get routine_daily_goal_group_periodic => '주기적으로 하는 습관';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      '켜면 매일 해야 하는 것으로 계산돼요. 주 3회 습관을 켜면 3회를 다 채운 뒤에도 남은 날에 미완료로 남아요';
+
+  @override
+  String get routine_daily_goal_freq_daily => '매일';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '주 $count회';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '월 $count회';
+  }
+
+  @override
+  String get routine_daily_goal_no_included => '목표에 포함된 습관이 없어요. 아래에서 습관을 켜주세요';
+
+  @override
+  String get routine_daily_goal_no_routines => '등록된 습관이 없어요';
 
   @override
   String routine_overview_total_routines(int count) {

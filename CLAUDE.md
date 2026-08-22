@@ -79,6 +79,7 @@ flutter clean && flutter pub get       # 클린 빌드
 
 - **[ROADMAP.md](ROADMAP.md)**: 프로젝트 로드맵 및 진행 상황
 - **[CODE_STYLE.md](CODE_STYLE.md)**: 코드 컨벤션 (필수 준수)
+- **[DESIGN.md](DESIGN.md)**: UI/디자인 컨벤션 (필수 준수)
 - **[docs/features/](docs/features/)**: 기능별 상세 문서 (15개)
 - **[docs/api/](docs/api/)**: 백엔드 API 문서 (자동 생성)
 
@@ -109,6 +110,18 @@ flutter clean && flutter pub get       # 클린 빌드
 - **명명**: snake_case 파일, PascalCase 클래스, camelCase 변수
 - **위젯**: const 생성자, build 메서드 분해
 - **Riverpod**: `@riverpod` 어노테이션 + `when()` 패턴
+
+## 디자인 스타일
+
+**필수: [DESIGN.md](DESIGN.md) 엄격히 준수** (UI 작업 시 반드시 확인)
+
+- **테마 색상**: `Theme.of(context).colorScheme.*` — 테마 5종을 지원하므로 `AppColors.primary` 직접 사용 금지
+- **의미 고정 색만** `AppColors.*` (success/warning/error/income/expense 등)
+- **앱바 액션 버튼**: 전경색을 명시하지 않으면 앱바 배경과 같은 색이라 안 보임
+- **크기/간격**: `AppSizes.*` (하드코딩 금지)
+- **텍스트**: `textTheme.*` (`fontSize` 직접 지정 금지)
+- **상태 처리**: 로딩·에러·빈 상태 3종 모두 (`AppErrorState`, `AppEmptyState`)
+- **생성/수정 화면**: `FormBottomBar` 하단 고정 저장 버튼
 
 ## 자주 참조하는 파일
 
