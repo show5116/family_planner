@@ -29,7 +29,7 @@ flutter clean && flutter pub get       # 클린 빌드
 
 ## Claude Skills 🤖
 
-프로젝트에는 반복 작업을 자동화하는 **7개의 Claude Skills**가 설정되어 있습니다.
+프로젝트에는 반복 작업을 자동화하는 **9개의 Claude Skills**가 설정되어 있습니다.
 
 ### 자동 실행 Skills (P0 - 최우선)
 
@@ -48,6 +48,8 @@ flutter clean && flutter pub get       # 클린 빌드
 
 - 🔍 **code-review**: CODE_STYLE.md 기준 코드 리뷰
   - 사용: "login_screen.dart 리뷰해주세요"
+- 🎨 **design-check**: DESIGN.md 기준 UI 디자인 컨벤션 점검
+  - 사용: "routine_list_screen.dart 디자인 점검해줘", "design-check 실행"
 - 🔄 **api-sync**: API 문서와 프론트엔드 동기화 확인
   - 사용: "공지사항 API 동기화 확인해줘"
 - 🧪 **test-generate**: 테스트 코드 자동 생성
@@ -96,8 +98,8 @@ flutter clean && flutter pub get       # 클린 빌드
 ## 개발 워크플로우
 
 1. **작업 전**: [ROADMAP.md](ROADMAP.md) 및 해당 기능 문서 확인
-2. **작업 중**: [CODE_STYLE.md](CODE_STYLE.md) 준수, 상태를 🟨로 변경
-3. **완료 후**: 상태를 ✅로 변경, ROADMAP.md 업데이트
+2. **작업 중**: [CODE_STYLE.md](CODE_STYLE.md) + UI 작업 시 [DESIGN.md](DESIGN.md) 준수, 상태를 🟨로 변경
+3. **완료 후**: UI 작업이면 `design-check` 실행, 상태를 ✅로 변경, ROADMAP.md 업데이트
 
 **상태 아이콘**: ⬜ 시작 안함 | 🟨 진행 중 | ✅ 완료 | ⏸️ 보류 | ❌ 취소
 

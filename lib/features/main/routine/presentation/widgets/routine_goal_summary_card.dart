@@ -85,7 +85,7 @@ class RoutineGoalSummaryCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(bottom: AppSizes.spaceXS),
                   child: Text(
                     l10n.routine_daily_goal_achieved_days(
                       overview.goalAchievedDays,

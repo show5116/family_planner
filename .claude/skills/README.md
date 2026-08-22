@@ -21,6 +21,7 @@
 | Skill | 설명 | 사용법 |
 |-------|------|--------|
 | [code-review](code-review/) | CODE_STYLE.md 기준 코드 자동 리뷰 | "login_screen.dart 리뷰해주세요" |
+| [design-check](design-check/) | DESIGN.md 기준 UI 디자인 컨벤션 점검 (테마 색상·앱바 버튼 가시성·하드코딩·상태 처리) | "routine_list_screen.dart 디자인 점검해줘" |
 | [api-sync](api-sync/) | 백엔드 API 문서와 프론트엔드 동기화 확인 | "공지사항 API 동기화 확인해줘" |
 | [test-generate](test-generate/) | 테스트 코드 자동 생성 | "MemoProvider 테스트 생성해줘" |
 | [vibe-verify](vibe-verify/) | 배포 전 5개 영역 검증 (그룹삭제·캐시·i18n·광고·Android UI) | "배포 전 검증해줘", "vibe-verify 실행" |
