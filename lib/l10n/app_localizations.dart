@@ -8948,6 +8948,78 @@ abstract class AppLocalizations {
   /// **'탭하면 목표 습관만 볼 수 있어요'**
   String get routine_daily_goal_filter_hint;
 
+  /// 루틴 온보딩 1단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 만들기'**
+  String get routine_coach_add_title;
+
+  /// 루틴 온보딩 1단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 반복하고 싶은 일을 습관으로 등록해보세요.\n여러 습관을 묶어 하나의 루틴으로 만들 수도 있어요.'**
+  String get routine_coach_add_desc;
+
+  /// 루틴 온보딩 2단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표'**
+  String get routine_coach_goal_title;
+
+  /// 루틴 온보딩 2단계 설명 — 일일 목표 개념
+  ///
+  /// In ko, this message translates to:
+  /// **'습관을 전부 못 채워도 괜찮아요.\n정해둔 개수만 채우면 그날은 성공이에요.\n연속으로 달성하면 배지도 받을 수 있어요.'**
+  String get routine_coach_goal_desc;
+
+  /// 루틴 온보딩 3단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표에 포함된 습관'**
+  String get routine_coach_flag_title;
+
+  /// 루틴 온보딩 3단계 설명 — 깃발 표시와 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'깃발이 붙은 습관이 오늘의 목표에 들어가요.\n위의 목표 막대를 누르면 이 습관만 모아볼 수 있어요.'**
+  String get routine_coach_flag_desc;
+
+  /// 루틴 온보딩 4단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'체크하기'**
+  String get routine_coach_check_title;
+
+  /// 루틴 온보딩 4단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'동그라미를 눌러 완료 표시를 하세요.\n기록형 습관은 시간이나 횟수도 함께 남길 수 있어요.'**
+  String get routine_coach_check_desc;
+
+  /// 온보딩 예시 습관 이름 1
+  ///
+  /// In ko, this message translates to:
+  /// **'아침 스트레칭'**
+  String get routine_coach_demo_habit_1;
+
+  /// 온보딩 예시 습관 이름 2
+  ///
+  /// In ko, this message translates to:
+  /// **'물 2L 마시기'**
+  String get routine_coach_demo_habit_2;
+
+  /// 온보딩 예시 습관 이름 3
+  ///
+  /// In ko, this message translates to:
+  /// **'책 30분 읽기'**
+  String get routine_coach_demo_habit_3;
+
+  /// 루틴 온보딩 건너뛰기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛰기'**
+  String get routine_coach_skip;
+
   /// 이번 주 진행 상황 라벨
   ///
   /// In ko, this message translates to:

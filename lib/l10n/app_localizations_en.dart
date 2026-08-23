@@ -4758,6 +4758,46 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap to see only your goal habits';
 
   @override
+  String get routine_coach_add_title => 'Create a habit';
+
+  @override
+  String get routine_coach_add_desc =>
+      'Add the things you want to repeat every day.\nYou can also bundle several habits into one routine.';
+
+  @override
+  String get routine_coach_goal_title => 'Today\'s goal';
+
+  @override
+  String get routine_coach_goal_desc =>
+      'You don\'t have to finish every habit.\nHit the number you set and the day counts as a win.\nKeep a streak going and you\'ll earn badges.';
+
+  @override
+  String get routine_coach_flag_title => 'Habits in your goal';
+
+  @override
+  String get routine_coach_flag_desc =>
+      'Habits with a flag count toward today\'s goal.\nTap the goal bar above to see just those habits.';
+
+  @override
+  String get routine_coach_check_title => 'Check it off';
+
+  @override
+  String get routine_coach_check_desc =>
+      'Tap the circle to mark a habit done.\nHabits that track values let you log a time or amount too.';
+
+  @override
+  String get routine_coach_demo_habit_1 => 'Morning stretch';
+
+  @override
+  String get routine_coach_demo_habit_2 => 'Drink 2L of water';
+
+  @override
+  String get routine_coach_demo_habit_3 => 'Read for 30 minutes';
+
+  @override
+  String get routine_coach_skip => 'Skip';
+
+  @override
   String get routine_this_week_progress => 'This week\'s progress';
 
   @override

@@ -39,6 +39,18 @@ class RoutineListScreen extends ConsumerStatefulWidget {
 
 class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   final _addButtonKey = GlobalKey();
+
+  // 온보딩 코치마크가 가리킬 대상들. 데모 화면이 떠 있을 때만 유효하다.
+  final _goalBarKey = GlobalKey();
+  final _demoFlagKey = GlobalKey();
+  final _demoCheckKey = GlobalKey();
+
+  /// 온보딩 예시 목록을 보여주는 중인지. 신규 사용자는 습관이 없어 가리킬
+  /// 대상이 없으므로, 온보딩 동안만 가짜 목록을 띄운다.
+  ///
+  /// 온보딩 로직이 extension에 있어 setState를 쓸 수 없으므로
+  /// ValueNotifier로 관리한다(냉장고 온보딩과 동일한 방식).
+  final _showOnboardingDemo = ValueNotifier<bool>(false);
   String? _selectedCategoryId;
   bool _isReordering = false;
 
@@ -121,6 +133,12 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     }
     if (!mounted) return;
     await _maybeSuggestGoalAdjustment();
+  }
+
+  @override
+  void dispose() {
+    _showOnboardingDemo.dispose();
+    super.dispose();
   }
 
   Future<void> _loadCachedSectionOrder() async {
@@ -1029,193 +1047,212 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
           item.routineId: (item.thisWeekProgress ?? item.thisMonthProgress)!,
     };
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routine_title),
-        actions: [
-          if (_isReordering)
-            IconButton(
-              icon: const Icon(Icons.close),
-              tooltip: MaterialLocalizations.of(context).cancelButtonLabel,
-              onPressed: _savingDraft ? null : _cancelReorderMode,
-            ),
-          IconButton(
-            icon: _savingDraft
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Icon(_isReordering ? Icons.check : Icons.swap_vert),
-            tooltip: _isReordering
-                ? l10n.routine_reorder_done
-                : l10n.routine_reorder,
-            onPressed: _savingDraft
-                ? null
-                : () => _isReordering
-                      ? _commitDraft(context, groupsAsync.valueOrNull ?? [])
-                      : _enterReorderMode(
-                          routinesAsync.valueOrNull ?? [],
-                          groupsAsync.valueOrNull ?? [],
-                        ),
-          ),
-          if (!_isReordering)
-            IconButton(
-              icon: const Icon(Icons.flag_outlined),
-              tooltip: l10n.routine_daily_goal_setting,
-              onPressed: () => context.push(AppRoutes.routineDailyGoal),
-            ),
-          if (!_isReordering)
-            IconButton(
-              icon: const Icon(Icons.bar_chart_outlined),
-              tooltip: l10n.routine_overview_title,
-              onPressed: () => context.push(AppRoutes.routineOverview),
-            ),
-          if (!_isReordering)
-            AppBarMoreMenu(
-              onReplayOnboarding: _showCoachMark,
-              extraItems: [
-                MoreMenuItem(
-                  id: 'shared_group',
-                  icon: Icons.groups_outlined,
-                  label: l10n.routine_shared_group_select,
-                  onTap: (ctx) => _showSharedGroupPicker(ctx, myGroups),
-                ),
-              ],
-            ),
-        ],
-      ),
-      floatingActionButton: _isReordering
-          ? null
-          : FloatingActionButton(
-              key: _addButtonKey,
-              onPressed: () => _showAddPicker(context),
-              child: const Icon(Icons.add),
-            ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              _buildDateNavigator(context, l10n),
-              // 일일 목표 진행 바는 "오늘"을 보고 있을 때만 의미가 있다.
-              // 과거 날짜를 조회 중일 때는 오늘의 진행을 띄우면 혼란스럽다.
-              if (_isToday && !_isReordering) _buildDailyGoalBar(),
-              _buildCategoryFilterRow(
-                context,
-                l10n,
-                categoriesAsync.valueOrNull ?? [],
+    return ValueListenableBuilder<bool>(
+      valueListenable: _showOnboardingDemo,
+      builder: (context, isDemo, _) => Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.routine_title),
+          actions: [
+            if (_isReordering)
+              IconButton(
+                icon: const Icon(Icons.close),
+                tooltip: MaterialLocalizations.of(context).cancelButtonLabel,
+                onPressed: _savingDraft ? null : _cancelReorderMode,
               ),
-              Expanded(
-                child: routinesAsync.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (error, _) => AppErrorState(
-                    error: error,
-                    title: l10n.routine_error_generic,
-                    onRetry: () => ref
-                        .read(routineListProvider(_selectedDateParam).notifier)
-                        .refresh(),
+            IconButton(
+              icon: _savingDraft
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(_isReordering ? Icons.check : Icons.swap_vert),
+              tooltip: _isReordering
+                  ? l10n.routine_reorder_done
+                  : l10n.routine_reorder,
+              onPressed: _savingDraft
+                  ? null
+                  : () => _isReordering
+                        ? _commitDraft(context, groupsAsync.valueOrNull ?? [])
+                        : _enterReorderMode(
+                            routinesAsync.valueOrNull ?? [],
+                            groupsAsync.valueOrNull ?? [],
+                          ),
+            ),
+            if (!_isReordering)
+              IconButton(
+                icon: const Icon(Icons.flag_outlined),
+                tooltip: l10n.routine_daily_goal_setting,
+                onPressed: () => context.push(AppRoutes.routineDailyGoal),
+              ),
+            if (!_isReordering)
+              IconButton(
+                icon: const Icon(Icons.bar_chart_outlined),
+                tooltip: l10n.routine_overview_title,
+                onPressed: () => context.push(AppRoutes.routineOverview),
+              ),
+            if (!_isReordering)
+              AppBarMoreMenu(
+                onReplayOnboarding: _showCoachMark,
+                extraItems: [
+                  MoreMenuItem(
+                    id: 'shared_group',
+                    icon: Icons.groups_outlined,
+                    label: l10n.routine_shared_group_select,
+                    onTap: (ctx) => _showSharedGroupPicker(ctx, myGroups),
                   ),
-                  data: (routines) {
-                    final groups = groupsAsync.valueOrNull ?? [];
-                    // 편집(순서변경/이동) 모드 중에는 로컬 draft를 화면에 반영하고,
-                    // "완료"를 눌러야 서버에 일괄 커밋한다.
-                    final effectiveRoutines = _isReordering
-                        ? (_draftRoutines ?? routines)
-                        : routines;
-                    var filteredRoutines = _selectedCategoryId == null
-                        ? effectiveRoutines
-                        : effectiveRoutines
-                              .where(
-                                (r) =>
-                                    r.categoryIds.contains(_selectedCategoryId),
-                              )
-                              .toList();
-                    // 진행 바를 탭해 켜는 "목표 습관만 보기" 필터.
-                    if (_goalOnlyFilter) {
-                      filteredRoutines = filteredRoutines
-                          .where((r) => r.includeInDailyGoal)
-                          .toList();
-                    }
-                    final standaloneRoutines = filteredRoutines
-                        .where((r) => r.routineGroupId == null)
-                        .toList();
-                    final groupById = {for (final g in groups) g.id: g};
-                    final standaloneById = {
-                      for (final r in standaloneRoutines) r.id: r,
-                    };
-                    // 편집 모드에서는 draft 섹션 순서를, 평소엔 캐시된 순서를
-                    // 쓴다(RoutineListScreen이 최초 빌드 때 로드해 둔다).
-                    final baseOrder = _isReordering
-                        ? (_draftSectionOrder ?? const <String>[])
-                        : (_cachedSectionOrder ?? const <String>[]);
-                    final sectionOrder = _resolveSectionOrder(
-                      baseOrder,
-                      groups,
-                      standaloneRoutines.map((r) => r.id).toList(),
-                    );
-
-                    if (routines.isEmpty && groups.isEmpty) {
-                      return AppEmptyState(
-                        icon: Icons.checklist_outlined,
-                        message: l10n.routine_list_empty,
-                        subtitle: l10n.routine_list_empty_subtitle,
-                        action: FilledButton.icon(
-                          onPressed: () => context.push(AppRoutes.routineAdd),
-                          icon: const Icon(Icons.add),
-                          label: Text(l10n.routine_add),
-                        ),
-                      );
-                    }
-
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        await ref
-                            .read(
-                              routineListProvider(_selectedDateParam).notifier,
-                            )
-                            .refresh();
-                        await ref
-                            .read(routineGroupListProvider.notifier)
-                            .refresh();
-                      },
-                      child: ListView(
-                        padding: EdgeInsets.fromLTRB(
-                          AppSizes.spaceM,
-                          AppSizes.spaceM,
-                          AppSizes.spaceM,
-                          AppSizes.spaceM +
-                              MediaQuery.paddingOf(context).bottom +
-                              72,
-                        ),
-                        children: [
-                          for (var i = 0; i < sectionOrder.length; i++)
-                            _buildSectionItem(
-                              context,
-                              sectionOrder[i],
-                              i,
-                              sectionOrder,
-                              groupById,
-                              standaloneById,
-                              filteredRoutines,
-                              progressByRoutineId,
-                            ),
-                        ],
+                ],
+              ),
+          ],
+        ),
+        floatingActionButton: _isReordering
+            ? null
+            : FloatingActionButton(
+                key: _addButtonKey,
+                // 온보딩 중에는 코치마크가 이 버튼을 가리키기만 하므로
+                // 실제 생성 화면이 열리지 않게 막는다.
+                onPressed: isDemo ? null : () => _showAddPicker(context),
+                child: const Icon(Icons.add),
+              ),
+        body: isDemo
+            ? _OnboardingRoutineDemo(
+                goalBarKey: _goalBarKey,
+                flagKey: _demoFlagKey,
+                checkKey: _demoCheckKey,
+              )
+            : Stack(
+                children: [
+                  Column(
+                    children: [
+                      _buildDateNavigator(context, l10n),
+                      // 일일 목표 진행 바는 "오늘"을 보고 있을 때만 의미가 있다.
+                      // 과거 날짜를 조회 중일 때는 오늘의 진행을 띄우면 혼란스럽다.
+                      if (_isToday && !_isReordering) _buildDailyGoalBar(),
+                      _buildCategoryFilterRow(
+                        context,
+                        l10n,
+                        categoriesAsync.valueOrNull ?? [],
                       ),
-                    );
-                  },
-                ),
+                      Expanded(
+                        child: routinesAsync.when(
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (error, _) => AppErrorState(
+                            error: error,
+                            title: l10n.routine_error_generic,
+                            onRetry: () => ref
+                                .read(
+                                  routineListProvider(
+                                    _selectedDateParam,
+                                  ).notifier,
+                                )
+                                .refresh(),
+                          ),
+                          data: (routines) {
+                            final groups = groupsAsync.valueOrNull ?? [];
+                            // 편집(순서변경/이동) 모드 중에는 로컬 draft를 화면에 반영하고,
+                            // "완료"를 눌러야 서버에 일괄 커밋한다.
+                            final effectiveRoutines = _isReordering
+                                ? (_draftRoutines ?? routines)
+                                : routines;
+                            var filteredRoutines = _selectedCategoryId == null
+                                ? effectiveRoutines
+                                : effectiveRoutines
+                                      .where(
+                                        (r) => r.categoryIds.contains(
+                                          _selectedCategoryId,
+                                        ),
+                                      )
+                                      .toList();
+                            // 진행 바를 탭해 켜는 "목표 습관만 보기" 필터.
+                            if (_goalOnlyFilter) {
+                              filteredRoutines = filteredRoutines
+                                  .where((r) => r.includeInDailyGoal)
+                                  .toList();
+                            }
+                            final standaloneRoutines = filteredRoutines
+                                .where((r) => r.routineGroupId == null)
+                                .toList();
+                            final groupById = {for (final g in groups) g.id: g};
+                            final standaloneById = {
+                              for (final r in standaloneRoutines) r.id: r,
+                            };
+                            // 편집 모드에서는 draft 섹션 순서를, 평소엔 캐시된 순서를
+                            // 쓴다(RoutineListScreen이 최초 빌드 때 로드해 둔다).
+                            final baseOrder = _isReordering
+                                ? (_draftSectionOrder ?? const <String>[])
+                                : (_cachedSectionOrder ?? const <String>[]);
+                            final sectionOrder = _resolveSectionOrder(
+                              baseOrder,
+                              groups,
+                              standaloneRoutines.map((r) => r.id).toList(),
+                            );
+
+                            if (routines.isEmpty && groups.isEmpty) {
+                              return AppEmptyState(
+                                icon: Icons.checklist_outlined,
+                                message: l10n.routine_list_empty,
+                                subtitle: l10n.routine_list_empty_subtitle,
+                                action: FilledButton.icon(
+                                  onPressed: () =>
+                                      context.push(AppRoutes.routineAdd),
+                                  icon: const Icon(Icons.add),
+                                  label: Text(l10n.routine_add),
+                                ),
+                              );
+                            }
+
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                await ref
+                                    .read(
+                                      routineListProvider(
+                                        _selectedDateParam,
+                                      ).notifier,
+                                    )
+                                    .refresh();
+                                await ref
+                                    .read(routineGroupListProvider.notifier)
+                                    .refresh();
+                              },
+                              child: ListView(
+                                padding: EdgeInsets.fromLTRB(
+                                  AppSizes.spaceM,
+                                  AppSizes.spaceM,
+                                  AppSizes.spaceM,
+                                  AppSizes.spaceM +
+                                      MediaQuery.paddingOf(context).bottom +
+                                      72,
+                                ),
+                                children: [
+                                  for (var i = 0; i < sectionOrder.length; i++)
+                                    _buildSectionItem(
+                                      context,
+                                      sectionOrder[i],
+                                      i,
+                                      sectionOrder,
+                                      groupById,
+                                      standaloneById,
+                                      filteredRoutines,
+                                      progressByRoutineId,
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (_savingDraft)
+                    const Positioned.fill(
+                      child: ColoredBox(
+                        color: Colors.black26,
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
+                ],
               ),
-            ],
-          ),
-          if (_savingDraft)
-            const Positioned.fill(
-              child: ColoredBox(
-                color: Colors.black26,
-                child: Center(child: CircularProgressIndicator()),
-              ),
-            ),
-        ],
       ),
     );
   }

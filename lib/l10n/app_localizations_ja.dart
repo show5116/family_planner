@@ -4647,6 +4647,46 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_daily_goal_filter_hint => 'タップすると目標の習慣だけ表示できます';
 
   @override
+  String get routine_coach_add_title => '習慣をつくる';
+
+  @override
+  String get routine_coach_add_desc =>
+      '毎日くり返したいことを習慣として登録しましょう。\n複数の習慣をまとめて1つのルーティンにもできます。';
+
+  @override
+  String get routine_coach_goal_title => '今日の目標';
+
+  @override
+  String get routine_coach_goal_desc =>
+      '習慣をすべて終えなくても大丈夫です。\n決めた数を満たせばその日は成功です。\n連続で達成するとバッジももらえます。';
+
+  @override
+  String get routine_coach_flag_title => '目標に入る習慣';
+
+  @override
+  String get routine_coach_flag_desc =>
+      '旗のついた習慣が今日の目標に入ります。\n上の目標バーを押すと、その習慣だけを見られます。';
+
+  @override
+  String get routine_coach_check_title => 'チェックする';
+
+  @override
+  String get routine_coach_check_desc =>
+      '丸を押して完了の印をつけましょう。\n記録型の習慣は時間や回数も残せます。';
+
+  @override
+  String get routine_coach_demo_habit_1 => '朝のストレッチ';
+
+  @override
+  String get routine_coach_demo_habit_2 => '水を2L飲む';
+
+  @override
+  String get routine_coach_demo_habit_3 => '30分読書';
+
+  @override
+  String get routine_coach_skip => 'スキップ';
+
+  @override
   String get routine_this_week_progress => '今週の進捗';
 
   @override

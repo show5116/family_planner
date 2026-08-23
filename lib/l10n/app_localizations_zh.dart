@@ -4618,6 +4618,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_daily_goal_filter_hint => '点击可只看目标习惯';
 
   @override
+  String get routine_coach_add_title => '创建习惯';
+
+  @override
+  String get routine_coach_add_desc => '把想每天重复的事登记为习惯吧。\n也可以把多个习惯组成一个例程。';
+
+  @override
+  String get routine_coach_goal_title => '今日目标';
+
+  @override
+  String get routine_coach_goal_desc =>
+      '不必完成全部习惯。\n只要达到设定的数量，这一天就算成功。\n连续达成还能获得徽章。';
+
+  @override
+  String get routine_coach_flag_title => '计入目标的习惯';
+
+  @override
+  String get routine_coach_flag_desc => '带旗帜的习惯会计入今日目标。\n点击上方的目标条，可以只看这些习惯。';
+
+  @override
+  String get routine_coach_check_title => '打卡';
+
+  @override
+  String get routine_coach_check_desc => '点击圆圈标记完成。\n记录型习惯还能填写时间或次数。';
+
+  @override
+  String get routine_coach_demo_habit_1 => '晨间拉伸';
+
+  @override
+  String get routine_coach_demo_habit_2 => '喝2升水';
+
+  @override
+  String get routine_coach_demo_habit_3 => '阅读30分钟';
+
+  @override
+  String get routine_coach_skip => '跳过';
+
+  @override
   String get routine_this_week_progress => '本周进度';
 
   @override

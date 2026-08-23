@@ -4655,6 +4655,46 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_daily_goal_filter_hint => '탭하면 목표 습관만 볼 수 있어요';
 
   @override
+  String get routine_coach_add_title => '습관 만들기';
+
+  @override
+  String get routine_coach_add_desc =>
+      '매일 반복하고 싶은 일을 습관으로 등록해보세요.\n여러 습관을 묶어 하나의 루틴으로 만들 수도 있어요.';
+
+  @override
+  String get routine_coach_goal_title => '오늘의 목표';
+
+  @override
+  String get routine_coach_goal_desc =>
+      '습관을 전부 못 채워도 괜찮아요.\n정해둔 개수만 채우면 그날은 성공이에요.\n연속으로 달성하면 배지도 받을 수 있어요.';
+
+  @override
+  String get routine_coach_flag_title => '목표에 포함된 습관';
+
+  @override
+  String get routine_coach_flag_desc =>
+      '깃발이 붙은 습관이 오늘의 목표에 들어가요.\n위의 목표 막대를 누르면 이 습관만 모아볼 수 있어요.';
+
+  @override
+  String get routine_coach_check_title => '체크하기';
+
+  @override
+  String get routine_coach_check_desc =>
+      '동그라미를 눌러 완료 표시를 하세요.\n기록형 습관은 시간이나 횟수도 함께 남길 수 있어요.';
+
+  @override
+  String get routine_coach_demo_habit_1 => '아침 스트레칭';
+
+  @override
+  String get routine_coach_demo_habit_2 => '물 2L 마시기';
+
+  @override
+  String get routine_coach_demo_habit_3 => '책 30분 읽기';
+
+  @override
+  String get routine_coach_skip => '건너뛰기';
+
+  @override
   String get routine_this_week_progress => '이번 주 진행';
 
   @override
