@@ -4626,6 +4626,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_streak_longest_weeks => '最長連続週数';
 
   @override
+  String get routine_streak_current_months => '現在の連続月';
+
+  @override
+  String get routine_streak_longest_months => '最長連続月';
+
+  @override
+  String get routine_this_month_progress_label => '今月の進捗';
+
+  @override
+  String get routine_badges_goal_subtitle => '今日の目標を達成して集めたバッジです';
+
+  @override
+  String get routine_daily_goal_included_badge => '今日の目標に含まれる習慣';
+
+  @override
+  String get routine_daily_goal_filter_on => '目標の習慣のみ表示中';
+
+  @override
+  String get routine_daily_goal_filter_hint => 'タップすると目標の習慣だけ表示できます';
+
+  @override
   String get routine_this_week_progress => '今週の進捗';
 
   @override
@@ -4684,9 +4705,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get nav_routines => 'ルーティン';
-
-  @override
-  String get routine_tab_badges => 'バッジ';
 
   @override
   String get routine_badges_title => 'マイバッジ';

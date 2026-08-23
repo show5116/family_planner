@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
-import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_heatmap_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_share_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_stats_tab.dart';
@@ -46,9 +45,9 @@ class RoutineDetailScreen extends ConsumerWidget {
     if (success) {
       context.pop();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.routine_error_generic)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.routine_error_generic)));
     }
   }
 
@@ -58,12 +57,10 @@ class RoutineDetailScreen extends ConsumerWidget {
     final detailAsync = ref.watch(routineDetailProvider(routineId));
 
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            detailAsync.valueOrNull?.title ?? l10n.routine_title,
-          ),
+          title: Text(detailAsync.valueOrNull?.title ?? l10n.routine_title),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_outlined),
@@ -85,7 +82,6 @@ class RoutineDetailScreen extends ConsumerWidget {
                 tabs: [
                   l10n.routine_tab_heatmap,
                   l10n.routine_tab_stats,
-                  l10n.routine_tab_badges,
                   l10n.routine_tab_share,
                 ],
               ),
@@ -102,8 +98,10 @@ class RoutineDetailScreen extends ConsumerWidget {
           data: (routine) => TabBarView(
             children: [
               RoutineHeatmapTab(routine: routine),
-              RoutineStatsTab(routineId: routineId),
-              RoutineBadgesTab(routineId: routineId),
+              RoutineStatsTab(
+                routineId: routineId,
+                frequencyType: routine.frequencyType,
+              ),
               RoutineShareTab(routineId: routineId),
             ],
           ),

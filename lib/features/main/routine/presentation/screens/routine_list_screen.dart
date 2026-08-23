@@ -42,6 +42,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   String? _selectedCategoryId;
   bool _isReordering = false;
 
+  /// 오늘의 목표에 포함된 습관만 보여줄지 여부. 진행 바를 탭해 토글한다.
+  bool _goalOnlyFilter = false;
+
   /// 편집(순서변경/소속이동) 모드 동안의 로컬 임시 목록. null이면 편집 중이
   /// 아니라는 뜻이며, 이 경우 서버 상태(routines)를 그대로 사용한다.
   /// 드래그는 이 목록만 바꾸고, "완료"를 눌러야 서버에 일괄 반영된다.
@@ -219,8 +222,9 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
       );
       _isReordering = true;
       // 편집 모드에서는 필터로 숨겨진 루틴도 드래그 대상이 될 수 있어야
-      // 하므로 진입 시 카테고리 필터를 해제한다.
+      // 하므로 진입 시 모든 필터를 해제한다.
       _selectedCategoryId = null;
+      _goalOnlyFilter = false;
     });
   }
 
@@ -965,7 +969,8 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     if (streak == null) return const SizedBox.shrink();
     return RoutineDailyGoalBar(
       streak: streak,
-      onTap: () => context.push(AppRoutes.routineDailyGoal),
+      filterActive: _goalOnlyFilter,
+      onTap: () => setState(() => _goalOnlyFilter = !_goalOnlyFilter),
     );
   }
 
@@ -1118,7 +1123,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                     final effectiveRoutines = _isReordering
                         ? (_draftRoutines ?? routines)
                         : routines;
-                    final filteredRoutines = _selectedCategoryId == null
+                    var filteredRoutines = _selectedCategoryId == null
                         ? effectiveRoutines
                         : effectiveRoutines
                               .where(
@@ -1126,6 +1131,12 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
                                     r.categoryIds.contains(_selectedCategoryId),
                               )
                               .toList();
+                    // 진행 바를 탭해 켜는 "목표 습관만 보기" 필터.
+                    if (_goalOnlyFilter) {
+                      filteredRoutines = filteredRoutines
+                          .where((r) => r.includeInDailyGoal)
+                          .toList();
+                    }
                     final standaloneRoutines = filteredRoutines
                         .where((r) => r.routineGroupId == null)
                         .toList();

@@ -4634,6 +4634,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_streak_longest_weeks => '최장 연속 주';
 
   @override
+  String get routine_streak_current_months => '현재 연속 달';
+
+  @override
+  String get routine_streak_longest_months => '최장 연속 달';
+
+  @override
+  String get routine_this_month_progress_label => '이번 달 진행';
+
+  @override
+  String get routine_badges_goal_subtitle => '오늘의 목표를 달성하며 모은 배지예요';
+
+  @override
+  String get routine_daily_goal_included_badge => '오늘의 목표에 포함된 습관';
+
+  @override
+  String get routine_daily_goal_filter_on => '목표 습관만 보는 중';
+
+  @override
+  String get routine_daily_goal_filter_hint => '탭하면 목표 습관만 볼 수 있어요';
+
+  @override
   String get routine_this_week_progress => '이번 주 진행';
 
   @override
@@ -4692,9 +4713,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nav_routines => '루틴';
-
-  @override
-  String get routine_tab_badges => '배지';
 
   @override
   String get routine_badges_title => '내 배지';

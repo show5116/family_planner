@@ -8906,6 +8906,48 @@ abstract class AppLocalizations {
   /// **'최장 연속 주'**
   String get routine_streak_longest_weeks;
 
+  /// 현재 연속 달성 개월 수 라벨 (월간 습관 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 연속 달'**
+  String get routine_streak_current_months;
+
+  /// 최장 연속 달성 개월 수 라벨 (월간 습관 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 연속 달'**
+  String get routine_streak_longest_months;
+
+  /// 월간 습관의 이번 달 진행 상황 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 진행'**
+  String get routine_this_month_progress_label;
+
+  /// 배지 화면 상단 설명 — 배지가 일일 목표 기준임을 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표를 달성하며 모은 배지예요'**
+  String get routine_badges_goal_subtitle;
+
+  /// 목록에서 목표 포함 습관을 나타내는 깃발 아이콘의 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표에 포함된 습관'**
+  String get routine_daily_goal_included_badge;
+
+  /// 목표 습관 필터가 켜졌을 때 진행 바에 표시되는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 습관만 보는 중'**
+  String get routine_daily_goal_filter_on;
+
+  /// 진행 바를 탭하면 필터가 켜진다는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'탭하면 목표 습관만 볼 수 있어요'**
+  String get routine_daily_goal_filter_hint;
+
   /// 이번 주 진행 상황 라벨
   ///
   /// In ko, this message translates to:
@@ -9025,12 +9067,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'루틴'**
   String get nav_routines;
-
-  /// 루틴 상세 배지 탭
-  ///
-  /// In ko, this message translates to:
-  /// **'배지'**
-  String get routine_tab_badges;
 
   /// 배지 목록 화면 타이틀
   ///

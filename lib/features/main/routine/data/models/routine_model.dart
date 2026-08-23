@@ -566,21 +566,29 @@ class RoutineLog {
   }
 }
 
-/// 배지 판정 기준 타입
+/// 배지 판정 기준 타입.
+///
+/// 배지는 개별 습관이 아니라 **일일 목표 달성** 기준으로 부여된다.
+/// 습관별 연속 기록은 배지가 아니라 루틴 상세 통계 탭에서 확인한다.
 enum BadgeCriteriaType {
-  streakDays,
-  streakWeeks,
-  totalChecks;
+  /// 일일 목표 연속 달성 N일
+  goalStreakDays,
+
+  /// 일일 목표 누적 달성 N일
+  goalTotalDays,
+
+  /// 한 주(월~일) 7일 전부 달성한 횟수 N회
+  goalPerfectWeek;
 
   static BadgeCriteriaType fromString(String? value) {
     switch (value) {
-      case 'STREAK_WEEKS':
-        return BadgeCriteriaType.streakWeeks;
-      case 'TOTAL_CHECKS':
-        return BadgeCriteriaType.totalChecks;
-      case 'STREAK_DAYS':
+      case 'GOAL_TOTAL_DAYS':
+        return BadgeCriteriaType.goalTotalDays;
+      case 'GOAL_PERFECT_WEEK':
+        return BadgeCriteriaType.goalPerfectWeek;
+      case 'GOAL_STREAK_DAYS':
       default:
-        return BadgeCriteriaType.streakDays;
+        return BadgeCriteriaType.goalStreakDays;
     }
   }
 }
@@ -620,21 +628,20 @@ class RoutineBadge {
   }
 }
 
-/// 사용자가 획득한 배지 기록
+/// 사용자가 획득한 배지 기록.
+///
+/// 배지는 일일 목표 기준의 사용자 단위 성취라, 어떤 습관에서 얻었는지를
+/// 나타내는 필드는 없다.
 class UserRoutineBadge {
   final String id;
   final String badgeId;
   final RoutineBadge badge;
-  final String? routineId;
-  final String? routineTitle;
   final DateTime earnedAt;
 
   const UserRoutineBadge({
     required this.id,
     required this.badgeId,
     required this.badge,
-    this.routineId,
-    this.routineTitle,
     required this.earnedAt,
   });
 
@@ -643,8 +650,6 @@ class UserRoutineBadge {
       id: json['id'] as String,
       badgeId: json['badgeId'] as String,
       badge: RoutineBadge.fromJson(json['badge'] as Map<String, dynamic>),
-      routineId: json['routineId'] as String?,
-      routineTitle: json['routineTitle'] as String?,
       earnedAt: DateTime.parse(json['earnedAt'] as String).toLocal(),
     );
   }
@@ -710,6 +715,11 @@ class RoutineStreak {
   final int longestStreakWeeks;
   final int currentStreakDays;
   final int longestStreakDays;
+
+  /// 월 목표 연속 달성 개월 수. frequencyType=MONTHLY 루틴 전용이며,
+  /// 그 외 루틴은 서버가 0으로 내려준다.
+  final int currentStreakMonths;
+  final int longestStreakMonths;
   final RoutinePeriodProgress thisWeekProgress;
 
   const RoutineStreak({
@@ -718,6 +728,8 @@ class RoutineStreak {
     required this.longestStreakWeeks,
     required this.currentStreakDays,
     required this.longestStreakDays,
+    this.currentStreakMonths = 0,
+    this.longestStreakMonths = 0,
     required this.thisWeekProgress,
   });
 
@@ -728,6 +740,8 @@ class RoutineStreak {
       longestStreakWeeks: json['longestStreakWeeks'] as int? ?? 0,
       currentStreakDays: json['currentStreakDays'] as int? ?? 0,
       longestStreakDays: json['longestStreakDays'] as int? ?? 0,
+      currentStreakMonths: json['currentStreakMonths'] as int? ?? 0,
+      longestStreakMonths: json['longestStreakMonths'] as int? ?? 0,
       thisWeekProgress: RoutinePeriodProgress.fromJson(
         json['thisWeekProgress'] as Map<String, dynamic>? ?? const {},
       ),

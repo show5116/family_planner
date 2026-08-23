@@ -11,9 +11,16 @@ import 'package:family_planner/shared/widgets/app_error_state.dart';
 
 /// 루틴 상세 - 통계(스트릭 + 달성률) 탭
 class RoutineStatsTab extends ConsumerStatefulWidget {
-  const RoutineStatsTab({super.key, required this.routineId});
+  const RoutineStatsTab({
+    super.key,
+    required this.routineId,
+    this.frequencyType,
+  });
 
   final String routineId;
+
+  /// 스트릭 보조 통계를 주/월 중 무엇으로 보여줄지 결정한다.
+  final RoutineFrequencyType? frequencyType;
 
   @override
   ConsumerState<RoutineStatsTab> createState() => _RoutineStatsTabState();
@@ -27,8 +34,10 @@ class _RoutineStatsTabState extends ConsumerState<RoutineStatsTab> {
     final l10n = AppLocalizations.of(context)!;
     final streakProviderArg = routineStreakProvider(widget.routineId);
     final streakAsync = ref.watch(streakProviderArg);
-    final rateProviderArg =
-        routineRateProvider(widget.routineId, period: _period);
+    final rateProviderArg = routineRateProvider(
+      widget.routineId,
+      period: _period,
+    );
     final rateAsync = ref.watch(rateProviderArg);
 
     return SingleChildScrollView(
@@ -48,7 +57,10 @@ class _RoutineStatsTabState extends ConsumerState<RoutineStatsTab> {
               title: l10n.routine_error_generic,
               onRetry: () => ref.invalidate(streakProviderArg),
             ),
-            data: (streak) => RoutineStreakCard(streak: streak),
+            data: (streak) => RoutineStreakCard(
+              streak: streak,
+              frequencyType: widget.frequencyType,
+            ),
           ),
           const SizedBox(height: AppSizes.spaceM),
           rateAsync.when(

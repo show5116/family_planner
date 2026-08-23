@@ -8,17 +8,51 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 
-/// 내 배지 목록 화면 (전체 카탈로그 + 획득 여부 표시)
+/// 내 배지 목록 화면 (전체 카탈로그 + 획득 여부 표시).
+///
+/// 배지는 개별 습관이 아니라 **일일 목표 달성** 기준으로 부여된다.
+/// 습관별 연속 기록은 루틴 상세의 통계 탭에서 볼 수 있다.
 class RoutineBadgesScreen extends StatelessWidget {
   const RoutineBadgesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.routine_badges_title)),
-      body: const RoutineBadgeGrid(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.spaceM,
+              AppSizes.spaceM,
+              AppSizes.spaceM,
+              0,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.flag_outlined,
+                  size: 18,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: AppSizes.spaceXS),
+                Expanded(
+                  child: Text(
+                    l10n.routine_badges_goal_subtitle,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Expanded(child: RoutineBadgeGrid()),
+        ],
+      ),
     );
   }
 }

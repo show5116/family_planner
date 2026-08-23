@@ -154,11 +154,31 @@ class _RoutineListItemState extends State<RoutineListItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      routine.title,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            routine.title,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        // 이 습관을 체크하면 오늘의 목표가 올라간다는 표시.
+                        // 목록에서 목표 대상을 바로 알 수 있어야, 진행률
+                        // "0/1"이 무엇을 세는지 헷갈리지 않는다.
+                        if (routine.includeInDailyGoal) ...[
+                          const SizedBox(width: AppSizes.spaceXS),
+                          Tooltip(
+                            message: l10n.routine_daily_goal_included_badge,
+                            child: Icon(
+                              Icons.flag,
+                              size: 12,
+                              color: accent.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     if (isPaused)
                       Text(
@@ -179,60 +199,72 @@ class _RoutineListItemState extends State<RoutineListItem> {
               ),
               if (!widget.isEditing) ...[
                 const SizedBox(width: AppSizes.spaceXS),
-                _CheckIndicator(
-                  routine: routine,
-                  accent: accent,
-                  enabled: canCheck,
-                  onTap: _handleToggleCheck,
+                // 표 헤더의 "체크" 라벨과 폭을 맞춘다
+                // (buildRoutineTableHeader 참고).
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 48),
+                  child: _CheckIndicator(
+                    routine: routine,
+                    accent: accent,
+                    enabled: canCheck,
+                    onTap: _handleToggleCheck,
+                  ),
                 ),
               ],
-              if (!widget.isEditing &&
-                  (widget.onEdit != null ||
-                      widget.onPause != null ||
-                      widget.onResume != null ||
-                      widget.onDelete != null))
-                PopupMenuButton<String>(
-                  padding: EdgeInsets.zero,
-                  icon: Icon(
-                    Icons.more_vert,
-                    size: 18,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  onSelected: (value) {
-                    switch (value) {
-                      case 'edit':
-                        widget.onEdit?.call();
-                      case 'pause':
-                        widget.onPause?.call();
-                      case 'resume':
-                        widget.onResume?.call();
-                      case 'delete':
-                        widget.onDelete?.call();
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    if (widget.onEdit != null)
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Text(l10n.routine_edit),
-                      ),
-                    if (isPaused && widget.onResume != null)
-                      PopupMenuItem(
-                        value: 'resume',
-                        child: Text(l10n.routine_resume),
-                      ),
-                    if (!isPaused && widget.onPause != null)
-                      PopupMenuItem(
-                        value: 'pause',
-                        child: Text(l10n.routine_pause),
-                      ),
-                    if (widget.onDelete != null)
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Text(l10n.routine_end),
-                      ),
-                  ],
-                ),
+              // 메뉴가 없는 행에서도 칸이 유지되어야 헤더의 '체크' 라벨과
+              // 체크 버튼의 세로 정렬이 흐트러지지 않는다.
+              SizedBox(
+                width: 32,
+                child:
+                    (!widget.isEditing &&
+                        (widget.onEdit != null ||
+                            widget.onPause != null ||
+                            widget.onResume != null ||
+                            widget.onDelete != null))
+                    ? PopupMenuButton<String>(
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 18,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        onSelected: (value) {
+                          switch (value) {
+                            case 'edit':
+                              widget.onEdit?.call();
+                            case 'pause':
+                              widget.onPause?.call();
+                            case 'resume':
+                              widget.onResume?.call();
+                            case 'delete':
+                              widget.onDelete?.call();
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          if (widget.onEdit != null)
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: Text(l10n.routine_edit),
+                            ),
+                          if (isPaused && widget.onResume != null)
+                            PopupMenuItem(
+                              value: 'resume',
+                              child: Text(l10n.routine_resume),
+                            ),
+                          if (!isPaused && widget.onPause != null)
+                            PopupMenuItem(
+                              value: 'pause',
+                              child: Text(l10n.routine_pause),
+                            ),
+                          if (widget.onDelete != null)
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: Text(l10n.routine_end),
+                            ),
+                        ],
+                      )
+                    : null,
+              ),
             ],
           ),
         ),

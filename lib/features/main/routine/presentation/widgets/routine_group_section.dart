@@ -346,7 +346,18 @@ Widget buildRoutineTableHeader(BuildContext context) {
         Expanded(
           child: Text(l10n.routine_table_header_habit, style: labelStyle),
         ),
-        Text(l10n.routine_table_header_check, style: labelStyle),
+        // 각 행의 끝은 [체크 버튼] + [⋮ 메뉴] 두 칸이다. "체크" 라벨을 그냥
+        // 마지막에 두면 메뉴 위에 얹혀 엉뚱한 칸을 가리키게 되므로,
+        // 체크 버튼 폭(48)만큼 자리를 잡고 메뉴 폭(32)은 빈칸으로 남긴다.
+        SizedBox(
+          width: 48,
+          child: Text(
+            l10n.routine_table_header_check,
+            textAlign: TextAlign.center,
+            style: labelStyle,
+          ),
+        ),
+        const SizedBox(width: 32),
       ],
     ),
   );

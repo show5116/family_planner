@@ -87,7 +87,7 @@ UserRoutineBadge _buildBadge(String code) {
       id: 'badge-$code',
       code: code,
       title: code,
-      criteriaType: BadgeCriteriaType.streakDays,
+      criteriaType: BadgeCriteriaType.goalStreakDays,
       criteriaValue: 7,
     ),
     earnedAt: _fixedDate(),
@@ -251,9 +251,6 @@ class _FakeRoutineRepository extends RoutineRepository {
 
   @override
   Future<List<UserRoutineBadge>> getMyBadges() async => [];
-
-  @override
-  Future<List<UserRoutineBadge>> getRoutineBadges(String id) async => [];
 }
 
 void main() {

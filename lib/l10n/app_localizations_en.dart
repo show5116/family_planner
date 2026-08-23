@@ -4735,6 +4735,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_streak_longest_weeks => 'Longest week streak';
 
   @override
+  String get routine_streak_current_months => 'Current Months';
+
+  @override
+  String get routine_streak_longest_months => 'Best Months';
+
+  @override
+  String get routine_this_month_progress_label => 'This Month';
+
+  @override
+  String get routine_badges_goal_subtitle =>
+      'Badges you earned by hitting your daily goal';
+
+  @override
+  String get routine_daily_goal_included_badge => 'Counts toward today\'s goal';
+
+  @override
+  String get routine_daily_goal_filter_on => 'Showing goal habits only';
+
+  @override
+  String get routine_daily_goal_filter_hint =>
+      'Tap to see only your goal habits';
+
+  @override
   String get routine_this_week_progress => 'This week\'s progress';
 
   @override
@@ -4795,9 +4818,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nav_routines => 'Routines';
-
-  @override
-  String get routine_tab_badges => 'Badges';
 
   @override
   String get routine_badges_title => 'My Badges';

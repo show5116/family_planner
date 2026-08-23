@@ -11,10 +11,19 @@ import 'package:family_planner/l10n/app_localizations.dart';
 /// 이어 붙인다. 목표를 채운 뒤에도 더 하고 싶게 만드는 것이 목적이라,
 /// 달성 즉시 바가 가득 차서 끝나버리지 않도록 초과분을 따로 보여준다.
 class RoutineDailyGoalBar extends StatelessWidget {
-  const RoutineDailyGoalBar({super.key, required this.streak, this.onTap});
+  const RoutineDailyGoalBar({
+    super.key,
+    required this.streak,
+    this.onTap,
+    this.filterActive = false,
+  });
 
   final RoutineDailyStreak streak;
   final VoidCallback? onTap;
+
+  /// "목표 습관만 보기" 필터가 켜져 있는지. 켜져 있으면 카드가 강조되고,
+  /// 꺼져 있으면 탭으로 켤 수 있다는 안내가 보인다.
+  final bool filterActive;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +101,34 @@ class RoutineDailyGoalBar extends StatelessWidget {
                     color: AppColors.warning,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+              ],
+              if (onTap != null) ...[
+                const SizedBox(height: AppSizes.spaceXS),
+                Row(
+                  children: [
+                    Icon(
+                      filterActive
+                          ? Icons.filter_alt
+                          : Icons.filter_alt_outlined,
+                      size: 12,
+                      color: filterActive
+                          ? colorScheme.primary
+                          : colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: AppSizes.spaceXS),
+                    Text(
+                      filterActive
+                          ? l10n.routine_daily_goal_filter_on
+                          : l10n.routine_daily_goal_filter_hint,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: filterActive
+                            ? colorScheme.primary
+                            : colorScheme.onSurfaceVariant,
+                        fontWeight: filterActive ? FontWeight.bold : null,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ],

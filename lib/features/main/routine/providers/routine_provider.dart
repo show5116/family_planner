@@ -313,13 +313,6 @@ Future<List<UserRoutineBadge>> routineMyBadges(Ref ref) async {
   return repository.getMyBadges();
 }
 
-/// 특정 루틴에서 획득한 배지 목록
-@riverpod
-Future<List<UserRoutineBadge>> routineBadges(Ref ref, String routineId) async {
-  final repository = ref.watch(routineRepositoryProvider);
-  return repository.getRoutineBadges(routineId);
-}
-
 // ── 랭킹보드 ──────────────────────────────────────────────────────────────────
 
 @riverpod
@@ -515,7 +508,6 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
       _ref.invalidate(routineDailyStreakProvider);
       if (newlyEarnedBadges.isNotEmpty) {
         _ref.invalidate(routineMyBadgesProvider);
-        _ref.invalidate(routineBadgesProvider(routineId));
       }
 
       final checkedRoutines = _ref

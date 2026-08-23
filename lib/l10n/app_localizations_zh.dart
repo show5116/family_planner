@@ -4597,6 +4597,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_streak_longest_weeks => '最长连续周数';
 
   @override
+  String get routine_streak_current_months => '当前连续月';
+
+  @override
+  String get routine_streak_longest_months => '最长连续月';
+
+  @override
+  String get routine_this_month_progress_label => '本月进度';
+
+  @override
+  String get routine_badges_goal_subtitle => '通过完成今日目标获得的徽章';
+
+  @override
+  String get routine_daily_goal_included_badge => '计入今日目标的习惯';
+
+  @override
+  String get routine_daily_goal_filter_on => '仅显示目标习惯';
+
+  @override
+  String get routine_daily_goal_filter_hint => '点击可只看目标习惯';
+
+  @override
   String get routine_this_week_progress => '本周进度';
 
   @override
@@ -4655,9 +4676,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nav_routines => '日常习惯';
-
-  @override
-  String get routine_tab_badges => '徽章';
 
   @override
   String get routine_badges_title => '我的徽章';

@@ -706,22 +706,6 @@ class RoutineRepository {
     }
   }
 
-  Future<List<UserRoutineBadge>> getRoutineBadges(String id) async {
-    try {
-      final response = await _dio.get('/routines/$id/badges');
-      final data = response.data;
-      if (data is List) {
-        return data
-            .map((e) => UserRoutineBadge.fromJson(e as Map<String, dynamic>))
-            .toList();
-      }
-      return [];
-    } on DioException catch (e) {
-      debugPrint('❌ [RoutineRepository] 루틴별 배지 조회 실패: ${e.message}');
-      throw Exception('루틴별 배지 조회 실패: ${e.message}');
-    }
-  }
-
   // ── 루틴(습관 묶음) ───────────────────────────────────────────────────────
 
   Future<RoutineGroup> createRoutineGroup(CreateRoutineGroupDto dto) async {
