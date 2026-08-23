@@ -40,6 +40,10 @@ class _RoutineDailyGoalScreenState
   bool _initialized = false;
   bool _saving = false;
 
+  /// 사용자가 슬라이더를 직접 움직였는지. 건드리지 않았다면 포함 습관 수가
+  /// 바뀔 때 목표도 함께 따라간다. 직접 정한 값은 임의로 바꾸지 않는다.
+  bool _countTouched = false;
+
   /// 습관별 포함 여부의 편집 중 상태(routineId → 포함). 서버 목록을 처음
   /// 읽을 때 초기화하고, 저장 시 원본과 비교해 바뀐 것만 전송한다.
   Map<String, bool>? _inclusions;
@@ -56,14 +60,40 @@ class _RoutineDailyGoalScreenState
     // 습관 목록이 아직 안 왔으면 기본값 계산이 어긋나므로 초기화를 미룬다.
     if (routines.isEmpty && _inclusions == null) return;
     _initialized = true;
-    // ALL 모드로 저장돼 있던 사용자는 "전부 하기"가 목표였던 셈이므로,
-    // 포함 습관 수를 그대로 목표로 잡아 기존 의도를 유지한다.
-    _count = settings.isCountMode
-        ? settings.dailyGoalCount
-        : (_includedCount > 0 ? _includedCount : null);
+    // 이미 저장된 목표가 있으면 사용자가 정한 값이므로 그대로 존중한다.
+    // ALL 모드였던 사용자는 "전부 하기"가 목표였던 셈이라 포함 습관 수를
+    // 그대로 목표로 잡는다.
+    if (settings.isCountMode && settings.dailyGoalCount != null) {
+      _count = settings.dailyGoalCount;
+      _countTouched = true;
+    } else if (!settings.isCountMode && _includedCount > 0) {
+      _count = _includedCount;
+      _countTouched = true;
+    }
   }
 
   int get _includedCount => _inclusions?.values.where((v) => v).length ?? 0;
+
+  /// 목표를 직접 정하지 않았을 때 쓰는 기본 비율.
+  ///
+  /// 주 N회/월 N회 습관도 기본으로 집계에 포함되므로, 그런 습관이 섞여
+  /// 있어도 달성 가능하도록 느슨하게 잡는다. 처음부터 빡빡하면 이 기능에
+  /// 도달하기도 전에 포기하게 된다.
+  static const double _defaultGoalRatio = 0.6;
+
+  /// 실제로 저장/표시할 목표 개수.
+  ///
+  /// 사용자가 슬라이더를 건드리지 않았다면 포함 습관 수의
+  /// [_defaultGoalRatio]를 기본으로 삼는다. 스위치로 습관을 더 포함시켰는데
+  /// 목표가 예전 값에 머물러 "8개 중 1개"처럼 어긋나는 것을 막기 위함이다.
+  /// 직접 정한 값이 있으면 포함 습관 수를 넘지 않는 선에서 그대로 존중한다.
+  int _effectiveCount(int included) {
+    if (included <= 0) return 1;
+    if (!_countTouched || _count == null) {
+      return (included * _defaultGoalRatio).round().clamp(1, included);
+    }
+    return _count!.clamp(1, included);
+  }
 
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
@@ -101,7 +131,10 @@ class _RoutineDailyGoalScreenState
       UpdateRoutineSettingsDto(
         // 화면에 모드 선택이 없으므로 항상 COUNT로 저장한다.
         dailyGoalMode: RoutineDailyGoalMode.count,
-        dailyGoalCount: _count,
+        // 화면에 보이는 값을 그대로 저장해야 한다. _count를 직접 쓰면
+        // 슬라이더를 건드리지 않은 경우 옛 값이 저장돼, 표시와 실제
+        // 저장값이 어긋난다.
+        dailyGoalCount: _effectiveCount(_includedCount),
       ),
     );
     if (!mounted) return;
@@ -181,8 +214,11 @@ class _RoutineDailyGoalScreenState
       children: [
         _GoalCountCard(
           included: included,
-          count: _count ?? included,
-          onChanged: (value) => setState(() => _count = value),
+          count: _effectiveCount(included),
+          onChanged: (value) => setState(() {
+            _count = value;
+            _countTouched = true;
+          }),
         ),
         const SizedBox(height: AppSizes.spaceL),
         _InclusionSection(
@@ -193,11 +229,8 @@ class _RoutineDailyGoalScreenState
             final map = Map.of(_inclusions ?? const <String, bool>{});
             map[routineId] = value;
             _inclusions = map;
-            // 포함 습관이 줄어 목표가 달성 불가능해지면 목표도 함께 낮춘다.
-            final newIncluded = map.values.where((v) => v).length;
-            if (_count != null && newIncluded > 0 && _count! > newIncluded) {
-              _count = newIncluded;
-            }
+            // 목표 개수는 _effectiveCount가 포함 습관 수에 맞춰 계산하므로
+            // 여기서 따로 보정하지 않는다.
           }),
         ),
       ],

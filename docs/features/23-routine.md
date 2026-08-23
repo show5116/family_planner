@@ -168,13 +168,11 @@
 - 통계 탭: `lib/features/main/routine/presentation/screens/routine_stats_tab.dart`
 - 공유 관리 탭: `lib/features/main/routine/presentation/screens/routine_share_tab.dart`
 - 그룹원 현황 화면: `lib/features/main/routine/presentation/screens/routine_group_members_screen.dart`
-- 배지 탭: `lib/features/main/routine/presentation/screens/routine_badges_tab.dart`
 - 내 배지 목록 화면: `lib/features/main/routine/presentation/screens/routine_badges_screen.dart`
 - 랭킹보드 화면: `lib/features/main/routine/presentation/screens/routine_leaderboard_screen.dart`
 - 위젯: `lib/features/main/routine/presentation/widgets/` (routine_list_item, routine_heatmap_calendar, routine_streak_card, routine_rate_card, routine_share_group_tile, routine_weekly_strip, routine_badge_celebration_dialog, routine_group_section(루틴 섹션 접기/펼치기+드래그정렬), routine_group_form_dialog(루틴 생성/수정 다이얼로그), **routine_check_value_dialog**(recordType별 체크 값 입력 다이얼로그), **routine_category_form_dialog**(카테고리 생성/수정 다이얼로그))
 - 홈 대시보드 위젯: `lib/features/home/presentation/widgets/routine_summary_widget.dart`
 - 알림 설정: `lib/features/notification/data/models/notification_settings_model.dart`, `notification_settings_provider.dart`, `notification_settings_section.dart` (routineEnabled/routineReminderHour 확장)
-- 백엔드 API 제안 문서(작성 시점 미구현이었으나 현재 배지/랭킹보드/알림 3종 모두 구현 완료): `docs/api-proposals/routine-gamification.md`
 - 목록 온보딩: `lib/features/main/routine/presentation/screens/_routine_list_onboarding.dart`
 - 유닛 테스트: `test/features/main/routine/routine_provider_test.dart` (체크 낙관적 업데이트/롤백, 체크취소, 스트릭 갱신 감지, 배지 전달 5건 + 루틴 목록 조회/생성/삭제 3건 + 목록 status 무필터 조회 1건 + recordType별 체크 값 전달 3건 + pause/resume 2건 + 카테고리 조회/생성/삭제 3건, 총 17건)
 
