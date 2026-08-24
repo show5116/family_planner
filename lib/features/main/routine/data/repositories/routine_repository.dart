@@ -27,6 +27,9 @@ class CreateRoutineDto {
   final String? endDate; // YYYY-MM-DD
   final String? routineGroupId; // 소속시킬 루틴 ID (없으면 독립 습관)
 
+  /// 공유 그룹의 다른 멤버에게 숨길지 여부. 생략 시 서버 기본값(false).
+  final bool? isPrivate;
+
   const CreateRoutineDto({
     required this.title,
     this.emoji,
@@ -43,6 +46,7 @@ class CreateRoutineDto {
     required this.startDate,
     this.endDate,
     this.routineGroupId,
+    this.isPrivate,
   });
 
   Map<String, dynamic> toJson() => {
@@ -61,6 +65,7 @@ class CreateRoutineDto {
     'startDate': startDate,
     if (endDate != null) 'endDate': endDate,
     if (routineGroupId != null) 'routineGroupId': routineGroupId,
+    if (isPrivate != null) 'isPrivate': isPrivate,
   };
 }
 
@@ -82,6 +87,9 @@ class UpdateRoutineDto {
   final List<int>? targetDays;
   final String? endDate;
   final String? routineGroupId;
+
+  /// 공유 그룹의 다른 멤버에게 숨길지 여부. null이면 미변경.
+  final bool? isPrivate;
 
   /// routineGroupId를 명시적으로 null 전달(그룹 소속 해제)할지 여부.
   /// false면 routineGroupId 필드 자체를 요청에서 생략(미변경).
@@ -117,6 +125,7 @@ class UpdateRoutineDto {
     this.clearWeeklyMode = false,
     this.clearTargetCount = false,
     this.clearTargetDays = false,
+    this.isPrivate,
   });
 
   Map<String, dynamic> toJson() => {
@@ -143,6 +152,7 @@ class UpdateRoutineDto {
     if (endDate != null) 'endDate': endDate,
     if (routineGroupId != null) 'routineGroupId': routineGroupId,
     if (clearRoutineGroupId && routineGroupId == null) 'routineGroupId': null,
+    if (isPrivate != null) 'isPrivate': isPrivate,
   };
 }
 
@@ -179,15 +189,6 @@ class RoutineSortOrderItemDto {
   const RoutineSortOrderItemDto({required this.id, required this.sortOrder});
 
   Map<String, dynamic> toJson() => {'id': id, 'sortOrder': sortOrder};
-}
-
-/// 그룹 공유 추가 DTO
-class CreateRoutineShareDto {
-  final String groupId;
-
-  const CreateRoutineShareDto({required this.groupId});
-
-  Map<String, dynamic> toJson() => {'groupId': groupId};
 }
 
 /// 루틴(습관 묶음) 생성 DTO
@@ -454,41 +455,42 @@ class RoutineRepository {
 
   // ── 그룹 공유 ─────────────────────────────────────────────────────────────
 
-  Future<RoutineShare> addShare(String id, CreateRoutineShareDto dto) async {
+  /// 내 루틴 전체를 공유 중인 그룹 목록
+  Future<List<RoutineShareGroup>> getShareGroups() async {
     try {
-      final response = await _dio.post(
-        '/routines/$id/shares',
-        data: dto.toJson(),
-      );
-      return RoutineShare.fromJson(response.data as Map<String, dynamic>);
-    } on DioException catch (e) {
-      debugPrint('❌ [RoutineRepository] 그룹 공유 추가 실패: ${e.message}');
-      throw Exception('그룹 공유 추가 실패: ${e.message}');
-    }
-  }
-
-  Future<void> removeShare(String id, String groupId) async {
-    try {
-      await _dio.delete('/routines/$id/shares/$groupId');
-    } on DioException catch (e) {
-      debugPrint('❌ [RoutineRepository] 그룹 공유 해제 실패: ${e.message}');
-      throw Exception('그룹 공유 해제 실패: ${e.message}');
-    }
-  }
-
-  Future<List<RoutineShare>> getShares(String id) async {
-    try {
-      final response = await _dio.get('/routines/$id/shares');
+      final response = await _dio.get('/routines/share-groups');
       final data = response.data;
       if (data is List) {
         return data
-            .map((e) => RoutineShare.fromJson(e as Map<String, dynamic>))
+            .map((e) => RoutineShareGroup.fromJson(e as Map<String, dynamic>))
             .toList();
       }
       return [];
     } on DioException catch (e) {
       debugPrint('❌ [RoutineRepository] 공유 그룹 목록 조회 실패: ${e.message}');
       throw Exception('공유 그룹 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  /// 공유 그룹 목록을 통째로 교체한다. 빈 배열이면 전체 공유 해제.
+  Future<List<RoutineShareGroup>> replaceShareGroups(
+    List<String> groupIds,
+  ) async {
+    try {
+      final response = await _dio.put(
+        '/routines/share-groups',
+        data: {'groupIds': groupIds},
+      );
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => RoutineShareGroup.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 공유 그룹 변경 실패: ${e.message}');
+      throw Exception('공유 그룹 변경 실패: ${e.message}');
     }
   }
 

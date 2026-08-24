@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
-import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 
-/// 그룹원별 공유 루틴 현황 화면 (읽기 전용)
-class RoutineGroupMembersScreen extends ConsumerWidget {
-  const RoutineGroupMembersScreen({super.key, required this.groupId});
+/// 그룹원별 공유 루틴 현황 탭 (읽기 전용).
+///
+/// [RoutineTogetherScreen]의 탭으로 쓰이므로 Scaffold를 두지 않는다.
+class RoutineGroupMembersTab extends ConsumerWidget {
+  const RoutineGroupMembersTab({super.key, required this.groupId});
 
   final String groupId;
 
@@ -22,52 +22,38 @@ class RoutineGroupMembersScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final membersAsync = ref.watch(routineGroupMembersProvider(groupId));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routine_group_members_title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.leaderboard_outlined),
-            tooltip: l10n.routine_leaderboard_title,
-            onPressed: () => context.push(
-              AppRoutes.routineLeaderboard.replaceFirst(':groupId', groupId),
-            ),
-          ),
-        ],
+    return membersAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => AppErrorState(
+        error: error,
+        title: l10n.routine_error_generic,
+        onRetry: () => ref.invalidate(routineGroupMembersProvider(groupId)),
       ),
-      body: membersAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => AppErrorState(
-          error: error,
-          title: l10n.routine_error_generic,
-          onRetry: () => ref.invalidate(routineGroupMembersProvider(groupId)),
-        ),
-        data: (members) {
-          final withRoutines = members
-              .where((m) => m.routines.isNotEmpty)
-              .toList();
-          if (withRoutines.isEmpty) {
-            return AppEmptyState(
-              icon: Icons.groups_outlined,
-              message: l10n.routine_group_members_empty,
-            );
-          }
-
-          return ListView.builder(
-            padding: EdgeInsets.fromLTRB(
-              AppSizes.spaceM,
-              AppSizes.spaceM,
-              AppSizes.spaceM,
-              AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
-            ),
-            itemCount: withRoutines.length,
-            itemBuilder: (context, index) {
-              final member = withRoutines[index];
-              return _MemberSection(groupId: groupId, member: member);
-            },
+      data: (members) {
+        final withRoutines = members
+            .where((m) => m.routines.isNotEmpty)
+            .toList();
+        if (withRoutines.isEmpty) {
+          return AppEmptyState(
+            icon: Icons.groups_outlined,
+            message: l10n.routine_group_members_empty,
           );
-        },
-      ),
+        }
+
+        return ListView.builder(
+          padding: EdgeInsets.fromLTRB(
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceM,
+            AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+          ),
+          itemCount: withRoutines.length,
+          itemBuilder: (context, index) {
+            final member = withRoutines[index];
+            return _MemberSection(groupId: groupId, member: member);
+          },
+        );
+      },
     );
   }
 }

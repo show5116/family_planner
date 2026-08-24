@@ -489,6 +489,31 @@ class _RoutineRateProviderElement
   String? get toDate => (origin as RoutineRateProvider).toDate;
 }
 
+String _$routineShareGroupsHash() =>
+    r'3423dcc3cc2cc340d681adf17d8b0cba060b2e9a';
+
+/// 내 루틴 전체를 공유 중인 그룹 목록.
+///
+/// 공유는 습관 단위가 아니라 사용자 단위다. 개별 습관은
+/// [Routine.isPrivate]로만 예외를 둔다.
+///
+/// Copied from [routineShareGroups].
+@ProviderFor(routineShareGroups)
+final routineShareGroupsProvider =
+    AutoDisposeFutureProvider<List<RoutineShareGroup>>.internal(
+      routineShareGroups,
+      name: r'routineShareGroupsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineShareGroupsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineShareGroupsRef =
+    AutoDisposeFutureProviderRef<List<RoutineShareGroup>>;
 String _$routineGroupMembersHash() =>
     r'7a7ffcd9afb587de9cba73175a60d5a8f8509ad1';
 
@@ -1678,149 +1703,6 @@ class _RoutineDetailProviderElement
 
   @override
   String get routineId => (origin as RoutineDetailProvider).routineId;
-}
-
-String _$routineSharesHash() => r'597a57d96df067d7a2618f25c6ae02f6bf06e6b9';
-
-abstract class _$RoutineShares
-    extends BuildlessAutoDisposeAsyncNotifier<List<RoutineShare>> {
-  late final String routineId;
-
-  FutureOr<List<RoutineShare>> build(String routineId);
-}
-
-/// See also [RoutineShares].
-@ProviderFor(RoutineShares)
-const routineSharesProvider = RoutineSharesFamily();
-
-/// See also [RoutineShares].
-class RoutineSharesFamily extends Family<AsyncValue<List<RoutineShare>>> {
-  /// See also [RoutineShares].
-  const RoutineSharesFamily();
-
-  /// See also [RoutineShares].
-  RoutineSharesProvider call(String routineId) {
-    return RoutineSharesProvider(routineId);
-  }
-
-  @override
-  RoutineSharesProvider getProviderOverride(
-    covariant RoutineSharesProvider provider,
-  ) {
-    return call(provider.routineId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'routineSharesProvider';
-}
-
-/// See also [RoutineShares].
-class RoutineSharesProvider
-    extends
-        AutoDisposeAsyncNotifierProviderImpl<
-          RoutineShares,
-          List<RoutineShare>
-        > {
-  /// See also [RoutineShares].
-  RoutineSharesProvider(String routineId)
-    : this._internal(
-        () => RoutineShares()..routineId = routineId,
-        from: routineSharesProvider,
-        name: r'routineSharesProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$routineSharesHash,
-        dependencies: RoutineSharesFamily._dependencies,
-        allTransitiveDependencies:
-            RoutineSharesFamily._allTransitiveDependencies,
-        routineId: routineId,
-      );
-
-  RoutineSharesProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.routineId,
-  }) : super.internal();
-
-  final String routineId;
-
-  @override
-  FutureOr<List<RoutineShare>> runNotifierBuild(
-    covariant RoutineShares notifier,
-  ) {
-    return notifier.build(routineId);
-  }
-
-  @override
-  Override overrideWith(RoutineShares Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: RoutineSharesProvider._internal(
-        () => create()..routineId = routineId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        routineId: routineId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<RoutineShares, List<RoutineShare>>
-  createElement() {
-    return _RoutineSharesProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is RoutineSharesProvider && other.routineId == routineId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, routineId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin RoutineSharesRef
-    on AutoDisposeAsyncNotifierProviderRef<List<RoutineShare>> {
-  /// The parameter `routineId` of this provider.
-  String get routineId;
-}
-
-class _RoutineSharesProviderElement
-    extends
-        AutoDisposeAsyncNotifierProviderElement<
-          RoutineShares,
-          List<RoutineShare>
-        >
-    with RoutineSharesRef {
-  _RoutineSharesProviderElement(super.provider);
-
-  @override
-  String get routineId => (origin as RoutineSharesProvider).routineId;
 }
 
 String _$routineCategoryListHash() =>

@@ -65,12 +65,11 @@ class AppRoutes {
   static const String routineAdd = '/routines/add';
   static const String routineEdit = '/routines/edit';
   static const String routineDetail = '/routines/detail';
-  static const String routineGroupMembers = '/routines/groups/:groupId/members';
   static const String routineBadges = '/routines/badges';
   static const String routineOverview = '/routines/overview';
   static const String routineDailyGoal = '/routines/daily-goal';
-  static const String routineLeaderboard =
-      '/routines/groups/:groupId/leaderboard';
+  static const String routineShareSettings = '/routines/share-settings';
+  static const String routineTogether = '/routines/together';
   static const String memo = '/memo';
   static const String memoAdd = '/memo/add';
   static const String memoDetail = '/memo/:id';

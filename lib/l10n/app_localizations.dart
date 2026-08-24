@@ -8876,12 +8876,6 @@ abstract class AppLocalizations {
   /// **'통계'**
   String get routine_tab_stats;
 
-  /// 루틴 상세 공유 탭
-  ///
-  /// In ko, this message translates to:
-  /// **'공유'**
-  String get routine_tab_share;
-
   /// 현재 연속 체크 일수 라벨
   ///
   /// In ko, this message translates to:
@@ -9062,29 +9056,53 @@ abstract class AppLocalizations {
   /// **'공유 그룹 관리'**
   String get routine_share_title;
 
-  /// 그룹 공유 추가 버튼
+  /// 공유 설정 화면 상단 설명
   ///
   /// In ko, this message translates to:
-  /// **'그룹에 공유'**
-  String get routine_share_add;
+  /// **'선택한 그룹의 구성원이 내 습관과 달성 현황을 볼 수 있어요.'**
+  String get routine_share_screen_desc;
 
-  /// 그룹 공유 해제 버튼
+  /// 공유 설정 화면에서 비공개 습관은 제외된다는 안내
   ///
   /// In ko, this message translates to:
-  /// **'공유 해제'**
-  String get routine_share_remove;
+  /// **'비공개로 표시한 습관은 공유되지 않아요.'**
+  String get routine_share_private_note;
 
-  /// 그룹 공유 해제 확인 다이얼로그
+  /// 공유 중인 그룹이 없을 때 안내
   ///
   /// In ko, this message translates to:
-  /// **'이 그룹과의 공유를 해제하시겠습니까?'**
-  String get routine_share_remove_confirm;
+  /// **'아직 공유 중인 그룹이 없어요'**
+  String get routine_share_none;
 
-  /// 공유 그룹 목록 비어있을 때 안내
+  /// 가입한 그룹이 하나도 없을 때 안내
   ///
   /// In ko, this message translates to:
-  /// **'공유된 그룹이 없습니다'**
-  String get routine_share_empty;
+  /// **'참여 중인 그룹이 없어요.\n그룹을 먼저 만들거나 참여해주세요.'**
+  String get routine_share_no_groups;
+
+  /// 공유 설정 저장 성공 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 설정을 저장했어요'**
+  String get routine_share_saved;
+
+  /// 습관 생성/수정 폼의 비공개 스위치 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개'**
+  String get routine_field_private;
+
+  /// 비공개 스위치 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 그룹의 다른 사람에게 이 습관을 숨겨요'**
+  String get routine_field_private_desc;
+
+  /// 목록에서 비공개 습관을 나타내는 자물쇠 아이콘 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개 습관'**
+  String get routine_private_badge;
 
   /// 공유 그룹 선택 시트 타이틀
   ///
@@ -9092,29 +9110,29 @@ abstract class AppLocalizations {
   /// **'공유할 그룹 선택'**
   String get routine_share_select_group;
 
-  /// 그룹원 루틴 현황 화면 타이틀
+  /// 그룹 현황/랭킹 통합 화면 타이틀
   ///
   /// In ko, this message translates to:
-  /// **'그룹원 루틴 현황'**
-  String get routine_group_members_title;
+  /// **'함께하기'**
+  String get routine_together_title;
+
+  /// 함께하기 화면 - 그룹원 현황 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'현황'**
+  String get routine_together_tab_status;
+
+  /// 함께하기 화면 - 랭킹 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'랭킹'**
+  String get routine_together_tab_ranking;
 
   /// 그룹원 루틴 목록 비어있을 때 안내
   ///
   /// In ko, this message translates to:
   /// **'공유된 루틴이 없습니다'**
   String get routine_group_members_empty;
-
-  /// 루틴 목록에서 공유받은 그룹을 선택하는 진입점 (버튼/시트 타이틀)
-  ///
-  /// In ko, this message translates to:
-  /// **'공유 루틴 볼 그룹 선택'**
-  String get routine_shared_group_select;
-
-  /// 공유 루틴 그룹 선택 시트에서 속한 그룹이 없을 때 안내
-  ///
-  /// In ko, this message translates to:
-  /// **'속한 그룹이 없습니다'**
-  String get routine_shared_group_empty;
 
   /// 루틴 순서 변경 완료 스낵바
   ///
@@ -9410,35 +9428,35 @@ abstract class AppLocalizations {
   /// **'확인'**
   String get routine_badge_earned_confirm;
 
-  /// 랭킹보드 화면 타이틀
+  /// 랭킹보드 정렬 기준 - 일일 목표 달성률
   ///
   /// In ko, this message translates to:
-  /// **'그룹 랭킹보드'**
-  String get routine_leaderboard_title;
+  /// **'목표 달성률'**
+  String get routine_leaderboard_metric_goalRate;
 
-  /// 랭킹보드 정렬 기준 - 체크 횟수
+  /// 랭킹보드 정렬 기준 - 연속 달성 일수
   ///
   /// In ko, this message translates to:
-  /// **'체크 횟수'**
-  String get routine_leaderboard_metric_checkCount;
+  /// **'연속 달성'**
+  String get routine_leaderboard_metric_goalStreak;
 
-  /// 랭킹보드 정렬 기준 - 달성률
+  /// 랭킹보드 목표 달성 일수 표기
   ///
   /// In ko, this message translates to:
-  /// **'달성률'**
-  String get routine_leaderboard_metric_achievementRate;
+  /// **'{achieved}일 / {total}일'**
+  String routine_leaderboard_goal_days(int achieved, int total);
+
+  /// 랭킹보드 연속 달성 일수 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 연속'**
+  String routine_leaderboard_streak_days(int days);
 
   /// 랭킹보드에 표시할 순위가 없을 때 안내
   ///
   /// In ko, this message translates to:
   /// **'공유된 루틴이 있는 그룹원이 없습니다'**
   String get routine_leaderboard_empty;
-
-  /// 랭킹보드 체크 횟수 뒤에 붙는 단위
-  ///
-  /// In ko, this message translates to:
-  /// **'회'**
-  String get routine_leaderboard_check_count_suffix;
 
   /// 루틴(습관 묶음) 추가 버튼
   ///

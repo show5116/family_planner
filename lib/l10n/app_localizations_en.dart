@@ -4720,9 +4720,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_tab_stats => 'Stats';
 
   @override
-  String get routine_tab_share => 'Share';
-
-  @override
   String get routine_streak_current_days => 'Current day streak';
 
   @override
@@ -4819,33 +4816,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_share_title => 'Manage Shared Groups';
 
   @override
-  String get routine_share_add => 'Share with group';
+  String get routine_share_screen_desc =>
+      'Members of the groups you pick can see your habits and progress.';
 
   @override
-  String get routine_share_remove => 'Unshare';
+  String get routine_share_private_note =>
+      'Habits marked private are never shared.';
 
   @override
-  String get routine_share_remove_confirm =>
-      'Unshare this routine from the group?';
+  String get routine_share_none => 'You\'re not sharing with any group yet';
 
   @override
-  String get routine_share_empty => 'Not shared with any group';
+  String get routine_share_no_groups =>
+      'You\'re not in any group yet.\nCreate or join a group first.';
+
+  @override
+  String get routine_share_saved => 'Sharing settings saved';
+
+  @override
+  String get routine_field_private => 'Private';
+
+  @override
+  String get routine_field_private_desc =>
+      'Hide this habit from others in your shared groups';
+
+  @override
+  String get routine_private_badge => 'Private habit';
 
   @override
   String get routine_share_select_group => 'Select a group to share with';
 
   @override
-  String get routine_group_members_title => 'Group Members\' Routines';
+  String get routine_together_title => 'Together';
+
+  @override
+  String get routine_together_tab_status => 'Status';
+
+  @override
+  String get routine_together_tab_ranking => 'Ranking';
 
   @override
   String get routine_group_members_empty => 'No shared routines';
-
-  @override
-  String get routine_shared_group_select =>
-      'Select group to view shared routines';
-
-  @override
-  String get routine_shared_group_empty => 'You don\'t belong to any group';
 
   @override
   String get routine_sort_order_updated => 'Order updated';
@@ -5030,20 +5041,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_badge_earned_confirm => 'OK';
 
   @override
-  String get routine_leaderboard_title => 'Group Leaderboard';
+  String get routine_leaderboard_metric_goalRate => 'Goal Rate';
 
   @override
-  String get routine_leaderboard_metric_checkCount => 'Check Count';
+  String get routine_leaderboard_metric_goalStreak => 'Streak';
 
   @override
-  String get routine_leaderboard_metric_achievementRate => 'Achievement Rate';
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved / $total days';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '$days-day streak';
+  }
 
   @override
   String get routine_leaderboard_empty =>
       'No group members with shared routines';
-
-  @override
-  String get routine_leaderboard_check_count_suffix => '';
 
   @override
   String get routine_group_add => 'Add Routine';

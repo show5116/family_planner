@@ -244,6 +244,12 @@ class Routine {
   /// 일일 목표 집계에 이 습관을 포함할지 여부. 주 N회/월 N회 습관은 매일
   /// 수행 대상이 아니라 기본적으로 제외된다(서버 기본값: DAILY만 true).
   final bool includeInDailyGoal;
+
+  /// true면 공유 그룹의 다른 멤버에게 이 습관이 완전히 숨겨진다.
+  /// 목록·달성률·랭킹 집계에서 모두 제외되며, 본인에게는 그대로 보인다.
+  /// [includeInDailyGoal]과는 독립된 축이다 — 비공개여도 내 일일 목표에는
+  /// 포함된다.
+  final bool isPrivate;
   final bool checkedToday;
 
   /// 조회 기준 날짜(GET routines의 date 쿼리, 미지정 시 오늘)의 실제 기록값.
@@ -272,6 +278,7 @@ class Routine {
     this.endDate,
     required this.sortOrder,
     this.includeInDailyGoal = true,
+    this.isPrivate = false,
     required this.checkedToday,
     this.checkedLog,
     this.routineGroupId,
@@ -307,6 +314,7 @@ class Routine {
           : null,
       sortOrder: json['sortOrder'] as int? ?? 0,
       includeInDailyGoal: json['includeInDailyGoal'] as bool? ?? true,
+      isPrivate: json['isPrivate'] as bool? ?? false,
       checkedToday: json['checkedToday'] as bool? ?? false,
       checkedLog: json['checkedLog'] != null
           ? RoutineCheckedLog.fromJson(
@@ -333,6 +341,7 @@ class Routine {
     RoutineStatus? status,
     int? sortOrder,
     bool? includeInDailyGoal,
+    bool? isPrivate,
     bool? checkedToday,
     RoutineCheckedLog? checkedLog,
     bool clearCheckedLog = false,
@@ -358,6 +367,7 @@ class Routine {
       endDate: endDate ?? this.endDate,
       sortOrder: sortOrder ?? this.sortOrder,
       includeInDailyGoal: includeInDailyGoal ?? this.includeInDailyGoal,
+      isPrivate: isPrivate ?? this.isPrivate,
       checkedToday: checkedToday ?? this.checkedToday,
       checkedLog: clearCheckedLog ? null : (checkedLog ?? this.checkedLog),
       routineGroupId: clearRoutineGroupId
@@ -656,25 +666,23 @@ class UserRoutineBadge {
 }
 
 /// 루틴 ↔ 그룹 공유
-class RoutineShare {
-  final String id;
-  final String routineId;
+/// 내 루틴 전체를 공유 중인 그룹.
+///
+/// 공유는 습관 단위가 아니라 **사용자 단위**다. 그룹을 지정하면 내 습관이
+/// 전부 공유되고, 개별 습관의 [Routine.isPrivate]로만 예외를 둔다.
+class RoutineShareGroup {
   final String groupId;
   final String groupName;
   final DateTime createdAt;
 
-  const RoutineShare({
-    required this.id,
-    required this.routineId,
+  const RoutineShareGroup({
     required this.groupId,
     required this.groupName,
     required this.createdAt,
   });
 
-  factory RoutineShare.fromJson(Map<String, dynamic> json) {
-    return RoutineShare(
-      id: json['id'] as String,
-      routineId: json['routineId'] as String,
+  factory RoutineShareGroup.fromJson(Map<String, dynamic> json) {
+    return RoutineShareGroup(
       groupId: json['groupId'] as String,
       groupName: json['groupName'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
@@ -1036,9 +1044,13 @@ enum LeaderboardPeriod {
 }
 
 /// 랭킹보드 정렬 기준
+/// 랭킹 정렬 기준.
+///
+/// 체크 횟수로 겨루면 공유한 습관 수가 많은 사람이 유리해 비교가 공정하지
+/// 않다. 일일 목표 기준으로 맞춰 습관 수와 무관하게 겨루도록 한다.
 enum LeaderboardMetric {
-  checkCount,
-  achievementRate;
+  goalAchievementRate,
+  goalStreakDays;
 
   String toJsonString() => name;
 }
@@ -1048,15 +1060,23 @@ class LeaderboardEntry {
   final int rank;
   final String userId;
   final String userName;
-  final int checkCount;
-  final num achievementRate;
+
+  /// 기간 내 일일 목표 달성일 수
+  final int goalAchievedDays;
+
+  /// 기간 내 집계 대상 일수
+  final int goalTotalDays;
+  final num goalAchievementRate;
+  final int currentStreakDays;
 
   const LeaderboardEntry({
     required this.rank,
     required this.userId,
     required this.userName,
-    required this.checkCount,
-    required this.achievementRate,
+    required this.goalAchievedDays,
+    required this.goalTotalDays,
+    required this.goalAchievementRate,
+    required this.currentStreakDays,
   });
 
   factory LeaderboardEntry.fromJson(Map<String, dynamic> json) {
@@ -1064,8 +1084,10 @@ class LeaderboardEntry {
       rank: json['rank'] as int,
       userId: json['userId'] as String,
       userName: json['userName'] as String,
-      checkCount: json['checkCount'] as int? ?? 0,
-      achievementRate: json['achievementRate'] as num? ?? 0,
+      goalAchievedDays: json['goalAchievedDays'] as int? ?? 0,
+      goalTotalDays: json['goalTotalDays'] as int? ?? 0,
+      goalAchievementRate: json['goalAchievementRate'] as num? ?? 0,
+      currentStreakDays: json['currentStreakDays'] as int? ?? 0,
     );
   }
 }

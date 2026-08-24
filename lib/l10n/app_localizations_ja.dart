@@ -4611,9 +4611,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_tab_stats => '統計';
 
   @override
-  String get routine_tab_share => '共有';
-
-  @override
   String get routine_streak_current_days => '現在の連続日数';
 
   @override
@@ -4708,31 +4705,43 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_share_title => '共有グループ管理';
 
   @override
-  String get routine_share_add => 'グループに共有';
+  String get routine_share_screen_desc => '選んだグループのメンバーが、あなたの習慣と達成状況を見られます。';
 
   @override
-  String get routine_share_remove => '共有解除';
+  String get routine_share_private_note => '非公開にした習慣は共有されません。';
 
   @override
-  String get routine_share_remove_confirm => 'このグループとの共有を解除しますか?';
+  String get routine_share_none => 'まだ共有中のグループがありません';
 
   @override
-  String get routine_share_empty => '共有されたグループがありません';
+  String get routine_share_no_groups => '参加中のグループがありません。\nまずグループを作るか参加してください。';
+
+  @override
+  String get routine_share_saved => '共有設定を保存しました';
+
+  @override
+  String get routine_field_private => '非公開';
+
+  @override
+  String get routine_field_private_desc => '共有グループの他の人にこの習慣を隠します';
+
+  @override
+  String get routine_private_badge => '非公開の習慣';
 
   @override
   String get routine_share_select_group => '共有するグループを選択';
 
   @override
-  String get routine_group_members_title => 'グループメンバーのルーティン状況';
+  String get routine_together_title => 'みんなで';
+
+  @override
+  String get routine_together_tab_status => '状況';
+
+  @override
+  String get routine_together_tab_ranking => 'ランキング';
 
   @override
   String get routine_group_members_empty => '共有されたルーティンがありません';
-
-  @override
-  String get routine_shared_group_select => '共有ルーティンを見るグループを選択';
-
-  @override
-  String get routine_shared_group_empty => '所属しているグループがありません';
 
   @override
   String get routine_sort_order_updated => '順序が変更されました';
@@ -4914,19 +4923,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_badge_earned_confirm => '確認';
 
   @override
-  String get routine_leaderboard_title => 'グループランキング';
+  String get routine_leaderboard_metric_goalRate => '目標達成率';
 
   @override
-  String get routine_leaderboard_metric_checkCount => 'チェック回数';
+  String get routine_leaderboard_metric_goalStreak => '連続達成';
 
   @override
-  String get routine_leaderboard_metric_achievementRate => '達成率';
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved日 / $total日';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '$days日連続';
+  }
 
   @override
   String get routine_leaderboard_empty => '共有ルーティンのあるグループメンバーがいません';
-
-  @override
-  String get routine_leaderboard_check_count_suffix => '回';
 
   @override
   String get routine_group_add => 'ルーティン追加';

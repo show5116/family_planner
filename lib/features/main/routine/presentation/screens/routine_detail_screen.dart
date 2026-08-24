@@ -4,14 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_heatmap_tab.dart';
-import 'package:family_planner/features/main/routine/presentation/screens/routine_share_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_stats_tab.dart';
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
 
-/// 루틴 상세 화면 셸 (히트맵/통계/배지/공유 4탭)
+/// 루틴 상세 화면 셸 (히트맵/통계 2탭)
 class RoutineDetailScreen extends ConsumerWidget {
   const RoutineDetailScreen({super.key, required this.routineId});
 
@@ -57,7 +56,7 @@ class RoutineDetailScreen extends ConsumerWidget {
     final detailAsync = ref.watch(routineDetailProvider(routineId));
 
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(detailAsync.valueOrNull?.title ?? l10n.routine_title),
@@ -79,11 +78,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             child: Builder(
               builder: (context) => AppTabBar(
                 controller: DefaultTabController.of(context),
-                tabs: [
-                  l10n.routine_tab_heatmap,
-                  l10n.routine_tab_stats,
-                  l10n.routine_tab_share,
-                ],
+                tabs: [l10n.routine_tab_heatmap, l10n.routine_tab_stats],
               ),
             ),
           ),
@@ -102,7 +97,6 @@ class RoutineDetailScreen extends ConsumerWidget {
                 routineId: routineId,
                 frequencyType: routine.frequencyType,
               ),
-              RoutineShareTab(routineId: routineId),
             ],
           ),
         ),

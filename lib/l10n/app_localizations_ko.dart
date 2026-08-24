@@ -4619,9 +4619,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_tab_stats => '통계';
 
   @override
-  String get routine_tab_share => '공유';
-
-  @override
   String get routine_streak_current_days => '현재 연속 일수';
 
   @override
@@ -4716,31 +4713,43 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_share_title => '공유 그룹 관리';
 
   @override
-  String get routine_share_add => '그룹에 공유';
+  String get routine_share_screen_desc => '선택한 그룹의 구성원이 내 습관과 달성 현황을 볼 수 있어요.';
 
   @override
-  String get routine_share_remove => '공유 해제';
+  String get routine_share_private_note => '비공개로 표시한 습관은 공유되지 않아요.';
 
   @override
-  String get routine_share_remove_confirm => '이 그룹과의 공유를 해제하시겠습니까?';
+  String get routine_share_none => '아직 공유 중인 그룹이 없어요';
 
   @override
-  String get routine_share_empty => '공유된 그룹이 없습니다';
+  String get routine_share_no_groups => '참여 중인 그룹이 없어요.\n그룹을 먼저 만들거나 참여해주세요.';
+
+  @override
+  String get routine_share_saved => '공유 설정을 저장했어요';
+
+  @override
+  String get routine_field_private => '비공개';
+
+  @override
+  String get routine_field_private_desc => '공유 그룹의 다른 사람에게 이 습관을 숨겨요';
+
+  @override
+  String get routine_private_badge => '비공개 습관';
 
   @override
   String get routine_share_select_group => '공유할 그룹 선택';
 
   @override
-  String get routine_group_members_title => '그룹원 루틴 현황';
+  String get routine_together_title => '함께하기';
+
+  @override
+  String get routine_together_tab_status => '현황';
+
+  @override
+  String get routine_together_tab_ranking => '랭킹';
 
   @override
   String get routine_group_members_empty => '공유된 루틴이 없습니다';
-
-  @override
-  String get routine_shared_group_select => '공유 루틴 볼 그룹 선택';
-
-  @override
-  String get routine_shared_group_empty => '속한 그룹이 없습니다';
 
   @override
   String get routine_sort_order_updated => '순서가 변경되었습니다';
@@ -4922,19 +4931,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_badge_earned_confirm => '확인';
 
   @override
-  String get routine_leaderboard_title => '그룹 랭킹보드';
+  String get routine_leaderboard_metric_goalRate => '목표 달성률';
 
   @override
-  String get routine_leaderboard_metric_checkCount => '체크 횟수';
+  String get routine_leaderboard_metric_goalStreak => '연속 달성';
 
   @override
-  String get routine_leaderboard_metric_achievementRate => '달성률';
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved일 / $total일';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '$days일 연속';
+  }
 
   @override
   String get routine_leaderboard_empty => '공유된 루틴이 있는 그룹원이 없습니다';
-
-  @override
-  String get routine_leaderboard_check_count_suffix => '회';
 
   @override
   String get routine_group_add => '루틴 추가';

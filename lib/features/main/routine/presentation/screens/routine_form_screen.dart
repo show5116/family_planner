@@ -41,6 +41,9 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
   RoutineImportance _importance = RoutineImportance.medium;
   RoutineTimeFilter? _timeFilter;
   RoutineRecordType _recordType = RoutineRecordType.boolean_;
+
+  /// 공유 그룹의 다른 멤버에게 이 습관을 숨길지 여부.
+  bool _isPrivate = false;
   bool _initialized = false;
   bool _saving = false;
   String? _frequencyError;
@@ -72,6 +75,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
     _importance = routine.importance;
     _timeFilter = routine.timeFilter;
     _recordType = routine.recordType;
+    _isPrivate = routine.isPrivate;
   }
 
   void _onFrequencyTypeChanged(RoutineFrequencyType type) {
@@ -240,6 +244,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           routineGroupId: _selectedGroupId,
           clearRoutineGroupId: _selectedGroupId == null,
           categoryIds: categoryIds,
+          isPrivate: _isPrivate,
         ),
       );
     } else {
@@ -260,6 +265,7 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
           startDate: _formatDate(_startDate),
           endDate: _endDate != null ? _formatDate(_endDate!) : null,
           routineGroupId: _selectedGroupId,
+          isPrivate: _isPrivate,
         ),
       );
     }
@@ -442,6 +448,19 @@ class _RoutineFormScreenState extends ConsumerState<RoutineFormScreen> {
               labelText: l10n.routine_field_memo,
               hintText: l10n.routine_field_memo_hint,
             ),
+          ),
+          const SizedBox(height: AppSizes.spaceS),
+          // 공유 그룹의 다른 멤버에게 숨길지. 공유는 사용자 단위로
+          // 이뤄지므로, 개별 습관은 이 스위치로만 예외를 둔다.
+          SwitchListTile(
+            value: _isPrivate,
+            onChanged: (value) => setState(() => _isPrivate = value),
+            title: Text(l10n.routine_field_private),
+            subtitle: Text(l10n.routine_field_private_desc),
+            secondary: Icon(
+              _isPrivate ? Icons.lock_outline : Icons.lock_open_outlined,
+            ),
+            contentPadding: EdgeInsets.zero,
           ),
           const SizedBox(height: AppSizes.spaceM),
           Text(

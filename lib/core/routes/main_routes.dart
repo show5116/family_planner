@@ -9,11 +9,11 @@ import 'package:family_planner/features/main/child_points/presentation/screens/t
 import 'package:family_planner/features/main/routine/presentation/screens/routine_list_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_form_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_detail_screen.dart';
-import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_daily_goal_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_share_settings_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_overview_screen.dart';
-import 'package:family_planner/features/main/routine/presentation/screens/routine_leaderboard_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_together_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart'
     show AccountDetailByIdScreen, AccountDetailScreen;
@@ -548,12 +548,9 @@ List<RouteBase> getMainRoutes() {
       },
     ),
     GoRoute(
-      path: AppRoutes.routineGroupMembers,
-      name: 'routineGroupMembers',
-      builder: (context, state) {
-        final groupId = state.pathParameters['groupId'] ?? '';
-        return RoutineGroupMembersScreen(groupId: groupId);
-      },
+      path: AppRoutes.routineTogether,
+      name: 'routineTogether',
+      builder: (context, state) => const RoutineTogetherScreen(),
     ),
     GoRoute(
       path: AppRoutes.routineBadges,
@@ -571,12 +568,9 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) => const RoutineDailyGoalScreen(),
     ),
     GoRoute(
-      path: AppRoutes.routineLeaderboard,
-      name: 'routineLeaderboard',
-      builder: (context, state) {
-        final groupId = state.pathParameters['groupId'] ?? '';
-        return RoutineLeaderboardScreen(groupId: groupId);
-      },
+      path: AppRoutes.routineShareSettings,
+      name: 'routineShareSettings',
+      builder: (context, state) => const RoutineShareSettingsScreen(),
     ),
 
     // Savings Routes (적립금 관리)

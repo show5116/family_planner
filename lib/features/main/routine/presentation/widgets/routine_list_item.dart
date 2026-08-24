@@ -178,6 +178,19 @@ class _RoutineListItemState extends State<RoutineListItem> {
                             ),
                           ),
                         ],
+                        // 공유 그룹의 다른 멤버에게 숨겨지는 습관.
+                        // 본인 화면에서만 보이는 표시다.
+                        if (routine.isPrivate) ...[
+                          const SizedBox(width: AppSizes.spaceXS),
+                          Tooltip(
+                            message: l10n.routine_private_badge,
+                            child: Icon(
+                              Icons.lock_outline,
+                              size: 12,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                     if (isPaused)

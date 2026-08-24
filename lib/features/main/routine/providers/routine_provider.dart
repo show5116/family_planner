@@ -221,20 +221,14 @@ Future<RoutineRate> routineRate(
 
 // ── 그룹 공유 ─────────────────────────────────────────────────────────────────
 
+/// 내 루틴 전체를 공유 중인 그룹 목록.
+///
+/// 공유는 습관 단위가 아니라 사용자 단위다. 개별 습관은
+/// [Routine.isPrivate]로만 예외를 둔다.
 @riverpod
-class RoutineShares extends _$RoutineShares {
-  @override
-  Future<List<RoutineShare>> build(String routineId) async {
-    final repository = ref.watch(routineRepositoryProvider);
-    return repository.getShares(routineId);
-  }
-
-  Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      return ref.read(routineRepositoryProvider).getShares(routineId);
-    });
-  }
+Future<List<RoutineShareGroup>> routineShareGroups(Ref ref) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getShareGroups();
 }
 
 /// 그룹원별 공유 루틴 현황
@@ -556,27 +550,14 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<RoutineShare?> addShare(String routineId, String groupId) async {
+  /// 공유 그룹 목록을 통째로 교체한다. 그룹이 바뀌면 그룹원에게 보이는
+  /// 내용도 달라지므로 관련 조회를 무효화한다.
+  Future<bool> replaceShareGroups(List<String> groupIds) async {
     state = const AsyncValue.loading();
     try {
-      final share = await _repository.addShare(
-        routineId,
-        CreateRoutineShareDto(groupId: groupId),
-      );
-      _ref.read(routineSharesProvider(routineId).notifier).refresh();
-      state = const AsyncValue.data(null);
-      return share;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
-  }
-
-  Future<bool> removeShare(String routineId, String groupId) async {
-    state = const AsyncValue.loading();
-    try {
-      await _repository.removeShare(routineId, groupId);
-      _ref.read(routineSharesProvider(routineId).notifier).refresh();
+      await _repository.replaceShareGroups(groupIds);
+      _ref.invalidate(routineShareGroupsProvider);
+      _ref.invalidate(routineGroupMembersProvider);
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {

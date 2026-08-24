@@ -4582,9 +4582,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_tab_stats => '统计';
 
   @override
-  String get routine_tab_share => '共享';
-
-  @override
   String get routine_streak_current_days => '当前连续天数';
 
   @override
@@ -4676,31 +4673,43 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_share_title => '共享群组管理';
 
   @override
-  String get routine_share_add => '共享给群组';
+  String get routine_share_screen_desc => '所选群组的成员可以看到你的习惯和达成情况。';
 
   @override
-  String get routine_share_remove => '取消共享';
+  String get routine_share_private_note => '标记为私密的习惯不会被共享。';
 
   @override
-  String get routine_share_remove_confirm => '确定要取消与该群组的共享吗?';
+  String get routine_share_none => '还没有共享给任何群组';
 
   @override
-  String get routine_share_empty => '尚未共享给任何群组';
+  String get routine_share_no_groups => '你还没有加入任何群组。\n请先创建或加入群组。';
+
+  @override
+  String get routine_share_saved => '已保存共享设置';
+
+  @override
+  String get routine_field_private => '私密';
+
+  @override
+  String get routine_field_private_desc => '对共享群组中的其他人隐藏这个习惯';
+
+  @override
+  String get routine_private_badge => '私密习惯';
 
   @override
   String get routine_share_select_group => '选择要共享的群组';
 
   @override
-  String get routine_group_members_title => '群组成员习惯状况';
+  String get routine_together_title => '一起做';
+
+  @override
+  String get routine_together_tab_status => '情况';
+
+  @override
+  String get routine_together_tab_ranking => '排行榜';
 
   @override
   String get routine_group_members_empty => '没有共享的习惯';
-
-  @override
-  String get routine_shared_group_select => '选择要查看共享习惯的群组';
-
-  @override
-  String get routine_shared_group_empty => '尚未加入任何群组';
 
   @override
   String get routine_sort_order_updated => '顺序已更新';
@@ -4881,19 +4890,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_badge_earned_confirm => '确定';
 
   @override
-  String get routine_leaderboard_title => '群组排行榜';
+  String get routine_leaderboard_metric_goalRate => '目标达成率';
 
   @override
-  String get routine_leaderboard_metric_checkCount => '打卡次数';
+  String get routine_leaderboard_metric_goalStreak => '连续达成';
 
   @override
-  String get routine_leaderboard_metric_achievementRate => '达成率';
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved天 / $total天';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '连续$days天';
+  }
 
   @override
   String get routine_leaderboard_empty => '没有共享习惯的群组成员';
-
-  @override
-  String get routine_leaderboard_check_count_suffix => '次';
 
   @override
   String get routine_group_add => '添加日程';

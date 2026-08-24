@@ -20,8 +20,6 @@ import 'package:family_planner/features/main/routine/presentation/widgets/routin
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
-import 'package:family_planner/features/settings/groups/models/group.dart';
-import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
@@ -604,69 +602,6 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     }
   }
 
-  Future<void> _showSharedGroupPicker(
-    BuildContext context,
-    List<Group> groups,
-  ) async {
-    final l10n = AppLocalizations.of(context)!;
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSizes.radiusMedium),
-        ),
-      ),
-      builder: (sheetContext) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.5,
-        maxChildSize: 0.9,
-        builder: (ctx, scrollController) => Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSizes.spaceL,
-                AppSizes.spaceM,
-                AppSizes.spaceL,
-                AppSizes.spaceS,
-              ),
-              child: Text(
-                l10n.routine_shared_group_select,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: groups.isEmpty
-                  ? Center(child: Text(l10n.routine_shared_group_empty))
-                  : ListView(
-                      controller: scrollController,
-                      children: groups.map((group) {
-                        return ListTile(
-                          leading: const Icon(Icons.group_outlined),
-                          title: Text(group.name),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {
-                            Navigator.pop(sheetContext);
-                            context.push(
-                              AppRoutes.routineGroupMembers.replaceFirst(
-                                ':groupId',
-                                group.id,
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   /// sectionOrder의 [index]번째 항목([sectionKey])을 그룹 카드 또는 독립
   /// 습관 행으로 렌더링한다. 편집 모드가 아니면 드래그 없이 읽기 전용으로
   /// 표시된다.
@@ -1038,7 +973,6 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
     final routinesAsync = ref.watch(routineListProvider(_selectedDateParam));
     final groupsAsync = ref.watch(routineGroupListProvider);
     final categoriesAsync = ref.watch(routineCategoryListProvider);
-    final myGroups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     // 주간/월간 목표(targetCount) 진행 상황. 습관명 아래 보조텍스트로 표시.
     final summaryItems = ref.watch(routineSummaryProvider).valueOrNull ?? [];
     final progressByRoutineId = <String, RoutinePeriodProgress>{
@@ -1095,11 +1029,12 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
               AppBarMoreMenu(
                 onReplayOnboarding: _showCoachMark,
                 extraItems: [
+                  // 그룹원 현황·랭킹·공유 설정이 모두 이 화면에 모여 있다.
                   MoreMenuItem(
-                    id: 'shared_group',
+                    id: 'together',
                     icon: Icons.groups_outlined,
-                    label: l10n.routine_shared_group_select,
-                    onTap: (ctx) => _showSharedGroupPicker(ctx, myGroups),
+                    label: l10n.routine_together_title,
+                    onTap: (ctx) => ctx.push(AppRoutes.routineTogether),
                   ),
                 ],
               ),
