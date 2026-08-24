@@ -1231,3 +1231,143 @@ class RoutineDailyStreak {
     );
   }
 }
+
+// ─── 그룹 챌린지 ─────────────────────────────────────────────────────────────
+
+/// 챌린지 진행 상태. 서버가 startDate/endDate와 오늘 날짜로 계산해 내려준다.
+enum RoutineChallengeStatus {
+  upcoming,
+  ongoing,
+  ended;
+
+  static RoutineChallengeStatus fromString(String? value) {
+    switch (value) {
+      case 'UPCOMING':
+        return RoutineChallengeStatus.upcoming;
+      case 'ENDED':
+        return RoutineChallengeStatus.ended;
+      case 'ONGOING':
+      default:
+        return RoutineChallengeStatus.ongoing;
+    }
+  }
+}
+
+/// 챌린지 참가자와 그 진행률.
+class RoutineChallengeParticipant {
+  final String userId;
+  final String userName;
+
+  /// 참가자가 이 챌린지에 연결한 자기 습관. 사람마다 다를 수 있다
+  /// (아버지는 "아침 운동", 아들은 "헬스장 가기").
+  final String routineId;
+  final String routineTitle;
+  final String? routineEmoji;
+  final int checkedCount;
+  final bool achieved;
+
+  const RoutineChallengeParticipant({
+    required this.userId,
+    required this.userName,
+    required this.routineId,
+    required this.routineTitle,
+    this.routineEmoji,
+    required this.checkedCount,
+    required this.achieved,
+  });
+
+  factory RoutineChallengeParticipant.fromJson(Map<String, dynamic> json) {
+    return RoutineChallengeParticipant(
+      userId: json['userId'] as String,
+      userName: json['userName'] as String,
+      routineId: json['routineId'] as String,
+      routineTitle: json['routineTitle'] as String? ?? '',
+      routineEmoji: json['routineEmoji'] as String?,
+      checkedCount: json['checkedCount'] as int? ?? 0,
+      achieved: json['achieved'] as bool? ?? false,
+    );
+  }
+}
+
+/// 그룹이 기간을 정해 함께 겨루는 챌린지.
+///
+/// 개인 습관 구조는 그대로 두고 그 위에 얹히는 형태다. 각자 자기 습관을
+/// 연결해 참가하므로 습관 이름을 통일할 필요가 없다.
+class RoutineChallenge {
+  final String id;
+  final String title;
+  final String? description;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  /// 기간 내 목표 체크 횟수
+  final int targetCount;
+
+  /// 내기·벌칙 문구 (자유 텍스트)
+  final String? reward;
+  final RoutineChallengeStatus status;
+  final int participantCount;
+
+  /// 내가 참가 중인지
+  final bool joined;
+
+  /// 내 기간 내 체크 횟수. 참가 중이 아니면 null.
+  final int? myCheckedCount;
+  final bool myAchieved;
+  final String createdBy;
+
+  /// 내가 만든 챌린지인지 (수정/삭제 버튼 노출 판단용)
+  final bool isMine;
+
+  /// 상세 조회일 때만 채워진다. 목록에서는 비어 있다.
+  final List<RoutineChallengeParticipant> participants;
+
+  const RoutineChallenge({
+    required this.id,
+    required this.title,
+    this.description,
+    required this.startDate,
+    required this.endDate,
+    required this.targetCount,
+    this.reward,
+    required this.status,
+    required this.participantCount,
+    required this.joined,
+    this.myCheckedCount,
+    required this.myAchieved,
+    required this.createdBy,
+    required this.isMine,
+    this.participants = const [],
+  });
+
+  /// 내 진행률(0.0~1.0). 참가 중이 아니면 0.
+  double get myProgress {
+    if (targetCount <= 0) return 0;
+    return ((myCheckedCount ?? 0) / targetCount).clamp(0.0, 1.0);
+  }
+
+  factory RoutineChallenge.fromJson(Map<String, dynamic> json) {
+    return RoutineChallenge(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      startDate: DateTime.parse(json['startDate'] as String).toLocal(),
+      endDate: DateTime.parse(json['endDate'] as String).toLocal(),
+      targetCount: json['targetCount'] as int? ?? 0,
+      reward: json['reward'] as String?,
+      status: RoutineChallengeStatus.fromString(json['status'] as String?),
+      participantCount: json['participantCount'] as int? ?? 0,
+      joined: json['joined'] as bool? ?? false,
+      myCheckedCount: json['myCheckedCount'] as int?,
+      myAchieved: json['myAchieved'] as bool? ?? false,
+      createdBy: json['createdBy'] as String? ?? '',
+      isMine: json['isMine'] as bool? ?? false,
+      participants: (json['participants'] as List<dynamic>? ?? [])
+          .map(
+            (e) =>
+                RoutineChallengeParticipant.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+  }
+}

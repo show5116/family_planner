@@ -4709,6 +4709,99 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_together_tab_ranking => '排行榜';
 
   @override
+  String get routine_together_tab_challenge => '挑战';
+
+  @override
+  String get routine_challenge_create => '创建挑战';
+
+  @override
+  String get routine_challenge_edit => '编辑挑战';
+
+  @override
+  String get routine_challenge_empty => '还没有挑战。\n来创建一个和群组一起完成的目标吧。';
+
+  @override
+  String get routine_challenge_field_title => '挑战名称';
+
+  @override
+  String get routine_challenge_field_title_hint => '例：本周运动';
+
+  @override
+  String get routine_challenge_field_description => '说明';
+
+  @override
+  String get routine_challenge_field_period => '期间';
+
+  @override
+  String get routine_challenge_field_target => '目标次数';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return '期间内打卡$count次即算达成';
+  }
+
+  @override
+  String get routine_challenge_field_reward => '赌注 · 惩罚';
+
+  @override
+  String get routine_challenge_field_reward_hint => '例：输的人请客';
+
+  @override
+  String get routine_challenge_status_upcoming => '未开始';
+
+  @override
+  String get routine_challenge_status_ongoing => '进行中';
+
+  @override
+  String get routine_challenge_status_ended => '已结束';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '$count人参加';
+  }
+
+  @override
+  String get routine_challenge_join => '参加';
+
+  @override
+  String get routine_challenge_leave => '取消参加';
+
+  @override
+  String get routine_challenge_leave_confirm => '要退出这个挑战吗？';
+
+  @override
+  String get routine_challenge_delete_confirm => '要删除这个挑战吗？\n参加者的记录也会一并消失。';
+
+  @override
+  String get routine_challenge_select_routine => '用哪个习惯参加？';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      '请选择要关联到这个挑战的习惯。\n私密习惯无法参加。';
+
+  @override
+  String get routine_challenge_no_routine => '没有可以参加的习惯。\n请先创建习惯。';
+
+  @override
+  String get routine_challenge_change_routine => '更换习惯';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target次';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '还剩$days天';
+  }
+
+  @override
+  String get routine_challenge_saved => '已保存挑战';
+
+  @override
+  String get routine_challenge_joined => '已参加挑战';
+
+  @override
   String get routine_group_members_empty => '没有共享的习惯';
 
   @override

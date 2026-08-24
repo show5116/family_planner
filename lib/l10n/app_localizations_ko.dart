@@ -4749,6 +4749,101 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_together_tab_ranking => '랭킹';
 
   @override
+  String get routine_together_tab_challenge => '챌린지';
+
+  @override
+  String get routine_challenge_create => '챌린지 만들기';
+
+  @override
+  String get routine_challenge_edit => '챌린지 수정';
+
+  @override
+  String get routine_challenge_empty => '아직 챌린지가 없어요.\n그룹과 함께할 목표를 만들어보세요.';
+
+  @override
+  String get routine_challenge_field_title => '챌린지 이름';
+
+  @override
+  String get routine_challenge_field_title_hint => '예: 이번 주 운동하기';
+
+  @override
+  String get routine_challenge_field_description => '설명';
+
+  @override
+  String get routine_challenge_field_period => '기간';
+
+  @override
+  String get routine_challenge_field_target => '목표 횟수';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return '기간 안에 $count번 체크하면 달성이에요';
+  }
+
+  @override
+  String get routine_challenge_field_reward => '내기 · 벌칙';
+
+  @override
+  String get routine_challenge_field_reward_hint => '예: 진 사람이 치킨 쏘기';
+
+  @override
+  String get routine_challenge_status_upcoming => '시작 전';
+
+  @override
+  String get routine_challenge_status_ongoing => '진행 중';
+
+  @override
+  String get routine_challenge_status_ended => '종료';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '참가자 $count명';
+  }
+
+  @override
+  String get routine_challenge_join => '참가하기';
+
+  @override
+  String get routine_challenge_leave => '참가 취소';
+
+  @override
+  String get routine_challenge_leave_confirm => '이 챌린지에서 빠지시겠어요?';
+
+  @override
+  String get routine_challenge_delete_confirm =>
+      '이 챌린지를 삭제하시겠어요?\n참가자들의 기록도 함께 사라져요.';
+
+  @override
+  String get routine_challenge_select_routine => '어떤 습관으로 참가할까요?';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      '이 챌린지에 연결할 내 습관을 골라주세요.\n비공개 습관은 참가할 수 없어요.';
+
+  @override
+  String get routine_challenge_no_routine =>
+      '참가할 수 있는 습관이 없어요.\n먼저 습관을 만들어주세요.';
+
+  @override
+  String get routine_challenge_change_routine => '습관 바꾸기';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target회';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '$days일 남음';
+  }
+
+  @override
+  String get routine_challenge_saved => '챌린지를 저장했어요';
+
+  @override
+  String get routine_challenge_joined => '챌린지에 참가했어요';
+
+  @override
   String get routine_group_members_empty => '공유된 루틴이 없습니다';
 
   @override

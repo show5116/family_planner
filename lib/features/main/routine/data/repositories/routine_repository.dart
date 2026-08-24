@@ -310,6 +310,38 @@ class UpdateRoutineSettingsDto {
   };
 }
 
+/// 그룹 챌린지 생성/수정 DTO.
+///
+/// 수정 시에는 바꿀 필드만 채운다(null인 필드는 요청에서 생략).
+class RoutineChallengeDto {
+  final String? title;
+  final String? description;
+
+  /// YYYY-MM-DD
+  final String? startDate;
+  final String? endDate;
+  final int? targetCount;
+  final String? reward;
+
+  const RoutineChallengeDto({
+    this.title,
+    this.description,
+    this.startDate,
+    this.endDate,
+    this.targetCount,
+    this.reward,
+  });
+
+  Map<String, dynamic> toJson() => {
+    if (title != null) 'title': title,
+    if (description != null) 'description': description,
+    if (startDate != null) 'startDate': startDate,
+    if (endDate != null) 'endDate': endDate,
+    if (targetCount != null) 'targetCount': targetCount,
+    if (reward != null) 'reward': reward,
+  };
+}
+
 // ─── Repository ─────────────────────────────────────────────────────────────
 
 final routineRepositoryProvider = Provider<RoutineRepository>((ref) {
@@ -869,6 +901,97 @@ class RoutineRepository {
     } on DioException catch (e) {
       debugPrint('❌ [RoutineRepository] 카테고리 삭제 실패: ${e.message}');
       throw Exception('카테고리 삭제 실패: ${e.message}');
+    }
+  }
+
+  // ── 그룹 챌린지 ───────────────────────────────────────────────────────────
+
+  Future<List<RoutineChallenge>> getChallenges(String groupId) async {
+    try {
+      final response = await _dio.get('/routines/groups/$groupId/challenges');
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => RoutineChallenge.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 목록 조회 실패: ${e.message}');
+      throw Exception('챌린지 목록 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineChallenge> getChallenge(String id) async {
+    try {
+      final response = await _dio.get('/routines/challenges/$id');
+      return RoutineChallenge.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 상세 조회 실패: ${e.message}');
+      throw Exception('챌린지 상세 조회 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineChallenge> createChallenge(
+    String groupId,
+    RoutineChallengeDto dto,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/routines/groups/$groupId/challenges',
+        data: dto.toJson(),
+      );
+      return RoutineChallenge.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 생성 실패: ${e.message}');
+      throw Exception('챌린지 생성 실패: ${e.message}');
+    }
+  }
+
+  Future<RoutineChallenge> updateChallenge(
+    String id,
+    RoutineChallengeDto dto,
+  ) async {
+    try {
+      final response = await _dio.patch(
+        '/routines/challenges/$id',
+        data: dto.toJson(),
+      );
+      return RoutineChallenge.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 수정 실패: ${e.message}');
+      throw Exception('챌린지 수정 실패: ${e.message}');
+    }
+  }
+
+  Future<void> deleteChallenge(String id) async {
+    try {
+      await _dio.delete('/routines/challenges/$id');
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 삭제 실패: ${e.message}');
+      throw Exception('챌린지 삭제 실패: ${e.message}');
+    }
+  }
+
+  /// 챌린지 참가. 이미 참가 중이면 연결 습관이 교체된다.
+  Future<void> joinChallenge(String id, String routineId) async {
+    try {
+      await _dio.post(
+        '/routines/challenges/$id/join',
+        data: {'routineId': routineId},
+      );
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 참가 실패: ${e.message}');
+      throw Exception('챌린지 참가 실패: ${e.message}');
+    }
+  }
+
+  Future<void> leaveChallenge(String id) async {
+    try {
+      await _dio.delete('/routines/challenges/$id/join');
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 챌린지 참가 취소 실패: ${e.message}');
+      throw Exception('챌린지 참가 취소 실패: ${e.message}');
     }
   }
 

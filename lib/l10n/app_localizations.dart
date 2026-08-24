@@ -9128,6 +9128,174 @@ abstract class AppLocalizations {
   /// **'랭킹'**
   String get routine_together_tab_ranking;
 
+  /// 함께하기 화면 - 챌린지 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지'**
+  String get routine_together_tab_challenge;
+
+  /// 챌린지 생성 화면 제목/버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지 만들기'**
+  String get routine_challenge_create;
+
+  /// 챌린지 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지 수정'**
+  String get routine_challenge_edit;
+
+  /// 챌린지가 하나도 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 챌린지가 없어요.\n그룹과 함께할 목표를 만들어보세요.'**
+  String get routine_challenge_empty;
+
+  /// 챌린지 제목 입력 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지 이름'**
+  String get routine_challenge_field_title;
+
+  /// 챌린지 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 이번 주 운동하기'**
+  String get routine_challenge_field_title_hint;
+
+  /// 챌린지 설명 입력 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'설명'**
+  String get routine_challenge_field_description;
+
+  /// 챌린지 기간 선택 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기간'**
+  String get routine_challenge_field_period;
+
+  /// 챌린지 목표 횟수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 횟수'**
+  String get routine_challenge_field_target;
+
+  /// 목표 횟수 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 안에 {count}번 체크하면 달성이에요'**
+  String routine_challenge_field_target_desc(int count);
+
+  /// 챌린지 보상/벌칙 입력 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'내기 · 벌칙'**
+  String get routine_challenge_field_reward;
+
+  /// 보상/벌칙 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 진 사람이 치킨 쏘기'**
+  String get routine_challenge_field_reward_hint;
+
+  /// 챌린지 상태 - 시작 전
+  ///
+  /// In ko, this message translates to:
+  /// **'시작 전'**
+  String get routine_challenge_status_upcoming;
+
+  /// 챌린지 상태 - 진행 중
+  ///
+  /// In ko, this message translates to:
+  /// **'진행 중'**
+  String get routine_challenge_status_ongoing;
+
+  /// 챌린지 상태 - 종료
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get routine_challenge_status_ended;
+
+  /// 챌린지 참가자 수
+  ///
+  /// In ko, this message translates to:
+  /// **'참가자 {count}명'**
+  String routine_challenge_participants(int count);
+
+  /// 챌린지 참가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'참가하기'**
+  String get routine_challenge_join;
+
+  /// 챌린지 참가 취소 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'참가 취소'**
+  String get routine_challenge_leave;
+
+  /// 참가 취소 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 챌린지에서 빠지시겠어요?'**
+  String get routine_challenge_leave_confirm;
+
+  /// 챌린지 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 챌린지를 삭제하시겠어요?\n참가자들의 기록도 함께 사라져요.'**
+  String get routine_challenge_delete_confirm;
+
+  /// 참가 시 습관 선택 시트 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'어떤 습관으로 참가할까요?'**
+  String get routine_challenge_select_routine;
+
+  /// 습관 선택 시트 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'이 챌린지에 연결할 내 습관을 골라주세요.\n비공개 습관은 참가할 수 없어요.'**
+  String get routine_challenge_select_routine_desc;
+
+  /// 연결 가능한 습관이 없을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'참가할 수 있는 습관이 없어요.\n먼저 습관을 만들어주세요.'**
+  String get routine_challenge_no_routine;
+
+  /// 연결한 습관 교체 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 바꾸기'**
+  String get routine_challenge_change_routine;
+
+  /// 챌린지 진행률
+  ///
+  /// In ko, this message translates to:
+  /// **'{checked} / {target}회'**
+  String routine_challenge_progress(int checked, int target);
+
+  /// 챌린지 종료까지 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 남음'**
+  String routine_challenge_days_left(int days);
+
+  /// 챌린지 저장 성공
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지를 저장했어요'**
+  String get routine_challenge_saved;
+
+  /// 챌린지 참가 성공
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지에 참가했어요'**
+  String get routine_challenge_joined;
+
   /// 그룹원 루틴 목록 비어있을 때 안내
   ///
   /// In ko, this message translates to:

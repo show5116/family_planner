@@ -291,6 +291,28 @@ Future<RoutineDailyStreak> routineDailyStreak(Ref ref) async {
   return repository.getDailyStreak();
 }
 
+// ── 그룹 챌린지 ───────────────────────────────────────────────────────────────
+
+/// 그룹의 챌린지 목록
+@riverpod
+Future<List<RoutineChallenge>> routineChallenges(
+  Ref ref,
+  String groupId,
+) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getChallenges(groupId);
+}
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+@riverpod
+Future<RoutineChallenge> routineChallengeDetail(
+  Ref ref,
+  String challengeId,
+) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getChallenge(challengeId);
+}
+
 // ── 배지 ──────────────────────────────────────────────────────────────────────
 
 /// 전체 배지 카탈로그 (마스터 데이터)
@@ -547,6 +569,93 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
           .read(routineListProvider(_selectedDate).notifier)
           .setCheckedToday(routineId, currentlyChecked);
       return const RoutineCheckResult(success: false);
+    }
+  }
+
+  // ── 그룹 챌린지 ─────────────────────────────────────────────────────────
+
+  /// 챌린지 생성/수정/삭제/참가 후 목록과 상세를 함께 갱신한다.
+  void _invalidateChallenges(String groupId, [String? challengeId]) {
+    _ref.invalidate(routineChallengesProvider(groupId));
+    if (challengeId != null) {
+      _ref.invalidate(routineChallengeDetailProvider(challengeId));
+    }
+  }
+
+  Future<RoutineChallenge?> createChallenge(
+    String groupId,
+    RoutineChallengeDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final challenge = await _repository.createChallenge(groupId, dto);
+      _invalidateChallenges(groupId);
+      state = const AsyncValue.data(null);
+      return challenge;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<bool> updateChallenge(
+    String groupId,
+    String challengeId,
+    RoutineChallengeDto dto,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.updateChallenge(challengeId, dto);
+      _invalidateChallenges(groupId, challengeId);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<bool> deleteChallenge(String groupId, String challengeId) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.deleteChallenge(challengeId);
+      _invalidateChallenges(groupId);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  /// 챌린지 참가. 이미 참가 중이면 연결 습관이 교체된다.
+  Future<bool> joinChallenge(
+    String groupId,
+    String challengeId,
+    String routineId,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.joinChallenge(challengeId, routineId);
+      _invalidateChallenges(groupId, challengeId);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<bool> leaveChallenge(String groupId, String challengeId) async {
+    state = const AsyncValue.loading();
+    try {
+      await _repository.leaveChallenge(challengeId);
+      _invalidateChallenges(groupId, challengeId);
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
     }
   }
 

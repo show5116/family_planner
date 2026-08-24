@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_challenge_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_leaderboard_screen.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
@@ -75,7 +76,7 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
     final groupId = _groupId!;
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.routine_together_title),
@@ -101,6 +102,7 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
                     tabs: [
                       l10n.routine_together_tab_status,
                       l10n.routine_together_tab_ranking,
+                      l10n.routine_together_tab_challenge,
                     ],
                   ),
                 ),
@@ -118,6 +120,10 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
             ),
             RoutineLeaderboardTab(
               key: ValueKey('leaderboard_$groupId'),
+              groupId: groupId,
+            ),
+            RoutineChallengeTab(
+              key: ValueKey('challenge_$groupId'),
               groupId: groupId,
             ),
           ],

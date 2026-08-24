@@ -4856,6 +4856,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_together_tab_ranking => 'Ranking';
 
   @override
+  String get routine_together_tab_challenge => 'Challenges';
+
+  @override
+  String get routine_challenge_create => 'New Challenge';
+
+  @override
+  String get routine_challenge_edit => 'Edit Challenge';
+
+  @override
+  String get routine_challenge_empty =>
+      'No challenges yet.\nCreate a goal to take on with your group.';
+
+  @override
+  String get routine_challenge_field_title => 'Challenge name';
+
+  @override
+  String get routine_challenge_field_title_hint => 'e.g. Work out this week';
+
+  @override
+  String get routine_challenge_field_description => 'Description';
+
+  @override
+  String get routine_challenge_field_period => 'Period';
+
+  @override
+  String get routine_challenge_field_target => 'Target count';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return 'Check in $count times during the period to win';
+  }
+
+  @override
+  String get routine_challenge_field_reward => 'Stakes';
+
+  @override
+  String get routine_challenge_field_reward_hint => 'e.g. Loser buys dinner';
+
+  @override
+  String get routine_challenge_status_upcoming => 'Upcoming';
+
+  @override
+  String get routine_challenge_status_ongoing => 'Ongoing';
+
+  @override
+  String get routine_challenge_status_ended => 'Ended';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '$count joined';
+  }
+
+  @override
+  String get routine_challenge_join => 'Join';
+
+  @override
+  String get routine_challenge_leave => 'Leave';
+
+  @override
+  String get routine_challenge_leave_confirm => 'Leave this challenge?';
+
+  @override
+  String get routine_challenge_delete_confirm =>
+      'Delete this challenge?\nEveryone\'s records will be removed too.';
+
+  @override
+  String get routine_challenge_select_routine => 'Which habit will you use?';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      'Pick one of your habits to link.\nPrivate habits can\'t join.';
+
+  @override
+  String get routine_challenge_no_routine =>
+      'No habits available to join with.\nCreate a habit first.';
+
+  @override
+  String get routine_challenge_change_routine => 'Change habit';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '$days days left';
+  }
+
+  @override
+  String get routine_challenge_saved => 'Challenge saved';
+
+  @override
+  String get routine_challenge_joined => 'You joined the challenge';
+
+  @override
   String get routine_group_members_empty => 'No shared routines';
 
   @override

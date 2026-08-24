@@ -1036,6 +1036,284 @@ final routineDailyStreakProvider =
 // ignore: unused_element
 typedef RoutineDailyStreakRef =
     AutoDisposeFutureProviderRef<RoutineDailyStreak>;
+String _$routineChallengesHash() => r'2060718e9326595342e1d3be2976bd383327b9a6';
+
+/// 그룹의 챌린지 목록
+///
+/// Copied from [routineChallenges].
+@ProviderFor(routineChallenges)
+const routineChallengesProvider = RoutineChallengesFamily();
+
+/// 그룹의 챌린지 목록
+///
+/// Copied from [routineChallenges].
+class RoutineChallengesFamily
+    extends Family<AsyncValue<List<RoutineChallenge>>> {
+  /// 그룹의 챌린지 목록
+  ///
+  /// Copied from [routineChallenges].
+  const RoutineChallengesFamily();
+
+  /// 그룹의 챌린지 목록
+  ///
+  /// Copied from [routineChallenges].
+  RoutineChallengesProvider call(String groupId) {
+    return RoutineChallengesProvider(groupId);
+  }
+
+  @override
+  RoutineChallengesProvider getProviderOverride(
+    covariant RoutineChallengesProvider provider,
+  ) {
+    return call(provider.groupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineChallengesProvider';
+}
+
+/// 그룹의 챌린지 목록
+///
+/// Copied from [routineChallenges].
+class RoutineChallengesProvider
+    extends AutoDisposeFutureProvider<List<RoutineChallenge>> {
+  /// 그룹의 챌린지 목록
+  ///
+  /// Copied from [routineChallenges].
+  RoutineChallengesProvider(String groupId)
+    : this._internal(
+        (ref) => routineChallenges(ref as RoutineChallengesRef, groupId),
+        from: routineChallengesProvider,
+        name: r'routineChallengesProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineChallengesHash,
+        dependencies: RoutineChallengesFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineChallengesFamily._allTransitiveDependencies,
+        groupId: groupId,
+      );
+
+  RoutineChallengesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+  }) : super.internal();
+
+  final String groupId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<RoutineChallenge>> Function(RoutineChallengesRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineChallengesProvider._internal(
+        (ref) => create(ref as RoutineChallengesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<RoutineChallenge>> createElement() {
+    return _RoutineChallengesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineChallengesProvider && other.groupId == groupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineChallengesRef
+    on AutoDisposeFutureProviderRef<List<RoutineChallenge>> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+}
+
+class _RoutineChallengesProviderElement
+    extends AutoDisposeFutureProviderElement<List<RoutineChallenge>>
+    with RoutineChallengesRef {
+  _RoutineChallengesProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineChallengesProvider).groupId;
+}
+
+String _$routineChallengeDetailHash() =>
+    r'cf0175d7b3822e208cdbd56dc8687ef04c3ea6c4';
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+///
+/// Copied from [routineChallengeDetail].
+@ProviderFor(routineChallengeDetail)
+const routineChallengeDetailProvider = RoutineChallengeDetailFamily();
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+///
+/// Copied from [routineChallengeDetail].
+class RoutineChallengeDetailFamily
+    extends Family<AsyncValue<RoutineChallenge>> {
+  /// 챌린지 상세 (참가자별 진행률 포함)
+  ///
+  /// Copied from [routineChallengeDetail].
+  const RoutineChallengeDetailFamily();
+
+  /// 챌린지 상세 (참가자별 진행률 포함)
+  ///
+  /// Copied from [routineChallengeDetail].
+  RoutineChallengeDetailProvider call(String challengeId) {
+    return RoutineChallengeDetailProvider(challengeId);
+  }
+
+  @override
+  RoutineChallengeDetailProvider getProviderOverride(
+    covariant RoutineChallengeDetailProvider provider,
+  ) {
+    return call(provider.challengeId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineChallengeDetailProvider';
+}
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+///
+/// Copied from [routineChallengeDetail].
+class RoutineChallengeDetailProvider
+    extends AutoDisposeFutureProvider<RoutineChallenge> {
+  /// 챌린지 상세 (참가자별 진행률 포함)
+  ///
+  /// Copied from [routineChallengeDetail].
+  RoutineChallengeDetailProvider(String challengeId)
+    : this._internal(
+        (ref) => routineChallengeDetail(
+          ref as RoutineChallengeDetailRef,
+          challengeId,
+        ),
+        from: routineChallengeDetailProvider,
+        name: r'routineChallengeDetailProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineChallengeDetailHash,
+        dependencies: RoutineChallengeDetailFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineChallengeDetailFamily._allTransitiveDependencies,
+        challengeId: challengeId,
+      );
+
+  RoutineChallengeDetailProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.challengeId,
+  }) : super.internal();
+
+  final String challengeId;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineChallenge> Function(RoutineChallengeDetailRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineChallengeDetailProvider._internal(
+        (ref) => create(ref as RoutineChallengeDetailRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        challengeId: challengeId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineChallenge> createElement() {
+    return _RoutineChallengeDetailProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineChallengeDetailProvider &&
+        other.challengeId == challengeId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, challengeId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineChallengeDetailRef
+    on AutoDisposeFutureProviderRef<RoutineChallenge> {
+  /// The parameter `challengeId` of this provider.
+  String get challengeId;
+}
+
+class _RoutineChallengeDetailProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineChallenge>
+    with RoutineChallengeDetailRef {
+  _RoutineChallengeDetailProviderElement(super.provider);
+
+  @override
+  String get challengeId =>
+      (origin as RoutineChallengeDetailProvider).challengeId;
+}
+
 String _$routineBadgeCatalogHash() =>
     r'4a5460770c2bed6473343588c14f51e37400ed62';
 

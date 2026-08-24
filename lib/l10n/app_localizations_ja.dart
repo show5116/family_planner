@@ -4741,6 +4741,100 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_together_tab_ranking => 'ランキング';
 
   @override
+  String get routine_together_tab_challenge => 'チャレンジ';
+
+  @override
+  String get routine_challenge_create => 'チャレンジを作る';
+
+  @override
+  String get routine_challenge_edit => 'チャレンジを編集';
+
+  @override
+  String get routine_challenge_empty => 'まだチャレンジがありません。\nグループで挑む目標を作ってみましょう。';
+
+  @override
+  String get routine_challenge_field_title => 'チャレンジ名';
+
+  @override
+  String get routine_challenge_field_title_hint => '例: 今週は運動する';
+
+  @override
+  String get routine_challenge_field_description => '説明';
+
+  @override
+  String get routine_challenge_field_period => '期間';
+
+  @override
+  String get routine_challenge_field_target => '目標回数';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return '期間内に$count回チェックすれば達成です';
+  }
+
+  @override
+  String get routine_challenge_field_reward => '賭け · 罰ゲーム';
+
+  @override
+  String get routine_challenge_field_reward_hint => '例: 負けた人がごちそう';
+
+  @override
+  String get routine_challenge_status_upcoming => '開始前';
+
+  @override
+  String get routine_challenge_status_ongoing => '進行中';
+
+  @override
+  String get routine_challenge_status_ended => '終了';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '参加者$count人';
+  }
+
+  @override
+  String get routine_challenge_join => '参加する';
+
+  @override
+  String get routine_challenge_leave => '参加取消';
+
+  @override
+  String get routine_challenge_leave_confirm => 'このチャレンジから抜けますか？';
+
+  @override
+  String get routine_challenge_delete_confirm =>
+      'このチャレンジを削除しますか？\n参加者の記録も一緒に消えます。';
+
+  @override
+  String get routine_challenge_select_routine => 'どの習慣で参加しますか？';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      'このチャレンジに紐づける習慣を選んでください。\n非公開の習慣は参加できません。';
+
+  @override
+  String get routine_challenge_no_routine => '参加できる習慣がありません。\nまず習慣を作ってください。';
+
+  @override
+  String get routine_challenge_change_routine => '習慣を変える';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target回';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '残り$days日';
+  }
+
+  @override
+  String get routine_challenge_saved => 'チャレンジを保存しました';
+
+  @override
+  String get routine_challenge_joined => 'チャレンジに参加しました';
+
+  @override
   String get routine_group_members_empty => '共有されたルーティンがありません';
 
   @override
