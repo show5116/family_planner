@@ -4795,6 +4795,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_coach_skip => 'Skip';
 
   @override
+  String get routine_coach_together_title => 'Do it together';
+
+  @override
+  String get routine_coach_together_desc =>
+      'Share your habits with family or friends.\nSee how everyone is doing and take on challenges together.';
+
+  @override
+  String get routine_together_coach_status_title => 'Member status';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      'See what everyone in the group did today.\nTap a name for their full record.';
+
+  @override
+  String get routine_together_coach_tabs_title => 'Ranking and challenges';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      'Ranking compares goal achievement rates.\nChallenges let you set a deadline, chase a goal together,\nand even put stakes on it.';
+
+  @override
+  String get routine_together_coach_settings_title => 'Sharing settings';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      'Choose which groups can see your habits.\nMark a habit private and it stays hidden from everyone.';
+
+  @override
   String get routine_this_week_progress => 'This week\'s progress';
 
   @override

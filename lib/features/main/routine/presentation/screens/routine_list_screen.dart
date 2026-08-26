@@ -42,6 +42,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
   final _goalBarKey = GlobalKey();
   final _demoFlagKey = GlobalKey();
   final _demoCheckKey = GlobalKey();
+  final _moreMenuKey = GlobalKey();
 
   /// 온보딩 예시 목록을 보여주는 중인지. 신규 사용자는 습관이 없어 가리킬
   /// 대상이 없으므로, 온보딩 동안만 가짜 목록을 띄운다.
@@ -1027,6 +1028,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
               ),
             if (!_isReordering)
               AppBarMoreMenu(
+                key: _moreMenuKey,
                 onReplayOnboarding: _showCoachMark,
                 extraItems: [
                   // 그룹원 현황·랭킹·공유 설정이 모두 이 화면에 모여 있다.

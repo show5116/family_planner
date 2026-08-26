@@ -4652,6 +4652,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_coach_skip => '跳过';
 
   @override
+  String get routine_coach_together_title => '和群组一起做';
+
+  @override
+  String get routine_coach_together_desc =>
+      '可以和家人或朋友的群组共享习惯。\n互相查看情况，还能一起参加挑战。';
+
+  @override
+  String get routine_together_coach_status_title => '成员情况';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      '可以看到群组成员今天完成了哪些习惯。\n点击名字还能查看详细记录。';
+
+  @override
+  String get routine_together_coach_tabs_title => '排行榜与挑战';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      '排行榜按目标达成率排名。\n挑战可以设定期限一起冲目标，\n还能加上赌注。';
+
+  @override
+  String get routine_together_coach_settings_title => '共享设置';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      '选择让哪些群组看到你的习惯。\n标记为私密的习惯不会被群组成员看到。';
+
+  @override
   String get routine_this_week_progress => '本周进度';
 
   @override

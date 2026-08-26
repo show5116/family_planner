@@ -106,6 +106,7 @@ extension _RoutineListOnboarding on _RoutineListScreenState {
     final goalBarPos = _keyToPosition(_goalBarKey);
     final flagPos = _keyToPosition(_demoFlagKey);
     final checkPos = _keyToPosition(_demoCheckKey);
+    final moreMenuPos = _keyToPosition(_moreMenuKey);
 
     final targets = <TargetFocus>[
       TargetFocus(
@@ -174,6 +175,26 @@ extension _RoutineListOnboarding on _RoutineListScreenState {
               description: l10n.routine_coach_check_desc,
               icon: Icons.check_circle_outline,
               color: AppColors.warning,
+            ),
+          ),
+        ],
+      ),
+      // 그룹 기능이 있다는 것만 알리고, 자세한 설명은 "함께하기" 화면에
+      // 들어갔을 때 그 자리에서 한다(여기서 다 설명하면 단계가 길어져
+      // 아무도 읽지 않는다).
+      TargetFocus(
+        identify: 'routine_together_menu',
+        targetPosition: moreMenuPos,
+        keyTarget: moreMenuPos == null ? _moreMenuKey : null,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (_, _) => FeatureCoachMark.buildContent(
+              title: l10n.routine_coach_together_title,
+              description: l10n.routine_coach_together_desc,
+              icon: Icons.groups_outlined,
+              color: AppColors.success,
             ),
           ),
         ],

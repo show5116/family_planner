@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_challenge_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_leaderboard_screen.dart';
+import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
+import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/app_empty_state.dart';
 import 'package:family_planner/shared/widgets/app_tab_bar.dart';
+
+part '_routine_together_onboarding.dart';
 
 /// 그룹과 함께 루틴을 보는 화면.
 ///
@@ -35,6 +42,17 @@ class RoutineTogetherScreen extends ConsumerStatefulWidget {
 
 class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
   String? _groupId;
+
+  // 온보딩 코치마크가 가리킬 대상들.
+  final _bodyKey = GlobalKey();
+  final _tabBarKey = GlobalKey();
+  final _settingsKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _maybeShowOnboarding();
+  }
 
   /// 그룹 목록이 로드되면 선택값을 확정한다. 이미 고른 그룹이 목록에서
   /// 사라졌을 때(탈퇴 등)도 첫 그룹으로 되돌린다.
@@ -64,7 +82,10 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
       return Scaffold(
         appBar: AppBar(
           title: Text(l10n.routine_together_title),
-          actions: [_settingsAction(appBarForeground, l10n)],
+          actions: [
+            _settingsAction(appBarForeground, l10n),
+            AppBarMoreMenu(onReplayOnboarding: _showCoachMark),
+          ],
         ),
         body: AppEmptyState(
           icon: Icons.groups_outlined,
@@ -80,7 +101,10 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.routine_together_title),
-          actions: [_settingsAction(appBarForeground, l10n)],
+          actions: [
+            _settingsAction(appBarForeground, l10n),
+            AppBarMoreMenu(onReplayOnboarding: _showCoachMark),
+          ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(
               // 그룹이 하나뿐이면 선택기를 띄울 이유가 없다.
@@ -97,6 +121,7 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
                     onChanged: (id) => setState(() => _groupId = id),
                   ),
                 Builder(
+                  key: _tabBarKey,
                   builder: (context) => AppTabBar(
                     controller: DefaultTabController.of(context),
                     tabs: [
@@ -111,6 +136,7 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
           ),
         ),
         body: TabBarView(
+          key: _bodyKey,
           children: [
             // 그룹을 바꾸면 탭 내부 상태(랭킹 기간/기준 등)가 이어지지
             // 않도록 key로 새 인스턴스를 만든다.
@@ -134,6 +160,7 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
 
   Widget _settingsAction(Color foreground, AppLocalizations l10n) {
     return IconButton(
+      key: _settingsKey,
       icon: const Icon(Icons.settings_outlined),
       tooltip: l10n.routine_share_title,
       color: foreground,

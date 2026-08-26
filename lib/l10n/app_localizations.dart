@@ -9014,6 +9014,54 @@ abstract class AppLocalizations {
   /// **'건너뛰기'**
   String get routine_coach_skip;
 
+  /// 목록 온보딩 - 그룹 기능 안내 단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹과 함께하기'**
+  String get routine_coach_together_title;
+
+  /// 목록 온보딩 - 그룹 기능 안내 단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'가족이나 친구 그룹과 습관을 공유할 수 있어요.\n서로의 현황을 보고, 함께 챌린지도 할 수 있어요.'**
+  String get routine_coach_together_desc;
+
+  /// 함께하기 온보딩 1단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원 현황'**
+  String get routine_together_coach_status_title;
+
+  /// 함께하기 온보딩 1단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원들이 오늘 어떤 습관을 했는지 볼 수 있어요.\n이름을 누르면 자세한 기록도 확인할 수 있어요.'**
+  String get routine_together_coach_status_desc;
+
+  /// 함께하기 온보딩 2단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'랭킹과 챌린지'**
+  String get routine_together_coach_tabs_title;
+
+  /// 함께하기 온보딩 2단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'랭킹에서는 목표 달성률로 순위를 겨뤄요.\n챌린지는 기간을 정해 함께 목표에 도전하고,\n내기를 걸 수도 있어요.'**
+  String get routine_together_coach_tabs_desc;
+
+  /// 함께하기 온보딩 3단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 설정'**
+  String get routine_together_coach_settings_title;
+
+  /// 함께하기 온보딩 3단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'어느 그룹에 내 습관을 보여줄지 정해요.\n숨기고 싶은 습관은 \'비공개\'로 표시하면\n그룹원에게 보이지 않아요.'**
+  String get routine_together_coach_settings_desc;
+
   /// 이번 주 진행 상황 라벨
   ///
   /// In ko, this message translates to:

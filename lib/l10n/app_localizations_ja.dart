@@ -4684,6 +4684,34 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_coach_skip => 'スキップ';
 
   @override
+  String get routine_coach_together_title => 'グループでいっしょに';
+
+  @override
+  String get routine_coach_together_desc =>
+      '家族や友だちのグループと習慣を共有できます。\nお互いの状況を見たり、いっしょにチャレンジもできます。';
+
+  @override
+  String get routine_together_coach_status_title => 'メンバーの状況';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      'グループのみんなが今日どの習慣をしたか見られます。\n名前を押すと詳しい記録も確認できます。';
+
+  @override
+  String get routine_together_coach_tabs_title => 'ランキングとチャレンジ';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      'ランキングでは目標達成率で順位を競います。\nチャレンジは期間を決めていっしょに目標へ挑戦でき、\n賭けをすることもできます。';
+
+  @override
+  String get routine_together_coach_settings_title => '共有の設定';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      'どのグループに自分の習慣を見せるか決めます。\n隠したい習慣は「非公開」にすると、\nグループのメンバーには見えません。';
+
+  @override
   String get routine_this_week_progress => '今週の進捗';
 
   @override
