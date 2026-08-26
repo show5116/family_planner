@@ -4503,6 +4503,28 @@ class AppLocalizationsJa extends AppLocalizations {
       'サブスクリプション商品を準備中です。しばらくしてからもう一度お試しください。';
 
   @override
+  String get subscription_ad_free_benefit => 'アプリ内のすべての広告が表示されなくなります。';
+
+  @override
+  String get subscription_period_monthly => '月額サブスクリプション';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      'サブスクリプションは毎月自動的に更新され、現在の期間終了の24時間前までに解約しない限り同額が請求されます。購入確定時にストアアカウントへ課金されます。サブスクリプションの管理および解約は、端末のストアアカウント設定からいつでも行えます。';
+
+  @override
+  String get subscription_manage_subscription_button => 'サブスクリプションの管理・解約';
+
+  @override
+  String get subscription_terms_button => '利用規約';
+
+  @override
+  String get subscription_privacy_button => 'プライバシーポリシー';
+
+  @override
+  String get subscription_manage_launch_failed => 'ストアのサブスクリプション設定を開けませんでした。';
+
+  @override
   String get routine_title => 'ルーティン';
 
   @override

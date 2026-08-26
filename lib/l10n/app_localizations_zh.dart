@@ -4475,6 +4475,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscription_product_not_found => '订阅商品正在准备中。请稍后重试。';
 
   @override
+  String get subscription_ad_free_benefit => '不再显示应用内的所有广告。';
+
+  @override
+  String get subscription_period_monthly => '按月订阅';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      '订阅将每月自动续期，若未在当前订阅期结束前 24 小时取消，将按相同金额扣费。确认购买时将从您的商店账户扣款。您可以随时在设备的商店账户设置中管理或取消订阅。';
+
+  @override
+  String get subscription_manage_subscription_button => '管理或取消订阅';
+
+  @override
+  String get subscription_terms_button => '服务条款';
+
+  @override
+  String get subscription_privacy_button => '隐私政策';
+
+  @override
+  String get subscription_manage_launch_failed => '无法打开商店订阅设置。';
+
+  @override
   String get routine_title => '日常习惯';
 
   @override

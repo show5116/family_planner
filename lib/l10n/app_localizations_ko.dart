@@ -4511,6 +4511,28 @@ class AppLocalizationsKo extends AppLocalizations {
       '구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.';
 
   @override
+  String get subscription_ad_free_benefit => '앱 내 모든 광고가 표시되지 않습니다.';
+
+  @override
+  String get subscription_period_monthly => '월간 구독';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      '구독은 매월 자동으로 갱신되며, 현재 구독 기간이 끝나기 24시간 전까지 해지하지 않으면 동일한 금액이 결제됩니다. 구매 확정 시 스토어 계정으로 결제되며, 구독 관리 및 해지는 기기의 스토어 계정 설정에서 언제든지 할 수 있습니다.';
+
+  @override
+  String get subscription_manage_subscription_button => '구독 관리 및 해지';
+
+  @override
+  String get subscription_terms_button => '이용약관';
+
+  @override
+  String get subscription_privacy_button => '개인정보 처리방침';
+
+  @override
+  String get subscription_manage_launch_failed => '스토어 구독 관리 화면을 열 수 없습니다.';
+
+  @override
   String get routine_title => '루틴';
 
   @override

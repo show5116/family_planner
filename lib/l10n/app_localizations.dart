@@ -8666,6 +8666,48 @@ abstract class AppLocalizations {
   /// **'구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.'**
   String get subscription_product_not_found;
 
+  /// 광고 제거 상품 혜택 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 내 모든 광고가 표시되지 않습니다.'**
+  String get subscription_ad_free_benefit;
+
+  /// 월 단위 구독 기간 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 구독'**
+  String get subscription_period_monthly;
+
+  /// 자동 갱신 고지 (App Store Guideline 3.1.2 필수)
+  ///
+  /// In ko, this message translates to:
+  /// **'구독은 매월 자동으로 갱신되며, 현재 구독 기간이 끝나기 24시간 전까지 해지하지 않으면 동일한 금액이 결제됩니다. 구매 확정 시 스토어 계정으로 결제되며, 구독 관리 및 해지는 기기의 스토어 계정 설정에서 언제든지 할 수 있습니다.'**
+  String get subscription_auto_renew_notice;
+
+  /// 스토어 구독 관리 화면으로 이동하는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리 및 해지'**
+  String get subscription_manage_subscription_button;
+
+  /// 구독 화면 이용약관 링크
+  ///
+  /// In ko, this message translates to:
+  /// **'이용약관'**
+  String get subscription_terms_button;
+
+  /// 구독 화면 개인정보 처리방침 링크
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get subscription_privacy_button;
+
+  /// 스토어 구독 관리 화면 실행 실패 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'스토어 구독 관리 화면을 열 수 없습니다.'**
+  String get subscription_manage_launch_failed;
+
   /// 루틴 메인 타이틀
   ///
   /// In ko, this message translates to:

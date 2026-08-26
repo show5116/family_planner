@@ -4611,6 +4611,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Subscription plans are being prepared. Please try again later.';
 
   @override
+  String get subscription_ad_free_benefit => 'Removes all ads within the app.';
+
+  @override
+  String get subscription_period_monthly => 'Monthly subscription';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      'Your subscription renews automatically each month and will be charged the same amount unless canceled at least 24 hours before the end of the current period. Payment is charged to your store account upon purchase confirmation. You can manage or cancel your subscription at any time in your device\'s store account settings.';
+
+  @override
+  String get subscription_manage_subscription_button =>
+      'Manage or cancel subscription';
+
+  @override
+  String get subscription_terms_button => 'Terms of Service';
+
+  @override
+  String get subscription_privacy_button => 'Privacy Policy';
+
+  @override
+  String get subscription_manage_launch_failed =>
+      'Could not open the store subscription settings.';
+
+  @override
   String get routine_title => 'Routines';
 
   @override

@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/iap_product_ids.dart';
 import 'package:family_planner/core/models/subscription_platform.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/services/in_app_purchase_service.dart';
 import 'package:family_planner/features/subscription/data/models/subscription_model.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -56,9 +62,33 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           ),
           const SizedBox(height: AppSizes.spaceM),
           _RestoreButton(onRestore: _onRestore),
+          const SizedBox(height: AppSizes.spaceS),
+          _ManageSubscriptionButton(onManage: _onManageSubscription),
+          const SizedBox(height: AppSizes.spaceM),
+          // App Store Guideline 3.1.2 필수 고지 3종:
+          // 자동 갱신 조건 + 이용약관 + 개인정보 처리방침
+          const _AutoRenewNotice(),
+          const SizedBox(height: AppSizes.spaceS),
+          const _LegalLinks(),
         ],
       ),
     );
+  }
+
+  /// 스토어 구독 관리 화면으로 이동 (해지 경로 제공 — 애플 심사 필수)
+  Future<void> _onManageSubscription() async {
+    final uri = Uri.parse(
+      Platform.isIOS
+          ? 'https://apps.apple.com/account/subscriptions'
+          : 'https://play.google.com/store/account/subscriptions',
+    );
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched && mounted) {
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.subscription_manage_launch_failed)),
+      );
+    }
   }
 
   Future<void> _onPurchase(String productId) async {
@@ -161,7 +191,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n.subscription_verify_network_error),
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
       ),
     );
   }
@@ -203,7 +233,7 @@ class _CurrentPlanCard extends StatelessWidget {
               value: subscription.isActive
                   ? l10n.subscription_active
                   : l10n.subscription_inactive,
-              valueColor: subscription.isActive ? Colors.green : null,
+              valueColor: subscription.isActive ? AppColors.success : null,
             ),
             if (subscription.expiresAt != null) ...[
               const SizedBox(height: AppSizes.spaceS),
@@ -303,13 +333,24 @@ class _ProductTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(product.title, style: Theme.of(context).textTheme.bodyMedium),
+                // 가격 옆에 기간을 함께 적어 "월 얼마"인지 명확히 한다
+                // (App Store Guideline 3.1.2 — 구독 기간 명시 필수).
                 Text(
-                  product.price,
+                  '${product.price} / ${l10n.subscription_period_monthly}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: tier.color,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
+                if (tier == SubscriptionTier.adFree) ...[
+                  const SizedBox(height: AppSizes.spaceXS),
+                  Text(
+                    l10n.subscription_ad_free_benefit,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -340,6 +381,78 @@ class _RestoreButton extends StatelessWidget {
         icon: const Icon(Icons.restore_outlined),
         label: Text(l10n.subscription_restore_button),
       ),
+    );
+  }
+}
+
+// ── 스토어 구독 관리 버튼 ──────────────────────────────────────
+
+class _ManageSubscriptionButton extends StatelessWidget {
+  const _ManageSubscriptionButton({required this.onManage});
+
+  final VoidCallback onManage;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return SizedBox(
+      width: double.infinity,
+      child: TextButton.icon(
+        onPressed: onManage,
+        icon: const Icon(Icons.open_in_new_outlined),
+        label: Text(l10n.subscription_manage_subscription_button),
+      ),
+    );
+  }
+}
+
+// ── 자동 갱신 고지 ────────────────────────────────────────────
+
+/// 구독 기간·자동 갱신·해지 방법 고지.
+///
+/// App Store Guideline 3.1.2가 구독 화면에 요구하는 필수 항목이라 상품
+/// 유무와 관계없이 항상 노출한다.
+class _AutoRenewNotice extends StatelessWidget {
+  const _AutoRenewNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Text(
+      l10n.subscription_auto_renew_notice,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+    );
+  }
+}
+
+// ── 약관 / 개인정보 링크 ──────────────────────────────────────
+
+class _LegalLinks extends StatelessWidget {
+  const _LegalLinks();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () => context.push(AppRoutes.termsOfService),
+          child: Text(l10n.subscription_terms_button),
+        ),
+        Text(
+          '·',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        TextButton(
+          onPressed: () => context.push(AppRoutes.privacyPolicy),
+          child: Text(l10n.subscription_privacy_button),
+        ),
+      ],
     );
   }
 }
@@ -384,19 +497,21 @@ class _TierBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.spaceS,
+        vertical: AppSizes.spaceXS,
+      ),
       decoration: BoxDecoration(
         color: tier.color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
         border: Border.all(color: tier.color.withValues(alpha: 0.4)),
       ),
       child: Text(
         tier.displayName,
-        style: TextStyle(
-          fontSize: 11,
-          color: tier.color,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: tier.color,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }
