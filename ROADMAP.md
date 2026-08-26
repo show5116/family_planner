@@ -69,7 +69,6 @@
 | 공지사항 | ✅ 완료 | [15-announcements.md](docs/features/15-announcements.md) | P1 |
 | Q&A (문의하기) | ✅ 완료 | [16-qna.md](docs/features/16-qna.md) | P1 |
 | 온보딩 & 튜토리얼 | ✅ 완료 | [20-onboarding.md](docs/features/20-onboarding.md) | P1 |
-| 구독 & 광고 | 🟨 진행 중 | [subscription.md](docs/features/subscription.md) | P1 |
 | 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
 | 날씨 기능 | ⬜ 시작 안함 | [17-weather.md](docs/features/17-weather.md) | P2 |
 
