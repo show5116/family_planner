@@ -51,7 +51,7 @@
 | 육아 포인트 | ✅ 완료 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
 | 미니게임 | ⬜ 시작 안함 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
 | 투표 | 🟨 진행 중 | [18-votes.md](docs/features/18-votes.md) | P2 |
-| 루틴(습관) 관리 | ✅ 완료 | [23-routine.md](docs/features/23-routine.md) | P2 |
+| 루틴(습관) 관리 | 🟨 진행 중 | [23-routine.md](docs/features/23-routine.md) | P2 |
 
 ### Phase 6: 스마트 장보기 (Smart Shopping)
 
@@ -104,19 +104,6 @@
 ---
 
 ## 📈 최근 완료된 기능
-
-### 2026-08-26 — v1.2.0 릴리즈
-- ✅ **루틴(습관) 관리 완성** ([23-routine.md](docs/features/23-routine.md))
-  - 루틴(습관 묶음) + 독립 습관 구조, 카테고리 다중선택, 반복주기/기록방식 재설계
-  - 일일 목표(하루 N개) + 습관별 포함/제외, 배지를 일일 목표 기준으로 전환
-  - 전체 루틴 통합 통계(주간 습관별 현황, 최근 8주 추이, 기간 이동)
-  - 그룹 공유를 사용자x그룹 단위로 개편(`isPrivate` 비공개 습관), 그룹 화면 단일 통합
-  - 그룹 챌린지(기간제 공동 목표 + 내기) 추가
-  - 루틴 목록/함께하기 화면 온보딩 코치마크
-- ✅ **홈 화면(OS) 위젯** — Android(Jetpack Glance)/iOS(WidgetKit) 오늘 일정·이번달 달력 2종, 그룹 필터/월 이동/날짜 선택/일정 추가, 딥링크 연동
-- ✅ **구독 결제(In-App Purchase)** — 구독 화면 및 IAP 연동
-- ✅ **공용 UI 정비** — FormBottomBar(하단 고정 저장 버튼) 통일 + 세이프존, 자체 이모지 피커(한국어 검색), 색상 선택 통일
-- 🐛 GPS 폴백 시 다른 지역 날씨가 표시되던 문제, 순서변경 시 항목 소실, 통계 기간 이동 깜빡임 등 수정
 
 ### 2026-07-13
 - 🟨 **루틴(습관) 관리 1차 구현** ([23-routine.md](docs/features/23-routine.md))
