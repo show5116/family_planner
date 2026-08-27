@@ -2836,7 +2836,39 @@ class AppLocalizationsJa extends AppLocalizations {
   String get household_variable_badge => '変動';
 
   @override
-  String get household_unconfirmed_badge => '未確認';
+  String get household_unconfirmed_badge => '要確認';
+
+  @override
+  String get household_confirm_amount_title => '実際金額の確定';
+
+  @override
+  String get household_confirm_amount_desc =>
+      '予想金額で登録された項目です。\n実際に支払った金額を入力してください。';
+
+  @override
+  String household_confirm_amount_estimated(String amount) {
+    return '予想 $amount';
+  }
+
+  @override
+  String get household_confirm_amount_average => '過去平均';
+
+  @override
+  String get household_confirm_amount_recent => '直近';
+
+  @override
+  String get household_confirm_amount_submit => '確定';
+
+  @override
+  String get household_confirm_amount_later => 'あとで';
+
+  @override
+  String get household_confirm_amount_success => '金額を確定しました';
+
+  @override
+  String household_estimated_included(int count) {
+    return '予想 $count件を含む';
+  }
 
   @override
   String get household_exclude_refunds => '返金を除外';

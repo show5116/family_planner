@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/widgets/confirm_amount_dialog.dart';
 import 'package:family_planner/features/main/household/presentation/widgets/expense_list_item.dart';
 import 'package:family_planner/features/main/household/providers/household_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -37,6 +38,14 @@ class _ExpenseDetailScreenState extends ConsumerState<ExpenseDetailScreen>
   }
 
   String _fmt(double amount) => NumberFormat('#,###').format(amount.toInt());
+
+  /// 예상 금액 항목을 실제 금액으로 확정
+  Future<void> _onConfirmAmount(ExpenseModel expense) async {
+    final updated = await showConfirmAmountDialog(context, expense);
+    if (updated != null && mounted) {
+      setState(() => _expense = updated);
+    }
+  }
 
   Future<void> _onDelete() async {
     final l10n = AppLocalizations.of(context)!;
@@ -266,16 +275,57 @@ class _ExpenseDetailScreenState extends ConsumerState<ExpenseDetailScreen>
                       ),
                     ),
                     const SizedBox(width: AppSizes.spaceS),
-                    Text(
-                      '$amountPrefix${_fmt(e.amount)}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: e.refunds.isNotEmpty ? colorScheme.outline : amountColor,
-                            decoration: e.refunds.isNotEmpty
-                                ? TextDecoration.lineThrough
-                                : null,
+                    if (!e.isConfirmed)
+                      // 예상 금액: 탭하면 실제 금액을 바로 확정
+                      InkWell(
+                        onTap: () => _onConfirmAmount(e),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.spaceXS,
+                            vertical: AppSizes.spaceXS,
                           ),
-                    ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '≈ $amountPrefix${_fmt(e.amount)}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.tertiary,
+                                      decoration: TextDecoration.underline,
+                                      decorationStyle:
+                                          TextDecorationStyle.dashed,
+                                      decorationColor: colorScheme.tertiary
+                                          .withValues(alpha: 0.6),
+                                    ),
+                              ),
+                              const SizedBox(width: AppSizes.spaceXS),
+                              Icon(
+                                Icons.edit_outlined,
+                                size: 16,
+                                color: colorScheme.tertiary,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      Text(
+                        '$amountPrefix${_fmt(e.amount)}',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: e.refunds.isNotEmpty
+                                  ? colorScheme.outline
+                                  : amountColor,
+                              decoration: e.refunds.isNotEmpty
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                            ),
+                      ),
                   ],
                 ),
               ),

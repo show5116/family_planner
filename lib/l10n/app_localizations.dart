@@ -5590,11 +5590,65 @@ abstract class AppLocalizations {
   /// **'가변'**
   String get household_variable_badge;
 
-  /// 실제 금액 미확인 상태 배지
+  /// 실제 금액 확정이 필요한 상태 배지
   ///
   /// In ko, this message translates to:
-  /// **'미확인'**
+  /// **'확정 필요'**
   String get household_unconfirmed_badge;
+
+  /// 실제 금액 확정 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'실제 금액 확정'**
+  String get household_confirm_amount_title;
+
+  /// 실제 금액 확정 다이얼로그 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 금액으로 등록된 항목이에요.\n실제 결제된 금액을 입력해주세요.'**
+  String get household_confirm_amount_desc;
+
+  /// 예상 금액 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 {amount}원'**
+  String household_confirm_amount_estimated(String amount);
+
+  /// 고정지출 과거 평균 금액 칩 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 평균'**
+  String get household_confirm_amount_average;
+
+  /// 고정지출 최근 확정 금액 칩 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최근'**
+  String get household_confirm_amount_recent;
+
+  /// 실제 금액 확정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'확정'**
+  String get household_confirm_amount_submit;
+
+  /// 실제 금액 확정 나중에 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'나중에'**
+  String get household_confirm_amount_later;
+
+  /// 실제 금액 확정 완료 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'금액을 확정했어요'**
+  String get household_confirm_amount_success;
+
+  /// 월 합계에 예상 금액이 포함되어 있음을 알리는 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 {count}건 포함'**
+  String household_estimated_included(int count);
 
   /// 통계/일별 합산에서 환불 항목 제외 체크버튼
   ///

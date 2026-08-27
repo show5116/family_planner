@@ -362,6 +362,8 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
             ? _selectedIncomeCategory
             : null,
         memberId: _selectedMemberId,
+        // 예상 금액(미확정) 항목을 수정해 저장하면 실제 금액으로 확정 처리
+        isConfirmed: widget.expense!.isConfirmed ? null : true,
       );
       final result = await ref
           .read(householdManagementProvider.notifier)

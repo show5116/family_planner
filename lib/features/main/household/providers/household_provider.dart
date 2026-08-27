@@ -177,6 +177,16 @@ class HouseholdRecurringExpenses extends _$HouseholdRecurringExpenses {
 ///
 /// dayOfMonth를 선택된 달 날짜로 환산했을 때 오늘 이후인 항목만 반환.
 /// 미래 달이면 해당 달 전체 고정지출이 모두 포함됨.
+/// 조회 중인 월의 미확정(예상 금액) 항목 목록
+///
+/// 가변 고정지출로 자동 생성되어 사용자가 아직 실제 금액을 확정하지 않은 항목.
+/// 월 합계에 예상 금액이 섞여 있음을 알리는 데 사용한다.
+final householdUnconfirmedExpensesProvider =
+    Provider<List<ExpenseModel>>((ref) {
+  final expenses = ref.watch(householdExpensesProvider).valueOrNull ?? [];
+  return expenses.where((e) => !e.isConfirmed).toList();
+});
+
 /// 이미 이번 달에 트랜잭션이 생성된 규칙(recurringExpenseId 매칭)은 제외.
 final householdUnpaidRecurringProvider = Provider<List<RecurringExpenseModel>>((ref) {
   final recurring = ref.watch(householdRecurringExpensesProvider).valueOrNull ?? [];

@@ -2820,7 +2820,38 @@ class AppLocalizationsZh extends AppLocalizations {
   String get household_variable_badge => '浮动';
 
   @override
-  String get household_unconfirmed_badge => '未确认';
+  String get household_unconfirmed_badge => '待确认';
+
+  @override
+  String get household_confirm_amount_title => '确认实际金额';
+
+  @override
+  String get household_confirm_amount_desc => '该项目以预估金额登记。\n请输入实际支付的金额。';
+
+  @override
+  String household_confirm_amount_estimated(String amount) {
+    return '预估 $amount';
+  }
+
+  @override
+  String get household_confirm_amount_average => '过往平均';
+
+  @override
+  String get household_confirm_amount_recent => '最近';
+
+  @override
+  String get household_confirm_amount_submit => '确认';
+
+  @override
+  String get household_confirm_amount_later => '稍后';
+
+  @override
+  String get household_confirm_amount_success => '已确认金额';
+
+  @override
+  String household_estimated_included(int count) {
+    return '含 $count 笔预估';
+  }
 
   @override
   String get household_exclude_refunds => '排除退款';

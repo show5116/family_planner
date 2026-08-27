@@ -2840,7 +2840,39 @@ class AppLocalizationsKo extends AppLocalizations {
   String get household_variable_badge => '가변';
 
   @override
-  String get household_unconfirmed_badge => '미확인';
+  String get household_unconfirmed_badge => '확정 필요';
+
+  @override
+  String get household_confirm_amount_title => '실제 금액 확정';
+
+  @override
+  String get household_confirm_amount_desc =>
+      '예상 금액으로 등록된 항목이에요.\n실제 결제된 금액을 입력해주세요.';
+
+  @override
+  String household_confirm_amount_estimated(String amount) {
+    return '예상 $amount원';
+  }
+
+  @override
+  String get household_confirm_amount_average => '지난 평균';
+
+  @override
+  String get household_confirm_amount_recent => '최근';
+
+  @override
+  String get household_confirm_amount_submit => '확정';
+
+  @override
+  String get household_confirm_amount_later => '나중에';
+
+  @override
+  String get household_confirm_amount_success => '금액을 확정했어요';
+
+  @override
+  String household_estimated_included(int count) {
+    return '예상 $count건 포함';
+  }
 
   @override
   String get household_exclude_refunds => '환불 제외';

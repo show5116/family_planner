@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/features/main/household/presentation/widgets/confirm_amount_dialog.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 입금 카테고리 아이콘
@@ -224,9 +225,13 @@ class ExpenseListItem extends StatelessWidget {
         : categoryName(l10n, expense.category);
     final amountPrefix = isIncome ? '+₩' : '₩';
     final amountColor = isIncome ? Colors.green : Theme.of(context).colorScheme.error;
+    final colorScheme = Theme.of(context).colorScheme;
+    // 가변 고정지출로 자동 생성된 예상 금액 (사용자가 실제 금액으로 확정해야 함)
+    final needsConfirm = !expense.isConfirmed;
 
     return Card(
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.symmetric(
         horizontal: AppSizes.spaceM,
         vertical: AppSizes.spaceXS,
@@ -234,17 +239,28 @@ class ExpenseListItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
-          width: 0.5,
+          color: needsConfirm
+              ? colorScheme.tertiary.withValues(alpha: 0.5)
+              : colorScheme.outlineVariant,
+          width: needsConfirm ? 1 : 0.5,
         ),
       ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceM,
-            vertical: AppSizes.spaceS,
+        child: Container(
+          decoration: needsConfirm
+              ? BoxDecoration(
+                  border: Border(
+                    left: BorderSide(color: colorScheme.tertiary, width: 3),
+                  ),
+                )
+              : null,
+          padding: EdgeInsets.only(
+            left: needsConfirm ? AppSizes.spaceM - 3 : AppSizes.spaceM,
+            right: AppSizes.spaceM,
+            top: AppSizes.spaceS,
+            bottom: AppSizes.spaceS,
           ),
           child: Row(
             children: [
@@ -360,7 +376,13 @@ class ExpenseListItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
+                  if (needsConfirm)
+                    _EstimatedAmount(
+                      expense: expense,
+                      text: '≈ $amountPrefix${_formatAmount(expense.amount)}',
+                    )
+                  else
+                    Text(
                       '$amountPrefix${_formatAmount(expense.amount)}',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
@@ -400,5 +422,46 @@ class ExpenseListItem extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.month}/${date.day}';
+  }
+}
+
+/// 미확정(예상) 금액 표시 — 탭하면 실제 금액을 바로 확정할 수 있다.
+///
+/// 확정 금액과 구분되도록 `≈` 접두사, 점선 밑줄, tertiary 색을 쓴다.
+class _EstimatedAmount extends StatelessWidget {
+  final ExpenseModel expense;
+  final String text;
+
+  const _EstimatedAmount({required this.expense, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return InkWell(
+      onTap: () => showConfirmAmountDialog(context, expense),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.tertiary,
+                    decoration: TextDecoration.underline,
+                    decorationStyle: TextDecorationStyle.dashed,
+                    decorationColor:
+                        colorScheme.tertiary.withValues(alpha: 0.6),
+                  ),
+            ),
+            const SizedBox(width: 3),
+            Icon(Icons.edit_outlined, size: 13, color: colorScheme.tertiary),
+          ],
+        ),
+      ),
+    );
   }
 }

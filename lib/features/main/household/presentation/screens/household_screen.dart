@@ -266,10 +266,12 @@ class _MonthlySummaryCard extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     if (demoStats != null) {
-      return _buildCard(context, ref, l10n, demoStats!, null, false);
+      return _buildCard(context, ref, l10n, demoStats!, null, false, const []);
     }
 
     final statsAsync = ref.watch(householdMonthlyStatisticsProvider);
+    // 합계에 섞여 있는 예상 금액(미확정) 항목
+    final unconfirmed = ref.watch(householdUnconfirmedExpensesProvider);
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
     final selectedGroupId = ref.watch(householdSelectedGroupIdProvider);
 
@@ -281,7 +283,15 @@ class _MonthlySummaryCard extends ConsumerWidget {
     final isCurrentMonth = selectedMonth == currentMonth || selectedMonth == prevMonth;
 
     return statsAsync.when(
-      data: (stats) => _buildCard(context, ref, l10n, stats, selectedGroupId, isCurrentMonth),
+      data: (stats) => _buildCard(
+        context,
+        ref,
+        l10n,
+        stats,
+        selectedGroupId,
+        isCurrentMonth,
+        unconfirmed,
+      ),
       loading: () => const Padding(
         padding: EdgeInsets.all(AppSizes.spaceM),
         child: Center(child: CircularProgressIndicator()),
@@ -297,7 +307,12 @@ class _MonthlySummaryCard extends ConsumerWidget {
     MonthlyStatisticsModel stats,
     String? selectedGroupId,
     bool isCurrentMonth,
+    List<ExpenseModel> unconfirmed,
   ) {
+    final estimatedIncome =
+        unconfirmed.where((e) => e.type == TransactionType.income).length;
+    final estimatedExpense = unconfirmed.length - estimatedIncome;
+
     return Container(
         margin: const EdgeInsets.all(AppSizes.spaceM),
         padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -315,6 +330,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                           label: l10n.household_total_income,
                           amount: stats.totalIncome,
                           color: Colors.green.shade700,
+                          isEstimated: estimatedIncome > 0,
                         ),
                       ),
                       Container(
@@ -327,6 +343,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                           label: l10n.household_total_expense,
                           amount: stats.totalExpense,
                           color: Theme.of(context).colorScheme.error,
+                          isEstimated: estimatedExpense > 0,
                         ),
                       ),
                       Container(
@@ -341,6 +358,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                           color: stats.balance >= 0
                               ? Colors.green.shade700
                               : Theme.of(context).colorScheme.error,
+                          isEstimated: unconfirmed.isNotEmpty,
                         ),
                       ),
                     ],
@@ -352,6 +370,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
                           label: l10n.household_total_expense,
                           amount: stats.totalExpense,
                           color: Theme.of(context).colorScheme.error,
+                          isEstimated: estimatedExpense > 0,
                         ),
                       ),
                       Container(
@@ -368,6 +387,11 @@ class _MonthlySummaryCard extends ConsumerWidget {
                       ),
                     ],
                   ),
+            // 합계에 예상 금액이 섞여 있음을 알리는 캡션
+            if (unconfirmed.isNotEmpty) ...[
+              const SizedBox(height: AppSizes.spaceXS),
+              _EstimatedNotice(count: unconfirmed.length),
+            ],
             // 예산 진척도 바 (예산이 설정된 경우)
             if (stats.totalBudget > 0) ...[
               const SizedBox(height: AppSizes.spaceS),
@@ -512,15 +536,45 @@ class _BudgetProgressBar extends StatelessWidget {
   }
 }
 
+/// 월 합계에 예상 금액이 섞여 있음을 알리는 캡션
+class _EstimatedNotice extends StatelessWidget {
+  final int count;
+
+  const _EstimatedNotice({required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final color =
+        Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.7);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.info_outline, size: 13, color: color),
+        const SizedBox(width: AppSizes.spaceXS),
+        Text(
+          l10n.household_estimated_included(count),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+        ),
+      ],
+    );
+  }
+}
+
 class _SummaryItem extends StatelessWidget {
   final String label;
   final double amount;
   final Color color;
 
+  /// 합계에 미확정(예상) 금액이 포함되어 있으면 `≈`를 붙여 확정치가 아님을 알린다
+  final bool isEstimated;
+
   const _SummaryItem({
     required this.label,
     required this.amount,
     required this.color,
+    this.isEstimated = false,
   });
 
   @override
@@ -535,7 +589,7 @@ class _SummaryItem extends StatelessWidget {
         ),
         const SizedBox(height: AppSizes.spaceXS),
         Text(
-          '₩${_formatAmount(amount)}',
+          '${isEstimated ? '≈ ' : ''}₩${_formatAmount(amount)}',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: color,

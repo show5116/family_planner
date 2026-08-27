@@ -2903,7 +2903,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get household_variable_badge => 'Variable';
 
   @override
-  String get household_unconfirmed_badge => 'Unconfirmed';
+  String get household_unconfirmed_badge => 'Confirm';
+
+  @override
+  String get household_confirm_amount_title => 'Confirm Actual Amount';
+
+  @override
+  String get household_confirm_amount_desc =>
+      'This item was added with an estimated amount.\nEnter the amount you actually paid.';
+
+  @override
+  String household_confirm_amount_estimated(String amount) {
+    return 'Est. $amount';
+  }
+
+  @override
+  String get household_confirm_amount_average => 'Past average';
+
+  @override
+  String get household_confirm_amount_recent => 'Latest';
+
+  @override
+  String get household_confirm_amount_submit => 'Confirm';
+
+  @override
+  String get household_confirm_amount_later => 'Later';
+
+  @override
+  String get household_confirm_amount_success => 'Amount confirmed';
+
+  @override
+  String household_estimated_included(int count) {
+    return 'Includes $count estimate(s)';
+  }
 
   @override
   String get household_exclude_refunds => 'Exclude Refunds';
