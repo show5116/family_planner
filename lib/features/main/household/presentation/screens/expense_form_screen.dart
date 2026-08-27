@@ -20,6 +20,11 @@ import 'package:family_planner/core/mixins/interstitial_ad_mixin.dart';
 import 'package:family_planner/core/widgets/focus_dismiss_dropdown.dart';
 import 'package:family_planner/shared/widgets/form_bottom_bar.dart';
 
+/// 날짜 선택 가능 범위
+DateTime get _datePickerFirstDate => DateTime(2020);
+DateTime get _datePickerLastDate =>
+    DateTime.now().add(const Duration(days: 365));
+
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   /// null이면 추가 모드, non-null이면 수정 모드
   final ExpenseModel? expense;
@@ -85,9 +90,31 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen>
       _selectedIncomeCategory = IncomeCategory.otherIncome;
       _descriptionController.text = '환불';
     } else {
-      _selectedDate = DateTime.now();
+      _selectedDate = _initialDateForSelectedMonth();
       // 추가 모드: 기본값은 본인 (그룹 모드에서 사용, 빌드 시 설정)
     }
+  }
+
+  /// 추가 모드 기본 날짜
+  ///
+  /// 가계부에서 조회 중인 월이 이번 달이 아니면 해당 월의 1일을 기본값으로 사용해
+  /// 날짜 선택 달력이 조회 중인 달로 열리도록 한다.
+  DateTime _initialDateForSelectedMonth() {
+    final now = DateTime.now();
+    final selectedMonth = ref.read(householdSelectedMonthProvider);
+    final parts = selectedMonth.split('-');
+    if (parts.length != 2) return now;
+
+    final year = int.tryParse(parts[0]);
+    final month = int.tryParse(parts[1]);
+    if (year == null || month == null) return now;
+    if (year == now.year && month == now.month) return now;
+
+    // 날짜 선택 가능 범위를 벗어나지 않도록 보정
+    final firstDay = DateTime(year, month, 1);
+    if (firstDay.isBefore(_datePickerFirstDate)) return _datePickerFirstDate;
+    if (firstDay.isAfter(_datePickerLastDate)) return _datePickerLastDate;
+    return firstDay;
   }
 
   @override
@@ -709,11 +736,15 @@ class _DateSelector extends StatelessWidget {
     return InkWell(
       onTap: () async {
         FocusScope.of(context).unfocus();
+        final firstDate = _datePickerFirstDate;
+        final lastDate = _datePickerLastDate;
         final picked = await showDatePicker(
           context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime(2020),
-          lastDate: DateTime.now().add(const Duration(days: 365)),
+          initialDate: selectedDate.isBefore(firstDate)
+              ? firstDate
+              : (selectedDate.isAfter(lastDate) ? lastDate : selectedDate),
+          firstDate: firstDate,
+          lastDate: lastDate,
         );
         if (picked != null) onChanged(picked);
       },
