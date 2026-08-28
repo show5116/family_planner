@@ -3,7 +3,7 @@
 > **이 문서는 결제 오픈 작업이 끝나면 삭제한다.**
 > 확정된 내용은 그때 `docs/features/subscription.md`에 정리해 옮긴다.
 
-**마지막 업데이트**: 2026-08-27
+**마지막 업데이트**: 2026-08-29
 **목표**: 결제까지 완성한 뒤 **v1.2.0에 루틴·홈위젯과 함께 일괄 출시**
 
 ---
@@ -14,13 +14,14 @@
 Phase 0  계약·정산       ✅ 애플·구글 모두 완료
 Phase 1  상품 설계       ✅ 확정
 Phase 2  코드 보완       ✅ 커밋 848897e
-Phase 3  콘솔 등록       🟨 구글 상품 등록 완료 / 애플 가격·테스터 남음  ← 지금 여기
-Phase 4  서버 키·웹훅    ⬜
-Phase 5  샌드박스 테스트 ⬜
+Phase 3  콘솔 등록       🟨 구글 상품 등록 완료 / 애플 가격·테스터 남음
+Phase 4  서버 키·웹훅    ✅ 백엔드 구현 완료 (프로덕션 env만 확인)
+Phase 5  샌드박스 테스트 ⬜  ← 지금 여기
 Phase 6  v1.2.0 릴리즈   ⬜
 ```
 
-**바로 다음 할 일**: 구글 라이선스 테스터 등록 + 애플 가격(₩1,900)·Sandbox 테스터.
+**바로 다음 할 일**: 실제 결제 테스트. Android는 라이선스 테스터 등록 후
+바로 가능하고, iOS는 Mac에서 `pod install`이 선행되어야 한다.
 
 ---
 
@@ -113,46 +114,73 @@ App Store Guideline 3.1.2가 구독 화면에 요구하는 항목을 채웠다.
 사용자를 바로 잃지 않게 해주는 장치라 그대로 두는 편이 낫다. 다만
 백엔드가 웹훅으로 이 상태를 처리해야 한다 → Phase 4 참고.
 
+---
+
+## ✅ Phase 4 — 서버 키·웹훅 (백엔드 구현 완료)
+
+백엔드 저장소: `../family_planner_back_end`
+관련 커밋: `76d406e` (검증·웹훅 구현), `aa85182` (자격증명 점검 스크립트),
+`5050993` (구글 웹훅 공유 시크릿 검증)
+
+**요청한 6개 항목이 모두 반영되었고 테스트 44개가 통과한다** (2026-08-29 확인).
+
+| 요청 | 구현 |
+|------|------|
+| 스토어 검증 | Google Play Developer API + App Store Server Library |
+| 웹훅 | RTDN / Apple Server Notifications V2 |
+| 유예 기간·계정 보류 구분 | `ENTITLED_STATUSES` 로 처리 (아래) |
+| tier 문자열 스펙 | `ad_free` 전송 — 프론트 파서와 호환 확인 |
+| 422 / 5xx 구분 | 전용 예외 클래스로 분리 |
+| 무료 체험 유지 | `isTrial` 현행 유지 |
+
+요청하지 않았지만 함께 들어온 것: 웹훅 공유 시크릿 검증(타이밍 공격 방어),
+Apple 루트 인증서 번들, 자격증명 점검 스크립트, 구독 재조정 스케줄러.
+
+### tier 문자열 호환 (검증 완료)
+백엔드는 Prisma enum을 그대로 내려 **`"ad_free"`** 를 보낸다.
+프론트 파서(`subscription_model.dart`)가 언더스코어를 제거하고 소문자로
+비교하므로 `ad_free` → `adfree` = `adFree` 로 정상 매칭된다.
+
+### 유예 기간·계정 보류 (요청대로 구현됨)
+`subscription.service.ts`의 `ENTITLED_STATUSES`:
+
+- **혜택 유지**: `active`, `grace_period`, `canceled`
+  (취소는 만료일까지 유지)
+- **즉시 회수**: 환불·보류 → `expireSubscription()` 으로 free 하향
+
+웹훅은 알림 내용을 그대로 믿지 않고 **스토어에 재조회해 검증**한 뒤
+상태를 반영한다.
+
+### 422 / 5xx 구분 (요청대로 구현됨)
+`verifiers/verification-error.ts`에 두 예외를 분리:
+
+- `PurchaseVerificationFailedException` → **422** (영수증 무효·중복 사용)
+- `PurchaseVerificationUnavailableException` → **503** (스토어 장애·설정 누락)
 
 ---
 
-## ⬜ Phase 4 — 서버 키·웹훅 (백엔드)
+## ⚠️ 릴리즈 전 반드시 확인할 프로덕션 환경변수
 
-백엔드에 엔드포인트는 **이미 존재**한다 (`docs/api/webhook.md`).
-연결 작업만 남았다.
+로컬 `.env` 기준으로 점검한 결과다. **Railway 프로덕션 환경변수는 따로
+확인해야 한다.**
 
-| | 할 일 |
-|---|---|
-| 🤖 구글 | 서비스 계정 생성 → Play Console 권한 부여 → JSON 키를 백엔드 env에 |
-| 🍎 애플 | In-App Purchase Key(`.p8`) 발급 → 백엔드 등록 |
-| 웹훅 | 구글 RTDN → Pub/Sub → `/v1/webhook/google` |
-| | 애플 Server Notifications V2 → `/v1/webhook/apple` |
+### 1. `GOOGLE_WEBHOOK_SECRET` — 비어 있음 🚨
+미설정이면 토큰 검증을 **건너뛰고 경고만** 남긴다
+(`webhook.controller.ts`의 `verifyGoogleWebhookToken`).
+개발에는 지장이 없지만 **프로덕션에 없으면 누구나 웹훅을 호출해 구독
+상태를 조작할 수 있다.** Pub/Sub 구독 URL의 `?token=` 값과 일치시켜야 한다.
 
-⚠️ 애플 웹훅은 **Production / Sandbox 각각** 등록해야 한다.
+### 2. `APPLE_IAP_ENVIRONMENT` — 현재 `Sandbox`
+테스트 중에는 맞다. **릴리즈 전 `Production`으로 바꿔야 한다.**
+안 바꾸면 실제 구매 검증이 전부 실패한다.
 
-### 유예 기간·계정 보류 처리 (구글)
-Play Console에서 기본값으로 켜둔 상태다. 백엔드가 RTDN으로 받아
-구분해서 처리해야 한다.
+### 그 외 자격증명 (로컬은 설정됨)
+`GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL` / `..._PRIVATE_KEY`,
+`APPLE_IAP_ISSUER_ID` / `APPLE_IAP_KEY_ID` / `APPLE_IAP_PRIVATE_KEY`,
+`APPLE_APP_APPLE_ID`
 
-- **유예 기간**(결제 실패 후 재시도 중) → tier 유지, `isActive` 유지
-- **계정 보류**(유예 기간 만료) → tier를 free로 내림
-- 이후 결제 성공 시 즉시 복구
-
-이 구분 없이 결제 실패를 바로 만료로 처리하면, 카드 한도 초과 같은
-일시적 실패로도 사용자가 구독을 잃는다.
-
-### 백엔드에 전달한 요구사항
-- 스토어 검증 키(구글 서비스 계정 JSON / 애플 `.p8`) 설정
-- 웹훅 연결 (애플은 Production·Sandbox 각각)
-- 유예 기간/계정 보류 구분 처리 (위 표)
-- **tier 문자열 스펙 준수** — 프론트 파싱이 인식 못 하는 값을 만나면
-  에러 없이 `free`로 폴백한다(`subscription_model.dart`). 값이 어긋나면
-  "구독이 사라진 것처럼" 보여 원인 추적이 어렵다.
-  허용: `free` / `adFree`·`ad_free`·`AD_FREE` / `premium`
-- **422는 영수증 무효일 때만** — 프론트는 422를 받으면
-  `completePurchase`를 호출하지 않고 재시도 여지를 남긴다. 일시적
-  서버 오류에 422를 주면 정상 구매가 재시도 없이 실패한다. 일시 오류는 5xx로.
-- 무료 체험(서버 부여 방식)은 현행 유지. 실제 구매 시 `isTrial: false` 전환
+→ 백엔드에 `scripts/check-iap-credentials.ts` 점검 스크립트가 있으니
+프로덕션에서 실행해 확인할 것.
 
 ### 프론트 확인 결과 (2026-08-27)
 Phase 4는 **순수 백엔드 작업**이며 프론트에 추가 구현은 없다.
@@ -178,6 +206,9 @@ verify/restore/getStatus 연동, 422 처리, Analytics, 광고 게이팅 모두 
 
 ## ⬜ Phase 6 — v1.2.0 릴리즈
 
+- [ ] 🚨 **프로덕션 `APPLE_IAP_ENVIRONMENT`를 `Production`으로 변경**
+      (Sandbox로 두면 실제 구매 검증이 전부 실패한다)
+- [ ] 🚨 **프로덕션 `GOOGLE_WEBHOOK_SECRET` 설정 확인**
 - [ ] `pubspec.yaml` → `1.2.0+8`
 - [ ] `docs/release/v1.2.0.md` 패치노트 (revert된 `572e06d` 참고)
 - [ ] ROADMAP.md 루틴 ✅ 전환, 최근 완료 항목 추가
