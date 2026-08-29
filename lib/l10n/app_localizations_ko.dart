@@ -4533,6 +4533,30 @@ class AppLocalizationsKo extends AppLocalizations {
   String get subscription_manage_launch_failed => '스토어 구독 관리 화면을 열 수 없습니다.';
 
   @override
+  String get subscription_compare_title => '플랜 비교';
+
+  @override
+  String get subscription_plan_current => '이용 중';
+
+  @override
+  String get subscription_benefit_all_features => '모든 기능 이용';
+
+  @override
+  String get subscription_benefit_ads_shown => '광고가 표시됩니다';
+
+  @override
+  String get subscription_benefit_no_ads => '광고 없이 이용';
+
+  @override
+  String get subscription_benefit_no_reward_ads => '기능 사용 시 광고 시청 불필요';
+
+  @override
+  String get subscription_benefit_cancel_anytime => '언제든 해지 가능';
+
+  @override
+  String get subscription_free_plan_price => '₩0';
+
+  @override
   String get routine_title => '루틴';
 
   @override

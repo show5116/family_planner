@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/models/subscription_tier.dart';
+import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/user_profile_card.dart';
 import 'package:family_planner/shared/widgets/menu_list_tile.dart';
@@ -91,6 +94,11 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                 title: l10n.settings_groupManagementTitle,
                 onTap: () => context.push(AppRoutes.groupManagement),
               ),
+              // 구독 관리 (상단 고정)
+              //
+              // 목록 중간에 두면 묻혀서 진입률이 낮아 상단으로 올리고,
+              // 현재 tier를 함께 노출해 눈에 띄게 한다.
+              const _SubscriptionMenuTile(),
               const Divider(),
               // 하단 네비게이션에 표시되지 않는 메뉴들 (다국어 적용)
               ...nonDisplayedMenuIds.map((menuId) {
@@ -109,13 +117,6 @@ class _MoreTabState extends ConsumerState<MoreTab> {
                 icon: Icons.how_to_vote_outlined,
                 title: l10n.nav_votes,
                 onTap: () => context.push(AppRoutes.votes),
-              ),
-              const Divider(),
-              // 고정 메뉴: 구독 관리
-              MenuListTile(
-                icon: Icons.workspace_premium_outlined,
-                title: l10n.subscription_manage_title,
-                onTap: () => context.push(AppRoutes.subscription),
               ),
               const Divider(),
               // 고정 메뉴: 공지사항, QnA
@@ -210,5 +211,63 @@ class _MoreTabState extends ConsumerState<MoreTab> {
       // 어떤 상황에서도 반드시 로그인 화면으로 이동
       context.go(AppRoutes.login);
     }
+  }
+}
+
+/// 구독 관리 메뉴 (현재 tier 배지 포함)
+///
+/// [MenuListTile]에는 trailing 슬롯이 없어 공용 위젯을 건드리는 대신
+/// 여기서만 쓰는 타일을 따로 둔다.
+class _SubscriptionMenuTile extends ConsumerWidget {
+  const _SubscriptionMenuTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final subscription = ref.watch(subscriptionProvider).valueOrNull;
+    final tier = subscription?.tier ?? SubscriptionTier.free;
+    final isTrial = subscription?.isTrial ?? false;
+
+    final label = switch (tier) {
+      SubscriptionTier.free => l10n.subscription_free_label,
+      SubscriptionTier.adFree when isTrial => l10n.subscription_trial_label,
+      SubscriptionTier.adFree => l10n.subscription_ad_free_label,
+      SubscriptionTier.premium => l10n.subscription_premium_label,
+    };
+    // 무료 사용자에게는 구독을 권해야 하므로 primary로 눈에 띄게 하고,
+    // 이미 구독 중이면 상태 표시에 가깝게 차분히 보여준다.
+    final color =
+        tier == SubscriptionTier.free ? colorScheme.primary : tier.color;
+
+    return ListTile(
+      leading: Icon(Icons.workspace_premium_outlined, color: color),
+      title: Text(l10n.subscription_manage_title),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceS,
+              vertical: AppSizes.spaceXS,
+            ),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+            ),
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          const SizedBox(width: AppSizes.spaceXS),
+          Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
+        ],
+      ),
+      onTap: () => context.push(AppRoutes.subscription),
+    );
   }
 }

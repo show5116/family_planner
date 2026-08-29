@@ -393,36 +393,53 @@ class _SubscriptionCard extends ConsumerWidget {
             AppSizes.spaceM,
             AppSizes.spaceS,
           ),
-          child: Container(
-            padding: const EdgeInsets.all(AppSizes.spaceM),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.08),
-              border: Border.all(color: color.withValues(alpha: 0.3)),
+          // 상태만 보여주고 끝나면 구독 화면까지 가는 길이 더보기 탭 하나뿐이라
+          // 카드 자체를 진입점으로 쓴다.
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => context.push(AppRoutes.subscription),
               borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, color: color, size: 32),
-                const SizedBox(width: AppSizes.spaceM),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: Container(
+                padding: const EdgeInsets.all(AppSizes.spaceM),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.08),
+                  border: Border.all(color: color.withValues(alpha: 0.3)),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                ),
+                child: Row(
                   children: [
-                    Text(
-                      label,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: color,
-                            fontWeight: FontWeight.bold,
+                    Icon(icon, color: color, size: 32),
+                    const SizedBox(width: AppSizes.spaceM),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            label,
+                            style:
+                                Theme.of(context).textTheme.titleSmall?.copyWith(
+                                      color: color,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
+                          Text(
+                            sublabel,
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      sublabel,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );

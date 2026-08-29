@@ -334,41 +334,57 @@ class _TrialBannerCard extends ConsumerWidget {
             horizontalPadding,
             AppSizes.spaceM,
           ),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceM,
-              vertical: AppSizes.spaceS,
-            ),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
+          // 체험 종료가 임박했다고 알리면서 구독 경로를 주지 않으면 전환
+          // 기회를 그대로 버리게 되므로 배너 자체를 진입점으로 만든다.
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => context.push(AppRoutes.subscription),
               borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.card_giftcard_outlined, color: colorScheme.primary),
-                const SizedBox(width: AppSizes.spaceS),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.dashboard_trial_banner_title,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: colorScheme.onPrimaryContainer,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      Text(
-                        daysLeft > 0 ? l10n.dashboard_trial_banner_sublabel_days(daysLeft) : l10n.dashboard_trial_banner_sublabel_today,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onPrimaryContainer,
-                            ),
-                      ),
-                    ],
-                  ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceM,
+                  vertical: AppSizes.spaceS,
                 ),
-              ],
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.card_giftcard_outlined,
+                        color: colorScheme.primary),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.dashboard_trial_banner_title,
+                            style:
+                                Theme.of(context).textTheme.titleSmall?.copyWith(
+                                      color: colorScheme.onPrimaryContainer,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                          Text(
+                            daysLeft > 0 ? l10n.dashboard_trial_banner_sublabel_days(daysLeft) : l10n.dashboard_trial_banner_sublabel_today,
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.onPrimaryContainer,
+                                    ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

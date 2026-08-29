@@ -8708,6 +8708,54 @@ abstract class AppLocalizations {
   /// **'스토어 구독 관리 화면을 열 수 없습니다.'**
   String get subscription_manage_launch_failed;
 
+  /// 플랜 비교 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'플랜 비교'**
+  String get subscription_compare_title;
+
+  /// 현재 사용 중인 플랜 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'이용 중'**
+  String get subscription_plan_current;
+
+  /// 플랜 혜택 - 모든 기능
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 기능 이용'**
+  String get subscription_benefit_all_features;
+
+  /// 무료 플랜 - 광고 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'광고가 표시됩니다'**
+  String get subscription_benefit_ads_shown;
+
+  /// 광고 제거 플랜 - 광고 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 없이 이용'**
+  String get subscription_benefit_no_ads;
+
+  /// 광고 제거 플랜 - 보상형 광고 불필요
+  ///
+  /// In ko, this message translates to:
+  /// **'기능 사용 시 광고 시청 불필요'**
+  String get subscription_benefit_no_reward_ads;
+
+  /// 광고 제거 플랜 - 해지 자유
+  ///
+  /// In ko, this message translates to:
+  /// **'언제든 해지 가능'**
+  String get subscription_benefit_cancel_anytime;
+
+  /// 무료 플랜 가격 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'₩0'**
+  String get subscription_free_plan_price;
+
   /// 루틴 메인 타이틀
   ///
   /// In ko, this message translates to:

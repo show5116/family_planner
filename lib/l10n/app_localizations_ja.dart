@@ -4525,6 +4525,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscription_manage_launch_failed => 'ストアのサブスクリプション設定を開けませんでした。';
 
   @override
+  String get subscription_compare_title => 'プラン比較';
+
+  @override
+  String get subscription_plan_current => '利用中';
+
+  @override
+  String get subscription_benefit_all_features => 'すべての機能を利用可能';
+
+  @override
+  String get subscription_benefit_ads_shown => '広告が表示されます';
+
+  @override
+  String get subscription_benefit_no_ads => '広告なしで利用';
+
+  @override
+  String get subscription_benefit_no_reward_ads => '機能利用時の広告視聴が不要';
+
+  @override
+  String get subscription_benefit_cancel_anytime => 'いつでも解約可能';
+
+  @override
+  String get subscription_free_plan_price => '無料';
+
+  @override
   String get routine_title => 'ルーティン';
 
   @override

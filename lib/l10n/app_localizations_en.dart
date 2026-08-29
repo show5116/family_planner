@@ -4635,6 +4635,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Could not open the store subscription settings.';
 
   @override
+  String get subscription_compare_title => 'Compare plans';
+
+  @override
+  String get subscription_plan_current => 'Current';
+
+  @override
+  String get subscription_benefit_all_features => 'All features included';
+
+  @override
+  String get subscription_benefit_ads_shown => 'Ads are shown';
+
+  @override
+  String get subscription_benefit_no_ads => 'No ads';
+
+  @override
+  String get subscription_benefit_no_reward_ads => 'No ads to unlock features';
+
+  @override
+  String get subscription_benefit_cancel_anytime => 'Cancel anytime';
+
+  @override
+  String get subscription_free_plan_price => 'Free';
+
+  @override
   String get routine_title => 'Routines';
 
   @override

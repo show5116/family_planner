@@ -56,7 +56,9 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
             error: (e, st) => const SizedBox.shrink(),
           ),
           const SizedBox(height: AppSizes.spaceM),
-          _ProductsCard(
+          _PlanComparison(
+            currentTier:
+                subscriptionAsync.valueOrNull?.tier ?? SubscriptionTier.free,
             isPurchasing: _isPurchasing,
             onPurchase: _onPurchase,
           ),
@@ -254,10 +256,20 @@ class _CurrentPlanCard extends StatelessWidget {
 }
 
 // ── 구독 상품 카드 ────────────────────────────────────────────
+// ── 플랜 비교 카드 ────────────────────────────────────────────
 
-class _ProductsCard extends StatelessWidget {
-  const _ProductsCard({required this.isPurchasing, required this.onPurchase});
+/// 무료 플랜과 구독 상품을 나란히 비교해 보여준다.
+///
+/// 상품 하나만 덩그러니 두면 "왜 결제해야 하는지"가 드러나지 않아,
+/// 현재 쓰는 무료 플랜과 혜택을 나란히 놓고 차이를 보이게 했다.
+class _PlanComparison extends StatelessWidget {
+  const _PlanComparison({
+    required this.currentTier,
+    required this.isPurchasing,
+    required this.onPurchase,
+  });
 
+  final SubscriptionTier currentTier;
   final bool isPurchasing;
   final void Function(String productId) onPurchase;
 
@@ -265,105 +277,194 @@ class _ProductsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final products = InAppPurchaseService.instance.products;
+    final adFreeProduct =
+        products.where((p) => p.id == IapProductIds.adFreeMonthly).firstOrNull;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.subscription_products_section_title,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const Divider(height: AppSizes.spaceL),
-            if (products.isEmpty)
-              Text(
-                l10n.subscription_product_not_found,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-              )
-            else
-              ...products.map(
-                (product) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSizes.spaceS),
-                  child: _ProductTile(
-                    product: product,
-                    isPurchasing: isPurchasing,
-                    onPurchase: () => onPurchase(product.id),
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.subscription_compare_title,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _PlanCard(
+                  title: l10n.subscription_free_label,
+                  price: l10n.subscription_free_plan_price,
+                  accent: Theme.of(context).colorScheme.outline,
+                  isCurrent: currentTier == SubscriptionTier.free,
+                  benefits: [
+                    (true, l10n.subscription_benefit_all_features),
+                    (false, l10n.subscription_benefit_ads_shown),
+                  ],
                 ),
               ),
-          ],
+              const SizedBox(width: AppSizes.spaceS),
+              Expanded(
+                child: _PlanCard(
+                  title: l10n.subscription_ad_free_label,
+                  // 스토어에서 상품을 아직 못 받아왔으면 가격 자리를 비운다.
+                  price: adFreeProduct == null
+                      ? null
+                      : '${adFreeProduct.price} / ${l10n.subscription_period_monthly}',
+                  accent: SubscriptionTier.adFree.color,
+                  isCurrent: currentTier == SubscriptionTier.adFree,
+                  highlighted: true,
+                  benefits: [
+                    (true, l10n.subscription_benefit_all_features),
+                    (true, l10n.subscription_benefit_no_ads),
+                    (true, l10n.subscription_benefit_no_reward_ads),
+                    (true, l10n.subscription_benefit_cancel_anytime),
+                  ],
+                  action: adFreeProduct == null
+                      ? Text(
+                          l10n.subscription_product_not_found,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                        )
+                      : SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: isPurchasing
+                                ? null
+                                : () => onPurchase(adFreeProduct.id),
+                            child: Text(l10n.subscription_purchase_button),
+                          ),
+                        ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-class _ProductTile extends StatelessWidget {
-  const _ProductTile({
-    required this.product,
-    required this.isPurchasing,
-    required this.onPurchase,
+class _PlanCard extends StatelessWidget {
+  const _PlanCard({
+    required this.title,
+    required this.price,
+    required this.accent,
+    required this.isCurrent,
+    required this.benefits,
+    this.highlighted = false,
+    this.action,
   });
 
-  final ProductDetails product;
-  final bool isPurchasing;
-  final VoidCallback onPurchase;
+  final String title;
+  final String? price;
+  final Color accent;
+  final bool isCurrent;
+
+  /// (포함 여부, 문구) — false면 이 플랜에 없는 항목으로 표시한다.
+  final List<(bool, String)> benefits;
+  final bool highlighted;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final tier = IapProductIds.tierForProductId(product.id);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.all(AppSizes.spaceS),
+      padding: const EdgeInsets.all(AppSizes.spaceM),
       decoration: BoxDecoration(
+        color: highlighted ? accent.withValues(alpha: 0.06) : null,
         border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant,
+          color: highlighted
+              ? accent.withValues(alpha: 0.5)
+              : colorScheme.outlineVariant,
+          width: highlighted ? 1.5 : 1,
         ),
         borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(product.title, style: Theme.of(context).textTheme.bodyMedium),
-                // 가격 옆에 기간을 함께 적어 "월 얼마"인지 명확히 한다
-                // (App Store Guideline 3.1.2 — 구독 기간 명시 필수).
-                Text(
-                  '${product.price} / ${l10n.subscription_period_monthly}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: tier.color,
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: accent,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                if (tier == SubscriptionTier.adFree) ...[
-                  const SizedBox(height: AppSizes.spaceXS),
-                  Text(
-                    l10n.subscription_ad_free_benefit,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              if (isCurrent)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceS,
+                    vertical: AppSizes.spaceXS,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+                  ),
+                  child: Text(
+                    l10n.subscription_plan_current,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
                         ),
                   ),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+          if (price != null)
+            Text(
+              price!,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          const SizedBox(height: AppSizes.spaceM),
+          ...benefits.map(
+            (benefit) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSizes.spaceXS),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    benefit.$1 ? Icons.check : Icons.close,
+                    size: AppSizes.iconSmall,
+                    color: benefit.$1 ? accent : colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: AppSizes.spaceXS),
+                  Expanded(
+                    child: Text(
+                      benefit.$2,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: benefit.$1
+                                ? colorScheme.onSurface
+                                : colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ),
                 ],
-              ],
+              ),
             ),
           ),
-          FilledButton(
-            onPressed: isPurchasing ? null : onPurchase,
-            child: Text(l10n.subscription_purchase_button),
-          ),
+          if (action != null) ...[
+            const Spacer(),
+            const SizedBox(height: AppSizes.spaceS),
+            action!,
+          ],
         ],
       ),
     );
   }
 }
-
 // ── 구독 복원 버튼 ────────────────────────────────────────────
 
 class _RestoreButton extends StatelessWidget {

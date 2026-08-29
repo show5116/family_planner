@@ -4497,6 +4497,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscription_manage_launch_failed => '无法打开商店订阅设置。';
 
   @override
+  String get subscription_compare_title => '方案对比';
+
+  @override
+  String get subscription_plan_current => '使用中';
+
+  @override
+  String get subscription_benefit_all_features => '可使用全部功能';
+
+  @override
+  String get subscription_benefit_ads_shown => '会显示广告';
+
+  @override
+  String get subscription_benefit_no_ads => '无广告使用';
+
+  @override
+  String get subscription_benefit_no_reward_ads => '使用功能无需观看广告';
+
+  @override
+  String get subscription_benefit_cancel_anytime => '可随时取消';
+
+  @override
+  String get subscription_free_plan_price => '免费';
+
+  @override
   String get routine_title => '日常习惯';
 
   @override
