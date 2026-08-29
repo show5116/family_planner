@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/models/subscription_platform.dart';
 import 'package:family_planner/core/services/ad_service.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
+import 'package:family_planner/core/services/subscription_cache_service.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/subscription/data/models/subscription_model.dart';
@@ -20,9 +21,15 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
   Future<SubscriptionModel> _fetchFromServer() async {
     try {
       final repo = ref.read(subscriptionRepositoryProvider);
-      return await repo.getStatus();
+      final result = await repo.getStatus();
+      // 서버 응답이 항상 기준이다. 캐시는 여기서만 갱신한다.
+      await SubscriptionCacheService.save(result);
+      return result;
     } catch (_) {
-      return SubscriptionModel.defaultFree();
+      // 서버에 닿지 못했을 뿐 구독이 사라진 건 아니다. 만료 전 캐시가
+      // 있으면 그걸 쓴다 — 없으면 종전대로 free.
+      final cached = await SubscriptionCacheService.read();
+      return cached ?? SubscriptionModel.defaultFree();
     }
   }
 
@@ -44,6 +51,7 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
         purchaseToken: purchaseToken,
         signedTransaction: signedTransaction,
       );
+      await SubscriptionCacheService.save(result);
       await AnalyticsService.instance.logSubscriptionPurchase(result.tier.name);
       await AnalyticsService.instance.setSubscriptionTier(result.tier.name);
       state = AsyncData(result);
@@ -59,6 +67,7 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
     state = await AsyncValue.guard(() async {
       final repo = ref.read(subscriptionRepositoryProvider);
       final result = await repo.restore();
+      await SubscriptionCacheService.save(result);
       await AnalyticsService.instance.logSubscriptionRestore(result.tier.name);
       await AnalyticsService.instance.setSubscriptionTier(result.tier.name);
       return result;
