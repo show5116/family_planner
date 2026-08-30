@@ -35,9 +35,11 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
   @override
   void initState() {
     super.initState();
-    InAppPurchaseService.instance.initialize(
-      onPurchaseUpdate: _handlePurchaseUpdate,
-    );
+    InAppPurchaseService.instance
+        .initialize(onPurchaseUpdate: _handlePurchaseUpdate)
+        .then((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
