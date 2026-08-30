@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 11/22 기능 (50%)
-- **진행 중**: 7/22 기능 (32%)
+- **완료**: 12/22 기능 (55%)
+- **진행 중**: 6/22 기능 (27%)
 - **미시작**: 4/22 기능 (18%)
 
-**마지막 업데이트**: 2026-07-13
+**마지막 업데이트**: 2026-08-31
 
 ---
 
@@ -51,7 +51,7 @@
 | 육아 포인트 | ✅ 완료 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
 | 미니게임 | ⬜ 시작 안함 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
 | 투표 | 🟨 진행 중 | [18-votes.md](docs/features/18-votes.md) | P2 |
-| 루틴(습관) 관리 | 🟨 진행 중 | [23-routine.md](docs/features/23-routine.md) | P2 |
+| 루틴(습관) 관리 | ✅ 완료 | [23-routine.md](docs/features/23-routine.md) | P2 |
 
 ### Phase 6: 스마트 장보기 (Smart Shopping)
 
@@ -104,6 +104,16 @@
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-08-31
+- ✅ **루틴(습관) 관리 완료** ([23-routine.md](docs/features/23-routine.md))
+  - 2차 UX 고도화, 게이미피케이션(배지/랭킹보드/알림), 그룹 챌린지, 온보딩까지 마무리
+- ✅ **구독 결제(IAP) 도입** ([subscription.md](docs/features/subscription.md))
+  - 광고 제거 구독(월 ₩1,900) — StoreKit2 / Play Billing 연동, 서버 영수증 검증, 웹훅 기반 상태 동기화
+  - 무료 vs 광고 제거 플랜 비교 카드, 구독 복원, 스토어 구독 관리 진입
+  - 오프라인 대비 구독 상태 로컬 캐시
+- ✅ **홈 화면(OS) 위젯**
+  - Android/iOS 오늘 일정 리스트 + 이번달 달력 위젯, 그룹 필터·월 이동·일정 추가 지원
 
 ### 2026-07-13
 - 🟨 **루틴(습관) 관리 1차 구현** ([23-routine.md](docs/features/23-routine.md))
