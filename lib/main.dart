@@ -32,7 +32,10 @@ import 'package:family_planner/features/weather/providers/weather_provider.dart'
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/services/ad_service.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
+import 'package:family_planner/core/services/in_app_purchase_service.dart';
+import 'package:family_planner/core/models/subscription_platform.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'firebase_options.dart';
 
 /// 전역 ScaffoldMessenger Key
@@ -137,6 +140,13 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
       unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
       unawaited(LocalNotificationService.initialize().catchError((_) {}));
+
+      // 구독 화면을 열지 않아도 결제가 서버에 반영되도록 앱 시작 시
+      // 1회 등록 (구매 직후 앱이 죽는 등으로 화면 쪽 검증이 못 이루어진
+      // 경우를 다음 실행 때 여기서 잡아낸다).
+      InAppPurchaseService.instance.startBackgroundSync(
+        onVerify: _verifyPurchaseInBackground,
+      );
       unawaited(DeepLinkService().init().catchError((_) {}));
       unawaited(ref.read(homeWidgetLinkServiceProvider).init().catchError((_) {}));
 
@@ -170,6 +180,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       AdService.instance.onAppResumed();
     }
+  }
+
+  Future<void> _verifyPurchaseInBackground(PurchaseDetails purchase) async {
+    final platform = InAppPurchaseService.instance.currentPlatform;
+    final token = purchase.verificationData.serverVerificationData;
+    await ref.read(subscriptionProvider.notifier).verify(
+          platform: platform,
+          purchaseToken:
+              platform == SubscriptionPlatform.android ? token : null,
+          signedTransaction:
+              platform == SubscriptionPlatform.ios ? token : null,
+        );
   }
 
   /// GPS 위치를 서버에 저장 (날씨 알림 크론잡에서 사용)

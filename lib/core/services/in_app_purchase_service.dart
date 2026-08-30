@@ -18,10 +18,48 @@ class InAppPurchaseService {
 
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
+  StreamSubscription<List<PurchaseDetails>>? _backgroundSyncSubscription;
   List<ProductDetails> _products = [];
   bool _initialized = false;
 
   List<ProductDetails> get products => _products;
+
+  /// 앱 시작 시 1회 호출 (main.dart). 구독 화면을 열지 않아도 서버 검증이
+  /// 이루어지도록, 화면과 별개로 purchaseStream을 감시하는 백그라운드
+  /// 구독을 하나 더 건다.
+  ///
+  /// 왜 필요한가: 구매 직후 앱이 죽는 등 구독 화면의 initialize()가 결제
+  /// 이벤트를 못 받는 경우, 다음 실행 때 이 리스너가 미완료 거래를 받아
+  /// 조용히 검증·완료 처리한다. 화면이 열려 있을 때는 화면 쪽 리스너와
+  /// 같은 이벤트를 중복으로 받아 verify를 두 번 부를 수 있지만, 서버가
+  /// 멱등하게 처리하므로 안전하다. UI 피드백은 화면 쪽 책임이라 여기서는
+  /// 실패해도 조용히 넘어간다 — completePurchase를 안 부르면 다음 실행
+  /// 때 다시 전달되어 자연스럽게 재시도된다.
+  void startBackgroundSync({
+    required Future<void> Function(PurchaseDetails purchase) onVerify,
+  }) {
+    if (_backgroundSyncSubscription != null) return;
+
+    _backgroundSyncSubscription = _iap.purchaseStream.listen(
+      (purchases) async {
+        for (final purchase in purchases) {
+          if (purchase.status != PurchaseStatus.purchased &&
+              purchase.status != PurchaseStatus.restored) {
+            continue;
+          }
+          try {
+            await onVerify(purchase);
+            await completePurchase(purchase);
+          } catch (error) {
+            debugPrint('🟡 [IAP] 백그라운드 검증 실패, 다음 실행 때 재시도: $error');
+          }
+        }
+      },
+      onError: (Object error) {
+        debugPrint('❌ [IAP] 백그라운드 purchaseStream error: $error');
+      },
+    );
+  }
 
   /// 앱 전역에서 1회만 초기화 (구독 관리 화면 재진입 시 중복 초기화 방지)
   Future<void> initialize({
@@ -83,6 +121,8 @@ class InAppPurchaseService {
   void dispose() {
     _subscription?.cancel();
     _subscription = null;
+    _backgroundSyncSubscription?.cancel();
+    _backgroundSyncSubscription = null;
     _initialized = false;
   }
 }
