@@ -111,13 +111,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     ApiClient.instance.onError = (String message) {
-      scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      // 짧은 시간에 여러 요청이 동시에 실패하면 스낵바가 큐에 쌓여
+      // 계속 순차 표시되는 문제가 있어, 새 에러가 오면 이전 것을 밀어내고
+      // 최신 것만 보여준다.
+      scaffoldMessengerKey.currentState
+        ?..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
