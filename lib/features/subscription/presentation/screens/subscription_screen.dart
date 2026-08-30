@@ -124,8 +124,13 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       case PurchaseStatus.pending:
         break;
       case PurchaseStatus.purchased:
+        await _verifyPurchase(purchase, showSuccessSnackBar: true);
       case PurchaseStatus.restored:
-        await _verifyPurchase(purchase);
+        // StoreKit은 구매 감시자를 새로 등록할 때(예: 화면 진입, 복원 버튼)마다
+        // 과거 거래를 restored로 재전달한다. 이건 사용자가 방금 구매한 게
+        // 아니므로 "구매 완료" 스낵바를 띄우면 안 된다 (복원 버튼 자체의
+        // 성공 메시지는 _onRestore()가 따로 처리).
+        await _verifyPurchase(purchase, showSuccessSnackBar: false);
       case PurchaseStatus.error:
         if (mounted) _showNetworkErrorSnackBar();
         await InAppPurchaseService.instance.completePurchase(purchase);
@@ -134,7 +139,10 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     }
   }
 
-  Future<void> _verifyPurchase(PurchaseDetails purchase) async {
+  Future<void> _verifyPurchase(
+    PurchaseDetails purchase, {
+    required bool showSuccessSnackBar,
+  }) async {
     final platform = InAppPurchaseService.instance.currentPlatform;
     final token = purchase.verificationData.serverVerificationData;
 
@@ -147,7 +155,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                 platform == SubscriptionPlatform.ios ? token : null,
           );
       await InAppPurchaseService.instance.completePurchase(purchase);
-      if (mounted) _showPurchaseSuccessSnackBar();
+      if (mounted && showSuccessSnackBar) _showPurchaseSuccessSnackBar();
     } on DioException catch (e) {
       if (!mounted) return;
       if (e.response?.statusCode == 422) {
@@ -323,24 +331,31 @@ class _PlanComparison extends StatelessWidget {
                     (true, l10n.subscription_benefit_no_reward_ads),
                     (true, l10n.subscription_benefit_cancel_anytime),
                   ],
-                  action: adFreeProduct == null
-                      ? Text(
-                          l10n.subscription_product_not_found,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                  // 이미 구독 중이면 카드 상단 "현재 플랜" 배지로 충분히 드러나므로
+                  // 구매 버튼은 새로 구독 가능한 경우에만 보여준다.
+                  action: currentTier == SubscriptionTier.adFree
+                      ? null
+                      : adFreeProduct == null
+                          ? Text(
+                              l10n.subscription_product_not_found,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
+                            )
+                          : SizedBox(
+                              width: double.infinity,
+                              child: FilledButton(
+                                onPressed: isPurchasing
+                                    ? null
+                                    : () => onPurchase(adFreeProduct.id),
+                                child: Text(l10n.subscription_purchase_button),
                               ),
-                        )
-                      : SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: isPurchasing
-                                ? null
-                                : () => onPurchase(adFreeProduct.id),
-                            child: Text(l10n.subscription_purchase_button),
-                          ),
-                        ),
+                            ),
                 ),
               ),
             ],
