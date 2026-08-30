@@ -1,0 +1,45 @@
+{
+  "flow": "가계부",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/household/screenshots/01-main.png",
+      "caption": "가계부 메인 — 월 요약(총 입금·총 지출·잔액)과 예산 사용률"
+    },
+    {
+      "name": "02-expense-list",
+      "file": "docs/manual/household/screenshots/02-expense-list.png",
+      "caption": "날짜별 지출 목록 — 카테고리·결제수단·소비처가 함께 표시됩니다"
+    },
+    {
+      "name": "03-expense-form",
+      "file": "docs/manual/household/screenshots/03-expense-form.png",
+      "caption": "지출 등록 — 금액, 카테고리, 날짜, 결제 수단을 입력합니다"
+    },
+    {
+      "name": "04-recurring",
+      "file": "docs/manual/household/screenshots/04-recurring.png",
+      "caption": "고정 내역 — 지출 합계와 카테고리별 분포, '가변' 배지가 붙은 변동 고정지출"
+    },
+    {
+      "name": "05-statistics",
+      "file": "docs/manual/household/screenshots/05-statistics.png",
+      "caption": "통계 — 입금 내역과 카테고리별 지출"
+    },
+    {
+      "name": "06-statistics-category",
+      "file": "docs/manual/household/screenshots/06-statistics-category.png",
+      "caption": "카테고리별 지출 상세 — 건수와 예산 소진율"
+    },
+    {
+      "name": "07-more-menu",
+      "file": "docs/manual/household/screenshots/07-more-menu.png",
+      "caption": "더보기 메뉴 — 예산 설정, 소비처 관리 등"
+    },
+    {
+      "name": "08-merchants",
+      "file": "docs/manual/household/screenshots/08-merchants.png",
+      "caption": "소비처 관리 — 자주 쓰는 소비처와 직접 등록한 소비처"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "flow": "그룹 관리",
+  "shots": [
+    {
+      "name": "01-group-list",
+      "file": "docs/manual/groups/screenshots/01-group-list.png",
+      "caption": "그룹 관리 — 참여 중인 그룹 목록과 각 그룹의 초대 코드"
+    },
+    {
+      "name": "02-create-dialog",
+      "file": "docs/manual/groups/screenshots/02-create-dialog.png",
+      "caption": "그룹 생성 — 이름, 설명, 기본 색상을 정합니다"
+    },
+    {
+      "name": "03-join-dialog",
+      "file": "docs/manual/groups/screenshots/03-join-dialog.png",
+      "caption": "그룹 참여 — 전달받은 초대 코드를 입력합니다"
+    },
+    {
+      "name": "04-group-detail",
+      "file": "docs/manual/groups/screenshots/04-group-detail.png",
+      "caption": "그룹 상세 — 멤버 탭에서 구성원과 역할을 확인합니다"
+    },
+    {
+      "name": "04b-pending",
+      "file": "docs/manual/groups/screenshots/04b-pending.png",
+      "caption": "대기중 — 승인을 기다리는 가입 신청을 확인합니다"
+    },
+    {
+      "name": "05-group-settings",
+      "file": "docs/manual/groups/screenshots/05-group-settings.png",
+      "caption": "그룹 설정 — 초대 코드를 공유하고 그룹 정보를 관리합니다"
+    },
+    {
+      "name": "06-roles",
+      "file": "docs/manual/groups/screenshots/06-roles.png",
+      "caption": "역할 — 그룹장·멤버 등 역할과 권한을 관리합니다"
+    },
+    {
+      "name": "07-join-requests",
+      "file": "docs/manual/groups/screenshots/07-join-requests.png",
+      "caption": "내 가입 신청 목록 — 신청한 그룹의 승인 상태"
+    }
+  ]
+}
