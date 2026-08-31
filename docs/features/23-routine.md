@@ -25,6 +25,12 @@
 - ✅ 공유 그룹 관리 탭 (공유 추가/해제, 그룹원 현황 진입)
 - ✅ 그룹원별 공유 루틴 현황 화면 (RoutineTogetherScreen, 읽기 전용)
 - ✅ 루틴 공유 설정 화면 (RoutineShareSettingsScreen) — 어떤 루틴을 어느 그룹에 공유할지 선택
+
+### 그룹 챌린지
+- ✅ 챌린지 탭 (RoutineChallengeTab) — 그룹원 현황 화면 내 탭
+- ✅ 챌린지 생성/수정 시트 (RoutineChallengeFormSheet) — 제목, 기간, 대상 습관 선택
+- ✅ 챌린지 대상 습관 선택기 (RoutineChallengeRoutinePicker)
+- ✅ 챌린지 참여/참여 취소, 참여자별 진행률 표시
 - ✅ 루틴 목록 화면에 "공유 루틴 볼 그룹 선택" 진입점 (내 그룹 선택 → 그룹원 현황 화면 이동, 내 루틴이 없어도 공유받은 그룹의 현황 확인 가능)
 - ✅ 홈 대시보드 위젯 (오늘의 루틴 요약 + 인라인 체크 토글)
 - ✅ 더보기 탭 / 하단 네비게이션 메뉴 노출
@@ -139,6 +145,15 @@
 - ✅ `GET routines/categories/:id` — 카테고리 상세 (메타 + 소속 습관 목록)
 - ✅ `PATCH routines/categories/:id` — 카테고리 수정 (title/emoji/color)
 - ✅ `DELETE routines/categories/:id` — 카테고리 삭제 (soft delete)
+
+### 그룹 챌린지
+- ✅ `GET /routines/groups/:groupId/challenges` — 그룹 챌린지 목록
+- ✅ `POST /routines/groups/:groupId/challenges` — 챌린지 생성
+- ✅ `GET /routines/challenges/:id` — 챌린지 상세
+- ✅ `PATCH /routines/challenges/:id` — 챌린지 수정
+- ✅ `DELETE /routines/challenges/:id` — 챌린지 삭제
+- ✅ `POST /routines/challenges/:id/join` — 챌린지 참여
+- ✅ `DELETE /routines/challenges/:id/join` — 챌린지 참여 취소
 
 ## 상태 관리
 - ✅ RoutineList Provider (@riverpod AsyncNotifier) — 목록 조회, 낙관적 체크/순서변경 반영
