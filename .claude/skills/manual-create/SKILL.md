@@ -39,10 +39,16 @@ grep -n "<메뉴>" lib/core/routes/app_routes.dart
 ### 1단계 — 테스트 데이터 시딩
 
 ```bash
-node .claude/skills/manual-create/scripts/seed-profile.mjs     # 계정·그룹 이름 (최초 1회)
-node .claude/skills/manual-create/scripts/seed.mjs --dry-run   # 먼저 확인
-node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"
+node .claude/skills/manual-create/scripts/seed-profile.mjs         # 계정·그룹 이름 (최초 1회)
+node .claude/skills/manual-create/scripts/seed.mjs --dry-run       # 먼저 확인
+node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"          # 가계부
+node .claude/skills/manual-create/scripts/seed-dashboard.mjs --group "김가네 가족" # 대시보드 위젯
 ```
+
+`seed-dashboard.mjs`는 대시보드 위젯이 빈 화면으로 찍히지 않도록 일정·할일·기념일·
+자녀 포인트·투자 지표 즐겨찾기·메모를 채웁니다. **재실행 전에 반드시 `--cleanup`**
+을 돌리세요. 일정·할일·메모는 중복 생성을 막지 않습니다.
+(포인트 거래와 자녀 프로필은 삭제 API가 없어 되돌릴 수 없습니다.)
 
 **이름은 정감 있게.** 스크린샷에 계정 이름과 그룹 이름이 그대로 찍힙니다.
 `seed-profile.mjs`가 테스트 계정을 아래처럼 바꿔둡니다.
@@ -102,6 +108,16 @@ node .claude/skills/manual-create/scripts/serve.mjs
 **반드시 `localhost:3001`.** 백엔드 CORS 허용 목록에 `http://localhost:3001`만
 있어서 `127.0.0.1`로 접속하면 로그인이 CORS로 차단됩니다.
 
+첫 실행이라면 Playwright를 먼저 설치합니다.
+
+```bash
+cd .claude/skills/manual-create/scripts && npm install && npx playwright install chromium
+```
+
+**위치 권한은 기본으로 허용됩니다** (서울시청 좌표). 권한이 없으면 날씨 위젯이
+"현재 위치를 가져오지 못해 …"를 빨간 글씨로 띄워 매뉴얼에 쓸 수 없습니다.
+권한 없는 상태를 일부러 찍으려면 플로우에 `"geolocation": null` 을 넣으세요.
+
 ### 3단계 — 스크린샷 촬영
 
 플로우 정의를 만들고 실행합니다.
@@ -129,8 +145,16 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 | `tapFab` | 오른쪽 아래 ＋ 버튼 | — |
 | `scroll` | 스크롤 | `dy` (음수는 위로) |
 | `back` | 뒤로가기 | — |
+| `tapContains` | 부분 일치 탭 (가장 작은 노드) | `contains` |
+| `tapRole` | 역할로 탭 (스위치·체크박스) | `role`, `index` |
 | `shot` | 스크린샷 | `name`, `caption`, `fullPage` |
 | `wait` | 대기 | `wait` |
+
+**`tap`은 시맨틱 노드의 aria-label 또는 텍스트 첫 줄과 완전일치**로 찾습니다.
+ListTile은 시맨틱 텍스트가 `제목\n부제목`으로 합쳐지므로 **제목만 적으면 됩니다.**
+
+라벨 앞뒤에 이모지·D-day가 붙는 항목(`💍결혼기념일10/12 · D+3976`)은 `tapContains`,
+라벨이 아예 없는 스위치는 `tapRole`(`role: "switch"`)을 쓰세요.
 
 **FAB(＋ 버튼)은 `tapFab`을 쓰세요.** aria-label이 없어 `tap`으로는 찾지 못합니다.
 
@@ -151,6 +175,12 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 ```
 
 촬영이 실패하면 `_failure.png`가 남으므로 그것부터 확인합니다.
+
+**빈 목록이 보이면 데이터가 없는 게 아니라 파싱이 깨진 것일 수 있습니다.**
+위젯 상당수가 `error:`를 빈 상태와 **똑같은 화면**으로 그려서 둘을 구분할 수 없습니다.
+(실제 사례: `TaskLocation.fromJson`이 `address`·`lat`·`lng`를 필수로 읽어서,
+장소명만 있는 일정 하나 때문에 일정 목록 전체가 "오늘 일정이 없습니다"로 보였습니다.)
+API를 직접 호출해 건수를 확인한 뒤, 값이 있는데 화면이 비었다면 모델 파싱을 의심하세요.
 
 **코치마크(반투명 안내 오버레이)가 화면을 가리면** 스크린샷을 못 씁니다.
 `capture.mjs`가 localStorage에 완료 플래그를 미리 심어 막습니다.
