@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
+
+import 'markdown_import_dialog.dart';
 
 /// 클립보드 서식(HTML)을 우선 시도하여 붙여넣기 (웹 Ctrl+V 서식 유실 대응)
 Future<void> _pasteWithFormat(
@@ -135,14 +138,14 @@ class FullEditorToolbar extends StatelessWidget {
           config: QuillSimpleToolbarConfig(
             showDividers: true,
             showFontFamily: false,
-            showFontSize: false,
+            showFontSize: true,
             showBoldButton: true,
             showItalicButton: true,
             showUnderLineButton: true,
             showStrikeThrough: true,
-            showInlineCode: false,
-            showColorButton: false,
-            showBackgroundColorButton: false,
+            showInlineCode: true,
+            showColorButton: true,
+            showBackgroundColorButton: true,
             showClearFormat: true,
             showAlignmentButtons: true,
             showLeftAlignment: true,
@@ -180,6 +183,12 @@ class FullEditorToolbar extends StatelessWidget {
                 icon: const Icon(Icons.content_paste_go, size: 18),
                 tooltip: '서식 유지 붙여넣기',
                 onPressed: () => _pasteWithFormat(context, controller),
+              ),
+              QuillToolbarCustomButtonOptions(
+                icon: const Icon(Icons.article_outlined, size: 18),
+                tooltip: AppLocalizations.of(context)!.announcement_markdownImport,
+                onPressed: () =>
+                    MarkdownImportDialog.show(context, controller),
               ),
             ],
           ),

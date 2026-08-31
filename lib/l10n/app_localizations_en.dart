@@ -1470,6 +1470,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get announcement_contentHint => 'Enter announcement content';
 
   @override
+  String get announcement_markdownImport => 'Import Markdown';
+
+  @override
+  String get announcement_markdownImportTitle => 'Paste Markdown';
+
+  @override
+  String get announcement_markdownImportDescription =>
+      'Paste raw Markdown and it will be converted into formatted content.';
+
+  @override
+  String get announcement_markdownImportHint =>
+      '# Heading\n- List item\n**Bold**';
+
+  @override
+  String get announcement_markdownImportEmpty =>
+      'Please enter Markdown to convert';
+
+  @override
+  String get announcement_markdownImportFailed => 'Failed to convert Markdown';
+
+  @override
+  String get announcement_markdownImportReplace => 'Replace existing content';
+
+  @override
+  String get announcement_markdownImportReplaceDescription =>
+      'When off, inserts at the cursor position';
+
+  @override
+  String get announcement_markdownImportConvert => 'Convert';
+
+  @override
+  String get announcement_markdownImportSuccess => 'Markdown converted';
+
+  @override
   String get announcement_categoryHint => 'Select category (optional)';
 
   @override

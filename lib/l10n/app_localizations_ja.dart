@@ -1424,6 +1424,38 @@ class AppLocalizationsJa extends AppLocalizations {
   String get announcement_contentHint => 'お知らせの内容を入力してください';
 
   @override
+  String get announcement_markdownImport => 'Markdownを取り込む';
+
+  @override
+  String get announcement_markdownImportTitle => 'Markdownを貼り付け';
+
+  @override
+  String get announcement_markdownImportDescription =>
+      'Markdownの原文を貼り付けると、書式付きの内容に変換されます。';
+
+  @override
+  String get announcement_markdownImportHint => '# 見出し\n- リスト項目\n**太字**';
+
+  @override
+  String get announcement_markdownImportEmpty => '変換するMarkdownを入力してください';
+
+  @override
+  String get announcement_markdownImportFailed => 'Markdownの変換に失敗しました';
+
+  @override
+  String get announcement_markdownImportReplace => '既存の内容を置き換える';
+
+  @override
+  String get announcement_markdownImportReplaceDescription =>
+      'オフの場合はカーソル位置に挿入します';
+
+  @override
+  String get announcement_markdownImportConvert => '変換';
+
+  @override
+  String get announcement_markdownImportSuccess => 'Markdownを変換しました';
+
+  @override
   String get announcement_categoryHint => 'カテゴリーを選択してください（任意）';
 
   @override

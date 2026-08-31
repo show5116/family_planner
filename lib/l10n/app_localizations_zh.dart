@@ -1411,6 +1411,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get announcement_contentHint => '请输入公告内容';
 
   @override
+  String get announcement_markdownImport => '导入 Markdown';
+
+  @override
+  String get announcement_markdownImportTitle => '粘贴 Markdown';
+
+  @override
+  String get announcement_markdownImportDescription =>
+      '粘贴 Markdown 原文后将转换为带格式的内容。';
+
+  @override
+  String get announcement_markdownImportHint => '# 标题\n- 列表项\n**粗体**';
+
+  @override
+  String get announcement_markdownImportEmpty => '请输入要转换的 Markdown';
+
+  @override
+  String get announcement_markdownImportFailed => 'Markdown 转换失败';
+
+  @override
+  String get announcement_markdownImportReplace => '替换现有内容';
+
+  @override
+  String get announcement_markdownImportReplaceDescription => '关闭时将在光标位置插入';
+
+  @override
+  String get announcement_markdownImportConvert => '转换';
+
+  @override
+  String get announcement_markdownImportSuccess => '已转换 Markdown';
+
+  @override
   String get announcement_categoryHint => '选择类别（可选）';
 
   @override

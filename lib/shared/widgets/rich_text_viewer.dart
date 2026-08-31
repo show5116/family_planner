@@ -58,6 +58,27 @@ class RichTextViewer extends StatelessWidget {
         'img': Style(
           margin: Margins.symmetric(vertical: 8),
         ),
+        'u': Style(
+          textDecoration: TextDecoration.underline,
+        ),
+        's': Style(
+          textDecoration: TextDecoration.lineThrough,
+        ),
+        'code': Style(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          fontFamily: 'monospace',
+          padding: HtmlPaddings.symmetric(horizontal: 4),
+        ),
+        'blockquote': Style(
+          margin: Margins.only(left: 0, bottom: 8),
+          padding: HtmlPaddings.only(left: 12),
+          border: Border(
+            left: BorderSide(
+              color: Theme.of(context).dividerColor,
+              width: 3,
+            ),
+          ),
+        ),
       },
       onLinkTap: (url, attributes, element) {
         if (url != null) {

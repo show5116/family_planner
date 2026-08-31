@@ -2844,6 +2844,66 @@ abstract class AppLocalizations {
   /// **'공지사항 내용을 입력하세요'**
   String get announcement_contentHint;
 
+  /// No description provided for @announcement_markdownImport.
+  ///
+  /// In ko, this message translates to:
+  /// **'마크다운 가져오기'**
+  String get announcement_markdownImport;
+
+  /// No description provided for @announcement_markdownImportTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'마크다운 붙여넣기'**
+  String get announcement_markdownImportTitle;
+
+  /// No description provided for @announcement_markdownImportDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'마크다운 원문을 붙여넣으면 서식이 적용된 내용으로 변환됩니다.'**
+  String get announcement_markdownImportDescription;
+
+  /// No description provided for @announcement_markdownImportHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'# 제목\n- 목록 항목\n**굵게**'**
+  String get announcement_markdownImportHint;
+
+  /// No description provided for @announcement_markdownImportEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'변환할 마크다운을 입력해주세요'**
+  String get announcement_markdownImportEmpty;
+
+  /// No description provided for @announcement_markdownImportFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'마크다운 변환에 실패했습니다'**
+  String get announcement_markdownImportFailed;
+
+  /// No description provided for @announcement_markdownImportReplace.
+  ///
+  /// In ko, this message translates to:
+  /// **'기존 내용 대체'**
+  String get announcement_markdownImportReplace;
+
+  /// No description provided for @announcement_markdownImportReplaceDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'끄면 커서 위치에 이어서 삽입합니다'**
+  String get announcement_markdownImportReplaceDescription;
+
+  /// No description provided for @announcement_markdownImportConvert.
+  ///
+  /// In ko, this message translates to:
+  /// **'변환'**
+  String get announcement_markdownImportConvert;
+
+  /// No description provided for @announcement_markdownImportSuccess.
+  ///
+  /// In ko, this message translates to:
+  /// **'마크다운을 변환했습니다'**
+  String get announcement_markdownImportSuccess;
+
   /// No description provided for @announcement_categoryHint.
   ///
   /// In ko, this message translates to:

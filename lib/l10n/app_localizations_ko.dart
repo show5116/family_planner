@@ -1428,6 +1428,38 @@ class AppLocalizationsKo extends AppLocalizations {
   String get announcement_contentHint => '공지사항 내용을 입력하세요';
 
   @override
+  String get announcement_markdownImport => '마크다운 가져오기';
+
+  @override
+  String get announcement_markdownImportTitle => '마크다운 붙여넣기';
+
+  @override
+  String get announcement_markdownImportDescription =>
+      '마크다운 원문을 붙여넣으면 서식이 적용된 내용으로 변환됩니다.';
+
+  @override
+  String get announcement_markdownImportHint => '# 제목\n- 목록 항목\n**굵게**';
+
+  @override
+  String get announcement_markdownImportEmpty => '변환할 마크다운을 입력해주세요';
+
+  @override
+  String get announcement_markdownImportFailed => '마크다운 변환에 실패했습니다';
+
+  @override
+  String get announcement_markdownImportReplace => '기존 내용 대체';
+
+  @override
+  String get announcement_markdownImportReplaceDescription =>
+      '끄면 커서 위치에 이어서 삽입합니다';
+
+  @override
+  String get announcement_markdownImportConvert => '변환';
+
+  @override
+  String get announcement_markdownImportSuccess => '마크다운을 변환했습니다';
+
+  @override
   String get announcement_categoryHint => '카테고리를 선택하세요 (선택사항)';
 
   @override
