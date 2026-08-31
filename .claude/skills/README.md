@@ -26,6 +26,8 @@
 | [test-generate](test-generate/) | 테스트 코드 자동 생성 | "MemoProvider 테스트 생성해줘" |
 | [vibe-verify](vibe-verify/) | 배포 전 5개 영역 검증 (그룹삭제·캐시·i18n·광고·Android UI) | "배포 전 검증해줘", "vibe-verify 실행" |
 | [version-update](version-update/) | 버전 업그레이드 + 커밋 분석 + 패치노트 생성 + 기능 검증 통합 처리 | "버전 올려줘", "v1.1.0 배포 준비", "릴리즈 준비" |
+| [manual-create](manual-create/) | 사용자 매뉴얼 자동 생성 (테스트 데이터 시딩 + 모바일 스크린샷 + 가이드 문서) | "가계부 매뉴얼 만들어줘", "manual-create 실행" |
+| [blog-post](blog-post/) | 프로젝트 코드 기반 Tistory용 SEO 기술 블로그 글 작성 | "육아포인트 기능 블로그 글 써줘", "blog-post 실행" |
 
 ### 💡 토큰 효율성 최적화
 

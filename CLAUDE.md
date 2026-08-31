@@ -29,7 +29,7 @@ flutter clean && flutter pub get       # 클린 빌드
 
 ## Claude Skills 🤖
 
-프로젝트에는 반복 작업을 자동화하는 **9개의 Claude Skills**가 설정되어 있습니다.
+프로젝트에는 반복 작업을 자동화하는 **11개의 Claude Skills**가 설정되어 있습니다.
 
 ### 자동 실행 Skills (P0 - 최우선)
 
@@ -56,6 +56,10 @@ flutter clean && flutter pub get       # 클린 빌드
   - 사용: "AnnouncementListScreen 테스트 생성해줘"
 - 🚀 **version-update**: 버전 업그레이드 + 패치노트 생성 + 기능 검증 통합 처리
   - 사용: "v1.1.0으로 버전 올려줘", "릴리즈 준비해줘"
+- 📖 **manual-create**: 사용자 매뉴얼 자동 생성 (시딩 + 스크린샷 + 가이드 문서)
+  - 사용: "가계부 매뉴얼 만들어줘", "manual-create 실행"
+- ✍️ **blog-post**: 프로젝트 코드 기반 Tistory용 SEO 기술 블로그 글 작성
+  - 사용: "육아포인트 기능 블로그 글 써줘", "이 버그 수정한 거 글로 정리해줘"
 
 ### 토큰 효율성 최적화
 
