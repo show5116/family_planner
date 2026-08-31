@@ -4,9 +4,11 @@ part 'memo_model.freezed.dart';
 part 'memo_model.g.dart';
 
 /// 메모 저장 포맷
+///
+/// 값은 서버가 받는 문자열과 같아야 합니다 (MARKDOWN · HTML · PLAIN · DELTA).
 enum MemoFormat {
-  @JsonValue('TEXT')
-  text,
+  @JsonValue('PLAIN')
+  plain,
   @JsonValue('MARKDOWN')
   markdown,
   @JsonValue('HTML')
@@ -113,7 +115,7 @@ class MemoModel with _$MemoModel {
   factory MemoModel.fromJson(Map<String, dynamic> json) {
     MemoFormat? parseFormat(dynamic v) {
       switch (v as String?) {
-        case 'TEXT': return MemoFormat.text;
+        case 'PLAIN': return MemoFormat.plain;
         case 'MARKDOWN': return MemoFormat.markdown;
         case 'HTML': return MemoFormat.html;
         case 'DELTA': return MemoFormat.delta;
