@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 24/26 기능 (92%)
-- **진행 중**: 2/26 기능 (8%)
-- **미시작**: 0/26 기능 (0%)
+- **완료**: 24/27 기능 (89%)
+- **진행 중**: 2/27 기능 (7%)
+- **미시작**: 1/27 기능 (4%)
 
-**마지막 업데이트**: 2026-08-31
+**마지막 업데이트**: 2026-09-01
 
 ---
 
@@ -52,6 +52,7 @@
 | 미니게임 | ✅ 완료 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
 | 투표 | ✅ 완료 | [18-votes.md](docs/features/18-votes.md) | P2 |
 | 루틴(습관) 관리 | ✅ 완료 | [23-routine.md](docs/features/23-routine.md) | P2 |
+| 다이어리(일기) | ⬜ 시작 안함 | [24-diary.md](docs/features/24-diary.md) | P2 |
 
 ### Phase 6: 스마트 장보기 (Smart Shopping)
 
