@@ -16,6 +16,11 @@
 - ✅ 카테고리별 원형 차트
 - ✅ 소비처 관리 화면 (`/household/merchants`) — 목록/추가/수정/삭제
 - ✅ 지출 폼에서 소비처 선택/등록
+- ✅ 지출 상세 화면 (ExpenseDetailScreen) — 환불 연결 내역 표시
+- ✅ 고정 지출 상세 화면 (RecurringExpenseDetailScreen)
+- ✅ 고정 지출 추가/수정 폼 (RecurringExpenseFormScreen) — 가변 금액(isVariable) 지원
+- ✅ 카테고리별 지출 목록 화면 (HouseholdCategoryExpensesScreen) — 통계에서 진입
+- ✅ 가계부 설정 화면 (HouseholdSettingsScreen) — 예산 설정, 카테고리 관리
 
 ## 데이터 모델
 - ✅ 지출 모델 (ExpenseModel) + CreateExpenseDto, UpdateExpenseDto

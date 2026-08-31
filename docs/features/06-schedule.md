@@ -14,6 +14,9 @@
 - ✅ 일정 추가/수정 폼 (TaskFormScreen)
 - ✅ 반복 일정 설정 UI (RecurringRuleType 선택)
 - ✅ 카테고리 관리 화면 (CRUD)
+- ✅ 기념일 목록 화면 (AnniversaryListScreen)
+- ✅ 기념일 상세 화면 (AnniversaryDetailScreen)
+- ✅ 기념일 생성/수정 다이얼로그 (AnniversaryFormDialog)
 
 ## 데이터 모델
 - ✅ Task 통합 모델 (TaskModel) - API 스펙에 맞춰 일정/할일 통합
@@ -36,6 +39,12 @@
 - ✅ 푸시 알림 지원 (FCM 연동 필요)
 - ✅ 일정 검색 기능
 
+### 기념일 (Anniversary)
+- ✅ 그룹별 기념일 등록 (이름, 날짜, 이모지)
+- ✅ D-day 계산 — `daysSince`(당일 0) 기준 D+N 표시
+- ✅ milestone Task 자동 생성 — 100일 단위(`every100Days`), 매년 주년(`everyYear`)
+- ✅ 대시보드 기념일 위젯 연동 (표시할 기념일 직접 선택)
+
 ## API 연동
 - ✅ Task 목록 조회 API (GET /tasks)
 - ✅ Task 상세 조회 API (GET /tasks/:id)
@@ -43,6 +52,11 @@
 - ✅ Task 수정 API (PUT /tasks/:id)
 - ✅ Task 삭제 API (DELETE /tasks/:id)
 - ✅ Task 완료 처리 API (PATCH /tasks/:id/complete)
+- ✅ 기념일 목록 조회 (GET /tasks/anniversaries)
+- ✅ 기념일 상세 조회 (GET /tasks/anniversaries/:id)
+- ✅ 기념일 생성 (POST /tasks/anniversaries)
+- ✅ 기념일 수정 (PUT /tasks/anniversaries/:id)
+- ✅ 기념일 삭제 (DELETE /tasks/anniversaries/:id)
 - ✅ 카테고리 목록 조회 API (GET /tasks/categories)
 - ✅ 카테고리 생성 API (POST /tasks/categories)
 - ✅ 카테고리 수정 API (PUT /tasks/categories/:id)

@@ -16,6 +16,8 @@
 - ✅ 적금 플랜 화면 (_SavingsPlanSection - 포인트 탭 내 인라인)
 - ✅ 용돈 플랜 화면 (child_allowance_plan_screen.dart)
 - ✅ 계정 생성 화면 개선 (자녀 ID 조회 연동)
+- ✅ 자녀 프로필 등록/수정 화면 (ChildProfileFormScreen) — 앱 계정 없이도 등록
+- ✅ 자녀 앱 계정 연결 화면 (ChildLinkUserScreen) — 자녀가 가입하면 프로필과 연결
 
 ## 데이터 모델
 - ✅ 포인트 계정 모델 (ChildcareAccount)

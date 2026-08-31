@@ -32,6 +32,16 @@
 - ✅ 초대 코드 입력 화면
 - ✅ 이메일 초대 화면
 - ✅ 가입 요청 관리 UI (대기 중 탭)
+- ✅ 초대 링크 랜딩 화면 (InviteLandingScreen) — 딥링크로 앱 열기
+
+### 가입 신청
+- ✅ 내 가입 신청 목록 화면 (MyJoinRequestsScreen) — 신청 상태 확인·취소
+- ✅ 그룹장의 신청 승인/거부 (그룹 상세 대기 중 탭)
+
+### 신고
+- ✅ 그룹원 신고 (그룹 상세에서 멤버 신고)
+- ✅ 내 신고 내역 화면 (MyReportsScreen) — 처리 상태 확인
+- ✅ 운영자 신고 관리 화면 (AdminReportListScreen) — 접수·처리
 
 ---
 
@@ -91,7 +101,14 @@
 ---
 
 ## API 문서
-[docs/api/groups.md](../api/groups.md)
+- [docs/api/groups.md](../api/groups.md)
+- [docs/api/groups-admin-reports.md](../api/groups-admin-reports.md) — 신고 접수·처리
+
+---
+
+## 딥링크
+- ✅ Universal Links / App Links로 초대 링크에서 앱 실행
+- ✅ 설정 파일: [docs/deeplink/apple-app-site-association](../deeplink/apple-app-site-association), [docs/deeplink/assetlinks.json](../deeplink/assetlinks.json)
 
 ---
 

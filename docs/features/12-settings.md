@@ -27,8 +27,16 @@
 
 ### 프로필 설정 화면
 - ✅ 프로필 설정 화면
-- ✅ 프로필 정보 수정 (이름, 이메일 등)
+- ✅ 프로필 정보 수정 (이름, 전화번호)
 - ✅ 프로필 이미지 업로드
+- ✅ 개인 색상 선택 (일정·할일에서 나를 나타내는 색)
+- ✅ 비밀번호 변경 (현재 비밀번호 확인 + 6자 이상 검증)
+- ✅ 비밀번호 미설정 계정(소셜 로그인) 안내 다이얼로그
+
+### 계정 관리 (프로필 화면 하단)
+- ✅ 내 데이터 내보내기 — 등록된 이메일로 사본 발송
+- ✅ 계정 삭제 예약 — 7일 유예 후 영구 삭제
+- ✅ 계정 삭제 예약 취소 — 유예 기간 중에만 노출
 
 ### 알림 설정 화면
 - ✅ 알림 설정 화면
@@ -47,6 +55,24 @@
 - ✅ 권한 소프트/하드 삭제 (API 연동 완료)
 - ✅ 권한 생성/수정 시 실시간 UI 반영
 - ✅ 카테고리 필터 (전체 버튼 포함)
+
+### 운영자 전용 - 공통 역할 관리
+- ✅ 공통 역할 목록 화면 (CommonRoleListScreen) — 시스템 전체 공통 역할 CRUD
+- ✅ 역할별 권한 편집 화면 (CommonRolePermissionsScreen)
+
+### 운영자 전용 - 사용자 및 계정 관리
+- ✅ 사용자 목록 화면 (AdminUserListScreen) — 검색·필터
+- ✅ 사용자 상세 화면 (AdminUserDetailScreen)
+- ✅ 구독 등급 수동 변경
+- ✅ 계정 삭제 예약 조회 및 처리
+
+### 운영자 전용 - 신고 관리
+- ✅ 그룹원 신고 접수·처리 → [12-groups.md](12-groups.md#신고)
+
+### 더보기 메뉴 (앱바 ⋮)
+- ✅ 튜토리얼 다시 보기
+- ✅ 사용 가이드 홈페이지 열기
+- 🟨 AI 어시스턴트 — 운영자에게만 열려 있고 일반 사용자에게는 준비 중 안내
 
 ## API 연동
 
@@ -130,3 +156,11 @@
 - 권한 관리는 is_admin이 true인 사용자만 접근 가능
 - Permission은 Role에 할당할 수 있는 권한 종류(상수)를 정의
   - 예: GROUP_UPDATE, MEMBER_INVITE, SCHEDULE_CREATE 등
+
+---
+
+## API 문서
+- [docs/api/permissions.md](../api/permissions.md) — 권한
+- [docs/api/roles.md](../api/roles.md) — 공통 역할
+- [docs/api/subscription-admin.md](../api/subscription-admin.md) — 운영자 구독·계정 관리
+- [docs/api/notifications.md](../api/notifications.md) — 알림 설정
