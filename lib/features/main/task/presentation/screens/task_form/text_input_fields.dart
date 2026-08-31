@@ -127,12 +127,12 @@ class LocationField extends StatelessWidget {
             ),
           ),
         ),
-        if (hasLocation) ...[
+        if (hasLocation && location!.address != null) ...[
           const SizedBox(height: AppSizes.spaceXS),
           Padding(
             padding: const EdgeInsets.only(left: AppSizes.spaceS),
             child: Text(
-              location!.address,
+              location!.address!,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

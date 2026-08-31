@@ -1,0 +1,60 @@
+{
+  "flow": "사용자 설정",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/settings/screenshots/01-main.png",
+      "caption": "설정 — 맨 위 구독 상태 카드와 항목별 섹션"
+    },
+    {
+      "name": "02-sections",
+      "file": "docs/manual/settings/screenshots/02-sections.png",
+      "caption": "설정 아래쪽 — 알림·신고·정보 섹션"
+    },
+    {
+      "name": "03-bottom-nav",
+      "file": "docs/manual/settings/screenshots/03-bottom-nav.png",
+      "caption": "하단 네비게이션 설정 — 5개 슬롯 중 가운데 3개를 바꿀 수 있습니다"
+    },
+    {
+      "name": "04-bottom-nav-menus",
+      "file": "docs/manual/settings/screenshots/04-bottom-nav-menus.png",
+      "caption": "사용 가능한 메뉴 — 슬롯에 배치된 메뉴에는 슬롯 번호가 붙습니다"
+    },
+    {
+      "name": "05-theme",
+      "file": "docs/manual/settings/screenshots/05-theme.png",
+      "caption": "테마 설정 — 색상 5종과 밝기 3종을 조합합니다"
+    },
+    {
+      "name": "06-language",
+      "file": "docs/manual/settings/screenshots/06-language.png",
+      "caption": "언어 설정 — 4개 언어 또는 기기 언어 따라가기"
+    },
+    {
+      "name": "07-profile",
+      "file": "docs/manual/settings/screenshots/07-profile.png",
+      "caption": "프로필 설정 — 사진, 이름, 전화번호, 개인 색상"
+    },
+    {
+      "name": "08-profile-password",
+      "file": "docs/manual/settings/screenshots/08-profile-password.png",
+      "caption": "비밀번호 변경 — 스위치를 켜면 새 비밀번호 입력란이 나타납니다"
+    },
+    {
+      "name": "09-account",
+      "file": "docs/manual/settings/screenshots/09-account.png",
+      "caption": "계정 관리 — 데이터 내보내기와 계정 삭제 예약"
+    },
+    {
+      "name": "10-notification",
+      "file": "docs/manual/settings/screenshots/10-notification.png",
+      "caption": "알림 설정 — 권한 상태 카드와 알림 종류별 스위치"
+    },
+    {
+      "name": "11-notification-types",
+      "file": "docs/manual/settings/screenshots/11-notification-types.png",
+      "caption": "알림 종류 — 필요한 알림만 켜 둘 수 있습니다"
+    }
+  ]
+}

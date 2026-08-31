@@ -24,6 +24,8 @@ enum NotificationCategory {
   weather, // 날씨
   @JsonValue('FRIDGE')
   fridge, // 냉장고
+  @JsonValue('ROUTINE')
+  routine, // 루틴(습관)
 }
 
 /// 알림 모델
@@ -53,6 +55,7 @@ class NotificationModel with _$NotificationModel {
         case 'SAVINGS': return NotificationCategory.savings;
         case 'WEATHER': return NotificationCategory.weather;
         case 'FRIDGE': return NotificationCategory.fridge;
+        case 'ROUTINE': return NotificationCategory.routine;
         default: return NotificationCategory.system;
       }
     }

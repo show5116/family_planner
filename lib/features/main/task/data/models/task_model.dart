@@ -41,8 +41,8 @@ enum RecurringRuleType {
 enum RecurringGenerationType {
   @JsonValue('AUTO_SCHEDULER')
   autoScheduler,
-  @JsonValue('MANUAL')
-  manual,
+  @JsonValue('AFTER_COMPLETION')
+  afterCompletion,
 }
 
 /// 알림 타입
@@ -51,8 +51,6 @@ enum TaskReminderType {
   beforeStart,
   @JsonValue('BEFORE_DUE')
   beforeDue,
-  @JsonValue('AT_TIME')
-  atTime,
 }
 
 /// Task 상태
@@ -369,33 +367,41 @@ class TaskDetailModel with _$TaskDetailModel {
 }
 
 /// 장소 정보 모델 (카카오 장소 검색 결과)
+///
+/// 서버 스키마에서 필수는 `name` 뿐이고 주소·좌표는 선택입니다.
+/// 앱 안에서 장소를 고르면 네 값이 모두 채워지지만, 장소명만 저장된 일정도
+/// 들어올 수 있으므로 나머지는 nullable로 둡니다.
+/// (필수로 두면 그런 일정 하나 때문에 목록 전체 파싱이 실패합니다.)
 class TaskLocation {
   final String name;
-  final String address;
-  final double lat;
-  final double lng;
+  final String? address;
+  final double? lat;
+  final double? lng;
 
   const TaskLocation({
     required this.name,
-    required this.address,
-    required this.lat,
-    required this.lng,
+    this.address,
+    this.lat,
+    this.lng,
   });
+
+  /// 지도에 찍을 수 있는 좌표가 있는지
+  bool get hasCoordinates => lat != null && lng != null;
 
   factory TaskLocation.fromJson(Map<String, dynamic> json) {
     return TaskLocation(
       name: json['name'] as String,
-      address: json['address'] as String,
-      lat: (json['lat'] as num).toDouble(),
-      lng: (json['lng'] as num).toDouble(),
+      address: json['address'] as String?,
+      lat: (json['lat'] as num?)?.toDouble(),
+      lng: (json['lng'] as num?)?.toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() => {
     'name': name,
-    'address': address,
-    'lat': lat,
-    'lng': lng,
+    if (address != null) 'address': address,
+    if (lat != null) 'lat': lat,
+    if (lng != null) 'lng': lng,
   };
 
   TaskLocation copyWith({String? name, String? address, double? lat, double? lng}) {
@@ -408,7 +414,7 @@ class TaskLocation {
   }
 
   @override
-  String toString() => '$name ($address)';
+  String toString() => address == null ? name : '$name ($address)';
 }
 
 /// Task 목록 응답 모델

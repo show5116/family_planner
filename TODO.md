@@ -9,28 +9,31 @@
 | 상태 | 기능 | 문서 |
 |------|------|------|
 | ✅ | 프로젝트 초기 설정 | [00-setup.md](docs/features/00-setup.md) |
-| 🟨 | 회원 가입 및 로그인 | [01-auth.md](docs/features/01-auth.md) |
-| 🟨 | 메인화면 (대시보드) | [02-dashboard.md](docs/features/02-dashboard.md) |
+| ✅ | 회원 가입 및 로그인 | [01-auth.md](docs/features/01-auth.md) |
+| ✅ | 메인화면 (대시보드) | [02-dashboard.md](docs/features/02-dashboard.md) |
 | ✅ | 자산관리 | [03-assets.md](docs/features/03-assets.md) |
 | ✅ | 투자지표 | [04-investment.md](docs/features/04-investment.md) |
-| ⬜ | 가계관리 | [05-household.md](docs/features/05-household.md) |
-| ⬜ | 일정관리 | [06-schedule.md](docs/features/06-schedule.md) |
-| ⬜ | ToDoList | [07-todo.md](docs/features/07-todo.md) |
+| ✅ | 가계관리 | [05-household.md](docs/features/05-household.md) |
+| ✅ | 일정관리 | [06-schedule.md](docs/features/06-schedule.md) |
+| ✅ | ToDoList | [07-todo.md](docs/features/07-todo.md) |
 | ✅ | 육아포인트 | [08-childcare.md](docs/features/08-childcare.md) |
 | ✅ | 메모 | [09-memo.md](docs/features/09-memo.md) |
-| ⬜ | 미니게임 | [10-minigame.md](docs/features/10-minigame.md) |
-| 🟨 | 다국어 | [11-i18n.md](docs/features/11-i18n.md) |
+| ✅ | 미니게임 | [10-minigame.md](docs/features/10-minigame.md) |
+| ✅ | 다국어 | [11-i18n.md](docs/features/11-i18n.md) |
 | ✅ | 설정 | [12-settings.md](docs/features/12-settings.md) |
 | ✅ | 그룹관리 | [12-groups.md](docs/features/12-groups.md) |
-| ⬜ | 공통 기능 | [13-common.md](docs/features/13-common.md) |
+| 🟨 | 공통 기능 | [13-common.md](docs/features/13-common.md) |
 | 🟨 | 알림 | [14-notification.md](docs/features/14-notification.md) |
 | ✅ | 공지사항 | [15-announcements.md](docs/features/15-announcements.md) |
 | ✅ | Q&A (문의하기) | [16-qna.md](docs/features/16-qna.md) |
-| ⬜ | 날씨 | [17-weather.md](docs/features/17-weather.md) |
-| 🟨 | 투표 | [18-votes.md](docs/features/18-votes.md) |
+| ✅ | 날씨 | [17-weather.md](docs/features/17-weather.md) |
+| ✅ | 투표 | [18-votes.md](docs/features/18-votes.md) |
 | ✅ | 적립금 관리 | [19-savings.md](docs/features/19-savings.md) |
 | ✅ | 온보딩 & 튜토리얼 | [20-onboarding.md](docs/features/20-onboarding.md) |
-| 🟨 | 루틴(습관) 관리 | [23-routine.md](docs/features/23-routine.md) |
+| ✅ | 냉장고 관리 | [21-fridge.md](docs/features/21-fridge.md) |
+| ✅ | 스마트 장보기 | [22-shopping.md](docs/features/22-shopping.md) |
+| ✅ | 루틴(습관) 관리 | [23-routine.md](docs/features/23-routine.md) |
+| ✅ | 구독 & 광고 | [subscription.md](docs/features/subscription.md) |
 
 ---
 

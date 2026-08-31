@@ -1,7 +1,7 @@
-# 17. 날씨 기능 (Weather)
+# 17. 날씨 기능 (Weather) ✅
 
 ## 상태
-⬜ 시작 안함
+✅ 완료
 
 ---
 
@@ -64,38 +64,38 @@ class WeatherForecastModel {
 
 ### Phase 1: 데이터 레이어
 
-- [ ] `WeatherModel`, `ForecastItemModel`, `WeatherForecastModel` 모델 작성
-- [ ] `WeatherRepository` — `/weather`, `/weather/forecast` API 호출
-- [ ] `weatherProvider` (FutureProvider) — 현재 날씨
-- [ ] `weatherForecastProvider` (FutureProvider) — 단기예보
-- [ ] 위치 권한 처리 (`geolocator` 패키지)
-- [ ] `locationProvider` — GPS 좌표 제공 (캐시 포함)
+- [x] `WeatherModel`, `ForecastItemModel`, `WeatherForecastModel` 모델 작성
+- [x] `WeatherRepository` — `/weather`, `/weather/forecast` API 호출
+- [x] `weatherProvider` (FutureProvider) — 현재 날씨
+- [x] `weatherForecastProvider` (FutureProvider) — 단기예보
+- [x] 위치 권한 처리 (`geolocator` 패키지)
+- [x] `locationProvider` — GPS 좌표 제공 (캐시 포함)
 
 ### Phase 2: 대시보드 위젯
 
-- [ ] `WeatherWidget` — 콤팩트 날씨 카드
+- [x] `WeatherWidget` — 콤팩트 날씨 카드
   - 날씨 아이콘 + 기온 + 날씨 설명
   - 습도 / 풍속 보조 정보
   - 탭 시 상세 화면 이동
   - 로딩/에러 상태 처리
-- [ ] `DashboardWidgetSettings`에 `showWeather` 추가 (기본값: `true`)
-- [ ] 위젯 설정 화면에 날씨 항목 추가
-- [ ] `dashboard_tab.dart`에 `WeatherWidget` 등록
+- [x] `DashboardWidgetSettings`에 `showWeather` 추가 (기본값: `true`)
+- [x] 위젯 설정 화면에 날씨 항목 추가
+- [x] `dashboard_tab.dart`에 `WeatherWidget` 등록
 
 ### Phase 3: 날씨 상세 화면
 
-- [ ] `WeatherDetailScreen` (`/weather` 라우트)
+- [x] `WeatherDetailScreen` (`/weather` 라우트)
   - 현재 날씨 섹션 (대형 아이콘 + 상세 정보)
   - 시간별 예보 수평 스크롤 리스트
   - 날짜별 일기예보 카드 (최저/최고 기온, 강수확률)
   - 위치 새로고침 버튼
-- [ ] 라우트 등록 (`app_routes.dart`, `main_routes.dart`)
+- [x] 라우트 등록 (`app_routes.dart`, `main_routes.dart`)
 
 ### Phase 4: UI 디테일
 
-- [ ] 날씨 아이콘 헬퍼 (`sky` + `precipitationType` → 아이콘/색상)
-- [ ] 날씨 배경색 — 맑음/흐림/비/눈 테마색 적용
-- [ ] 다국어 지원 (한/영/일) — `weather_` prefix
+- [x] 날씨 아이콘 헬퍼 (`sky` + `precipitationType` → 아이콘/색상)
+- [x] 날씨 배경색 — 맑음/흐림/비/눈 테마색 적용
+- [x] 다국어 지원 (한/영/일) — `weather_` prefix
 
 ---
 

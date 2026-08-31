@@ -276,7 +276,7 @@ const _$RecurringRuleTypeEnumMap = {
 
 const _$RecurringGenerationTypeEnumMap = {
   RecurringGenerationType.autoScheduler: 'AUTO_SCHEDULER',
-  RecurringGenerationType.manual: 'MANUAL',
+  RecurringGenerationType.afterCompletion: 'AFTER_COMPLETION',
 };
 
 const _$SkipBehaviorEnumMap = {
@@ -301,5 +301,4 @@ Map<String, dynamic> _$$TaskReminderDtoImplToJson(
 const _$TaskReminderTypeEnumMap = {
   TaskReminderType.beforeStart: 'BEFORE_START',
   TaskReminderType.beforeDue: 'BEFORE_DUE',
-  TaskReminderType.atTime: 'AT_TIME',
 };

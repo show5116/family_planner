@@ -9,13 +9,17 @@
 - ✅ 육아포인트 메인 화면 (더보기 탭에서 접근)
 - ✅ 포인트 탭/보상 탭/규칙 탭/히스토리 탭
 - ✅ 자녀별 포인트 카드 (AccountSummaryCard)
+- ✅ 그룹·자녀 선택 바 (GroupAndChildBar)
+- ✅ 첫 진입 코치마크 (_child_points_onboarding)
 - ✅ 포인트 지급/차감 폼 (TransactionFormScreen)
 - ✅ 보상 항목 관리 화면 (인라인 다이얼로그)
 - ✅ 규칙 관리 화면 (_RuleSection 타입별 섹션, 접기/펼치기, 드래그 순서 변경)
 - ✅ 히스토리 화면 (월별/연도별 토글, 잔액 라인 차트, 도넛 차트, 연간 막대 차트)
 - ✅ 적금 플랜 화면 (_SavingsPlanSection - 포인트 탭 내 인라인)
 - ✅ 용돈 플랜 화면 (child_allowance_plan_screen.dart)
-- ⬜ 계정 생성 화면 개선 (자녀 ID 조회 연동)
+- ✅ 계정 생성 화면 개선 (자녀 ID 조회 연동)
+- ✅ 자녀 프로필 등록/수정 화면 (ChildProfileFormScreen) — 앱 계정 없이도 등록
+- ✅ 자녀 앱 계정 연결 화면 (ChildLinkUserScreen) — 자녀가 가입하면 프로필과 연결
 
 ## 데이터 모델
 - ✅ 포인트 계정 모델 (ChildcareAccount)
@@ -26,7 +30,11 @@
 - ✅ 거래 결과 래퍼 (TransactionResult - transactions + closingBalance)
 
 ## 기능 구현
-- ✅ 포인트 지급/차감 (EARN, SPEND, PENALTY, MONTHLY_ALLOWANCE)
+- ✅ 포인트 지급/차감 — ChildcareTransactionType 9종
+  (ALLOWANCE 용돈 · REWARD 보상 · BONUS 보너스 · PENALTY 차감 · PURCHASE 구매 ·
+   CASHOUT 현금화 · SAVINGS_DEPOSIT 적금 입금 · SAVINGS_WITHDRAW 적금 출금 · INTEREST 이자)
+- ✅ 자녀 프로필 등록 — 앱 계정 없이도 등록 가능 (부모가 대신 관리)
+- ✅ 자녀 앱 계정 연결 — 자녀가 가입한 뒤 프로필과 연결
 - ✅ 포인트 적립/사용 항목 등록/편집/삭제/순서 변경
 - ✅ 포인트 규칙 등록/편집/삭제/순서 변경 (타입별 섹션)
 - ✅ 규칙 위반 시 포인트 차감 (규칙 탭에서 직접 적용)
@@ -50,6 +58,11 @@
 - ✅ 적금 플랜 조회 API (`GET /childcare/accounts/:id/savings`)
 - ✅ 적금 플랜 해지 API (`DELETE /childcare/accounts/:id/savings`)
 - ✅ 국고채 3년물 금리 조회 API (`GET /childcare/accounts/:id/savings/kr3y-rate`)
+- ✅ 자녀 프로필 등록 API (`POST /childcare/children`)
+- ✅ 자녀 프로필 목록 API (`GET /childcare/children?groupId=`)
+- ✅ 자녀 앱 계정 연결 API (`POST /childcare/children/:id/link-user`)
+- ✅ 용돈 플랜 설정·조회 API (`POST|GET /childcare/children/:id/allowance-plan`)
+- ✅ 용돈 플랜 변경 이력 API (`GET /childcare/children/:id/allowance-plan/history`)
 
 ## 상태 관리
 - ✅ childcareSelectedGroupIdProvider (StateProvider)
@@ -76,7 +89,10 @@
 - 규칙 탭: `lib/features/main/child_points/presentation/screens/rules_tab.dart`
 - 상점 탭: `lib/features/main/child_points/presentation/screens/shop_tab.dart`
 - 용돈 플랜: `lib/features/main/child_points/presentation/screens/child_allowance_plan_screen.dart`
-- 위젯: `lib/features/main/child_points/presentation/widgets/`
+- 자녀 프로필 폼: `.../presentation/screens/child_profile_form_screen.dart`
+- 자녀 계정 연결: `.../presentation/screens/child_link_user_screen.dart`
+- 위젯: `.../presentation/widgets/` — account_summary_card, group_and_child_bar,
+  rule_list_item, shop_item_list_item, transaction_list_item, management_loading_overlay
 
 ## 노트
 - 포인트 자동 지급 및 적금 이자 지급은 백엔드 스케줄러에서 처리

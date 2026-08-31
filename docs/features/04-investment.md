@@ -7,6 +7,7 @@
 
 ## 구현 위치
 - 모델: `lib/features/main/investment/data/models/indicator_model.dart`
+- 브리핑 모델: `lib/features/main/investment/data/models/market_briefing_model.dart`
 - Repository: `lib/features/main/investment/data/repositories/indicator_repository.dart`
 - Provider: `lib/features/main/investment/providers/indicator_provider.dart`
 - 목록 화면: `lib/features/main/investment/presentation/screens/investment_indicators_screen.dart`
@@ -23,6 +24,8 @@
 - ✅ 즐겨찾기 드래그 정렬 (ReorderableListView, 길게 눌러 순서 변경)
 - ✅ 대시보드 즐겨찾기 위젯 (InvestmentSummaryWidget)
 - ✅ 관리자 전용 과거 데이터 초기화 다이얼로그
+- ✅ AI 마켓 브리핑 카드 — 거시경제 / 국내 증시 / 해외 증시 요약
+- ✅ 첫 진입 코치마크 (_investment_indicators_onboarding)
 
 ## 제공 지표
 - ✅ 백엔드에서 지표 목록 동적 제공 (KOSPI, NASDAQ, 금, 환율, VIX, 버핏지수 등)
@@ -46,6 +49,7 @@
 - ✅ `DELETE /indicators/:symbol/bookmark` — 즐겨찾기 해제
 - ✅ `PATCH /indicators/bookmarks/reorder` — 즐겨찾기 순서 변경
 - ✅ `POST /indicators/admin/init-history` — 과거 데이터 일괄 초기화 (어드민)
+- ✅ `GET /ai/market-briefing` — AI 마켓 브리핑 (거시/국내/해외)
 
 ## 상태 관리
 - ✅ `IndicatorsNotifier` (`indicatorsProvider`) — 전체 목록, 즐겨찾기 토글, 순서 변경
@@ -53,3 +57,4 @@
 - ✅ `indicatorHistoryProvider` — 시계열 히스토리 (symbol + days 패밀리)
 - ✅ `indicatorSparklineProvider` — 스파크라인용 당일 데이터
 - ✅ `initIndicatorHistoryProvider` — 어드민 과거 데이터 초기화
+- ✅ `marketBriefingProvider` — AI 마켓 브리핑

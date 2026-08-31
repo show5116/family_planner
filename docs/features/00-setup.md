@@ -16,8 +16,10 @@
 - ✅ 색상 팔레트 정의 (Primary, Secondary, Semantic, Functional)
 - ✅ 간격 시스템 (4px ~ 48px)
 - ✅ 타이포그래피 시스템 (Material Design 3)
-- ✅ 라이트/다크 테마 지원
+- ✅ 컬러 테마 5종 (파랑/초록/보라/분홍/청록 — AppThemeVariant)
+- ✅ 밝기 모드 3종 (Light / Dark / 시스템 설정)
 - ✅ 반응형 디자인 시스템 (Mobile/Tablet/Desktop)
+- ✅ 다국어 4종 (한/영/일/중) — [11-i18n.md](11-i18n.md)
 
 ## 공통 컴포넌트
 - ✅ 앱 로고 위젯 (AppLogo)
@@ -39,3 +41,5 @@
 - `lib/core/theme/app_theme.dart`
 - `lib/core/constants/app_sizes.dart`
 - `lib/core/constants/app_colors.dart`
+- `lib/core/theme/theme_provider.dart` — 컬러 테마·밝기 모드 상태
+- `lib/core/utils/responsive.dart` — 반응형 브레이크포인트

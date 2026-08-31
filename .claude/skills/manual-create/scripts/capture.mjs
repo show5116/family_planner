@@ -79,17 +79,39 @@ function nodeByText(page, label) {
  * (줄바꿈·따옴표가 든 라벨도 안전하게 처리하기 위함).
  */
 async function clickLabel(page, label, timeout = 45000) {
-  const box = await page.evaluate((want) => {
-    const el = [...document.querySelectorAll('flt-semantics')]
-      .find((n) => (n.getAttribute('aria-label') || '') === want);
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    if (r.width === 0 || r.height === 0) return null;
-    return { x: r.x, y: r.y, w: r.width, h: r.height };
+  // 1) aria-label 완전일치
+  // 2) 첫 줄 완전일치 — ListTile은 시맨틱 텍스트가 "제목\n부제목"으로 합쳐져서
+  //    제목만으로는 완전일치가 되지 않습니다. 후보 중 **가장 작은** 노드를 고릅니다
+  //    (자식 텍스트를 모두 품은 스크롤 컨테이너 같은 상위 노드를 피하기 위함).
+  //
+  // 좌표(page.mouse)가 아니라 요소 핸들로 클릭합니다. 화면 밖에 있는 버튼은
+  // 좌표 클릭이 통하지 않는데(스크롤을 하지 않음), 핸들 클릭은 먼저 스크롤합니다.
+  // 로그인 화면의 테스트 계정 버튼처럼 접힌 아래쪽 버튼이 여기에 해당합니다.
+  const handle = await page.evaluateHandle((want) => {
+    const visible = (n) => {
+      const r = n.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    };
+    const area = (n) => {
+      const r = n.getBoundingClientRect();
+      return r.width * r.height;
+    };
+    const nodes = [...document.querySelectorAll('flt-semantics')];
+
+    const byAria = nodes.find(
+      (n) => (n.getAttribute('aria-label') || '') === want && visible(n),
+    );
+    if (byAria) return byAria;
+
+    const byFirstLine = nodes
+      .filter((n) => (n.textContent || '').split('\n')[0].trim() === want && visible(n))
+      .sort((a, b) => area(a) - area(b));
+    return byFirstLine[0] ?? null;
   }, label);
 
-  if (box) {
-    await page.mouse.click(box.x + box.w / 2, box.y + box.h / 2);
+  const el = handle.asElement();
+  if (el) {
+    await el.click({ timeout });
     return;
   }
 
@@ -127,6 +149,53 @@ async function runStep(page, step, ctxState) {
     case 'tap': {
       await enableSemantics(page);
       await clickLabel(page, step.label, step.timeout ?? 45000);
+      await settle(page, step.wait ?? 3500);
+      await enableSemantics(page);
+      break;
+    }
+    case 'tapRole': {
+      // 라벨이 없는 컨트롤(스위치·체크박스)용. 화면에 같은 역할이 여러 개면
+      // index로 위에서부터 몇 번째인지 지정합니다.
+      await enableSemantics(page);
+      const handle = await page.evaluateHandle(({ role, index }) => {
+        const nodes = [...document.querySelectorAll('flt-semantics')]
+          .filter((n) => n.getAttribute('role') === role)
+          .filter((n) => {
+            const r = n.getBoundingClientRect();
+            return r.width > 0 && r.height > 0;
+          })
+          .sort((a, b) => a.getBoundingClientRect().y - b.getBoundingClientRect().y);
+        return nodes[index ?? 0] ?? null;
+      }, { role: step.role, index: step.index });
+      const target = handle.asElement();
+      if (!target) throw new Error(`role="${step.role}" 요소를 찾지 못했습니다`);
+      await target.click({ timeout: step.timeout ?? 45000 });
+      await settle(page, step.wait ?? 3500);
+      await enableSemantics(page);
+      break;
+    }
+    case 'tapContains': {
+      // 부분일치 — 이모지·D-day처럼 라벨 앞뒤에 다른 글자가 붙는 항목용
+      // (예: "💍결혼기념일10/12 · D+3976"). 후보 중 가장 작은 노드를 고릅니다.
+      await enableSemantics(page);
+      const handle = await page.evaluateHandle((want) => {
+        const area = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width * r.height;
+        };
+        return (
+          [...document.querySelectorAll('flt-semantics')]
+            .filter((n) => {
+              const t = (n.getAttribute('aria-label') || '') + (n.textContent || '');
+              const r = n.getBoundingClientRect();
+              return t.includes(want) && r.width > 0 && r.height > 0;
+            })
+            .sort((a, b) => area(a) - area(b))[0] ?? null
+        );
+      }, step.contains);
+      const target = handle.asElement();
+      if (!target) throw new Error(`"${step.contains}" 를 포함한 요소를 찾지 못했습니다`);
+      await target.click({ timeout: step.timeout ?? 45000 });
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -201,11 +270,20 @@ async function runStep(page, step, ctxState) {
 
 async function main() {
   const browser = await chromium.launch();
+  // 위치 권한을 주지 않으면 날씨 위젯이 "현재 위치를 가져오지 못해 …" 경고를
+  // 빨간 글씨로 띄웁니다. 매뉴얼 스크린샷으로 쓸 수 없으므로 기본으로 허용합니다.
+  // 플로우에서 `geolocation: null` 로 두면 권한 없는 상태를 일부러 찍을 수 있습니다.
+  const geolocation =
+    flow.geolocation === undefined
+      ? { latitude: 37.5665, longitude: 126.978 } // 서울시청
+      : flow.geolocation;
+
   const context = await browser.newContext({
     ...devices[flow.device ?? 'iPhone 13'],
     locale: flow.locale ?? 'ko-KR',
     // 스크린샷 시각을 고정하고 싶다면 timezoneId 지정
     timezoneId: flow.timezone ?? 'Asia/Seoul',
+    ...(geolocation ? { geolocation, permissions: ['geolocation'] } : {}),
   });
   // 코치마크 오버레이 억제 (페이지 로드 전 주입되어야 함).
   // 그룹 상세 코치마크는 키에 그룹 ID가 들어가므로 API로 목록을 먼저 받아옵니다.

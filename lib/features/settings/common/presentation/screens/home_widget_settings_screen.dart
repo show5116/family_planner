@@ -9,6 +9,90 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
+/// 추가할 수 있는 위젯 키 (추가 시트에 보이는 순서)
+const _addableWidgetKeys = [
+  'weather',
+  'fridgeSummary',
+  'todaySchedule',
+  'investmentSummary',
+  'todoSummary',
+  'assetSummary',
+  'memoSummary',
+  'householdSummary',
+  'childcareSummary',
+  'savingsSummary',
+  'anniversary',
+  'routineSummary',
+];
+
+/// 위젯 이름.
+///
+/// 표시 중인 목록과 추가 시트가 **같은 이름**을 쓰도록 여기 한 곳에서만 만듭니다.
+/// (예전에는 추가 시트가 '오늘 일정'·'가계관리'처럼 다른 이름을 하드코딩해서
+///  같은 위젯이 화면마다 다른 이름으로 보였습니다.)
+String _widgetLabel(String key, AppLocalizations l10n) {
+  switch (key) {
+    case 'weather':
+      return l10n.widgetSettings_weather;
+    case 'fridgeSummary':
+      return l10n.widgetSettings_fridgeSummary;
+    case 'todaySchedule':
+      return l10n.widgetSettings_todaySchedule;
+    case 'investmentSummary':
+      return l10n.widgetSettings_investmentSummary;
+    case 'todoSummary':
+      return l10n.widgetSettings_todoSummary;
+    case 'assetSummary':
+      return l10n.widgetSettings_assetSummary;
+    case 'memoSummary':
+      return l10n.widgetSettings_memoSummary;
+    case 'householdSummary':
+      return l10n.widgetSettings_householdSummary;
+    case 'childcareSummary':
+      return l10n.widgetSettings_childcareSummary;
+    case 'savingsSummary':
+      return l10n.widgetSettings_savingsSummary;
+    case 'anniversary':
+      return l10n.widgetSettings_anniversarySummary;
+    case 'routineSummary':
+      return l10n.widgetSettings_routineSummary;
+    default:
+      return key;
+  }
+}
+
+/// 위젯 아이콘 (이름과 마찬가지로 한 곳에서만 정합니다)
+IconData _widgetIcon(String key) {
+  switch (key) {
+    case 'weather':
+      return Icons.wb_sunny_outlined;
+    case 'fridgeSummary':
+      return Icons.warning_amber_outlined;
+    case 'todaySchedule':
+      return Icons.calendar_today;
+    case 'investmentSummary':
+      return Icons.trending_up;
+    case 'todoSummary':
+      return Icons.check_box;
+    case 'assetSummary':
+      return Icons.account_balance_wallet;
+    case 'memoSummary':
+      return Icons.note_outlined;
+    case 'householdSummary':
+      return Icons.account_balance;
+    case 'childcareSummary':
+      return Icons.child_care;
+    case 'savingsSummary':
+      return Icons.savings;
+    case 'anniversary':
+      return Icons.celebration_outlined;
+    case 'routineSummary':
+      return Icons.check_circle_outline;
+    default:
+      return Icons.widgets_outlined;
+  }
+}
+
 /// 홈 위젯 설정 화면
 class HomeWidgetSettingsScreen extends ConsumerWidget {
   const HomeWidgetSettingsScreen({super.key});
@@ -112,68 +196,6 @@ class _HomeWidgetSettingsBodyState
         onAdd: _addWidget,
       ),
     );
-  }
-
-  static String _labelOf(String key, AppLocalizations l10n) {
-    switch (key) {
-      case 'weather':
-        return l10n.widgetSettings_weather;
-      case 'fridgeSummary':
-        return l10n.widgetSettings_fridgeSummary;
-      case 'todaySchedule':
-        return l10n.widgetSettings_todaySchedule;
-      case 'investmentSummary':
-        return l10n.widgetSettings_investmentSummary;
-      case 'todoSummary':
-        return l10n.widgetSettings_todoSummary;
-      case 'assetSummary':
-        return l10n.widgetSettings_assetSummary;
-      case 'memoSummary':
-        return l10n.widgetSettings_memoSummary;
-      case 'householdSummary':
-        return l10n.widgetSettings_householdSummary;
-      case 'childcareSummary':
-        return l10n.widgetSettings_childcareSummary;
-      case 'savingsSummary':
-        return l10n.widgetSettings_savingsSummary;
-      case 'anniversary':
-        return '기념일';
-      case 'routineSummary':
-        return l10n.widgetSettings_routineSummary;
-      default:
-        return key;
-    }
-  }
-
-  static IconData _iconOf(String key) {
-    switch (key) {
-      case 'weather':
-        return Icons.wb_sunny_outlined;
-      case 'fridgeSummary':
-        return Icons.warning_amber_outlined;
-      case 'todaySchedule':
-        return Icons.calendar_today;
-      case 'investmentSummary':
-        return Icons.trending_up;
-      case 'todoSummary':
-        return Icons.check_box;
-      case 'assetSummary':
-        return Icons.account_balance_wallet;
-      case 'memoSummary':
-        return Icons.note_outlined;
-      case 'householdSummary':
-        return Icons.account_balance;
-      case 'childcareSummary':
-        return Icons.child_care;
-      case 'savingsSummary':
-        return Icons.savings;
-      case 'anniversary':
-        return Icons.celebration_outlined;
-      case 'routineSummary':
-        return Icons.check_circle_outline;
-      default:
-        return Icons.widgets_outlined;
-    }
   }
 
   Widget _buildInfoHeader(BuildContext context) {
@@ -304,7 +326,7 @@ class _HomeWidgetSettingsBodyState
                                       AppSizes.radiusSmall),
                                 ),
                                 child: Icon(
-                                  _iconOf(key),
+                                  _widgetIcon(key),
                                   color:
                                       Theme.of(context).colorScheme.primary,
                                 ),
@@ -312,7 +334,7 @@ class _HomeWidgetSettingsBodyState
                               const SizedBox(width: AppSizes.spaceM),
                               Expanded(
                                 child: Text(
-                                  _labelOf(key, l10n),
+                                  _widgetLabel(key, l10n),
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
@@ -701,25 +723,11 @@ class _AddWidgetSheet extends ConsumerWidget {
   final List<String> currentOrder;
   final void Function(String key) onAdd;
 
-  static const _defs = [
-    ('weather', Icons.wb_sunny_outlined, '날씨'),
-    ('fridgeSummary', Icons.warning_amber_outlined, '냉장고 유통기한'),
-    ('todaySchedule', Icons.calendar_today, '오늘 일정'),
-    ('investmentSummary', Icons.trending_up, '투자 현황'),
-    ('todoSummary', Icons.check_box, '할일'),
-    ('assetSummary', Icons.account_balance_wallet, '자산'),
-    ('memoSummary', Icons.note_outlined, '메모'),
-    ('householdSummary', Icons.account_balance, '가계관리'),
-    ('childcareSummary', Icons.child_care, '육아포인트'),
-    ('savingsSummary', Icons.savings, '저금통'),
-    ('anniversary', Icons.celebration_outlined, '기념일'),
-    ('routineSummary', Icons.check_circle_outline, '루틴'),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final available =
-        _defs.where((d) => !currentOrder.contains(d.$1)).toList();
+        _addableWidgetKeys.where((key) => !currentOrder.contains(key)).toList();
 
     return DraggableScrollableSheet(
       expand: false,
@@ -771,8 +779,7 @@ class _AddWidgetSheet extends ConsumerWidget {
                   )
                 : ListView(
                     controller: scrollController,
-                    children: available.map((def) {
-                      final (key, icon, label) = def;
+                    children: available.map((key) {
                       return ListTile(
                         leading: Container(
                           width: 40,
@@ -785,11 +792,11 @@ class _AddWidgetSheet extends ConsumerWidget {
                                 BorderRadius.circular(AppSizes.radiusSmall),
                           ),
                           child: Icon(
-                            icon,
+                            _widgetIcon(key),
                             color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
-                        title: Text(label),
+                        title: Text(_widgetLabel(key, l10n)),
                         trailing: const Icon(Icons.add),
                         onTap: () => onAdd(key),
                       );
