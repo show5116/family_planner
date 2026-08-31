@@ -33,6 +33,7 @@
 | ✅ | 냉장고 관리 | [21-fridge.md](docs/features/21-fridge.md) |
 | ✅ | 스마트 장보기 | [22-shopping.md](docs/features/22-shopping.md) |
 | ✅ | 루틴(습관) 관리 | [23-routine.md](docs/features/23-routine.md) |
+| ⬜ | 다이어리(일기) | [24-diary.md](docs/features/24-diary.md) |
 | ✅ | 구독 & 광고 | [subscription.md](docs/features/subscription.md) |
 
 ---
