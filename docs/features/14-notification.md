@@ -14,7 +14,10 @@
 ## UI 구현
 - ✅ 알림 설정 화면 (설정 메뉴 내)
 - ✅ 권한 상태 표시 카드
-- ✅ 카테고리별 알림 토글 (일정, 가계부, 할일, 자산, 육아, 그룹, 시스템)
+- ✅ 카테고리별 알림 토글 — 일정 · 할일 · 가계부 · 자산 · 육아 · 그룹 · 적금 ·
+  시스템 · 날씨 · 루틴 (10종)
+- ✅ 날씨 알림 시간 / 루틴 리마인드 시간 설정 (토글 ON일 때 노출)
+- ✅ 위치 권한 카드 (날씨 알림용)
 - ✅ 알림 히스토리 화면 (전체 화면)
 - ✅ 읽음/안 읽음 표시
 - ✅ 무한 스크롤 (페이지네이션)
@@ -27,14 +30,17 @@
 ## 데이터 모델
 - ✅ NotificationModel (id, userId, category, title, body, data, isRead, sentAt, readAt)
 - ✅ NotificationSettingsModel (카테고리별 enabled 플래그)
-- ✅ NotificationCategory enum (schedule, todo, household, asset, childcare, group, system)
+- ✅ NotificationCategory enum — SCHEDULE, TODO, HOUSEHOLD, ASSET, CHILDCARE,
+  GROUP, SAVINGS, SYSTEM, WEATHER, FRIDGE, ROUTINE (11종, 서버 스키마와 동일)
+  - 알 수 없는 값은 SYSTEM으로 폴백해 파싱이 깨지지 않게 합니다
 - ✅ 백엔드 API 응답 구조와 매핑 완료
 
 ## Firebase 설정
 - ✅ Firebase 프로젝트 설정 완료 (Android, iOS, Web)
 - ✅ google-services.json 추가 (Android)
 - ✅ GoogleService-Info.plist 추가 (iOS)
-- ✅ VAPID Key 설정 (Web)
+- ✅ VAPID Key 설정 (Web) — `.env`의 FIREBASE_WEB_VAPID_KEY
+- ⬜ 웹 서비스 워커 (`web/firebase-messaging-sw.js`) — **미작성이라 웹 푸시는 동작하지 않습니다**
 - ✅ 환경 변수로 Firebase 설정 관리 (.env)
 - ✅ GitHub Actions에서 환경 변수 동적 생성
 
