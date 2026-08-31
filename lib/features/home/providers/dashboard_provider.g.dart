@@ -6,8 +6,31 @@ part of 'dashboard_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$dashboardWidgetSyncHash() =>
+    r'e0e3d027a76baf76e9b2598c1c9732885ec46ac1';
+
+/// 대시보드 진입 시 홈 화면(OS) 위젯 데이터를 한 번 동기화한다.
+///
+/// Task CRUD 성공 시에는 TaskManagementNotifier가 직접 HomeWidgetService.syncFromServer를
+/// 호출하므로, 이 provider는 "다른 기기에서 변경된 일정 반영" 등 진입 시점 보정용이다.
+///
+/// Copied from [dashboardWidgetSync].
+@ProviderFor(dashboardWidgetSync)
+final dashboardWidgetSyncProvider = AutoDisposeFutureProvider<void>.internal(
+  dashboardWidgetSync,
+  name: r'dashboardWidgetSyncProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$dashboardWidgetSyncHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DashboardWidgetSyncRef = AutoDisposeFutureProviderRef<void>;
 String _$dashboardTodayTasksHash() =>
-    r'd631af80acaff887ee2dad7348a349560a4c1a4b';
+    r'8ac4538f2d083fd335a98bb16a077566f5bfa317';
 
 /// Copied from Dart SDK
 class _SystemHash {

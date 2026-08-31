@@ -6,6 +6,14 @@ import 'package:family_planner/features/main/child_points/presentation/screens/c
 import 'package:family_planner/features/main/child_points/presentation/screens/child_link_user_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/child_profile_form_screen.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/transaction_form_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_list_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_form_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_detail_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_badges_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_daily_goal_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_share_settings_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_overview_screen.dart';
+import 'package:family_planner/features/main/routine/presentation/screens/routine_together_screen.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
 import 'package:family_planner/features/main/assets/presentation/screens/account_detail_screen.dart'
     show AccountDetailByIdScreen, AccountDetailScreen;
@@ -54,6 +62,7 @@ import 'package:family_planner/features/main/fridge/presentation/screens/fridge_
 import 'package:family_planner/features/main/fridge/presentation/screens/expiry_preset_management_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_history_detail_screen.dart';
+import 'package:family_planner/features/subscription/presentation/screens/subscription_screen.dart';
 
 /// 메인 기능 라우트 목록
 ///
@@ -346,9 +355,7 @@ List<RouteBase> getMainRoutes() {
       name: 'householdRecurringAdd',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>? ?? {};
-        return RecurringExpenseFormScreen(
-          groupId: extra['groupId'] as String?,
-        );
+        return RecurringExpenseFormScreen(groupId: extra['groupId'] as String?);
       },
     ),
     GoRoute(
@@ -511,6 +518,61 @@ List<RouteBase> getMainRoutes() {
       },
     ),
 
+    // Routine Routes (루틴)
+    GoRoute(
+      path: AppRoutes.routines,
+      name: 'routines',
+      builder: (context, state) => const RoutineListScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineAdd,
+      name: 'routineAdd',
+      builder: (context, state) => const RoutineFormScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineEdit,
+      name: 'routineEdit',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final routineId = extra?['routineId'] as String? ?? '';
+        return RoutineFormScreen(routineId: routineId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.routineDetail,
+      name: 'routineDetail',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final routineId = extra?['routineId'] as String? ?? '';
+        return RoutineDetailScreen(routineId: routineId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.routineTogether,
+      name: 'routineTogether',
+      builder: (context, state) => const RoutineTogetherScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineBadges,
+      name: 'routineBadges',
+      builder: (context, state) => const RoutineBadgesScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineOverview,
+      name: 'routineOverview',
+      builder: (context, state) => const RoutineOverviewScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineDailyGoal,
+      name: 'routineDailyGoal',
+      builder: (context, state) => const RoutineDailyGoalScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.routineShareSettings,
+      name: 'routineShareSettings',
+      builder: (context, state) => const RoutineShareSettingsScreen(),
+    ),
+
     // Savings Routes (적립금 관리)
     GoRoute(
       path: AppRoutes.savings,
@@ -576,7 +638,10 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final historyId = state.pathParameters['historyId']!;
         final groupId = state.uri.queryParameters['groupId'];
-        return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
+        return ShoppingHistoryDetailScreen(
+          historyId: historyId,
+          groupId: groupId,
+        );
       },
     ),
     GoRoute(
@@ -585,8 +650,18 @@ List<RouteBase> getMainRoutes() {
       builder: (context, state) {
         final historyId = state.pathParameters['historyId']!;
         final groupId = state.uri.queryParameters['groupId'];
-        return ShoppingHistoryDetailScreen(historyId: historyId, groupId: groupId);
+        return ShoppingHistoryDetailScreen(
+          historyId: historyId,
+          groupId: groupId,
+        );
       },
+    ),
+
+    // Subscription Routes (구독 관리)
+    GoRoute(
+      path: AppRoutes.subscription,
+      name: 'subscription',
+      builder: (context, state) => const SubscriptionScreen(),
     ),
   ];
 }

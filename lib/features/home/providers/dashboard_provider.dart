@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/core/models/dashboard_widget_settings.dart';
+import 'package:family_planner/core/services/home_widget_service.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_statistics_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/household/data/models/statistics_model.dart';
@@ -22,6 +23,15 @@ part 'dashboard_provider.g.dart';
 ///
 /// null: 요청 없음, String: 이동할 탭 ID (예: 'calendar', 'todo')
 final homeTabNavigationProvider = StateProvider<String?>((ref) => null);
+
+/// 대시보드 진입 시 홈 화면(OS) 위젯 데이터를 한 번 동기화한다.
+///
+/// Task CRUD 성공 시에는 TaskManagementNotifier가 직접 HomeWidgetService.syncFromServer를
+/// 호출하므로, 이 provider는 "다른 기기에서 변경된 일정 반영" 등 진입 시점 보정용이다.
+@riverpod
+Future<void> dashboardWidgetSync(Ref ref) async {
+  await HomeWidgetService.syncFromServer(ref);
+}
 
 const _dashboardCacheDuration = Duration(minutes: 5);
 
@@ -85,12 +95,13 @@ Future<List<TaskModel>> dashboardTodayTasks(
     result = result.where((t) => t.groupId == null).toList();
   }
 
-  return result
-    ..sort((a, b) {
-      if (a.scheduledAt == null) return 1;
-      if (b.scheduledAt == null) return -1;
-      return a.scheduledAt!.compareTo(b.scheduledAt!);
-    });
+  result.sort((a, b) {
+    if (a.scheduledAt == null) return 1;
+    if (b.scheduledAt == null) return -1;
+    return a.scheduledAt!.compareTo(b.scheduledAt!);
+  });
+
+  return result;
 }
 
 /// 대시보드 할일 요약 (대시보드 전용) - 모드/그룹 필터에 따라 조회

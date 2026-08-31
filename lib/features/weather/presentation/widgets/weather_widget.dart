@@ -78,6 +78,8 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget>
   @override
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
+    final isFallbackLocation =
+        ref.watch(locationProvider).valueOrNull?.isFallback ?? false;
 
     final l10n = AppLocalizations.of(context)!;
     return DashboardCard(
@@ -110,16 +112,20 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget>
         error: (_, _) => _ErrorState(
           onRetry: () => ref.invalidate(weatherProvider),
         ),
-        data: (weather) => _WeatherContent(weather: weather),
+        data: (weather) => _WeatherContent(
+          weather: weather,
+          isFallbackLocation: isFallbackLocation,
+        ),
       ),
     );
   }
 }
 
 class _WeatherContent extends StatelessWidget {
-  const _WeatherContent({required this.weather});
+  const _WeatherContent({required this.weather, this.isFallbackLocation = false});
 
   final WeatherModel weather;
+  final bool isFallbackLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +136,27 @@ class _WeatherContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (isFallbackLocation) ...[
+          Row(
+            children: [
+              Icon(
+                Icons.location_off_outlined,
+                size: AppSizes.iconSmall,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              const SizedBox(width: 2),
+              Expanded(
+                child: Text(
+                  AppLocalizations.of(context)!.weather_fallbackLocationNotice,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+        ],
         Row(
           children: [
             if (weather.sidoName != null) ...[

@@ -33,6 +33,8 @@ class NavigationLabelHelper {
         return l10n.fridge_title;
       case 'shopping':
         return l10n.shopping_title;
+      case 'routines':
+        return l10n.nav_routines;
       default:
         return id; // fallback
     }

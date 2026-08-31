@@ -34,6 +34,9 @@ mixin _$NotificationSettingsModel {
   bool get weatherEnabled =>
       throw _privateConstructorUsedError; // 날씨 알림을 받을 시간 (시 단위, 기본 오전 7시)
   int get weatherAlertHour => throw _privateConstructorUsedError;
+  bool get routineEnabled =>
+      throw _privateConstructorUsedError; // 루틴 미체크 리마인드를 받을 시간 (시 단위, 기본 오후 9시)
+  int get routineReminderHour => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -63,6 +66,8 @@ abstract class $NotificationSettingsModelCopyWith<$Res> {
     bool systemEnabled,
     bool weatherEnabled,
     int weatherAlertHour,
+    bool routineEnabled,
+    int routineReminderHour,
   });
 }
 
@@ -94,6 +99,8 @@ class _$NotificationSettingsModelCopyWithImpl<
     Object? systemEnabled = null,
     Object? weatherEnabled = null,
     Object? weatherAlertHour = null,
+    Object? routineEnabled = null,
+    Object? routineReminderHour = null,
   }) {
     return _then(
       _value.copyWith(
@@ -137,6 +144,14 @@ class _$NotificationSettingsModelCopyWithImpl<
                 ? _value.weatherAlertHour
                 : weatherAlertHour // ignore: cast_nullable_to_non_nullable
                       as int,
+            routineEnabled: null == routineEnabled
+                ? _value.routineEnabled
+                : routineEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            routineReminderHour: null == routineReminderHour
+                ? _value.routineReminderHour
+                : routineReminderHour // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -163,6 +178,8 @@ abstract class _$$NotificationSettingsModelImplCopyWith<$Res>
     bool systemEnabled,
     bool weatherEnabled,
     int weatherAlertHour,
+    bool routineEnabled,
+    int routineReminderHour,
   });
 }
 
@@ -194,6 +211,8 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
     Object? systemEnabled = null,
     Object? weatherEnabled = null,
     Object? weatherAlertHour = null,
+    Object? routineEnabled = null,
+    Object? routineReminderHour = null,
   }) {
     return _then(
       _$NotificationSettingsModelImpl(
@@ -237,6 +256,14 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
             ? _value.weatherAlertHour
             : weatherAlertHour // ignore: cast_nullable_to_non_nullable
                   as int,
+        routineEnabled: null == routineEnabled
+            ? _value.routineEnabled
+            : routineEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        routineReminderHour: null == routineReminderHour
+            ? _value.routineReminderHour
+            : routineReminderHour // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -256,6 +283,8 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     this.systemEnabled = true,
     this.weatherEnabled = true,
     this.weatherAlertHour = 7,
+    this.routineEnabled = true,
+    this.routineReminderHour = 21,
   });
 
   factory _$NotificationSettingsModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -292,10 +321,17 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
   @override
   @JsonKey()
   final int weatherAlertHour;
+  @override
+  @JsonKey()
+  final bool routineEnabled;
+  // 루틴 미체크 리마인드를 받을 시간 (시 단위, 기본 오후 9시)
+  @override
+  @JsonKey()
+  final int routineReminderHour;
 
   @override
   String toString() {
-    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, savingsEnabled: $savingsEnabled, systemEnabled: $systemEnabled, weatherEnabled: $weatherEnabled, weatherAlertHour: $weatherAlertHour)';
+    return 'NotificationSettingsModel(scheduleEnabled: $scheduleEnabled, todoEnabled: $todoEnabled, householdEnabled: $householdEnabled, assetEnabled: $assetEnabled, childcareEnabled: $childcareEnabled, groupEnabled: $groupEnabled, savingsEnabled: $savingsEnabled, systemEnabled: $systemEnabled, weatherEnabled: $weatherEnabled, weatherAlertHour: $weatherAlertHour, routineEnabled: $routineEnabled, routineReminderHour: $routineReminderHour)';
   }
 
   @override
@@ -322,7 +358,11 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
             (identical(other.weatherEnabled, weatherEnabled) ||
                 other.weatherEnabled == weatherEnabled) &&
             (identical(other.weatherAlertHour, weatherAlertHour) ||
-                other.weatherAlertHour == weatherAlertHour));
+                other.weatherAlertHour == weatherAlertHour) &&
+            (identical(other.routineEnabled, routineEnabled) ||
+                other.routineEnabled == routineEnabled) &&
+            (identical(other.routineReminderHour, routineReminderHour) ||
+                other.routineReminderHour == routineReminderHour));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -339,6 +379,8 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
     systemEnabled,
     weatherEnabled,
     weatherAlertHour,
+    routineEnabled,
+    routineReminderHour,
   );
 
   /// Create a copy of NotificationSettingsModel
@@ -370,6 +412,8 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
     final bool systemEnabled,
     final bool weatherEnabled,
     final int weatherAlertHour,
+    final bool routineEnabled,
+    final int routineReminderHour,
   }) = _$NotificationSettingsModelImpl;
 
   factory _NotificationSettingsModel.fromJson(Map<String, dynamic> json) =
@@ -395,6 +439,10 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
   bool get weatherEnabled; // 날씨 알림을 받을 시간 (시 단위, 기본 오전 7시)
   @override
   int get weatherAlertHour;
+  @override
+  bool get routineEnabled; // 루틴 미체크 리마인드를 받을 시간 (시 단위, 기본 오후 9시)
+  @override
+  int get routineReminderHour;
 
   /// Create a copy of NotificationSettingsModel
   /// with the given fields replaced by the non-null parameter values.

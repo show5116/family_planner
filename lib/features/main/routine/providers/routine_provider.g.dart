@@ -1,0 +1,2009 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'routine_provider.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$routineHeatmapHash() => r'e61d607555e5eda8f74bc56437fefd3a113c2a8d';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// See also [routineHeatmap].
+@ProviderFor(routineHeatmap)
+const routineHeatmapProvider = RoutineHeatmapFamily();
+
+/// See also [routineHeatmap].
+class RoutineHeatmapFamily extends Family<AsyncValue<RoutineHeatmap>> {
+  /// See also [routineHeatmap].
+  const RoutineHeatmapFamily();
+
+  /// See also [routineHeatmap].
+  RoutineHeatmapProvider call(
+    String routineId, {
+    required String fromDate,
+    required String toDate,
+  }) {
+    return RoutineHeatmapProvider(
+      routineId,
+      fromDate: fromDate,
+      toDate: toDate,
+    );
+  }
+
+  @override
+  RoutineHeatmapProvider getProviderOverride(
+    covariant RoutineHeatmapProvider provider,
+  ) {
+    return call(
+      provider.routineId,
+      fromDate: provider.fromDate,
+      toDate: provider.toDate,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineHeatmapProvider';
+}
+
+/// See also [routineHeatmap].
+class RoutineHeatmapProvider extends AutoDisposeFutureProvider<RoutineHeatmap> {
+  /// See also [routineHeatmap].
+  RoutineHeatmapProvider(
+    String routineId, {
+    required String fromDate,
+    required String toDate,
+  }) : this._internal(
+         (ref) => routineHeatmap(
+           ref as RoutineHeatmapRef,
+           routineId,
+           fromDate: fromDate,
+           toDate: toDate,
+         ),
+         from: routineHeatmapProvider,
+         name: r'routineHeatmapProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$routineHeatmapHash,
+         dependencies: RoutineHeatmapFamily._dependencies,
+         allTransitiveDependencies:
+             RoutineHeatmapFamily._allTransitiveDependencies,
+         routineId: routineId,
+         fromDate: fromDate,
+         toDate: toDate,
+       );
+
+  RoutineHeatmapProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.routineId,
+    required this.fromDate,
+    required this.toDate,
+  }) : super.internal();
+
+  final String routineId;
+  final String fromDate;
+  final String toDate;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineHeatmap> Function(RoutineHeatmapRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineHeatmapProvider._internal(
+        (ref) => create(ref as RoutineHeatmapRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        routineId: routineId,
+        fromDate: fromDate,
+        toDate: toDate,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineHeatmap> createElement() {
+    return _RoutineHeatmapProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineHeatmapProvider &&
+        other.routineId == routineId &&
+        other.fromDate == fromDate &&
+        other.toDate == toDate;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, routineId.hashCode);
+    hash = _SystemHash.combine(hash, fromDate.hashCode);
+    hash = _SystemHash.combine(hash, toDate.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineHeatmapRef on AutoDisposeFutureProviderRef<RoutineHeatmap> {
+  /// The parameter `routineId` of this provider.
+  String get routineId;
+
+  /// The parameter `fromDate` of this provider.
+  String get fromDate;
+
+  /// The parameter `toDate` of this provider.
+  String get toDate;
+}
+
+class _RoutineHeatmapProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineHeatmap>
+    with RoutineHeatmapRef {
+  _RoutineHeatmapProviderElement(super.provider);
+
+  @override
+  String get routineId => (origin as RoutineHeatmapProvider).routineId;
+  @override
+  String get fromDate => (origin as RoutineHeatmapProvider).fromDate;
+  @override
+  String get toDate => (origin as RoutineHeatmapProvider).toDate;
+}
+
+String _$routineStreakHash() => r'2e60ece26a1d5d47d31bebabe200268d9ccd369b';
+
+/// See also [routineStreak].
+@ProviderFor(routineStreak)
+const routineStreakProvider = RoutineStreakFamily();
+
+/// See also [routineStreak].
+class RoutineStreakFamily extends Family<AsyncValue<RoutineStreak>> {
+  /// See also [routineStreak].
+  const RoutineStreakFamily();
+
+  /// See also [routineStreak].
+  RoutineStreakProvider call(String routineId) {
+    return RoutineStreakProvider(routineId);
+  }
+
+  @override
+  RoutineStreakProvider getProviderOverride(
+    covariant RoutineStreakProvider provider,
+  ) {
+    return call(provider.routineId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineStreakProvider';
+}
+
+/// See also [routineStreak].
+class RoutineStreakProvider extends AutoDisposeFutureProvider<RoutineStreak> {
+  /// See also [routineStreak].
+  RoutineStreakProvider(String routineId)
+    : this._internal(
+        (ref) => routineStreak(ref as RoutineStreakRef, routineId),
+        from: routineStreakProvider,
+        name: r'routineStreakProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineStreakHash,
+        dependencies: RoutineStreakFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineStreakFamily._allTransitiveDependencies,
+        routineId: routineId,
+      );
+
+  RoutineStreakProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.routineId,
+  }) : super.internal();
+
+  final String routineId;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineStreak> Function(RoutineStreakRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineStreakProvider._internal(
+        (ref) => create(ref as RoutineStreakRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        routineId: routineId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineStreak> createElement() {
+    return _RoutineStreakProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineStreakProvider && other.routineId == routineId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, routineId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineStreakRef on AutoDisposeFutureProviderRef<RoutineStreak> {
+  /// The parameter `routineId` of this provider.
+  String get routineId;
+}
+
+class _RoutineStreakProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineStreak>
+    with RoutineStreakRef {
+  _RoutineStreakProviderElement(super.provider);
+
+  @override
+  String get routineId => (origin as RoutineStreakProvider).routineId;
+}
+
+String _$routineRateHash() => r'34801408fc80155bdaf4b536282b983f77478b0c';
+
+/// See also [routineRate].
+@ProviderFor(routineRate)
+const routineRateProvider = RoutineRateFamily();
+
+/// See also [routineRate].
+class RoutineRateFamily extends Family<AsyncValue<RoutineRate>> {
+  /// See also [routineRate].
+  const RoutineRateFamily();
+
+  /// See also [routineRate].
+  RoutineRateProvider call(
+    String routineId, {
+    required RoutineRatePeriod period,
+    String? fromDate,
+    String? toDate,
+  }) {
+    return RoutineRateProvider(
+      routineId,
+      period: period,
+      fromDate: fromDate,
+      toDate: toDate,
+    );
+  }
+
+  @override
+  RoutineRateProvider getProviderOverride(
+    covariant RoutineRateProvider provider,
+  ) {
+    return call(
+      provider.routineId,
+      period: provider.period,
+      fromDate: provider.fromDate,
+      toDate: provider.toDate,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineRateProvider';
+}
+
+/// See also [routineRate].
+class RoutineRateProvider extends AutoDisposeFutureProvider<RoutineRate> {
+  /// See also [routineRate].
+  RoutineRateProvider(
+    String routineId, {
+    required RoutineRatePeriod period,
+    String? fromDate,
+    String? toDate,
+  }) : this._internal(
+         (ref) => routineRate(
+           ref as RoutineRateRef,
+           routineId,
+           period: period,
+           fromDate: fromDate,
+           toDate: toDate,
+         ),
+         from: routineRateProvider,
+         name: r'routineRateProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$routineRateHash,
+         dependencies: RoutineRateFamily._dependencies,
+         allTransitiveDependencies:
+             RoutineRateFamily._allTransitiveDependencies,
+         routineId: routineId,
+         period: period,
+         fromDate: fromDate,
+         toDate: toDate,
+       );
+
+  RoutineRateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.routineId,
+    required this.period,
+    required this.fromDate,
+    required this.toDate,
+  }) : super.internal();
+
+  final String routineId;
+  final RoutineRatePeriod period;
+  final String? fromDate;
+  final String? toDate;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineRate> Function(RoutineRateRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineRateProvider._internal(
+        (ref) => create(ref as RoutineRateRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        routineId: routineId,
+        period: period,
+        fromDate: fromDate,
+        toDate: toDate,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineRate> createElement() {
+    return _RoutineRateProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineRateProvider &&
+        other.routineId == routineId &&
+        other.period == period &&
+        other.fromDate == fromDate &&
+        other.toDate == toDate;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, routineId.hashCode);
+    hash = _SystemHash.combine(hash, period.hashCode);
+    hash = _SystemHash.combine(hash, fromDate.hashCode);
+    hash = _SystemHash.combine(hash, toDate.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineRateRef on AutoDisposeFutureProviderRef<RoutineRate> {
+  /// The parameter `routineId` of this provider.
+  String get routineId;
+
+  /// The parameter `period` of this provider.
+  RoutineRatePeriod get period;
+
+  /// The parameter `fromDate` of this provider.
+  String? get fromDate;
+
+  /// The parameter `toDate` of this provider.
+  String? get toDate;
+}
+
+class _RoutineRateProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineRate>
+    with RoutineRateRef {
+  _RoutineRateProviderElement(super.provider);
+
+  @override
+  String get routineId => (origin as RoutineRateProvider).routineId;
+  @override
+  RoutineRatePeriod get period => (origin as RoutineRateProvider).period;
+  @override
+  String? get fromDate => (origin as RoutineRateProvider).fromDate;
+  @override
+  String? get toDate => (origin as RoutineRateProvider).toDate;
+}
+
+String _$routineShareGroupsHash() =>
+    r'3423dcc3cc2cc340d681adf17d8b0cba060b2e9a';
+
+/// 내 루틴 전체를 공유 중인 그룹 목록.
+///
+/// 공유는 습관 단위가 아니라 사용자 단위다. 개별 습관은
+/// [Routine.isPrivate]로만 예외를 둔다.
+///
+/// Copied from [routineShareGroups].
+@ProviderFor(routineShareGroups)
+final routineShareGroupsProvider =
+    AutoDisposeFutureProvider<List<RoutineShareGroup>>.internal(
+      routineShareGroups,
+      name: r'routineShareGroupsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineShareGroupsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineShareGroupsRef =
+    AutoDisposeFutureProviderRef<List<RoutineShareGroup>>;
+String _$routineGroupMembersHash() =>
+    r'7a7ffcd9afb587de9cba73175a60d5a8f8509ad1';
+
+/// 그룹원별 공유 루틴 현황
+///
+/// Copied from [routineGroupMembers].
+@ProviderFor(routineGroupMembers)
+const routineGroupMembersProvider = RoutineGroupMembersFamily();
+
+/// 그룹원별 공유 루틴 현황
+///
+/// Copied from [routineGroupMembers].
+class RoutineGroupMembersFamily
+    extends Family<AsyncValue<List<RoutineGroupMemberRoutines>>> {
+  /// 그룹원별 공유 루틴 현황
+  ///
+  /// Copied from [routineGroupMembers].
+  const RoutineGroupMembersFamily();
+
+  /// 그룹원별 공유 루틴 현황
+  ///
+  /// Copied from [routineGroupMembers].
+  RoutineGroupMembersProvider call(String groupId) {
+    return RoutineGroupMembersProvider(groupId);
+  }
+
+  @override
+  RoutineGroupMembersProvider getProviderOverride(
+    covariant RoutineGroupMembersProvider provider,
+  ) {
+    return call(provider.groupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineGroupMembersProvider';
+}
+
+/// 그룹원별 공유 루틴 현황
+///
+/// Copied from [routineGroupMembers].
+class RoutineGroupMembersProvider
+    extends AutoDisposeFutureProvider<List<RoutineGroupMemberRoutines>> {
+  /// 그룹원별 공유 루틴 현황
+  ///
+  /// Copied from [routineGroupMembers].
+  RoutineGroupMembersProvider(String groupId)
+    : this._internal(
+        (ref) => routineGroupMembers(ref as RoutineGroupMembersRef, groupId),
+        from: routineGroupMembersProvider,
+        name: r'routineGroupMembersProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineGroupMembersHash,
+        dependencies: RoutineGroupMembersFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineGroupMembersFamily._allTransitiveDependencies,
+        groupId: groupId,
+      );
+
+  RoutineGroupMembersProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+  }) : super.internal();
+
+  final String groupId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<RoutineGroupMemberRoutines>> Function(
+      RoutineGroupMembersRef provider,
+    )
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineGroupMembersProvider._internal(
+        (ref) => create(ref as RoutineGroupMembersRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<RoutineGroupMemberRoutines>>
+  createElement() {
+    return _RoutineGroupMembersProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineGroupMembersProvider && other.groupId == groupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineGroupMembersRef
+    on AutoDisposeFutureProviderRef<List<RoutineGroupMemberRoutines>> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+}
+
+class _RoutineGroupMembersProviderElement
+    extends AutoDisposeFutureProviderElement<List<RoutineGroupMemberRoutines>>
+    with RoutineGroupMembersRef {
+  _RoutineGroupMembersProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineGroupMembersProvider).groupId;
+}
+
+String _$routineGroupMemberDetailHash() =>
+    r'2acac66ea7c76cf71612fcc63db4f54493f44b9f';
+
+/// 특정 그룹원의 공유 루틴 상세 조회
+///
+/// Copied from [routineGroupMemberDetail].
+@ProviderFor(routineGroupMemberDetail)
+const routineGroupMemberDetailProvider = RoutineGroupMemberDetailFamily();
+
+/// 특정 그룹원의 공유 루틴 상세 조회
+///
+/// Copied from [routineGroupMemberDetail].
+class RoutineGroupMemberDetailFamily extends Family<AsyncValue<List<Routine>>> {
+  /// 특정 그룹원의 공유 루틴 상세 조회
+  ///
+  /// Copied from [routineGroupMemberDetail].
+  const RoutineGroupMemberDetailFamily();
+
+  /// 특정 그룹원의 공유 루틴 상세 조회
+  ///
+  /// Copied from [routineGroupMemberDetail].
+  RoutineGroupMemberDetailProvider call(String groupId, String userId) {
+    return RoutineGroupMemberDetailProvider(groupId, userId);
+  }
+
+  @override
+  RoutineGroupMemberDetailProvider getProviderOverride(
+    covariant RoutineGroupMemberDetailProvider provider,
+  ) {
+    return call(provider.groupId, provider.userId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineGroupMemberDetailProvider';
+}
+
+/// 특정 그룹원의 공유 루틴 상세 조회
+///
+/// Copied from [routineGroupMemberDetail].
+class RoutineGroupMemberDetailProvider
+    extends AutoDisposeFutureProvider<List<Routine>> {
+  /// 특정 그룹원의 공유 루틴 상세 조회
+  ///
+  /// Copied from [routineGroupMemberDetail].
+  RoutineGroupMemberDetailProvider(String groupId, String userId)
+    : this._internal(
+        (ref) => routineGroupMemberDetail(
+          ref as RoutineGroupMemberDetailRef,
+          groupId,
+          userId,
+        ),
+        from: routineGroupMemberDetailProvider,
+        name: r'routineGroupMemberDetailProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineGroupMemberDetailHash,
+        dependencies: RoutineGroupMemberDetailFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineGroupMemberDetailFamily._allTransitiveDependencies,
+        groupId: groupId,
+        userId: userId,
+      );
+
+  RoutineGroupMemberDetailProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+    required this.userId,
+  }) : super.internal();
+
+  final String groupId;
+  final String userId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Routine>> Function(RoutineGroupMemberDetailRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineGroupMemberDetailProvider._internal(
+        (ref) => create(ref as RoutineGroupMemberDetailRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+        userId: userId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Routine>> createElement() {
+    return _RoutineGroupMemberDetailProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineGroupMemberDetailProvider &&
+        other.groupId == groupId &&
+        other.userId == userId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineGroupMemberDetailRef
+    on AutoDisposeFutureProviderRef<List<Routine>> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+
+  /// The parameter `userId` of this provider.
+  String get userId;
+}
+
+class _RoutineGroupMemberDetailProviderElement
+    extends AutoDisposeFutureProviderElement<List<Routine>>
+    with RoutineGroupMemberDetailRef {
+  _RoutineGroupMemberDetailProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineGroupMemberDetailProvider).groupId;
+  @override
+  String get userId => (origin as RoutineGroupMemberDetailProvider).userId;
+}
+
+String _$routineSummaryHash() => r'3e14d302fdb36e7b5f8b5568d6b8bf8107b23c27';
+
+/// See also [routineSummary].
+@ProviderFor(routineSummary)
+final routineSummaryProvider =
+    AutoDisposeFutureProvider<List<RoutineSummaryItem>>.internal(
+      routineSummary,
+      name: r'routineSummaryProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineSummaryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineSummaryRef =
+    AutoDisposeFutureProviderRef<List<RoutineSummaryItem>>;
+String _$routineOverviewHash() => r'4781007f53a3c70662fcb2e63ad434a08e4ddc87';
+
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
+///
+/// Copied from [routineOverview].
+@ProviderFor(routineOverview)
+const routineOverviewProvider = RoutineOverviewFamily();
+
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
+///
+/// Copied from [routineOverview].
+class RoutineOverviewFamily extends Family<AsyncValue<RoutineOverview>> {
+  /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  /// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+  /// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
+  ///
+  /// Copied from [routineOverview].
+  const RoutineOverviewFamily();
+
+  /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  /// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+  /// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
+  ///
+  /// Copied from [routineOverview].
+  RoutineOverviewProvider call({
+    required RoutineOverviewPeriod period,
+    String? fromDate,
+  }) {
+    return RoutineOverviewProvider(period: period, fromDate: fromDate);
+  }
+
+  @override
+  RoutineOverviewProvider getProviderOverride(
+    covariant RoutineOverviewProvider provider,
+  ) {
+    return call(period: provider.period, fromDate: provider.fromDate);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineOverviewProvider';
+}
+
+/// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+/// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+/// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
+///
+/// Copied from [routineOverview].
+class RoutineOverviewProvider
+    extends AutoDisposeFutureProvider<RoutineOverview> {
+  /// 전체 루틴 통합 개요 (달성률 + 날짜별 통합 히트맵). 통합 통계 화면용.
+  /// [fromDate](YYYY-MM-DD)를 지정하면 그 날짜가 속한 주/월 기준으로 조회한다
+  /// (서버가 주 월요일/월 1일로 스냅). null이면 오늘 기준.
+  ///
+  /// Copied from [routineOverview].
+  RoutineOverviewProvider({
+    required RoutineOverviewPeriod period,
+    String? fromDate,
+  }) : this._internal(
+         (ref) => routineOverview(
+           ref as RoutineOverviewRef,
+           period: period,
+           fromDate: fromDate,
+         ),
+         from: routineOverviewProvider,
+         name: r'routineOverviewProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$routineOverviewHash,
+         dependencies: RoutineOverviewFamily._dependencies,
+         allTransitiveDependencies:
+             RoutineOverviewFamily._allTransitiveDependencies,
+         period: period,
+         fromDate: fromDate,
+       );
+
+  RoutineOverviewProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.period,
+    required this.fromDate,
+  }) : super.internal();
+
+  final RoutineOverviewPeriod period;
+  final String? fromDate;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineOverview> Function(RoutineOverviewRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineOverviewProvider._internal(
+        (ref) => create(ref as RoutineOverviewRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        period: period,
+        fromDate: fromDate,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineOverview> createElement() {
+    return _RoutineOverviewProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineOverviewProvider &&
+        other.period == period &&
+        other.fromDate == fromDate;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, period.hashCode);
+    hash = _SystemHash.combine(hash, fromDate.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineOverviewRef on AutoDisposeFutureProviderRef<RoutineOverview> {
+  /// The parameter `period` of this provider.
+  RoutineOverviewPeriod get period;
+
+  /// The parameter `fromDate` of this provider.
+  String? get fromDate;
+}
+
+class _RoutineOverviewProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineOverview>
+    with RoutineOverviewRef {
+  _RoutineOverviewProviderElement(super.provider);
+
+  @override
+  RoutineOverviewPeriod get period =>
+      (origin as RoutineOverviewProvider).period;
+  @override
+  String? get fromDate => (origin as RoutineOverviewProvider).fromDate;
+}
+
+String _$routineSettingsHash() => r'6cd4acea59e95c8d208f50eefd2bff48fa137746';
+
+/// 사용자의 일일 목표 설정(현재값). 과거 기간의 통계를 표시할 때는 이
+/// 값이 아니라 `RoutineOverview.dailyGoalCount`를 써야 한다 — 서버가
+/// 목표 변경 이력을 보존하므로 과거 기간은 그때의 목표로 판정된다.
+///
+/// Copied from [routineSettings].
+@ProviderFor(routineSettings)
+final routineSettingsProvider =
+    AutoDisposeFutureProvider<RoutineSettings>.internal(
+      routineSettings,
+      name: r'routineSettingsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineSettingsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineSettingsRef = AutoDisposeFutureProviderRef<RoutineSettings>;
+String _$routineDailyStreakHash() =>
+    r'c797dc426ce471027ed9b07aef701374e797d33e';
+
+/// 일일 목표 기준 전체 연속 달성 스트릭 + 최근 14일 집계
+///
+/// Copied from [routineDailyStreak].
+@ProviderFor(routineDailyStreak)
+final routineDailyStreakProvider =
+    AutoDisposeFutureProvider<RoutineDailyStreak>.internal(
+      routineDailyStreak,
+      name: r'routineDailyStreakProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineDailyStreakHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineDailyStreakRef =
+    AutoDisposeFutureProviderRef<RoutineDailyStreak>;
+String _$routineChallengesHash() => r'2060718e9326595342e1d3be2976bd383327b9a6';
+
+/// 그룹의 챌린지 목록
+///
+/// Copied from [routineChallenges].
+@ProviderFor(routineChallenges)
+const routineChallengesProvider = RoutineChallengesFamily();
+
+/// 그룹의 챌린지 목록
+///
+/// Copied from [routineChallenges].
+class RoutineChallengesFamily
+    extends Family<AsyncValue<List<RoutineChallenge>>> {
+  /// 그룹의 챌린지 목록
+  ///
+  /// Copied from [routineChallenges].
+  const RoutineChallengesFamily();
+
+  /// 그룹의 챌린지 목록
+  ///
+  /// Copied from [routineChallenges].
+  RoutineChallengesProvider call(String groupId) {
+    return RoutineChallengesProvider(groupId);
+  }
+
+  @override
+  RoutineChallengesProvider getProviderOverride(
+    covariant RoutineChallengesProvider provider,
+  ) {
+    return call(provider.groupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineChallengesProvider';
+}
+
+/// 그룹의 챌린지 목록
+///
+/// Copied from [routineChallenges].
+class RoutineChallengesProvider
+    extends AutoDisposeFutureProvider<List<RoutineChallenge>> {
+  /// 그룹의 챌린지 목록
+  ///
+  /// Copied from [routineChallenges].
+  RoutineChallengesProvider(String groupId)
+    : this._internal(
+        (ref) => routineChallenges(ref as RoutineChallengesRef, groupId),
+        from: routineChallengesProvider,
+        name: r'routineChallengesProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineChallengesHash,
+        dependencies: RoutineChallengesFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineChallengesFamily._allTransitiveDependencies,
+        groupId: groupId,
+      );
+
+  RoutineChallengesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+  }) : super.internal();
+
+  final String groupId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<RoutineChallenge>> Function(RoutineChallengesRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineChallengesProvider._internal(
+        (ref) => create(ref as RoutineChallengesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<RoutineChallenge>> createElement() {
+    return _RoutineChallengesProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineChallengesProvider && other.groupId == groupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineChallengesRef
+    on AutoDisposeFutureProviderRef<List<RoutineChallenge>> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+}
+
+class _RoutineChallengesProviderElement
+    extends AutoDisposeFutureProviderElement<List<RoutineChallenge>>
+    with RoutineChallengesRef {
+  _RoutineChallengesProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineChallengesProvider).groupId;
+}
+
+String _$routineChallengeDetailHash() =>
+    r'cf0175d7b3822e208cdbd56dc8687ef04c3ea6c4';
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+///
+/// Copied from [routineChallengeDetail].
+@ProviderFor(routineChallengeDetail)
+const routineChallengeDetailProvider = RoutineChallengeDetailFamily();
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+///
+/// Copied from [routineChallengeDetail].
+class RoutineChallengeDetailFamily
+    extends Family<AsyncValue<RoutineChallenge>> {
+  /// 챌린지 상세 (참가자별 진행률 포함)
+  ///
+  /// Copied from [routineChallengeDetail].
+  const RoutineChallengeDetailFamily();
+
+  /// 챌린지 상세 (참가자별 진행률 포함)
+  ///
+  /// Copied from [routineChallengeDetail].
+  RoutineChallengeDetailProvider call(String challengeId) {
+    return RoutineChallengeDetailProvider(challengeId);
+  }
+
+  @override
+  RoutineChallengeDetailProvider getProviderOverride(
+    covariant RoutineChallengeDetailProvider provider,
+  ) {
+    return call(provider.challengeId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineChallengeDetailProvider';
+}
+
+/// 챌린지 상세 (참가자별 진행률 포함)
+///
+/// Copied from [routineChallengeDetail].
+class RoutineChallengeDetailProvider
+    extends AutoDisposeFutureProvider<RoutineChallenge> {
+  /// 챌린지 상세 (참가자별 진행률 포함)
+  ///
+  /// Copied from [routineChallengeDetail].
+  RoutineChallengeDetailProvider(String challengeId)
+    : this._internal(
+        (ref) => routineChallengeDetail(
+          ref as RoutineChallengeDetailRef,
+          challengeId,
+        ),
+        from: routineChallengeDetailProvider,
+        name: r'routineChallengeDetailProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineChallengeDetailHash,
+        dependencies: RoutineChallengeDetailFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineChallengeDetailFamily._allTransitiveDependencies,
+        challengeId: challengeId,
+      );
+
+  RoutineChallengeDetailProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.challengeId,
+  }) : super.internal();
+
+  final String challengeId;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineChallenge> Function(RoutineChallengeDetailRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineChallengeDetailProvider._internal(
+        (ref) => create(ref as RoutineChallengeDetailRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        challengeId: challengeId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineChallenge> createElement() {
+    return _RoutineChallengeDetailProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineChallengeDetailProvider &&
+        other.challengeId == challengeId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, challengeId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineChallengeDetailRef
+    on AutoDisposeFutureProviderRef<RoutineChallenge> {
+  /// The parameter `challengeId` of this provider.
+  String get challengeId;
+}
+
+class _RoutineChallengeDetailProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineChallenge>
+    with RoutineChallengeDetailRef {
+  _RoutineChallengeDetailProviderElement(super.provider);
+
+  @override
+  String get challengeId =>
+      (origin as RoutineChallengeDetailProvider).challengeId;
+}
+
+String _$routineBadgeCatalogHash() =>
+    r'4a5460770c2bed6473343588c14f51e37400ed62';
+
+/// 전체 배지 카탈로그 (마스터 데이터)
+///
+/// Copied from [routineBadgeCatalog].
+@ProviderFor(routineBadgeCatalog)
+final routineBadgeCatalogProvider =
+    AutoDisposeFutureProvider<List<RoutineBadge>>.internal(
+      routineBadgeCatalog,
+      name: r'routineBadgeCatalogProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineBadgeCatalogHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineBadgeCatalogRef =
+    AutoDisposeFutureProviderRef<List<RoutineBadge>>;
+String _$routineMyBadgesHash() => r'77138e59542f6cc532ce25705a088614fe1bfc13';
+
+/// 내가 획득한 통산 배지 목록
+///
+/// Copied from [routineMyBadges].
+@ProviderFor(routineMyBadges)
+final routineMyBadgesProvider =
+    AutoDisposeFutureProvider<List<UserRoutineBadge>>.internal(
+      routineMyBadges,
+      name: r'routineMyBadgesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineMyBadgesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineMyBadgesRef =
+    AutoDisposeFutureProviderRef<List<UserRoutineBadge>>;
+String _$routineLeaderboardHash() =>
+    r'ae8bd652ad3b2ead1971d5b74405714938e1aa8c';
+
+/// See also [routineLeaderboard].
+@ProviderFor(routineLeaderboard)
+const routineLeaderboardProvider = RoutineLeaderboardFamily();
+
+/// See also [routineLeaderboard].
+class RoutineLeaderboardFamily extends Family<AsyncValue<RoutineLeaderboard>> {
+  /// See also [routineLeaderboard].
+  const RoutineLeaderboardFamily();
+
+  /// See also [routineLeaderboard].
+  RoutineLeaderboardProvider call(
+    String groupId, {
+    required LeaderboardPeriod period,
+    required LeaderboardMetric metric,
+  }) {
+    return RoutineLeaderboardProvider(groupId, period: period, metric: metric);
+  }
+
+  @override
+  RoutineLeaderboardProvider getProviderOverride(
+    covariant RoutineLeaderboardProvider provider,
+  ) {
+    return call(
+      provider.groupId,
+      period: provider.period,
+      metric: provider.metric,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineLeaderboardProvider';
+}
+
+/// See also [routineLeaderboard].
+class RoutineLeaderboardProvider
+    extends AutoDisposeFutureProvider<RoutineLeaderboard> {
+  /// See also [routineLeaderboard].
+  RoutineLeaderboardProvider(
+    String groupId, {
+    required LeaderboardPeriod period,
+    required LeaderboardMetric metric,
+  }) : this._internal(
+         (ref) => routineLeaderboard(
+           ref as RoutineLeaderboardRef,
+           groupId,
+           period: period,
+           metric: metric,
+         ),
+         from: routineLeaderboardProvider,
+         name: r'routineLeaderboardProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$routineLeaderboardHash,
+         dependencies: RoutineLeaderboardFamily._dependencies,
+         allTransitiveDependencies:
+             RoutineLeaderboardFamily._allTransitiveDependencies,
+         groupId: groupId,
+         period: period,
+         metric: metric,
+       );
+
+  RoutineLeaderboardProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+    required this.period,
+    required this.metric,
+  }) : super.internal();
+
+  final String groupId;
+  final LeaderboardPeriod period;
+  final LeaderboardMetric metric;
+
+  @override
+  Override overrideWith(
+    FutureOr<RoutineLeaderboard> Function(RoutineLeaderboardRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineLeaderboardProvider._internal(
+        (ref) => create(ref as RoutineLeaderboardRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+        period: period,
+        metric: metric,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RoutineLeaderboard> createElement() {
+    return _RoutineLeaderboardProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineLeaderboardProvider &&
+        other.groupId == groupId &&
+        other.period == period &&
+        other.metric == metric;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+    hash = _SystemHash.combine(hash, period.hashCode);
+    hash = _SystemHash.combine(hash, metric.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineLeaderboardRef
+    on AutoDisposeFutureProviderRef<RoutineLeaderboard> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+
+  /// The parameter `period` of this provider.
+  LeaderboardPeriod get period;
+
+  /// The parameter `metric` of this provider.
+  LeaderboardMetric get metric;
+}
+
+class _RoutineLeaderboardProviderElement
+    extends AutoDisposeFutureProviderElement<RoutineLeaderboard>
+    with RoutineLeaderboardRef {
+  _RoutineLeaderboardProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineLeaderboardProvider).groupId;
+  @override
+  LeaderboardPeriod get period => (origin as RoutineLeaderboardProvider).period;
+  @override
+  LeaderboardMetric get metric => (origin as RoutineLeaderboardProvider).metric;
+}
+
+String _$routineListHash() => r'b404e54302a51d416963fe8c0abc798b5d703c8b';
+
+abstract class _$RoutineList
+    extends BuildlessAutoDisposeAsyncNotifier<List<Routine>> {
+  late final String? date;
+
+  FutureOr<List<Routine>> build(String? date);
+}
+
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
+///
+/// Copied from [RoutineList].
+@ProviderFor(RoutineList)
+const routineListProvider = RoutineListFamily();
+
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
+///
+/// Copied from [RoutineList].
+class RoutineListFamily extends Family<AsyncValue<List<Routine>>> {
+  /// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+  /// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+  /// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+  /// 재조회 없이 즉시 표시된다.
+  ///
+  /// Copied from [RoutineList].
+  const RoutineListFamily();
+
+  /// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+  /// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+  /// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+  /// 재조회 없이 즉시 표시된다.
+  ///
+  /// Copied from [RoutineList].
+  RoutineListProvider call(String? date) {
+    return RoutineListProvider(date);
+  }
+
+  @override
+  RoutineListProvider getProviderOverride(
+    covariant RoutineListProvider provider,
+  ) {
+    return call(provider.date);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineListProvider';
+}
+
+/// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+/// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+/// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+/// 재조회 없이 즉시 표시된다.
+///
+/// Copied from [RoutineList].
+class RoutineListProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<RoutineList, List<Routine>> {
+  /// 루틴 목록 Provider (ACTIVE+PAUSED, ENDED는 서버에서 항상 제외).
+  /// [date]는 YYYY-MM-DD 형식의 조회 기준 날짜 (null이면 오늘).
+  /// 날짜별로 인스턴스가 분리되어 캐시되므로, 이미 조회한 날짜로 돌아오면
+  /// 재조회 없이 즉시 표시된다.
+  ///
+  /// Copied from [RoutineList].
+  RoutineListProvider(String? date)
+    : this._internal(
+        () => RoutineList()..date = date,
+        from: routineListProvider,
+        name: r'routineListProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineListHash,
+        dependencies: RoutineListFamily._dependencies,
+        allTransitiveDependencies: RoutineListFamily._allTransitiveDependencies,
+        date: date,
+      );
+
+  RoutineListProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.date,
+  }) : super.internal();
+
+  final String? date;
+
+  @override
+  FutureOr<List<Routine>> runNotifierBuild(covariant RoutineList notifier) {
+    return notifier.build(date);
+  }
+
+  @override
+  Override overrideWith(RoutineList Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineListProvider._internal(
+        () => create()..date = date,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        date: date,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<RoutineList, List<Routine>>
+  createElement() {
+    return _RoutineListProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineListProvider && other.date == date;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, date.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineListRef on AutoDisposeAsyncNotifierProviderRef<List<Routine>> {
+  /// The parameter `date` of this provider.
+  String? get date;
+}
+
+class _RoutineListProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<RoutineList, List<Routine>>
+    with RoutineListRef {
+  _RoutineListProviderElement(super.provider);
+
+  @override
+  String? get date => (origin as RoutineListProvider).date;
+}
+
+String _$routineGroupListHash() => r'863f511ae247fb2e88f971b6c8e8209cb733b955';
+
+/// 루틴(습관 묶음) 목록 Provider
+///
+/// Copied from [RoutineGroupList].
+@ProviderFor(RoutineGroupList)
+final routineGroupListProvider =
+    AutoDisposeAsyncNotifierProvider<
+      RoutineGroupList,
+      List<RoutineGroup>
+    >.internal(
+      RoutineGroupList.new,
+      name: r'routineGroupListProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineGroupListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$RoutineGroupList = AutoDisposeAsyncNotifier<List<RoutineGroup>>;
+String _$routineGroupDetailNotifierHash() =>
+    r'd34dd306aaf48f51a2ff150d0d13d50e96a4b3e3';
+
+abstract class _$RoutineGroupDetailNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<RoutineGroupDetail> {
+  late final String groupId;
+
+  FutureOr<RoutineGroupDetail> build(String groupId);
+}
+
+/// See also [RoutineGroupDetailNotifier].
+@ProviderFor(RoutineGroupDetailNotifier)
+const routineGroupDetailNotifierProvider = RoutineGroupDetailNotifierFamily();
+
+/// See also [RoutineGroupDetailNotifier].
+class RoutineGroupDetailNotifierFamily
+    extends Family<AsyncValue<RoutineGroupDetail>> {
+  /// See also [RoutineGroupDetailNotifier].
+  const RoutineGroupDetailNotifierFamily();
+
+  /// See also [RoutineGroupDetailNotifier].
+  RoutineGroupDetailNotifierProvider call(String groupId) {
+    return RoutineGroupDetailNotifierProvider(groupId);
+  }
+
+  @override
+  RoutineGroupDetailNotifierProvider getProviderOverride(
+    covariant RoutineGroupDetailNotifierProvider provider,
+  ) {
+    return call(provider.groupId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineGroupDetailNotifierProvider';
+}
+
+/// See also [RoutineGroupDetailNotifier].
+class RoutineGroupDetailNotifierProvider
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          RoutineGroupDetailNotifier,
+          RoutineGroupDetail
+        > {
+  /// See also [RoutineGroupDetailNotifier].
+  RoutineGroupDetailNotifierProvider(String groupId)
+    : this._internal(
+        () => RoutineGroupDetailNotifier()..groupId = groupId,
+        from: routineGroupDetailNotifierProvider,
+        name: r'routineGroupDetailNotifierProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineGroupDetailNotifierHash,
+        dependencies: RoutineGroupDetailNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineGroupDetailNotifierFamily._allTransitiveDependencies,
+        groupId: groupId,
+      );
+
+  RoutineGroupDetailNotifierProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupId,
+  }) : super.internal();
+
+  final String groupId;
+
+  @override
+  FutureOr<RoutineGroupDetail> runNotifierBuild(
+    covariant RoutineGroupDetailNotifier notifier,
+  ) {
+    return notifier.build(groupId);
+  }
+
+  @override
+  Override overrideWith(RoutineGroupDetailNotifier Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineGroupDetailNotifierProvider._internal(
+        () => create()..groupId = groupId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupId: groupId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<
+    RoutineGroupDetailNotifier,
+    RoutineGroupDetail
+  >
+  createElement() {
+    return _RoutineGroupDetailNotifierProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineGroupDetailNotifierProvider &&
+        other.groupId == groupId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineGroupDetailNotifierRef
+    on AutoDisposeAsyncNotifierProviderRef<RoutineGroupDetail> {
+  /// The parameter `groupId` of this provider.
+  String get groupId;
+}
+
+class _RoutineGroupDetailNotifierProviderElement
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          RoutineGroupDetailNotifier,
+          RoutineGroupDetail
+        >
+    with RoutineGroupDetailNotifierRef {
+  _RoutineGroupDetailNotifierProviderElement(super.provider);
+
+  @override
+  String get groupId => (origin as RoutineGroupDetailNotifierProvider).groupId;
+}
+
+String _$routineDetailHash() => r'bd961b012fbcf0cac77a1ce1769c4c4bc7fbf044';
+
+abstract class _$RoutineDetail
+    extends BuildlessAutoDisposeAsyncNotifier<Routine> {
+  late final String routineId;
+
+  FutureOr<Routine> build(String routineId);
+}
+
+/// See also [RoutineDetail].
+@ProviderFor(RoutineDetail)
+const routineDetailProvider = RoutineDetailFamily();
+
+/// See also [RoutineDetail].
+class RoutineDetailFamily extends Family<AsyncValue<Routine>> {
+  /// See also [RoutineDetail].
+  const RoutineDetailFamily();
+
+  /// See also [RoutineDetail].
+  RoutineDetailProvider call(String routineId) {
+    return RoutineDetailProvider(routineId);
+  }
+
+  @override
+  RoutineDetailProvider getProviderOverride(
+    covariant RoutineDetailProvider provider,
+  ) {
+    return call(provider.routineId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'routineDetailProvider';
+}
+
+/// See also [RoutineDetail].
+class RoutineDetailProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<RoutineDetail, Routine> {
+  /// See also [RoutineDetail].
+  RoutineDetailProvider(String routineId)
+    : this._internal(
+        () => RoutineDetail()..routineId = routineId,
+        from: routineDetailProvider,
+        name: r'routineDetailProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$routineDetailHash,
+        dependencies: RoutineDetailFamily._dependencies,
+        allTransitiveDependencies:
+            RoutineDetailFamily._allTransitiveDependencies,
+        routineId: routineId,
+      );
+
+  RoutineDetailProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.routineId,
+  }) : super.internal();
+
+  final String routineId;
+
+  @override
+  FutureOr<Routine> runNotifierBuild(covariant RoutineDetail notifier) {
+    return notifier.build(routineId);
+  }
+
+  @override
+  Override overrideWith(RoutineDetail Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: RoutineDetailProvider._internal(
+        () => create()..routineId = routineId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        routineId: routineId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<RoutineDetail, Routine>
+  createElement() {
+    return _RoutineDetailProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RoutineDetailProvider && other.routineId == routineId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, routineId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RoutineDetailRef on AutoDisposeAsyncNotifierProviderRef<Routine> {
+  /// The parameter `routineId` of this provider.
+  String get routineId;
+}
+
+class _RoutineDetailProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<RoutineDetail, Routine>
+    with RoutineDetailRef {
+  _RoutineDetailProviderElement(super.provider);
+
+  @override
+  String get routineId => (origin as RoutineDetailProvider).routineId;
+}
+
+String _$routineCategoryListHash() =>
+    r'a7d1b4e5cadd7dec33b7582546e1a494bdd058f5';
+
+/// 루틴 카테고리 목록 Provider
+///
+/// Copied from [RoutineCategoryList].
+@ProviderFor(RoutineCategoryList)
+final routineCategoryListProvider =
+    AutoDisposeAsyncNotifierProvider<
+      RoutineCategoryList,
+      List<RoutineCategory>
+    >.internal(
+      RoutineCategoryList.new,
+      name: r'routineCategoryListProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineCategoryListHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$RoutineCategoryList = AutoDisposeAsyncNotifier<List<RoutineCategory>>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

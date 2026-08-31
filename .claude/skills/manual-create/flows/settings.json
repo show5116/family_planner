@@ -1,0 +1,161 @@
+{
+  "name": "사용자 설정",
+  "outDir": "docs/manual/settings/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "테마·언어는 고르는 즉시 앱 전체에 적용되므로 촬영 중 선택하지 않습니다. 화면만 찍습니다. 하위 화면에서 목록으로 돌아갈 때는 back 대신 goto /settings 를 씁니다.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 8000
+    },
+    {
+      "action": "login",
+      "as": "owner",
+      "wait": 16000
+    },
+    {
+      "action": "goto",
+      "path": "/settings",
+      "wait": 10000
+    },
+    {
+      "action": "shot",
+      "name": "01-main",
+      "caption": "설정 — 맨 위 구독 상태 카드와 항목별 섹션"
+    },
+    {
+      "action": "scroll",
+      "dy": 500,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "02-sections",
+      "caption": "설정 아래쪽 — 알림·신고·정보 섹션"
+    },
+    {
+      "action": "scroll",
+      "dy": -500,
+      "wait": 2500
+    },
+    {
+      "action": "tap",
+      "label": "하단 네비게이션 설정",
+      "wait": 6000
+    },
+    {
+      "action": "shot",
+      "name": "03-bottom-nav",
+      "caption": "하단 네비게이션 설정 — 5개 슬롯 중 가운데 3개를 바꿀 수 있습니다"
+    },
+    {
+      "action": "scroll",
+      "dy": 500,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "04-bottom-nav-menus",
+      "caption": "사용 가능한 메뉴 — 슬롯에 배치된 메뉴에는 슬롯 번호가 붙습니다"
+    },
+    {
+      "action": "goto",
+      "path": "/settings",
+      "wait": 8000
+    },
+    {
+      "action": "tap",
+      "label": "테마 설정",
+      "wait": 6000
+    },
+    {
+      "action": "shot",
+      "name": "05-theme",
+      "caption": "테마 설정 — 색상 5종과 밝기 3종을 조합합니다"
+    },
+    {
+      "action": "goto",
+      "path": "/settings",
+      "wait": 8000
+    },
+    {
+      "action": "tap",
+      "label": "언어 설정",
+      "wait": 6000
+    },
+    {
+      "action": "shot",
+      "name": "06-language",
+      "caption": "언어 설정 — 4개 언어 또는 기기 언어 따라가기"
+    },
+    {
+      "action": "goto",
+      "path": "/settings",
+      "wait": 8000
+    },
+    {
+      "action": "tap",
+      "label": "프로필 설정",
+      "wait": 8000
+    },
+    {
+      "action": "shot",
+      "name": "07-profile",
+      "caption": "프로필 설정 — 사진, 이름, 전화번호, 개인 색상"
+    },
+    {
+      "action": "scroll",
+      "dy": 700,
+      "wait": 2500
+    },
+    {
+      "action": "tapRole",
+      "role": "switch",
+      "index": 0,
+      "wait": 3500
+    },
+    {
+      "action": "shot",
+      "name": "08-profile-password",
+      "caption": "비밀번호 변경 — 스위치를 켜면 새 비밀번호 입력란이 나타납니다"
+    },
+    {
+      "action": "scroll",
+      "dy": 700,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "09-account",
+      "caption": "계정 관리 — 데이터 내보내기와 계정 삭제 예약"
+    },
+    {
+      "action": "goto",
+      "path": "/settings",
+      "wait": 8000
+    },
+    {
+      "action": "tap",
+      "label": "알림 설정",
+      "wait": 8000
+    },
+    {
+      "action": "shot",
+      "name": "10-notification",
+      "caption": "알림 설정 — 권한 상태 카드와 알림 종류별 스위치"
+    },
+    {
+      "action": "scroll",
+      "dy": 700,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "11-notification-types",
+      "caption": "알림 종류 — 필요한 알림만 켜 둘 수 있습니다"
+    }
+  ]
+}

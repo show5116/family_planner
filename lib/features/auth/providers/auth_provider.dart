@@ -23,6 +23,8 @@ import 'package:family_planner/features/main/investment/providers/indicator_prov
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/onboarding/providers/onboarding_provider.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
+import 'package:family_planner/core/services/home_widget_service.dart';
+import 'package:family_planner/core/services/subscription_cache_service.dart';
 
 /// 인증 상태
 class AuthState {
@@ -199,6 +201,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await AnalyticsService.instance.logLogout();
     await AnalyticsService.instance.clearUserId();
 
+    // 로그아웃 후 홈 화면(OS) 위젯에 이전 계정 일정이 남지 않도록 캐시 삭제
+    try {
+      await HomeWidgetService.clear();
+    } catch (_) {}
+
+    // 구독 캐시는 _invalidateGroupProviders()에서도 지우지만, 그쪽은
+    // 다음 프레임에 실행되므로 앱이 먼저 종료되면 남는다. 계정 간 구독이
+    // 새는 건 막아야 하므로 여기서 즉시 지운다.
+    await SubscriptionCacheService.clear();
+
     // 성공/실패 무관하게 반드시 인증 상태 초기화
     state = const AuthState(isAuthenticated: false);
 
@@ -211,6 +223,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   void _invalidateGroupProviders() {
     // 이전 계정의 group filter가 새 계정에 적용되지 않도록 SharedPreferences 제거
     _clearGroupFilterPrefs();
+
+    // 이전 계정의 구독이 새 계정에 적용되지 않도록 캐시 제거.
+    // 로그아웃뿐 아니라 계정 전환(로그인) 경로에서도 반드시 지워야 한다.
+    SubscriptionCacheService.clear();
 
     // 로그아웃/계정 전환 모두 invalidate하여 다음 로그인 시 새 계정 데이터를 fetch
     _ref.invalidate(myGroupsProvider);

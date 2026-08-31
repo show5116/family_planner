@@ -29,12 +29,15 @@ class RulesTab extends ConsumerWidget {
 
     // 데모 모드: 샘플 규칙 렌더링
     if (demoRules != null) {
-      final plusRules =
-          demoRules!.where((r) => r.type == ChildcareRuleType.plus).toList();
-      final minusRules =
-          demoRules!.where((r) => r.type == ChildcareRuleType.minus).toList();
-      final infoRules =
-          demoRules!.where((r) => r.type == ChildcareRuleType.info).toList();
+      final plusRules = demoRules!
+          .where((r) => r.type == ChildcareRuleType.plus)
+          .toList();
+      final minusRules = demoRules!
+          .where((r) => r.type == ChildcareRuleType.minus)
+          .toList();
+      final infoRules = demoRules!
+          .where((r) => r.type == ChildcareRuleType.info)
+          .toList();
       return Scaffold(
         body: ListView(
           children: [
@@ -42,17 +45,26 @@ class RulesTab extends ConsumerWidget {
             if (plusRules.isNotEmpty)
               KeyedSubtree(
                 key: demoPlusKey,
-                child: _DemoRuleSection(type: ChildcareRuleType.plus, rules: plusRules),
+                child: _DemoRuleSection(
+                  type: ChildcareRuleType.plus,
+                  rules: plusRules,
+                ),
               ),
             if (minusRules.isNotEmpty)
               KeyedSubtree(
                 key: demoMinusKey,
-                child: _DemoRuleSection(type: ChildcareRuleType.minus, rules: minusRules),
+                child: _DemoRuleSection(
+                  type: ChildcareRuleType.minus,
+                  rules: minusRules,
+                ),
               ),
             if (infoRules.isNotEmpty)
               KeyedSubtree(
                 key: demoInfoKey,
-                child: _DemoRuleSection(type: ChildcareRuleType.info, rules: infoRules),
+                child: _DemoRuleSection(
+                  type: ChildcareRuleType.info,
+                  rules: infoRules,
+                ),
               ),
           ],
         ),
@@ -77,12 +89,15 @@ class RulesTab extends ConsumerWidget {
           if (rules.isEmpty) {
             return const RulesGuide(hasRules: false);
           }
-          final plusRules =
-              rules.where((r) => r.type == ChildcareRuleType.plus).toList();
-          final minusRules =
-              rules.where((r) => r.type == ChildcareRuleType.minus).toList();
-          final infoRules =
-              rules.where((r) => r.type == ChildcareRuleType.info).toList();
+          final plusRules = rules
+              .where((r) => r.type == ChildcareRuleType.plus)
+              .toList();
+          final minusRules = rules
+              .where((r) => r.type == ChildcareRuleType.minus)
+              .toList();
+          final infoRules = rules
+              .where((r) => r.type == ChildcareRuleType.info)
+              .toList();
 
           return RefreshIndicator(
             onRefresh: () =>
@@ -99,19 +114,29 @@ class RulesTab extends ConsumerWidget {
                     rules: plusRules,
                     allRules: rules,
                     accountId: account.id,
-                    onEdit: (rule) =>
-                        _showRuleForm(context, ref, accountId: account.id, rule: rule),
+                    onEdit: (rule) => _showRuleForm(
+                      context,
+                      ref,
+                      accountId: account.id,
+                      rule: rule,
+                    ),
                     onDelete: (rule) =>
                         _confirmDeleteRule(context, ref, account.id, rule),
                     onToggleActive: (rule) => ref
                         .read(childcareManagementProvider.notifier)
-                        .updateRule(account.id, rule.id,
-                            UpdateRuleDto(isActive: !rule.isActive)),
+                        .updateRule(
+                          account.id,
+                          rule.id,
+                          UpdateRuleDto(isActive: !rule.isActive),
+                        ),
                     onApplyRule: (rule) =>
                         _applyRule(context, ref, account.id, rule),
                     onReorder: (updated) => ref
                         .read(childcareManagementProvider.notifier)
-                        .reorderRules(account.id, _mergeReordered(rules, updated)),
+                        .reorderRules(
+                          account.id,
+                          _mergeReordered(rules, updated),
+                        ),
                   ),
                 if (minusRules.isNotEmpty)
                   _RuleSection(
@@ -119,19 +144,29 @@ class RulesTab extends ConsumerWidget {
                     rules: minusRules,
                     allRules: rules,
                     accountId: account.id,
-                    onEdit: (rule) =>
-                        _showRuleForm(context, ref, accountId: account.id, rule: rule),
+                    onEdit: (rule) => _showRuleForm(
+                      context,
+                      ref,
+                      accountId: account.id,
+                      rule: rule,
+                    ),
                     onDelete: (rule) =>
                         _confirmDeleteRule(context, ref, account.id, rule),
                     onToggleActive: (rule) => ref
                         .read(childcareManagementProvider.notifier)
-                        .updateRule(account.id, rule.id,
-                            UpdateRuleDto(isActive: !rule.isActive)),
+                        .updateRule(
+                          account.id,
+                          rule.id,
+                          UpdateRuleDto(isActive: !rule.isActive),
+                        ),
                     onApplyRule: (rule) =>
                         _applyRule(context, ref, account.id, rule),
                     onReorder: (updated) => ref
                         .read(childcareManagementProvider.notifier)
-                        .reorderRules(account.id, _mergeReordered(rules, updated)),
+                        .reorderRules(
+                          account.id,
+                          _mergeReordered(rules, updated),
+                        ),
                   ),
                 if (infoRules.isNotEmpty)
                   _RuleSection(
@@ -139,19 +174,29 @@ class RulesTab extends ConsumerWidget {
                     rules: infoRules,
                     allRules: rules,
                     accountId: account.id,
-                    onEdit: (rule) =>
-                        _showRuleForm(context, ref, accountId: account.id, rule: rule),
+                    onEdit: (rule) => _showRuleForm(
+                      context,
+                      ref,
+                      accountId: account.id,
+                      rule: rule,
+                    ),
                     onDelete: (rule) =>
                         _confirmDeleteRule(context, ref, account.id, rule),
                     onToggleActive: (rule) => ref
                         .read(childcareManagementProvider.notifier)
-                        .updateRule(account.id, rule.id,
-                            UpdateRuleDto(isActive: !rule.isActive)),
+                        .updateRule(
+                          account.id,
+                          rule.id,
+                          UpdateRuleDto(isActive: !rule.isActive),
+                        ),
                     onApplyRule: (rule) =>
                         _applyRule(context, ref, account.id, rule),
                     onReorder: (updated) => ref
                         .read(childcareManagementProvider.notifier)
-                        .reorderRules(account.id, _mergeReordered(rules, updated)),
+                        .reorderRules(
+                          account.id,
+                          _mergeReordered(rules, updated),
+                        ),
                   ),
               ],
             ),
@@ -175,11 +220,8 @@ class RulesTab extends ConsumerWidget {
   }) async {
     await showDialog<void>(
       context: context,
-      builder: (ctx) => RuleFormDialog(
-        accountId: accountId,
-        rule: rule,
-        ref: ref,
-      ),
+      builder: (ctx) =>
+          RuleFormDialog(accountId: accountId, rule: rule, ref: ref),
     );
   }
 
@@ -214,14 +256,17 @@ class RulesTab extends ConsumerWidget {
 
     if (confirmed != true || !context.mounted) return;
 
-    await ref.read(childcareManagementProvider.notifier).addTransaction(
-          accountId,
-          CreateTransactionDto.byRule(rule.id),
-        );
+    await ref
+        .read(childcareManagementProvider.notifier)
+        .addTransaction(accountId, CreateTransactionDto.byRule(rule.id));
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(isPlus ? '${rule.points}P 지급되었습니다' : '${rule.points}P 차감되었습니다')),
+      SnackBar(
+        content: Text(
+          isPlus ? '${rule.points}P 지급되었습니다' : '${rule.points}P 차감되었습니다',
+        ),
+      ),
     );
   }
 
@@ -256,8 +301,9 @@ class RulesTab extends ConsumerWidget {
         .read(childcareManagementProvider.notifier)
         .deleteRule(accountId, rule.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('삭제되었습니다')));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('삭제되었습니다')));
   }
 }
 
@@ -330,14 +376,16 @@ class _RuleSectionState extends State<_RuleSection> {
                   child: Text(
                     label,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
@@ -345,9 +393,9 @@ class _RuleSectionState extends State<_RuleSection> {
                   child: Text(
                     '${rules.length}',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: AppSizes.spaceS),
@@ -393,8 +441,7 @@ class _RuleSectionState extends State<_RuleSection> {
               );
             },
           ),
-        if (!_expanded)
-          const SizedBox(height: AppSizes.spaceS),
+        if (!_expanded) const SizedBox(height: AppSizes.spaceS),
       ],
     );
   }
@@ -469,14 +516,13 @@ class _DemoRuleSection extends StatelessWidget {
                 child: Text(
                   label,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
@@ -484,9 +530,9 @@ class _DemoRuleSection extends StatelessWidget {
                 child: Text(
                   '${rules.length}',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -550,15 +596,18 @@ class _RulesGuideState extends State<RulesGuide> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline,
-                        size: 18, color: colorScheme.primary),
+                    Icon(
+                      Icons.info_outline,
+                      size: 18,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: AppSizes.spaceS),
                     Expanded(
                       child: Text(
                         '규칙이란 무엇인가요?',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: colorScheme.primary,
-                            ),
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                     Icon(
@@ -582,30 +631,34 @@ class _RulesGuideState extends State<RulesGuide> {
                     Text(
                       '규칙은 아이의 행동에 포인트를 연결하는 약속입니다.\n좋은 행동에는 포인트를 주고, 약속을 어겼을 때는 포인트를 차감해요.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: AppSizes.spaceS),
                     Container(
                       padding: const EdgeInsets.all(AppSizes.spaceS),
                       decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+                        color: colorScheme.primaryContainer.withValues(
+                          alpha: 0.5,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                            color: colorScheme.primary.withValues(alpha: 0.3)),
+                          color: colorScheme.primary.withValues(alpha: 0.3),
+                        ),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.lightbulb_outline,
-                              size: 14, color: colorScheme.primary),
+                          Icon(
+                            Icons.lightbulb_outline,
+                            size: 14,
+                            color: colorScheme.primary,
+                          ),
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
                               '규칙은 구체적이고 명확할수록 좋습니다.\n애매한 규칙은 아이와 불필요한 기싸움으로 이어질 수 있어요.\n아이와 함께 규칙을 정하면 신뢰가 쌓입니다.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: colorScheme.primary),
                             ),
                           ),
@@ -650,9 +703,9 @@ class _RulesGuideState extends State<RulesGuide> {
                     Text(
                       '규칙을 적용하면 해당 포인트가 즉시 반영됩니다.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                            fontStyle: FontStyle.italic,
-                          ),
+                        color: colorScheme.onSurfaceVariant,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ],
                 ),
@@ -691,9 +744,9 @@ class ExampleRow extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -704,8 +757,8 @@ class ExampleRow extends StatelessWidget {
             child: Text(
               '· $e',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ),
@@ -747,7 +800,8 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
     _nameCtrl = TextEditingController(text: rule?.name ?? '');
     _descCtrl = TextEditingController(text: rule?.description ?? '');
     _pointsCtrl = TextEditingController(
-        text: rule != null ? rule.points.toString() : '');
+      text: rule != null ? rule.points.toString() : '',
+    );
     _type = rule?.type ?? ChildcareRuleType.plus;
   }
 
@@ -785,6 +839,7 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
             Text('규칙 유형', style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 6),
             SegmentedButton<ChildcareRuleType>(
+              showSelectedIcon: false,
               segments: const [
                 ButtonSegment(
                   value: ChildcareRuleType.plus,
@@ -821,8 +876,8 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
                 hintText: _type == ChildcareRuleType.plus
                     ? '예: 숙제를 스스로 했을 때'
                     : _type == ChildcareRuleType.minus
-                        ? '예: 스마트폰을 30분 이상 보았을 때'
-                        : '예: 이달 현금 출금 한도',
+                    ? '예: 스마트폰을 30분 이상 보았을 때'
+                    : '예: 이달 현금 출금 한도',
               ),
               autofocus: true,
             ),
@@ -852,8 +907,8 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
               Text(
                 _errorMsg!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
             ],
           ],
@@ -884,8 +939,7 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
 
     setState(() => _isSaving = true);
 
-    final desc =
-        _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim();
+    final desc = _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim();
     final notifier = widget.ref.read(childcareManagementProvider.notifier);
 
     final Object? result;
@@ -893,14 +947,22 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
       result = await notifier.addRule(
         widget.accountId,
         CreateRuleDto(
-            name: name, description: desc, type: _type, points: points),
+          name: name,
+          description: desc,
+          type: _type,
+          points: points,
+        ),
       );
     } else {
       result = await notifier.updateRule(
         widget.accountId,
         widget.rule!.id,
         UpdateRuleDto(
-            name: name, description: desc, type: _type, points: points),
+          name: name,
+          description: desc,
+          type: _type,
+          points: points,
+        ),
       );
     }
 
@@ -915,7 +977,8 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
     }
 
     Navigator.pop(context);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('저장되었습니다')));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('저장되었습니다')));
   }
 }

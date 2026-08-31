@@ -8,11 +8,11 @@
 
 ## 📊 Progress Overview
 
-- **완료**: 11/21 기능 (52%)
-- **진행 중**: 6/21 기능 (29%)
-- **미시작**: 4/21 기능 (19%)
+- **완료**: 24/26 기능 (92%)
+- **진행 중**: 2/26 기능 (8%)
+- **미시작**: 0/26 기능 (0%)
 
-**마지막 업데이트**: 2026-06-08
+**마지막 업데이트**: 2026-08-31
 
 ---
 
@@ -23,16 +23,16 @@
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
 | 프로젝트 초기 설정 | ✅ 완료 | [00-setup.md](docs/features/00-setup.md) | P0 |
-| 회원 가입 및 로그인 | 🟨 진행 중 | [01-auth.md](docs/features/01-auth.md) | P0 |
+| 회원 가입 및 로그인 | ✅ 완료 | [01-auth.md](docs/features/01-auth.md) | P0 |
 | 그룹 관리 | ✅ 완료 | [12-groups.md](docs/features/12-groups.md) | P0 |
 
 ### Phase 2: 핵심 기능 (Core Features)
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
-| 메인화면 (대시보드) | 🟨 진행 중 | [02-dashboard.md](docs/features/02-dashboard.md) | P1 |
-| 일정 관리 | 🟨 진행 중 | [06-schedule.md](docs/features/06-schedule.md) | P1 |
-| ToDoList | 🟨 진행 중 | [07-todo.md](docs/features/07-todo.md) | P1 |
+| 메인화면 (대시보드) | ✅ 완료 | [02-dashboard.md](docs/features/02-dashboard.md) | P1 |
+| 일정 관리 | ✅ 완료 | [06-schedule.md](docs/features/06-schedule.md) | P1 |
+| ToDoList | ✅ 완료 | [07-todo.md](docs/features/07-todo.md) | P1 |
 | 메모 | ✅ 완료 | [09-memo.md](docs/features/09-memo.md) | P2 |
 
 ### Phase 3: 자산 및 금융 (Finance & Assets)
@@ -41,7 +41,7 @@
 |------|------|------|----------|
 | 자산관리 | ✅ 완료 | [03-assets.md](docs/features/03-assets.md) | P2 |
 | 투자지표 | ✅ 완료 | [04-investment.md](docs/features/04-investment.md) | P2 |
-| 가계관리 | ⬜ 시작 안함 | [05-household.md](docs/features/05-household.md) | P2 |
+| 가계관리 | ✅ 완료 | [05-household.md](docs/features/05-household.md) | P2 |
 | 적립금 관리 | ✅ 완료 | [19-savings.md](docs/features/19-savings.md) | P2 |
 
 ### Phase 4: 가족 기능 (Family Features)
@@ -49,60 +49,100 @@
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
 | 육아 포인트 | ✅ 완료 | [08-childcare.md](docs/features/08-childcare.md) | P3 |
-| 미니게임 | ⬜ 시작 안함 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
-| 투표 | 🟨 진행 중 | [18-votes.md](docs/features/18-votes.md) | P2 |
+| 미니게임 | ✅ 완료 | [10-minigame.md](docs/features/10-minigame.md) | P3 |
+| 투표 | ✅ 완료 | [18-votes.md](docs/features/18-votes.md) | P2 |
+| 루틴(습관) 관리 | ✅ 완료 | [23-routine.md](docs/features/23-routine.md) | P2 |
 
 ### Phase 6: 스마트 장보기 (Smart Shopping)
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
-| 스마트 장보기 | 🟨 진행 중 | [22-shopping.md](docs/features/22-shopping.md) | P1 |
+| 스마트 장보기 | ✅ 완료 | [22-shopping.md](docs/features/22-shopping.md) | P1 |
+| 냉장고 관리 | ✅ 완료 | [21-fridge.md](docs/features/21-fridge.md) | P1 |
 
 ### Phase 5: 개선 및 확장 (Enhancement & Expansion)
 
 | 기능 | 상태 | 문서 | 우선순위 |
 |------|------|------|----------|
-| 다국어 지원 | 🟨 진행 중 | [11-i18n.md](docs/features/11-i18n.md) | P1 |
+| 다국어 지원 | ✅ 완료 | [11-i18n.md](docs/features/11-i18n.md) | P1 |
 | 설정 메뉴 | ✅ 완료 | [12-settings.md](docs/features/12-settings.md) | P1 |
 | 알림 시스템 | 🟨 진행 중 | [14-notification.md](docs/features/14-notification.md) | P1 |
 | 공지사항 | ✅ 완료 | [15-announcements.md](docs/features/15-announcements.md) | P1 |
 | Q&A (문의하기) | ✅ 완료 | [16-qna.md](docs/features/16-qna.md) | P1 |
 | 온보딩 & 튜토리얼 | ✅ 완료 | [20-onboarding.md](docs/features/20-onboarding.md) | P1 |
-| 공통 기능 | ⬜ 시작 안함 | [13-common.md](docs/features/13-common.md) | P2 |
-| 날씨 기능 | ⬜ 시작 안함 | [17-weather.md](docs/features/17-weather.md) | P2 |
+| 날씨 기능 | ✅ 완료 | [17-weather.md](docs/features/17-weather.md) | P2 |
+| 공통 기능 | 🟨 진행 중 | [13-common.md](docs/features/13-common.md) | P2 |
+
+### Phase 7: 수익화 (Monetization)
+
+| 기능 | 상태 | 문서 | 우선순위 |
+|------|------|------|----------|
+| 구독 & 광고 | ✅ 완료 | [subscription.md](docs/features/subscription.md) | P1 |
 
 **참고**: 설정 메뉴는 프로필 설정, 테마 설정, 홈 위젯 설정을 포함하며, 그룹 관리([12-groups.md](docs/features/12-groups.md))와 권한 관리는 별도 관리됩니다.
+
+**남은 🟨 2건**
+- **알림 시스템**: 네이티브(Android/iOS) FCM 수신·라우팅·설정·히스토리는 완료. **웹 푸시만 미구현** (`web/firebase-messaging-sw.js` 부재)
+- **공통 기능**: 푸시 알림은 [14-notification.md](docs/features/14-notification.md)로 이관 완료. 통합 검색(일정·할일·메모)과 오프라인 로컬 DB는 미착수
 
 ---
 
 ## 🎯 Milestone Plan
 
-### Milestone 1: MVP Launch (목표: Phase 1-2 완료)
+### Milestone 1: MVP Launch (목표: Phase 1-2 완료) ✅
 - [x] 프로젝트 기반 구조
-- [ ] 회원 인증 시스템 완성
+- [x] 회원 인증 시스템 완성
 - [x] 그룹 관리 완성
 - [x] 대시보드 데이터 연동
-- [ ] 일정 관리 기본 기능
-- [ ] ToDoList 기본 기능
+- [x] 일정 관리 기본 기능
+- [x] ToDoList 기본 기능
 
-### Milestone 2: Finance Features (목표: Phase 3 완료)
-- [ ] 자산관리 시스템
-- [ ] 투자지표 대시보드
-- [ ] 가계부 기능
+### Milestone 2: Finance Features (목표: Phase 3 완료) ✅
+- [x] 자산관리 시스템
+- [x] 투자지표 대시보드
+- [x] 가계부 기능
 
-### Milestone 3: Family Features (목표: Phase 4 완료)
+### Milestone 3: Family Features (목표: Phase 4 완료) ✅
 - [x] 육아 포인트 시스템
-- [ ] 미니게임 기능
+- [x] 미니게임 기능
 
-### Milestone 4: Polish & Scale (목표: Phase 5 완료)
-- [ ] 다국어 완전 지원
-- [ ] 푸시 알림 시스템
+### Milestone 4: Polish & Scale (목표: Phase 5 완료) 🟨
+- [x] 다국어 완전 지원
+- [x] 푸시 알림 시스템 (네이티브)
+- [ ] 웹 푸시 알림
+- [ ] 통합 검색 (일정·할일·메모)
 - [ ] 오프라인 지원
 - [ ] 성능 최적화
 
 ---
 
 ## 📈 최근 완료된 기능
+
+### 2026-08-31
+- ✅ **문서 정합성 전면 정리** — 실제 구현과 대조해 상태 재산정
+  - 코드 검증 결과 ⬜/🟨로 남아 있던 12건이 실제로는 완료 상태였습니다
+  - ⬜ → ✅: 가계관리(소비처 관리·통계 차트), 미니게임(사다리·룰렛), 날씨(위젯·상세·프리셋 15개 항목 전부)
+  - 🟨 → ✅: 회원 인증(애플/구글 소셜), 대시보드, 일정 관리(월/주/타임테이블·검색), ToDoList(필터·정렬), 다국어(4개 언어), 투표, 스마트 장보기
+  - Feature Roadmap 테이블에 누락돼 있던 **냉장고 관리**·**구독 & 광고** 추가
+  - 남은 🟨 2건: 알림 시스템(웹 푸시), 공통 기능(통합 검색·오프라인 DB)
+- ✅ **대시보드·사용자 설정 사용자 매뉴얼** ([docs/manual/](docs/manual/))
+  - 대시보드 10샷, 사용자 설정 11샷 — 스크린샷 자동 촬영 파이프라인으로 생성
+- ✅ **루틴(습관) 관리 완료** ([23-routine.md](docs/features/23-routine.md))
+  - 2차 UX 고도화, 게이미피케이션(배지/랭킹보드/알림), 그룹 챌린지, 온보딩까지 마무리
+- ✅ **구독 결제(IAP) 도입** ([subscription.md](docs/features/subscription.md))
+  - 광고 제거 구독(월 ₩1,900) — StoreKit2 / Play Billing 연동, 서버 영수증 검증, 웹훅 기반 상태 동기화
+  - 무료 vs 광고 제거 플랜 비교 카드, 구독 복원, 스토어 구독 관리 진입
+  - 오프라인 대비 구독 상태 로컬 캐시
+- ✅ **홈 화면(OS) 위젯**
+  - Android/iOS 오늘 일정 리스트 + 이번달 달력 위젯, 그룹 필터·월 이동·일정 추가 지원
+
+### 2026-07-13
+- 🟨 **루틴(습관) 관리 1차 구현** ([23-routine.md](docs/features/23-routine.md))
+  - 루틴 목록(오늘 체크 리스트, 드래그 순서 변경), 생성/수정 폼, 상세 화면(히트맵/통계/공유 3탭)
+  - 그룹원별 공유 루틴 현황 화면, 홈 대시보드 위젯(인라인 체크 토글 포함)
+  - 체크/체크취소 낙관적 업데이트, 순서 변경 낙관적 반영 + 실패 시 롤백
+  - 히트맵 캘린더는 신규 패키지 추가 없이 table_calendar 재사용
+  - 4개 언어(한/영/일/중) l10n 키 추가
 
 ### 2026-06-08
 - 🟨 **스마트 장보기 UX 대규모 개선** ([22-shopping.md](docs/features/22-shopping.md))

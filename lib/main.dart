@@ -24,6 +24,7 @@ import 'package:family_planner/features/auth/providers/auth_provider.dart';
 // import 'package:family_planner/features/main/household/providers/household_auto_settings_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_callback_handler.dart';
 import 'package:family_planner/core/services/deep_link_service.dart';
+import 'package:family_planner/core/services/home_widget_link_service.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/notification/data/services/firebase_messaging_service.dart';
 import 'package:family_planner/features/notification/data/services/local_notification_service.dart';
@@ -31,7 +32,10 @@ import 'package:family_planner/features/weather/providers/weather_provider.dart'
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/services/ad_service.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
+import 'package:family_planner/core/services/in_app_purchase_service.dart';
+import 'package:family_planner/core/models/subscription_platform.dart';
 import 'package:family_planner/core/providers/subscription_provider.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'firebase_options.dart';
 
 /// 전역 ScaffoldMessenger Key
@@ -110,13 +114,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     ApiClient.instance.onError = (String message) {
-      scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      // 짧은 시간에 여러 요청이 동시에 실패하면 스낵바가 큐에 쌓여
+      // 계속 순차 표시되는 문제가 있어, 새 에러가 오면 이전 것을 밀어내고
+      // 최신 것만 보여준다.
+      scaffoldMessengerKey.currentState
+        ?..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -131,7 +140,15 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       // 알림 서비스 초기화 (runApp 후 실행 - iOS APNs 이슈 방지)
       unawaited(FirebaseMessagingService.initialize().catchError((_) {}));
       unawaited(LocalNotificationService.initialize().catchError((_) {}));
+
+      // 구독 화면을 열지 않아도 결제가 서버에 반영되도록 앱 시작 시
+      // 1회 등록 (구매 직후 앱이 죽는 등으로 화면 쪽 검증이 못 이루어진
+      // 경우를 다음 실행 때 여기서 잡아낸다).
+      InAppPurchaseService.instance.startBackgroundSync(
+        onVerify: _verifyPurchaseInBackground,
+      );
       unawaited(DeepLinkService().init().catchError((_) {}));
+      unawaited(ref.read(homeWidgetLinkServiceProvider).init().catchError((_) {}));
 
       await ref.read(authProvider.notifier).checkAuthStatus();
 
@@ -165,6 +182,18 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     }
   }
 
+  Future<void> _verifyPurchaseInBackground(PurchaseDetails purchase) async {
+    final platform = InAppPurchaseService.instance.currentPlatform;
+    final token = purchase.verificationData.serverVerificationData;
+    await ref.read(subscriptionProvider.notifier).verify(
+          platform: platform,
+          purchaseToken:
+              platform == SubscriptionPlatform.android ? token : null,
+          signedTransaction:
+              platform == SubscriptionPlatform.ios ? token : null,
+        );
+  }
+
   /// GPS 위치를 서버에 저장 (날씨 알림 크론잡에서 사용)
   /// 로그인된 상태에서만 전송합니다.
   Future<void> _updateUserLocation() async {
@@ -173,6 +202,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 
     try {
       final latLon = await ref.read(locationProvider.future);
+      if (latLon.isFallback) return; // GPS 실패 시 서울 기본값을 실제 위치로 저장하지 않음
       await AuthService().updateLocation(lat: latLon.lat, lon: latLon.lon);
     } catch (_) {
       // 위치 권한 거부 등 실패 시 조용히 무시

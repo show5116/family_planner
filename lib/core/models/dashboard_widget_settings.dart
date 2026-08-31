@@ -15,6 +15,7 @@ const kSingletonWidgetKeys = {
   'childcareSummary',
   'savingsSummary',
   'anniversary',
+  'routineSummary',
 };
 
 /// 대시보드 위젯 설정 모델

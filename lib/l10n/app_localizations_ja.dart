@@ -143,6 +143,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get auth_or => 'または';
 
   @override
+  String get auth_testAccountLoginOwner => 'テストアカウントでログイン（グループオーナー）';
+
+  @override
+  String get auth_testAccountLoginMember => 'テストアカウントでログイン（グループメンバー）';
+
+  @override
   String get auth_emailHint => 'メールアドレスを入力してください';
 
   @override
@@ -3843,6 +3849,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get weather_dustUltraFine => 'PM2.5';
 
   @override
+  String get weather_fallbackLocationNotice => '現在地を取得できなかったため、ソウルの天気を表示しています';
+
+  @override
+  String get weather_enableLocationAction => '位置情報の権限を許可する';
+
+  @override
   String get investment_widgetTitle => '投資指標';
 
   @override
@@ -4438,4 +4450,943 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get widgetSettings_anniversarySummaryDesc =>
       '近づく記念日とD-dayカウントダウンを表示します';
+
+  @override
+  String get subscription_manage_title => 'サブスクリプション管理';
+
+  @override
+  String get subscription_screen_title => 'サブスクリプション管理';
+
+  @override
+  String get subscription_current_plan_label => '現在のプラン';
+
+  @override
+  String get subscription_active_status_label => '有効状態';
+
+  @override
+  String get subscription_active => '有効';
+
+  @override
+  String get subscription_inactive => '無効';
+
+  @override
+  String get subscription_expires_at_label => '有効期限';
+
+  @override
+  String get subscription_products_section_title => 'サブスクリプション商品';
+
+  @override
+  String get subscription_purchase_button => '購読する';
+
+  @override
+  String get subscription_restore_button => '購入を復元';
+
+  @override
+  String get subscription_purchase_success => '購読が完了しました。';
+
+  @override
+  String get subscription_verify_failed_title => '購入確認に失敗しました';
+
+  @override
+  String get subscription_verify_failed_message =>
+      '既に使用された購入か、検証に失敗しました。問題が続く場合はサポートにお問い合わせください。';
+
+  @override
+  String get subscription_verify_network_error =>
+      'ネットワークエラーが発生しました。しばらくしてからもう一度お試しください。';
+
+  @override
+  String get subscription_restore_success => 'サブスクリプションが復元されました。';
+
+  @override
+  String get subscription_product_not_found =>
+      'サブスクリプション商品を準備中です。しばらくしてからもう一度お試しください。';
+
+  @override
+  String get subscription_ad_free_benefit => 'アプリ内のすべての広告が表示されなくなります。';
+
+  @override
+  String get subscription_period_monthly => '月額サブスクリプション';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      'サブスクリプションは毎月自動的に更新され、現在の期間終了の24時間前までに解約しない限り同額が請求されます。購入確定時にストアアカウントへ課金されます。サブスクリプションの管理および解約は、端末のストアアカウント設定からいつでも行えます。';
+
+  @override
+  String get subscription_manage_subscription_button => 'サブスクリプションの管理・解約';
+
+  @override
+  String get subscription_terms_button => '利用規約';
+
+  @override
+  String get subscription_privacy_button => 'プライバシーポリシー';
+
+  @override
+  String get subscription_manage_launch_failed => 'ストアのサブスクリプション設定を開けませんでした。';
+
+  @override
+  String get subscription_compare_title => 'プラン比較';
+
+  @override
+  String get subscription_plan_current => '利用中';
+
+  @override
+  String get subscription_benefit_all_features => 'すべての機能を利用可能';
+
+  @override
+  String get subscription_benefit_ads_shown => '広告が表示されます';
+
+  @override
+  String get subscription_benefit_no_ads => '広告なしで利用';
+
+  @override
+  String get subscription_benefit_no_reward_ads => '機能利用時の広告視聴が不要';
+
+  @override
+  String get subscription_benefit_cancel_anytime => 'いつでも解約可能';
+
+  @override
+  String get subscription_free_plan_price => '無料';
+
+  @override
+  String get routine_title => 'ルーティン';
+
+  @override
+  String get routine_date_today => '今日';
+
+  @override
+  String get routine_reorder => '並べ替え';
+
+  @override
+  String get routine_reorder_done => '完了';
+
+  @override
+  String get routine_list_empty => '登録された習慣がありません';
+
+  @override
+  String get routine_list_empty_subtitle =>
+      '毎日繰り返したい習慣を登録して\nコツコツチェックしながらストリークを積み上げましょう';
+
+  @override
+  String get routine_add => '習慣追加';
+
+  @override
+  String get routine_edit => '習慣編集';
+
+  @override
+  String get routine_delete => '習慣削除';
+
+  @override
+  String get routine_delete_confirm => 'この習慣を削除しますか?';
+
+  @override
+  String get routine_field_title => 'タイトル';
+
+  @override
+  String get routine_field_title_hint => '例: 朝のストレッチ';
+
+  @override
+  String get routine_field_title_required => 'タイトルを入力してください';
+
+  @override
+  String get routine_field_title_too_long => 'タイトルは100文字以内で入力してください';
+
+  @override
+  String get routine_field_emoji => '絵文字';
+
+  @override
+  String get routine_field_emoji_custom => '直接入力';
+
+  @override
+  String get routine_field_emoji_helper => '絵文字を1つ入力してください(例: 🏃)';
+
+  @override
+  String get routine_field_color => '色';
+
+  @override
+  String get routine_field_target_count => '週間目標回数';
+
+  @override
+  String get routine_field_target_count_month => '月間目標回数';
+
+  @override
+  String get routine_this_month_progress => '今月の進捗';
+
+  @override
+  String get routine_field_start_date => '開始日';
+
+  @override
+  String get routine_field_end_date => '終了日（任意）';
+
+  @override
+  String get routine_field_end_date_none => '無期限';
+
+  @override
+  String get routine_field_group => '所属ルーティン';
+
+  @override
+  String get routine_field_group_none => 'なし(独立した習慣)';
+
+  @override
+  String get routine_save => '保存';
+
+  @override
+  String get routine_check => 'チェック';
+
+  @override
+  String get routine_uncheck => 'チェック取り消し';
+
+  @override
+  String get routine_check_already => 'すでにチェック済みです';
+
+  @override
+  String get routine_check_future_date => '未来の日付はチェックできません';
+
+  @override
+  String get routine_check_error => 'チェックに失敗しました';
+
+  @override
+  String routine_streak_celebration(int days) {
+    return '🔥 $days日連続達成!';
+  }
+
+  @override
+  String get routine_tab_heatmap => 'カレンダー';
+
+  @override
+  String get routine_tab_stats => '統計';
+
+  @override
+  String get routine_streak_current_days => '現在の連続日数';
+
+  @override
+  String get routine_streak_longest_days => '最長連続日数';
+
+  @override
+  String get routine_streak_current_weeks => '現在の連続週数';
+
+  @override
+  String get routine_streak_longest_weeks => '最長連続週数';
+
+  @override
+  String get routine_streak_current_months => '現在の連続月';
+
+  @override
+  String get routine_streak_longest_months => '最長連続月';
+
+  @override
+  String get routine_this_month_progress_label => '今月の進捗';
+
+  @override
+  String get routine_badges_goal_subtitle => '今日の目標を達成して集めたバッジです';
+
+  @override
+  String get routine_daily_goal_included_badge => '今日の目標に含まれる習慣';
+
+  @override
+  String get routine_daily_goal_filter_on => '目標の習慣のみ表示中';
+
+  @override
+  String get routine_daily_goal_filter_hint => 'タップすると目標の習慣だけ表示できます';
+
+  @override
+  String get routine_coach_add_title => '習慣をつくる';
+
+  @override
+  String get routine_coach_add_desc =>
+      '毎日くり返したいことを習慣として登録しましょう。\n複数の習慣をまとめて1つのルーティンにもできます。';
+
+  @override
+  String get routine_coach_goal_title => '今日の目標';
+
+  @override
+  String get routine_coach_goal_desc =>
+      '習慣をすべて終えなくても大丈夫です。\n決めた数を満たせばその日は成功です。\n連続で達成するとバッジももらえます。';
+
+  @override
+  String get routine_coach_flag_title => '目標に入る習慣';
+
+  @override
+  String get routine_coach_flag_desc =>
+      '旗のついた習慣が今日の目標に入ります。\n上の目標バーを押すと、その習慣だけを見られます。';
+
+  @override
+  String get routine_coach_check_title => 'チェックする';
+
+  @override
+  String get routine_coach_check_desc =>
+      '丸を押して完了の印をつけましょう。\n記録型の習慣は時間や回数も残せます。';
+
+  @override
+  String get routine_coach_demo_habit_1 => '朝のストレッチ';
+
+  @override
+  String get routine_coach_demo_habit_2 => '水を2L飲む';
+
+  @override
+  String get routine_coach_demo_habit_3 => '30分読書';
+
+  @override
+  String get routine_coach_skip => 'スキップ';
+
+  @override
+  String get routine_coach_together_title => 'グループでいっしょに';
+
+  @override
+  String get routine_coach_together_desc =>
+      '家族や友だちのグループと習慣を共有できます。\nお互いの状況を見たり、いっしょにチャレンジもできます。';
+
+  @override
+  String get routine_together_coach_status_title => 'メンバーの状況';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      'グループのみんなが今日どの習慣をしたか見られます。\n名前を押すと詳しい記録も確認できます。';
+
+  @override
+  String get routine_together_coach_tabs_title => 'ランキングとチャレンジ';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      'ランキングでは目標達成率で順位を競います。\nチャレンジは期間を決めていっしょに目標へ挑戦でき、\n賭けをすることもできます。';
+
+  @override
+  String get routine_together_coach_settings_title => '共有の設定';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      'どのグループに自分の習慣を見せるか決めます。\n隠したい習慣は「非公開」にすると、\nグループのメンバーには見えません。';
+
+  @override
+  String get routine_this_week_progress => '今週の進捗';
+
+  @override
+  String get routine_weekly_strip_title => '直近8週間の達成状況';
+
+  @override
+  String get routine_rate_period_week => '週';
+
+  @override
+  String get routine_rate_period_month => '月';
+
+  @override
+  String get routine_rate_period_custom => '期間指定';
+
+  @override
+  String get routine_rate_achievement => '達成率';
+
+  @override
+  String get routine_share_title => '共有グループ管理';
+
+  @override
+  String get routine_share_screen_desc => '選んだグループのメンバーが、あなたの習慣と達成状況を見られます。';
+
+  @override
+  String get routine_share_private_note => '非公開にした習慣は共有されません。';
+
+  @override
+  String get routine_share_none => 'まだ共有中のグループがありません';
+
+  @override
+  String get routine_share_no_groups => '参加中のグループがありません。\nまずグループを作るか参加してください。';
+
+  @override
+  String get routine_share_saved => '共有設定を保存しました';
+
+  @override
+  String get routine_field_private => '非公開';
+
+  @override
+  String get routine_field_private_desc => '共有グループの他の人にこの習慣を隠します';
+
+  @override
+  String get routine_private_badge => '非公開の習慣';
+
+  @override
+  String get routine_share_select_group => '共有するグループを選択';
+
+  @override
+  String get routine_together_title => 'みんなで';
+
+  @override
+  String get routine_together_tab_status => '状況';
+
+  @override
+  String get routine_together_tab_ranking => 'ランキング';
+
+  @override
+  String get routine_together_tab_challenge => 'チャレンジ';
+
+  @override
+  String get routine_challenge_create => 'チャレンジを作る';
+
+  @override
+  String get routine_challenge_edit => 'チャレンジを編集';
+
+  @override
+  String get routine_challenge_empty => 'まだチャレンジがありません。\nグループで挑む目標を作ってみましょう。';
+
+  @override
+  String get routine_challenge_field_title => 'チャレンジ名';
+
+  @override
+  String get routine_challenge_field_title_hint => '例: 今週は運動する';
+
+  @override
+  String get routine_challenge_field_description => '説明';
+
+  @override
+  String get routine_challenge_field_period => '期間';
+
+  @override
+  String get routine_challenge_field_target => '目標回数';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return '期間内に$count回チェックすれば達成です';
+  }
+
+  @override
+  String get routine_challenge_field_reward => '賭け · 罰ゲーム';
+
+  @override
+  String get routine_challenge_field_reward_hint => '例: 負けた人がごちそう';
+
+  @override
+  String get routine_challenge_status_upcoming => '開始前';
+
+  @override
+  String get routine_challenge_status_ongoing => '進行中';
+
+  @override
+  String get routine_challenge_status_ended => '終了';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '参加者$count人';
+  }
+
+  @override
+  String get routine_challenge_join => '参加する';
+
+  @override
+  String get routine_challenge_leave => '参加取消';
+
+  @override
+  String get routine_challenge_leave_confirm => 'このチャレンジから抜けますか？';
+
+  @override
+  String get routine_challenge_delete_confirm =>
+      'このチャレンジを削除しますか？\n参加者の記録も一緒に消えます。';
+
+  @override
+  String get routine_challenge_select_routine => 'どの習慣で参加しますか？';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      'このチャレンジに紐づける習慣を選んでください。\n非公開の習慣は参加できません。';
+
+  @override
+  String get routine_challenge_no_routine => '参加できる習慣がありません。\nまず習慣を作ってください。';
+
+  @override
+  String get routine_challenge_change_routine => '習慣を変える';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target回';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '残り$days日';
+  }
+
+  @override
+  String get routine_challenge_saved => 'チャレンジを保存しました';
+
+  @override
+  String get routine_challenge_joined => 'チャレンジに参加しました';
+
+  @override
+  String get routine_group_members_empty => '共有されたルーティンがありません';
+
+  @override
+  String get routine_sort_order_updated => '順序が変更されました';
+
+  @override
+  String get routine_error_generic => 'エラーが発生しました';
+
+  @override
+  String get widgetSettings_routineSummary => '今日のルーティン';
+
+  @override
+  String get nav_routines => 'ルーティン';
+
+  @override
+  String get routine_badges_title => 'マイバッジ';
+
+  @override
+  String get routine_overview_title => '統計';
+
+  @override
+  String get routine_overview_heatmap_title => '全体習慣達成状況';
+
+  @override
+  String get routine_overview_previous_period => '前の期間';
+
+  @override
+  String get routine_overview_next_period => '次の期間';
+
+  @override
+  String get routine_overview_this_week => '今週へ';
+
+  @override
+  String get routine_overview_this_month => '今月へ';
+
+  @override
+  String get routine_overview_weekly_title => '今週の習慣別遂行状況';
+
+  @override
+  String get routine_overview_achieved => '達成';
+
+  @override
+  String get routine_overview_not_achieved => '未達成';
+
+  @override
+  String get routine_overview_total_checked => '合計チェック';
+
+  @override
+  String get routine_daily_goal_title => '今日の目標';
+
+  @override
+  String get routine_daily_goal_setting => '今日の目標を設定';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '習慣$total個のうち$count個';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '1日$count個で成功です';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total =>
+      '登録中の習慣より目標が多いです。習慣を追加するか目標を下げてみましょう';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return '今日 $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => '今日の目標達成！';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return 'ボーナス +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '$days日連続達成';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return '最長$days日';
+  }
+
+  @override
+  String get routine_daily_goal_rate => '目標達成率';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved日 / $total日 達成';
+  }
+
+  @override
+  String get routine_daily_goal_saved => '目標を保存しました';
+
+  @override
+  String get routine_daily_goal_raise_title => '目標を上げてみませんか？';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return 'この2週間、目標をよく超えています。最近は1日平均$average個こなしています。\n\n1日の目標を$current個から$suggested個に上げてみませんか？';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => '上げる';
+
+  @override
+  String get routine_daily_goal_keep => '今のままでいい';
+
+  @override
+  String get routine_daily_goal_lower_title => '少し目標を下げますか？';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return '最近お忙しいですか？無理をしなくても大丈夫です。\n\n1日の目標を$current個から$suggested個に下げてもいいですよ。いつでも元に戻せます。';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => '下げる';
+
+  @override
+  String get routine_daily_goal_included_section => '目標に含める習慣';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '習慣$included個が目標の集計に含まれます';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => '毎日行う習慣';
+
+  @override
+  String get routine_daily_goal_group_periodic => '定期的に行う習慣';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      'オンにすると毎日行うものとして計算されます。週3回の習慣をオンにすると、3回を達成した後も残りの日は未完了として残ります';
+
+  @override
+  String get routine_daily_goal_freq_daily => '毎日';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '週$count回';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '月$count回';
+  }
+
+  @override
+  String get routine_daily_goal_no_included => '目標に含まれる習慣がありません。下からオンにしてください';
+
+  @override
+  String get routine_daily_goal_no_routines => '登録された習慣がありません';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return '全体習慣$count個基準';
+  }
+
+  @override
+  String get routine_badges_empty => 'まだ獲得したバッジがありません';
+
+  @override
+  String get routine_badge_earned_title => 'バッジ獲得!';
+
+  @override
+  String get routine_badge_earned_confirm => '確認';
+
+  @override
+  String get routine_leaderboard_metric_goalRate => '目標達成率';
+
+  @override
+  String get routine_leaderboard_metric_goalStreak => '連続達成';
+
+  @override
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved日 / $total日';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '$days日連続';
+  }
+
+  @override
+  String get routine_leaderboard_empty => '共有ルーティンのあるグループメンバーがいません';
+
+  @override
+  String get routine_group_add => 'ルーティン追加';
+
+  @override
+  String get routine_group_edit => 'ルーティン編集';
+
+  @override
+  String get routine_group_delete => 'ルーティン削除';
+
+  @override
+  String get routine_group_delete_confirm =>
+      'このルーティンを削除しますか?\n所属する習慣は削除されず、独立した習慣として残ります。';
+
+  @override
+  String get routine_group_field_title_hint => '例: 朝のルーティン';
+
+  @override
+  String get routine_group_save => '保存';
+
+  @override
+  String get routine_group_standalone_section_title => '独立した習慣';
+
+  @override
+  String get routine_table_header_number => '番号';
+
+  @override
+  String get routine_table_header_habit => '習慣';
+
+  @override
+  String get routine_table_header_check => 'チェック';
+
+  @override
+  String get routine_group_error_generic => 'エラーが発生しました';
+
+  @override
+  String get routine_field_memo => 'メモ';
+
+  @override
+  String get routine_field_memo_hint => 'この習慣についての説明を残してみましょう';
+
+  @override
+  String get routine_field_importance => '重要度';
+
+  @override
+  String get routine_importance_low => '低い';
+
+  @override
+  String get routine_importance_medium => '普通';
+
+  @override
+  String get routine_importance_high => '高い';
+
+  @override
+  String get routine_field_time_filter => '時間帯';
+
+  @override
+  String get routine_time_filter_morning => '午前';
+
+  @override
+  String get routine_time_filter_afternoon => '午後';
+
+  @override
+  String get routine_time_filter_evening => '夕方';
+
+  @override
+  String get routine_time_filter_none => '指定なし';
+
+  @override
+  String get routine_field_category => 'カテゴリー';
+
+  @override
+  String get routine_field_category_none => '未分類';
+
+  @override
+  String get routine_category_title => 'カテゴリー';
+
+  @override
+  String get routine_category_add => 'カテゴリー追加';
+
+  @override
+  String get routine_category_edit => 'カテゴリー編集';
+
+  @override
+  String get routine_category_delete => 'カテゴリー削除';
+
+  @override
+  String get routine_category_delete_confirm =>
+      'このカテゴリーを削除しますか?\n所属する習慣は削除されず、未分類として残ります。';
+
+  @override
+  String get routine_category_save => '保存';
+
+  @override
+  String get routine_category_field_title_hint => '例: 規則正しい生活';
+
+  @override
+  String get routine_category_error_generic => 'エラーが発生しました';
+
+  @override
+  String get routine_category_empty => '登録されたカテゴリーがありません';
+
+  @override
+  String get routine_category_filter_all => 'すべて';
+
+  @override
+  String get routine_category_picker_title => 'カテゴリーを選択';
+
+  @override
+  String get routine_category_edit_mode => '編集';
+
+  @override
+  String get routine_category_edit_mode_done => '完了';
+
+  @override
+  String get routine_category_reorder_hint => 'ハンドルを押して並べ替えできます';
+
+  @override
+  String get routine_category_select_done => '選択完了';
+
+  @override
+  String get routine_category_none_selected => 'カテゴリーを選択';
+
+  @override
+  String get routine_field_record_type => '記録方式';
+
+  @override
+  String get routine_record_type_boolean => 'シンプルチェック';
+
+  @override
+  String get routine_record_type_text => 'テキスト';
+
+  @override
+  String get routine_record_type_time => '時刻';
+
+  @override
+  String get routine_record_type_numeric => '数値';
+
+  @override
+  String get routine_record_type_readonly_hint => '記録方式は作成後に変更できません';
+
+  @override
+  String get routine_check_dialog_title => '記録入力';
+
+  @override
+  String get routine_check_dialog_text_label => '内容';
+
+  @override
+  String get routine_check_dialog_numeric_label => '数値';
+
+  @override
+  String get routine_check_dialog_time_label => '時刻';
+
+  @override
+  String get routine_check_dialog_confirm => 'チェック';
+
+  @override
+  String get routine_check_dialog_cancel => 'キャンセル';
+
+  @override
+  String get routine_status_active => '有効';
+
+  @override
+  String get routine_status_paused => '一時停止';
+
+  @override
+  String get routine_status_ended => '終了';
+
+  @override
+  String get routine_pause => '一時停止';
+
+  @override
+  String get routine_pause_confirm => 'この習慣を一時停止しますか?\n一時停止中はチェックできません。';
+
+  @override
+  String get routine_resume => '再開';
+
+  @override
+  String get routine_resume_success => '再開しました';
+
+  @override
+  String get routine_pause_error => '一時停止に失敗しました';
+
+  @override
+  String get routine_resume_error => '再開に失敗しました';
+
+  @override
+  String get routine_end => '終了';
+
+  @override
+  String get routine_end_confirm => 'この習慣を終了しますか?\nチェック記録は保存されます。';
+
+  @override
+  String get routine_frequency_type_daily => '毎日';
+
+  @override
+  String get routine_frequency_type_weekly => '毎週';
+
+  @override
+  String get routine_frequency_type_monthly => '毎月';
+
+  @override
+  String get routine_weekly_mode_count_only => '週N回';
+
+  @override
+  String get routine_weekly_mode_fixed_days => '曜日指定';
+
+  @override
+  String get routine_field_target_days => '反復曜日';
+
+  @override
+  String get routine_day_sun => '日';
+
+  @override
+  String get routine_day_mon => '月';
+
+  @override
+  String get routine_day_tue => '火';
+
+  @override
+  String get routine_day_wed => '水';
+
+  @override
+  String get routine_day_thu => '木';
+
+  @override
+  String get routine_day_fri => '金';
+
+  @override
+  String get routine_day_sat => '土';
+
+  @override
+  String get routine_error_weekly_mode_required => '週反復方式を選択してください';
+
+  @override
+  String get routine_error_weekly_target_required => '週目標回数を選択してください';
+
+  @override
+  String get routine_error_fixed_days_required => '反復する曜日を1つ以上選択してください';
+
+  @override
+  String get routine_error_monthly_target_required => '月目標回数を選択してください';
+
+  @override
+  String get emoji_picker_more => 'もっと見る';
+
+  @override
+  String get emoji_picker_custom_selected => 'プリセット以外の絵文字が選択されています';
+
+  @override
+  String get emoji_picker_search_hint => '絵文字を検索';
+
+  @override
+  String get emoji_picker_no_result => '検索結果がありません';
+
+  @override
+  String get emoji_picker_category_recent => '最近使った項目';
+
+  @override
+  String get emoji_picker_category_smileys => '表情';
+
+  @override
+  String get emoji_picker_category_animals => '動物';
+
+  @override
+  String get emoji_picker_category_foods => '食べ物';
+
+  @override
+  String get emoji_picker_category_travel => '旅行';
+
+  @override
+  String get emoji_picker_category_activities => 'アクティビティ';
+
+  @override
+  String get emoji_picker_category_objects => '物';
+
+  @override
+  String get emoji_picker_category_symbols => '記号';
+
+  @override
+  String get emoji_picker_category_flags => '旗';
 }

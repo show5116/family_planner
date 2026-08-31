@@ -71,6 +71,7 @@ class NotificationRepository {
     required String category,
     required bool enabled,
     int? weatherAlertHour,
+    int? routineReminderHour,
   }) async {
     try {
       final data = <String, dynamic>{
@@ -79,6 +80,9 @@ class NotificationRepository {
       };
       if (weatherAlertHour != null) {
         data['weatherAlertHour'] = weatherAlertHour;
+      }
+      if (routineReminderHour != null) {
+        data['routineReminderHour'] = routineReminderHour;
       }
       await _dio.put('/notifications/settings', data: data);
     } on DioException catch (e) {

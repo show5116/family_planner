@@ -366,6 +366,18 @@ abstract class AppLocalizations {
   /// **'또는'**
   String get auth_or;
 
+  /// 로그인 화면의 테스트 계정(그룹 소유자) 로그인 버튼 텍스트 (local/development 환경 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 계정으로 로그인 (그룹 소유자)'**
+  String get auth_testAccountLoginOwner;
+
+  /// 로그인 화면의 테스트 계정(그룹 멤버) 로그인 버튼 텍스트 (local/development 환경 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 계정으로 로그인 (그룹 멤버)'**
+  String get auth_testAccountLoginMember;
+
   /// No description provided for @auth_emailHint.
   ///
   /// In ko, this message translates to:
@@ -7490,6 +7502,18 @@ abstract class AppLocalizations {
   /// **'초미세'**
   String get weather_dustUltraFine;
 
+  /// No description provided for @weather_fallbackLocationNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 위치를 가져오지 못해 서울 날씨를 표시하고 있습니다'**
+  String get weather_fallbackLocationNotice;
+
+  /// No description provided for @weather_enableLocationAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 권한 허용하기'**
+  String get weather_enableLocationAction;
+
   /// No description provided for @investment_widgetTitle.
   ///
   /// In ko, this message translates to:
@@ -8545,6 +8569,1758 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'다가오는 기념일과 D-day를 표시합니다'**
   String get widgetSettings_anniversarySummaryDesc;
+
+  /// 더보기 탭의 구독 관리 메뉴 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리'**
+  String get subscription_manage_title;
+
+  /// 구독 관리 화면 AppBar 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리'**
+  String get subscription_screen_title;
+
+  /// 구독 관리 화면 현재 플랜 섹션 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 플랜'**
+  String get subscription_current_plan_label;
+
+  /// 구독 활성 여부 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'활성 여부'**
+  String get subscription_active_status_label;
+
+  /// 구독 활성 상태 값
+  ///
+  /// In ko, this message translates to:
+  /// **'활성'**
+  String get subscription_active;
+
+  /// 구독 비활성 상태 값
+  ///
+  /// In ko, this message translates to:
+  /// **'비활성'**
+  String get subscription_inactive;
+
+  /// 구독 만료일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'만료일'**
+  String get subscription_expires_at_label;
+
+  /// 구독 상품 목록 섹션 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 상품'**
+  String get subscription_products_section_title;
+
+  /// 구독 구매 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'구독하기'**
+  String get subscription_purchase_button;
+
+  /// 구독 복원 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 복원'**
+  String get subscription_restore_button;
+
+  /// 구독 구매 성공 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'구독이 완료되었습니다.'**
+  String get subscription_purchase_success;
+
+  /// 구매 검증 실패(422) 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 확인 실패'**
+  String get subscription_verify_failed_title;
+
+  /// 구매 검증 실패(422) 다이얼로그 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 사용된 구매이거나 검증에 실패했습니다. 문제가 지속되면 고객센터에 문의해주세요.'**
+  String get subscription_verify_failed_message;
+
+  /// 구매 검증 중 네트워크 오류 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'**
+  String get subscription_verify_network_error;
+
+  /// 구독 복원 성공 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'구독이 복원되었습니다.'**
+  String get subscription_restore_success;
+
+  /// 스토어에서 상품을 찾을 수 없을 때 안내 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.'**
+  String get subscription_product_not_found;
+
+  /// 광고 제거 상품 혜택 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 내 모든 광고가 표시되지 않습니다.'**
+  String get subscription_ad_free_benefit;
+
+  /// 월 단위 구독 기간 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 구독'**
+  String get subscription_period_monthly;
+
+  /// 자동 갱신 고지 (App Store Guideline 3.1.2 필수)
+  ///
+  /// In ko, this message translates to:
+  /// **'구독은 매월 자동으로 갱신되며, 현재 구독 기간이 끝나기 24시간 전까지 해지하지 않으면 동일한 금액이 결제됩니다. 구매 확정 시 스토어 계정으로 결제되며, 구독 관리 및 해지는 기기의 스토어 계정 설정에서 언제든지 할 수 있습니다.'**
+  String get subscription_auto_renew_notice;
+
+  /// 스토어 구독 관리 화면으로 이동하는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리 및 해지'**
+  String get subscription_manage_subscription_button;
+
+  /// 구독 화면 이용약관 링크
+  ///
+  /// In ko, this message translates to:
+  /// **'이용약관'**
+  String get subscription_terms_button;
+
+  /// 구독 화면 개인정보 처리방침 링크
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보 처리방침'**
+  String get subscription_privacy_button;
+
+  /// 스토어 구독 관리 화면 실행 실패 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'스토어 구독 관리 화면을 열 수 없습니다.'**
+  String get subscription_manage_launch_failed;
+
+  /// 플랜 비교 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'플랜 비교'**
+  String get subscription_compare_title;
+
+  /// 현재 사용 중인 플랜 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'이용 중'**
+  String get subscription_plan_current;
+
+  /// 플랜 혜택 - 모든 기능
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 기능 이용'**
+  String get subscription_benefit_all_features;
+
+  /// 무료 플랜 - 광고 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'광고가 표시됩니다'**
+  String get subscription_benefit_ads_shown;
+
+  /// 광고 제거 플랜 - 광고 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'광고 없이 이용'**
+  String get subscription_benefit_no_ads;
+
+  /// 광고 제거 플랜 - 보상형 광고 불필요
+  ///
+  /// In ko, this message translates to:
+  /// **'기능 사용 시 광고 시청 불필요'**
+  String get subscription_benefit_no_reward_ads;
+
+  /// 광고 제거 플랜 - 해지 자유
+  ///
+  /// In ko, this message translates to:
+  /// **'언제든 해지 가능'**
+  String get subscription_benefit_cancel_anytime;
+
+  /// 무료 플랜 가격 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'₩0'**
+  String get subscription_free_plan_price;
+
+  /// 루틴 메인 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴'**
+  String get routine_title;
+
+  /// 루틴 목록 날짜 선택기에서 오늘로 돌아가는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get routine_date_today;
+
+  /// 루틴 목록 순서변경 편집 모드 진입 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'순서변경'**
+  String get routine_reorder;
+
+  /// 루틴 목록 순서변경 편집 모드 종료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'완료'**
+  String get routine_reorder_done;
+
+  /// 습관 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 습관이 없습니다'**
+  String get routine_list_empty;
+
+  /// 습관 목록 빈 상태 부가 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 반복하고 싶은 습관을 등록하고\n꾸준히 체크하며 스트릭을 쌓아보세요'**
+  String get routine_list_empty_subtitle;
+
+  /// 습관 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 추가'**
+  String get routine_add;
+
+  /// 습관 수정 버튼/타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 수정'**
+  String get routine_edit;
+
+  /// 습관 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 삭제'**
+  String get routine_delete;
+
+  /// 습관 삭제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관을 삭제하시겠습니까?'**
+  String get routine_delete_confirm;
+
+  /// 습관 제목 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get routine_field_title;
+
+  /// 습관 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 아침 스트레칭'**
+  String get routine_field_title_hint;
+
+  /// 제목 미입력 시 유효성 검사 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get routine_field_title_required;
+
+  /// 제목 길이 초과 시 유효성 검사 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'제목은 100자 이내로 입력해주세요'**
+  String get routine_field_title_too_long;
+
+  /// 습관 이모지 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지'**
+  String get routine_field_emoji;
+
+  /// 이모지 직접 입력 필드 라벨 (프리셋에 없는 이모지용)
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 입력'**
+  String get routine_field_emoji_custom;
+
+  /// 이모지 입력 필드 도움말
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지 하나를 입력해주세요 (예: 🏃)'**
+  String get routine_field_emoji_helper;
+
+  /// 습관 색상 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'색상'**
+  String get routine_field_color;
+
+  /// 주간 목표 체크 횟수 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'주 목표 횟수'**
+  String get routine_field_target_count;
+
+  /// 월간 목표 체크 횟수 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월 목표 횟수'**
+  String get routine_field_target_count_month;
+
+  /// 이번 달 진행 상황 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 진행'**
+  String get routine_this_month_progress;
+
+  /// 습관 시작일 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'시작일'**
+  String get routine_field_start_date;
+
+  /// 습관 종료일 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'종료일 (선택)'**
+  String get routine_field_end_date;
+
+  /// 종료일 미지정 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'무기한'**
+  String get routine_field_end_date_none;
+
+  /// 습관이 소속될 루틴(묶음) 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'소속 루틴'**
+  String get routine_field_group;
+
+  /// 소속 루틴 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'없음 (독립 습관)'**
+  String get routine_field_group_none;
+
+  /// 습관 저장 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get routine_save;
+
+  /// 습관 체크 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'체크'**
+  String get routine_check;
+
+  /// 습관 체크 취소 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'체크 취소'**
+  String get routine_uncheck;
+
+  /// 중복 체크(409) 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 체크했습니다'**
+  String get routine_check_already;
+
+  /// 미래 날짜 체크(400) 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'미래 날짜는 체크할 수 없습니다'**
+  String get routine_check_future_date;
+
+  /// 체크 처리 실패 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'체크에 실패했습니다'**
+  String get routine_check_error;
+
+  /// 체크 후 스트릭이 갱신되었을 때 축하 스낵바 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'🔥 {days}일 연속 달성!'**
+  String routine_streak_celebration(int days);
+
+  /// 루틴 상세 히트맵 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'달력'**
+  String get routine_tab_heatmap;
+
+  /// 루틴 상세 통계 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get routine_tab_stats;
+
+  /// 현재 연속 체크 일수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 연속 일수'**
+  String get routine_streak_current_days;
+
+  /// 최장 연속 체크 일수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 연속 일수'**
+  String get routine_streak_longest_days;
+
+  /// 현재 연속 달성 주 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 연속 주'**
+  String get routine_streak_current_weeks;
+
+  /// 최장 연속 달성 주 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 연속 주'**
+  String get routine_streak_longest_weeks;
+
+  /// 현재 연속 달성 개월 수 라벨 (월간 습관 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 연속 달'**
+  String get routine_streak_current_months;
+
+  /// 최장 연속 달성 개월 수 라벨 (월간 습관 전용)
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 연속 달'**
+  String get routine_streak_longest_months;
+
+  /// 월간 습관의 이번 달 진행 상황 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 진행'**
+  String get routine_this_month_progress_label;
+
+  /// 배지 화면 상단 설명 — 배지가 일일 목표 기준임을 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표를 달성하며 모은 배지예요'**
+  String get routine_badges_goal_subtitle;
+
+  /// 목록에서 목표 포함 습관을 나타내는 깃발 아이콘의 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표에 포함된 습관'**
+  String get routine_daily_goal_included_badge;
+
+  /// 목표 습관 필터가 켜졌을 때 진행 바에 표시되는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 습관만 보는 중'**
+  String get routine_daily_goal_filter_on;
+
+  /// 진행 바를 탭하면 필터가 켜진다는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'탭하면 목표 습관만 볼 수 있어요'**
+  String get routine_daily_goal_filter_hint;
+
+  /// 루틴 온보딩 1단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 만들기'**
+  String get routine_coach_add_title;
+
+  /// 루틴 온보딩 1단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 반복하고 싶은 일을 습관으로 등록해보세요.\n여러 습관을 묶어 하나의 루틴으로 만들 수도 있어요.'**
+  String get routine_coach_add_desc;
+
+  /// 루틴 온보딩 2단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표'**
+  String get routine_coach_goal_title;
+
+  /// 루틴 온보딩 2단계 설명 — 일일 목표 개념
+  ///
+  /// In ko, this message translates to:
+  /// **'습관을 전부 못 채워도 괜찮아요.\n정해둔 개수만 채우면 그날은 성공이에요.\n연속으로 달성하면 배지도 받을 수 있어요.'**
+  String get routine_coach_goal_desc;
+
+  /// 루틴 온보딩 3단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표에 포함된 습관'**
+  String get routine_coach_flag_title;
+
+  /// 루틴 온보딩 3단계 설명 — 깃발 표시와 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'깃발이 붙은 습관이 오늘의 목표에 들어가요.\n위의 목표 막대를 누르면 이 습관만 모아볼 수 있어요.'**
+  String get routine_coach_flag_desc;
+
+  /// 루틴 온보딩 4단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'체크하기'**
+  String get routine_coach_check_title;
+
+  /// 루틴 온보딩 4단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'동그라미를 눌러 완료 표시를 하세요.\n기록형 습관은 시간이나 횟수도 함께 남길 수 있어요.'**
+  String get routine_coach_check_desc;
+
+  /// 온보딩 예시 습관 이름 1
+  ///
+  /// In ko, this message translates to:
+  /// **'아침 스트레칭'**
+  String get routine_coach_demo_habit_1;
+
+  /// 온보딩 예시 습관 이름 2
+  ///
+  /// In ko, this message translates to:
+  /// **'물 2L 마시기'**
+  String get routine_coach_demo_habit_2;
+
+  /// 온보딩 예시 습관 이름 3
+  ///
+  /// In ko, this message translates to:
+  /// **'책 30분 읽기'**
+  String get routine_coach_demo_habit_3;
+
+  /// 루틴 온보딩 건너뛰기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛰기'**
+  String get routine_coach_skip;
+
+  /// 목록 온보딩 - 그룹 기능 안내 단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹과 함께하기'**
+  String get routine_coach_together_title;
+
+  /// 목록 온보딩 - 그룹 기능 안내 단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'가족이나 친구 그룹과 습관을 공유할 수 있어요.\n서로의 현황을 보고, 함께 챌린지도 할 수 있어요.'**
+  String get routine_coach_together_desc;
+
+  /// 함께하기 온보딩 1단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원 현황'**
+  String get routine_together_coach_status_title;
+
+  /// 함께하기 온보딩 1단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원들이 오늘 어떤 습관을 했는지 볼 수 있어요.\n이름을 누르면 자세한 기록도 확인할 수 있어요.'**
+  String get routine_together_coach_status_desc;
+
+  /// 함께하기 온보딩 2단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'랭킹과 챌린지'**
+  String get routine_together_coach_tabs_title;
+
+  /// 함께하기 온보딩 2단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'랭킹에서는 목표 달성률로 순위를 겨뤄요.\n챌린지는 기간을 정해 함께 목표에 도전하고,\n내기를 걸 수도 있어요.'**
+  String get routine_together_coach_tabs_desc;
+
+  /// 함께하기 온보딩 3단계 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 설정'**
+  String get routine_together_coach_settings_title;
+
+  /// 함께하기 온보딩 3단계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'어느 그룹에 내 습관을 보여줄지 정해요.\n숨기고 싶은 습관은 \'비공개\'로 표시하면\n그룹원에게 보이지 않아요.'**
+  String get routine_together_coach_settings_desc;
+
+  /// 이번 주 진행 상황 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 진행'**
+  String get routine_this_week_progress;
+
+  /// 히트맵 탭 주간 달성 스트립 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 8주 달성 현황'**
+  String get routine_weekly_strip_title;
+
+  /// 달성률 기간 단위 - 주
+  ///
+  /// In ko, this message translates to:
+  /// **'주'**
+  String get routine_rate_period_week;
+
+  /// 달성률 기간 단위 - 월
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get routine_rate_period_month;
+
+  /// 달성률 기간 단위 - 커스텀
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 지정'**
+  String get routine_rate_period_custom;
+
+  /// 기간별 달성률 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'달성률'**
+  String get routine_rate_achievement;
+
+  /// 루틴 공유 그룹 관리 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 그룹 관리'**
+  String get routine_share_title;
+
+  /// 공유 설정 화면 상단 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'선택한 그룹의 구성원이 내 습관과 달성 현황을 볼 수 있어요.'**
+  String get routine_share_screen_desc;
+
+  /// 공유 설정 화면에서 비공개 습관은 제외된다는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개로 표시한 습관은 공유되지 않아요.'**
+  String get routine_share_private_note;
+
+  /// 공유 중인 그룹이 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 공유 중인 그룹이 없어요'**
+  String get routine_share_none;
+
+  /// 가입한 그룹이 하나도 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'참여 중인 그룹이 없어요.\n그룹을 먼저 만들거나 참여해주세요.'**
+  String get routine_share_no_groups;
+
+  /// 공유 설정 저장 성공 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 설정을 저장했어요'**
+  String get routine_share_saved;
+
+  /// 습관 생성/수정 폼의 비공개 스위치 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개'**
+  String get routine_field_private;
+
+  /// 비공개 스위치 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 그룹의 다른 사람에게 이 습관을 숨겨요'**
+  String get routine_field_private_desc;
+
+  /// 목록에서 비공개 습관을 나타내는 자물쇠 아이콘 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'비공개 습관'**
+  String get routine_private_badge;
+
+  /// 공유 그룹 선택 시트 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'공유할 그룹 선택'**
+  String get routine_share_select_group;
+
+  /// 그룹 현황/랭킹 통합 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'함께하기'**
+  String get routine_together_title;
+
+  /// 함께하기 화면 - 그룹원 현황 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'현황'**
+  String get routine_together_tab_status;
+
+  /// 함께하기 화면 - 랭킹 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'랭킹'**
+  String get routine_together_tab_ranking;
+
+  /// 함께하기 화면 - 챌린지 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지'**
+  String get routine_together_tab_challenge;
+
+  /// 챌린지 생성 화면 제목/버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지 만들기'**
+  String get routine_challenge_create;
+
+  /// 챌린지 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지 수정'**
+  String get routine_challenge_edit;
+
+  /// 챌린지가 하나도 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 챌린지가 없어요.\n그룹과 함께할 목표를 만들어보세요.'**
+  String get routine_challenge_empty;
+
+  /// 챌린지 제목 입력 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지 이름'**
+  String get routine_challenge_field_title;
+
+  /// 챌린지 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 이번 주 운동하기'**
+  String get routine_challenge_field_title_hint;
+
+  /// 챌린지 설명 입력 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'설명'**
+  String get routine_challenge_field_description;
+
+  /// 챌린지 기간 선택 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기간'**
+  String get routine_challenge_field_period;
+
+  /// 챌린지 목표 횟수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 횟수'**
+  String get routine_challenge_field_target;
+
+  /// 목표 횟수 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 안에 {count}번 체크하면 달성이에요'**
+  String routine_challenge_field_target_desc(int count);
+
+  /// 챌린지 보상/벌칙 입력 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'내기 · 벌칙'**
+  String get routine_challenge_field_reward;
+
+  /// 보상/벌칙 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 진 사람이 치킨 쏘기'**
+  String get routine_challenge_field_reward_hint;
+
+  /// 챌린지 상태 - 시작 전
+  ///
+  /// In ko, this message translates to:
+  /// **'시작 전'**
+  String get routine_challenge_status_upcoming;
+
+  /// 챌린지 상태 - 진행 중
+  ///
+  /// In ko, this message translates to:
+  /// **'진행 중'**
+  String get routine_challenge_status_ongoing;
+
+  /// 챌린지 상태 - 종료
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get routine_challenge_status_ended;
+
+  /// 챌린지 참가자 수
+  ///
+  /// In ko, this message translates to:
+  /// **'참가자 {count}명'**
+  String routine_challenge_participants(int count);
+
+  /// 챌린지 참가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'참가하기'**
+  String get routine_challenge_join;
+
+  /// 챌린지 참가 취소 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'참가 취소'**
+  String get routine_challenge_leave;
+
+  /// 참가 취소 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 챌린지에서 빠지시겠어요?'**
+  String get routine_challenge_leave_confirm;
+
+  /// 챌린지 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 챌린지를 삭제하시겠어요?\n참가자들의 기록도 함께 사라져요.'**
+  String get routine_challenge_delete_confirm;
+
+  /// 참가 시 습관 선택 시트 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'어떤 습관으로 참가할까요?'**
+  String get routine_challenge_select_routine;
+
+  /// 습관 선택 시트 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'이 챌린지에 연결할 내 습관을 골라주세요.\n비공개 습관은 참가할 수 없어요.'**
+  String get routine_challenge_select_routine_desc;
+
+  /// 연결 가능한 습관이 없을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'참가할 수 있는 습관이 없어요.\n먼저 습관을 만들어주세요.'**
+  String get routine_challenge_no_routine;
+
+  /// 연결한 습관 교체 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 바꾸기'**
+  String get routine_challenge_change_routine;
+
+  /// 챌린지 진행률
+  ///
+  /// In ko, this message translates to:
+  /// **'{checked} / {target}회'**
+  String routine_challenge_progress(int checked, int target);
+
+  /// 챌린지 종료까지 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 남음'**
+  String routine_challenge_days_left(int days);
+
+  /// 챌린지 저장 성공
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지를 저장했어요'**
+  String get routine_challenge_saved;
+
+  /// 챌린지 참가 성공
+  ///
+  /// In ko, this message translates to:
+  /// **'챌린지에 참가했어요'**
+  String get routine_challenge_joined;
+
+  /// 그룹원 루틴 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'공유된 루틴이 없습니다'**
+  String get routine_group_members_empty;
+
+  /// 루틴 순서 변경 완료 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'순서가 변경되었습니다'**
+  String get routine_sort_order_updated;
+
+  /// 루틴 관련 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get routine_error_generic;
+
+  /// 홈 위젯 설정 - 루틴 요약 위젯 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 루틴'**
+  String get widgetSettings_routineSummary;
+
+  /// 루틴 네비게이션 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴'**
+  String get nav_routines;
+
+  /// 배지 목록 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'내 배지'**
+  String get routine_badges_title;
+
+  /// 전체 루틴 통합 통계 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get routine_overview_title;
+
+  /// 통합 히트맵 캘린더 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 습관 달성 현황'**
+  String get routine_overview_heatmap_title;
+
+  /// 통계 화면 이전 주/달 이동 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 기간'**
+  String get routine_overview_previous_period;
+
+  /// 통계 화면 다음 주/달 이동 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 기간'**
+  String get routine_overview_next_period;
+
+  /// 통계 화면 주간 모드에서 이번 주로 돌아가는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'금주로'**
+  String get routine_overview_this_week;
+
+  /// 통계 화면 월간 모드에서 이번 달로 돌아가는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달로'**
+  String get routine_overview_this_month;
+
+  /// 주간 모드 습관별 7일 그리드 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 습관별 수행 현황'**
+  String get routine_overview_weekly_title;
+
+  /// 주간 목표를 달성한 습관 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'달성'**
+  String get routine_overview_achieved;
+
+  /// 주간 목표를 달성하지 못한 습관 수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'미달성'**
+  String get routine_overview_not_achieved;
+
+  /// 주간 모드에서 전체 습관의 체크된 총 횟수 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'총 체크'**
+  String get routine_overview_total_checked;
+
+  /// 일일 목표 설정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표'**
+  String get routine_daily_goal_title;
+
+  /// 더보기 메뉴에서 일일 목표 설정으로 진입하는 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 목표 설정'**
+  String get routine_daily_goal_setting;
+
+  /// 목표 개수 슬라이더 위에 표시되는 현재 선택값
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 {total}개 중 {count}개'**
+  String routine_daily_goal_count_label(int total, int count);
+
+  /// 목표 개수 슬라이더 아래 격려 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'하루 {count}개면 성공이에요'**
+  String routine_daily_goal_encourage(int count);
+
+  /// 목표 개수가 전체 습관 수보다 클 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'지금 등록된 습관보다 목표가 많아요. 습관을 더 추가하거나 목표를 낮춰보세요'**
+  String get routine_daily_goal_exceeds_total;
+
+  /// 오늘의 목표 진행 상황 (체크 수 / 목표 수)
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 {checked} / {target}'**
+  String routine_daily_goal_today_progress(int checked, int target);
+
+  /// 오늘 목표를 달성했을 때 표시 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 목표 달성!'**
+  String get routine_daily_goal_achieved_today;
+
+  /// 목표를 초과 달성했을 때 추가 체크 수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스 +{count}'**
+  String routine_daily_goal_bonus(int count);
+
+  /// 일일 목표 연속 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 연속 달성'**
+  String routine_daily_goal_streak(int days);
+
+  /// 역대 최장 연속 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'최장 {days}일'**
+  String routine_daily_goal_streak_longest(int days);
+
+  /// 통계 화면 일일 목표 달성률 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 달성률'**
+  String get routine_daily_goal_rate;
+
+  /// 기간 내 목표 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{achieved}일 / {total}일 달성'**
+  String routine_daily_goal_achieved_days(int achieved, int total);
+
+  /// 목표 저장 성공 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'목표를 저장했어요'**
+  String get routine_daily_goal_saved;
+
+  /// 목표 상향 제안 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표를 올려볼까요?'**
+  String get routine_daily_goal_raise_title;
+
+  /// 목표 상향 제안 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 2주 동안 목표를 자주 넘었어요. 요즘 하루 평균 {average}개를 하고 계세요.\n\n하루 목표를 {current}개에서 {suggested}개로 올려볼까요?'**
+  String routine_daily_goal_raise_body(int average, int current, int suggested);
+
+  /// 목표 상향 수락 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'올릴게요'**
+  String get routine_daily_goal_raise_accept;
+
+  /// 목표 조정 제안 거절 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'지금이 좋아요'**
+  String get routine_daily_goal_keep;
+
+  /// 목표 하향 제안 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표를 잠시 낮춰볼까요?'**
+  String get routine_daily_goal_lower_title;
+
+  /// 목표 하향 제안 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'요즘 조금 바쁘신가요? 무리하지 않아도 괜찮아요.\n\n하루 목표를 {current}개에서 {suggested}개로 낮춰도 좋아요. 언제든 다시 올릴 수 있어요.'**
+  String routine_daily_goal_lower_body(int current, int suggested);
+
+  /// 목표 하향 수락 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'낮출게요'**
+  String get routine_daily_goal_lower_accept;
+
+  /// 일일 목표 집계 대상 습관 선택 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표에 포함할 습관'**
+  String get routine_daily_goal_included_section;
+
+  /// 집계에 포함된 습관 수 요약
+  ///
+  /// In ko, this message translates to:
+  /// **'습관 {included}개가 목표 집계에 포함돼요'**
+  String routine_daily_goal_included_summary(int included);
+
+  /// DAILY 습관 그룹 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 하는 습관'**
+  String get routine_daily_goal_group_daily;
+
+  /// WEEKLY/MONTHLY 습관 그룹 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'주기적으로 하는 습관'**
+  String get routine_daily_goal_group_periodic;
+
+  /// 주기 습관을 포함할 때의 트레이드오프 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'켜면 매일 해야 하는 것으로 계산돼요. 주 3회 습관을 켜면 3회를 다 채운 뒤에도 남은 날에 미완료로 남아요'**
+  String get routine_daily_goal_periodic_hint;
+
+  /// 주기 배지 - 매일
+  ///
+  /// In ko, this message translates to:
+  /// **'매일'**
+  String get routine_daily_goal_freq_daily;
+
+  /// 주기 배지 - 주 N회
+  ///
+  /// In ko, this message translates to:
+  /// **'주 {count}회'**
+  String routine_daily_goal_freq_weekly_count(int count);
+
+  /// 주기 배지 - 월 N회
+  ///
+  /// In ko, this message translates to:
+  /// **'월 {count}회'**
+  String routine_daily_goal_freq_monthly_count(int count);
+
+  /// 포함된 습관이 0개일 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'목표에 포함된 습관이 없어요. 아래에서 습관을 켜주세요'**
+  String get routine_daily_goal_no_included;
+
+  /// 습관이 하나도 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 습관이 없어요'**
+  String get routine_daily_goal_no_routines;
+
+  /// 통합 달성률 카드에 집계 대상 습관 수를 보여주는 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 습관 {count}개 기준'**
+  String routine_overview_total_routines(int count);
+
+  /// 루틴별 배지 목록이 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 획득한 배지가 없습니다'**
+  String get routine_badges_empty;
+
+  /// 배지 획득 축하 다이얼로그 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'배지 획득!'**
+  String get routine_badge_earned_title;
+
+  /// 배지 획득 축하 다이얼로그 확인 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'확인'**
+  String get routine_badge_earned_confirm;
+
+  /// 랭킹보드 정렬 기준 - 일일 목표 달성률
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 달성률'**
+  String get routine_leaderboard_metric_goalRate;
+
+  /// 랭킹보드 정렬 기준 - 연속 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'연속 달성'**
+  String get routine_leaderboard_metric_goalStreak;
+
+  /// 랭킹보드 목표 달성 일수 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{achieved}일 / {total}일'**
+  String routine_leaderboard_goal_days(int achieved, int total);
+
+  /// 랭킹보드 연속 달성 일수 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 연속'**
+  String routine_leaderboard_streak_days(int days);
+
+  /// 랭킹보드에 표시할 순위가 없을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'공유된 루틴이 있는 그룹원이 없습니다'**
+  String get routine_leaderboard_empty;
+
+  /// 루틴(습관 묶음) 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 추가'**
+  String get routine_group_add;
+
+  /// 루틴(습관 묶음) 수정 버튼/타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 수정'**
+  String get routine_group_edit;
+
+  /// 루틴(습관 묶음) 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 삭제'**
+  String get routine_group_delete;
+
+  /// 루틴 삭제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 루틴을 삭제하시겠습니까?\n소속된 습관은 삭제되지 않고 독립 습관으로 남습니다.'**
+  String get routine_group_delete_confirm;
+
+  /// 루틴 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 아침 루틴'**
+  String get routine_group_field_title_hint;
+
+  /// 루틴 저장 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get routine_group_save;
+
+  /// 루틴에 소속되지 않은 습관 섹션 헤더
+  ///
+  /// In ko, this message translates to:
+  /// **'독립 습관'**
+  String get routine_group_standalone_section_title;
+
+  /// 습관 표 헤더 - 번호 컬럼
+  ///
+  /// In ko, this message translates to:
+  /// **'번호'**
+  String get routine_table_header_number;
+
+  /// 습관 표 헤더 - 습관 컬럼
+  ///
+  /// In ko, this message translates to:
+  /// **'습관'**
+  String get routine_table_header_habit;
+
+  /// 습관 표 헤더 - 체크 컬럼
+  ///
+  /// In ko, this message translates to:
+  /// **'체크'**
+  String get routine_table_header_check;
+
+  /// 루틴 관련 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get routine_group_error_generic;
+
+  /// 습관 메모 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'메모'**
+  String get routine_field_memo;
+
+  /// 메모 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관에 대한 설명을 남겨보세요'**
+  String get routine_field_memo_hint;
+
+  /// 습관 중요도 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'중요도'**
+  String get routine_field_importance;
+
+  /// 중요도 - 낮음
+  ///
+  /// In ko, this message translates to:
+  /// **'낮음'**
+  String get routine_importance_low;
+
+  /// 중요도 - 보통
+  ///
+  /// In ko, this message translates to:
+  /// **'보통'**
+  String get routine_importance_medium;
+
+  /// 중요도 - 높음
+  ///
+  /// In ko, this message translates to:
+  /// **'높음'**
+  String get routine_importance_high;
+
+  /// 시간대 분류 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'시간대'**
+  String get routine_field_time_filter;
+
+  /// 시간대 - 오전
+  ///
+  /// In ko, this message translates to:
+  /// **'오전'**
+  String get routine_time_filter_morning;
+
+  /// 시간대 - 오후
+  ///
+  /// In ko, this message translates to:
+  /// **'오후'**
+  String get routine_time_filter_afternoon;
+
+  /// 시간대 - 저녁
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁'**
+  String get routine_time_filter_evening;
+
+  /// 시간대 미지정 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'지정 안 함'**
+  String get routine_time_filter_none;
+
+  /// 습관 카테고리 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get routine_field_category;
+
+  /// 카테고리 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'미분류'**
+  String get routine_field_category_none;
+
+  /// 카테고리 관리 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get routine_category_title;
+
+  /// 카테고리 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 추가'**
+  String get routine_category_add;
+
+  /// 카테고리 수정 버튼/타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 수정'**
+  String get routine_category_edit;
+
+  /// 카테고리 삭제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 삭제'**
+  String get routine_category_delete;
+
+  /// 카테고리 삭제 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 카테고리를 삭제하시겠습니까?\n소속 습관은 삭제되지 않고 미분류로 남습니다.'**
+  String get routine_category_delete_confirm;
+
+  /// 카테고리 저장 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get routine_category_save;
+
+  /// 카테고리 제목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 규칙적인 삶'**
+  String get routine_category_field_title_hint;
+
+  /// 카테고리 관련 일반 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get routine_category_error_generic;
+
+  /// 카테고리 목록 비어있을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 카테고리가 없습니다'**
+  String get routine_category_empty;
+
+  /// 카테고리 필터 칩 - 전체
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get routine_category_filter_all;
+
+  /// 카테고리 다중 선택 바텀시트 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 선택'**
+  String get routine_category_picker_title;
+
+  /// 카테고리 바텀시트 편집 모드 진입 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'편집'**
+  String get routine_category_edit_mode;
+
+  /// 카테고리 바텀시트 편집 모드 종료(완료) 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'완료'**
+  String get routine_category_edit_mode_done;
+
+  /// 카테고리 편집 모드에서 핸들 아이콘을 눌러 드래그 정렬 가능함을 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'핸들을 눌러 순서를 변경하세요'**
+  String get routine_category_reorder_hint;
+
+  /// 카테고리 다중 선택 바텀시트 닫기(선택 완료) 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'선택 완료'**
+  String get routine_category_select_done;
+
+  /// 폼 화면에서 카테고리를 하나도 선택하지 않았을 때의 플레이스홀더
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리 선택'**
+  String get routine_category_none_selected;
+
+  /// 기록 방식 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 방식'**
+  String get routine_field_record_type;
+
+  /// 기록 방식 - 단순 체크
+  ///
+  /// In ko, this message translates to:
+  /// **'단순 체크'**
+  String get routine_record_type_boolean;
+
+  /// 기록 방식 - 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'텍스트'**
+  String get routine_record_type_text;
+
+  /// 기록 방식 - 시각
+  ///
+  /// In ko, this message translates to:
+  /// **'시각'**
+  String get routine_record_type_time;
+
+  /// 기록 방식 - 수치
+  ///
+  /// In ko, this message translates to:
+  /// **'수치'**
+  String get routine_record_type_numeric;
+
+  /// 수정 화면에서 기록 방식이 읽기 전용임을 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 방식은 생성 후 변경할 수 없습니다'**
+  String get routine_record_type_readonly_hint;
+
+  /// 체크 값 입력 다이얼로그 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 입력'**
+  String get routine_check_dialog_title;
+
+  /// 텍스트 기록 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get routine_check_dialog_text_label;
+
+  /// 수치 기록 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'수치'**
+  String get routine_check_dialog_numeric_label;
+
+  /// 시각 기록 입력 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'시각'**
+  String get routine_check_dialog_time_label;
+
+  /// 체크 값 입력 다이얼로그 확인 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'체크'**
+  String get routine_check_dialog_confirm;
+
+  /// 체크 값 입력 다이얼로그 취소 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get routine_check_dialog_cancel;
+
+  /// 루틴 상태 - 활성
+  ///
+  /// In ko, this message translates to:
+  /// **'활성'**
+  String get routine_status_active;
+
+  /// 루틴 상태 - 일시정지
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get routine_status_paused;
+
+  /// 루틴 상태 - 종료
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get routine_status_ended;
+
+  /// 일시정지 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get routine_pause;
+
+  /// 일시정지 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관을 일시정지하시겠습니까?\n일시정지 중에는 체크할 수 없습니다.'**
+  String get routine_pause_confirm;
+
+  /// 재개 액션
+  ///
+  /// In ko, this message translates to:
+  /// **'재개'**
+  String get routine_resume;
+
+  /// 재개 성공 스낵바
+  ///
+  /// In ko, this message translates to:
+  /// **'재개되었습니다'**
+  String get routine_resume_success;
+
+  /// 일시정지 실패 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지에 실패했습니다'**
+  String get routine_pause_error;
+
+  /// 재개 실패 에러 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'재개에 실패했습니다'**
+  String get routine_resume_error;
+
+  /// 습관 종료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get routine_end;
+
+  /// 습관 종료 확인 다이얼로그
+  ///
+  /// In ko, this message translates to:
+  /// **'이 습관을 종료하시겠습니까?\n체크 기록은 보존됩니다.'**
+  String get routine_end_confirm;
+
+  /// 반복 타입 - 일간
+  ///
+  /// In ko, this message translates to:
+  /// **'일간'**
+  String get routine_frequency_type_daily;
+
+  /// 반복 타입 - 주간
+  ///
+  /// In ko, this message translates to:
+  /// **'주간'**
+  String get routine_frequency_type_weekly;
+
+  /// 반복 타입 - 월간
+  ///
+  /// In ko, this message translates to:
+  /// **'월간'**
+  String get routine_frequency_type_monthly;
+
+  /// 주 반복 방식 - 요일 무관 주 N회
+  ///
+  /// In ko, this message translates to:
+  /// **'주 N회'**
+  String get routine_weekly_mode_count_only;
+
+  /// 주 반복 방식 - 특정 요일 지정
+  ///
+  /// In ko, this message translates to:
+  /// **'요일 지정'**
+  String get routine_weekly_mode_fixed_days;
+
+  /// 반복 요일 선택 필드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 요일'**
+  String get routine_field_target_days;
+
+  /// 요일 축약 - 일요일
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get routine_day_sun;
+
+  /// 요일 축약 - 월요일
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get routine_day_mon;
+
+  /// 요일 축약 - 화요일
+  ///
+  /// In ko, this message translates to:
+  /// **'화'**
+  String get routine_day_tue;
+
+  /// 요일 축약 - 수요일
+  ///
+  /// In ko, this message translates to:
+  /// **'수'**
+  String get routine_day_wed;
+
+  /// 요일 축약 - 목요일
+  ///
+  /// In ko, this message translates to:
+  /// **'목'**
+  String get routine_day_thu;
+
+  /// 요일 축약 - 금요일
+  ///
+  /// In ko, this message translates to:
+  /// **'금'**
+  String get routine_day_fri;
+
+  /// 요일 축약 - 토요일
+  ///
+  /// In ko, this message translates to:
+  /// **'토'**
+  String get routine_day_sat;
+
+  /// 주간 반복인데 weeklyMode 미선택 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'주 반복 방식을 선택해주세요'**
+  String get routine_error_weekly_mode_required;
+
+  /// 주 N회인데 목표 횟수 미입력 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'주 목표 횟수를 선택해주세요'**
+  String get routine_error_weekly_target_required;
+
+  /// 요일지정인데 요일 미선택 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'반복할 요일을 1개 이상 선택해주세요'**
+  String get routine_error_fixed_days_required;
+
+  /// 월간인데 목표 횟수 미입력 시 에러
+  ///
+  /// In ko, this message translates to:
+  /// **'월 목표 횟수를 선택해주세요'**
+  String get routine_error_monthly_target_required;
+
+  /// 공용 이모지 선택 필드의 '전체 이모지 보기' 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'더 많은 이모지'**
+  String get emoji_picker_more;
+
+  /// 프리셋에 없는 이모지를 바텀시트에서 선택했을 때 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'프리셋 외 이모지가 선택되었습니다'**
+  String get emoji_picker_custom_selected;
+
+  /// 이모지 검색창 placeholder
+  ///
+  /// In ko, this message translates to:
+  /// **'이모지 검색'**
+  String get emoji_picker_search_hint;
+
+  /// 이모지 검색 결과가 없을 때 안내 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get emoji_picker_no_result;
+
+  /// 최근 사용 이모지 카테고리 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 사용'**
+  String get emoji_picker_category_recent;
+
+  /// 이모지 카테고리 - 표정
+  ///
+  /// In ko, this message translates to:
+  /// **'표정'**
+  String get emoji_picker_category_smileys;
+
+  /// 이모지 카테고리 - 동물
+  ///
+  /// In ko, this message translates to:
+  /// **'동물'**
+  String get emoji_picker_category_animals;
+
+  /// 이모지 카테고리 - 음식
+  ///
+  /// In ko, this message translates to:
+  /// **'음식'**
+  String get emoji_picker_category_foods;
+
+  /// 이모지 카테고리 - 여행
+  ///
+  /// In ko, this message translates to:
+  /// **'여행'**
+  String get emoji_picker_category_travel;
+
+  /// 이모지 카테고리 - 활동
+  ///
+  /// In ko, this message translates to:
+  /// **'활동'**
+  String get emoji_picker_category_activities;
+
+  /// 이모지 카테고리 - 사물
+  ///
+  /// In ko, this message translates to:
+  /// **'사물'**
+  String get emoji_picker_category_objects;
+
+  /// 이모지 카테고리 - 기호
+  ///
+  /// In ko, this message translates to:
+  /// **'기호'**
+  String get emoji_picker_category_symbols;
+
+  /// 이모지 카테고리 - 깃발
+  ///
+  /// In ko, this message translates to:
+  /// **'깃발'**
+  String get emoji_picker_category_flags;
 }
 
 class _AppLocalizationsDelegate

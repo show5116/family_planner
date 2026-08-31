@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:family_planner/core/models/subscription_tier.dart';
+import 'package:family_planner/core/models/subscription_platform.dart';
 import 'package:family_planner/core/services/ad_service.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
+import 'package:family_planner/core/services/subscription_cache_service.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/subscription/data/models/subscription_model.dart';
@@ -20,30 +21,44 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
   Future<SubscriptionModel> _fetchFromServer() async {
     try {
       final repo = ref.read(subscriptionRepositoryProvider);
-      return await repo.getStatus();
+      final result = await repo.getStatus();
+      // 서버 응답이 항상 기준이다. 캐시는 여기서만 갱신한다.
+      await SubscriptionCacheService.save(result);
+      return result;
     } catch (_) {
-      return SubscriptionModel.defaultFree();
+      // 서버에 닿지 못했을 뿐 구독이 사라진 건 아니다. 만료 전 캐시가
+      // 있으면 그걸 쓴다 — 없으면 종전대로 free.
+      final cached = await SubscriptionCacheService.read();
+      return cached ?? SubscriptionModel.defaultFree();
     }
   }
 
   /// 인앱결제 완료 후 서버 검증 및 상태 업데이트
+  ///
+  /// 실패 시 state는 [AsyncError]로 갱신되고 예외를 다시 던진다.
+  /// 호출부에서 [DioException.response]의 statusCode(예: 422)로 세부 에러 UI를
+  /// 분기할 수 있도록 하기 위함.
   Future<void> verify({
-    required SubscriptionTier tier,
-    String? expiresAt,
+    required SubscriptionPlatform platform,
     String? purchaseToken,
+    String? signedTransaction,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    try {
       final repo = ref.read(subscriptionRepositoryProvider);
       final result = await repo.verify(
-        tier: tier,
-        expiresAt: expiresAt,
+        platform: platform,
         purchaseToken: purchaseToken,
+        signedTransaction: signedTransaction,
       );
-      await AnalyticsService.instance.logSubscriptionPurchase(tier.name);
-      await AnalyticsService.instance.setSubscriptionTier(tier.name);
-      return result;
-    });
+      await SubscriptionCacheService.save(result);
+      await AnalyticsService.instance.logSubscriptionPurchase(result.tier.name);
+      await AnalyticsService.instance.setSubscriptionTier(result.tier.name);
+      state = AsyncData(result);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
   }
 
   /// 구독 복원 (앱 재설치, 기기 변경 등)
@@ -52,6 +67,7 @@ class SubscriptionNotifier extends AsyncNotifier<SubscriptionModel> {
     state = await AsyncValue.guard(() async {
       final repo = ref.read(subscriptionRepositoryProvider);
       final result = await repo.restore();
+      await SubscriptionCacheService.save(result);
       await AnalyticsService.instance.logSubscriptionRestore(result.tier.name);
       await AnalyticsService.instance.setSubscriptionTier(result.tier.name);
       return result;

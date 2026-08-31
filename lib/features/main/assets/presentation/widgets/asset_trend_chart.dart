@@ -11,7 +11,8 @@ import 'package:family_planner/l10n/app_localizations.dart';
 enum _TrendViewMode { chart, compare }
 
 class AssetTrendChart extends ConsumerStatefulWidget {
-  final AsyncValue<List<AssetTrendPoint>> Function(TrendPeriod, String?) trendBuilder;
+  final AsyncValue<List<AssetTrendPoint>> Function(TrendPeriod, String?)
+  trendBuilder;
 
   const AssetTrendChart({super.key, required this.trendBuilder});
 
@@ -47,6 +48,7 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
           children: [
             Expanded(
               child: SegmentedButton<TrendPeriod>(
+                showSelectedIcon: false,
                 segments: [
                   ButtonSegment(
                     value: TrendPeriod.monthly,
@@ -88,41 +90,43 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
             spacing: AppSizes.spaceXS,
             runSpacing: AppSizes.spaceXS,
             children: [
-                _MetricChip(
-                  label: l10n.asset_trend_balance,
-                  selected: _metric == _ChartMetric.balance,
-                  onTap: () => setState(() => _metric = _ChartMetric.balance),
-                  tooltipTitle: '잔액',
-                  tooltipBody: '각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금',
-                ),
-                _MetricChip(
-                  label: l10n.asset_trend_principal,
-                  selected: _metric == _ChartMetric.principal,
-                  onTap: () => setState(() => _metric = _ChartMetric.principal),
-                  tooltipTitle: '원금',
-                  tooltipBody: '각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.',
-                ),
-                _MetricChip(
-                  label: l10n.asset_trend_profit,
-                  selected: _metric == _ChartMetric.profit,
-                  onTap: () => setState(() => _metric = _ChartMetric.profit),
-                  tooltipTitle: '수익금',
-                  tooltipBody: '각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금',
-                ),
-                _MetricChip(
-                  label: l10n.asset_trend_profit_rate,
-                  selected: _metric == _ChartMetric.profitRate,
-                  onTap: () => setState(() => _metric = _ChartMetric.profitRate),
-                  tooltipTitle: '누적 수익률',
-                  tooltipBody: '각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100',
-                ),
-                _MetricChip(
-                  label: l10n.asset_trend_period_return,
-                  selected: _metric == _ChartMetric.periodReturn,
-                  onTap: () => setState(() => _metric = _ChartMetric.periodReturn),
-                  tooltipTitle: '기간 수익률',
-                  tooltipBody: '직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100',
-                ),
+              _MetricChip(
+                label: l10n.asset_trend_balance,
+                selected: _metric == _ChartMetric.balance,
+                onTap: () => setState(() => _metric = _ChartMetric.balance),
+                tooltipTitle: '잔액',
+                tooltipBody: '각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금',
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_principal,
+                selected: _metric == _ChartMetric.principal,
+                onTap: () => setState(() => _metric = _ChartMetric.principal),
+                tooltipTitle: '원금',
+                tooltipBody: '각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.',
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_profit,
+                selected: _metric == _ChartMetric.profit,
+                onTap: () => setState(() => _metric = _ChartMetric.profit),
+                tooltipTitle: '수익금',
+                tooltipBody: '각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금',
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_profit_rate,
+                selected: _metric == _ChartMetric.profitRate,
+                onTap: () => setState(() => _metric = _ChartMetric.profitRate),
+                tooltipTitle: '누적 수익률',
+                tooltipBody: '각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100',
+              ),
+              _MetricChip(
+                label: l10n.asset_trend_period_return,
+                selected: _metric == _ChartMetric.periodReturn,
+                onTap: () =>
+                    setState(() => _metric = _ChartMetric.periodReturn),
+                tooltipTitle: '기간 수익률',
+                tooltipBody:
+                    '직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100',
+              ),
             ],
           ),
           const SizedBox(height: AppSizes.spaceM),
@@ -136,16 +140,13 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
                 child: Text(
                   l10n.asset_trend_no_data,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
               );
             }
             if (_viewMode == _TrendViewMode.compare) {
-              return AssetComparisonChart(
-                assetPoints: points,
-                period: _period,
-              );
+              return AssetComparisonChart(assetPoints: points, period: _period);
             }
             return SizedBox(
               height: 220,
@@ -189,7 +190,10 @@ class _CompareToggle extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceS, vertical: 6),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.spaceS,
+          vertical: 6,
+        ),
         decoration: BoxDecoration(
           color: active
               ? colorScheme.secondaryContainer
@@ -207,15 +211,19 @@ class _CompareToggle extends StatelessWidget {
             Icon(
               Icons.compare_arrows,
               size: 14,
-              color: active ? colorScheme.secondary : colorScheme.onSurfaceVariant,
+              color: active
+                  ? colorScheme.secondary
+                  : colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 4),
             Text(
               l10n.asset_compare_button,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: active ? colorScheme.secondary : colorScheme.onSurfaceVariant,
-                    fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                  ),
+                color: active
+                    ? colorScheme.secondary
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: active ? FontWeight.bold : FontWeight.normal,
+              ),
             ),
           ],
         ),
@@ -239,8 +247,12 @@ class _YearPicker extends StatelessWidget {
       value: selectedYear,
       underline: const SizedBox(),
       isDense: true,
-      items: years.map((y) => DropdownMenuItem(value: y, child: Text(y))).toList(),
-      onChanged: (v) { if (v != null) onChanged(v); },
+      items: years
+          .map((y) => DropdownMenuItem(value: y, child: Text(y)))
+          .toList(),
+      onChanged: (v) {
+        if (v != null) onChanged(v);
+      },
     );
   }
 }
@@ -279,13 +291,22 @@ class _MetricChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final labelColor = selected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant;
+    final labelColor = selected
+        ? colorScheme.onPrimary
+        : colorScheme.onSurfaceVariant;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.only(left: AppSizes.spaceS, right: 4, top: 4, bottom: 4),
+        padding: const EdgeInsets.only(
+          left: AppSizes.spaceS,
+          right: 4,
+          top: 4,
+          bottom: 4,
+        ),
         decoration: BoxDecoration(
-          color: selected ? colorScheme.primary : colorScheme.surfaceContainerHighest,
+          color: selected
+              ? colorScheme.primary
+              : colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
         ),
         child: Row(
@@ -294,9 +315,9 @@ class _MetricChip extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: labelColor,
-                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                  ),
+                color: labelColor,
+                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+              ),
             ),
             const SizedBox(width: 2),
             GestureDetector(
@@ -393,7 +414,9 @@ class _TrendLineChartState extends State<_TrendLineChart> {
     final pts = widget.points;
 
     final rawValues = List.generate(pts.length, _valueAt);
-    final spots = rawValues.asMap().entries
+    final spots = rawValues
+        .asMap()
+        .entries
         .map((e) => FlSpot(e.key.toDouble(), e.value))
         .toList();
 
@@ -416,12 +439,14 @@ class _TrendLineChartState extends State<_TrendLineChart> {
     // 앵커(드래그 시작) 보조선
     final extraLines = <VerticalLine>[];
     if (_anchorIdx != null && _dragIdx != null && _anchorIdx != _dragIdx) {
-      extraLines.add(VerticalLine(
-        x: _anchorIdx!.toDouble(),
-        color: colorScheme.tertiary.withValues(alpha: 0.6),
-        strokeWidth: 1.5,
-        dashArray: [4, 4],
-      ));
+      extraLines.add(
+        VerticalLine(
+          x: _anchorIdx!.toDouble(),
+          color: colorScheme.tertiary.withValues(alpha: 0.6),
+          strokeWidth: 1.5,
+          dashArray: [4, 4],
+        ),
+      );
     }
 
     // handleBuiltInTouches: false 일 때 툴팁을 강제 표시하려면
@@ -448,7 +473,11 @@ class _TrendLineChartState extends State<_TrendLineChart> {
     );
 
     final showingTooltips = _dragIdx != null
-        ? [ShowingTooltipIndicators([LineBarSpot(barData, 0, spots[_dragIdx!])])]
+        ? [
+            ShowingTooltipIndicators([
+              LineBarSpot(barData, 0, spots[_dragIdx!]),
+            ]),
+          ]
         : <ShowingTooltipIndicators>[];
 
     final chart = LineChart(
@@ -468,8 +497,12 @@ class _TrendLineChartState extends State<_TrendLineChart> {
         ),
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
@@ -480,13 +513,14 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                 }
                 final label = _isPercent
                     ? '${value.toStringAsFixed(1)}%'
-                    : (formatAssetAmountKorean(value) ?? '${formatAssetAmount(value)}원');
+                    : (formatAssetAmountKorean(value) ??
+                          '${formatAssetAmount(value)}원');
                 return Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.outline,
-                        fontSize: 9,
-                      ),
+                    color: colorScheme.outline,
+                    fontSize: 9,
+                  ),
                   textAlign: TextAlign.right,
                 );
               },
@@ -499,7 +533,8 @@ class _TrendLineChartState extends State<_TrendLineChart> {
               interval: _bottomInterval(pts.length),
               getTitlesWidget: (value, meta) {
                 final idx = value.toInt();
-                if (idx < 0 || idx >= pts.length) return const SizedBox.shrink();
+                if (idx < 0 || idx >= pts.length)
+                  return const SizedBox.shrink();
                 final p = pts[idx].period;
                 final label = widget.period == TrendPeriod.monthly
                     ? '${int.parse(p.substring(5))}월'
@@ -509,9 +544,9 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                   child: Text(
                     label,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.outline,
-                          fontSize: 10,
-                        ),
+                      color: colorScheme.outline,
+                      fontSize: 10,
+                    ),
                   ),
                 );
               },
@@ -531,7 +566,9 @@ class _TrendLineChartState extends State<_TrendLineChart> {
               final p = pts[idx];
               final val = _valueAt(idx);
 
-              if (_anchorIdx != null && _dragIdx != null && _anchorIdx != _dragIdx) {
+              if (_anchorIdx != null &&
+                  _dragIdx != null &&
+                  _anchorIdx != _dragIdx) {
                 final anchorVal = _valueAt(_anchorIdx!);
                 final diff = val - anchorVal;
                 final sign = diff >= 0 ? '+' : '';
@@ -542,16 +579,16 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                 return LineTooltipItem(
                   '${p.period}\n${_formatValue(val)}\n',
                   Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
                   children: [
                     TextSpan(
                       text: diffStr,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: diffColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: diffColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 );
@@ -560,9 +597,9 @@ class _TrendLineChartState extends State<_TrendLineChart> {
               return LineTooltipItem(
                 '${p.period}\n${_formatValue(val)}',
                 Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
               );
             }).toList(),
           ),

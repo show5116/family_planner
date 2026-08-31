@@ -143,6 +143,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get auth_or => '또는';
 
   @override
+  String get auth_testAccountLoginOwner => '테스트 계정으로 로그인 (그룹 소유자)';
+
+  @override
+  String get auth_testAccountLoginMember => '테스트 계정으로 로그인 (그룹 멤버)';
+
+  @override
   String get auth_emailHint => '이메일을 입력해주세요';
 
   @override
@@ -3850,6 +3856,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get weather_dustUltraFine => '초미세';
 
   @override
+  String get weather_fallbackLocationNotice =>
+      '현재 위치를 가져오지 못해 서울 날씨를 표시하고 있습니다';
+
+  @override
+  String get weather_enableLocationAction => '위치 권한 허용하기';
+
+  @override
   String get investment_widgetTitle => '투자 지표';
 
   @override
@@ -4445,4 +4458,944 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get widgetSettings_anniversarySummaryDesc => '다가오는 기념일과 D-day를 표시합니다';
+
+  @override
+  String get subscription_manage_title => '구독 관리';
+
+  @override
+  String get subscription_screen_title => '구독 관리';
+
+  @override
+  String get subscription_current_plan_label => '현재 플랜';
+
+  @override
+  String get subscription_active_status_label => '활성 여부';
+
+  @override
+  String get subscription_active => '활성';
+
+  @override
+  String get subscription_inactive => '비활성';
+
+  @override
+  String get subscription_expires_at_label => '만료일';
+
+  @override
+  String get subscription_products_section_title => '구독 상품';
+
+  @override
+  String get subscription_purchase_button => '구독하기';
+
+  @override
+  String get subscription_restore_button => '구독 복원';
+
+  @override
+  String get subscription_purchase_success => '구독이 완료되었습니다.';
+
+  @override
+  String get subscription_verify_failed_title => '구매 확인 실패';
+
+  @override
+  String get subscription_verify_failed_message =>
+      '이미 사용된 구매이거나 검증에 실패했습니다. 문제가 지속되면 고객센터에 문의해주세요.';
+
+  @override
+  String get subscription_verify_network_error =>
+      '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get subscription_restore_success => '구독이 복원되었습니다.';
+
+  @override
+  String get subscription_product_not_found =>
+      '구독 상품을 준비 중입니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get subscription_ad_free_benefit => '앱 내 모든 광고가 표시되지 않습니다.';
+
+  @override
+  String get subscription_period_monthly => '월간 구독';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      '구독은 매월 자동으로 갱신되며, 현재 구독 기간이 끝나기 24시간 전까지 해지하지 않으면 동일한 금액이 결제됩니다. 구매 확정 시 스토어 계정으로 결제되며, 구독 관리 및 해지는 기기의 스토어 계정 설정에서 언제든지 할 수 있습니다.';
+
+  @override
+  String get subscription_manage_subscription_button => '구독 관리 및 해지';
+
+  @override
+  String get subscription_terms_button => '이용약관';
+
+  @override
+  String get subscription_privacy_button => '개인정보 처리방침';
+
+  @override
+  String get subscription_manage_launch_failed => '스토어 구독 관리 화면을 열 수 없습니다.';
+
+  @override
+  String get subscription_compare_title => '플랜 비교';
+
+  @override
+  String get subscription_plan_current => '이용 중';
+
+  @override
+  String get subscription_benefit_all_features => '모든 기능 이용';
+
+  @override
+  String get subscription_benefit_ads_shown => '광고가 표시됩니다';
+
+  @override
+  String get subscription_benefit_no_ads => '광고 없이 이용';
+
+  @override
+  String get subscription_benefit_no_reward_ads => '기능 사용 시 광고 시청 불필요';
+
+  @override
+  String get subscription_benefit_cancel_anytime => '언제든 해지 가능';
+
+  @override
+  String get subscription_free_plan_price => '₩0';
+
+  @override
+  String get routine_title => '루틴';
+
+  @override
+  String get routine_date_today => '오늘';
+
+  @override
+  String get routine_reorder => '순서변경';
+
+  @override
+  String get routine_reorder_done => '완료';
+
+  @override
+  String get routine_list_empty => '등록된 습관이 없습니다';
+
+  @override
+  String get routine_list_empty_subtitle =>
+      '매일 반복하고 싶은 습관을 등록하고\n꾸준히 체크하며 스트릭을 쌓아보세요';
+
+  @override
+  String get routine_add => '습관 추가';
+
+  @override
+  String get routine_edit => '습관 수정';
+
+  @override
+  String get routine_delete => '습관 삭제';
+
+  @override
+  String get routine_delete_confirm => '이 습관을 삭제하시겠습니까?';
+
+  @override
+  String get routine_field_title => '제목';
+
+  @override
+  String get routine_field_title_hint => '예: 아침 스트레칭';
+
+  @override
+  String get routine_field_title_required => '제목을 입력해주세요';
+
+  @override
+  String get routine_field_title_too_long => '제목은 100자 이내로 입력해주세요';
+
+  @override
+  String get routine_field_emoji => '이모지';
+
+  @override
+  String get routine_field_emoji_custom => '직접 입력';
+
+  @override
+  String get routine_field_emoji_helper => '이모지 하나를 입력해주세요 (예: 🏃)';
+
+  @override
+  String get routine_field_color => '색상';
+
+  @override
+  String get routine_field_target_count => '주 목표 횟수';
+
+  @override
+  String get routine_field_target_count_month => '월 목표 횟수';
+
+  @override
+  String get routine_this_month_progress => '이번 달 진행';
+
+  @override
+  String get routine_field_start_date => '시작일';
+
+  @override
+  String get routine_field_end_date => '종료일 (선택)';
+
+  @override
+  String get routine_field_end_date_none => '무기한';
+
+  @override
+  String get routine_field_group => '소속 루틴';
+
+  @override
+  String get routine_field_group_none => '없음 (독립 습관)';
+
+  @override
+  String get routine_save => '저장';
+
+  @override
+  String get routine_check => '체크';
+
+  @override
+  String get routine_uncheck => '체크 취소';
+
+  @override
+  String get routine_check_already => '이미 체크했습니다';
+
+  @override
+  String get routine_check_future_date => '미래 날짜는 체크할 수 없습니다';
+
+  @override
+  String get routine_check_error => '체크에 실패했습니다';
+
+  @override
+  String routine_streak_celebration(int days) {
+    return '🔥 $days일 연속 달성!';
+  }
+
+  @override
+  String get routine_tab_heatmap => '달력';
+
+  @override
+  String get routine_tab_stats => '통계';
+
+  @override
+  String get routine_streak_current_days => '현재 연속 일수';
+
+  @override
+  String get routine_streak_longest_days => '최장 연속 일수';
+
+  @override
+  String get routine_streak_current_weeks => '현재 연속 주';
+
+  @override
+  String get routine_streak_longest_weeks => '최장 연속 주';
+
+  @override
+  String get routine_streak_current_months => '현재 연속 달';
+
+  @override
+  String get routine_streak_longest_months => '최장 연속 달';
+
+  @override
+  String get routine_this_month_progress_label => '이번 달 진행';
+
+  @override
+  String get routine_badges_goal_subtitle => '오늘의 목표를 달성하며 모은 배지예요';
+
+  @override
+  String get routine_daily_goal_included_badge => '오늘의 목표에 포함된 습관';
+
+  @override
+  String get routine_daily_goal_filter_on => '목표 습관만 보는 중';
+
+  @override
+  String get routine_daily_goal_filter_hint => '탭하면 목표 습관만 볼 수 있어요';
+
+  @override
+  String get routine_coach_add_title => '습관 만들기';
+
+  @override
+  String get routine_coach_add_desc =>
+      '매일 반복하고 싶은 일을 습관으로 등록해보세요.\n여러 습관을 묶어 하나의 루틴으로 만들 수도 있어요.';
+
+  @override
+  String get routine_coach_goal_title => '오늘의 목표';
+
+  @override
+  String get routine_coach_goal_desc =>
+      '습관을 전부 못 채워도 괜찮아요.\n정해둔 개수만 채우면 그날은 성공이에요.\n연속으로 달성하면 배지도 받을 수 있어요.';
+
+  @override
+  String get routine_coach_flag_title => '목표에 포함된 습관';
+
+  @override
+  String get routine_coach_flag_desc =>
+      '깃발이 붙은 습관이 오늘의 목표에 들어가요.\n위의 목표 막대를 누르면 이 습관만 모아볼 수 있어요.';
+
+  @override
+  String get routine_coach_check_title => '체크하기';
+
+  @override
+  String get routine_coach_check_desc =>
+      '동그라미를 눌러 완료 표시를 하세요.\n기록형 습관은 시간이나 횟수도 함께 남길 수 있어요.';
+
+  @override
+  String get routine_coach_demo_habit_1 => '아침 스트레칭';
+
+  @override
+  String get routine_coach_demo_habit_2 => '물 2L 마시기';
+
+  @override
+  String get routine_coach_demo_habit_3 => '책 30분 읽기';
+
+  @override
+  String get routine_coach_skip => '건너뛰기';
+
+  @override
+  String get routine_coach_together_title => '그룹과 함께하기';
+
+  @override
+  String get routine_coach_together_desc =>
+      '가족이나 친구 그룹과 습관을 공유할 수 있어요.\n서로의 현황을 보고, 함께 챌린지도 할 수 있어요.';
+
+  @override
+  String get routine_together_coach_status_title => '그룹원 현황';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      '그룹원들이 오늘 어떤 습관을 했는지 볼 수 있어요.\n이름을 누르면 자세한 기록도 확인할 수 있어요.';
+
+  @override
+  String get routine_together_coach_tabs_title => '랭킹과 챌린지';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      '랭킹에서는 목표 달성률로 순위를 겨뤄요.\n챌린지는 기간을 정해 함께 목표에 도전하고,\n내기를 걸 수도 있어요.';
+
+  @override
+  String get routine_together_coach_settings_title => '공유 설정';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      '어느 그룹에 내 습관을 보여줄지 정해요.\n숨기고 싶은 습관은 \'비공개\'로 표시하면\n그룹원에게 보이지 않아요.';
+
+  @override
+  String get routine_this_week_progress => '이번 주 진행';
+
+  @override
+  String get routine_weekly_strip_title => '최근 8주 달성 현황';
+
+  @override
+  String get routine_rate_period_week => '주';
+
+  @override
+  String get routine_rate_period_month => '월';
+
+  @override
+  String get routine_rate_period_custom => '기간 지정';
+
+  @override
+  String get routine_rate_achievement => '달성률';
+
+  @override
+  String get routine_share_title => '공유 그룹 관리';
+
+  @override
+  String get routine_share_screen_desc => '선택한 그룹의 구성원이 내 습관과 달성 현황을 볼 수 있어요.';
+
+  @override
+  String get routine_share_private_note => '비공개로 표시한 습관은 공유되지 않아요.';
+
+  @override
+  String get routine_share_none => '아직 공유 중인 그룹이 없어요';
+
+  @override
+  String get routine_share_no_groups => '참여 중인 그룹이 없어요.\n그룹을 먼저 만들거나 참여해주세요.';
+
+  @override
+  String get routine_share_saved => '공유 설정을 저장했어요';
+
+  @override
+  String get routine_field_private => '비공개';
+
+  @override
+  String get routine_field_private_desc => '공유 그룹의 다른 사람에게 이 습관을 숨겨요';
+
+  @override
+  String get routine_private_badge => '비공개 습관';
+
+  @override
+  String get routine_share_select_group => '공유할 그룹 선택';
+
+  @override
+  String get routine_together_title => '함께하기';
+
+  @override
+  String get routine_together_tab_status => '현황';
+
+  @override
+  String get routine_together_tab_ranking => '랭킹';
+
+  @override
+  String get routine_together_tab_challenge => '챌린지';
+
+  @override
+  String get routine_challenge_create => '챌린지 만들기';
+
+  @override
+  String get routine_challenge_edit => '챌린지 수정';
+
+  @override
+  String get routine_challenge_empty => '아직 챌린지가 없어요.\n그룹과 함께할 목표를 만들어보세요.';
+
+  @override
+  String get routine_challenge_field_title => '챌린지 이름';
+
+  @override
+  String get routine_challenge_field_title_hint => '예: 이번 주 운동하기';
+
+  @override
+  String get routine_challenge_field_description => '설명';
+
+  @override
+  String get routine_challenge_field_period => '기간';
+
+  @override
+  String get routine_challenge_field_target => '목표 횟수';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return '기간 안에 $count번 체크하면 달성이에요';
+  }
+
+  @override
+  String get routine_challenge_field_reward => '내기 · 벌칙';
+
+  @override
+  String get routine_challenge_field_reward_hint => '예: 진 사람이 치킨 쏘기';
+
+  @override
+  String get routine_challenge_status_upcoming => '시작 전';
+
+  @override
+  String get routine_challenge_status_ongoing => '진행 중';
+
+  @override
+  String get routine_challenge_status_ended => '종료';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '참가자 $count명';
+  }
+
+  @override
+  String get routine_challenge_join => '참가하기';
+
+  @override
+  String get routine_challenge_leave => '참가 취소';
+
+  @override
+  String get routine_challenge_leave_confirm => '이 챌린지에서 빠지시겠어요?';
+
+  @override
+  String get routine_challenge_delete_confirm =>
+      '이 챌린지를 삭제하시겠어요?\n참가자들의 기록도 함께 사라져요.';
+
+  @override
+  String get routine_challenge_select_routine => '어떤 습관으로 참가할까요?';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      '이 챌린지에 연결할 내 습관을 골라주세요.\n비공개 습관은 참가할 수 없어요.';
+
+  @override
+  String get routine_challenge_no_routine =>
+      '참가할 수 있는 습관이 없어요.\n먼저 습관을 만들어주세요.';
+
+  @override
+  String get routine_challenge_change_routine => '습관 바꾸기';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target회';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '$days일 남음';
+  }
+
+  @override
+  String get routine_challenge_saved => '챌린지를 저장했어요';
+
+  @override
+  String get routine_challenge_joined => '챌린지에 참가했어요';
+
+  @override
+  String get routine_group_members_empty => '공유된 루틴이 없습니다';
+
+  @override
+  String get routine_sort_order_updated => '순서가 변경되었습니다';
+
+  @override
+  String get routine_error_generic => '오류가 발생했습니다';
+
+  @override
+  String get widgetSettings_routineSummary => '오늘의 루틴';
+
+  @override
+  String get nav_routines => '루틴';
+
+  @override
+  String get routine_badges_title => '내 배지';
+
+  @override
+  String get routine_overview_title => '통계';
+
+  @override
+  String get routine_overview_heatmap_title => '전체 습관 달성 현황';
+
+  @override
+  String get routine_overview_previous_period => '이전 기간';
+
+  @override
+  String get routine_overview_next_period => '다음 기간';
+
+  @override
+  String get routine_overview_this_week => '금주로';
+
+  @override
+  String get routine_overview_this_month => '이번 달로';
+
+  @override
+  String get routine_overview_weekly_title => '이번 주 습관별 수행 현황';
+
+  @override
+  String get routine_overview_achieved => '달성';
+
+  @override
+  String get routine_overview_not_achieved => '미달성';
+
+  @override
+  String get routine_overview_total_checked => '총 체크';
+
+  @override
+  String get routine_daily_goal_title => '오늘의 목표';
+
+  @override
+  String get routine_daily_goal_setting => '오늘의 목표 설정';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '습관 $total개 중 $count개';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '하루 $count개면 성공이에요';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total =>
+      '지금 등록된 습관보다 목표가 많아요. 습관을 더 추가하거나 목표를 낮춰보세요';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return '오늘 $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => '오늘 목표 달성!';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return '보너스 +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '$days일 연속 달성';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return '최장 $days일';
+  }
+
+  @override
+  String get routine_daily_goal_rate => '목표 달성률';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved일 / $total일 달성';
+  }
+
+  @override
+  String get routine_daily_goal_saved => '목표를 저장했어요';
+
+  @override
+  String get routine_daily_goal_raise_title => '목표를 올려볼까요?';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return '최근 2주 동안 목표를 자주 넘었어요. 요즘 하루 평균 $average개를 하고 계세요.\n\n하루 목표를 $current개에서 $suggested개로 올려볼까요?';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => '올릴게요';
+
+  @override
+  String get routine_daily_goal_keep => '지금이 좋아요';
+
+  @override
+  String get routine_daily_goal_lower_title => '목표를 잠시 낮춰볼까요?';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return '요즘 조금 바쁘신가요? 무리하지 않아도 괜찮아요.\n\n하루 목표를 $current개에서 $suggested개로 낮춰도 좋아요. 언제든 다시 올릴 수 있어요.';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => '낮출게요';
+
+  @override
+  String get routine_daily_goal_included_section => '목표에 포함할 습관';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '습관 $included개가 목표 집계에 포함돼요';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => '매일 하는 습관';
+
+  @override
+  String get routine_daily_goal_group_periodic => '주기적으로 하는 습관';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      '켜면 매일 해야 하는 것으로 계산돼요. 주 3회 습관을 켜면 3회를 다 채운 뒤에도 남은 날에 미완료로 남아요';
+
+  @override
+  String get routine_daily_goal_freq_daily => '매일';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '주 $count회';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '월 $count회';
+  }
+
+  @override
+  String get routine_daily_goal_no_included => '목표에 포함된 습관이 없어요. 아래에서 습관을 켜주세요';
+
+  @override
+  String get routine_daily_goal_no_routines => '등록된 습관이 없어요';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return '전체 습관 $count개 기준';
+  }
+
+  @override
+  String get routine_badges_empty => '아직 획득한 배지가 없습니다';
+
+  @override
+  String get routine_badge_earned_title => '배지 획득!';
+
+  @override
+  String get routine_badge_earned_confirm => '확인';
+
+  @override
+  String get routine_leaderboard_metric_goalRate => '목표 달성률';
+
+  @override
+  String get routine_leaderboard_metric_goalStreak => '연속 달성';
+
+  @override
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved일 / $total일';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '$days일 연속';
+  }
+
+  @override
+  String get routine_leaderboard_empty => '공유된 루틴이 있는 그룹원이 없습니다';
+
+  @override
+  String get routine_group_add => '루틴 추가';
+
+  @override
+  String get routine_group_edit => '루틴 수정';
+
+  @override
+  String get routine_group_delete => '루틴 삭제';
+
+  @override
+  String get routine_group_delete_confirm =>
+      '이 루틴을 삭제하시겠습니까?\n소속된 습관은 삭제되지 않고 독립 습관으로 남습니다.';
+
+  @override
+  String get routine_group_field_title_hint => '예: 아침 루틴';
+
+  @override
+  String get routine_group_save => '저장';
+
+  @override
+  String get routine_group_standalone_section_title => '독립 습관';
+
+  @override
+  String get routine_table_header_number => '번호';
+
+  @override
+  String get routine_table_header_habit => '습관';
+
+  @override
+  String get routine_table_header_check => '체크';
+
+  @override
+  String get routine_group_error_generic => '오류가 발생했습니다';
+
+  @override
+  String get routine_field_memo => '메모';
+
+  @override
+  String get routine_field_memo_hint => '이 습관에 대한 설명을 남겨보세요';
+
+  @override
+  String get routine_field_importance => '중요도';
+
+  @override
+  String get routine_importance_low => '낮음';
+
+  @override
+  String get routine_importance_medium => '보통';
+
+  @override
+  String get routine_importance_high => '높음';
+
+  @override
+  String get routine_field_time_filter => '시간대';
+
+  @override
+  String get routine_time_filter_morning => '오전';
+
+  @override
+  String get routine_time_filter_afternoon => '오후';
+
+  @override
+  String get routine_time_filter_evening => '저녁';
+
+  @override
+  String get routine_time_filter_none => '지정 안 함';
+
+  @override
+  String get routine_field_category => '카테고리';
+
+  @override
+  String get routine_field_category_none => '미분류';
+
+  @override
+  String get routine_category_title => '카테고리';
+
+  @override
+  String get routine_category_add => '카테고리 추가';
+
+  @override
+  String get routine_category_edit => '카테고리 수정';
+
+  @override
+  String get routine_category_delete => '카테고리 삭제';
+
+  @override
+  String get routine_category_delete_confirm =>
+      '이 카테고리를 삭제하시겠습니까?\n소속 습관은 삭제되지 않고 미분류로 남습니다.';
+
+  @override
+  String get routine_category_save => '저장';
+
+  @override
+  String get routine_category_field_title_hint => '예: 규칙적인 삶';
+
+  @override
+  String get routine_category_error_generic => '오류가 발생했습니다';
+
+  @override
+  String get routine_category_empty => '등록된 카테고리가 없습니다';
+
+  @override
+  String get routine_category_filter_all => '전체';
+
+  @override
+  String get routine_category_picker_title => '카테고리 선택';
+
+  @override
+  String get routine_category_edit_mode => '편집';
+
+  @override
+  String get routine_category_edit_mode_done => '완료';
+
+  @override
+  String get routine_category_reorder_hint => '핸들을 눌러 순서를 변경하세요';
+
+  @override
+  String get routine_category_select_done => '선택 완료';
+
+  @override
+  String get routine_category_none_selected => '카테고리 선택';
+
+  @override
+  String get routine_field_record_type => '기록 방식';
+
+  @override
+  String get routine_record_type_boolean => '단순 체크';
+
+  @override
+  String get routine_record_type_text => '텍스트';
+
+  @override
+  String get routine_record_type_time => '시각';
+
+  @override
+  String get routine_record_type_numeric => '수치';
+
+  @override
+  String get routine_record_type_readonly_hint => '기록 방식은 생성 후 변경할 수 없습니다';
+
+  @override
+  String get routine_check_dialog_title => '기록 입력';
+
+  @override
+  String get routine_check_dialog_text_label => '내용';
+
+  @override
+  String get routine_check_dialog_numeric_label => '수치';
+
+  @override
+  String get routine_check_dialog_time_label => '시각';
+
+  @override
+  String get routine_check_dialog_confirm => '체크';
+
+  @override
+  String get routine_check_dialog_cancel => '취소';
+
+  @override
+  String get routine_status_active => '활성';
+
+  @override
+  String get routine_status_paused => '일시정지';
+
+  @override
+  String get routine_status_ended => '종료';
+
+  @override
+  String get routine_pause => '일시정지';
+
+  @override
+  String get routine_pause_confirm => '이 습관을 일시정지하시겠습니까?\n일시정지 중에는 체크할 수 없습니다.';
+
+  @override
+  String get routine_resume => '재개';
+
+  @override
+  String get routine_resume_success => '재개되었습니다';
+
+  @override
+  String get routine_pause_error => '일시정지에 실패했습니다';
+
+  @override
+  String get routine_resume_error => '재개에 실패했습니다';
+
+  @override
+  String get routine_end => '종료';
+
+  @override
+  String get routine_end_confirm => '이 습관을 종료하시겠습니까?\n체크 기록은 보존됩니다.';
+
+  @override
+  String get routine_frequency_type_daily => '일간';
+
+  @override
+  String get routine_frequency_type_weekly => '주간';
+
+  @override
+  String get routine_frequency_type_monthly => '월간';
+
+  @override
+  String get routine_weekly_mode_count_only => '주 N회';
+
+  @override
+  String get routine_weekly_mode_fixed_days => '요일 지정';
+
+  @override
+  String get routine_field_target_days => '반복 요일';
+
+  @override
+  String get routine_day_sun => '일';
+
+  @override
+  String get routine_day_mon => '월';
+
+  @override
+  String get routine_day_tue => '화';
+
+  @override
+  String get routine_day_wed => '수';
+
+  @override
+  String get routine_day_thu => '목';
+
+  @override
+  String get routine_day_fri => '금';
+
+  @override
+  String get routine_day_sat => '토';
+
+  @override
+  String get routine_error_weekly_mode_required => '주 반복 방식을 선택해주세요';
+
+  @override
+  String get routine_error_weekly_target_required => '주 목표 횟수를 선택해주세요';
+
+  @override
+  String get routine_error_fixed_days_required => '반복할 요일을 1개 이상 선택해주세요';
+
+  @override
+  String get routine_error_monthly_target_required => '월 목표 횟수를 선택해주세요';
+
+  @override
+  String get emoji_picker_more => '더 많은 이모지';
+
+  @override
+  String get emoji_picker_custom_selected => '프리셋 외 이모지가 선택되었습니다';
+
+  @override
+  String get emoji_picker_search_hint => '이모지 검색';
+
+  @override
+  String get emoji_picker_no_result => '검색 결과가 없습니다';
+
+  @override
+  String get emoji_picker_category_recent => '최근 사용';
+
+  @override
+  String get emoji_picker_category_smileys => '표정';
+
+  @override
+  String get emoji_picker_category_animals => '동물';
+
+  @override
+  String get emoji_picker_category_foods => '음식';
+
+  @override
+  String get emoji_picker_category_travel => '여행';
+
+  @override
+  String get emoji_picker_category_activities => '활동';
+
+  @override
+  String get emoji_picker_category_objects => '사물';
+
+  @override
+  String get emoji_picker_category_symbols => '기호';
+
+  @override
+  String get emoji_picker_category_flags => '깃발';
 }

@@ -31,7 +31,7 @@ class _LocationMapSheet extends StatefulWidget {
 }
 
 class _LocationMapSheetState extends State<_LocationMapSheet> {
-  LatLng get _latLng => LatLng(widget.location.lat, widget.location.lng);
+  LatLng get _latLng => LatLng(widget.location.lat!, widget.location.lng!);
 
   Future<void> _openKakaoMap() async {
     // 카카오맵 앱 또는 웹으로 열기
@@ -52,6 +52,10 @@ class _LocationMapSheetState extends State<_LocationMapSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // 좌표 없이 장소명만 저장된 일정도 있습니다. 이때는 지도도 지도 앱 연결도
+    // 할 수 없으므로 안내만 보여줍니다.
+    final hasCoordinates = widget.location.hasCoordinates;
+    final address = widget.location.address;
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.6,
@@ -86,31 +90,75 @@ class _LocationMapSheetState extends State<_LocationMapSheet> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        widget.location.address,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                      if (address != null)
+                        Text(
+                          address,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
-                TextButton.icon(
-                  icon: const Icon(Icons.open_in_new, size: 16),
-                  label: const Text('지도 앱'),
-                  onPressed: _openKakaoMap,
-                ),
+                if (hasCoordinates)
+                  TextButton.icon(
+                    icon: const Icon(Icons.open_in_new, size: 16),
+                    label: const Text('지도 앱'),
+                    onPressed: _openKakaoMap,
+                  ),
               ],
             ),
           ),
           const SizedBox(height: AppSizes.spaceS),
           // 지도 영역
           Expanded(
-            child: kIsWeb ? _WebMapPlaceholder(location: widget.location) : _MobileMap(
-              latLng: _latLng,
-              name: widget.location.name,
-              onMapCreated: (_) {},
+            child: !hasCoordinates
+                ? const _NoCoordinatesPlaceholder()
+                : kIsWeb
+                    ? _WebMapPlaceholder(location: widget.location)
+                    : _MobileMap(
+                        latLng: _latLng,
+                        name: widget.location.name,
+                        onMapCreated: (_) {},
+                      ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 좌표 없이 장소명만 저장된 경우 — 지도를 그릴 수 없습니다
+class _NoCoordinatesPlaceholder extends StatelessWidget {
+  const _NoCoordinatesPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.location_off_outlined,
+            size: 48,
+            color: theme.colorScheme.outlineVariant,
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          Text(
+            '위치 정보가 없어 지도를 표시할 수 없습니다',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
             ),
+          ),
+          const SizedBox(height: AppSizes.spaceXS),
+          Text(
+            '일정을 수정해 장소를 다시 선택하면 지도가 표시됩니다',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

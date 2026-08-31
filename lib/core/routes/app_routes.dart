@@ -41,7 +41,8 @@ class AppRoutes {
   static const String householdRecurringAdd = '/household/recurring/add';
   static const String householdRecurringEdit = '/household/recurring/edit';
   static const String householdMerchants = '/household/merchants';
-  static const String householdCategoryExpenses = '/household/category-expenses';
+  static const String householdCategoryExpenses =
+      '/household/category-expenses';
   // TODO: 결제 알림 자동 등록 기능 — 앱 심사 통과 후 주석 해제
   // static const String householdSettings = '/household/settings';
   static const String calendarDetail = '/calendar/detail';
@@ -54,10 +55,21 @@ class AppRoutes {
   static const String todoAdd = '/todo/add';
   static const String childPoints = '/child-points';
   static const String childPointsDetail = '/child-points/detail';
-  static const String childPointsChildProfileForm = '/child-points/children/create';
+  static const String childPointsChildProfileForm =
+      '/child-points/children/create';
   static const String childPointsAllowancePlan = '/child-points/allowance-plan';
   static const String childPointsLinkUser = '/child-points/link-user';
-  static const String childPointsTransactionAdd = '/child-points/transactions/add';
+  static const String childPointsTransactionAdd =
+      '/child-points/transactions/add';
+  static const String routines = '/routines';
+  static const String routineAdd = '/routines/add';
+  static const String routineEdit = '/routines/edit';
+  static const String routineDetail = '/routines/detail';
+  static const String routineBadges = '/routines/badges';
+  static const String routineOverview = '/routines/overview';
+  static const String routineDailyGoal = '/routines/daily-goal';
+  static const String routineShareSettings = '/routines/share-settings';
+  static const String routineTogether = '/routines/together';
   static const String memo = '/memo';
   static const String memoAdd = '/memo/add';
   static const String memoDetail = '/memo/:id';
@@ -78,11 +90,13 @@ class AppRoutes {
   static const String notificationHistory = '/settings/notifications/history';
   static const String theme = '/settings/theme';
   static const String language = '/settings/language';
+  static const String subscription = '/settings/subscription';
 
   // Admin Routes
   static const String permissionManagement = '/settings/permissions';
   static const String commonRoleManagement = '/settings/common-roles';
-  static const String commonRolePermissions = '/settings/common-roles/:id/permissions';
+  static const String commonRolePermissions =
+      '/settings/common-roles/:id/permissions';
   static const String adminUserManagement = '/settings/admin/users';
   static const String adminUserDetail = '/settings/admin/users/:userId';
   static const String adminGroupReports = '/settings/admin/group-reports';
@@ -127,5 +141,6 @@ class AppRoutes {
   static const String shopping = '/shopping';
   static const String shoppingHistoryDetail = '/shopping/history/:historyId';
   static const String fridgeShoppingHistory = '/fridge/history';
-  static const String fridgeShoppingHistoryDetail = '/fridge/history/:historyId';
+  static const String fridgeShoppingHistoryDetail =
+      '/fridge/history/:historyId';
 }

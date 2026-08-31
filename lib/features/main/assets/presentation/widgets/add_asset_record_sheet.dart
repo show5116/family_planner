@@ -22,7 +22,8 @@ class AddAssetRecordSheet extends ConsumerStatefulWidget {
   const AddAssetRecordSheet({super.key, required this.account});
 
   @override
-  ConsumerState<AddAssetRecordSheet> createState() => _AddAssetRecordSheetState();
+  ConsumerState<AddAssetRecordSheet> createState() =>
+      _AddAssetRecordSheetState();
 }
 
 class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
@@ -121,7 +122,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       _goldPriceError = false;
     });
     try {
-      final price = await ref.read(assetRepositoryProvider).getGoldCurrentPrice();
+      final price = await ref
+          .read(assetRepositoryProvider)
+          .getGoldCurrentPrice();
       if (!mounted) return;
       setState(() {
         _goldPricePerGram = price;
@@ -149,7 +152,8 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
         left: AppSizes.spaceM,
         right: AppSizes.spaceM,
         top: AppSizes.spaceM,
-        bottom: MediaQuery.of(context).viewInsets.bottom +
+        bottom:
+            MediaQuery.of(context).viewInsets.bottom +
             MediaQuery.of(context).padding.bottom +
             AppSizes.spaceM,
       ),
@@ -190,8 +194,8 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                 Text(
                   l10n.asset_duplicate_date_error,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               ],
               const SizedBox(height: AppSizes.spaceM),
@@ -199,9 +203,13 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
               if (_isGold) ...[
                 ..._buildGoldFields(l10n),
               ] else ...[
-                Text(l10n.asset_input_mode, style: Theme.of(context).textTheme.labelLarge),
+                Text(
+                  l10n.asset_input_mode,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
                 const SizedBox(height: AppSizes.spaceXS),
                 SegmentedButton<RecordInputMode>(
+                  showSelectedIcon: false,
                   segments: [
                     ButtonSegment(
                       value: RecordInputMode.manual,
@@ -213,11 +221,14 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                     ),
                   ],
                   selected: {_inputMode},
-                  onSelectionChanged: (s) => setState(() => _inputMode = s.first),
+                  onSelectionChanged: (s) =>
+                      setState(() => _inputMode = s.first),
                 ),
                 const SizedBox(height: AppSizes.spaceM),
-                if (_inputMode == RecordInputMode.manual) ..._buildManualFields(l10n),
-                if (_inputMode == RecordInputMode.auto) ..._buildAutoFields(l10n),
+                if (_inputMode == RecordInputMode.manual)
+                  ..._buildManualFields(l10n),
+                if (_inputMode == RecordInputMode.auto)
+                  ..._buildAutoFields(l10n),
               ],
 
               // 메모
@@ -234,8 +245,8 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                 Text(
                   _errorMsg!,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               ],
               const SizedBox(height: AppSizes.spaceM),
@@ -268,6 +279,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
     return [
       // 단위 토글
       SegmentedButton<_GoldWeightUnit>(
+        showSelectedIcon: false,
         segments: [
           ButtonSegment(
             value: _GoldWeightUnit.gram,
@@ -311,8 +323,10 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
           });
         },
         validator: (v) {
-          if (v == null || v.trim().isEmpty) return l10n.asset_gold_gram_weight_required;
-          if (double.tryParse(v.trim()) == null) return l10n.asset_gold_gram_weight_invalid;
+          if (v == null || v.trim().isEmpty)
+            return l10n.asset_gold_gram_weight_required;
+          if (double.tryParse(v.trim()) == null)
+            return l10n.asset_gold_gram_weight_invalid;
           return null;
         },
       ),
@@ -321,9 +335,13 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       // 금 시세 정보 카드
       Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(120),
+          color: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest.withAlpha(120),
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
         ),
         padding: const EdgeInsets.all(AppSizes.spaceM),
         child: _goldPriceLoading
@@ -335,40 +353,50 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                   const SizedBox(width: AppSizes.spaceS),
-                  Text(l10n.asset_gold_price_loading,
-                      style: Theme.of(context).textTheme.bodyMedium),
+                  Text(
+                    l10n.asset_gold_price_loading,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ],
               )
             : _goldPriceError
-                ? Row(
-                    children: [
-                      Icon(Icons.warning_amber_rounded,
-                          size: 18, color: Theme.of(context).colorScheme.error),
-                      const SizedBox(width: AppSizes.spaceS),
-                      Expanded(
-                        child: Text(
-                          l10n.asset_gold_price_error,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                        ),
-                      ),
-                      TextButton(onPressed: _fetchGoldPrice, child: const Text('재시도')),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(l10n.asset_gold_current_price_label,
-                          style: Theme.of(context).textTheme.bodySmall),
-                      Text(
-                        _goldPricePerGram != null
-                            ? '${formatAssetAmount(_goldPricePerGram!)}원/g'
-                            : '-',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+            ? Row(
+                children: [
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.error,
                   ),
+                  const SizedBox(width: AppSizes.spaceS),
+                  Expanded(
+                    child: Text(
+                      l10n.asset_gold_price_error,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: _fetchGoldPrice,
+                    child: const Text('재시도'),
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.asset_gold_current_price_label,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  Text(
+                    _goldPricePerGram != null
+                        ? '${formatAssetAmount(_goldPricePerGram!)}원/g'
+                        : '-',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
       ),
       const SizedBox(height: AppSizes.spaceM),
 
@@ -501,8 +529,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
 
     if (_isGold) {
       final grams = _gramsFromInput ?? 0;
-      final purchaseCost =
-          double.tryParse(_goldPrincipalController.text.replaceAll(',', ''));
+      final purchaseCost = double.tryParse(
+        _goldPrincipalController.text.replaceAll(',', ''),
+      );
       dto = CreateAssetRecordDto(
         recordDate: dateStr,
         inputMode: RecordInputMode.gold,
@@ -511,10 +540,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
         note: note.isEmpty ? null : note,
       );
 
-      final result = await ref.read(assetManagementProvider.notifier).createRecord(
-            widget.account.id,
-            dto,
-          );
+      final result = await ref
+          .read(assetManagementProvider.notifier)
+          .createRecord(widget.account.id, dto);
 
       if (!mounted) return;
       if (result == null) {
@@ -524,7 +552,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
 
       // gramWeight 변경 시 계좌 업데이트
       if (grams != widget.account.gramWeight) {
-        await ref.read(assetManagementProvider.notifier).updateAccount(
+        await ref
+            .read(assetManagementProvider.notifier)
+            .updateAccount(
               widget.account.id,
               UpdateAccountDto(gramWeight: grams),
             );
@@ -532,9 +562,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
 
       if (!mounted) return;
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.asset_record_save_success)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.asset_record_save_success)));
       return;
     }
 
@@ -542,9 +572,15 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
       dto = CreateAssetRecordDto(
         recordDate: dateStr,
         inputMode: RecordInputMode.manual,
-        balance: double.tryParse(_balanceController.text.replaceAll(',', '')) ?? 0,
-        principal: double.tryParse(_manualPrincipalController.text.replaceAll(',', '')) ?? 0,
-        profit: double.tryParse(_profitController.text.replaceAll(',', '')) ?? 0,
+        balance:
+            double.tryParse(_balanceController.text.replaceAll(',', '')) ?? 0,
+        principal:
+            double.tryParse(
+              _manualPrincipalController.text.replaceAll(',', ''),
+            ) ??
+            0,
+        profit:
+            double.tryParse(_profitController.text.replaceAll(',', '')) ?? 0,
         note: note.isEmpty ? null : note,
       );
     } else {
@@ -552,26 +588,31 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
         recordDate: dateStr,
         inputMode: RecordInputMode.auto,
         currentBalance:
-            double.tryParse(_currentBalanceController.text.replaceAll(',', '')) ?? 0,
+            double.tryParse(
+              _currentBalanceController.text.replaceAll(',', ''),
+            ) ??
+            0,
         additionalPrincipal:
-            double.tryParse(_additionalPrincipalController.text.replaceAll(',', '')) ?? 0,
+            double.tryParse(
+              _additionalPrincipalController.text.replaceAll(',', ''),
+            ) ??
+            0,
         note: note.isEmpty ? null : note,
       );
     }
 
     try {
-      final result = await ref.read(assetManagementProvider.notifier).createRecord(
-            widget.account.id,
-            dto,
-          );
+      final result = await ref
+          .read(assetManagementProvider.notifier)
+          .createRecord(widget.account.id, dto);
 
       if (!mounted) return;
 
       if (result != null) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.asset_record_save_success)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.asset_record_save_success)));
       } else {
         setState(() => _errorMsg = l10n.common_error);
       }

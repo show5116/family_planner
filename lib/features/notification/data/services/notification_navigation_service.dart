@@ -94,6 +94,9 @@ class NotificationNavigationService {
 
       case NotificationCategory.fridge:
         return _navigateToFridge(context, data);
+
+      case NotificationCategory.routine:
+        return _navigateToRoutine(context, data);
     }
   }
 
@@ -214,6 +217,18 @@ class NotificationNavigationService {
     Map<String, dynamic> data,
   ) {
     context.push(AppRoutes.fridge);
+    return true;
+  }
+
+  /// 루틴 화면으로 이동
+  ///
+  /// 루틴 알림은 미체크 리마인드·배지 획득·주간 요약 세 종류이며,
+  /// 모두 루틴 목록에서 이어서 확인할 수 있으므로 목록으로 보냅니다.
+  static bool _navigateToRoutine(
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) {
+    context.push(AppRoutes.routines);
     return true;
   }
 

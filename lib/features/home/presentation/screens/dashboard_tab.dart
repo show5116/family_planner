@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/features/home/presentation/widgets/anniversary_summary_widget.dart';
+import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/home/presentation/widgets/fridge_expiry_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/today_schedule_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/investment_summary_widget.dart';
@@ -10,6 +11,7 @@ import 'package:family_planner/features/home/presentation/widgets/asset_summary_
 import 'package:family_planner/features/home/presentation/widgets/memo_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/childcare_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/household_summary_widget.dart';
+import 'package:family_planner/features/home/presentation/widgets/routine_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/savings_summary_widget.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
@@ -60,6 +62,8 @@ class DashboardTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final unreadCountAsync = ref.watch(unreadCountProvider);
+    // 홈 화면(OS) 위젯 데이터 동기화 (대시보드 진입 시 1회, keepAlive 없어 재진입마다 실행)
+    ref.watch(dashboardWidgetSyncProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -240,6 +244,9 @@ class _DashboardGrid extends ConsumerWidget {
               initialSelectedGroupId: settings.savingsSelectedGroupId,
             );
             break;
+          case 'routineSummary':
+            widget = const RoutineSummaryWidget();
+            break;
         }
       }
 
@@ -327,41 +334,57 @@ class _TrialBannerCard extends ConsumerWidget {
             horizontalPadding,
             AppSizes.spaceM,
           ),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.spaceM,
-              vertical: AppSizes.spaceS,
-            ),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
+          // 체험 종료가 임박했다고 알리면서 구독 경로를 주지 않으면 전환
+          // 기회를 그대로 버리게 되므로 배너 자체를 진입점으로 만든다.
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => context.push(AppRoutes.subscription),
               borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.card_giftcard_outlined, color: colorScheme.primary),
-                const SizedBox(width: AppSizes.spaceS),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.dashboard_trial_banner_title,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: colorScheme.onPrimaryContainer,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      Text(
-                        daysLeft > 0 ? l10n.dashboard_trial_banner_sublabel_days(daysLeft) : l10n.dashboard_trial_banner_sublabel_today,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onPrimaryContainer,
-                            ),
-                      ),
-                    ],
-                  ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.spaceM,
+                  vertical: AppSizes.spaceS,
                 ),
-              ],
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.card_giftcard_outlined,
+                        color: colorScheme.primary),
+                    const SizedBox(width: AppSizes.spaceS),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.dashboard_trial_banner_title,
+                            style:
+                                Theme.of(context).textTheme.titleSmall?.copyWith(
+                                      color: colorScheme.onPrimaryContainer,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                          Text(
+                            daysLeft > 0 ? l10n.dashboard_trial_banner_sublabel_days(daysLeft) : l10n.dashboard_trial_banner_sublabel_today,
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.onPrimaryContainer,
+                                    ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

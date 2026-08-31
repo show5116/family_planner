@@ -20,7 +20,12 @@ class ScheduleFilterSheet extends StatefulWidget {
   final List<String>? selectedGroupIds;
   final bool includePersonal;
   final ScheduleViewMode? viewMode;
-  final void Function(List<String>? selectedGroupIds, bool includePersonal, ScheduleViewMode? viewMode) onApply;
+  final void Function(
+    List<String>? selectedGroupIds,
+    bool includePersonal,
+    ScheduleViewMode? viewMode,
+  )
+  onApply;
 
   @override
   State<ScheduleFilterSheet> createState() => _ScheduleFilterSheetState();
@@ -104,7 +109,10 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
+              AppSizes.spaceL,
+              AppSizes.spaceM,
+              AppSizes.spaceL,
+              AppSizes.spaceS,
             ),
             child: Text('필터', style: Theme.of(context).textTheme.titleLarge),
           ),
@@ -118,25 +126,32 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
               child: Text(
                 '기간',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceL),
               child: SegmentedButton<ScheduleViewMode>(
+                showSelectedIcon: false,
                 segments: [
                   ButtonSegment(
                     value: ScheduleViewMode.today,
-                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewToday),
+                    label: Text(
+                      AppLocalizations.of(context)!.widgetSettings_viewToday,
+                    ),
                   ),
                   ButtonSegment(
                     value: ScheduleViewMode.week,
-                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewWeek),
+                    label: Text(
+                      AppLocalizations.of(context)!.widgetSettings_viewWeek,
+                    ),
                   ),
                   ButtonSegment(
                     value: ScheduleViewMode.month,
-                    label: Text(AppLocalizations.of(context)!.widgetSettings_viewMonth),
+                    label: Text(
+                      AppLocalizations.of(context)!.widgetSettings_viewMonth,
+                    ),
                   ),
                 ],
                 selected: {_viewMode!},
@@ -163,8 +178,8 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
               child: Text(
                 AppLocalizations.of(context)!.schedule_filter_group_schedule,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
             CheckboxListTile(
@@ -173,29 +188,37 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
               onChanged: (_) => _toggleAllGroups(),
               controlAffinity: ListTileControlAffinity.leading,
             ),
-            ...widget.groups.map((group) => CheckboxListTile(
-                  title: Text(group.name),
-                  value: _isGroupSelected(group.id),
-                  onChanged: (_) => _toggleGroup(group.id),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  secondary: group.myColor != null || group.defaultColor != null
-                      ? CircleAvatar(
-                          radius: 8,
-                          backgroundColor: ColorUtils.groupColor(group),
-                        )
-                      : null,
-                )),
+            ...widget.groups.map(
+              (group) => CheckboxListTile(
+                title: Text(group.name),
+                value: _isGroupSelected(group.id),
+                onChanged: (_) => _toggleGroup(group.id),
+                controlAffinity: ListTileControlAffinity.leading,
+                secondary: group.myColor != null || group.defaultColor != null
+                    ? CircleAvatar(
+                        radius: 8,
+                        backgroundColor: ColorUtils.groupColor(group),
+                      )
+                    : null,
+              ),
+            ),
           ],
           const SizedBox(height: AppSizes.spaceS),
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceL, 0, AppSizes.spaceL, AppSizes.spaceL,
+              AppSizes.spaceL,
+              0,
+              AppSizes.spaceL,
+              AppSizes.spaceL,
             ),
             child: SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () =>
-                    widget.onApply(_selectedGroupIds, _includePersonal, _viewMode),
+                onPressed: () => widget.onApply(
+                  _selectedGroupIds,
+                  _includePersonal,
+                  _viewMode,
+                ),
                 child: const Text('적용'),
               ),
             ),

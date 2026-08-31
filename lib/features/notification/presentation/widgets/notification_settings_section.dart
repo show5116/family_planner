@@ -6,26 +6,35 @@ import 'package:family_planner/features/notification/data/models/notification_se
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_toggle_item.dart';
 
-/// 날씨 알림 시간 선택 타일
-class _WeatherAlertTimeTile extends StatelessWidget {
+/// 시간 선택 타일 (날씨 알림 시간 / 루틴 리마인드 시간 등 공용)
+class _HourPickerTile extends StatelessWidget {
+  final String title;
+  final String subtitle;
   final int hour;
+  final List<int> availableHours;
   final ValueChanged<int> onChanged;
 
-  const _WeatherAlertTimeTile({required this.hour, required this.onChanged});
+  const _HourPickerTile({
+    required this.title,
+    required this.subtitle,
+    required this.hour,
+    required this.availableHours,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.access_time, color: Theme.of(context).colorScheme.primary),
-      title: const Text('날씨 알림 시간'),
+      title: Text(title),
       subtitle: Text(
-        '앱 실행 시 설정 시간이 되면 알림을 보냅니다',
+        subtitle,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
       ),
       trailing: DropdownButton<int>(
         value: hour,
         underline: const SizedBox.shrink(),
-        items: List.generate(17, (i) => i + 5).map((h) {
+        items: availableHours.map((h) {
           final label = h < 12 ? '오전 $h시' : (h == 12 ? '낮 12시' : '오후 ${h - 12}시');
           return DropdownMenuItem(value: h, child: Text(label));
         }).toList(),
@@ -172,12 +181,41 @@ class NotificationSettingsSection extends ConsumerWidget {
               ),
               if (settings.weatherEnabled) ...[
                 const Divider(height: 1),
-                _WeatherAlertTimeTile(
+                _HourPickerTile(
+                  title: '날씨 알림 시간',
+                  subtitle: '앱 실행 시 설정 시간이 되면 알림을 보냅니다',
                   hour: settings.weatherAlertHour,
+                  availableHours: List.generate(17, (i) => i + 5),
                   onChanged: (hour) {
                     ref
                         .read(notificationSettingsProvider.notifier)
                         .updateSetting(weatherAlertHour: hour);
+                  },
+                ),
+              ],
+              const Divider(height: 1),
+              NotificationToggleItem(
+                icon: Icons.checklist_outlined,
+                title: '루틴 알림',
+                subtitle: '미체크 루틴 리마인드, 배지 획득, 주간 요약을 받습니다',
+                value: settings.routineEnabled,
+                onChanged: (value) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .updateSetting(routineEnabled: value);
+                },
+              ),
+              if (settings.routineEnabled) ...[
+                const Divider(height: 1),
+                _HourPickerTile(
+                  title: '루틴 리마인드 시간',
+                  subtitle: '설정 시간까지 오늘 미체크 루틴이 있으면 알림을 보냅니다',
+                  hour: settings.routineReminderHour,
+                  availableHours: List.generate(24, (h) => h),
+                  onChanged: (hour) {
+                    ref
+                        .read(notificationSettingsProvider.notifier)
+                        .updateSetting(routineReminderHour: hour);
                   },
                 ),
               ],

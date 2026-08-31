@@ -1,0 +1,55 @@
+{
+  "flow": "대시보드",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/dashboard/screenshots/01-main.png",
+      "caption": "대시보드 — 인사말과 요약 위젯이 순서대로 표시됩니다"
+    },
+    {
+      "name": "02-widgets",
+      "file": "docs/manual/dashboard/screenshots/02-widgets.png",
+      "caption": "오늘의 일정 위젯 — 종일 일정과 시간 일정이 함께 표시됩니다"
+    },
+    {
+      "name": "03-widgets-more",
+      "file": "docs/manual/dashboard/screenshots/03-widgets-more.png",
+      "caption": "가계 현황과 투자 지표 — 카드를 누르면 해당 메뉴로 이동합니다"
+    },
+    {
+      "name": "04-widgets-bottom",
+      "file": "docs/manual/dashboard/screenshots/04-widgets-bottom.png",
+      "caption": "육아 포인트 — 자녀별 포인트 잔액이 표시됩니다"
+    },
+    {
+      "name": "05-notifications",
+      "file": "docs/manual/dashboard/screenshots/05-notifications.png",
+      "caption": "알림 — 종 아이콘을 누르면 읽지 않은 알림이 펼쳐집니다"
+    },
+    {
+      "name": "06-widget-settings",
+      "file": "docs/manual/dashboard/screenshots/06-widget-settings.png",
+      "caption": "홈 위젯 설정 — 드래그로 순서를 바꾸고 X로 제거합니다"
+    },
+    {
+      "name": "07-widget-add",
+      "file": "docs/manual/dashboard/screenshots/07-widget-add.png",
+      "caption": "위젯 추가하기 — 현재 표시하지 않는 위젯만 목록에 나옵니다"
+    },
+    {
+      "name": "08-widget-anniversary",
+      "file": "docs/manual/dashboard/screenshots/08-widget-anniversary.png",
+      "caption": "기념일 위젯 — 대시보드에 띄울 기념일을 카드 안에서 직접 고릅니다"
+    },
+    {
+      "name": "09-anniversary-pick",
+      "file": "docs/manual/dashboard/screenshots/09-anniversary-pick.png",
+      "caption": "기념일 고르기 — 그룹을 먼저 고르면 그 그룹의 기념일 목록이 나옵니다"
+    },
+    {
+      "name": "10-anniversary-picked",
+      "file": "docs/manual/dashboard/screenshots/10-anniversary-picked.png",
+      "caption": "고른 기념일 — ⊖ 를 누르면 목록에서 뺍니다"
+    }
+  ]
+}

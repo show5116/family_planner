@@ -1,0 +1,9 @@
+{
+  "name": "manual-create-scripts",
+  "private": true,
+  "type": "module",
+  "description": "매뉴얼 스크린샷 촬영 스크립트. 최초 1회: npm install && npx playwright install chromium",
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

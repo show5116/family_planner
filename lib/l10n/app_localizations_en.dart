@@ -143,6 +143,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auth_or => 'or';
 
   @override
+  String get auth_testAccountLoginOwner =>
+      'Log in as test account (group owner)';
+
+  @override
+  String get auth_testAccountLoginMember =>
+      'Log in as test account (group member)';
+
+  @override
   String get auth_emailHint => 'Enter your email';
 
   @override
@@ -3928,6 +3936,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weather_dustUltraFine => 'PM2.5';
 
   @override
+  String get weather_fallbackLocationNotice =>
+      'Couldn\'t get your current location — showing weather for Seoul instead';
+
+  @override
+  String get weather_enableLocationAction => 'Allow location access';
+
+  @override
   String get investment_widgetTitle => 'Investment Indicators';
 
   @override
@@ -4543,4 +4558,965 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get widgetSettings_anniversarySummaryDesc =>
       'Shows upcoming anniversaries and D-day countdown';
+
+  @override
+  String get subscription_manage_title => 'Manage Subscription';
+
+  @override
+  String get subscription_screen_title => 'Manage Subscription';
+
+  @override
+  String get subscription_current_plan_label => 'Current Plan';
+
+  @override
+  String get subscription_active_status_label => 'Status';
+
+  @override
+  String get subscription_active => 'Active';
+
+  @override
+  String get subscription_inactive => 'Inactive';
+
+  @override
+  String get subscription_expires_at_label => 'Expires';
+
+  @override
+  String get subscription_products_section_title => 'Subscription Plans';
+
+  @override
+  String get subscription_purchase_button => 'Subscribe';
+
+  @override
+  String get subscription_restore_button => 'Restore Purchases';
+
+  @override
+  String get subscription_purchase_success => 'Subscription completed.';
+
+  @override
+  String get subscription_verify_failed_title => 'Purchase Verification Failed';
+
+  @override
+  String get subscription_verify_failed_message =>
+      'This purchase was already used or failed verification. Please contact support if the issue persists.';
+
+  @override
+  String get subscription_verify_network_error =>
+      'A network error occurred. Please try again later.';
+
+  @override
+  String get subscription_restore_success => 'Subscription restored.';
+
+  @override
+  String get subscription_product_not_found =>
+      'Subscription plans are being prepared. Please try again later.';
+
+  @override
+  String get subscription_ad_free_benefit => 'Removes all ads within the app.';
+
+  @override
+  String get subscription_period_monthly => 'Monthly subscription';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      'Your subscription renews automatically each month and will be charged the same amount unless canceled at least 24 hours before the end of the current period. Payment is charged to your store account upon purchase confirmation. You can manage or cancel your subscription at any time in your device\'s store account settings.';
+
+  @override
+  String get subscription_manage_subscription_button =>
+      'Manage or cancel subscription';
+
+  @override
+  String get subscription_terms_button => 'Terms of Service';
+
+  @override
+  String get subscription_privacy_button => 'Privacy Policy';
+
+  @override
+  String get subscription_manage_launch_failed =>
+      'Could not open the store subscription settings.';
+
+  @override
+  String get subscription_compare_title => 'Compare plans';
+
+  @override
+  String get subscription_plan_current => 'Current';
+
+  @override
+  String get subscription_benefit_all_features => 'All features included';
+
+  @override
+  String get subscription_benefit_ads_shown => 'Ads are shown';
+
+  @override
+  String get subscription_benefit_no_ads => 'No ads';
+
+  @override
+  String get subscription_benefit_no_reward_ads => 'No ads to unlock features';
+
+  @override
+  String get subscription_benefit_cancel_anytime => 'Cancel anytime';
+
+  @override
+  String get subscription_free_plan_price => 'Free';
+
+  @override
+  String get routine_title => 'Routines';
+
+  @override
+  String get routine_date_today => 'Today';
+
+  @override
+  String get routine_reorder => 'Reorder';
+
+  @override
+  String get routine_reorder_done => 'Done';
+
+  @override
+  String get routine_list_empty => 'No habits yet';
+
+  @override
+  String get routine_list_empty_subtitle =>
+      'Add a habit you want to repeat every day\nand build a streak by checking it off consistently';
+
+  @override
+  String get routine_add => 'Add Habit';
+
+  @override
+  String get routine_edit => 'Edit Habit';
+
+  @override
+  String get routine_delete => 'Delete Habit';
+
+  @override
+  String get routine_delete_confirm => 'Delete this habit?';
+
+  @override
+  String get routine_field_title => 'Title';
+
+  @override
+  String get routine_field_title_hint => 'e.g. Morning stretch';
+
+  @override
+  String get routine_field_title_required => 'Please enter a title';
+
+  @override
+  String get routine_field_title_too_long =>
+      'Title must be 100 characters or fewer';
+
+  @override
+  String get routine_field_emoji => 'Emoji';
+
+  @override
+  String get routine_field_emoji_custom => 'Custom';
+
+  @override
+  String get routine_field_emoji_helper => 'Enter a single emoji (e.g. 🏃)';
+
+  @override
+  String get routine_field_color => 'Color';
+
+  @override
+  String get routine_field_target_count => 'Weekly target count';
+
+  @override
+  String get routine_field_target_count_month => 'Monthly target count';
+
+  @override
+  String get routine_this_month_progress => 'This month\'s progress';
+
+  @override
+  String get routine_field_start_date => 'Start date';
+
+  @override
+  String get routine_field_end_date => 'End date (optional)';
+
+  @override
+  String get routine_field_end_date_none => 'No end date';
+
+  @override
+  String get routine_field_group => 'Routine';
+
+  @override
+  String get routine_field_group_none => 'None (standalone habit)';
+
+  @override
+  String get routine_save => 'Save';
+
+  @override
+  String get routine_check => 'Check';
+
+  @override
+  String get routine_uncheck => 'Uncheck';
+
+  @override
+  String get routine_check_already => 'Already checked';
+
+  @override
+  String get routine_check_future_date => 'Cannot check a future date';
+
+  @override
+  String get routine_check_error => 'Failed to check';
+
+  @override
+  String routine_streak_celebration(int days) {
+    return '🔥 $days-day streak!';
+  }
+
+  @override
+  String get routine_tab_heatmap => 'Calendar';
+
+  @override
+  String get routine_tab_stats => 'Stats';
+
+  @override
+  String get routine_streak_current_days => 'Current day streak';
+
+  @override
+  String get routine_streak_longest_days => 'Longest day streak';
+
+  @override
+  String get routine_streak_current_weeks => 'Current week streak';
+
+  @override
+  String get routine_streak_longest_weeks => 'Longest week streak';
+
+  @override
+  String get routine_streak_current_months => 'Current Months';
+
+  @override
+  String get routine_streak_longest_months => 'Best Months';
+
+  @override
+  String get routine_this_month_progress_label => 'This Month';
+
+  @override
+  String get routine_badges_goal_subtitle =>
+      'Badges you earned by hitting your daily goal';
+
+  @override
+  String get routine_daily_goal_included_badge => 'Counts toward today\'s goal';
+
+  @override
+  String get routine_daily_goal_filter_on => 'Showing goal habits only';
+
+  @override
+  String get routine_daily_goal_filter_hint =>
+      'Tap to see only your goal habits';
+
+  @override
+  String get routine_coach_add_title => 'Create a habit';
+
+  @override
+  String get routine_coach_add_desc =>
+      'Add the things you want to repeat every day.\nYou can also bundle several habits into one routine.';
+
+  @override
+  String get routine_coach_goal_title => 'Today\'s goal';
+
+  @override
+  String get routine_coach_goal_desc =>
+      'You don\'t have to finish every habit.\nHit the number you set and the day counts as a win.\nKeep a streak going and you\'ll earn badges.';
+
+  @override
+  String get routine_coach_flag_title => 'Habits in your goal';
+
+  @override
+  String get routine_coach_flag_desc =>
+      'Habits with a flag count toward today\'s goal.\nTap the goal bar above to see just those habits.';
+
+  @override
+  String get routine_coach_check_title => 'Check it off';
+
+  @override
+  String get routine_coach_check_desc =>
+      'Tap the circle to mark a habit done.\nHabits that track values let you log a time or amount too.';
+
+  @override
+  String get routine_coach_demo_habit_1 => 'Morning stretch';
+
+  @override
+  String get routine_coach_demo_habit_2 => 'Drink 2L of water';
+
+  @override
+  String get routine_coach_demo_habit_3 => 'Read for 30 minutes';
+
+  @override
+  String get routine_coach_skip => 'Skip';
+
+  @override
+  String get routine_coach_together_title => 'Do it together';
+
+  @override
+  String get routine_coach_together_desc =>
+      'Share your habits with family or friends.\nSee how everyone is doing and take on challenges together.';
+
+  @override
+  String get routine_together_coach_status_title => 'Member status';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      'See what everyone in the group did today.\nTap a name for their full record.';
+
+  @override
+  String get routine_together_coach_tabs_title => 'Ranking and challenges';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      'Ranking compares goal achievement rates.\nChallenges let you set a deadline, chase a goal together,\nand even put stakes on it.';
+
+  @override
+  String get routine_together_coach_settings_title => 'Sharing settings';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      'Choose which groups can see your habits.\nMark a habit private and it stays hidden from everyone.';
+
+  @override
+  String get routine_this_week_progress => 'This week\'s progress';
+
+  @override
+  String get routine_weekly_strip_title => 'Last 8 weeks';
+
+  @override
+  String get routine_rate_period_week => 'Week';
+
+  @override
+  String get routine_rate_period_month => 'Month';
+
+  @override
+  String get routine_rate_period_custom => 'Custom range';
+
+  @override
+  String get routine_rate_achievement => 'Achievement rate';
+
+  @override
+  String get routine_share_title => 'Manage Shared Groups';
+
+  @override
+  String get routine_share_screen_desc =>
+      'Members of the groups you pick can see your habits and progress.';
+
+  @override
+  String get routine_share_private_note =>
+      'Habits marked private are never shared.';
+
+  @override
+  String get routine_share_none => 'You\'re not sharing with any group yet';
+
+  @override
+  String get routine_share_no_groups =>
+      'You\'re not in any group yet.\nCreate or join a group first.';
+
+  @override
+  String get routine_share_saved => 'Sharing settings saved';
+
+  @override
+  String get routine_field_private => 'Private';
+
+  @override
+  String get routine_field_private_desc =>
+      'Hide this habit from others in your shared groups';
+
+  @override
+  String get routine_private_badge => 'Private habit';
+
+  @override
+  String get routine_share_select_group => 'Select a group to share with';
+
+  @override
+  String get routine_together_title => 'Together';
+
+  @override
+  String get routine_together_tab_status => 'Status';
+
+  @override
+  String get routine_together_tab_ranking => 'Ranking';
+
+  @override
+  String get routine_together_tab_challenge => 'Challenges';
+
+  @override
+  String get routine_challenge_create => 'New Challenge';
+
+  @override
+  String get routine_challenge_edit => 'Edit Challenge';
+
+  @override
+  String get routine_challenge_empty =>
+      'No challenges yet.\nCreate a goal to take on with your group.';
+
+  @override
+  String get routine_challenge_field_title => 'Challenge name';
+
+  @override
+  String get routine_challenge_field_title_hint => 'e.g. Work out this week';
+
+  @override
+  String get routine_challenge_field_description => 'Description';
+
+  @override
+  String get routine_challenge_field_period => 'Period';
+
+  @override
+  String get routine_challenge_field_target => 'Target count';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return 'Check in $count times during the period to win';
+  }
+
+  @override
+  String get routine_challenge_field_reward => 'Stakes';
+
+  @override
+  String get routine_challenge_field_reward_hint => 'e.g. Loser buys dinner';
+
+  @override
+  String get routine_challenge_status_upcoming => 'Upcoming';
+
+  @override
+  String get routine_challenge_status_ongoing => 'Ongoing';
+
+  @override
+  String get routine_challenge_status_ended => 'Ended';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '$count joined';
+  }
+
+  @override
+  String get routine_challenge_join => 'Join';
+
+  @override
+  String get routine_challenge_leave => 'Leave';
+
+  @override
+  String get routine_challenge_leave_confirm => 'Leave this challenge?';
+
+  @override
+  String get routine_challenge_delete_confirm =>
+      'Delete this challenge?\nEveryone\'s records will be removed too.';
+
+  @override
+  String get routine_challenge_select_routine => 'Which habit will you use?';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      'Pick one of your habits to link.\nPrivate habits can\'t join.';
+
+  @override
+  String get routine_challenge_no_routine =>
+      'No habits available to join with.\nCreate a habit first.';
+
+  @override
+  String get routine_challenge_change_routine => 'Change habit';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '$days days left';
+  }
+
+  @override
+  String get routine_challenge_saved => 'Challenge saved';
+
+  @override
+  String get routine_challenge_joined => 'You joined the challenge';
+
+  @override
+  String get routine_group_members_empty => 'No shared routines';
+
+  @override
+  String get routine_sort_order_updated => 'Order updated';
+
+  @override
+  String get routine_error_generic => 'Something went wrong';
+
+  @override
+  String get widgetSettings_routineSummary => 'Today\'s Routines';
+
+  @override
+  String get nav_routines => 'Routines';
+
+  @override
+  String get routine_badges_title => 'My Badges';
+
+  @override
+  String get routine_overview_title => 'Statistics';
+
+  @override
+  String get routine_overview_heatmap_title => 'Overall Completion Heatmap';
+
+  @override
+  String get routine_overview_previous_period => 'Previous period';
+
+  @override
+  String get routine_overview_next_period => 'Next period';
+
+  @override
+  String get routine_overview_this_week => 'This Week';
+
+  @override
+  String get routine_overview_this_month => 'This Month';
+
+  @override
+  String get routine_overview_weekly_title => 'This Week\'s Habit Performance';
+
+  @override
+  String get routine_overview_achieved => 'Achieved';
+
+  @override
+  String get routine_overview_not_achieved => 'Not Achieved';
+
+  @override
+  String get routine_overview_total_checked => 'Total Checked';
+
+  @override
+  String get routine_daily_goal_title => 'Today\'s Goal';
+
+  @override
+  String get routine_daily_goal_setting => 'Set Daily Goal';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '$count of $total habits';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '$count a day and you have succeeded';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total =>
+      'Your goal is higher than the number of habits you have. Add more habits or lower the goal.';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return 'Today $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => 'Goal reached today!';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return 'Bonus +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '$days-day streak';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return 'Best $days days';
+  }
+
+  @override
+  String get routine_daily_goal_rate => 'Goal Achievement';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved of $total days';
+  }
+
+  @override
+  String get routine_daily_goal_saved => 'Goal saved';
+
+  @override
+  String get routine_daily_goal_raise_title => 'Ready to aim higher?';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return 'You have been passing your goal often these past two weeks, averaging $average a day.\n\nShall we raise your daily goal from $current to $suggested?';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => 'Raise it';
+
+  @override
+  String get routine_daily_goal_keep => 'Keep it as is';
+
+  @override
+  String get routine_daily_goal_lower_title => 'Want to ease off for now?';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return 'Busy stretch lately? There is no need to push.\n\nYou could drop your daily goal from $current to $suggested. You can always raise it again.';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => 'Lower it';
+
+  @override
+  String get routine_daily_goal_included_section =>
+      'Habits Counted Toward Your Goal';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '$included habits count toward your goal';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => 'Everyday Habits';
+
+  @override
+  String get routine_daily_goal_group_periodic => 'Periodic Habits';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      'Turning this on treats it as an everyday habit. A 3-times-a-week habit will still show as incomplete on the remaining days once you have done all 3.';
+
+  @override
+  String get routine_daily_goal_freq_daily => 'Daily';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '${count}x per week';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '${count}x per month';
+  }
+
+  @override
+  String get routine_daily_goal_no_included =>
+      'No habits are counted toward your goal yet. Turn some on below.';
+
+  @override
+  String get routine_daily_goal_no_routines =>
+      'You have not added any habits yet';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return 'Based on $count habits';
+  }
+
+  @override
+  String get routine_badges_empty => 'No badges earned yet';
+
+  @override
+  String get routine_badge_earned_title => 'Badge Earned!';
+
+  @override
+  String get routine_badge_earned_confirm => 'OK';
+
+  @override
+  String get routine_leaderboard_metric_goalRate => 'Goal Rate';
+
+  @override
+  String get routine_leaderboard_metric_goalStreak => 'Streak';
+
+  @override
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved / $total days';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '$days-day streak';
+  }
+
+  @override
+  String get routine_leaderboard_empty =>
+      'No group members with shared routines';
+
+  @override
+  String get routine_group_add => 'Add Routine';
+
+  @override
+  String get routine_group_edit => 'Edit Routine';
+
+  @override
+  String get routine_group_delete => 'Delete Routine';
+
+  @override
+  String get routine_group_delete_confirm =>
+      'Delete this routine?\nHabits in it won\'t be deleted and will become standalone habits.';
+
+  @override
+  String get routine_group_field_title_hint => 'e.g. Morning Routine';
+
+  @override
+  String get routine_group_save => 'Save';
+
+  @override
+  String get routine_group_standalone_section_title => 'Standalone Habits';
+
+  @override
+  String get routine_table_header_number => 'No.';
+
+  @override
+  String get routine_table_header_habit => 'Habit';
+
+  @override
+  String get routine_table_header_check => 'Check';
+
+  @override
+  String get routine_group_error_generic => 'Something went wrong';
+
+  @override
+  String get routine_field_memo => 'Memo';
+
+  @override
+  String get routine_field_memo_hint => 'Add a note about this habit';
+
+  @override
+  String get routine_field_importance => 'Importance';
+
+  @override
+  String get routine_importance_low => 'Low';
+
+  @override
+  String get routine_importance_medium => 'Medium';
+
+  @override
+  String get routine_importance_high => 'High';
+
+  @override
+  String get routine_field_time_filter => 'Time of Day';
+
+  @override
+  String get routine_time_filter_morning => 'Morning';
+
+  @override
+  String get routine_time_filter_afternoon => 'Afternoon';
+
+  @override
+  String get routine_time_filter_evening => 'Evening';
+
+  @override
+  String get routine_time_filter_none => 'Not set';
+
+  @override
+  String get routine_field_category => 'Category';
+
+  @override
+  String get routine_field_category_none => 'Uncategorized';
+
+  @override
+  String get routine_category_title => 'Categories';
+
+  @override
+  String get routine_category_add => 'Add Category';
+
+  @override
+  String get routine_category_edit => 'Edit Category';
+
+  @override
+  String get routine_category_delete => 'Delete Category';
+
+  @override
+  String get routine_category_delete_confirm =>
+      'Delete this category?\nHabits in it won\'t be deleted and will become uncategorized.';
+
+  @override
+  String get routine_category_save => 'Save';
+
+  @override
+  String get routine_category_field_title_hint => 'e.g. Healthy Living';
+
+  @override
+  String get routine_category_error_generic => 'Something went wrong';
+
+  @override
+  String get routine_category_empty => 'No categories yet';
+
+  @override
+  String get routine_category_filter_all => 'All';
+
+  @override
+  String get routine_category_picker_title => 'Select Categories';
+
+  @override
+  String get routine_category_edit_mode => 'Edit';
+
+  @override
+  String get routine_category_edit_mode_done => 'Done';
+
+  @override
+  String get routine_category_reorder_hint => 'Press the handle to reorder';
+
+  @override
+  String get routine_category_select_done => 'Done';
+
+  @override
+  String get routine_category_none_selected => 'Select category';
+
+  @override
+  String get routine_field_record_type => 'Record Type';
+
+  @override
+  String get routine_record_type_boolean => 'Simple check';
+
+  @override
+  String get routine_record_type_text => 'Text';
+
+  @override
+  String get routine_record_type_time => 'Time';
+
+  @override
+  String get routine_record_type_numeric => 'Number';
+
+  @override
+  String get routine_record_type_readonly_hint =>
+      'Record type can\'t be changed after creation';
+
+  @override
+  String get routine_check_dialog_title => 'Log Entry';
+
+  @override
+  String get routine_check_dialog_text_label => 'Content';
+
+  @override
+  String get routine_check_dialog_numeric_label => 'Value';
+
+  @override
+  String get routine_check_dialog_time_label => 'Time';
+
+  @override
+  String get routine_check_dialog_confirm => 'Check';
+
+  @override
+  String get routine_check_dialog_cancel => 'Cancel';
+
+  @override
+  String get routine_status_active => 'Active';
+
+  @override
+  String get routine_status_paused => 'Paused';
+
+  @override
+  String get routine_status_ended => 'Ended';
+
+  @override
+  String get routine_pause => 'Pause';
+
+  @override
+  String get routine_pause_confirm =>
+      'Pause this habit?\nYou won\'t be able to check it while paused.';
+
+  @override
+  String get routine_resume => 'Resume';
+
+  @override
+  String get routine_resume_success => 'Resumed';
+
+  @override
+  String get routine_pause_error => 'Failed to pause';
+
+  @override
+  String get routine_resume_error => 'Failed to resume';
+
+  @override
+  String get routine_end => 'End';
+
+  @override
+  String get routine_end_confirm =>
+      'End this habit?\nCheck history will be preserved.';
+
+  @override
+  String get routine_frequency_type_daily => 'Daily';
+
+  @override
+  String get routine_frequency_type_weekly => 'Weekly';
+
+  @override
+  String get routine_frequency_type_monthly => 'Monthly';
+
+  @override
+  String get routine_weekly_mode_count_only => 'N times/week';
+
+  @override
+  String get routine_weekly_mode_fixed_days => 'Specific days';
+
+  @override
+  String get routine_field_target_days => 'Repeat Days';
+
+  @override
+  String get routine_day_sun => 'Sun';
+
+  @override
+  String get routine_day_mon => 'Mon';
+
+  @override
+  String get routine_day_tue => 'Tue';
+
+  @override
+  String get routine_day_wed => 'Wed';
+
+  @override
+  String get routine_day_thu => 'Thu';
+
+  @override
+  String get routine_day_fri => 'Fri';
+
+  @override
+  String get routine_day_sat => 'Sat';
+
+  @override
+  String get routine_error_weekly_mode_required =>
+      'Please choose a weekly repeat mode';
+
+  @override
+  String get routine_error_weekly_target_required =>
+      'Please set a weekly target count';
+
+  @override
+  String get routine_error_fixed_days_required =>
+      'Please select at least one day';
+
+  @override
+  String get routine_error_monthly_target_required =>
+      'Please set a monthly target count';
+
+  @override
+  String get emoji_picker_more => 'More emojis';
+
+  @override
+  String get emoji_picker_custom_selected => 'A custom emoji is selected';
+
+  @override
+  String get emoji_picker_search_hint => 'Search emoji';
+
+  @override
+  String get emoji_picker_no_result => 'No results found';
+
+  @override
+  String get emoji_picker_category_recent => 'Recent';
+
+  @override
+  String get emoji_picker_category_smileys => 'Smileys';
+
+  @override
+  String get emoji_picker_category_animals => 'Animals';
+
+  @override
+  String get emoji_picker_category_foods => 'Food';
+
+  @override
+  String get emoji_picker_category_travel => 'Travel';
+
+  @override
+  String get emoji_picker_category_activities => 'Activities';
+
+  @override
+  String get emoji_picker_category_objects => 'Objects';
+
+  @override
+  String get emoji_picker_category_symbols => 'Symbols';
+
+  @override
+  String get emoji_picker_category_flags => 'Flags';
 }

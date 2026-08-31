@@ -182,6 +182,8 @@ class NotificationHistoryItem extends StatelessWidget {
         return Icons.wb_sunny_outlined;
       case NotificationCategory.fridge:
         return Icons.kitchen_outlined;
+      case NotificationCategory.routine:
+        return Icons.check_circle_outline;
     }
   }
 
@@ -208,6 +210,8 @@ class NotificationHistoryItem extends StatelessWidget {
         return Colors.lightBlue;
       case NotificationCategory.fridge:
         return Colors.cyan;
+      case NotificationCategory.routine:
+        return Colors.teal;
     }
   }
 }

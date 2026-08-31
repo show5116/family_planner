@@ -1,0 +1,39 @@
+{
+  "name": "가계부",
+  "outDir": "docs/manual/household/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "화면 이동은 반드시 앱 내 탭으로 합니다. /household/recurring 같은 경로로 직접 goto하면 그룹 컨텍스트가 초기화되어 목록이 비어 보입니다. 소비처·예산은 '더보기' 메뉴 안에 있습니다.",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 15000 },
+
+    { "action": "goto", "path": "/household", "wait": 13000 },
+    { "action": "shot", "name": "01-main", "caption": "가계부 메인 — 월 요약(총 입금·총 지출·잔액)과 예산 사용률" },
+
+    { "action": "scroll", "dy": 600, "wait": 2000 },
+    { "action": "shot", "name": "02-expense-list", "caption": "날짜별 지출 목록 — 카테고리·결제수단·소비처가 함께 표시됩니다" },
+    { "action": "scroll", "dy": -600, "wait": 2000 },
+
+    { "action": "tapFab", "wait": 6000 },
+    { "action": "shot", "name": "03-expense-form", "caption": "지출 등록 — 금액, 카테고리, 날짜, 결제 수단을 입력합니다" },
+    { "action": "back", "wait": 5000 },
+
+    { "action": "tap", "label": "고정 내역", "wait": 6000 },
+    { "action": "shot", "name": "04-recurring", "caption": "고정 내역 — 지출 합계와 카테고리별 분포, '가변' 배지가 붙은 변동 고정지출" },
+    { "action": "back", "wait": 5000 },
+
+    { "action": "tap", "label": "통계", "wait": 7000 },
+    { "action": "shot", "name": "05-statistics", "caption": "통계 — 입금 내역과 카테고리별 지출" },
+    { "action": "scroll", "dy": 700, "wait": 2000 },
+    { "action": "shot", "name": "06-statistics-category", "caption": "카테고리별 지출 상세 — 건수와 예산 소진율" },
+    { "action": "back", "wait": 5000 },
+
+    { "action": "tap", "label": "더보기", "wait": 3500 },
+    { "action": "shot", "name": "07-more-menu", "caption": "더보기 메뉴 — 예산 설정, 소비처 관리 등" },
+    { "action": "tap", "label": "소비처 관리", "wait": 6000 },
+    { "action": "shot", "name": "08-merchants", "caption": "소비처 관리 — 자주 쓰는 소비처와 직접 등록한 소비처" },
+    { "action": "back", "wait": 5000 }
+  ]
+}

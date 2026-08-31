@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
+import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
 
 /// 기념일 생성/수정 다이얼로그
 class AnniversaryFormDialog extends ConsumerStatefulWidget {
@@ -23,10 +24,8 @@ class AnniversaryFormDialog extends ConsumerStatefulWidget {
   }) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AnniversaryFormDialog(
-        groupId: groupId,
-        anniversary: anniversary,
-      ),
+      builder: (ctx) =>
+          AnniversaryFormDialog(groupId: groupId, anniversary: anniversary),
     );
     return result ?? false;
   }
@@ -36,8 +35,7 @@ class AnniversaryFormDialog extends ConsumerStatefulWidget {
       _AnniversaryFormDialogState();
 }
 
-class _AnniversaryFormDialogState
-    extends ConsumerState<AnniversaryFormDialog> {
+class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
   late final TextEditingController _titleController;
   late DateTime _selectedDate;
   String? _emoji;
@@ -79,16 +77,17 @@ class _AnniversaryFormDialogState
   Future<void> _submit() async {
     final title = _titleController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('기념일 이름을 입력해 주세요')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('기념일 이름을 입력해 주세요')));
       return;
     }
 
     setState(() => _isSubmitting = true);
 
-    final notifier =
-        ref.read(anniversaryManagementProvider(widget.groupId).notifier);
+    final notifier = ref.read(
+      anniversaryManagementProvider(widget.groupId).notifier,
+    );
 
     final milestoneConfig = (_every100Days || _everyYear)
         ? MilestoneConfig(every100Days: _every100Days, everyYear: _everyYear)
@@ -146,41 +145,15 @@ class _AnniversaryFormDialogState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 이모지 + 이름
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 이모지 버튼
-                InkWell(
-                  onTap: _pickEmoji,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                  child: Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      _emoji ?? '🎂',
-                      style: const TextStyle(fontSize: 26),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSizes.spaceM),
-                // 이름
-                Expanded(
-                  child: TextField(
-                    controller: _titleController,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      labelText: '기념일 이름',
-                      hintText: '예: 결혼기념일',
-                    ),
-                    textInputAction: TextInputAction.done,
-                  ),
-                ),
-              ],
+            EmojiPickerField(
+              selectedEmoji: _emoji,
+              placeholderIcon: Icons.cake_outlined,
+              onEmojiChanged: (emoji) => setState(() => _emoji = emoji),
+              controller: _titleController,
+              autofocus: true,
+              labelText: '기념일 이름',
+              hintText: '예: 결혼기념일',
+              textInputAction: TextInputAction.done,
             ),
             const SizedBox(height: AppSizes.spaceL),
             // 날짜 선택
@@ -238,7 +211,9 @@ class _AnniversaryFormDialogState
       ),
       actions: [
         TextButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(false),
+          onPressed: _isSubmitting
+              ? null
+              : () => Navigator.of(context).pop(false),
           child: const Text('취소'),
         ),
         FilledButton(
@@ -253,43 +228,5 @@ class _AnniversaryFormDialogState
         ),
       ],
     );
-  }
-
-  Future<void> _pickEmoji() async {
-    // 간단한 이모지 선택 — 자주 쓰는 기념일 이모지 목록
-    const emojis = [
-      '🎂', '💑', '💍', '💕', '🥂', '🎊', '🎉', '❤️',
-      '👨‍👩‍👧', '👨‍👩‍👦', '🏠', '✈️', '🎓', '🌸', '🎁', '⭐',
-    ];
-    final picked = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('이모지 선택'),
-        contentPadding: const EdgeInsets.all(AppSizes.spaceM),
-        content: Wrap(
-          spacing: AppSizes.spaceS,
-          runSpacing: AppSizes.spaceS,
-          children: emojis
-              .map(
-                (e) => InkWell(
-                  onTap: () => Navigator.of(ctx).pop(e),
-                  borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.spaceS),
-                    child: Text(e, style: const TextStyle(fontSize: 28)),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(null),
-            child: const Text('취소'),
-          ),
-        ],
-      ),
-    );
-    if (picked != null) setState(() => _emoji = picked);
   }
 }

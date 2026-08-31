@@ -9,11 +9,9 @@ class _TransferDetail {
   DateTime? expiresAt;
   int alertDays;
 
-  _TransferDetail({
-    required this.cartItem,
-    required this.storageId,
-  })  : quantity = TextEditingController(text: cartItem.quantity.toString()),
-        alertDays = 3;
+  _TransferDetail({required this.cartItem, required this.storageId})
+    : quantity = TextEditingController(text: cartItem.quantity.toString()),
+      alertDays = 3;
 
   void dispose() {
     quantity.dispose();
@@ -59,8 +57,8 @@ class _CompleteShoppingDialogState
     final total = widget.items
         .where((item) => !_excludedSet.contains(item.id))
         .fold<double>(0, (sum, item) {
-      return sum + (widget.initialPrices[item.id] ?? 0);
-    });
+          return sum + (widget.initialPrices[item.id] ?? 0);
+        });
     if (total > 0) {
       _amountController.text = total.toInt().toString();
     }
@@ -93,10 +91,7 @@ class _CompleteShoppingDialogState
       if (_excludedSet.contains(item.id)) continue;
       final storageId = _transferMap[item.id];
       if (storageId != null) {
-        _details.add(_TransferDetail(
-          cartItem: item,
-          storageId: storageId,
-        ));
+        _details.add(_TransferDetail(cartItem: item, storageId: storageId));
       }
     }
     setState(() => _isStep2 = true);
@@ -109,31 +104,37 @@ class _CompleteShoppingDialogState
 
       final transfers = _isStep2
           ? _details
-              .map((d) => TransferItemDto(
+                .map(
+                  (d) => TransferItemDto(
                     cartItemId: d.cartItem.id,
                     storageLocationId: d.storageId,
-                    quantity: int.tryParse(d.quantity.text) ?? d.cartItem.quantity,
+                    quantity:
+                        int.tryParse(d.quantity.text) ?? d.cartItem.quantity,
                     price: widget.initialPrices[d.cartItem.id],
                     expiresAt: d.expiresAt != null
                         ? DateFormat('yyyy-MM-dd').format(d.expiresAt!)
                         : null,
                     alertDaysBefore: d.expiresAt != null ? d.alertDays : null,
-                  ))
-              .toList()
+                  ),
+                )
+                .toList()
           : _transferMap.entries
-              .where((e) => e.value != null && !_excludedSet.contains(e.key))
-              .map((e) => TransferItemDto(
+                .where((e) => e.value != null && !_excludedSet.contains(e.key))
+                .map(
+                  (e) => TransferItemDto(
                     cartItemId: e.key,
                     storageLocationId: e.value!,
                     price: widget.initialPrices[e.key],
-                  ))
-              .toList();
+                  ),
+                )
+                .toList();
 
       ShoppingExpenseDto? expense;
       if (_addExpense) {
         // amount를 직접 입력하지 않으면 null → 백엔드가 품목별 price 합계로 자동 계산
         final amount = double.tryParse(
-            _amountController.text.replaceAll(',', '').trim());
+          _amountController.text.replaceAll(',', '').trim(),
+        );
         expense = ShoppingExpenseDto(
           amount: (amount != null && amount > 0) ? amount : null,
           paymentMethod: _paymentMethod,
@@ -146,13 +147,17 @@ class _CompleteShoppingDialogState
         );
       }
 
-      await ref.read(cartProvider.notifier).complete(CompleteCartDto(
-            groupId: groupId ?? '',
-            completedAt: _completedAt.toUtc().toIso8601String(),
-            transfers: transfers,
-            excludes: _excludedSet.isEmpty ? null : _excludedSet.toList(),
-            expense: expense,
-          ));
+      await ref
+          .read(cartProvider.notifier)
+          .complete(
+            CompleteCartDto(
+              groupId: groupId ?? '',
+              completedAt: _completedAt.toUtc().toIso8601String(),
+              transfers: transfers,
+              excludes: _excludedSet.isEmpty ? null : _excludedSet.toList(),
+              expense: expense,
+            ),
+          );
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
@@ -167,8 +172,9 @@ class _CompleteShoppingDialogState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
         setState(() => _loading = false);
       } else {
         _loading = false;
@@ -197,7 +203,10 @@ class _CompleteShoppingDialogState
           children: [
             // 핸들
             Padding(
-              padding: const EdgeInsets.only(top: AppSizes.spaceM, bottom: AppSizes.spaceS),
+              padding: const EdgeInsets.only(
+                top: AppSizes.spaceM,
+                bottom: AppSizes.spaceS,
+              ),
               child: Center(
                 child: Container(
                   width: 36,
@@ -242,7 +251,11 @@ class _CompleteShoppingDialogState
                   AppSizes.spaceL,
                 ),
                 child: _isStep2
-                    ? _Step2Content(details: _details, l10n: l10n, completedAt: _completedAt)
+                    ? _Step2Content(
+                        details: _details,
+                        l10n: l10n,
+                        completedAt: _completedAt,
+                      )
                     : _Step1Content(
                         items: widget.items,
                         transferMap: _transferMap,
@@ -258,17 +271,17 @@ class _CompleteShoppingDialogState
                         onTransferChanged: (id, storageId) =>
                             setState(() => _transferMap[id] = storageId),
                         onExcludeToggled: (id) => setState(() {
-                              if (_excludedSet.contains(id)) {
-                                _excludedSet.remove(id);
-                              } else {
-                                _excludedSet.add(id);
-                              }
-                              _syncAmountFromPrices();
-                            }),
+                          if (_excludedSet.contains(id)) {
+                            _excludedSet.remove(id);
+                          } else {
+                            _excludedSet.add(id);
+                          }
+                          _syncAmountFromPrices();
+                        }),
                         onAddExpenseChanged: (v) => setState(() {
-                              _addExpense = v;
-                              if (v) _syncAmountFromPrices();
-                            }),
+                          _addExpense = v;
+                          if (v) _syncAmountFromPrices();
+                        }),
                         onPaymentMethodChanged: (v) =>
                             setState(() => _paymentMethod = v),
                         onMerchantChanged: (id) =>
@@ -289,7 +302,9 @@ class _CompleteShoppingDialogState
                 children: [
                   if (_isStep2)
                     TextButton(
-                      onPressed: _loading ? null : () => setState(() => _isStep2 = false),
+                      onPressed: _loading
+                          ? null
+                          : () => setState(() => _isStep2 = false),
                       child: Text(l10n.common_back),
                     ),
                   if (_isStep2) const SizedBox(width: AppSizes.spaceS),
@@ -311,10 +326,13 @@ class _CompleteShoppingDialogState
                           ? const SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2))
-                          : Text(_isStep2 || !hasTransfer
-                              ? l10n.fridge_cart_complete
-                              : l10n.common_next),
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(
+                              _isStep2 || !hasTransfer
+                                  ? l10n.fridge_cart_complete
+                                  : l10n.common_next,
+                            ),
                     ),
                   ),
                 ],
@@ -374,24 +392,28 @@ class _Step1Content extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.fridge_cart_complete_transfer_hint,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.outline)),
+        Text(
+          l10n.fridge_cart_complete_transfer_hint,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.outline,
+          ),
+        ),
         const SizedBox(height: AppSizes.spaceS),
-        ...items.map((item) => _TransferRow(
-              item: item,
-              storages: storages,
-              selectedStorageId: transferMap[item.id],
-              excluded: excludedSet.contains(item.id),
-              onChanged: (id) => onTransferChanged(item.id, id),
-              onExcludeToggled: () => onExcludeToggled(item.id),
-              l10n: l10n,
-            )),
+        ...items.map(
+          (item) => _TransferRow(
+            item: item,
+            storages: storages,
+            selectedStorageId: transferMap[item.id],
+            excluded: excludedSet.contains(item.id),
+            onChanged: (id) => onTransferChanged(item.id, id),
+            onExcludeToggled: () => onExcludeToggled(item.id),
+            l10n: l10n,
+          ),
+        ),
         const Divider(height: AppSizes.spaceL),
         ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text('장보기 날짜',
-              style: Theme.of(context).textTheme.bodyMedium),
+          title: Text('장보기 날짜', style: Theme.of(context).textTheme.bodyMedium),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -423,15 +445,17 @@ class _Step1Content extends ConsumerWidget {
         if (addExpense) ...[
           TextField(
             controller: amountController,
-            decoration:
-                InputDecoration(labelText: l10n.fridge_cart_complete_amount),
+            decoration: InputDecoration(
+              labelText: l10n.fridge_cart_complete_amount,
+            ),
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: AppSizes.spaceS),
           TextField(
             controller: descController,
             decoration: InputDecoration(
-                labelText: l10n.fridge_cart_complete_description),
+              labelText: l10n.fridge_cart_complete_description,
+            ),
           ),
           const SizedBox(height: AppSizes.spaceS),
           _MerchantSelector(
@@ -440,11 +464,11 @@ class _Step1Content extends ConsumerWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           SegmentedButton<PaymentMethod>(
+            showSelectedIcon: false,
             segments: const [
               ButtonSegment(value: PaymentMethod.card, label: Text('카드')),
               ButtonSegment(value: PaymentMethod.cash, label: Text('현금')),
-              ButtonSegment(
-                  value: PaymentMethod.transfer, label: Text('이체')),
+              ButtonSegment(value: PaymentMethod.transfer, label: Text('이체')),
             ],
             selected: {paymentMethod},
             onSelectionChanged: (s) => onPaymentMethodChanged(s.first),
@@ -513,7 +537,9 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
       // storageType 일치 우선 → storageType null(무관) → 전체 fallback
       ExpiryPresetModel? match;
       if (storageType != null) {
-        match = best(presets.where((p) => p.storageType == storageType && hits(p)));
+        match = best(
+          presets.where((p) => p.storageType == storageType && hits(p)),
+        );
       }
       match ??= best(presets.where((p) => p.storageType == null && hits(p)));
       match ??= best(presets.where(hits));
@@ -540,7 +566,9 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
   }
 
   Future<void> _openReferenceSelector(
-      _TransferDetail detail, List<StorageModel> storages) async {
+    _TransferDetail detail,
+    List<StorageModel> storages,
+  ) async {
     final storageType = storages
         .where((s) => s.id == detail.storageId)
         .map((s) => s.type)
@@ -607,13 +635,15 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
               // ── 요약 행 (항상 표시) ──
               ListTile(
                 onTap: () => _toggle(id),
-                title: Text(d.cartItem.name,
-                    style: Theme.of(context).textTheme.bodyLarge),
+                title: Text(
+                  d.cartItem.name,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
                 subtitle: Text(
                   subtitle,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
                 trailing: Icon(
                   isExpanded
@@ -643,8 +673,9 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                       TextField(
                         controller: d.quantity,
                         decoration: InputDecoration(
-                            labelText: l10n.fridge_item_quantity,
-                            isDense: true),
+                          labelText: l10n.fridge_item_quantity,
+                          isDense: true,
+                        ),
                         keyboardType: TextInputType.number,
                         onChanged: (_) => setState(() {}),
                       ),
@@ -654,7 +685,8 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                         dense: true,
                         subtitle: Text(
                           l10n.fridge_item_expires_at,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
                                 color: Theme.of(context).colorScheme.outline,
                               ),
                         ),
@@ -662,14 +694,12 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                           d.expiresAt != null
                               ? DateFormat('yyyy-MM-dd').format(d.expiresAt!)
                               : '날짜 선택',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: d.expiresAt != null
-                                        ? null
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: d.expiresAt != null
+                                    ? null
+                                    : Theme.of(context).colorScheme.outline,
+                              ),
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -682,28 +712,31 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                               ),
                             IconButton(
                               icon: const Icon(Icons.search, size: 18),
-                              onPressed: () => _openReferenceSelector(d, storages),
+                              onPressed: () =>
+                                  _openReferenceSelector(d, storages),
                             ),
-                            const Icon(Icons.calendar_today_outlined,
-                                size: 18),
+                            const Icon(Icons.calendar_today_outlined, size: 18),
                           ],
                         ),
                         onTap: () => _pickDate(d),
                       ),
-                      if (d.expiresAt == null && _suggestions[d.cartItem.id] != null)
+                      if (d.expiresAt == null &&
+                          _suggestions[d.cartItem.id] != null)
                         _SuggestionChip(
                           days: _suggestions[d.cartItem.id]!,
                           onApply: () => setState(() {
                             d.expiresAt = widget.completedAt.add(
-                                Duration(days: _suggestions[d.cartItem.id]!));
+                              Duration(days: _suggestions[d.cartItem.id]!),
+                            );
                           }),
                         ),
                       if (d.expiresAt != null)
                         Row(
                           children: [
-                            Text(l10n.fridge_item_alert_days(d.alertDays),
-                                style:
-                                    Theme.of(context).textTheme.bodySmall),
+                            Text(
+                              l10n.fridge_item_alert_days(d.alertDays),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                             Expanded(
                               child: Slider(
                                 value: d.alertDays.toDouble(),
@@ -783,7 +816,9 @@ class _TransferRow extends StatelessWidget {
                       '$priceText원',
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.outline,
-                        decoration: excluded ? TextDecoration.lineThrough : null,
+                        decoration: excluded
+                            ? TextDecoration.lineThrough
+                            : null,
                       ),
                     ),
                 ],
@@ -794,19 +829,25 @@ class _TransferRow extends StatelessWidget {
             FocusDismissDropdown(
               child: DropdownButton<String?>(
                 value: selectedStorageId,
-                hint: Text(l10n.fridge_cart_skip_transfer,
-                    style: textTheme.bodySmall),
+                hint: Text(
+                  l10n.fridge_cart_skip_transfer,
+                  style: textTheme.bodySmall,
+                ),
                 underline: const SizedBox.shrink(),
                 items: [
                   DropdownMenuItem<String?>(
                     value: null,
-                    child: Text(l10n.fridge_cart_skip_transfer,
-                        style: textTheme.bodySmall),
+                    child: Text(
+                      l10n.fridge_cart_skip_transfer,
+                      style: textTheme.bodySmall,
+                    ),
                   ),
-                  ...storages.map((s) => DropdownMenuItem<String?>(
-                        value: s.id,
-                        child: Text(s.name, style: textTheme.bodySmall),
-                      )),
+                  ...storages.map(
+                    (s) => DropdownMenuItem<String?>(
+                      value: s.id,
+                      child: Text(s.name, style: textTheme.bodySmall),
+                    ),
+                  ),
                 ],
                 onChanged: onChanged,
               ),
@@ -820,11 +861,11 @@ class _TransferRow extends StatelessWidget {
 // ── 소비처 선택 ───────────────────────────────────────────────────────────────────
 
 // 장보기 그룹 기준으로 소비처를 가져오는 전용 provider (householdSelectedGroupIdProvider와 무관)
-final _shoppingMerchantsProvider =
-    FutureProvider.autoDispose.family<List<MerchantModel>, String>(
-  (ref, groupId) =>
-      ref.watch(householdRepositoryProvider).getMerchants(groupId: groupId),
-);
+final _shoppingMerchantsProvider = FutureProvider.autoDispose
+    .family<List<MerchantModel>, String>(
+      (ref, groupId) =>
+          ref.watch(householdRepositoryProvider).getMerchants(groupId: groupId),
+    );
 
 class _MerchantSelector extends ConsumerWidget {
   final String? selectedId;
@@ -858,7 +899,9 @@ class _MerchantSelector extends ConsumerWidget {
         child: FocusDismissDropdown(
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String?>(
-              value: merchants.any((m) => m.id == selectedId) ? selectedId : null,
+              value: merchants.any((m) => m.id == selectedId)
+                  ? selectedId
+                  : null,
               isExpanded: true,
               isDense: true,
               hint: Text(
@@ -905,7 +948,9 @@ class _SuggestionChip extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(top: AppSizes.spaceXS),
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.spaceS, vertical: AppSizes.spaceXS),
+          horizontal: AppSizes.spaceS,
+          vertical: AppSizes.spaceXS,
+        ),
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
@@ -918,9 +963,9 @@ class _SuggestionChip extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               '$days일 추천  ·  $dateStr 까지  →  적용',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurface,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: colorScheme.onSurface),
             ),
           ],
         ),

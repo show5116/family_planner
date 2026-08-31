@@ -71,6 +71,18 @@ class EnvironmentConfig {
   /// 디버그 모드 여부
   static bool get isDebugMode => isLocal || isDevelopment;
 
+  /// 테스트 계정 로그인 사용 가능 여부 (local/development 전용, production 제외)
+  static bool get isTestAccountLoginEnabled => isLocal || isDevelopment;
+
+  /// 테스트 계정(그룹 소유자) 이메일 (local/development 전용)
+  static const String testOwnerAccountEmail = 'test-owner@familyplanner.test';
+
+  /// 테스트 계정(그룹 멤버) 이메일 (local/development 전용)
+  static const String testMemberAccountEmail = 'test-member@familyplanner.test';
+
+  /// 테스트 계정 공통 비밀번호 (local/development 전용)
+  static const String testAccountPassword = 'Test1234!';
+
   // ========== OAuth 설정 ==========
 
   /// Google OAuth 웹 클라이언트 ID

@@ -18,7 +18,7 @@ Future<LatLon> getWebLocation() async {
     }.toJS,
     (web.GeolocationPositionError err) {
       debugPrint('⚠️ [Weather] 위치 권한 거부 — 서울 기본 좌표 사용 (${err.message})');
-      completer.complete(const LatLon(lat: 37.5665, lon: 126.9780));
+      completer.complete(const LatLon(lat: 37.5665, lon: 126.9780, isFallback: true));
     }.toJS,
   );
 
@@ -26,7 +26,7 @@ Future<LatLon> getWebLocation() async {
     const Duration(seconds: 10),
     onTimeout: () {
       debugPrint('⚠️ [Weather] 위치 조회 타임아웃 — 서울 기본 좌표 사용');
-      return const LatLon(lat: 37.5665, lon: 126.9780);
+      return const LatLon(lat: 37.5665, lon: 126.9780, isFallback: true);
     },
   );
 }

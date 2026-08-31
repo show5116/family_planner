@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_heatmap_calendar.dart';
+import 'package:family_planner/features/main/routine/presentation/widgets/routine_weekly_strip.dart';
+import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/shared/widgets/app_error_state.dart';
+
+/// 루틴 상세 - 히트맵(달력) 탭
+class RoutineHeatmapTab extends ConsumerStatefulWidget {
+  const RoutineHeatmapTab({super.key, required this.routine});
+
+  final Routine routine;
+
+  @override
+  ConsumerState<RoutineHeatmapTab> createState() => _RoutineHeatmapTabState();
+}
+
+class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
+  late DateTime _from;
+  late DateTime _to;
+
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    _setRangeForMonth(DateTime(now.year, now.month));
+  }
+
+  void _setRangeForMonth(DateTime month) {
+    _from = DateTime(month.year, month.month, 1);
+    _to = DateTime(month.year, month.month + 1, 0);
+  }
+
+  String _fmt(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  Color? _accentColor() {
+    if (widget.routine.color == null) return null;
+    return AppColors.parseHex(widget.routine.color);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final heatmapProviderArg = routineHeatmapProvider(
+      widget.routine.id,
+      fromDate: _fmt(_from),
+      toDate: _fmt(_to),
+    );
+    final heatmapAsync = ref.watch(heatmapProviderArg);
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM,
+        AppSizes.spaceM + MediaQuery.paddingOf(context).bottom,
+      ),
+      child: heatmapAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => AppErrorState(
+          error: error,
+          title: l10n.routine_error_generic,
+          onRetry: () => ref.invalidate(heatmapProviderArg),
+        ),
+        data: (heatmap) {
+          final checkedDates = heatmap.checkedDates
+              .map((s) => DateTime.parse(s))
+              .toSet();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RoutineHeatmapCalendar(
+                checkedDates: checkedDates,
+                accentColor: _accentColor(),
+                startDate: widget.routine.startDate,
+                onMonthChanged: (month) {
+                  setState(() => _setRangeForMonth(month));
+                },
+              ),
+              const SizedBox(height: AppSizes.spaceL),
+              RoutineWeeklyStrip(
+                routineId: widget.routine.id,
+                targetCount: widget.routine.targetCount,
+                accentColor: _accentColor(),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}

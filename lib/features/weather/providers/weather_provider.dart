@@ -15,7 +15,10 @@ class LatLon {
   final double lat;
   final double lon;
 
-  const LatLon({required this.lat, required this.lon});
+  /// GPS 조회 실패로 기본 좌표(서울)를 사용했는지 여부
+  final bool isFallback;
+
+  const LatLon({required this.lat, required this.lon, this.isFallback = false});
 }
 
 /// 마지막 날씨 조회 시각 (앱 재개 시 만료 여부 판단에 사용)

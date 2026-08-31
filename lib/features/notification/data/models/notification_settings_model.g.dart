@@ -19,6 +19,8 @@ _$NotificationSettingsModelImpl _$$NotificationSettingsModelImplFromJson(
   systemEnabled: json['systemEnabled'] as bool? ?? true,
   weatherEnabled: json['weatherEnabled'] as bool? ?? true,
   weatherAlertHour: (json['weatherAlertHour'] as num?)?.toInt() ?? 7,
+  routineEnabled: json['routineEnabled'] as bool? ?? true,
+  routineReminderHour: (json['routineReminderHour'] as num?)?.toInt() ?? 21,
 );
 
 Map<String, dynamic> _$$NotificationSettingsModelImplToJson(
@@ -34,4 +36,6 @@ Map<String, dynamic> _$$NotificationSettingsModelImplToJson(
   'systemEnabled': instance.systemEnabled,
   'weatherEnabled': instance.weatherEnabled,
   'weatherAlertHour': instance.weatherAlertHour,
+  'routineEnabled': instance.routineEnabled,
+  'routineReminderHour': instance.routineReminderHour,
 };

@@ -143,6 +143,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get auth_or => '或';
 
   @override
+  String get auth_testAccountLoginOwner => '使用测试账号登录（群组所有者）';
+
+  @override
+  String get auth_testAccountLoginMember => '使用测试账号登录（群组成员）';
+
+  @override
   String get auth_emailHint => '请输入邮箱';
 
   @override
@@ -3819,6 +3825,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get weather_dustUltraFine => 'PM2.5';
 
   @override
+  String get weather_fallbackLocationNotice => '无法获取当前位置，正在显示首尔的天气';
+
+  @override
+  String get weather_enableLocationAction => '允许位置权限';
+
+  @override
   String get investment_widgetTitle => '投资指标';
 
   @override
@@ -4413,4 +4425,933 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get widgetSettings_anniversarySummaryDesc => '显示即将到来的纪念日和倒计时';
+
+  @override
+  String get subscription_manage_title => '订阅管理';
+
+  @override
+  String get subscription_screen_title => '订阅管理';
+
+  @override
+  String get subscription_current_plan_label => '当前套餐';
+
+  @override
+  String get subscription_active_status_label => '活跃状态';
+
+  @override
+  String get subscription_active => '活跃';
+
+  @override
+  String get subscription_inactive => '未激活';
+
+  @override
+  String get subscription_expires_at_label => '到期日';
+
+  @override
+  String get subscription_products_section_title => '订阅商品';
+
+  @override
+  String get subscription_purchase_button => '订阅';
+
+  @override
+  String get subscription_restore_button => '恢复购买';
+
+  @override
+  String get subscription_purchase_success => '订阅已完成。';
+
+  @override
+  String get subscription_verify_failed_title => '购买验证失败';
+
+  @override
+  String get subscription_verify_failed_message => '该购买已被使用或验证失败。如问题持续，请联系客服。';
+
+  @override
+  String get subscription_verify_network_error => '发生网络错误。请稍后重试。';
+
+  @override
+  String get subscription_restore_success => '订阅已恢复。';
+
+  @override
+  String get subscription_product_not_found => '订阅商品正在准备中。请稍后重试。';
+
+  @override
+  String get subscription_ad_free_benefit => '不再显示应用内的所有广告。';
+
+  @override
+  String get subscription_period_monthly => '按月订阅';
+
+  @override
+  String get subscription_auto_renew_notice =>
+      '订阅将每月自动续期，若未在当前订阅期结束前 24 小时取消，将按相同金额扣费。确认购买时将从您的商店账户扣款。您可以随时在设备的商店账户设置中管理或取消订阅。';
+
+  @override
+  String get subscription_manage_subscription_button => '管理或取消订阅';
+
+  @override
+  String get subscription_terms_button => '服务条款';
+
+  @override
+  String get subscription_privacy_button => '隐私政策';
+
+  @override
+  String get subscription_manage_launch_failed => '无法打开商店订阅设置。';
+
+  @override
+  String get subscription_compare_title => '方案对比';
+
+  @override
+  String get subscription_plan_current => '使用中';
+
+  @override
+  String get subscription_benefit_all_features => '可使用全部功能';
+
+  @override
+  String get subscription_benefit_ads_shown => '会显示广告';
+
+  @override
+  String get subscription_benefit_no_ads => '无广告使用';
+
+  @override
+  String get subscription_benefit_no_reward_ads => '使用功能无需观看广告';
+
+  @override
+  String get subscription_benefit_cancel_anytime => '可随时取消';
+
+  @override
+  String get subscription_free_plan_price => '免费';
+
+  @override
+  String get routine_title => '日常习惯';
+
+  @override
+  String get routine_date_today => '今天';
+
+  @override
+  String get routine_reorder => '排序';
+
+  @override
+  String get routine_reorder_done => '完成';
+
+  @override
+  String get routine_list_empty => '还没有习惯';
+
+  @override
+  String get routine_list_empty_subtitle => '添加一个想每天坚持的习惯\n持续打卡累积连续记录吧';
+
+  @override
+  String get routine_add => '添加习惯';
+
+  @override
+  String get routine_edit => '编辑习惯';
+
+  @override
+  String get routine_delete => '删除习惯';
+
+  @override
+  String get routine_delete_confirm => '确定要删除这个习惯吗?';
+
+  @override
+  String get routine_field_title => '标题';
+
+  @override
+  String get routine_field_title_hint => '例如: 晨间拉伸';
+
+  @override
+  String get routine_field_title_required => '请输入标题';
+
+  @override
+  String get routine_field_title_too_long => '标题请控制在100字以内';
+
+  @override
+  String get routine_field_emoji => '表情符号';
+
+  @override
+  String get routine_field_emoji_custom => '自定义输入';
+
+  @override
+  String get routine_field_emoji_helper => '请输入一个表情符号(例如: 🏃)';
+
+  @override
+  String get routine_field_color => '颜色';
+
+  @override
+  String get routine_field_target_count => '每周目标次数';
+
+  @override
+  String get routine_field_target_count_month => '每月目标次数';
+
+  @override
+  String get routine_this_month_progress => '本月进度';
+
+  @override
+  String get routine_field_start_date => '开始日期';
+
+  @override
+  String get routine_field_end_date => '结束日期（可选）';
+
+  @override
+  String get routine_field_end_date_none => '无限期';
+
+  @override
+  String get routine_field_group => '所属日程';
+
+  @override
+  String get routine_field_group_none => '无(独立习惯)';
+
+  @override
+  String get routine_save => '保存';
+
+  @override
+  String get routine_check => '打卡';
+
+  @override
+  String get routine_uncheck => '取消打卡';
+
+  @override
+  String get routine_check_already => '今天已经打过卡了';
+
+  @override
+  String get routine_check_future_date => '无法为未来日期打卡';
+
+  @override
+  String get routine_check_error => '打卡失败';
+
+  @override
+  String routine_streak_celebration(int days) {
+    return '🔥 连续$days天达成!';
+  }
+
+  @override
+  String get routine_tab_heatmap => '日历';
+
+  @override
+  String get routine_tab_stats => '统计';
+
+  @override
+  String get routine_streak_current_days => '当前连续天数';
+
+  @override
+  String get routine_streak_longest_days => '最长连续天数';
+
+  @override
+  String get routine_streak_current_weeks => '当前连续周数';
+
+  @override
+  String get routine_streak_longest_weeks => '最长连续周数';
+
+  @override
+  String get routine_streak_current_months => '当前连续月';
+
+  @override
+  String get routine_streak_longest_months => '最长连续月';
+
+  @override
+  String get routine_this_month_progress_label => '本月进度';
+
+  @override
+  String get routine_badges_goal_subtitle => '通过完成今日目标获得的徽章';
+
+  @override
+  String get routine_daily_goal_included_badge => '计入今日目标的习惯';
+
+  @override
+  String get routine_daily_goal_filter_on => '仅显示目标习惯';
+
+  @override
+  String get routine_daily_goal_filter_hint => '点击可只看目标习惯';
+
+  @override
+  String get routine_coach_add_title => '创建习惯';
+
+  @override
+  String get routine_coach_add_desc => '把想每天重复的事登记为习惯吧。\n也可以把多个习惯组成一个例程。';
+
+  @override
+  String get routine_coach_goal_title => '今日目标';
+
+  @override
+  String get routine_coach_goal_desc =>
+      '不必完成全部习惯。\n只要达到设定的数量，这一天就算成功。\n连续达成还能获得徽章。';
+
+  @override
+  String get routine_coach_flag_title => '计入目标的习惯';
+
+  @override
+  String get routine_coach_flag_desc => '带旗帜的习惯会计入今日目标。\n点击上方的目标条，可以只看这些习惯。';
+
+  @override
+  String get routine_coach_check_title => '打卡';
+
+  @override
+  String get routine_coach_check_desc => '点击圆圈标记完成。\n记录型习惯还能填写时间或次数。';
+
+  @override
+  String get routine_coach_demo_habit_1 => '晨间拉伸';
+
+  @override
+  String get routine_coach_demo_habit_2 => '喝2升水';
+
+  @override
+  String get routine_coach_demo_habit_3 => '阅读30分钟';
+
+  @override
+  String get routine_coach_skip => '跳过';
+
+  @override
+  String get routine_coach_together_title => '和群组一起做';
+
+  @override
+  String get routine_coach_together_desc =>
+      '可以和家人或朋友的群组共享习惯。\n互相查看情况，还能一起参加挑战。';
+
+  @override
+  String get routine_together_coach_status_title => '成员情况';
+
+  @override
+  String get routine_together_coach_status_desc =>
+      '可以看到群组成员今天完成了哪些习惯。\n点击名字还能查看详细记录。';
+
+  @override
+  String get routine_together_coach_tabs_title => '排行榜与挑战';
+
+  @override
+  String get routine_together_coach_tabs_desc =>
+      '排行榜按目标达成率排名。\n挑战可以设定期限一起冲目标，\n还能加上赌注。';
+
+  @override
+  String get routine_together_coach_settings_title => '共享设置';
+
+  @override
+  String get routine_together_coach_settings_desc =>
+      '选择让哪些群组看到你的习惯。\n标记为私密的习惯不会被群组成员看到。';
+
+  @override
+  String get routine_this_week_progress => '本周进度';
+
+  @override
+  String get routine_weekly_strip_title => '最近8周达成情况';
+
+  @override
+  String get routine_rate_period_week => '周';
+
+  @override
+  String get routine_rate_period_month => '月';
+
+  @override
+  String get routine_rate_period_custom => '自定义期间';
+
+  @override
+  String get routine_rate_achievement => '达成率';
+
+  @override
+  String get routine_share_title => '共享群组管理';
+
+  @override
+  String get routine_share_screen_desc => '所选群组的成员可以看到你的习惯和达成情况。';
+
+  @override
+  String get routine_share_private_note => '标记为私密的习惯不会被共享。';
+
+  @override
+  String get routine_share_none => '还没有共享给任何群组';
+
+  @override
+  String get routine_share_no_groups => '你还没有加入任何群组。\n请先创建或加入群组。';
+
+  @override
+  String get routine_share_saved => '已保存共享设置';
+
+  @override
+  String get routine_field_private => '私密';
+
+  @override
+  String get routine_field_private_desc => '对共享群组中的其他人隐藏这个习惯';
+
+  @override
+  String get routine_private_badge => '私密习惯';
+
+  @override
+  String get routine_share_select_group => '选择要共享的群组';
+
+  @override
+  String get routine_together_title => '一起做';
+
+  @override
+  String get routine_together_tab_status => '情况';
+
+  @override
+  String get routine_together_tab_ranking => '排行榜';
+
+  @override
+  String get routine_together_tab_challenge => '挑战';
+
+  @override
+  String get routine_challenge_create => '创建挑战';
+
+  @override
+  String get routine_challenge_edit => '编辑挑战';
+
+  @override
+  String get routine_challenge_empty => '还没有挑战。\n来创建一个和群组一起完成的目标吧。';
+
+  @override
+  String get routine_challenge_field_title => '挑战名称';
+
+  @override
+  String get routine_challenge_field_title_hint => '例：本周运动';
+
+  @override
+  String get routine_challenge_field_description => '说明';
+
+  @override
+  String get routine_challenge_field_period => '期间';
+
+  @override
+  String get routine_challenge_field_target => '目标次数';
+
+  @override
+  String routine_challenge_field_target_desc(int count) {
+    return '期间内打卡$count次即算达成';
+  }
+
+  @override
+  String get routine_challenge_field_reward => '赌注 · 惩罚';
+
+  @override
+  String get routine_challenge_field_reward_hint => '例：输的人请客';
+
+  @override
+  String get routine_challenge_status_upcoming => '未开始';
+
+  @override
+  String get routine_challenge_status_ongoing => '进行中';
+
+  @override
+  String get routine_challenge_status_ended => '已结束';
+
+  @override
+  String routine_challenge_participants(int count) {
+    return '$count人参加';
+  }
+
+  @override
+  String get routine_challenge_join => '参加';
+
+  @override
+  String get routine_challenge_leave => '取消参加';
+
+  @override
+  String get routine_challenge_leave_confirm => '要退出这个挑战吗？';
+
+  @override
+  String get routine_challenge_delete_confirm => '要删除这个挑战吗？\n参加者的记录也会一并消失。';
+
+  @override
+  String get routine_challenge_select_routine => '用哪个习惯参加？';
+
+  @override
+  String get routine_challenge_select_routine_desc =>
+      '请选择要关联到这个挑战的习惯。\n私密习惯无法参加。';
+
+  @override
+  String get routine_challenge_no_routine => '没有可以参加的习惯。\n请先创建习惯。';
+
+  @override
+  String get routine_challenge_change_routine => '更换习惯';
+
+  @override
+  String routine_challenge_progress(int checked, int target) {
+    return '$checked / $target次';
+  }
+
+  @override
+  String routine_challenge_days_left(int days) {
+    return '还剩$days天';
+  }
+
+  @override
+  String get routine_challenge_saved => '已保存挑战';
+
+  @override
+  String get routine_challenge_joined => '已参加挑战';
+
+  @override
+  String get routine_group_members_empty => '没有共享的习惯';
+
+  @override
+  String get routine_sort_order_updated => '顺序已更新';
+
+  @override
+  String get routine_error_generic => '发生错误';
+
+  @override
+  String get widgetSettings_routineSummary => '今日习惯';
+
+  @override
+  String get nav_routines => '日常习惯';
+
+  @override
+  String get routine_badges_title => '我的徽章';
+
+  @override
+  String get routine_overview_title => '统计';
+
+  @override
+  String get routine_overview_heatmap_title => '全部习惯完成情况';
+
+  @override
+  String get routine_overview_previous_period => '上一期间';
+
+  @override
+  String get routine_overview_next_period => '下一期间';
+
+  @override
+  String get routine_overview_this_week => '回到本周';
+
+  @override
+  String get routine_overview_this_month => '回到本月';
+
+  @override
+  String get routine_overview_weekly_title => '本周各习惯完成情况';
+
+  @override
+  String get routine_overview_achieved => '已达成';
+
+  @override
+  String get routine_overview_not_achieved => '未达成';
+
+  @override
+  String get routine_overview_total_checked => '总打卡次数';
+
+  @override
+  String get routine_daily_goal_title => '今日目标';
+
+  @override
+  String get routine_daily_goal_setting => '设置今日目标';
+
+  @override
+  String routine_daily_goal_count_label(int total, int count) {
+    return '$total个习惯中的$count个';
+  }
+
+  @override
+  String routine_daily_goal_encourage(int count) {
+    return '每天$count个就算成功';
+  }
+
+  @override
+  String get routine_daily_goal_exceeds_total => '目标数量超过了现有习惯数。可以添加更多习惯或降低目标';
+
+  @override
+  String routine_daily_goal_today_progress(int checked, int target) {
+    return '今日 $checked / $target';
+  }
+
+  @override
+  String get routine_daily_goal_achieved_today => '今日目标达成！';
+
+  @override
+  String routine_daily_goal_bonus(int count) {
+    return '额外 +$count';
+  }
+
+  @override
+  String routine_daily_goal_streak(int days) {
+    return '连续达成$days天';
+  }
+
+  @override
+  String routine_daily_goal_streak_longest(int days) {
+    return '最长$days天';
+  }
+
+  @override
+  String get routine_daily_goal_rate => '目标达成率';
+
+  @override
+  String routine_daily_goal_achieved_days(int achieved, int total) {
+    return '$achieved天 / $total天 达成';
+  }
+
+  @override
+  String get routine_daily_goal_saved => '目标已保存';
+
+  @override
+  String get routine_daily_goal_raise_title => '要提高目标吗？';
+
+  @override
+  String routine_daily_goal_raise_body(
+    int average,
+    int current,
+    int suggested,
+  ) {
+    return '最近两周你经常超额完成目标，平均每天完成$average个。\n\n要把每日目标从$current个提高到$suggested个吗？';
+  }
+
+  @override
+  String get routine_daily_goal_raise_accept => '提高目标';
+
+  @override
+  String get routine_daily_goal_keep => '保持现状';
+
+  @override
+  String get routine_daily_goal_lower_title => '要暂时降低目标吗？';
+
+  @override
+  String routine_daily_goal_lower_body(int current, int suggested) {
+    return '最近有点忙吗？不用勉强自己。\n\n可以把每日目标从$current个降到$suggested个，随时都能再调高。';
+  }
+
+  @override
+  String get routine_daily_goal_lower_accept => '降低目标';
+
+  @override
+  String get routine_daily_goal_included_section => '计入目标的习惯';
+
+  @override
+  String routine_daily_goal_included_summary(int included) {
+    return '$included个习惯计入目标统计';
+  }
+
+  @override
+  String get routine_daily_goal_group_daily => '每天进行的习惯';
+
+  @override
+  String get routine_daily_goal_group_periodic => '定期进行的习惯';
+
+  @override
+  String get routine_daily_goal_periodic_hint =>
+      '开启后会按每天都要完成来计算。每周3次的习惯开启后，即使完成了3次，剩余日期仍会显示为未完成';
+
+  @override
+  String get routine_daily_goal_freq_daily => '每天';
+
+  @override
+  String routine_daily_goal_freq_weekly_count(int count) {
+    return '每周$count次';
+  }
+
+  @override
+  String routine_daily_goal_freq_monthly_count(int count) {
+    return '每月$count次';
+  }
+
+  @override
+  String get routine_daily_goal_no_included => '还没有习惯计入目标。请在下方开启';
+
+  @override
+  String get routine_daily_goal_no_routines => '还没有添加习惯';
+
+  @override
+  String routine_overview_total_routines(int count) {
+    return '基于全部 $count 个习惯';
+  }
+
+  @override
+  String get routine_badges_empty => '尚未获得任何徽章';
+
+  @override
+  String get routine_badge_earned_title => '获得徽章!';
+
+  @override
+  String get routine_badge_earned_confirm => '确定';
+
+  @override
+  String get routine_leaderboard_metric_goalRate => '目标达成率';
+
+  @override
+  String get routine_leaderboard_metric_goalStreak => '连续达成';
+
+  @override
+  String routine_leaderboard_goal_days(int achieved, int total) {
+    return '$achieved天 / $total天';
+  }
+
+  @override
+  String routine_leaderboard_streak_days(int days) {
+    return '连续$days天';
+  }
+
+  @override
+  String get routine_leaderboard_empty => '没有共享习惯的群组成员';
+
+  @override
+  String get routine_group_add => '添加日程';
+
+  @override
+  String get routine_group_edit => '编辑日程';
+
+  @override
+  String get routine_group_delete => '删除日程';
+
+  @override
+  String get routine_group_delete_confirm => '确定要删除这个日程吗?\n其中的习惯不会被删除，将变为独立习惯。';
+
+  @override
+  String get routine_group_field_title_hint => '例如: 晨间日程';
+
+  @override
+  String get routine_group_save => '保存';
+
+  @override
+  String get routine_group_standalone_section_title => '独立习惯';
+
+  @override
+  String get routine_table_header_number => '编号';
+
+  @override
+  String get routine_table_header_habit => '习惯';
+
+  @override
+  String get routine_table_header_check => '打卡';
+
+  @override
+  String get routine_group_error_generic => '发生错误';
+
+  @override
+  String get routine_field_memo => '备注';
+
+  @override
+  String get routine_field_memo_hint => '为这个习惯添加说明';
+
+  @override
+  String get routine_field_importance => '重要程度';
+
+  @override
+  String get routine_importance_low => '低';
+
+  @override
+  String get routine_importance_medium => '中';
+
+  @override
+  String get routine_importance_high => '高';
+
+  @override
+  String get routine_field_time_filter => '时间段';
+
+  @override
+  String get routine_time_filter_morning => '上午';
+
+  @override
+  String get routine_time_filter_afternoon => '下午';
+
+  @override
+  String get routine_time_filter_evening => '晚上';
+
+  @override
+  String get routine_time_filter_none => '不指定';
+
+  @override
+  String get routine_field_category => '分类';
+
+  @override
+  String get routine_field_category_none => '未分类';
+
+  @override
+  String get routine_category_title => '分类';
+
+  @override
+  String get routine_category_add => '添加分类';
+
+  @override
+  String get routine_category_edit => '编辑分类';
+
+  @override
+  String get routine_category_delete => '删除分类';
+
+  @override
+  String get routine_category_delete_confirm =>
+      '确定要删除这个分类吗?\n其中的习惯不会被删除，将变为未分类。';
+
+  @override
+  String get routine_category_save => '保存';
+
+  @override
+  String get routine_category_field_title_hint => '例如: 规律生活';
+
+  @override
+  String get routine_category_error_generic => '发生错误';
+
+  @override
+  String get routine_category_empty => '还没有分类';
+
+  @override
+  String get routine_category_filter_all => '全部';
+
+  @override
+  String get routine_category_picker_title => '选择分类';
+
+  @override
+  String get routine_category_edit_mode => '编辑';
+
+  @override
+  String get routine_category_edit_mode_done => '完成';
+
+  @override
+  String get routine_category_reorder_hint => '按住手柄可调整顺序';
+
+  @override
+  String get routine_category_select_done => '选择完成';
+
+  @override
+  String get routine_category_none_selected => '选择分类';
+
+  @override
+  String get routine_field_record_type => '记录方式';
+
+  @override
+  String get routine_record_type_boolean => '简单打卡';
+
+  @override
+  String get routine_record_type_text => '文本';
+
+  @override
+  String get routine_record_type_time => '时刻';
+
+  @override
+  String get routine_record_type_numeric => '数值';
+
+  @override
+  String get routine_record_type_readonly_hint => '记录方式创建后无法更改';
+
+  @override
+  String get routine_check_dialog_title => '记录输入';
+
+  @override
+  String get routine_check_dialog_text_label => '内容';
+
+  @override
+  String get routine_check_dialog_numeric_label => '数值';
+
+  @override
+  String get routine_check_dialog_time_label => '时刻';
+
+  @override
+  String get routine_check_dialog_confirm => '打卡';
+
+  @override
+  String get routine_check_dialog_cancel => '取消';
+
+  @override
+  String get routine_status_active => '进行中';
+
+  @override
+  String get routine_status_paused => '已暂停';
+
+  @override
+  String get routine_status_ended => '已结束';
+
+  @override
+  String get routine_pause => '暂停';
+
+  @override
+  String get routine_pause_confirm => '确定要暂停这个习惯吗?\n暂停期间无法打卡。';
+
+  @override
+  String get routine_resume => '恢复';
+
+  @override
+  String get routine_resume_success => '已恢复';
+
+  @override
+  String get routine_pause_error => '暂停失败';
+
+  @override
+  String get routine_resume_error => '恢复失败';
+
+  @override
+  String get routine_end => '结束';
+
+  @override
+  String get routine_end_confirm => '确定要结束这个习惯吗?\n打卡记录将被保留。';
+
+  @override
+  String get routine_frequency_type_daily => '每天';
+
+  @override
+  String get routine_frequency_type_weekly => '每周';
+
+  @override
+  String get routine_frequency_type_monthly => '每月';
+
+  @override
+  String get routine_weekly_mode_count_only => '每周N次';
+
+  @override
+  String get routine_weekly_mode_fixed_days => '指定星期';
+
+  @override
+  String get routine_field_target_days => '重复星期';
+
+  @override
+  String get routine_day_sun => '日';
+
+  @override
+  String get routine_day_mon => '一';
+
+  @override
+  String get routine_day_tue => '二';
+
+  @override
+  String get routine_day_wed => '三';
+
+  @override
+  String get routine_day_thu => '四';
+
+  @override
+  String get routine_day_fri => '五';
+
+  @override
+  String get routine_day_sat => '六';
+
+  @override
+  String get routine_error_weekly_mode_required => '请选择每周重复方式';
+
+  @override
+  String get routine_error_weekly_target_required => '请设置每周目标次数';
+
+  @override
+  String get routine_error_fixed_days_required => '请至少选择一个重复星期';
+
+  @override
+  String get routine_error_monthly_target_required => '请设置每月目标次数';
+
+  @override
+  String get emoji_picker_more => '更多表情符号';
+
+  @override
+  String get emoji_picker_custom_selected => '已选择预设外的表情符号';
+
+  @override
+  String get emoji_picker_search_hint => '搜索表情符号';
+
+  @override
+  String get emoji_picker_no_result => '没有找到结果';
+
+  @override
+  String get emoji_picker_category_recent => '最近使用';
+
+  @override
+  String get emoji_picker_category_smileys => '表情';
+
+  @override
+  String get emoji_picker_category_animals => '动物';
+
+  @override
+  String get emoji_picker_category_foods => '食物';
+
+  @override
+  String get emoji_picker_category_travel => '旅行';
+
+  @override
+  String get emoji_picker_category_activities => '活动';
+
+  @override
+  String get emoji_picker_category_objects => '物品';
+
+  @override
+  String get emoji_picker_category_symbols => '符号';
+
+  @override
+  String get emoji_picker_category_flags => '旗帜';
 }
