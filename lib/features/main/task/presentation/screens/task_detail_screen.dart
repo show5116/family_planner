@@ -29,42 +29,24 @@ class TaskDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
-  TaskModel? _loadedTask;
-  List<TaskReminderResponse>? _reminders;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.taskId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _loadDetail());
-    }
-  }
-
-  Future<void> _loadDetail() async {
-    final taskId = widget.taskId;
-    if (taskId == null) return;
-    if (widget.task == null) {
-      setState(() => _isLoading = true);
-    }
-    try {
-      final detail = await ref.read(taskDetailProvider(taskId).future);
-      if (!mounted) return;
-      setState(() {
-        _loadedTask = detail.task;
-        _reminders = detail.reminders;
-        _isLoading = false;
-      });
-    } catch (_) {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
+  /// 삭제 후에는 상세 Provider를 구독하지 않음
+  /// (삭제된 일정을 자동 재조회하면 404가 발생하는 것을 방지)
+  bool _isDeleted = false;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final task = _loadedTask ?? widget.task;
-    if (_isLoading || task == null) {
+    final taskId = widget.taskId;
+
+    // 상세 Provider를 watch 하여 수정 후 invalidate 시 화면이 즉시 갱신되도록 함
+    final detail = (taskId != null && !_isDeleted)
+        ? ref.watch(taskDetailProvider(taskId))
+        : null;
+
+    final task = detail?.valueOrNull?.task ?? widget.task;
+    final reminders = detail?.valueOrNull?.reminders;
+
+    if (task == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.schedule_detail)),
         body: const Center(child: CircularProgressIndicator()),
@@ -212,14 +194,14 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
               const Divider(height: AppSizes.spaceXL),
             ],
 
-            if (_reminders != null && _reminders!.isNotEmpty) ...[
+            if (reminders != null && reminders.isNotEmpty) ...[
               _InfoRow(
                 icon: Icons.notifications_outlined,
                 label: l10n.schedule_reminder,
                 child: Wrap(
                   spacing: AppSizes.spaceS,
                   runSpacing: AppSizes.spaceXS,
-                  children: _reminders!.map((r) {
+                  children: reminders.map((r) {
                     return Chip(
                       label: Text(_formatReminder(r.offsetMinutes, l10n)),
                       visualDensity: VisualDensity.compact,
@@ -296,6 +278,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
         );
     if (!mounted) return;
     if (success) {
+      setState(() => _isDeleted = true);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.schedule_deleteSuccess)),
       );
