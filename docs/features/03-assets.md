@@ -33,11 +33,11 @@
 - ✅ 출금 목록 아이템 (WithdrawalListItem)
 
 ### 보유 종목 (Holding)
-- ✅ 보유 종목 섹션 (HoldingsSection) — 계좌별 종목 구성 비율
-- ✅ 보유 종목 등록/수정 시트 (HoldingFormSheet)
-- ✅ 보유 종목 기록 섹션 (HoldingRecordsSection)
+- ✅ 보유 종목 기록 섹션 (HoldingRecordsSection) — 시점별 종목 스냅샷
 - ✅ 보유 종목 기록 등록/수정 시트 (HoldingRecordFormSheet)
-- ✅ 보유 종목 순서 변경
+- ✅ 종목 기록 비교 (HoldingRecordsComparison)
+- ⚠️ 보유 종목 섹션(HoldingsSection)·등록 시트(HoldingFormSheet)·순서 변경
+  — **화면은 있으나 서버 API가 없어 동작하지 않습니다** (아래 참조)
 
 ### 미구현
 - ⬜ 가족 구성원별 자산 뷰 (userId 필터 UI) — Provider(`assetSelectedUserIdProvider`)는 준비됨
@@ -65,7 +65,7 @@
 - ✅ 전체 원금/수익금/수익률 통계 요약
 - ✅ 유형별 자산 현황
 - ✅ 자산 추이 차트 — 전체/계좌별
-- ✅ 보유 종목 관리 — 계좌별 종목 등록, 비율(ratio) 관리, 순서 변경
+- ⚠️ 보유 종목 관리 (등록·비율·순서) — 클라이언트만 구현, 서버 API 부재
 - ✅ 보유 종목 기록 — 시점별 기록 등록·수정·삭제, 기록 간 비교
 - ✅ 그룹 내 보유 종목명 자동완성 (그룹에서 쓰인 종목명 조회)
 - ✅ 금 시세 조회 (실시간 현재가)
@@ -98,11 +98,11 @@
 - ✅ 계좌별 자산 추이 `GET /assets/accounts/:id/statistics/trend`
 
 ### 보유 종목
-- ✅ 종목 목록 `GET /assets/accounts/:id/holdings`
-- ✅ 종목 등록 `POST /assets/accounts/:id/holdings`
-- ✅ 종목 수정 `PATCH /assets/accounts/:id/holdings/:holdingId`
-- ✅ 종목 삭제 `DELETE /assets/accounts/:id/holdings/:holdingId`
-- ✅ 종목 순서 변경 `PATCH /assets/accounts/:id/holdings/reorder`
+- ❌ 종목 목록 `GET /assets/accounts/:id/holdings` — **서버에 없음 (404)**
+- ❌ 종목 등록 `POST /assets/accounts/:id/holdings` — **서버에 없음 (404)**
+- ❌ 종목 수정 `PATCH /assets/accounts/:id/holdings/:holdingId` — **서버에 없음**
+- ❌ 종목 삭제 `DELETE /assets/accounts/:id/holdings/:holdingId` — **서버에 없음**
+- ❌ 종목 순서 변경 `PATCH /assets/accounts/:id/holdings/reorder` — **서버에 없음**
 - ✅ 그룹 내 종목명 목록 `GET /assets/groups/:groupId/holding-records/names`
 - ✅ 종목 기록 조회·등록 `GET|POST /assets/accounts/:id/holding-records`
 - ✅ 종목 기록 수정·삭제 `PATCH|DELETE /assets/accounts/:id/holding-records/:recordId`
@@ -146,6 +146,13 @@ lib/features/main/assets/
 - `fl_chart` — 추이·비교·원형 차트
 
 ## 노트
+- ⚠️ **보유 종목(holdings) API 5개가 서버에 존재하지 않습니다.**
+  앱은 `/assets/accounts/:id/holdings`를 GET/POST/PATCH/DELETE/reorder로 호출하지만
+  개발 서버는 404를 반환하고, [docs/api/assets.md](../api/assets.md)에도 해당
+  엔드포인트가 없습니다. 반면 종목 **기록**(holding-records)은 정상 동작합니다.
+  백엔드 구현 여부를 확인해 API를 추가하거나, 클라이언트 코드를 정리해야 합니다.
+  (관련: `asset_repository.dart`의 getHoldings/createHolding/updateHolding/
+   deleteHolding/reorderHoldings, `asset_provider.dart`)
 - 가족 구성원별 필터(`assetSelectedUserIdProvider`)는 Provider에 준비되어 있고 UI 연결만 남았습니다.
 - 보유 종목의 `ratio`는 계좌 내 비중(%)이며, 종목 기록(HoldingRecord)은 시점별 스냅샷입니다.
 - 저금통(19-savings) 중 `includeInAssets=true`인 목표가 자산 화면과 통계에 함께 집계됩니다.

@@ -1,0 +1,14 @@
+import { login, api } from './lib.mjs';
+const { accessToken: t } = await login();
+const groups = await api(t, 'GET', 'groups');
+const gid = groups.find(g => g.name === '김가네 가족').id;
+const now = new Date();
+const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+console.log('오늘:', now.toISOString().slice(0,10));
+const tasks = await api(t, 'GET', `tasks?groupIds=${gid}&limit=200`);
+const arr = tasks.data ?? [];
+console.log(`\n[일정/할일] 총 ${arr.length}건`);
+for (const x of arr.slice(0,20)) console.log(`  ${x.type.padEnd(14)} ${x.status.padEnd(11)} ${x.title}`);
+const accounts = await api(t, 'GET', `assets/accounts?groupId=${gid}`).catch(e=>e.message);
+console.log(`\n[자산 계좌] ${Array.isArray(accounts) ? accounts.length + '건' : String(accounts).slice(0,120)}`);
+if (Array.isArray(accounts)) for (const a of accounts) console.log(`  ${a.name} (${a.type ?? '-'})`);
