@@ -11,6 +11,7 @@
 - ✅ 적립 목표 생성/수정 폼 (SavingsFormScreen) - 자동 적립 토글, 자산 연동 토글
 - ✅ 전체 내역 화면 (SavingsTransactionsScreen) - 타입/월 필터, 무한 스크롤
 - ✅ 자산 탭 연동 - includeInAssets=true 목표를 자산 대시보드 계좌 목록 하단에 표시
+- ✅ 첫 진입 코치마크 (목록·상세 각각)
 
 ## 데이터 모델
 - ✅ SavingsGoalModel - `lib/features/main/savings/data/models/savings_model.dart`

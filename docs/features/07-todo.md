@@ -10,7 +10,7 @@
 - ✅ 칸반 보드 뷰 (데스크톱/태블릿 전용)
 - ✅ 리스트 뷰
 - ✅ 할일 카드 컴포넌트
-- ✅ 할일 상세 화면 (TaskFormScreen 재사용)
+- ✅ 할일 상세 화면 (TodoDetailScreen)
 - ✅ 할일 추가/수정 폼 (TaskFormScreen 재사용)
 - ✅ 드래그 앤 드롭 기능 (칸반 보드)
 - ✅ 주간 날짜 선택 바 (TodoWeekBar)
@@ -18,6 +18,12 @@
 - ✅ 모아 보기 - 날짜 섹션별 그룹핑 리스트
 - ✅ 상태 드롭다운 (PopupMenuButton - 6가지 상태)
 - ✅ 완료 포함 체크박스
+- ✅ 필터·정렬 바 (_FilterSortBar) — 상태 필터, 우선순위 필터, 정렬
+- ✅ 필터 칩 위젯 (TodoFilterChip)
+- ✅ 그룹 필터 바 (_TodoGroupFilterBar) — 볼 그룹 선택
+- ✅ 할일 검색 (_TodoSearchBar + _TodoSearchResults)
+- ✅ 빈 상태 / 에러 상태 화면
+- ✅ 첫 진입 코치마크 (_todo_onboarding)
 
 ## 데이터 모델
 - ✅ 할일 모델 (TaskModel 재사용 - 캘린더와 통합)
@@ -37,7 +43,11 @@
 - ✅ 모아 보기: 전체 할일을 날짜 섹션별로 그룹핑 표시
 - ✅ 완료 포함/숨김 필터
 - ✅ 모바일 반응형 (모바일에서는 리스트 뷰만 사용, 칸반 숨김)
-- ✅ 할일 필터링 및 정렬 (우선순위/상태별)
+- ✅ 상태 필터 (6가지 상태 중 선택)
+- ✅ 우선순위 필터 (긴급/높음/보통/낮음)
+- ✅ 정렬 (상태순 / 우선순위순 / 마감일순 / 생성일순 — TodoSortBy)
+- ✅ 그룹 필터 (볼 그룹 선택)
+- ✅ 할일 검색 (제목·설명)
 - ⬜ 완료된 할일 아카이브
 
 ## 할일 상태 (TaskStatus)
@@ -60,7 +70,7 @@
   - 기한 없음 (No Due Date)
 
 ## API 연동
-- ✅ 할일 목록 조회 API (view: 'todo', 주간 날짜 범위)
+- ✅ 할일 목록 조회 API (GET /tasks, view=todo, 주간 날짜 범위)
 - ✅ 모아 보기 전체 할일 조회 API (날짜 제한 없음)
 - ✅ 할일 추가 API
 - ✅ 할일 수정/삭제 API
@@ -74,7 +84,10 @@
 - ✅ todoSelectedDateProvider (선택된 날짜)
 - ✅ todoSelectedWeekStartProvider (주간 시작일)
 - ✅ showCompletedTodosProvider (완료 항목 표시)
+- ✅ todoFilterStatusProvider (상태 필터)
 - ✅ todoFilterPriorityProvider (우선순위 필터)
+- ✅ todoSortByProvider (정렬 — TodoSortBy: status/priority/dueDate/createdAt)
+- ✅ todoSearchActiveProvider, todoSearchQueryProvider (검색)
 
 ---
 
@@ -83,7 +96,9 @@
 - `lib/features/main/todo/presentation/widgets/todo_card.dart` - 칸반 카드
 - `lib/features/main/todo/presentation/widgets/todo_kanban_column.dart` - 칸반 컬럼
 - `lib/features/main/todo/presentation/widgets/todo_list_item.dart` - 리스트 아이템 (상태 드롭다운)
+- `lib/features/main/todo/presentation/screens/todo_detail_screen.dart` - 할일 상세
 - `lib/features/main/todo/presentation/widgets/todo_week_bar.dart` - 주간 날짜 선택 바
+- `lib/features/main/todo/presentation/widgets/todo_filter_chip.dart` - 필터 칩
 - `lib/features/main/task/providers/task_provider.dart` - Provider (TodoTasks, TodoOverviewTasks 등)
 - `lib/features/main/task/data/models/task_model.dart` - TaskStatus enum
 
@@ -93,4 +108,4 @@
 - 칸반 보드는 데스크톱/태블릿 전용 (좌우 스크롤), 모바일에서는 리스트 뷰만 사용
 - TaskStatus 6가지 상태는 백엔드 API와 완전히 동기화됨
 - 모아 보기는 클라이언트 사이드에서 날짜 기준 섹션 분류
-- 다국어 지원: 한/영/일 (모든 상태명, 섹션명, UI 텍스트)
+- 다국어 지원: 한/영/일/중 (모든 상태명, 섹션명, UI 텍스트)
