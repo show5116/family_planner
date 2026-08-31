@@ -41,8 +41,8 @@ enum RecurringRuleType {
 enum RecurringGenerationType {
   @JsonValue('AUTO_SCHEDULER')
   autoScheduler,
-  @JsonValue('MANUAL')
-  manual,
+  @JsonValue('AFTER_COMPLETION')
+  afterCompletion,
 }
 
 /// 알림 타입
@@ -51,8 +51,6 @@ enum TaskReminderType {
   beforeStart,
   @JsonValue('BEFORE_DUE')
   beforeDue,
-  @JsonValue('AT_TIME')
-  atTime,
 }
 
 /// Task 상태
