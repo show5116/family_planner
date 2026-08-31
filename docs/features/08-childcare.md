@@ -15,7 +15,7 @@
 - ✅ 히스토리 화면 (월별/연도별 토글, 잔액 라인 차트, 도넛 차트, 연간 막대 차트)
 - ✅ 적금 플랜 화면 (_SavingsPlanSection - 포인트 탭 내 인라인)
 - ✅ 용돈 플랜 화면 (child_allowance_plan_screen.dart)
-- ⬜ 계정 생성 화면 개선 (자녀 ID 조회 연동)
+- ✅ 계정 생성 화면 개선 (자녀 ID 조회 연동)
 
 ## 데이터 모델
 - ✅ 포인트 계정 모델 (ChildcareAccount)
