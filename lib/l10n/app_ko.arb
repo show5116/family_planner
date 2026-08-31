@@ -1901,6 +1901,10 @@
   "dashboard_emptyWidgets": "표시할 위젯이 없습니다",
   "dashboard_emptyWidgetsHint": "설정에서 위젯을 활성화하세요",
   "dashboard_widgetSettings": "위젯 설정",
+  "dashboard_loadFailed": "불러오지 못했습니다",
+  "@dashboard_loadFailed": {
+    "description": "대시보드 요약 위젯에서 데이터 로드 실패 시 표시"
+  },
   "dashboard_notifications": "알림",
 
   "weather_widgetTitle": "오늘 날씨",

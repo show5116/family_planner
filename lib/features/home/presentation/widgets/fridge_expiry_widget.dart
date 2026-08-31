@@ -11,6 +11,7 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 class FridgeExpiryWidget extends ConsumerStatefulWidget {
   const FridgeExpiryWidget({super.key, this.initialSelectedGroupId});
@@ -113,7 +114,10 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
           ),
         ),
       ),
-      error: (_, _) => _buildCard(context, groups, [], hasFilter),
+      error: (_, _) => _buildCard(
+        context, groups, [], hasFilter,
+        onRetry: () => ref.invalidate(fridgeExpiryItemsProvider),
+      ),
       data: (items) => _buildCard(context, groups, items, hasFilter),
     );
   }
@@ -122,8 +126,7 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
     BuildContext context,
     List<Group> groups,
     List<FridgeItemModel> items,
-    bool hasFilter,
-  ) {
+    bool hasFilter, {VoidCallback? onRetry}) {
     return DashboardCard(
       title: AppLocalizations.of(context)!.widgetSettings_fridgeSummary,
       icon: Icons.warning_amber_outlined,
@@ -138,7 +141,9 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
               icon: Badge(
                 isLabelVisible: hasFilter,
                 smallSize: 7,
-                child: Icon(
+                child: onRetry != null
+          ? DashboardErrorState(onRetry: onRetry)
+          : Icon(
                   Icons.tune,
                   color: hasFilter
                       ? Theme.of(context).colorScheme.primary

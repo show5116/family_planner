@@ -15,6 +15,7 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 /// 자산 요약 위젯
 class AssetSummaryWidget extends ConsumerStatefulWidget {
@@ -100,12 +101,15 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
           ),
         ),
       ),
-      error: (e, _) => _buildCard(context, groups, AssetStatisticsModel.empty(), hasActiveFilter),
+      error: (e, _) => _buildCard(
+        context, groups, AssetStatisticsModel.empty(), hasActiveFilter,
+        onRetry: () => ref.invalidate(dashboardAssetStatisticsProvider),
+      ),
       data: (stats) => _buildCard(context, groups, stats, hasActiveFilter),
     );
   }
 
-  Widget _buildCard(BuildContext context, List<Group> groups, AssetStatisticsModel stats, bool hasActiveFilter) {
+  Widget _buildCard(BuildContext context, List<Group> groups, AssetStatisticsModel stats, bool hasActiveFilter, {VoidCallback? onRetry}) {
     final l10n = AppLocalizations.of(context)!;
     final isProfit = stats.totalProfit >= 0;
 
@@ -129,7 +133,9 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
-                child: Icon(
+                child: onRetry != null
+          ? DashboardErrorState(onRetry: onRetry)
+          : Icon(
                   Icons.tune,
                   color: hasActiveFilter
                       ? Theme.of(context).colorScheme.primary

@@ -1887,6 +1887,10 @@
   "dashboard_emptyWidgets": "表示するウィジェットがありません",
   "dashboard_emptyWidgetsHint": "設定でウィジェットを有効にしてください",
   "dashboard_widgetSettings": "ウィジェット設定",
+  "dashboard_loadFailed": "読み込めませんでした",
+  "@dashboard_loadFailed": {
+    "description": "ダッシュボードの要約ウィジェットでデータ読み込みに失敗した場合に表示"
+  },
   "dashboard_notifications": "通知",
 
   "weather_widgetTitle": "今日の天気",

@@ -13,6 +13,7 @@ import 'package:family_planner/features/settings/groups/providers/group_provider
 import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 class ChildcareSummaryWidget extends ConsumerStatefulWidget {
   const ChildcareSummaryWidget({
@@ -138,7 +139,9 @@ class _ChildcareSummaryWidgetState
             child: CircularProgressIndicator(),
           ),
         ),
-        error: (_, _) => const _EmptyState(),
+        error: (_, _) => DashboardErrorState(
+          onRetry: () => ref.invalidate(childcareChildrenProvider),
+        ),
         data: (children) {
           if (children.isEmpty) return const _EmptyState();
           return accountsAsync.when(

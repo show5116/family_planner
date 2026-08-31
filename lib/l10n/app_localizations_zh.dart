@@ -3835,6 +3835,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dashboard_widgetSettings => '小部件设置';
 
   @override
+  String get dashboard_loadFailed => '加载失败';
+
+  @override
   String get dashboard_notifications => '通知';
 
   @override

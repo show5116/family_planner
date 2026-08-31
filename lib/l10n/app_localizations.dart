@@ -7520,6 +7520,12 @@ abstract class AppLocalizations {
   /// **'위젯 설정'**
   String get dashboard_widgetSettings;
 
+  /// 대시보드 요약 위젯에서 데이터 로드 실패 시 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'불러오지 못했습니다'**
+  String get dashboard_loadFailed;
+
   /// No description provided for @dashboard_notifications.
   ///
   /// In ko, this message translates to:

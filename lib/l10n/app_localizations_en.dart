@@ -3949,6 +3949,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard_widgetSettings => 'Widget Settings';
 
   @override
+  String get dashboard_loadFailed => 'Couldn\'t load';
+
+  @override
   String get dashboard_notifications => 'Notifications';
 
   @override

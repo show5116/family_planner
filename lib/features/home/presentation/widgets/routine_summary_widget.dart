@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/routine/presentation/widgets/routin
 import 'package:family_planner/features/main/routine/providers/routine_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 /// 홈 대시보드 - 오늘의 루틴 요약 위젯 (인라인 체크 토글 포함)
 class RoutineSummaryWidget extends ConsumerWidget {
@@ -59,7 +60,9 @@ class RoutineSummaryWidget extends ConsumerWidget {
             child: CircularProgressIndicator(),
           ),
         ),
-        error: (_, _) => const _EmptyState(),
+        error: (_, _) => DashboardErrorState(
+          onRetry: () => ref.invalidate(routineSummaryProvider),
+        ),
         data: (items) {
           if (items.isEmpty) return const _EmptyState();
           return Column(

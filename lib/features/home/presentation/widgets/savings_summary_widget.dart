@@ -12,6 +12,7 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 class SavingsSummaryWidget extends ConsumerStatefulWidget {
   const SavingsSummaryWidget({
@@ -93,7 +94,10 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
           ),
         ),
       ),
-      error: (e, _) => _buildCard(context, groups, [], hasActiveFilter),
+      error: (e, _) => _buildCard(
+        context, groups, [], hasActiveFilter,
+        onRetry: () => ref.invalidate(dashboardSavingsProvider),
+      ),
       data: (goals) => _buildCard(context, groups, goals, hasActiveFilter),
     );
   }
@@ -102,8 +106,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
     BuildContext context,
     List<Group> groups,
     List<SavingsGoalModel> goals,
-    bool hasActiveFilter,
-  ) {
+    bool hasActiveFilter, {VoidCallback? onRetry}) {
     final activeGoals = goals.where((g) => g.status == SavingsGoalStatus.active).toList();
     final totalCurrent = goals.fold<double>(0, (s, g) => s + g.currentAmount);
     final goalsWithTarget = goals.where((g) => g.targetAmount != null && g.targetAmount! > 0).toList();
@@ -125,7 +128,9 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
-                child: Icon(
+                child: onRetry != null
+          ? DashboardErrorState(onRetry: onRetry)
+          : Icon(
                   Icons.tune,
                   color: hasActiveFilter
                       ? Theme.of(context).colorScheme.primary

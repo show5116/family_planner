@@ -9,6 +9,7 @@ import 'package:family_planner/features/main/task/data/repositories/anniversary_
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 const _kMilestoneLimit = 3;
 
@@ -46,7 +47,9 @@ class AnniversarySummaryWidget extends ConsumerWidget {
         title: l10n.anniversary_widgetTitle,
         icon: Icons.celebration_outlined,
         onTap: () {},
-        child: _EmptyState(message: l10n.anniversary_widgetEmpty),
+        child: DashboardErrorState(
+          onRetry: () => ref.invalidate(allGroupsAnniversariesProvider),
+        ),
       ),
       data: (all) {
         final selected = anniversaryIds

@@ -1842,6 +1842,10 @@
   "dashboard_emptyWidgets": "没有要显示的小部件",
   "dashboard_emptyWidgetsHint": "请在设置中启用小部件",
   "dashboard_widgetSettings": "小部件设置",
+  "dashboard_loadFailed": "加载失败",
+  "@dashboard_loadFailed": {
+    "description": "仪表板摘要小部件加载数据失败时显示"
+  },
   "dashboard_notifications": "通知",
 
   "weather_widgetTitle": "今日天气",

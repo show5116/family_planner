@@ -12,6 +12,7 @@ import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 /// 할일 요약 위젯 (오늘 / 금주 / 이번달, 그룹 필터 지원)
 class TodoSummaryWidget extends ConsumerStatefulWidget {
@@ -147,7 +148,10 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
           ),
         ),
       ),
-      error: (_, _) => _buildCard(context, [], hasGroups, hasActiveFilter),
+      error: (_, _) => _buildCard(
+        context, [], hasGroups, hasActiveFilter,
+        onRetry: () => ref.invalidate(dashboardTodoTasksProvider),
+      ),
       data: (todos) => _buildCard(context, todos, hasGroups, hasActiveFilter),
     );
   }
@@ -156,8 +160,7 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
     BuildContext context,
     List<TaskModel> todos,
     bool hasGroups,
-    bool hasActiveFilter,
-  ) {
+    bool hasActiveFilter, {VoidCallback? onRetry}) {
     final completedCount = todos.where((t) => t.isCompleted).length;
     final totalCount = todos.length;
 
@@ -185,7 +188,9 @@ class _TodoSummaryWidgetState extends ConsumerState<TodoSummaryWidget> {
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
-                child: Icon(
+                child: onRetry != null
+          ? DashboardErrorState(onRetry: onRetry)
+          : Icon(
                   Icons.tune,
                   color: hasActiveFilter
                       ? Theme.of(context).colorScheme.primary

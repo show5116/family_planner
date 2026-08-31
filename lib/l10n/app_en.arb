@@ -1887,6 +1887,10 @@
   "dashboard_emptyWidgets": "No widgets to display",
   "dashboard_emptyWidgetsHint": "Enable widgets in settings",
   "dashboard_widgetSettings": "Widget Settings",
+  "dashboard_loadFailed": "Couldn't load",
+  "@dashboard_loadFailed": {
+    "description": "Shown when a dashboard summary widget fails to load data"
+  },
   "dashboard_notifications": "Notifications",
 
   "weather_widgetTitle": "Today's Weather",

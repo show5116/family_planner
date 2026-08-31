@@ -3860,6 +3860,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dashboard_widgetSettings => 'ウィジェット設定';
 
   @override
+  String get dashboard_loadFailed => '読み込めませんでした';
+
+  @override
   String get dashboard_notifications => '通知';
 
   @override

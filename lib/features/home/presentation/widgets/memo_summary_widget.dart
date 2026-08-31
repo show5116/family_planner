@@ -13,6 +13,7 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 /// 메모 요약 위젯
 class MemoSummaryWidget extends ConsumerStatefulWidget {
@@ -136,7 +137,9 @@ class _MemoSummaryWidgetState extends ConsumerState<MemoSummaryWidget> {
             child: CircularProgressIndicator(),
           ),
         ),
-        error: (e, _) => const _EmptyState(),
+        error: (e, _) => DashboardErrorState(
+          onRetry: () => ref.invalidate(dashboardMemosProvider),
+        ),
         data: (memos) {
           if (memos.isEmpty) return const _EmptyState();
           return Column(

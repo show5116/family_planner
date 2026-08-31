@@ -16,6 +16,7 @@ import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 // 개인 모드를 나타내는 sentinel 값 (groupId: null로 API 호출)
 const _kPersonal = '__personal__';
@@ -127,8 +128,10 @@ class _HouseholdSummaryWidgetState
           ),
         ),
       ),
-      error: (e, _) =>
-          _buildCard(context, groups, _emptyStats(), hasActiveFilter),
+      error: (e, _) => _buildCard(
+        context, groups, _emptyStats(), hasActiveFilter,
+        onRetry: () => ref.invalidate(dashboardHouseholdStatisticsProvider),
+      ),
       data: (stats) => _buildCard(context, groups, stats, hasActiveFilter),
     );
   }
@@ -148,8 +151,7 @@ class _HouseholdSummaryWidgetState
     BuildContext context,
     List<Group> groups,
     MonthlyStatisticsModel stats,
-    bool hasActiveFilter,
-  ) {
+    bool hasActiveFilter, {VoidCallback? onRetry}) {
     final now = DateTime.now();
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
@@ -178,7 +180,9 @@ class _HouseholdSummaryWidgetState
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
-                child: Icon(
+                child: onRetry != null
+          ? DashboardErrorState(onRetry: onRetry)
+          : Icon(
                   Icons.tune,
                   color: hasActiveFilter
                       ? Theme.of(context).colorScheme.primary

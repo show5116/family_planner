@@ -12,6 +12,7 @@ import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/shared/widgets/dashboard_card.dart';
+import 'package:family_planner/features/home/presentation/widgets/dashboard_error_state.dart';
 
 /// 일정 위젯 (오늘 / 금주 / 이번달, 그룹 필터 지원)
 class TodayScheduleWidget extends ConsumerStatefulWidget {
@@ -174,7 +175,9 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
             child: CircularProgressIndicator(),
           ),
         ),
-        error: (_, _) => _EmptyState(message: _emptyMessage(context)),
+        error: (_, _) => DashboardErrorState(
+          onRetry: () => ref.invalidate(dashboardTodayTasksProvider),
+        ),
         data: (tasks) {
           if (tasks.isEmpty) return _EmptyState(message: _emptyMessage(context));
           final showDate = _viewMode != ScheduleViewMode.today;

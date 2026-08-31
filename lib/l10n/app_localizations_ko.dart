@@ -3867,6 +3867,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dashboard_widgetSettings => '위젯 설정';
 
   @override
+  String get dashboard_loadFailed => '불러오지 못했습니다';
+
+  @override
   String get dashboard_notifications => '알림';
 
   @override
