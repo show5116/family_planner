@@ -77,15 +77,24 @@
 ## API 연동
 
 ### 프로필 설정
-- ✅ 프로필 조회 API (SecureStorageService.getUserInfo)
-- ✅ 프로필 수정 API (PATCH /users/profile)
-  - 이름, 전화번호, 프로필 이미지 URL 수정
+- ✅ 프로필 조회 (`GET /auth/me`, 캐시는 SecureStorageService.getUserInfo)
+- ✅ 프로필 수정 (`PATCH /auth/update-profile`)
+  - 이름, 전화번호, 개인 색상, 프로필 이미지 URL
   - 비밀번호 변경 (현재 비밀번호 확인 후)
-- ✅ 프로필 이미지 업로드 API (파일 업로드)
+- ✅ 프로필 이미지 업로드 (`POST /auth/upload-profile-photo`)
 
 ### 알림 설정
-- ✅ 알림 설정 조회 API
-- ✅ 알림 설정 수정 API
+- ✅ 알림 설정 조회 (`GET /notifications/settings`)
+- ✅ 알림 설정 수정 (`PUT /notifications/settings`)
+
+### 계정 관리
+- ✅ 데이터 내보내기 (`POST /auth/me/export`)
+- ✅ 계정 삭제 예약 (`DELETE /auth/me`)
+- ✅ 삭제 예약 취소 (`POST /auth/me/cancel-delete`)
+
+### 운영자
+- ✅ 공통 역할 관리 ([docs/api/roles.md](../api/roles.md))
+- ✅ 사용자·구독 관리 ([docs/api/subscription-admin.md](../api/subscription-admin.md))
 
 ### 권한 관리
 - ✅ 권한 관리 API (완료)
