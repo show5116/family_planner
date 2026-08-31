@@ -5,3 +5,6 @@ windows/flutter/generated_plugins.cmake text eol=lf
 macos/Flutter/GeneratedPluginRegistrant.swift text eol=lf
 linux/flutter/generated_plugin_registrant.cc text eol=lf
 linux/flutter/generated_plugins.cmake text eol=lf
+
+# flutter gen-l10n이 자동 생성하는 다국어 파일 - 위와 같은 이유로 LF 고정
+lib/l10n/app_localizations*.dart text eol=lf
