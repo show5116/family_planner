@@ -3078,57 +3078,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get asset_records => '记录';
 
   @override
-  String get asset_holdings => '持仓配置';
-
-  @override
-  String get asset_holdings_empty => '暂无持仓';
-
-  @override
-  String get asset_holding_add => '添加持仓';
-
-  @override
-  String get asset_holding_edit => '编辑持仓';
-
-  @override
-  String get asset_holding_delete => '删除持仓';
-
-  @override
-  String get asset_holding_name => '名称';
-
-  @override
-  String get asset_holding_name_hint => '例：纳斯达克ETF';
-
-  @override
-  String get asset_holding_name_required => '请输入名称';
-
-  @override
-  String get asset_holding_ticker => '代码（可选）';
-
-  @override
-  String get asset_holding_ticker_hint => '例：QQQ';
-
-  @override
-  String get asset_holding_ratio => '比例（%）';
-
-  @override
-  String get asset_holding_ratio_hint => '例：40';
-
-  @override
-  String get asset_holding_ratio_required => '请输入比例';
-
-  @override
-  String get asset_holding_ratio_invalid => '请输入0.01到100之间的数字';
-
-  @override
-  String get asset_holding_ratio_exceeded => '总比例超过100%';
-
-  @override
-  String get asset_holding_delete_confirm => '删除这个持仓吗？';
-
-  @override
-  String get asset_holding_total_ratio => '合计';
-
-  @override
   String get asset_gold_record_info_title => '关于黄金账户';
 
   @override

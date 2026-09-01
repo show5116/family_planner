@@ -140,14 +140,14 @@ lib/features/main/assets/
 - `fl_chart` — 추이·비교·원형 차트
 
 ## 노트
-- 🧹 **미사용 코드 — holdings(보유 종목) 계열**
-  `HoldingsSection` · `HoldingFormSheet` · `HoldingsNotifier`/`holdingsProvider` ·
-  `asset_repository.dart`의 getHoldings/createHolding/updateHolding/deleteHolding/
-  reorderHoldings · `HoldingModel` 은 **어느 화면에도 연결돼 있지 않습니다.**
-  대응하는 `/assets/accounts/:id/holdings` 라우트도 백엔드에 없습니다
-  (`assets.controller.ts`는 holding-records만 제공).
-  실제 포트폴리오 기능은 전부 holding-records로 동작하므로 **사용에는 문제가 없고**,
-  설계가 바뀌면서 남은 잔여 코드로 보입니다. 정리 대상입니다.
+- holdings(보유 종목) 계열 코드는 **삭제했습니다.** 설계가 종목 기록
+  (holding-records) 방식으로 바뀌면서 남은 잔여물이었고, 어느 화면에도
+  연결돼 있지 않았습니다. 백엔드에도 `/assets/accounts/:id/holdings` 라우트가
+  없습니다 (`assets.controller.ts`는 holding-records만 제공).
+  제거 대상: HoldingModel · HoldingsSection · HoldingFormSheet ·
+  HoldingsNotifier/holdingsProvider · repository의 holdings 메서드 5개 ·
+  `asset_holding_*` l10n 키 17개(4개 언어)
+- 통계 응답의 `byHolding`(HoldingStatModel)은 **별개이며 정상 사용 중**입니다.
 - 가족 구성원별 필터(`assetSelectedUserIdProvider`)는 Provider에 준비되어 있고 UI 연결만 남았습니다.
 - 보유 종목의 `ratio`는 계좌 내 비중(%)이며, 종목 기록(HoldingRecord)은 시점별 스냅샷입니다.
 - 저금통(19-savings) 중 `includeInAssets=true`인 목표가 자산 화면과 통계에 함께 집계됩니다.
