@@ -1,5 +1,45 @@
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 
+/// 가계부 카테고리 → API 문자열 변환
+///
+/// 예산 단건 등록 DTO가 사라진 뒤에도 쿼리 파라미터·경로에서 계속 쓰여
+/// 최상위 유틸로 남겨둡니다.
+class BudgetCategoryCodec {
+  static String categoryToString(ExpenseCategory category) {
+    switch (category) {
+      case ExpenseCategory.transportation:
+        return 'TRANSPORTATION';
+      case ExpenseCategory.food:
+        return 'FOOD';
+      case ExpenseCategory.groceries:
+        return 'GROCERIES';
+      case ExpenseCategory.leisure:
+        return 'LEISURE';
+      case ExpenseCategory.living:
+        return 'LIVING';
+      case ExpenseCategory.medical:
+        return 'MEDICAL';
+      case ExpenseCategory.education:
+        return 'EDUCATION';
+      case ExpenseCategory.allowance:
+        return 'ALLOWANCE';
+      case ExpenseCategory.celebration:
+        return 'CELEBRATION';
+      case ExpenseCategory.assetTransfer:
+        return 'ASSET_TRANSFER';
+      case ExpenseCategory.childcare:
+        return 'CHILDCARE';
+      case ExpenseCategory.communication:
+        return 'COMMUNICATION';
+      case ExpenseCategory.carryover:
+        return 'CARRYOVER';
+      case ExpenseCategory.other:
+        return 'OTHER';
+    }
+  }
+}
+
+
 // ─────────────────────────────────────────────
 // 카테고리별 예산
 // ─────────────────────────────────────────────
@@ -40,62 +80,6 @@ class BudgetModel {
 }
 
 /// 카테고리별 예산 설정 DTO
-class SetBudgetDto {
-  final String? groupId; // null이면 개인 모드
-  final ExpenseCategory category;
-  final double amount;
-  final String month; // YYYY-MM
-
-  const SetBudgetDto({
-    this.groupId,
-    required this.category,
-    required this.amount,
-    required this.month,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      if (groupId != null) 'groupId': groupId,
-      'category': categoryToString(category),
-      'amount': amount,
-      'month': month,
-    };
-  }
-
-  static String categoryToString(ExpenseCategory category) {
-    switch (category) {
-      case ExpenseCategory.transportation:
-        return 'TRANSPORTATION';
-      case ExpenseCategory.food:
-        return 'FOOD';
-      case ExpenseCategory.groceries:
-        return 'GROCERIES';
-      case ExpenseCategory.leisure:
-        return 'LEISURE';
-      case ExpenseCategory.living:
-        return 'LIVING';
-      case ExpenseCategory.medical:
-        return 'MEDICAL';
-      case ExpenseCategory.education:
-        return 'EDUCATION';
-      case ExpenseCategory.allowance:
-        return 'ALLOWANCE';
-      case ExpenseCategory.celebration:
-        return 'CELEBRATION';
-      case ExpenseCategory.assetTransfer:
-        return 'ASSET_TRANSFER';
-      case ExpenseCategory.childcare:
-        return 'CHILDCARE';
-      case ExpenseCategory.communication:
-        return 'COMMUNICATION';
-      case ExpenseCategory.carryover:
-        return 'CARRYOVER';
-      case ExpenseCategory.other:
-        return 'OTHER';
-    }
-  }
-}
-
 // ─────────────────────────────────────────────
 // 카테고리별 예산 템플릿
 // ─────────────────────────────────────────────
@@ -133,26 +117,6 @@ class BudgetTemplateModel {
 }
 
 /// 카테고리별 예산 템플릿 설정 DTO
-class SetBudgetTemplateDto {
-  final String? groupId; // null이면 개인 모드
-  final ExpenseCategory category;
-  final double amount;
-
-  const SetBudgetTemplateDto({
-    this.groupId,
-    required this.category,
-    required this.amount,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      if (groupId != null) 'groupId': groupId,
-      'category': SetBudgetDto.categoryToString(category),
-      'amount': amount,
-    };
-  }
-}
-
 // ─────────────────────────────────────────────
 // 그룹 전체 예산
 // ─────────────────────────────────────────────
@@ -188,26 +152,6 @@ class GroupBudgetModel {
 }
 
 /// 그룹 전체 예산 설정 DTO
-class SetGroupBudgetDto {
-  final String? groupId; // null이면 개인 모드
-  final double amount;
-  final String month; // YYYY-MM
-
-  const SetGroupBudgetDto({
-    this.groupId,
-    required this.amount,
-    required this.month,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      if (groupId != null) 'groupId': groupId,
-      'amount': amount,
-      'month': month,
-    };
-  }
-}
-
 // ─────────────────────────────────────────────
 // 그룹 전체 예산 템플릿
 // ─────────────────────────────────────────────
@@ -240,23 +184,6 @@ class GroupBudgetTemplateModel {
 }
 
 /// 그룹 전체 예산 템플릿 설정 DTO
-class SetGroupBudgetTemplateDto {
-  final String? groupId; // null이면 개인 모드
-  final double amount;
-
-  const SetGroupBudgetTemplateDto({
-    this.groupId,
-    required this.amount,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      if (groupId != null) 'groupId': groupId,
-      'amount': amount,
-    };
-  }
-}
-
 // ─────────────────────────────────────────────
 // Bulk DTO
 // ─────────────────────────────────────────────
@@ -269,7 +196,7 @@ class CategoryBudgetItemDto {
   const CategoryBudgetItemDto({required this.category, required this.amount});
 
   Map<String, dynamic> toJson() => {
-        'category': SetBudgetDto.categoryToString(category),
+        'category': BudgetCategoryCodec.categoryToString(category),
         'amount': amount,
       };
 }
@@ -323,7 +250,7 @@ class CategoryTemplateItemDto {
   const CategoryTemplateItemDto({required this.category, required this.amount});
 
   Map<String, dynamic> toJson() => {
-        'category': SetBudgetDto.categoryToString(category),
+        'category': BudgetCategoryCodec.categoryToString(category),
         'amount': amount,
       };
 }

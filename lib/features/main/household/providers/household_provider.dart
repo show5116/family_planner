@@ -407,34 +407,6 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<BudgetModel?> setBudget(SetBudgetDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final budget = await _repository.setBudget(dto);
-      _ref.invalidate(householdBudgetsProvider);
-      _ref.invalidate(householdMonthlyStatisticsProvider);
-      _ref.invalidate(dashboardHouseholdStatisticsProvider);
-      state = const AsyncValue.data(null);
-      return budget;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
-  }
-
-  Future<BudgetTemplateModel?> setBudgetTemplate(SetBudgetTemplateDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final template = await _repository.setBudgetTemplate(dto);
-      _ref.invalidate(householdBudgetTemplatesProvider);
-      state = const AsyncValue.data(null);
-      return template;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
-  }
-
   Future<bool> deleteBudgetTemplate({
     String? groupId,
     required ExpenseCategory category,
@@ -448,34 +420,6 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return false;
-    }
-  }
-
-  Future<GroupBudgetModel?> setGroupBudget(SetGroupBudgetDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final budget = await _repository.setGroupBudget(dto);
-      _ref.invalidate(householdGroupBudgetProvider);
-      _ref.invalidate(householdMonthlyStatisticsProvider);
-      _ref.invalidate(dashboardHouseholdStatisticsProvider);
-      state = const AsyncValue.data(null);
-      return budget;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
-  }
-
-  Future<GroupBudgetTemplateModel?> setGroupBudgetTemplate(SetGroupBudgetTemplateDto dto) async {
-    state = const AsyncValue.loading();
-    try {
-      final template = await _repository.setGroupBudgetTemplate(dto);
-      _ref.invalidate(householdGroupBudgetTemplateProvider);
-      state = const AsyncValue.data(null);
-      return template;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
     }
   }
 
