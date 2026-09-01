@@ -1,0 +1,29 @@
+{
+  "name": "육아 포인트",
+  "outDir": "docs/manual/childcare/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "4개 탭(포인트/상점/규칙/히스토리) 구조입니다. 탭 전환은 TabBar 라벨로 tap 합니다. 자녀 선택 바는 상단에 있어 첫 화면에서 함께 찍힙니다.",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+
+    { "action": "goto", "path": "/child-points", "wait": 14000 },
+    { "action": "shot", "name": "01-main", "caption": "육아포인트 — 그룹·자녀 선택과 포인트 잔액" },
+    { "action": "scroll", "dy": 600, "wait": 2500 },
+    { "action": "shot", "name": "02-points", "caption": "포인트 탭 — 적금 플랜과 최근 거래" },
+    { "action": "scroll", "dy": -600, "wait": 2500 },
+
+    { "action": "tap", "label": "상점", "wait": 6000 },
+    { "action": "shot", "name": "03-shop", "caption": "상점 — 포인트로 바꿔 쓸 수 있는 보상" },
+
+    { "action": "tap", "label": "규칙", "wait": 6000 },
+    { "action": "shot", "name": "04-rules", "caption": "규칙 — 적립·차감 규칙을 눌러 바로 적용" },
+
+    { "action": "tap", "label": "히스토리", "wait": 8000 },
+    { "action": "shot", "name": "05-history", "caption": "히스토리 — 월별 요약과 잔액 추이" },
+    { "action": "scroll", "dy": 700, "wait": 2500 },
+    { "action": "shot", "name": "06-history-chart", "caption": "유형별 도넛 차트와 거래 내역" }
+  ]
+}

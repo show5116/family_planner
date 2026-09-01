@@ -1,0 +1,35 @@
+{
+  "flow": "육아 포인트",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/childcare/screenshots/01-main.png",
+      "caption": "육아포인트 — 그룹·자녀 선택과 포인트 잔액"
+    },
+    {
+      "name": "02-points",
+      "file": "docs/manual/childcare/screenshots/02-points.png",
+      "caption": "포인트 탭 — 적금 플랜과 최근 거래"
+    },
+    {
+      "name": "03-shop",
+      "file": "docs/manual/childcare/screenshots/03-shop.png",
+      "caption": "상점 — 포인트로 바꿔 쓸 수 있는 보상"
+    },
+    {
+      "name": "04-rules",
+      "file": "docs/manual/childcare/screenshots/04-rules.png",
+      "caption": "규칙 — 적립·차감 규칙을 눌러 바로 적용"
+    },
+    {
+      "name": "05-history",
+      "file": "docs/manual/childcare/screenshots/05-history.png",
+      "caption": "히스토리 — 월별 요약과 잔액 추이"
+    },
+    {
+      "name": "06-history-chart",
+      "file": "docs/manual/childcare/screenshots/06-history-chart.png",
+      "caption": "유형별 도넛 차트와 거래 내역"
+    }
+  ]
+}
