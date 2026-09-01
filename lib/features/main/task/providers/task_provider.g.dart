@@ -365,7 +365,7 @@ class _TaskDetailProviderElement
 }
 
 String _$todoSelectedDateTasksHash() =>
-    r'd9fd00a091988e48338e35fc310ec4edb56afdc8';
+    r'ecb50df25fc4b9093911a4972d6498beff84a643';
 
 /// 선택된 날짜의 할일 목록 Provider (시작일~마감일 사이에 해당 날짜가 포함된 경우)
 ///
@@ -386,7 +386,7 @@ final todoSelectedDateTasksProvider =
 // ignore: unused_element
 typedef TodoSelectedDateTasksRef =
     AutoDisposeFutureProviderRef<List<TaskModel>>;
-String _$todoCountByDateHash() => r'ee7302cc1eaf2ba50bef0d1f591dfafbcec568fd';
+String _$todoCountByDateHash() => r'08327ef9e9c79d3cdf759d2a7562f49445f5e5a7';
 
 /// 주간 날짜별 할일 개수 Provider (캘린더 마커용)
 ///

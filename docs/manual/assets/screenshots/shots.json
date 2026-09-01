@@ -1,0 +1,25 @@
+{
+  "flow": "자산",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/assets/screenshots/01-main.png",
+      "caption": "자산 — 총 자산 요약과 계좌 목록"
+    },
+    {
+      "name": "02-accounts",
+      "file": "docs/manual/assets/screenshots/02-accounts.png",
+      "caption": "계좌 목록 — 유형별 잔액과 수익률"
+    },
+    {
+      "name": "03-account-detail",
+      "file": "docs/manual/assets/screenshots/03-account-detail.png",
+      "caption": "계좌 상세 — 잔액 추이와 기록 목록"
+    },
+    {
+      "name": "04-statistics",
+      "file": "docs/manual/assets/screenshots/04-statistics.png",
+      "caption": "자산 통계 — 유형별 구성과 추이"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "할일",
+  "outDir": "docs/manual/todo/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "모바일에서는 칸반이 숨겨지고 리스트 뷰만 나옵니다. 칸반은 데스크톱 전용이라 촬영하지 않습니다.",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+
+    { "action": "goto", "path": "/todo", "wait": 14000 },
+    { "action": "shot", "name": "01-main", "caption": "할일 — 주간 날짜 바와 그날의 할일" },
+    { "action": "scroll", "dy": 500, "wait": 2500 },
+    { "action": "shot", "name": "02-list", "caption": "할일 목록 — 상태와 우선순위" },
+    { "action": "scroll", "dy": -500, "wait": 2500 },
+
+    { "action": "tapContains", "contains": "모아 보기", "wait": 6000 },
+    { "action": "shot", "name": "03-overview", "caption": "모아 보기 — 지난 할일·오늘·이번 주로 묶어서 표시" }
+  ]
+}

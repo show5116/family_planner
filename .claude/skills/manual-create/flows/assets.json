@@ -1,0 +1,70 @@
+{
+  "name": "자산",
+  "outDir": "docs/manual/assets/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "계좌 상세는 extra 필요. 목록에서 계좌명을 탭해 진입합니다. 보유 종목 섹션은 서버 API가 없어 에러가 날 수 있으므로 촬영하지 않습니다.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 8000
+    },
+    {
+      "action": "login",
+      "as": "owner",
+      "wait": 16000
+    },
+    {
+      "action": "goto",
+      "path": "/assets",
+      "wait": 14000
+    },
+    {
+      "action": "shot",
+      "name": "01-main",
+      "caption": "자산 — 총 자산 요약과 계좌 목록"
+    },
+    {
+      "action": "scroll",
+      "dy": 600,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "02-accounts",
+      "caption": "계좌 목록 — 유형별 잔액과 수익률"
+    },
+    {
+      "action": "scroll",
+      "dy": -600,
+      "wait": 2500
+    },
+    {
+      "action": "tapContains",
+      "contains": "연금저축펀드",
+      "wait": 7000
+    },
+    {
+      "action": "shot",
+      "name": "03-account-detail",
+      "caption": "계좌 상세 — 잔액 추이와 기록 목록"
+    },
+    {
+      "action": "goto",
+      "path": "/assets",
+      "wait": 12000
+    },
+    {
+      "action": "goto",
+      "path": "/assets/statistics",
+      "wait": 12000
+    },
+    {
+      "action": "shot",
+      "name": "04-statistics",
+      "caption": "자산 통계 — 유형별 구성과 추이"
+    }
+  ]
+}

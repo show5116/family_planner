@@ -1,0 +1,30 @@
+{
+  "flow": "일정",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/calendar/screenshots/01-main.png",
+      "caption": "일정 — 월간 캘린더와 그룹 선택"
+    },
+    {
+      "name": "02-day-list",
+      "file": "docs/manual/calendar/screenshots/02-day-list.png",
+      "caption": "날짜를 누르면 그날 일정이 아래에 펼쳐집니다"
+    },
+    {
+      "name": "03-detail",
+      "file": "docs/manual/calendar/screenshots/03-detail.png",
+      "caption": "일정 상세 — 시간·장소·참여자"
+    },
+    {
+      "name": "04-form",
+      "file": "docs/manual/calendar/screenshots/04-form.png",
+      "caption": "일정 등록 — 제목과 날짜만 넣어도 저장됩니다"
+    },
+    {
+      "name": "05-form-options",
+      "file": "docs/manual/calendar/screenshots/05-form-options.png",
+      "caption": "반복·알림·참여자 설정"
+    }
+  ]
+}

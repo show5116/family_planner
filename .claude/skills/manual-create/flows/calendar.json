@@ -1,0 +1,84 @@
+{
+  "name": "일정",
+  "outDir": "docs/manual/calendar/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "일정 상세는 extra로 taskId를 넘겨야 해서 직접 goto가 안 됩니다. 캘린더에서 날짜 → 일정 순으로 탭해 들어갑니다.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 8000
+    },
+    {
+      "action": "login",
+      "as": "owner",
+      "wait": 16000
+    },
+    {
+      "action": "goto",
+      "path": "/calendar",
+      "wait": 14000
+    },
+    {
+      "action": "shot",
+      "name": "01-main",
+      "caption": "일정 — 월간 캘린더와 그룹 선택"
+    },
+    {
+      "action": "tapContains",
+      "contains": "1",
+      "wait": 5000
+    },
+    {
+      "action": "scroll",
+      "dy": 700,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "02-day-list",
+      "caption": "날짜를 누르면 그날 일정이 아래에 펼쳐집니다"
+    },
+    {
+      "action": "tap",
+      "label": "어린이집 학부모 상담\n오전 10:30",
+      "wait": 7000
+    },
+    {
+      "action": "shot",
+      "name": "03-detail",
+      "caption": "일정 상세 — 시간·장소·참여자"
+    },
+    {
+      "action": "goto",
+      "path": "/calendar",
+      "wait": 12000
+    },
+    {
+      "action": "tapFab",
+      "wait": 7000
+    },
+    {
+      "action": "shot",
+      "name": "04-form",
+      "caption": "일정 등록 — 제목과 날짜만 넣어도 저장됩니다"
+    },
+    {
+      "action": "scroll",
+      "dy": 600,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "05-form-options",
+      "caption": "반복·알림·참여자 설정"
+    },
+    {
+      "action": "goto",
+      "path": "/calendar",
+      "wait": 12000
+    }
+  ]
+}

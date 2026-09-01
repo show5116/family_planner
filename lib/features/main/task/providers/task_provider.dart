@@ -508,32 +508,29 @@ Future<List<TaskModel>> todoSelectedDateTasks(Ref ref) async {
   return todosAsync.maybeWhen(
     data: (response) {
       return response.data.where((task) {
-        // scheduledAt 또는 dueAt이 없으면 제외
-        if (task.scheduledAt == null) return false;
+        // 할일은 보통 마감일만 정합니다. 시작일을 필수로 보면
+        // 마감일만 있는 할일이 날짜별 보기에서 모두 사라집니다.
+        final start = task.scheduledAt;
+        final due = task.dueAt;
+        if (start == null && due == null) return false;
 
-        final taskStartDate = DateTime(
-          task.scheduledAt!.year,
-          task.scheduledAt!.month,
-          task.scheduledAt!.day,
-        );
         final selected = DateTime(
           selectedDate.year,
           selectedDate.month,
           selectedDate.day,
         );
+        final startDate = start == null
+            ? null
+            : DateTime(start.year, start.month, start.day);
+        final endDate =
+            due == null ? null : DateTime(due.year, due.month, due.day);
 
-        // dueAt이 있으면 기간 일정으로 처리
-        if (task.dueAt != null) {
-          final taskEndDate = DateTime(
-            task.dueAt!.year,
-            task.dueAt!.month,
-            task.dueAt!.day,
-          );
-          return !selected.isBefore(taskStartDate) && !selected.isAfter(taskEndDate);
+        // 시작일과 마감일이 모두 있으면 기간으로 처리
+        if (startDate != null && endDate != null) {
+          return !selected.isBefore(startDate) && !selected.isAfter(endDate);
         }
-
-        // dueAt이 없으면 scheduledAt만 비교
-        return taskStartDate == selected;
+        // 한쪽만 있으면 그 날짜와 비교
+        return selected == (startDate ?? endDate);
       }).toList();
     },
     orElse: () => <TaskModel>[],
@@ -550,21 +547,18 @@ Map<DateTime, int> todoCountByDate(Ref ref) {
       final Map<DateTime, int> countMap = {};
 
       for (final task in response.data) {
-        if (task.scheduledAt == null) continue;
+        // 마감일만 있는 할일도 세야 합니다 (todoSelectedDateTasks와 같은 기준).
+        final start = task.scheduledAt;
+        final due = task.dueAt;
+        if (start == null && due == null) continue;
 
-        final startDate = DateTime(
-          task.scheduledAt!.year,
-          task.scheduledAt!.month,
-          task.scheduledAt!.day,
-        );
+        final startDate = start == null
+            ? DateTime(due!.year, due.month, due.day)
+            : DateTime(start.year, start.month, start.day);
 
         // dueAt이 있으면 기간 동안 모든 날짜에 표시
-        final endDate = task.dueAt != null
-            ? DateTime(
-                task.dueAt!.year,
-                task.dueAt!.month,
-                task.dueAt!.day,
-              )
+        final endDate = due != null
+            ? DateTime(due.year, due.month, due.day)
             : startDate;
 
         for (var date = startDate;

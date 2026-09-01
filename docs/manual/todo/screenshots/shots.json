@@ -1,0 +1,20 @@
+{
+  "flow": "할일",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/todo/screenshots/01-main.png",
+      "caption": "할일 — 주간 날짜 바와 그날의 할일"
+    },
+    {
+      "name": "02-list",
+      "file": "docs/manual/todo/screenshots/02-list.png",
+      "caption": "할일 목록 — 상태와 우선순위"
+    },
+    {
+      "name": "03-overview",
+      "file": "docs/manual/todo/screenshots/03-overview.png",
+      "caption": "모아 보기 — 지난 할일·오늘·이번 주로 묶어서 표시"
+    }
+  ]
+}
