@@ -27,6 +27,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_save => 'Save';
 
   @override
+  String get common_refresh => 'Refresh';
+
+  @override
+  String get investment_bookmarkAdd => 'Add to favorites';
+
+  @override
+  String get investment_bookmarkRemove => 'Remove from favorites';
+
+  @override
   String get common_delete => 'Delete';
 
   @override

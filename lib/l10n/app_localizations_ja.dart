@@ -27,6 +27,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get common_save => '保存';
 
   @override
+  String get common_refresh => '更新';
+
+  @override
+  String get investment_bookmarkAdd => 'お気に入りに追加';
+
+  @override
+  String get investment_bookmarkRemove => 'お気に入りから削除';
+
+  @override
   String get common_delete => '削除';
 
   @override

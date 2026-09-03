@@ -15,6 +15,18 @@
   "common_cancel": "取消",
   "common_confirm": "确认",
   "common_save": "保存",
+  "common_refresh": "刷新",
+  "@common_refresh": {
+    "description": "刷新按钮"
+  },
+  "investment_bookmarkAdd": "添加到收藏",
+  "@investment_bookmarkAdd": {
+    "description": "将指标加入收藏"
+  },
+  "investment_bookmarkRemove": "取消收藏",
+  "@investment_bookmarkRemove": {
+    "description": "取消指标收藏"
+  },
   "common_delete": "删除",
   "common_edit": "编辑",
   "common_add": "添加",

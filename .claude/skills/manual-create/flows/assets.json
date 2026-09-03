@@ -4,7 +4,7 @@
   "device": "iPhone 13",
   "locale": "ko-KR",
   "timezone": "Asia/Seoul",
-  "_note": "계좌 상세는 extra 필요 — 목록에서 계좌명을 tapContains로 진입합니다. 자산 통계는 앱바 아이콘에 aria-label이 없어 tap으로 잡을 수 없으므로 라우트로 직접 goto 합니다.",
+  "_note": "계좌 상세는 extra 필요 — 목록에서 계좌명을 tapContains로 진입합니다. 통계는 앱바의 막대그래프 아이콘(tooltip \"통계\")을 탭합니다.",
   "steps": [
     {
       "action": "goto",
@@ -57,9 +57,9 @@
       "wait": 12000
     },
     {
-      "action": "goto",
-      "path": "/assets/statistics",
-      "wait": 12000
+      "action": "tap",
+      "label": "통계",
+      "wait": 8000
     },
     {
       "action": "shot",

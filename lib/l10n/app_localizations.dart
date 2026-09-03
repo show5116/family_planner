@@ -138,6 +138,24 @@ abstract class AppLocalizations {
   /// **'저장'**
   String get common_save;
 
+  /// 새로고침 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'새로고침'**
+  String get common_refresh;
+
+  /// 지표 즐겨찾기 등록 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 추가'**
+  String get investment_bookmarkAdd;
+
+  /// 지표 즐겨찾기 해제 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 해제'**
+  String get investment_bookmarkRemove;
+
   /// No description provided for @common_delete.
   ///
   /// In ko, this message translates to:

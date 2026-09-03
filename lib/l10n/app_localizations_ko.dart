@@ -27,6 +27,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get common_save => '저장';
 
   @override
+  String get common_refresh => '새로고침';
+
+  @override
+  String get investment_bookmarkAdd => '즐겨찾기 추가';
+
+  @override
+  String get investment_bookmarkRemove => '즐겨찾기 해제';
+
+  @override
   String get common_delete => '삭제';
 
   @override

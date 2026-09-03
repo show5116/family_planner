@@ -63,6 +63,7 @@ class RoutineDetailScreen extends ConsumerWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_outlined),
+              tooltip: l10n.routine_edit,
               onPressed: () => context.push(
                 AppRoutes.routineEdit,
                 extra: {'routineId': routineId},
@@ -70,6 +71,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline),
+              tooltip: l10n.routine_delete,
               onPressed: () => _confirmDelete(context, ref),
             ),
           ],

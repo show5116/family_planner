@@ -42,6 +42,7 @@ class _MyJoinRequestsScreenState extends ConsumerState<MyJoinRequestsScreen>
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.common_refresh,
             onPressed: () => ref.invalidate(myJoinRequestsProvider),
           ),
         ],

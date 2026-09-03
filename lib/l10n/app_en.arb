@@ -15,6 +15,18 @@
   "common_cancel": "Cancel",
   "common_confirm": "Confirm",
   "common_save": "Save",
+  "common_refresh": "Refresh",
+  "@common_refresh": {
+    "description": "Refresh button"
+  },
+  "investment_bookmarkAdd": "Add to favorites",
+  "@investment_bookmarkAdd": {
+    "description": "Bookmark an indicator"
+  },
+  "investment_bookmarkRemove": "Remove from favorites",
+  "@investment_bookmarkRemove": {
+    "description": "Unbookmark an indicator"
+  },
   "common_delete": "Delete",
   "common_edit": "Edit",
   "common_add": "Add",

@@ -76,6 +76,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
             ),
             IconButton(
               icon: const Icon(Icons.refresh),
+              tooltip: l10n.common_refresh,
               onPressed: () {
                 ref.read(groupNotifierProvider.notifier).loadGroups();
               },

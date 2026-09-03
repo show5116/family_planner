@@ -15,6 +15,18 @@
   "common_cancel": "キャンセル",
   "common_confirm": "確認",
   "common_save": "保存",
+  "common_refresh": "更新",
+  "@common_refresh": {
+    "description": "更新ボタン"
+  },
+  "investment_bookmarkAdd": "お気に入りに追加",
+  "@investment_bookmarkAdd": {
+    "description": "指標をお気に入りに登録"
+  },
+  "investment_bookmarkRemove": "お気に入りから削除",
+  "@investment_bookmarkRemove": {
+    "description": "指標のお気に入りを解除"
+  },
   "common_delete": "削除",
   "common_edit": "編集",
   "common_add": "追加",

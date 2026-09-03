@@ -15,6 +15,18 @@
   "common_cancel": "취소",
   "common_confirm": "확인",
   "common_save": "저장",
+  "common_refresh": "새로고침",
+  "@common_refresh": {
+    "description": "새로고침 버튼"
+  },
+  "investment_bookmarkAdd": "즐겨찾기 추가",
+  "@investment_bookmarkAdd": {
+    "description": "지표 즐겨찾기 등록 버튼"
+  },
+  "investment_bookmarkRemove": "즐겨찾기 해제",
+  "@investment_bookmarkRemove": {
+    "description": "지표 즐겨찾기 해제 버튼"
+  },
   "common_delete": "삭제",
   "common_edit": "수정",
   "common_add": "추가",

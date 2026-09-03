@@ -27,6 +27,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get common_save => '保存';
 
   @override
+  String get common_refresh => '刷新';
+
+  @override
+  String get investment_bookmarkAdd => '添加到收藏';
+
+  @override
+  String get investment_bookmarkRemove => '取消收藏';
+
+  @override
   String get common_delete => '删除';
 
   @override
