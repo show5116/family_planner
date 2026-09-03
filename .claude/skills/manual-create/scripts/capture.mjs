@@ -88,6 +88,25 @@ async function dumpLabels(page) {
     .catch(() => []);
 }
 
+/// 요소를 누릅니다. 핸들 클릭이 flt-glass-pane에 막히면 좌표로 직접 누릅니다.
+///
+/// Flutter 웹은 시맨틱 노드 위를 glass-pane이 덮고 있고 좌표로 히트 테스트합니다.
+/// 대부분은 핸들 클릭이 그대로 통하지만, 노드가 pane에 완전히 가려져 Playwright가
+/// 계속 재시도만 하는 경우가 있어(메모 목록의 체크리스트 카드) 그때는 노드 위치를
+/// 구해 그 좌표를 직접 누릅니다. 실제 사용자의 탭과 같은 경로입니다.
+async function clickElement(page, el, timeout = 45000) {
+  try {
+    await el.click({ timeout: Math.min(timeout, 8000) });
+    return;
+  } catch {
+    // 아래 좌표 클릭으로 넘어갑니다
+  }
+  await el.scrollIntoViewIfNeeded().catch(() => {});
+  const box = await el.boundingBox();
+  if (!box) throw new Error('요소의 위치를 구하지 못했습니다');
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+}
+
 async function clickLabel(page, label, timeout = 45000) {
   // 매칭을 3단계로 넓혀가며 시도합니다. 실제 촬영에서 아래 경우를 모두 만났습니다.
   //  1) aria-label 완전일치 — 대부분의 버튼
@@ -97,6 +116,11 @@ async function clickLabel(page, label, timeout = 45000) {
   //
   // 좌표(page.mouse)가 아니라 요소 핸들로 클릭합니다. 화면 밖 요소는 좌표 클릭이
   // 통하지 않지만(스크롤을 하지 않음) 핸들 클릭은 먼저 스크롤합니다.
+  //
+  // 다만 시맨틱 노드 위를 flt-glass-pane이 덮고 있으면 핸들 클릭이 계속 막힙니다.
+  // (메모 목록의 체크리스트 카드가 그랬습니다.) 이때는 노드 위치를 구해 그 좌표를
+  // 직접 누릅니다 — Flutter는 원래 glass-pane에서 좌표로 히트 테스트하므로
+  // 이쪽이 실제 사용자의 탭에 더 가깝습니다.
   const find = (mode) =>
     page.evaluateHandle(
       ({ want, mode }) => {
@@ -136,7 +160,7 @@ async function clickLabel(page, label, timeout = 45000) {
     const handle = await find(mode);
     const el = handle.asElement();
     if (el) {
-      await el.click({ timeout });
+      await clickElement(page, el, timeout);
       return;
     }
   }
@@ -146,7 +170,7 @@ async function clickLabel(page, label, timeout = 45000) {
   const retry = await find('contains');
   const el = retry.asElement();
   if (el) {
-    await el.click({ timeout });
+    await clickElement(page, el, timeout);
     return;
   }
   throw new Error(`"${label}" 을(를) 찾지 못했습니다 (aria/첫줄/부분일치 모두 실패)`);
@@ -203,7 +227,7 @@ async function runStep(page, step, ctxState) {
       }, { role: step.role, index: step.index });
       const target = handle.asElement();
       if (!target) throw new Error(`role="${step.role}" 요소를 찾지 못했습니다`);
-      await target.click({ timeout: step.timeout ?? 45000 });
+      await clickElement(page, target, step.timeout ?? 45000);
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -229,7 +253,7 @@ async function runStep(page, step, ctxState) {
       }, step.contains);
       const target = handle.asElement();
       if (!target) throw new Error(`"${step.contains}" 를 포함한 요소를 찾지 못했습니다`);
-      await target.click({ timeout: step.timeout ?? 45000 });
+      await clickElement(page, target, step.timeout ?? 45000);
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -239,7 +263,7 @@ async function runStep(page, step, ctxState) {
       const loc = page.locator('flt-semantics', {
         hasText: new RegExp(escapeRe(step.contains)),
       });
-      await loc.nth(step.index ?? 0).click({ timeout: 45000 });
+      await clickElement(page, loc.nth(step.index ?? 0), 45000);
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -310,6 +334,10 @@ async function runStep(page, step, ctxState) {
     }
     case 'shot': {
       const file = path.join(OUT_DIR, `${step.name}.png`);
+      // 웹폰트가 아직 안 붙었으면 Flutter가 대체 폰트 폭으로 글자를 재서
+      // 칩 라벨 같은 짧은 글이 잘린 채 찍힙니다. 폰트를 기다린 뒤 찍습니다.
+      await page.evaluate(() => document.fonts.ready).catch(() => {});
+      await page.waitForTimeout(600);
       await page.screenshot({ path: file, fullPage: step.fullPage ?? false });
       ctxState.shots.push({
         name: step.name,
