@@ -169,10 +169,19 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 `tapContains`는 명시적으로 부분일치만 쓰고 싶을 때, `tapRole`(`role: "switch"`)은
 라벨이 아예 없는 스위치·체크박스에 씁니다.
 
-**앱바 아이콘 버튼 중 tooltip이 없는 것은 어떤 방법으로도 못 찾습니다.**
-(예: 자산 화면의 통계 아이콘) 이럴 때는 라우트로 직접 `goto` 하세요.
+**아이콘 버튼은 `tooltip` 문구로 찾습니다.** 추측하지 말고 코드에서 확인하세요.
+(자산 화면 통계 아이콘의 tooltip은 "자산 통계"가 아니라 **"통계"** 입니다.)
 
-**FAB(＋ 버튼)은 `tapFab`을 쓰세요.** aria-label이 없어 `tap`으로는 찾지 못합니다.
+```bash
+grep -n "tooltip:" lib/features/<메뉴>/presentation/screens/<화면>.dart
+grep -n '"<키>"' lib/l10n/app_ko.arb    # l10n 키라면 실제 값 확인
+```
+
+tooltip이 아예 없으면 시맨틱스에 라벨이 남지 않아 찾을 수 없습니다.
+그런 버튼을 만나면 **앱에 tooltip을 추가하는 편이 낫습니다** — 접근성에도 필요합니다.
+
+**FAB은 `tapFab`을 쓰세요.** 대부분 tooltip이 없어 라벨로는 찾지 못하고,
+`tapFab`이 "오른쪽 아래 정사각형 버튼"을 좌표로 추론해 누릅니다.
 
 **다이얼로그는 Escape로 닫히지 않습니다.** `취소` 버튼을 탭하세요.
 
