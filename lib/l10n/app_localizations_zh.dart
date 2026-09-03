@@ -36,6 +36,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get investment_bookmarkRemove => '取消收藏';
 
   @override
+  String get vote_create => '创建投票';
+
+  @override
+  String get cart_item_add => '添加物品';
+
+  @override
+  String get savings_goal_add => '添加储蓄罐';
+
+  @override
+  String get household_expense_add => '添加记录';
+
+  @override
+  String get household_recurring_add => '添加固定支出';
+
+  @override
+  String get asset_account_add => '添加账户';
+
+  @override
+  String get group_role_add => '添加角色';
+
+  @override
   String get common_delete => '删除';
 
   @override
@@ -2780,9 +2801,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get household_recurring_inactive => '已停用';
-
-  @override
-  String get household_recurring_add => '添加固定支出';
 
   @override
   String get household_recurring_edit => '编辑固定支出';

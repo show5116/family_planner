@@ -74,6 +74,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         key: _fabKey,
+        tooltip: '투표 만들기',
         onPressed: _isDemo ? null : () => context.push(AppRoutes.voteCreate),
         child: const Icon(Icons.add),
       ),

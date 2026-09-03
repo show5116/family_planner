@@ -118,6 +118,7 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
           floatingActionButton: (isOnboarding || selectedGroupId != null)
               ? FloatingActionButton(
                   key: _fabKey,
+                  tooltip: '저금통 추가',
                   onPressed: isOnboarding
                       ? null
                       : () async {

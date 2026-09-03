@@ -36,6 +36,27 @@ class AppLocalizationsJa extends AppLocalizations {
   String get investment_bookmarkRemove => 'お気に入りから削除';
 
   @override
+  String get vote_create => '投票を作成';
+
+  @override
+  String get cart_item_add => '品目を追加';
+
+  @override
+  String get savings_goal_add => '貯金箱を追加';
+
+  @override
+  String get household_expense_add => '記録を追加';
+
+  @override
+  String get household_recurring_add => '固定費を追加';
+
+  @override
+  String get asset_account_add => '口座を追加';
+
+  @override
+  String get group_role_add => '役割を追加';
+
+  @override
   String get common_delete => '削除';
 
   @override
@@ -2796,9 +2817,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get household_recurring_inactive => '無効';
-
-  @override
-  String get household_recurring_add => '固定費を追加';
 
   @override
   String get household_recurring_edit => '固定費を編集';

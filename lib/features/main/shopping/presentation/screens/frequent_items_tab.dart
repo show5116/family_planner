@@ -236,6 +236,7 @@ class _RealFrequentItemsView extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'frequent_add',
+        tooltip: l10n.fridge_frequent_add,
         onPressed: onAdd,
         child: const Icon(Icons.add),
       ),

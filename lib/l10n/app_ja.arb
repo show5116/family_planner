@@ -27,6 +27,34 @@
   "@investment_bookmarkRemove": {
     "description": "指標のお気に入りを解除"
   },
+  "vote_create": "投票を作成",
+  "@vote_create": {
+    "description": "투표 생성 FAB"
+  },
+  "cart_item_add": "品目を追加",
+  "@cart_item_add": {
+    "description": "장바구니 품목 추가 FAB"
+  },
+  "savings_goal_add": "貯金箱を追加",
+  "@savings_goal_add": {
+    "description": "저금통 목표 추가 FAB"
+  },
+  "household_expense_add": "記録を追加",
+  "@household_expense_add": {
+    "description": "가계부 내역 추가 FAB"
+  },
+  "household_recurring_add": "固定項目を追加",
+  "@household_recurring_add": {
+    "description": "고정 내역 추가 FAB"
+  },
+  "asset_account_add": "口座を追加",
+  "@asset_account_add": {
+    "description": "자산 계좌 추가 FAB"
+  },
+  "group_role_add": "役割を追加",
+  "@group_role_add": {
+    "description": "그룹 역할 추가 FAB"
+  },
   "common_delete": "削除",
   "common_edit": "編集",
   "common_add": "追加",

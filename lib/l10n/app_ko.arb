@@ -27,6 +27,34 @@
   "@investment_bookmarkRemove": {
     "description": "지표 즐겨찾기 해제 버튼"
   },
+  "vote_create": "투표 만들기",
+  "@vote_create": {
+    "description": "투표 생성 FAB"
+  },
+  "cart_item_add": "품목 추가",
+  "@cart_item_add": {
+    "description": "장바구니 품목 추가 FAB"
+  },
+  "savings_goal_add": "저금통 추가",
+  "@savings_goal_add": {
+    "description": "저금통 목표 추가 FAB"
+  },
+  "household_expense_add": "내역 추가",
+  "@household_expense_add": {
+    "description": "가계부 내역 추가 FAB"
+  },
+  "household_recurring_add": "고정 내역 추가",
+  "@household_recurring_add": {
+    "description": "고정 내역 추가 FAB"
+  },
+  "asset_account_add": "계좌 추가",
+  "@asset_account_add": {
+    "description": "자산 계좌 추가 FAB"
+  },
+  "group_role_add": "역할 추가",
+  "@group_role_add": {
+    "description": "그룹 역할 추가 FAB"
+  },
   "common_delete": "삭제",
   "common_edit": "수정",
   "common_add": "추가",

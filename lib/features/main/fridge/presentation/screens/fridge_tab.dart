@@ -111,6 +111,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           floatingActionButton: FloatingActionButton(
             key: _fabKey,
             heroTag: 'fridge_add_storage',
+            tooltip: l10n.fridge_storage_add,
             onPressed: isDemo
                 ? null
                 : () => showDialog<void>(

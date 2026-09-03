@@ -36,6 +36,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get investment_bookmarkRemove => 'Remove from favorites';
 
   @override
+  String get vote_create => 'Create vote';
+
+  @override
+  String get cart_item_add => 'Add item';
+
+  @override
+  String get savings_goal_add => 'Add goal';
+
+  @override
+  String get household_expense_add => 'Add entry';
+
+  @override
+  String get household_recurring_add => 'Add Fixed Expense';
+
+  @override
+  String get asset_account_add => 'Add account';
+
+  @override
+  String get group_role_add => 'Add role';
+
+  @override
   String get common_delete => 'Delete';
 
   @override
@@ -2861,9 +2882,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get household_recurring_inactive => 'Inactive';
-
-  @override
-  String get household_recurring_add => 'Add Fixed Expense';
 
   @override
   String get household_recurring_edit => 'Edit Fixed Expense';

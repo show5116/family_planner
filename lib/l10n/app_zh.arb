@@ -27,6 +27,34 @@
   "@investment_bookmarkRemove": {
     "description": "取消指标收藏"
   },
+  "vote_create": "创建投票",
+  "@vote_create": {
+    "description": "투표 생성 FAB"
+  },
+  "cart_item_add": "添加物品",
+  "@cart_item_add": {
+    "description": "장바구니 품목 추가 FAB"
+  },
+  "savings_goal_add": "添加储蓄罐",
+  "@savings_goal_add": {
+    "description": "저금통 목표 추가 FAB"
+  },
+  "household_expense_add": "添加记录",
+  "@household_expense_add": {
+    "description": "가계부 내역 추가 FAB"
+  },
+  "household_recurring_add": "添加固定支出",
+  "@household_recurring_add": {
+    "description": "고정 내역 추가 FAB"
+  },
+  "asset_account_add": "添加账户",
+  "@asset_account_add": {
+    "description": "자산 계좌 추가 FAB"
+  },
+  "group_role_add": "添加角色",
+  "@group_role_add": {
+    "description": "그룹 역할 추가 FAB"
+  },
   "common_delete": "删除",
   "common_edit": "编辑",
   "common_add": "添加",

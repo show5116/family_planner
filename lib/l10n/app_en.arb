@@ -27,6 +27,34 @@
   "@investment_bookmarkRemove": {
     "description": "Unbookmark an indicator"
   },
+  "vote_create": "Create vote",
+  "@vote_create": {
+    "description": "투표 생성 FAB"
+  },
+  "cart_item_add": "Add item",
+  "@cart_item_add": {
+    "description": "장바구니 품목 추가 FAB"
+  },
+  "savings_goal_add": "Add goal",
+  "@savings_goal_add": {
+    "description": "저금통 목표 추가 FAB"
+  },
+  "household_expense_add": "Add entry",
+  "@household_expense_add": {
+    "description": "가계부 내역 추가 FAB"
+  },
+  "household_recurring_add": "Add recurring entry",
+  "@household_recurring_add": {
+    "description": "고정 내역 추가 FAB"
+  },
+  "asset_account_add": "Add account",
+  "@asset_account_add": {
+    "description": "자산 계좌 추가 FAB"
+  },
+  "group_role_add": "Add role",
+  "@group_role_add": {
+    "description": "그룹 역할 추가 FAB"
+  },
   "common_delete": "Delete",
   "common_edit": "Edit",
   "common_add": "Add",

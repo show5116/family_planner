@@ -156,6 +156,48 @@ abstract class AppLocalizations {
   /// **'즐겨찾기 해제'**
   String get investment_bookmarkRemove;
 
+  /// 투표 생성 FAB
+  ///
+  /// In ko, this message translates to:
+  /// **'투표 만들기'**
+  String get vote_create;
+
+  /// 장바구니 품목 추가 FAB
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 추가'**
+  String get cart_item_add;
+
+  /// 저금통 목표 추가 FAB
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통 추가'**
+  String get savings_goal_add;
+
+  /// 가계부 내역 추가 FAB
+  ///
+  /// In ko, this message translates to:
+  /// **'내역 추가'**
+  String get household_expense_add;
+
+  /// 고정지출 추가 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정지출 추가'**
+  String get household_recurring_add;
+
+  /// 자산 계좌 추가 FAB
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 추가'**
+  String get asset_account_add;
+
+  /// 그룹 역할 추가 FAB
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 추가'**
+  String get group_role_add;
+
   /// No description provided for @common_delete.
   ///
   /// In ko, this message translates to:
@@ -5525,12 +5567,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'비활성'**
   String get household_recurring_inactive;
-
-  /// 고정지출 추가 화면 제목
-  ///
-  /// In ko, this message translates to:
-  /// **'고정지출 추가'**
-  String get household_recurring_add;
 
   /// 고정지출 수정 화면 제목
   ///

@@ -206,6 +206,7 @@ class RulesTab extends ConsumerWidget {
         error: (_, _) => Center(child: Text(l10n.childcare_empty_rules)),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: l10n.childcare_add_rule,
         onPressed: () => _showRuleForm(context, ref, accountId: account.id),
         child: const Icon(Icons.add),
       ),

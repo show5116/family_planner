@@ -629,6 +629,7 @@ class _CartTabState extends ConsumerState<CartTab>
               floatingActionButton: FloatingActionButton(
                 key: _addFabKey,
                 heroTag: 'cart_add',
+                tooltip: l10n.cart_item_add,
                 onPressed: () => _showAddItemDialog(context),
                 child: const Icon(Icons.add),
               ),

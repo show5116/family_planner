@@ -126,6 +126,7 @@ class ShopTab extends ConsumerWidget {
         error: (_, _) => const ShopGuide(hasItems: false),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: l10n.childcare_add_reward,
         onPressed: () =>
             _showShopItemForm(context, ref, accountId: account.id),
         child: const Icon(Icons.add),

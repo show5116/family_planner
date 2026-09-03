@@ -178,6 +178,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         key: _fabKey,
+        tooltip: l10n.household_expense_add,
         onPressed: () => context.push(
           AppRoutes.householdAdd,
           extra: {'groupId': selectedGroupId},

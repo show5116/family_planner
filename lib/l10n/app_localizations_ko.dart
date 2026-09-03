@@ -36,6 +36,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get investment_bookmarkRemove => '즐겨찾기 해제';
 
   @override
+  String get vote_create => '투표 만들기';
+
+  @override
+  String get cart_item_add => '품목 추가';
+
+  @override
+  String get savings_goal_add => '저금통 추가';
+
+  @override
+  String get household_expense_add => '내역 추가';
+
+  @override
+  String get household_recurring_add => '고정지출 추가';
+
+  @override
+  String get asset_account_add => '계좌 추가';
+
+  @override
+  String get group_role_add => '역할 추가';
+
+  @override
   String get common_delete => '삭제';
 
   @override
@@ -2800,9 +2821,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get household_recurring_inactive => '비활성';
-
-  @override
-  String get household_recurring_add => '고정지출 추가';
 
   @override
   String get household_recurring_edit => '고정지출 수정';

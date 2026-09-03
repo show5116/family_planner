@@ -115,6 +115,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
       ),
       floatingActionButton: (!_isDemo && selectedGroupId != null)
           ? FloatingActionButton(
+              tooltip: l10n.asset_account_add,
               onPressed: () => context.push(
                 AppRoutes.assetAccountAdd,
                 extra: {'groupId': selectedGroupId},
