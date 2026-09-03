@@ -4,7 +4,7 @@
   "device": "iPhone 13",
   "locale": "ko-KR",
   "timezone": "Asia/Seoul",
-  "_note": "상세는 /savings/:id 라우트라 직접 goto가 안 됩니다. 목록에서 카드를 tap 해 진입합니다. 카드 aria-label을 모르면 tapContains로 목표 이름을 잡습니다.",
+  "_note": "상세는 /savings/:id 라우트라 직접 goto가 안 됩니다. 목록에서 카드를 tapContains로 잡습니다. 목표 카드는 이름 가나다순 정렬이라 뒤쪽 이름은 스크롤이 필요합니다.",
   "steps": [
     {
       "action": "goto",
@@ -35,10 +35,6 @@
       "action": "shot",
       "name": "02-goals",
       "caption": "목표 카드 — 달성률과 자동 적립 표시"
-    },
-    {
-      "action": "wait",
-      "wait": 2500
     },
     {
       "action": "tapContains",

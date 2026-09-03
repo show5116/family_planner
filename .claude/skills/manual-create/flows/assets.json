@@ -4,7 +4,7 @@
   "device": "iPhone 13",
   "locale": "ko-KR",
   "timezone": "Asia/Seoul",
-  "_note": "계좌 상세는 extra 필요. 목록에서 계좌명을 탭해 진입합니다. 보유 종목 섹션은 서버 API가 없어 에러가 날 수 있으므로 촬영하지 않습니다.",
+  "_note": "계좌 상세는 extra 필요 — 목록에서 계좌명을 tapContains로 진입합니다. 자산 통계는 앱바 아이콘에 aria-label이 없어 tap으로 잡을 수 없으므로 라우트로 직접 goto 합니다.",
   "steps": [
     {
       "action": "goto",
