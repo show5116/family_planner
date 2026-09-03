@@ -1,0 +1,78 @@
+{
+  "name": "그룹 저금통",
+  "outDir": "docs/manual/savings/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "상세는 /savings/:id 라우트라 직접 goto가 안 됩니다. 목록에서 카드를 tap 해 진입합니다. 카드 aria-label을 모르면 tapContains로 목표 이름을 잡습니다.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 8000
+    },
+    {
+      "action": "login",
+      "as": "owner",
+      "wait": 16000
+    },
+    {
+      "action": "goto",
+      "path": "/savings",
+      "wait": 14000
+    },
+    {
+      "action": "shot",
+      "name": "01-main",
+      "caption": "그룹 저금통 — 목표 목록과 달성률"
+    },
+    {
+      "action": "scroll",
+      "dy": 1600,
+      "wait": 4000
+    },
+    {
+      "action": "shot",
+      "name": "02-goals",
+      "caption": "목표 카드 — 달성률과 자동 적립 표시"
+    },
+    {
+      "action": "wait",
+      "wait": 2500
+    },
+    {
+      "action": "tapContains",
+      "contains": "제주도 가족여행",
+      "wait": 9000
+    },
+    {
+      "action": "shot",
+      "name": "03-detail",
+      "caption": "목표 상세 — 모은 금액과 입출금 버튼"
+    },
+    {
+      "action": "scroll",
+      "dy": 600,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "04-recent",
+      "caption": "최근 내역 — 입금과 출금이 함께 표시됩니다"
+    },
+    {
+      "action": "goto",
+      "path": "/savings",
+      "wait": 12000
+    },
+    {
+      "action": "tapFab",
+      "wait": 7000
+    },
+    {
+      "action": "shot",
+      "name": "05-form",
+      "caption": "저금통 추가 — 이름만 넣어도 만들 수 있습니다"
+    }
+  ]
+}
