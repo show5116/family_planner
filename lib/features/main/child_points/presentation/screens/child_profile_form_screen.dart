@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/child_points/data/repositories/childcare_repository.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -35,6 +36,7 @@ class _ChildProfileFormScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groupName = ref
         .watch(myGroupsProvider)
         .whenOrNull(
@@ -47,7 +49,7 @@ class _ChildProfileFormScreenState
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('자녀 프로필 등록'),
+            Text(l10n.childcare_profile_add),
             if (groupName != null)
               Text(
                 groupName,
@@ -74,21 +76,21 @@ class _ChildProfileFormScreenState
                   children: [
                     TextFormField(
                       controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: '자녀 이름',
-                        hintText: '예: 김민준',
+                      decoration: InputDecoration(
+                        labelText: l10n.childcare_child_name,
+                        hintText: l10n.childcare_child_name_hint,
                         prefixIcon: Icon(Icons.person),
                       ),
                       validator: (v) => v == null || v.trim().isEmpty
-                          ? '자녀 이름을 입력해주세요'
+                          ? l10n.childcare_child_name_required
                           : null,
                     ),
                     const SizedBox(height: AppSizes.spaceM),
                     InkWell(
                       onTap: _selectBirthDate,
                       child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: '생년월일',
+                        decoration: InputDecoration(
+                          labelText: l10n.childcare_birthdate,
                           prefixIcon: Icon(Icons.cake),
                         ),
                         child: Text(
@@ -96,7 +98,7 @@ class _ChildProfileFormScreenState
                               ? DateFormat(
                                   'yyyy-MM-dd',
                                 ).format(_selectedBirthDate!)
-                              : '날짜를 선택하세요',
+                              : l10n.childcare_select_date,
                           style: _selectedBirthDate != null
                               ? Theme.of(context).textTheme.bodyMedium
                               : Theme.of(
@@ -112,7 +114,7 @@ class _ChildProfileFormScreenState
               ),
             ),
             FormBottomBar(
-              label: '자녀 프로필 등록',
+              label: l10n.childcare_profile_add,
               isLoading: _isSubmitting,
               onPressed: _handleSubmit,
             ),
@@ -135,11 +137,12 @@ class _ChildProfileFormScreenState
   }
 
   Future<void> _handleSubmit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     if (_selectedBirthDate == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('생년월일을 선택해주세요')));
+      ).showSnackBar(SnackBar(content: Text(l10n.childcare_birthdate_required)));
       return;
     }
 
@@ -161,12 +164,12 @@ class _ChildProfileFormScreenState
     if (result != null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('자녀 프로필이 등록되었습니다')));
+      ).showSnackBar(SnackBar(content: Text(l10n.childcare_profile_added)));
       context.pop(result);
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('등록에 실패했습니다. 다시 시도해주세요')));
+      ).showSnackBar(SnackBar(content: Text(l10n.childcare_profile_add_failed)));
     }
   }
 }
@@ -246,6 +249,7 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final maxDay = _daysInMonth(_year, _month);
 
@@ -264,16 +268,16 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('취소'),
+                  child: Text(l10n.common_cancel),
                 ),
                 Text(
-                  '$_year년 $_month월 $_day일',
+                  l10n.childcare_date_full('$_year', '$_month', '$_day'),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 TextButton(
                   onPressed: () =>
                       Navigator.of(context).pop(DateTime(_year, _month, _day)),
-                  child: const Text('확인'),
+                  child: Text(l10n.common_confirm),
                 ),
               ],
             ),
@@ -292,7 +296,8 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
                     itemCount: _lastYear - _firstYear + 1,
                     selectedIndex: _year - _firstYear,
                     onSelectedItemChanged: _onYearChanged,
-                    labelBuilder: (i) => '${_firstYear + i}년',
+                    labelBuilder: (i) =>
+                        l10n.childcare_year_unit('${_firstYear + i}'),
                     selectedColor: colorScheme.primary,
                   ),
                 ),
@@ -304,7 +309,7 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
                     itemCount: 12,
                     selectedIndex: _month - 1,
                     onSelectedItemChanged: _onMonthChanged,
-                    labelBuilder: (i) => '${i + 1}월',
+                    labelBuilder: (i) => l10n.childcare_month_unit('${i + 1}'),
                     selectedColor: colorScheme.primary,
                   ),
                 ),
@@ -316,7 +321,7 @@ class _BirthDatePickerState extends State<_BirthDatePicker> {
                     itemCount: maxDay,
                     selectedIndex: _day - 1,
                     onSelectedItemChanged: _onDayChanged,
-                    labelBuilder: (i) => '${i + 1}일',
+                    labelBuilder: (i) => l10n.childcare_day_value('${i + 1}'),
                     selectedColor: colorScheme.primary,
                   ),
                 ),

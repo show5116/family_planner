@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/roles/models/common_role.dart';
 import 'package:family_planner/features/settings/roles/providers/common_role_provider.dart';
 import 'package:family_planner/features/settings/roles/presentation/widgets/role_info_header.dart';
@@ -30,22 +31,23 @@ class _CommonRolePermissionsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final rolesState = ref.watch(commonRoleProvider);
     final permissionsState = ref.watch(permissionManagementProvider);
 
     if (rolesState.isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('권한 관리')),
+        appBar: AppBar(title: Text(l10n.role_manage_permissions)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (rolesState.error != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('권한 관리')),
+        appBar: AppBar(title: Text(l10n.role_manage_permissions)),
         body: AppErrorState(
-          error: rolesState.error ?? '알 수 없는 오류',
-          title: '역할 정보를 불러오는데 실패했습니다',
+          error: rolesState.error ?? l10n.common_unknownError,
+          title: l10n.role_info_load_error,
           onRetry: () => ref.read(commonRoleProvider.notifier).loadRoles(),
         ),
       );
@@ -53,7 +55,7 @@ class _CommonRolePermissionsScreenState
 
     final role = rolesState.roles.firstWhere(
       (r) => r.id == widget.roleId,
-      orElse: () => throw Exception('역할을 찾을 수 없습니다'),
+      orElse: () => throw Exception(l10n.role_not_found),
     );
 
     _initializePermissions(role);
@@ -61,15 +63,15 @@ class _CommonRolePermissionsScreenState
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('${role.name} 권한 관리'),
+        title: Text(l10n.role_permissions_title(role.name)),
         elevation: 0,
         actions: [
           if (isModified)
             TextButton(
               onPressed: () => _savePermissions(role.id),
-              child: const Text(
-                '저장',
-                style: TextStyle(
+              child: Text(
+                l10n.common_save,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -114,9 +116,10 @@ class _CommonRolePermissionsScreenState
   }
 
   Widget _buildSearchField(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return TextField(
       decoration: InputDecoration(
-        hintText: '권한 검색',
+        hintText: l10n.role_permission_search,
         prefixIcon: const Icon(Icons.search),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
@@ -131,23 +134,26 @@ class _CommonRolePermissionsScreenState
     BuildContext context,
     PermissionManagementState permissionsState,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (permissionsState.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (permissionsState.error != null) {
       return AppErrorState(
-        error: permissionsState.error ?? '알 수 없는 오류',
-        title: '권한 목록을 불러오는데 실패했습니다',
+        error: permissionsState.error ?? l10n.common_unknownError,
+        title: l10n.role_permissions_load_error,
         onRetry: () =>
             ref.read(permissionManagementProvider.notifier).loadPermissions(),
       );
     }
 
-    final filteredPermissions = _filterPermissions(permissionsState.permissions);
+    final filteredPermissions = _filterPermissions(
+      permissionsState.permissions,
+    );
 
     if (filteredPermissions.isEmpty) {
-      return const Center(child: Text('검색 결과가 없습니다'));
+      return Center(child: Text(l10n.common_noSearchResults));
     }
 
     final groupedPermissions = _groupByCategory(filteredPermissions);
@@ -192,7 +198,8 @@ class _CommonRolePermissionsScreenState
           return PermissionCheckboxTile(
             permission: permission,
             isSelected: isSelected,
-            onChanged: (value) => _handlePermissionChange(permission.code, value),
+            onChanged: (value) =>
+                _handlePermissionChange(permission.code, value),
           );
         }),
         const SizedBox(height: AppSizes.spaceL),
@@ -212,6 +219,7 @@ class _CommonRolePermissionsScreenState
   }
 
   Future<void> _savePermissions(String roleId) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ref
           .read(commonRoleProvider.notifier)
@@ -219,15 +227,15 @@ class _CommonRolePermissionsScreenState
 
       if (mounted) {
         setState(() => isModified = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('권한이 저장되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.role_permissions_saved)));
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('저장 실패: ${e.toString()}'),
+            content: Text('${l10n.common_saveFailed}\n$e'),
             backgroundColor: Colors.red,
           ),
         );

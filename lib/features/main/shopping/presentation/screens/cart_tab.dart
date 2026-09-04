@@ -519,7 +519,9 @@ class _CartTabState extends ConsumerState<CartTab>
       // dispose 후에는 스낵바 표시 불가 — 조용히 무시
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('저장 중 오류가 발생했습니다')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.cart_save_error),
+          ),
         );
       }
     } finally {

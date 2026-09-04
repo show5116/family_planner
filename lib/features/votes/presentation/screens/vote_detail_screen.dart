@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/votes/data/models/vote_model.dart';
 import 'package:family_planner/features/votes/providers/vote_detail_provider.dart';
 import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
@@ -20,12 +21,13 @@ class VoteDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final voteAsync =
         ref.watch(voteDetailProvider(groupId: groupId, voteId: voteId));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('투표'),
+        title: Text(l10n.vote_title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -41,7 +43,7 @@ class VoteDetailScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => AppErrorState(
           error: e,
-          title: '투표를 불러오지 못했습니다',
+          title: l10n.vote_detail_load_error,
           onRetry: () => ref.invalidate(
               voteDetailProvider(groupId: groupId, voteId: voteId)),
         ),
@@ -60,27 +62,29 @@ class _DeleteButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return IconButton(
       icon: const Icon(Icons.delete_outline),
-      tooltip: '투표 삭제',
+      tooltip: l10n.vote_delete,
       onPressed: () => _confirmDelete(context, ref),
     );
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('투표 삭제'),
-        content: const Text('이 투표를 삭제하시겠습니까?\n삭제된 투표는 복구할 수 없습니다.'),
+        title: Text(l10n.vote_delete),
+        content: Text(l10n.vote_delete_message),
         actions: [
           TextButton(
-              onPressed: () => ctx.pop(false), child: const Text('취소')),
+              onPressed: () => ctx.pop(false), child: Text(l10n.common_cancel)),
           TextButton(
             onPressed: () => ctx.pop(true),
             style: TextButton.styleFrom(
                 foregroundColor: Theme.of(ctx).colorScheme.error),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -97,7 +101,7 @@ class _DeleteButton extends ConsumerWidget {
       context.pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('삭제에 실패했습니다')),
+        SnackBar(content: Text(l10n.vote_delete_failed)),
       );
     }
   }
@@ -153,6 +157,7 @@ class _VoteDetailBodyState extends ConsumerState<_VoteDetailBody> {
   }
 
   Future<void> _castBallot() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedOptionIds.isEmpty) return;
     final ballotState = ref.read(voteBallotProvider);
     if (ballotState.isLoading) return;
@@ -165,7 +170,9 @@ class _VoteDetailBodyState extends ConsumerState<_VoteDetailBody> {
 
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(success ? '투표가 완료되었습니다' : '투표에 실패했습니다')),
+      SnackBar(
+        content: Text(success ? l10n.vote_submit_success : l10n.vote_submit_failed),
+      ),
     );
   }
 
@@ -181,6 +188,7 @@ class _VoteDetailBodyState extends ConsumerState<_VoteDetailBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final vote = widget.vote;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -217,15 +225,18 @@ class _VoteDetailBodyState extends ConsumerState<_VoteDetailBody> {
               _MetaChip(icon: Icons.person_outline, label: vote.creatorName),
               _MetaChip(
                   icon: Icons.how_to_vote_outlined,
-                  label: '${vote.totalVoters}명 참여'),
+                  label: l10n.vote_participants(vote.totalVoters)),
               if (vote.isMultiple)
-                _MetaChip(icon: Icons.checklist, label: '복수 선택'),
+                _MetaChip(
+                    icon: Icons.checklist, label: l10n.vote_multiple_choice_badge),
               if (vote.isAnonymous)
-                _MetaChip(icon: Icons.visibility_off_outlined, label: '익명'),
+                _MetaChip(
+                    icon: Icons.visibility_off_outlined,
+                    label: l10n.vote_anonymous_badge),
               if (vote.endsAt != null)
                 _MetaChip(
                   icon: Icons.schedule,
-                  label: _formatDeadline(vote.endsAt!),
+                  label: _formatDeadline(l10n, vote.endsAt!),
                   color: vote.isOngoing ? null : colorScheme.error,
                 ),
             ],
@@ -272,20 +283,20 @@ class _VoteDetailBodyState extends ConsumerState<_VoteDetailBody> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(vote.hasVoted ? '재투표하기' : '투표하기'),
+                  : Text(vote.hasVoted ? l10n.vote_revote : l10n.vote_submit),
             ),
         ],
       ),
     );
   }
 
-  String _formatDeadline(DateTime endsAt) {
+  String _formatDeadline(AppLocalizations l10n, DateTime endsAt) {
     final now = DateTime.now();
     final diff = endsAt.difference(now);
-    if (diff.isNegative) return '마감됨';
-    if (diff.inDays > 0) return '${diff.inDays}일 후 마감';
-    if (diff.inHours > 0) return '${diff.inHours}시간 후 마감';
-    return '${diff.inMinutes}분 후 마감';
+    if (diff.isNegative) return l10n.vote_deadline_passed;
+    if (diff.inDays > 0) return l10n.vote_deadline_days(diff.inDays);
+    if (diff.inHours > 0) return l10n.vote_deadline_hours(diff.inHours);
+    return l10n.vote_deadline_minutes(diff.inMinutes);
   }
 }
 
@@ -312,6 +323,7 @@ class _OptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
@@ -352,7 +364,10 @@ class _OptionTile extends StatelessWidget {
                   ),
                   if (showResult)
                     Text(
-                      '${option.count}표 (${(ratio * 100).toStringAsFixed(0)}%)',
+                      l10n.vote_option_result(
+                        option.count,
+                        (ratio * 100).toStringAsFixed(0),
+                      ),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
@@ -401,6 +416,7 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
@@ -410,7 +426,7 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        isOngoing ? '진행중' : '종료',
+        isOngoing ? l10n.vote_status_ongoing : l10n.vote_status_closed,
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,

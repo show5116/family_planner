@@ -262,8 +262,12 @@ class _AddCartItemSheetState extends ConsumerState<_AddCartItemSheet> {
                         child: TextField(
                           controller: _priceCtrl,
                           decoration: InputDecoration(
-                            labelText: _isUnitPrice ? '개당 금액' : '총 금액',
-                            hintText: _isUnitPrice ? '개당 금액 입력' : '총 금액 입력',
+                            labelText: _isUnitPrice
+                                ? l10n.cart_price_unit_label
+                                : l10n.cart_price_total_label,
+                            hintText: _isUnitPrice
+                                ? l10n.cart_price_unit_hint
+                                : l10n.cart_price_total_hint,
                             suffixText: '원',
                             helperText: showTotal
                                 ? '합계 ${NumberFormat('#,###').format((unitPrice * qty).toInt())}원'
@@ -294,7 +298,9 @@ class _AddCartItemSheetState extends ConsumerState<_AddCartItemSheet> {
                             ),
                           ),
                           child: Text(
-                            _isUnitPrice ? '개당' : '총액',
+                            _isUnitPrice
+                                ? l10n.cart_price_unit
+                                : l10n.cart_price_total,
                             style: Theme.of(context).textTheme.labelMedium?.copyWith(
                                   color: _isUnitPrice
                                       ? colorScheme.primary
@@ -354,7 +360,7 @@ class _AddCartItemSheetState extends ConsumerState<_AddCartItemSheet> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          _showExtra ? '단위·메모 숨기기' : '단위·메모 추가',
+                          _showExtra ? l10n.cart_extra_hide : l10n.cart_extra_show,
                           style: Theme.of(context).textTheme.labelMedium?.copyWith(
                                 color: colorScheme.primary,
                               ),

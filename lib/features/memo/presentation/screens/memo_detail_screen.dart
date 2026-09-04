@@ -143,7 +143,9 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
                         : Icons.push_pin_outlined,
                     color: memoAsync.value!.isPinned ? Colors.amber : Colors.white,
                   ),
-                  tooltip: memoAsync.value!.isPinned ? '핀 해제' : '대시보드에 고정',
+                  tooltip: memoAsync.value!.isPinned
+                      ? l10n.memo_pin_remove
+                      : l10n.memo_pin_add,
                   onPressed: () =>
                       ref.read(memoPinProvider.notifier).togglePin(widget.memoId),
                 )
@@ -327,7 +329,7 @@ class _MemoDetailScreenState extends ConsumerState<MemoDetailScreen> {
       context.push(
         AppRoutes.memoAdd,
         extra: MemoDuplicateData(
-          title: '${memo.title} (복사본)',
+          title: l10n.memo_duplicate_title(memo.title),
           content: memo.content,
           tags: memo.tags.map((t) => t.name).toList(),
         ),

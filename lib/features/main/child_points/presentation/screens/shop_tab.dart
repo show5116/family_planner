@@ -140,21 +140,22 @@ class ShopTab extends ConsumerWidget {
     String accountId,
     ChildcareShopItem item,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('아이템 사용'),
+        title: Text(l10n.childcare_item_use),
         content: Text(
-          '"${item.name}"\n${item.points}P를 사용합니다.',
+          l10n.childcare_item_use_message(item.name, '${item.points}'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('사용'),
+            child: Text(l10n.childcare_item_use_confirm),
           ),
         ],
       ),
@@ -169,12 +170,13 @@ class ShopTab extends ConsumerWidget {
     if (!context.mounted) return;
     if (result == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('사용에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+        SnackBar(content: Text(l10n.childcare_item_use_failed)),
       );
       return;
     }
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('"${item.name}" 사용되었습니다')));
+        .showSnackBar(SnackBar(
+            content: Text(l10n.childcare_item_used(item.name))));
   }
 
   Future<void> _showShopItemForm(
@@ -199,22 +201,23 @@ class ShopTab extends ConsumerWidget {
     String accountId,
     ChildcareShopItem item,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('아이템 삭제'),
-        content: Text('"${item.name}"을(를) 삭제하시겠습니까?'),
+        title: Text(l10n.childcare_item_delete),
+        content: Text(l10n.childcare_item_delete_message(item.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -226,12 +229,12 @@ class ShopTab extends ConsumerWidget {
     if (!context.mounted) return;
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('삭제에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+        SnackBar(content: Text(l10n.childcare_delete_failed)),
       );
       return;
     }
     ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('삭제되었습니다')));
+        .showSnackBar(SnackBar(content: Text(l10n.common_deleted)));
   }
 }
 
@@ -279,6 +282,7 @@ class _ShopItemFormDialogState extends State<ShopItemFormDialog> {
   }
 
   Future<void> _handleSave() async {
+    final l10n = AppLocalizations.of(context)!;
     final name = _nameCtrl.text.trim();
     final points = int.tryParse(_pointsCtrl.text.trim());
     if (name.isEmpty || points == null || points <= 0) return;
@@ -307,44 +311,47 @@ class _ShopItemFormDialogState extends State<ShopItemFormDialog> {
     if (result == null) {
       setState(() {
         _isSaving = false;
-        _errorMsg = '저장에 실패했습니다. 잠시 후 다시 시도해주세요.';
+        _errorMsg = l10n.childcare_save_failed;
       });
       return;
     }
 
     Navigator.pop(context);
     ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('저장되었습니다')));
+        .showSnackBar(SnackBar(content: Text(l10n.common_saved)));
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isNew = widget.item == null;
 
     return AlertDialog(
-      title: Text(isNew ? '상점 아이템 추가' : '상점 아이템 수정'),
+      title: Text(isNew ? l10n.childcare_item_add : l10n.childcare_item_edit),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _nameCtrl,
-            decoration: const InputDecoration(
-              labelText: '아이템 이름',
-              hintText: '예: TV 30분 더보기',
+            decoration: InputDecoration(
+              labelText: l10n.childcare_item_name,
+              hintText: l10n.childcare_item_name_hint,
             ),
             autofocus: true,
           ),
           const SizedBox(height: AppSizes.spaceS),
           TextField(
             controller: _descCtrl,
-            decoration: const InputDecoration(labelText: '설명 (선택)'),
+            decoration:
+                InputDecoration(labelText: l10n.childcare_reward_description),
           ),
           const SizedBox(height: AppSizes.spaceS),
           TextField(
             controller: _pointsCtrl,
             keyboardType: TextInputType.number,
             decoration:
-                const InputDecoration(labelText: '포인트 비용', suffixText: 'P'),
+                InputDecoration(
+                    labelText: l10n.childcare_item_points, suffixText: 'P'),
           ),
           if (_errorMsg != null) ...[
             const SizedBox(height: AppSizes.spaceS),
@@ -360,11 +367,11 @@ class _ShopItemFormDialogState extends State<ShopItemFormDialog> {
       actions: [
         TextButton(
           onPressed: _isSaving ? null : () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _isSaving ? null : _handleSave,
-          child: Text(isNew ? '추가' : '저장'),
+          child: Text(isNew ? l10n.common_add : l10n.common_save),
         ),
       ],
     );
@@ -393,6 +400,7 @@ class _ShopGuideState extends State<ShopGuide> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return AnimatedSize(
@@ -419,7 +427,7 @@ class _ShopGuideState extends State<ShopGuide> {
                     const SizedBox(width: AppSizes.spaceS),
                     Expanded(
                       child: Text(
-                        '포인트 상점이란?',
+                        l10n.childcare_shop_help_title,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                               color: colorScheme.secondary,
                             ),
@@ -444,25 +452,25 @@ class _ShopGuideState extends State<ShopGuide> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '아이가 모은 포인트로 구매할 수 있는 보상 목록입니다.\n원하는 것을 얻기 위해 스스로 포인트를 모으는 동기부여가 됩니다.',
+                      l10n.childcare_shop_help_body,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                     ),
                     const SizedBox(height: AppSizes.spaceM),
                     Text(
-                      '예시 아이템',
+                      l10n.childcare_shop_examples,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                             color: colorScheme.secondary,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                     const SizedBox(height: AppSizes.spaceS),
-                    ...const [
-                      ('TV 30분 더보기', 10),
-                      ('게임 1시간 하기', 20),
-                      ('원하는 간식 고르기', 15),
-                      ('늦게 자도 되는 날', 30),
+                    ...[
+                      (l10n.childcare_shop_example1, 10),
+                      (l10n.childcare_shop_example2, 20),
+                      (l10n.childcare_shop_example3, 15),
+                      (l10n.childcare_shop_example4, 30),
                     ].map(
                       (e) => Padding(
                         padding: const EdgeInsets.only(left: 4, bottom: 4),
@@ -505,7 +513,7 @@ class _ShopGuideState extends State<ShopGuide> {
                     ),
                     const SizedBox(height: AppSizes.spaceS),
                     Text(
-                      '아이템을 비활성화하면 목록에서 숨길 수 있습니다.',
+                      l10n.childcare_shop_disable_note,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontStyle: FontStyle.italic,

@@ -8630,6 +8630,54 @@ abstract class AppLocalizations {
   /// **'만료일'**
   String get subscription_expires_at_label;
 
+  /// 구독 남은 기간 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'남은 기간'**
+  String get subscription_days_left_label;
+
+  /// 구독 남은 일수 값
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일'**
+  String subscription_days_left_value(int days);
+
+  /// 구독이 오늘 끝날 때 표시하는 값
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 종료'**
+  String get subscription_days_left_today;
+
+  /// 무료 체험 종료일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'체험 종료일'**
+  String get subscription_trial_ends_at_label;
+
+  /// 유료 구독의 현재 이용 기간 종료일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이용 기간 종료일'**
+  String get subscription_period_end_label;
+
+  /// 이용 기간 종료일 아래 자동 갱신 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'해지하지 않으면 이 날짜에 자동으로 갱신됩니다'**
+  String get subscription_auto_renew_hint;
+
+  /// 자동 갱신 예약된 구독의 다음 결제일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 갱신일'**
+  String get subscription_next_renewal_label;
+
+  /// 자동 갱신이 꺼진 구독의 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'구독이 해지되어 이 날짜에 종료됩니다'**
+  String get subscription_canceled_hint;
+
   /// 구독 상품 목록 섹션 타이틀
   ///
   /// In ko, this message translates to:
@@ -10339,6 +10387,2658 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'깃발'**
   String get emoji_picker_category_flags;
+
+  /// 태그 필터 선택을 해제하는 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'태그 필터 초기화'**
+  String get memo_tag_filter_clear;
+
+  /// 메모 목록에서 고정된 메모 구역 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정된 메모'**
+  String get memo_section_pinned;
+
+  /// 고정 메모가 많을 때 더 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'펼치기 ({count}개 더)'**
+  String memo_pinned_expand(int count);
+
+  /// 펼쳐진 고정 메모를 다시 접는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'접기'**
+  String get memo_pinned_collapse;
+
+  /// 메모를 고정하는 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'대시보드에 고정'**
+  String get memo_pin_add;
+
+  /// 메모 고정을 푸는 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'핀 해제'**
+  String get memo_pin_remove;
+
+  /// 고정 상태 변경 실패 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'핀 설정에 실패했습니다'**
+  String get memo_pin_error;
+
+  /// 메모를 고정했을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'메모가 상단에 고정되고, 대시보드에 추가되었습니다.'**
+  String get memo_pin_added;
+
+  /// 메모 고정을 풀었을 때 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'고정이 해제되었습니다.'**
+  String get memo_pin_removed;
+
+  /// 메모를 복사할 때 새 메모에 붙는 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'{title} (복사본)'**
+  String memo_duplicate_title(String title);
+
+  /// 태그 입력칸 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'태그 입력 후 추가'**
+  String get memo_tag_input_hint;
+
+  /// 클립보드 붙여넣기 실패 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'클립보드 붙여넣기에 실패했습니다.'**
+  String get memo_editor_paste_failed;
+
+  /// 링크 카드 추가 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'링크 카드 추가'**
+  String get memo_editor_link_card_add;
+
+  /// 에디터 도구 - 이미지
+  ///
+  /// In ko, this message translates to:
+  /// **'이미지'**
+  String get memo_editor_image;
+
+  /// 에디터 도구 - 서식 유지 붙여넣기
+  ///
+  /// In ko, this message translates to:
+  /// **'서식 유지 붙여넣기'**
+  String get memo_editor_paste_formatted;
+
+  /// 에디터 도구 - 선택한 글자에 링크 걸기
+  ///
+  /// In ko, this message translates to:
+  /// **'하이퍼링크 적용'**
+  String get memo_editor_link_apply;
+
+  /// 링크를 걸려면 글자를 먼저 선택하라는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'텍스트를 선택하세요'**
+  String get memo_editor_link_select_first;
+
+  /// 에디터 도구 - 굵게
+  ///
+  /// In ko, this message translates to:
+  /// **'굵게'**
+  String get memo_editor_bold;
+
+  /// 에디터 도구 - 기울임
+  ///
+  /// In ko, this message translates to:
+  /// **'기울임'**
+  String get memo_editor_italic;
+
+  /// 에디터 도구 - 취소선
+  ///
+  /// In ko, this message translates to:
+  /// **'취소선'**
+  String get memo_editor_strikethrough;
+
+  /// 에디터 도구 - 제목 1
+  ///
+  /// In ko, this message translates to:
+  /// **'제목 1'**
+  String get memo_editor_heading1;
+
+  /// 에디터 도구 - 제목 2(체크리스트 구역 구분)
+  ///
+  /// In ko, this message translates to:
+  /// **'제목 2 (체크리스트 섹션)'**
+  String get memo_editor_heading2;
+
+  /// 에디터 도구 - 글머리 기호 목록
+  ///
+  /// In ko, this message translates to:
+  /// **'글머리 기호'**
+  String get memo_editor_bullet_list;
+
+  /// 에디터 도구 - 번호 목록
+  ///
+  /// In ko, this message translates to:
+  /// **'번호 목록'**
+  String get memo_editor_numbered_list;
+
+  /// 에디터 도구 - 실행 취소
+  ///
+  /// In ko, this message translates to:
+  /// **'실행 취소'**
+  String get memo_editor_undo;
+
+  /// 에디터 도구 - 다시 실행
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 실행'**
+  String get memo_editor_redo;
+
+  /// 그룹 저금통 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 저금통'**
+  String get savings_title;
+
+  /// 그룹을 고르라는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택해 주세요'**
+  String get savings_select_group;
+
+  /// 저금통 소개 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹과 함께 목표를 정해 돈을 모아요'**
+  String get savings_intro_title;
+
+  /// 저금통 소개 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'여행 경비, 비상금, 가전 구매 등 원하는 목표를 만들고 매달 자동으로 적립하거나 수동으로 입금할 수 있어요.'**
+  String get savings_intro_body;
+
+  /// 저금통 소개 팁
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 외에도 친구, 동료 등 그룹이라면 누구든 \"계\" 처럼 활용할 수 있어요.'**
+  String get savings_intro_tip;
+
+  /// 저금통이 하나도 없을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통이 없습니다\n+ 버튼을 눌러 저금통을 추가하세요'**
+  String get savings_list_empty;
+
+  /// 달성률 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{rate}% 달성'**
+  String savings_achievement_rate(String rate);
+
+  /// 입금
+  ///
+  /// In ko, this message translates to:
+  /// **'입금'**
+  String get savings_deposit;
+
+  /// 출금
+  ///
+  /// In ko, this message translates to:
+  /// **'출금'**
+  String get savings_withdraw;
+
+  /// 금액 입력칸 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'금액 (원)'**
+  String get savings_amount_label;
+
+  /// 메모 입력칸 라벨(선택)
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 (선택)'**
+  String get savings_memo_label;
+
+  /// 출금 사유 입력칸 라벨(필수)
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 사유 (필수)'**
+  String get savings_withdraw_reason_label;
+
+  /// 목표 삭제 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 삭제'**
+  String get savings_delete_title;
+
+  /// 목표 삭제 확인 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'\'{name}\'을(를) 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.'**
+  String savings_delete_message(String name);
+
+  /// 적립 목표 상세 기본 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'적립 목표'**
+  String get savings_detail_title;
+
+  /// 목표 금액을 다 모았을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 금액 달성!'**
+  String get savings_goal_reached;
+
+  /// 목표 금액 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'목표: {amount}'**
+  String savings_target_amount(String amount);
+
+  /// 자동 적립
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 적립'**
+  String get savings_auto_deposit;
+
+  /// 매달 적립하는 금액
+  ///
+  /// In ko, this message translates to:
+  /// **'월 {amount}'**
+  String savings_auto_deposit_monthly(String amount);
+
+  /// 자동 적립 중지 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 적립 중지'**
+  String get savings_auto_deposit_pause;
+
+  /// 자동 적립 재개 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 적립 재개'**
+  String get savings_auto_deposit_resume;
+
+  /// 최근 거래 내역 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 내역'**
+  String get savings_recent_transactions;
+
+  /// 전체 내역 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 보기'**
+  String get savings_view_all;
+
+  /// 거래 내역이 없을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'거래 내역이 없습니다.'**
+  String get savings_transactions_empty;
+
+  /// 거래 내역 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'내역을 불러오지 못했습니다'**
+  String get savings_transactions_load_error;
+
+  /// 거래 내역 필터 - 자동 적립
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 적립'**
+  String get savings_filter_auto;
+
+  /// 저금통 추가 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통 추가'**
+  String get savings_form_title_add;
+
+  /// 저금통 수정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통 수정'**
+  String get savings_form_title_edit;
+
+  /// 수정 완료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'수정 완료'**
+  String get savings_form_submit_edit;
+
+  /// 저장 실패 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하지 못했습니다'**
+  String get savings_form_save_error;
+
+  /// 목표 이름 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 이름 *'**
+  String get savings_field_name;
+
+  /// 목표 이름 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 이름을 입력해 주세요'**
+  String get savings_field_name_required;
+
+  /// 설명 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'설명 (선택)'**
+  String get savings_field_description;
+
+  /// 목표 금액 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 금액 (선택, 원)'**
+  String get savings_field_target;
+
+  /// 목표 금액 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 1000000'**
+  String get savings_field_target_hint;
+
+  /// 목표 금액 없이도 된다는 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 금액을 지정하지 않으면 비상금·계처럼 계속 모아서 사용할 수 있어요.'**
+  String get savings_field_target_helper;
+
+  /// 금액 형식 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'올바른 금액을 입력해 주세요'**
+  String get savings_field_amount_invalid;
+
+  /// 자동 적립 스위치 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 자동으로 적립합니다'**
+  String get savings_field_auto_deposit_desc;
+
+  /// 월 적립금 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'월 적립금 (원)'**
+  String get savings_field_monthly_amount;
+
+  /// 월 적립금 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 100000'**
+  String get savings_field_monthly_amount_hint;
+
+  /// 월 적립금 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'월 적립금을 입력해 주세요'**
+  String get savings_field_monthly_amount_required;
+
+  /// 적립일 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'매달 적립일 (1~31일)'**
+  String get savings_field_deposit_day;
+
+  /// 적립일 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 25'**
+  String get savings_field_deposit_day_hint;
+
+  /// 말일 처리 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'해당 월에 날짜가 없으면 말일에 자동 처리돼요.'**
+  String get savings_field_deposit_day_helper;
+
+  /// 적립일 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'1~31 사이의 날짜를 입력해 주세요'**
+  String get savings_field_deposit_day_invalid;
+
+  /// 자산 통계 포함 스위치
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 통계에 포함'**
+  String get savings_field_include_assets;
+
+  /// 자산 통계 포함 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 현황에서 적립금 잔액을 함께 확인할 수 있어요'**
+  String get savings_field_include_assets_desc;
+
+  /// 투표 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'투표'**
+  String get vote_title;
+
+  /// 진행 중 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'진행중'**
+  String get vote_filter_ongoing;
+
+  /// 종료됨 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'종료됨'**
+  String get vote_filter_closed;
+
+  /// 진행 중 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'진행중'**
+  String get vote_status_ongoing;
+
+  /// 종료 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'종료'**
+  String get vote_status_closed;
+
+  /// 그룹 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택하면 투표 목록이 표시됩니다'**
+  String get vote_select_group;
+
+  /// 투표가 없을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 투표가 없습니다\n+ 버튼으로 새 투표를 만들어보세요'**
+  String get vote_list_empty;
+
+  /// 목록 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'투표 목록을 불러오지 못했습니다'**
+  String get vote_list_load_error;
+
+  /// 상세 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'투표를 불러오지 못했습니다'**
+  String get vote_detail_load_error;
+
+  /// 참여자 수
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명 참여'**
+  String vote_participants(int count);
+
+  /// 내가 참여했음 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'참여함'**
+  String get vote_participated;
+
+  /// 마감된 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'마감됨'**
+  String get vote_deadline_passed;
+
+  /// 마감까지 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 후 마감'**
+  String vote_deadline_days(int days);
+
+  /// 마감까지 남은 시간
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 후 마감'**
+  String vote_deadline_hours(int hours);
+
+  /// 마감까지 남은 분
+  ///
+  /// In ko, this message translates to:
+  /// **'{minutes}분 후 마감'**
+  String vote_deadline_minutes(int minutes);
+
+  /// 투표 삭제
+  ///
+  /// In ko, this message translates to:
+  /// **'투표 삭제'**
+  String get vote_delete;
+
+  /// 투표 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 투표를 삭제하시겠습니까?\n삭제된 투표는 복구할 수 없습니다.'**
+  String get vote_delete_message;
+
+  /// 삭제 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하지 못했습니다'**
+  String get vote_delete_failed;
+
+  /// 투표 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'투표가 완료되었습니다'**
+  String get vote_submit_success;
+
+  /// 투표 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'투표하지 못했습니다'**
+  String get vote_submit_failed;
+
+  /// 복수 선택 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'복수 선택'**
+  String get vote_multiple_choice_badge;
+
+  /// 익명 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'익명'**
+  String get vote_anonymous_badge;
+
+  /// 투표하기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'투표하기'**
+  String get vote_submit;
+
+  /// 재투표 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'재투표하기'**
+  String get vote_revote;
+
+  /// 선택지 득표 결과
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}표 ({percent}%)'**
+  String vote_option_result(int count, String percent);
+
+  /// 투표 만들기 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'새 투표 만들기'**
+  String get vote_create_title;
+
+  /// 투표 제목 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'투표 제목 *'**
+  String get vote_field_title;
+
+  /// 제목 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해주세요'**
+  String get vote_field_title_required;
+
+  /// 설명 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'설명 (선택)'**
+  String get vote_field_description;
+
+  /// 선택지 구역 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'선택지'**
+  String get vote_options_section;
+
+  /// 선택지 입력칸 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'선택지 {index}'**
+  String vote_option_hint(int index);
+
+  /// 선택지 2개 이상 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'선택지를 2개 이상 입력해주세요'**
+  String get vote_options_min;
+
+  /// 투표 생성 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'투표를 만들지 못했습니다'**
+  String get vote_create_failed;
+
+  /// 복수 선택 허용 스위치
+  ///
+  /// In ko, this message translates to:
+  /// **'복수 선택 허용'**
+  String get vote_allow_multiple;
+
+  /// 복수 선택 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'여러 항목을 동시에 선택할 수 있습니다'**
+  String get vote_allow_multiple_desc;
+
+  /// 익명 투표 스위치
+  ///
+  /// In ko, this message translates to:
+  /// **'익명 투표'**
+  String get vote_anonymous;
+
+  /// 익명 투표 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'투표자 이름이 공개되지 않습니다'**
+  String get vote_anonymous_desc;
+
+  /// 마감 시각 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'마감 시각'**
+  String get vote_deadline;
+
+  /// 마감 시각 미설정
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 안 함 (수동 종료)'**
+  String get vote_deadline_none;
+
+  /// 할일 상세 - 마감일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'마감일'**
+  String get todo_label_dueDate;
+
+  /// 할일 상세 - 카테고리 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get todo_label_category;
+
+  /// 할일 상세 - 등록일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'등록일'**
+  String get todo_label_createdAt;
+
+  /// 할일 상세 - 완료일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'완료일'**
+  String get todo_label_completedAt;
+
+  /// 할일 상세 - 상태 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'상태'**
+  String get todo_label_status;
+
+  /// 칸반 열에서 드래그 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'드래그하여 이동'**
+  String get todo_drag_to_move;
+
+  /// 더 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'더 보기'**
+  String get common_more;
+
+  /// 장바구니 합계 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'합계'**
+  String get cart_total;
+
+  /// 장바구니 저장 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'저장 중 오류가 발생했습니다'**
+  String get cart_save_error;
+
+  /// 개당 금액 모드
+  ///
+  /// In ko, this message translates to:
+  /// **'개당'**
+  String get cart_price_unit;
+
+  /// 총액 모드
+  ///
+  /// In ko, this message translates to:
+  /// **'총액'**
+  String get cart_price_total;
+
+  /// 개당 금액 입력칸 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'개당 금액'**
+  String get cart_price_unit_label;
+
+  /// 총 금액 입력칸 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'총 금액'**
+  String get cart_price_total_label;
+
+  /// 개당 금액 입력칸 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'개당 금액 입력'**
+  String get cart_price_unit_hint;
+
+  /// 총 금액 입력칸 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'총 금액 입력'**
+  String get cart_price_total_hint;
+
+  /// 단위·메모 입력 열기
+  ///
+  /// In ko, this message translates to:
+  /// **'단위·메모 추가'**
+  String get cart_extra_show;
+
+  /// 단위·메모 입력 닫기
+  ///
+  /// In ko, this message translates to:
+  /// **'단위·메모 숨기기'**
+  String get cart_extra_hide;
+
+  /// 장보기 날짜 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 날짜'**
+  String get cart_shopping_date;
+
+  /// 날짜 선택 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 선택'**
+  String get cart_select_date;
+
+  /// 장보기 완료 시 기본 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'마트 장보기'**
+  String get cart_default_description;
+
+  /// 내 신고 내역 메뉴 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'내 신고 내역'**
+  String get settings_myReportsTitle;
+
+  /// 내 신고 내역 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'내가 신고한 목록을 확인합니다'**
+  String get settings_myReportsSubtitle;
+
+  /// 공통 역할 관리 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'공통 역할 관리'**
+  String get settings_commonRolesTitle;
+
+  /// 공통 역할 관리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'시스템 전체에 적용되는 공통 역할 관리'**
+  String get settings_commonRolesSubtitle;
+
+  /// 사용자 및 계정 관리 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'사용자 및 계정 관리'**
+  String get settings_userAdminTitle;
+
+  /// 사용자 및 계정 관리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 수정, 계정 삭제 예약 및 처리'**
+  String get settings_userAdminSubtitle;
+
+  /// 신고 관리 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 관리'**
+  String get settings_reportAdminTitle;
+
+  /// 신고 관리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원 신고 접수 및 처리'**
+  String get settings_reportAdminSubtitle;
+
+  /// 튜토리얼 다시 보기 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'튜토리얼 다시 보기'**
+  String get settings_replayTutorial;
+
+  /// 튜토리얼 다시 보기 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 소개 슬라이드와 각 기능의 안내를\n처음부터 다시 볼 수 있습니다.'**
+  String get settings_replayTutorialBody;
+
+  /// 다시 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 보기'**
+  String get settings_replayTutorialConfirm;
+
+  /// 튜토리얼 예약 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 앱 실행 시 튜토리얼이 표시됩니다.'**
+  String get settings_replayTutorialDone;
+
+  /// 개인 색상 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 색상'**
+  String get settings_personalColor;
+
+  /// 개인 색상 선택 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 색상 선택'**
+  String get settings_personalColorPick;
+
+  /// 위젯 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'위젯 추가하기'**
+  String get widgetSettings_addWidget;
+
+  /// 기념일 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 추가'**
+  String get widgetSettings_addAnniversary;
+
+  /// 신고하기 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'신고하기'**
+  String get report_title;
+
+  /// 신고 사유 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 사유'**
+  String get report_reason;
+
+  /// 상세 내용 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 내용 (선택)'**
+  String get report_detail;
+
+  /// 상세 내용 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'추가 설명을 입력하세요'**
+  String get report_detail_hint;
+
+  /// 신고 접수 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 접수'**
+  String get report_submit;
+
+  /// 신고 접수 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'신고가 접수되었습니다.'**
+  String get report_submitted;
+
+  /// 신고 접수 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'신고를 접수하지 못했습니다'**
+  String get report_submit_failed;
+
+  /// 신고 내역 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 내역이 없습니다'**
+  String get report_empty;
+
+  /// 신고 관리 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 관리'**
+  String get report_admin_title;
+
+  /// 신고 처리 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'신고 처리'**
+  String get report_handle_title;
+
+  /// 처리 상태 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 상태'**
+  String get report_handle_status;
+
+  /// 처리 메모 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 메모 (선택)'**
+  String get report_handle_memo;
+
+  /// 처리 메모 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 내용을 입력하세요'**
+  String get report_handle_memo_hint;
+
+  /// 처리 완료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'처리 완료'**
+  String get report_handle_done;
+
+  /// 신고 처리 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'신고가 처리되었습니다.'**
+  String get report_handled;
+
+  /// 신고 처리 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'처리하지 못했습니다'**
+  String get report_handle_failed;
+
+  /// 초대 취소
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 취소'**
+  String get group_invite_cancel;
+
+  /// 초대 취소 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'{email}에게 보낸 초대를 취소하시겠습니까?'**
+  String group_invite_cancel_message(String email);
+
+  /// 초대 취소 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'초대가 취소되었습니다'**
+  String get group_invite_canceled;
+
+  /// 초대 재전송 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'{email}에게 초대 이메일을 다시 보냈습니다'**
+  String group_invite_resent(String email);
+
+  /// 재전송 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'재전송'**
+  String get group_invite_resend;
+
+  /// 색상 변경 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'색상을 바꾸지 못했습니다'**
+  String get group_color_change_failed;
+
+  /// 색상 초기화 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 기본 색상으로 되돌렸습니다'**
+  String get group_color_reset;
+
+  /// 색상 초기화 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'색상을 되돌리지 못했습니다'**
+  String get group_color_reset_failed;
+
+  /// 그룹 순서 저장 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 순서를 저장했습니다'**
+  String get group_order_saved;
+
+  /// 멤버 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버가 없습니다'**
+  String get group_members_empty;
+
+  /// 멤버 탈퇴 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버 탈퇴'**
+  String get group_member_remove;
+
+  /// 멤버 삭제 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버를 삭제했습니다'**
+  String get group_member_removed;
+
+  /// 역할 변경 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 변경'**
+  String get group_role_change;
+
+  /// 역할 변경 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 변경했습니다'**
+  String get group_role_changed;
+
+  /// 역할 목록 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 목록을 불러올 수 없습니다'**
+  String get group_roles_load_error;
+
+  /// 초대 코드 재생성 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 재생성하시겠습니까?\n기존 초대 코드는 사용할 수 없게 됩니다.'**
+  String get group_regenerate_code_message;
+
+  /// 그룹장 양도
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹장 양도'**
+  String get group_transfer_ownership;
+
+  /// 양도하기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'양도하기'**
+  String get group_transfer_confirm;
+
+  /// 양도 확인 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님에게 그룹장 권한을 넘기시겠습니까?'**
+  String group_transfer_message(String name);
+
+  /// 양도 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹장을 넘기지 못했습니다'**
+  String get group_transfer_failed;
+
+  /// 그룹 초대 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 초대'**
+  String get invite_title;
+
+  /// 가입 진행 중
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹에 가입 중...'**
+  String get invite_joining;
+
+  /// 가입 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 가입 완료!'**
+  String get invite_joined;
+
+  /// 홈으로 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'홈으로'**
+  String get invite_go_home;
+
+  /// 로그인 필요 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인 후 그룹에 가입할 수 있어요.'**
+  String get invite_login_required;
+
+  /// 로그인하기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인하기'**
+  String get invite_login;
+
+  /// 가입 실패 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 실패'**
+  String get invite_failed;
+
+  /// 양도 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님에게 그룹장을 넘겼습니다'**
+  String group_transfer_done(String name);
+
+  /// 초대 코드 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드: {code}'**
+  String invite_code_label(String code);
+
+  /// 알 수 없는 오류
+  ///
+  /// In ko, this message translates to:
+  /// **'알 수 없는 오류가 발생했어요.'**
+  String get invite_unknown_error;
+
+  /// 알 수 없는 오류
+  ///
+  /// In ko, this message translates to:
+  /// **'알 수 없는 오류'**
+  String get common_unknownError;
+
+  /// 정렬 순서 저장 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'정렬 순서를 저장했습니다'**
+  String get common_sortOrderSaved;
+
+  /// 저장 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하지 못했습니다'**
+  String get common_saveFailed;
+
+  /// 삭제 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하지 못했습니다'**
+  String get common_deleteFailed;
+
+  /// 검색 결과 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'검색 결과가 없습니다'**
+  String get common_noSearchResults;
+
+  /// 공통 역할 관리 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'공통 역할 관리'**
+  String get role_common_title;
+
+  /// 역할 생성 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 생성'**
+  String get role_create;
+
+  /// 역할 목록 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 목록을 불러오지 못했습니다'**
+  String get role_list_load_error;
+
+  /// 공통 역할 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 공통 역할이 없습니다'**
+  String get role_list_empty;
+
+  /// 공통 역할 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'+ 버튼을 눌러 새로운 역할을 만드세요'**
+  String get role_list_empty_subtitle;
+
+  /// 역할 정보 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 정보를 불러오지 못했습니다'**
+  String get role_info_load_error;
+
+  /// 역할 없음 예외
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 찾을 수 없습니다'**
+  String get role_not_found;
+
+  /// 역할별 권한 관리 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 권한 관리'**
+  String role_permissions_title(String name);
+
+  /// 권한 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 검색'**
+  String get role_permission_search;
+
+  /// 권한 목록 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 목록을 불러오지 못했습니다'**
+  String get role_permissions_load_error;
+
+  /// 권한 저장 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'권한을 저장했습니다'**
+  String get role_permissions_saved;
+
+  /// 공통 역할 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'공통 역할 수정'**
+  String get role_edit_title;
+
+  /// 공통 역할 생성 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'공통 역할 생성'**
+  String get role_create_title;
+
+  /// 역할 생성 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 만들었습니다'**
+  String get role_created;
+
+  /// 역할 수정 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 수정했습니다'**
+  String get role_updated;
+
+  /// 역할 생성 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 만들지 못했습니다'**
+  String get role_create_failed;
+
+  /// 역할 수정 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 수정하지 못했습니다'**
+  String get role_update_failed;
+
+  /// 역할 이름 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 이름'**
+  String get role_field_name;
+
+  /// 역할 이름 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: ADMIN, MEMBER'**
+  String get role_field_name_hint;
+
+  /// 역할 이름 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 이름을 입력하세요'**
+  String get role_field_name_required;
+
+  /// 기본 역할 스위치
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 역할'**
+  String get role_default;
+
+  /// 기본 역할 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'신규 가입 시 자동으로 부여되는 역할'**
+  String get role_default_desc;
+
+  /// 기본 역할 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'기본'**
+  String get role_default_badge;
+
+  /// 역할 색상 섹션
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 색상'**
+  String get role_color;
+
+  /// 역할 삭제
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 삭제'**
+  String get role_delete;
+
+  /// 역할 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 역할을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.'**
+  String role_delete_message(String name);
+
+  /// 역할 삭제 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'역할을 삭제했습니다'**
+  String get role_deleted;
+
+  /// 권한 관리 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 관리'**
+  String get role_manage_permissions;
+
+  /// 권한 이름 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예시 권한'**
+  String get permission_name_hint;
+
+  /// 권한 설명 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'이 권한에 대한 설명을 입력하세요'**
+  String get permission_desc_hint;
+
+  /// 직접 입력 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'+ 직접 입력'**
+  String get permission_category_custom;
+
+  /// 새 카테고리 이름 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'새 카테고리 이름'**
+  String get permission_category_new;
+
+  /// 카테고리 이름 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'새 카테고리 이름을 입력해주세요'**
+  String get permission_category_required;
+
+  /// 적금 플랜 카드 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 플랜'**
+  String get childcare_savings_plan;
+
+  /// 적금 진행 중 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'진행 중'**
+  String get childcare_savings_ongoing;
+
+  /// 적금 만기 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'만기 완료'**
+  String get childcare_savings_matured;
+
+  /// 단리
+  ///
+  /// In ko, this message translates to:
+  /// **'단리'**
+  String get childcare_interest_simple;
+
+  /// 복리
+  ///
+  /// In ko, this message translates to:
+  /// **'복리'**
+  String get childcare_interest_compound;
+
+  /// 이자 유형 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이자 유형'**
+  String get childcare_interest_type;
+
+  /// 월 납입액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월 납입액'**
+  String get childcare_monthly_deposit;
+
+  /// 이자율 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이자율'**
+  String get childcare_interest_rate;
+
+  /// 기간 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기간'**
+  String get childcare_period;
+
+  /// 적금 시작 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 플랜 시작하기'**
+  String get childcare_savings_start;
+
+  /// 적금 시작 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 자동으로 적금이 납입돼요'**
+  String get childcare_savings_start_desc;
+
+  /// 중도 해지 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'중도 해지'**
+  String get childcare_savings_cancel;
+
+  /// 중도 해지 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 중도 해지'**
+  String get childcare_savings_cancel_title;
+
+  /// 중도 해지 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'중도 해지 시 이자 없이 원금만 반환됩니다.\n정말 해지하시겠습니까?'**
+  String get childcare_savings_cancel_message;
+
+  /// 해지 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'해지'**
+  String get childcare_savings_cancel_confirm;
+
+  /// 해지 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'적금을 해지했습니다'**
+  String get childcare_savings_canceled;
+
+  /// 해지 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'해지하지 못했습니다'**
+  String get childcare_savings_cancel_failed;
+
+  /// 적금 시작 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 플랜을 시작했습니다'**
+  String get childcare_savings_started;
+
+  /// 적금 만들기 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 플랜 만들기'**
+  String get childcare_savings_create_title;
+
+  /// 월 납입 포인트 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'월 납입 포인트'**
+  String get childcare_savings_monthly_points;
+
+  /// 연 이자율 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'연 이자율'**
+  String get childcare_savings_annual_rate;
+
+  /// 기준 금리 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 국고채 3년물 금리({rate}%)를 참고해 기본값을 넣었어요'**
+  String childcare_savings_rate_helper(String rate);
+
+  /// 기준 금리 로딩
+  ///
+  /// In ko, this message translates to:
+  /// **'국고채 3년물 금리를 불러오는 중...'**
+  String get childcare_savings_rate_loading;
+
+  /// 시작일 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'시작일'**
+  String get childcare_start_date;
+
+  /// 만기일 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'만기일'**
+  String get childcare_maturity_date;
+
+  /// 총 납입 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'총 납입'**
+  String get childcare_total_deposit;
+
+  /// 예상 이자 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 이자'**
+  String get childcare_expected_interest;
+
+  /// 만기 수령 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'만기 수령'**
+  String get childcare_maturity_amount;
+
+  /// 개월 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'{months}개월'**
+  String childcare_months(int months);
+
+  /// 시작 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'시작'**
+  String get childcare_start;
+
+  /// 용돈 플랜 미설정 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈 플랜이 설정되지 않았습니다'**
+  String get childcare_allowance_missing;
+
+  /// 용돈 플랜 미설정 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'월 포인트, 지급일 등을 설정해보세요'**
+  String get childcare_allowance_missing_desc;
+
+  /// 연봉 협상일 지남 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'연봉 협상일이 지났습니다'**
+  String get childcare_negotiation_passed;
+
+  /// 연봉 협상일 임박 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'연봉 협상일이 다가오고 있습니다'**
+  String get childcare_negotiation_upcoming;
+
+  /// 협상일 지남 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 전({date})이었습니다. 용돈 플랜을 검토해보세요'**
+  String childcare_negotiation_passed_desc(int days, String date);
+
+  /// 협상일 당일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘이 연봉 협상일입니다! ({date})'**
+  String childcare_negotiation_today(String date);
+
+  /// 포인트 현금화 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 현금화'**
+  String get childcare_cashout;
+
+  /// 현금화 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'현금화'**
+  String get childcare_cashout_button;
+
+  /// 현금화할 포인트 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'현금화할 포인트'**
+  String get childcare_cashout_points;
+
+  /// 현금화 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'현금화하지 못했습니다. 잠시 후 다시 시도해주세요.'**
+  String get childcare_cashout_failed;
+
+  /// 현금화 거래 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 현금화 ({amount}원)'**
+  String childcare_cashout_description(String amount);
+
+  /// 현금화 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'{points}P를 {amount}원으로 바꿨습니다'**
+  String childcare_cashout_done(String points, String amount);
+
+  /// 현금화 환율·잔액 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'1P = {ratio}원 · 보유 {balance}P'**
+  String childcare_cashout_rate(String ratio, String balance);
+
+  /// 현금화 예상 금액
+  ///
+  /// In ko, this message translates to:
+  /// **'≈ {amount}원'**
+  String childcare_cashout_approx(String amount);
+
+  /// 규칙 적용 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 적용'**
+  String get childcare_rule_apply;
+
+  /// 규칙 위반 적용 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 위반 적용'**
+  String get childcare_rule_apply_penalty;
+
+  /// 포인트 지급 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\"\n{points}P를 지급합니다.'**
+  String childcare_rule_apply_plus_message(String name, String points);
+
+  /// 포인트 차감 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\" 위반으로\n{points}P를 차감합니다.'**
+  String childcare_rule_apply_minus_message(String name, String points);
+
+  /// 지급 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'지급'**
+  String get childcare_rule_give;
+
+  /// 차감 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'차감'**
+  String get childcare_rule_deduct;
+
+  /// 포인트 지급 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'{points}P를 지급했습니다'**
+  String childcare_points_given(String points);
+
+  /// 포인트 차감 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'{points}P를 차감했습니다'**
+  String childcare_points_deducted(String points);
+
+  /// 규칙 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 삭제'**
+  String get childcare_rule_delete;
+
+  /// 규칙 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\"을(를) 삭제하시겠습니까?'**
+  String childcare_rule_delete_message(String name);
+
+  /// 삭제 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제되었습니다'**
+  String get common_deleted;
+
+  /// 저장 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'저장되었습니다'**
+  String get common_saved;
+
+  /// +포인트 규칙
+  ///
+  /// In ko, this message translates to:
+  /// **'+ 포인트 규칙'**
+  String get childcare_rule_type_plus;
+
+  /// -포인트 규칙
+  ///
+  /// In ko, this message translates to:
+  /// **'- 포인트 규칙'**
+  String get childcare_rule_type_minus;
+
+  /// 일반 규칙
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 규칙'**
+  String get childcare_rule_type_info;
+
+  /// 규칙 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙이란 무엇인가요?'**
+  String get childcare_rule_help_title;
+
+  /// 규칙 안내 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙은 아이의 행동에 포인트를 연결하는 약속입니다.\n좋은 행동에는 포인트를 주고, 약속을 어겼을 때는 포인트를 차감해요.'**
+  String get childcare_rule_help_body;
+
+  /// 규칙 작성 팁
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙은 구체적이고 명확할수록 좋습니다.\n애매한 규칙은 아이와 불필요한 기싸움으로 이어질 수 있어요.\n아이와 함께 규칙을 정하면 신뢰가 쌓입니다.'**
+  String get childcare_rule_help_tip;
+
+  /// + 규칙 예시 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'+ 규칙 예시 (포인트 지급)'**
+  String get childcare_rule_examples_plus;
+
+  /// - 규칙 예시 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'- 규칙 예시 (포인트 차감)'**
+  String get childcare_rule_examples_minus;
+
+  /// 일반 규칙 예시 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 규칙 예시 (포인트 없음)'**
+  String get childcare_rule_examples_info;
+
+  /// + 예시 1
+  ///
+  /// In ko, this message translates to:
+  /// **'학교 숙제를 혼자 힘으로 끝냈을 때  +10P'**
+  String get childcare_rule_example_plus1;
+
+  /// + 예시 2
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁 9시 이전에 스스로 잠자리에 들었을 때  +5P'**
+  String get childcare_rule_example_plus2;
+
+  /// + 예시 3
+  ///
+  /// In ko, this message translates to:
+  /// **'밥 먹은 후 식기를 싱크대에 가져다 놓았을 때  +3P'**
+  String get childcare_rule_example_plus3;
+
+  /// + 예시 4
+  ///
+  /// In ko, this message translates to:
+  /// **'일주일 동안 지각 없이 등교했을 때  +20P'**
+  String get childcare_rule_example_plus4;
+
+  /// - 예시 1
+  ///
+  /// In ko, this message translates to:
+  /// **'평일에 스마트폰을 1시간 이상 사용했을 때  -10P'**
+  String get childcare_rule_example_minus1;
+
+  /// - 예시 2
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁 10시가 넘도록 잠자리에 들지 않았을 때  -5P'**
+  String get childcare_rule_example_minus2;
+
+  /// - 예시 3
+  ///
+  /// In ko, this message translates to:
+  /// **'형제·자매에게 욕설을 했을 때  -15P'**
+  String get childcare_rule_example_minus3;
+
+  /// - 예시 4
+  ///
+  /// In ko, this message translates to:
+  /// **'약속된 귀가 시간인 오후 6시를 넘겼을 때  -10P'**
+  String get childcare_rule_example_minus4;
+
+  /// 일반 예시 1
+  ///
+  /// In ko, this message translates to:
+  /// **'이달 포인트 현금 전환은 최대 50P까지만 가능'**
+  String get childcare_rule_example_info1;
+
+  /// 일반 예시 2
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 상점 아이템은 하루 1개만 사용 가능'**
+  String get childcare_rule_example_info2;
+
+  /// 규칙 적용 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙을 적용하면 해당 포인트가 즉시 반영됩니다.'**
+  String get childcare_rule_apply_note;
+
+  /// 규칙 추가 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 추가'**
+  String get childcare_rule_add;
+
+  /// 규칙 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 수정'**
+  String get childcare_rule_edit;
+
+  /// 규칙 유형 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 유형'**
+  String get childcare_rule_type;
+
+  /// +포인트 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'+포인트'**
+  String get childcare_rule_type_plus_short;
+
+  /// -포인트 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'-포인트'**
+  String get childcare_rule_type_minus_short;
+
+  /// 일반 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'일반'**
+  String get childcare_rule_type_info_short;
+
+  /// + 규칙 이름 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 숙제를 스스로 했을 때'**
+  String get childcare_rule_name_hint_plus;
+
+  /// - 규칙 이름 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 스마트폰을 30분 이상 보았을 때'**
+  String get childcare_rule_name_hint_minus;
+
+  /// 일반 규칙 이름 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 이달 현금 출금 한도'**
+  String get childcare_rule_name_hint_info;
+
+  /// 지급 포인트 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'지급 포인트'**
+  String get childcare_rule_points_give;
+
+  /// 차감 포인트 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'차감 포인트'**
+  String get childcare_rule_points_deduct;
+
+  /// 지급 포인트 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'좋은 행동 시 지급할 포인트'**
+  String get childcare_rule_points_give_hint;
+
+  /// 차감 포인트 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'규칙 위반 시 차감할 포인트'**
+  String get childcare_rule_points_deduct_hint;
+
+  /// 저장 실패 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하지 못했습니다. 잠시 후 다시 시도해주세요.'**
+  String get childcare_save_failed;
+
+  /// 자녀 기본 호칭
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀'**
+  String get childcare_child;
+
+  /// 용돈 플랜 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 용돈 플랜'**
+  String childcare_allowance_plan_title(String name);
+
+  /// 설정 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'설정'**
+  String get childcare_tab_settings;
+
+  /// 변경 히스토리 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'변경 히스토리'**
+  String get childcare_tab_change_history;
+
+  /// 용돈 플랜 설정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈 플랜 설정'**
+  String get childcare_allowance_setup;
+
+  /// 용돈 플랜 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈 플랜 수정'**
+  String get childcare_allowance_edit;
+
+  /// 월 지급 포인트 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'월 지급 포인트'**
+  String get childcare_monthly_points;
+
+  /// 월 지급 포인트 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 100'**
+  String get childcare_monthly_points_hint;
+
+  /// 월 지급 포인트 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'월 지급 포인트를 입력해주세요'**
+  String get childcare_monthly_points_required;
+
+  /// 숫자 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'숫자를 입력해주세요'**
+  String get childcare_number_required;
+
+  /// 지급일 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'매달 지급일'**
+  String get childcare_pay_day;
+
+  /// 일 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get childcare_day_unit;
+
+  /// 지급일 말일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'해당 월에 선택한 날짜가 없으면 말일에 지급됩니다'**
+  String get childcare_pay_day_helper;
+
+  /// 선택한 일자
+  ///
+  /// In ko, this message translates to:
+  /// **'{day}일'**
+  String childcare_day_value(String day);
+
+  /// 날짜 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜를 선택하세요'**
+  String get childcare_select_date;
+
+  /// 선택 날짜 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜를 선택하세요 (선택)'**
+  String get childcare_select_date_optional;
+
+  /// 포인트 환산 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'1포인트 = N원'**
+  String get childcare_point_ratio;
+
+  /// 포인트 환산 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 10'**
+  String get childcare_point_ratio_hint;
+
+  /// 포인트 환산 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'아이와의 약속을 명확히 하기 위한 표시용입니다'**
+  String get childcare_point_ratio_helper;
+
+  /// 1 이상 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'1 이상의 숫자를 입력해주세요'**
+  String get childcare_min_one;
+
+  /// 연봉 협상일 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 연봉 협상일 (선택)'**
+  String get childcare_negotiation_date;
+
+  /// 플랜 설정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'플랜 설정'**
+  String get childcare_plan_save;
+
+  /// 플랜 수정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'플랜 수정'**
+  String get childcare_plan_update;
+
+  /// 플랜 저장 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈 플랜을 저장했습니다'**
+  String get childcare_plan_saved;
+
+  /// 현재 플랜 카드 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 용돈 플랜'**
+  String get childcare_current_plan;
+
+  /// 월 지급 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월 지급'**
+  String get childcare_monthly_payout;
+
+  /// 지급일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'지급일'**
+  String get childcare_payout_day;
+
+  /// 매월 N일
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {day}일'**
+  String childcare_payout_day_value(String day);
+
+  /// 다음 협상일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 협상일'**
+  String get childcare_next_negotiation;
+
+  /// 변경 히스토리 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'변경 히스토리가 없습니다'**
+  String get childcare_history_empty;
+
+  /// 히스토리 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'히스토리를 불러오지 못했습니다'**
+  String get childcare_history_load_error;
+
+  /// 히스토리 항목 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'{points}P / 매월 {day}일'**
+  String childcare_history_entry(String points, String day);
+
+  /// 환산 비율 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'1P = {amount}원'**
+  String childcare_ratio_value(String amount);
+
+  /// 협상일 접미
+  ///
+  /// In ko, this message translates to:
+  /// **'협상일 {date}'**
+  String childcare_negotiation_suffix(String date);
+
+  /// 매달 N일 선택 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'매달 {day}일'**
+  String childcare_monthly_day(String day);
+
+  /// 아이템 사용 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'아이템 사용'**
+  String get childcare_item_use;
+
+  /// 아이템 사용 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\"\n{points}P를 사용합니다.'**
+  String childcare_item_use_message(String name, String points);
+
+  /// 사용 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'사용'**
+  String get childcare_item_use_confirm;
+
+  /// 사용 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\"을(를) 사용했습니다'**
+  String childcare_item_used(String name);
+
+  /// 사용 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'사용하지 못했습니다. 잠시 후 다시 시도해주세요.'**
+  String get childcare_item_use_failed;
+
+  /// 아이템 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'아이템 삭제'**
+  String get childcare_item_delete;
+
+  /// 아이템 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{name}\"을(를) 삭제하시겠습니까?'**
+  String childcare_item_delete_message(String name);
+
+  /// 삭제 실패 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하지 못했습니다. 잠시 후 다시 시도해주세요.'**
+  String get childcare_delete_failed;
+
+  /// 상점 아이템 추가 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'상점 아이템 추가'**
+  String get childcare_item_add;
+
+  /// 상점 아이템 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'상점 아이템 수정'**
+  String get childcare_item_edit;
+
+  /// 아이템 이름 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'아이템 이름'**
+  String get childcare_item_name;
+
+  /// 아이템 이름 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: TV 30분 더보기'**
+  String get childcare_item_name_hint;
+
+  /// 포인트 비용 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 비용'**
+  String get childcare_item_points;
+
+  /// 상점 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 상점이란?'**
+  String get childcare_shop_help_title;
+
+  /// 상점 안내 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'아이가 모은 포인트로 구매할 수 있는 보상 목록입니다.\n원하는 것을 얻기 위해 스스로 포인트를 모으는 동기부여가 됩니다.'**
+  String get childcare_shop_help_body;
+
+  /// 예시 아이템 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'예시 아이템'**
+  String get childcare_shop_examples;
+
+  /// 예시 1
+  ///
+  /// In ko, this message translates to:
+  /// **'TV 30분 더보기'**
+  String get childcare_shop_example1;
+
+  /// 예시 2
+  ///
+  /// In ko, this message translates to:
+  /// **'게임 1시간 하기'**
+  String get childcare_shop_example2;
+
+  /// 예시 3
+  ///
+  /// In ko, this message translates to:
+  /// **'원하는 간식 고르기'**
+  String get childcare_shop_example3;
+
+  /// 예시 4
+  ///
+  /// In ko, this message translates to:
+  /// **'늦게 자도 되는 날'**
+  String get childcare_shop_example4;
+
+  /// 비활성화 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'아이템을 비활성화하면 목록에서 숨길 수 있습니다.'**
+  String get childcare_shop_disable_note;
+
+  /// 월별 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'월별'**
+  String get childcare_period_monthly;
+
+  /// 연도별 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'연도별'**
+  String get childcare_period_yearly;
+
+  /// 수입 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'수입'**
+  String get childcare_income;
+
+  /// 지출 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'지출'**
+  String get childcare_expense;
+
+  /// 순변동 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'순변동'**
+  String get childcare_net_change;
+
+  /// 연간 수입 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'연간 수입'**
+  String get childcare_yearly_income;
+
+  /// 연간 지출 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'연간 지출'**
+  String get childcare_yearly_expense;
+
+  /// 잔액 추이 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액 추이'**
+  String get childcare_balance_trend;
+
+  /// 월별 현황 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'월별 현황'**
+  String get childcare_monthly_status;
+
+  /// 유형별 분포 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'유형별 분포'**
+  String get childcare_type_distribution;
+
+  /// N월
+  ///
+  /// In ko, this message translates to:
+  /// **'{month}월'**
+  String childcare_month_unit(String month);
+
+  /// 이번 달 수입 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 수입 내역이 없습니다'**
+  String get childcare_no_income_this_month;
+
+  /// 이번 달 지출 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 지출 내역이 없습니다'**
+  String get childcare_no_expense_this_month;
+
+  /// 거래유형 용돈
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈'**
+  String get childcare_type_allowance;
+
+  /// 거래유형 보상
+  ///
+  /// In ko, this message translates to:
+  /// **'보상'**
+  String get childcare_type_reward;
+
+  /// 거래유형 보너스
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스'**
+  String get childcare_type_bonus;
+
+  /// 거래유형 이자
+  ///
+  /// In ko, this message translates to:
+  /// **'이자'**
+  String get childcare_type_interest;
+
+  /// 거래유형 적금 출금
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 출금'**
+  String get childcare_type_savings_withdraw;
+
+  /// 거래유형 벌점
+  ///
+  /// In ko, this message translates to:
+  /// **'벌점'**
+  String get childcare_type_penalty;
+
+  /// 거래유형 상점
+  ///
+  /// In ko, this message translates to:
+  /// **'상점'**
+  String get childcare_type_purchase;
+
+  /// 거래유형 현금화
+  ///
+  /// In ko, this message translates to:
+  /// **'현금화'**
+  String get childcare_type_cashout;
+
+  /// 거래유형 적금
+  ///
+  /// In ko, this message translates to:
+  /// **'적금'**
+  String get childcare_type_savings_deposit;
+
+  /// 기타
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get common_etc;
+
+  /// 자녀 프로필 등록 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 프로필 등록'**
+  String get childcare_profile_add;
+
+  /// 자녀 이름 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 이름'**
+  String get childcare_child_name;
+
+  /// 자녀 이름 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 김민준'**
+  String get childcare_child_name_hint;
+
+  /// 자녀 이름 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 이름을 입력해주세요'**
+  String get childcare_child_name_required;
+
+  /// 생년월일 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'생년월일'**
+  String get childcare_birthdate;
+
+  /// 생년월일 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'생년월일을 선택해주세요'**
+  String get childcare_birthdate_required;
+
+  /// 프로필 등록 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 프로필을 등록했습니다'**
+  String get childcare_profile_added;
+
+  /// 프로필 등록 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'등록하지 못했습니다. 다시 시도해주세요'**
+  String get childcare_profile_add_failed;
+
+  /// 연월일 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년 {month}월 {day}일'**
+  String childcare_date_full(String year, String month, String day);
+
+  /// N년
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년'**
+  String childcare_year_unit(String year);
+
+  /// 계정 연동 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 계정 연동'**
+  String childcare_link_title(String name);
+
+  /// 연동됨 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 계정 연동됨'**
+  String get childcare_link_linked;
+
+  /// 미연동 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 계정 미연동'**
+  String get childcare_link_unlinked;
+
+  /// 연동된 계정 ID
+  ///
+  /// In ko, this message translates to:
+  /// **'연동된 계정 ID: {id}...'**
+  String childcare_link_account_id(String id);
+
+  /// 연동 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 연동 안내'**
+  String get childcare_link_guide;
+
+  /// 연동 안내 1
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀가 앱에 직접 가입해야 연동이 가능합니다.'**
+  String get childcare_link_guide1;
+
+  /// 연동 안내 2
+  ///
+  /// In ko, this message translates to:
+  /// **'연동 후 자녀가 직접 포인트 현황을 확인할 수 있습니다.'**
+  String get childcare_link_guide2;
+
+  /// 연동 안내 3
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 계정으로 적금 입금이 가능해집니다.'**
+  String get childcare_link_guide3;
+
+  /// 연동 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 계정 연동하기'**
+  String get childcare_link_button;
+
+  /// 연동 정보 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'연동 정보'**
+  String get childcare_link_info;
+
+  /// 연동 정보 1
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀가 앱으로 직접 포인트를 확인할 수 있습니다.'**
+  String get childcare_link_info1;
+
+  /// 연동 정보 2
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 계정으로 적금 입금이 가능합니다.'**
+  String get childcare_link_info2;
+
+  /// 연동 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 계정을 연동했습니다'**
+  String get childcare_link_done;
+
+  /// 연동 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'연동하지 못했습니다. 자녀가 앱에 가입되어 있는지 확인해주세요'**
+  String get childcare_link_failed;
+
+  /// 보너스 지급 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스 지급'**
+  String get childcare_bonus_give;
+
+  /// 자녀 등록 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 등록'**
+  String get childcare_child_register;
+
+  /// 용돈 플랜 설정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'용돈 플랜 설정'**
+  String get childcare_allowance_setup_button;
+
+  /// 앱 계정 연동 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 계정 연동'**
+  String get childcare_link_account;
+
+  /// 보너스 지급 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'아이에게 보너스 포인트를 지급합니다.\n규칙이나 상점 외에 특별히 칭찬하고 싶을 때 사용하세요.'**
+  String get childcare_bonus_desc;
+
+  /// 지급 포인트 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'지급 포인트'**
+  String get childcare_bonus_points;
+
+  /// 지급 포인트 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'지급 포인트를 입력해주세요'**
+  String get childcare_bonus_points_required;
+
+  /// 지급 포인트 양수 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'1 이상의 포인트를 입력해주세요'**
+  String get childcare_bonus_points_positive;
+
+  /// 지급 이유 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'지급 이유'**
+  String get childcare_bonus_reason;
+
+  /// 지급 이유 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 방 청소를 스스로 해서'**
+  String get childcare_bonus_reason_hint;
+
+  /// 지급 이유 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'지급 이유를 입력해주세요'**
+  String get childcare_bonus_reason_required;
+
+  /// 보너스 지급 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스를 지급했습니다'**
+  String get childcare_bonus_given;
+
+  /// 비활성화 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'비활성화'**
+  String get common_deactivate;
+
+  /// 활성화 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'활성화'**
+  String get common_activate;
+
+  /// 포인트 환산 근사값
+  ///
+  /// In ko, this message translates to:
+  /// **'≈ {amount}원'**
+  String childcare_approx_money(String amount);
+
+  /// 월 포인트 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'P/월'**
+  String get childcare_points_per_month;
+
+  /// 용돈 플랜 요약
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {day}일 · 1P={amount}원'**
+  String childcare_plan_summary(String day, String amount);
 }
 
 class _AppLocalizationsDelegate

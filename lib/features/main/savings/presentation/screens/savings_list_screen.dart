@@ -4,6 +4,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_detail_screen.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_form_screen.dart';
@@ -61,6 +62,7 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(savingsSelectedGroupIdProvider);
 
     return ValueListenableBuilder<List<SavingsGoalModel>?>(
@@ -70,12 +72,12 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('그룹 저금통'),
+            title: Text(l10n.savings_title),
             actions: [
               if (selectedGroupId != null && !isOnboarding)
                 IconButton(
                   icon: const Icon(Icons.refresh),
-                  tooltip: '새로고침',
+                  tooltip: l10n.common_refresh,
                   onPressed: () {
                     ref
                         .read(savingsGoalsProvider(selectedGroupId).notifier)
@@ -105,11 +107,11 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
               else if (selectedGroupId != null)
                 Expanded(child: _GoalsList(groupId: selectedGroupId))
               else
-                const Expanded(
+                Expanded(
                   child: Center(
                     child: Text(
-                      '그룹을 선택해 주세요',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      l10n.savings_select_group,
+                      style: const TextStyle(color: AppColors.textSecondary),
                     ),
                   ),
                 ),
@@ -118,7 +120,7 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
           floatingActionButton: (isOnboarding || selectedGroupId != null)
               ? FloatingActionButton(
                   key: _fabKey,
-                  tooltip: '저금통 추가',
+                  tooltip: l10n.savings_goal_add,
                   onPressed: isOnboarding
                       ? null
                       : () async {
@@ -159,6 +161,7 @@ class _InfoBannerState extends State<_InfoBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return InkWell(
       onTap: () => setState(() => _expanded = !_expanded),
@@ -179,7 +182,7 @@ class _InfoBannerState extends State<_InfoBanner> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '그룹과 함께 목표를 정해 돈을 모아요',
+                    l10n.savings_intro_title,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppColors.investment,
                       fontWeight: FontWeight.w600,
@@ -188,14 +191,14 @@ class _InfoBannerState extends State<_InfoBanner> {
                   if (_expanded) ...[
                     const SizedBox(height: AppSizes.spaceXS),
                     Text(
-                      '여행 경비, 비상금, 가전 구매 등 원하는 목표를 만들고 매달 자동으로 적립하거나 수동으로 입금할 수 있어요.',
+                      l10n.savings_intro_body,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: AppColors.investment.withAlpha(180),
                       ),
                     ),
                     const SizedBox(height: AppSizes.spaceXS),
                     Text(
-                      '💡 가족 외에도 친구, 동료 등 그룹이라면 누구든 "계" 처럼 활용할 수 있어요.',
+                      '💡 ${l10n.savings_intro_tip}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: AppColors.investment.withAlpha(180),
                       ),
@@ -225,6 +228,7 @@ class _GoalsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final goalsAsync = ref.watch(savingsGoalsProvider(groupId));
 
     return goalsAsync.when(
@@ -236,14 +240,14 @@ class _GoalsList extends ConsumerWidget {
             const Icon(Icons.error_outline,
                 size: AppSizes.iconXLarge, color: AppColors.error),
             const SizedBox(height: AppSizes.spaceM),
-            Text('오류가 발생했습니다\n$e',
+            Text('${l10n.common_error}\n$e',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: AppColors.textSecondary)),
             const SizedBox(height: AppSizes.spaceM),
             TextButton(
               onPressed: () =>
                   ref.read(savingsGoalsProvider(groupId).notifier).refresh(),
-              child: const Text('다시 시도'),
+              child: Text(l10n.common_retry),
             ),
           ],
         ),
@@ -257,10 +261,10 @@ class _GoalsList extends ConsumerWidget {
                 const Icon(Icons.savings_outlined,
                     size: AppSizes.iconXLarge, color: AppColors.textSecondary),
                 const SizedBox(height: AppSizes.spaceM),
-                const Text(
-                  '저금통이 없습니다\n+ 버튼을 눌러 저금통을 추가하세요',
+                Text(
+                  l10n.savings_list_empty,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.textSecondary),
+                  style: const TextStyle(color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -311,6 +315,7 @@ class _GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Card(
@@ -377,7 +382,9 @@ class _GoalCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSizes.spaceXS),
                 Text(
-                  '${goal.achievementRate.toStringAsFixed(1)}% 달성',
+                  l10n.savings_achievement_rate(
+                    goal.achievementRate.toStringAsFixed(1),
+                  ),
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: AppColors.textSecondary),
                 ),

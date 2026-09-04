@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/todo/presentation/widgets/todo_card.dart';
 
@@ -174,7 +175,7 @@ class _EmptyColumn extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '드래그하여 이동',
+            AppLocalizations.of(context)!.todo_drag_to_move,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: color.withValues(alpha: 0.7),
             ),

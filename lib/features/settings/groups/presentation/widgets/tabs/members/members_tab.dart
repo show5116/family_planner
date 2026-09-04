@@ -97,14 +97,15 @@ class _MembersTabState extends ConsumerState<MembersTab> {
   }
 
   Widget _buildMembersList(String? currentUserId) {
+    final l10n = AppLocalizations.of(context)!;
     return widget.membersAsync.when(
       loading: () => const LoadingView(),
       error: (error, stack) =>
           ErrorView(message: error.toString(), onRetry: widget.onRetry),
       data: (members) {
         if (members.isEmpty) {
-          return const EmptyView(
-            message: '멤버가 없습니다',
+          return EmptyView(
+            message: l10n.group_members_empty,
             icon: Icons.people_outline,
           );
         }

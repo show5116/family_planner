@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
 
@@ -110,6 +111,7 @@ class _SavingsTransactionsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.goalName),
@@ -122,9 +124,9 @@ class _SavingsTransactionsScreenState
           ),
           Expanded(
             child: _items.isEmpty && !_loading && _error == null
-                ? const Center(
-                    child: Text('거래 내역이 없습니다.',
-                        style: TextStyle(color: AppColors.textSecondary)),
+                ? Center(
+                    child: Text(l10n.savings_transactions_empty,
+                        style: const TextStyle(color: AppColors.textSecondary)),
                   )
                 : RefreshIndicator(
                     onRefresh: _refresh,
@@ -142,12 +144,12 @@ class _SavingsTransactionsScreenState
                               padding: const EdgeInsets.all(AppSizes.spaceM),
                               child: Column(
                                 children: [
-                                  Text('오류: $_error',
+                                  Text('${l10n.common_error}: $_error',
                                       style: const TextStyle(
                                           color: AppColors.error)),
                                   TextButton(
                                     onPressed: _loadMore,
-                                    child: const Text('다시 시도'),
+                                    child: Text(l10n.common_retry),
                                   ),
                                 ],
                               ),
@@ -182,6 +184,7 @@ class _TypeFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(
@@ -191,25 +194,25 @@ class _TypeFilterBar extends StatelessWidget {
       child: Row(
         children: [
           _Chip(
-            label: '전체',
+            label: l10n.common_all,
             selected: selectedType == null,
             onTap: () => onTypeChanged(null),
           ),
           const SizedBox(width: AppSizes.spaceS),
           _Chip(
-            label: '입금',
+            label: l10n.savings_deposit,
             selected: selectedType == SavingsType.deposit,
             onTap: () => onTypeChanged(SavingsType.deposit),
           ),
           const SizedBox(width: AppSizes.spaceS),
           _Chip(
-            label: '출금',
+            label: l10n.savings_withdraw,
             selected: selectedType == SavingsType.withdraw,
             onTap: () => onTypeChanged(SavingsType.withdraw),
           ),
           const SizedBox(width: AppSizes.spaceS),
           _Chip(
-            label: '자동 적립',
+            label: l10n.savings_filter_auto,
             selected: selectedType == SavingsType.autoDeposit,
             onTap: () => onTypeChanged(SavingsType.autoDeposit),
           ),

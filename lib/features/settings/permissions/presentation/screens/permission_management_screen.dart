@@ -28,10 +28,7 @@ class _PermissionManagementScreenState
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(l10n.permission_title),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(l10n.permission_title), elevation: 0),
       body: SafeArea(
         top: false,
         child: Column(
@@ -54,9 +51,7 @@ class _PermissionManagementScreenState
                 onCancel: _cancelReorder,
               ),
             // 권한 목록
-            Expanded(
-              child: _buildPermissionList(context, ref, l10n, state),
-            ),
+            Expanded(child: _buildPermissionList(context, ref, l10n, state)),
           ],
         ),
       ),
@@ -193,12 +188,8 @@ class _PermissionManagementScreenState
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
-              onTap: () => PermissionDetailDialog.show(
-                context,
-                ref,
-                l10n,
-                permission,
-              ),
+              onTap: () =>
+                  PermissionDetailDialog.show(context, ref, l10n, permission),
             ),
           ),
         );
@@ -225,10 +216,9 @@ class _PermissionManagementScreenState
           const SizedBox(height: AppSizes.spaceS),
           Text(
             state.error!,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Colors.grey),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSizes.spaceL),
@@ -253,10 +243,9 @@ class _PermissionManagementScreenState
           const SizedBox(height: AppSizes.spaceM),
           Text(
             l10n.permission_noPermissions,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: Colors.grey),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: Colors.grey),
           ),
         ],
       ),
@@ -276,6 +265,7 @@ class _PermissionManagementScreenState
 
   /// 정렬 순서 저장
   Future<void> _saveSortOrder() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_reorderedPermissions == null) return;
 
     // 확인 다이얼로그
@@ -299,15 +289,15 @@ class _PermissionManagementScreenState
           _hasChanges = false;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('정렬 순서가 저장되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.common_sortOrderSaved)));
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('저장 실패: ${e.toString()}'),
+            content: Text('${l10n.common_saveFailed}\n$e'),
             backgroundColor: Colors.red,
           ),
         );

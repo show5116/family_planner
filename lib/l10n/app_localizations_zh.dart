@@ -4458,6 +4458,32 @@ class AppLocalizationsZh extends AppLocalizations {
   String get subscription_expires_at_label => '到期日';
 
   @override
+  String get subscription_days_left_label => '剩余时间';
+
+  @override
+  String subscription_days_left_value(int days) {
+    return '$days天';
+  }
+
+  @override
+  String get subscription_days_left_today => '今日结束';
+
+  @override
+  String get subscription_trial_ends_at_label => '体验结束日';
+
+  @override
+  String get subscription_period_end_label => '当前周期结束日';
+
+  @override
+  String get subscription_auto_renew_hint => '如未取消，将于该日期自动续订';
+
+  @override
+  String get subscription_next_renewal_label => '下次续订日';
+
+  @override
+  String get subscription_canceled_hint => '订阅已取消，将于该日期结束';
+
+  @override
   String get subscription_products_section_title => '订阅商品';
 
   @override
@@ -5364,4 +5390,1428 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => '旗帜';
+
+  @override
+  String get memo_tag_filter_clear => '清除标签筛选';
+
+  @override
+  String get memo_section_pinned => '已固定的备忘';
+
+  @override
+  String memo_pinned_expand(int count) {
+    return '展开（还有 $count 条）';
+  }
+
+  @override
+  String get memo_pinned_collapse => '收起';
+
+  @override
+  String get memo_pin_add => '固定到仪表板';
+
+  @override
+  String get memo_pin_remove => '取消固定';
+
+  @override
+  String get memo_pin_error => '固定设置失败';
+
+  @override
+  String get memo_pin_added => '已固定到顶部，并添加到仪表板。';
+
+  @override
+  String get memo_pin_removed => '已取消固定。';
+
+  @override
+  String memo_duplicate_title(String title) {
+    return '$title（副本）';
+  }
+
+  @override
+  String get memo_tag_input_hint => '输入标签后添加';
+
+  @override
+  String get memo_editor_paste_failed => '从剪贴板粘贴失败。';
+
+  @override
+  String get memo_editor_link_card_add => '添加链接卡片';
+
+  @override
+  String get memo_editor_image => '图片';
+
+  @override
+  String get memo_editor_paste_formatted => '保留格式粘贴';
+
+  @override
+  String get memo_editor_link_apply => '应用超链接';
+
+  @override
+  String get memo_editor_link_select_first => '请先选择文字';
+
+  @override
+  String get memo_editor_bold => '加粗';
+
+  @override
+  String get memo_editor_italic => '斜体';
+
+  @override
+  String get memo_editor_strikethrough => '删除线';
+
+  @override
+  String get memo_editor_heading1 => '标题 1';
+
+  @override
+  String get memo_editor_heading2 => '标题 2（清单分区）';
+
+  @override
+  String get memo_editor_bullet_list => '项目符号列表';
+
+  @override
+  String get memo_editor_numbered_list => '编号列表';
+
+  @override
+  String get memo_editor_undo => '撤销';
+
+  @override
+  String get memo_editor_redo => '重做';
+
+  @override
+  String get savings_title => '群组储蓄';
+
+  @override
+  String get savings_select_group => '请选择群组';
+
+  @override
+  String get savings_intro_title => '和群组一起定目标存钱';
+
+  @override
+  String get savings_intro_body => '可以创建旅行费用、应急金、家电购置等目标，每月自动存入或随时手动存入。';
+
+  @override
+  String get savings_intro_tip => '不只是家人，朋友、同事等任何群组都可以使用。';
+
+  @override
+  String get savings_list_empty => '还没有储蓄目标\n点击 + 添加';
+
+  @override
+  String savings_achievement_rate(String rate) {
+    return '已达成 $rate%';
+  }
+
+  @override
+  String get savings_deposit => '存入';
+
+  @override
+  String get savings_withdraw => '取出';
+
+  @override
+  String get savings_amount_label => '金额（韩元）';
+
+  @override
+  String get savings_memo_label => '备注（可选）';
+
+  @override
+  String get savings_withdraw_reason_label => '取出原因（必填）';
+
+  @override
+  String get savings_delete_title => '删除目标';
+
+  @override
+  String savings_delete_message(String name) {
+    return '确定删除“$name”吗？\n此操作无法撤销。';
+  }
+
+  @override
+  String get savings_detail_title => '储蓄目标';
+
+  @override
+  String get savings_goal_reached => '目标达成！';
+
+  @override
+  String savings_target_amount(String amount) {
+    return '目标：$amount';
+  }
+
+  @override
+  String get savings_auto_deposit => '自动存入';
+
+  @override
+  String savings_auto_deposit_monthly(String amount) {
+    return '每月 $amount';
+  }
+
+  @override
+  String get savings_auto_deposit_pause => '暂停自动存入';
+
+  @override
+  String get savings_auto_deposit_resume => '恢复自动存入';
+
+  @override
+  String get savings_recent_transactions => '最近记录';
+
+  @override
+  String get savings_view_all => '查看全部';
+
+  @override
+  String get savings_transactions_empty => '暂无交易记录。';
+
+  @override
+  String get savings_transactions_load_error => '无法加载记录';
+
+  @override
+  String get savings_filter_auto => '自动';
+
+  @override
+  String get savings_form_title_add => '添加储蓄';
+
+  @override
+  String get savings_form_title_edit => '编辑储蓄';
+
+  @override
+  String get savings_form_submit_edit => '保存修改';
+
+  @override
+  String get savings_form_save_error => '保存失败';
+
+  @override
+  String get savings_field_name => '目标名称 *';
+
+  @override
+  String get savings_field_name_required => '请输入目标名称';
+
+  @override
+  String get savings_field_description => '说明（可选）';
+
+  @override
+  String get savings_field_target => '目标金额（可选，韩元）';
+
+  @override
+  String get savings_field_target_hint => '例：1000000';
+
+  @override
+  String get savings_field_target_helper => '不设定目标金额时，可以像应急金一样持续存钱。';
+
+  @override
+  String get savings_field_amount_invalid => '请输入正确的金额';
+
+  @override
+  String get savings_field_auto_deposit_desc => '每月自动存入';
+
+  @override
+  String get savings_field_monthly_amount => '每月金额（韩元）';
+
+  @override
+  String get savings_field_monthly_amount_hint => '例：100000';
+
+  @override
+  String get savings_field_monthly_amount_required => '请输入每月金额';
+
+  @override
+  String get savings_field_deposit_day => '每月存入日（1~31）';
+
+  @override
+  String get savings_field_deposit_day_hint => '例：25';
+
+  @override
+  String get savings_field_deposit_day_helper => '如果当月没有该日期，将在月末处理。';
+
+  @override
+  String get savings_field_deposit_day_invalid => '请输入 1~31 之间的日期';
+
+  @override
+  String get savings_field_include_assets => '计入资产统计';
+
+  @override
+  String get savings_field_include_assets_desc => '可在资产概览中一并查看余额。';
+
+  @override
+  String get vote_title => '投票';
+
+  @override
+  String get vote_filter_ongoing => '进行中';
+
+  @override
+  String get vote_filter_closed => '已结束';
+
+  @override
+  String get vote_status_ongoing => '进行中';
+
+  @override
+  String get vote_status_closed => '已结束';
+
+  @override
+  String get vote_select_group => '选择群组后显示投票列表';
+
+  @override
+  String get vote_list_empty => '还没有投票\n点击 + 创建';
+
+  @override
+  String get vote_list_load_error => '无法加载投票列表';
+
+  @override
+  String get vote_detail_load_error => '无法加载该投票';
+
+  @override
+  String vote_participants(int count) {
+    return '$count 人参与';
+  }
+
+  @override
+  String get vote_participated => '已参与';
+
+  @override
+  String get vote_deadline_passed => '已截止';
+
+  @override
+  String vote_deadline_days(int days) {
+    return '$days 天后截止';
+  }
+
+  @override
+  String vote_deadline_hours(int hours) {
+    return '$hours 小时后截止';
+  }
+
+  @override
+  String vote_deadline_minutes(int minutes) {
+    return '$minutes 分钟后截止';
+  }
+
+  @override
+  String get vote_delete => '删除投票';
+
+  @override
+  String get vote_delete_message => '确定删除该投票吗？\n删除后无法恢复。';
+
+  @override
+  String get vote_delete_failed => '删除失败';
+
+  @override
+  String get vote_submit_success => '投票完成';
+
+  @override
+  String get vote_submit_failed => '投票失败';
+
+  @override
+  String get vote_multiple_choice_badge => '多选';
+
+  @override
+  String get vote_anonymous_badge => '匿名';
+
+  @override
+  String get vote_submit => '投票';
+
+  @override
+  String get vote_revote => '重新投票';
+
+  @override
+  String vote_option_result(int count, String percent) {
+    return '$count 票（$percent%）';
+  }
+
+  @override
+  String get vote_create_title => '创建投票';
+
+  @override
+  String get vote_field_title => '投票标题 *';
+
+  @override
+  String get vote_field_title_required => '请输入标题';
+
+  @override
+  String get vote_field_description => '说明（可选）';
+
+  @override
+  String get vote_options_section => '选项';
+
+  @override
+  String vote_option_hint(int index) {
+    return '选项 $index';
+  }
+
+  @override
+  String get vote_options_min => '请至少输入两个选项';
+
+  @override
+  String get vote_create_failed => '创建投票失败';
+
+  @override
+  String get vote_allow_multiple => '允许多选';
+
+  @override
+  String get vote_allow_multiple_desc => '可以同时选择多个选项。';
+
+  @override
+  String get vote_anonymous => '匿名投票';
+
+  @override
+  String get vote_anonymous_desc => '不会公开投票者姓名。';
+
+  @override
+  String get vote_deadline => '截止时间';
+
+  @override
+  String get vote_deadline_none => '未设置（手动结束）';
+
+  @override
+  String get todo_label_dueDate => '截止日期';
+
+  @override
+  String get todo_label_category => '分类';
+
+  @override
+  String get todo_label_createdAt => '创建日期';
+
+  @override
+  String get todo_label_completedAt => '完成日期';
+
+  @override
+  String get todo_label_status => '状态';
+
+  @override
+  String get todo_drag_to_move => '拖动以移动';
+
+  @override
+  String get common_more => '查看更多';
+
+  @override
+  String get cart_total => '合计';
+
+  @override
+  String get cart_save_error => '保存时出错';
+
+  @override
+  String get cart_price_unit => '单价';
+
+  @override
+  String get cart_price_total => '总额';
+
+  @override
+  String get cart_price_unit_label => '单价金额';
+
+  @override
+  String get cart_price_total_label => '总金额';
+
+  @override
+  String get cart_price_unit_hint => '输入单价';
+
+  @override
+  String get cart_price_total_hint => '输入总金额';
+
+  @override
+  String get cart_extra_show => '添加单位和备注';
+
+  @override
+  String get cart_extra_hide => '隐藏单位和备注';
+
+  @override
+  String get cart_shopping_date => '购物日期';
+
+  @override
+  String get cart_select_date => '选择日期';
+
+  @override
+  String get cart_default_description => '超市购物';
+
+  @override
+  String get settings_myReportsTitle => '我的举报记录';
+
+  @override
+  String get settings_myReportsSubtitle => '查看我提交的举报';
+
+  @override
+  String get settings_commonRolesTitle => '通用角色管理';
+
+  @override
+  String get settings_commonRolesSubtitle => '管理适用于全系统的通用角色';
+
+  @override
+  String get settings_userAdminTitle => '用户与账号管理';
+
+  @override
+  String get settings_userAdminSubtitle => '修改订阅、预约与处理账号删除';
+
+  @override
+  String get settings_reportAdminTitle => '举报管理';
+
+  @override
+  String get settings_reportAdminSubtitle => '接收并处理成员举报';
+
+  @override
+  String get settings_replayTutorial => '重新查看教程';
+
+  @override
+  String get settings_replayTutorialBody => '可以从头重新观看应用介绍和各功能指引。';
+
+  @override
+  String get settings_replayTutorialConfirm => '重新查看';
+
+  @override
+  String get settings_replayTutorialDone => '下次打开应用时会显示教程。';
+
+  @override
+  String get settings_personalColor => '个人颜色';
+
+  @override
+  String get settings_personalColorPick => '选择个人颜色';
+
+  @override
+  String get widgetSettings_addWidget => '添加小组件';
+
+  @override
+  String get widgetSettings_addAnniversary => '添加纪念日';
+
+  @override
+  String get report_title => '举报';
+
+  @override
+  String get report_reason => '举报原因';
+
+  @override
+  String get report_detail => '详细说明（可选）';
+
+  @override
+  String get report_detail_hint => '请输入补充说明';
+
+  @override
+  String get report_submit => '提交举报';
+
+  @override
+  String get report_submitted => '已收到您的举报。';
+
+  @override
+  String get report_submit_failed => '提交举报失败';
+
+  @override
+  String get report_empty => '没有举报记录';
+
+  @override
+  String get report_admin_title => '举报管理';
+
+  @override
+  String get report_handle_title => '处理举报';
+
+  @override
+  String get report_handle_status => '处理状态';
+
+  @override
+  String get report_handle_memo => '处理备注（可选）';
+
+  @override
+  String get report_handle_memo_hint => '请输入处理内容';
+
+  @override
+  String get report_handle_done => '处理完成';
+
+  @override
+  String get report_handled => '已处理该举报。';
+
+  @override
+  String get report_handle_failed => '处理失败';
+
+  @override
+  String get group_invite_cancel => '取消邀请';
+
+  @override
+  String group_invite_cancel_message(String email) {
+    return '要取消发送给 $email 的邀请吗？';
+  }
+
+  @override
+  String get group_invite_canceled => '已取消邀请';
+
+  @override
+  String group_invite_resent(String email) {
+    return '已重新发送邀请至 $email';
+  }
+
+  @override
+  String get group_invite_resend => '重新发送';
+
+  @override
+  String get group_color_change_failed => '颜色修改失败';
+
+  @override
+  String get group_color_reset => '已恢复群组默认颜色';
+
+  @override
+  String get group_color_reset_failed => '恢复颜色失败';
+
+  @override
+  String get group_order_saved => '已保存群组顺序';
+
+  @override
+  String get group_members_empty => '没有成员';
+
+  @override
+  String get group_member_remove => '移除成员';
+
+  @override
+  String get group_member_removed => '已移除成员';
+
+  @override
+  String get group_role_change => '更改角色';
+
+  @override
+  String get group_role_changed => '已更改角色';
+
+  @override
+  String get group_roles_load_error => '无法加载角色列表';
+
+  @override
+  String get group_regenerate_code_message => '要重新生成邀请码吗？\n原邀请码将失效。';
+
+  @override
+  String get group_transfer_ownership => '转让群主';
+
+  @override
+  String get group_transfer_confirm => '转让';
+
+  @override
+  String group_transfer_message(String name) {
+    return '要将群主转让给 $name 吗？';
+  }
+
+  @override
+  String get group_transfer_failed => '转让群主失败';
+
+  @override
+  String get invite_title => '群组邀请';
+
+  @override
+  String get invite_joining => '正在加入群组…';
+
+  @override
+  String get invite_joined => '加入成功！';
+
+  @override
+  String get invite_go_home => '返回首页';
+
+  @override
+  String get invite_login_required => '登录后即可加入群组。';
+
+  @override
+  String get invite_login => '去登录';
+
+  @override
+  String get invite_failed => '加入失败';
+
+  @override
+  String group_transfer_done(String name) {
+    return '已将群主转让给 $name';
+  }
+
+  @override
+  String invite_code_label(String code) {
+    return '邀请码：$code';
+  }
+
+  @override
+  String get invite_unknown_error => '发生未知错误。';
+
+  @override
+  String get common_unknownError => '未知错误';
+
+  @override
+  String get common_sortOrderSaved => '已保存排序';
+
+  @override
+  String get common_saveFailed => '保存失败';
+
+  @override
+  String get common_deleteFailed => '删除失败';
+
+  @override
+  String get common_noSearchResults => '没有搜索结果';
+
+  @override
+  String get role_common_title => '通用角色管理';
+
+  @override
+  String get role_create => '创建角色';
+
+  @override
+  String get role_list_load_error => '无法加载角色列表';
+
+  @override
+  String get role_list_empty => '还没有通用角色';
+
+  @override
+  String get role_list_empty_subtitle => '点击 + 创建新角色';
+
+  @override
+  String get role_info_load_error => '无法加载角色信息';
+
+  @override
+  String get role_not_found => '找不到该角色';
+
+  @override
+  String role_permissions_title(String name) {
+    return '$name 权限管理';
+  }
+
+  @override
+  String get role_permission_search => '搜索权限';
+
+  @override
+  String get role_permissions_load_error => '无法加载权限列表';
+
+  @override
+  String get role_permissions_saved => '已保存权限';
+
+  @override
+  String get role_edit_title => '编辑通用角色';
+
+  @override
+  String get role_create_title => '创建通用角色';
+
+  @override
+  String get role_created => '已创建角色';
+
+  @override
+  String get role_updated => '已更新角色';
+
+  @override
+  String get role_create_failed => '创建角色失败';
+
+  @override
+  String get role_update_failed => '更新角色失败';
+
+  @override
+  String get role_field_name => '角色名称';
+
+  @override
+  String get role_field_name_hint => '例：ADMIN、MEMBER';
+
+  @override
+  String get role_field_name_required => '请输入角色名称';
+
+  @override
+  String get role_default => '默认角色';
+
+  @override
+  String get role_default_desc => '新成员加入时自动获得';
+
+  @override
+  String get role_default_badge => '默认';
+
+  @override
+  String get role_color => '角色颜色';
+
+  @override
+  String get role_delete => '删除角色';
+
+  @override
+  String role_delete_message(String name) {
+    return '确定删除 $name 角色吗？\n此操作无法撤销。';
+  }
+
+  @override
+  String get role_deleted => '已删除角色';
+
+  @override
+  String get role_manage_permissions => '权限管理';
+
+  @override
+  String get permission_name_hint => '例：VIEW_REPORT';
+
+  @override
+  String get permission_desc_hint => '请输入该权限的说明';
+
+  @override
+  String get permission_category_custom => '+ 自定义';
+
+  @override
+  String get permission_category_new => '新分类名称';
+
+  @override
+  String get permission_category_required => '请输入新分类名称';
+
+  @override
+  String get childcare_savings_plan => '储蓄计划';
+
+  @override
+  String get childcare_savings_ongoing => '进行中';
+
+  @override
+  String get childcare_savings_matured => '已到期';
+
+  @override
+  String get childcare_interest_simple => '单利';
+
+  @override
+  String get childcare_interest_compound => '复利';
+
+  @override
+  String get childcare_interest_type => '计息方式';
+
+  @override
+  String get childcare_monthly_deposit => '每月存入';
+
+  @override
+  String get childcare_interest_rate => '利率';
+
+  @override
+  String get childcare_period => '期限';
+
+  @override
+  String get childcare_savings_start => '开始储蓄计划';
+
+  @override
+  String get childcare_savings_start_desc => '每月自动存入';
+
+  @override
+  String get childcare_savings_cancel => '提前解约';
+
+  @override
+  String get childcare_savings_cancel_title => '提前解约储蓄';
+
+  @override
+  String get childcare_savings_cancel_message => '提前解约将只退还本金，不含利息。\n确定要解约吗？';
+
+  @override
+  String get childcare_savings_cancel_confirm => '解约';
+
+  @override
+  String get childcare_savings_canceled => '已解约储蓄';
+
+  @override
+  String get childcare_savings_cancel_failed => '解约失败';
+
+  @override
+  String get childcare_savings_started => '已开始储蓄计划';
+
+  @override
+  String get childcare_savings_create_title => '创建储蓄计划';
+
+  @override
+  String get childcare_savings_monthly_points => '每月存入积分';
+
+  @override
+  String get childcare_savings_annual_rate => '年利率';
+
+  @override
+  String childcare_savings_rate_helper(String rate) {
+    return '已参考3年期国债利率（$rate%）设置默认值';
+  }
+
+  @override
+  String get childcare_savings_rate_loading => '正在获取国债利率…';
+
+  @override
+  String get childcare_start_date => '开始日期';
+
+  @override
+  String get childcare_maturity_date => '到期日';
+
+  @override
+  String get childcare_total_deposit => '存入总额';
+
+  @override
+  String get childcare_expected_interest => '预计利息';
+
+  @override
+  String get childcare_maturity_amount => '到期金额';
+
+  @override
+  String childcare_months(int months) {
+    return '$months 个月';
+  }
+
+  @override
+  String get childcare_start => '开始';
+
+  @override
+  String get childcare_allowance_missing => '还没有设置零花钱计划';
+
+  @override
+  String get childcare_allowance_missing_desc => '请设置每月积分和发放日';
+
+  @override
+  String get childcare_negotiation_passed => '调整日已过';
+
+  @override
+  String get childcare_negotiation_upcoming => '调整日临近';
+
+  @override
+  String childcare_negotiation_passed_desc(int days, String date) {
+    return '已过去 $days 天（$date），该检查零花钱计划了。';
+  }
+
+  @override
+  String childcare_negotiation_today(String date) {
+    return '今天就是调整日！（$date）';
+  }
+
+  @override
+  String get childcare_cashout => '积分兑现';
+
+  @override
+  String get childcare_cashout_button => '兑现';
+
+  @override
+  String get childcare_cashout_points => '要兑现的积分';
+
+  @override
+  String get childcare_cashout_failed => '兑现失败，请稍后再试。';
+
+  @override
+  String childcare_cashout_description(String amount) {
+    return '积分兑现（$amount 韩元）';
+  }
+
+  @override
+  String childcare_cashout_done(String points, String amount) {
+    return '已将 ${points}P 兑换为 $amount 韩元';
+  }
+
+  @override
+  String childcare_cashout_rate(String ratio, String balance) {
+    return '1P = $ratio 韩元 · 持有 ${balance}P';
+  }
+
+  @override
+  String childcare_cashout_approx(String amount) {
+    return '≈ $amount 韩元';
+  }
+
+  @override
+  String get childcare_rule_apply => '应用规则';
+
+  @override
+  String get childcare_rule_apply_penalty => '应用违规';
+
+  @override
+  String childcare_rule_apply_plus_message(String name, String points) {
+    return '“$name”\n将给予 ${points}P。';
+  }
+
+  @override
+  String childcare_rule_apply_minus_message(String name, String points) {
+    return '因违反“$name”\n将扣除 ${points}P。';
+  }
+
+  @override
+  String get childcare_rule_give => '给予';
+
+  @override
+  String get childcare_rule_deduct => '扣除';
+
+  @override
+  String childcare_points_given(String points) {
+    return '已给予 ${points}P';
+  }
+
+  @override
+  String childcare_points_deducted(String points) {
+    return '已扣除 ${points}P';
+  }
+
+  @override
+  String get childcare_rule_delete => '删除规则';
+
+  @override
+  String childcare_rule_delete_message(String name) {
+    return '确定删除“$name”吗？';
+  }
+
+  @override
+  String get common_deleted => '已删除';
+
+  @override
+  String get common_saved => '已保存';
+
+  @override
+  String get childcare_rule_type_plus => '加分规则';
+
+  @override
+  String get childcare_rule_type_minus => '扣分规则';
+
+  @override
+  String get childcare_rule_type_info => '一般规则';
+
+  @override
+  String get childcare_rule_help_title => '什么是规则？';
+
+  @override
+  String get childcare_rule_help_body => '规则把孩子的行为和积分联系起来：做得好就加分，违反约定就扣分。';
+
+  @override
+  String get childcare_rule_help_tip => '规则越具体明确越好。含糊的规则容易引发争执，和孩子一起制定则能建立信任。';
+
+  @override
+  String get childcare_rule_examples_plus => '加分规则示例';
+
+  @override
+  String get childcare_rule_examples_minus => '扣分规则示例';
+
+  @override
+  String get childcare_rule_examples_info => '一般规则示例';
+
+  @override
+  String get childcare_rule_example_plus1 => '独立完成学校作业  +10P';
+
+  @override
+  String get childcare_rule_example_plus2 => '晚上9点前主动上床睡觉  +5P';
+
+  @override
+  String get childcare_rule_example_plus3 => '饭后把碗筷放到水槽  +3P';
+
+  @override
+  String get childcare_rule_example_plus4 => '一周上学不迟到  +20P';
+
+  @override
+  String get childcare_rule_example_minus1 => '工作日玩手机超过1小时  -10P';
+
+  @override
+  String get childcare_rule_example_minus2 => '晚上10点后仍不睡觉  -5P';
+
+  @override
+  String get childcare_rule_example_minus3 => '对兄弟姐妹说脏话  -15P';
+
+  @override
+  String get childcare_rule_example_minus4 => '超过约定的下午6点回家时间  -10P';
+
+  @override
+  String get childcare_rule_example_info1 => '本月积分兑现上限为 50P';
+
+  @override
+  String get childcare_rule_example_info2 => '积分商店每天限用1件';
+
+  @override
+  String get childcare_rule_apply_note => '应用规则后积分会立即更新。';
+
+  @override
+  String get childcare_rule_add => '添加规则';
+
+  @override
+  String get childcare_rule_edit => '编辑规则';
+
+  @override
+  String get childcare_rule_type => '规则类型';
+
+  @override
+  String get childcare_rule_type_plus_short => '加分';
+
+  @override
+  String get childcare_rule_type_minus_short => '扣分';
+
+  @override
+  String get childcare_rule_type_info_short => '一般';
+
+  @override
+  String get childcare_rule_name_hint_plus => '例：独立完成作业';
+
+  @override
+  String get childcare_rule_name_hint_minus => '例：玩手机超过30分钟';
+
+  @override
+  String get childcare_rule_name_hint_info => '例：本月兑现上限';
+
+  @override
+  String get childcare_rule_points_give => '给予积分';
+
+  @override
+  String get childcare_rule_points_deduct => '扣除积分';
+
+  @override
+  String get childcare_rule_points_give_hint => '做得好时给予的积分';
+
+  @override
+  String get childcare_rule_points_deduct_hint => '违规时扣除的积分';
+
+  @override
+  String get childcare_save_failed => '保存失败，请稍后再试。';
+
+  @override
+  String get childcare_child => '孩子';
+
+  @override
+  String childcare_allowance_plan_title(String name) {
+    return '$name 的零花钱计划';
+  }
+
+  @override
+  String get childcare_tab_settings => '设置';
+
+  @override
+  String get childcare_tab_change_history => '变更记录';
+
+  @override
+  String get childcare_allowance_setup => '设置零花钱计划';
+
+  @override
+  String get childcare_allowance_edit => '编辑零花钱计划';
+
+  @override
+  String get childcare_monthly_points => '每月发放积分';
+
+  @override
+  String get childcare_monthly_points_hint => '例：100';
+
+  @override
+  String get childcare_monthly_points_required => '请输入每月发放积分';
+
+  @override
+  String get childcare_number_required => '请输入数字';
+
+  @override
+  String get childcare_pay_day => '每月发放日';
+
+  @override
+  String get childcare_day_unit => '日';
+
+  @override
+  String get childcare_pay_day_helper => '如果当月没有该日期，将在月末发放';
+
+  @override
+  String childcare_day_value(String day) {
+    return '$day 日';
+  }
+
+  @override
+  String get childcare_select_date => '请选择日期';
+
+  @override
+  String get childcare_select_date_optional => '请选择日期（可选）';
+
+  @override
+  String get childcare_point_ratio => '1 积分 = N 韩元';
+
+  @override
+  String get childcare_point_ratio_hint => '例：10';
+
+  @override
+  String get childcare_point_ratio_helper => '仅用于让约定更清晰';
+
+  @override
+  String get childcare_min_one => '请输入不小于 1 的数字';
+
+  @override
+  String get childcare_negotiation_date => '下次调整日（可选）';
+
+  @override
+  String get childcare_plan_save => '保存计划';
+
+  @override
+  String get childcare_plan_update => '更新计划';
+
+  @override
+  String get childcare_plan_saved => '已保存零花钱计划';
+
+  @override
+  String get childcare_current_plan => '当前零花钱计划';
+
+  @override
+  String get childcare_monthly_payout => '每月发放';
+
+  @override
+  String get childcare_payout_day => '发放日';
+
+  @override
+  String childcare_payout_day_value(String day) {
+    return '每月 $day 日';
+  }
+
+  @override
+  String get childcare_next_negotiation => '下次调整';
+
+  @override
+  String get childcare_history_empty => '暂无变更记录';
+
+  @override
+  String get childcare_history_load_error => '无法加载记录';
+
+  @override
+  String childcare_history_entry(String points, String day) {
+    return '${points}P / 每月 $day 日';
+  }
+
+  @override
+  String childcare_ratio_value(String amount) {
+    return '1P = $amount 韩元';
+  }
+
+  @override
+  String childcare_negotiation_suffix(String date) {
+    return '调整日 $date';
+  }
+
+  @override
+  String childcare_monthly_day(String day) {
+    return '每月 $day 日';
+  }
+
+  @override
+  String get childcare_item_use => '使用物品';
+
+  @override
+  String childcare_item_use_message(String name, String points) {
+    return '“$name”\n将花费 ${points}P。';
+  }
+
+  @override
+  String get childcare_item_use_confirm => '使用';
+
+  @override
+  String childcare_item_used(String name) {
+    return '已使用“$name”';
+  }
+
+  @override
+  String get childcare_item_use_failed => '使用失败，请稍后再试。';
+
+  @override
+  String get childcare_item_delete => '删除物品';
+
+  @override
+  String childcare_item_delete_message(String name) {
+    return '确定删除“$name”吗？';
+  }
+
+  @override
+  String get childcare_delete_failed => '删除失败，请稍后再试。';
+
+  @override
+  String get childcare_item_add => '添加商店物品';
+
+  @override
+  String get childcare_item_edit => '编辑商店物品';
+
+  @override
+  String get childcare_item_name => '物品名称';
+
+  @override
+  String get childcare_item_name_hint => '例：多看30分钟电视';
+
+  @override
+  String get childcare_item_points => '所需积分';
+
+  @override
+  String get childcare_shop_help_title => '什么是积分商店？';
+
+  @override
+  String get childcare_shop_help_body => '孩子可以用攒下的积分兑换的奖励清单，能激励他们主动攒分。';
+
+  @override
+  String get childcare_shop_examples => '示例物品';
+
+  @override
+  String get childcare_shop_example1 => '多看30分钟电视';
+
+  @override
+  String get childcare_shop_example2 => '玩1小时游戏';
+
+  @override
+  String get childcare_shop_example3 => '挑选喜欢的零食';
+
+  @override
+  String get childcare_shop_example4 => '可以晚睡一天';
+
+  @override
+  String get childcare_shop_disable_note => '停用物品可将其从列表中隐藏。';
+
+  @override
+  String get childcare_period_monthly => '按月';
+
+  @override
+  String get childcare_period_yearly => '按年';
+
+  @override
+  String get childcare_income => '收入';
+
+  @override
+  String get childcare_expense => '支出';
+
+  @override
+  String get childcare_net_change => '净变动';
+
+  @override
+  String get childcare_yearly_income => '本年收入';
+
+  @override
+  String get childcare_yearly_expense => '本年支出';
+
+  @override
+  String get childcare_balance_trend => '余额走势';
+
+  @override
+  String get childcare_monthly_status => '按月概览';
+
+  @override
+  String get childcare_type_distribution => '按类型分布';
+
+  @override
+  String childcare_month_unit(String month) {
+    return '$month 月';
+  }
+
+  @override
+  String get childcare_no_income_this_month => '本月没有收入记录';
+
+  @override
+  String get childcare_no_expense_this_month => '本月没有支出记录';
+
+  @override
+  String get childcare_type_allowance => '零花钱';
+
+  @override
+  String get childcare_type_reward => '奖励';
+
+  @override
+  String get childcare_type_bonus => '奖金';
+
+  @override
+  String get childcare_type_interest => '利息';
+
+  @override
+  String get childcare_type_savings_withdraw => '储蓄取出';
+
+  @override
+  String get childcare_type_penalty => '扣分';
+
+  @override
+  String get childcare_type_purchase => '商店';
+
+  @override
+  String get childcare_type_cashout => '兑现';
+
+  @override
+  String get childcare_type_savings_deposit => '储蓄';
+
+  @override
+  String get common_etc => '其他';
+
+  @override
+  String get childcare_profile_add => '添加孩子资料';
+
+  @override
+  String get childcare_child_name => '孩子姓名';
+
+  @override
+  String get childcare_child_name_hint => '例：小明';
+
+  @override
+  String get childcare_child_name_required => '请输入孩子姓名';
+
+  @override
+  String get childcare_birthdate => '出生日期';
+
+  @override
+  String get childcare_birthdate_required => '请选择出生日期';
+
+  @override
+  String get childcare_profile_added => '已添加孩子资料';
+
+  @override
+  String get childcare_profile_add_failed => '添加失败，请重试';
+
+  @override
+  String childcare_date_full(String year, String month, String day) {
+    return '$year 年 $month 月 $day 日';
+  }
+
+  @override
+  String childcare_year_unit(String year) {
+    return '$year 年';
+  }
+
+  @override
+  String childcare_link_title(String name) {
+    return '关联 $name 的账号';
+  }
+
+  @override
+  String get childcare_link_linked => '已关联应用账号';
+
+  @override
+  String get childcare_link_unlinked => '未关联应用账号';
+
+  @override
+  String childcare_link_account_id(String id) {
+    return '关联账号 ID：$id…';
+  }
+
+  @override
+  String get childcare_link_guide => '关联说明';
+
+  @override
+  String get childcare_link_guide1 => '孩子需要先自行注册应用账号。';
+
+  @override
+  String get childcare_link_guide2 => '关联后孩子可以自己查看积分。';
+
+  @override
+  String get childcare_link_guide3 => '孩子还可以自行存入储蓄。';
+
+  @override
+  String get childcare_link_button => '关联应用账号';
+
+  @override
+  String get childcare_link_info => '关联信息';
+
+  @override
+  String get childcare_link_info1 => '孩子可以在应用中查看积分。';
+
+  @override
+  String get childcare_link_info2 => '孩子可以存入储蓄。';
+
+  @override
+  String get childcare_link_done => '已关联应用账号';
+
+  @override
+  String get childcare_link_failed => '关联失败，请确认孩子已注册应用。';
+
+  @override
+  String get childcare_bonus_give => '发放奖金';
+
+  @override
+  String get childcare_child_register => '添加孩子';
+
+  @override
+  String get childcare_allowance_setup_button => '设置零花钱';
+
+  @override
+  String get childcare_link_account => '关联应用账号';
+
+  @override
+  String get childcare_bonus_desc => '给孩子发放奖励积分。\n用于规则和商店之外，想特别表扬的时候。';
+
+  @override
+  String get childcare_bonus_points => '发放积分';
+
+  @override
+  String get childcare_bonus_points_required => '请输入发放积分';
+
+  @override
+  String get childcare_bonus_points_positive => '请输入不小于 1 的积分';
+
+  @override
+  String get childcare_bonus_reason => '理由';
+
+  @override
+  String get childcare_bonus_reason_hint => '例：主动打扫房间';
+
+  @override
+  String get childcare_bonus_reason_required => '请输入理由';
+
+  @override
+  String get childcare_bonus_given => '已发放奖励';
+
+  @override
+  String get common_deactivate => '停用';
+
+  @override
+  String get common_activate => '启用';
+
+  @override
+  String childcare_approx_money(String amount) {
+    return '≈ $amount 韩元';
+  }
+
+  @override
+  String get childcare_points_per_month => 'P/月';
+
+  @override
+  String childcare_plan_summary(String day, String amount) {
+    return '每月 $day 日 · 1P=$amount 韩元';
+  }
 }

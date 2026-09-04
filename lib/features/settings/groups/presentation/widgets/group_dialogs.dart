@@ -23,7 +23,7 @@ class GroupDialogs {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.group_regenerateCode),
-        content: const Text('초대 코드를 재생성하시겠습니까?\n기존 초대 코드는 사용할 수 없게 됩니다.'),
+        content: Text(l10n.group_regenerate_code_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -93,7 +93,7 @@ class GroupDialogs {
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('멤버가 삭제되었습니다')));
+          ).showSnackBar(SnackBar(content: Text(l10n.group_member_removed)));
         }
       } catch (e) {
         if (context.mounted) {
@@ -132,7 +132,7 @@ class GroupDialogs {
             children: [
               const Icon(Icons.error_outline, size: 48, color: Colors.red),
               const SizedBox(height: 16),
-              Text('역할 목록을 불러올 수 없습니다:\n$error'),
+              Text('${l10n.group_roles_load_error}\n$error'),
             ],
           ),
           actions: [
@@ -164,8 +164,10 @@ class GroupDialogs {
                       title: Text(GroupUtils.getRoleName(l10n, role.name)),
                       subtitle: Text(role.name),
                       value: role.id,
-                      groupValue: selectedRoleId, // ignore: deprecated_member_use
-                      onChanged: (value) { // ignore: deprecated_member_use
+                      groupValue:
+                          selectedRoleId, // ignore: deprecated_member_use
+                      onChanged: (value) {
+                        // ignore: deprecated_member_use
                         setState(() {
                           selectedRoleId = value;
                         });
@@ -201,7 +203,7 @@ class GroupDialogs {
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('역할이 변경되었습니다')));
+          ).showSnackBar(SnackBar(content: Text(l10n.group_role_changed)));
         }
       } catch (e) {
         if (context.mounted) {

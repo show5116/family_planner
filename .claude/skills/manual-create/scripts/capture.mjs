@@ -332,12 +332,37 @@ async function runStep(page, step, ctxState) {
       await settle(page, step.wait ?? 2000);
       break;
     }
+    case 'reload': {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(step.wait ?? 15000);
+      await enableSemantics(page);
+      break;
+    }
+    case 'dump': {
+      // 플로우를 짤 때 실제 시맨틱 라벨과 크기를 확인하는 용도.
+      await enableSemantics(page);
+      const rows = await page.evaluate((role) => {
+        return [...document.querySelectorAll('flt-semantics')]
+          .filter((n) => !role || n.getAttribute('role') === role)
+          .map((n) => {
+            const r = n.getBoundingClientRect();
+            return {
+              role: n.getAttribute('role') || '-',
+              label: (n.getAttribute('aria-label') || n.textContent || '').split('\n')[0].slice(0, 30),
+              w: Math.round(r.width),
+              h: Math.round(r.height),
+            };
+          })
+          .filter((r) => r.w > 0 && r.label);
+      }, step.role ?? null);
+      console.log(`  [dump] ${rows.length}개`);
+      for (const r of rows) console.log(`    ${r.role.padEnd(12)} ${String(r.w).padStart(4)}x${String(r.h).padStart(3)}  ${r.label}`);
+      break;
+    }
     case 'shot': {
       const file = path.join(OUT_DIR, `${step.name}.png`);
-      // 웹폰트가 아직 안 붙었으면 Flutter가 대체 폰트 폭으로 글자를 재서
-      // 칩 라벨 같은 짧은 글이 잘린 채 찍힙니다. 폰트를 기다린 뒤 찍습니다.
       await page.evaluate(() => document.fonts.ready).catch(() => {});
-      await page.waitForTimeout(600);
+      await page.waitForTimeout(400);
       await page.screenshot({ path: file, fullPage: step.fullPage ?? false });
       ctxState.shots.push({
         name: step.name,
@@ -382,6 +407,15 @@ async function main() {
 
   const page = await context.newPage();
   page.on('pageerror', (e) => console.log('  [pageerror]', String(e).slice(0, 160)));
+  if (process.env.CAPTURE_DEBUG_NET) {
+    page.on('requestfailed', (r) =>
+      console.log('  [netfail]', r.failure()?.errorText, r.url().slice(0, 110)),
+    );
+    page.on('response', (r) => {
+      if (/font|\.ttf|\.otf|\.woff/i.test(r.url()))
+        console.log('  [font]', r.status(), r.url().slice(0, 110));
+    });
+  }
 
   const state = { shots: [] };
   let failed = null;

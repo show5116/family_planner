@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 import 'package:family_planner/features/main/child_points/data/repositories/childcare_repository.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
@@ -39,6 +40,7 @@ class _ChildAllowancePlanScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final planAsync = ref.watch(childcareAllowancePlanProvider);
     final childrenAsync = ref.watch(childcareChildrenProvider);
 
@@ -55,7 +57,8 @@ class _ChildAllowancePlanScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${childName ?? '자녀'} 용돈 플랜'),
+        title: Text(l10n.childcare_allowance_plan_title(
+            childName ?? l10n.childcare_child)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -66,9 +69,9 @@ class _ChildAllowancePlanScreenState
           unselectedLabelColor:
               Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.6),
           indicatorColor: Theme.of(context).colorScheme.onPrimary,
-          tabs: const [
-            Tab(text: '설정'),
-            Tab(text: '변경 히스토리'),
+          tabs: [
+            Tab(text: l10n.childcare_tab_settings),
+            Tab(text: l10n.childcare_tab_change_history),
           ],
         ),
       ),
@@ -133,6 +136,7 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSizes.spaceM),
       child: Form(
@@ -145,7 +149,9 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
               const SizedBox(height: AppSizes.spaceL),
             ],
             Text(
-              widget.plan == null ? '용돈 플랜 설정' : '용돈 플랜 수정',
+              widget.plan == null
+                  ? l10n.childcare_allowance_setup
+                  : l10n.childcare_allowance_edit,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -155,15 +161,19 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
               controller: _monthlyPointsController,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: '월 지급 포인트',
-                hintText: '예: 100',
+              decoration: InputDecoration(
+                labelText: l10n.childcare_monthly_points,
+                hintText: l10n.childcare_monthly_points_hint,
                 prefixIcon: Icon(Icons.monetization_on_outlined),
                 suffixText: 'P',
               ),
               validator: (v) {
-                if (v == null || v.trim().isEmpty) return '월 지급 포인트를 입력해주세요';
-                if (int.tryParse(v.trim()) == null) return '숫자를 입력해주세요';
+                if (v == null || v.trim().isEmpty) {
+                  return l10n.childcare_monthly_points_required;
+                }
+                if (int.tryParse(v.trim()) == null) {
+                  return l10n.childcare_number_required;
+                }
                 return null;
               },
             ),
@@ -172,19 +182,19 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
               onTap: _selectPayDay,
               child: InputDecorator(
                 decoration: InputDecoration(
-                  labelText: '매달 지급일',
+                  labelText: l10n.childcare_pay_day,
                   prefixIcon: const Icon(Icons.calendar_today_outlined),
-                  suffixText: '일',
+                  suffixText: l10n.childcare_day_unit,
                   helperText: int.tryParse(_payDayController.text) != null &&
                           int.parse(_payDayController.text) > 28
-                      ? '해당 월에 선택한 날짜가 없으면 말일에 지급됩니다'
+                      ? l10n.childcare_pay_day_helper
                       : null,
                   helperMaxLines: 2,
                 ),
                 child: Text(
                   _payDayController.text.isNotEmpty
-                      ? '${_payDayController.text}일'
-                      : '날짜를 선택하세요',
+                      ? l10n.childcare_day_value(_payDayController.text)
+                      : l10n.childcare_select_date,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -194,23 +204,23 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
               controller: _ratioController,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: '1포인트 = N원',
-                hintText: '예: 10',
+              decoration: InputDecoration(
+                labelText: l10n.childcare_point_ratio,
+                hintText: l10n.childcare_point_ratio_hint,
                 prefixIcon: Icon(Icons.swap_horiz),
                 suffixText: '원',
-                helperText: '아이와의 약속을 명확히 하기 위한 표시용입니다',
+                helperText: l10n.childcare_point_ratio_helper,
               ),
               validator: (v) {
                 final n = int.tryParse(v?.trim() ?? '');
-                if (n == null || n < 1) return '1 이상의 숫자를 입력해주세요';
+                if (n == null || n < 1) return l10n.childcare_min_one;
                 return null;
               },
             ),
             const SizedBox(height: AppSizes.spaceM),
             InputDecorator(
               decoration: InputDecoration(
-                labelText: '다음 연봉 협상일 (선택)',
+                labelText: l10n.childcare_negotiation_date,
                 prefixIcon: const Icon(Icons.handshake_outlined),
                 suffixIcon: _nextNegotiationDate != null
                     ? IconButton(
@@ -229,7 +239,7 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
                       _nextNegotiationDate != null
                           ? DateFormat('yyyy-MM-dd')
                               .format(_nextNegotiationDate!)
-                          : '날짜를 선택하세요 (선택)',
+                          : l10n.childcare_select_date_optional,
                       style: _nextNegotiationDate != null
                           ? Theme.of(context).textTheme.bodyMedium
                           : Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -251,7 +261,9 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Text(widget.plan == null ? '플랜 설정' : '플랜 수정'),
+                    : Text(widget.plan == null
+                        ? l10n.childcare_plan_save
+                        : l10n.childcare_plan_update),
               ),
             ),
           ],
@@ -284,6 +296,7 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
   }
 
   Future<void> _handleSubmit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
@@ -306,11 +319,11 @@ class _PlanFormState extends ConsumerState<_PlanForm> {
 
     if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('용돈 플랜이 저장되었습니다')),
+        SnackBar(content: Text(l10n.childcare_plan_saved)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('저장에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+        SnackBar(content: Text(l10n.childcare_save_failed)),
       );
     }
   }
@@ -325,6 +338,7 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -335,20 +349,24 @@ class _InfoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '현재 용돈 플랜',
+              l10n.childcare_current_plan,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: colorScheme.onPrimaryContainer,
                   ),
             ),
             const SizedBox(height: AppSizes.spaceS),
-            _Row(label: '월 지급', value: '${plan.monthlyPoints}P'),
-            _Row(label: '지급일', value: '매월 ${plan.payDay}일'),
+            _Row(
+                label: l10n.childcare_monthly_payout,
+                value: '${plan.monthlyPoints}P'),
+            _Row(
+                label: l10n.childcare_payout_day,
+                value: l10n.childcare_payout_day_value('${plan.payDay}')),
             _Row(
                 label: '1P =',
-                value: '${plan.pointToMoneyRatio}원'),
+                value: l10n.childcare_ratio_value('${plan.pointToMoneyRatio}')),
             if (plan.nextNegotiationDate != null)
               _Row(
-                label: '다음 협상일',
+                label: l10n.childcare_next_negotiation,
                 value: DateFormat('yyyy.MM.dd')
                     .format(plan.nextNegotiationDate!),
               ),
@@ -402,13 +420,14 @@ class _HistoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final historyAsync = ref.watch(childcareAllowancePlanHistoryProvider);
 
     return historyAsync.when(
       data: (history) {
         if (history.isEmpty) {
-          return const Center(
-            child: Text('변경 히스토리가 없습니다'),
+          return Center(
+            child: Text(l10n.childcare_history_empty),
           );
         }
         return ListView.separated(
@@ -430,10 +449,13 @@ class _HistoryTab extends ConsumerWidget {
                   ),
                 ),
               ),
-              title: Text('${h.monthlyPoints}P / 매월 ${h.payDay}일'),
+              title: Text(l10n.childcare_history_entry(
+                  '${h.monthlyPoints}', '${h.payDay}')),
               subtitle: Text(
-                '1P = ${h.pointToMoneyRatio}원'
-                '${h.nextNegotiationDate != null ? ' · 협상일 ${DateFormat('yy.MM.dd').format(h.nextNegotiationDate!)}' : ''}',
+                l10n.childcare_ratio_value('${h.pointToMoneyRatio}') +
+                    (h.nextNegotiationDate != null
+                        ? ' · ${l10n.childcare_negotiation_suffix(DateFormat('yy.MM.dd').format(h.nextNegotiationDate!))}'
+                        : ''),
               ),
               trailing: Text(
                 DateFormat('yy.MM.dd').format(h.changedAt),
@@ -444,7 +466,7 @@ class _HistoryTab extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, _) => const Center(child: Text('히스토리를 불러올 수 없습니다')),
+      error: (_, _) => Center(child: Text(l10n.childcare_history_load_error)),
     );
   }
 }
@@ -479,6 +501,7 @@ class _DayPickerState extends State<_DayPicker> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
@@ -495,15 +518,15 @@ class _DayPickerState extends State<_DayPicker> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('취소'),
+                  child: Text(l10n.common_cancel),
                 ),
                 Text(
-                  '매달 $_day일',
+                  l10n.childcare_monthly_day('$_day'),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(_day),
-                  child: const Text('확인'),
+                  child: Text(l10n.common_confirm),
                 ),
               ],
             ),
@@ -531,7 +554,7 @@ class _DayPickerState extends State<_DayPicker> {
                             ),
                     child: Center(
                       child: Text(
-                        '${index + 1}일',
+                        l10n.childcare_day_value('${index + 1}'),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: isSelected ? colorScheme.primary : null,
                               fontWeight: isSelected

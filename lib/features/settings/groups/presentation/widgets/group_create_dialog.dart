@@ -79,23 +79,25 @@ class GroupCreateDialog {
             ),
             actions: [
               TextButton(
-                onPressed: isLoading ? null : () => Navigator.pop(dialogContext),
+                onPressed: isLoading
+                    ? null
+                    : () => Navigator.pop(dialogContext),
                 child: Text(l10n.group_cancel),
               ),
               ElevatedButton(
                 onPressed: isLoading
                     ? null
                     : () => _handleCreate(
-                          dialogContext,
-                          context,
-                          ref,
-                          l10n,
-                          formKey,
-                          nameController,
-                          descriptionController,
-                          selectedColor,
-                          (loading) => setState(() => isLoading = loading),
-                        ),
+                        dialogContext,
+                        context,
+                        ref,
+                        l10n,
+                        formKey,
+                        nameController,
+                        descriptionController,
+                        selectedColor,
+                        (loading) => setState(() => isLoading = loading),
+                      ),
                 child: isLoading
                     ? const SizedBox(
                         width: 16,
@@ -127,10 +129,13 @@ class GroupCreateDialog {
       final g = (selectedColor.g * 255).round();
       final b = (selectedColor.b * 255).round();
       final hexColor =
-          '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
+          '#${r.toRadixString(16).padLeft(2, '0')}${g.toRadixString(16).padLeft(2, '0')}${b.toRadixString(16).padLeft(2, '0')}'
+              .toUpperCase();
       setLoading(true);
       try {
-        await ref.read(groupNotifierProvider.notifier).createGroup(
+        await ref
+            .read(groupNotifierProvider.notifier)
+            .createGroup(
               name: nameController.text,
               description: descriptionController.text.isEmpty
                   ? null
@@ -140,16 +145,16 @@ class GroupCreateDialog {
 
         if (dialogContext.mounted) {
           Navigator.pop(dialogContext);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.group_createSuccess)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.group_createSuccess)));
         }
       } catch (e) {
         if (dialogContext.mounted) {
           setLoading(false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('오류: ${e.toString()}')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('오류: ${e.toString()}')));
         }
       }
     }

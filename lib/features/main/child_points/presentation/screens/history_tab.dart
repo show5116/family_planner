@@ -44,15 +44,15 @@ class HistoryTab extends ConsumerWidget {
               // 월별/연도별 토글
               SegmentedButton<HistoryViewMode>(
                 showSelectedIcon: false,
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: HistoryViewMode.monthly,
-                    label: Text('월별'),
+                    label: Text(l10n.childcare_period_monthly),
                     icon: Icon(Icons.calendar_view_month, size: 16),
                   ),
                   ButtonSegment(
                     value: HistoryViewMode.yearly,
-                    label: Text('연도별'),
+                    label: Text(l10n.childcare_period_yearly),
                     icon: Icon(Icons.calendar_today, size: 16),
                   ),
                 ],
@@ -208,6 +208,7 @@ class _MonthlySummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     double income = 0;
@@ -237,7 +238,7 @@ class _MonthlySummaryCard extends StatelessWidget {
           child: Row(
             children: [
               _SummaryItem(
-                label: '수입',
+                label: l10n.childcare_income,
                 value: '+${income.toInt()}P',
                 color: Colors.green,
               ),
@@ -249,7 +250,7 @@ class _MonthlySummaryCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
-                label: '지출',
+                label: l10n.childcare_expense,
                 value: '-${expense.toInt()}P',
                 color: colorScheme.error,
               ),
@@ -261,7 +262,7 @@ class _MonthlySummaryCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
-                label: '순변동',
+                label: l10n.childcare_net_change,
                 value: '${net >= 0 ? '+' : ''}${net.toInt()}P',
                 color: net >= 0 ? Colors.green : colorScheme.error,
               ),
@@ -282,6 +283,7 @@ class _YearlySummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     double income = 0;
@@ -311,7 +313,7 @@ class _YearlySummaryCard extends StatelessWidget {
           child: Row(
             children: [
               _SummaryItem(
-                label: '연간 수입',
+                label: l10n.childcare_yearly_income,
                 value: '+${income.toInt()}P',
                 color: Colors.green,
               ),
@@ -323,7 +325,7 @@ class _YearlySummaryCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
-                label: '연간 지출',
+                label: l10n.childcare_yearly_expense,
                 value: '-${expense.toInt()}P',
                 color: colorScheme.error,
               ),
@@ -335,7 +337,7 @@ class _YearlySummaryCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSizes.spaceM),
               _SummaryItem(
-                label: '순변동',
+                label: l10n.childcare_net_change,
                 value: '${net >= 0 ? '+' : ''}${net.toInt()}P',
                 color: net >= 0 ? Colors.green : colorScheme.error,
               ),
@@ -401,6 +403,7 @@ class _BalanceLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final parts = month.split('-');
     final year = int.parse(parts[0]);
@@ -466,7 +469,7 @@ class _BalanceLineChart extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: AppSizes.spaceS),
                 child: Text(
-                  '잔액 추이',
+                  l10n.childcare_balance_trend,
                   style: Theme.of(
                     context,
                   ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -514,7 +517,7 @@ class _BalanceLineChart extends StatelessWidget {
                           showTitles: true,
                           interval: (lastDay / 4).ceilToDouble(),
                           getTitlesWidget: (v, _) => Text(
-                            '${v.toInt()}일',
+                            l10n.childcare_day_value('${v.toInt()}'),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: 9,
@@ -600,6 +603,7 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     // 월별 수입/지출 집계
@@ -657,7 +661,7 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                   Padding(
                     padding: const EdgeInsets.only(left: AppSizes.spaceS),
                     child: Text(
-                      '월별 현황',
+                      l10n.childcare_monthly_status,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -666,9 +670,11 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                   const Spacer(),
                   SegmentedButton<bool>(
                     showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: true, label: Text('수입')),
-                      ButtonSegment(value: false, label: Text('지출')),
+                    segments: [
+                      ButtonSegment(
+                          value: true, label: Text(l10n.childcare_income)),
+                      ButtonSegment(
+                          value: false, label: Text(l10n.childcare_expense)),
                     ],
                     selected: {_showIncome},
                     onSelectionChanged: (s) =>
@@ -723,7 +729,7 @@ class _YearlyBarChartState extends State<_YearlyBarChart> {
                         sideTitles: SideTitles(
                           showTitles: true,
                           getTitlesWidget: (v, _) => Text(
-                            '${v.toInt()}월',
+                            l10n.childcare_month_unit('${v.toInt()}'),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontSize: 9,
@@ -779,16 +785,20 @@ class _TypeDonutChart extends StatefulWidget {
 class _TypeDonutChartState extends State<_TypeDonutChart> {
   bool _showIncome = true;
 
-  static const _typeLabels = {
-    ChildcareTransactionType.allowance: '용돈',
-    ChildcareTransactionType.reward: '보상',
-    ChildcareTransactionType.bonus: '보너스',
-    ChildcareTransactionType.interest: '이자',
-    ChildcareTransactionType.savingsWithdraw: '적금 출금',
-    ChildcareTransactionType.penalty: '벌점',
-    ChildcareTransactionType.purchase: '상점',
-    ChildcareTransactionType.cashout: '현금화',
-    ChildcareTransactionType.savingsDeposit: '적금',
+  /// 거래 유형 라벨. const 맵으로 둘 수 없어 l10n을 받아 만든다.
+  static Map<ChildcareTransactionType, String> _typeLabels(
+    AppLocalizations l10n,
+  ) => {
+    ChildcareTransactionType.allowance: l10n.childcare_type_allowance,
+    ChildcareTransactionType.reward: l10n.childcare_type_reward,
+    ChildcareTransactionType.bonus: l10n.childcare_type_bonus,
+    ChildcareTransactionType.interest: l10n.childcare_type_interest,
+    ChildcareTransactionType.savingsWithdraw:
+        l10n.childcare_type_savings_withdraw,
+    ChildcareTransactionType.penalty: l10n.childcare_type_penalty,
+    ChildcareTransactionType.purchase: l10n.childcare_type_purchase,
+    ChildcareTransactionType.cashout: l10n.childcare_type_cashout,
+    ChildcareTransactionType.savingsDeposit: l10n.childcare_type_savings_deposit,
   };
 
   static const _typeColors = {
@@ -805,6 +815,7 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     // 유형별 합산
@@ -824,7 +835,9 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
             padding: const EdgeInsets.all(AppSizes.spaceM),
             child: Center(
               child: Text(
-                _showIncome ? '이번 달 수입 내역이 없습니다' : '이번 달 지출 내역이 없습니다',
+                _showIncome
+                    ? l10n.childcare_no_income_this_month
+                    : l10n.childcare_no_expense_this_month,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -863,7 +876,7 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
               Row(
                 children: [
                   Text(
-                    '유형별 분포',
+                    l10n.childcare_type_distribution,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -871,9 +884,11 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
                   const Spacer(),
                   SegmentedButton<bool>(
                     showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: true, label: Text('수입')),
-                      ButtonSegment(value: false, label: Text('지출')),
+                    segments: [
+                      ButtonSegment(
+                          value: true, label: Text(l10n.childcare_income)),
+                      ButtonSegment(
+                          value: false, label: Text(l10n.childcare_expense)),
                     ],
                     selected: {_showIncome},
                     onSelectionChanged: (s) =>
@@ -905,7 +920,7 @@ class _TypeDonutChartState extends State<_TypeDonutChart> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: byType.entries.map((e) {
                         final color = _typeColors[e.key] ?? colorScheme.primary;
-                        final label = _typeLabels[e.key] ?? '기타';
+                        final label = _typeLabels(l10n)[e.key] ?? l10n.common_etc;
                         final pct = e.value / total * 100;
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 2),

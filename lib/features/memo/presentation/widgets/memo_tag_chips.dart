@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/memo/data/models/memo_model.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 태그 칩 표시 위젯
 class MemoTagChips extends StatelessWidget {
@@ -137,10 +138,10 @@ class _MemoTagInputState extends State<MemoTagInput> {
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
-                    decoration: const InputDecoration(
-                      hintText: '태그 입력 후 추가',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.memo_tag_input_hint,
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: AppSizes.spaceM,
                         vertical: AppSizes.spaceS,
                       ),

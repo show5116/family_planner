@@ -4593,6 +4593,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscription_expires_at_label => 'Expires';
 
   @override
+  String get subscription_days_left_label => 'Time remaining';
+
+  @override
+  String subscription_days_left_value(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get subscription_days_left_today => 'Ends today';
+
+  @override
+  String get subscription_trial_ends_at_label => 'Trial ends';
+
+  @override
+  String get subscription_period_end_label => 'Current period ends';
+
+  @override
+  String get subscription_auto_renew_hint =>
+      'Renews automatically on this date unless canceled';
+
+  @override
+  String get subscription_next_renewal_label => 'Next renewal';
+
+  @override
+  String get subscription_canceled_hint =>
+      'Canceled — your subscription ends on this date';
+
+  @override
   String get subscription_products_section_title => 'Subscription Plans';
 
   @override
@@ -5531,4 +5565,1466 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => 'Flags';
+
+  @override
+  String get memo_tag_filter_clear => 'Clear tag filter';
+
+  @override
+  String get memo_section_pinned => 'Pinned';
+
+  @override
+  String memo_pinned_expand(int count) {
+    return 'Show $count more';
+  }
+
+  @override
+  String get memo_pinned_collapse => 'Collapse';
+
+  @override
+  String get memo_pin_add => 'Pin to dashboard';
+
+  @override
+  String get memo_pin_remove => 'Unpin';
+
+  @override
+  String get memo_pin_error => 'Couldn\'t change the pin';
+
+  @override
+  String get memo_pin_added => 'Pinned to the top and added to your dashboard.';
+
+  @override
+  String get memo_pin_removed => 'Unpinned.';
+
+  @override
+  String memo_duplicate_title(String title) {
+    return '$title (copy)';
+  }
+
+  @override
+  String get memo_tag_input_hint => 'Type a tag, then add';
+
+  @override
+  String get memo_editor_paste_failed => 'Couldn\'t paste from the clipboard.';
+
+  @override
+  String get memo_editor_link_card_add => 'Add link card';
+
+  @override
+  String get memo_editor_image => 'Image';
+
+  @override
+  String get memo_editor_paste_formatted => 'Paste with formatting';
+
+  @override
+  String get memo_editor_link_apply => 'Add link';
+
+  @override
+  String get memo_editor_link_select_first => 'Select text first';
+
+  @override
+  String get memo_editor_bold => 'Bold';
+
+  @override
+  String get memo_editor_italic => 'Italic';
+
+  @override
+  String get memo_editor_strikethrough => 'Strikethrough';
+
+  @override
+  String get memo_editor_heading1 => 'Heading 1';
+
+  @override
+  String get memo_editor_heading2 => 'Heading 2 (checklist section)';
+
+  @override
+  String get memo_editor_bullet_list => 'Bulleted list';
+
+  @override
+  String get memo_editor_numbered_list => 'Numbered list';
+
+  @override
+  String get memo_editor_undo => 'Undo';
+
+  @override
+  String get memo_editor_redo => 'Redo';
+
+  @override
+  String get savings_title => 'Group savings';
+
+  @override
+  String get savings_select_group => 'Choose a group';
+
+  @override
+  String get savings_intro_title => 'Set a goal and save together';
+
+  @override
+  String get savings_intro_body =>
+      'Create a goal — a trip, an emergency fund, a new appliance — and add money automatically each month or whenever you like.';
+
+  @override
+  String get savings_intro_tip =>
+      'It works for any group — friends or coworkers, not just family.';
+
+  @override
+  String get savings_list_empty => 'No savings goals yet\nTap + to add one';
+
+  @override
+  String savings_achievement_rate(String rate) {
+    return '$rate% saved';
+  }
+
+  @override
+  String get savings_deposit => 'Deposit';
+
+  @override
+  String get savings_withdraw => 'Withdraw';
+
+  @override
+  String get savings_amount_label => 'Amount (KRW)';
+
+  @override
+  String get savings_memo_label => 'Note (optional)';
+
+  @override
+  String get savings_withdraw_reason_label => 'Reason (required)';
+
+  @override
+  String get savings_delete_title => 'Delete goal';
+
+  @override
+  String savings_delete_message(String name) {
+    return 'Delete \'$name\'?\nThis can\'t be undone.';
+  }
+
+  @override
+  String get savings_detail_title => 'Savings goal';
+
+  @override
+  String get savings_goal_reached => 'Goal reached!';
+
+  @override
+  String savings_target_amount(String amount) {
+    return 'Target: $amount';
+  }
+
+  @override
+  String get savings_auto_deposit => 'Auto deposit';
+
+  @override
+  String savings_auto_deposit_monthly(String amount) {
+    return '$amount/month';
+  }
+
+  @override
+  String get savings_auto_deposit_pause => 'Pause auto deposit';
+
+  @override
+  String get savings_auto_deposit_resume => 'Resume auto deposit';
+
+  @override
+  String get savings_recent_transactions => 'Recent activity';
+
+  @override
+  String get savings_view_all => 'View all';
+
+  @override
+  String get savings_transactions_empty => 'No transactions yet.';
+
+  @override
+  String get savings_transactions_load_error => 'Couldn\'t load transactions';
+
+  @override
+  String get savings_filter_auto => 'Auto';
+
+  @override
+  String get savings_form_title_add => 'New savings goal';
+
+  @override
+  String get savings_form_title_edit => 'Edit savings goal';
+
+  @override
+  String get savings_form_submit_edit => 'Save changes';
+
+  @override
+  String get savings_form_save_error => 'Couldn\'t save';
+
+  @override
+  String get savings_field_name => 'Goal name *';
+
+  @override
+  String get savings_field_name_required => 'Enter a goal name';
+
+  @override
+  String get savings_field_description => 'Description (optional)';
+
+  @override
+  String get savings_field_target => 'Target amount (optional, KRW)';
+
+  @override
+  String get savings_field_target_hint => 'e.g. 1000000';
+
+  @override
+  String get savings_field_target_helper =>
+      'Leave it blank to keep saving without a fixed target, like an emergency fund.';
+
+  @override
+  String get savings_field_amount_invalid => 'Enter a valid amount';
+
+  @override
+  String get savings_field_auto_deposit_desc =>
+      'Add money automatically every month';
+
+  @override
+  String get savings_field_monthly_amount => 'Monthly amount (KRW)';
+
+  @override
+  String get savings_field_monthly_amount_hint => 'e.g. 100000';
+
+  @override
+  String get savings_field_monthly_amount_required => 'Enter a monthly amount';
+
+  @override
+  String get savings_field_deposit_day => 'Day of month (1–31)';
+
+  @override
+  String get savings_field_deposit_day_hint => 'e.g. 25';
+
+  @override
+  String get savings_field_deposit_day_helper =>
+      'If a month is shorter, it runs on the last day.';
+
+  @override
+  String get savings_field_deposit_day_invalid =>
+      'Enter a day between 1 and 31';
+
+  @override
+  String get savings_field_include_assets => 'Include in assets';
+
+  @override
+  String get savings_field_include_assets_desc =>
+      'Your balance shows up in the assets overview.';
+
+  @override
+  String get vote_title => 'Votes';
+
+  @override
+  String get vote_filter_ongoing => 'Open';
+
+  @override
+  String get vote_filter_closed => 'Closed';
+
+  @override
+  String get vote_status_ongoing => 'Open';
+
+  @override
+  String get vote_status_closed => 'Closed';
+
+  @override
+  String get vote_select_group => 'Choose a group to see its votes';
+
+  @override
+  String get vote_list_empty => 'No votes yet\nTap + to create one';
+
+  @override
+  String get vote_list_load_error => 'Couldn\'t load votes';
+
+  @override
+  String get vote_detail_load_error => 'Couldn\'t load this vote';
+
+  @override
+  String vote_participants(int count) {
+    return '$count voted';
+  }
+
+  @override
+  String get vote_participated => 'Voted';
+
+  @override
+  String get vote_deadline_passed => 'Closed';
+
+  @override
+  String vote_deadline_days(int days) {
+    return 'Closes in ${days}d';
+  }
+
+  @override
+  String vote_deadline_hours(int hours) {
+    return 'Closes in ${hours}h';
+  }
+
+  @override
+  String vote_deadline_minutes(int minutes) {
+    return 'Closes in ${minutes}m';
+  }
+
+  @override
+  String get vote_delete => 'Delete vote';
+
+  @override
+  String get vote_delete_message => 'Delete this vote?\nIt can\'t be restored.';
+
+  @override
+  String get vote_delete_failed => 'Couldn\'t delete';
+
+  @override
+  String get vote_submit_success => 'Your vote is in';
+
+  @override
+  String get vote_submit_failed => 'Couldn\'t submit your vote';
+
+  @override
+  String get vote_multiple_choice_badge => 'Multiple choice';
+
+  @override
+  String get vote_anonymous_badge => 'Anonymous';
+
+  @override
+  String get vote_submit => 'Vote';
+
+  @override
+  String get vote_revote => 'Change my vote';
+
+  @override
+  String vote_option_result(int count, String percent) {
+    return '$count votes ($percent%)';
+  }
+
+  @override
+  String get vote_create_title => 'New vote';
+
+  @override
+  String get vote_field_title => 'Title *';
+
+  @override
+  String get vote_field_title_required => 'Enter a title';
+
+  @override
+  String get vote_field_description => 'Description (optional)';
+
+  @override
+  String get vote_options_section => 'Options';
+
+  @override
+  String vote_option_hint(int index) {
+    return 'Option $index';
+  }
+
+  @override
+  String get vote_options_min => 'Add at least two options';
+
+  @override
+  String get vote_create_failed => 'Couldn\'t create the vote';
+
+  @override
+  String get vote_allow_multiple => 'Allow multiple choices';
+
+  @override
+  String get vote_allow_multiple_desc =>
+      'People can pick more than one option.';
+
+  @override
+  String get vote_anonymous => 'Anonymous vote';
+
+  @override
+  String get vote_anonymous_desc => 'Voter names stay hidden.';
+
+  @override
+  String get vote_deadline => 'Closing time';
+
+  @override
+  String get vote_deadline_none => 'Not set (close manually)';
+
+  @override
+  String get todo_label_dueDate => 'Due date';
+
+  @override
+  String get todo_label_category => 'Category';
+
+  @override
+  String get todo_label_createdAt => 'Created';
+
+  @override
+  String get todo_label_completedAt => 'Completed';
+
+  @override
+  String get todo_label_status => 'Status';
+
+  @override
+  String get todo_drag_to_move => 'Drag to move';
+
+  @override
+  String get common_more => 'Show more';
+
+  @override
+  String get cart_total => 'Total';
+
+  @override
+  String get cart_save_error => 'Couldn\'t save';
+
+  @override
+  String get cart_price_unit => 'Per item';
+
+  @override
+  String get cart_price_total => 'Total';
+
+  @override
+  String get cart_price_unit_label => 'Price per item';
+
+  @override
+  String get cart_price_total_label => 'Total price';
+
+  @override
+  String get cart_price_unit_hint => 'Enter price per item';
+
+  @override
+  String get cart_price_total_hint => 'Enter total price';
+
+  @override
+  String get cart_extra_show => 'Add unit and note';
+
+  @override
+  String get cart_extra_hide => 'Hide unit and note';
+
+  @override
+  String get cart_shopping_date => 'Shopping date';
+
+  @override
+  String get cart_select_date => 'Pick a date';
+
+  @override
+  String get cart_default_description => 'Grocery shopping';
+
+  @override
+  String get settings_myReportsTitle => 'My reports';
+
+  @override
+  String get settings_myReportsSubtitle => 'See the reports you\'ve submitted';
+
+  @override
+  String get settings_commonRolesTitle => 'Shared roles';
+
+  @override
+  String get settings_commonRolesSubtitle =>
+      'Roles that apply across the whole service';
+
+  @override
+  String get settings_userAdminTitle => 'Users and accounts';
+
+  @override
+  String get settings_userAdminSubtitle =>
+      'Edit subscriptions, schedule and process account deletion';
+
+  @override
+  String get settings_reportAdminTitle => 'Reports';
+
+  @override
+  String get settings_reportAdminSubtitle =>
+      'Receive and handle member reports';
+
+  @override
+  String get settings_replayTutorial => 'Replay the tutorial';
+
+  @override
+  String get settings_replayTutorialBody =>
+      'You can watch the intro slides and feature guides again from the start.';
+
+  @override
+  String get settings_replayTutorialConfirm => 'Replay';
+
+  @override
+  String get settings_replayTutorialDone =>
+      'The tutorial will show the next time you open the app.';
+
+  @override
+  String get settings_personalColor => 'Your color';
+
+  @override
+  String get settings_personalColorPick => 'Pick your color';
+
+  @override
+  String get widgetSettings_addWidget => 'Add a widget';
+
+  @override
+  String get widgetSettings_addAnniversary => 'Add an anniversary';
+
+  @override
+  String get report_title => 'Report';
+
+  @override
+  String get report_reason => 'Reason';
+
+  @override
+  String get report_detail => 'Details (optional)';
+
+  @override
+  String get report_detail_hint => 'Add anything else we should know';
+
+  @override
+  String get report_submit => 'Submit report';
+
+  @override
+  String get report_submitted => 'Your report has been submitted.';
+
+  @override
+  String get report_submit_failed => 'Couldn\'t submit the report';
+
+  @override
+  String get report_empty => 'No reports';
+
+  @override
+  String get report_admin_title => 'Reports';
+
+  @override
+  String get report_handle_title => 'Handle report';
+
+  @override
+  String get report_handle_status => 'Status';
+
+  @override
+  String get report_handle_memo => 'Note (optional)';
+
+  @override
+  String get report_handle_memo_hint => 'What did you do about it?';
+
+  @override
+  String get report_handle_done => 'Done';
+
+  @override
+  String get report_handled => 'The report has been handled.';
+
+  @override
+  String get report_handle_failed => 'Couldn\'t handle the report';
+
+  @override
+  String get group_invite_cancel => 'Cancel invite';
+
+  @override
+  String group_invite_cancel_message(String email) {
+    return 'Cancel the invite sent to $email?';
+  }
+
+  @override
+  String get group_invite_canceled => 'Invite canceled';
+
+  @override
+  String group_invite_resent(String email) {
+    return 'Invite resent to $email';
+  }
+
+  @override
+  String get group_invite_resend => 'Resend';
+
+  @override
+  String get group_color_change_failed => 'Couldn\'t change the color';
+
+  @override
+  String get group_color_reset => 'Reset to the group\'s default color';
+
+  @override
+  String get group_color_reset_failed => 'Couldn\'t reset the color';
+
+  @override
+  String get group_order_saved => 'Group order saved';
+
+  @override
+  String get group_members_empty => 'No members';
+
+  @override
+  String get group_member_remove => 'Remove member';
+
+  @override
+  String get group_member_removed => 'Member removed';
+
+  @override
+  String get group_role_change => 'Change role';
+
+  @override
+  String get group_role_changed => 'Role changed';
+
+  @override
+  String get group_roles_load_error => 'Couldn\'t load roles';
+
+  @override
+  String get group_regenerate_code_message =>
+      'Generate a new invite code?\nThe old one will stop working.';
+
+  @override
+  String get group_transfer_ownership => 'Transfer ownership';
+
+  @override
+  String get group_transfer_confirm => 'Transfer';
+
+  @override
+  String group_transfer_message(String name) {
+    return 'Make $name the group owner?';
+  }
+
+  @override
+  String get group_transfer_failed => 'Couldn\'t transfer ownership';
+
+  @override
+  String get invite_title => 'Group invite';
+
+  @override
+  String get invite_joining => 'Joining the group…';
+
+  @override
+  String get invite_joined => 'You\'re in!';
+
+  @override
+  String get invite_go_home => 'Go home';
+
+  @override
+  String get invite_login_required => 'Sign in to join this group.';
+
+  @override
+  String get invite_login => 'Sign in';
+
+  @override
+  String get invite_failed => 'Couldn\'t join';
+
+  @override
+  String group_transfer_done(String name) {
+    return '$name is now the group owner';
+  }
+
+  @override
+  String invite_code_label(String code) {
+    return 'Invite code: $code';
+  }
+
+  @override
+  String get invite_unknown_error => 'Something went wrong.';
+
+  @override
+  String get common_unknownError => 'Something went wrong';
+
+  @override
+  String get common_sortOrderSaved => 'Order saved';
+
+  @override
+  String get common_saveFailed => 'Couldn\'t save';
+
+  @override
+  String get common_deleteFailed => 'Couldn\'t delete';
+
+  @override
+  String get common_noSearchResults => 'No results';
+
+  @override
+  String get role_common_title => 'Shared roles';
+
+  @override
+  String get role_create => 'New role';
+
+  @override
+  String get role_list_load_error => 'Couldn\'t load roles';
+
+  @override
+  String get role_list_empty => 'No shared roles yet';
+
+  @override
+  String get role_list_empty_subtitle => 'Tap + to create one';
+
+  @override
+  String get role_info_load_error => 'Couldn\'t load the role';
+
+  @override
+  String get role_not_found => 'Role not found';
+
+  @override
+  String role_permissions_title(String name) {
+    return '$name permissions';
+  }
+
+  @override
+  String get role_permission_search => 'Search permissions';
+
+  @override
+  String get role_permissions_load_error => 'Couldn\'t load permissions';
+
+  @override
+  String get role_permissions_saved => 'Permissions saved';
+
+  @override
+  String get role_edit_title => 'Edit shared role';
+
+  @override
+  String get role_create_title => 'New shared role';
+
+  @override
+  String get role_created => 'Role created';
+
+  @override
+  String get role_updated => 'Role updated';
+
+  @override
+  String get role_create_failed => 'Couldn\'t create the role';
+
+  @override
+  String get role_update_failed => 'Couldn\'t update the role';
+
+  @override
+  String get role_field_name => 'Role name';
+
+  @override
+  String get role_field_name_hint => 'e.g. ADMIN, MEMBER';
+
+  @override
+  String get role_field_name_required => 'Enter a role name';
+
+  @override
+  String get role_default => 'Default role';
+
+  @override
+  String get role_default_desc => 'Given automatically to new members';
+
+  @override
+  String get role_default_badge => 'Default';
+
+  @override
+  String get role_color => 'Role color';
+
+  @override
+  String get role_delete => 'Delete role';
+
+  @override
+  String role_delete_message(String name) {
+    return 'Delete the $name role?\nThis can\'t be undone.';
+  }
+
+  @override
+  String get role_deleted => 'Role deleted';
+
+  @override
+  String get role_manage_permissions => 'Permissions';
+
+  @override
+  String get permission_name_hint => 'e.g. VIEW_REPORT';
+
+  @override
+  String get permission_desc_hint => 'Describe what this permission allows';
+
+  @override
+  String get permission_category_custom => '+ Custom';
+
+  @override
+  String get permission_category_new => 'New category name';
+
+  @override
+  String get permission_category_required => 'Enter a category name';
+
+  @override
+  String get childcare_savings_plan => 'Savings plan';
+
+  @override
+  String get childcare_savings_ongoing => 'In progress';
+
+  @override
+  String get childcare_savings_matured => 'Matured';
+
+  @override
+  String get childcare_interest_simple => 'Simple';
+
+  @override
+  String get childcare_interest_compound => 'Compound';
+
+  @override
+  String get childcare_interest_type => 'Interest type';
+
+  @override
+  String get childcare_monthly_deposit => 'Monthly deposit';
+
+  @override
+  String get childcare_interest_rate => 'Interest rate';
+
+  @override
+  String get childcare_period => 'Period';
+
+  @override
+  String get childcare_savings_start => 'Start a savings plan';
+
+  @override
+  String get childcare_savings_start_desc =>
+      'Money is deposited automatically each month';
+
+  @override
+  String get childcare_savings_cancel => 'Cancel early';
+
+  @override
+  String get childcare_savings_cancel_title => 'Cancel the savings plan';
+
+  @override
+  String get childcare_savings_cancel_message =>
+      'You\'ll get the principal back without interest.\nCancel anyway?';
+
+  @override
+  String get childcare_savings_cancel_confirm => 'Cancel plan';
+
+  @override
+  String get childcare_savings_canceled => 'Savings plan canceled';
+
+  @override
+  String get childcare_savings_cancel_failed => 'Couldn\'t cancel the plan';
+
+  @override
+  String get childcare_savings_started => 'Savings plan started';
+
+  @override
+  String get childcare_savings_create_title => 'New savings plan';
+
+  @override
+  String get childcare_savings_monthly_points => 'Points per month';
+
+  @override
+  String get childcare_savings_annual_rate => 'Annual rate';
+
+  @override
+  String childcare_savings_rate_helper(String rate) {
+    return 'Default based on the 3-year treasury rate ($rate%)';
+  }
+
+  @override
+  String get childcare_savings_rate_loading => 'Loading the treasury rate…';
+
+  @override
+  String get childcare_start_date => 'Start date';
+
+  @override
+  String get childcare_maturity_date => 'Maturity date';
+
+  @override
+  String get childcare_total_deposit => 'Total deposits';
+
+  @override
+  String get childcare_expected_interest => 'Interest';
+
+  @override
+  String get childcare_maturity_amount => 'At maturity';
+
+  @override
+  String childcare_months(int months) {
+    return '$months months';
+  }
+
+  @override
+  String get childcare_start => 'Start';
+
+  @override
+  String get childcare_allowance_missing => 'No allowance plan yet';
+
+  @override
+  String get childcare_allowance_missing_desc =>
+      'Set the monthly points and payout day';
+
+  @override
+  String get childcare_negotiation_passed => 'The review date has passed';
+
+  @override
+  String get childcare_negotiation_upcoming => 'The review date is coming up';
+
+  @override
+  String childcare_negotiation_passed_desc(int days, String date) {
+    return 'It was $days days ago ($date). Time to review the allowance.';
+  }
+
+  @override
+  String childcare_negotiation_today(String date) {
+    return 'Today is the review date! ($date)';
+  }
+
+  @override
+  String get childcare_cashout => 'Cash out points';
+
+  @override
+  String get childcare_cashout_button => 'Cash out';
+
+  @override
+  String get childcare_cashout_points => 'Points to cash out';
+
+  @override
+  String get childcare_cashout_failed =>
+      'Couldn\'t cash out. Please try again.';
+
+  @override
+  String childcare_cashout_description(String amount) {
+    return 'Cashed out points ($amount KRW)';
+  }
+
+  @override
+  String childcare_cashout_done(String points, String amount) {
+    return 'Cashed out ${points}P for $amount KRW';
+  }
+
+  @override
+  String childcare_cashout_rate(String ratio, String balance) {
+    return '1P = $ratio KRW · ${balance}P available';
+  }
+
+  @override
+  String childcare_cashout_approx(String amount) {
+    return '≈ $amount KRW';
+  }
+
+  @override
+  String get childcare_rule_apply => 'Apply rule';
+
+  @override
+  String get childcare_rule_apply_penalty => 'Apply penalty';
+
+  @override
+  String childcare_rule_apply_plus_message(String name, String points) {
+    return '\"$name\"\nGive ${points}P.';
+  }
+
+  @override
+  String childcare_rule_apply_minus_message(String name, String points) {
+    return '\"$name\" broken.\nDeduct ${points}P.';
+  }
+
+  @override
+  String get childcare_rule_give => 'Give';
+
+  @override
+  String get childcare_rule_deduct => 'Deduct';
+
+  @override
+  String childcare_points_given(String points) {
+    return 'Gave ${points}P';
+  }
+
+  @override
+  String childcare_points_deducted(String points) {
+    return 'Deducted ${points}P';
+  }
+
+  @override
+  String get childcare_rule_delete => 'Delete rule';
+
+  @override
+  String childcare_rule_delete_message(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get common_deleted => 'Deleted';
+
+  @override
+  String get common_saved => 'Saved';
+
+  @override
+  String get childcare_rule_type_plus => 'Reward rule';
+
+  @override
+  String get childcare_rule_type_minus => 'Penalty rule';
+
+  @override
+  String get childcare_rule_type_info => 'Plain rule';
+
+  @override
+  String get childcare_rule_help_title => 'What are rules?';
+
+  @override
+  String get childcare_rule_help_body =>
+      'Rules tie points to your child\'s actions — points for good habits, deductions when a promise is broken.';
+
+  @override
+  String get childcare_rule_help_tip =>
+      'The clearer the rule, the better. Vague rules invite arguments — and setting them together builds trust.';
+
+  @override
+  String get childcare_rule_examples_plus => 'Reward examples';
+
+  @override
+  String get childcare_rule_examples_minus => 'Penalty examples';
+
+  @override
+  String get childcare_rule_examples_info => 'Plain rule examples';
+
+  @override
+  String get childcare_rule_example_plus1 =>
+      'Finished homework on their own  +10P';
+
+  @override
+  String get childcare_rule_example_plus2 =>
+      'Went to bed before 9pm on their own  +5P';
+
+  @override
+  String get childcare_rule_example_plus3 =>
+      'Cleared their dishes after a meal  +3P';
+
+  @override
+  String get childcare_rule_example_plus4 =>
+      'A whole week without being late for school  +20P';
+
+  @override
+  String get childcare_rule_example_minus1 =>
+      'Over an hour of phone time on a weekday  -10P';
+
+  @override
+  String get childcare_rule_example_minus2 => 'Still up after 10pm  -5P';
+
+  @override
+  String get childcare_rule_example_minus3 => 'Swore at a sibling  -15P';
+
+  @override
+  String get childcare_rule_example_minus4 =>
+      'Came home later than the agreed 6pm  -10P';
+
+  @override
+  String get childcare_rule_example_info1 => 'Cash out up to 50P per month';
+
+  @override
+  String get childcare_rule_example_info2 => 'One shop item per day';
+
+  @override
+  String get childcare_rule_apply_note =>
+      'Applying a rule updates the points right away.';
+
+  @override
+  String get childcare_rule_add => 'New rule';
+
+  @override
+  String get childcare_rule_edit => 'Edit rule';
+
+  @override
+  String get childcare_rule_type => 'Rule type';
+
+  @override
+  String get childcare_rule_type_plus_short => '+Points';
+
+  @override
+  String get childcare_rule_type_minus_short => '−Points';
+
+  @override
+  String get childcare_rule_type_info_short => 'Plain';
+
+  @override
+  String get childcare_rule_name_hint_plus => 'e.g. Did homework on their own';
+
+  @override
+  String get childcare_rule_name_hint_minus =>
+      'e.g. Over 30 minutes of phone time';
+
+  @override
+  String get childcare_rule_name_hint_info => 'e.g. Monthly cash-out limit';
+
+  @override
+  String get childcare_rule_points_give => 'Points to give';
+
+  @override
+  String get childcare_rule_points_deduct => 'Points to deduct';
+
+  @override
+  String get childcare_rule_points_give_hint =>
+      'Points given for the good habit';
+
+  @override
+  String get childcare_rule_points_deduct_hint => 'Points deducted when broken';
+
+  @override
+  String get childcare_save_failed => 'Couldn\'t save. Please try again.';
+
+  @override
+  String get childcare_child => 'Child';
+
+  @override
+  String childcare_allowance_plan_title(String name) {
+    return '$name\'s allowance';
+  }
+
+  @override
+  String get childcare_tab_settings => 'Settings';
+
+  @override
+  String get childcare_tab_change_history => 'Changes';
+
+  @override
+  String get childcare_allowance_setup => 'Set up the allowance';
+
+  @override
+  String get childcare_allowance_edit => 'Edit the allowance';
+
+  @override
+  String get childcare_monthly_points => 'Points per month';
+
+  @override
+  String get childcare_monthly_points_hint => 'e.g. 100';
+
+  @override
+  String get childcare_monthly_points_required => 'Enter the monthly points';
+
+  @override
+  String get childcare_number_required => 'Enter a number';
+
+  @override
+  String get childcare_pay_day => 'Payout day';
+
+  @override
+  String get childcare_day_unit => '';
+
+  @override
+  String get childcare_pay_day_helper =>
+      'If a month is shorter, it pays on the last day';
+
+  @override
+  String childcare_day_value(String day) {
+    return 'Day $day';
+  }
+
+  @override
+  String get childcare_select_date => 'Pick a date';
+
+  @override
+  String get childcare_select_date_optional => 'Pick a date (optional)';
+
+  @override
+  String get childcare_point_ratio => '1 point = N KRW';
+
+  @override
+  String get childcare_point_ratio_hint => 'e.g. 10';
+
+  @override
+  String get childcare_point_ratio_helper =>
+      'Just for reference, so the promise is clear';
+
+  @override
+  String get childcare_min_one => 'Enter a number of 1 or more';
+
+  @override
+  String get childcare_negotiation_date => 'Next review date (optional)';
+
+  @override
+  String get childcare_plan_save => 'Save plan';
+
+  @override
+  String get childcare_plan_update => 'Update plan';
+
+  @override
+  String get childcare_plan_saved => 'Allowance plan saved';
+
+  @override
+  String get childcare_current_plan => 'Current allowance';
+
+  @override
+  String get childcare_monthly_payout => 'Monthly';
+
+  @override
+  String get childcare_payout_day => 'Payout day';
+
+  @override
+  String childcare_payout_day_value(String day) {
+    return 'Day $day of each month';
+  }
+
+  @override
+  String get childcare_next_negotiation => 'Next review';
+
+  @override
+  String get childcare_history_empty => 'No changes yet';
+
+  @override
+  String get childcare_history_load_error => 'Couldn\'t load the history';
+
+  @override
+  String childcare_history_entry(String points, String day) {
+    return '${points}P / day $day';
+  }
+
+  @override
+  String childcare_ratio_value(String amount) {
+    return '1P = $amount KRW';
+  }
+
+  @override
+  String childcare_negotiation_suffix(String date) {
+    return 'review $date';
+  }
+
+  @override
+  String childcare_monthly_day(String day) {
+    return 'Day $day each month';
+  }
+
+  @override
+  String get childcare_item_use => 'Use item';
+
+  @override
+  String childcare_item_use_message(String name, String points) {
+    return '\"$name\"\nSpend ${points}P.';
+  }
+
+  @override
+  String get childcare_item_use_confirm => 'Use';
+
+  @override
+  String childcare_item_used(String name) {
+    return 'Used \"$name\"';
+  }
+
+  @override
+  String get childcare_item_use_failed => 'Couldn\'t use it. Please try again.';
+
+  @override
+  String get childcare_item_delete => 'Delete item';
+
+  @override
+  String childcare_item_delete_message(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get childcare_delete_failed => 'Couldn\'t delete. Please try again.';
+
+  @override
+  String get childcare_item_add => 'New shop item';
+
+  @override
+  String get childcare_item_edit => 'Edit shop item';
+
+  @override
+  String get childcare_item_name => 'Item name';
+
+  @override
+  String get childcare_item_name_hint => 'e.g. 30 more minutes of TV';
+
+  @override
+  String get childcare_item_points => 'Cost in points';
+
+  @override
+  String get childcare_shop_help_title => 'What is the shop?';
+
+  @override
+  String get childcare_shop_help_body =>
+      'A list of rewards your child can buy with the points they\'ve earned — a reason to keep saving.';
+
+  @override
+  String get childcare_shop_examples => 'Example items';
+
+  @override
+  String get childcare_shop_example1 => '30 more minutes of TV';
+
+  @override
+  String get childcare_shop_example2 => 'An hour of gaming';
+
+  @override
+  String get childcare_shop_example3 => 'Pick a snack';
+
+  @override
+  String get childcare_shop_example4 => 'A late bedtime';
+
+  @override
+  String get childcare_shop_disable_note =>
+      'Turn an item off to hide it from the list.';
+
+  @override
+  String get childcare_period_monthly => 'Monthly';
+
+  @override
+  String get childcare_period_yearly => 'Yearly';
+
+  @override
+  String get childcare_income => 'Earned';
+
+  @override
+  String get childcare_expense => 'Spent';
+
+  @override
+  String get childcare_net_change => 'Net';
+
+  @override
+  String get childcare_yearly_income => 'Earned this year';
+
+  @override
+  String get childcare_yearly_expense => 'Spent this year';
+
+  @override
+  String get childcare_balance_trend => 'Balance over time';
+
+  @override
+  String get childcare_monthly_status => 'By month';
+
+  @override
+  String get childcare_type_distribution => 'By type';
+
+  @override
+  String childcare_month_unit(String month) {
+    return '$month';
+  }
+
+  @override
+  String get childcare_no_income_this_month => 'Nothing earned this month';
+
+  @override
+  String get childcare_no_expense_this_month => 'Nothing spent this month';
+
+  @override
+  String get childcare_type_allowance => 'Allowance';
+
+  @override
+  String get childcare_type_reward => 'Reward';
+
+  @override
+  String get childcare_type_bonus => 'Bonus';
+
+  @override
+  String get childcare_type_interest => 'Interest';
+
+  @override
+  String get childcare_type_savings_withdraw => 'Savings out';
+
+  @override
+  String get childcare_type_penalty => 'Penalty';
+
+  @override
+  String get childcare_type_purchase => 'Shop';
+
+  @override
+  String get childcare_type_cashout => 'Cash out';
+
+  @override
+  String get childcare_type_savings_deposit => 'Savings';
+
+  @override
+  String get common_etc => 'Other';
+
+  @override
+  String get childcare_profile_add => 'Add a child';
+
+  @override
+  String get childcare_child_name => 'Child\'s name';
+
+  @override
+  String get childcare_child_name_hint => 'e.g. Minjun';
+
+  @override
+  String get childcare_child_name_required => 'Enter the child\'s name';
+
+  @override
+  String get childcare_birthdate => 'Date of birth';
+
+  @override
+  String get childcare_birthdate_required => 'Pick a date of birth';
+
+  @override
+  String get childcare_profile_added => 'Child added';
+
+  @override
+  String get childcare_profile_add_failed => 'Couldn\'t add. Please try again.';
+
+  @override
+  String childcare_date_full(String year, String month, String day) {
+    return '$year-$month-$day';
+  }
+
+  @override
+  String childcare_year_unit(String year) {
+    return '$year';
+  }
+
+  @override
+  String childcare_link_title(String name) {
+    return 'Link $name\'s account';
+  }
+
+  @override
+  String get childcare_link_linked => 'Account linked';
+
+  @override
+  String get childcare_link_unlinked => 'Not linked yet';
+
+  @override
+  String childcare_link_account_id(String id) {
+    return 'Linked account: $id…';
+  }
+
+  @override
+  String get childcare_link_guide => 'How linking works';
+
+  @override
+  String get childcare_link_guide1 =>
+      'Your child needs their own account first.';
+
+  @override
+  String get childcare_link_guide2 =>
+      'Once linked, they can check their own points.';
+
+  @override
+  String get childcare_link_guide3 => 'They can also deposit into savings.';
+
+  @override
+  String get childcare_link_button => 'Link an account';
+
+  @override
+  String get childcare_link_info => 'Linked account';
+
+  @override
+  String get childcare_link_info1 => 'They can check their points in the app.';
+
+  @override
+  String get childcare_link_info2 => 'They can deposit into savings.';
+
+  @override
+  String get childcare_link_done => 'Account linked';
+
+  @override
+  String get childcare_link_failed =>
+      'Couldn\'t link. Check that your child has signed up.';
+
+  @override
+  String get childcare_bonus_give => 'Give a bonus';
+
+  @override
+  String get childcare_child_register => 'Add a child';
+
+  @override
+  String get childcare_allowance_setup_button => 'Set up allowance';
+
+  @override
+  String get childcare_link_account => 'Link account';
+
+  @override
+  String get childcare_bonus_desc =>
+      'Give your child bonus points — for when you want to praise something outside the rules or shop.';
+
+  @override
+  String get childcare_bonus_points => 'Points';
+
+  @override
+  String get childcare_bonus_points_required => 'Enter the points';
+
+  @override
+  String get childcare_bonus_points_positive => 'Enter 1 or more';
+
+  @override
+  String get childcare_bonus_reason => 'Reason';
+
+  @override
+  String get childcare_bonus_reason_hint =>
+      'e.g. Cleaned their room without being asked';
+
+  @override
+  String get childcare_bonus_reason_required => 'Enter a reason';
+
+  @override
+  String get childcare_bonus_given => 'Bonus given';
+
+  @override
+  String get common_deactivate => 'Turn off';
+
+  @override
+  String get common_activate => 'Turn on';
+
+  @override
+  String childcare_approx_money(String amount) {
+    return '≈ $amount KRW';
+  }
+
+  @override
+  String get childcare_points_per_month => 'P/mo';
+
+  @override
+  String childcare_plan_summary(String day, String amount) {
+    return 'Day $day · 1P=$amount KRW';
+  }
 }

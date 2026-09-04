@@ -3,60 +3,63 @@ import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 
 /// 앱 컬러 테마 변형
-enum AppThemeVariant {
-  blue,
-  green,
-  purple,
-  pink,
-  teal,
-}
+enum AppThemeVariant { blue, green, purple, pink, teal }
 
 extension AppThemeVariantX on AppThemeVariant {
   String get id => name;
 
   Color get lightPrimary => switch (this) {
-        AppThemeVariant.blue => const Color(0xFF2196F3),
-        AppThemeVariant.green => const Color(0xFF43A047),
-        AppThemeVariant.purple => const Color(0xFF7B1FA2),
-        AppThemeVariant.pink => const Color(0xFFEC407A),
-        AppThemeVariant.teal => const Color(0xFF00897B),
-      };
+    AppThemeVariant.blue => const Color(0xFF2196F3),
+    AppThemeVariant.green => const Color(0xFF43A047),
+    AppThemeVariant.purple => const Color(0xFF7B1FA2),
+    AppThemeVariant.pink => const Color(0xFFEC407A),
+    AppThemeVariant.teal => const Color(0xFF00897B),
+  };
 
   Color get lightPrimaryLight => switch (this) {
-        AppThemeVariant.blue => const Color(0xFFBBDEFB),
-        AppThemeVariant.green => const Color(0xFFC8E6C9),
-        AppThemeVariant.purple => const Color(0xFFE1BEE7),
-        AppThemeVariant.pink => const Color(0xFFFCE4EC),
-        AppThemeVariant.teal => const Color(0xFFB2DFDB),
-      };
+    AppThemeVariant.blue => const Color(0xFFBBDEFB),
+    AppThemeVariant.green => const Color(0xFFC8E6C9),
+    AppThemeVariant.purple => const Color(0xFFE1BEE7),
+    AppThemeVariant.pink => const Color(0xFFFCE4EC),
+    AppThemeVariant.teal => const Color(0xFFB2DFDB),
+  };
 
   Color get lightPrimaryDark => switch (this) {
-        AppThemeVariant.blue => const Color(0xFF1976D2),
-        AppThemeVariant.green => const Color(0xFF2E7D32),
-        AppThemeVariant.purple => const Color(0xFF4A148C),
-        AppThemeVariant.pink => const Color(0xFFAD1457),
-        AppThemeVariant.teal => const Color(0xFF00695C),
-      };
+    AppThemeVariant.blue => const Color(0xFF1976D2),
+    AppThemeVariant.green => const Color(0xFF2E7D32),
+    AppThemeVariant.purple => const Color(0xFF4A148C),
+    AppThemeVariant.pink => const Color(0xFFAD1457),
+    AppThemeVariant.teal => const Color(0xFF00695C),
+  };
 
   Color get darkPrimary => switch (this) {
-        AppThemeVariant.blue => const Color(0xFF90CAF9),
-        AppThemeVariant.green => const Color(0xFFA5D6A7),
-        AppThemeVariant.purple => const Color(0xFFCE93D8),
-        AppThemeVariant.pink => const Color(0xFFF48FB1),
-        AppThemeVariant.teal => const Color(0xFF80CBC4),
-      };
+    AppThemeVariant.blue => const Color(0xFF90CAF9),
+    AppThemeVariant.green => const Color(0xFFA5D6A7),
+    AppThemeVariant.purple => const Color(0xFFCE93D8),
+    AppThemeVariant.pink => const Color(0xFFF48FB1),
+    AppThemeVariant.teal => const Color(0xFF80CBC4),
+  };
 }
 
 /// Family Planner 앱의 테마 설정
 class AppTheme {
   AppTheme._();
 
-  static ThemeData lightTheme({AppThemeVariant variant = AppThemeVariant.blue}) {
+  /// 앱 전체 본문 폰트.
+  ///
+  /// 지정하지 않으면 플랫폼 기본 폰트를 쓰는데, 웹에서는 한글을 덮는 폰트가
+  /// 없어 Noto 폴백을 내려받는 동안 배치된 글자가 잘린 채 굳는다.
+  static const String _fontFamily = 'Pretendard';
+
+  static ThemeData lightTheme({
+    AppThemeVariant variant = AppThemeVariant.blue,
+  }) {
     final primary = variant.lightPrimary;
     final primaryLight = variant.lightPrimaryLight;
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: _fontFamily,
       brightness: Brightness.light,
 
       colorScheme: ColorScheme.light(
@@ -81,6 +84,7 @@ class AppTheme {
         elevation: AppSizes.elevation3,
         centerTitle: false,
         titleTextStyle: const TextStyle(
+          fontFamily: _fontFamily,
           color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -109,6 +113,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
           ),
           textStyle: const TextStyle(
+            fontFamily: _fontFamily,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -127,6 +132,7 @@ class AppTheme {
           ),
           side: BorderSide(color: primary),
           textStyle: const TextStyle(
+            fontFamily: _fontFamily,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -141,6 +147,7 @@ class AppTheme {
             vertical: AppSizes.spaceS,
           ),
           textStyle: const TextStyle(
+            fontFamily: _fontFamily,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -171,16 +178,30 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
           borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
-        labelStyle: const TextStyle(color: AppColors.textSecondary),
-        hintStyle: const TextStyle(color: AppColors.textSecondary),
+        labelStyle: const TextStyle(
+          fontFamily: _fontFamily,
+          color: AppColors.textSecondary,
+        ),
+        hintStyle: const TextStyle(
+          fontFamily: _fontFamily,
+          color: AppColors.textSecondary,
+        ),
       ),
 
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppColors.surface,
         selectedItemColor: primary,
         unselectedItemColor: AppColors.textSecondary,
-        selectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-        unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        selectedLabelStyle: const TextStyle(
+          fontFamily: _fontFamily,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontFamily: _fontFamily,
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+        ),
         type: BottomNavigationBarType.fixed,
         elevation: AppSizes.elevation3,
       ),
@@ -222,15 +243,26 @@ class AppTheme {
 
       snackBarTheme: const SnackBarThemeData(
         backgroundColor: AppColors.textPrimary,
-        contentTextStyle: TextStyle(color: Colors.white),
+        contentTextStyle: TextStyle(
+          fontFamily: _fontFamily,
+          color: Colors.white,
+        ),
         behavior: SnackBarBehavior.fixed,
       ),
 
       chipTheme: ChipThemeData(
         backgroundColor: primaryLight,
         selectedColor: primary,
-        labelStyle: const TextStyle(color: AppColors.textPrimary),
-        secondaryLabelStyle: const TextStyle(color: Colors.white),
+        // ChipThemeData.labelStyle는 Material 기본 라벨 스타일을 대체하므로
+        // 폰트 패밀리를 여기서 다시 지정하지 않으면 칩 글자만 기본 폰트로 그려진다.
+        labelStyle: const TextStyle(
+          color: AppColors.textPrimary,
+          fontFamily: _fontFamily,
+        ),
+        secondaryLabelStyle: const TextStyle(
+          color: Colors.white,
+          fontFamily: _fontFamily,
+        ),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.spaceM,
           vertical: AppSizes.spaceS,
@@ -248,6 +280,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: _fontFamily,
       brightness: Brightness.dark,
 
       colorScheme: ColorScheme.dark(
@@ -272,6 +305,7 @@ class AppTheme {
         elevation: AppSizes.elevation3,
         centerTitle: false,
         titleTextStyle: const TextStyle(
+          fontFamily: _fontFamily,
           color: AppColors.textPrimaryDark,
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -300,6 +334,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
           ),
           textStyle: const TextStyle(
+            fontFamily: _fontFamily,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -310,8 +345,16 @@ class AppTheme {
         backgroundColor: AppColors.surfaceDark,
         selectedItemColor: primary,
         unselectedItemColor: AppColors.textSecondaryDark,
-        selectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-        unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        selectedLabelStyle: const TextStyle(
+          fontFamily: _fontFamily,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontFamily: _fontFamily,
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+        ),
         type: BottomNavigationBarType.fixed,
         elevation: AppSizes.elevation3,
       ),

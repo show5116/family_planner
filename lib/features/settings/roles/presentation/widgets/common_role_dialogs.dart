@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/features/settings/roles/models/common_role.dart';
 import 'package:family_planner/features/settings/roles/providers/common_role_provider.dart';
@@ -70,13 +71,19 @@ class _CommonRoleFormDialogState extends State<_CommonRoleFormDialog> {
       '#${c.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
 
   Future<void> _handleSave() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() { _isSaving = true; _errorMsg = null; });
+    setState(() {
+      _isSaving = true;
+      _errorMsg = null;
+    });
 
     try {
       final notifier = widget.ref.read(commonRoleProvider.notifier);
-      final colorHex = _selectedColor != null ? _colorHex(_selectedColor!) : null;
+      final colorHex = _selectedColor != null
+          ? _colorHex(_selectedColor!)
+          : null;
 
       if (_isEdit) {
         await notifier.updateRole(
@@ -96,21 +103,26 @@ class _CommonRoleFormDialogState extends State<_CommonRoleFormDialog> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_isEdit ? '역할이 수정되었습니다' : '역할이 생성되었습니다')),
+        SnackBar(
+          content: Text(_isEdit ? l10n.role_updated : l10n.role_created),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _isSaving = false;
-        _errorMsg = _isEdit ? '수정 실패: ${e.toString()}' : '생성 실패: ${e.toString()}';
+        _errorMsg = _isEdit
+            ? '${l10n.role_update_failed}\n$e'
+            : '${l10n.role_create_failed}\n$e';
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(_isEdit ? '공통 역할 수정' : '공통 역할 생성'),
+      title: Text(_isEdit ? l10n.role_edit_title : l10n.role_create_title),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -120,30 +132,31 @@ class _CommonRoleFormDialogState extends State<_CommonRoleFormDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: '역할 이름',
-                  hintText: _isEdit ? null : '예: ADMIN, MEMBER',
+                  labelText: l10n.role_field_name,
+                  hintText: _isEdit ? null : l10n.role_field_name_hint,
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return '역할 이름을 입력하세요';
+                    return l10n.role_field_name_required;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: AppSizes.spaceM),
               CheckboxListTile(
-                title: const Text('기본 역할'),
-                subtitle: const Text('신규 가입 시 자동으로 부여되는 역할'),
+                title: Text(l10n.role_default),
+                subtitle: Text(l10n.role_default_desc),
                 value: _isDefaultRole,
                 onChanged: _isSaving
                     ? null
-                    : (value) => setState(() => _isDefaultRole = value ?? false),
+                    : (value) =>
+                          setState(() => _isDefaultRole = value ?? false),
                 controlAffinity: ListTileControlAffinity.leading,
               ),
               const SizedBox(height: AppSizes.spaceM),
-              const Text(
-                '역할 색상',
+              Text(
+                l10n.role_color,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: AppSizes.spaceS),
@@ -158,8 +171,8 @@ class _CommonRoleFormDialogState extends State<_CommonRoleFormDialog> {
                 Text(
                   _errorMsg!,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               ],
             ],
@@ -169,11 +182,11 @@ class _CommonRoleFormDialogState extends State<_CommonRoleFormDialog> {
       actions: [
         TextButton(
           onPressed: _isSaving ? null : () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         ElevatedButton(
           onPressed: _isSaving ? null : _handleSave,
-          child: Text(_isEdit ? '저장' : '생성'),
+          child: Text(_isEdit ? l10n.common_save : l10n.common_create),
         ),
       ],
     );

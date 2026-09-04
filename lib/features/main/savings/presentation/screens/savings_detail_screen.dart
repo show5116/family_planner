@@ -4,6 +4,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
@@ -61,7 +62,7 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('오류: $e')));
+            .showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.common_error}: $e')));
       }
     } finally {
       if (mounted) setState(() => _actionLoading = false);
@@ -69,32 +70,33 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
   }
 
   Future<void> _showDepositDialog(SavingsGoalModel goal) async {
+    final l10n = AppLocalizations.of(context)!;
     final amountCtrl = TextEditingController();
     final descCtrl = TextEditingController();
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('입금'),
+        title: Text(l10n.savings_deposit),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: amountCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: '금액 (원)', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: l10n.savings_amount_label, border: const OutlineInputBorder()),
             ),
             const SizedBox(height: AppSizes.spaceM),
             TextField(
               controller: descCtrl,
-              decoration: const InputDecoration(labelText: '메모 (선택)', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: l10n.savings_memo_label, border: const OutlineInputBorder()),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('취소')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.common_cancel)),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('입금'),
+            child: Text(l10n.savings_deposit),
           ),
         ],
       ),
@@ -110,32 +112,33 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
   }
 
   Future<void> _showWithdrawDialog(SavingsGoalModel goal) async {
+    final l10n = AppLocalizations.of(context)!;
     final amountCtrl = TextEditingController();
     final descCtrl = TextEditingController();
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('출금'),
+        title: Text(l10n.savings_withdraw),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: amountCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: '금액 (원)', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: l10n.savings_amount_label, border: const OutlineInputBorder()),
             ),
             const SizedBox(height: AppSizes.spaceM),
             TextField(
               controller: descCtrl,
-              decoration: const InputDecoration(labelText: '출금 사유 (필수)', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: l10n.savings_withdraw_reason_label, border: const OutlineInputBorder()),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('취소')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.common_cancel)),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('출금'),
+            child: Text(l10n.savings_withdraw),
           ),
         ],
       ),
@@ -151,17 +154,18 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
   }
 
   Future<void> _confirmDelete(SavingsGoalModel goal) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('목표 삭제'),
-        content: Text('\'${goal.name}\'을(를) 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.'),
+        title: Text(l10n.savings_delete_title),
+        content: Text(l10n.savings_delete_message(goal.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('취소')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.common_cancel)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -174,6 +178,7 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // 온보딩 demo 모드: API 없이 가짜 데이터로 렌더링
     if (widget.isDemo) {
       final goal = widget.demoGoal!;
@@ -200,7 +205,7 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
       appBar: AppBar(
         title: goalAsync.maybeWhen(
           data: (g) => Text(g.name),
-          orElse: () => const Text('적립 목표'),
+          orElse: () => Text(l10n.savings_detail_title),
         ),
         actions: [
           if (goalAsync.hasValue)
@@ -224,11 +229,12 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
                     await _confirmDelete(goal);
                 }
               },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'edit', child: Text('수정')),
+              itemBuilder: (_) => [
+                PopupMenuItem(value: 'edit', child: Text(l10n.common_edit)),
                 PopupMenuItem(
                   value: 'delete',
-                  child: Text('삭제', style: TextStyle(color: AppColors.error)),
+                  child: Text(l10n.common_delete,
+                      style: const TextStyle(color: AppColors.error)),
                 ),
               ],
             ),
@@ -243,13 +249,13 @@ class _SavingsDetailScreenState extends ConsumerState<SavingsDetailScreen> {
               const Icon(Icons.error_outline,
                   size: AppSizes.iconXLarge, color: AppColors.error),
               const SizedBox(height: AppSizes.spaceM),
-              Text('오류: $e', textAlign: TextAlign.center),
+              Text('${l10n.common_error}: $e', textAlign: TextAlign.center),
               const SizedBox(height: AppSizes.spaceM),
               TextButton(
                 onPressed: () => ref
                     .read(savingsGoalDetailProvider(widget.goalId).notifier)
                     .refresh(),
-                child: const Text('다시 시도'),
+                child: Text(l10n.common_retry),
               ),
             ],
           ),
@@ -304,6 +310,7 @@ class _DetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -352,7 +359,7 @@ class _DetailBody extends StatelessWidget {
                           Icon(Icons.check_circle, size: 14, color: AppColors.investment),
                           const SizedBox(width: AppSizes.spaceXS),
                           Text(
-                            '목표 금액 달성!',
+                            l10n.savings_goal_reached,
                             style: TextStyle(
                               color: AppColors.investment,
                               fontSize: 12,
@@ -366,7 +373,9 @@ class _DetailBody extends StatelessWidget {
                   if (goal.targetAmount != null) ...[
                     const SizedBox(height: AppSizes.spaceXS),
                     Text(
-                      '목표: ${_formatAmount(goal.targetAmount!)}',
+                      l10n.savings_target_amount(
+                        _formatAmount(goal.targetAmount!),
+                      ),
                       style: theme.textTheme.bodyMedium
                           ?.copyWith(color: AppColors.textSecondary),
                     ),
@@ -382,7 +391,9 @@ class _DetailBody extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSizes.spaceXS),
                     Text(
-                      '${goal.achievementRate.toStringAsFixed(1)}% 달성',
+                      l10n.savings_achievement_rate(
+                        goal.achievementRate.toStringAsFixed(1),
+                      ),
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: AppColors.textSecondary),
                     ),
@@ -398,14 +409,16 @@ class _DetailBody extends StatelessWidget {
                             color: AppColors.textSecondary),
                         const SizedBox(width: AppSizes.spaceXS),
                         Text(
-                          '자동 적립',
+                          l10n.savings_auto_deposit,
                           style: theme.textTheme.bodySmall
                               ?.copyWith(color: AppColors.textSecondary),
                         ),
                         if (goal.monthlyAmount != null) ...[
                           const SizedBox(width: AppSizes.spaceS),
                           Text(
-                            '월 ${_formatAmount(goal.monthlyAmount!)}',
+                            l10n.savings_auto_deposit_monthly(
+                              _formatAmount(goal.monthlyAmount!),
+                            ),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: AppColors.investment,
                               fontWeight: FontWeight.w600,
@@ -441,7 +454,7 @@ class _DetailBody extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: onPause,
                       icon: const Icon(Icons.pause),
-                      label: const Text('자동 적립 중지'),
+                      label: Text(l10n.savings_auto_deposit_pause),
                     ),
                   ),
                 if (goal.status == SavingsGoalStatus.paused) ...[
@@ -449,7 +462,7 @@ class _DetailBody extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: onResume,
                       icon: const Icon(Icons.play_arrow),
-                      label: const Text('자동 적립 재개'),
+                      label: Text(l10n.savings_auto_deposit_resume),
                     ),
                   ),
                 ],
@@ -464,7 +477,7 @@ class _DetailBody extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onDeposit,
                     icon: const Icon(Icons.add),
-                    label: const Text('입금'),
+                    label: Text(l10n.savings_deposit),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.success,
                       foregroundColor: Colors.white,
@@ -476,7 +489,7 @@ class _DetailBody extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onWithdraw,
                     icon: const Icon(Icons.remove),
-                    label: const Text('출금'),
+                    label: Text(l10n.savings_withdraw),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.error,
                       foregroundColor: Colors.white,
@@ -510,6 +523,7 @@ class _RecentTransactions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final txAsync = ref.watch(savingsTransactionsProvider(goalId));
     final theme = Theme.of(context);
 
@@ -519,7 +533,7 @@ class _RecentTransactions extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('최근 내역',
+            Text(l10n.savings_recent_transactions,
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600)),
             TextButton(
@@ -532,22 +546,22 @@ class _RecentTransactions extends ConsumerWidget {
                   ),
                 );
               },
-              child: const Text('전체 보기'),
+              child: Text(l10n.savings_view_all),
             ),
           ],
         ),
         const SizedBox(height: AppSizes.spaceS),
         txAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Text('내역 로드 실패: $e',
+          error: (e, _) => Text('${l10n.savings_transactions_load_error}\n$e',
               style: const TextStyle(color: AppColors.error)),
           data: (result) {
             if (result.items.isEmpty) {
-              return const Center(
+              return Center(
                 child: Padding(
-                  padding: EdgeInsets.all(AppSizes.spaceM),
-                  child: Text('거래 내역이 없습니다.',
-                      style: TextStyle(color: AppColors.textSecondary)),
+                  padding: const EdgeInsets.all(AppSizes.spaceM),
+                  child: Text(l10n.savings_transactions_empty,
+                      style: const TextStyle(color: AppColors.textSecondary)),
                 ),
               );
             }

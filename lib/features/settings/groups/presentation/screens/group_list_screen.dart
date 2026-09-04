@@ -83,7 +83,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
             ),
             AppBarMoreMenu(
               onReplayOnboarding: _replayOnboarding,
-              guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%95%B1%EC%9D%98-%ED%95%B5%EC%8B%AC-%EA%B7%B8%EB%A3%B9-%EC%83%9D%EC%84%B1-%EB%B0%8F-%EB%A9%A4%EB%B2%84-%EC%B4%88%EB%8C%80%ED%95%98%EA%B8%B0-1%ED%8E%B8',
+              guideUrl:
+                  'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%95%B1%EC%9D%98-%ED%95%B5%EC%8B%AC-%EA%B7%B8%EB%A3%B9-%EC%83%9D%EC%84%B1-%EB%B0%8F-%EB%A9%A4%EB%B2%84-%EC%B4%88%EB%8C%80%ED%95%98%EA%B8%B0-1%ED%8E%B8',
             ),
           ],
         ],
@@ -178,6 +179,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
   }
 
   Future<void> _saveSortOrder() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_reorderedGroups == null) return;
 
     final confirm = await showReorderSaveDialog(context);
@@ -185,16 +187,18 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
 
     try {
       final groupIds = _reorderedGroups!.map((g) => g.id).toList();
-      await ref.read(groupNotifierProvider.notifier).updateMyGroupOrder(groupIds);
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .updateMyGroupOrder(groupIds);
 
       if (mounted) {
         setState(() {
           _reorderedGroups = null;
           _hasChanges = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('그룹 순서가 저장되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.group_order_saved)));
       }
     } catch (e) {
       if (mounted) {

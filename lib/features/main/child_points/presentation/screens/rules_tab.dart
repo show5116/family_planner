@@ -232,24 +232,31 @@ class RulesTab extends ConsumerWidget {
     String accountId,
     ChildcareRule rule,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final isPlus = rule.type == ChildcareRuleType.plus;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(isPlus ? '규칙 적용' : '규칙 위반 적용'),
+        title: Text(isPlus
+            ? l10n.childcare_rule_apply
+            : l10n.childcare_rule_apply_penalty),
         content: Text(
           isPlus
-              ? '"${rule.name}"\n${rule.points}P를 지급합니다.'
-              : '"${rule.name}" 위반으로\n${rule.points}P를 차감합니다.',
+              ? l10n.childcare_rule_apply_plus_message(
+                  rule.name, '${rule.points}')
+              : l10n.childcare_rule_apply_minus_message(
+                  rule.name, '${rule.points}'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(isPlus ? '지급' : '차감'),
+            child: Text(isPlus
+                ? l10n.childcare_rule_give
+                : l10n.childcare_rule_deduct),
           ),
         ],
       ),
@@ -265,7 +272,9 @@ class RulesTab extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          isPlus ? '${rule.points}P 지급되었습니다' : '${rule.points}P 차감되었습니다',
+          isPlus
+              ? l10n.childcare_points_given('${rule.points}')
+              : l10n.childcare_points_deducted('${rule.points}'),
         ),
       ),
     );
@@ -277,22 +286,23 @@ class RulesTab extends ConsumerWidget {
     String accountId,
     ChildcareRule rule,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('규칙 삭제'),
-        content: Text('"${rule.name}"을(를) 삭제하시겠습니까?'),
+        title: Text(l10n.childcare_rule_delete),
+        content: Text(l10n.childcare_rule_delete_message(rule.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -304,7 +314,7 @@ class RulesTab extends ConsumerWidget {
     if (!context.mounted) return;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('삭제되었습니다')));
+    ).showSnackBar(SnackBar(content: Text(l10n.common_deleted)));
   }
 }
 
@@ -341,14 +351,17 @@ class _RuleSectionState extends State<_RuleSection> {
   bool _expanded = true;
 
   (String, IconData, Color) get _typeInfo {
+    final l10n = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     switch (widget.type) {
       case ChildcareRuleType.plus:
-        return ('+ 포인트 규칙', Icons.add_circle_outline, Colors.green.shade700);
+        return (l10n.childcare_rule_type_plus, Icons.add_circle_outline,
+            Colors.green.shade700);
       case ChildcareRuleType.minus:
-        return ('- 포인트 규칙', Icons.remove_circle_outline, cs.error);
+        return (l10n.childcare_rule_type_minus, Icons.remove_circle_outline,
+            cs.error);
       case ChildcareRuleType.info:
-        return ('일반 규칙', Icons.info_outline, cs.primary);
+        return (l10n.childcare_rule_type_info, Icons.info_outline, cs.primary);
     }
   }
 
@@ -485,14 +498,17 @@ class _DemoRuleSection extends StatelessWidget {
   final List<ChildcareRule> rules;
 
   (String, IconData, Color) _typeInfo(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     switch (type) {
       case ChildcareRuleType.plus:
-        return ('+ 포인트 규칙', Icons.add_circle_outline, Colors.green.shade700);
+        return (l10n.childcare_rule_type_plus, Icons.add_circle_outline,
+            Colors.green.shade700);
       case ChildcareRuleType.minus:
-        return ('- 포인트 규칙', Icons.remove_circle_outline, cs.error);
+        return (l10n.childcare_rule_type_minus, Icons.remove_circle_outline,
+            cs.error);
       case ChildcareRuleType.info:
-        return ('일반 규칙', Icons.info_outline, cs.primary);
+        return (l10n.childcare_rule_type_info, Icons.info_outline, cs.primary);
     }
   }
 
@@ -576,6 +592,7 @@ class _RulesGuideState extends State<RulesGuide> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return AnimatedSize(
@@ -605,7 +622,7 @@ class _RulesGuideState extends State<RulesGuide> {
                     const SizedBox(width: AppSizes.spaceS),
                     Expanded(
                       child: Text(
-                        '규칙이란 무엇인가요?',
+                        l10n.childcare_rule_help_title,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: colorScheme.primary,
                         ),
@@ -630,7 +647,7 @@ class _RulesGuideState extends State<RulesGuide> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '규칙은 아이의 행동에 포인트를 연결하는 약속입니다.\n좋은 행동에는 포인트를 주고, 약속을 어겼을 때는 포인트를 차감해요.',
+                      l10n.childcare_rule_help_body,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -658,7 +675,7 @@ class _RulesGuideState extends State<RulesGuide> {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              '규칙은 구체적이고 명확할수록 좋습니다.\n애매한 규칙은 아이와 불필요한 기싸움으로 이어질 수 있어요.\n아이와 함께 규칙을 정하면 신뢰가 쌓입니다.',
+                              l10n.childcare_rule_help_tip,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: colorScheme.primary),
                             ),
@@ -670,39 +687,39 @@ class _RulesGuideState extends State<RulesGuide> {
                     ExampleRow(
                       icon: Icons.add_circle_outline,
                       color: Colors.green.shade700,
-                      label: '+ 규칙 예시 (포인트 지급)',
-                      examples: const [
-                        '학교 숙제를 혼자 힘으로 끝냈을 때  +10P',
-                        '저녁 9시 이전에 스스로 잠자리에 들었을 때  +5P',
-                        '밥 먹은 후 식기를 싱크대에 가져다 놓았을 때  +3P',
-                        '일주일 동안 지각 없이 등교했을 때  +20P',
+                      label: l10n.childcare_rule_examples_plus,
+                      examples: [
+                        l10n.childcare_rule_example_plus1,
+                        l10n.childcare_rule_example_plus2,
+                        l10n.childcare_rule_example_plus3,
+                        l10n.childcare_rule_example_plus4,
                       ],
                     ),
                     const SizedBox(height: AppSizes.spaceS),
                     ExampleRow(
                       icon: Icons.remove_circle_outline,
                       color: colorScheme.error,
-                      label: '- 규칙 예시 (포인트 차감)',
-                      examples: const [
-                        '평일에 스마트폰을 1시간 이상 사용했을 때  -10P',
-                        '저녁 10시가 넘도록 잠자리에 들지 않았을 때  -5P',
-                        '형제·자매에게 욕설을 했을 때  -15P',
-                        '약속된 귀가 시간인 오후 6시를 넘겼을 때  -10P',
+                      label: l10n.childcare_rule_examples_minus,
+                      examples: [
+                        l10n.childcare_rule_example_minus1,
+                        l10n.childcare_rule_example_minus2,
+                        l10n.childcare_rule_example_minus3,
+                        l10n.childcare_rule_example_minus4,
                       ],
                     ),
                     const SizedBox(height: AppSizes.spaceS),
                     ExampleRow(
                       icon: Icons.info_outline,
                       color: colorScheme.primary,
-                      label: '일반 규칙 예시 (포인트 없음)',
-                      examples: const [
-                        '이달 포인트 현금 전환은 최대 50P까지만 가능',
-                        '포인트 상점 아이템은 하루 1개만 사용 가능',
+                      label: l10n.childcare_rule_examples_info,
+                      examples: [
+                        l10n.childcare_rule_example_info1,
+                        l10n.childcare_rule_example_info2,
                       ],
                     ),
                     const SizedBox(height: AppSizes.spaceS),
                     Text(
-                      '규칙을 적용하면 해당 포인트가 즉시 반영됩니다.',
+                      l10n.childcare_rule_apply_note,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                         fontStyle: FontStyle.italic,
@@ -816,6 +833,7 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isNew = widget.rule == null;
 
@@ -831,30 +849,31 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
     }
 
     return AlertDialog(
-      title: Text(isNew ? '규칙 추가' : '규칙 수정'),
+      title: Text(isNew ? l10n.childcare_rule_add : l10n.childcare_rule_edit),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('규칙 유형', style: Theme.of(context).textTheme.labelMedium),
+            Text(l10n.childcare_rule_type,
+                style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 6),
             SegmentedButton<ChildcareRuleType>(
               showSelectedIcon: false,
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: ChildcareRuleType.plus,
-                  label: Text('+포인트'),
+                  label: Text(l10n.childcare_rule_type_plus_short),
                   icon: Icon(Icons.add_circle_outline, size: 16),
                 ),
                 ButtonSegment(
                   value: ChildcareRuleType.minus,
-                  label: Text('-포인트'),
+                  label: Text(l10n.childcare_rule_type_minus_short),
                   icon: Icon(Icons.remove_circle_outline, size: 16),
                 ),
                 ButtonSegment(
                   value: ChildcareRuleType.info,
-                  label: Text('일반'),
+                  label: Text(l10n.childcare_rule_type_info_short),
                   icon: Icon(Icons.info_outline, size: 16),
                 ),
               ],
@@ -873,19 +892,20 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
             TextField(
               controller: _nameCtrl,
               decoration: InputDecoration(
-                labelText: '규칙 이름',
+                labelText: l10n.childcare_rule_name,
                 hintText: _type == ChildcareRuleType.plus
-                    ? '예: 숙제를 스스로 했을 때'
+                    ? l10n.childcare_rule_name_hint_plus
                     : _type == ChildcareRuleType.minus
-                    ? '예: 스마트폰을 30분 이상 보았을 때'
-                    : '예: 이달 현금 출금 한도',
+                    ? l10n.childcare_rule_name_hint_minus
+                    : l10n.childcare_rule_name_hint_info,
               ),
               autofocus: true,
             ),
             const SizedBox(height: AppSizes.spaceS),
             TextField(
               controller: _descCtrl,
-              decoration: const InputDecoration(labelText: '설명 (선택)'),
+              decoration:
+                  InputDecoration(labelText: l10n.childcare_rule_description),
             ),
             if (_type != ChildcareRuleType.info) ...[
               const SizedBox(height: AppSizes.spaceS),
@@ -894,12 +914,12 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: _type == ChildcareRuleType.plus
-                      ? '지급 포인트'
-                      : '차감 포인트',
+                      ? l10n.childcare_rule_points_give
+                      : l10n.childcare_rule_points_deduct,
                   suffixText: 'P',
                   helperText: _type == ChildcareRuleType.plus
-                      ? '좋은 행동 시 지급할 포인트'
-                      : '규칙 위반 시 차감할 포인트',
+                      ? l10n.childcare_rule_points_give_hint
+                      : l10n.childcare_rule_points_deduct_hint,
                 ),
               ),
             ],
@@ -918,17 +938,18 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _isSaving ? null : _handleSave,
-          child: Text(isNew ? '추가' : '저장'),
+          child: Text(isNew ? l10n.common_add : l10n.common_save),
         ),
       ],
     );
   }
 
   Future<void> _handleSave() async {
+    final l10n = AppLocalizations.of(context)!;
     final name = _nameCtrl.text.trim();
     if (name.isEmpty) return;
 
@@ -972,7 +993,7 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
     if (result == null) {
       setState(() {
         _isSaving = false;
-        _errorMsg = '저장에 실패했습니다. 잠시 후 다시 시도해주세요.';
+        _errorMsg = l10n.childcare_save_failed;
       });
       return;
     }
@@ -980,6 +1001,6 @@ class _RuleFormDialogState extends State<RuleFormDialog> {
     Navigator.pop(context);
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('저장되었습니다')));
+    ).showSnackBar(SnackBar(content: Text(l10n.common_saved)));
   }
 }

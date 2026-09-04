@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
@@ -59,13 +60,14 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(voteSelectedGroupIdProvider);
     final statusFilter = ref.watch(voteStatusFilterProvider);
     final votesAsync = ref.watch(voteListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('투표'),
+        title: Text(l10n.vote_title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -74,7 +76,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         key: _fabKey,
-        tooltip: '투표 만들기',
+        tooltip: l10n.vote_create,
         onPressed: _isDemo ? null : () => context.push(AppRoutes.voteCreate),
         child: const Icon(Icons.add),
       ),
@@ -103,18 +105,18 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
                     ),
                     child: SegmentedButton<VoteStatusFilter>(
                       showSelectedIcon: false,
-                      segments: const [
+                      segments: [
                         ButtonSegment(
                           value: VoteStatusFilter.all,
-                          label: Text('전체'),
+                          label: Text(l10n.common_all),
                         ),
                         ButtonSegment(
                           value: VoteStatusFilter.ongoing,
-                          label: Text('진행중'),
+                          label: Text(l10n.vote_filter_ongoing),
                         ),
                         ButtonSegment(
                           value: VoteStatusFilter.closed,
-                          label: Text('종료됨'),
+                          label: Text(l10n.vote_filter_closed),
                         ),
                       ],
                       selected: {statusFilter},
@@ -129,9 +131,9 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
                   ),
                 Expanded(
                   child: selectedGroupId == null
-                      ? const AppEmptyState(
+                      ? AppEmptyState(
                           icon: Icons.group_outlined,
-                          message: '그룹을 선택하면 투표 목록이 표시됩니다',
+                          message: l10n.vote_select_group,
                         )
                       : RefreshIndicator(
                           onRefresh: () =>
@@ -139,9 +141,9 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
                           child: votesAsync.when(
                             data: (votes) {
                               if (votes.isEmpty) {
-                                return const AppEmptyState(
+                                return AppEmptyState(
                                   icon: Icons.how_to_vote_outlined,
-                                  message: '아직 투표가 없습니다\n+ 버튼으로 새 투표를 만들어보세요',
+                                  message: l10n.vote_list_empty,
                                 );
                               }
                               return ListView.separated(
@@ -158,7 +160,7 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
                             ),
                             error: (e, _) => AppErrorState(
                               error: e,
-                              title: '투표 목록을 불러오지 못했습니다',
+                              title: l10n.vote_list_load_error,
                               onRetry: () =>
                                   ref.read(voteListProvider.notifier).refresh(),
                             ),
@@ -181,6 +183,7 @@ class _VoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -249,7 +252,7 @@ class _VoteCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '${vote.totalVoters}명 참여',
+                    l10n.vote_participants(vote.totalVoters),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -263,7 +266,7 @@ class _VoteCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '참여함',
+                      l10n.vote_participated,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.primary,
                       ),
@@ -282,7 +285,7 @@ class _VoteCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      _formatDeadline(vote.endsAt!),
+                      _formatDeadline(l10n, vote.endsAt!),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: vote.isOngoing
                             ? colorScheme.onSurfaceVariant
@@ -299,13 +302,13 @@ class _VoteCard extends StatelessWidget {
     );
   }
 
-  String _formatDeadline(DateTime endsAt) {
+  String _formatDeadline(AppLocalizations l10n, DateTime endsAt) {
     final now = DateTime.now();
     final diff = endsAt.difference(now);
-    if (diff.isNegative) return '마감됨';
-    if (diff.inDays > 0) return '${diff.inDays}일 후 마감';
-    if (diff.inHours > 0) return '${diff.inHours}시간 후 마감';
-    return '${diff.inMinutes}분 후 마감';
+    if (diff.isNegative) return l10n.vote_deadline_passed;
+    if (diff.inDays > 0) return l10n.vote_deadline_days(diff.inDays);
+    if (diff.inHours > 0) return l10n.vote_deadline_hours(diff.inHours);
+    return l10n.vote_deadline_minutes(diff.inMinutes);
   }
 }
 
@@ -318,6 +321,7 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
@@ -327,7 +331,7 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        isOngoing ? '진행중' : '종료',
+        isOngoing ? l10n.vote_status_ongoing : l10n.vote_status_closed,
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,

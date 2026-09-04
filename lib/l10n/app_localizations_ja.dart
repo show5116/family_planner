@@ -4484,6 +4484,32 @@ class AppLocalizationsJa extends AppLocalizations {
   String get subscription_expires_at_label => '有効期限';
 
   @override
+  String get subscription_days_left_label => '残り期間';
+
+  @override
+  String subscription_days_left_value(int days) {
+    return '$days日';
+  }
+
+  @override
+  String get subscription_days_left_today => '本日終了';
+
+  @override
+  String get subscription_trial_ends_at_label => '体験終了日';
+
+  @override
+  String get subscription_period_end_label => '利用期間の終了日';
+
+  @override
+  String get subscription_auto_renew_hint => '解約しない限り、この日に自動的に更新されます';
+
+  @override
+  String get subscription_next_renewal_label => '次回更新日';
+
+  @override
+  String get subscription_canceled_hint => '解約済みのため、この日に終了します';
+
+  @override
   String get subscription_products_section_title => 'サブスクリプション商品';
 
   @override
@@ -5400,4 +5426,1435 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => '旗';
+
+  @override
+  String get memo_tag_filter_clear => 'タグフィルターを解除';
+
+  @override
+  String get memo_section_pinned => '固定したメモ';
+
+  @override
+  String memo_pinned_expand(int count) {
+    return 'さらに$count件を表示';
+  }
+
+  @override
+  String get memo_pinned_collapse => '折りたたむ';
+
+  @override
+  String get memo_pin_add => 'ダッシュボードに固定';
+
+  @override
+  String get memo_pin_remove => '固定を解除';
+
+  @override
+  String get memo_pin_error => '固定の変更に失敗しました';
+
+  @override
+  String get memo_pin_added => '上部に固定し、ダッシュボードに追加しました。';
+
+  @override
+  String get memo_pin_removed => '固定を解除しました。';
+
+  @override
+  String memo_duplicate_title(String title) {
+    return '$title（コピー）';
+  }
+
+  @override
+  String get memo_tag_input_hint => 'タグを入力して追加';
+
+  @override
+  String get memo_editor_paste_failed => 'クリップボードから貼り付けできませんでした。';
+
+  @override
+  String get memo_editor_link_card_add => 'リンクカードを追加';
+
+  @override
+  String get memo_editor_image => '画像';
+
+  @override
+  String get memo_editor_paste_formatted => '書式を保持して貼り付け';
+
+  @override
+  String get memo_editor_link_apply => 'リンクを設定';
+
+  @override
+  String get memo_editor_link_select_first => 'テキストを選択してください';
+
+  @override
+  String get memo_editor_bold => '太字';
+
+  @override
+  String get memo_editor_italic => '斜体';
+
+  @override
+  String get memo_editor_strikethrough => '取り消し線';
+
+  @override
+  String get memo_editor_heading1 => '見出し1';
+
+  @override
+  String get memo_editor_heading2 => '見出し2（チェックリストの区切り）';
+
+  @override
+  String get memo_editor_bullet_list => '箇条書き';
+
+  @override
+  String get memo_editor_numbered_list => '番号付きリスト';
+
+  @override
+  String get memo_editor_undo => '元に戻す';
+
+  @override
+  String get memo_editor_redo => 'やり直す';
+
+  @override
+  String get savings_title => 'グループ貯金';
+
+  @override
+  String get savings_select_group => 'グループを選択してください';
+
+  @override
+  String get savings_intro_title => 'グループで目標を決めて貯めましょう';
+
+  @override
+  String get savings_intro_body =>
+      '旅行費、緊急資金、家電購入など目標を作り、毎月自動で積み立てたり手動で入金したりできます。';
+
+  @override
+  String get savings_intro_tip => '家族だけでなく、友人や同僚などどんなグループでも使えます。';
+
+  @override
+  String get savings_list_empty => '貯金がありません\n＋ボタンで追加してください';
+
+  @override
+  String savings_achievement_rate(String rate) {
+    return '$rate％達成';
+  }
+
+  @override
+  String get savings_deposit => '入金';
+
+  @override
+  String get savings_withdraw => '出金';
+
+  @override
+  String get savings_amount_label => '金額（ウォン）';
+
+  @override
+  String get savings_memo_label => 'メモ（任意）';
+
+  @override
+  String get savings_withdraw_reason_label => '出金理由（必須）';
+
+  @override
+  String get savings_delete_title => '目標を削除';
+
+  @override
+  String savings_delete_message(String name) {
+    return '「$name」を削除しますか？\nこの操作は取り消せません。';
+  }
+
+  @override
+  String get savings_detail_title => '積立目標';
+
+  @override
+  String get savings_goal_reached => '目標達成！';
+
+  @override
+  String savings_target_amount(String amount) {
+    return '目標：$amount';
+  }
+
+  @override
+  String get savings_auto_deposit => '自動積立';
+
+  @override
+  String savings_auto_deposit_monthly(String amount) {
+    return '月$amount';
+  }
+
+  @override
+  String get savings_auto_deposit_pause => '自動積立を停止';
+
+  @override
+  String get savings_auto_deposit_resume => '自動積立を再開';
+
+  @override
+  String get savings_recent_transactions => '最近の履歴';
+
+  @override
+  String get savings_view_all => 'すべて見る';
+
+  @override
+  String get savings_transactions_empty => '取引履歴がありません。';
+
+  @override
+  String get savings_transactions_load_error => '履歴を読み込めませんでした';
+
+  @override
+  String get savings_filter_auto => '自動積立';
+
+  @override
+  String get savings_form_title_add => '貯金を追加';
+
+  @override
+  String get savings_form_title_edit => '貯金を編集';
+
+  @override
+  String get savings_form_submit_edit => '変更を保存';
+
+  @override
+  String get savings_form_save_error => '保存できませんでした';
+
+  @override
+  String get savings_field_name => '目標名 *';
+
+  @override
+  String get savings_field_name_required => '目標名を入力してください';
+
+  @override
+  String get savings_field_description => '説明（任意）';
+
+  @override
+  String get savings_field_target => '目標金額（任意・ウォン）';
+
+  @override
+  String get savings_field_target_hint => '例：1000000';
+
+  @override
+  String get savings_field_target_helper => '目標金額を決めなければ、緊急資金のように続けて貯められます。';
+
+  @override
+  String get savings_field_amount_invalid => '正しい金額を入力してください';
+
+  @override
+  String get savings_field_auto_deposit_desc => '毎月自動で積み立てます';
+
+  @override
+  String get savings_field_monthly_amount => '月の積立金（ウォン）';
+
+  @override
+  String get savings_field_monthly_amount_hint => '例：100000';
+
+  @override
+  String get savings_field_monthly_amount_required => '月の積立金を入力してください';
+
+  @override
+  String get savings_field_deposit_day => '毎月の積立日（1〜31日）';
+
+  @override
+  String get savings_field_deposit_day_hint => '例：25';
+
+  @override
+  String get savings_field_deposit_day_helper => 'その月に該当日がなければ月末に処理されます。';
+
+  @override
+  String get savings_field_deposit_day_invalid => '1〜31の日付を入力してください';
+
+  @override
+  String get savings_field_include_assets => '資産統計に含める';
+
+  @override
+  String get savings_field_include_assets_desc => '資産状況で積立残高も一緒に確認できます。';
+
+  @override
+  String get vote_title => '投票';
+
+  @override
+  String get vote_filter_ongoing => '進行中';
+
+  @override
+  String get vote_filter_closed => '終了';
+
+  @override
+  String get vote_status_ongoing => '進行中';
+
+  @override
+  String get vote_status_closed => '終了';
+
+  @override
+  String get vote_select_group => 'グループを選ぶと投票一覧が表示されます';
+
+  @override
+  String get vote_list_empty => 'まだ投票がありません\n＋ボタンで作成できます';
+
+  @override
+  String get vote_list_load_error => '投票一覧を読み込めませんでした';
+
+  @override
+  String get vote_detail_load_error => '投票を読み込めませんでした';
+
+  @override
+  String vote_participants(int count) {
+    return '$count人が参加';
+  }
+
+  @override
+  String get vote_participated => '参加済み';
+
+  @override
+  String get vote_deadline_passed => '締切済み';
+
+  @override
+  String vote_deadline_days(int days) {
+    return '$days日後に締切';
+  }
+
+  @override
+  String vote_deadline_hours(int hours) {
+    return '$hours時間後に締切';
+  }
+
+  @override
+  String vote_deadline_minutes(int minutes) {
+    return '$minutes分後に締切';
+  }
+
+  @override
+  String get vote_delete => '投票を削除';
+
+  @override
+  String get vote_delete_message => 'この投票を削除しますか？\n復元できません。';
+
+  @override
+  String get vote_delete_failed => '削除できませんでした';
+
+  @override
+  String get vote_submit_success => '投票が完了しました';
+
+  @override
+  String get vote_submit_failed => '投票できませんでした';
+
+  @override
+  String get vote_multiple_choice_badge => '複数選択';
+
+  @override
+  String get vote_anonymous_badge => '匿名';
+
+  @override
+  String get vote_submit => '投票する';
+
+  @override
+  String get vote_revote => '投票し直す';
+
+  @override
+  String vote_option_result(int count, String percent) {
+    return '$count票（$percent％）';
+  }
+
+  @override
+  String get vote_create_title => '新しい投票';
+
+  @override
+  String get vote_field_title => '投票タイトル *';
+
+  @override
+  String get vote_field_title_required => 'タイトルを入力してください';
+
+  @override
+  String get vote_field_description => '説明（任意）';
+
+  @override
+  String get vote_options_section => '選択肢';
+
+  @override
+  String vote_option_hint(int index) {
+    return '選択肢$index';
+  }
+
+  @override
+  String get vote_options_min => '選択肢を2つ以上入力してください';
+
+  @override
+  String get vote_create_failed => '投票を作成できませんでした';
+
+  @override
+  String get vote_allow_multiple => '複数選択を許可';
+
+  @override
+  String get vote_allow_multiple_desc => '複数の項目を同時に選べます。';
+
+  @override
+  String get vote_anonymous => '匿名投票';
+
+  @override
+  String get vote_anonymous_desc => '投票者の名前は公開されません。';
+
+  @override
+  String get vote_deadline => '締切時刻';
+
+  @override
+  String get vote_deadline_none => '設定しない（手動で終了）';
+
+  @override
+  String get todo_label_dueDate => '締切日';
+
+  @override
+  String get todo_label_category => 'カテゴリ';
+
+  @override
+  String get todo_label_createdAt => '登録日';
+
+  @override
+  String get todo_label_completedAt => '完了日';
+
+  @override
+  String get todo_label_status => 'ステータス';
+
+  @override
+  String get todo_drag_to_move => 'ドラッグして移動';
+
+  @override
+  String get common_more => 'もっと見る';
+
+  @override
+  String get cart_total => '合計';
+
+  @override
+  String get cart_save_error => '保存中にエラーが発生しました';
+
+  @override
+  String get cart_price_unit => '1個あたり';
+
+  @override
+  String get cart_price_total => '合計';
+
+  @override
+  String get cart_price_unit_label => '1個あたりの金額';
+
+  @override
+  String get cart_price_total_label => '合計金額';
+
+  @override
+  String get cart_price_unit_hint => '1個あたりの金額を入力';
+
+  @override
+  String get cart_price_total_hint => '合計金額を入力';
+
+  @override
+  String get cart_extra_show => '単位・メモを追加';
+
+  @override
+  String get cart_extra_hide => '単位・メモを隠す';
+
+  @override
+  String get cart_shopping_date => '買い物の日付';
+
+  @override
+  String get cart_select_date => '日付を選択';
+
+  @override
+  String get cart_default_description => 'スーパーで買い物';
+
+  @override
+  String get settings_myReportsTitle => '自分の通報履歴';
+
+  @override
+  String get settings_myReportsSubtitle => '自分が通報した一覧を確認します';
+
+  @override
+  String get settings_commonRolesTitle => '共通ロール管理';
+
+  @override
+  String get settings_commonRolesSubtitle => 'システム全体に適用される共通ロールを管理';
+
+  @override
+  String get settings_userAdminTitle => 'ユーザー・アカウント管理';
+
+  @override
+  String get settings_userAdminSubtitle => 'サブスクの変更、アカウント削除の予約と処理';
+
+  @override
+  String get settings_reportAdminTitle => '通報管理';
+
+  @override
+  String get settings_reportAdminSubtitle => 'メンバーの通報の受付と処理';
+
+  @override
+  String get settings_replayTutorial => 'チュートリアルをもう一度見る';
+
+  @override
+  String get settings_replayTutorialBody => 'アプリ紹介スライドと各機能の案内を\n最初から見直せます。';
+
+  @override
+  String get settings_replayTutorialConfirm => 'もう一度見る';
+
+  @override
+  String get settings_replayTutorialDone => '次回アプリを開いたときにチュートリアルが表示されます。';
+
+  @override
+  String get settings_personalColor => '個人カラー';
+
+  @override
+  String get settings_personalColorPick => '個人カラーを選択';
+
+  @override
+  String get widgetSettings_addWidget => 'ウィジェットを追加';
+
+  @override
+  String get widgetSettings_addAnniversary => '記念日を追加';
+
+  @override
+  String get report_title => '通報する';
+
+  @override
+  String get report_reason => '通報理由';
+
+  @override
+  String get report_detail => '詳細（任意）';
+
+  @override
+  String get report_detail_hint => '追加の説明を入力してください';
+
+  @override
+  String get report_submit => '通報を送信';
+
+  @override
+  String get report_submitted => '通報を受け付けました。';
+
+  @override
+  String get report_submit_failed => '通報を送信できませんでした';
+
+  @override
+  String get report_empty => '通報履歴がありません';
+
+  @override
+  String get report_admin_title => '通報管理';
+
+  @override
+  String get report_handle_title => '通報の処理';
+
+  @override
+  String get report_handle_status => '処理状況';
+
+  @override
+  String get report_handle_memo => '処理メモ（任意）';
+
+  @override
+  String get report_handle_memo_hint => '処理内容を入力してください';
+
+  @override
+  String get report_handle_done => '処理完了';
+
+  @override
+  String get report_handled => '通報を処理しました。';
+
+  @override
+  String get report_handle_failed => '処理できませんでした';
+
+  @override
+  String get group_invite_cancel => '招待を取り消す';
+
+  @override
+  String group_invite_cancel_message(String email) {
+    return '$emailへの招待を取り消しますか？';
+  }
+
+  @override
+  String get group_invite_canceled => '招待を取り消しました';
+
+  @override
+  String group_invite_resent(String email) {
+    return '$emailに招待メールを再送しました';
+  }
+
+  @override
+  String get group_invite_resend => '再送';
+
+  @override
+  String get group_color_change_failed => '色を変更できませんでした';
+
+  @override
+  String get group_color_reset => 'グループの既定色に戻しました';
+
+  @override
+  String get group_color_reset_failed => '色を戻せませんでした';
+
+  @override
+  String get group_order_saved => 'グループの並び順を保存しました';
+
+  @override
+  String get group_members_empty => 'メンバーがいません';
+
+  @override
+  String get group_member_remove => 'メンバーを退会させる';
+
+  @override
+  String get group_member_removed => 'メンバーを削除しました';
+
+  @override
+  String get group_role_change => 'ロールを変更';
+
+  @override
+  String get group_role_changed => 'ロールを変更しました';
+
+  @override
+  String get group_roles_load_error => 'ロール一覧を読み込めません';
+
+  @override
+  String get group_regenerate_code_message =>
+      '招待コードを再生成しますか？\n既存のコードは使えなくなります。';
+
+  @override
+  String get group_transfer_ownership => 'グループ長の譲渡';
+
+  @override
+  String get group_transfer_confirm => '譲渡する';
+
+  @override
+  String group_transfer_message(String name) {
+    return '$nameさんにグループ長を譲りますか？';
+  }
+
+  @override
+  String get group_transfer_failed => 'グループ長を譲渡できませんでした';
+
+  @override
+  String get invite_title => 'グループ招待';
+
+  @override
+  String get invite_joining => 'グループに参加中…';
+
+  @override
+  String get invite_joined => 'グループに参加しました！';
+
+  @override
+  String get invite_go_home => 'ホームへ';
+
+  @override
+  String get invite_login_required => 'ログインするとグループに参加できます。';
+
+  @override
+  String get invite_login => 'ログイン';
+
+  @override
+  String get invite_failed => '参加に失敗';
+
+  @override
+  String group_transfer_done(String name) {
+    return '$nameさんにグループ長を譲りました';
+  }
+
+  @override
+  String invite_code_label(String code) {
+    return '招待コード：$code';
+  }
+
+  @override
+  String get invite_unknown_error => '不明なエラーが発生しました。';
+
+  @override
+  String get common_unknownError => '不明なエラー';
+
+  @override
+  String get common_sortOrderSaved => '並び順を保存しました';
+
+  @override
+  String get common_saveFailed => '保存できませんでした';
+
+  @override
+  String get common_deleteFailed => '削除できませんでした';
+
+  @override
+  String get common_noSearchResults => '検索結果がありません';
+
+  @override
+  String get role_common_title => '共通ロール管理';
+
+  @override
+  String get role_create => 'ロールを作成';
+
+  @override
+  String get role_list_load_error => 'ロール一覧を読み込めませんでした';
+
+  @override
+  String get role_list_empty => '共通ロールがありません';
+
+  @override
+  String get role_list_empty_subtitle => '＋ボタンで新しいロールを作成できます';
+
+  @override
+  String get role_info_load_error => 'ロール情報を読み込めませんでした';
+
+  @override
+  String get role_not_found => 'ロールが見つかりません';
+
+  @override
+  String role_permissions_title(String name) {
+    return '$nameの権限管理';
+  }
+
+  @override
+  String get role_permission_search => '権限を検索';
+
+  @override
+  String get role_permissions_load_error => '権限一覧を読み込めませんでした';
+
+  @override
+  String get role_permissions_saved => '権限を保存しました';
+
+  @override
+  String get role_edit_title => '共通ロールを編集';
+
+  @override
+  String get role_create_title => '共通ロールを作成';
+
+  @override
+  String get role_created => 'ロールを作成しました';
+
+  @override
+  String get role_updated => 'ロールを更新しました';
+
+  @override
+  String get role_create_failed => 'ロールを作成できませんでした';
+
+  @override
+  String get role_update_failed => 'ロールを更新できませんでした';
+
+  @override
+  String get role_field_name => 'ロール名';
+
+  @override
+  String get role_field_name_hint => '例：ADMIN, MEMBER';
+
+  @override
+  String get role_field_name_required => 'ロール名を入力してください';
+
+  @override
+  String get role_default => 'デフォルトロール';
+
+  @override
+  String get role_default_desc => '新規参加時に自動で付与されます';
+
+  @override
+  String get role_default_badge => 'デフォルト';
+
+  @override
+  String get role_color => 'ロールの色';
+
+  @override
+  String get role_delete => 'ロールを削除';
+
+  @override
+  String role_delete_message(String name) {
+    return '$nameロールを削除しますか？\nこの操作は取り消せません。';
+  }
+
+  @override
+  String get role_deleted => 'ロールを削除しました';
+
+  @override
+  String get role_manage_permissions => '権限管理';
+
+  @override
+  String get permission_name_hint => '例：VIEW_REPORT';
+
+  @override
+  String get permission_desc_hint => 'この権限の説明を入力してください';
+
+  @override
+  String get permission_category_custom => '＋ 直接入力';
+
+  @override
+  String get permission_category_new => '新しいカテゴリ名';
+
+  @override
+  String get permission_category_required => '新しいカテゴリ名を入力してください';
+
+  @override
+  String get childcare_savings_plan => '積立プラン';
+
+  @override
+  String get childcare_savings_ongoing => '進行中';
+
+  @override
+  String get childcare_savings_matured => '満期完了';
+
+  @override
+  String get childcare_interest_simple => '単利';
+
+  @override
+  String get childcare_interest_compound => '複利';
+
+  @override
+  String get childcare_interest_type => '利息の種類';
+
+  @override
+  String get childcare_monthly_deposit => '毎月の積立額';
+
+  @override
+  String get childcare_interest_rate => '利率';
+
+  @override
+  String get childcare_period => '期間';
+
+  @override
+  String get childcare_savings_start => '積立プランを始める';
+
+  @override
+  String get childcare_savings_start_desc => '毎月自動で積み立てられます';
+
+  @override
+  String get childcare_savings_cancel => '中途解約';
+
+  @override
+  String get childcare_savings_cancel_title => '積立の中途解約';
+
+  @override
+  String get childcare_savings_cancel_message =>
+      '中途解約すると利息なしで元金のみ返還されます。\n本当に解約しますか？';
+
+  @override
+  String get childcare_savings_cancel_confirm => '解約';
+
+  @override
+  String get childcare_savings_canceled => '積立を解約しました';
+
+  @override
+  String get childcare_savings_cancel_failed => '解約できませんでした';
+
+  @override
+  String get childcare_savings_started => '積立プランを開始しました';
+
+  @override
+  String get childcare_savings_create_title => '積立プランを作成';
+
+  @override
+  String get childcare_savings_monthly_points => '毎月の積立ポイント';
+
+  @override
+  String get childcare_savings_annual_rate => '年利率';
+
+  @override
+  String childcare_savings_rate_helper(String rate) {
+    return '3年国債金利（$rate%）を参考に初期値を設定しました';
+  }
+
+  @override
+  String get childcare_savings_rate_loading => '国債金利を読み込み中…';
+
+  @override
+  String get childcare_start_date => '開始日';
+
+  @override
+  String get childcare_maturity_date => '満期日';
+
+  @override
+  String get childcare_total_deposit => '積立総額';
+
+  @override
+  String get childcare_expected_interest => '予想利息';
+
+  @override
+  String get childcare_maturity_amount => '満期受取';
+
+  @override
+  String childcare_months(int months) {
+    return '$monthsか月';
+  }
+
+  @override
+  String get childcare_start => '開始';
+
+  @override
+  String get childcare_allowance_missing => 'お小遣いプランが未設定です';
+
+  @override
+  String get childcare_allowance_missing_desc => '毎月のポイントや支給日を設定しましょう';
+
+  @override
+  String get childcare_negotiation_passed => '昇給交渉日が過ぎました';
+
+  @override
+  String get childcare_negotiation_upcoming => '昇給交渉日が近づいています';
+
+  @override
+  String childcare_negotiation_passed_desc(int days, String date) {
+    return '$days日前（$date）でした。お小遣いプランを見直しましょう。';
+  }
+
+  @override
+  String childcare_negotiation_today(String date) {
+    return '今日が昇給交渉日です！（$date）';
+  }
+
+  @override
+  String get childcare_cashout => 'ポイントを現金化';
+
+  @override
+  String get childcare_cashout_button => '現金化';
+
+  @override
+  String get childcare_cashout_points => '現金化するポイント';
+
+  @override
+  String get childcare_cashout_failed => '現金化できませんでした。しばらくしてからお試しください。';
+
+  @override
+  String childcare_cashout_description(String amount) {
+    return 'ポイント現金化（$amountウォン）';
+  }
+
+  @override
+  String childcare_cashout_done(String points, String amount) {
+    return '${points}Pを$amountウォンに交換しました';
+  }
+
+  @override
+  String childcare_cashout_rate(String ratio, String balance) {
+    return '1P = $ratioウォン・保有 ${balance}P';
+  }
+
+  @override
+  String childcare_cashout_approx(String amount) {
+    return '≈ $amountウォン';
+  }
+
+  @override
+  String get childcare_rule_apply => 'ルールを適用';
+
+  @override
+  String get childcare_rule_apply_penalty => '違反を適用';
+
+  @override
+  String childcare_rule_apply_plus_message(String name, String points) {
+    return '「$name」\n${points}Pを付与します。';
+  }
+
+  @override
+  String childcare_rule_apply_minus_message(String name, String points) {
+    return '「$name」違反により\n${points}Pを差し引きます。';
+  }
+
+  @override
+  String get childcare_rule_give => '付与';
+
+  @override
+  String get childcare_rule_deduct => '差し引く';
+
+  @override
+  String childcare_points_given(String points) {
+    return '${points}Pを付与しました';
+  }
+
+  @override
+  String childcare_points_deducted(String points) {
+    return '${points}Pを差し引きました';
+  }
+
+  @override
+  String get childcare_rule_delete => 'ルールを削除';
+
+  @override
+  String childcare_rule_delete_message(String name) {
+    return '「$name」を削除しますか？';
+  }
+
+  @override
+  String get common_deleted => '削除しました';
+
+  @override
+  String get common_saved => '保存しました';
+
+  @override
+  String get childcare_rule_type_plus => '＋ポイントのルール';
+
+  @override
+  String get childcare_rule_type_minus => '－ポイントのルール';
+
+  @override
+  String get childcare_rule_type_info => '一般ルール';
+
+  @override
+  String get childcare_rule_help_title => 'ルールとは？';
+
+  @override
+  String get childcare_rule_help_body =>
+      'ルールは子どもの行動とポイントを結びつける約束です。\n良い行いにはポイントを与え、約束を破ったときは差し引きます。';
+
+  @override
+  String get childcare_rule_help_tip =>
+      'ルールは具体的で明確なほど良いです。\n曖昧なルールは子どもとの不要な衝突につながります。\n一緒に決めると信頼が育ちます。';
+
+  @override
+  String get childcare_rule_examples_plus => '＋ルールの例（ポイント付与）';
+
+  @override
+  String get childcare_rule_examples_minus => '－ルールの例（ポイント差し引き）';
+
+  @override
+  String get childcare_rule_examples_info => '一般ルールの例（ポイントなし）';
+
+  @override
+  String get childcare_rule_example_plus1 => '学校の宿題を自分で終わらせたとき  +10P';
+
+  @override
+  String get childcare_rule_example_plus2 => '夜9時前に自分から寝たとき  +5P';
+
+  @override
+  String get childcare_rule_example_plus3 => '食後に食器を流しに運んだとき  +3P';
+
+  @override
+  String get childcare_rule_example_plus4 => '1週間遅刻せずに登校したとき  +20P';
+
+  @override
+  String get childcare_rule_example_minus1 => '平日にスマホを1時間以上使ったとき  -10P';
+
+  @override
+  String get childcare_rule_example_minus2 => '夜10時を過ぎても寝なかったとき  -5P';
+
+  @override
+  String get childcare_rule_example_minus3 => '兄弟姉妹に暴言を吐いたとき  -15P';
+
+  @override
+  String get childcare_rule_example_minus4 => '約束の帰宅時間（午後6時）を過ぎたとき  -10P';
+
+  @override
+  String get childcare_rule_example_info1 => '今月のポイント現金化は最大50Pまで';
+
+  @override
+  String get childcare_rule_example_info2 => 'ポイントショップの利用は1日1個まで';
+
+  @override
+  String get childcare_rule_apply_note => 'ルールを適用するとポイントがすぐ反映されます。';
+
+  @override
+  String get childcare_rule_add => 'ルールを追加';
+
+  @override
+  String get childcare_rule_edit => 'ルールを編集';
+
+  @override
+  String get childcare_rule_type => 'ルールの種類';
+
+  @override
+  String get childcare_rule_type_plus_short => '＋ポイント';
+
+  @override
+  String get childcare_rule_type_minus_short => '－ポイント';
+
+  @override
+  String get childcare_rule_type_info_short => '一般';
+
+  @override
+  String get childcare_rule_name_hint_plus => '例：宿題を自分でやったとき';
+
+  @override
+  String get childcare_rule_name_hint_minus => '例：スマホを30分以上見たとき';
+
+  @override
+  String get childcare_rule_name_hint_info => '例：今月の現金化上限';
+
+  @override
+  String get childcare_rule_points_give => '付与ポイント';
+
+  @override
+  String get childcare_rule_points_deduct => '差し引くポイント';
+
+  @override
+  String get childcare_rule_points_give_hint => '良い行いに与えるポイント';
+
+  @override
+  String get childcare_rule_points_deduct_hint => '違反時に差し引くポイント';
+
+  @override
+  String get childcare_save_failed => '保存できませんでした。しばらくしてからお試しください。';
+
+  @override
+  String get childcare_child => '子ども';
+
+  @override
+  String childcare_allowance_plan_title(String name) {
+    return '$nameのお小遣いプラン';
+  }
+
+  @override
+  String get childcare_tab_settings => '設定';
+
+  @override
+  String get childcare_tab_change_history => '変更履歴';
+
+  @override
+  String get childcare_allowance_setup => 'お小遣いプランを設定';
+
+  @override
+  String get childcare_allowance_edit => 'お小遣いプランを編集';
+
+  @override
+  String get childcare_monthly_points => '毎月の支給ポイント';
+
+  @override
+  String get childcare_monthly_points_hint => '例：100';
+
+  @override
+  String get childcare_monthly_points_required => '毎月の支給ポイントを入力してください';
+
+  @override
+  String get childcare_number_required => '数字を入力してください';
+
+  @override
+  String get childcare_pay_day => '毎月の支給日';
+
+  @override
+  String get childcare_day_unit => '日';
+
+  @override
+  String get childcare_pay_day_helper => 'その月に該当日がなければ月末に支給されます';
+
+  @override
+  String childcare_day_value(String day) {
+    return '$day日';
+  }
+
+  @override
+  String get childcare_select_date => '日付を選択してください';
+
+  @override
+  String get childcare_select_date_optional => '日付を選択（任意）';
+
+  @override
+  String get childcare_point_ratio => '1ポイント＝N ウォン';
+
+  @override
+  String get childcare_point_ratio_hint => '例：10';
+
+  @override
+  String get childcare_point_ratio_helper => '子どもとの約束を明確にするための表示です';
+
+  @override
+  String get childcare_min_one => '1以上の数字を入力してください';
+
+  @override
+  String get childcare_negotiation_date => '次の昇給交渉日（任意）';
+
+  @override
+  String get childcare_plan_save => 'プランを設定';
+
+  @override
+  String get childcare_plan_update => 'プランを更新';
+
+  @override
+  String get childcare_plan_saved => 'お小遣いプランを保存しました';
+
+  @override
+  String get childcare_current_plan => '現在のお小遣いプラン';
+
+  @override
+  String get childcare_monthly_payout => '毎月の支給';
+
+  @override
+  String get childcare_payout_day => '支給日';
+
+  @override
+  String childcare_payout_day_value(String day) {
+    return '毎月$day日';
+  }
+
+  @override
+  String get childcare_next_negotiation => '次の交渉日';
+
+  @override
+  String get childcare_history_empty => '変更履歴がありません';
+
+  @override
+  String get childcare_history_load_error => '履歴を読み込めませんでした';
+
+  @override
+  String childcare_history_entry(String points, String day) {
+    return '${points}P／毎月$day日';
+  }
+
+  @override
+  String childcare_ratio_value(String amount) {
+    return '1P = $amountウォン';
+  }
+
+  @override
+  String childcare_negotiation_suffix(String date) {
+    return '交渉日 $date';
+  }
+
+  @override
+  String childcare_monthly_day(String day) {
+    return '毎月$day日';
+  }
+
+  @override
+  String get childcare_item_use => 'アイテムを使う';
+
+  @override
+  String childcare_item_use_message(String name, String points) {
+    return '「$name」\n${points}Pを使います。';
+  }
+
+  @override
+  String get childcare_item_use_confirm => '使う';
+
+  @override
+  String childcare_item_used(String name) {
+    return '「$name」を使いました';
+  }
+
+  @override
+  String get childcare_item_use_failed => '使用できませんでした。しばらくしてからお試しください。';
+
+  @override
+  String get childcare_item_delete => 'アイテムを削除';
+
+  @override
+  String childcare_item_delete_message(String name) {
+    return '「$name」を削除しますか？';
+  }
+
+  @override
+  String get childcare_delete_failed => '削除できませんでした。しばらくしてからお試しください。';
+
+  @override
+  String get childcare_item_add => 'ショップアイテムを追加';
+
+  @override
+  String get childcare_item_edit => 'ショップアイテムを編集';
+
+  @override
+  String get childcare_item_name => 'アイテム名';
+
+  @override
+  String get childcare_item_name_hint => '例：テレビを30分延長';
+
+  @override
+  String get childcare_item_points => '必要ポイント';
+
+  @override
+  String get childcare_shop_help_title => 'ポイントショップとは？';
+
+  @override
+  String get childcare_shop_help_body =>
+      '子どもが貯めたポイントで買える報酬の一覧です。\n欲しいもののために自分でポイントを貯める動機になります。';
+
+  @override
+  String get childcare_shop_examples => 'アイテムの例';
+
+  @override
+  String get childcare_shop_example1 => 'テレビを30分延長';
+
+  @override
+  String get childcare_shop_example2 => 'ゲームを1時間';
+
+  @override
+  String get childcare_shop_example3 => '好きなおやつを選ぶ';
+
+  @override
+  String get childcare_shop_example4 => '夜更かしできる日';
+
+  @override
+  String get childcare_shop_disable_note => 'アイテムを無効にすると一覧から隠せます。';
+
+  @override
+  String get childcare_period_monthly => '月別';
+
+  @override
+  String get childcare_period_yearly => '年別';
+
+  @override
+  String get childcare_income => '収入';
+
+  @override
+  String get childcare_expense => '支出';
+
+  @override
+  String get childcare_net_change => '純増減';
+
+  @override
+  String get childcare_yearly_income => '年間収入';
+
+  @override
+  String get childcare_yearly_expense => '年間支出';
+
+  @override
+  String get childcare_balance_trend => '残高の推移';
+
+  @override
+  String get childcare_monthly_status => '月별 현황';
+
+  @override
+  String get childcare_type_distribution => '種類別の内訳';
+
+  @override
+  String childcare_month_unit(String month) {
+    return '$month月';
+  }
+
+  @override
+  String get childcare_no_income_this_month => '今月の収入がありません';
+
+  @override
+  String get childcare_no_expense_this_month => '今月の支出がありません';
+
+  @override
+  String get childcare_type_allowance => 'お小遣い';
+
+  @override
+  String get childcare_type_reward => '報酬';
+
+  @override
+  String get childcare_type_bonus => 'ボーナス';
+
+  @override
+  String get childcare_type_interest => '利息';
+
+  @override
+  String get childcare_type_savings_withdraw => '積立引き出し';
+
+  @override
+  String get childcare_type_penalty => '罰点';
+
+  @override
+  String get childcare_type_purchase => 'ショップ';
+
+  @override
+  String get childcare_type_cashout => '現金化';
+
+  @override
+  String get childcare_type_savings_deposit => '積立';
+
+  @override
+  String get common_etc => 'その他';
+
+  @override
+  String get childcare_profile_add => '子どものプロフィール登録';
+
+  @override
+  String get childcare_child_name => '子どもの名前';
+
+  @override
+  String get childcare_child_name_hint => '例：ミンジュン';
+
+  @override
+  String get childcare_child_name_required => '子どもの名前を入力してください';
+
+  @override
+  String get childcare_birthdate => '生年月日';
+
+  @override
+  String get childcare_birthdate_required => '生年月日を選択してください';
+
+  @override
+  String get childcare_profile_added => '子どものプロフィールを登録しました';
+
+  @override
+  String get childcare_profile_add_failed => '登録できませんでした。もう一度お試しください。';
+
+  @override
+  String childcare_date_full(String year, String month, String day) {
+    return '$year年$month月$day日';
+  }
+
+  @override
+  String childcare_year_unit(String year) {
+    return '$year年';
+  }
+
+  @override
+  String childcare_link_title(String name) {
+    return '$nameのアカウント連携';
+  }
+
+  @override
+  String get childcare_link_linked => 'アプリアカウント連携済み';
+
+  @override
+  String get childcare_link_unlinked => 'アプリアカウント未連携';
+
+  @override
+  String childcare_link_account_id(String id) {
+    return '連携アカウントID：$id…';
+  }
+
+  @override
+  String get childcare_link_guide => 'アカウント連携について';
+
+  @override
+  String get childcare_link_guide1 => '子どもがアプリに登録している必要があります。';
+
+  @override
+  String get childcare_link_guide2 => '連携すると子どもが自分でポイントを確認できます。';
+
+  @override
+  String get childcare_link_guide3 => '子どものアカウントで積立の入金ができます。';
+
+  @override
+  String get childcare_link_button => 'アプリアカウントを連携';
+
+  @override
+  String get childcare_link_info => '連携情報';
+
+  @override
+  String get childcare_link_info1 => '子どもがアプリでポイントを確認できます。';
+
+  @override
+  String get childcare_link_info2 => '子どものアカウントで積立の入金ができます。';
+
+  @override
+  String get childcare_link_done => 'アプリアカウントを連携しました';
+
+  @override
+  String get childcare_link_failed => '連携できませんでした。子どもがアプリに登録済みか確認してください。';
+
+  @override
+  String get childcare_bonus_give => 'ボーナスを付与';
+
+  @override
+  String get childcare_child_register => '子どもを登録';
+
+  @override
+  String get childcare_allowance_setup_button => 'お小遣いプランを設定';
+
+  @override
+  String get childcare_link_account => 'アプリアカウント連携';
+
+  @override
+  String get childcare_bonus_desc =>
+      '子どもにボーナスポイントを付与します。\nルールやショップ以外で特に褒めたいときに使ってください。';
+
+  @override
+  String get childcare_bonus_points => '付与ポイント';
+
+  @override
+  String get childcare_bonus_points_required => '付与ポイントを入力してください';
+
+  @override
+  String get childcare_bonus_points_positive => '1以上のポイントを入力してください';
+
+  @override
+  String get childcare_bonus_reason => '理由';
+
+  @override
+  String get childcare_bonus_reason_hint => '例：自分から部屋を片付けたから';
+
+  @override
+  String get childcare_bonus_reason_required => '理由を入力してください';
+
+  @override
+  String get childcare_bonus_given => 'ボーナスを付与しました';
+
+  @override
+  String get common_deactivate => '無効にする';
+
+  @override
+  String get common_activate => '有効にする';
+
+  @override
+  String childcare_approx_money(String amount) {
+    return '≈ $amountウォン';
+  }
+
+  @override
+  String get childcare_points_per_month => 'P/月';
+
+  @override
+  String childcare_plan_summary(String day, String amount) {
+    return '毎月$day日・1P=$amountウォン';
+  }
 }

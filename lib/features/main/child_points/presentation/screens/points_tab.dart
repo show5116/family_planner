@@ -141,7 +141,7 @@ class PointsTab extends ConsumerWidget {
             ElevatedButton(
               onPressed: () =>
                   ref.read(childcareAccountsProvider.notifier).refresh(),
-              child: const Text('다시 시도'),
+              child: Text(l10n.common_retry),
             ),
           ],
         ),
@@ -176,11 +176,12 @@ class _DemoSavingsPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final fmt = DateFormat('yyyy.MM.dd');
     final interestLabel = plan.interestType == SavingsInterestType.simple
-        ? '단리'
-        : '복리';
+        ? l10n.childcare_interest_simple
+        : l10n.childcare_interest_compound;
 
     return Card(
       child: Padding(
@@ -197,7 +198,7 @@ class _DemoSavingsPlanCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  '적금 플랜',
+                  l10n.childcare_savings_plan,
                   style: Theme.of(
                     context,
                   ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -213,7 +214,7 @@ class _DemoSavingsPlanCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    '진행 중',
+                    l10n.childcare_savings_ongoing,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: colorScheme.tertiary,
                       fontWeight: FontWeight.bold,
@@ -225,18 +226,18 @@ class _DemoSavingsPlanCard extends StatelessWidget {
             const SizedBox(height: AppSizes.spaceS),
             const Divider(height: 1),
             const SizedBox(height: AppSizes.spaceS),
-            _InfoRow(label: '월 납입액', value: '${plan.monthlyAmount}P'),
+            _InfoRow(label: l10n.childcare_monthly_deposit, value: '${plan.monthlyAmount}P'),
             _InfoRow(
-              label: '이자율',
+              label: l10n.childcare_interest_rate,
               value: '${plan.interestRate}% ($interestLabel)',
             ),
             _InfoRow(
-              label: '기간',
+              label: l10n.childcare_period,
               value:
                   '${fmt.format(plan.startDate)} ~ ${fmt.format(plan.endDate)}',
             ),
             _InfoRow(
-              label: '적금 잔액',
+              label: l10n.childcare_savings_balance,
               value: '${account.savingsBalance.toInt()}P',
             ),
           ],
@@ -281,6 +282,7 @@ class _SavingsStartBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       color: colorScheme.tertiaryContainer,
@@ -290,14 +292,14 @@ class _SavingsStartBanner extends ConsumerWidget {
           color: colorScheme.onTertiaryContainer,
         ),
         title: Text(
-          '적금 플랜 시작하기',
+          l10n.childcare_savings_start,
           style: TextStyle(
             color: colorScheme.onTertiaryContainer,
             fontWeight: FontWeight.w600,
           ),
         ),
         subtitle: Text(
-          '매월 자동으로 적금이 납입돼요',
+          l10n.childcare_savings_start_desc,
           style: TextStyle(color: colorScheme.onTertiaryContainer),
         ),
         trailing: Icon(
@@ -334,13 +336,16 @@ class _SavingsPlanCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final fmt = DateFormat('yyyy.MM.dd');
     final interestLabel = plan.interestType == SavingsInterestType.simple
-        ? '단리'
-        : '복리';
+        ? l10n.childcare_interest_simple
+        : l10n.childcare_interest_compound;
     final statusColor = matured ? colorScheme.secondary : colorScheme.tertiary;
-    final statusLabel = matured ? '만기 완료' : '진행 중';
+    final statusLabel = matured
+        ? l10n.childcare_savings_matured
+        : l10n.childcare_savings_ongoing;
 
     return Card(
       child: Padding(
@@ -353,7 +358,7 @@ class _SavingsPlanCard extends ConsumerWidget {
                 Icon(Icons.savings_rounded, color: statusColor, size: 20),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  '적금 플랜',
+                  l10n.childcare_savings_plan,
                   style: Theme.of(
                     context,
                   ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -381,18 +386,18 @@ class _SavingsPlanCard extends ConsumerWidget {
             const SizedBox(height: AppSizes.spaceS),
             const Divider(height: 1),
             const SizedBox(height: AppSizes.spaceS),
-            _InfoRow(label: '월 납입액', value: '${plan.monthlyAmount}P'),
+            _InfoRow(label: l10n.childcare_monthly_deposit, value: '${plan.monthlyAmount}P'),
             _InfoRow(
-              label: '이자율',
+              label: l10n.childcare_interest_rate,
               value: '${plan.interestRate}% ($interestLabel)',
             ),
             _InfoRow(
-              label: '기간',
+              label: l10n.childcare_period,
               value:
                   '${fmt.format(plan.startDate)} ~ ${fmt.format(plan.endDate)}',
             ),
             _InfoRow(
-              label: '적금 잔액',
+              label: l10n.childcare_savings_balance,
               value: '${account.savingsBalance.toInt()}P',
             ),
             if (!matured) ...[
@@ -405,7 +410,7 @@ class _SavingsPlanCard extends ConsumerWidget {
                     Icons.cancel_outlined,
                     size: AppSizes.iconSmall,
                   ),
-                  label: const Text('중도 해지'),
+                  label: Text(l10n.childcare_savings_cancel),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: colorScheme.error,
                     side: BorderSide(color: colorScheme.error),
@@ -420,22 +425,23 @@ class _SavingsPlanCard extends ConsumerWidget {
   }
 
   Future<void> _confirmCancel(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('적금 중도 해지'),
-        content: const Text('중도 해지 시 이자 없이 원금만 반환됩니다.\n정말 해지하시겠습니까?'),
+        title: Text(l10n.childcare_savings_cancel_title),
+        content: Text(l10n.childcare_savings_cancel_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(ctx).colorScheme.error,
             ),
-            child: const Text('해지'),
+            child: Text(l10n.childcare_savings_cancel_confirm),
           ),
         ],
       ),
@@ -446,7 +452,11 @@ class _SavingsPlanCard extends ConsumerWidget {
         .cancelSavingsPlan(account.id);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(ok ? '적금이 해지되었습니다' : '해지 중 오류가 발생했습니다')),
+      SnackBar(
+        content: Text(ok
+            ? l10n.childcare_savings_canceled
+            : l10n.childcare_savings_cancel_failed),
+      ),
     );
   }
 }
@@ -593,6 +603,7 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
   );
 
   Future<void> _handleCreate() async {
+    final l10n = AppLocalizations.of(context)!;
     final monthly = int.tryParse(_monthlyCtrl.text.trim()) ?? 0;
     final rate = double.tryParse(_rateCtrl.text.trim()) ?? 0;
     if (monthly <= 0 || rate <= 0) return;
@@ -608,18 +619,19 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
       Navigator.pop(context);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('적금 플랜이 시작되었습니다')));
+      ).showSnackBar(SnackBar(content: Text(l10n.childcare_savings_started)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final fmt = DateFormat('yyyy-MM-dd');
     final colorScheme = Theme.of(context).colorScheme;
     final preview = _preview;
 
     return AlertDialog(
-      title: const Text('적금 플랜 만들기'),
+      title: Text(l10n.childcare_savings_create_title),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -628,8 +640,8 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
             TextField(
               controller: _monthlyCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: '월 납입 포인트',
+              decoration: InputDecoration(
+                labelText: l10n.childcare_savings_monthly_points,
                 suffixText: 'P',
               ),
               onChanged: (_) => setState(() {}),
@@ -641,28 +653,30 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
                 decimal: true,
               ),
               decoration: InputDecoration(
-                labelText: '연 이자율',
+                labelText: l10n.childcare_savings_annual_rate,
                 suffixText: '%',
                 helperText: _kr3yRate != null
-                    ? '현재 국고채 3년물 금리(${_kr3yRate!.toStringAsFixed(1)}%)를 참고하여 기본값이 설정됩니다'
-                    : '국고채 3년물 금리를 불러오는 중...',
+                    ? l10n.childcare_savings_rate_helper(
+                        _kr3yRate!.toStringAsFixed(1))
+                    : l10n.childcare_savings_rate_loading,
                 helperMaxLines: 2,
               ),
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSizes.spaceS),
-            Text('이자 유형', style: Theme.of(context).textTheme.labelMedium),
+            Text(l10n.childcare_interest_type,
+                style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 4),
             SegmentedButton<SavingsInterestType>(
               showSelectedIcon: false,
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: SavingsInterestType.simple,
-                  label: Text('단리'),
+                  label: Text(l10n.childcare_interest_simple),
                 ),
                 ButtonSegment(
                   value: SavingsInterestType.compound,
-                  label: Text('복리'),
+                  label: Text(l10n.childcare_interest_compound),
                 ),
               ],
               selected: {_interestType},
@@ -672,7 +686,7 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
             const SizedBox(height: AppSizes.spaceS),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('시작일'),
+              title: Text(l10n.childcare_start_date),
               subtitle: Text(fmt.format(_startDate)),
               trailing: const Icon(Icons.calendar_today, size: 18),
               onTap: () async {
@@ -687,7 +701,7 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('만기일'),
+              title: Text(l10n.childcare_maturity_date),
               subtitle: Text(fmt.format(_endDate)),
               trailing: const Icon(Icons.calendar_today, size: 18),
               onTap: () async {
@@ -710,10 +724,12 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
                 ),
                 child: Column(
                   children: [
-                    _InfoRow(label: '총 납입', value: '${preview.totalDeposit}P'),
-                    _InfoRow(label: '예상 이자', value: '${preview.interest}P'),
-                    _InfoRow(label: '만기 수령', value: '${preview.total}P'),
-                    _InfoRow(label: '기간', value: '${preview.months}개월'),
+                    _InfoRow(label: l10n.childcare_total_deposit, value: '${preview.totalDeposit}P'),
+                    _InfoRow(label: l10n.childcare_expected_interest, value: '${preview.interest}P'),
+                    _InfoRow(label: l10n.childcare_maturity_amount, value: '${preview.total}P'),
+                    _InfoRow(
+                        label: l10n.childcare_period,
+                        value: l10n.childcare_months(preview.months)),
                   ],
                 ),
               ),
@@ -724,7 +740,7 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _submitting ? null : _handleCreate,
@@ -734,7 +750,7 @@ class _SavingsPlanFormDialogState extends State<_SavingsPlanFormDialog> {
                   width: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('시작'),
+              : Text(l10n.childcare_start),
         ),
       ],
     );
@@ -749,12 +765,13 @@ class AllowancePlanBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       color: Theme.of(context).colorScheme.secondaryContainer,
       child: ListTile(
         leading: const Icon(Icons.monetization_on_outlined),
-        title: const Text('용돈 플랜이 설정되지 않았습니다'),
-        subtitle: const Text('월 포인트, 지급일 등을 설정해보세요'),
+        title: Text(l10n.childcare_allowance_missing),
+        subtitle: Text(l10n.childcare_allowance_missing_desc),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => context.push(
           AppRoutes.childPointsAllowancePlan,
@@ -778,6 +795,7 @@ class NegotiationDateBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final today = DateTime.now();
     final diff = negotiationDate
         .difference(DateTime(today.year, today.month, today.day))
@@ -796,11 +814,13 @@ class NegotiationDateBanner extends StatelessWidget {
         ? colorScheme.onErrorContainer
         : colorScheme.onTertiaryContainer;
 
-    final String title = isOverdue ? '연봉 협상일이 지났습니다' : '연봉 협상일이 다가오고 있습니다';
+    final String title = isOverdue
+        ? l10n.childcare_negotiation_passed
+        : l10n.childcare_negotiation_upcoming;
     final String subtitle = isOverdue
-        ? '${-diff}일 전 (${_fmt(negotiationDate)})이었습니다. 용돈 플랜을 검토해보세요'
+        ? l10n.childcare_negotiation_passed_desc(-diff, _fmt(negotiationDate))
         : diff == 0
-        ? '오늘이 연봉 협상일입니다! (${_fmt(negotiationDate)})'
+        ? l10n.childcare_negotiation_today(_fmt(negotiationDate))
         : 'D-$diff · ${_fmt(negotiationDate)}';
 
     return Card(
@@ -859,6 +879,7 @@ class _CashoutDialogState extends State<_CashoutDialog> {
   }
 
   Future<void> _handleSubmit() async {
+    final l10n = AppLocalizations.of(context)!;
     final points = double.tryParse(_controller.text);
     if (points == null || points <= 0) return;
 
@@ -875,7 +896,8 @@ class _CashoutDialogState extends State<_CashoutDialog> {
           CreateTransactionDto.direct(
             type: ChildcareTransactionType.cashout,
             amount: points,
-            description: '포인트 현금화 (${points.toInt() * ratio}원)',
+            description: l10n.childcare_cashout_description(
+                '${points.toInt() * ratio}'),
           ),
         );
 
@@ -884,7 +906,7 @@ class _CashoutDialogState extends State<_CashoutDialog> {
     if (result == null) {
       setState(() {
         _isSaving = false;
-        _errorMsg = '현금화에 실패했습니다. 잠시 후 다시 시도해주세요.';
+        _errorMsg = l10n.childcare_cashout_failed;
       });
       return;
     }
@@ -893,7 +915,10 @@ class _CashoutDialogState extends State<_CashoutDialog> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '${points.toInt()}P → ${points.toInt() * widget.plan.pointToMoneyRatio}원 현금화되었습니다',
+          l10n.childcare_cashout_done(
+            '${points.toInt()}',
+            '${points.toInt() * widget.plan.pointToMoneyRatio}',
+          ),
         ),
       ),
     );
@@ -901,18 +926,20 @@ class _CashoutDialogState extends State<_CashoutDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final ratio = widget.plan.pointToMoneyRatio;
     final points = int.tryParse(_controller.text) ?? 0;
     final money = points * ratio;
 
     return AlertDialog(
-      title: const Text('포인트 현금화'),
+      title: Text(l10n.childcare_cashout),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '1P = $ratio원 · 보유 ${widget.account.balance.toInt()}P',
+            l10n.childcare_cashout_rate(
+                '$ratio', '${widget.account.balance.toInt()}'),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -922,8 +949,8 @@ class _CashoutDialogState extends State<_CashoutDialog> {
             controller: _controller,
             keyboardType: TextInputType.number,
             autofocus: true,
-            decoration: const InputDecoration(
-              labelText: '현금화할 포인트',
+            decoration: InputDecoration(
+              labelText: l10n.childcare_cashout_points,
               suffixText: 'P',
             ),
             onChanged: (_) => setState(() {}),
@@ -931,7 +958,7 @@ class _CashoutDialogState extends State<_CashoutDialog> {
           if (money > 0) ...[
             const SizedBox(height: 8),
             Text(
-              '≈ $money원',
+              l10n.childcare_cashout_approx('$money'),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
@@ -952,11 +979,11 @@ class _CashoutDialogState extends State<_CashoutDialog> {
       actions: [
         TextButton(
           onPressed: _isSaving ? null : () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _isSaving ? null : _handleSubmit,
-          child: const Text('현금화'),
+          child: Text(l10n.childcare_cashout_button),
         ),
       ],
     );

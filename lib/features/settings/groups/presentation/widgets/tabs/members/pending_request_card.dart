@@ -37,7 +37,9 @@ class PendingRequestCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: isInvite ? Colors.blue[100] : Colors.grey[200],
+                  backgroundColor: isInvite
+                      ? Colors.blue[100]
+                      : Colors.grey[200],
                   child: Icon(
                     isInvite ? Icons.email_outlined : Icons.person_add,
                     color: isInvite ? Colors.blue[700] : Colors.grey[700],
@@ -64,16 +66,22 @@ class PendingRequestCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: isInvite ? Colors.blue[50] : Colors.grey[100],
+                              color: isInvite
+                                  ? Colors.blue[50]
+                                  : Colors.grey[100],
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: isInvite ? Colors.blue[200]! : Colors.grey[300]!,
+                                color: isInvite
+                                    ? Colors.blue[200]!
+                                    : Colors.grey[300]!,
                               ),
                             ),
                             child: Text(
                               isInvite ? '초대됨' : '가입 요청',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: isInvite ? Colors.blue[700] : Colors.grey[700],
+                                color: isInvite
+                                    ? Colors.blue[700]
+                                    : Colors.grey[700],
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -103,14 +111,14 @@ class PendingRequestCard extends StatelessWidget {
                   if (onCancel != null)
                     TextButton(
                       onPressed: onCancel,
-                      child: const Text('초대 취소'),
+                      child: Text(l10n.group_invite_cancel),
                     ),
                   if (onResend != null) ...[
                     const SizedBox(width: AppSizes.spaceS),
                     ElevatedButton.icon(
                       onPressed: onResend,
                       icon: const Icon(Icons.email_outlined, size: 18),
-                      label: const Text('재전송'),
+                      label: Text(l10n.group_invite_resend),
                     ),
                   ],
                 ]

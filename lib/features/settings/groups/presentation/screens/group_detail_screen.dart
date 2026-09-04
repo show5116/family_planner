@@ -25,10 +25,7 @@ part '_group_detail_onboarding.dart';
 class GroupDetailScreen extends ConsumerStatefulWidget {
   final String groupId;
 
-  const GroupDetailScreen({
-    super.key,
-    required this.groupId,
-  });
+  const GroupDetailScreen({super.key, required this.groupId});
 
   @override
   ConsumerState<GroupDetailScreen> createState() => _GroupDetailScreenState();
@@ -37,7 +34,6 @@ class GroupDetailScreen extends ConsumerStatefulWidget {
 class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
 
   // 그룹장 여부 — 데이터 로드 후 세팅
   bool? _isOwner;
@@ -74,9 +70,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     final membersAsync = ref.watch(groupMembersProvider(widget.groupId));
 
     return groupAsync.when(
-      loading: () => const Scaffold(
-        body: LoadingView(),
-      ),
+      loading: () => const Scaffold(body: LoadingView()),
       error: (error, stack) => Scaffold(
         appBar: AppBar(title: Text(l10n.group_groupName)),
         body: ErrorView(
@@ -105,11 +99,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
             title: Text(group.name),
             bottom: AppTabBar(
               controller: _tabController,
-              tabs: [
-                l10n.group_members,
-                l10n.group_settings,
-                l10n.group_role,
-              ],
+              tabs: [l10n.group_members, l10n.group_settings, l10n.group_role],
             ),
           ),
           body: TabBarView(
@@ -120,7 +110,11 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
               _buildRolesTab(group, membersAsync, isOwner, canManageRole),
             ],
           ),
-          floatingActionButton: _buildFloatingActionButton(canManage, isOwner, canManageRole),
+          floatingActionButton: _buildFloatingActionButton(
+            canManage,
+            isOwner,
+            canManageRole,
+          ),
         );
       },
     );
@@ -155,12 +149,8 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         widget.groupId,
         member,
       ),
-      onTransferOwnership: (member) => TransferOwnershipDialog.show(
-        context,
-        ref,
-        widget.groupId,
-        member,
-      ),
+      onTransferOwnership: (member) =>
+          TransferOwnershipDialog.show(context, ref, widget.groupId, member),
       onAcceptRequest: (request) => _handleAcceptRequest(l10n, request),
       onRejectRequest: (request) => _handleRejectRequest(l10n, request),
       onCancelInvite: (request) => _handleCancelInvite(l10n, request),
@@ -169,28 +159,33 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   }
 
   /// 가입 요청 승인 처리
-  Future<void> _handleAcceptRequest(AppLocalizations l10n, JoinRequest request) async {
+  Future<void> _handleAcceptRequest(
+    AppLocalizations l10n,
+    JoinRequest request,
+  ) async {
     try {
-      await ref.read(groupNotifierProvider.notifier).acceptJoinRequest(
-            widget.groupId,
-            request.id,
-          );
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .acceptJoinRequest(widget.groupId, request.id);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.group_acceptSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.group_acceptSuccess)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
 
   /// 가입 요청 거부 처리
-  Future<void> _handleRejectRequest(AppLocalizations l10n, JoinRequest request) async {
+  Future<void> _handleRejectRequest(
+    AppLocalizations l10n,
+    JoinRequest request,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -212,31 +207,33 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     if (confirmed != true) return;
 
     try {
-      await ref.read(groupNotifierProvider.notifier).rejectJoinRequest(
-            widget.groupId,
-            request.id,
-          );
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .rejectJoinRequest(widget.groupId, request.id);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.group_rejectSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.group_rejectSuccess)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
 
   /// 초대 취소 처리
-  Future<void> _handleCancelInvite(AppLocalizations l10n, JoinRequest request) async {
+  Future<void> _handleCancelInvite(
+    AppLocalizations l10n,
+    JoinRequest request,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('초대 취소'),
-        content: Text('${request.email}에게 보낸 초대를 취소하시겠습니까?'),
+        title: Text(l10n.group_invite_cancel),
+        content: Text(l10n.group_invite_cancel_message(request.email)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -244,7 +241,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
         ],
       ),
@@ -253,47 +250,52 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     if (confirmed != true) return;
 
     try {
-      await ref.read(groupNotifierProvider.notifier).cancelInvite(
-            widget.groupId,
-            request.id,
-          );
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .cancelInvite(widget.groupId, request.id);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('초대가 취소되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.group_invite_canceled)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
 
   /// 초대 재전송 처리
-  Future<void> _handleResendInvite(AppLocalizations l10n, JoinRequest request) async {
+  Future<void> _handleResendInvite(
+    AppLocalizations l10n,
+    JoinRequest request,
+  ) async {
     try {
-      await ref.read(groupNotifierProvider.notifier).resendInvite(
-            widget.groupId,
-            request.id,
-          );
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .resendInvite(widget.groupId, request.id);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${request.email}에게 초대 이메일이 재전송되었습니다')),
+          SnackBar(content: Text(l10n.group_invite_resent(request.email))),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
 
   /// 설정 탭 빌드
-  Widget _buildSettingsTab(Group group, AsyncValue<List<GroupMember>> membersAsync, bool canManage) {
+  Widget _buildSettingsTab(
+    Group group,
+    AsyncValue<List<GroupMember>> membersAsync,
+    bool canManage,
+  ) {
     final l10n = AppLocalizations.of(context)!;
 
     return SettingsTab(
@@ -336,13 +338,8 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         isOwner: isOwner,
         canManageRole: canManageRole,
         onRetry: () => ref.invalidate(groupRolesProvider(widget.groupId)),
-        onEditRole: (role) => GroupRoleEditDialog.show(
-          context,
-          ref,
-          l10n,
-          widget.groupId,
-          role,
-        ),
+        onEditRole: (role) =>
+            GroupRoleEditDialog.show(context, ref, l10n, widget.groupId, role),
         onDeleteRole: (role) => GroupRoleDeleteDialog.show(
           context,
           ref,
@@ -355,7 +352,11 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
   }
 
   /// FloatingActionButton 빌드
-  Widget? _buildFloatingActionButton(bool canManage, bool isOwner, bool canManageRole) {
+  Widget? _buildFloatingActionButton(
+    bool canManage,
+    bool isOwner,
+    bool canManageRole,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     final tabIndex = _tabController.index;
 
@@ -363,14 +364,10 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
       // 역할 탭 - 역할 추가 버튼
       return FloatingActionButton.extended(
         key: _fabKey,
-        onPressed: () => GroupRoleCreateDialog.show(
-          context,
-          ref,
-          l10n,
-          widget.groupId,
-        ),
+        onPressed: () =>
+            GroupRoleCreateDialog.show(context, ref, l10n, widget.groupId),
         icon: const Icon(Icons.add),
-        label: const Text('역할 추가'),
+        label: Text(l10n.group_role_add),
       );
     }
 
@@ -384,21 +381,20 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     try {
       final colorHex = ColorUtils.colorToHex(color);
 
-      await ref.read(groupNotifierProvider.notifier).updateMyColor(
-        widget.groupId,
-        colorHex,
-      );
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .updateMyColor(widget.groupId, colorHex);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.group_updateSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.group_updateSuccess)));
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('색상 변경 실패: ${e.toString()}'),
+            content: Text('${l10n.group_color_change_failed}\n$e'),
             duration: const Duration(seconds: 5),
           ),
         );
@@ -408,22 +404,25 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
 
   /// 색상 초기화 (그룹 기본 색상으로 되돌림)
   Future<void> _resetColor() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
-      await ref.read(groupNotifierProvider.notifier).updateMyColor(
-        widget.groupId,
-        null, // null을 전달하여 customColor 제거
-      );
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .updateMyColor(
+            widget.groupId,
+            null, // null을 전달하여 customColor 제거
+          );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('그룹 기본 색상으로 초기화되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.group_color_reset)));
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('색상 초기화 실패: ${e.toString()}'),
+            content: Text('${l10n.group_color_reset_failed}\n$e'),
             duration: const Duration(seconds: 5),
           ),
         );

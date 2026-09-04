@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 
 /// 포인트 상점 아이템 리스트 아이템
@@ -22,6 +23,7 @@ class ShopItemListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListTile(
@@ -89,17 +91,19 @@ class ShopItemListItem extends StatelessWidget {
               },
               itemBuilder: (context) => [
                 if (onEdit != null)
-                  const PopupMenuItem(value: 'edit', child: Text('수정')),
+                  PopupMenuItem(value: 'edit', child: Text(l10n.common_edit)),
                 if (onToggleActive != null)
                   PopupMenuItem(
                     value: 'toggle',
-                    child: Text(item.isActive ? '비활성화' : '활성화'),
+                    child: Text(item.isActive
+                        ? l10n.common_deactivate
+                        : l10n.common_activate),
                   ),
                 if (onDelete != null)
                   PopupMenuItem(
                     value: 'delete',
                     child: Text(
-                      '삭제',
+                      l10n.common_delete,
                       style: TextStyle(color: colorScheme.error),
                     ),
                   ),

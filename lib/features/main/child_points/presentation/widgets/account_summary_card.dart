@@ -39,7 +39,8 @@ class AccountSummaryCard extends StatelessWidget {
               value: account.balance.toInt().toString(),
               unit: 'P',
               subtitle: plan != null
-                  ? '≈ ${(account.balance * plan!.pointToMoneyRatio).toInt()}원'
+                  ? l10n.childcare_approx_money(
+                      '${(account.balance * plan!.pointToMoneyRatio).toInt()}')
                   : null,
             ),
             const SizedBox(height: AppSizes.spaceS),
@@ -53,8 +54,9 @@ class AccountSummaryCard extends StatelessWidget {
                 color: Colors.green,
                 label: l10n.childcare_monthly_allowance,
                 value: plan!.monthlyPoints.toString(),
-                unit: 'P/월',
-                subtitle: '매월 ${plan!.payDay}일 · 1P=${plan!.pointToMoneyRatio}원',
+                unit: l10n.childcare_points_per_month,
+                subtitle: l10n.childcare_plan_summary(
+                    '${plan!.payDay}', '${plan!.pointToMoneyRatio}'),
               ),
               const SizedBox(height: AppSizes.spaceS),
             ],
@@ -76,7 +78,7 @@ class AccountSummaryCard extends StatelessWidget {
                     child: FilledButton.icon(
                       onPressed: onAddTransaction,
                       icon: const Icon(Icons.card_giftcard_outlined, size: AppSizes.iconSmall),
-                      label: const Text('보너스 지급'),
+                      label: Text(l10n.childcare_bonus_give),
                     ),
                   ),
                 if (onCashout != null) ...[
@@ -84,7 +86,7 @@ class AccountSummaryCard extends StatelessWidget {
                   OutlinedButton.icon(
                     onPressed: onCashout,
                     icon: const Icon(Icons.payments_outlined, size: AppSizes.iconSmall),
-                    label: const Text('현금화'),
+                    label: Text(l10n.childcare_cashout_button),
                   ),
                 ],
               ],

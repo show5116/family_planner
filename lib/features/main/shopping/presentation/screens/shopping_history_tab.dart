@@ -146,7 +146,7 @@ class _LoadMoreButton extends StatelessWidget {
         padding: const EdgeInsets.all(AppSizes.spaceM),
         child: TextButton(
           onPressed: onTap,
-          child: const Text('더 보기'),
+          child: Text(AppLocalizations.of(context)!.common_more),
         ),
       ),
     );

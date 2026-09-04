@@ -23,7 +23,7 @@ class _TotalPriceBar extends StatelessWidget {
               size: 16, color: colorScheme.onSurfaceVariant),
           const SizedBox(width: AppSizes.spaceS),
           Text(
-            '합계',
+            AppLocalizations.of(context)!.cart_total,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -339,7 +339,9 @@ class _CartItemTileState extends State<_CartItemTile> {
                       child: TextField(
                         controller: _priceCtrl,
                         decoration: InputDecoration(
-                          hintText: _isUnitPrice ? '개당 금액 입력' : '총 금액 입력',
+                          hintText: _isUnitPrice
+                              ? l10n.cart_price_unit_hint
+                              : l10n.cart_price_total_hint,
                           suffixText: _priceCtrl.text.isNotEmpty ? '원' : null,
                           helperText: priceHint,
                           helperStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -384,7 +386,9 @@ class _CartItemTileState extends State<_CartItemTile> {
                             ),
                           ),
                           child: Text(
-                            _isUnitPrice ? '개당' : '총액',
+                            _isUnitPrice
+                                ? l10n.cart_price_unit
+                                : l10n.cart_price_total,
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                   color: _isUnitPrice
                                       ? colorScheme.primary

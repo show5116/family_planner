@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
@@ -16,7 +17,8 @@ class InviteLandingScreen extends ConsumerStatefulWidget {
   const InviteLandingScreen({super.key, required this.inviteCode});
 
   @override
-  ConsumerState<InviteLandingScreen> createState() => _InviteLandingScreenState();
+  ConsumerState<InviteLandingScreen> createState() =>
+      _InviteLandingScreenState();
 }
 
 class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
@@ -45,7 +47,9 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
     });
 
     try {
-      await ref.read(groupNotifierProvider.notifier).joinGroup(widget.inviteCode);
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .joinGroup(widget.inviteCode);
       ref.read(pendingInviteCodeProvider.notifier).state = null;
       if (mounted) setState(() => _isSuccess = true);
     } catch (e) {
@@ -60,11 +64,12 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isAuthenticated = ref.watch(authProvider).isAuthenticated;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('그룹 초대')),
+      appBar: AppBar(title: Text(l10n.invite_title)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -75,13 +80,14 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
   }
 
   Widget _buildBody(ThemeData theme, bool? isAuthenticated) {
+    final l10n = AppLocalizations.of(context)!;
     if (_isLoading) {
-      return const Column(
+      return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('그룹에 가입 중...'),
+          const CircularProgressIndicator(),
+          const SizedBox(height: 16),
+          Text(l10n.invite_joining),
         ],
       );
     }
@@ -90,13 +96,17 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.check_circle_outline, size: 64, color: theme.colorScheme.primary),
+          Icon(
+            Icons.check_circle_outline,
+            size: 64,
+            color: theme.colorScheme.primary,
+          ),
           const SizedBox(height: 16),
-          Text('그룹 가입 완료!', style: theme.textTheme.titleLarge),
+          Text(l10n.invite_joined, style: theme.textTheme.titleLarge),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: () => context.go(AppRoutes.home),
-            child: const Text('홈으로'),
+            child: Text(l10n.invite_go_home),
           ),
         ],
       );
@@ -106,20 +116,26 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.group_add_outlined, size: 64, color: theme.colorScheme.primary),
+          Icon(
+            Icons.group_add_outlined,
+            size: 64,
+            color: theme.colorScheme.primary,
+          ),
           const SizedBox(height: 16),
-          Text('그룹 초대', style: theme.textTheme.titleLarge),
+          Text(l10n.invite_title, style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
           Text(
-            '초대 코드: ${widget.inviteCode}',
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
+            l10n.invite_code_label(widget.inviteCode),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.outline,
+            ),
           ),
           const SizedBox(height: 8),
-          const Text('로그인 후 그룹에 가입할 수 있어요.'),
+          Text(l10n.invite_login_required),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: () => context.go(AppRoutes.login),
-            child: const Text('로그인하기'),
+            child: Text(l10n.invite_login),
           ),
         ],
       );
@@ -131,15 +147,18 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
       children: [
         Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
         const SizedBox(height: 16),
-        Text('가입 실패', style: theme.textTheme.titleLarge),
+        Text(l10n.invite_failed, style: theme.textTheme.titleLarge),
         const SizedBox(height: 8),
-        Text(_errorMessage ?? '알 수 없는 오류가 발생했어요.', textAlign: TextAlign.center),
+        Text(
+          _errorMessage ?? l10n.invite_unknown_error,
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: 24),
-        FilledButton(onPressed: _joinGroup, child: const Text('다시 시도')),
+        FilledButton(onPressed: _joinGroup, child: Text(l10n.common_retry)),
         const SizedBox(height: 8),
         TextButton(
           onPressed: () => context.go(AppRoutes.home),
-          child: const Text('홈으로'),
+          child: Text(l10n.invite_go_home),
         ),
       ],
     );

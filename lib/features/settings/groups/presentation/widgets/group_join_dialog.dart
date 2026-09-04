@@ -74,22 +74,23 @@ class GroupJoinDialog {
   ) async {
     if (formKey.currentState!.validate()) {
       try {
-        final result = await ref.read(groupNotifierProvider.notifier).joinGroup(
-              codeController.text.trim(),
-            );
+        final result = await ref
+            .read(groupNotifierProvider.notifier)
+            .joinGroup(codeController.text.trim());
 
         if (dialogContext.mounted) {
           Navigator.pop(dialogContext);
-          final message = result['message'] as String? ?? l10n.group_joinSuccess;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message)),
-          );
+          final message =
+              result['message'] as String? ?? l10n.group_joinSuccess;
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(message)));
         }
       } catch (e) {
         if (dialogContext.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('오류: ${e.toString()}')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('오류: ${e.toString()}')));
         }
       }
     }

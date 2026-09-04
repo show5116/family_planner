@@ -94,7 +94,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             IconButton(
               key: _addChildKey,
               icon: const Icon(Icons.person_add_outlined),
-              tooltip: '자녀 등록',
+              tooltip: l10n.childcare_child_register,
               onPressed: _isDemo
                   ? null
                   : () => context.push(
@@ -109,7 +109,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
                 MoreMenuItem(
                   id: 'allowance',
                   icon: Icons.monetization_on_outlined,
-                  label: '용돈 플랜 설정',
+                  label: l10n.childcare_allowance_setup_button,
                   onTap: (ctx) => ctx.push(
                     AppRoutes.childPointsAllowancePlan,
                     extra: {'childId': selectedChildId},
@@ -118,7 +118,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
                 MoreMenuItem(
                   id: 'link',
                   icon: Icons.link,
-                  label: '앱 계정 연동',
+                  label: l10n.childcare_link_account,
                   onTap: (ctx) => ctx.push(
                     AppRoutes.childPointsLinkUser,
                     extra: {'childId': selectedChildId},

@@ -100,6 +100,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
   Widget _buildTagChips(List<String> tags) {
     if (tags.isEmpty) return const SizedBox.shrink();
 
+    final l10n = AppLocalizations.of(context)!;
     final hasSelection = _selectedTag != null;
 
     return SizedBox(
@@ -110,7 +111,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
           Padding(
             padding: const EdgeInsets.only(left: AppSizes.spaceM),
             child: IconButton(
-              tooltip: '태그 필터 초기화',
+              tooltip: l10n.memo_tag_filter_clear,
               onPressed: () => _selectTag(null),
               icon: Icon(
                 Icons.filter_alt_off_outlined,
@@ -229,11 +230,13 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
                         final items = <Object>[];
                         if (hasPinned) {
                           items.add(_SectionHeader(
-                            label: '📌 고정된 메모',
+                            label: '📌 ${l10n.memo_section_pinned}',
                             trailing: showCollapse
                                 ? _pinnedCollapsed
-                                    ? '펼치기 (${pinned.length - collapseThreshold}개 더)'
-                                    : '접기'
+                                    ? l10n.memo_pinned_expand(
+                                        pinned.length - collapseThreshold,
+                                      )
+                                    : l10n.memo_pinned_collapse
                                 : null,
                             onTrailingTap: showCollapse
                                 ? () => setState(
@@ -242,7 +245,7 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
                           ));
                           items.addAll(visiblePinned);
                           if (normal.isNotEmpty) {
-                            items.add(const _SectionHeader(label: '메모'));
+                            items.add(_SectionHeader(label: l10n.memo_title));
                           }
                         }
                         items.addAll(normal);
