@@ -109,19 +109,19 @@ struct WidgetScheduleFilter {
 
 extension Array where Element == ScheduleItem {
     func applyFilter(_ filter: WidgetScheduleFilter) -> [ScheduleItem] {
-        self.filter { filter.matches($0.groupId) }
+        self.filter { filter.matches(groupId: $0.groupId) }
     }
 }
 
 extension MonthScheduleData {
     func markedDates(_ filter: WidgetScheduleFilter) -> Set<String> {
-        Set(entries.filter { filter.matches($0.groupId) }.map { $0.date })
+        Set(entries.filter { filter.matches(groupId: $0.groupId) }.map { $0.date })
     }
 
     /// 특정 날짜(dateKey, "yyyy-MM-dd")의 일정 목록을 시간순으로 반환한다
     func items(forDate dateKey: String, filter: WidgetScheduleFilter) -> [ScheduleItem] {
         entries
-            .filter { $0.date == dateKey && filter.matches($0.groupId) }
+            .filter { $0.date == dateKey && filter.matches(groupId: $0.groupId) }
             .map { $0.item }
             .sorted { ($0.scheduledAt ?? "") < ($1.scheduledAt ?? "") }
     }

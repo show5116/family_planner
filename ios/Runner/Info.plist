@@ -124,6 +124,16 @@
 				<string>kakao144947609e42ac1b0ad1746fdf57d643</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.hmncorp.familyplanner.widget</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>familyplanner</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
