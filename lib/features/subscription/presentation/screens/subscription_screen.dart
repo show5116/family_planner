@@ -53,14 +53,22 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
         padding: const EdgeInsets.all(AppSizes.spaceM),
         children: [
           subscriptionAsync.when(
+            // 구매·복원 중이거나 실패했다고 해서 현재 플랜 카드가 사라지면
+            // 안 된다. 직전 값이 남아 있으면 그대로 그린다.
+            // (진행 표시는 버튼 비활성화, 실패 안내는 스낵바가 맡는다.)
+            skipLoadingOnReload: true,
+            skipError: true,
             data: (subscription) => _CurrentPlanCard(subscription: subscription),
             loading: () => const Center(child: CircularProgressIndicator()),
+            // 최초 로드조차 못 한 경우만 여기 온다. subscriptionProvider는
+            // 서버 실패 시 캐시 → free로 폴백하므로 사실상 도달하지 않는다.
             error: (e, st) => const SizedBox.shrink(),
           ),
           const SizedBox(height: AppSizes.spaceM),
           _PlanComparison(
             currentTier:
                 subscriptionAsync.valueOrNull?.tier ?? SubscriptionTier.free,
+            isTrial: subscriptionAsync.valueOrNull?.isTrial ?? false,
             isPurchasing: _isPurchasing,
             onPurchase: _onPurchase,
           ),
@@ -219,7 +227,51 @@ class _CurrentPlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final tier = subscription.tier;
+    final isTrial = subscription.isTrial;
+    final expiresAt = subscription.expiresAt;
+
+    // 체험은 tier가 adFree라 tier만으로는 유료 구독과 구별되지 않는다.
+    // 배지 색도 설정 화면과 맞춰 체험은 primary로 구분한다.
+    final badgeColor = isTrial ? colorScheme.primary : tier.color;
+    final badgeLabel = switch (tier) {
+      SubscriptionTier.free => l10n.subscription_free_label,
+      SubscriptionTier.adFree when isTrial => l10n.subscription_trial_label,
+      SubscriptionTier.adFree => l10n.subscription_ad_free_label,
+      SubscriptionTier.premium => l10n.subscription_premium_label,
+    };
+
+    // 유료로 이용 중인 구독. 체험은 tier가 adFree여도 결제 갱신이 아니라
+    // 무료 플랜으로 전환되므로 갱신 안내 대상이 아니다.
+    final isPaidActive = subscription.isActive && !isTrial;
+    final autoRenewing = subscription.autoRenewing;
+
+    // 같은 날짜라도 상황에 따라 의미가 다르다. 자동 갱신 중인 구독자에게
+    // "만료일"이라고만 쓰면 서비스가 끊기는 날로 읽힌다.
+    final dateLabel = !subscription.isActive
+        ? l10n.subscription_expires_at_label
+        : isTrial
+        ? l10n.subscription_trial_ends_at_label
+        : autoRenewing == true
+        ? l10n.subscription_next_renewal_label
+        : l10n.subscription_period_end_label;
+
+    // 남은 기간은 서버가 준 daysLeft를 그대로 쓴다. 기기 시계로 다시 계산하면
+    // 서버와 어긋난다. 만료·무료면 서버가 0을 주므로 활성일 때만 보여준다.
+    final showDaysLeft = subscription.isActive && expiresAt != null;
+
+    // 갱신 안내는 서버가 준 autoRenewing에 따라 셋으로 갈린다.
+    // - false: 해지된 상태다. 만료일에 끝난다고 분명히 알린다.
+    // - true : 라벨이 이미 "다음 갱신일"이라 문구를 더 붙이지 않는다.
+    // - null : 구버전 서버라 단정할 수 없다. "해지하지 않으면" 조건절로 쓴다.
+    final renewHint = !isPaidActive || expiresAt == null
+        ? null
+        : autoRenewing == false
+        ? l10n.subscription_canceled_hint
+        : autoRenewing == null
+        ? l10n.subscription_auto_renew_hint
+        : null;
 
     return Card(
       child: Padding(
@@ -229,14 +281,14 @@ class _CurrentPlanCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.workspace_premium_outlined, color: tier.color),
+                Icon(Icons.workspace_premium_outlined, color: badgeColor),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
                   l10n.subscription_current_plan_label,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const Spacer(),
-                _TierBadge(tier: tier),
+                _TierBadge(label: badgeLabel, color: badgeColor),
               ],
             ),
             const Divider(height: AppSizes.spaceL),
@@ -247,11 +299,29 @@ class _CurrentPlanCard extends StatelessWidget {
                   : l10n.subscription_inactive,
               valueColor: subscription.isActive ? AppColors.success : null,
             ),
-            if (subscription.expiresAt != null) ...[
+            if (expiresAt != null) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              _InfoRow(label: dateLabel, value: _formatDate(expiresAt)),
+            ],
+            if (showDaysLeft) ...[
               const SizedBox(height: AppSizes.spaceS),
               _InfoRow(
-                label: l10n.subscription_expires_at_label,
-                value: _formatDate(subscription.expiresAt!),
+                label: l10n.subscription_days_left_label,
+                value: subscription.daysLeft > 0
+                    ? l10n.subscription_days_left_value(subscription.daysLeft)
+                    : l10n.subscription_days_left_today,
+              ),
+            ],
+            if (renewHint != null) ...[
+              const SizedBox(height: AppSizes.spaceS),
+              Text(
+                renewHint,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      // 해지 상태는 놓치면 안 되는 정보라 강조한다.
+                      color: autoRenewing == false
+                          ? AppColors.warning
+                          : colorScheme.onSurfaceVariant,
+                    ),
               ),
             ],
           ],
@@ -275,11 +345,16 @@ class _CurrentPlanCard extends StatelessWidget {
 class _PlanComparison extends StatelessWidget {
   const _PlanComparison({
     required this.currentTier,
+    required this.isTrial,
     required this.isPurchasing,
     required this.onPurchase,
   });
 
   final SubscriptionTier currentTier;
+
+  /// 결제 없이 서버가 부여한 무료 체험인지 여부.
+  final bool isTrial;
+
   final bool isPurchasing;
   final void Function(String productId) onPurchase;
 
@@ -331,9 +406,12 @@ class _PlanComparison extends StatelessWidget {
                     (true, l10n.subscription_benefit_no_reward_ads),
                     (true, l10n.subscription_benefit_cancel_anytime),
                   ],
-                  // 이미 구독 중이면 카드 상단 "현재 플랜" 배지로 충분히 드러나므로
-                  // 구매 버튼은 새로 구독 가능한 경우에만 보여준다.
-                  action: currentTier == SubscriptionTier.adFree
+                  // 이미 결제로 구독 중이면 카드 상단 "현재 플랜" 배지로 충분히
+                  // 드러나므로 구매 버튼을 숨긴다. 다만 무료 체험은 tier가
+                  // adFree여도 결제 수단이 없는 상태라, 체험이 끝나기 전에
+                  // 구독할 길을 남겨둬야 한다 (심사에서도 이 화면으로 결제
+                  // 플로우를 확인한다).
+                  action: currentTier == SubscriptionTier.adFree && !isTrial
                       ? null
                       : adFreeProduct == null
                           ? Text(
@@ -608,9 +686,12 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _TierBadge extends StatelessWidget {
-  const _TierBadge({required this.tier});
+  // tier를 그대로 받으면 `tier.displayName`(한국어 하드코딩)이 찍히고,
+  // 체험과 유료 광고 제거가 같은 문구로 보인다. 라벨과 색을 받아 쓴다.
+  const _TierBadge({required this.label, required this.color});
 
-  final SubscriptionTier tier;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -620,14 +701,14 @@ class _TierBadge extends StatelessWidget {
         vertical: AppSizes.spaceXS,
       ),
       decoration: BoxDecoration(
-        color: tier.color.withValues(alpha: 0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-        border: Border.all(color: tier.color.withValues(alpha: 0.4)),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Text(
-        tier.displayName,
+        label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: tier.color,
+              color: color,
               fontWeight: FontWeight.bold,
             ),
       ),
