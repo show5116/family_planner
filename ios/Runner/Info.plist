@@ -24,6 +24,15 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<!-- Flutter 내장 딥링크 라우팅 비활성화.
+	     켜져 있으면 들어온 URL이 GoRouter 경로로 그대로 넘어가, 위젯의
+	     familyplanner://widget/add 가 매칭되는 라우트를 못 찾아 "페이지를
+	     찾을 수 없습니다" 에러 화면이 뜬다. 이 앱은 위젯 링크를
+	     HomeWidgetLinkService(home_widget), 유니버설 링크를
+	     DeepLinkService(app_links)가 각각 플러그인 채널로 받아 직접
+	     라우팅하므로 내장 처리와 겹치기만 한다. -->
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-1069302827856916~8730025923</string>
 	<key>LSRequiresIPhoneOS</key>
