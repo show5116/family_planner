@@ -10,8 +10,8 @@ class LanguageSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentLanguage = ref.watch(currentLanguageProvider);
     final l10n = AppLocalizations.of(context)!;
+    final currentLanguage = ref.watch(currentLanguageProvider);
 
     return Scaffold(
       appBar: AppBar(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/auth/services/oauth_popup_helper_web.dart';
 
@@ -83,19 +84,20 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // 팝업인 경우 간단한 메시지만 표시
     if (kIsWeb && OAuthPopupHelper.isPopup()) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(),
               SizedBox(height: 16),
-              Text('로그인 처리 중...'),
+              Text(l10n.auth_login_processing),
               SizedBox(height: 8),
               Text(
-                '잠시만 기다려주세요.',
+                l10n.auth_please_wait,
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
@@ -113,7 +115,7 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
                   const CircularProgressIndicator(),
                   const SizedBox(height: 16),
                   Text(
-                    '로그인 처리 중...',
+                    l10n.auth_login_processing,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
@@ -128,19 +130,19 @@ class _OAuthCallbackScreenState extends ConsumerState<OAuthCallbackScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '로그인 실패',
+                    l10n.auth_login_failed,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _error ?? '알 수 없는 오류가 발생했습니다',
+                    _error ?? l10n.common_unknownError,
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => context.go(AppRoutes.login),
-                    child: const Text('로그인 화면으로 돌아가기'),
+                    child: Text(l10n.auth_back_to_login),
                   ),
                 ],
               ),

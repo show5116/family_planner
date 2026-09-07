@@ -7027,4 +7027,2212 @@ class AppLocalizationsEn extends AppLocalizations {
   String childcare_plan_summary(String day, String amount) {
     return 'Day $day · 1P=$amount KRW';
   }
+
+  @override
+  String get task_recurring_guide => 'How repeats work';
+
+  @override
+  String get task_recurring_guide_body =>
+      'Repeating events are created ahead of time like this.';
+
+  @override
+  String get task_recurring_daily_weekly => 'Daily / weekly';
+
+  @override
+  String get task_recurring_monthly_unit => 'Monthly';
+
+  @override
+  String get task_recurring_yearly_unit => 'Yearly';
+
+  @override
+  String get task_recurring_every_month => 'Every month';
+
+  @override
+  String get task_recurring_every_2months => 'Every 2 months';
+
+  @override
+  String get task_recurring_every_3months => 'Every 3 months';
+
+  @override
+  String get task_recurring_every_year => 'Every year';
+
+  @override
+  String get task_recurring_every_2years => 'Every 2 years';
+
+  @override
+  String task_recurring_ahead_months(String months) {
+    return '$months months ahead';
+  }
+
+  @override
+  String get task_recurring_ahead_3months => '3 months ahead';
+
+  @override
+  String get task_lunar => 'Lunar';
+
+  @override
+  String get task_lunar_leap_prefix => 'Leap ';
+
+  @override
+  String task_lunar_date(String prefix, String month, String day) {
+    return 'Lunar $prefix$month/$day';
+  }
+
+  @override
+  String get task_lunar_pick => 'Pick a lunar date';
+
+  @override
+  String get task_month => 'Month';
+
+  @override
+  String get task_day => 'Day';
+
+  @override
+  String task_month_value(String month) {
+    return '$month';
+  }
+
+  @override
+  String task_day_value(String day) {
+    return '$day';
+  }
+
+  @override
+  String get task_leap_month => 'Leap month';
+
+  @override
+  String get task_leap_month_desc =>
+      'In years without a leap month, the same day of that month is used.';
+
+  @override
+  String get task_skip_settings => 'Skip settings';
+
+  @override
+  String get task_skip_weekend => 'Weekends';
+
+  @override
+  String get task_skip_holiday => 'Holidays';
+
+  @override
+  String get task_skip_when => 'When skipped';
+
+  @override
+  String get task_skip_do => 'Skip it';
+
+  @override
+  String get task_skip_next_weekday => 'Next weekday';
+
+  @override
+  String get anniversary_detail => 'Anniversary';
+
+  @override
+  String get anniversary_date => 'Date';
+
+  @override
+  String get anniversary_created_at => 'Added';
+
+  @override
+  String get anniversary_delete => 'Delete anniversary';
+
+  @override
+  String anniversary_delete_message(String title) {
+    return 'Delete \"$title\"?';
+  }
+
+  @override
+  String get anniversary_delete_linked => 'Also delete the linked events';
+
+  @override
+  String get anniversary_delete_linked_desc => 'Uncheck to keep the events';
+
+  @override
+  String get anniversary_delete_failed => 'Couldn\'t delete';
+
+  @override
+  String get anniversary_days_elapsed => 'Days so far';
+
+  @override
+  String get anniversary_next => 'Next';
+
+  @override
+  String get anniversary_upcoming => 'Coming up';
+
+  @override
+  String get anniversary_collapse => 'Collapse';
+
+  @override
+  String anniversary_show_more(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String get anniversary_every100 => 'Every 100 days (D+100, D+200…)';
+
+  @override
+  String get anniversary_everyYear => 'Every year (1st, 2nd…)';
+
+  @override
+  String get anniversary_auto_create => 'Create reminder events automatically';
+
+  @override
+  String get anniversary_manage => 'Anniversaries';
+
+  @override
+  String get anniversary_add => 'New anniversary';
+
+  @override
+  String get anniversary_edit => 'Edit anniversary';
+
+  @override
+  String get anniversary_load_failed => 'Couldn\'t load anniversaries';
+
+  @override
+  String get anniversary_empty => 'No anniversaries yet';
+
+  @override
+  String get anniversary_name => 'Name';
+
+  @override
+  String get anniversary_name_hint => 'e.g. Wedding anniversary';
+
+  @override
+  String get anniversary_name_required => 'Enter a name';
+
+  @override
+  String get anniversary_create_failed => 'Couldn\'t create it';
+
+  @override
+  String get anniversary_update_failed => 'Couldn\'t update it';
+
+  @override
+  String get common_date => 'Date';
+
+  @override
+  String get task_recurring_edit_title => 'Edit this repeating event?';
+
+  @override
+  String get task_recurring_edit_this => 'This event only';
+
+  @override
+  String get task_recurring_edit_following => 'This and following events';
+
+  @override
+  String get task_recurring_delete_title => 'Delete this repeating event?';
+
+  @override
+  String get task_recurring_delete_this => 'This event only';
+
+  @override
+  String get task_recurring_delete_following => 'This and following events';
+
+  @override
+  String get task_recurring_delete_all => 'All events in the series';
+
+  @override
+  String get task_label_type => 'Type';
+
+  @override
+  String get task_label_category => 'Category';
+
+  @override
+  String get task_label_createdAt => 'Created';
+
+  @override
+  String get task_completed => 'Done';
+
+  @override
+  String get task_inactive => '(inactive)';
+
+  @override
+  String task_start_at(String date, String time) {
+    return 'Starts $date $time';
+  }
+
+  @override
+  String task_end_at(String date, String time) {
+    return 'Ends $date $time';
+  }
+
+  @override
+  String task_end_time_only(String time) {
+    return 'Ends $time';
+  }
+
+  @override
+  String get task_type_calendarOnly => 'Calendar only';
+
+  @override
+  String get task_type_todoLinked => 'Calendar + to-do';
+
+  @override
+  String get task_type_todoOnly => 'To-do only';
+
+  @override
+  String get task_type_default => 'Event';
+
+  @override
+  String get task_coach_title_title => 'Event title';
+
+  @override
+  String get task_coach_title_desc =>
+      'Name the event — short and clear works best.';
+
+  @override
+  String get task_coach_date_title => 'Date and time';
+
+  @override
+  String get task_coach_date_desc =>
+      'Set the start and end dates, and the time.';
+
+  @override
+  String get task_coach_type_title => 'Event type';
+
+  @override
+  String get task_coach_type_desc => 'Choose an event, a to-do, or both.';
+
+  @override
+  String get task_coach_participants_title => 'Participants';
+
+  @override
+  String get task_coach_participants_desc =>
+      'Invite group members — they\'ll get a notification.';
+
+  @override
+  String get common_skip => 'Skip';
+
+  @override
+  String get task_place_search_hint => 'Search a place or address';
+
+  @override
+  String get task_place_search_prompt => 'Search for a place';
+
+  @override
+  String get notif_settings => 'Notifications';
+
+  @override
+  String notif_hour_am(String hour) {
+    return '$hour AM';
+  }
+
+  @override
+  String get notif_hour_noon => 'Noon';
+
+  @override
+  String notif_hour_pm(String hour) {
+    return '$hour PM';
+  }
+
+  @override
+  String get notif_task => 'Events';
+
+  @override
+  String get notif_task_desc => 'Get a heads-up before an event starts';
+
+  @override
+  String get notif_todo => 'To-dos';
+
+  @override
+  String get notif_todo_desc => 'Get reminded before a to-do is due';
+
+  @override
+  String get notif_household => 'Household budget';
+
+  @override
+  String get notif_household_desc => 'Notifications about your budget';
+
+  @override
+  String get notif_assets => 'Assets';
+
+  @override
+  String get notif_assets_desc => 'Notifications when your assets change';
+
+  @override
+  String get notif_childcare => 'Child points';
+
+  @override
+  String get notif_childcare_desc => 'Notifications about child points';
+
+  @override
+  String get notif_group => 'Groups';
+
+  @override
+  String get notif_group_desc => 'Notifications about your groups';
+
+  @override
+  String get notif_savings => 'Savings';
+
+  @override
+  String get notif_savings_desc =>
+      'Notifications about savings goals and deposits';
+
+  @override
+  String get notif_system => 'System';
+
+  @override
+  String get notif_system_desc => 'Important service notices';
+
+  @override
+  String get notif_weather => 'Weather';
+
+  @override
+  String get notif_weather_desc => 'Rain, snow, or a big temperature swing';
+
+  @override
+  String get notif_weather_time => 'Weather alert time';
+
+  @override
+  String get notif_weather_time_desc =>
+      'Sent when you open the app after this time';
+
+  @override
+  String get notif_routine => 'Routines';
+
+  @override
+  String get notif_routine_desc => 'Reminders, badges, and a weekly summary';
+
+  @override
+  String get notif_routine_time => 'Routine reminder time';
+
+  @override
+  String get notif_routine_time_desc =>
+      'We\'ll nudge you if anything is still unchecked by then';
+
+  @override
+  String get notif_unread => 'Unread';
+
+  @override
+  String get notif_mark_all_read => 'Mark all read';
+
+  @override
+  String get notif_view_all => 'See all';
+
+  @override
+  String get notif_mark_read => 'Mark as read';
+
+  @override
+  String get notif_action_failed => 'Couldn\'t update the notification';
+
+  @override
+  String notif_marked_read_count(int count) {
+    return 'Marked $count as read';
+  }
+
+  @override
+  String get notif_mark_all_failed => 'Couldn\'t mark all as read';
+
+  @override
+  String get notif_none_new => 'No new notifications';
+
+  @override
+  String get notif_load_failed => 'Couldn\'t load notifications';
+
+  @override
+  String get notif_permission => 'Notification permission';
+
+  @override
+  String get notif_permission_granted => 'Notifications allowed';
+
+  @override
+  String get notif_permission_denied => 'Notifications denied';
+
+  @override
+  String get notif_permission_on => 'On';
+
+  @override
+  String get notif_permission_off => 'Off';
+
+  @override
+  String get notif_permission_on_desc => 'You\'ll receive push notifications.';
+
+  @override
+  String get notif_permission_off_desc =>
+      'Allow notifications to receive them.';
+
+  @override
+  String get notif_permission_request => 'Allow';
+
+  @override
+  String get notif_permission_settings => 'Open settings';
+
+  @override
+  String get location_permission => 'Location permission';
+
+  @override
+  String get location_permission_granted => 'Location allowed';
+
+  @override
+  String get location_permission_denied => 'Location denied';
+
+  @override
+  String get location_permission_on_desc =>
+      'Your location is used for weather alerts.';
+
+  @override
+  String get location_permission_off_desc =>
+      'Allow location to get weather alerts.\nIt\'s used only for weather alerts and is stored on our server.';
+
+  @override
+  String get notif_delete => 'Delete notification';
+
+  @override
+  String get notif_delete_message => 'Delete this notification?';
+
+  @override
+  String get notif_deleted => 'Notification deleted';
+
+  @override
+  String get notif_delete_failed => 'Couldn\'t delete the notification';
+
+  @override
+  String get notif_title => 'Notifications';
+
+  @override
+  String get notif_empty => 'No notifications';
+
+  @override
+  String get notif_history => 'Notification history';
+
+  @override
+  String get notif_history_desc => 'See the notifications you\'ve received';
+
+  @override
+  String get notif_settings_load_failed =>
+      'Couldn\'t load notification settings';
+
+  @override
+  String get notif_test_send => 'Send a test notification';
+
+  @override
+  String get notif_test_send_desc => 'Sends a test to yourself (admin only)';
+
+  @override
+  String get notif_test_sent => 'Test notification sent';
+
+  @override
+  String get notif_test_failed => 'Couldn\'t send the test notification';
+
+  @override
+  String get common_anonymous => 'Anonymous';
+
+  @override
+  String get common_admin => 'Admin';
+
+  @override
+  String get common_updateDone => 'Save changes';
+
+  @override
+  String get qna_myQuestionsOnly => 'Mine only';
+
+  @override
+  String get qna_allCategories => 'All categories';
+
+  @override
+  String get qna_tab_pending => 'Pending';
+
+  @override
+  String get qna_tab_answered => 'Answered';
+
+  @override
+  String get qna_tab_resolved => 'Resolved';
+
+  @override
+  String qna_searchLabel(String query) {
+    return 'Search: $query';
+  }
+
+  @override
+  String get qna_writeQuestion => 'Ask a question';
+
+  @override
+  String get qna_editQuestion => 'Edit question';
+
+  @override
+  String get qna_searchByTitleOrContent => 'Search title or content';
+
+  @override
+  String qna_emptyByStatus(String status) {
+    return 'No $status questions';
+  }
+
+  @override
+  String qna_emptyByCategory(String category) {
+    return 'No questions in $category';
+  }
+
+  @override
+  String get qna_emptyMine =>
+      'You haven\'t asked anything yet\nGo ahead and ask!';
+
+  @override
+  String get qna_listLoadError => 'Couldn\'t load questions';
+
+  @override
+  String get qna_contentLabel => 'Content';
+
+  @override
+  String get qna_titleLabel => 'Title';
+
+  @override
+  String get qna_contentHintDetailed =>
+      'Describe it in detail — a screenshot helps us answer faster.';
+
+  @override
+  String get qna_contentMaxLength => 'Content can\'t exceed 5000 characters';
+
+  @override
+  String get qna_titleMin5 => 'Title must be at least 5 characters';
+
+  @override
+  String get qna_contentMin10 => 'Content must be at least 10 characters';
+
+  @override
+  String get qna_submitQuestion => 'Post question';
+
+  @override
+  String get qna_writeGuide => 'Before you ask';
+
+  @override
+  String get qna_writeGuideBody =>
+      '• An admin will review and answer.\n• You\'ll get a notification when we reply.\n• You can edit or delete only while it\'s pending.';
+
+  @override
+  String get qna_visibility => 'Visibility';
+
+  @override
+  String get qna_createSuccessDetail =>
+      'Your question is posted.\nWe\'ll notify you when it\'s answered.';
+
+  @override
+  String get qna_questionDetail => 'Question';
+
+  @override
+  String get qna_cannotEditResolved => 'Resolved questions can\'t be edited';
+
+  @override
+  String get qna_resolve => 'Resolve';
+
+  @override
+  String get qna_attachments => 'Attachments';
+
+  @override
+  String get qna_downloadNotReady => 'File download isn\'t available yet';
+
+  @override
+  String qna_answersCount(int count) {
+    return 'Answers ($count)';
+  }
+
+  @override
+  String get qna_resolveTitle => 'Mark as resolved';
+
+  @override
+  String get qna_resolveMessage =>
+      'Mark this as resolved?\nYou won\'t be able to edit it afterwards.';
+
+  @override
+  String get qna_editAnswer => 'Edit answer';
+
+  @override
+  String get qna_deleteAnswer => 'Delete answer';
+
+  @override
+  String get qna_deleteAnswerMessage =>
+      'Delete this answer?\nIt can\'t be restored.';
+
+  @override
+  String get qna_writeAnswer => 'Write an answer';
+
+  @override
+  String get qna_submitAnswer => 'Post answer';
+
+  @override
+  String get qna_submittingAnswer => 'Posting…';
+
+  @override
+  String get qna_resolvedPrompt => 'Did this solve it?';
+
+  @override
+  String get qna_resolvedPromptBody =>
+      'If the answer helped, mark it resolved.\nWe\'ll do it automatically after a week.';
+
+  @override
+  String get common_collapse => 'Collapse';
+
+  @override
+  String get common_required_mark => '(required)';
+
+  @override
+  String get common_errorOccurred => 'Something went wrong';
+
+  @override
+  String get asset_account_order_saved => 'Account order saved';
+
+  @override
+  String get asset_management => 'Asset management';
+
+  @override
+  String get asset_management_placeholder => 'Asset management appears here';
+
+  @override
+  String get asset_record_reminder => 'Record reminder';
+
+  @override
+  String get asset_record_reminder_desc =>
+      'We\'ll remind you to add a record on this day each month.';
+
+  @override
+  String get asset_reminder_day => 'Reminder day';
+
+  @override
+  String asset_monthly_day(String day) {
+    return 'Day $day each month';
+  }
+
+  @override
+  String get asset_reminder_day_note =>
+      'For days 29–31, we send on the last day of shorter months.';
+
+  @override
+  String get asset_withdrawal_record => 'Withdrawal';
+
+  @override
+  String asset_withdrawal_date(String date) {
+    return 'Date: $date';
+  }
+
+  @override
+  String get asset_withdrawal_type => 'Withdrawal type';
+
+  @override
+  String get asset_withdrawal_type_desc =>
+      'Did the money come out of your principal or your gains?';
+
+  @override
+  String get asset_withdrawal_type_required => 'Pick a withdrawal type';
+
+  @override
+  String get asset_withdrawal_amount => 'Amount';
+
+  @override
+  String get asset_amount_invalid => 'Enter a valid amount';
+
+  @override
+  String get asset_memo_optional => 'Note (optional)';
+
+  @override
+  String get asset_memo_hint => 'e.g. Living expenses, taking profit';
+
+  @override
+  String get asset_save_failed => 'Couldn\'t save';
+
+  @override
+  String get asset_withdrawal_from_principal =>
+      'From principal (spending, transfers)';
+
+  @override
+  String get asset_holding_add => 'Add a holding';
+
+  @override
+  String get asset_holding_edit => 'Edit holding';
+
+  @override
+  String get asset_holding_name => 'Name';
+
+  @override
+  String get asset_holding_name_hint => 'e.g. Nasdaq ETF, Samsung';
+
+  @override
+  String get asset_holding_name_required => 'Enter a name';
+
+  @override
+  String get asset_holding_ticker => 'Ticker (optional)';
+
+  @override
+  String get asset_holding_ticker_hint => 'e.g. QQQ, 005930';
+
+  @override
+  String get asset_amount_label => 'Amount';
+
+  @override
+  String get asset_ratio_auto => 'The share is calculated from the balance';
+
+  @override
+  String asset_date_full(String year, String month, String day) {
+    return '$year-$month-$day';
+  }
+
+  @override
+  String get asset_coach_detail_title => 'Account details';
+
+  @override
+  String get asset_coach_detail_desc =>
+      'See the latest balance and return — scroll down for the trend chart and the principal/gains breakdown.';
+
+  @override
+  String get asset_coach_record_title => 'Add a balance record';
+
+  @override
+  String get asset_coach_record_desc =>
+      'Record the balance regularly to see the trend on a chart — withdrawals are tracked here too.';
+
+  @override
+  String get asset_coach_portfolio_title => 'Portfolio';
+
+  @override
+  String get asset_coach_portfolio_desc =>
+      'Record holdings by date to see the mix as a pie chart — and compare two dates to see what changed.';
+
+  @override
+  String asset_view_all_records(int count) {
+    return 'See all $count';
+  }
+
+  @override
+  String get asset_balance_record => 'Balance record';
+
+  @override
+  String get asset_balance_record_desc =>
+      'Record balance, principal, and gains';
+
+  @override
+  String get asset_withdrawal => 'Withdrawal';
+
+  @override
+  String get asset_withdrawal_desc =>
+      'Record a principal withdrawal or realized gain';
+
+  @override
+  String get asset_portfolio => 'Portfolio';
+
+  @override
+  String get asset_change => 'Change';
+
+  @override
+  String get asset_total => 'Total';
+
+  @override
+  String get asset_retry => 'Retry';
+
+  @override
+  String get asset_reset_auto => 'Back to auto-calculated';
+
+  @override
+  String get asset_withdrawal_delete => 'Delete withdrawal';
+
+  @override
+  String get asset_withdrawal_delete_message =>
+      'Deleting restores the principal and gains after that date. Continue?';
+
+  @override
+  String get asset_holding_add_button => 'Add holding';
+
+  @override
+  String get asset_compare => 'Compare';
+
+  @override
+  String get asset_record_first =>
+      'Add a balance record first to track your portfolio.';
+
+  @override
+  String get asset_no_holdings => 'No holdings recorded for this date.';
+
+  @override
+  String get asset_cash => 'Cash';
+
+  @override
+  String get asset_holding_delete => 'Delete holding';
+
+  @override
+  String asset_holding_delete_message(String name) {
+    return 'Delete the $name record?';
+  }
+
+  @override
+  String get asset_delete_failed => 'Couldn\'t delete';
+
+  @override
+  String asset_others_count(int count) {
+    return '$count others';
+  }
+
+  @override
+  String asset_fill_with_cash(String amount) {
+    return 'Fill with cash ($amount)';
+  }
+
+  @override
+  String asset_balance_value(String amount) {
+    return 'Balance: $amount';
+  }
+
+  @override
+  String get asset_filter_min_one => 'Pick at least one';
+
+  @override
+  String get asset_withdrawal_type_desc_full =>
+      'Did the money come out of your principal or your gains?\nWe use this to recalculate them when you add a balance record.';
+
+  @override
+  String get asset_withdrawal_from_profit => 'From gains (tax, taking profit)';
+
+  @override
+  String get asset_filter_min_one_account => 'Pick at least one account.';
+
+  @override
+  String asset_legend_more(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String get asset_holdings_section => 'Portfolio';
+
+  @override
+  String asset_others_ratio(int count, String ratio) {
+    return '$count others  $ratio%';
+  }
+
+  @override
+  String get asset_cumulative_return => 'Cumulative return';
+
+  @override
+  String get asset_period_return => 'Period return';
+
+  @override
+  String get asset_tooltip_balance =>
+      'Total balance at each point.\nBalance = principal + gains';
+
+  @override
+  String get asset_tooltip_principal =>
+      'How much you\'ve actually put in, up to that point.\nGains and losses aren\'t counted.';
+
+  @override
+  String get asset_tooltip_profit =>
+      'Cumulative gains at each point.\nGains = balance − principal';
+
+  @override
+  String get asset_tooltip_cumulative =>
+      'Cumulative return at each point.\nReturn = gains ÷ principal × 100';
+
+  @override
+  String get asset_tooltip_period =>
+      'Return for that period versus the previous point.\nDeposits and withdrawals are excluded, so only real gains show.\n\nPeriod return = (gains now − gains before) ÷ previous principal × 100';
+
+  @override
+  String asset_amount_won(String amount) {
+    return '$amount KRW';
+  }
+
+  @override
+  String asset_month_unit(String month) {
+    return '$month';
+  }
+
+  @override
+  String asset_gold_price_per_gram(String amount) {
+    return '$amount KRW/g';
+  }
+
+  @override
+  String get asset_compare_usd => 'In USD';
+
+  @override
+  String get minigame_title => 'Mini games';
+
+  @override
+  String get minigame_coach_desc =>
+      'Ladder and roulette games — handy when you need a fair way to decide.';
+
+  @override
+  String get minigame_coach_group => 'Choose a group';
+
+  @override
+  String get minigame_coach_group_desc =>
+      'Pick a group and results are saved automatically — anyone in the group can see the history.';
+
+  @override
+  String get minigame_history => 'Game history';
+
+  @override
+  String get minigame_coach_history_desc =>
+      'See past results here — who got what is visible to everyone.';
+
+  @override
+  String get minigame_ladder => 'Ladder';
+
+  @override
+  String get minigame_roulette => 'Roulette';
+
+  @override
+  String get minigame_no_group => 'No group (don\'t save)';
+
+  @override
+  String get minigame_history_empty => 'No games yet';
+
+  @override
+  String get minigame_select_group_hint =>
+      'Pick a group and your games are saved automatically';
+
+  @override
+  String get minigame_history_delete => 'Delete history';
+
+  @override
+  String get minigame_history_delete_message => 'Delete this game record?';
+
+  @override
+  String minigame_winner(String name) {
+    return 'Winner: $name';
+  }
+
+  @override
+  String get minigame_ladder_default_title => 'Ladder game';
+
+  @override
+  String get minigame_roulette_default_title => 'Roulette';
+
+  @override
+  String get minigame_game_title => 'Game title';
+
+  @override
+  String get minigame_create_ladder => 'Build the ladder';
+
+  @override
+  String get minigame_ladder_hint => 'Tap a name to follow the ladder!';
+
+  @override
+  String get minigame_skip_all => 'Skip all';
+
+  @override
+  String get minigame_reset => 'Start over';
+
+  @override
+  String get minigame_participants => 'Participants';
+
+  @override
+  String get minigame_final_result => 'Final result';
+
+  @override
+  String get minigame_saved => 'Result saved';
+
+  @override
+  String get minigame_save_failed => 'Couldn\'t save';
+
+  @override
+  String get minigame_result_items => 'Outcomes';
+
+  @override
+  String minigame_item_hint(int index) {
+    return 'Item $index';
+  }
+
+  @override
+  String get minigame_add_item => 'Add item';
+
+  @override
+  String minigame_count_mismatch(String total, String count) {
+    return 'The totals ($total) must match the number of participants ($count)';
+  }
+
+  @override
+  String get minigame_playing_with_group => 'Playing with a group';
+
+  @override
+  String get minigame_members_loading =>
+      'Still loading group members. Try again in a moment.';
+
+  @override
+  String minigame_add_manually(String label) {
+    return 'Add $label manually';
+  }
+
+  @override
+  String get minigame_select_members => 'Pick members';
+
+  @override
+  String get minigame_select_group_members => 'Pick group members';
+
+  @override
+  String get minigame_unknown => 'Unknown';
+
+  @override
+  String get minigame_already_added => 'Already added';
+
+  @override
+  String minigame_add_count(int count) {
+    return 'Add ($count)';
+  }
+
+  @override
+  String get minigame_spin => 'Spin';
+
+  @override
+  String get minigame_need_two_items => 'Add at least two items';
+
+  @override
+  String get minigame_result => 'Result';
+
+  @override
+  String get minigame_item => 'Item';
+
+  @override
+  String get minigame_ratio => 'Share';
+
+  @override
+  String get common_filter => 'Filter';
+
+  @override
+  String get common_selectGroup => 'Choose a group';
+
+  @override
+  String get common_unknown => 'Unknown';
+
+  @override
+  String home_delete_scheduled(String date, String days) {
+    return 'Your account is scheduled for deletion on $date (in $days days).';
+  }
+
+  @override
+  String get home_delete_cancel => 'Cancel deletion';
+
+  @override
+  String get home_delete_canceled => 'Deletion canceled';
+
+  @override
+  String get home_coach_more => 'Start from the More tab';
+
+  @override
+  String get home_coach_group => 'Groups';
+
+  @override
+  String get home_coach_group_desc =>
+      'Create a group — family, partner, friends — and invite people with a code.';
+
+  @override
+  String get home_coach_widget => 'Customize your dashboard';
+
+  @override
+  String get home_coach_widget_desc =>
+      'Settings → Home widgets: pick just the widgets you want.';
+
+  @override
+  String get home_coach_tab => 'Customize the bottom tabs';
+
+  @override
+  String get home_coach_tab_desc =>
+      'Settings → Bottom navigation: swap in the menus you use most.';
+
+  @override
+  String get home_coach_tap_more => 'Tap to open More';
+
+  @override
+  String get home_period => 'Period';
+
+  @override
+  String get home_personal_schedule => 'Personal events';
+
+  @override
+  String get home_personal_schedule_desc => 'Include my personal events';
+
+  @override
+  String get home_view_mode => 'View';
+
+  @override
+  String get home_pinned_memos => 'Pinned memos';
+
+  @override
+  String get home_pinned_memos_empty => 'No pinned memos';
+
+  @override
+  String home_checklist_progress(String checked, String total) {
+    return '$checked/$total done';
+  }
+
+  @override
+  String get home_no_expiry => 'No expiry';
+
+  @override
+  String home_expired_days(String days) {
+    return '$days days past';
+  }
+
+  @override
+  String get home_expires_today => 'Expires today';
+
+  @override
+  String get home_total_savings => 'Total saved';
+
+  @override
+  String home_active_goals(int count) {
+    return '$count in progress';
+  }
+
+  @override
+  String home_goal_amount(String amount) {
+    return 'Goal $amount';
+  }
+
+  @override
+  String home_more_goals(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String get home_schedule_filter => 'Event filter';
+
+  @override
+  String get home_no_children => 'No children yet';
+
+  @override
+  String home_childcare_savings(String points) {
+    return 'Savings ${points}P';
+  }
+
+  @override
+  String home_anniversary_more(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String get auth_email_copied => 'Email address copied';
+
+  @override
+  String get auth_login_processing => 'Signing you in…';
+
+  @override
+  String get auth_please_wait => 'One moment please.';
+
+  @override
+  String get auth_login_failed => 'Sign-in failed';
+
+  @override
+  String get auth_back_to_login => 'Back to sign-in';
+
+  @override
+  String get auth_code_required => 'Enter the verification code';
+
+  @override
+  String get auth_email_verified => 'Your email is verified. Please sign in.';
+
+  @override
+  String get auth_email_resent => 'We\'ve resent the verification email.';
+
+  @override
+  String get auth_email_verification => 'Verify your email';
+
+  @override
+  String get auth_check_email => 'Check your email';
+
+  @override
+  String auth_email_sent_to(String email) {
+    return 'We sent a verification email to\n$email.';
+  }
+
+  @override
+  String get auth_enter_code => 'Enter the code';
+
+  @override
+  String get auth_enter_code_desc => 'Type the 6-digit code from the email.';
+
+  @override
+  String get auth_code_label => 'Verification code';
+
+  @override
+  String get auth_code_hint => 'e.g. 123456';
+
+  @override
+  String get auth_no_email => 'Didn\'t get the email?';
+
+  @override
+  String get auth_resend_email => 'Resend email';
+
+  @override
+  String get auth_verify_later => 'Verify later ';
+
+  @override
+  String get auth_back_to_signin => 'Back to sign-in';
+
+  @override
+  String get auth_no_token => 'No auth token. Please sign in again.';
+
+  @override
+  String get auth_terms_title => 'Terms of service';
+
+  @override
+  String get auth_terms_desc =>
+      'Please accept the terms to start using Family Planner.';
+
+  @override
+  String get auth_agree_and_start => 'Agree and continue';
+
+  @override
+  String get ai_assistant => 'AI assistant';
+
+  @override
+  String get ai_premium_desc =>
+      'A premium subscription feature launching next year.\nSubscribe to use the AI assistant.';
+
+  @override
+  String get ai_premium_coming => 'Premium coming soon';
+
+  @override
+  String get ai_ask_anything => 'Ask me anything';
+
+  @override
+  String get ai_reset_chat => 'Clear chat';
+
+  @override
+  String get ai_greeting => 'Hi! I\'m the Family Planner AI.';
+
+  @override
+  String get ai_greeting_desc =>
+      'Tap a suggestion below, or type your own question.';
+
+  @override
+  String get ai_new_chat => 'Started a new chat';
+
+  @override
+  String get ai_message_hint => 'Type a message…';
+
+  @override
+  String get ai_send => 'Send';
+
+  @override
+  String get ai_suggest1 => 'Analyze this month\'s spending';
+
+  @override
+  String get ai_suggest2 => 'Summarize the family schedule';
+
+  @override
+  String get ai_suggest3 => 'How are the savings goals going?';
+
+  @override
+  String get ai_suggest4 => 'Show my open to-dos';
+
+  @override
+  String get ai_suggest5 => 'How\'s my investment portfolio?';
+
+  @override
+  String get ai_suggest6 => 'What\'s important this week?';
+
+  @override
+  String get weather_title => 'Weather';
+
+  @override
+  String get weather_current_failed => 'Couldn\'t load the current weather';
+
+  @override
+  String get weather_forecast_failed => 'Couldn\'t load the forecast';
+
+  @override
+  String get weather_humidity => 'Humidity';
+
+  @override
+  String get weather_wind => 'Wind';
+
+  @override
+  String get weather_precipitation => 'Precipitation';
+
+  @override
+  String get weather_air_quality => 'Air quality';
+
+  @override
+  String get weather_pm10 => 'PM10';
+
+  @override
+  String get weather_pm25 => 'PM2.5';
+
+  @override
+  String weather_measured_at(String region) {
+    return 'Measured at $region';
+  }
+
+  @override
+  String get weather_hourly => 'Hourly';
+
+  @override
+  String get weather_hourly_empty => 'No hourly forecast';
+
+  @override
+  String get weather_daily => 'Daily';
+
+  @override
+  String weather_hour(String hour) {
+    return '$hour:00';
+  }
+
+  @override
+  String get weather_today => 'Today';
+
+  @override
+  String get calendar_view_day => 'Day';
+
+  @override
+  String get calendar_view_week => 'Week';
+
+  @override
+  String get calendar_view_month => 'Month';
+
+  @override
+  String get calendar_view_year => 'Year';
+
+  @override
+  String get calendar_manage_anniversary => 'Anniversaries';
+
+  @override
+  String get calendar_select_view => 'Choose a view';
+
+  @override
+  String get calendar_allday => 'All day';
+
+  @override
+  String calendar_lunar_label(String label) {
+    return 'Lunar $label';
+  }
+
+  @override
+  String calendar_hidden_count(int count) {
+    return '+$count';
+  }
+
+  @override
+  String calendar_group_more(String name, int count) {
+    return '$name +$count';
+  }
+
+  @override
+  String calendar_year_label(String year) {
+    return '$year';
+  }
+
+  @override
+  String get calendar_task_added => 'Event added.';
+
+  @override
+  String get calendar_task_title_hint => 'Event title';
+
+  @override
+  String get calendar_personal => 'Personal';
+
+  @override
+  String get calendar_type_event => 'Event';
+
+  @override
+  String get calendar_type_todo => 'To-do';
+
+  @override
+  String get calendar_type_both => 'Both';
+
+  @override
+  String get calendar_more => 'More';
+
+  @override
+  String get calendar_remind_5m => '5 min before';
+
+  @override
+  String get calendar_remind_15m => '15 min before';
+
+  @override
+  String get calendar_remind_30m => '30 min before';
+
+  @override
+  String get calendar_remind_1h => '1 hour before';
+
+  @override
+  String get calendar_remind_1d => '1 day before';
+
+  @override
+  String household_year_label(String year) {
+    return '$year';
+  }
+
+  @override
+  String get household_yearly_stats => 'Yearly';
+
+  @override
+  String get household_stats_exclude_note =>
+      'Refunds and carried-over deposits are excluded';
+
+  @override
+  String get household_by_category => 'By category';
+
+  @override
+  String get household_by_merchant => 'By merchant';
+
+  @override
+  String get household_by_member => 'By member';
+
+  @override
+  String get household_custom_filter => 'Custom filter';
+
+  @override
+  String get household_category_spending => 'Spending by category';
+
+  @override
+  String get household_merchant_spending => 'Spending by merchant';
+
+  @override
+  String get household_member_spending => 'Spending by member';
+
+  @override
+  String get household_no_merchant => 'No merchant';
+
+  @override
+  String get household_unassigned => 'Unassigned';
+
+  @override
+  String get household_member => 'Member';
+
+  @override
+  String get household_monthly_spending => 'Monthly spending';
+
+  @override
+  String get household_compare_last_month => 'vs. last month';
+
+  @override
+  String get household_cumulative_trend => 'Cumulative spending';
+
+  @override
+  String get household_variable => 'Variable';
+
+  @override
+  String get household_expected_amount => 'Expected';
+
+  @override
+  String get household_due_day => 'Due day';
+
+  @override
+  String household_due_day_value(String day) {
+    return 'Day $day each month';
+  }
+
+  @override
+  String get household_payee => 'Payee';
+
+  @override
+  String get household_payer => 'Payer';
+
+  @override
+  String get household_no_applied => 'Nothing applied yet';
+
+  @override
+  String get household_confirmed_avg => 'Confirmed average';
+
+  @override
+  String get household_min => 'Min';
+
+  @override
+  String get household_max => 'Max';
+
+  @override
+  String household_unconfirmed_suffix(String date) {
+    return '$date  unconfirmed';
+  }
+
+  @override
+  String get asset_demo_nasdaq => 'Nasdaq ETF';
+
+  @override
+  String get asset_demo_samsung => 'Samsung';
+
+  @override
+  String get currency_won_unit => 'KRW';
+
+  @override
+  String get household_auto_registered => 'Added to your budget';
+
+  @override
+  String household_auto_registered_body(String amount) {
+    return '$amount KRW was added to your budget.';
+  }
+
+  @override
+  String get household_auto_service => 'Auto budget entry';
+
+  @override
+  String get household_auto_service_desc =>
+      'Watches payment notifications and records them for you';
+
+  @override
+  String get coach_calendar_shared => 'Shared calendar';
+
+  @override
+  String get coach_calendar_shared_desc =>
+      'See everyone\'s events in one place.\nTap a date to view that day.';
+
+  @override
+  String get coach_calendar_add => 'Add an event';
+
+  @override
+  String get coach_calendar_add_desc =>
+      'Tap the button to create an event.\nGive it a try.';
+
+  @override
+  String get coach_group_create => 'Create a group';
+
+  @override
+  String get coach_group_create_desc =>
+      'Family, partner, friends, a team — make the group you want.';
+
+  @override
+  String get coach_group_join => 'Join a group';
+
+  @override
+  String get coach_group_join_desc =>
+      'Enter an invite code to join an existing group — a member can share one with you.';
+
+  @override
+  String get coach_group_requests => 'Your requests';
+
+  @override
+  String get coach_group_requests_desc =>
+      'See the groups you\'ve asked to join and whether you\'ve been accepted.';
+
+  @override
+  String get coach_savings_status => 'Your savings';
+
+  @override
+  String get coach_savings_status_desc =>
+      'See what you\'ve saved, the target, and how far along you are.\nAuto-deposit status shows here too.';
+
+  @override
+  String get coach_savings_deposit => 'Deposit / withdraw';
+
+  @override
+  String get coach_savings_deposit_desc =>
+      'Add or take out money whenever you like — handy alongside auto-deposit.';
+
+  @override
+  String get coach_savings_goal => 'Savings goal';
+
+  @override
+  String get coach_savings_goal_desc =>
+      'See the goal name, what\'s saved, and your progress at a glance.\nTurn on auto-deposit and it saves every month.';
+
+  @override
+  String get coach_savings_demo_desc => 'This summer\'s family trip';
+
+  @override
+  String get coach_savings_demo_jeju => 'Jeju trip';
+
+  @override
+  String get coach_savings_demo_emergency => 'Emergency fund';
+
+  @override
+  String get demo_milk => 'Milk';
+
+  @override
+  String get demo_eggs => 'Eggs';
+
+  @override
+  String get demo_tofu => 'Tofu';
+
+  @override
+  String get demo_unit_piece => 'pcs';
+
+  @override
+  String get demo_unit_pack => 'tray';
+
+  @override
+  String get demo_fridge => 'Fridge';
+
+  @override
+  String get demo_freezer => 'Freezer';
+
+  @override
+  String get demo_bank_savings => 'KB savings account';
+
+  @override
+  String get coach_ladder_participants => 'Add participants';
+
+  @override
+  String get coach_ladder_participants_desc =>
+      'Type the names of everyone playing.\nOr pull in your group members all at once.';
+
+  @override
+  String get coach_ladder_results => 'Add outcomes';
+
+  @override
+  String get coach_ladder_results_desc =>
+      'Enter the outcomes and how many of each.\nThe totals must match the number of participants.';
+
+  @override
+  String get coach_ladder_create => 'Build the ladder';
+
+  @override
+  String get coach_ladder_create_desc =>
+      'Tap the button to build it.\nTap a name and the path animates to reveal the result.';
+
+  @override
+  String get coach_roulette_items => 'Add items';
+
+  @override
+  String get coach_roulette_items_desc =>
+      'Enter the items for the wheel.\nAdjust the shares to change the odds.';
+
+  @override
+  String get coach_roulette_wheel => 'The wheel';
+
+  @override
+  String get coach_roulette_wheel_desc =>
+      'Add two or more items and the wheel appears.\nThe center button spins it too.';
+
+  @override
+  String get coach_roulette_spin => 'Spin';
+
+  @override
+  String get coach_roulette_spin_desc =>
+      'Tap to spin.\nThe result is saved to the group history for everyone to see.';
+
+  @override
+  String get coach_asset_card => 'Account card';
+
+  @override
+  String get coach_asset_card_desc =>
+      'See the account name, institution, latest balance, and return at a glance.\nTap to manage balance records and the portfolio.';
+
+  @override
+  String get coach_asset_stats => 'Asset statistics';
+
+  @override
+  String get coach_asset_stats_desc =>
+      'Totals, returns, and the mix by type — all in charts.\nYou can compare against KOSPI, S&P 500, and more.';
+
+  @override
+  String get demo_bank_kb => 'KB Bank';
+
+  @override
+  String get coach_group_invite => 'Invite some members';
+
+  @override
+  String get coach_group_invite_desc =>
+      'In the Settings tab you can share an invite code or email an invitation.\n\nTap to go to Settings.';
+
+  @override
+  String get coach_group_invite_code => 'Invite with a code';
+
+  @override
+  String get coach_group_invite_code_desc =>
+      'Copy the code to share it, or send an invitation by email.';
+
+  @override
+  String get coach_group_roles => 'Manage access with roles';
+
+  @override
+  String get coach_group_roles_desc =>
+      'In the Roles tab you can create roles and fine-tune what each member can do.\n\nTap to go to Roles.';
+
+  @override
+  String get coach_group_role_new => 'Create a role';
+
+  @override
+  String get coach_group_role_new_desc =>
+      'Tap to create a role and set its name, color, and permissions.';
+
+  @override
+  String get coach_group_color => 'Pick a color for this group';
+
+  @override
+  String get coach_group_color_desc =>
+      'Set the group\'s color in the Settings tab.\nIt\'s used across the app — in the calendar and elsewhere — to tell this group\'s items apart.\n\nTap to go to Settings.';
+
+  @override
+  String get coach_cart_complete => 'What happens when you finish';
+
+  @override
+  String get coach_cart_complete_desc =>
+      'Tapping Finish shopping does both of these at once.';
+
+  @override
+  String get coach_cart_to_fridge => 'Move to the fridge';
+
+  @override
+  String get coach_cart_to_fridge_desc =>
+      'Send what you bought straight into fridge storage — with quantity, expiry, and reminder date.';
+
+  @override
+  String get coach_cart_to_expense => 'Record it in the budget';
+
+  @override
+  String get coach_cart_to_expense_desc =>
+      'Enter the amount, payment method, and a note — it\'s recorded automatically.';
+
+  @override
+  String get coach_cart_no_transfer => 'Don\'t move';
+
+  @override
+  String get demo_todo_shopping => 'Make a shopping list';
+
+  @override
+  String get demo_todo_shopping_desc => 'Groceries we need this week';
+
+  @override
+  String get demo_todo_trip => 'Plan the family trip';
+
+  @override
+  String get demo_todo_trip_desc => 'Summer dates and booking a place';
+
+  @override
+  String get demo_todo_budget => 'Tidy up the monthly budget';
+
+  @override
+  String get demo_todo_budget_desc => 'Check last month\'s income and spending';
+
+  @override
+  String get coach_todo_byDate => 'To-dos by date';
+
+  @override
+  String get coach_todo_byDate_desc =>
+      'Tap a date to see that day\'s to-dos and split them with your group.';
+
+  @override
+  String get coach_todo_status => 'Change status';
+
+  @override
+  String get coach_todo_status_desc =>
+      'Tap the icon on the left to switch between pending, in progress, and done.';
+
+  @override
+  String get coach_todo_add => 'Add a to-do';
+
+  @override
+  String get coach_todo_add_desc =>
+      'Add a to-do, then set who\'s on it and when it\'s due.';
+
+  @override
+  String get demo_apple => 'Apples';
+
+  @override
+  String get coach_history_records => 'Purchase history';
+
+  @override
+  String get coach_history_records_desc =>
+      'Every finished shopping trip lands here.\nTap a card to see the items.';
+
+  @override
+  String get coach_history_expense => 'Linked to the budget';
+
+  @override
+  String get coach_history_expense_desc =>
+      'Record the spending when you finish and this badge appears — it links to your budget automatically.';
+
+  @override
+  String get demo_expense_salary => 'June salary';
+
+  @override
+  String get demo_expense_dining => 'Dinner out';
+
+  @override
+  String get demo_expense_fuel => 'Fuel';
+
+  @override
+  String get demo_expense_utility => 'Electricity and gas';
+
+  @override
+  String get coach_household_summary => 'Monthly summary';
+
+  @override
+  String get coach_household_summary_desc =>
+      'See this month\'s income, spending, and balance — plus how much of the budget you\'ve used.';
+
+  @override
+  String get coach_household_budget => 'Set a budget';
+
+  @override
+  String get coach_household_budget_desc =>
+      'Open the More menu here to set monthly budgets per category.';
+
+  @override
+  String get coach_household_recurring => 'Recurring expenses';
+
+  @override
+  String get coach_household_recurring_desc =>
+      'Register rent, subscriptions, and the like — we\'ll record them each month.';
+
+  @override
+  String get coach_household_stats => 'Statistics';
+
+  @override
+  String get coach_household_stats_desc =>
+      'See spending by category and month-over-month trends in charts.';
+
+  @override
+  String get coach_household_add => 'Add spending or income';
+
+  @override
+  String get coach_household_add_desc =>
+      'Record a new expense or income — you can keep them separate by group.';
+
+  @override
+  String get common_me => 'Me';
+
+  @override
+  String get demo_memo_trip => 'Getting ready for Jeju';
+
+  @override
+  String get demo_memo_trip_body =>
+      'Flights booked\nStaying at a guesthouse in Hallim.\nStill need a rental car. Planning Udo and Seongsan Ilchulbong.';
+
+  @override
+  String get demo_tag_travel => 'Travel';
+
+  @override
+  String get demo_tag_jeju => 'Jeju';
+
+  @override
+  String get demo_memo_packing => 'Overnight packing';
+
+  @override
+  String get demo_check_passport => 'Passport / ID';
+
+  @override
+  String get demo_check_toiletries => 'Toiletries';
+
+  @override
+  String get demo_check_clothes => 'Change of clothes';
+
+  @override
+  String get demo_check_charger => 'Charger';
+
+  @override
+  String get demo_check_meds => 'Medicine';
+
+  @override
+  String get coach_memo_richtext => 'Rich text memos';
+
+  @override
+  String get coach_memo_richtext_desc =>
+      'Bold, italic, headings — format freely.\nTag them, and paste a URL to get a link card automatically.';
+
+  @override
+  String get coach_memo_checklist => 'Checklists';
+
+  @override
+  String get coach_memo_checklist_desc =>
+      'Drop a checklist anywhere in a memo.\nThe card shows how many are done, and you can tick them off in the detail view.';
+
+  @override
+  String get coach_memo_progress => 'Progress';
+
+  @override
+  String get coach_memo_progress_desc =>
+      'See how many are done at a glance — with select-all and reset buttons.';
+
+  @override
+  String get coach_memo_check => 'Ticking items';
+
+  @override
+  String get coach_memo_check_desc =>
+      'Tap a checkbox to mark it done — changes save on their own shortly after.';
+
+  @override
+  String get coach_memo_edit => 'Edit mode';
+
+  @override
+  String get coach_memo_edit_desc =>
+      'Tap Edit to open the editor.\nUse the checklist button in the toolbar to add or change items.';
+
+  @override
+  String get demo_vote_outing => 'Where should we go this weekend?';
+
+  @override
+  String get demo_vote_outing_desc => 'Majority wins — cast your vote!';
+
+  @override
+  String get demo_vote_dinner => 'What\'s for dinner?';
+
+  @override
+  String get demo_member_mom => 'Mom';
+
+  @override
+  String get demo_member_dad => 'Dad';
+
+  @override
+  String get demo_member_child => 'Minjun';
+
+  @override
+  String get demo_place_hangang => 'Han River Park';
+
+  @override
+  String get demo_place_amusement => 'Amusement park';
+
+  @override
+  String get demo_place_zoo => 'Zoo';
+
+  @override
+  String get demo_food_chicken => 'Fried chicken';
+
+  @override
+  String get demo_food_pizza => 'Pizza';
+
+  @override
+  String get demo_food_pork => 'Pork belly';
+
+  @override
+  String get demo_group_family => 'Our family';
+
+  @override
+  String get coach_vote_group => 'Choose a group';
+
+  @override
+  String get coach_vote_group_desc =>
+      'Votes belong to a group.\nPick one to see its votes.';
+
+  @override
+  String get coach_vote_filter => 'Status filter';
+
+  @override
+  String get coach_vote_filter_desc =>
+      'Use the tabs to see all, open, or closed votes.';
+
+  @override
+  String get coach_vote_card => 'Vote card';
+
+  @override
+  String get coach_vote_card_desc =>
+      'Tap a card to cast your vote.\nEveryone in the group can join, and results update live.';
+
+  @override
+  String get coach_vote_create => 'Create a vote';
+
+  @override
+  String get coach_vote_create_desc =>
+      'Tap + to create one.\nSingle or multiple choice, anonymous voting, and a closing time are all supported.';
+
+  @override
+  String get demo_shop_tv_desc => '30 extra minutes of TV after dinner';
+
+  @override
+  String get demo_shop_game_desc => 'An hour of gaming on the weekend';
+
+  @override
+  String get demo_rule_homework => 'Finished homework on their own';
+
+  @override
+  String get demo_rule_phone => 'Over an hour of phone time';
+
+  @override
+  String get demo_rule_cashout => 'Cash out up to 50P this month';
+
+  @override
+  String get coach_child_register => 'Add a child';
+
+  @override
+  String get coach_child_register_desc =>
+      'Start by adding a child.\nEnter a name and birthday and a points account is created automatically.';
+
+  @override
+  String get coach_child_points => 'Points overview';
+
+  @override
+  String get coach_child_points_desc =>
+      'See the balance and the monthly allowance plan at a glance.\nPoints are given automatically on the day you set.';
+
+  @override
+  String get coach_child_savings => 'Savings plan';
+
+  @override
+  String get coach_child_savings_desc =>
+      'Set up a points savings plan and it deposits every month — with interest.';
+
+  @override
+  String get coach_child_shop => 'Points shop';
+
+  @override
+  String get coach_child_shop_desc =>
+      'Rewards your child can buy with the points they\'ve earned — a reason to keep saving.';
+
+  @override
+  String get coach_child_rule_plus_desc =>
+      'Give points for good habits.\ne.g. Finished homework on their own +10P';
+
+  @override
+  String get coach_child_rule_minus_desc =>
+      'Deduct points when a promise is broken.\ne.g. Over an hour of phone time −10P';
+
+  @override
+  String get coach_child_rule_info_desc =>
+      'Record a promise without points.\ne.g. Cash out up to 50P this month';
+
+  @override
+  String get intro_slide1_title => 'A planner of your own';
+
+  @override
+  String get intro_slide1_subtitle => 'Family, partner, friends, teams';
+
+  @override
+  String get intro_slide1_desc =>
+      'Manage several groups in one app.\nEach relationship gets its own space to plan in.';
+
+  @override
+  String get intro_slide2_title => 'Plan together';
+
+  @override
+  String get intro_slide2_subtitle => 'Shared calendar';
+
+  @override
+  String get intro_slide2_desc =>
+      'See everyone\'s plans in one place.\nNever miss an important day.';
+
+  @override
+  String get intro_slide3_title => 'Get things done';
+
+  @override
+  String get intro_slide3_subtitle => 'Shared to-do list';
+
+  @override
+  String get intro_slide3_desc =>
+      'Everyone knows who\'s doing what.\nSplit the work and finish it together.';
+
+  @override
+  String get intro_slide4_title => 'Money at a glance';
+
+  @override
+  String get intro_slide4_subtitle => 'Shared budget';
+
+  @override
+  String get intro_slide4_desc =>
+      'Track income and spending together, and see where it goes.\nHit your money goals as a group.';
+
+  @override
+  String get intro_slide5_title => 'And plenty more';
+
+  @override
+  String get intro_slide5_subtitle => 'Assets, memos, savings, votes';
+
+  @override
+  String get intro_slide5_desc =>
+      'Everything you need for daily life, in one place.\nGive it a try!';
+
+  @override
+  String get intro_start => 'Get started';
+
+  @override
+  String get intro_next => 'Next';
+
+  @override
+  String get intro_preview_couple => 'Partner';
+
+  @override
+  String get intro_preview_friends => 'Friends';
+
+  @override
+  String get intro_preview_team => 'Team project';
+
+  @override
+  String get intro_preview_mygroups => 'My groups';
+
+  @override
+  String intro_preview_members(String count) {
+    return '$count';
+  }
+
+  @override
+  String get intro_preview_dining => 'Family dinner';
+
+  @override
+  String get intro_preview_hospital => 'Doctor\'s appointment';
+
+  @override
+  String get intro_preview_birthday => 'Birthday party 🎂';
+
+  @override
+  String get intro_preview_todo1 => 'Grocery run';
+
+  @override
+  String get intro_preview_todo2 => 'Vacuum the floor';
+
+  @override
+  String get intro_preview_todo3 => 'Check insurance renewal';
+
+  @override
+  String get intro_preview_todo4 => 'Sort the photo album';
+
+  @override
+  String get intro_preview_todo5 => 'Check the kid\'s homework';
+
+  @override
+  String get intro_preview_today => 'Today';
+
+  @override
+  String get intro_preview_tomorrow => 'Tomorrow';
+
+  @override
+  String get intro_preview_thisweek => 'This week';
+
+  @override
+  String intro_preview_total(String count) {
+    return '$count total';
+  }
+
+  @override
+  String intro_preview_done(String count) {
+    return '$count done';
+  }
+
+  @override
+  String get intro_preview_mart => 'Groceries';
+
+  @override
+  String get intro_preview_eatout => 'Eating out';
+
+  @override
+  String get intro_preview_salary => 'Salary';
+
+  @override
+  String get intro_preview_transport => 'Transport';
+
+  @override
+  String get intro_preview_assets => 'Assets';
+
+  @override
+  String get intro_preview_savings => 'Savings';
+
+  @override
+  String get demo_memo_domestic => 'Local';
+
+  @override
+  String get coach_cart_add => 'Add items';
+
+  @override
+  String get coach_cart_add_desc =>
+      'Add what you need to buy — it saves automatically.';
+
+  @override
+  String get coach_cart_manage => 'Manage items';
+
+  @override
+  String get coach_cart_manage_desc =>
+      '• Tap to edit the name, quantity, or note\n• Use ± to change the quantity\n• Swipe left to delete\n• Changes save on their own shortly after';
+
+  @override
+  String get coach_cart_finish => 'Finish shopping';
+
+  @override
+  String get coach_cart_finish_desc =>
+      'Tap here when you\'re done shopping.\nThe next screen shows what else it can do!';
+
+  @override
+  String get coach_cart_next => 'Tap to see what\'s next!';
+
+  @override
+  String get coach_cart_next_desc =>
+      'We\'ll show you more in the Frequent items tab.';
+
+  @override
+  String get household_carryover_out => 'Balance carried over';
+
+  @override
+  String get household_carryover_in => 'Carried over from last month';
+
+  @override
+  String household_transfer_asset(String name) {
+    return 'Moved to $name';
+  }
+
+  @override
+  String household_transfer_savings(String name) {
+    return 'Moved to $name';
+  }
+
+  @override
+  String get household_transfer_from_ledger => 'Moved from the budget';
 }

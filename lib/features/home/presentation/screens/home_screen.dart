@@ -74,6 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _showDeletionBanner(DateTime scheduledAt) {
+    final l10n = AppLocalizations.of(context)!;
     final daysLeft = scheduledAt.difference(DateTime.now()).inDays + 1;
     final dateStr =
         '${scheduledAt.year}-${scheduledAt.month.toString().padLeft(2, '0')}-${scheduledAt.day.toString().padLeft(2, '0')}';
@@ -82,7 +83,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       MaterialBanner(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         content: Text(
-          '계정이 $dateStr ($daysLeft일 후)에 삭제될 예정입니다.',
+          l10n.home_delete_scheduled(dateStr, '$daysLeft'),
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
         leading: const Icon(Icons.warning_amber_rounded, color: Colors.orange),
@@ -92,15 +93,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             },
-            child: const Text('닫기'),
+            child: Text(l10n.common_close),
           ),
           TextButton(
             onPressed: () async {
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
               await _cancelScheduledDeletion();
             },
-            child: const Text(
-              '삭제 취소',
+            child: Text(
+              l10n.home_delete_cancel,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -110,13 +111,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _cancelScheduledDeletion() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     try {
       await ref.read(authProvider.notifier).cancelDeleteAccount();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('계정 삭제 예약이 취소되었습니다'),
+        SnackBar(
+          content: Text(l10n.home_delete_canceled),
           backgroundColor: Colors.green,
         ),
       );
@@ -124,7 +126,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('오류가 발생했습니다: $e'),
+          content: Text('${l10n.common_errorOccurred}\n$e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -254,14 +256,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   /// 더보기 탭 코치마크 콘텐츠 — 3가지 안내를 한 번에 표시
   Widget _buildMoreTabCoachContent() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '더보기 탭에서 시작하세요',
+          Text(
+            l10n.home_coach_more,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -272,30 +275,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           _buildCoachItem(
             icon: Icons.group_outlined,
             color: Colors.blue,
-            title: '그룹 관리',
-            description: '가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.',
+            title: l10n.home_coach_group,
+            description: l10n.home_coach_group_desc,
           ),
           const SizedBox(height: 10),
           _buildCoachItem(
             icon: Icons.widgets_outlined,
             color: Colors.purple,
-            title: '대시보드 위젯 커스터마이징',
-            description: '설정 → 홈 위젯 설정에서\n원하는 위젯만 골라 대시보드를 꾸미세요.',
+            title: l10n.home_coach_widget,
+            description: l10n.home_coach_widget_desc,
           ),
           const SizedBox(height: 10),
           _buildCoachItem(
             icon: Icons.navigation_outlined,
             color: Colors.orange,
-            title: '하단 탭 커스터마이징',
-            description: '설정 → 하단 네비게이션 설정에서\n자주 쓰는 메뉴로 자유롭게 바꾸세요.',
+            title: l10n.home_coach_tab,
+            description: l10n.home_coach_tab_desc,
           ),
           const SizedBox(height: 14),
           Row(
             children: [
               const Icon(Icons.touch_app, color: Colors.white54, size: 14),
               const SizedBox(width: 4),
-              const Text(
-                '탭을 눌러 더보기로 이동',
+              Text(
+                l10n.home_coach_tap_more,
                 style: TextStyle(color: Colors.white54, fontSize: 12),
               ),
             ],
@@ -450,12 +453,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   /// 탭 콘텐츠 빌드
   Widget _buildTabContent(String id, AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return _getScreenForId(id, l10n);
   }
 
   /// Lazy Loading 방식의 탭 body 빌드
   /// 방문한 탭만 빌드하고, 이미 빌드된 탭은 Offstage로 숨겨서 상태 유지
   Widget _buildLazyBody(List<NavigationItem> displayedItems, AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return Stack(
       children: List.generate(displayedItems.length, (index) {
         final item = displayedItems[index];

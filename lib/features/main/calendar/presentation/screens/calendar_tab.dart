@@ -58,12 +58,12 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     super.dispose();
   }
 
-  String get _viewModeLabel {
+  String _viewModeLabel(AppLocalizations l10n) {
     switch (_viewMode) {
-      case CalendarViewMode.day:   return '일';
-      case CalendarViewMode.week:  return '주';
-      case CalendarViewMode.month: return '월';
-      case CalendarViewMode.year:  return '연도';
+      case CalendarViewMode.day:   return l10n.calendar_view_day;
+      case CalendarViewMode.week:  return l10n.calendar_view_week;
+      case CalendarViewMode.month: return l10n.calendar_view_month;
+      case CalendarViewMode.year:  return l10n.calendar_view_year;
     }
   }
 
@@ -117,7 +117,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
               MoreMenuItem(
                 id: 'anniversaries',
                 icon: Icons.celebration_outlined,
-                label: '기념일 관리',
+                label: l10n.calendar_manage_anniversary,
                 onTap: (ctx) => ctx.push('/calendar/anniversaries'),
               ),
               MoreMenuItem(
@@ -159,6 +159,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     DateTime selectedDate,
     AsyncValue<List<TaskModel>> tasksAsync,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     switch (_viewMode) {
       case CalendarViewMode.day:
         return Column(
@@ -171,7 +172,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                 selectedDate: selectedDate,
                 onDayChanged: _onDaySelected,
                 onViewModeTap: _showViewModeSheet,
-                viewModeLabel: _viewModeLabel,
+                viewModeLabel: _viewModeLabel(l10n),
               ),
             ),
           ],
@@ -193,7 +194,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
               onPageChanged: _onPageChanged,
               onFormatChanged: _onCalendarFormatChanged,
               onViewModeTap: _showViewModeSheet,
-              viewModeLabel: _viewModeLabel,
+              viewModeLabel: _viewModeLabel(l10n),
             ),
             const Divider(height: 1),
             Expanded(
@@ -226,7 +227,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                 onPageChanged: _onPageChanged,
                 onFormatChanged: _onCalendarFormatChanged,
                 onViewModeTap: _showViewModeSheet,
-                viewModeLabel: _viewModeLabel,
+                viewModeLabel: _viewModeLabel(l10n),
               ),
             ),
 
@@ -253,7 +254,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                   _onViewModeChanged(CalendarViewMode.month);
                 },
                 onViewModeTap: _showViewModeSheet,
-                viewModeLabel: _viewModeLabel,
+                viewModeLabel: _viewModeLabel(l10n),
               ),
             ),
           ],
@@ -354,6 +355,7 @@ class _ViewModeSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -371,7 +373,7 @@ class _ViewModeSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              '뷰 선택',
+              l10n.calendar_select_view,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -388,7 +390,7 @@ class _ViewModeSheet extends StatelessWidget {
                     : null,
               ),
               title: Text(
-                _modeLabel(mode),
+                _modeLabel(l10n, mode),
                 style: TextStyle(
                   fontWeight:
                       isSelected ? FontWeight.bold : FontWeight.normal,
@@ -410,12 +412,12 @@ class _ViewModeSheet extends StatelessWidget {
     );
   }
 
-  String _modeLabel(CalendarViewMode mode) {
+  String _modeLabel(AppLocalizations l10n, CalendarViewMode mode) {
     switch (mode) {
-      case CalendarViewMode.day:   return '일';
-      case CalendarViewMode.week:  return '주';
-      case CalendarViewMode.month: return '월';
-      case CalendarViewMode.year:  return '연도';
+      case CalendarViewMode.day:   return l10n.calendar_view_day;
+      case CalendarViewMode.week:  return l10n.calendar_view_week;
+      case CalendarViewMode.month: return l10n.calendar_view_month;
+      case CalendarViewMode.year:  return l10n.calendar_view_year;
     }
   }
 

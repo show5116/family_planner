@@ -167,7 +167,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
             }),
           Expanded(
             child: _isDemo
-                ? _DemoExpenseList(expenses: _demoExpenses)
+                ? _DemoExpenseList(expenses: _demoExpenses(l10n))
                 : _ExpenseBody(
                     selectedGroupId: selectedGroupId,
                     scrollController: _scrollController,
@@ -299,6 +299,7 @@ class _MonthlySummaryCard extends ConsumerWidget {
     String? selectedGroupId,
     bool isCurrentMonth,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
         margin: const EdgeInsets.all(AppSizes.spaceM),
         padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -1059,6 +1060,7 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final unpaid = ref.watch(householdUnpaidRecurringProvider);
     final selectedMonth = ref.watch(householdSelectedMonthProvider);
 
@@ -1070,7 +1072,6 @@ class _UnpaidRecurringBanner extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     final expenseItems =
@@ -1365,10 +1366,10 @@ class _CarryOverBottomSheetState extends ConsumerState<_CarryOverBottomSheet> {
   }
 
   Future<void> _onConfirm() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isSubmitting = true);
     final amount = _parsedAmount;
     final notifier = ref.read(householdManagementProvider.notifier);
-    final l10n = AppLocalizations.of(context)!;
     bool success;
     String successMsg;
 
@@ -1469,7 +1470,7 @@ class _CarryOverBottomSheetState extends ConsumerState<_CarryOverBottomSheet> {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: l10n.household_carry_over_amount_label,
-              suffix: Text('원',
+              suffix: Text(l10n.currency_won_unit,
                   style: Theme.of(context).textTheme.bodyMedium),
               errorText: amountError,
               border: const OutlineInputBorder(),

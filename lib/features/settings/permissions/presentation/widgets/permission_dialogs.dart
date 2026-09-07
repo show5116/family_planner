@@ -51,7 +51,7 @@ class PermissionCreateDialog {
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: l10n.permission_name,
-                      hintText: '예시 권한',
+                      hintText: l10n.permission_name_hint,
                       border: const OutlineInputBorder(),
                     ),
                   ),
@@ -60,7 +60,7 @@ class PermissionCreateDialog {
                     controller: descriptionController,
                     decoration: InputDecoration(
                       labelText: l10n.permission_description,
-                      hintText: '이 권한에 대한 설명을 입력하세요',
+                      hintText: l10n.permission_desc_hint,
                       border: const OutlineInputBorder(),
                     ),
                     maxLines: 3,
@@ -83,9 +83,9 @@ class PermissionCreateDialog {
                           ),
                         ),
                         // 마지막에 "직접 입력" 옵션 추가
-                        const DropdownMenuItem(
+                        DropdownMenuItem(
                           value: _customCategoryValue,
-                          child: Text('+ 직접 입력'),
+                          child: Text(l10n.permission_category_custom),
                         ),
                       ],
                       onChanged: (value) {
@@ -102,10 +102,10 @@ class PermissionCreateDialog {
                     const SizedBox(height: AppSizes.spaceM),
                     TextField(
                       controller: customCategoryController,
-                      decoration: const InputDecoration(
-                        labelText: '새 카테고리 이름',
+                      decoration: InputDecoration(
+                        labelText: l10n.permission_category_new,
                         hintText: 'NEW_CATEGORY',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                       textCapitalization: TextCapitalization.characters,
                     ),
@@ -137,8 +137,8 @@ class PermissionCreateDialog {
                     final customValue = customCategoryController.text.trim().toUpperCase();
                     if (customValue.isEmpty) {
                       ScaffoldMessenger.of(builderContext).showSnackBar(
-                        const SnackBar(
-                          content: Text('새 카테고리 이름을 입력해주세요'),
+                        SnackBar(
+                          content: Text(l10n.permission_category_required),
                           backgroundColor: Colors.red,
                         ),
                       );

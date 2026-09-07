@@ -1,7 +1,8 @@
 part of 'shopping_history_tab.dart';
 
 // 온보딩 샘플 데이터
-final _demoHistories = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<ShoppingHistoryModel> _demoHistories(AppLocalizations l10n) => [
   ShoppingHistoryModel(
     id: '__demo_hist_1__',
     groupId: '__demo__',
@@ -9,25 +10,25 @@ final _demoHistories = [
     items: [
       ShoppingHistoryItemModel(
         id: '__demo_hist_item_1__',
-        name: '우유',
+        name: l10n.demo_milk,
         quantity: 2,
-        unit: '개',
+        unit: l10n.demo_unit_piece,
         price: 3200,
         transferredToFridge: true,
         fridgeItemId: '__demo__',
       ),
       ShoppingHistoryItemModel(
         id: '__demo_hist_item_2__',
-        name: '계란',
+        name: l10n.demo_eggs,
         quantity: 1,
-        unit: '판',
+        unit: l10n.demo_unit_pack,
         price: 6500,
         transferredToFridge: true,
         fridgeItemId: '__demo__',
       ),
       ShoppingHistoryItemModel(
         id: '__demo_hist_item_3__',
-        name: '두부',
+        name: l10n.demo_tofu,
         quantity: 1,
         unit: null,
         price: 1800,
@@ -41,7 +42,7 @@ final _demoHistories = [
       category: 'food',
       paymentMethod: 'card',
       date: DateTime.now().subtract(const Duration(days: 2)),
-      description: '마트 장보기',
+      description: l10n.cart_default_description,
     ),
   ),
   ShoppingHistoryModel(
@@ -51,9 +52,9 @@ final _demoHistories = [
     items: [
       ShoppingHistoryItemModel(
         id: '__demo_hist_item_4__',
-        name: '사과',
+        name: l10n.demo_apple,
         quantity: 5,
-        unit: '개',
+        unit: l10n.demo_unit_piece,
         price: 8000,
         transferredToFridge: false,
         fridgeItemId: null,
@@ -92,6 +93,7 @@ extension _ShoppingHistoryOnboarding on _ShoppingHistoryTabState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final firstCardPos = _keyToPosition(_firstCardKey);
@@ -108,8 +110,8 @@ extension _ShoppingHistoryOnboarding on _ShoppingHistoryTabState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '구매 이력',
-              description: '장보기를 완료할 때마다 이력이 쌓여요.\n카드를 탭하면 품목별 상세 내역을\n확인할 수 있어요.',
+              title: l10n.coach_history_records,
+              description: l10n.coach_history_records_desc,
               icon: Icons.receipt_long_outlined,
               color: AppColors.primary,
             ),
@@ -126,8 +128,8 @@ extension _ShoppingHistoryOnboarding on _ShoppingHistoryTabState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '가계부 연동',
-              description: '장보기 완료 시 지출을 함께 기록하면\n이 배지가 표시돼요.\n가계부와 자동으로 연동되어 지출 관리가 편해져요.',
+              title: l10n.coach_history_expense,
+              description: l10n.coach_history_expense_desc,
               icon: Icons.account_balance_wallet_outlined,
               color: AppColors.primary,
             ),
@@ -143,7 +145,7 @@ extension _ShoppingHistoryOnboarding on _ShoppingHistoryTabState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -152,8 +154,8 @@ extension _ShoppingHistoryOnboarding on _ShoppingHistoryTabState {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),

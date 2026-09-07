@@ -13039,6 +13039,3972 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'매월 {day}일 · 1P={amount}원'**
   String childcare_plan_summary(String day, String amount);
+
+  /// 반복 일정 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 일정 안내'**
+  String get task_recurring_guide;
+
+  /// 반복 일정 안내 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 일정은 아래 기준으로 자동 생성됩니다.'**
+  String get task_recurring_guide_body;
+
+  /// 매일/매주 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'매일 / 매주'**
+  String get task_recurring_daily_weekly;
+
+  /// 월 단위 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'월 단위'**
+  String get task_recurring_monthly_unit;
+
+  /// 연 단위 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'연 단위'**
+  String get task_recurring_yearly_unit;
+
+  /// 매월 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 (1개월마다)'**
+  String get task_recurring_every_month;
+
+  /// 격월 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'격월 (2개월마다)'**
+  String get task_recurring_every_2months;
+
+  /// 3개월 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'3개월마다'**
+  String get task_recurring_every_3months;
+
+  /// 매년 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'매년 (1년마다)'**
+  String get task_recurring_every_year;
+
+  /// 2년 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'2년마다'**
+  String get task_recurring_every_2years;
+
+  /// N개월치 사전 생성
+  ///
+  /// In ko, this message translates to:
+  /// **'{months}개월치'**
+  String task_recurring_ahead_months(String months);
+
+  /// 3개월치 사전 생성
+  ///
+  /// In ko, this message translates to:
+  /// **'3개월치 사전 생성'**
+  String get task_recurring_ahead_3months;
+
+  /// 음력 칩
+  ///
+  /// In ko, this message translates to:
+  /// **'음력'**
+  String get task_lunar;
+
+  /// 윤달 접두
+  ///
+  /// In ko, this message translates to:
+  /// **'윤'**
+  String get task_lunar_leap_prefix;
+
+  /// 음력 날짜 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'음력 {prefix}{month}월 {day}일'**
+  String task_lunar_date(String prefix, String month, String day);
+
+  /// 음력 날짜 선택 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'음력 날짜 선택'**
+  String get task_lunar_pick;
+
+  /// 월 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get task_month;
+
+  /// 일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get task_day;
+
+  /// N월
+  ///
+  /// In ko, this message translates to:
+  /// **'{month}월'**
+  String task_month_value(String month);
+
+  /// N일
+  ///
+  /// In ko, this message translates to:
+  /// **'{day}일'**
+  String task_day_value(String day);
+
+  /// 윤달 스위치
+  ///
+  /// In ko, this message translates to:
+  /// **'윤달'**
+  String get task_leap_month;
+
+  /// 윤달 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'윤달이 없는 해에는 해당 달의 같은 날로 처리됩니다'**
+  String get task_leap_month_desc;
+
+  /// 건너뜀 설정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뜀 설정'**
+  String get task_skip_settings;
+
+  /// 주말 건너뛰기
+  ///
+  /// In ko, this message translates to:
+  /// **'주말'**
+  String get task_skip_weekend;
+
+  /// 공휴일 건너뛰기
+  ///
+  /// In ko, this message translates to:
+  /// **'공휴일'**
+  String get task_skip_holiday;
+
+  /// 건너뛸 때 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛸 때'**
+  String get task_skip_when;
+
+  /// 건너뜀 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뜀'**
+  String get task_skip_do;
+
+  /// 다음 평일 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 평일로'**
+  String get task_skip_next_weekday;
+
+  /// 기념일 상세 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 상세'**
+  String get anniversary_detail;
+
+  /// 기념일 날짜 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 날짜'**
+  String get anniversary_date;
+
+  /// 등록일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'등록일'**
+  String get anniversary_created_at;
+
+  /// 기념일 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 삭제'**
+  String get anniversary_delete;
+
+  /// 기념일 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'\"{title}\"을(를) 삭제하시겠습니까?'**
+  String anniversary_delete_message(String title);
+
+  /// 연동 일정 함께 삭제 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'연동된 기념일 일정도 함께 삭제'**
+  String get anniversary_delete_linked;
+
+  /// 연동 삭제 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'체크 해제 시 일정은 유지됩니다'**
+  String get anniversary_delete_linked_desc;
+
+  /// 기념일 삭제 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하지 못했습니다'**
+  String get anniversary_delete_failed;
+
+  /// 경과일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'경과일'**
+  String get anniversary_days_elapsed;
+
+  /// 다음 기념일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 기념일'**
+  String get anniversary_next;
+
+  /// 예정된 기념일 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'예정된 기념일'**
+  String get anniversary_upcoming;
+
+  /// 접기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'접기'**
+  String get anniversary_collapse;
+
+  /// 더 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'+ {count}개 더 보기'**
+  String anniversary_show_more(int count);
+
+  /// 100일 단위 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'100일 단위 (D+100, D+200…)'**
+  String get anniversary_every100;
+
+  /// 매년 주년 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'매년 주년 (1주년, 2주년…)'**
+  String get anniversary_everyYear;
+
+  /// 자동 생성 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 알림 일정 자동 생성'**
+  String get anniversary_auto_create;
+
+  /// 기념일 관리 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 관리'**
+  String get anniversary_manage;
+
+  /// 기념일 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 추가'**
+  String get anniversary_add;
+
+  /// 기념일 수정
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 수정'**
+  String get anniversary_edit;
+
+  /// 기념일 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일을 불러오지 못했습니다'**
+  String get anniversary_load_failed;
+
+  /// 기념일 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 기념일이 없습니다'**
+  String get anniversary_empty;
+
+  /// 기념일 이름 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 이름'**
+  String get anniversary_name;
+
+  /// 기념일 이름 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 결혼기념일'**
+  String get anniversary_name_hint;
+
+  /// 기념일 이름 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 이름을 입력해 주세요'**
+  String get anniversary_name_required;
+
+  /// 기념일 생성 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'만들지 못했습니다'**
+  String get anniversary_create_failed;
+
+  /// 기념일 수정 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'수정하지 못했습니다'**
+  String get anniversary_update_failed;
+
+  /// 날짜 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜'**
+  String get common_date;
+
+  /// 반복 일정 수정 확인 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'반복 일정을 수정하시겠습니까?'**
+  String get task_recurring_edit_title;
+
+  /// 이 일정만 수정
+  ///
+  /// In ko, this message translates to:
+  /// **'이 일정만 수정'**
+  String get task_recurring_edit_this;
+
+  /// 이후 일정 모두 수정
+  ///
+  /// In ko, this message translates to:
+  /// **'이 일정 및 이후 일정 모두 수정'**
+  String get task_recurring_edit_following;
+
+  /// 반복 일정 삭제 확인 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이 반복 일정을 삭제하시겠습니까?'**
+  String get task_recurring_delete_title;
+
+  /// 이 일정만 삭제
+  ///
+  /// In ko, this message translates to:
+  /// **'이 일정만 삭제'**
+  String get task_recurring_delete_this;
+
+  /// 이후 일정 모두 삭제
+  ///
+  /// In ko, this message translates to:
+  /// **'이 일정 및 이후 일정 모두 삭제'**
+  String get task_recurring_delete_following;
+
+  /// 모든 반복 일정 삭제
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 반복 일정 삭제'**
+  String get task_recurring_delete_all;
+
+  /// 유형 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'유형'**
+  String get task_label_type;
+
+  /// 카테고리 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get task_label_category;
+
+  /// 등록일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'등록일'**
+  String get task_label_createdAt;
+
+  /// 완료됨 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'완료됨'**
+  String get task_completed;
+
+  /// 비활성 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'(비활성)'**
+  String get task_inactive;
+
+  /// 시작 시각 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'시작: {date} {time}'**
+  String task_start_at(String date, String time);
+
+  /// 종료 시각 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'종료: {date} {time}'**
+  String task_end_at(String date, String time);
+
+  /// 종료 시각(시간만)
+  ///
+  /// In ko, this message translates to:
+  /// **'종료: {time}'**
+  String task_end_time_only(String time);
+
+  /// 캘린더 전용
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더 전용'**
+  String get task_type_calendarOnly;
+
+  /// 할일 연동
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 연동'**
+  String get task_type_todoLinked;
+
+  /// 할일 전용
+  ///
+  /// In ko, this message translates to:
+  /// **'할일 전용'**
+  String get task_type_todoOnly;
+
+  /// 일반 일정
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 일정'**
+  String get task_type_default;
+
+  /// 코치마크 - 일정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 제목'**
+  String get task_coach_title_title;
+
+  /// 코치마크 - 일정 제목 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'일정의 이름을 입력하세요.\n짧고 명확하게 적을수록 좋아요.'**
+  String get task_coach_title_desc;
+
+  /// 코치마크 - 날짜 시간
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 & 시간'**
+  String get task_coach_date_title;
+
+  /// 코치마크 - 날짜 시간 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 시작일과 종료일,\n시간을 지정할 수 있어요.'**
+  String get task_coach_date_desc;
+
+  /// 코치마크 - 일정 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 유형'**
+  String get task_coach_type_title;
+
+  /// 코치마크 - 일정 유형 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 일정, 할 일, 또는 둘 다로\n유형을 선택할 수 있어요.'**
+  String get task_coach_type_desc;
+
+  /// 코치마크 - 참가자
+  ///
+  /// In ko, this message translates to:
+  /// **'참가자'**
+  String get task_coach_participants_title;
+
+  /// 코치마크 - 참가자 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹원을 이 일정에 초대할 수 있어요.\n참가자에게 알림이 전송돼요.'**
+  String get task_coach_participants_desc;
+
+  /// 건너뛰기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'건너뛰기'**
+  String get common_skip;
+
+  /// 장소 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'장소명 또는 주소 검색'**
+  String get task_place_search_hint;
+
+  /// 장소 검색 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'장소를 검색해보세요'**
+  String get task_place_search_prompt;
+
+  /// 알림 설정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 설정'**
+  String get notif_settings;
+
+  /// 오전 N시
+  ///
+  /// In ko, this message translates to:
+  /// **'오전 {hour}시'**
+  String notif_hour_am(String hour);
+
+  /// 낮 12시
+  ///
+  /// In ko, this message translates to:
+  /// **'낮 12시'**
+  String get notif_hour_noon;
+
+  /// 오후 N시
+  ///
+  /// In ko, this message translates to:
+  /// **'오후 {hour}시'**
+  String notif_hour_pm(String hour);
+
+  /// 일정 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 알림'**
+  String get notif_task;
+
+  /// 일정 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 시작 전 알림을 받습니다'**
+  String get notif_task_desc;
+
+  /// 할 일 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'할 일 알림'**
+  String get notif_todo;
+
+  /// 할 일 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'할 일 마감 기한 알림을 받습니다'**
+  String get notif_todo_desc;
+
+  /// 가계부 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 알림'**
+  String get notif_household;
+
+  /// 가계부 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 관련 알림을 받습니다'**
+  String get notif_household_desc;
+
+  /// 자산 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 알림'**
+  String get notif_assets;
+
+  /// 자산 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 변동 관련 알림을 받습니다'**
+  String get notif_assets_desc;
+
+  /// 육아 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'육아 알림'**
+  String get notif_childcare;
+
+  /// 육아 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'육아 포인트 관련 알림을 받습니다'**
+  String get notif_childcare_desc;
+
+  /// 그룹 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 알림'**
+  String get notif_group;
+
+  /// 그룹 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 관련 알림을 받습니다'**
+  String get notif_group_desc;
+
+  /// 적금 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 알림'**
+  String get notif_savings;
+
+  /// 적금 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 목표 및 납입 관련 알림을 받습니다'**
+  String get notif_savings_desc;
+
+  /// 시스템 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'시스템 알림'**
+  String get notif_system;
+
+  /// 시스템 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'중요한 시스템 알림을 받습니다'**
+  String get notif_system_desc;
+
+  /// 날씨 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨 알림'**
+  String get notif_weather;
+
+  /// 날씨 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'비·눈 예보 또는 큰 기온 변화 시 알립니다'**
+  String get notif_weather_desc;
+
+  /// 날씨 알림 시간
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨 알림 시간'**
+  String get notif_weather_time;
+
+  /// 날씨 알림 시간 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 실행 시 설정 시간이 되면 알림을 보냅니다'**
+  String get notif_weather_time_desc;
+
+  /// 루틴 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 알림'**
+  String get notif_routine;
+
+  /// 루틴 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'미체크 루틴 리마인드, 배지 획득, 주간 요약을 받습니다'**
+  String get notif_routine_desc;
+
+  /// 루틴 리마인드 시간
+  ///
+  /// In ko, this message translates to:
+  /// **'루틴 리마인드 시간'**
+  String get notif_routine_time;
+
+  /// 루틴 리마인드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 시간까지 오늘 미체크 루틴이 있으면 알림을 보냅니다'**
+  String get notif_routine_time_desc;
+
+  /// 읽지 않은 알림 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'읽지 않은 알림'**
+  String get notif_unread;
+
+  /// 전체 읽음 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 읽음'**
+  String get notif_mark_all_read;
+
+  /// 전체보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전체보기'**
+  String get notif_view_all;
+
+  /// 읽음 처리 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'읽음 처리'**
+  String get notif_mark_read;
+
+  /// 알림 처리 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 처리하지 못했습니다'**
+  String get notif_action_failed;
+
+  /// N개 읽음 처리 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 {count}개를 읽음 처리했습니다'**
+  String notif_marked_read_count(int count);
+
+  /// 전체 읽음 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 읽음 처리에 실패했습니다'**
+  String get notif_mark_all_failed;
+
+  /// 새 알림 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'새로운 알림이 없습니다'**
+  String get notif_none_new;
+
+  /// 알림 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 불러오지 못했습니다'**
+  String get notif_load_failed;
+
+  /// 알림 권한 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 권한'**
+  String get notif_permission;
+
+  /// 권한 허용됨 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 권한이 허용되었습니다'**
+  String get notif_permission_granted;
+
+  /// 권한 거부됨 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 권한이 거부되었습니다'**
+  String get notif_permission_denied;
+
+  /// 권한 활성화 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'활성화됨'**
+  String get notif_permission_on;
+
+  /// 권한 비활성화 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'비활성화됨'**
+  String get notif_permission_off;
+
+  /// 권한 있음 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'푸시 알림을 받을 수 있습니다.'**
+  String get notif_permission_on_desc;
+
+  /// 권한 없음 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 받으려면 권한을 허용해주세요.'**
+  String get notif_permission_off_desc;
+
+  /// 권한 요청 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'권한 요청'**
+  String get notif_permission_request;
+
+  /// 설정에서 허용 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'설정에서 권한 허용'**
+  String get notif_permission_settings;
+
+  /// 위치 권한 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 권한'**
+  String get location_permission;
+
+  /// 위치 권한 허용됨
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 권한이 허용되었습니다'**
+  String get location_permission_granted;
+
+  /// 위치 권한 거부됨
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 권한이 거부되었습니다'**
+  String get location_permission_denied;
+
+  /// 위치 권한 있음 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨 알림 발송에 현재 위치가 사용됩니다.'**
+  String get location_permission_on_desc;
+
+  /// 위치 권한 없음 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨 알림을 받으려면 위치 권한을 허용해주세요.\n위치 정보는 날씨 알림 발송 목적으로만 사용되며 서버에 저장됩니다.'**
+  String get location_permission_off_desc;
+
+  /// 알림 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 삭제'**
+  String get notif_delete;
+
+  /// 알림 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 알림을 삭제하시겠습니까?'**
+  String get notif_delete_message;
+
+  /// 알림 삭제 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 삭제했습니다'**
+  String get notif_deleted;
+
+  /// 알림 삭제 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 삭제하지 못했습니다'**
+  String get notif_delete_failed;
+
+  /// 알림 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get notif_title;
+
+  /// 알림 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'알림이 없습니다'**
+  String get notif_empty;
+
+  /// 알림 히스토리 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 히스토리'**
+  String get notif_history;
+
+  /// 알림 히스토리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'받은 알림 목록을 확인합니다'**
+  String get notif_history_desc;
+
+  /// 설정 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 설정을 불러오지 못했습니다'**
+  String get notif_settings_load_failed;
+
+  /// 테스트 알림 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 알림 전송'**
+  String get notif_test_send;
+
+  /// 테스트 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 알림을 자신에게 전송합니다 (운영자 전용)'**
+  String get notif_test_send_desc;
+
+  /// 테스트 알림 전송 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 알림을 보냈습니다'**
+  String get notif_test_sent;
+
+  /// 테스트 알림 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'테스트 알림을 보내지 못했습니다'**
+  String get notif_test_failed;
+
+  /// 익명 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'익명'**
+  String get common_anonymous;
+
+  /// 관리자 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자'**
+  String get common_admin;
+
+  /// 수정 완료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'수정 완료'**
+  String get common_updateDone;
+
+  /// 내 질문만 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'내 질문만'**
+  String get qna_myQuestionsOnly;
+
+  /// 전체 카테고리 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 카테고리'**
+  String get qna_allCategories;
+
+  /// 대기중 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'대기중'**
+  String get qna_tab_pending;
+
+  /// 답변완료 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'답변완료'**
+  String get qna_tab_answered;
+
+  /// 해결완료 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'해결완료'**
+  String get qna_tab_resolved;
+
+  /// 검색어 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'검색: {query}'**
+  String qna_searchLabel(String query);
+
+  /// 질문 작성 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 작성'**
+  String get qna_writeQuestion;
+
+  /// 질문 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 수정'**
+  String get qna_editQuestion;
+
+  /// 검색 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'제목 또는 내용으로 검색'**
+  String get qna_searchByTitleOrContent;
+
+  /// 상태별 질문 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'{status} 상태의 질문이 없습니다'**
+  String qna_emptyByStatus(String status);
+
+  /// 카테고리별 질문 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'{category} 카테고리의 질문이 없습니다'**
+  String qna_emptyByCategory(String category);
+
+  /// 내 질문 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 작성한 질문이 없습니다\n궁금한 점을 질문해보세요!'**
+  String get qna_emptyMine;
+
+  /// 질문 목록 로드 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 목록을 불러오지 못했습니다'**
+  String get qna_listLoadError;
+
+  /// 내용 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get qna_contentLabel;
+
+  /// 제목 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get qna_titleLabel;
+
+  /// 내용 상세 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.'**
+  String get qna_contentHintDetailed;
+
+  /// 내용 최대 길이
+  ///
+  /// In ko, this message translates to:
+  /// **'내용은 5000자를 초과할 수 없습니다'**
+  String get qna_contentMaxLength;
+
+  /// 제목 최소 5자
+  ///
+  /// In ko, this message translates to:
+  /// **'제목은 5자 이상 입력해주세요'**
+  String get qna_titleMin5;
+
+  /// 내용 최소 10자
+  ///
+  /// In ko, this message translates to:
+  /// **'내용은 10자 이상 입력해주세요'**
+  String get qna_contentMin10;
+
+  /// 질문 등록 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 등록'**
+  String get qna_submitQuestion;
+
+  /// 질문 작성 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 작성 안내'**
+  String get qna_writeGuide;
+
+  /// 질문 작성 안내 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'• 질문은 관리자가 확인 후 답변드립니다.\n• 답변은 알림으로 안내됩니다.\n• 대기 중 상태에서만 수정/삭제 가능합니다.'**
+  String get qna_writeGuideBody;
+
+  /// 공개 설정 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'공개 설정'**
+  String get qna_visibility;
+
+  /// 질문 등록 완료 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'질문이 등록되었습니다.\n답변은 알림으로 안내드립니다.'**
+  String get qna_createSuccessDetail;
+
+  /// 질문 상세 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'질문 상세'**
+  String get qna_questionDetail;
+
+  /// 해결완료 수정 불가
+  ///
+  /// In ko, this message translates to:
+  /// **'해결 완료된 질문은 수정할 수 없습니다'**
+  String get qna_cannotEditResolved;
+
+  /// 해결완료 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'해결완료'**
+  String get qna_resolve;
+
+  /// 첨부파일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'첨부파일'**
+  String get qna_attachments;
+
+  /// 다운로드 미구현 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'파일 다운로드는 아직 준비 중입니다'**
+  String get qna_downloadNotReady;
+
+  /// 답변 개수 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 ({count})'**
+  String qna_answersCount(int count);
+
+  /// 해결완료 처리 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'해결완료 처리'**
+  String get qna_resolveTitle;
+
+  /// 해결완료 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 질문을 해결완료로 처리하시겠습니까?\n해결완료 후에는 질문을 수정할 수 없습니다.'**
+  String get qna_resolveMessage;
+
+  /// 답변 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 수정'**
+  String get qna_editAnswer;
+
+  /// 답변 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 삭제'**
+  String get qna_deleteAnswer;
+
+  /// 답변 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 답변을 삭제하시겠습니까?\n삭제된 답변은 복구할 수 없습니다.'**
+  String get qna_deleteAnswerMessage;
+
+  /// 답변 작성 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 작성'**
+  String get qna_writeAnswer;
+
+  /// 답변 등록 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 등록'**
+  String get qna_submitAnswer;
+
+  /// 답변 등록 중
+  ///
+  /// In ko, this message translates to:
+  /// **'답변 등록 중...'**
+  String get qna_submittingAnswer;
+
+  /// 해결 확인 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'문제가 해결되셨나요?'**
+  String get qna_resolvedPrompt;
+
+  /// 해결 확인 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'답변이 도움이 되셨다면 해결 완료로 변경해주세요.\n1주일간 상태를 변경하지 않으면 자동으로 해결 완료로 변경됩니다.'**
+  String get qna_resolvedPromptBody;
+
+  /// 접기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'접기'**
+  String get common_collapse;
+
+  /// 필수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'(필수)'**
+  String get common_required_mark;
+
+  /// 오류 발생 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오류가 발생했습니다'**
+  String get common_errorOccurred;
+
+  /// 계좌 순서 저장
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 순서를 저장했습니다'**
+  String get asset_account_order_saved;
+
+  /// 자산 관리 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 관리'**
+  String get asset_management;
+
+  /// 자산 관리 자리표시
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 관리 기능이 여기에 표시됩니다'**
+  String get asset_management_placeholder;
+
+  /// 기록 알림 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'기록 알림'**
+  String get asset_record_reminder;
+
+  /// 기록 알림 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 지정한 날짜에 자산 기록 입력 알림을 보내드립니다.'**
+  String get asset_record_reminder_desc;
+
+  /// 알림 날짜 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 날짜'**
+  String get asset_reminder_day;
+
+  /// 매월 N일
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {day}일'**
+  String asset_monthly_day(String day);
+
+  /// 말일 처리 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'29~31일은 해당 월에 없는 경우 말일에 발송됩니다.'**
+  String get asset_reminder_day_note;
+
+  /// 출금 기록 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 기록'**
+  String get asset_withdrawal_record;
+
+  /// 출금 날짜 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 날짜: {date}'**
+  String asset_withdrawal_date(String date);
+
+  /// 출금 유형 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 유형'**
+  String get asset_withdrawal_type;
+
+  /// 출금 유형 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'출금한 금액이 원금에서 나간 것인지, 수익에서 나간 것인지 선택해 주세요.'**
+  String get asset_withdrawal_type_desc;
+
+  /// 출금 유형 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 유형을 선택해 주세요'**
+  String get asset_withdrawal_type_required;
+
+  /// 출금 금액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 금액'**
+  String get asset_withdrawal_amount;
+
+  /// 유효 금액 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'유효한 금액을 입력해 주세요'**
+  String get asset_amount_invalid;
+
+  /// 메모 라벨(선택)
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 (선택)'**
+  String get asset_memo_optional;
+
+  /// 메모 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 생활비, 수익 실현'**
+  String get asset_memo_hint;
+
+  /// 저장 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하지 못했습니다'**
+  String get asset_save_failed;
+
+  /// 원금 차감 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'원금에서 차감 (생활비, 계좌 이동 등)'**
+  String get asset_withdrawal_from_principal;
+
+  /// 종목 추가 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 추가'**
+  String get asset_holding_add;
+
+  /// 종목 수정 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 수정'**
+  String get asset_holding_edit;
+
+  /// 종목명 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'종목명'**
+  String get asset_holding_name;
+
+  /// 종목명 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 나스닥 ETF, 삼성전자'**
+  String get asset_holding_name_hint;
+
+  /// 종목명 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'종목명을 입력해 주세요'**
+  String get asset_holding_name_required;
+
+  /// 티커 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'티커 (선택)'**
+  String get asset_holding_ticker;
+
+  /// 티커 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: QQQ, 005930'**
+  String get asset_holding_ticker_hint;
+
+  /// 금액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'금액'**
+  String get asset_amount_label;
+
+  /// 비율 자동 계산 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'비율은 잔액 기준으로 자동 계산됩니다'**
+  String get asset_ratio_auto;
+
+  /// 연월일 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년 {month}월 {day}일'**
+  String asset_date_full(String year, String month, String day);
+
+  /// 코치마크 계좌 상세
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 상세 정보'**
+  String get asset_coach_detail_title;
+
+  /// 코치마크 계좌 상세 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'최신 잔액과 수익률을 확인하고,\n아래로 스크롤하면 자산 변화 차트와\n원금·수익금 통계를 볼 수 있어요.'**
+  String get asset_coach_detail_desc;
+
+  /// 코치마크 잔액 기록
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액 기록 추가'**
+  String get asset_coach_record_title;
+
+  /// 코치마크 잔액 기록 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.\n출금 기록도 함께 관리할 수 있습니다.'**
+  String get asset_coach_record_desc;
+
+  /// 코치마크 포트폴리오
+  ///
+  /// In ko, this message translates to:
+  /// **'포트폴리오'**
+  String get asset_coach_portfolio_title;
+
+  /// 코치마크 포트폴리오 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜별로 보유 종목과 금액을 기록해\n자산 구성을 파이차트로 확인하세요.\n두 날짜를 비교해 변화도 볼 수 있어요.'**
+  String get asset_coach_portfolio_desc;
+
+  /// 전체 기록 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 {count}건 보기'**
+  String asset_view_all_records(int count);
+
+  /// 잔액 기록 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액 기록'**
+  String get asset_balance_record;
+
+  /// 잔액 기록 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액·원금·수익을 기록합니다'**
+  String get asset_balance_record_desc;
+
+  /// 출금 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'출금'**
+  String get asset_withdrawal;
+
+  /// 출금 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'원금 인출 또는 수익 실현을 기록합니다'**
+  String get asset_withdrawal_desc;
+
+  /// 포트폴리오 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'포트폴리오'**
+  String get asset_portfolio;
+
+  /// 변화 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'변화'**
+  String get asset_change;
+
+  /// 합계 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'합계'**
+  String get asset_total;
+
+  /// 재시도 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'재시도'**
+  String get asset_retry;
+
+  /// 자동 계산 되돌리기 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 계산으로 되돌리기'**
+  String get asset_reset_auto;
+
+  /// 출금 기록 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'출금 기록 삭제'**
+  String get asset_withdrawal_delete;
+
+  /// 출금 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하면 출금일 이후 원금/수익이 원복됩니다. 계속하시겠어요?'**
+  String get asset_withdrawal_delete_message;
+
+  /// 종목 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 추가'**
+  String get asset_holding_add_button;
+
+  /// 비교 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'비교'**
+  String get asset_compare;
+
+  /// 잔액 기록 선행 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액 기록을 먼저 추가하면 포트폴리오를 기록할 수 있습니다.'**
+  String get asset_record_first;
+
+  /// 해당 날짜 종목 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'이 날짜에 등록된 종목이 없습니다.'**
+  String get asset_no_holdings;
+
+  /// 현금 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'현금'**
+  String get asset_cash;
+
+  /// 종목 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'종목 삭제'**
+  String get asset_holding_delete;
+
+  /// 종목 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 기록을 삭제할까요?'**
+  String asset_holding_delete_message(String name);
+
+  /// 삭제 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제하지 못했습니다'**
+  String get asset_delete_failed;
+
+  /// 기타 N개
+  ///
+  /// In ko, this message translates to:
+  /// **'기타 {count}개'**
+  String asset_others_count(int count);
+
+  /// 현금으로 채우기
+  ///
+  /// In ko, this message translates to:
+  /// **'현금으로 채우기 ({amount})'**
+  String asset_fill_with_cash(String amount);
+
+  /// 잔액 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액: {amount}'**
+  String asset_balance_value(String amount);
+
+  /// 필터 최소 1개 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'적어도 하나는 선택해 주세요'**
+  String get asset_filter_min_one;
+
+  /// 출금 유형 상세 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'출금한 금액이 원금에서 나간 것인지, 수익에서 나간 것인지 선택해 주세요.\n잔액 기록 시 원금과 수익을 자동으로 재계산하는 데 사용됩니다.'**
+  String get asset_withdrawal_type_desc_full;
+
+  /// 수익 차감 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'수익에서 차감 (세금, 수익 인출 등)'**
+  String get asset_withdrawal_from_profit;
+
+  /// 계좌 최소 1개 선택
+  ///
+  /// In ko, this message translates to:
+  /// **'적어도 한 개의 계좌를 선택해 주세요.'**
+  String get asset_filter_min_one_account;
+
+  /// 범례 더보기
+  ///
+  /// In ko, this message translates to:
+  /// **'+{count}개 더보기'**
+  String asset_legend_more(int count);
+
+  /// 포트폴리오 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'포트폴리오'**
+  String get asset_holdings_section;
+
+  /// 기타 비율 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'기타 {count}개  {ratio}%'**
+  String asset_others_ratio(int count, String ratio);
+
+  /// 누적 수익률 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'누적 수익률'**
+  String get asset_cumulative_return;
+
+  /// 기간 수익률 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 수익률'**
+  String get asset_period_return;
+
+  /// 잔액 툴팁 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금'**
+  String get asset_tooltip_balance;
+
+  /// 원금 툴팁 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.'**
+  String get asset_tooltip_principal;
+
+  /// 수익금 툴팁 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금'**
+  String get asset_tooltip_profit;
+
+  /// 누적 수익률 툴팁 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100'**
+  String get asset_tooltip_cumulative;
+
+  /// 기간 수익률 툴팁 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100'**
+  String get asset_tooltip_period;
+
+  /// 금액 원 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원'**
+  String asset_amount_won(String amount);
+
+  /// N월 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{month}월'**
+  String asset_month_unit(String month);
+
+  /// 금 시세 g당 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원/g'**
+  String asset_gold_price_per_gram(String amount);
+
+  /// USD 환산 비교 대상
+  ///
+  /// In ko, this message translates to:
+  /// **'USD환산'**
+  String get asset_compare_usd;
+
+  /// 미니게임 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'미니게임'**
+  String get minigame_title;
+
+  /// 미니게임 코치마크 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'사다리타기와 룰렛 게임을 즐길 수 있어요.\n공정한 결정이 필요할 때 활용해보세요!'**
+  String get minigame_coach_desc;
+
+  /// 그룹 선택 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get minigame_coach_group;
+
+  /// 그룹 선택 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택하면 게임 결과가\n자동으로 저장돼요.\n그룹 멤버 누구나 이력을 확인할 수 있어요.'**
+  String get minigame_coach_group_desc;
+
+  /// 게임 이력 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'게임 이력'**
+  String get minigame_history;
+
+  /// 게임 이력 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'지금까지 진행한 게임 결과를\n이곳에서 확인할 수 있어요.\n누가 어떤 결과를 받았는지 투명하게 공개됩니다.'**
+  String get minigame_coach_history_desc;
+
+  /// 사다리타기
+  ///
+  /// In ko, this message translates to:
+  /// **'사다리타기'**
+  String get minigame_ladder;
+
+  /// 룰렛
+  ///
+  /// In ko, this message translates to:
+  /// **'룰렛'**
+  String get minigame_roulette;
+
+  /// 그룹 없음 옵션
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 없음 (이력 저장 안 함)'**
+  String get minigame_no_group;
+
+  /// 게임 이력 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'게임 이력이 없습니다'**
+  String get minigame_history_empty;
+
+  /// 그룹 선택 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 선택하면\n게임 이력이 자동 저장됩니다'**
+  String get minigame_select_group_hint;
+
+  /// 이력 삭제 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이력 삭제'**
+  String get minigame_history_delete;
+
+  /// 이력 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 게임 이력을 삭제하시겠습니까?'**
+  String get minigame_history_delete_message;
+
+  /// 룰렛 당첨 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'당첨: {name}'**
+  String minigame_winner(String name);
+
+  /// 사다리 기본 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'사다리타기'**
+  String get minigame_ladder_default_title;
+
+  /// 룰렛 기본 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'룰렛'**
+  String get minigame_roulette_default_title;
+
+  /// 게임 제목 입력칸
+  ///
+  /// In ko, this message translates to:
+  /// **'게임 제목'**
+  String get minigame_game_title;
+
+  /// 사다리 생성 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'사다리 생성'**
+  String get minigame_create_ladder;
+
+  /// 사다리 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'참여자 이름을 눌러 사다리를 타세요!'**
+  String get minigame_ladder_hint;
+
+  /// 전체 스킵 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 스킵'**
+  String get minigame_skip_all;
+
+  /// 다시 설정 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 설정'**
+  String get minigame_reset;
+
+  /// 참여자 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'참여자'**
+  String get minigame_participants;
+
+  /// 최종 결과 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'최종 결과'**
+  String get minigame_final_result;
+
+  /// 게임 저장 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'게임 결과를 저장했습니다'**
+  String get minigame_saved;
+
+  /// 게임 저장 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하지 못했습니다'**
+  String get minigame_save_failed;
+
+  /// 결과 항목 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'결과 항목'**
+  String get minigame_result_items;
+
+  /// 항목 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 {index}'**
+  String minigame_item_hint(int index);
+
+  /// 항목 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 추가'**
+  String get minigame_add_item;
+
+  /// 수량 불일치 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'수량 합계({total})가 참여자 수({count})와 같아야 합니다'**
+  String minigame_count_mismatch(String total, String count);
+
+  /// 그룹 플레이 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹으로 플레이 중'**
+  String get minigame_playing_with_group;
+
+  /// 멤버 로딩 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 멤버를 불러오는 중입니다. 잠시 후 다시 시도해주세요.'**
+  String get minigame_members_loading;
+
+  /// 직접 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'{label} 직접 추가'**
+  String minigame_add_manually(String label);
+
+  /// 멤버 선택 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버 선택'**
+  String get minigame_select_members;
+
+  /// 그룹 멤버 선택 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 멤버 선택'**
+  String get minigame_select_group_members;
+
+  /// 알 수 없는 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'알 수 없음'**
+  String get minigame_unknown;
+
+  /// 이미 추가됨 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 추가됨'**
+  String get minigame_already_added;
+
+  /// 선택 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'추가 ({count})'**
+  String minigame_add_count(int count);
+
+  /// 돌리기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'돌리기'**
+  String get minigame_spin;
+
+  /// 항목 2개 이상 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'항목을 2개 이상 입력해주세요'**
+  String get minigame_need_two_items;
+
+  /// 결과 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'결과'**
+  String get minigame_result;
+
+  /// 항목 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'항목'**
+  String get minigame_item;
+
+  /// 비율 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'비율'**
+  String get minigame_ratio;
+
+  /// 필터 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'필터'**
+  String get common_filter;
+
+  /// 그룹 선택
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get common_selectGroup;
+
+  /// 알 수 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'알 수 없음'**
+  String get common_unknown;
+
+  /// 계정 삭제 예정 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'계정이 {date} ({days}일 후)에 삭제될 예정입니다.'**
+  String home_delete_scheduled(String date, String days);
+
+  /// 삭제 취소 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제 취소'**
+  String get home_delete_cancel;
+
+  /// 삭제 취소 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제 예약을 취소했습니다'**
+  String get home_delete_canceled;
+
+  /// 더보기 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'더보기 탭에서 시작하세요'**
+  String get home_coach_more;
+
+  /// 그룹 관리 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 관리'**
+  String get home_coach_group;
+
+  /// 그룹 관리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'가족, 연인, 친구 등 원하는 그룹을 만들고\n초대 코드로 구성원을 초대하세요.'**
+  String get home_coach_group_desc;
+
+  /// 위젯 설정 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'대시보드 위젯 커스터마이징'**
+  String get home_coach_widget;
+
+  /// 위젯 설정 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 → 홈 위젯 설정에서\n원하는 위젯만 골라 대시보드를 꾸미세요.'**
+  String get home_coach_widget_desc;
+
+  /// 탭 설정 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'하단 탭 커스터마이징'**
+  String get home_coach_tab;
+
+  /// 탭 설정 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 → 하단 네비게이션 설정에서\n자주 쓰는 메뉴로 자유롭게 바꾸세요.'**
+  String get home_coach_tab_desc;
+
+  /// 더보기 이동 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'탭을 눌러 더보기로 이동'**
+  String get home_coach_tap_more;
+
+  /// 기간 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기간'**
+  String get home_period;
+
+  /// 개인 일정 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'개인 일정'**
+  String get home_personal_schedule;
+
+  /// 개인 일정 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'내 개인 일정 포함'**
+  String get home_personal_schedule_desc;
+
+  /// 보기 모드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'보기 모드'**
+  String get home_view_mode;
+
+  /// 고정된 메모 위젯 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'고정된 메모'**
+  String get home_pinned_memos;
+
+  /// 고정 메모 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'고정된 메모가 없습니다'**
+  String get home_pinned_memos_empty;
+
+  /// 체크리스트 진행
+  ///
+  /// In ko, this message translates to:
+  /// **'{checked}/{total} 완료'**
+  String home_checklist_progress(String checked, String total);
+
+  /// 유통기한 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'기한 없음'**
+  String get home_no_expiry;
+
+  /// 기한 초과
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 초과'**
+  String home_expired_days(String days);
+
+  /// 오늘 만료
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 만료'**
+  String get home_expires_today;
+
+  /// 총 적립액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'총 적립액'**
+  String get home_total_savings;
+
+  /// 진행 중 목표 수
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개 진행 중'**
+  String home_active_goals(int count);
+
+  /// 목표 금액 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 {amount}'**
+  String home_goal_amount(String amount);
+
+  /// 외 N개
+  ///
+  /// In ko, this message translates to:
+  /// **'외 {count}개'**
+  String home_more_goals(int count);
+
+  /// 일정 필터 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 필터'**
+  String get home_schedule_filter;
+
+  /// 자녀 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 자녀가 없습니다'**
+  String get home_no_children;
+
+  /// 자녀 적금 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 {points}P'**
+  String home_childcare_savings(String points);
+
+  /// 기념일 더보기
+  ///
+  /// In ko, this message translates to:
+  /// **'+ {count}개 더 보기'**
+  String home_anniversary_more(int count);
+
+  /// 이메일 복사 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일 주소를 복사했습니다'**
+  String get auth_email_copied;
+
+  /// 로그인 처리 중
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인 처리 중...'**
+  String get auth_login_processing;
+
+  /// 잠시 대기 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'잠시만 기다려주세요.'**
+  String get auth_please_wait;
+
+  /// 로그인 실패 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인 실패'**
+  String get auth_login_failed;
+
+  /// 로그인 화면으로 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인 화면으로 돌아가기'**
+  String get auth_back_to_login;
+
+  /// 인증 코드 검증
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드를 입력해주세요'**
+  String get auth_code_required;
+
+  /// 이메일 인증 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일 인증이 완료되었습니다. 로그인해주세요.'**
+  String get auth_email_verified;
+
+  /// 인증 메일 재전송 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 이메일을 다시 보냈습니다.'**
+  String get auth_email_resent;
+
+  /// 이메일 인증 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일 인증'**
+  String get auth_email_verification;
+
+  /// 이메일 확인 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일을 확인해주세요'**
+  String get auth_check_email;
+
+  /// 인증 메일 발송 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'{email}\n으로 인증 이메일을 보냈습니다.'**
+  String auth_email_sent_to(String email);
+
+  /// 인증 코드 입력 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드 입력'**
+  String get auth_enter_code;
+
+  /// 인증 코드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일에 포함된 6자리 인증 코드를 입력해주세요.'**
+  String get auth_enter_code_desc;
+
+  /// 인증 코드 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 코드'**
+  String get auth_code_label;
+
+  /// 인증 코드 예시
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 123456'**
+  String get auth_code_hint;
+
+  /// 메일 미수신 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일을 받지 못하셨나요?'**
+  String get auth_no_email;
+
+  /// 인증 메일 재전송 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 이메일 재전송'**
+  String get auth_resend_email;
+
+  /// 나중에 인증 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'나중에 인증하기 '**
+  String get auth_verify_later;
+
+  /// 로그인으로 돌아가기
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인으로 돌아가기'**
+  String get auth_back_to_signin;
+
+  /// 인증 토큰 없음 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'인증 토큰이 없습니다. 다시 로그인해주세요.'**
+  String get auth_no_token;
+
+  /// 약관 동의 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'서비스 이용 동의'**
+  String get auth_terms_title;
+
+  /// 약관 동의 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'패밀리플래너 서비스 이용을\n위해 약관에 동의해 주세요'**
+  String get auth_terms_desc;
+
+  /// 동의하고 시작 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'동의하고 시작하기'**
+  String get auth_agree_and_start;
+
+  /// AI 어시스턴트
+  ///
+  /// In ko, this message translates to:
+  /// **'AI 어시스턴트'**
+  String get ai_assistant;
+
+  /// 프리미엄 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'내년 출시될 프리미엄 구독 기능입니다.\n구독을 통해 AI 어시스턴트를 사용하실 수 있습니다.'**
+  String get ai_premium_desc;
+
+  /// 프리미엄 출시 예정 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'프리미엄 구독 출시 예정'**
+  String get ai_premium_coming;
+
+  /// 무엇이든 물어보세요
+  ///
+  /// In ko, this message translates to:
+  /// **'무엇이든 물어보세요'**
+  String get ai_ask_anything;
+
+  /// 대화 초기화 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'대화 초기화'**
+  String get ai_reset_chat;
+
+  /// AI 인사말
+  ///
+  /// In ko, this message translates to:
+  /// **'안녕하세요! 가족 플래너 AI입니다.'**
+  String get ai_greeting;
+
+  /// AI 인사 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'아래 추천 질문을 눌러보거나\n직접 질문을 입력해보세요.'**
+  String get ai_greeting_desc;
+
+  /// 새 대화 시작 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'새 대화를 시작했습니다'**
+  String get ai_new_chat;
+
+  /// 메시지 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'메시지를 입력하세요...'**
+  String get ai_message_hint;
+
+  /// 전송 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'전송'**
+  String get ai_send;
+
+  /// 추천 질문 1
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 지출 분석해줘'**
+  String get ai_suggest1;
+
+  /// 추천 질문 2
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 일정 요약해줘'**
+  String get ai_suggest2;
+
+  /// 추천 질문 3
+  ///
+  /// In ko, this message translates to:
+  /// **'저축 목표 달성률 알려줘'**
+  String get ai_suggest3;
+
+  /// 추천 질문 4
+  ///
+  /// In ko, this message translates to:
+  /// **'미결 할 일 목록 보여줘'**
+  String get ai_suggest4;
+
+  /// 추천 질문 5
+  ///
+  /// In ko, this message translates to:
+  /// **'투자 포트폴리오 현황은?'**
+  String get ai_suggest5;
+
+  /// 추천 질문 6
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 중요한 일정 뭐 있어?'**
+  String get ai_suggest6;
+
+  /// 날씨 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'날씨'**
+  String get weather_title;
+
+  /// 현재 날씨 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 날씨를 불러오지 못했습니다'**
+  String get weather_current_failed;
+
+  /// 예보 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'예보를 불러오지 못했습니다'**
+  String get weather_forecast_failed;
+
+  /// 습도 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'습도'**
+  String get weather_humidity;
+
+  /// 풍속 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'풍속'**
+  String get weather_wind;
+
+  /// 강수량 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'강수량'**
+  String get weather_precipitation;
+
+  /// 대기질 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'대기질'**
+  String get weather_air_quality;
+
+  /// 미세먼지 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'미세먼지'**
+  String get weather_pm10;
+
+  /// 초미세먼지 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'초미세먼지'**
+  String get weather_pm25;
+
+  /// 측정 기준 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'측정 기준: {region}'**
+  String weather_measured_at(String region);
+
+  /// 시간별 예보 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'시간별 예보'**
+  String get weather_hourly;
+
+  /// 시간별 예보 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'시간별 예보 정보가 없습니다'**
+  String get weather_hourly_empty;
+
+  /// 날짜별 예보 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜별 예보'**
+  String get weather_daily;
+
+  /// N시 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{hour}시'**
+  String weather_hour(String hour);
+
+  /// 오늘 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get weather_today;
+
+  /// 일 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'일'**
+  String get calendar_view_day;
+
+  /// 주 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'주'**
+  String get calendar_view_week;
+
+  /// 월 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'월'**
+  String get calendar_view_month;
+
+  /// 연도 보기
+  ///
+  /// In ko, this message translates to:
+  /// **'연도'**
+  String get calendar_view_year;
+
+  /// 기념일 관리 메뉴
+  ///
+  /// In ko, this message translates to:
+  /// **'기념일 관리'**
+  String get calendar_manage_anniversary;
+
+  /// 뷰 선택 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'뷰 선택'**
+  String get calendar_select_view;
+
+  /// 종일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'종일'**
+  String get calendar_allday;
+
+  /// 음력 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'음력 {label}'**
+  String calendar_lunar_label(String label);
+
+  /// 숨겨진 일정 수
+  ///
+  /// In ko, this message translates to:
+  /// **'+{count}개'**
+  String calendar_hidden_count(int count);
+
+  /// 그룹 외 N개
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 외 {count}개'**
+  String calendar_group_more(String name, int count);
+
+  /// N년 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년'**
+  String calendar_year_label(String year);
+
+  /// 일정 추가 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'일정을 추가했습니다.'**
+  String get calendar_task_added;
+
+  /// 일정 제목 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 제목'**
+  String get calendar_task_title_hint;
+
+  /// 개인 선택지
+  ///
+  /// In ko, this message translates to:
+  /// **'개인'**
+  String get calendar_personal;
+
+  /// 일정 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'일정'**
+  String get calendar_type_event;
+
+  /// 할일 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'할일'**
+  String get calendar_type_todo;
+
+  /// 일정+할일 유형
+  ///
+  /// In ko, this message translates to:
+  /// **'일정+할일'**
+  String get calendar_type_both;
+
+  /// 더 보기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'더 보기'**
+  String get calendar_more;
+
+  /// 5분 전 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'5분 전'**
+  String get calendar_remind_5m;
+
+  /// 15분 전 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'15분 전'**
+  String get calendar_remind_15m;
+
+  /// 30분 전 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'30분 전'**
+  String get calendar_remind_30m;
+
+  /// 1시간 전 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'1시간 전'**
+  String get calendar_remind_1h;
+
+  /// 1일 전 알림
+  ///
+  /// In ko, this message translates to:
+  /// **'1일 전'**
+  String get calendar_remind_1d;
+
+  /// N년 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년'**
+  String household_year_label(String year);
+
+  /// 연간 통계 탭
+  ///
+  /// In ko, this message translates to:
+  /// **'연간 통계'**
+  String get household_yearly_stats;
+
+  /// 통계 제외 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'환불금 및 이월 입금은 통계에서 제외됩니다'**
+  String get household_stats_exclude_note;
+
+  /// 카테고리별
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별'**
+  String get household_by_category;
+
+  /// 소비처별
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처별'**
+  String get household_by_merchant;
+
+  /// 멤버별
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버별'**
+  String get household_by_member;
+
+  /// 직접 필터링
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 필터링'**
+  String get household_custom_filter;
+
+  /// 카테고리별 지출 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별 지출'**
+  String get household_category_spending;
+
+  /// 소비처별 지출 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처별 지출'**
+  String get household_merchant_spending;
+
+  /// 멤버별 지출 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버별 지출'**
+  String get household_member_spending;
+
+  /// 소비처 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'소비처 없음'**
+  String get household_no_merchant;
+
+  /// 미지정
+  ///
+  /// In ko, this message translates to:
+  /// **'미지정'**
+  String get household_unassigned;
+
+  /// 멤버 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버'**
+  String get household_member;
+
+  /// 월별 지출 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'월별 지출'**
+  String get household_monthly_spending;
+
+  /// 지난달 비교 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'지난달 비교'**
+  String get household_compare_last_month;
+
+  /// 누적 지출 추이 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'누적 지출 추이'**
+  String get household_cumulative_trend;
+
+  /// 가변 배지
+  ///
+  /// In ko, this message translates to:
+  /// **'가변'**
+  String get household_variable;
+
+  /// 예상금액 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'예상금액'**
+  String get household_expected_amount;
+
+  /// 발생일 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'발생일'**
+  String get household_due_day;
+
+  /// 매월 N일
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {day}일'**
+  String household_due_day_value(String day);
+
+  /// 받는 사람 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 사람'**
+  String get household_payee;
+
+  /// 결제하는 사람 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'결제하는 사람'**
+  String get household_payer;
+
+  /// 적용 내역 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 적용된 내역이 없습니다'**
+  String get household_no_applied;
+
+  /// 확정 평균 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'확정 평균'**
+  String get household_confirmed_avg;
+
+  /// 최솟값 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최솟값'**
+  String get household_min;
+
+  /// 최댓값 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'최댓값'**
+  String get household_max;
+
+  /// 미확정 접미
+  ///
+  /// In ko, this message translates to:
+  /// **'{date}  미확정'**
+  String household_unconfirmed_suffix(String date);
+
+  /// 예시 포트폴리오 - 나스닥 ETF
+  ///
+  /// In ko, this message translates to:
+  /// **'나스닥 ETF'**
+  String get asset_demo_nasdaq;
+
+  /// 예시 포트폴리오 - 삼성전자
+  ///
+  /// In ko, this message translates to:
+  /// **'삼성전자'**
+  String get asset_demo_samsung;
+
+  /// 금액 입력칸의 통화 단위
+  ///
+  /// In ko, this message translates to:
+  /// **'원'**
+  String get currency_won_unit;
+
+  /// 가계부 자동 등록 완료 알림 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 자동 등록 완료'**
+  String get household_auto_registered;
+
+  /// 가계부 자동 등록 알림 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원이 가계부에 등록되었습니다.'**
+  String household_auto_registered_body(String amount);
+
+  /// 결제 알림 감지 서비스 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 자동 등록'**
+  String get household_auto_service;
+
+  /// 결제 알림 감지 서비스 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 알림을 감지해 가계부에 자동 등록합니다'**
+  String get household_auto_service_desc;
+
+  /// 캘린더 코치마크 - 공유 캘린더
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 캘린더'**
+  String get coach_calendar_shared;
+
+  /// 공유 캘린더 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 구성원의 일정을 한눈에 볼 수 있어요.\n날짜를 탭해 해당 날의 일정을 확인하세요.'**
+  String get coach_calendar_shared_desc;
+
+  /// 캘린더 코치마크 - 일정 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'일정 추가'**
+  String get coach_calendar_add;
+
+  /// 일정 추가 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'버튼을 눌러 새 일정을 만드세요.\n눌러서 생성 화면을 살펴보세요.'**
+  String get coach_calendar_add_desc;
+
+  /// 그룹 코치마크 - 그룹 만들기
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 만들기'**
+  String get coach_group_create;
+
+  /// 그룹 만들기 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'가족, 연인, 친구, 팀 등\n원하는 그룹을 직접 만들어 보세요.'**
+  String get coach_group_create_desc;
+
+  /// 그룹 코치마크 - 참여하기
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 참여하기'**
+  String get coach_group_join;
+
+  /// 그룹 참여 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 입력해 기존 그룹에 합류하세요.\n그룹원이 공유한 코드를 사용하면 돼요.'**
+  String get coach_group_join_desc;
+
+  /// 그룹 코치마크 - 신청 내역
+  ///
+  /// In ko, this message translates to:
+  /// **'신청 내역'**
+  String get coach_group_requests;
+
+  /// 신청 내역 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'내가 참여 신청한 그룹 목록을 확인하고\n수락 여부를 여기서 확인할 수 있어요.'**
+  String get coach_group_requests_desc;
+
+  /// 저금통 코치마크 - 적립 현황
+  ///
+  /// In ko, this message translates to:
+  /// **'적립 현황'**
+  String get coach_savings_status;
+
+  /// 적립 현황 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 적립금과 목표 금액,\n달성률을 상세하게 확인할 수 있어요.\n자동 적립 중일 때는 적립 상태도 표시돼요.'**
+  String get coach_savings_status_desc;
+
+  /// 저금통 코치마크 - 입출금
+  ///
+  /// In ko, this message translates to:
+  /// **'입금 / 출금'**
+  String get coach_savings_deposit;
+
+  /// 입출금 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'언제든지 직접 입금하거나 출금할 수 있어요.\n자동 적립과 함께 활용하면 더욱 편리해요.'**
+  String get coach_savings_deposit_desc;
+
+  /// 저금통 코치마크 - 저금통
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통'**
+  String get coach_savings_goal;
+
+  /// 저금통 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 이름, 현재 적립금, 달성률을 한눈에 확인할 수 있어요.\n자동 적립을 켜두면 매달 자동으로 입금돼요.'**
+  String get coach_savings_goal_desc;
+
+  /// 저금통 예시 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'올해 여름 가족 여행 목표'**
+  String get coach_savings_demo_desc;
+
+  /// 저금통 예시 - 제주도 여행
+  ///
+  /// In ko, this message translates to:
+  /// **'제주도 여행'**
+  String get coach_savings_demo_jeju;
+
+  /// 저금통 예시 - 비상금
+  ///
+  /// In ko, this message translates to:
+  /// **'비상금'**
+  String get coach_savings_demo_emergency;
+
+  /// 예시 품목 - 우유
+  ///
+  /// In ko, this message translates to:
+  /// **'우유'**
+  String get demo_milk;
+
+  /// 예시 품목 - 계란
+  ///
+  /// In ko, this message translates to:
+  /// **'계란'**
+  String get demo_eggs;
+
+  /// 예시 품목 - 두부
+  ///
+  /// In ko, this message translates to:
+  /// **'두부'**
+  String get demo_tofu;
+
+  /// 예시 단위 - 개
+  ///
+  /// In ko, this message translates to:
+  /// **'개'**
+  String get demo_unit_piece;
+
+  /// 예시 단위 - 판
+  ///
+  /// In ko, this message translates to:
+  /// **'판'**
+  String get demo_unit_pack;
+
+  /// 예시 보관함 - 냉장고
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고'**
+  String get demo_fridge;
+
+  /// 예시 보관함 - 냉동실
+  ///
+  /// In ko, this message translates to:
+  /// **'냉동실'**
+  String get demo_freezer;
+
+  /// 예시 계좌 - 국민은행 적금
+  ///
+  /// In ko, this message translates to:
+  /// **'국민은행 적금'**
+  String get demo_bank_savings;
+
+  /// 사다리 코치마크 - 참여자 입력
+  ///
+  /// In ko, this message translates to:
+  /// **'참여자 입력'**
+  String get coach_ladder_participants;
+
+  /// 참여자 입력 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'사다리를 탈 참여자 이름을 입력해요.\n그룹 멤버 불러오기 버튼으로\n한 번에 추가할 수도 있어요.'**
+  String get coach_ladder_participants_desc;
+
+  /// 사다리 코치마크 - 결과 항목
+  ///
+  /// In ko, this message translates to:
+  /// **'결과 항목 입력'**
+  String get coach_ladder_results;
+
+  /// 결과 항목 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'당첨될 결과 항목과 수량을 입력해요.\n수량의 합이 참여자 수와 같아야\n사다리를 생성할 수 있어요.'**
+  String get coach_ladder_results_desc;
+
+  /// 사다리 코치마크 - 생성
+  ///
+  /// In ko, this message translates to:
+  /// **'사다리 생성'**
+  String get coach_ladder_create;
+
+  /// 사다리 생성 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'버튼을 누르면 사다리가 생성돼요.\n참여자 이름을 탭하면 경로가 애니메이션으로\n표시되고 결과가 공개됩니다.'**
+  String get coach_ladder_create_desc;
+
+  /// 룰렛 코치마크 - 항목 입력
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 입력'**
+  String get coach_roulette_items;
+
+  /// 항목 입력 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'룰렛에 올릴 항목을 입력해요.\n비율을 조정하면 당첨 확률을\n다르게 설정할 수 있어요.'**
+  String get coach_roulette_items_desc;
+
+  /// 룰렛 코치마크 - 원판
+  ///
+  /// In ko, this message translates to:
+  /// **'룰렛 원판'**
+  String get coach_roulette_wheel;
+
+  /// 원판 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'항목을 2개 이상 입력하면\n룰렛 원판이 나타나요.\n가운데 버튼을 눌러도 돌릴 수 있어요.'**
+  String get coach_roulette_wheel_desc;
+
+  /// 룰렛 코치마크 - 돌리기
+  ///
+  /// In ko, this message translates to:
+  /// **'돌리기'**
+  String get coach_roulette_spin;
+
+  /// 돌리기 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'버튼을 누르면 룰렛이 회전해요.\n결과는 자동으로 그룹 이력에\n저장되어 모두가 확인할 수 있어요.'**
+  String get coach_roulette_spin_desc;
+
+  /// 자산 코치마크 - 계좌 카드
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌 카드'**
+  String get coach_asset_card;
+
+  /// 계좌 카드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'계좌명, 금융기관, 최신 잔액과 수익률을\n한눈에 확인할 수 있어요.\n탭하면 잔액 기록과 포트폴리오를 관리할 수 있습니다.'**
+  String get coach_asset_card_desc;
+
+  /// 자산 코치마크 - 자산 통계
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 통계'**
+  String get coach_asset_stats;
+
+  /// 자산 통계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 자산의 합계, 수익률, 유형별 분포를\n차트로 한눈에 확인할 수 있어요.\nKOSPI·S&P500 등 지수와 비교도 가능합니다.'**
+  String get coach_asset_stats_desc;
+
+  /// 예시 금융기관 - 국민은행
+  ///
+  /// In ko, this message translates to:
+  /// **'국민은행'**
+  String get demo_bank_kb;
+
+  /// 그룹 상세 코치마크 - 멤버 초대
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버를 초대해보세요'**
+  String get coach_group_invite;
+
+  /// 멤버 초대 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 탭에서 초대 코드를 공유하거나\n이메일로 직접 멤버를 초대할 수 있어요.\n\n탭을 눌러 설정으로 이동하세요.'**
+  String get coach_group_invite_desc;
+
+  /// 초대 코드 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드로 멤버 초대'**
+  String get coach_group_invite_code;
+
+  /// 초대 코드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'코드를 복사해 공유하거나\n이메일로 직접 초대장을 보낼 수 있어요.'**
+  String get coach_group_invite_code_desc;
+
+  /// 역할 관리 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'역할로 권한을 관리하세요'**
+  String get coach_group_roles;
+
+  /// 역할 관리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 탭에서 새로운 역할을 만들고\n멤버별 권한을 세밀하게 설정할 수 있어요.\n\n탭을 눌러 역할 관리로 이동하세요.'**
+  String get coach_group_roles_desc;
+
+  /// 새 역할 만들기 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'새 역할 만들기'**
+  String get coach_group_role_new;
+
+  /// 새 역할 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'버튼을 눌러 역할을 만들고\n이름, 색상, 권한을 자유롭게 설정하세요.'**
+  String get coach_group_role_new_desc;
+
+  /// 그룹 색상 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'나만의 그룹 색상을 설정하세요'**
+  String get coach_group_color;
+
+  /// 그룹 색상 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'설정 탭에서 이 그룹의 색상을 지정할 수 있어요.\n설정한 색상은 일정 등 다양한 메뉴에서\n이 그룹의 항목을 구분하는 데 사용돼요.\n\n탭을 눌러 설정으로 이동하세요.'**
+  String get coach_group_color_desc;
+
+  /// 장보기 완료 코치마크 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 완료 기능 안내'**
+  String get coach_cart_complete;
+
+  /// 장보기 완료 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 완료 버튼을 누르면 아래 두 가지를 한 번에 처리할 수 있어요.'**
+  String get coach_cart_complete_desc;
+
+  /// 냉장고 이관 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'냉장고로 이관'**
+  String get coach_cart_to_fridge;
+
+  /// 냉장고 이관 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'구매한 품목을 냉장고 보관소로 바로 옮길 수 있어요.\n수량·유통기한·알림일도 함께 설정할 수 있습니다.'**
+  String get coach_cart_to_fridge_desc;
+
+  /// 가계부 기록 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 자동 기록'**
+  String get coach_cart_to_expense;
+
+  /// 가계부 기록 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'지출 금액·결제 수단·메모를 입력하면\n가계부에 자동으로 기록돼요.'**
+  String get coach_cart_to_expense_desc;
+
+  /// 이관 안 함 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'이관 안 함'**
+  String get coach_cart_no_transfer;
+
+  /// 할일 예시 1
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 목록 작성'**
+  String get demo_todo_shopping;
+
+  /// 할일 예시 1 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주 필요한 식재료 정리'**
+  String get demo_todo_shopping_desc;
+
+  /// 할일 예시 2
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 여행 계획'**
+  String get demo_todo_trip;
+
+  /// 할일 예시 2 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'여름 휴가 일정 및 숙소 예약'**
+  String get demo_todo_trip_desc;
+
+  /// 할일 예시 3
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 가계부 정리'**
+  String get demo_todo_budget;
+
+  /// 할일 예시 3 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'지난달 수입·지출 확인'**
+  String get demo_todo_budget_desc;
+
+  /// 할일 코치마크 - 날짜별
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜별 할 일'**
+  String get coach_todo_byDate;
+
+  /// 날짜별 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜를 탭해 해당 날의 할 일을 확인하고\n그룹원과 역할을 나눠 보세요.'**
+  String get coach_todo_byDate_desc;
+
+  /// 할일 코치마크 - 상태 변경
+  ///
+  /// In ko, this message translates to:
+  /// **'상태 변경'**
+  String get coach_todo_status;
+
+  /// 상태 변경 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'왼쪽 아이콘을 탭하면 할 일의 상태를\n대기 · 진행 중 · 완료 등으로 바꿀 수 있어요.'**
+  String get coach_todo_status_desc;
+
+  /// 할일 코치마크 - 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'할 일 추가'**
+  String get coach_todo_add;
+
+  /// 할일 추가 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'새로운 할 일을 추가하고\n담당자와 마감일을 지정해보세요.'**
+  String get coach_todo_add_desc;
+
+  /// 예시 품목 - 사과
+  ///
+  /// In ko, this message translates to:
+  /// **'사과'**
+  String get demo_apple;
+
+  /// 구매 이력 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'구매 이력'**
+  String get coach_history_records;
+
+  /// 구매 이력 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기를 완료할 때마다 이력이 쌓여요.\n카드를 탭하면 품목별 상세 내역을\n확인할 수 있어요.'**
+  String get coach_history_records_desc;
+
+  /// 가계부 연동 코치마크
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 연동'**
+  String get coach_history_expense;
+
+  /// 가계부 연동 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 완료 시 지출을 함께 기록하면\n이 배지가 표시돼요.\n가계부와 자동으로 연동되어 지출 관리가 편해져요.'**
+  String get coach_history_expense_desc;
+
+  /// 가계부 예시 - 급여
+  ///
+  /// In ko, this message translates to:
+  /// **'6월 급여'**
+  String get demo_expense_salary;
+
+  /// 가계부 예시 - 외식
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁 외식'**
+  String get demo_expense_dining;
+
+  /// 가계부 예시 - 주유
+  ///
+  /// In ko, this message translates to:
+  /// **'주유'**
+  String get demo_expense_fuel;
+
+  /// 가계부 예시 - 공과금
+  ///
+  /// In ko, this message translates to:
+  /// **'전기/가스 요금'**
+  String get demo_expense_utility;
+
+  /// 가계부 코치마크 - 월간 요약
+  ///
+  /// In ko, this message translates to:
+  /// **'월간 요약'**
+  String get coach_household_summary;
+
+  /// 월간 요약 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 수입·지출·잔액을 한눈에 확인하고,\n예산 대비 사용량을 진척도 바로 볼 수 있어요.'**
+  String get coach_household_summary_desc;
+
+  /// 가계부 코치마크 - 예산 설정
+  ///
+  /// In ko, this message translates to:
+  /// **'예산 설정'**
+  String get coach_household_budget;
+
+  /// 예산 설정 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'여기 더보기 메뉴를 열면 월별 예산을\n카테고리별로 설정할 수 있어요.'**
+  String get coach_household_budget_desc;
+
+  /// 가계부 코치마크 - 고정 지출
+  ///
+  /// In ko, this message translates to:
+  /// **'고정 지출'**
+  String get coach_household_recurring;
+
+  /// 고정 지출 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'월세, 구독료 등 매달 반복되는 지출을\n등록하면 자동으로 기록해 드려요.'**
+  String get coach_household_recurring_desc;
+
+  /// 가계부 코치마크 - 통계
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get coach_household_stats;
+
+  /// 통계 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리별 지출 비율과 월별 추이를\n차트로 확인할 수 있어요.'**
+  String get coach_household_stats_desc;
+
+  /// 가계부 코치마크 - 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'지출/수입 추가'**
+  String get coach_household_add;
+
+  /// 추가 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'새 지출이나 수입을 기록하세요.\n그룹별로 나눠서 관리할 수 있어요.'**
+  String get coach_household_add_desc;
+
+  /// 나(본인) 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'나'**
+  String get common_me;
+
+  /// 메모 예시 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'제주도 여행 준비'**
+  String get demo_memo_trip;
+
+  /// 메모 예시 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'항공권 예약 완료\n숙소는 한림읍 게스트하우스로 결정.\n렌터카 예약 필요. 우도, 성산일출봉 방문 예정.'**
+  String get demo_memo_trip_body;
+
+  /// 메모 예시 태그 - 여행
+  ///
+  /// In ko, this message translates to:
+  /// **'여행'**
+  String get demo_tag_travel;
+
+  /// 메모 예시 태그 - 제주
+  ///
+  /// In ko, this message translates to:
+  /// **'제주'**
+  String get demo_tag_jeju;
+
+  /// 체크리스트 메모 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'외박 준비물'**
+  String get demo_memo_packing;
+
+  /// 체크 항목 - 여권
+  ///
+  /// In ko, this message translates to:
+  /// **'여권 / 신분증'**
+  String get demo_check_passport;
+
+  /// 체크 항목 - 세면도구
+  ///
+  /// In ko, this message translates to:
+  /// **'세면도구'**
+  String get demo_check_toiletries;
+
+  /// 체크 항목 - 여벌 옷
+  ///
+  /// In ko, this message translates to:
+  /// **'여벌 옷'**
+  String get demo_check_clothes;
+
+  /// 체크 항목 - 충전기
+  ///
+  /// In ko, this message translates to:
+  /// **'충전기'**
+  String get demo_check_charger;
+
+  /// 체크 항목 - 상비약
+  ///
+  /// In ko, this message translates to:
+  /// **'상비약'**
+  String get demo_check_meds;
+
+  /// 메모 코치마크 - 리치 텍스트
+  ///
+  /// In ko, this message translates to:
+  /// **'리치 텍스트 메모'**
+  String get coach_memo_richtext;
+
+  /// 리치 텍스트 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'굵게, 기울임, 제목 등 서식을 자유롭게 적용할 수 있어요.\n태그로 분류하고 URL을 붙여넣으면\n링크 카드가 자동으로 생성됩니다.'**
+  String get coach_memo_richtext_desc;
+
+  /// 메모 코치마크 - 체크리스트
+  ///
+  /// In ko, this message translates to:
+  /// **'체크리스트'**
+  String get coach_memo_checklist;
+
+  /// 체크리스트 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 중간 어디에든 체크리스트를 삽입할 수 있어요.\n완료된 항목 수가 카드에 바로 표시되고\n상세 화면에서 탭해 체크할 수 있습니다.'**
+  String get coach_memo_checklist_desc;
+
+  /// 메모 코치마크 - 진행률
+  ///
+  /// In ko, this message translates to:
+  /// **'진행률'**
+  String get coach_memo_progress;
+
+  /// 진행률 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'완료된 항목 수를 한눈에 볼 수 있어요.\n전체 선택/초기화 버튼도 있습니다.'**
+  String get coach_memo_progress_desc;
+
+  /// 메모 코치마크 - 항목 체크
+  ///
+  /// In ko, this message translates to:
+  /// **'항목 체크'**
+  String get coach_memo_check;
+
+  /// 항목 체크 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'체크박스를 탭하면 완료 처리돼요.\n저장 버튼을 누르면 변경사항이 한 번에 저장됩니다.'**
+  String get coach_memo_check_desc;
+
+  /// 메모 코치마크 - 수정 모드
+  ///
+  /// In ko, this message translates to:
+  /// **'수정 모드'**
+  String get coach_memo_edit;
+
+  /// 수정 모드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'수정 버튼을 누르면 에디터가 열려요.\n툴바의 체크리스트 버튼으로 항목을 자유롭게 추가·수정할 수 있습니다.'**
+  String get coach_memo_edit_desc;
+
+  /// 투표 예시 제목 1
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주말 가족 나들이 장소'**
+  String get demo_vote_outing;
+
+  /// 투표 예시 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'다수결로 결정해요! 의견을 남겨주세요.'**
+  String get demo_vote_outing_desc;
+
+  /// 투표 예시 제목 2
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁 메뉴 결정'**
+  String get demo_vote_dinner;
+
+  /// 예시 멤버 - 엄마
+  ///
+  /// In ko, this message translates to:
+  /// **'엄마'**
+  String get demo_member_mom;
+
+  /// 예시 멤버 - 아빠
+  ///
+  /// In ko, this message translates to:
+  /// **'아빠'**
+  String get demo_member_dad;
+
+  /// 예시 멤버 - 민준
+  ///
+  /// In ko, this message translates to:
+  /// **'민준'**
+  String get demo_member_child;
+
+  /// 투표 선택지 - 한강공원
+  ///
+  /// In ko, this message translates to:
+  /// **'한강공원'**
+  String get demo_place_hangang;
+
+  /// 투표 선택지 - 놀이동산
+  ///
+  /// In ko, this message translates to:
+  /// **'놀이동산'**
+  String get demo_place_amusement;
+
+  /// 투표 선택지 - 동물원
+  ///
+  /// In ko, this message translates to:
+  /// **'동물원'**
+  String get demo_place_zoo;
+
+  /// 투표 선택지 - 치킨
+  ///
+  /// In ko, this message translates to:
+  /// **'치킨'**
+  String get demo_food_chicken;
+
+  /// 투표 선택지 - 피자
+  ///
+  /// In ko, this message translates to:
+  /// **'피자'**
+  String get demo_food_pizza;
+
+  /// 투표 선택지 - 삼겹살
+  ///
+  /// In ko, this message translates to:
+  /// **'삼겹살'**
+  String get demo_food_pork;
+
+  /// 예시 그룹 - 우리 가족
+  ///
+  /// In ko, this message translates to:
+  /// **'우리 가족'**
+  String get demo_group_family;
+
+  /// 투표 코치마크 - 그룹 선택
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get coach_vote_group;
+
+  /// 그룹 선택 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'투표는 그룹 단위로 진행돼요.\n그룹을 선택하면 해당 그룹의\n투표 목록을 확인할 수 있어요.'**
+  String get coach_vote_group_desc;
+
+  /// 투표 코치마크 - 상태 필터
+  ///
+  /// In ko, this message translates to:
+  /// **'상태 필터'**
+  String get coach_vote_filter;
+
+  /// 상태 필터 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'전체, 진행중, 종료된 투표를\n탭으로 쉽게 구분해서 볼 수 있어요.'**
+  String get coach_vote_filter_desc;
+
+  /// 투표 코치마크 - 투표 카드
+  ///
+  /// In ko, this message translates to:
+  /// **'투표 카드'**
+  String get coach_vote_card;
+
+  /// 투표 카드 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'카드를 탭하면 선택지에 투표할 수 있어요.\n그룹 멤버 모두가 참여할 수 있고\n결과는 실시간으로 확인할 수 있어요.'**
+  String get coach_vote_card_desc;
+
+  /// 투표 코치마크 - 새 투표
+  ///
+  /// In ko, this message translates to:
+  /// **'새 투표 만들기'**
+  String get coach_vote_create;
+
+  /// 새 투표 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'+ 버튼을 눌러 새 투표를 만들어보세요.\n단일/복수 선택, 익명 투표,\n마감 시각 설정도 지원해요.'**
+  String get coach_vote_create_desc;
+
+  /// 상점 예시 설명 - TV
+  ///
+  /// In ko, this message translates to:
+  /// **'저녁 식사 후 TV 30분 추가'**
+  String get demo_shop_tv_desc;
+
+  /// 상점 예시 설명 - 게임
+  ///
+  /// In ko, this message translates to:
+  /// **'주말에 게임 1시간'**
+  String get demo_shop_game_desc;
+
+  /// 규칙 예시 - 숙제
+  ///
+  /// In ko, this message translates to:
+  /// **'숙제를 스스로 끝냈을 때'**
+  String get demo_rule_homework;
+
+  /// 규칙 예시 - 스마트폰
+  ///
+  /// In ko, this message translates to:
+  /// **'스마트폰 1시간 이상 사용'**
+  String get demo_rule_phone;
+
+  /// 규칙 예시 - 현금 한도
+  ///
+  /// In ko, this message translates to:
+  /// **'이달 현금 출금은 최대 50P'**
+  String get demo_rule_cashout;
+
+  /// 육아 코치마크 - 자녀 등록
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀 등록'**
+  String get coach_child_register;
+
+  /// 자녀 등록 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'먼저 자녀를 등록해요.\n이름과 생년월일을 입력하면\n포인트 계정이 자동으로 만들어져요.'**
+  String get coach_child_register_desc;
+
+  /// 육아 코치마크 - 포인트 현황
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 현황'**
+  String get coach_child_points;
+
+  /// 포인트 현황 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'자녀의 현재 포인트 잔액과\n월 용돈 플랜을 한눈에 확인할 수 있어요.\n매월 설정한 날짜에 자동으로 포인트가 지급돼요.'**
+  String get coach_child_points_desc;
+
+  /// 육아 코치마크 - 적금 플랜
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 플랜'**
+  String get coach_child_savings;
+
+  /// 적금 플랜 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 적금을 설정하면\n매월 자동으로 포인트가 적립되고\n이자도 받을 수 있어요.'**
+  String get coach_child_savings_desc;
+
+  /// 육아 코치마크 - 포인트 상점
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 상점'**
+  String get coach_child_shop;
+
+  /// 포인트 상점 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'아이가 모은 포인트로 구매할 수 있는\n보상 목록이에요.\n원하는 것을 얻기 위해 스스로 포인트를\n모으는 동기부여가 됩니다.'**
+  String get coach_child_shop_desc;
+
+  /// + 규칙 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'좋은 행동을 했을 때 포인트를 지급해요.\n예: 숙제를 스스로 끝냈을 때 +10P'**
+  String get coach_child_rule_plus_desc;
+
+  /// - 규칙 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'약속을 어겼을 때 포인트를 차감해요.\n예: 스마트폰을 1시간 이상 사용하면 -10P'**
+  String get coach_child_rule_minus_desc;
+
+  /// 일반 규칙 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 없이 약속만 기록해요.\n예: 이달 현금 출금은 최대 50P까지만 가능'**
+  String get coach_child_rule_info_desc;
+
+  /// 소개 슬라이드1 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'우리만의 플래너'**
+  String get intro_slide1_title;
+
+  /// 소개 슬라이드1 부제
+  ///
+  /// In ko, this message translates to:
+  /// **'가족, 연인, 친구, 팀까지'**
+  String get intro_slide1_subtitle;
+
+  /// 소개 슬라이드1 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'하나의 앱으로 여러 그룹을 관리하세요.\n관계마다 다른 공간에서 함께 계획할 수 있어요.'**
+  String get intro_slide1_desc;
+
+  /// 소개 슬라이드2 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'일정을 함께'**
+  String get intro_slide2_title;
+
+  /// 소개 슬라이드2 부제
+  ///
+  /// In ko, this message translates to:
+  /// **'공유 캘린더'**
+  String get intro_slide2_subtitle;
+
+  /// 소개 슬라이드2 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 구성원 모두의 일정을 한눈에.\n중요한 날을 절대 놓치지 않아요.'**
+  String get intro_slide2_desc;
+
+  /// 소개 슬라이드3 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'할 일 관리'**
+  String get intro_slide3_title;
+
+  /// 소개 슬라이드3 부제
+  ///
+  /// In ko, this message translates to:
+  /// **'공동 TodoList'**
+  String get intro_slide3_subtitle;
+
+  /// 소개 슬라이드3 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'누가 무엇을 해야 하는지 명확하게.\n역할을 나누고 함께 완료해 나가세요.'**
+  String get intro_slide3_desc;
+
+  /// 소개 슬라이드4 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'가계를 한눈에'**
+  String get intro_slide4_title;
+
+  /// 소개 슬라이드4 부제
+  ///
+  /// In ko, this message translates to:
+  /// **'공동 가계부'**
+  String get intro_slide4_subtitle;
+
+  /// 소개 슬라이드4 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'수입과 지출을 함께 기록하고 분석하세요.\n재정 목표를 그룹과 함께 달성해요.'**
+  String get intro_slide4_desc;
+
+  /// 소개 슬라이드5 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그 외 다양한 기능'**
+  String get intro_slide5_title;
+
+  /// 소개 슬라이드5 부제
+  ///
+  /// In ko, this message translates to:
+  /// **'자산·메모·적금·투표 등'**
+  String get intro_slide5_subtitle;
+
+  /// 소개 슬라이드5 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'일상에 필요한 모든 것을 한 곳에서.\n지금 바로 시작해보세요!'**
+  String get intro_slide5_desc;
+
+  /// 시작하기 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'시작하기'**
+  String get intro_start;
+
+  /// 다음 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'다음'**
+  String get intro_next;
+
+  /// 미리보기 그룹 - 연인
+  ///
+  /// In ko, this message translates to:
+  /// **'연인'**
+  String get intro_preview_couple;
+
+  /// 미리보기 그룹 - 친구 모임
+  ///
+  /// In ko, this message translates to:
+  /// **'친구 모임'**
+  String get intro_preview_friends;
+
+  /// 미리보기 그룹 - 팀 프로젝트
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 프로젝트'**
+  String get intro_preview_team;
+
+  /// 미리보기 - 내 그룹
+  ///
+  /// In ko, this message translates to:
+  /// **'내 그룹'**
+  String get intro_preview_mygroups;
+
+  /// 미리보기 - N명
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명'**
+  String intro_preview_members(String count);
+
+  /// 미리보기 일정 - 가족 외식
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 외식'**
+  String get intro_preview_dining;
+
+  /// 미리보기 일정 - 병원 예약
+  ///
+  /// In ko, this message translates to:
+  /// **'병원 예약'**
+  String get intro_preview_hospital;
+
+  /// 미리보기 일정 - 생일 파티
+  ///
+  /// In ko, this message translates to:
+  /// **'생일 파티 🎂'**
+  String get intro_preview_birthday;
+
+  /// 미리보기 할일 - 장보기
+  ///
+  /// In ko, this message translates to:
+  /// **'마트 장보기'**
+  String get intro_preview_todo1;
+
+  /// 미리보기 할일 - 청소
+  ///
+  /// In ko, this message translates to:
+  /// **'청소기 돌리기'**
+  String get intro_preview_todo2;
+
+  /// 미리보기 할일 - 보험
+  ///
+  /// In ko, this message translates to:
+  /// **'보험 갱신 확인'**
+  String get intro_preview_todo3;
+
+  /// 미리보기 할일 - 앨범
+  ///
+  /// In ko, this message translates to:
+  /// **'가족사진 앨범 정리'**
+  String get intro_preview_todo4;
+
+  /// 미리보기 할일 - 숙제
+  ///
+  /// In ko, this message translates to:
+  /// **'아이 숙제 확인'**
+  String get intro_preview_todo5;
+
+  /// 미리보기 - 오늘
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get intro_preview_today;
+
+  /// 미리보기 - 내일
+  ///
+  /// In ko, this message translates to:
+  /// **'내일'**
+  String get intro_preview_tomorrow;
+
+  /// 미리보기 - 이번 주
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주'**
+  String get intro_preview_thisweek;
+
+  /// 미리보기 - 전체 N
+  ///
+  /// In ko, this message translates to:
+  /// **'전체 {count}'**
+  String intro_preview_total(String count);
+
+  /// 미리보기 - 완료 N
+  ///
+  /// In ko, this message translates to:
+  /// **'완료 {count}'**
+  String intro_preview_done(String count);
+
+  /// 미리보기 지출 - 마트
+  ///
+  /// In ko, this message translates to:
+  /// **'마트'**
+  String get intro_preview_mart;
+
+  /// 미리보기 지출 - 외식
+  ///
+  /// In ko, this message translates to:
+  /// **'외식'**
+  String get intro_preview_eatout;
+
+  /// 미리보기 수입 - 월급
+  ///
+  /// In ko, this message translates to:
+  /// **'월급'**
+  String get intro_preview_salary;
+
+  /// 미리보기 지출 - 교통비
+  ///
+  /// In ko, this message translates to:
+  /// **'교통비'**
+  String get intro_preview_transport;
+
+  /// 미리보기 기능 - 자산 관리
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 관리'**
+  String get intro_preview_assets;
+
+  /// 미리보기 기능 - 적금 관리
+  ///
+  /// In ko, this message translates to:
+  /// **'적금 관리'**
+  String get intro_preview_savings;
+
+  /// 예시 메모 - 국산
+  ///
+  /// In ko, this message translates to:
+  /// **'국산'**
+  String get demo_memo_domestic;
+
+  /// 장바구니 코치마크 - 품목 추가
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 추가'**
+  String get coach_cart_add;
+
+  /// 품목 추가 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'구매할 품목을 추가해요.\n추가하면 자동으로 저장됩니다.'**
+  String get coach_cart_add_desc;
+
+  /// 장바구니 코치마크 - 품목 관리
+  ///
+  /// In ko, this message translates to:
+  /// **'품목 관리'**
+  String get coach_cart_manage;
+
+  /// 품목 관리 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'• 탭하면 이름·수량·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제돼요\n• 변경하면 잠시 후 자동으로 저장됩니다'**
+  String get coach_cart_manage_desc;
+
+  /// 장바구니 코치마크 - 장보기 완료
+  ///
+  /// In ko, this message translates to:
+  /// **'장보기 완료'**
+  String get coach_cart_finish;
+
+  /// 장보기 완료 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'쇼핑을 마치면 여기를 눌러요.\n다음 화면에서 상세 기능을 확인해 보세요!'**
+  String get coach_cart_finish_desc;
+
+  /// 다음 기능 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'탭하면 다음 기능으로 넘어가요!'**
+  String get coach_cart_next;
+
+  /// 다음 기능 안내 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 사는 물건 탭에서 더 많은 기능을 안내해 드릴게요.'**
+  String get coach_cart_next_desc;
+
+  /// 이월 지출 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'잔금 이월'**
+  String get household_carryover_out;
+
+  /// 이월 수입 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'전월 이월'**
+  String get household_carryover_in;
+
+  /// 자산 이동 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'자산 이동 ({name})'**
+  String household_transfer_asset(String name);
+
+  /// 저금통 이동 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'저금통 이동 ({name})'**
+  String household_transfer_savings(String name);
+
+  /// 가계부 잔금 이동 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'가계부 잔금 이동'**
+  String get household_transfer_from_ledger;
 }
 
 class _AppLocalizationsDelegate

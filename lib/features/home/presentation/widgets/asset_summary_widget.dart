@@ -80,6 +80,7 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final statsAsync = ref.watch(
       dashboardAssetStatisticsProvider(selectedGroupId: _selectedGroupId),
@@ -87,7 +88,6 @@ class _AssetSummaryWidgetState extends ConsumerState<AssetSummaryWidget> {
 
     final hasActiveFilter = _selectedGroupId != null;
 
-    final l10n = AppLocalizations.of(context)!;
 
     return statsAsync.when(
       loading: () => DashboardCard(
@@ -394,10 +394,10 @@ class _AssetDistribution extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final total = byType.fold<double>(0, (sum, t) => sum + t.balance);
     if (total == 0) return const SizedBox.shrink();
 
-    final l10n = AppLocalizations.of(context)!;
     final distribution = byType
         .where((t) => t.balance > 0)
         .map((t) => (

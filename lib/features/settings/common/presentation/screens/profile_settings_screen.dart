@@ -110,11 +110,11 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   }
 
   Future<void> _updateProfile() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final l10n = AppLocalizations.of(context)!;
 
     // 비밀번호 변경 모드인 경우 비밀번호 일치 확인
     if (_isPasswordChangeMode) {
@@ -299,9 +299,9 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final userInfo = ref.watch(authProvider).user;
     final profileImageUrl = userInfo?['profileImageUrl'] as String?;
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profile_title)),

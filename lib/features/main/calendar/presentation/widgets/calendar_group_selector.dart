@@ -180,7 +180,7 @@ class _CalendarGroupSelectorState extends ConsumerState<CalendarGroupSelector> {
       firstName = '';
     }
 
-    return '$firstName 외 ${selectedCount - 1}개';
+    return l10n.calendar_group_more(firstName, selectedCount - 1);
   }
 
   void _showGroupFilterDialog(

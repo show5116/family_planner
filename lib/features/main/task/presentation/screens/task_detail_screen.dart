@@ -126,7 +126,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
 
             _InfoRow(
               icon: Icons.category_outlined,
-              label: '유형',
+              label: l10n.task_label_type,
               child: _TaskTypeBadge(type: task.type),
             ),
             const Divider(height: AppSizes.spaceXL),
@@ -134,7 +134,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
             if (task.category != null) ...[
               _InfoRow(
                 icon: Icons.label_outline,
-                label: '카테고리',
+                label: l10n.task_label_category,
                 child: Row(
                   children: [
                     if (task.category!.emoji != null) ...[
@@ -227,7 +227,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
 
             _InfoRow(
               icon: Icons.schedule_outlined,
-              label: '등록일',
+              label: l10n.task_label_createdAt,
               child: Text(
                 _formatDateTime(task.createdAt),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -242,6 +242,7 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
   }
 
   Future<void> _handleDelete(TaskModel task, AppLocalizations l10n) async {
+    final l10n = AppLocalizations.of(context)!;
     final isRecurring = task.recurring != null;
     String? deleteScope;
 
@@ -294,30 +295,31 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
   }
 
   Future<String?> _showRecurringDeleteDialog(AppLocalizations l10n) async {
+    final l10n = AppLocalizations.of(context)!;
     String selected = 'current';
     return showDialog<String>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('이 반복 일정을 삭제하시겠습니까?'),
+          title: Text(l10n.task_recurring_delete_title),
           content: RadioGroup<String>(
             groupValue: selected,
             onChanged: (v) => setState(() => selected = v!),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 RadioListTile<String>(
-                  title: Text('이 일정만 삭제'),
+                  title: Text(l10n.task_recurring_delete_this),
                   value: 'current',
                   contentPadding: EdgeInsets.zero,
                 ),
                 RadioListTile<String>(
-                  title: Text('이 일정 및 이후 일정 모두 삭제'),
+                  title: Text(l10n.task_recurring_delete_following),
                   value: 'future',
                   contentPadding: EdgeInsets.zero,
                 ),
                 RadioListTile<String>(
-                  title: Text('모든 반복 일정 삭제'),
+                  title: Text(l10n.task_recurring_delete_all),
                   value: 'all',
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -364,6 +366,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return Row(
       children: [
@@ -400,7 +403,7 @@ class _Header extends StatelessWidget {
                     Icon(Icons.check_circle, size: 14, color: AppColors.success),
                     const SizedBox(width: 4),
                     Text(
-                      '완료됨',
+                      l10n.task_completed,
                       style: theme.textTheme.labelSmall?.copyWith(color: AppColors.success),
                     ),
                   ],
@@ -461,6 +464,7 @@ class _DateTimeDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy.MM.dd (E)', 'ko');
     final timeFormat = DateFormat('HH:mm');
@@ -530,7 +534,8 @@ class _DateTimeDisplay extends StatelessWidget {
       children: [
         if (hasTimeRange) ...[
           Text(
-            '시작: ${dateFormat.format(scheduled)} ${timeFormat.format(scheduled)}',
+            l10n.task_start_at(dateFormat.format(scheduled),
+                timeFormat.format(scheduled)),
             style: theme.textTheme.bodyMedium,
           ),
         ],
@@ -538,8 +543,9 @@ class _DateTimeDisplay extends StatelessWidget {
           if (hasTimeRange) const SizedBox(height: AppSizes.spaceXS),
           Text(
             hasDifferentDays
-                ? '종료: ${dateFormat.format(dueAt)} ${timeFormat.format(dueAt)}'
-                : '종료: ${timeFormat.format(dueAt)}',
+                ? l10n.task_end_at(
+                    dateFormat.format(dueAt), timeFormat.format(dueAt))
+                : l10n.task_end_time_only(timeFormat.format(dueAt)),
             style: theme.textTheme.bodyMedium,
           ),
         ],
@@ -597,11 +603,12 @@ class _TaskTypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final (label, icon) = switch (type) {
-      TaskType.calendarOnly => ('캘린더 전용', Icons.calendar_today),
-      TaskType.todoLinked => ('할일 연동', Icons.task_alt),
-      TaskType.todoOnly => ('할일 전용', Icons.checklist),
-      null => ('일반 일정', Icons.event),
+      TaskType.calendarOnly => (l10n.task_type_calendarOnly, Icons.calendar_today),
+      TaskType.todoLinked => (l10n.task_type_todoLinked, Icons.task_alt),
+      TaskType.todoOnly => (l10n.task_type_todoOnly, Icons.checklist),
+      null => (l10n.task_type_default, Icons.event),
     };
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -622,6 +629,7 @@ class _PriorityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final (label, color) = switch (priority) {
       TaskPriority.urgent => (l10n.schedule_priorityUrgent, AppColors.error),
       TaskPriority.high => (l10n.schedule_priorityHigh, AppColors.secondary),
@@ -650,6 +658,7 @@ class _RecurringDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final label = switch (recurring.ruleType) {
       'DAILY' => l10n.schedule_recurrenceDaily,
       'WEEKLY' => l10n.schedule_recurrenceWeekly,
@@ -665,7 +674,7 @@ class _RecurringDisplay extends StatelessWidget {
         if (!recurring.isActive) ...[
           const SizedBox(width: AppSizes.spaceS),
           Text(
-            '(비활성)',
+            l10n.task_inactive,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                 ),

@@ -76,7 +76,7 @@ class _ShoppingHistoryTabState extends ConsumerState<ShoppingHistoryTab>
             });
           }
           return _OnboardingHistoryView(
-            histories: _demoHistories,
+            histories: _demoHistories(AppLocalizations.of(context)!),
             firstCardKey: _firstCardKey,
             expenseBadgeKey: _expenseBadgeKey,
           );

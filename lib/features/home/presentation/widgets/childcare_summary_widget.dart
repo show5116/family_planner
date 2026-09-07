@@ -99,6 +99,7 @@ class _ChildcareSummaryWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final childrenAsync = ref.watch(childcareChildrenProvider);
     final accountsAsync = ref.watch(childcareAccountsProvider);
@@ -116,7 +117,7 @@ class _ChildcareSummaryWidgetState
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '그룹 선택',
+              tooltip: l10n.common_selectGroup,
               icon: Badge(
                 isLabelVisible: hasFilter,
                 smallSize: 7,
@@ -166,11 +167,12 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceM),
       child: Center(
         child: Text(
-          '등록된 자녀가 없습니다',
+          l10n.home_no_children,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -191,6 +193,7 @@ class _ChildrenList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: children.map((child) {
         ChildcareAccount? account;
@@ -240,7 +243,7 @@ class _ChildrenList extends StatelessWidget {
                   ),
                   if (savings > 0)
                     Text(
-                      '적금 ${savings.toInt()}P',
+                      l10n.home_childcare_savings('${savings.toInt()}'),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
@@ -284,6 +287,7 @@ class _GroupPickerSheetState extends State<_GroupPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.of(context);
     return Padding(
       padding: EdgeInsets.only(bottom: mq.viewInsets.bottom + mq.padding.bottom),
@@ -309,7 +313,7 @@ class _GroupPickerSheetState extends State<_GroupPickerSheet> {
               AppSizes.spaceL,
               AppSizes.spaceS,
             ),
-            child: Text('그룹 선택',
+            child: Text(l10n.common_selectGroup,
                 style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
@@ -339,7 +343,7 @@ class _GroupPickerSheetState extends State<_GroupPickerSheet> {
                 onPressed: _selectedGroupId.isEmpty
                     ? null
                     : () => widget.onApply(_selectedGroupId),
-                child: const Text('적용'),
+                child: Text(l10n.common_apply),
               ),
             ),
           ),

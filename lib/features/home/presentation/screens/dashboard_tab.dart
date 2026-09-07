@@ -315,10 +315,10 @@ class _TrialBannerCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final subscription = ref.watch(subscriptionProvider).valueOrNull;
     if (subscription == null || !subscription.isTrial) return const SizedBox.shrink();
 
-    final l10n = AppLocalizations.of(context)!;
     final daysLeft = subscription.daysLeft;
     final colorScheme = Theme.of(context).colorScheme;
     final horizontalPadding = ResponsivePadding.getHorizontalPadding(context);
@@ -397,11 +397,11 @@ class _TrialBannerCard extends ConsumerWidget {
 class _GreetingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hour = DateTime.now().hour;
     String greeting;
     IconData icon;
 
-    final l10n = AppLocalizations.of(context)!;
     if (hour < 12) {
       greeting = l10n.dashboard_greetingMorning;
       icon = Icons.wb_sunny;

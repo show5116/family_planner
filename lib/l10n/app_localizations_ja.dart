@@ -6857,4 +6857,2154 @@ class AppLocalizationsJa extends AppLocalizations {
   String childcare_plan_summary(String day, String amount) {
     return '毎月$day日・1P=$amountウォン';
   }
+
+  @override
+  String get task_recurring_guide => '繰り返し予定について';
+
+  @override
+  String get task_recurring_guide_body => '繰り返し予定は以下の基準で自動生成されます。';
+
+  @override
+  String get task_recurring_daily_weekly => '毎日／毎週';
+
+  @override
+  String get task_recurring_monthly_unit => '月単位';
+
+  @override
+  String get task_recurring_yearly_unit => '年単位';
+
+  @override
+  String get task_recurring_every_month => '毎月（1か月ごと）';
+
+  @override
+  String get task_recurring_every_2months => '隔月（2か月ごと）';
+
+  @override
+  String get task_recurring_every_3months => '3か月ごと';
+
+  @override
+  String get task_recurring_every_year => '毎年（1年ごと）';
+
+  @override
+  String get task_recurring_every_2years => '2年ごと';
+
+  @override
+  String task_recurring_ahead_months(String months) {
+    return '$monthsか月分';
+  }
+
+  @override
+  String get task_recurring_ahead_3months => '3か月分を事前生成';
+
+  @override
+  String get task_lunar => '旧暦';
+
+  @override
+  String get task_lunar_leap_prefix => '閏';
+
+  @override
+  String task_lunar_date(String prefix, String month, String day) {
+    return '旧暦 $prefix$month月$day日';
+  }
+
+  @override
+  String get task_lunar_pick => '旧暦の日付を選択';
+
+  @override
+  String get task_month => '月';
+
+  @override
+  String get task_day => '日';
+
+  @override
+  String task_month_value(String month) {
+    return '$month月';
+  }
+
+  @override
+  String task_day_value(String day) {
+    return '$day日';
+  }
+
+  @override
+  String get task_leap_month => '閏月';
+
+  @override
+  String get task_leap_month_desc => '閏月がない年はその月の同じ日として扱われます。';
+
+  @override
+  String get task_skip_settings => 'スキップ設定';
+
+  @override
+  String get task_skip_weekend => '週末';
+
+  @override
+  String get task_skip_holiday => '祝日';
+
+  @override
+  String get task_skip_when => 'スキップするとき';
+
+  @override
+  String get task_skip_do => 'スキップ';
+
+  @override
+  String get task_skip_next_weekday => '次の平日へ';
+
+  @override
+  String get anniversary_detail => '記念日の詳細';
+
+  @override
+  String get anniversary_date => '記念日の日付';
+
+  @override
+  String get anniversary_created_at => '登録日';
+
+  @override
+  String get anniversary_delete => '記念日を削除';
+
+  @override
+  String anniversary_delete_message(String title) {
+    return '「$title」を削除しますか？';
+  }
+
+  @override
+  String get anniversary_delete_linked => '連動した記念日予定も一緒に削除';
+
+  @override
+  String get anniversary_delete_linked_desc => 'チェックを外すと予定は残ります';
+
+  @override
+  String get anniversary_delete_failed => '削除できませんでした';
+
+  @override
+  String get anniversary_days_elapsed => '経過日数';
+
+  @override
+  String get anniversary_next => '次の記念日';
+
+  @override
+  String get anniversary_upcoming => '予定の記念日';
+
+  @override
+  String get anniversary_collapse => '折りたたむ';
+
+  @override
+  String anniversary_show_more(int count) {
+    return '＋$count件を表示';
+  }
+
+  @override
+  String get anniversary_every100 => '100日ごと（D+100, D+200…）';
+
+  @override
+  String get anniversary_everyYear => '毎年の周年（1周年、2周年…）';
+
+  @override
+  String get anniversary_auto_create => '記念日の通知予定を自動生成';
+
+  @override
+  String get anniversary_manage => '記念日の管理';
+
+  @override
+  String get anniversary_add => '記念日を追加';
+
+  @override
+  String get anniversary_edit => '記念日を編集';
+
+  @override
+  String get anniversary_load_failed => '記念日を読み込めませんでした';
+
+  @override
+  String get anniversary_empty => '記念日がありません';
+
+  @override
+  String get anniversary_name => '記念日の名前';
+
+  @override
+  String get anniversary_name_hint => '例：結婚記念日';
+
+  @override
+  String get anniversary_name_required => '記念日の名前を入力してください';
+
+  @override
+  String get anniversary_create_failed => '作成できませんでした';
+
+  @override
+  String get anniversary_update_failed => '更新できませんでした';
+
+  @override
+  String get common_date => '日付';
+
+  @override
+  String get task_recurring_edit_title => '繰り返し予定を編集しますか？';
+
+  @override
+  String get task_recurring_edit_this => 'この予定のみ編集';
+
+  @override
+  String get task_recurring_edit_following => 'この予定と以降すべて編集';
+
+  @override
+  String get task_recurring_delete_title => 'この繰り返し予定を削除しますか？';
+
+  @override
+  String get task_recurring_delete_this => 'この予定のみ削除';
+
+  @override
+  String get task_recurring_delete_following => 'この予定と以降すべて削除';
+
+  @override
+  String get task_recurring_delete_all => 'すべての繰り返し予定を削除';
+
+  @override
+  String get task_label_type => '種類';
+
+  @override
+  String get task_label_category => 'カテゴリ';
+
+  @override
+  String get task_label_createdAt => '登録日';
+
+  @override
+  String get task_completed => '完了';
+
+  @override
+  String get task_inactive => '（無効）';
+
+  @override
+  String task_start_at(String date, String time) {
+    return '開始：$date $time';
+  }
+
+  @override
+  String task_end_at(String date, String time) {
+    return '終了：$date $time';
+  }
+
+  @override
+  String task_end_time_only(String time) {
+    return '終了：$time';
+  }
+
+  @override
+  String get task_type_calendarOnly => 'カレンダーのみ';
+
+  @override
+  String get task_type_todoLinked => '予定＋やること';
+
+  @override
+  String get task_type_todoOnly => 'やることのみ';
+
+  @override
+  String get task_type_default => '通常の予定';
+
+  @override
+  String get task_coach_title_title => '予定のタイトル';
+
+  @override
+  String get task_coach_title_desc => '予定の名前を入力しましょう。\n短く明確なほど良いです。';
+
+  @override
+  String get task_coach_date_title => '日付と時間';
+
+  @override
+  String get task_coach_date_desc => '開始日・終了日と時間を指定できます。';
+
+  @override
+  String get task_coach_type_title => '予定の種類';
+
+  @override
+  String get task_coach_type_desc => '通常の予定、やること、または両方を選べます。';
+
+  @override
+  String get task_coach_participants_title => '参加者';
+
+  @override
+  String get task_coach_participants_desc => 'グループのメンバーを招待できます。\n参加者に通知が届きます。';
+
+  @override
+  String get common_skip => 'スキップ';
+
+  @override
+  String get task_place_search_hint => '場所名または住所を検索';
+
+  @override
+  String get task_place_search_prompt => '場所を検索してみましょう';
+
+  @override
+  String get notif_settings => '通知設定';
+
+  @override
+  String notif_hour_am(String hour) {
+    return '午前$hour時';
+  }
+
+  @override
+  String get notif_hour_noon => '正午12時';
+
+  @override
+  String notif_hour_pm(String hour) {
+    return '午後$hour時';
+  }
+
+  @override
+  String get notif_task => '予定の通知';
+
+  @override
+  String get notif_task_desc => '予定の開始前に通知します';
+
+  @override
+  String get notif_todo => 'やることの通知';
+
+  @override
+  String get notif_todo_desc => 'やることの締切を通知します';
+
+  @override
+  String get notif_household => '家計簿の通知';
+
+  @override
+  String get notif_household_desc => '家計簿に関する通知を受け取ります';
+
+  @override
+  String get notif_assets => '資産の通知';
+
+  @override
+  String get notif_assets_desc => '資産の変動に関する通知を受け取ります';
+
+  @override
+  String get notif_childcare => '育児の通知';
+
+  @override
+  String get notif_childcare_desc => '育児ポイントに関する通知を受け取ります';
+
+  @override
+  String get notif_group => 'グループの通知';
+
+  @override
+  String get notif_group_desc => 'グループに関する通知を受け取ります';
+
+  @override
+  String get notif_savings => '積立の通知';
+
+  @override
+  String get notif_savings_desc => '積立の目標や入金に関する通知を受け取ります';
+
+  @override
+  String get notif_system => 'システム通知';
+
+  @override
+  String get notif_system_desc => '重要なシステム通知を受け取ります';
+
+  @override
+  String get notif_weather => '天気の通知';
+
+  @override
+  String get notif_weather_desc => '雨・雪の予報や大きな気温変化をお知らせします';
+
+  @override
+  String get notif_weather_time => '天気通知の時間';
+
+  @override
+  String get notif_weather_time_desc => 'アプリ起動時に設定時刻を過ぎていれば通知します';
+
+  @override
+  String get notif_routine => 'ルーティンの通知';
+
+  @override
+  String get notif_routine_desc => '未チェックのリマインド、バッジ獲得、週次まとめを受け取ります';
+
+  @override
+  String get notif_routine_time => 'ルーティンのリマインド時間';
+
+  @override
+  String get notif_routine_time_desc => '設定時刻までに未チェックがあれば通知します';
+
+  @override
+  String get notif_unread => '未読の通知';
+
+  @override
+  String get notif_mark_all_read => 'すべて既読';
+
+  @override
+  String get notif_view_all => 'すべて見る';
+
+  @override
+  String get notif_mark_read => '既読にする';
+
+  @override
+  String get notif_action_failed => '通知を処理できませんでした';
+
+  @override
+  String notif_marked_read_count(int count) {
+    return '$count件を既読にしました';
+  }
+
+  @override
+  String get notif_mark_all_failed => 'すべて既読にできませんでした';
+
+  @override
+  String get notif_none_new => '新しい通知はありません';
+
+  @override
+  String get notif_load_failed => '通知を読み込めませんでした';
+
+  @override
+  String get notif_permission => '通知の許可';
+
+  @override
+  String get notif_permission_granted => '通知が許可されました';
+
+  @override
+  String get notif_permission_denied => '通知が拒否されました';
+
+  @override
+  String get notif_permission_on => '有効';
+
+  @override
+  String get notif_permission_off => '無効';
+
+  @override
+  String get notif_permission_on_desc => 'プッシュ通知を受け取れます。';
+
+  @override
+  String get notif_permission_off_desc => '通知を受け取るには許可してください。';
+
+  @override
+  String get notif_permission_request => '許可をリクエスト';
+
+  @override
+  String get notif_permission_settings => '設定で許可';
+
+  @override
+  String get location_permission => '位置情報の許可';
+
+  @override
+  String get location_permission_granted => '位置情報が許可されました';
+
+  @override
+  String get location_permission_denied => '位置情報が拒否されました';
+
+  @override
+  String get location_permission_on_desc => '天気通知の送信に現在地が使われます。';
+
+  @override
+  String get location_permission_off_desc =>
+      '天気通知を受け取るには位置情報を許可してください。\n位置情報は天気通知の送信のみに使われ、サーバーに保存されます。';
+
+  @override
+  String get notif_delete => '通知を削除';
+
+  @override
+  String get notif_delete_message => 'この通知を削除しますか？';
+
+  @override
+  String get notif_deleted => '通知を削除しました';
+
+  @override
+  String get notif_delete_failed => '通知を削除できませんでした';
+
+  @override
+  String get notif_title => '通知';
+
+  @override
+  String get notif_empty => '通知がありません';
+
+  @override
+  String get notif_history => '通知履歴';
+
+  @override
+  String get notif_history_desc => '受け取った通知の一覧を確認します';
+
+  @override
+  String get notif_settings_load_failed => '通知設定を読み込めませんでした';
+
+  @override
+  String get notif_test_send => 'テスト通知を送信';
+
+  @override
+  String get notif_test_send_desc => '自分にテスト通知を送ります（管理者専用）';
+
+  @override
+  String get notif_test_sent => 'テスト通知を送信しました';
+
+  @override
+  String get notif_test_failed => 'テスト通知を送信できませんでした';
+
+  @override
+  String get common_anonymous => '匿名';
+
+  @override
+  String get common_admin => '管理者';
+
+  @override
+  String get common_updateDone => '変更を保存';
+
+  @override
+  String get qna_myQuestionsOnly => '自分の質問のみ';
+
+  @override
+  String get qna_allCategories => 'すべてのカテゴリ';
+
+  @override
+  String get qna_tab_pending => '対応待ち';
+
+  @override
+  String get qna_tab_answered => '回答済み';
+
+  @override
+  String get qna_tab_resolved => '解決済み';
+
+  @override
+  String qna_searchLabel(String query) {
+    return '検索：$query';
+  }
+
+  @override
+  String get qna_writeQuestion => '質問を作成';
+
+  @override
+  String get qna_editQuestion => '質問を編集';
+
+  @override
+  String get qna_searchByTitleOrContent => 'タイトルまたは内容で検索';
+
+  @override
+  String qna_emptyByStatus(String status) {
+    return '$statusの質問はありません';
+  }
+
+  @override
+  String qna_emptyByCategory(String category) {
+    return '$categoryカテゴリの質問はありません';
+  }
+
+  @override
+  String get qna_emptyMine => 'まだ質問がありません\n気になることを聞いてみましょう！';
+
+  @override
+  String get qna_listLoadError => '質問一覧を読み込めませんでした';
+
+  @override
+  String get qna_contentLabel => '内容';
+
+  @override
+  String get qna_titleLabel => 'タイトル';
+
+  @override
+  String get qna_contentHintDetailed =>
+      '質問内容を詳しく書いてください。スクリーンショットがあるとより早く回答できます。';
+
+  @override
+  String get qna_contentMaxLength => '内容は5000文字を超えられません';
+
+  @override
+  String get qna_titleMin5 => 'タイトルは5文字以上で入力してください';
+
+  @override
+  String get qna_contentMin10 => '内容は10文字以上で入力してください';
+
+  @override
+  String get qna_submitQuestion => '質問を投稿';
+
+  @override
+  String get qna_writeGuide => '質問を書く前に';
+
+  @override
+  String get qna_writeGuideBody =>
+      '• 管理者が確認して回答します。\n• 回答は通知でお知らせします。\n• 対応待ちの間のみ編集・削除できます。';
+
+  @override
+  String get qna_visibility => '公開設定';
+
+  @override
+  String get qna_createSuccessDetail => '質問を投稿しました。\n回答は通知でお知らせします。';
+
+  @override
+  String get qna_questionDetail => '質問の詳細';
+
+  @override
+  String get qna_cannotEditResolved => '解決済みの質問は編集できません';
+
+  @override
+  String get qna_resolve => '解決済みにする';
+
+  @override
+  String get qna_attachments => '添付ファイル';
+
+  @override
+  String get qna_downloadNotReady => 'ファイルのダウンロードは準備中です';
+
+  @override
+  String qna_answersCount(int count) {
+    return '回答（$count）';
+  }
+
+  @override
+  String get qna_resolveTitle => '解決済みにする';
+
+  @override
+  String get qna_resolveMessage => 'この質問を解決済みにしますか？\n解決済みにすると編集できなくなります。';
+
+  @override
+  String get qna_editAnswer => '回答を編集';
+
+  @override
+  String get qna_deleteAnswer => '回答を削除';
+
+  @override
+  String get qna_deleteAnswerMessage => 'この回答を削除しますか？\n復元できません。';
+
+  @override
+  String get qna_writeAnswer => '回答を書く';
+
+  @override
+  String get qna_submitAnswer => '回答を投稿';
+
+  @override
+  String get qna_submittingAnswer => '投稿中…';
+
+  @override
+  String get qna_resolvedPrompt => '問題は解決しましたか？';
+
+  @override
+  String get qna_resolvedPromptBody =>
+      '回答が役に立ったら解決済みにしてください。\n1週間変更がなければ自動で解決済みになります。';
+
+  @override
+  String get common_collapse => '折りたたむ';
+
+  @override
+  String get common_required_mark => '（必須）';
+
+  @override
+  String get common_errorOccurred => 'エラーが発生しました';
+
+  @override
+  String get asset_account_order_saved => '口座の並び順を保存しました';
+
+  @override
+  String get asset_management => '資産管理';
+
+  @override
+  String get asset_management_placeholder => '資産管理機能がここに表示されます';
+
+  @override
+  String get asset_record_reminder => '記録リマインド';
+
+  @override
+  String get asset_record_reminder_desc => '毎月指定した日に資産記録の入力をお知らせします。';
+
+  @override
+  String get asset_reminder_day => '通知日';
+
+  @override
+  String asset_monthly_day(String day) {
+    return '毎月$day日';
+  }
+
+  @override
+  String get asset_reminder_day_note => '29〜31日は該当日がない月は月末に送信されます。';
+
+  @override
+  String get asset_withdrawal_record => '出金記録';
+
+  @override
+  String asset_withdrawal_date(String date) {
+    return '出金日：$date';
+  }
+
+  @override
+  String get asset_withdrawal_type => '出金の種類';
+
+  @override
+  String get asset_withdrawal_type_desc => '出金した金額が元金からか、利益からかを選んでください。';
+
+  @override
+  String get asset_withdrawal_type_required => '出金の種類を選んでください';
+
+  @override
+  String get asset_withdrawal_amount => '出金額';
+
+  @override
+  String get asset_amount_invalid => '有効な金額を入力してください';
+
+  @override
+  String get asset_memo_optional => 'メモ（任意）';
+
+  @override
+  String get asset_memo_hint => '例：生活費、利益確定';
+
+  @override
+  String get asset_save_failed => '保存できませんでした';
+
+  @override
+  String get asset_withdrawal_from_principal => '元金から差し引く（生活費、口座移動など）';
+
+  @override
+  String get asset_holding_add => '銘柄を追加';
+
+  @override
+  String get asset_holding_edit => '銘柄を編集';
+
+  @override
+  String get asset_holding_name => '銘柄名';
+
+  @override
+  String get asset_holding_name_hint => '例：ナスダックETF、サムスン電子';
+
+  @override
+  String get asset_holding_name_required => '銘柄名を入力してください';
+
+  @override
+  String get asset_holding_ticker => 'ティッカー（任意）';
+
+  @override
+  String get asset_holding_ticker_hint => '例：QQQ, 005930';
+
+  @override
+  String get asset_amount_label => '金額';
+
+  @override
+  String get asset_ratio_auto => '比率は残高を基準に自動計算されます';
+
+  @override
+  String asset_date_full(String year, String month, String day) {
+    return '$year年$month月$day日';
+  }
+
+  @override
+  String get asset_coach_detail_title => '口座の詳細';
+
+  @override
+  String get asset_coach_detail_desc =>
+      '最新の残高と収益率を確認し、\n下にスクロールすると推移グラフと\n元金・利益の統計が見られます。';
+
+  @override
+  String get asset_coach_record_title => '残高記録の追加';
+
+  @override
+  String get asset_coach_record_desc =>
+      '定期的に残高を記録すると推移をグラフで確認できます。\n出金記録も一緒に管理できます。';
+
+  @override
+  String get asset_coach_portfolio_title => 'ポートフォリオ';
+
+  @override
+  String get asset_coach_portfolio_desc =>
+      '日付ごとに保有銘柄と金額を記録して構成を円グラフで確認できます。\n2つの日付を比べて変化も見られます。';
+
+  @override
+  String asset_view_all_records(int count) {
+    return 'すべて$count件を見る';
+  }
+
+  @override
+  String get asset_balance_record => '残高記録';
+
+  @override
+  String get asset_balance_record_desc => '残高・元金・利益を記録します';
+
+  @override
+  String get asset_withdrawal => '出金';
+
+  @override
+  String get asset_withdrawal_desc => '元金の引き出しや利益確定を記録します';
+
+  @override
+  String get asset_portfolio => 'ポートフォリオ';
+
+  @override
+  String get asset_change => '変化';
+
+  @override
+  String get asset_total => '合計';
+
+  @override
+  String get asset_retry => '再試行';
+
+  @override
+  String get asset_reset_auto => '自動計算に戻す';
+
+  @override
+  String get asset_withdrawal_delete => '出金記録を削除';
+
+  @override
+  String get asset_withdrawal_delete_message =>
+      '削除すると出金日以降の元金・利益が元に戻ります。続けますか？';
+
+  @override
+  String get asset_holding_add_button => '銘柄を追加';
+
+  @override
+  String get asset_compare => '比較';
+
+  @override
+  String get asset_record_first => '先に残高記録を追加するとポートフォリオを記録できます。';
+
+  @override
+  String get asset_no_holdings => 'この日付に登録された銘柄がありません。';
+
+  @override
+  String get asset_cash => '現金';
+
+  @override
+  String get asset_holding_delete => '銘柄を削除';
+
+  @override
+  String asset_holding_delete_message(String name) {
+    return '$nameの記録を削除しますか？';
+  }
+
+  @override
+  String get asset_delete_failed => '削除できませんでした';
+
+  @override
+  String asset_others_count(int count) {
+    return 'その他$count件';
+  }
+
+  @override
+  String asset_fill_with_cash(String amount) {
+    return '現金で埋める（$amount）';
+  }
+
+  @override
+  String asset_balance_value(String amount) {
+    return '残高：$amount';
+  }
+
+  @override
+  String get asset_filter_min_one => '少なくとも1つ選んでください';
+
+  @override
+  String get asset_withdrawal_type_desc_full =>
+      '出金した金額が元金からか利益からかを選んでください。\n残高記録時に元金と利益を自動で再計算するのに使われます。';
+
+  @override
+  String get asset_withdrawal_from_profit => '利益から差し引く（税金、利益の引き出しなど）';
+
+  @override
+  String get asset_filter_min_one_account => '少なくとも1つの口座を選んでください。';
+
+  @override
+  String asset_legend_more(int count) {
+    return '＋$count件';
+  }
+
+  @override
+  String get asset_holdings_section => 'ポートフォリオ';
+
+  @override
+  String asset_others_ratio(int count, String ratio) {
+    return 'その他$count件  $ratio%';
+  }
+
+  @override
+  String get asset_cumulative_return => '累積収益率';
+
+  @override
+  String get asset_period_return => '期間収益率';
+
+  @override
+  String get asset_tooltip_balance => '各時点の総資産残高です。\n残高 = 元金 + 利益';
+
+  @override
+  String get asset_tooltip_principal => 'その時点までに実際に入金した累積の元金です。\n損益は含みません。';
+
+  @override
+  String get asset_tooltip_profit => '各時点の累積利益です。\n利益 = 残高 − 元金';
+
+  @override
+  String get asset_tooltip_cumulative => '各時点の累積収益率です。\n累積収益率 = 利益 ÷ 元金 × 100';
+
+  @override
+  String get asset_tooltip_period =>
+      '前の時点と比べたその期間の収益率です。\n元金の入出金の影響を除き、純粋な損益の変化だけを反映します。\n\n期間収益率 =（今回の利益 − 前回の利益）÷ 前回の元金 × 100';
+
+  @override
+  String asset_amount_won(String amount) {
+    return '$amountウォン';
+  }
+
+  @override
+  String asset_month_unit(String month) {
+    return '$month月';
+  }
+
+  @override
+  String asset_gold_price_per_gram(String amount) {
+    return '$amountウォン/g';
+  }
+
+  @override
+  String get asset_compare_usd => 'USD換算';
+
+  @override
+  String get minigame_title => 'ミニゲーム';
+
+  @override
+  String get minigame_coach_desc => 'あみだくじとルーレットで遊べます。\n公平に決めたいときに使ってみましょう！';
+
+  @override
+  String get minigame_coach_group => 'グループの選択';
+
+  @override
+  String get minigame_coach_group_desc =>
+      'グループを選ぶと結果が自動保存されます。\nグループの誰でも履歴を確認できます。';
+
+  @override
+  String get minigame_history => 'ゲーム履歴';
+
+  @override
+  String get minigame_coach_history_desc =>
+      'これまでの結果をここで確認できます。\n誰がどの結果になったか公開されます。';
+
+  @override
+  String get minigame_ladder => 'あみだくじ';
+
+  @override
+  String get minigame_roulette => 'ルーレット';
+
+  @override
+  String get minigame_no_group => 'グループなし（履歴を保存しない）';
+
+  @override
+  String get minigame_history_empty => 'ゲーム履歴がありません';
+
+  @override
+  String get minigame_select_group_hint => 'グループを選ぶとゲーム履歴が自動保存されます';
+
+  @override
+  String get minigame_history_delete => '履歴を削除';
+
+  @override
+  String get minigame_history_delete_message => 'このゲーム履歴を削除しますか？';
+
+  @override
+  String minigame_winner(String name) {
+    return '当選：$name';
+  }
+
+  @override
+  String get minigame_ladder_default_title => 'あみだくじ';
+
+  @override
+  String get minigame_roulette_default_title => 'ルーレット';
+
+  @override
+  String get minigame_game_title => 'ゲームのタイトル';
+
+  @override
+  String get minigame_create_ladder => 'あみだを作る';
+
+  @override
+  String get minigame_ladder_hint => '参加者の名前をタップしてあみだを進めましょう！';
+
+  @override
+  String get minigame_skip_all => 'すべてスキップ';
+
+  @override
+  String get minigame_reset => '設定し直す';
+
+  @override
+  String get minigame_participants => '参加者';
+
+  @override
+  String get minigame_final_result => '最終結果';
+
+  @override
+  String get minigame_saved => '結果を保存しました';
+
+  @override
+  String get minigame_save_failed => '保存できませんでした';
+
+  @override
+  String get minigame_result_items => '結果の項目';
+
+  @override
+  String minigame_item_hint(int index) {
+    return '項目$index';
+  }
+
+  @override
+  String get minigame_add_item => '項目を追加';
+
+  @override
+  String minigame_count_mismatch(String total, String count) {
+    return '数量の合計（$total）が参加者数（$count）と一致する必要があります';
+  }
+
+  @override
+  String get minigame_playing_with_group => 'グループでプレイ中';
+
+  @override
+  String get minigame_members_loading => 'グループメンバーを読み込み中です。しばらくしてからお試しください。';
+
+  @override
+  String minigame_add_manually(String label) {
+    return '$labelを直接追加';
+  }
+
+  @override
+  String get minigame_select_members => 'メンバーを選択';
+
+  @override
+  String get minigame_select_group_members => 'グループメンバーを選択';
+
+  @override
+  String get minigame_unknown => '不明';
+
+  @override
+  String get minigame_already_added => '追加済み';
+
+  @override
+  String minigame_add_count(int count) {
+    return '追加（$count）';
+  }
+
+  @override
+  String get minigame_spin => '回す';
+
+  @override
+  String get minigame_need_two_items => '項目を2つ以上入力してください';
+
+  @override
+  String get minigame_result => '結果';
+
+  @override
+  String get minigame_item => '項目';
+
+  @override
+  String get minigame_ratio => '比率';
+
+  @override
+  String get common_filter => 'フィルター';
+
+  @override
+  String get common_selectGroup => 'グループを選択';
+
+  @override
+  String get common_unknown => '不明';
+
+  @override
+  String home_delete_scheduled(String date, String days) {
+    return 'アカウントは$date（$days日後）に削除される予定です。';
+  }
+
+  @override
+  String get home_delete_cancel => '削除を取り消す';
+
+  @override
+  String get home_delete_canceled => 'アカウント削除の予約を取り消しました';
+
+  @override
+  String get home_coach_more => '「もっと見る」タブから始めましょう';
+
+  @override
+  String get home_coach_group => 'グループ管理';
+
+  @override
+  String get home_coach_group_desc => '家族・恋人・友人などグループを作り、\n招待コードでメンバーを招待しましょう。';
+
+  @override
+  String get home_coach_widget => 'ダッシュボードのカスタマイズ';
+
+  @override
+  String get home_coach_widget_desc => '設定 → ホームウィジェット設定で\n好きなウィジェットだけ選べます。';
+
+  @override
+  String get home_coach_tab => '下部タブのカスタマイズ';
+
+  @override
+  String get home_coach_tab_desc => '設定 → 下部ナビゲーション設定で\nよく使うメニューに変えられます。';
+
+  @override
+  String get home_coach_tap_more => 'タップして「もっと見る」へ';
+
+  @override
+  String get home_period => '期間';
+
+  @override
+  String get home_personal_schedule => '個人の予定';
+
+  @override
+  String get home_personal_schedule_desc => '自分の個人予定を含む';
+
+  @override
+  String get home_view_mode => '表示モード';
+
+  @override
+  String get home_pinned_memos => '固定したメモ';
+
+  @override
+  String get home_pinned_memos_empty => '固定したメモがありません';
+
+  @override
+  String home_checklist_progress(String checked, String total) {
+    return '$checked/$total 完了';
+  }
+
+  @override
+  String get home_no_expiry => '期限なし';
+
+  @override
+  String home_expired_days(String days) {
+    return '$days日超過';
+  }
+
+  @override
+  String get home_expires_today => '今日期限';
+
+  @override
+  String get home_total_savings => '積立総額';
+
+  @override
+  String home_active_goals(int count) {
+    return '$count件進行中';
+  }
+
+  @override
+  String home_goal_amount(String amount) {
+    return '目標 $amount';
+  }
+
+  @override
+  String home_more_goals(int count) {
+    return '他$count件';
+  }
+
+  @override
+  String get home_schedule_filter => '予定のフィルター';
+
+  @override
+  String get home_no_children => '登録された子どもがいません';
+
+  @override
+  String home_childcare_savings(String points) {
+    return '積立 ${points}P';
+  }
+
+  @override
+  String home_anniversary_more(int count) {
+    return '＋$count件を表示';
+  }
+
+  @override
+  String get auth_email_copied => 'メールアドレスをコピーしました';
+
+  @override
+  String get auth_login_processing => 'ログイン処理中…';
+
+  @override
+  String get auth_please_wait => '少々お待ちください。';
+
+  @override
+  String get auth_login_failed => 'ログインに失敗';
+
+  @override
+  String get auth_back_to_login => 'ログイン画面に戻る';
+
+  @override
+  String get auth_code_required => '認証コードを入力してください';
+
+  @override
+  String get auth_email_verified => 'メール認証が完了しました。ログインしてください。';
+
+  @override
+  String get auth_email_resent => '認証メールを再送しました。';
+
+  @override
+  String get auth_email_verification => 'メール認証';
+
+  @override
+  String get auth_check_email => 'メールを確認してください';
+
+  @override
+  String auth_email_sent_to(String email) {
+    return '$email\nに認証メールを送りました。';
+  }
+
+  @override
+  String get auth_enter_code => '認証コードの入力';
+
+  @override
+  String get auth_enter_code_desc => 'メールに記載の6桁の認証コードを入力してください。';
+
+  @override
+  String get auth_code_label => '認証コード';
+
+  @override
+  String get auth_code_hint => '例：123456';
+
+  @override
+  String get auth_no_email => 'メールが届きませんか？';
+
+  @override
+  String get auth_resend_email => '認証メールを再送';
+
+  @override
+  String get auth_verify_later => '後で認証する ';
+
+  @override
+  String get auth_back_to_signin => 'ログインに戻る';
+
+  @override
+  String get auth_no_token => '認証トークンがありません。もう一度ログインしてください。';
+
+  @override
+  String get auth_terms_title => 'サービス利用の同意';
+
+  @override
+  String get auth_terms_desc => 'ファミリープランナーをご利用いただくには\n利用規約への同意が必要です。';
+
+  @override
+  String get auth_agree_and_start => '同意して始める';
+
+  @override
+  String get ai_assistant => 'AIアシスタント';
+
+  @override
+  String get ai_premium_desc =>
+      '来年リリース予定のプレミアム機能です。\nサブスクリプションでAIアシスタントを利用できます。';
+
+  @override
+  String get ai_premium_coming => 'プレミアム提供予定';
+
+  @override
+  String get ai_ask_anything => '何でも聞いてください';
+
+  @override
+  String get ai_reset_chat => '会話をリセット';
+
+  @override
+  String get ai_greeting => 'こんにちは！ファミリープランナーAIです。';
+
+  @override
+  String get ai_greeting_desc => '下のおすすめ質問を押すか、\n自由に質問を入力してください。';
+
+  @override
+  String get ai_new_chat => '新しい会話を始めました';
+
+  @override
+  String get ai_message_hint => 'メッセージを入力…';
+
+  @override
+  String get ai_send => '送信';
+
+  @override
+  String get ai_suggest1 => '今月の支出を分析して';
+
+  @override
+  String get ai_suggest2 => '家族の予定をまとめて';
+
+  @override
+  String get ai_suggest3 => '貯蓄目標の達成率は？';
+
+  @override
+  String get ai_suggest4 => '未完了のやることを見せて';
+
+  @override
+  String get ai_suggest5 => '投資ポートフォリオの状況は？';
+
+  @override
+  String get ai_suggest6 => '今週の大事な予定は？';
+
+  @override
+  String get weather_title => '天気';
+
+  @override
+  String get weather_current_failed => '現在の天気を読み込めませんでした';
+
+  @override
+  String get weather_forecast_failed => '予報を読み込めませんでした';
+
+  @override
+  String get weather_humidity => '湿度';
+
+  @override
+  String get weather_wind => '風速';
+
+  @override
+  String get weather_precipitation => '降水量';
+
+  @override
+  String get weather_air_quality => '大気質';
+
+  @override
+  String get weather_pm10 => 'PM10';
+
+  @override
+  String get weather_pm25 => 'PM2.5';
+
+  @override
+  String weather_measured_at(String region) {
+    return '測定基準：$region';
+  }
+
+  @override
+  String get weather_hourly => '時間別予報';
+
+  @override
+  String get weather_hourly_empty => '時間別予報がありません';
+
+  @override
+  String get weather_daily => '日別予報';
+
+  @override
+  String weather_hour(String hour) {
+    return '$hour時';
+  }
+
+  @override
+  String get weather_today => '今日';
+
+  @override
+  String get calendar_view_day => '日';
+
+  @override
+  String get calendar_view_week => '週';
+
+  @override
+  String get calendar_view_month => '月';
+
+  @override
+  String get calendar_view_year => '年';
+
+  @override
+  String get calendar_manage_anniversary => '記念日の管理';
+
+  @override
+  String get calendar_select_view => '表示を選択';
+
+  @override
+  String get calendar_allday => '終日';
+
+  @override
+  String calendar_lunar_label(String label) {
+    return '旧暦 $label';
+  }
+
+  @override
+  String calendar_hidden_count(int count) {
+    return '+$count件';
+  }
+
+  @override
+  String calendar_group_more(String name, int count) {
+    return '$name 他$count件';
+  }
+
+  @override
+  String calendar_year_label(String year) {
+    return '$year年';
+  }
+
+  @override
+  String get calendar_task_added => '予定を追加しました。';
+
+  @override
+  String get calendar_task_title_hint => '予定のタイトル';
+
+  @override
+  String get calendar_personal => '個人';
+
+  @override
+  String get calendar_type_event => '予定';
+
+  @override
+  String get calendar_type_todo => 'やること';
+
+  @override
+  String get calendar_type_both => '予定＋やること';
+
+  @override
+  String get calendar_more => 'もっと見る';
+
+  @override
+  String get calendar_remind_5m => '5分前';
+
+  @override
+  String get calendar_remind_15m => '15分前';
+
+  @override
+  String get calendar_remind_30m => '30分前';
+
+  @override
+  String get calendar_remind_1h => '1時間前';
+
+  @override
+  String get calendar_remind_1d => '1日前';
+
+  @override
+  String household_year_label(String year) {
+    return '$year年';
+  }
+
+  @override
+  String get household_yearly_stats => '年間統計';
+
+  @override
+  String get household_stats_exclude_note => '返金と繰越入金は統計から除外されます';
+
+  @override
+  String get household_by_category => 'カテゴリ別';
+
+  @override
+  String get household_by_merchant => '店舗別';
+
+  @override
+  String get household_by_member => 'メンバー別';
+
+  @override
+  String get household_custom_filter => '自分でフィルター';
+
+  @override
+  String get household_category_spending => 'カテゴリ別の支出';
+
+  @override
+  String get household_merchant_spending => '店舗別の支出';
+
+  @override
+  String get household_member_spending => 'メンバー別の支出';
+
+  @override
+  String get household_no_merchant => '店舗なし';
+
+  @override
+  String get household_unassigned => '未指定';
+
+  @override
+  String get household_member => 'メンバー';
+
+  @override
+  String get household_monthly_spending => '月別の支出';
+
+  @override
+  String get household_compare_last_month => '先月との比較';
+
+  @override
+  String get household_cumulative_trend => '累積支出の推移';
+
+  @override
+  String get household_variable => '変動';
+
+  @override
+  String get household_expected_amount => '予想金額';
+
+  @override
+  String get household_due_day => '発生日';
+
+  @override
+  String household_due_day_value(String day) {
+    return '毎月$day日';
+  }
+
+  @override
+  String get household_payee => '受取人';
+
+  @override
+  String get household_payer => '支払者';
+
+  @override
+  String get household_no_applied => 'まだ適用された記録がありません';
+
+  @override
+  String get household_confirmed_avg => '確定平均';
+
+  @override
+  String get household_min => '最小値';
+
+  @override
+  String get household_max => '最大値';
+
+  @override
+  String household_unconfirmed_suffix(String date) {
+    return '$date  未確定';
+  }
+
+  @override
+  String get asset_demo_nasdaq => 'ナスダックETF';
+
+  @override
+  String get asset_demo_samsung => 'サムスン電子';
+
+  @override
+  String get currency_won_unit => 'ウォン';
+
+  @override
+  String get household_auto_registered => '家計簿に自動登録しました';
+
+  @override
+  String household_auto_registered_body(String amount) {
+    return '$amountウォンを家計簿に登録しました。';
+  }
+
+  @override
+  String get household_auto_service => '家計簿の自動登録';
+
+  @override
+  String get household_auto_service_desc => '決済通知を検知して家計簿に自動登録します';
+
+  @override
+  String get coach_calendar_shared => '共有カレンダー';
+
+  @override
+  String get coach_calendar_shared_desc =>
+      'グループメンバーの予定を一目で確認できます。\n日付をタップするとその日の予定が見られます。';
+
+  @override
+  String get coach_calendar_add => '予定を追加';
+
+  @override
+  String get coach_calendar_add_desc =>
+      'ボタンを押して新しい予定を作りましょう。\n押して作成画面を見てみてください。';
+
+  @override
+  String get coach_group_create => 'グループを作る';
+
+  @override
+  String get coach_group_create_desc => '家族、恋人、友人、チームなど\n好きなグループを作ってみましょう。';
+
+  @override
+  String get coach_group_join => 'グループに参加';
+
+  @override
+  String get coach_group_join_desc =>
+      '招待コードを入力して既存のグループに参加できます。\nメンバーが共有したコードを使いましょう。';
+
+  @override
+  String get coach_group_requests => '申請履歴';
+
+  @override
+  String get coach_group_requests_desc =>
+      '参加申請したグループの一覧と\n承認されたかどうかをここで確認できます。';
+
+  @override
+  String get coach_savings_status => '積立状況';
+
+  @override
+  String get coach_savings_status_desc =>
+      '現在の積立額と目標金額、\n達成率を詳しく確認できます。\n自動積立中はその状態も表示されます。';
+
+  @override
+  String get coach_savings_deposit => '入金／出金';
+
+  @override
+  String get coach_savings_deposit_desc => 'いつでも手動で入金・出金できます。\n自動積立と併用すると便利です。';
+
+  @override
+  String get coach_savings_goal => '貯金';
+
+  @override
+  String get coach_savings_goal_desc =>
+      '目標名・現在の積立額・達成率が一目で分かります。\n自動積立をオンにすると毎月自動で入金されます。';
+
+  @override
+  String get coach_savings_demo_desc => '今年の夏の家族旅行';
+
+  @override
+  String get coach_savings_demo_jeju => '済州島旅行';
+
+  @override
+  String get coach_savings_demo_emergency => '緊急資金';
+
+  @override
+  String get demo_milk => '牛乳';
+
+  @override
+  String get demo_eggs => '卵';
+
+  @override
+  String get demo_tofu => '豆腐';
+
+  @override
+  String get demo_unit_piece => '個';
+
+  @override
+  String get demo_unit_pack => 'パック';
+
+  @override
+  String get demo_fridge => '冷蔵庫';
+
+  @override
+  String get demo_freezer => '冷凍庫';
+
+  @override
+  String get demo_bank_savings => '国民銀行の積立';
+
+  @override
+  String get coach_ladder_participants => '参加者の入力';
+
+  @override
+  String get coach_ladder_participants_desc =>
+      'あみだを引く参加者の名前を入力します。\nグループメンバー読み込みボタンで\nまとめて追加もできます。';
+
+  @override
+  String get coach_ladder_results => '結果項目の入力';
+
+  @override
+  String get coach_ladder_results_desc =>
+      '当たりの結果項目と数量を入力します。\n数量の合計が参加者数と一致しないと\nあみだを作れません。';
+
+  @override
+  String get coach_ladder_create => 'あみだの作成';
+
+  @override
+  String get coach_ladder_create_desc =>
+      'ボタンを押すとあみだが作られます。\n参加者名をタップすると経路がアニメーションで\n表示され結果が分かります。';
+
+  @override
+  String get coach_roulette_items => '項目の入力';
+
+  @override
+  String get coach_roulette_items_desc =>
+      'ルーレットに載せる項目を入力します。\n比率を変えると当選確率を調整できます。';
+
+  @override
+  String get coach_roulette_wheel => 'ルーレット盤';
+
+  @override
+  String get coach_roulette_wheel_desc =>
+      '項目を2つ以上入力すると\nルーレット盤が現れます。\n中央のボタンでも回せます。';
+
+  @override
+  String get coach_roulette_spin => '回す';
+
+  @override
+  String get coach_roulette_spin_desc =>
+      'ボタンを押すとルーレットが回ります。\n結果はグループ履歴に自動保存され\n全員が確認できます。';
+
+  @override
+  String get coach_asset_card => '口座カード';
+
+  @override
+  String get coach_asset_card_desc =>
+      '口座名・金融機関・最新残高・収益率を\n一目で確認できます。\nタップすると残高記録とポートフォリオを管理できます。';
+
+  @override
+  String get coach_asset_stats => '資産統計';
+
+  @override
+  String get coach_asset_stats_desc =>
+      '総資産・収益率・種類別の内訳を\nグラフで一目で確認できます。\nKOSPIやS&P500などの指数と比較もできます。';
+
+  @override
+  String get demo_bank_kb => '国民銀行';
+
+  @override
+  String get coach_group_invite => 'メンバーを招待しましょう';
+
+  @override
+  String get coach_group_invite_desc =>
+      '設定タブで招待コードを共有したり\nメールで直接招待したりできます。\n\nタップして設定へ移動しましょう。';
+
+  @override
+  String get coach_group_invite_code => '招待コードで招待';
+
+  @override
+  String get coach_group_invite_code_desc => 'コードをコピーして共有するか\nメールで招待状を送れます。';
+
+  @override
+  String get coach_group_roles => 'ロールで権限を管理';
+
+  @override
+  String get coach_group_roles_desc =>
+      'ロールタブで新しいロールを作り\nメンバーごとの権限を細かく設定できます。\n\nタップしてロール管理へ移動しましょう。';
+
+  @override
+  String get coach_group_role_new => '新しいロールを作る';
+
+  @override
+  String get coach_group_role_new_desc => 'ボタンを押してロールを作り\n名前・色・権限を自由に設定しましょう。';
+
+  @override
+  String get coach_group_color => 'グループの色を設定しましょう';
+
+  @override
+  String get coach_group_color_desc =>
+      '設定タブでこのグループの色を指定できます。\n設定した色は予定など様々な画面で\nこのグループの項目を見分けるのに使われます。\n\nタップして設定へ移動しましょう。';
+
+  @override
+  String get coach_cart_complete => '買い物完了の機能について';
+
+  @override
+  String get coach_cart_complete_desc => '買い物完了ボタンを押すと、次の2つをまとめて処理できます。';
+
+  @override
+  String get coach_cart_to_fridge => '冷蔵庫へ移動';
+
+  @override
+  String get coach_cart_to_fridge_desc =>
+      '買った品目を冷蔵庫の保管場所にそのまま移せます。\n数量・賞味期限・通知日も一緒に設定できます。';
+
+  @override
+  String get coach_cart_to_expense => '家計簿に自動記録';
+
+  @override
+  String get coach_cart_to_expense_desc => '支出額・支払い方法・メモを入力すると\n家計簿に自動で記録されます。';
+
+  @override
+  String get coach_cart_no_transfer => '移動しない';
+
+  @override
+  String get demo_todo_shopping => '買い物リストを作る';
+
+  @override
+  String get demo_todo_shopping_desc => '今週必要な食材をまとめる';
+
+  @override
+  String get demo_todo_trip => '家族旅行の計画';
+
+  @override
+  String get demo_todo_trip_desc => '夏休みの日程と宿の予約';
+
+  @override
+  String get demo_todo_budget => '月次の家計簿整理';
+
+  @override
+  String get demo_todo_budget_desc => '先月の収入・支出を確認';
+
+  @override
+  String get coach_todo_byDate => '日付ごとのやること';
+
+  @override
+  String get coach_todo_byDate_desc => '日付をタップしてその日のやることを確認し\nグループで分担しましょう。';
+
+  @override
+  String get coach_todo_status => 'ステータスの変更';
+
+  @override
+  String get coach_todo_status_desc => '左のアイコンをタップすると\n待機・進行中・完了などに変えられます。';
+
+  @override
+  String get coach_todo_add => 'やることを追加';
+
+  @override
+  String get coach_todo_add_desc => '新しいやることを追加して\n担当者と締切を設定しましょう。';
+
+  @override
+  String get demo_apple => 'りんご';
+
+  @override
+  String get coach_history_records => '購入履歴';
+
+  @override
+  String get coach_history_records_desc =>
+      '買い物を完了するたびに履歴が残ります。\nカードをタップすると品目の明細が見られます。';
+
+  @override
+  String get coach_history_expense => '家計簿との連携';
+
+  @override
+  String get coach_history_expense_desc =>
+      '買い物完了時に支出も記録するとこのバッジが付きます。\n家計簿と自動で連携され支出管理が楽になります。';
+
+  @override
+  String get demo_expense_salary => '6月の給与';
+
+  @override
+  String get demo_expense_dining => '夕食の外食';
+
+  @override
+  String get demo_expense_fuel => '給油';
+
+  @override
+  String get demo_expense_utility => '電気・ガス料金';
+
+  @override
+  String get coach_household_summary => '月間サマリー';
+
+  @override
+  String get coach_household_summary_desc =>
+      '今月の収入・支出・残高を一目で確認し、\n予算に対する使用量も見られます。';
+
+  @override
+  String get coach_household_budget => '予算の設定';
+
+  @override
+  String get coach_household_budget_desc => 'ここのメニューを開くと月ごとの予算を\nカテゴリ別に設定できます。';
+
+  @override
+  String get coach_household_recurring => '固定費';
+
+  @override
+  String get coach_household_recurring_desc =>
+      '家賃やサブスクなど毎月繰り返す支出を\n登録すると自動で記録します。';
+
+  @override
+  String get coach_household_stats => '統計';
+
+  @override
+  String get coach_household_stats_desc => 'カテゴリ別の支出比率と月別の推移を\nグラフで確認できます。';
+
+  @override
+  String get coach_household_add => '支出・収入の追加';
+
+  @override
+  String get coach_household_add_desc => '新しい支出や収入を記録しましょう。\nグループごとに分けて管理できます。';
+
+  @override
+  String get common_me => '自分';
+
+  @override
+  String get demo_memo_trip => '済州島旅行の準備';
+
+  @override
+  String get demo_memo_trip_body =>
+      '航空券の予約完了\n宿は翰林邑のゲストハウスに決定。\nレンタカーの予約が必要。牛島・城山日出峰へ行く予定。';
+
+  @override
+  String get demo_tag_travel => '旅行';
+
+  @override
+  String get demo_tag_jeju => '済州';
+
+  @override
+  String get demo_memo_packing => 'お泊まりの持ち物';
+
+  @override
+  String get demo_check_passport => 'パスポート／身分証';
+
+  @override
+  String get demo_check_toiletries => '洗面用具';
+
+  @override
+  String get demo_check_clothes => '着替え';
+
+  @override
+  String get demo_check_charger => '充電器';
+
+  @override
+  String get demo_check_meds => '常備薬';
+
+  @override
+  String get coach_memo_richtext => 'リッチテキストのメモ';
+
+  @override
+  String get coach_memo_richtext_desc =>
+      '太字・斜体・見出しなど自由に書式を付けられます。\nタグで分類でき、URLを貼るとリンクカードが自動生成されます。';
+
+  @override
+  String get coach_memo_checklist => 'チェックリスト';
+
+  @override
+  String get coach_memo_checklist_desc =>
+      'メモのどこにでもチェックリストを入れられます。\n完了数がカードに表示され、詳細画面でタップして完了にできます。';
+
+  @override
+  String get coach_memo_progress => '進捗';
+
+  @override
+  String get coach_memo_progress_desc =>
+      '完了した項目数が一目で分かります。\n全選択・リセットのボタンもあります。';
+
+  @override
+  String get coach_memo_check => '項目のチェック';
+
+  @override
+  String get coach_memo_check_desc => 'チェックボックスをタップすると完了になります。\n変更はまとめて保存されます。';
+
+  @override
+  String get coach_memo_edit => '編集モード';
+
+  @override
+  String get coach_memo_edit_desc =>
+      '編集ボタンを押すとエディタが開きます。\nツールバーのチェックリストボタンで項目を追加・変更できます。';
+
+  @override
+  String get demo_vote_outing => '今週末の家族お出かけ先';
+
+  @override
+  String get demo_vote_outing_desc => '多数決で決めましょう！意見をどうぞ。';
+
+  @override
+  String get demo_vote_dinner => '夕食のメニュー決め';
+
+  @override
+  String get demo_member_mom => 'お母さん';
+
+  @override
+  String get demo_member_dad => 'お父さん';
+
+  @override
+  String get demo_member_child => 'ミンジュン';
+
+  @override
+  String get demo_place_hangang => '漢江公園';
+
+  @override
+  String get demo_place_amusement => '遊園地';
+
+  @override
+  String get demo_place_zoo => '動物園';
+
+  @override
+  String get demo_food_chicken => 'チキン';
+
+  @override
+  String get demo_food_pizza => 'ピザ';
+
+  @override
+  String get demo_food_pork => 'サムギョプサル';
+
+  @override
+  String get demo_group_family => 'わが家';
+
+  @override
+  String get coach_vote_group => 'グループの選択';
+
+  @override
+  String get coach_vote_group_desc =>
+      '投票はグループ単位で行われます。\nグループを選ぶとそのグループの投票が見られます。';
+
+  @override
+  String get coach_vote_filter => 'ステータスフィルター';
+
+  @override
+  String get coach_vote_filter_desc => '全体・進行中・終了をタブで簡単に切り替えられます。';
+
+  @override
+  String get coach_vote_card => '投票カード';
+
+  @override
+  String get coach_vote_card_desc =>
+      'カードをタップすると選択肢に投票できます。\nグループの全員が参加でき、結果はリアルタイムで見られます。';
+
+  @override
+  String get coach_vote_create => '新しい投票を作る';
+
+  @override
+  String get coach_vote_create_desc =>
+      '＋ボタンで新しい投票を作れます。\n単一・複数選択、匿名投票、締切時刻の設定に対応しています。';
+
+  @override
+  String get demo_shop_tv_desc => '夕食後にテレビ30分追加';
+
+  @override
+  String get demo_shop_game_desc => '週末にゲーム1時間';
+
+  @override
+  String get demo_rule_homework => '宿題を自分で終わらせたとき';
+
+  @override
+  String get demo_rule_phone => 'スマホを1時間以上使用';
+
+  @override
+  String get demo_rule_cashout => '今月の現金化は最大50Pまで';
+
+  @override
+  String get coach_child_register => '子どもの登録';
+
+  @override
+  String get coach_child_register_desc =>
+      'まず子どもを登録します。\n名前と生年月日を入力すると\nポイント口座が自動で作られます。';
+
+  @override
+  String get coach_child_points => 'ポイントの状況';
+
+  @override
+  String get coach_child_points_desc =>
+      '子どもの現在のポイント残高と\n毎月のお小遣いプランを一目で確認できます。\n設定した日に自動で支給されます。';
+
+  @override
+  String get coach_child_savings => '積立プラン';
+
+  @override
+  String get coach_child_savings_desc => 'ポイント積立を設定すると\n毎月自動で積み立てられ利息も付きます。';
+
+  @override
+  String get coach_child_shop => 'ポイントショップ';
+
+  @override
+  String get coach_child_shop_desc =>
+      '子どもが貯めたポイントで買える報酬の一覧です。\n欲しいもののために自分で貯める動機になります。';
+
+  @override
+  String get coach_child_rule_plus_desc =>
+      '良い行いにポイントを与えます。\n例：宿題を自分で終わらせたとき +10P';
+
+  @override
+  String get coach_child_rule_minus_desc =>
+      '約束を破ったときポイントを差し引きます。\n例：スマホを1時間以上使ったら −10P';
+
+  @override
+  String get coach_child_rule_info_desc =>
+      'ポイントなしで約束だけ記録します。\n例：今月の現金化は最大50Pまで';
+
+  @override
+  String get intro_slide1_title => '私たちだけのプランナー';
+
+  @override
+  String get intro_slide1_subtitle => '家族・恋人・友人・チームまで';
+
+  @override
+  String get intro_slide1_desc =>
+      '1つのアプリで複数のグループを管理できます。\n関係ごとに別の空間で一緒に計画できます。';
+
+  @override
+  String get intro_slide2_title => '予定を一緒に';
+
+  @override
+  String get intro_slide2_subtitle => '共有カレンダー';
+
+  @override
+  String get intro_slide2_desc => 'メンバー全員の予定を一目で。\n大事な日を逃しません。';
+
+  @override
+  String get intro_slide3_title => 'やること管理';
+
+  @override
+  String get intro_slide3_subtitle => '共同のToDoリスト';
+
+  @override
+  String get intro_slide3_desc => '誰が何をするか明確に。\n役割を分けて一緒に終わらせましょう。';
+
+  @override
+  String get intro_slide4_title => '家計を一目で';
+
+  @override
+  String get intro_slide4_subtitle => '共同の家計簿';
+
+  @override
+  String get intro_slide4_desc => '収入と支出を一緒に記録して分析しましょう。\n財政目標をグループで達成します。';
+
+  @override
+  String get intro_slide5_title => 'その他の機能も';
+
+  @override
+  String get intro_slide5_subtitle => '資産・メモ・積立・投票など';
+
+  @override
+  String get intro_slide5_desc => '日常に必要なすべてを一か所に。\n今すぐ始めましょう！';
+
+  @override
+  String get intro_start => '始める';
+
+  @override
+  String get intro_next => '次へ';
+
+  @override
+  String get intro_preview_couple => '恋人';
+
+  @override
+  String get intro_preview_friends => '友人の集まり';
+
+  @override
+  String get intro_preview_team => 'チームプロジェクト';
+
+  @override
+  String get intro_preview_mygroups => 'マイグループ';
+
+  @override
+  String intro_preview_members(String count) {
+    return '$count人';
+  }
+
+  @override
+  String get intro_preview_dining => '家族で外食';
+
+  @override
+  String get intro_preview_hospital => '病院の予約';
+
+  @override
+  String get intro_preview_birthday => '誕生日パーティー 🎂';
+
+  @override
+  String get intro_preview_todo1 => 'スーパーで買い物';
+
+  @override
+  String get intro_preview_todo2 => '掃除機をかける';
+
+  @override
+  String get intro_preview_todo3 => '保険の更新確認';
+
+  @override
+  String get intro_preview_todo4 => '家族写真の整理';
+
+  @override
+  String get intro_preview_todo5 => '子どもの宿題確認';
+
+  @override
+  String get intro_preview_today => '今日';
+
+  @override
+  String get intro_preview_tomorrow => '明日';
+
+  @override
+  String get intro_preview_thisweek => '今週';
+
+  @override
+  String intro_preview_total(String count) {
+    return '全$count';
+  }
+
+  @override
+  String intro_preview_done(String count) {
+    return '完了 $count';
+  }
+
+  @override
+  String get intro_preview_mart => 'スーパー';
+
+  @override
+  String get intro_preview_eatout => '外食';
+
+  @override
+  String get intro_preview_salary => '給料';
+
+  @override
+  String get intro_preview_transport => '交通費';
+
+  @override
+  String get intro_preview_assets => '資産管理';
+
+  @override
+  String get intro_preview_savings => '積立管理';
+
+  @override
+  String get demo_memo_domestic => '国産';
+
+  @override
+  String get coach_cart_add => '品目を追加';
+
+  @override
+  String get coach_cart_add_desc => '買う品目を追加します。\n追加すると自動で保存されます。';
+
+  @override
+  String get coach_cart_manage => '品目の管理';
+
+  @override
+  String get coach_cart_manage_desc =>
+      '• タップすると名前・数量・メモを編集できます\n• ±ボタンで数量を調整します\n• 左にスワイプすると削除されます\n• 変更は少し後に自動保存されます';
+
+  @override
+  String get coach_cart_finish => '買い物完了';
+
+  @override
+  String get coach_cart_finish_desc => '買い物が終わったらここを押します。\n次の画面で詳しい機能を確認しましょう！';
+
+  @override
+  String get coach_cart_next => 'タップすると次の機能へ！';
+
+  @override
+  String get coach_cart_next_desc => '「よく買う物」タブでさらに機能をご案内します。';
+
+  @override
+  String get household_carryover_out => '残額の繰越';
+
+  @override
+  String get household_carryover_in => '前月からの繰越';
+
+  @override
+  String household_transfer_asset(String name) {
+    return '資産へ移動（$name）';
+  }
+
+  @override
+  String household_transfer_savings(String name) {
+    return '貯金へ移動（$name）';
+  }
+
+  @override
+  String get household_transfer_from_ledger => '家計簿の残額から移動';
 }

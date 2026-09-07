@@ -94,38 +94,38 @@ class _AssetTrendChartState extends ConsumerState<AssetTrendChart> {
                 label: l10n.asset_trend_balance,
                 selected: _metric == _ChartMetric.balance,
                 onTap: () => setState(() => _metric = _ChartMetric.balance),
-                tooltipTitle: '잔액',
-                tooltipBody: '각 시점의 총 자산 잔액입니다.\n잔액 = 원금 + 수익금',
+                tooltipTitle: l10n.asset_balance,
+                tooltipBody: l10n.asset_tooltip_balance,
               ),
               _MetricChip(
                 label: l10n.asset_trend_principal,
                 selected: _metric == _ChartMetric.principal,
                 onTap: () => setState(() => _metric = _ChartMetric.principal),
-                tooltipTitle: '원금',
-                tooltipBody: '각 시점까지 실제로 입금한 누적 투자 원금입니다.\n수익·손실은 포함되지 않습니다.',
+                tooltipTitle: l10n.asset_principal,
+                tooltipBody: l10n.asset_tooltip_principal,
               ),
               _MetricChip(
                 label: l10n.asset_trend_profit,
                 selected: _metric == _ChartMetric.profit,
                 onTap: () => setState(() => _metric = _ChartMetric.profit),
-                tooltipTitle: '수익금',
-                tooltipBody: '각 시점의 누적 수익금입니다.\n수익금 = 잔액 − 원금',
+                tooltipTitle: l10n.asset_profit,
+                tooltipBody: l10n.asset_tooltip_profit,
               ),
               _MetricChip(
                 label: l10n.asset_trend_profit_rate,
                 selected: _metric == _ChartMetric.profitRate,
                 onTap: () => setState(() => _metric = _ChartMetric.profitRate),
-                tooltipTitle: '누적 수익률',
-                tooltipBody: '각 시점의 누적 수익률입니다.\n누적 수익률 = 수익금 ÷ 원금 × 100',
+                tooltipTitle: l10n.asset_cumulative_return,
+                tooltipBody: l10n.asset_tooltip_cumulative,
               ),
               _MetricChip(
                 label: l10n.asset_trend_period_return,
                 selected: _metric == _ChartMetric.periodReturn,
                 onTap: () =>
                     setState(() => _metric = _ChartMetric.periodReturn),
-                tooltipTitle: '기간 수익률',
+                tooltipTitle: l10n.asset_period_return,
                 tooltipBody:
-                    '직전 시점 대비 해당 기간의 수익률입니다.\n원금 입·출금의 영향을 제거하고 순수한 수익 변화만 반영합니다.\n\n기간 수익률 = (이번 수익금 − 전 수익금) ÷ 전 원금 × 100',
+                    l10n.asset_tooltip_period,
               ),
             ],
           ),
@@ -273,6 +273,7 @@ class _MetricChip extends StatelessWidget {
   });
 
   void _showInfo(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -281,7 +282,7 @@ class _MetricChip extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('확인'),
+            child: Text(l10n.common_confirm),
           ),
         ],
       ),
@@ -410,6 +411,7 @@ class _TrendLineChartState extends State<_TrendLineChart> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final pts = widget.points;
 
@@ -514,7 +516,7 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                 final label = _isPercent
                     ? '${value.toStringAsFixed(1)}%'
                     : (formatAssetAmountKorean(value) ??
-                          '${formatAssetAmount(value)}원');
+                          l10n.asset_amount_won(formatAssetAmount(value)));
                 return Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -537,7 +539,7 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                   return const SizedBox.shrink();
                 final p = pts[idx].period;
                 final label = widget.period == TrendPeriod.monthly
-                    ? '${int.parse(p.substring(5))}월'
+                    ? l10n.asset_month_unit('${int.parse(p.substring(5))}')
                     : p; // YYYY
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
@@ -574,7 +576,7 @@ class _TrendLineChartState extends State<_TrendLineChart> {
                 final sign = diff >= 0 ? '+' : '';
                 final diffStr = _isPercent
                     ? '$sign${diff.toStringAsFixed(2)}%'
-                    : '$sign${formatAssetAmount(diff)}원';
+                    : l10n.asset_amount_won('$sign${formatAssetAmount(diff)}');
                 final diffColor = diff >= 0 ? Colors.green : Colors.red;
                 return LineTooltipItem(
                   '${p.period}\n${_formatValue(val)}\n',

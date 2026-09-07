@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 
 /// 알림 히스토리 아이템
@@ -21,6 +22,7 @@ class NotificationHistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final dateFormat = DateFormat('MM/dd HH:mm');
 
@@ -37,17 +39,17 @@ class NotificationHistoryItem extends StatelessWidget {
         return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('알림 삭제'),
-            content: const Text('이 알림을 삭제하시겠습니까?'),
+            title: Text(l10n.notif_delete),
+            content: Text(l10n.notif_delete_message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('취소'),
+                child: Text(l10n.common_cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('삭제'),
+                child: Text(l10n.common_delete),
               ),
             ],
           ),
@@ -147,7 +149,7 @@ class NotificationHistoryItem extends StatelessWidget {
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),
-                  tooltip: '읽음 처리',
+                  tooltip: l10n.notif_mark_read,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),

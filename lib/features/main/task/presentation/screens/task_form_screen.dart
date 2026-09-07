@@ -200,6 +200,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final selectedGroupId = ref.read(selectedGroupIdProvider);
@@ -213,8 +214,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '일정 제목',
-              description: '일정의 이름을 입력하세요.\n짧고 명확하게 적을수록 좋아요.',
+              title: l10n.task_coach_title_title,
+              description: l10n.task_coach_title_desc,
               icon: Icons.title,
               color: Colors.blue,
             ),
@@ -230,8 +231,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '날짜 & 시간',
-              description: '일정 시작일과 종료일,\n시간을 지정할 수 있어요.',
+              title: l10n.task_coach_date_title,
+              description: l10n.task_coach_date_desc,
               icon: Icons.schedule,
               color: Colors.teal,
             ),
@@ -247,8 +248,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '일정 유형',
-              description: '일반 일정, 할 일, 또는 둘 다로\n유형을 선택할 수 있어요.',
+              title: l10n.task_coach_type_title,
+              description: l10n.task_coach_type_desc,
               icon: Icons.category_outlined,
               color: Colors.orange,
             ),
@@ -265,8 +266,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
             TargetContent(
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '참가자',
-                description: '그룹원을 이 일정에 초대할 수 있어요.\n참가자에게 알림이 전송돼요.',
+                title: l10n.task_coach_participants_title,
+                description: l10n.task_coach_participants_desc,
                 icon: Icons.group_outlined,
                 color: Colors.purple,
               ),
@@ -282,7 +283,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -291,8 +292,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(
             color: Colors.white,
             fontSize: 13,
@@ -476,6 +477,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
     String? groupId,
     AppLocalizations l10n,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       _titleFocusNode.requestFocus();
       return;
@@ -544,6 +546,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
     TaskFormState formState,
     AppLocalizations l10n,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final isRecurring = formState.editingTask?.recurring != null;
 
     String? deleteScope;
@@ -595,26 +598,27 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
   }
 
   Future<String?> _showRecurringUpdateDialog(AppLocalizations l10n) async {
+    final l10n = AppLocalizations.of(context)!;
     String selected = 'current';
 
     return showDialog<String>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('반복 일정을 수정하시겠습니까?'),
+          title: Text(l10n.task_recurring_edit_title),
           content: RadioGroup<String>(
             groupValue: selected,
             onChanged: (v) => setState(() => selected = v!),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 RadioListTile<String>(
-                  title: Text('이 일정만 수정'),
+                  title: Text(l10n.task_recurring_edit_this),
                   value: 'current',
                   contentPadding: EdgeInsets.zero,
                 ),
                 RadioListTile<String>(
-                  title: Text('이 일정 및 이후 일정 모두 수정'),
+                  title: Text(l10n.task_recurring_edit_following),
                   value: 'future',
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -637,31 +641,32 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen>
   }
 
   Future<String?> _showRecurringDeleteDialog(AppLocalizations l10n) async {
+    final l10n = AppLocalizations.of(context)!;
     String selected = 'current';
 
     return showDialog<String>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('이 반복 일정을 삭제하시겠습니까?'),
+          title: Text(l10n.task_recurring_delete_title),
           content: RadioGroup<String>(
             groupValue: selected,
             onChanged: (v) => setState(() => selected = v!),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 RadioListTile<String>(
-                  title: Text('이 일정만 삭제'),
+                  title: Text(l10n.task_recurring_delete_this),
                   value: 'current',
                   contentPadding: EdgeInsets.zero,
                 ),
                 RadioListTile<String>(
-                  title: Text('이 일정 및 이후 일정 모두 삭제'),
+                  title: Text(l10n.task_recurring_delete_following),
                   value: 'future',
                   contentPadding: EdgeInsets.zero,
                 ),
                 RadioListTile<String>(
-                  title: Text('모든 반복 일정 삭제'),
+                  title: Text(l10n.task_recurring_delete_all),
                   value: 'all',
                   contentPadding: EdgeInsets.zero,
                 ),

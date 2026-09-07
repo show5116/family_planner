@@ -2,30 +2,30 @@ part of 'fridge_tab.dart';
 
 // ── 온보딩용 샘플 데이터 ─────────────────────────────────────────────────────────
 
-final _demoStorage1 = StorageModel(
+StorageModel _demoStorage1(AppLocalizations l10n) => StorageModel(
   id: '__demo_storage_1__',
   groupId: '__demo__',
-  name: '냉장고',
+  name: l10n.demo_fridge,
   type: StorageType.fridge,
   sortOrder: 0,
   createdAt: DateTime(2025, 1, 1),
 );
 
-final _demoStorage2 = StorageModel(
+StorageModel _demoStorage2(AppLocalizations l10n) => StorageModel(
   id: '__demo_storage_2__',
   groupId: '__demo__',
-  name: '냉동실',
+  name: l10n.demo_freezer,
   type: StorageType.freezer,
   sortOrder: 1,
   createdAt: DateTime(2025, 1, 1),
 );
 
-final _demoItems1 = [
+List<FridgeItemModel> _demoItems1(AppLocalizations l10n) => [
   FridgeItemModel(
     id: '__demo_item_1__',
     groupId: '__demo__',
     storageLocationId: '__demo_storage_1__',
-    name: '우유',
+    name: l10n.demo_milk,
     quantity: 2,
     unit: '개',
     registeredAt: DateTime.now().subtract(const Duration(days: 2)),
@@ -39,7 +39,7 @@ final _demoItems1 = [
     id: '__demo_item_2__',
     groupId: '__demo__',
     storageLocationId: '__demo_storage_1__',
-    name: '계란',
+    name: l10n.demo_eggs,
     quantity: 10,
     unit: '개',
     registeredAt: DateTime.now().subtract(const Duration(days: 1)),
@@ -51,9 +51,10 @@ final _demoItems1 = [
   ),
 ];
 
-final _demoSwis = [
-  StorageWithItemsModel(storage: _demoStorage1, items: _demoItems1),
-  StorageWithItemsModel(storage: _demoStorage2, items: []),
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<StorageWithItemsModel> _demoSwis(AppLocalizations l10n) => [
+  StorageWithItemsModel(storage: _demoStorage1(l10n), items: _demoItems1(l10n)),
+  StorageWithItemsModel(storage: _demoStorage2(l10n), items: []),
 ];
 
 // ── 온보딩 로직 ────────────────────────────────────────────────────────────────
@@ -100,9 +101,9 @@ extension _FridgeOnboarding on _FridgeTabState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
-    final l10n = AppLocalizations.of(context)!;
     final fabPos = _keyToPosition(_fabKey);
     final sectionPos = _keyToPosition(_firstSectionKey);
     final itemPos = _keyToPosition(_firstItemKey);
@@ -421,8 +422,8 @@ class _DemoSuggestionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.spaceS, vertical: AppSizes.spaceXS),
@@ -438,7 +439,7 @@ class _DemoSuggestionChip extends StatelessWidget {
           Expanded(
             child: Text(
               l10n.fridge_expiry_suggestion_label(
-                '우유',
+                l10n.demo_milk,
                 l10n.fridge_storage_type_fridge,
                 7,
               ),

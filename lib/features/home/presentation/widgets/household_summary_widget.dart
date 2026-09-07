@@ -104,6 +104,7 @@ class _HouseholdSummaryWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final statsAsync = ref.watch(
       dashboardHouseholdStatisticsProvider(
@@ -114,7 +115,6 @@ class _HouseholdSummaryWidgetState
 
     final hasActiveFilter = _selectedGroupId != null;
 
-    final l10n = AppLocalizations.of(context)!;
 
     return statsAsync.when(
       loading: () => DashboardCard(
@@ -152,8 +152,8 @@ class _HouseholdSummaryWidgetState
     List<Group> groups,
     MonthlyStatisticsModel stats,
     bool hasActiveFilter, {VoidCallback? onRetry}) {
-    final now = DateTime.now();
     final l10n = AppLocalizations.of(context)!;
+    final now = DateTime.now();
     final locale = Localizations.localeOf(context).languageCode;
     final monthLabel = DateFormat('MMMM', locale).format(now);
 
@@ -444,7 +444,7 @@ class _HouseholdGroupPickerSheetState
               vertical: AppSizes.spaceS,
             ),
             child: Text(
-              '보기 모드',
+              l10n.home_view_mode,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),

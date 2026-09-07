@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/holiday_provider.dart';
@@ -162,6 +163,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return TableCalendar<TaskModel>(
       firstDay: DateTime.utc(2020, 1, 1),
       lastDay: DateTime.utc(2030, 12, 31),
@@ -188,8 +190,11 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
 
       // 뷰 모드 버튼이 있으면 포맷 버튼 숨김
       availableCalendarFormats: widget.onViewModeTap != null
-          ? const {CalendarFormat.month: '', CalendarFormat.week: ''}
-          : const {CalendarFormat.month: '월', CalendarFormat.week: '주'},
+          ? {CalendarFormat.month: '', CalendarFormat.week: ''}
+          : {
+              CalendarFormat.month: l10n.calendar_view_month,
+              CalendarFormat.week: l10n.calendar_view_week,
+            },
 
       // 일정 데이터 로드 (해당 날짜의 Task 목록)
       eventLoader: (day) => _getEventsForDay(day),
@@ -327,6 +332,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
 
   /// 캘린더 빌더
   CalendarBuilders<TaskModel> _buildCalendarBuilders() {
+    final l10n = AppLocalizations.of(context)!;
     return CalendarBuilders(
       // 커스텀 헤더 타이틀 (뷰 모드 버튼 포함)
       headerTitleBuilder: widget.onViewModeTap != null
@@ -355,7 +361,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            widget.viewModeLabel ?? '월',
+                            widget.viewModeLabel ?? l10n.calendar_view_month,
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           const SizedBox(width: 2),
@@ -558,7 +564,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
               ),
               alignment: Alignment.center,
               child: Text(
-                '+$hiddenCount개',
+                l10n.calendar_hidden_count(hiddenCount),
                 style: const TextStyle(
                   fontSize: 9,
                   fontWeight: FontWeight.w600,

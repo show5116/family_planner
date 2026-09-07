@@ -162,11 +162,11 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
                     demoSavingsPlanKey: _isDemo ? _savingsPlanKey : null,
                   ),
                   ShopTab(
-                    demoItems: _isDemo ? _demoShopItems : null,
+                    demoItems: _isDemo ? _demoShopItems(l10n) : null,
                     demoShopKey: _isDemo ? _shopListKey : null,
                   ),
                   RulesTab(
-                    demoRules: _isDemo ? _demoRules : null,
+                    demoRules: _isDemo ? _demoRules(l10n) : null,
                     demoPlusKey: _isDemo ? _rulePlusKey : null,
                     demoMinusKey: _isDemo ? _ruleMinusKey : null,
                     demoInfoKey: _isDemo ? _ruleInfoKey : null,

@@ -141,6 +141,7 @@ class GroupCard extends ConsumerWidget {
   }
 
   Widget _buildInviteCodeRow(BuildContext context, AppLocalizations l10n, bool isExpired) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         const Spacer(),
@@ -180,9 +181,9 @@ class _DefaultGroupButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final l10n = AppLocalizations.of(context)!;
     return Tooltip(
       message: isDefault ? l10n.group_unsetDefaultGroupTooltip : l10n.group_setDefaultGroupTooltip,
       child: InkWell(
@@ -201,8 +202,8 @@ class _DefaultGroupButton extends ConsumerWidget {
   }
 
   Future<void> _toggle(BuildContext context, WidgetRef ref) async {
-    final notifier = ref.read(defaultGroupProvider.notifier);
     final l10n = AppLocalizations.of(context)!;
+    final notifier = ref.read(defaultGroupProvider.notifier);
     if (isDefault) {
       await notifier.clear();
       if (context.mounted) {

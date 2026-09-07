@@ -8,6 +8,7 @@ class _DemoCompleteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -27,25 +28,25 @@ class _DemoCompleteDialog extends StatelessWidget {
                 children: [
                   Icon(Icons.check_circle_outline, color: colorScheme.primary, size: 22),
                   const SizedBox(width: 8),
-                  Text('장보기 완료 기능 안내', style: textTheme.titleLarge),
+                  Text(l10n.coach_cart_complete, style: textTheme.titleLarge),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                '장보기 완료 버튼을 누르면 아래 두 가지를 한 번에 처리할 수 있어요.',
+                l10n.coach_cart_complete_desc,
                 style: textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
               ),
               const SizedBox(height: 16),
               _DemoInfoCard(
                 icon: Icons.kitchen_outlined,
                 color: colorScheme.primary,
-                title: '냉장고로 이관',
-                description: '구매한 품목을 냉장고 보관소로 바로 옮길 수 있어요.\n수량·유통기한·알림일도 함께 설정할 수 있습니다.',
+                title: l10n.coach_cart_to_fridge,
+                description: l10n.coach_cart_to_fridge_desc,
                 preview: Column(
                   children: [
-                    _DemoTransferRow(name: '우유', qty: '2개', storage: '냉장고'),
-                    _DemoTransferRow(name: '계란', qty: '1판', storage: '냉장고'),
-                    _DemoTransferRow(name: '두부', qty: '1개', storage: '이관 안 함'),
+                    _DemoTransferRow(name: l10n.demo_milk, qty: '2개', storage: l10n.demo_fridge),
+                    _DemoTransferRow(name: l10n.demo_eggs, qty: '1판', storage: l10n.demo_fridge),
+                    _DemoTransferRow(name: l10n.demo_tofu, qty: '1개', storage: l10n.coach_cart_no_transfer),
                   ],
                 ),
               ),
@@ -53,8 +54,8 @@ class _DemoCompleteDialog extends StatelessWidget {
               _DemoInfoCard(
                 icon: Icons.account_balance_wallet_outlined,
                 color: colorScheme.tertiary,
-                title: '가계부 자동 기록',
-                description: '지출 금액·결제 수단·메모를 입력하면\n가계부에 자동으로 기록돼요.',
+                title: l10n.coach_cart_to_expense,
+                description: l10n.coach_cart_to_expense_desc,
                 preview: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
@@ -67,7 +68,7 @@ class _DemoCompleteDialog extends StatelessWidget {
                         children: [
                           Icon(Icons.receipt_long_outlined, size: 16, color: colorScheme.outline),
                           const SizedBox(width: 6),
-                          Text('마트 장보기', style: textTheme.bodySmall),
+                          Text(l10n.cart_default_description, style: textTheme.bodySmall),
                           const Spacer(),
                           Text('32,500원', style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
                         ],
@@ -77,7 +78,7 @@ class _DemoCompleteDialog extends StatelessWidget {
                         children: [
                           Icon(Icons.credit_card_outlined, size: 14, color: colorScheme.outline),
                           const SizedBox(width: 4),
-                          Text('카드', style: textTheme.labelSmall?.copyWith(color: colorScheme.outline)),
+                          Text(l10n.household_payment_card, style: textTheme.labelSmall?.copyWith(color: colorScheme.outline)),
                         ],
                       ),
                     ],
@@ -151,9 +152,10 @@ class _DemoTransferRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final isSkipped = storage == '이관 안 함';
+    final isSkipped = storage == l10n.coach_cart_no_transfer;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),

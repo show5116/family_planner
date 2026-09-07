@@ -134,6 +134,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   }
 
   Future<void> _showDemoCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     // 포트폴리오 좌표는 스크롤 후에 잡아야 정확함 — 먼저 끝까지 스크롤
     await _demoScrollController.animateTo(
@@ -161,8 +162,8 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '계좌 상세 정보',
-              description: '최신 잔액과 수익률을 확인하고,\n아래로 스크롤하면 자산 변화 차트와\n원금·수익금 통계를 볼 수 있어요.',
+              title: l10n.asset_coach_detail_title,
+              description: l10n.asset_coach_detail_desc,
               icon: Icons.account_balance_outlined,
               color: AppColors.primary,
             ),
@@ -179,8 +180,8 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '잔액 기록 추가',
-              description: '잔액을 주기적으로 기록하면\n자산 변화 추이를 차트로 확인할 수 있어요.\n출금 기록도 함께 관리할 수 있습니다.',
+              title: l10n.asset_coach_record_title,
+              description: l10n.asset_coach_record_desc,
               icon: Icons.add_chart,
               color: Colors.teal,
             ),
@@ -197,8 +198,8 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '포트폴리오',
-              description: '날짜별로 보유 종목과 금액을 기록해\n자산 구성을 파이차트로 확인하세요.\n두 날짜를 비교해 변화도 볼 수 있어요.',
+              title: l10n.asset_coach_portfolio_title,
+              description: l10n.asset_coach_portfolio_desc,
               icon: Icons.pie_chart_outline,
               color: Colors.deepPurple,
             ),
@@ -213,7 +214,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -222,8 +223,8 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
@@ -448,8 +449,8 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                       icon: Icon(_recordsExpanded ? Icons.expand_less : Icons.expand_more),
                       label: Text(
                         _recordsExpanded
-                            ? '접기'
-                            : '전체 ${records.length}건 보기',
+                            ? l10n.common_collapse
+                            : l10n.asset_view_all_records(records.length),
                       ),
                     );
                   },
@@ -473,6 +474,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
   }
 
   void _showGoldInfoDialog(BuildContext context, AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -532,6 +534,7 @@ class _AddActionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
@@ -540,14 +543,14 @@ class _AddActionSheet extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.add_chart_outlined),
-              title: const Text('잔액 기록'),
-              subtitle: const Text('잔액·원금·수익을 기록합니다'),
+              title: Text(l10n.asset_balance_record),
+              subtitle: Text(l10n.asset_balance_record_desc),
               onTap: onSelectRecord,
             ),
             ListTile(
               leading: const Icon(Icons.remove_circle_outline),
-              title: const Text('출금'),
-              subtitle: const Text('원금 인출 또는 수익 실현을 기록합니다'),
+              title: Text(l10n.asset_withdrawal),
+              subtitle: Text(l10n.asset_withdrawal_desc),
               onTap: onSelectWithdrawal,
             ),
           ],
@@ -563,14 +566,18 @@ class _DemoPortfolioSection extends StatelessWidget {
 
   const _DemoPortfolioSection({required this.portfolioKey});
 
-  static const _items = [
-    (label: '나스닥 ETF', ratio: 0.60, color: Color(0xFF6366F1)),
-    (label: '삼성전자', ratio: 0.25, color: Color(0xFF22C55E)),
-    (label: '현금', ratio: 0.15, color: Color(0xFFF59E0B)),
+  /// 온보딩용 예시 구성. 번역이 필요해 const로 둘 수 없다.
+  static List<({String label, double ratio, Color color})> _demoItems(
+    AppLocalizations l10n,
+  ) => [
+    (label: l10n.asset_demo_nasdaq, ratio: 0.60, color: const Color(0xFF6366F1)),
+    (label: l10n.asset_demo_samsung, ratio: 0.25, color: const Color(0xFF22C55E)),
+    (label: l10n.asset_cash, ratio: 0.15, color: const Color(0xFFF59E0B)),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       key: portfolioKey,
       padding: const EdgeInsets.all(AppSizes.spaceM),
@@ -578,7 +585,7 @@ class _DemoPortfolioSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '포트폴리오',
+            l10n.asset_portfolio,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -592,7 +599,7 @@ class _DemoPortfolioSection extends StatelessWidget {
                   height: 160,
                   child: PieChart(
                     PieChartData(
-                      sections: _items
+                      sections: _demoItems(l10n)
                           .map((item) => PieChartSectionData(
                                 value: item.ratio * 100,
                                 color: item.color,
@@ -617,7 +624,7 @@ class _DemoPortfolioSection extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: _items
+                children: _demoItems(l10n)
                     .map((item) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: Row(

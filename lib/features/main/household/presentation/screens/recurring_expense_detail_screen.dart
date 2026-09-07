@@ -204,7 +204,7 @@ class RecurringExpenseDetailScreen extends ConsumerWidget {
                               if (item.isVariable) ...[
                                 const SizedBox(width: 4),
                                 _Badge(
-                                  label: '가변',
+                                  label: l10n.household_variable,
                                   color: colorScheme.tertiaryContainer,
                                   textColor: colorScheme.onTertiaryContainer,
                                 ),
@@ -235,7 +235,7 @@ class RecurringExpenseDetailScreen extends ConsumerWidget {
                         ),
                         if (item.isVariable)
                           Text(
-                            '예상금액',
+                            l10n.household_expected_amount,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: colorScheme.outline,
                                 ),
@@ -259,7 +259,9 @@ class RecurringExpenseDetailScreen extends ConsumerWidget {
               ),
               child: Column(
                 children: [
-                  _KvRow(label: '발생일', value: '매월 ${item.dayOfMonth}일'),
+                  _KvRow(
+                      label: l10n.household_due_day,
+                      value: l10n.household_due_day_value('${item.dayOfMonth}')),
                   if (hasDescription) ...[
                     const Divider(height: 1, indent: AppSizes.spaceM),
                     _KvRow(label: l10n.household_description, value: item.description!),
@@ -269,7 +271,7 @@ class RecurringExpenseDetailScreen extends ConsumerWidget {
                     _MemberKvRow(
                       groupId: nonNullGroupId,
                       memberId: item.memberId!,
-                      label: isIncome ? '받는 사람' : '결제하는 사람',
+                      label: isIncome ? l10n.household_payee : l10n.household_payer,
                     ),
                   ],
                   const Divider(height: 1, indent: AppSizes.spaceM),
@@ -445,6 +447,7 @@ class _HistorySection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final historyAsync = ref.watch(recurringExpenseHistoryProvider(recurringId));
 
@@ -467,7 +470,7 @@ class _HistorySection extends ConsumerWidget {
                   Icon(Icons.history, size: 18, color: colorScheme.outline),
                   const SizedBox(width: AppSizes.spaceS),
                   Text(
-                    '아직 적용된 내역이 없습니다',
+                    l10n.household_no_applied,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -492,15 +495,17 @@ class _HistorySection extends ConsumerWidget {
                 ),
                 child: Column(
                   children: [
-                    _KvRow(label: '확정 평균', value: '₩${fmt(data.averageAmount!)}'),
+                    _KvRow(
+                        label: l10n.household_confirmed_avg,
+                        value: '₩${fmt(data.averageAmount!)}'),
                     const Divider(height: 1, indent: AppSizes.spaceM),
                     _KvRow(
-                      label: '최솟값',
+                      label: l10n.household_min,
                       value: data.minAmount != null ? '₩${fmt(data.minAmount!)}' : '-',
                     ),
                     const Divider(height: 1, indent: AppSizes.spaceM),
                     _KvRow(
-                      label: '최댓값',
+                      label: l10n.household_max,
                       value: data.maxAmount != null ? '₩${fmt(data.maxAmount!)}' : '-',
                     ),
                   ],
@@ -522,7 +527,9 @@ class _HistorySection extends ConsumerWidget {
                   final i = entry.key;
                   final h = entry.value;
                   final dateStr = DateFormat('yyyy.MM.dd').format(h.date);
-                  final label = h.isConfirmed ? dateStr : '$dateStr  미확정';
+                  final label = h.isConfirmed
+                      ? dateStr
+                      : l10n.household_unconfirmed_suffix(dateStr);
                   return Column(
                     children: [
                       if (i > 0) const Divider(height: 1, indent: AppSizes.spaceM),

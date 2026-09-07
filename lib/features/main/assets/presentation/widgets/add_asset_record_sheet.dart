@@ -310,7 +310,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
           hintText: _weightUnit == _GoldWeightUnit.gram
               ? l10n.asset_gold_gram_weight_hint
               : l10n.asset_gold_don_hint,
-          suffixText: _weightUnit == _GoldWeightUnit.gram ? 'g' : '돈',
+          suffixText: _weightUnit == _GoldWeightUnit.gram
+              ? 'g'
+              : l10n.asset_gold_unit_don,
           border: const OutlineInputBorder(),
           // 돈 입력 시 g 환산값 helper로 표시
           helperText: showGramConverted
@@ -378,7 +380,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                   ),
                   TextButton(
                     onPressed: _fetchGoldPrice,
-                    child: const Text('재시도'),
+                    child: Text(l10n.asset_retry),
                   ),
                 ],
               )
@@ -391,7 +393,8 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
                   ),
                   Text(
                     _goldPricePerGram != null
-                        ? '${formatAssetAmount(_goldPricePerGram!)}원/g'
+                        ? l10n.asset_gold_price_per_gram(
+                            formatAssetAmount(_goldPricePerGram!))
                         : '-',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
@@ -412,7 +415,7 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
           suffixIcon: _principalUserEdited
               ? IconButton(
                   icon: const Icon(Icons.refresh, size: 18),
-                  tooltip: '자동 계산으로 되돌리기',
+                  tooltip: l10n.asset_reset_auto,
                   onPressed: () => setState(() {
                     _principalUserEdited = false;
                     _syncPrincipalIfNeeded();
@@ -518,9 +521,9 @@ class _AddAssetRecordSheetState extends ConsumerState<AddAssetRecordSheet> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
-    final l10n = AppLocalizations.of(context)!;
     final note = _noteController.text.trim();
     final dateStr =
         '${_recordDate.year}-${_recordDate.month.toString().padLeft(2, '0')}-${_recordDate.day.toString().padLeft(2, '0')}';

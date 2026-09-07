@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
 import 'package:family_planner/features/notification/data/services/notification_navigation_service.dart';
@@ -52,6 +53,7 @@ class _NotificationHistoryScreenState
 
   /// 알림 삭제
   Future<void> _onDelete(String notificationId) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.deleteNotification(notificationId);
@@ -60,13 +62,13 @@ class _NotificationHistoryScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('알림이 삭제되었습니다')),
+          SnackBar(content: Text(l10n.notif_deleted)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('알림 삭제 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_delete_failed}\n$e')),
         );
       }
     }
@@ -74,6 +76,7 @@ class _NotificationHistoryScreenState
 
   /// 알림 탭
   Future<void> _onTap(NotificationModel notification) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notification.id);
@@ -86,7 +89,7 @@ class _NotificationHistoryScreenState
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('알림 읽음 처리 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_action_failed}\n$e')),
         );
       }
     }
@@ -94,6 +97,7 @@ class _NotificationHistoryScreenState
 
   /// 읽음 처리만 (화면 이동 없음)
   Future<void> _onMarkAsReadOnly(NotificationModel notification) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notification.id);
@@ -104,7 +108,7 @@ class _NotificationHistoryScreenState
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('알림 읽음 처리 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_action_failed}\n$e')),
         );
       }
     }
@@ -112,6 +116,7 @@ class _NotificationHistoryScreenState
 
   /// 전체 읽음 처리
   Future<void> _onMarkAllAsRead() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       final count = await repository.markAllAsRead();
@@ -122,13 +127,13 @@ class _NotificationHistoryScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$count개의 알림을 읽음 처리했습니다')),
+          SnackBar(content: Text(l10n.notif_marked_read_count(count))),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('전체 읽음 처리 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_mark_all_failed}\n$e')),
         );
       }
     }
@@ -136,11 +141,12 @@ class _NotificationHistoryScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final historyState = ref.watch(notificationHistoryProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('알림'),
+        title: Text(l10n.notif_title),
         centerTitle: true,
         actions: [
           TextButton(
@@ -148,7 +154,7 @@ class _NotificationHistoryScreenState
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.onPrimary,
             ),
-            child: const Text('전체 읽음'),
+            child: Text(l10n.notif_mark_all_read),
           ),
           const SizedBox(width: AppSizes.spaceS),
         ],
@@ -156,9 +162,9 @@ class _NotificationHistoryScreenState
       body: historyState.when(
         data: (notifications) {
           if (notifications.isEmpty) {
-            return const AppEmptyState(
+            return AppEmptyState(
               icon: Icons.notifications_none,
-              message: '알림이 없습니다',
+              message: l10n.notif_empty,
             );
           }
 
@@ -188,7 +194,7 @@ class _NotificationHistoryScreenState
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => AppErrorState(
           error: error,
-          title: '알림을 불러오는 데 실패했습니다',
+          title: l10n.notif_load_failed,
           onRetry: _onRefresh,
         ),
       ),

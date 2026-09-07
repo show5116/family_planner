@@ -31,6 +31,7 @@ extension _CalendarOnboarding on _CalendarTabState {
   }
 
   Future<void> _showCoachMark({bool force = false}) async {
+    final l10n = AppLocalizations.of(context)!;
     final calendarPos = _keyToPosition(_calendarKey);
     final fabPos = _keyToPosition(_fabKey);
 
@@ -56,8 +57,8 @@ extension _CalendarOnboarding on _CalendarTabState {
             TargetContent(
               align: ContentAlign.bottom,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '공유 캘린더',
-                description: '그룹 구성원의 일정을 한눈에 볼 수 있어요.\n날짜를 탭해 해당 날의 일정을 확인하세요.',
+                title: l10n.coach_calendar_shared,
+                description: l10n.coach_calendar_shared_desc,
                 icon: Icons.calendar_month,
               ),
             ),
@@ -72,8 +73,8 @@ extension _CalendarOnboarding on _CalendarTabState {
             TargetContent(
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '일정 추가',
-                description: '버튼을 눌러 새 일정을 만드세요.\n눌러서 생성 화면을 살펴보세요.',
+                title: l10n.coach_calendar_add,
+                description: l10n.coach_calendar_add_desc,
                 icon: Icons.add,
               ),
             ),

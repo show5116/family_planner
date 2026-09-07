@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
@@ -38,6 +39,7 @@ class _AnniversaryListScreenState extends ConsumerState<AnniversaryListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(selectedGroupIdProvider);
 
     // 그룹 로드 완료 시 아직 미선택이면 첫 그룹 자동 선택
@@ -52,7 +54,7 @@ class _AnniversaryListScreenState extends ConsumerState<AnniversaryListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('기념일 관리'),
+        title: Text(l10n.anniversary_manage),
       ),
       body: Column(
         children: [
@@ -78,7 +80,7 @@ class _AnniversaryListScreenState extends ConsumerState<AnniversaryListScreen> {
                 context,
                 groupId: selectedGroupId,
               ),
-              tooltip: '기념일 추가',
+              tooltip: l10n.anniversary_add,
               child: const Icon(Icons.add),
             )
           : null,
@@ -94,6 +96,7 @@ class _AnniversaryList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final listAsync = ref.watch(anniversaryManagementProvider(groupId));
 
     return listAsync.when(
@@ -102,13 +105,13 @@ class _AnniversaryList extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('불러오기 실패: $e'),
+            Text('${l10n.anniversary_load_failed}\n$e'),
             const SizedBox(height: AppSizes.spaceM),
             FilledButton(
               onPressed: () => ref
                   .read(anniversaryManagementProvider(groupId).notifier)
                   .refresh(),
-              child: const Text('다시 시도'),
+              child: Text(l10n.common_retry),
             ),
           ],
         ),
@@ -149,6 +152,7 @@ class _EmptyList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     return Center(
       child: Column(
@@ -161,7 +165,7 @@ class _EmptyList extends ConsumerWidget {
           ),
           const SizedBox(height: AppSizes.spaceM),
           Text(
-            '등록된 기념일이 없습니다',
+            l10n.anniversary_empty,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -173,7 +177,7 @@ class _EmptyList extends ConsumerWidget {
               groupId: groupId,
             ),
             icon: const Icon(Icons.add),
-            label: const Text('기념일 추가'),
+            label: Text(l10n.anniversary_add),
           ),
         ],
       ),
@@ -193,6 +197,7 @@ class _AnniversaryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final daysUntil = anniversary.daysUntilNext;
     final daysSince = anniversary.daysSince;
@@ -284,25 +289,25 @@ class _AnniversaryTile extends ConsumerWidget {
               icon: const Icon(Icons.more_vert, size: 20),
               onSelected: (action) => _handleAction(context, ref, action),
               itemBuilder: (_) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: _TileAction.edit,
                   child: Row(
                     children: [
                       Icon(Icons.edit_outlined, size: 18),
                       SizedBox(width: 8),
-                      Text('수정'),
+                      Text(l10n.common_edit),
                     ],
                   ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: _TileAction.delete,
                   child: Row(
                     children: [
                       Icon(Icons.delete_outline,
                           size: 18, color: AppColors.error),
                       SizedBox(width: 8),
-                      Text('삭제',
-                          style: TextStyle(color: AppColors.error)),
+                      Text(l10n.common_delete,
+                          style: const TextStyle(color: AppColors.error)),
                     ],
                   ),
                 ),
@@ -319,6 +324,7 @@ class _AnniversaryTile extends ConsumerWidget {
     WidgetRef ref,
     _TileAction action,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     switch (action) {
       case _TileAction.edit:
         await AnniversaryFormDialog.show(
@@ -338,7 +344,7 @@ class _AnniversaryTile extends ConsumerWidget {
         if (!context.mounted) return;
         if (!success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('삭제에 실패했습니다')),
+            SnackBar(content: Text(l10n.anniversary_delete_failed)),
           );
         }
     }
@@ -366,19 +372,20 @@ class _DeleteDialogState extends State<_DeleteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('기념일 삭제'),
+      title: Text(l10n.anniversary_delete),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('"${widget.title}"을(를) 삭제하시겠습니까?'),
+          Text(l10n.anniversary_delete_message(widget.title)),
           const SizedBox(height: AppSizes.spaceM),
           CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
-            title: const Text('연동된 기념일 일정도 함께 삭제'),
-            subtitle: const Text('체크 해제 시 일정은 유지됩니다'),
+            title: Text(l10n.anniversary_delete_linked),
+            subtitle: Text(l10n.anniversary_delete_linked_desc),
             value: _deleteWithTasks,
             onChanged: (v) => setState(() => _deleteWithTasks = v ?? false),
             controlAffinity: ListTileControlAffinity.leading,
@@ -388,13 +395,13 @@ class _DeleteDialogState extends State<_DeleteDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(null),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         TextButton(
           onPressed: () => Navigator.of(context)
               .pop(_DeleteResult(deleteWithTasks: _deleteWithTasks)),
           style: TextButton.styleFrom(foregroundColor: AppColors.error),
-          child: const Text('삭제'),
+          child: Text(l10n.common_delete),
         ),
       ],
     );

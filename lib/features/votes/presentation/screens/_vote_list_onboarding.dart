@@ -4,38 +4,39 @@ part of 'vote_list_screen.dart';
 
 final _demoNow = DateTime.now();
 
-final _demoVotes = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<VoteModel> _demoVotes(AppLocalizations l10n) => [
   VoteModel(
     id: '__demo_1__',
     groupId: '__demo__',
-    title: '이번 주말 가족 나들이 장소',
-    description: '다수결로 결정해요! 의견을 남겨주세요.',
+    title: l10n.demo_vote_outing,
+    description: l10n.demo_vote_outing_desc,
     isMultiple: false,
     isAnonymous: false,
     endsAt: _demoNow.add(const Duration(days: 2)),
     isOngoing: true,
     totalVoters: 3,
     hasVoted: true,
-    creatorName: '엄마',
+    creatorName: l10n.demo_member_mom,
     createdAt: _demoNow.subtract(const Duration(hours: 5)),
     options: [
-      const VoteOptionModel(
+      VoteOptionModel(
         id: 'o1',
-        label: '한강공원',
+        label: l10n.demo_place_hangang,
         count: 2,
         isSelected: true,
-        voters: ['엄마', '아빠'],
+        voters: [l10n.demo_member_mom, l10n.demo_member_dad],
       ),
-      const VoteOptionModel(
+      VoteOptionModel(
         id: 'o2',
-        label: '놀이동산',
+        label: l10n.demo_place_amusement,
         count: 1,
         isSelected: false,
-        voters: ['민준'],
+        voters: [l10n.demo_member_child],
       ),
-      const VoteOptionModel(
+      VoteOptionModel(
         id: 'o3',
-        label: '동물원',
+        label: l10n.demo_place_zoo,
         count: 0,
         isSelected: false,
         voters: [],
@@ -45,7 +46,7 @@ final _demoVotes = [
   VoteModel(
     id: '__demo_2__',
     groupId: '__demo__',
-    title: '저녁 메뉴 결정',
+    title: l10n.demo_vote_dinner,
     description: null,
     isMultiple: true,
     isAnonymous: true,
@@ -53,26 +54,26 @@ final _demoVotes = [
     isOngoing: false,
     totalVoters: 4,
     hasVoted: true,
-    creatorName: '아빠',
+    creatorName: l10n.demo_member_dad,
     createdAt: _demoNow.subtract(const Duration(days: 1)),
     options: [
-      const VoteOptionModel(
+      VoteOptionModel(
         id: 'o4',
-        label: '치킨',
+        label: l10n.demo_food_chicken,
         count: 3,
         isSelected: false,
         voters: [],
       ),
-      const VoteOptionModel(
+      VoteOptionModel(
         id: 'o5',
-        label: '피자',
+        label: l10n.demo_food_pizza,
         count: 2,
         isSelected: false,
         voters: [],
       ),
-      const VoteOptionModel(
+      VoteOptionModel(
         id: 'o6',
-        label: '삼겹살',
+        label: l10n.demo_food_pork,
         count: 1,
         isSelected: false,
         voters: [],
@@ -118,6 +119,7 @@ extension _VoteListOnboarding on _VoteListScreenState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final targets = <TargetFocus>[
@@ -130,9 +132,9 @@ extension _VoteListOnboarding on _VoteListScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '그룹 선택',
+              title: l10n.coach_vote_group,
               description:
-                  '투표는 그룹 단위로 진행돼요.\n그룹을 선택하면 해당 그룹의\n투표 목록을 확인할 수 있어요.',
+                  l10n.coach_vote_group_desc,
               icon: Icons.group_outlined,
               color: Colors.teal,
             ),
@@ -148,8 +150,8 @@ extension _VoteListOnboarding on _VoteListScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '상태 필터',
-              description: '전체, 진행중, 종료된 투표를\n탭으로 쉽게 구분해서 볼 수 있어요.',
+              title: l10n.coach_vote_filter,
+              description: l10n.coach_vote_filter_desc,
               icon: Icons.filter_list,
               color: Colors.indigo,
             ),
@@ -165,9 +167,9 @@ extension _VoteListOnboarding on _VoteListScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '투표 카드',
+              title: l10n.coach_vote_card,
               description:
-                  '카드를 탭하면 선택지에 투표할 수 있어요.\n그룹 멤버 모두가 참여할 수 있고\n결과는 실시간으로 확인할 수 있어요.',
+                  l10n.coach_vote_card_desc,
               icon: Icons.how_to_vote_outlined,
               color: Colors.orange,
             ),
@@ -183,9 +185,9 @@ extension _VoteListOnboarding on _VoteListScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '새 투표 만들기',
+              title: l10n.coach_vote_create,
               description:
-                  '+ 버튼을 눌러 새 투표를 만들어보세요.\n단일/복수 선택, 익명 투표,\n마감 시각 설정도 지원해요.',
+                  l10n.coach_vote_create_desc,
               icon: Icons.add_circle_outline,
               color: Colors.purple,
             ),
@@ -201,7 +203,7 @@ extension _VoteListOnboarding on _VoteListScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: _skipWidget,
       onFinish: () {
@@ -225,15 +227,17 @@ extension _VoteListOnboarding on _VoteListScreenState {
     ).show(context: context);
   }
 
-  Widget get _skipWidget => Container(
+  Widget get _skipWidget {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     decoration: BoxDecoration(
       color: Colors.white.withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(20),
       border: Border.all(color: Colors.white30),
     ),
-    child: const Text(
-      '건너뛰기',
+    child: Text(
+      l10n.common_skip,
       style: TextStyle(
         color: Colors.white,
         fontSize: 13,
@@ -241,6 +245,7 @@ extension _VoteListOnboarding on _VoteListScreenState {
       ),
     ),
   );
+  }
 }
 
 // ─── 온보딩 전용 뷰 ───────────────────────────────────────────────────────────
@@ -258,6 +263,7 @@ class _DemoVoteBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
@@ -277,7 +283,7 @@ class _DemoVoteBody extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: AppSizes.spaceS),
-                Text('우리 가족', style: Theme.of(context).textTheme.bodyMedium),
+                Text(l10n.demo_group_family, style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 4),
                 Icon(
                   Icons.arrow_drop_down,
@@ -297,10 +303,10 @@ class _DemoVoteBody extends StatelessWidget {
             ),
             child: SegmentedButton<int>(
               showSelectedIcon: false,
-              segments: const [
-                ButtonSegment(value: 0, label: Text('전체')),
-                ButtonSegment(value: 1, label: Text('진행중')),
-                ButtonSegment(value: 2, label: Text('종료됨')),
+              segments: [
+                ButtonSegment(value: 0, label: Text(l10n.qna_statusAll)),
+                ButtonSegment(value: 1, label: Text(l10n.vote_status_ongoing)),
+                ButtonSegment(value: 2, label: Text(l10n.vote_filter_closed)),
               ],
               selected: const {0},
               onSelectionChanged: (_) {},
@@ -312,11 +318,11 @@ class _DemoVoteBody extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.all(AppSizes.spaceM),
-            itemCount: _demoVotes.length,
+            itemCount: _demoVotes(l10n).length,
             separatorBuilder: (_, _) => const SizedBox(height: AppSizes.spaceM),
             itemBuilder: (_, index) => _VoteCard(
               key: index == 0 ? firstCardKey : null,
-              vote: _demoVotes[index],
+              vote: _demoVotes(l10n)[index],
               isDemo: true,
             ),
           ),

@@ -127,6 +127,7 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
     List<Group> groups,
     List<FridgeItemModel> items,
     bool hasFilter, {VoidCallback? onRetry}) {
+    final l10n = AppLocalizations.of(context)!;
     return DashboardCard(
       title: AppLocalizations.of(context)!.widgetSettings_fridgeSummary,
       icon: Icons.warning_amber_outlined,
@@ -137,7 +138,7 @@ class _FridgeExpiryWidgetState extends ConsumerState<FridgeExpiryWidget> {
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '그룹 선택',
+              tooltip: l10n.common_selectGroup,
               icon: Badge(
                 isLabelVisible: hasFilter,
                 smallSize: 7,
@@ -196,6 +197,7 @@ class _ExpiryItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final days = item.daysUntilExpiry;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
@@ -204,13 +206,13 @@ class _ExpiryItemRow extends StatelessWidget {
     String label;
     if (days == null) {
       chipColor = colorScheme.outline;
-      label = '기한 없음';
+      label = l10n.home_no_expiry;
     } else if (days < 0) {
       chipColor = colorScheme.error;
-      label = '${days.abs()}일 초과';
+      label = l10n.home_expired_days('${days.abs()}');
     } else if (days == 0) {
       chipColor = colorScheme.error;
-      label = '오늘 만료';
+      label = l10n.home_expires_today;
     } else {
       chipColor = days <= 3 ? colorScheme.error : colorScheme.tertiary;
       label = 'D-$days';
@@ -276,12 +278,14 @@ class _GroupPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: AppSizes.spaceM),
-          Text('그룹 선택', style: Theme.of(context).textTheme.titleMedium),
+          Text(l10n.common_selectGroup,
+              style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppSizes.spaceS),
           RadioGroup<String>(
             groupValue: selectedGroupId ?? '',

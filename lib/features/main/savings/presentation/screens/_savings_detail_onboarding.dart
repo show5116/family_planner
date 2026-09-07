@@ -11,6 +11,7 @@ extension _SavingsDetailOnboarding on _SavingsDetailScreenState {
   }
 
   Future<void> _showDemoCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final headerPos = _keyToPosition(_headerCardKey);
     final depositPos = _keyToPosition(_depositButtonKey);
@@ -25,8 +26,8 @@ extension _SavingsDetailOnboarding on _SavingsDetailScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '적립 현황',
-              description: '현재 적립금과 목표 금액,\n달성률을 상세하게 확인할 수 있어요.\n자동 적립 중일 때는 적립 상태도 표시돼요.',
+              title: l10n.coach_savings_status,
+              description: l10n.coach_savings_status_desc,
               icon: Icons.savings_outlined,
               color: AppColors.investment,
             ),
@@ -43,8 +44,8 @@ extension _SavingsDetailOnboarding on _SavingsDetailScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '입금 / 출금',
-              description: '언제든지 직접 입금하거나 출금할 수 있어요.\n자동 적립과 함께 활용하면 더욱 편리해요.',
+              title: l10n.coach_savings_deposit,
+              description: l10n.coach_savings_deposit_desc,
               icon: Icons.swap_vert,
               color: Colors.green,
             ),
@@ -58,7 +59,7 @@ extension _SavingsDetailOnboarding on _SavingsDetailScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -67,8 +68,8 @@ extension _SavingsDetailOnboarding on _SavingsDetailScreenState {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),

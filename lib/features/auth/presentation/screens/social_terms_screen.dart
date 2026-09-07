@@ -76,7 +76,9 @@ class _SocialTermsScreenState extends ConsumerState<SocialTermsScreen> {
     final tempToken = ref.read(authProvider).pendingTempToken;
     if (tempToken == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('오류: 인증 토큰이 없습니다. 다시 로그인해주세요.'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text(l10n.auth_no_token),
+            backgroundColor: Colors.red),
       );
       return;
     }
@@ -111,7 +113,7 @@ class _SocialTermsScreenState extends ConsumerState<SocialTermsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('서비스 이용 동의'),
+          title: Text(l10n.auth_terms_title),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => ref.read(authProvider.notifier).cancelSocialSignup(),
@@ -124,7 +126,7 @@ class _SocialTermsScreenState extends ConsumerState<SocialTermsScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  '패밀리플래너 서비스 이용을\n위해 약관에 동의해 주세요',
+                  l10n.auth_terms_desc,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -168,7 +170,7 @@ class _SocialTermsScreenState extends ConsumerState<SocialTermsScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('동의하고 시작하기'),
+                      : Text(l10n.auth_agree_and_start),
                 ),
               ],
             ),

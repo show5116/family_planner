@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/utils/thousands_formatter.dart';
 import 'package:family_planner/features/main/assets/data/models/holding_record_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
@@ -65,6 +66,7 @@ class _HoldingRecordFormSheetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: AppSizes.spaceM,
@@ -82,12 +84,12 @@ class _HoldingRecordFormSheetState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                _isEdit ? '종목 수정' : '종목 추가',
+                _isEdit ? l10n.asset_holding_edit : l10n.asset_holding_add,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: AppSizes.spaceXS),
               Text(
-                _formatDateLabel(widget.recordDate),
+                _formatDateLabel(l10n, widget.recordDate),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),
@@ -113,13 +115,15 @@ class _HoldingRecordFormSheetState
                   return TextFormField(
                     controller: controller,
                     focusNode: focusNode,
-                    decoration: const InputDecoration(
-                      labelText: '종목명',
-                      hintText: '예: 나스닥 ETF, 삼성전자',
+                    decoration: InputDecoration(
+                      labelText: l10n.asset_holding_name,
+                      hintText: l10n.asset_holding_name_hint,
                       border: OutlineInputBorder(),
                     ),
                     validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? '종목명을 입력해주세요' : null,
+                        (v == null || v.trim().isEmpty)
+                            ? l10n.asset_holding_name_required
+                            : null,
                   );
                 },
                 optionsViewBuilder: (ctx, onSelected, options) {
@@ -159,9 +163,9 @@ class _HoldingRecordFormSheetState
               TextFormField(
                 controller: _tickerCtrl,
                 textCapitalization: TextCapitalization.characters,
-                decoration: const InputDecoration(
-                  labelText: '티커 (선택)',
-                  hintText: '예: QQQ, 005930',
+                decoration: InputDecoration(
+                  labelText: l10n.asset_holding_ticker,
+                  hintText: l10n.asset_holding_ticker_hint,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -172,17 +176,19 @@ class _HoldingRecordFormSheetState
                 controller: _amountCtrl,
                 keyboardType: TextInputType.number,
                 inputFormatters: [ThousandsFormatter()],
-                decoration: const InputDecoration(
-                  labelText: '금액',
-                  hintText: '예: 2,000,000',
+                decoration: InputDecoration(
+                  labelText: l10n.asset_amount_label,
+                  hintText: l10n.asset_amount_hint,
                   prefixText: '₩ ',
                   border: OutlineInputBorder(),
-                  helperText: '비율은 잔액 기준으로 자동 계산됩니다',
+                  helperText: l10n.asset_ratio_auto,
                 ),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty) return '금액을 입력해주세요';
+                  if (v == null || v.trim().isEmpty) {
+                    return l10n.asset_amount_required;
+                  }
                   final n = double.tryParse(v.trim().replaceAll(',', ''));
-                  if (n == null || n <= 0) return '유효한 금액을 입력해주세요';
+                  if (n == null || n <= 0) return l10n.asset_amount_invalid;
                   return null;
                 },
               ),
@@ -197,7 +203,7 @@ class _HoldingRecordFormSheetState
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Text('저장'),
+                    : Text(l10n.common_save),
               ),
             ],
           ),
@@ -206,9 +212,10 @@ class _HoldingRecordFormSheetState
     );
   }
 
-  String _formatDateLabel(String date) {
+  String _formatDateLabel(AppLocalizations l10n, String date) {
     final parts = date.split('-');
-    return '${parts[0]}년 ${int.parse(parts[1])}월 ${int.parse(parts[2])}일';
+    return l10n.asset_date_full(
+        parts[0], '${int.parse(parts[1])}', '${int.parse(parts[2])}');
   }
 
   Future<void> _submit() async {

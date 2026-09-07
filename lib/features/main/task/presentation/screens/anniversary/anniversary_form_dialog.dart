@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
 import 'package:family_planner/features/main/task/providers/anniversary_provider.dart';
 import 'package:family_planner/shared/widgets/emoji_picker_field.dart';
@@ -75,11 +76,13 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     final title = _titleController.text.trim();
     if (title.isEmpty) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('기념일 이름을 입력해 주세요')));
+      ).showSnackBar(
+          SnackBar(content: Text(l10n.anniversary_name_required)));
       return;
     }
 
@@ -120,19 +123,24 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
       Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(isEditMode ? '수정에 실패했습니다' : '생성에 실패했습니다')),
+        SnackBar(
+            content: Text(isEditMode
+                ? l10n.anniversary_update_failed
+                : l10n.anniversary_create_failed)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final dateStr =
         '${_selectedDate.year}.${_selectedDate.month.toString().padLeft(2, '0')}.${_selectedDate.day.toString().padLeft(2, '0')}';
 
     return AlertDialog(
-      title: Text(isEditMode ? '기념일 수정' : '기념일 추가'),
+      title: Text(
+          isEditMode ? l10n.anniversary_edit : l10n.anniversary_add),
       contentPadding: const EdgeInsets.fromLTRB(
         AppSizes.spaceL,
         AppSizes.spaceM,
@@ -151,13 +159,13 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
               onEmojiChanged: (emoji) => setState(() => _emoji = emoji),
               controller: _titleController,
               autofocus: true,
-              labelText: '기념일 이름',
-              hintText: '예: 결혼기념일',
+              labelText: l10n.anniversary_name,
+              hintText: l10n.anniversary_name_hint,
               textInputAction: TextInputAction.done,
             ),
             const SizedBox(height: AppSizes.spaceL),
             // 날짜 선택
-            Text('날짜', style: theme.textTheme.labelMedium),
+            Text(l10n.common_date, style: theme.textTheme.labelMedium),
             const SizedBox(height: AppSizes.spaceXS),
             InkWell(
               onTap: _pickDate,
@@ -188,11 +196,12 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
             ),
             const SizedBox(height: AppSizes.spaceM),
             // milestone 자동 생성 설정
-            Text('기념일 알림 일정 자동 생성', style: theme.textTheme.labelMedium),
+            Text(l10n.anniversary_auto_create,
+                style: theme.textTheme.labelMedium),
             CheckboxListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
-              title: const Text('100일 단위 (D+100, D+200…)'),
+              title: Text(l10n.anniversary_every100),
               value: _every100Days,
               onChanged: (v) => setState(() => _every100Days = v ?? false),
               controlAffinity: ListTileControlAffinity.leading,
@@ -200,7 +209,7 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
             CheckboxListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
-              title: const Text('매년 주년 (1주년, 2주년…)'),
+              title: Text(l10n.anniversary_everyYear),
               value: _everyYear,
               onChanged: (v) => setState(() => _everyYear = v ?? false),
               controlAffinity: ListTileControlAffinity.leading,
@@ -214,7 +223,7 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
           onPressed: _isSubmitting
               ? null
               : () => Navigator.of(context).pop(false),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _isSubmitting ? null : _submit,
@@ -224,7 +233,7 @@ class _AnniversaryFormDialogState extends ConsumerState<AnniversaryFormDialog> {
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : Text(isEditMode ? '수정' : '추가'),
+              : Text(isEditMode ? l10n.common_edit : l10n.common_add),
         ),
       ],
     );

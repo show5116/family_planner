@@ -88,6 +88,7 @@ class _MemoSummaryWidgetState extends ConsumerState<MemoSummaryWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final memosAsync = ref.watch(
       dashboardMemosProvider(
@@ -98,7 +99,7 @@ class _MemoSummaryWidgetState extends ConsumerState<MemoSummaryWidget> {
 
     final hasActiveFilter = _selectedGroupId != null || _personalOnly;
 
-    const title = '고정된 메모';
+    final title = l10n.home_pinned_memos;
 
     return DashboardCard(
       title: title,
@@ -110,7 +111,7 @@ class _MemoSummaryWidgetState extends ConsumerState<MemoSummaryWidget> {
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '필터',
+              tooltip: l10n.common_filter,
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
@@ -186,6 +187,7 @@ class _MemoGroupPickerSheetState extends State<_MemoGroupPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.of(context);
     return Padding(
       padding: EdgeInsets.only(bottom: mq.viewInsets.bottom + mq.padding.bottom),
@@ -208,7 +210,8 @@ class _MemoGroupPickerSheetState extends State<_MemoGroupPickerSheet> {
             padding: const EdgeInsets.fromLTRB(
               AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
             ),
-            child: Text('필터', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(l10n.common_filter,
+                style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
           RadioGroup<String>(
@@ -245,7 +248,7 @@ class _MemoGroupPickerSheetState extends State<_MemoGroupPickerSheet> {
                       : _value,
                   _value == _personalOnlyValue,
                 ),
-                child: const Text('적용'),
+                child: Text(l10n.common_apply),
               ),
             ),
           ),
@@ -262,6 +265,7 @@ class _MemoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final checkedCount = memo.checklistMeta.checked;
     final totalCount = memo.checklistMeta.total;
     final isChecklist = totalCount > 0;
@@ -296,7 +300,8 @@ class _MemoItem extends StatelessWidget {
                   const SizedBox(height: 2),
                   if (isChecklist && totalCount > 0)
                     Text(
-                      '$checkedCount/$totalCount 완료',
+                      l10n.home_checklist_progress(
+                          '$checkedCount', '$totalCount'),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -332,6 +337,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         children: [
@@ -342,7 +348,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '고정된 메모가 없습니다',
+            l10n.home_pinned_memos_empty,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

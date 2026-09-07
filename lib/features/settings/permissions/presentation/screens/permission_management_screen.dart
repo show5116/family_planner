@@ -68,6 +68,7 @@ class _PermissionManagementScreenState
     WidgetRef ref,
     AppLocalizations l10n,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return TextField(
       decoration: InputDecoration(
         hintText: l10n.permission_search,
@@ -89,6 +90,7 @@ class _PermissionManagementScreenState
     AppLocalizations l10n,
     PermissionManagementState state,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -140,6 +142,7 @@ class _PermissionManagementScreenState
     AppLocalizations l10n,
     PermissionManagementState state,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -203,6 +206,7 @@ class _PermissionManagementScreenState
     AppLocalizations l10n,
     PermissionManagementState state,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -235,6 +239,7 @@ class _PermissionManagementScreenState
   }
 
   Widget _buildEmptyView(BuildContext context, AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

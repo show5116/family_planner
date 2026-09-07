@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/notification/data/models/notification_settings_model.dart';
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_toggle_item.dart';
@@ -24,6 +25,7 @@ class _HourPickerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
       leading: Icon(Icons.access_time, color: Theme.of(context).colorScheme.primary),
       title: Text(title),
@@ -35,7 +37,9 @@ class _HourPickerTile extends StatelessWidget {
         value: hour,
         underline: const SizedBox.shrink(),
         items: availableHours.map((h) {
-          final label = h < 12 ? '오전 $h시' : (h == 12 ? '낮 12시' : '오후 ${h - 12}시');
+          final label = h < 12
+              ? l10n.notif_hour_am('$h')
+              : (h == 12 ? l10n.notif_hour_noon : l10n.notif_hour_pm('${h - 12}'));
           return DropdownMenuItem(value: h, child: Text(label));
         }).toList(),
         onChanged: (v) { if (v != null) onChanged(v); },
@@ -59,11 +63,12 @@ class NotificationSettingsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '알림 설정',
+          l10n.notif_settings,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -74,8 +79,8 @@ class NotificationSettingsSection extends ConsumerWidget {
             children: [
               NotificationToggleItem(
                 icon: Icons.calendar_today_outlined,
-                title: '일정 알림',
-                subtitle: '일정 시작 전 알림을 받습니다',
+                title: l10n.notif_task,
+                subtitle: l10n.notif_task_desc,
                 value: settings.scheduleEnabled,
                 onChanged: (value) {
                   ref
@@ -86,8 +91,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.check_box_outlined,
-                title: '할 일 알림',
-                subtitle: '할 일 마감 기한 알림을 받습니다',
+                title: l10n.notif_todo,
+                subtitle: l10n.notif_todo_desc,
                 value: settings.todoEnabled,
                 onChanged: (value) {
                   ref
@@ -98,8 +103,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.account_balance_wallet_outlined,
-                title: '가계부 알림',
-                subtitle: '가계부 관련 알림을 받습니다',
+                title: l10n.notif_household,
+                subtitle: l10n.notif_household_desc,
                 value: settings.householdEnabled,
                 onChanged: (value) {
                   ref
@@ -110,8 +115,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.savings_outlined,
-                title: '자산 알림',
-                subtitle: '자산 변동 관련 알림을 받습니다',
+                title: l10n.notif_assets,
+                subtitle: l10n.notif_assets_desc,
                 value: settings.assetEnabled,
                 onChanged: (value) {
                   ref
@@ -122,8 +127,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.child_care_outlined,
-                title: '육아 알림',
-                subtitle: '육아 포인트 관련 알림을 받습니다',
+                title: l10n.notif_childcare,
+                subtitle: l10n.notif_childcare_desc,
                 value: settings.childcareEnabled,
                 onChanged: (value) {
                   ref
@@ -134,8 +139,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.group_outlined,
-                title: '그룹 알림',
-                subtitle: '그룹 관련 알림을 받습니다',
+                title: l10n.notif_group,
+                subtitle: l10n.notif_group_desc,
                 value: settings.groupEnabled,
                 onChanged: (value) {
                   ref
@@ -146,8 +151,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.wallet_outlined,
-                title: '적금 알림',
-                subtitle: '적금 목표 및 납입 관련 알림을 받습니다',
+                title: l10n.notif_savings,
+                subtitle: l10n.notif_savings_desc,
                 value: settings.savingsEnabled,
                 onChanged: (value) {
                   ref
@@ -158,8 +163,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.campaign_outlined,
-                title: '시스템 알림',
-                subtitle: '중요한 시스템 알림을 받습니다',
+                title: l10n.notif_system,
+                subtitle: l10n.notif_system_desc,
                 value: settings.systemEnabled,
                 onChanged: (value) {
                   ref
@@ -170,8 +175,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.wb_cloudy_outlined,
-                title: '날씨 알림',
-                subtitle: '비·눈 예보 또는 큰 기온 변화 시 알립니다',
+                title: l10n.notif_weather,
+                subtitle: l10n.notif_weather_desc,
                 value: settings.weatherEnabled,
                 onChanged: (value) {
                   ref
@@ -182,8 +187,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               if (settings.weatherEnabled) ...[
                 const Divider(height: 1),
                 _HourPickerTile(
-                  title: '날씨 알림 시간',
-                  subtitle: '앱 실행 시 설정 시간이 되면 알림을 보냅니다',
+                  title: l10n.notif_weather_time,
+                  subtitle: l10n.notif_weather_time_desc,
                   hour: settings.weatherAlertHour,
                   availableHours: List.generate(17, (i) => i + 5),
                   onChanged: (hour) {
@@ -196,8 +201,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               const Divider(height: 1),
               NotificationToggleItem(
                 icon: Icons.checklist_outlined,
-                title: '루틴 알림',
-                subtitle: '미체크 루틴 리마인드, 배지 획득, 주간 요약을 받습니다',
+                title: l10n.notif_routine,
+                subtitle: l10n.notif_routine_desc,
                 value: settings.routineEnabled,
                 onChanged: (value) {
                   ref
@@ -208,8 +213,8 @@ class NotificationSettingsSection extends ConsumerWidget {
               if (settings.routineEnabled) ...[
                 const Divider(height: 1),
                 _HourPickerTile(
-                  title: '루틴 리마인드 시간',
-                  subtitle: '설정 시간까지 오늘 미체크 루틴이 있으면 알림을 보냅니다',
+                  title: l10n.notif_routine_time,
+                  subtitle: l10n.notif_routine_time_desc,
                   hour: settings.routineReminderHour,
                   availableHours: List.generate(24, (h) => h),
                   onChanged: (hour) {

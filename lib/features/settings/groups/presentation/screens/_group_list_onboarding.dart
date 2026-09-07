@@ -31,6 +31,7 @@ extension _GroupListOnboarding on _GroupListScreenState {
   void _replayOnboarding() => _showCoachMark(force: true);
 
   Future<void> _showCoachMark({bool force = false}) async {
+    final l10n = AppLocalizations.of(context)!;
     final createFabPos = _keyToPosition(_createFabKey);
     final joinFabPos = _keyToPosition(_joinFabKey);
     final myRequestsPos = _keyToPosition(_myRequestsKey);
@@ -51,8 +52,8 @@ extension _GroupListOnboarding on _GroupListScreenState {
             TargetContent(
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '그룹 만들기',
-                description: '가족, 연인, 친구, 팀 등\n원하는 그룹을 직접 만들어 보세요.',
+                title: l10n.coach_group_create,
+                description: l10n.coach_group_create_desc,
                 icon: Icons.group_add,
                 color: Colors.blue,
               ),
@@ -69,8 +70,8 @@ extension _GroupListOnboarding on _GroupListScreenState {
             TargetContent(
               align: ContentAlign.top,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '그룹 참여하기',
-                description: '초대 코드를 입력해 기존 그룹에 합류하세요.\n그룹원이 공유한 코드를 사용하면 돼요.',
+                title: l10n.coach_group_join,
+                description: l10n.coach_group_join_desc,
                 icon: Icons.login,
                 color: Colors.green,
               ),
@@ -86,8 +87,8 @@ extension _GroupListOnboarding on _GroupListScreenState {
             TargetContent(
               align: ContentAlign.bottom,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '신청 내역',
-                description: '내가 참여 신청한 그룹 목록을 확인하고\n수락 여부를 여기서 확인할 수 있어요.',
+                title: l10n.coach_group_requests,
+                description: l10n.coach_group_requests_desc,
                 icon: Icons.assignment_outlined,
                 color: Colors.orange,
               ),

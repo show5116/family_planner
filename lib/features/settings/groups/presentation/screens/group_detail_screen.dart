@@ -127,6 +127,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     AsyncValue<List<GroupMember>> membersAsync,
     AsyncValue<List<JoinRequest>> joinRequestsAsync,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return MembersTab(
       group: group,
       membersAsync: membersAsync,
@@ -163,6 +164,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     AppLocalizations l10n,
     JoinRequest request,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ref
           .read(groupNotifierProvider.notifier)
@@ -186,6 +188,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     AppLocalizations l10n,
     JoinRequest request,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -229,6 +232,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     AppLocalizations l10n,
     JoinRequest request,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -272,6 +276,7 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
     AppLocalizations l10n,
     JoinRequest request,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ref
           .read(groupNotifierProvider.notifier)

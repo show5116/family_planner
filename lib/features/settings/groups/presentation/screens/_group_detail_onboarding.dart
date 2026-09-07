@@ -39,6 +39,7 @@ extension _GroupDetailOnboarding on _GroupDetailScreenState {
   }
 
   Future<void> _showCoachMark(bool isOwner) async {
+    final l10n = AppLocalizations.of(context)!;
     final featureKey = CoachMarkKeys.groupDetail(widget.groupId);
 
     final screenWidth = MediaQuery.of(context).size.width;
@@ -94,8 +95,8 @@ extension _GroupDetailOnboarding on _GroupDetailScreenState {
         },
         targets: [
           settingsTabTarget(
-            '멤버를 초대해보세요',
-            '설정 탭에서 초대 코드를 공유하거나\n이메일로 직접 멤버를 초대할 수 있어요.\n\n탭을 눌러 설정으로 이동하세요.',
+            l10n.coach_group_invite,
+            l10n.coach_group_invite_desc,
             Icons.person_add_outlined,
             Colors.blue,
           ),
@@ -109,8 +110,8 @@ extension _GroupDetailOnboarding on _GroupDetailScreenState {
               TargetContent(
                 align: ContentAlign.bottom,
                 builder: (_, _) => FeatureCoachMark.buildContent(
-                  title: '초대 코드로 멤버 초대',
-                  description: '코드를 복사해 공유하거나\n이메일로 직접 초대장을 보낼 수 있어요.',
+                  title: l10n.coach_group_invite_code,
+                  description: l10n.coach_group_invite_code_desc,
                   icon: Icons.vpn_key_outlined,
                   color: Colors.blue,
                 ),
@@ -129,8 +130,8 @@ extension _GroupDetailOnboarding on _GroupDetailScreenState {
               TargetContent(
                 align: ContentAlign.bottom,
                 builder: (_, _) => FeatureCoachMark.buildContent(
-                  title: '역할로 권한을 관리하세요',
-                  description: '역할 탭에서 새로운 역할을 만들고\n멤버별 권한을 세밀하게 설정할 수 있어요.\n\n탭을 눌러 역할 관리로 이동하세요.',
+                  title: l10n.coach_group_roles,
+                  description: l10n.coach_group_roles_desc,
                   icon: Icons.manage_accounts_outlined,
                   color: Colors.orange,
                 ),
@@ -147,8 +148,8 @@ extension _GroupDetailOnboarding on _GroupDetailScreenState {
               TargetContent(
                 align: ContentAlign.top,
                 builder: (_, _) => FeatureCoachMark.buildContent(
-                  title: '새 역할 만들기',
-                  description: '버튼을 눌러 역할을 만들고\n이름, 색상, 권한을 자유롭게 설정하세요.',
+                  title: l10n.coach_group_role_new,
+                  description: l10n.coach_group_role_new_desc,
                   icon: Icons.add_circle_outline,
                   color: Colors.orange,
                 ),
@@ -169,8 +170,8 @@ extension _GroupDetailOnboarding on _GroupDetailScreenState {
         },
         targets: [
           settingsTabTarget(
-            '나만의 그룹 색상을 설정하세요',
-            '설정 탭에서 이 그룹의 색상을 지정할 수 있어요.\n설정한 색상은 일정 등 다양한 메뉴에서\n이 그룹의 항목을 구분하는 데 사용돼요.\n\n탭을 눌러 설정으로 이동하세요.',
+            l10n.coach_group_color,
+            l10n.coach_group_color_desc,
             Icons.palette_outlined,
             Colors.purple,
           ),

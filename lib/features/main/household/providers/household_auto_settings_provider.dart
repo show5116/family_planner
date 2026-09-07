@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:family_planner/features/main/household/data/models/household_auto_settings_model.dart';
+import 'package:family_planner/core/utils/localization_loader.dart';
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
 import 'package:family_planner/features/main/household/data/repositories/household_repository.dart';
 import 'package:family_planner/features/main/household/data/services/push_expense_listener_service.dart';
@@ -95,10 +96,11 @@ class HouseholdAutoSettingsNotifier
 
       // 등록 완료 로컬 알림
       final amountStr = _formatAmount(parsed.amount);
+      final l10n = await LocalizationLoader.load();
       await LocalNotificationService.show(
         id: expense.hashCode,
-        title: '가계부 자동 등록 완료',
-        body: '$amountStr원이 가계부에 등록되었습니다.',
+        title: l10n.household_auto_registered,
+        body: l10n.household_auto_registered_body(amountStr),
       );
 
       debugPrint('[PushAutoRegister] 등록 완료: ${parsed.amount}원 (${parsed.sourcePkg})');

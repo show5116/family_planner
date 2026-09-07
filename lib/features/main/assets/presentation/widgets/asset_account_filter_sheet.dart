@@ -168,7 +168,8 @@ class _AssetAccountFilterSheetState extends State<AssetAccountFilterSheet> {
                   FilledButton(
                     onPressed: () {
                       if (_selectedIds.isEmpty) {
-                        setState(() => _errorMsg = '적어도 한 개의 계좌를 선택해 주세요.');
+                        setState(
+                            () => _errorMsg = l10n.asset_filter_min_one_account);
                         return;
                       }
                       // 전체 선택이면 빈 Set으로 변환해서 전달 (전체 = 필터 없음)

@@ -102,6 +102,7 @@ class _AnniversaryCardState extends ConsumerState<_AnniversaryCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final a = _current;
     final milestonesAsync = ref.watch(upcomingMilestoneTasksProvider(a.id));
@@ -173,8 +174,9 @@ class _AnniversaryCardState extends ConsumerState<_AnniversaryCard> {
                     ),
                     label: Text(
                       _expanded
-                          ? '접기'
-                          : '+ ${milestones.length - _kMilestoneLimit}개 더 보기',
+                          ? l10n.common_collapse
+                          : l10n.home_anniversary_more(
+                              milestones.length - _kMilestoneLimit),
                     ),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,

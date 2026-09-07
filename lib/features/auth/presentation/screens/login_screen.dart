@@ -171,8 +171,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _handleAppleLogin() async {
-    if (_isLoading) return;
     final l10n = AppLocalizations.of(context)!;
+    if (_isLoading) return;
     setState(() => _isLoading = true);
 
     try {
@@ -271,6 +271,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildEmailField(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
@@ -295,6 +296,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildPasswordField(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _passwordController,
       obscureText: _obscurePassword,
@@ -331,6 +333,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildForgotPasswordLink(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
@@ -345,6 +348,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildLoginButton(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -366,6 +370,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildSocialLoginConsent(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final baseStyle = Theme.of(context).textTheme.bodySmall?.copyWith(color: colorScheme.outline);
     final linkStyle = baseStyle?.copyWith(color: colorScheme.primary, decoration: TextDecoration.underline);
@@ -403,6 +408,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildTestAccountLoginButtons(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         SizedBox(
@@ -441,6 +447,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildSocialLoginButtons(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         SocialLoginButton(

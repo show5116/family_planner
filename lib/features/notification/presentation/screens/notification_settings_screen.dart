@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
 import 'package:family_planner/features/notification/providers/notification_settings_provider.dart';
@@ -20,6 +21,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   /// 테스트 알림 전송
   Future<void> _sendTestNotification(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.sendTestNotification();
@@ -29,8 +31,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('테스트 알림이 전송되었습니다'),
+          SnackBar(
+            content: Text(l10n.notif_test_sent),
             backgroundColor: Colors.green,
           ),
         );
@@ -39,7 +41,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('테스트 알림 전송 실패: $e'),
+            content: Text('${l10n.notif_test_failed}\n$e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -49,10 +51,11 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final settingsAsync = ref.watch(notificationSettingsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('알림 설정')),
+      appBar: AppBar(title: Text(l10n.notif_settings)),
       body: SafeArea(
         top: false,
         child: settingsAsync.when(
@@ -87,7 +90,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => AppErrorState(
             error: error,
-            title: '알림 설정을 불러올 수 없습니다',
+            title: l10n.notif_settings_load_failed,
             onRetry: () => ref.invalidate(notificationSettingsProvider),
           ),
         ),
@@ -104,11 +107,12 @@ class _NotificationHistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: ListTile(
         leading: const Icon(Icons.history),
-        title: const Text('알림 히스토리'),
-        subtitle: const Text('받은 알림 목록을 확인합니다'),
+        title: Text(l10n.notif_history),
+        subtitle: Text(l10n.notif_history_desc),
         trailing: const Icon(Icons.chevron_right),
         onTap: onTap,
       ),
@@ -124,11 +128,12 @@ class _TestNotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: ListTile(
         leading: const Icon(Icons.notifications_active, color: Colors.orange),
-        title: const Text('테스트 알림 전송'),
-        subtitle: const Text('테스트 알림을 자신에게 전송합니다 (운영자 전용)'),
+        title: Text(l10n.notif_test_send),
+        subtitle: Text(l10n.notif_test_send_desc),
         trailing: const Icon(Icons.send),
         onTap: onTap,
       ),

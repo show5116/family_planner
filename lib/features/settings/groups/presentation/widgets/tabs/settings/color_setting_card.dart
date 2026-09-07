@@ -119,6 +119,7 @@ class ColorSettingCard extends StatelessWidget {
     AppLocalizations l10n,
     Color currentColor,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final selectedColor = await showColorPickerDialog(
       context: context,
       title: l10n.group_customColor,

@@ -2,12 +2,13 @@ part of 'todo_tab.dart';
 
 // ── 온보딩용 샘플 할일 데이터 ────────────────────────────────────────────────────
 
-final _todoOnboardingTasks = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<TaskModel> _todoOnboardingTasks(AppLocalizations l10n) => [
   TaskModel(
     id: '__demo_todo_1__',
     userId: '__demo__',
-    title: '장보기 목록 작성',
-    description: '이번 주 필요한 식재료 정리',
+    title: l10n.demo_todo_shopping,
+    description: l10n.demo_todo_shopping_desc,
     status: TaskStatus.pending,
     priority: TaskPriority.medium,
     scheduledAt: DateTime.now(),
@@ -17,8 +18,8 @@ final _todoOnboardingTasks = [
   TaskModel(
     id: '__demo_todo_2__',
     userId: '__demo__',
-    title: '가족 여행 계획',
-    description: '여름 휴가 일정 및 숙소 예약',
+    title: l10n.demo_todo_trip,
+    description: l10n.demo_todo_trip_desc,
     status: TaskStatus.inProgress,
     priority: TaskPriority.high,
     scheduledAt: DateTime.now(),
@@ -28,8 +29,8 @@ final _todoOnboardingTasks = [
   TaskModel(
     id: '__demo_todo_3__',
     userId: '__demo__',
-    title: '월간 가계부 정리',
-    description: '지난달 수입·지출 확인',
+    title: l10n.demo_todo_budget,
+    description: l10n.demo_todo_budget_desc,
     status: TaskStatus.completed,
     priority: TaskPriority.low,
     scheduledAt: DateTime.now(),
@@ -54,7 +55,8 @@ extension _TodoOnboarding on _TodoTabState {
   }
 
   void _startDemo() {
-    _onboardingTasks.value = _todoOnboardingTasks;
+    _onboardingTasks.value =
+        _todoOnboardingTasks(AppLocalizations.of(context)!);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final animation = ModalRoute.of(context)?.animation;
@@ -86,6 +88,7 @@ extension _TodoOnboarding on _TodoTabState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final weekBarPos = _keyToPosition(_weekBarKey);
     final demoItemPos = _keyToPosition(_demoItemKey);
@@ -102,8 +105,8 @@ extension _TodoOnboarding on _TodoTabState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '날짜별 할 일',
-              description: '날짜를 탭해 해당 날의 할 일을 확인하고\n그룹원과 역할을 나눠 보세요.',
+              title: l10n.coach_todo_byDate,
+              description: l10n.coach_todo_byDate_desc,
               icon: Icons.date_range,
               color: Colors.green,
             ),
@@ -120,8 +123,8 @@ extension _TodoOnboarding on _TodoTabState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '상태 변경',
-              description: '왼쪽 아이콘을 탭하면 할 일의 상태를\n대기 · 진행 중 · 완료 등으로 바꿀 수 있어요.',
+              title: l10n.coach_todo_status,
+              description: l10n.coach_todo_status_desc,
               icon: Icons.swap_horiz,
               color: AppColors.primary,
             ),
@@ -137,8 +140,8 @@ extension _TodoOnboarding on _TodoTabState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '할 일 추가',
-              description: '새로운 할 일을 추가하고\n담당자와 마감일을 지정해보세요.',
+              title: l10n.coach_todo_add,
+              description: l10n.coach_todo_add_desc,
               icon: Icons.add_task,
               color: Colors.green,
             ),
@@ -154,7 +157,7 @@ extension _TodoOnboarding on _TodoTabState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -163,8 +166,8 @@ extension _TodoOnboarding on _TodoTabState {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),

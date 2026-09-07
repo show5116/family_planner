@@ -38,12 +38,13 @@ final _demoSavingsPlan = ChildcareSavingsPlan(
   updatedAt: _demoNow,
 );
 
-final _demoShopItems = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<ChildcareShopItem> _demoShopItems(AppLocalizations l10n) => [
   ChildcareShopItem(
     id: '__demo_shop1__',
     accountId: '__demo_account__',
-    name: 'TV 30분 더보기',
-    description: '저녁 식사 후 TV 30분 추가',
+    name: l10n.childcare_shop_example1,
+    description: l10n.demo_shop_tv_desc,
     points: 10,
     isActive: true,
     createdAt: _demoNow,
@@ -52,8 +53,8 @@ final _demoShopItems = [
   ChildcareShopItem(
     id: '__demo_shop2__',
     accountId: '__demo_account__',
-    name: '게임 1시간 하기',
-    description: '주말에 게임 1시간',
+    name: l10n.childcare_shop_example2,
+    description: l10n.demo_shop_game_desc,
     points: 20,
     isActive: true,
     createdAt: _demoNow,
@@ -62,7 +63,7 @@ final _demoShopItems = [
   ChildcareShopItem(
     id: '__demo_shop3__',
     accountId: '__demo_account__',
-    name: '원하는 간식 고르기',
+    name: l10n.childcare_shop_example3,
     points: 15,
     isActive: false,
     createdAt: _demoNow,
@@ -70,11 +71,11 @@ final _demoShopItems = [
   ),
 ];
 
-final _demoRules = [
+List<ChildcareRule> _demoRules(AppLocalizations l10n) => [
   ChildcareRule(
     id: '__demo_rule1__',
     accountId: '__demo_account__',
-    name: '숙제를 스스로 끝냈을 때',
+    name: l10n.demo_rule_homework,
     points: 10,
     type: ChildcareRuleType.plus,
     isActive: true,
@@ -84,7 +85,7 @@ final _demoRules = [
   ChildcareRule(
     id: '__demo_rule2__',
     accountId: '__demo_account__',
-    name: '스마트폰 1시간 이상 사용',
+    name: l10n.demo_rule_phone,
     points: 10,
     type: ChildcareRuleType.minus,
     isActive: true,
@@ -94,7 +95,7 @@ final _demoRules = [
   ChildcareRule(
     id: '__demo_rule3__',
     accountId: '__demo_account__',
-    name: '이달 현금 출금은 최대 50P',
+    name: l10n.demo_rule_cashout,
     points: 0,
     type: ChildcareRuleType.info,
     isActive: true,
@@ -151,6 +152,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
   }
 
   Future<void> _showPhase1() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final targets = <TargetFocus>[
       TargetFocus(
@@ -161,8 +163,8 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '자녀 등록',
-              description: '먼저 자녀를 등록해요.\n이름과 생년월일을 입력하면\n포인트 계정이 자동으로 만들어져요.',
+              title: l10n.coach_child_register,
+              description: l10n.coach_child_register_desc,
               icon: Icons.person_add_outlined,
               color: AppColors.primary,
             ),
@@ -176,7 +178,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase2,
@@ -191,6 +193,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
   }
 
   Future<void> _showPhase2() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     _tabController.animateTo(0);
     await Future.delayed(const Duration(milliseconds: 400));
@@ -209,9 +212,9 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '포인트 현황',
+              title: l10n.coach_child_points,
               description:
-                  '자녀의 현재 포인트 잔액과\n월 용돈 플랜을 한눈에 확인할 수 있어요.\n매월 설정한 날짜에 자동으로 포인트가 지급돼요.',
+                  l10n.coach_child_points_desc,
               icon: Icons.star_rounded,
               color: Colors.amber.shade700,
             ),
@@ -228,9 +231,9 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '적금 플랜',
+              title: l10n.coach_child_savings,
               description:
-                  '포인트 적금을 설정하면\n매월 자동으로 포인트가 적립되고\n이자도 받을 수 있어요.',
+                  l10n.coach_child_savings_desc,
               icon: Icons.savings_rounded,
               color: Colors.teal,
             ),
@@ -244,7 +247,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase3Shop,
@@ -259,6 +262,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
   }
 
   Future<void> _showPhase3Shop() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     _tabController.animateTo(1);
     await Future.delayed(const Duration(milliseconds: 400));
@@ -276,9 +280,9 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '포인트 상점',
+              title: l10n.coach_child_shop,
               description:
-                  '아이가 모은 포인트로 구매할 수 있는\n보상 목록이에요.\n원하는 것을 얻기 위해 스스로 포인트를\n모으는 동기부여가 됩니다.',
+                  l10n.coach_child_shop_desc,
               icon: Icons.storefront_outlined,
               color: Colors.orange,
             ),
@@ -292,7 +296,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase3Rules,
@@ -307,6 +311,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
   }
 
   Future<void> _showPhase3Rules() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     _tabController.animateTo(2);
     await Future.delayed(const Duration(milliseconds: 400));
@@ -327,8 +332,8 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '+ 포인트 규칙',
-              description: '좋은 행동을 했을 때 포인트를 지급해요.\n예: 숙제를 스스로 끝냈을 때 +10P',
+              title: l10n.childcare_rule_type_plus,
+              description: l10n.coach_child_rule_plus_desc,
               icon: Icons.add_circle_outline,
               color: Colors.green.shade700,
             ),
@@ -345,8 +350,8 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '- 포인트 규칙',
-              description: '약속을 어겼을 때 포인트를 차감해요.\n예: 스마트폰을 1시간 이상 사용하면 -10P',
+              title: l10n.childcare_rule_type_minus,
+              description: l10n.coach_child_rule_minus_desc,
               icon: Icons.remove_circle_outline,
               color: Colors.red,
             ),
@@ -363,8 +368,8 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '일반 규칙',
-              description: '포인트 없이 약속만 기록해요.\n예: 이달 현금 출금은 최대 50P까지만 가능',
+              title: l10n.childcare_rule_type_info,
+              description: l10n.coach_child_rule_info_desc,
               icon: Icons.info_outline,
               color: AppColors.primary,
             ),
@@ -378,7 +383,7 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _completeOnboarding,
@@ -397,17 +402,20 @@ extension _ChildPointsOnboarding on _ChildPointsScreenState {
     _endDemo();
   }
 
-  Widget get _skipWidget => Container(
+  Widget get _skipWidget {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(
               color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       );
+  }
 }

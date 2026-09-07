@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/features/qna/data/dto/qna_dto.dart';
@@ -56,8 +57,11 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(_isEditMode ? '질문 수정' : '질문 작성')),
+      appBar: AppBar(
+          title: Text(
+              _isEditMode ? l10n.qna_editQuestion : l10n.qna_writeQuestion)),
       body: SafeArea(
         top: false,
         child: Column(
@@ -91,22 +95,22 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                       // 내용 입력 (리치 텍스트 에디터 - 간소화 모드)
                       RichTextEditor(
                         controller: _contentController,
-                        labelText: '내용',
+                        labelText: l10n.qna_contentLabel,
                         hintText:
-                            '질문 내용을 자세히 작성해주세요. 스크린샷이 있으면 더 빠른 답변이 가능합니다.',
+                            l10n.qna_contentHintDetailed,
                         minLines: 15,
                         maxLines: 30,
                         simpleMode: true,
                         imageUploadType: EditorImageType.qna,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return '내용을 입력해주세요';
+                            return l10n.qna_contentRequired;
                           }
                           if (value.trim().length < 10) {
-                            return '내용은 10자 이상 입력해주세요';
+                            return l10n.qna_contentMin10;
                           }
                           if (value.length > 5000) {
-                            return '내용은 5000자를 초과할 수 없습니다';
+                            return l10n.qna_contentMaxLength;
                           }
                           return null;
                         },
@@ -117,7 +121,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
               ),
             ),
             FormBottomBar(
-              label: _isEditMode ? '수정 완료' : '질문 등록',
+              label: _isEditMode ? l10n.common_updateDone : l10n.qna_submitQuestion,
               onPressed: _handleSubmit,
             ),
           ],
@@ -128,6 +132,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
   /// 안내 카드
   Widget _buildInfoCard() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       color: AppColors.primary.withValues(alpha: 0.08),
       elevation: 0,
@@ -160,7 +165,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '질문 작성 안내',
+                    l10n.qna_writeGuide,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
@@ -168,7 +173,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
                   ),
                   const SizedBox(height: AppSizes.spaceXS),
                   Text(
-                    '• 질문은 관리자가 확인 후 답변드립니다.\n• 답변은 알림으로 안내됩니다.\n• 대기 중 상태에서만 수정/삭제 가능합니다.',
+                    l10n.qna_writeGuideBody,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.primary.withValues(alpha: 0.8),
                       height: 1.5,
@@ -185,11 +190,12 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
   /// 카테고리 선택 섹션
   Widget _buildCategorySection() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '카테고리',
+          l10n.qna_category,
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -235,11 +241,12 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
   /// 공개/비공개 선택 섹션
   Widget _buildVisibilitySection() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '공개 설정',
+          l10n.qna_visibility,
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -283,20 +290,21 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
   /// 제목 입력 필드
   Widget _buildTitleField() {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _titleController,
-      decoration: const InputDecoration(
-        labelText: '제목',
-        hintText: '질문 제목을 입력하세요',
+      decoration: InputDecoration(
+        labelText: l10n.qna_titleLabel,
+        hintText: l10n.qna_questionTitleHint,
         border: OutlineInputBorder(),
       ),
       maxLength: 200,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return '제목을 입력해주세요';
+          return l10n.qna_titleRequired;
         }
         if (value.trim().length < 5) {
-          return '제목은 5자 이상 입력해주세요';
+          return l10n.qna_titleMin5;
         }
         return null;
       },
@@ -305,6 +313,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
   /// 제출 처리
   Future<void> _handleSubmit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -326,7 +335,7 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('질문이 수정되었습니다')));
+          ).showSnackBar(SnackBar(content: Text(l10n.qna_updateSuccess)));
           context.pop();
         }
       } else {
@@ -335,8 +344,8 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('질문이 등록되었습니다.\n답변은 알림으로 안내드립니다.'),
+            SnackBar(
+              content: Text(l10n.qna_createSuccessDetail),
               duration: Duration(seconds: 3),
             ),
           );
@@ -347,7 +356,8 @@ class _QuestionFormScreenState extends ConsumerState<QuestionFormScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isEditMode ? '질문 수정 실패: $e' : '질문 등록 실패: $e'),
+            content: Text(
+                '${_isEditMode ? l10n.qna_updateError : l10n.qna_createError}\n$e'),
             backgroundColor: AppColors.error,
           ),
         );

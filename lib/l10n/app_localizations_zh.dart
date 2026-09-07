@@ -6814,4 +6814,2112 @@ class AppLocalizationsZh extends AppLocalizations {
   String childcare_plan_summary(String day, String amount) {
     return '每月 $day 日 · 1P=$amount 韩元';
   }
+
+  @override
+  String get task_recurring_guide => '重复日程说明';
+
+  @override
+  String get task_recurring_guide_body => '重复日程按以下规则自动生成。';
+
+  @override
+  String get task_recurring_daily_weekly => '每天 / 每周';
+
+  @override
+  String get task_recurring_monthly_unit => '按月';
+
+  @override
+  String get task_recurring_yearly_unit => '按年';
+
+  @override
+  String get task_recurring_every_month => '每月（每 1 个月）';
+
+  @override
+  String get task_recurring_every_2months => '每 2 个月';
+
+  @override
+  String get task_recurring_every_3months => '每 3 个月';
+
+  @override
+  String get task_recurring_every_year => '每年（每 1 年）';
+
+  @override
+  String get task_recurring_every_2years => '每 2 年';
+
+  @override
+  String task_recurring_ahead_months(String months) {
+    return '提前 $months 个月';
+  }
+
+  @override
+  String get task_recurring_ahead_3months => '提前生成 3 个月';
+
+  @override
+  String get task_lunar => '农历';
+
+  @override
+  String get task_lunar_leap_prefix => '闰';
+
+  @override
+  String task_lunar_date(String prefix, String month, String day) {
+    return '农历 $prefix$month 月 $day 日';
+  }
+
+  @override
+  String get task_lunar_pick => '选择农历日期';
+
+  @override
+  String get task_month => '月';
+
+  @override
+  String get task_day => '日';
+
+  @override
+  String task_month_value(String month) {
+    return '$month 月';
+  }
+
+  @override
+  String task_day_value(String day) {
+    return '$day 日';
+  }
+
+  @override
+  String get task_leap_month => '闰月';
+
+  @override
+  String get task_leap_month_desc => '没有闰月的年份按该月同一天处理。';
+
+  @override
+  String get task_skip_settings => '跳过设置';
+
+  @override
+  String get task_skip_weekend => '周末';
+
+  @override
+  String get task_skip_holiday => '节假日';
+
+  @override
+  String get task_skip_when => '跳过时';
+
+  @override
+  String get task_skip_do => '跳过';
+
+  @override
+  String get task_skip_next_weekday => '顺延到下个工作日';
+
+  @override
+  String get anniversary_detail => '纪念日详情';
+
+  @override
+  String get anniversary_date => '纪念日日期';
+
+  @override
+  String get anniversary_created_at => '创建日期';
+
+  @override
+  String get anniversary_delete => '删除纪念日';
+
+  @override
+  String anniversary_delete_message(String title) {
+    return '确定删除“$title”吗？';
+  }
+
+  @override
+  String get anniversary_delete_linked => '同时删除关联的日程';
+
+  @override
+  String get anniversary_delete_linked_desc => '取消勾选则保留日程';
+
+  @override
+  String get anniversary_delete_failed => '删除失败';
+
+  @override
+  String get anniversary_days_elapsed => '已过天数';
+
+  @override
+  String get anniversary_next => '下一个纪念日';
+
+  @override
+  String get anniversary_upcoming => '即将到来';
+
+  @override
+  String get anniversary_collapse => '收起';
+
+  @override
+  String anniversary_show_more(int count) {
+    return '再显示 $count 个';
+  }
+
+  @override
+  String get anniversary_every100 => '每 100 天（D+100、D+200…）';
+
+  @override
+  String get anniversary_everyYear => '每年周年（1 周年、2 周年…）';
+
+  @override
+  String get anniversary_auto_create => '自动创建纪念日提醒';
+
+  @override
+  String get anniversary_manage => '纪念日管理';
+
+  @override
+  String get anniversary_add => '添加纪念日';
+
+  @override
+  String get anniversary_edit => '编辑纪念日';
+
+  @override
+  String get anniversary_load_failed => '无法加载纪念日';
+
+  @override
+  String get anniversary_empty => '还没有纪念日';
+
+  @override
+  String get anniversary_name => '纪念日名称';
+
+  @override
+  String get anniversary_name_hint => '例：结婚纪念日';
+
+  @override
+  String get anniversary_name_required => '请输入纪念日名称';
+
+  @override
+  String get anniversary_create_failed => '创建失败';
+
+  @override
+  String get anniversary_update_failed => '更新失败';
+
+  @override
+  String get common_date => '日期';
+
+  @override
+  String get task_recurring_edit_title => '要修改重复日程吗？';
+
+  @override
+  String get task_recurring_edit_this => '仅修改此日程';
+
+  @override
+  String get task_recurring_edit_following => '此日程及之后全部';
+
+  @override
+  String get task_recurring_delete_title => '要删除该重复日程吗？';
+
+  @override
+  String get task_recurring_delete_this => '仅删除此日程';
+
+  @override
+  String get task_recurring_delete_following => '此日程及之后全部';
+
+  @override
+  String get task_recurring_delete_all => '删除全部重复日程';
+
+  @override
+  String get task_label_type => '类型';
+
+  @override
+  String get task_label_category => '分类';
+
+  @override
+  String get task_label_createdAt => '创建日期';
+
+  @override
+  String get task_completed => '已完成';
+
+  @override
+  String get task_inactive => '（未启用）';
+
+  @override
+  String task_start_at(String date, String time) {
+    return '开始：$date $time';
+  }
+
+  @override
+  String task_end_at(String date, String time) {
+    return '结束：$date $time';
+  }
+
+  @override
+  String task_end_time_only(String time) {
+    return '结束：$time';
+  }
+
+  @override
+  String get task_type_calendarOnly => '仅日历';
+
+  @override
+  String get task_type_todoLinked => '日历+待办';
+
+  @override
+  String get task_type_todoOnly => '仅待办';
+
+  @override
+  String get task_type_default => '普通日程';
+
+  @override
+  String get task_coach_title_title => '日程标题';
+
+  @override
+  String get task_coach_title_desc => '请输入日程名称，简短明确为佳。';
+
+  @override
+  String get task_coach_date_title => '日期和时间';
+
+  @override
+  String get task_coach_date_desc => '可以设置开始日、结束日和时间。';
+
+  @override
+  String get task_coach_type_title => '日程类型';
+
+  @override
+  String get task_coach_type_desc => '可以选择日程、待办，或两者兼有。';
+
+  @override
+  String get task_coach_participants_title => '参与者';
+
+  @override
+  String get task_coach_participants_desc => '可以邀请群组成员，他们会收到通知。';
+
+  @override
+  String get common_skip => '跳过';
+
+  @override
+  String get task_place_search_hint => '搜索地点或地址';
+
+  @override
+  String get task_place_search_prompt => '试试搜索地点';
+
+  @override
+  String get notif_settings => '通知设置';
+
+  @override
+  String notif_hour_am(String hour) {
+    return '上午 $hour 点';
+  }
+
+  @override
+  String get notif_hour_noon => '中午 12 点';
+
+  @override
+  String notif_hour_pm(String hour) {
+    return '下午 $hour 点';
+  }
+
+  @override
+  String get notif_task => '日程通知';
+
+  @override
+  String get notif_task_desc => '日程开始前提醒';
+
+  @override
+  String get notif_todo => '待办通知';
+
+  @override
+  String get notif_todo_desc => '待办截止前提醒';
+
+  @override
+  String get notif_household => '家庭账本通知';
+
+  @override
+  String get notif_household_desc => '接收账本相关通知';
+
+  @override
+  String get notif_assets => '资产通知';
+
+  @override
+  String get notif_assets_desc => '资产变动时提醒';
+
+  @override
+  String get notif_childcare => '育儿通知';
+
+  @override
+  String get notif_childcare_desc => '接收育儿积分通知';
+
+  @override
+  String get notif_group => '群组通知';
+
+  @override
+  String get notif_group_desc => '接收群组相关通知';
+
+  @override
+  String get notif_savings => '储蓄通知';
+
+  @override
+  String get notif_savings_desc => '接收储蓄目标和存入通知';
+
+  @override
+  String get notif_system => '系统通知';
+
+  @override
+  String get notif_system_desc => '接收重要系统通知';
+
+  @override
+  String get notif_weather => '天气通知';
+
+  @override
+  String get notif_weather_desc => '下雨下雪或气温骤变时提醒';
+
+  @override
+  String get notif_weather_time => '天气通知时间';
+
+  @override
+  String get notif_weather_time_desc => '打开应用时若已过设定时间则发送';
+
+  @override
+  String get notif_routine => '习惯通知';
+
+  @override
+  String get notif_routine_desc => '未打卡提醒、徽章获得和每周总结';
+
+  @override
+  String get notif_routine_time => '习惯提醒时间';
+
+  @override
+  String get notif_routine_time_desc => '到设定时间仍有未打卡则提醒';
+
+  @override
+  String get notif_unread => '未读通知';
+
+  @override
+  String get notif_mark_all_read => '全部标记已读';
+
+  @override
+  String get notif_view_all => '查看全部';
+
+  @override
+  String get notif_mark_read => '标记已读';
+
+  @override
+  String get notif_action_failed => '处理通知失败';
+
+  @override
+  String notif_marked_read_count(int count) {
+    return '已将 $count 条标记为已读';
+  }
+
+  @override
+  String get notif_mark_all_failed => '全部标记已读失败';
+
+  @override
+  String get notif_none_new => '没有新通知';
+
+  @override
+  String get notif_load_failed => '无法加载通知';
+
+  @override
+  String get notif_permission => '通知权限';
+
+  @override
+  String get notif_permission_granted => '已允许通知';
+
+  @override
+  String get notif_permission_denied => '已拒绝通知';
+
+  @override
+  String get notif_permission_on => '已开启';
+
+  @override
+  String get notif_permission_off => '已关闭';
+
+  @override
+  String get notif_permission_on_desc => '可以接收推送通知。';
+
+  @override
+  String get notif_permission_off_desc => '请允许通知权限以接收通知。';
+
+  @override
+  String get notif_permission_request => '请求权限';
+
+  @override
+  String get notif_permission_settings => '在设置中允许';
+
+  @override
+  String get location_permission => '位置权限';
+
+  @override
+  String get location_permission_granted => '已允许位置权限';
+
+  @override
+  String get location_permission_denied => '已拒绝位置权限';
+
+  @override
+  String get location_permission_on_desc => '天气通知会使用当前位置。';
+
+  @override
+  String get location_permission_off_desc =>
+      '要接收天气通知请允许位置权限。\n位置信息仅用于发送天气通知，并保存在服务器。';
+
+  @override
+  String get notif_delete => '删除通知';
+
+  @override
+  String get notif_delete_message => '确定删除该通知吗？';
+
+  @override
+  String get notif_deleted => '已删除通知';
+
+  @override
+  String get notif_delete_failed => '删除通知失败';
+
+  @override
+  String get notif_title => '通知';
+
+  @override
+  String get notif_empty => '没有通知';
+
+  @override
+  String get notif_history => '通知历史';
+
+  @override
+  String get notif_history_desc => '查看收到的通知';
+
+  @override
+  String get notif_settings_load_failed => '无法加载通知设置';
+
+  @override
+  String get notif_test_send => '发送测试通知';
+
+  @override
+  String get notif_test_send_desc => '向自己发送测试通知（仅管理员）';
+
+  @override
+  String get notif_test_sent => '已发送测试通知';
+
+  @override
+  String get notif_test_failed => '发送测试通知失败';
+
+  @override
+  String get common_anonymous => '匿名';
+
+  @override
+  String get common_admin => '管理员';
+
+  @override
+  String get common_updateDone => '保存修改';
+
+  @override
+  String get qna_myQuestionsOnly => '仅我的提问';
+
+  @override
+  String get qna_allCategories => '全部分类';
+
+  @override
+  String get qna_tab_pending => '待处理';
+
+  @override
+  String get qna_tab_answered => '已回答';
+
+  @override
+  String get qna_tab_resolved => '已解决';
+
+  @override
+  String qna_searchLabel(String query) {
+    return '搜索：$query';
+  }
+
+  @override
+  String get qna_writeQuestion => '提问';
+
+  @override
+  String get qna_editQuestion => '编辑提问';
+
+  @override
+  String get qna_searchByTitleOrContent => '按标题或内容搜索';
+
+  @override
+  String qna_emptyByStatus(String status) {
+    return '没有$status的提问';
+  }
+
+  @override
+  String qna_emptyByCategory(String category) {
+    return '$category 分类下没有提问';
+  }
+
+  @override
+  String get qna_emptyMine => '还没有提问\n有疑问就问吧！';
+
+  @override
+  String get qna_listLoadError => '无法加载提问列表';
+
+  @override
+  String get qna_contentLabel => '内容';
+
+  @override
+  String get qna_titleLabel => '标题';
+
+  @override
+  String get qna_contentHintDetailed => '请详细描述问题，附上截图可以更快得到回复。';
+
+  @override
+  String get qna_contentMaxLength => '内容不能超过 5000 字';
+
+  @override
+  String get qna_titleMin5 => '标题请输入至少 5 个字';
+
+  @override
+  String get qna_contentMin10 => '内容请输入至少 10 个字';
+
+  @override
+  String get qna_submitQuestion => '发布提问';
+
+  @override
+  String get qna_writeGuide => '提问须知';
+
+  @override
+  String get qna_writeGuideBody =>
+      '• 管理员确认后会回复。\n• 回复会通过通知告知。\n• 仅在待处理状态可编辑或删除。';
+
+  @override
+  String get qna_visibility => '公开设置';
+
+  @override
+  String get qna_createSuccessDetail => '已发布提问。\n回复时会通知您。';
+
+  @override
+  String get qna_questionDetail => '提问详情';
+
+  @override
+  String get qna_cannotEditResolved => '已解决的提问无法编辑';
+
+  @override
+  String get qna_resolve => '标记已解决';
+
+  @override
+  String get qna_attachments => '附件';
+
+  @override
+  String get qna_downloadNotReady => '文件下载功能尚未开放';
+
+  @override
+  String qna_answersCount(int count) {
+    return '回复（$count）';
+  }
+
+  @override
+  String get qna_resolveTitle => '标记为已解决';
+
+  @override
+  String get qna_resolveMessage => '要将该提问标记为已解决吗？\n之后将无法编辑。';
+
+  @override
+  String get qna_editAnswer => '编辑回复';
+
+  @override
+  String get qna_deleteAnswer => '删除回复';
+
+  @override
+  String get qna_deleteAnswerMessage => '确定删除该回复吗？\n删除后无法恢复。';
+
+  @override
+  String get qna_writeAnswer => '撰写回复';
+
+  @override
+  String get qna_submitAnswer => '发布回复';
+
+  @override
+  String get qna_submittingAnswer => '发布中…';
+
+  @override
+  String get qna_resolvedPrompt => '问题解决了吗？';
+
+  @override
+  String get qna_resolvedPromptBody => '如果回复有帮助，请标记为已解决。\n一周内未更改会自动标记为已解决。';
+
+  @override
+  String get common_collapse => '收起';
+
+  @override
+  String get common_required_mark => '（必填）';
+
+  @override
+  String get common_errorOccurred => '发生错误';
+
+  @override
+  String get asset_account_order_saved => '已保存账户顺序';
+
+  @override
+  String get asset_management => '资产管理';
+
+  @override
+  String get asset_management_placeholder => '资产管理功能将显示在这里';
+
+  @override
+  String get asset_record_reminder => '记录提醒';
+
+  @override
+  String get asset_record_reminder_desc => '每月在指定日期提醒您录入资产记录。';
+
+  @override
+  String get asset_reminder_day => '提醒日期';
+
+  @override
+  String asset_monthly_day(String day) {
+    return '每月 $day 日';
+  }
+
+  @override
+  String get asset_reminder_day_note => '29~31 日在没有该日期的月份将在月末发送。';
+
+  @override
+  String get asset_withdrawal_record => '取出记录';
+
+  @override
+  String asset_withdrawal_date(String date) {
+    return '取出日期：$date';
+  }
+
+  @override
+  String get asset_withdrawal_type => '取出类型';
+
+  @override
+  String get asset_withdrawal_type_desc => '请选择取出的金额来自本金还是收益。';
+
+  @override
+  String get asset_withdrawal_type_required => '请选择取出类型';
+
+  @override
+  String get asset_withdrawal_amount => '取出金额';
+
+  @override
+  String get asset_amount_invalid => '请输入有效金额';
+
+  @override
+  String get asset_memo_optional => '备注（可选）';
+
+  @override
+  String get asset_memo_hint => '例：生活费、获利了结';
+
+  @override
+  String get asset_save_failed => '保存失败';
+
+  @override
+  String get asset_withdrawal_from_principal => '从本金扣除（生活费、账户转移等）';
+
+  @override
+  String get asset_holding_add => '添加持仓';
+
+  @override
+  String get asset_holding_edit => '编辑持仓';
+
+  @override
+  String get asset_holding_name => '名称';
+
+  @override
+  String get asset_holding_name_hint => '例：纳斯达克 ETF、三星电子';
+
+  @override
+  String get asset_holding_name_required => '请输入名称';
+
+  @override
+  String get asset_holding_ticker => '代码（可选）';
+
+  @override
+  String get asset_holding_ticker_hint => '例：QQQ、005930';
+
+  @override
+  String get asset_amount_label => '金额';
+
+  @override
+  String get asset_ratio_auto => '比例根据余额自动计算';
+
+  @override
+  String asset_date_full(String year, String month, String day) {
+    return '$year 年 $month 月 $day 日';
+  }
+
+  @override
+  String get asset_coach_detail_title => '账户详情';
+
+  @override
+  String get asset_coach_detail_desc => '查看最新余额和收益率，向下滚动可看变化图表以及本金和收益统计。';
+
+  @override
+  String get asset_coach_record_title => '添加余额记录';
+
+  @override
+  String get asset_coach_record_desc => '定期记录余额即可用图表查看趋势，也可一并管理取出记录。';
+
+  @override
+  String get asset_coach_portfolio_title => '投资组合';
+
+  @override
+  String get asset_coach_portfolio_desc => '按日期记录持仓和金额，用饼图查看资产构成，还能对比两个日期看变化。';
+
+  @override
+  String asset_view_all_records(int count) {
+    return '查看全部 $count 条';
+  }
+
+  @override
+  String get asset_balance_record => '余额记录';
+
+  @override
+  String get asset_balance_record_desc => '记录余额、本金和收益';
+
+  @override
+  String get asset_withdrawal => '取出';
+
+  @override
+  String get asset_withdrawal_desc => '记录本金取出或获利了结';
+
+  @override
+  String get asset_portfolio => '投资组合';
+
+  @override
+  String get asset_change => '变化';
+
+  @override
+  String get asset_total => '合计';
+
+  @override
+  String get asset_retry => '重试';
+
+  @override
+  String get asset_reset_auto => '恢复自动计算';
+
+  @override
+  String get asset_withdrawal_delete => '删除取出记录';
+
+  @override
+  String get asset_withdrawal_delete_message => '删除后该日期之后的本金和收益将恢复。要继续吗？';
+
+  @override
+  String get asset_holding_add_button => '添加持仓';
+
+  @override
+  String get asset_compare => '对比';
+
+  @override
+  String get asset_record_first => '先添加余额记录后才能记录投资组合。';
+
+  @override
+  String get asset_no_holdings => '该日期没有记录持仓。';
+
+  @override
+  String get asset_cash => '现金';
+
+  @override
+  String get asset_holding_delete => '删除持仓';
+
+  @override
+  String asset_holding_delete_message(String name) {
+    return '要删除 $name 的记录吗？';
+  }
+
+  @override
+  String get asset_delete_failed => '删除失败';
+
+  @override
+  String asset_others_count(int count) {
+    return '其他 $count 项';
+  }
+
+  @override
+  String asset_fill_with_cash(String amount) {
+    return '用现金填充（$amount）';
+  }
+
+  @override
+  String asset_balance_value(String amount) {
+    return '余额：$amount';
+  }
+
+  @override
+  String get asset_filter_min_one => '请至少选择一个';
+
+  @override
+  String get asset_withdrawal_type_desc_full =>
+      '请选择取出的金额来自本金还是收益。\n记录余额时会据此自动重算本金和收益。';
+
+  @override
+  String get asset_withdrawal_from_profit => '从收益扣除（税金、提取收益等）';
+
+  @override
+  String get asset_filter_min_one_account => '请至少选择一个账户。';
+
+  @override
+  String asset_legend_more(int count) {
+    return '再显示 $count 项';
+  }
+
+  @override
+  String get asset_holdings_section => '投资组合';
+
+  @override
+  String asset_others_ratio(int count, String ratio) {
+    return '其他 $count 项  $ratio%';
+  }
+
+  @override
+  String get asset_cumulative_return => '累计收益率';
+
+  @override
+  String get asset_period_return => '区间收益率';
+
+  @override
+  String get asset_tooltip_balance => '各时点的资产总余额。\n余额 = 本金 + 收益';
+
+  @override
+  String get asset_tooltip_principal => '截至该时点实际投入的累计本金。\n不含盈亏。';
+
+  @override
+  String get asset_tooltip_profit => '各时点的累计收益。\n收益 = 余额 − 本金';
+
+  @override
+  String get asset_tooltip_cumulative => '各时点的累计收益率。\n累计收益率 = 收益 ÷ 本金 × 100';
+
+  @override
+  String get asset_tooltip_period =>
+      '相对上一时点该区间的收益率。\n剔除本金存取的影响，仅反映真实收益变化。\n\n区间收益率 =（本次收益 − 上次收益）÷ 上次本金 × 100';
+
+  @override
+  String asset_amount_won(String amount) {
+    return '$amount 韩元';
+  }
+
+  @override
+  String asset_month_unit(String month) {
+    return '$month 月';
+  }
+
+  @override
+  String asset_gold_price_per_gram(String amount) {
+    return '$amount 韩元/g';
+  }
+
+  @override
+  String get asset_compare_usd => '美元换算';
+
+  @override
+  String get minigame_title => '小游戏';
+
+  @override
+  String get minigame_coach_desc => '可以玩梯子游戏和轮盘。\n需要公平决定时用得上！';
+
+  @override
+  String get minigame_coach_group => '选择群组';
+
+  @override
+  String get minigame_coach_group_desc => '选择群组后结果会自动保存，群组成员都能查看记录。';
+
+  @override
+  String get minigame_history => '游戏记录';
+
+  @override
+  String get minigame_coach_history_desc => '可在此查看过往结果，谁得到什么一目了然。';
+
+  @override
+  String get minigame_ladder => '梯子游戏';
+
+  @override
+  String get minigame_roulette => '轮盘';
+
+  @override
+  String get minigame_no_group => '不选群组（不保存记录）';
+
+  @override
+  String get minigame_history_empty => '还没有游戏记录';
+
+  @override
+  String get minigame_select_group_hint => '选择群组后游戏记录会自动保存';
+
+  @override
+  String get minigame_history_delete => '删除记录';
+
+  @override
+  String get minigame_history_delete_message => '确定删除该游戏记录吗？';
+
+  @override
+  String minigame_winner(String name) {
+    return '中奖：$name';
+  }
+
+  @override
+  String get minigame_ladder_default_title => '梯子游戏';
+
+  @override
+  String get minigame_roulette_default_title => '轮盘';
+
+  @override
+  String get minigame_game_title => '游戏标题';
+
+  @override
+  String get minigame_create_ladder => '生成梯子';
+
+  @override
+  String get minigame_ladder_hint => '点击参与者名字开始走梯子！';
+
+  @override
+  String get minigame_skip_all => '全部跳过';
+
+  @override
+  String get minigame_reset => '重新设置';
+
+  @override
+  String get minigame_participants => '参与者';
+
+  @override
+  String get minigame_final_result => '最终结果';
+
+  @override
+  String get minigame_saved => '已保存结果';
+
+  @override
+  String get minigame_save_failed => '保存失败';
+
+  @override
+  String get minigame_result_items => '结果选项';
+
+  @override
+  String minigame_item_hint(int index) {
+    return '选项 $index';
+  }
+
+  @override
+  String get minigame_add_item => '添加选项';
+
+  @override
+  String minigame_count_mismatch(String total, String count) {
+    return '数量合计（$total）必须等于参与者人数（$count）';
+  }
+
+  @override
+  String get minigame_playing_with_group => '正在与群组一起玩';
+
+  @override
+  String get minigame_members_loading => '正在加载群组成员，请稍后再试。';
+
+  @override
+  String minigame_add_manually(String label) {
+    return '手动添加$label';
+  }
+
+  @override
+  String get minigame_select_members => '选择成员';
+
+  @override
+  String get minigame_select_group_members => '选择群组成员';
+
+  @override
+  String get minigame_unknown => '未知';
+
+  @override
+  String get minigame_already_added => '已添加';
+
+  @override
+  String minigame_add_count(int count) {
+    return '添加（$count）';
+  }
+
+  @override
+  String get minigame_spin => '转动';
+
+  @override
+  String get minigame_need_two_items => '请至少输入两个选项';
+
+  @override
+  String get minigame_result => '结果';
+
+  @override
+  String get minigame_item => '选项';
+
+  @override
+  String get minigame_ratio => '比例';
+
+  @override
+  String get common_filter => '筛选';
+
+  @override
+  String get common_selectGroup => '选择群组';
+
+  @override
+  String get common_unknown => '未知';
+
+  @override
+  String home_delete_scheduled(String date, String days) {
+    return '账号将于 $date（$days 天后）删除。';
+  }
+
+  @override
+  String get home_delete_cancel => '取消删除';
+
+  @override
+  String get home_delete_canceled => '已取消删除预约';
+
+  @override
+  String get home_coach_more => '从“更多”标签开始';
+
+  @override
+  String get home_coach_group => '群组管理';
+
+  @override
+  String get home_coach_group_desc => '创建家人、伴侣、朋友等群组，用邀请码邀请成员。';
+
+  @override
+  String get home_coach_widget => '自定义仪表板';
+
+  @override
+  String get home_coach_widget_desc => '在设置 → 主页小组件中挑选需要的小组件。';
+
+  @override
+  String get home_coach_tab => '自定义底部标签';
+
+  @override
+  String get home_coach_tab_desc => '在设置 → 底部导航中换成常用菜单。';
+
+  @override
+  String get home_coach_tap_more => '点击进入“更多”';
+
+  @override
+  String get home_period => '时间范围';
+
+  @override
+  String get home_personal_schedule => '个人日程';
+
+  @override
+  String get home_personal_schedule_desc => '包含我的个人日程';
+
+  @override
+  String get home_view_mode => '查看模式';
+
+  @override
+  String get home_pinned_memos => '已固定的备忘';
+
+  @override
+  String get home_pinned_memos_empty => '没有已固定的备忘';
+
+  @override
+  String home_checklist_progress(String checked, String total) {
+    return '$checked/$total 完成';
+  }
+
+  @override
+  String get home_no_expiry => '无保质期';
+
+  @override
+  String home_expired_days(String days) {
+    return '已过期 $days 天';
+  }
+
+  @override
+  String get home_expires_today => '今天到期';
+
+  @override
+  String get home_total_savings => '累计储蓄';
+
+  @override
+  String home_active_goals(int count) {
+    return '$count 个进行中';
+  }
+
+  @override
+  String home_goal_amount(String amount) {
+    return '目标 $amount';
+  }
+
+  @override
+  String home_more_goals(int count) {
+    return '另外 $count 个';
+  }
+
+  @override
+  String get home_schedule_filter => '日程筛选';
+
+  @override
+  String get home_no_children => '还没有添加孩子';
+
+  @override
+  String home_childcare_savings(String points) {
+    return '储蓄 ${points}P';
+  }
+
+  @override
+  String home_anniversary_more(int count) {
+    return '再显示 $count 个';
+  }
+
+  @override
+  String get auth_email_copied => '已复制邮箱地址';
+
+  @override
+  String get auth_login_processing => '正在登录…';
+
+  @override
+  String get auth_please_wait => '请稍候。';
+
+  @override
+  String get auth_login_failed => '登录失败';
+
+  @override
+  String get auth_back_to_login => '返回登录页';
+
+  @override
+  String get auth_code_required => '请输入验证码';
+
+  @override
+  String get auth_email_verified => '邮箱验证完成，请登录。';
+
+  @override
+  String get auth_email_resent => '已重新发送验证邮件。';
+
+  @override
+  String get auth_email_verification => '邮箱验证';
+
+  @override
+  String get auth_check_email => '请查收邮件';
+
+  @override
+  String auth_email_sent_to(String email) {
+    return '已向 $email\n发送验证邮件。';
+  }
+
+  @override
+  String get auth_enter_code => '输入验证码';
+
+  @override
+  String get auth_enter_code_desc => '请输入邮件中的 6 位验证码。';
+
+  @override
+  String get auth_code_label => '验证码';
+
+  @override
+  String get auth_code_hint => '例：123456';
+
+  @override
+  String get auth_no_email => '没收到邮件？';
+
+  @override
+  String get auth_resend_email => '重新发送邮件';
+
+  @override
+  String get auth_verify_later => '稍后验证 ';
+
+  @override
+  String get auth_back_to_signin => '返回登录';
+
+  @override
+  String get auth_no_token => '缺少认证令牌，请重新登录。';
+
+  @override
+  String get auth_terms_title => '服务条款';
+
+  @override
+  String get auth_terms_desc => '使用家庭规划师前请同意条款。';
+
+  @override
+  String get auth_agree_and_start => '同意并开始';
+
+  @override
+  String get ai_assistant => 'AI 助手';
+
+  @override
+  String get ai_premium_desc => '这是明年推出的高级订阅功能。\n订阅后可使用 AI 助手。';
+
+  @override
+  String get ai_premium_coming => '高级订阅即将推出';
+
+  @override
+  String get ai_ask_anything => '有问题尽管问';
+
+  @override
+  String get ai_reset_chat => '清空对话';
+
+  @override
+  String get ai_greeting => '你好！我是家庭规划师 AI。';
+
+  @override
+  String get ai_greeting_desc => '可以点击下方推荐问题，或直接输入问题。';
+
+  @override
+  String get ai_new_chat => '已开始新对话';
+
+  @override
+  String get ai_message_hint => '请输入消息…';
+
+  @override
+  String get ai_send => '发送';
+
+  @override
+  String get ai_suggest1 => '分析本月支出';
+
+  @override
+  String get ai_suggest2 => '总结家庭日程';
+
+  @override
+  String get ai_suggest3 => '储蓄目标完成得怎么样？';
+
+  @override
+  String get ai_suggest4 => '显示未完成的待办';
+
+  @override
+  String get ai_suggest5 => '投资组合现在怎么样？';
+
+  @override
+  String get ai_suggest6 => '这周有什么重要日程？';
+
+  @override
+  String get weather_title => '天气';
+
+  @override
+  String get weather_current_failed => '无法加载当前天气';
+
+  @override
+  String get weather_forecast_failed => '无法加载预报';
+
+  @override
+  String get weather_humidity => '湿度';
+
+  @override
+  String get weather_wind => '风速';
+
+  @override
+  String get weather_precipitation => '降水量';
+
+  @override
+  String get weather_air_quality => '空气质量';
+
+  @override
+  String get weather_pm10 => 'PM10';
+
+  @override
+  String get weather_pm25 => 'PM2.5';
+
+  @override
+  String weather_measured_at(String region) {
+    return '测量地点：$region';
+  }
+
+  @override
+  String get weather_hourly => '逐小时预报';
+
+  @override
+  String get weather_hourly_empty => '没有逐小时预报';
+
+  @override
+  String get weather_daily => '逐日预报';
+
+  @override
+  String weather_hour(String hour) {
+    return '$hour 时';
+  }
+
+  @override
+  String get weather_today => '今天';
+
+  @override
+  String get calendar_view_day => '日';
+
+  @override
+  String get calendar_view_week => '周';
+
+  @override
+  String get calendar_view_month => '月';
+
+  @override
+  String get calendar_view_year => '年';
+
+  @override
+  String get calendar_manage_anniversary => '纪念日管理';
+
+  @override
+  String get calendar_select_view => '选择视图';
+
+  @override
+  String get calendar_allday => '全天';
+
+  @override
+  String calendar_lunar_label(String label) {
+    return '农历 $label';
+  }
+
+  @override
+  String calendar_hidden_count(int count) {
+    return '+$count 个';
+  }
+
+  @override
+  String calendar_group_more(String name, int count) {
+    return '$name 等 $count 个';
+  }
+
+  @override
+  String calendar_year_label(String year) {
+    return '$year 年';
+  }
+
+  @override
+  String get calendar_task_added => '已添加日程。';
+
+  @override
+  String get calendar_task_title_hint => '日程标题';
+
+  @override
+  String get calendar_personal => '个人';
+
+  @override
+  String get calendar_type_event => '日程';
+
+  @override
+  String get calendar_type_todo => '待办';
+
+  @override
+  String get calendar_type_both => '日程+待办';
+
+  @override
+  String get calendar_more => '更多';
+
+  @override
+  String get calendar_remind_5m => '提前 5 分钟';
+
+  @override
+  String get calendar_remind_15m => '提前 15 分钟';
+
+  @override
+  String get calendar_remind_30m => '提前 30 分钟';
+
+  @override
+  String get calendar_remind_1h => '提前 1 小时';
+
+  @override
+  String get calendar_remind_1d => '提前 1 天';
+
+  @override
+  String household_year_label(String year) {
+    return '$year 年';
+  }
+
+  @override
+  String get household_yearly_stats => '年度统计';
+
+  @override
+  String get household_stats_exclude_note => '退款和结转存入不计入统计';
+
+  @override
+  String get household_by_category => '按分类';
+
+  @override
+  String get household_by_merchant => '按商家';
+
+  @override
+  String get household_by_member => '按成员';
+
+  @override
+  String get household_custom_filter => '自定义筛选';
+
+  @override
+  String get household_category_spending => '按分类支出';
+
+  @override
+  String get household_merchant_spending => '按商家支出';
+
+  @override
+  String get household_member_spending => '按成员支出';
+
+  @override
+  String get household_no_merchant => '无商家';
+
+  @override
+  String get household_unassigned => '未指定';
+
+  @override
+  String get household_member => '成员';
+
+  @override
+  String get household_monthly_spending => '按月支出';
+
+  @override
+  String get household_compare_last_month => '与上月对比';
+
+  @override
+  String get household_cumulative_trend => '累计支出趋势';
+
+  @override
+  String get household_variable => '浮动';
+
+  @override
+  String get household_expected_amount => '预计金额';
+
+  @override
+  String get household_due_day => '发生日';
+
+  @override
+  String household_due_day_value(String day) {
+    return '每月 $day 日';
+  }
+
+  @override
+  String get household_payee => '收款人';
+
+  @override
+  String get household_payer => '付款人';
+
+  @override
+  String get household_no_applied => '还没有应用记录';
+
+  @override
+  String get household_confirmed_avg => '确认均值';
+
+  @override
+  String get household_min => '最小值';
+
+  @override
+  String get household_max => '最大值';
+
+  @override
+  String household_unconfirmed_suffix(String date) {
+    return '$date  未确认';
+  }
+
+  @override
+  String get asset_demo_nasdaq => '纳斯达克 ETF';
+
+  @override
+  String get asset_demo_samsung => '三星电子';
+
+  @override
+  String get currency_won_unit => '韩元';
+
+  @override
+  String get household_auto_registered => '已自动记入账本';
+
+  @override
+  String household_auto_registered_body(String amount) {
+    return '已将 $amount 韩元记入账本。';
+  }
+
+  @override
+  String get household_auto_service => '账本自动记账';
+
+  @override
+  String get household_auto_service_desc => '检测支付通知并自动记入账本';
+
+  @override
+  String get coach_calendar_shared => '共享日历';
+
+  @override
+  String get coach_calendar_shared_desc => '一眼查看群组成员的日程。\n点击日期可查看当天安排。';
+
+  @override
+  String get coach_calendar_add => '添加日程';
+
+  @override
+  String get coach_calendar_add_desc => '点击按钮创建新日程，试试看吧。';
+
+  @override
+  String get coach_group_create => '创建群组';
+
+  @override
+  String get coach_group_create_desc => '家人、伴侣、朋友、团队——创建你想要的群组。';
+
+  @override
+  String get coach_group_join => '加入群组';
+
+  @override
+  String get coach_group_join_desc => '输入邀请码即可加入已有群组，向成员索取即可。';
+
+  @override
+  String get coach_group_requests => '申请记录';
+
+  @override
+  String get coach_group_requests_desc => '查看已申请加入的群组以及是否被通过。';
+
+  @override
+  String get coach_savings_status => '储蓄情况';
+
+  @override
+  String get coach_savings_status_desc => '查看当前储蓄额、目标金额和达成率。\n自动存入时也会显示状态。';
+
+  @override
+  String get coach_savings_deposit => '存入 / 取出';
+
+  @override
+  String get coach_savings_deposit_desc => '随时可以手动存入或取出，配合自动存入更方便。';
+
+  @override
+  String get coach_savings_goal => '储蓄罐';
+
+  @override
+  String get coach_savings_goal_desc => '一眼看到目标名称、已存金额和达成率。\n开启自动存入后每月自动入账。';
+
+  @override
+  String get coach_savings_demo_desc => '今年夏天的家庭旅行';
+
+  @override
+  String get coach_savings_demo_jeju => '济州岛旅行';
+
+  @override
+  String get coach_savings_demo_emergency => '应急金';
+
+  @override
+  String get demo_milk => '牛奶';
+
+  @override
+  String get demo_eggs => '鸡蛋';
+
+  @override
+  String get demo_tofu => '豆腐';
+
+  @override
+  String get demo_unit_piece => '个';
+
+  @override
+  String get demo_unit_pack => '盒';
+
+  @override
+  String get demo_fridge => '冰箱';
+
+  @override
+  String get demo_freezer => '冷冻室';
+
+  @override
+  String get demo_bank_savings => '国民银行储蓄';
+
+  @override
+  String get coach_ladder_participants => '输入参与者';
+
+  @override
+  String get coach_ladder_participants_desc => '输入参与者的名字。\n也可以用“加载群组成员”一次性添加。';
+
+  @override
+  String get coach_ladder_results => '输入结果选项';
+
+  @override
+  String get coach_ladder_results_desc => '输入结果选项及数量。\n数量合计需与参与者人数一致才能生成。';
+
+  @override
+  String get coach_ladder_create => '生成梯子';
+
+  @override
+  String get coach_ladder_create_desc => '点击按钮生成梯子。\n点击参与者名字会动画展示路径并揭晓结果。';
+
+  @override
+  String get coach_roulette_items => '输入选项';
+
+  @override
+  String get coach_roulette_items_desc => '输入要放上轮盘的选项。\n调整比例可改变中奖概率。';
+
+  @override
+  String get coach_roulette_wheel => '轮盘';
+
+  @override
+  String get coach_roulette_wheel_desc => '输入两个以上选项后会出现轮盘。\n点击中间按钮也能转动。';
+
+  @override
+  String get coach_roulette_spin => '转动';
+
+  @override
+  String get coach_roulette_spin_desc => '点击后轮盘转动。\n结果会自动存入群组记录，大家都能看到。';
+
+  @override
+  String get coach_asset_card => '账户卡片';
+
+  @override
+  String get coach_asset_card_desc => '一眼查看账户名、金融机构、最新余额和收益率。\n点击可管理余额记录和投资组合。';
+
+  @override
+  String get coach_asset_stats => '资产统计';
+
+  @override
+  String get coach_asset_stats_desc =>
+      '用图表查看总资产、收益率和类型分布。\n还能与 KOSPI、标普500 等指数对比。';
+
+  @override
+  String get demo_bank_kb => '国民银行';
+
+  @override
+  String get coach_group_invite => '邀请成员吧';
+
+  @override
+  String get coach_group_invite_desc => '在设置标签可分享邀请码或直接用邮件邀请。\n\n点击进入设置。';
+
+  @override
+  String get coach_group_invite_code => '用邀请码邀请';
+
+  @override
+  String get coach_group_invite_code_desc => '可复制邀请码分享，也可用邮件发送邀请。';
+
+  @override
+  String get coach_group_roles => '用角色管理权限';
+
+  @override
+  String get coach_group_roles_desc => '在角色标签可创建角色并细致设置成员权限。\n\n点击进入角色管理。';
+
+  @override
+  String get coach_group_role_new => '创建新角色';
+
+  @override
+  String get coach_group_role_new_desc => '点击创建角色，自由设置名称、颜色和权限。';
+
+  @override
+  String get coach_group_color => '为群组设置颜色';
+
+  @override
+  String get coach_group_color_desc =>
+      '在设置标签可指定该群组的颜色。\n该颜色会在日程等多个页面用于区分本群组的条目。\n\n点击进入设置。';
+
+  @override
+  String get coach_cart_complete => '购物完成功能说明';
+
+  @override
+  String get coach_cart_complete_desc => '点击“购物完成”可一次处理以下两件事。';
+
+  @override
+  String get coach_cart_to_fridge => '转入冰箱';
+
+  @override
+  String get coach_cart_to_fridge_desc => '可将购买的物品直接放入冰箱存放处，还能设置数量、保质期和提醒日。';
+
+  @override
+  String get coach_cart_to_expense => '自动记入账本';
+
+  @override
+  String get coach_cart_to_expense_desc => '输入金额、支付方式和备注后会自动记入账本。';
+
+  @override
+  String get coach_cart_no_transfer => '不转入';
+
+  @override
+  String get demo_todo_shopping => '写购物清单';
+
+  @override
+  String get demo_todo_shopping_desc => '整理本周所需食材';
+
+  @override
+  String get demo_todo_trip => '计划家庭旅行';
+
+  @override
+  String get demo_todo_trip_desc => '暑假行程与住宿预订';
+
+  @override
+  String get demo_todo_budget => '整理月度账本';
+
+  @override
+  String get demo_todo_budget_desc => '查看上月收支';
+
+  @override
+  String get coach_todo_byDate => '按日期的待办';
+
+  @override
+  String get coach_todo_byDate_desc => '点击日期查看当天待办，并与群组分工。';
+
+  @override
+  String get coach_todo_status => '更改状态';
+
+  @override
+  String get coach_todo_status_desc => '点击左侧图标可切换待处理、进行中、已完成等状态。';
+
+  @override
+  String get coach_todo_add => '添加待办';
+
+  @override
+  String get coach_todo_add_desc => '添加新待办，并指定负责人和截止日期。';
+
+  @override
+  String get demo_apple => '苹果';
+
+  @override
+  String get coach_history_records => '购买记录';
+
+  @override
+  String get coach_history_records_desc => '每完成一次购物就会留下记录。\n点击卡片可查看物品明细。';
+
+  @override
+  String get coach_history_expense => '账本联动';
+
+  @override
+  String get coach_history_expense_desc => '购物完成时一并记录支出就会显示该标记，会自动与账本联动。';
+
+  @override
+  String get demo_expense_salary => '6月工资';
+
+  @override
+  String get demo_expense_dining => '晚餐外出';
+
+  @override
+  String get demo_expense_fuel => '加油';
+
+  @override
+  String get demo_expense_utility => '水电燃气费';
+
+  @override
+  String get coach_household_summary => '月度概览';
+
+  @override
+  String get coach_household_summary_desc => '一眼查看本月收入、支出和余额，以及预算使用进度。';
+
+  @override
+  String get coach_household_budget => '设置预算';
+
+  @override
+  String get coach_household_budget_desc => '打开这里的更多菜单，可按分类设置每月预算。';
+
+  @override
+  String get coach_household_recurring => '固定支出';
+
+  @override
+  String get coach_household_recurring_desc => '登记房租、订阅等每月重复的支出，会自动记录。';
+
+  @override
+  String get coach_household_stats => '统计';
+
+  @override
+  String get coach_household_stats_desc => '用图表查看分类支出占比和逐月趋势。';
+
+  @override
+  String get coach_household_add => '添加支出/收入';
+
+  @override
+  String get coach_household_add_desc => '记录新的支出或收入，可按群组分开管理。';
+
+  @override
+  String get common_me => '我';
+
+  @override
+  String get demo_memo_trip => '济州岛旅行准备';
+
+  @override
+  String get demo_memo_trip_body => '机票已订\n住宿定在翰林邑的旅舍。\n还需订租车。计划去牛岛和城山日出峰。';
+
+  @override
+  String get demo_tag_travel => '旅行';
+
+  @override
+  String get demo_tag_jeju => '济州';
+
+  @override
+  String get demo_memo_packing => '过夜用品';
+
+  @override
+  String get demo_check_passport => '护照 / 身份证';
+
+  @override
+  String get demo_check_toiletries => '洗漱用品';
+
+  @override
+  String get demo_check_clothes => '换洗衣物';
+
+  @override
+  String get demo_check_charger => '充电器';
+
+  @override
+  String get demo_check_meds => '常备药';
+
+  @override
+  String get coach_memo_richtext => '富文本备忘';
+
+  @override
+  String get coach_memo_richtext_desc =>
+      '可自由使用加粗、斜体、标题等格式。\n可用标签分类，粘贴网址会自动生成链接卡片。';
+
+  @override
+  String get coach_memo_checklist => '清单';
+
+  @override
+  String get coach_memo_checklist_desc =>
+      '可在备忘的任意位置插入清单。\n卡片会显示完成数量，可在详情页点击勾选。';
+
+  @override
+  String get coach_memo_progress => '进度';
+
+  @override
+  String get coach_memo_progress_desc => '一眼看到完成数量，还有全选和重置按钮。';
+
+  @override
+  String get coach_memo_check => '勾选项目';
+
+  @override
+  String get coach_memo_check_desc => '点击复选框即可标记完成，改动会自动保存。';
+
+  @override
+  String get coach_memo_edit => '编辑模式';
+
+  @override
+  String get coach_memo_edit_desc => '点击编辑打开编辑器。\n用工具栏的清单按钮可自由增删项目。';
+
+  @override
+  String get demo_vote_outing => '这周末家庭出游去哪';
+
+  @override
+  String get demo_vote_outing_desc => '少数服从多数，快来投票！';
+
+  @override
+  String get demo_vote_dinner => '晚饭吃什么';
+
+  @override
+  String get demo_member_mom => '妈妈';
+
+  @override
+  String get demo_member_dad => '爸爸';
+
+  @override
+  String get demo_member_child => '小明';
+
+  @override
+  String get demo_place_hangang => '汉江公园';
+
+  @override
+  String get demo_place_amusement => '游乐园';
+
+  @override
+  String get demo_place_zoo => '动物园';
+
+  @override
+  String get demo_food_chicken => '炸鸡';
+
+  @override
+  String get demo_food_pizza => '披萨';
+
+  @override
+  String get demo_food_pork => '五花肉';
+
+  @override
+  String get demo_group_family => '我们家';
+
+  @override
+  String get coach_vote_group => '选择群组';
+
+  @override
+  String get coach_vote_group_desc => '投票以群组为单位。\n选择群组即可查看该群组的投票。';
+
+  @override
+  String get coach_vote_filter => '状态筛选';
+
+  @override
+  String get coach_vote_filter_desc => '用标签轻松区分全部、进行中和已结束的投票。';
+
+  @override
+  String get coach_vote_card => '投票卡片';
+
+  @override
+  String get coach_vote_card_desc => '点击卡片即可投票。\n群组成员都能参与，结果实时更新。';
+
+  @override
+  String get coach_vote_create => '创建新投票';
+
+  @override
+  String get coach_vote_create_desc => '点击 + 创建新投票。\n支持单选/多选、匿名投票和截止时间。';
+
+  @override
+  String get demo_shop_tv_desc => '晚饭后多看30分钟电视';
+
+  @override
+  String get demo_shop_game_desc => '周末玩1小时游戏';
+
+  @override
+  String get demo_rule_homework => '独立完成作业';
+
+  @override
+  String get demo_rule_phone => '玩手机超过1小时';
+
+  @override
+  String get demo_rule_cashout => '本月兑现上限 50P';
+
+  @override
+  String get coach_child_register => '添加孩子';
+
+  @override
+  String get coach_child_register_desc => '先添加孩子。\n输入姓名和出生日期后会自动创建积分账户。';
+
+  @override
+  String get coach_child_points => '积分概览';
+
+  @override
+  String get coach_child_points_desc => '一眼查看孩子的积分余额和每月零花钱计划。\n会在设定的日期自动发放。';
+
+  @override
+  String get coach_child_savings => '储蓄计划';
+
+  @override
+  String get coach_child_savings_desc => '设置积分储蓄后每月自动存入，还能获得利息。';
+
+  @override
+  String get coach_child_shop => '积分商店';
+
+  @override
+  String get coach_child_shop_desc => '孩子可用积分兑换的奖励清单，能激励他们主动攒分。';
+
+  @override
+  String get coach_child_rule_plus_desc => '做得好就加分。\n例：独立完成作业 +10P';
+
+  @override
+  String get coach_child_rule_minus_desc => '违反约定就扣分。\n例：玩手机超过1小时 −10P';
+
+  @override
+  String get coach_child_rule_info_desc => '不涉及积分，只记录约定。\n例：本月兑现上限 50P';
+
+  @override
+  String get intro_slide1_title => '属于我们的规划器';
+
+  @override
+  String get intro_slide1_subtitle => '家人、伴侣、朋友、团队';
+
+  @override
+  String get intro_slide1_desc => '一个应用管理多个群组。\n每段关系都有各自的空间共同规划。';
+
+  @override
+  String get intro_slide2_title => '一起安排日程';
+
+  @override
+  String get intro_slide2_subtitle => '共享日历';
+
+  @override
+  String get intro_slide2_desc => '一眼看到所有成员的安排。\n绝不错过重要日子。';
+
+  @override
+  String get intro_slide3_title => '待办管理';
+
+  @override
+  String get intro_slide3_subtitle => '共享待办清单';
+
+  @override
+  String get intro_slide3_desc => '清楚谁该做什么。\n分工协作，一起完成。';
+
+  @override
+  String get intro_slide4_title => '一眼看清家庭财务';
+
+  @override
+  String get intro_slide4_subtitle => '共享账本';
+
+  @override
+  String get intro_slide4_desc => '一起记录并分析收支。\n与群组共同实现财务目标。';
+
+  @override
+  String get intro_slide5_title => '还有更多功能';
+
+  @override
+  String get intro_slide5_subtitle => '资产、备忘、储蓄、投票等';
+
+  @override
+  String get intro_slide5_desc => '日常所需，尽在一处。\n现在就开始吧！';
+
+  @override
+  String get intro_start => '开始使用';
+
+  @override
+  String get intro_next => '下一步';
+
+  @override
+  String get intro_preview_couple => '伴侣';
+
+  @override
+  String get intro_preview_friends => '朋友聚会';
+
+  @override
+  String get intro_preview_team => '团队项目';
+
+  @override
+  String get intro_preview_mygroups => '我的群组';
+
+  @override
+  String intro_preview_members(String count) {
+    return '$count 人';
+  }
+
+  @override
+  String get intro_preview_dining => '家庭聚餐';
+
+  @override
+  String get intro_preview_hospital => '医院预约';
+
+  @override
+  String get intro_preview_birthday => '生日派对 🎂';
+
+  @override
+  String get intro_preview_todo1 => '超市采购';
+
+  @override
+  String get intro_preview_todo2 => '吸地板';
+
+  @override
+  String get intro_preview_todo3 => '确认保险续期';
+
+  @override
+  String get intro_preview_todo4 => '整理家庭相册';
+
+  @override
+  String get intro_preview_todo5 => '检查孩子作业';
+
+  @override
+  String get intro_preview_today => '今天';
+
+  @override
+  String get intro_preview_tomorrow => '明天';
+
+  @override
+  String get intro_preview_thisweek => '本周';
+
+  @override
+  String intro_preview_total(String count) {
+    return '共 $count';
+  }
+
+  @override
+  String intro_preview_done(String count) {
+    return '完成 $count';
+  }
+
+  @override
+  String get intro_preview_mart => '超市';
+
+  @override
+  String get intro_preview_eatout => '外出就餐';
+
+  @override
+  String get intro_preview_salary => '工资';
+
+  @override
+  String get intro_preview_transport => '交通费';
+
+  @override
+  String get intro_preview_assets => '资产管理';
+
+  @override
+  String get intro_preview_savings => '储蓄管理';
+
+  @override
+  String get demo_memo_domestic => '国产';
+
+  @override
+  String get coach_cart_add => '添加物品';
+
+  @override
+  String get coach_cart_add_desc => '添加要买的物品，会自动保存。';
+
+  @override
+  String get coach_cart_manage => '管理物品';
+
+  @override
+  String get coach_cart_manage_desc =>
+      '• 点击可修改名称、数量和备注\n• 用 ± 调整数量\n• 向左滑动可删除\n• 修改后会自动保存';
+
+  @override
+  String get coach_cart_finish => '购物完成';
+
+  @override
+  String get coach_cart_finish_desc => '购物结束后点这里。\n下个界面会介绍更多功能！';
+
+  @override
+  String get coach_cart_next => '点击进入下一个功能！';
+
+  @override
+  String get coach_cart_next_desc => '将在“常买物品”标签介绍更多功能。';
+
+  @override
+  String get household_carryover_out => '结余结转';
+
+  @override
+  String get household_carryover_in => '上月结转';
+
+  @override
+  String household_transfer_asset(String name) {
+    return '转入资产（$name）';
+  }
+
+  @override
+  String household_transfer_savings(String name) {
+    return '转入储蓄（$name）';
+  }
+
+  @override
+  String get household_transfer_from_ledger => '从账本结余转入';
 }

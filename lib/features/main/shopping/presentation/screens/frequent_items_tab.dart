@@ -81,7 +81,7 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
             });
           }
           return _OnboardingFrequentView(
-            items: _demoFrequentItems,
+            items: _demoFrequentItems(AppLocalizations.of(context)!),
             fabKey: _fabKey,
             firstItemKey: _firstItemKey,
             autoAddKey: _autoAddKey,

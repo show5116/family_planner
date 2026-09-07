@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/minigame/data/repositories/minigame_repository.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -54,7 +55,8 @@ class RouletteGameScreen extends ConsumerStatefulWidget {
 
 class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
     with SingleTickerProviderStateMixin {
-  final _titleController = TextEditingController(text: '룰렛');
+  final _titleController = TextEditingController();
+  bool _titleInitialized = false;
   final List<_RouletteItem> _items = [
     _RouletteItem(),
     _RouletteItem(),
@@ -73,6 +75,16 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
   final _itemsEditorKey = GlobalKey();
   final _wheelKey = GlobalKey();
   final _spinButtonKey = GlobalKey();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 필드 초기화 시점에는 context가 없어 여기서 기본 제목을 넣는다.
+    if (!_titleInitialized) {
+      _titleInitialized = true;
+      _titleController.text = AppLocalizations.of(context)!.minigame_roulette_default_title;
+    }
+  }
 
   @override
   void initState() {
@@ -115,6 +127,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final validItems = _validItems;
     final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
@@ -125,7 +138,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('룰렛'),
+        title: Text(l10n.minigame_roulette),
         actions: [
           AppBarMoreMenu(
             onReplayOnboarding: () {
@@ -147,8 +160,8 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
               // 제목
               TextField(
                 controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: '게임 제목',
+                decoration: InputDecoration(
+                  labelText: l10n.minigame_game_title,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -214,13 +227,13 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
                   key: _spinButtonKey,
                   onPressed: _spinning ? null : _spin,
                   icon: const Icon(Icons.refresh),
-                  label: const Text('돌리기'),
+                  label: Text(l10n.minigame_spin),
                 ),
               ] else
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Text(
-                    '항목을 2개 이상 입력해주세요',
+                    l10n.minigame_need_two_items,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey),
                   ),
@@ -233,7 +246,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        const Text('결과',
+                        Text(l10n.minigame_result,
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500)),
                         const SizedBox(height: 8),
@@ -315,11 +328,12 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
   }
 
   void _showWinnerDialog() {
+    final l10n = AppLocalizations.of(context)!;
     if (_winner == null || !mounted) return;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('결과'),
+        title: Text(l10n.minigame_result),
         content: Text(
           _winner!,
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -328,7 +342,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('확인'),
+            child: Text(l10n.common_confirm),
           ),
         ],
       ),
@@ -336,6 +350,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
   }
 
   void _autoSaveIfGroupSelected() {
+    final l10n = AppLocalizations.of(context)!;
     final groupId = ref.read(minigameSelectedGroupIdProvider);
     if (groupId == null) return;
 
@@ -355,13 +370,15 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(saved != null ? '게임 결과가 저장되었습니다' : '저장 실패')),
+              content: Text(saved != null
+                  ? l10n.minigame_saved
+                  : l10n.minigame_save_failed)),
         );
       }
     }).catchError((_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('저장 실패')),
+          SnackBar(content: Text(l10n.minigame_save_failed)),
         );
       }
     });
@@ -386,19 +403,20 @@ class _ItemsEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           children: [
-            const Expanded(
-              child: Text('항목',
+            Expanded(
+              child: Text(l10n.minigame_item,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
             SizedBox(
               width: 60,
               child: Text(
-                '비율',
+                l10n.minigame_ratio,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 12,
@@ -431,7 +449,7 @@ class _ItemsEditor extends StatelessWidget {
                     controller: item.nameController,
                     onChanged: (_) => onChanged(),
                     decoration: InputDecoration(
-                      hintText: '항목 ${i + 1}',
+                      hintText: l10n.minigame_item_hint(i + 1),
                       border: const OutlineInputBorder(),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 8),
@@ -471,7 +489,7 @@ class _ItemsEditor extends StatelessWidget {
         TextButton.icon(
           onPressed: onAdd,
           icon: const Icon(Icons.add, size: 16),
-          label: const Text('항목 추가'),
+          label: Text(l10n.minigame_add_item),
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 4),
           ),
@@ -569,6 +587,7 @@ class _GroupBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -592,7 +611,7 @@ class _GroupBanner extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            '그룹으로 플레이 중',
+            l10n.minigame_playing_with_group,
             style: TextStyle(
               fontSize: 12,
               color: Theme.of(context)

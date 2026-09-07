@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/task/data/models/anniversary_model.dart';
@@ -30,6 +31,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     // 목록 provider에서 최신 데이터 구독 (수정 후 자동 반영)
     final listAsync = ref.watch(anniversaryManagementProvider(groupId));
     final isLoading = listAsync.isLoading && listAsync.valueOrNull == null;
@@ -46,11 +48,11 @@ class AnniversaryDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('기념일 상세'),
+        title: Text(l10n.anniversary_detail),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
-            tooltip: '수정',
+            tooltip: l10n.common_edit,
             onPressed: isLoading
                 ? null
                 : () => AnniversaryFormDialog.show(
@@ -61,7 +63,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline, color: AppColors.error),
-            tooltip: '삭제',
+            tooltip: l10n.common_delete,
             onPressed: isLoading
                 ? null
                 : () => _confirmDelete(context, ref, current),
@@ -85,7 +87,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
 
             // 날짜 정보
             _InfoSection(
-              title: '기념일 날짜',
+              title: l10n.anniversary_date,
               child: Text(dateStr, style: theme.textTheme.bodyLarge),
             ),
             const SizedBox(height: AppSizes.spaceL),
@@ -102,7 +104,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
 
             // 등록일
             _InfoSection(
-              title: '등록일',
+              title: l10n.anniversary_created_at,
               child: Text(
                 '${current.createdAt.year}.${current.createdAt.month.toString().padLeft(2, '0')}.${current.createdAt.day.toString().padLeft(2, '0')}',
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -122,24 +124,25 @@ class AnniversaryDetailScreen extends ConsumerWidget {
     WidgetRef ref,
     AnniversaryModel current,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     bool deleteWithTasks = false;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          title: const Text('기념일 삭제'),
+          title: Text(l10n.anniversary_delete),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('"${current.title}"을(를) 삭제하시겠습니까?'),
+              Text(l10n.anniversary_delete_message(current.title)),
               const SizedBox(height: AppSizes.spaceM),
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                title: const Text('연동된 기념일 일정도 함께 삭제'),
-                subtitle: const Text('체크 해제 시 일정은 유지됩니다'),
+                title: Text(l10n.anniversary_delete_linked),
+                subtitle: Text(l10n.anniversary_delete_linked_desc),
                 value: deleteWithTasks,
                 onChanged: (v) => setState(() => deleteWithTasks = v ?? false),
                 controlAffinity: ListTileControlAffinity.leading,
@@ -149,12 +152,12 @@ class AnniversaryDetailScreen extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('취소'),
+              child: Text(l10n.common_cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(true),
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
-              child: const Text('삭제'),
+              child: Text(l10n.common_delete),
             ),
           ],
         ),
@@ -170,7 +173,7 @@ class AnniversaryDetailScreen extends ConsumerWidget {
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('삭제에 실패했습니다')),
+        SnackBar(content: Text(l10n.anniversary_delete_failed)),
       );
     }
   }
@@ -224,6 +227,7 @@ class _DayCountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final d = daysUntil;
     final Color nextColor;
     if (d == null || d > 7) {
@@ -238,7 +242,7 @@ class _DayCountRow extends StatelessWidget {
       children: [
         Expanded(
           child: _DayCard(
-            label: '경과일',
+            label: l10n.anniversary_days_elapsed,
             value: daysSince >= 0 ? 'D+$daysSince' : 'D$daysSince',
             color: Theme.of(context).colorScheme.secondary,
           ),
@@ -246,7 +250,7 @@ class _DayCountRow extends StatelessWidget {
         const SizedBox(width: AppSizes.spaceM),
         Expanded(
           child: _DayCard(
-            label: '다음 기념일',
+            label: l10n.anniversary_next,
             value: d == null ? '-' : d == 0 ? 'D-Day' : 'D-$d',
             color: nextColor,
           ),
@@ -348,6 +352,7 @@ class _UpcomingMilestonesSectionState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final async = ref.watch(upcomingMilestoneTasksProvider(widget.anniversaryId));
 
     return async.when(
@@ -362,7 +367,7 @@ class _UpcomingMilestonesSectionState
         final hasMore = items.length > _kInitialLimit;
 
         return _InfoSection(
-          title: '예정된 기념일',
+          title: l10n.anniversary_upcoming,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -384,8 +389,9 @@ class _UpcomingMilestonesSectionState
                     size: 16,
                   ),
                   label: Text(_expanded
-                      ? '접기'
-                      : '+ ${items.length - _kInitialLimit}개 더 보기'),
+                      ? l10n.anniversary_collapse
+                      : l10n.anniversary_show_more(
+                          items.length - _kInitialLimit)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.only(top: AppSizes.spaceXS),
                     visualDensity: VisualDensity.compact,
@@ -479,14 +485,15 @@ class _MilestoneSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final items = <String>[];
-    if (config.every100Days == true) items.add('100일 단위 (D+100, D+200…)');
-    if (config.everyYear == true) items.add('매년 주년 (1주년, 2주년…)');
+    if (config.every100Days == true) items.add(l10n.anniversary_every100);
+    if (config.everyYear == true) items.add(l10n.anniversary_everyYear);
     if (items.isEmpty) return const SizedBox.shrink();
 
     return _InfoSection(
-      title: '기념일 알림 일정 자동 생성',
+      title: l10n.anniversary_auto_create,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: items

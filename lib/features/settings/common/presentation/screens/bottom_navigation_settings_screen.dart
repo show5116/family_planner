@@ -13,9 +13,9 @@ class BottomNavigationSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final settings = ref.watch(bottomNavigationSettingsProvider);
     final notifier = ref.read(bottomNavigationSettingsProvider.notifier);
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(

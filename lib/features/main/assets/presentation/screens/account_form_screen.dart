@@ -173,9 +173,9 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen>
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
-    final l10n = AppLocalizations.of(context)!;
     final name = _nameController.text.trim();
     final institutionRaw = _institutionController.text.trim();
     final institution = institutionRaw.isEmpty ? null : institutionRaw;
@@ -241,6 +241,7 @@ class _ReminderDayField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isEnabled = value != null;
 
     return Column(
@@ -254,14 +255,14 @@ class _ReminderDayField extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '기록 알림',
+                    l10n.asset_record_reminder,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '매월 지정한 날짜에 자산 기록 입력 알림을 보내드립니다.',
+                    l10n.asset_record_reminder_desc,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),
@@ -297,7 +298,7 @@ class _ReminderDayField extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  '알림 날짜',
+                  l10n.asset_reminder_day,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -312,7 +313,7 @@ class _ReminderDayField extends StatelessWidget {
                       31,
                       (i) => DropdownMenuItem(
                         value: i + 1,
-                        child: Text('매월 ${i + 1}일'),
+                        child: Text(l10n.asset_monthly_day('${i + 1}')),
                       ),
                     ),
                     onChanged: onChanged,
@@ -323,7 +324,7 @@ class _ReminderDayField extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceXS),
           Text(
-            '29~31일은 해당 월에 없는 경우 말일에 발송됩니다.',
+            l10n.asset_reminder_day_note,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.outline,
             ),

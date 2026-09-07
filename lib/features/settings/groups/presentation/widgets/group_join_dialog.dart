@@ -90,7 +90,7 @@ class GroupJoinDialog {
         if (dialogContext.mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('오류: ${e.toString()}')));
+          ).showSnackBar(SnackBar(content: Text('${l10n.common_error}: $e')));
         }
       }
     }

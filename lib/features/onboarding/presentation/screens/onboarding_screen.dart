@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
@@ -34,39 +35,40 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  static final List<_OnboardingSlide> _slides = [
+  // 번역이 필요해 상수로 둘 수 없다.
+  static List<_OnboardingSlide> _slidesOf(AppLocalizations l10n) => [
     _OnboardingSlide(
-      title: '우리만의 플래너',
-      subtitle: '가족, 연인, 친구, 팀까지',
-      description: '하나의 앱으로 여러 그룹을 관리하세요.\n관계마다 다른 공간에서 함께 계획할 수 있어요.',
+      title: l10n.intro_slide1_title,
+      subtitle: l10n.intro_slide1_subtitle,
+      description: l10n.intro_slide1_desc,
       preview: const GroupPreviewWidget(),
       accentColor: AppColors.primary,
     ),
     _OnboardingSlide(
-      title: '일정을 함께',
-      subtitle: '공유 캘린더',
-      description: '그룹 구성원 모두의 일정을 한눈에.\n중요한 날을 절대 놓치지 않아요.',
+      title: l10n.intro_slide2_title,
+      subtitle: l10n.intro_slide2_subtitle,
+      description: l10n.intro_slide2_desc,
       preview: const CalendarPreviewWidget(),
       accentColor: Color(0xFF1976D2),
     ),
     _OnboardingSlide(
-      title: '할 일 관리',
-      subtitle: '공동 TodoList',
-      description: '누가 무엇을 해야 하는지 명확하게.\n역할을 나누고 함께 완료해 나가세요.',
+      title: l10n.intro_slide3_title,
+      subtitle: l10n.intro_slide3_subtitle,
+      description: l10n.intro_slide3_desc,
       preview: const TodoPreviewWidget(),
       accentColor: Colors.green,
     ),
     _OnboardingSlide(
-      title: '가계를 한눈에',
-      subtitle: '공동 가계부',
-      description: '수입과 지출을 함께 기록하고 분석하세요.\n재정 목표를 그룹과 함께 달성해요.',
+      title: l10n.intro_slide4_title,
+      subtitle: l10n.intro_slide4_subtitle,
+      description: l10n.intro_slide4_desc,
       preview: const HouseholdPreviewWidget(),
       accentColor: Colors.orange,
     ),
     _OnboardingSlide(
-      title: '그 외 다양한 기능',
-      subtitle: '자산·메모·적금·투표 등',
-      description: '일상에 필요한 모든 것을 한 곳에서.\n지금 바로 시작해보세요!',
+      title: l10n.intro_slide5_title,
+      subtitle: l10n.intro_slide5_subtitle,
+      description: l10n.intro_slide5_desc,
       preview: const MoreFeaturesPreviewWidget(),
       accentColor: Colors.purple,
     ),
@@ -79,7 +81,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   void _nextPage() {
-    if (_currentPage < _slides.length - 1) {
+    final l10n = AppLocalizations.of(context)!;
+    if (_currentPage < _slidesOf(l10n).length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
@@ -97,7 +100,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final slide = _slides[_currentPage];
+    final l10n = AppLocalizations.of(context)!;
+    final slide = _slidesOf(l10n)[_currentPage];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,7 +114,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: TextButton(
                 onPressed: _completeOnboarding,
                 child: Text(
-                  '건너뛰기',
+                  l10n.common_skip,
                   style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
                 ),
               ),
@@ -120,8 +124,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (i) => setState(() => _currentPage = i),
-                itemCount: _slides.length,
-                itemBuilder: (_, i) => _SlidePage(slide: _slides[i]),
+                itemCount: _slidesOf(l10n).length,
+                itemBuilder: (_, i) => _SlidePage(slide: _slidesOf(l10n)[i]),
               ),
             ),
             // 하단 영역
@@ -138,7 +142,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      _slides.length,
+                      _slidesOf(l10n).length,
                       (i) => AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -167,7 +171,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                       onPressed: _nextPage,
                       child: Text(
-                        _currentPage == _slides.length - 1 ? '시작하기' : '다음',
+                        _currentPage == _slidesOf(l10n).length - 1 ? l10n.intro_start : l10n.intro_next,
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ),

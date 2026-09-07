@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_icon_button.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 자산 관리 탭
 class AssetsTab extends StatelessWidget {
@@ -8,9 +9,10 @@ class AssetsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('자산'),
+        title: Text(l10n.asset_title),
         actions: const [AiChatIconButton()],
       ),
       body: Center(
@@ -24,11 +26,11 @@ class AssetsTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '자산 관리',
+              l10n.asset_management,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
-            const Text('자산 관리 기능이 여기에 표시됩니다'),
+            Text(l10n.asset_management_placeholder),
           ],
         ),
       ),

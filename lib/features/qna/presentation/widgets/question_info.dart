@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/shared/widgets/status_badge.dart';
@@ -18,6 +19,7 @@ class QuestionInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('yyyy년 MM월 dd일 HH:mm');
 
     return Column(
@@ -69,7 +71,7 @@ class QuestionInfo extends StatelessWidget {
             ),
             const SizedBox(width: AppSizes.spaceXS),
             Text(
-              question.user?.name ?? '익명',
+              question.user?.name ?? l10n.common_anonymous,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),

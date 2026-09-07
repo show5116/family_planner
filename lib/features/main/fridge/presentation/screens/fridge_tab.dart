@@ -122,7 +122,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           ),
           body: isDemo
               ? _OnboardingFridgeView(
-                  swis: _demoSwis,
+                  swis: _demoSwis(AppLocalizations.of(context)!),
                   sortOrder: _sortOrder,
                   firstSectionKey: _firstSectionKey,
                   firstItemKey: _firstItemKey,
