@@ -3489,6 +3489,9 @@ class AppLocalizationsJa extends AppLocalizations {
       'この保管場所を削除すると、中の品目もすべて削除されます。続けますか？';
 
   @override
+  String get fridge_storage_name => '保管場所の名前';
+
+  @override
   String get fridge_storage_name_hint => '例：キッチンの冷蔵庫';
 
   @override

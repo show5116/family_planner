@@ -1695,6 +1695,8 @@
   "@fridge_storage_delete": { "description": "Delete storage" },
   "fridge_storage_delete_confirm": "Deleting this storage will also delete all items inside. Continue?",
   "@fridge_storage_delete_confirm": { "description": "Delete storage confirmation" },
+  "fridge_storage_name": "Storage name",
+  "@fridge_storage_name": { "description": "Storage name field label" },
   "fridge_storage_name_hint": "e.g. Kitchen Fridge",
   "@fridge_storage_name_hint": { "description": "Storage name hint" },
   "fridge_storage_type_fridge": "Fridge",

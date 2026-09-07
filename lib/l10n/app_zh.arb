@@ -1650,6 +1650,8 @@
   "@fridge_storage_delete": { "description": "Delete storage" },
   "fridge_storage_delete_confirm": "删除此储存区将同时删除其中所有食材。确定继续吗？",
   "@fridge_storage_delete_confirm": { "description": "Delete storage confirmation" },
+  "fridge_storage_name": "储存区名称",
+  "@fridge_storage_name": { "description": "Storage name field label" },
   "fridge_storage_name_hint": "例：厨房冰箱",
   "@fridge_storage_name_hint": { "description": "Storage name hint" },
   "fridge_storage_type_fridge": "冰箱",

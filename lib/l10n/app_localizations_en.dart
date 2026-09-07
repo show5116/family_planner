@@ -3570,6 +3570,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Deleting this storage will also delete all items inside. Continue?';
 
   @override
+  String get fridge_storage_name => 'Storage name';
+
+  @override
   String get fridge_storage_name_hint => 'e.g. Kitchen Fridge';
 
   @override

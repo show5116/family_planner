@@ -43,6 +43,7 @@ node .claude/skills/manual-create/scripts/seed-profile.mjs         # 계정·그
 node .claude/skills/manual-create/scripts/seed.mjs --dry-run       # 먼저 확인
 node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"          # 가계부
 node .claude/skills/manual-create/scripts/seed-dashboard.mjs --group "김가네 가족" # 대시보드 위젯
+node .claude/skills/manual-create/scripts/seed-fridge.mjs --group "김가네 가족"    # 냉장고
 ```
 
 **촬영 전에는 `seed-all.mjs` 한 번이면 됩니다.**
@@ -156,6 +157,7 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 | `back` | 뒤로가기 | — |
 | `tapContains` | 부분 일치 탭 (가장 작은 노드) | `contains` |
 | `tapRole` | 역할로 탭 (스위치·체크박스) | `role`, `index` |
+| `type` | 텍스트 입력 | `label`(필드 라벨), `text` |
 | `shot` | 스크린샷 | `name`, `caption`, `fullPage` |
 | `wait` | 대기 | `wait` |
 
@@ -168,6 +170,12 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 
 `tapContains`는 명시적으로 부분일치만 쓰고 싶을 때, `tapRole`(`role: "switch"`)은
 라벨이 아예 없는 스위치·체크박스에 씁니다.
+
+**`type`은 "입력해야만 보이는 UI"를 찍을 때 씁니다.** (냉장고의 유통기한 추천 칩처럼
+품목명을 쳐야 나타나는 화면.) 라벨로 시맨틱 노드를 찾아 그 안의 `<input>`을 포커스한 뒤
+`insertText`로 한 번에 넣습니다. 한 글자씩 치면 첫 글자의 onChanged로 위젯이 리빌드되며
+편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다(검증됨: "삼겹살" → "삼").
+디바운스가 있는 화면은 `wait`를 넉넉히(5초) 주세요.
 
 **아이콘 버튼은 `tooltip` 문구로 찾습니다.** 추측하지 말고 코드에서 확인하세요.
 (자산 화면 통계 아이콘의 tooltip은 "자산 통계"가 아니라 **"통계"** 입니다.)

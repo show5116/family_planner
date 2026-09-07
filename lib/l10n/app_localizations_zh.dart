@@ -3468,6 +3468,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fridge_storage_delete_confirm => '删除此储存区将同时删除其中所有食材。确定继续吗？';
 
   @override
+  String get fridge_storage_name => '储存区名称';
+
+  @override
   String get fridge_storage_name_hint => '例：厨房冰箱';
 
   @override

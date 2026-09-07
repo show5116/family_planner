@@ -1695,6 +1695,8 @@
   "@fridge_storage_delete": { "description": "保管場所削除" },
   "fridge_storage_delete_confirm": "この保管場所を削除すると、中の品目もすべて削除されます。続けますか？",
   "@fridge_storage_delete_confirm": { "description": "保管場所削除確認" },
+  "fridge_storage_name": "保管場所の名前",
+  "@fridge_storage_name": { "description": "保管場所名の入力ラベル" },
   "fridge_storage_name_hint": "例：キッチンの冷蔵庫",
   "@fridge_storage_name_hint": { "description": "保管場所名のヒント" },
   "fridge_storage_type_fridge": "冷蔵",

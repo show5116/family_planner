@@ -37,6 +37,7 @@ const STEPS = [
   { file: 'seed-assets.mjs', label: '자산', dateSensitive: false, cleanupSafe: true },
   { file: 'seed-childcare.mjs', label: '육아 포인트', dateSensitive: true, cleanupSafe: true },
   { file: 'seed-savings.mjs', label: '그룹 저금통', dateSensitive: false, cleanupSafe: true },
+  { file: 'seed-fridge.mjs', label: '냉장고', dateSensitive: true, cleanupSafe: true },
 ];
 
 const run = (file, args) => {

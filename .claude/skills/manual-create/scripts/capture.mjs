@@ -293,6 +293,43 @@ async function runStep(page, step, ctxState) {
       await enableSemantics(page);
       break;
     }
+    case 'type': {
+      // 텍스트 입력. Flutter 웹은 포커스된 TextField 자리에 실제 <input>을 얹으므로,
+      // 라벨로 시맨틱 노드를 찾아 그 안의 input을 클릭해 포커스한 뒤 키보드로 칩니다.
+      // (유통기한 자동 추천처럼 "입력해야만 보이는 UI"를 찍을 때 씁니다.)
+      await enableSemantics(page);
+      const handle = await page.evaluateHandle((want) => {
+        const visible = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width > 0 && r.height > 0;
+        };
+        const nodes = [...document.querySelectorAll('flt-semantics')].filter(visible);
+        // 1) 라벨이 일치하는 노드 안의 input
+        for (const n of nodes) {
+          const t = (n.getAttribute('aria-label') || '') + ' ' + (n.textContent || '');
+          if (!t.includes(want)) continue;
+          const input = n.querySelector('input, textarea');
+          if (input) return input;
+        }
+        // 2) 라벨 매칭 실패 — 화면에 보이는 첫 입력 필드
+        return (
+          [...document.querySelectorAll('flt-semantics input, flt-semantics textarea')].find(
+            visible,
+          ) ?? null
+        );
+      }, step.label ?? '');
+      const input = handle.asElement();
+      if (!input) throw new Error(`"${step.label}" 입력 필드를 찾지 못했습니다`);
+      await input.click({ timeout: step.timeout ?? 45000 });
+      await page.waitForTimeout(600);
+      // 한 글자씩 치면(keyboard.type) 첫 글자의 onChanged로 위젯이 리빌드되면서
+      // 편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다. (검증됨: "삼겹살" → "삼")
+      // insertText는 문자열을 한 번의 input 이벤트로 넣어 그 문제를 피합니다.
+      await page.keyboard.insertText(step.text ?? '');
+      await settle(page, step.wait ?? 2500);
+      await enableSemantics(page);
+      break;
+    }
     case 'scroll': {
       // 스크롤 전 시맨틱 지문을 남겨, 트리가 실제로 갱신될 때까지 기다립니다.
       const before = await page

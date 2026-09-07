@@ -3495,6 +3495,9 @@ class AppLocalizationsKo extends AppLocalizations {
       '보관소를 삭제하면 안에 있는 모든 품목도 함께 삭제됩니다. 계속하시겠습니까?';
 
   @override
+  String get fridge_storage_name => '보관소 이름';
+
+  @override
   String get fridge_storage_name_hint => '예: 우리집 냉장고';
 
   @override

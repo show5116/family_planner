@@ -1,0 +1,40 @@
+{
+  "flow": "냉장고",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/fridge/screenshots/01-main.png",
+      "caption": "냉장고 — 보관소별 품목과 유통기한 뱃지"
+    },
+    {
+      "name": "04-add-item",
+      "file": "docs/manual/fridge/screenshots/04-add-item.png",
+      "caption": "품목 추가 — 여러 개를 목록에 담아 한 번에 저장합니다"
+    },
+    {
+      "name": "05-expiry-suggestion",
+      "file": "docs/manual/fridge/screenshots/05-expiry-suggestion.png",
+      "caption": "품목명을 입력하면 유통기한을 자동으로 추천합니다"
+    },
+    {
+      "name": "06-item-edit",
+      "file": "docs/manual/fridge/screenshots/06-item-edit.png",
+      "caption": "품목 수정 — 이름·단위·메모·유통기한·알림일"
+    },
+    {
+      "name": "02-storage-form",
+      "file": "docs/manual/fridge/screenshots/02-storage-form.png",
+      "caption": "보관소 추가 — 이름과 보관 방법을 고릅니다"
+    },
+    {
+      "name": "03-storages",
+      "file": "docs/manual/fridge/screenshots/03-storages.png",
+      "caption": "보관 방법이 다른 보관소는 아이콘으로 구분됩니다"
+    },
+    {
+      "name": "07-presets",
+      "file": "docs/manual/fridge/screenshots/07-presets.png",
+      "caption": "유통기한 프리셋 관리 — 품목별 기준 일수를 직접 바꿉니다"
+    }
+  ]
+}
