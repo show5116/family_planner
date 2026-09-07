@@ -120,6 +120,12 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
       icon: Icons.note_outlined,
       selectedIcon: Icons.note,
     ),
+    'diary': NavigationItem(
+      id: 'diary',
+      label: '다이어리',
+      icon: Icons.auto_stories_outlined,
+      selectedIcon: Icons.auto_stories,
+    ),
     'miniGames': NavigationItem(
       id: 'miniGames',
       label: '미니게임',

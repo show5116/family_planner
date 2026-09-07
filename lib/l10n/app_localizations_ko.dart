@@ -5382,4 +5382,115 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => '깃발';
+
+  @override
+  String get diary_title => '다이어리';
+
+  @override
+  String get diary_empty => '아직 기록이 없어요';
+
+  @override
+  String get diary_empty_subtitle => '아래에 한 줄만 남겨보세요';
+
+  @override
+  String get diary_load_error => '일기를 불러오지 못했습니다';
+
+  @override
+  String get diary_capture_hint => '오늘 어땠나요?';
+
+  @override
+  String get diary_capture_hint_continue => '이어서 기록하기';
+
+  @override
+  String get diary_capture_send => '기록하기';
+
+  @override
+  String get diary_capture_failed => '기록을 저장하지 못했어요';
+
+  @override
+  String get diary_capture_retry => '다시 시도';
+
+  @override
+  String get diary_today => '오늘';
+
+  @override
+  String get diary_shared_badge => '공유됨';
+
+  @override
+  String diary_shared_by(String name) {
+    return '$name · 그룹에 공유됨';
+  }
+
+  @override
+  String get diary_detail_title => '일기';
+
+  @override
+  String get diary_polish => '다듬기';
+
+  @override
+  String get diary_write => '일기 쓰기';
+
+  @override
+  String get diary_delete_confirm_title => '일기를 삭제할까요?';
+
+  @override
+  String get diary_delete_confirm_message => '삭제한 일기는 30일 안에 복구할 수 있습니다.';
+
+  @override
+  String get diary_delete_failed => '삭제에 실패했습니다';
+
+  @override
+  String get diary_save_failed => '저장에 실패했습니다';
+
+  @override
+  String get diary_title_hint => '제목 (선택)';
+
+  @override
+  String get diary_content_hint => '오늘 하루를 정리해보세요';
+
+  @override
+  String get diary_change_date => '날짜 변경';
+
+  @override
+  String get diary_mood => '기분';
+
+  @override
+  String get diary_view_timeline => '타임라인';
+
+  @override
+  String get diary_view_calendar => '캘린더';
+
+  @override
+  String diary_streak_days(int count) {
+    return '$count일 연속';
+  }
+
+  @override
+  String diary_this_month_count(int count) {
+    return '이번 달 $count일 기록';
+  }
+
+  @override
+  String get diary_calendar_empty => '이 달에는 기록이 없어요';
+
+  @override
+  String get diary_onboarding_capture_title => '한 줄만 남겨보세요';
+
+  @override
+  String get diary_onboarding_capture_desc =>
+      '화면을 옮기지 않아도 여기서 바로 기록됩니다. 하루에 여러 번 던져두면 그날 일기에 차곡차곡 쌓여요.';
+
+  @override
+  String get diary_onboarding_card_title => '하루에 한 편으로 모여요';
+
+  @override
+  String get diary_onboarding_card_desc =>
+      '던진 기록은 날짜별로 묶입니다. 카드를 눌러 그날의 일기를 열고, 천천히 다듬을 수 있어요.';
+
+  @override
+  String get diary_onboarding_flashback_title => '지난 오늘이 찾아와요';
+
+  @override
+  String get diary_onboarding_flashback_desc =>
+      '한 달 전, 일 년 전 오늘의 기록이 맨 위에 떠오릅니다. 쌓일수록 반가워져요.';
 }

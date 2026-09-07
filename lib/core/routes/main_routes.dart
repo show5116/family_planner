@@ -62,6 +62,9 @@ import 'package:family_planner/features/main/fridge/presentation/screens/fridge_
 import 'package:family_planner/features/main/fridge/presentation/screens/expiry_preset_management_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_screen.dart';
 import 'package:family_planner/features/main/shopping/presentation/screens/shopping_history_detail_screen.dart';
+import 'package:family_planner/features/main/diary/presentation/screens/diary_timeline_screen.dart';
+import 'package:family_planner/features/main/diary/presentation/screens/diary_detail_screen.dart';
+import 'package:family_planner/features/main/diary/presentation/screens/diary_form_screen.dart';
 import 'package:family_planner/features/subscription/presentation/screens/subscription_screen.dart';
 
 /// 메인 기능 라우트 목록
@@ -397,6 +400,33 @@ List<RouteBase> getMainRoutes() {
     //   name: 'householdSettings',
     //   builder: (context, state) => const HouseholdSettingsScreen(),
     // ),
+
+    // Diary Routes (다이어리)
+    GoRoute(
+      path: AppRoutes.diary,
+      name: 'diaryTimeline',
+      builder: (context, state) => const DiaryTimelineScreen(),
+    ),
+    // '/diary/form'은 '/diary/:id'보다 먼저 선언해야 한다.
+    // 순서가 바뀌면 'form'이 id로 잡혀 상세 화면이 열린다.
+    GoRoute(
+      path: AppRoutes.diaryForm,
+      name: 'diaryForm',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        return DiaryFormScreen(
+          diaryId: extra?['diaryId'] as String?,
+          date: extra?['date'] as String?,
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.diaryDetail,
+      name: 'diaryDetail',
+      builder: (context, state) => DiaryDetailScreen(
+        diaryId: state.pathParameters['id'] ?? '',
+      ),
+    ),
 
     // Memo Routes (메모)
     GoRoute(

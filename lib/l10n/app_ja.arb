@@ -2824,4 +2824,48 @@
   "@emoji_picker_category_symbols": { "description": "絵文字カテゴリー - 記号" },
   "emoji_picker_category_flags": "旗",
   "@emoji_picker_category_flags": { "description": "絵文字カテゴリー - 旗" }
+,
+  "diary_title": "日記",
+  "diary_empty": "まだ記録がありません",
+  "diary_empty_subtitle": "下に一行だけ残してみましょう",
+  "diary_load_error": "日記を読み込めませんでした",
+  "diary_capture_hint": "今日はどうでしたか",
+  "diary_capture_hint_continue": "続けて記録する",
+  "diary_capture_send": "記録する",
+  "diary_capture_failed": "記録を保存できませんでした",
+  "diary_capture_retry": "再試行",
+  "diary_today": "今日",
+  "diary_shared_badge": "共有中",
+  "diary_shared_by": "{name} · グループに共有",
+  "@diary_shared_by": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "diary_detail_title": "日記",
+  "diary_polish": "整える",
+  "diary_write": "日記を書く",
+  "diary_delete_confirm_title": "日記を削除しますか？",
+  "diary_delete_confirm_message": "削除した日記は30日以内に復元できます。",
+  "diary_delete_failed": "削除に失敗しました",
+  "diary_save_failed": "保存に失敗しました",
+  "diary_title_hint": "タイトル（任意）",
+  "diary_content_hint": "今日一日を振り返ってみましょう",
+  "diary_change_date": "日付を変更",
+  "diary_mood": "気分",
+  "diary_view_timeline": "タイムライン",
+  "diary_view_calendar": "カレンダー",
+  "diary_streak_days": "{count}日連続",
+  "@diary_streak_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "diary_this_month_count": "今月{count}日記録",
+  "@diary_this_month_count": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "diary_calendar_empty": "今月は記録がありません",
+  "diary_onboarding_capture_title": "一行だけ残してみましょう",
+  "diary_onboarding_capture_desc": "画面を移動しなくてもここから記録できます。一日に何度か残しておくと、その日の日記にたまっていきます。",
+  "diary_onboarding_card_title": "一日一編にまとまります",
+  "diary_onboarding_card_desc": "残した記録は日付ごとにまとまります。カードを押すとその日の日記が開き、ゆっくり整えられます。",
+  "diary_onboarding_flashback_title": "過去の今日が届きます",
+  "diary_onboarding_flashback_desc": "一か月前、一年前の今日の記録が一番上に現れます。積み重なるほど嬉しくなります。"
 }

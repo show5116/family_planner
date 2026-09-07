@@ -5373,4 +5373,115 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => '旗';
+
+  @override
+  String get diary_title => '日記';
+
+  @override
+  String get diary_empty => 'まだ記録がありません';
+
+  @override
+  String get diary_empty_subtitle => '下に一行だけ残してみましょう';
+
+  @override
+  String get diary_load_error => '日記を読み込めませんでした';
+
+  @override
+  String get diary_capture_hint => '今日はどうでしたか';
+
+  @override
+  String get diary_capture_hint_continue => '続けて記録する';
+
+  @override
+  String get diary_capture_send => '記録する';
+
+  @override
+  String get diary_capture_failed => '記録を保存できませんでした';
+
+  @override
+  String get diary_capture_retry => '再試行';
+
+  @override
+  String get diary_today => '今日';
+
+  @override
+  String get diary_shared_badge => '共有中';
+
+  @override
+  String diary_shared_by(String name) {
+    return '$name · グループに共有';
+  }
+
+  @override
+  String get diary_detail_title => '日記';
+
+  @override
+  String get diary_polish => '整える';
+
+  @override
+  String get diary_write => '日記を書く';
+
+  @override
+  String get diary_delete_confirm_title => '日記を削除しますか？';
+
+  @override
+  String get diary_delete_confirm_message => '削除した日記は30日以内に復元できます。';
+
+  @override
+  String get diary_delete_failed => '削除に失敗しました';
+
+  @override
+  String get diary_save_failed => '保存に失敗しました';
+
+  @override
+  String get diary_title_hint => 'タイトル（任意）';
+
+  @override
+  String get diary_content_hint => '今日一日を振り返ってみましょう';
+
+  @override
+  String get diary_change_date => '日付を変更';
+
+  @override
+  String get diary_mood => '気分';
+
+  @override
+  String get diary_view_timeline => 'タイムライン';
+
+  @override
+  String get diary_view_calendar => 'カレンダー';
+
+  @override
+  String diary_streak_days(int count) {
+    return '$count日連続';
+  }
+
+  @override
+  String diary_this_month_count(int count) {
+    return '今月$count日記録';
+  }
+
+  @override
+  String get diary_calendar_empty => '今月は記録がありません';
+
+  @override
+  String get diary_onboarding_capture_title => '一行だけ残してみましょう';
+
+  @override
+  String get diary_onboarding_capture_desc =>
+      '画面を移動しなくてもここから記録できます。一日に何度か残しておくと、その日の日記にたまっていきます。';
+
+  @override
+  String get diary_onboarding_card_title => '一日一編にまとまります';
+
+  @override
+  String get diary_onboarding_card_desc =>
+      '残した記録は日付ごとにまとまります。カードを押すとその日の日記が開き、ゆっくり整えられます。';
+
+  @override
+  String get diary_onboarding_flashback_title => '過去の今日が届きます';
+
+  @override
+  String get diary_onboarding_flashback_desc =>
+      '一か月前、一年前の今日の記録が一番上に現れます。積み重なるほど嬉しくなります。';
 }

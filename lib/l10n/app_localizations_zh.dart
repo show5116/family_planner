@@ -5337,4 +5337,113 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => '旗帜';
+
+  @override
+  String get diary_title => '日记';
+
+  @override
+  String get diary_empty => '还没有记录';
+
+  @override
+  String get diary_empty_subtitle => '在下面写一行试试';
+
+  @override
+  String get diary_load_error => '无法加载日记';
+
+  @override
+  String get diary_capture_hint => '今天过得怎么样';
+
+  @override
+  String get diary_capture_hint_continue => '继续记录';
+
+  @override
+  String get diary_capture_send => '记录';
+
+  @override
+  String get diary_capture_failed => '记录保存失败';
+
+  @override
+  String get diary_capture_retry => '重试';
+
+  @override
+  String get diary_today => '今天';
+
+  @override
+  String get diary_shared_badge => '已共享';
+
+  @override
+  String diary_shared_by(String name) {
+    return '$name · 已共享至群组';
+  }
+
+  @override
+  String get diary_detail_title => '日记';
+
+  @override
+  String get diary_polish => '整理';
+
+  @override
+  String get diary_write => '写日记';
+
+  @override
+  String get diary_delete_confirm_title => '要删除这篇日记吗？';
+
+  @override
+  String get diary_delete_confirm_message => '删除后30天内可以恢复。';
+
+  @override
+  String get diary_delete_failed => '删除失败';
+
+  @override
+  String get diary_save_failed => '保存失败';
+
+  @override
+  String get diary_title_hint => '标题（可选）';
+
+  @override
+  String get diary_content_hint => '回顾一下今天吧';
+
+  @override
+  String get diary_change_date => '更改日期';
+
+  @override
+  String get diary_mood => '心情';
+
+  @override
+  String get diary_view_timeline => '时间线';
+
+  @override
+  String get diary_view_calendar => '日历';
+
+  @override
+  String diary_streak_days(int count) {
+    return '连续$count天';
+  }
+
+  @override
+  String diary_this_month_count(int count) {
+    return '本月记录$count天';
+  }
+
+  @override
+  String get diary_calendar_empty => '本月没有记录';
+
+  @override
+  String get diary_onboarding_capture_title => '写一行就够了';
+
+  @override
+  String get diary_onboarding_capture_desc =>
+      '不用切换页面，在这里就能记录。一天多记几次，它们会汇集到当天的日记里。';
+
+  @override
+  String get diary_onboarding_card_title => '一天汇成一篇';
+
+  @override
+  String get diary_onboarding_card_desc => '记录会按日期归类。点击卡片打开那天的日记，可以慢慢整理。';
+
+  @override
+  String get diary_onboarding_flashback_title => '过去的今天会回来';
+
+  @override
+  String get diary_onboarding_flashback_desc => '一个月前、一年前的今天会出现在最上方。记录越多越有意思。';
 }

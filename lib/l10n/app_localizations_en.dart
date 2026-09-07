@@ -5504,4 +5504,128 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emoji_picker_category_flags => 'Flags';
+
+  @override
+  String get diary_title => 'Diary';
+
+  @override
+  String get diary_empty => 'No entries yet';
+
+  @override
+  String get diary_empty_subtitle => 'Jot down a line below';
+
+  @override
+  String get diary_load_error => 'Couldn\'t load your diary';
+
+  @override
+  String get diary_capture_hint => 'How was your day?';
+
+  @override
+  String get diary_capture_hint_continue => 'Add to today\'s entry';
+
+  @override
+  String get diary_capture_send => 'Save';
+
+  @override
+  String get diary_capture_failed => 'Couldn\'t save your note';
+
+  @override
+  String get diary_capture_retry => 'Try again';
+
+  @override
+  String get diary_today => 'Today';
+
+  @override
+  String get diary_shared_badge => 'Shared';
+
+  @override
+  String diary_shared_by(String name) {
+    return '$name · shared with group';
+  }
+
+  @override
+  String get diary_detail_title => 'Entry';
+
+  @override
+  String get diary_polish => 'Refine';
+
+  @override
+  String get diary_write => 'New entry';
+
+  @override
+  String get diary_delete_confirm_title => 'Delete this entry?';
+
+  @override
+  String get diary_delete_confirm_message =>
+      'You can restore it within 30 days.';
+
+  @override
+  String get diary_delete_failed => 'Couldn\'t delete the entry';
+
+  @override
+  String get diary_save_failed => 'Couldn\'t save the entry';
+
+  @override
+  String get diary_title_hint => 'Title (optional)';
+
+  @override
+  String get diary_content_hint => 'Look back on your day';
+
+  @override
+  String get diary_change_date => 'Change date';
+
+  @override
+  String get diary_mood => 'Mood';
+
+  @override
+  String get diary_view_timeline => 'Timeline';
+
+  @override
+  String get diary_view_calendar => 'Calendar';
+
+  @override
+  String diary_streak_days(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count day streak',
+      one: '1 day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diary_this_month_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries this month',
+      one: '1 entry this month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diary_calendar_empty => 'No entries this month';
+
+  @override
+  String get diary_onboarding_capture_title => 'Just one line is enough';
+
+  @override
+  String get diary_onboarding_capture_desc =>
+      'Write here without leaving the screen. Drop notes throughout the day and they gather into that day\'s entry.';
+
+  @override
+  String get diary_onboarding_card_title => 'One entry per day';
+
+  @override
+  String get diary_onboarding_card_desc =>
+      'Your notes are grouped by date. Tap a card to open that day and refine it whenever you like.';
+
+  @override
+  String get diary_onboarding_flashback_title => 'Your past days come back';
+
+  @override
+  String get diary_onboarding_flashback_desc =>
+      'Entries from a month or a year ago surface at the top. The more you write, the better it gets.';
 }

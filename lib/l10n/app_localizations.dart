@@ -10285,6 +10285,210 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'깃발'**
   String get emoji_picker_category_flags;
+
+  /// 다이어리 메인 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'다이어리'**
+  String get diary_title;
+
+  /// 다이어리 빈 상태 메시지
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 기록이 없어요'**
+  String get diary_empty;
+
+  /// 다이어리 빈 상태 부제
+  ///
+  /// In ko, this message translates to:
+  /// **'아래에 한 줄만 남겨보세요'**
+  String get diary_empty_subtitle;
+
+  /// 다이어리 목록/상세 조회 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'일기를 불러오지 못했습니다'**
+  String get diary_load_error;
+
+  /// 빠른 기록 입력창 안내 문구 (오늘 일기 없음)
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 어땠나요?'**
+  String get diary_capture_hint;
+
+  /// 빠른 기록 입력창 안내 문구 (오늘 일기 있음)
+  ///
+  /// In ko, this message translates to:
+  /// **'이어서 기록하기'**
+  String get diary_capture_hint_continue;
+
+  /// 빠른 기록 전송 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'기록하기'**
+  String get diary_capture_send;
+
+  /// 빠른 기록 전송 실패 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'기록을 저장하지 못했어요'**
+  String get diary_capture_failed;
+
+  /// 빠른 기록 재시도 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get diary_capture_retry;
+
+  /// 오늘 날짜 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get diary_today;
+
+  /// 그룹 공유 일기 뱃지
+  ///
+  /// In ko, this message translates to:
+  /// **'공유됨'**
+  String get diary_shared_badge;
+
+  /// 그룹 공유 일기 작성자 표기
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} · 그룹에 공유됨'**
+  String diary_shared_by(String name);
+
+  /// 일기 상세 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'일기'**
+  String get diary_detail_title;
+
+  /// 일기 수정(다듬기) 버튼/화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'다듬기'**
+  String get diary_polish;
+
+  /// 일기 신규 작성 화면 타이틀
+  ///
+  /// In ko, this message translates to:
+  /// **'일기 쓰기'**
+  String get diary_write;
+
+  /// 일기 삭제 확인 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'일기를 삭제할까요?'**
+  String get diary_delete_confirm_title;
+
+  /// 일기 삭제 확인 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제한 일기는 30일 안에 복구할 수 있습니다.'**
+  String get diary_delete_confirm_message;
+
+  /// 일기 삭제 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제에 실패했습니다'**
+  String get diary_delete_failed;
+
+  /// 일기 저장 실패
+  ///
+  /// In ko, this message translates to:
+  /// **'저장에 실패했습니다'**
+  String get diary_save_failed;
+
+  /// 일기 제목 입력 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'제목 (선택)'**
+  String get diary_title_hint;
+
+  /// 일기 본문 입력 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 하루를 정리해보세요'**
+  String get diary_content_hint;
+
+  /// 일기 날짜 변경 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 변경'**
+  String get diary_change_date;
+
+  /// 기분 선택 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'기분'**
+  String get diary_mood;
+
+  /// 타임라인 뷰 전환
+  ///
+  /// In ko, this message translates to:
+  /// **'타임라인'**
+  String get diary_view_timeline;
+
+  /// 캘린더 뷰 전환
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더'**
+  String get diary_view_calendar;
+
+  /// 연속 작성일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}일 연속'**
+  String diary_streak_days(int count);
+
+  /// 이번 달 작성일수
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 달 {count}일 기록'**
+  String diary_this_month_count(int count);
+
+  /// 캘린더 뷰 해당 월 빈 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'이 달에는 기록이 없어요'**
+  String get diary_calendar_empty;
+
+  /// 온보딩 - 빠른 기록 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'한 줄만 남겨보세요'**
+  String get diary_onboarding_capture_title;
+
+  /// 온보딩 - 빠른 기록 안내 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'화면을 옮기지 않아도 여기서 바로 기록됩니다. 하루에 여러 번 던져두면 그날 일기에 차곡차곡 쌓여요.'**
+  String get diary_onboarding_capture_desc;
+
+  /// 온보딩 - 카드 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'하루에 한 편으로 모여요'**
+  String get diary_onboarding_card_title;
+
+  /// 온보딩 - 카드 안내 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'던진 기록은 날짜별로 묶입니다. 카드를 눌러 그날의 일기를 열고, 천천히 다듬을 수 있어요.'**
+  String get diary_onboarding_card_desc;
+
+  /// 온보딩 - 회고 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 오늘이 찾아와요'**
+  String get diary_onboarding_flashback_title;
+
+  /// 온보딩 - 회고 안내 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'한 달 전, 일 년 전 오늘의 기록이 맨 위에 떠오릅니다. 쌓일수록 반가워져요.'**
+  String get diary_onboarding_flashback_desc;
 }
 
 class _AppLocalizationsDelegate

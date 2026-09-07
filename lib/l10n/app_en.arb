@@ -2824,4 +2824,48 @@
   "@emoji_picker_category_symbols": { "description": "Emoji category - symbols" },
   "emoji_picker_category_flags": "Flags",
   "@emoji_picker_category_flags": { "description": "Emoji category - flags" }
+,
+  "diary_title": "Diary",
+  "diary_empty": "No entries yet",
+  "diary_empty_subtitle": "Jot down a line below",
+  "diary_load_error": "Couldn't load your diary",
+  "diary_capture_hint": "How was your day?",
+  "diary_capture_hint_continue": "Add to today's entry",
+  "diary_capture_send": "Save",
+  "diary_capture_failed": "Couldn't save your note",
+  "diary_capture_retry": "Try again",
+  "diary_today": "Today",
+  "diary_shared_badge": "Shared",
+  "diary_shared_by": "{name} · shared with group",
+  "@diary_shared_by": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "diary_detail_title": "Entry",
+  "diary_polish": "Refine",
+  "diary_write": "New entry",
+  "diary_delete_confirm_title": "Delete this entry?",
+  "diary_delete_confirm_message": "You can restore it within 30 days.",
+  "diary_delete_failed": "Couldn't delete the entry",
+  "diary_save_failed": "Couldn't save the entry",
+  "diary_title_hint": "Title (optional)",
+  "diary_content_hint": "Look back on your day",
+  "diary_change_date": "Change date",
+  "diary_mood": "Mood",
+  "diary_view_timeline": "Timeline",
+  "diary_view_calendar": "Calendar",
+  "diary_streak_days": "{count, plural, =1{1 day streak} other{{count} day streak}}",
+  "@diary_streak_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "diary_this_month_count": "{count, plural, =1{1 entry this month} other{{count} entries this month}}",
+  "@diary_this_month_count": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "diary_calendar_empty": "No entries this month",
+  "diary_onboarding_capture_title": "Just one line is enough",
+  "diary_onboarding_capture_desc": "Write here without leaving the screen. Drop notes throughout the day and they gather into that day's entry.",
+  "diary_onboarding_card_title": "One entry per day",
+  "diary_onboarding_card_desc": "Your notes are grouped by date. Tap a card to open that day and refine it whenever you like.",
+  "diary_onboarding_flashback_title": "Your past days come back",
+  "diary_onboarding_flashback_desc": "Entries from a month or a year ago surface at the top. The more you write, the better it gets."
 }
