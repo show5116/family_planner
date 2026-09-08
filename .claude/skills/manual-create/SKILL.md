@@ -47,6 +47,13 @@ node .claude/skills/manual-create/scripts/seed-fridge.mjs --group "김가네 가
 node .claude/skills/manual-create/scripts/seed-shopping.mjs --group "김가네 가족"  # 장보기 (냉장고 뒤에)
 node .claude/skills/manual-create/scripts/seed-minigame.mjs --group "김가네 가족"  # 미니게임
 node .claude/skills/manual-create/scripts/seed-vote.mjs --group "김가네 가족"      # 투표
+
+# Q&A — 답변은 운영자(ADMIN)만 달 수 있습니다.
+# 개발 DB에서 테스트 계정을 잠깐 운영자로 올렸다가 **반드시 되돌린 뒤** 촬영합니다.
+# (운영자 상태로 찍으면 Q&A 상세에 답변 작성 폼이, 투자 지표·공지사항에 관리자 버튼이 나옵니다.)
+cd ../family_planner_back_end && node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.user.update({where:{email:'test-owner@familyplanner.test'},data:{isAdmin:true}}).then(()=>p.\$disconnect())" && cd -
+node .claude/skills/manual-create/scripts/seed-qna.mjs
+cd ../family_planner_back_end && node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.user.update({where:{email:'test-owner@familyplanner.test'},data:{isAdmin:false}}).then(()=>p.\$disconnect())" && cd -
 ```
 
 **촬영 전에는 `seed-all.mjs` 한 번이면 됩니다.**
@@ -331,4 +338,19 @@ screenshots: 5
 
 웹 브라우저 렌더링이라 **네이티브 전용 요소는 다르게 보이거나 안 보입니다**:
 광고 배너, 인앱결제 시트, 푸시 권한 팝업.
-구독·결제 화면 매뉴얼이 필요하면 그 부분만 실기기에서 수동 촬영해 보완하세요.
+
+### 실기기 캡처로 보완하기
+
+구독 화면이 그런 경우입니다. 가격과 구독 버튼을 스토어 상품 정보로 그리는데,
+웹에는 스토어가 없어 그 자리에 `구독 상품을 준비 중입니다`가 뜹니다.
+
+실기기에서 찍은 스크린샷은 **원본을 `docs/manual/<메뉴>/device/` 에 보관**하고,
+`crop.mjs`로 iOS 상태바를 잘라 `screenshots/`에 넣습니다.
+
+```bash
+node .claude/skills/manual-create/scripts/crop.mjs <원본> <출력> 150   # 상단 150px 제거
+```
+
+⚠️ **capture.mjs는 시작할 때 outDir의 PNG를 모두 지웁니다.** 그래서 순서가 중요합니다 —
+플로우를 돌린 **뒤에** 실기기 캡처를 다시 잘라 넣으세요. 플로우 `_note`에 그 명령을 적어두면
+다음 사람이 헤매지 않습니다.

@@ -42,6 +42,7 @@ const STEPS = [
   { file: 'seed-shopping.mjs', label: '장보기', dateSensitive: true, cleanupSafe: true },
   { file: 'seed-minigame.mjs', label: '미니게임', dateSensitive: false, cleanupSafe: true },
   { file: 'seed-vote.mjs', label: '투표', dateSensitive: true, cleanupSafe: true },
+  // Q&A 답변은 운영자만 달 수 있어 수동 시딩입니다 (seed-qna.mjs 주석 참고) — 여기서는 제외
 ];
 
 const run = (file, args) => {
