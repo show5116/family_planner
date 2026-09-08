@@ -284,13 +284,18 @@ class _ChartSectionState extends State<_ChartSection> {
                   ),
             ),
             const SizedBox(width: AppSizes.spaceS),
+            // 칩을 Flexible로 늘어놓으면 좁은 화면에서 각 칩이 줄어들며
+            // 라벨이 두 줄로 깨집니다 (가장 긴 `180일`부터). 가로 스크롤로 두어
+            // 칩 너비는 글자에 맞추고, 넘치면 밀어서 보게 합니다.
+            // reverse: true — 다 들어갈 때는 오른쪽 정렬, 넘칠 때는 최신 칩이 먼저 보입니다.
             Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: widget.dayOptions
-                    .map(
-                      (days) => Flexible(
-                        child: _DayChip(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                reverse: true,
+                child: Row(
+                  children: widget.dayOptions
+                      .map(
+                        (days) => _DayChip(
                           label: days >= 365
                               ? AppLocalizations.of(context)!.investment_chartYearChip
                               : AppLocalizations.of(context)!.investment_chartDayChip(days),
@@ -300,9 +305,9 @@ class _ChartSectionState extends State<_ChartSection> {
                             widget.onDaysChanged(days);
                           },
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
+                ),
               ),
             ),
           ],
@@ -394,6 +399,8 @@ class _DayChip extends StatelessWidget {
         ),
         child: Text(
           label,
+          maxLines: 1,
+          softWrap: false,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: selected
                     ? Colors.white

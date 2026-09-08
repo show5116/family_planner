@@ -35,6 +35,18 @@ if (!flowPath) {
 }
 
 const flow = JSON.parse(readFileSync(path.resolve(flowPath), 'utf8'));
+
+/**
+ * 촬영 대상 오리진.
+ *
+ * 기본은 로컬 정적 서버(localhost:3001)입니다. 다만 **프로덕션 데이터가 있어야만
+ * 의미 있는 화면**(투자 지표의 최신 시세·AI 시황 브리핑)은 배포된 웹앱에서 찍습니다.
+ * 프로덕션 API의 CORS 허용 목록에 localhost:3001이 없어서, 로컬에 프로덕션 빌드를
+ * 띄워도 로그인이 막힙니다. 배포된 웹앱은 자기 오리진이라 그대로 통과합니다.
+ *
+ * ⚠️ 프로덕션 오리진으로 찍을 때는 **읽기 전용 조작만** 하세요.
+ */
+const ORIGIN = flow.origin ?? APP_ORIGIN;
 const OUT_DIR = path.resolve(PROJECT_ROOT, flow.outDir);
 mkdirSync(OUT_DIR, { recursive: true });
 
@@ -188,7 +200,7 @@ async function settle(page, ms = 2500) {
 async function runStep(page, step, ctxState) {
   switch (step.action) {
     case 'goto': {
-      await page.goto(APP_ORIGIN + step.path, { waitUntil: 'load', timeout: 180000 });
+      await page.goto(ORIGIN + step.path, { waitUntil: 'load', timeout: 180000 });
       await bootFlutter(page);
       await settle(page, step.wait ?? 8000);
       break;
@@ -294,39 +306,67 @@ async function runStep(page, step, ctxState) {
       break;
     }
     case 'type': {
-      // 텍스트 입력. Flutter 웹은 포커스된 TextField 자리에 실제 <input>을 얹으므로,
-      // 라벨로 시맨틱 노드를 찾아 그 안의 input을 클릭해 포커스한 뒤 키보드로 칩니다.
-      // (유통기한 자동 추천처럼 "입력해야만 보이는 UI"를 찍을 때 씁니다.)
+      // 텍스트 입력.
+      //
+      // Flutter 웹은 **포커스된 뒤에야** 편집용 <input>을 만듭니다. 그래서 먼저
+      // 라벨로 찾은 필드를 실제 탭하듯 눌러 포커스한 다음 글자를 넣습니다.
+      // (시맨틱 노드 안의 <input>을 바로 클릭하면 glass-pane에 막혀 포커스가
+      //  안 잡히는 화면이 있습니다 — 로그인 폼이 그랬습니다.)
+      //
+      // 한 글자씩 치면(keyboard.type) 첫 글자의 onChanged로 위젯이 리빌드되며
+      // 편집용 엘리먼트가 새로 만들어져 나머지가 사라집니다(검증됨: "삼겹살" → "삼").
+      // insertText는 한 번의 input 이벤트로 넣어 그 문제를 피합니다.
       await enableSemantics(page);
+      // focused: true — 이미 포커스된 필드에 그대로 넣습니다.
+      // 비밀번호처럼 클릭으로 포커스가 잡히지 않는 필드는 앞 필드에서 Tab으로 옮겨온 뒤 씁니다.
+      if (step.focused) {
+        await page.keyboard.insertText(step.text ?? '');
+        await settle(page, step.wait ?? 2500);
+        await enableSemantics(page);
+        break;
+      }
+      const label = step.label ?? '';
       const handle = await page.evaluateHandle((want) => {
         const visible = (n) => {
           const r = n.getBoundingClientRect();
           return r.width > 0 && r.height > 0;
         };
+        const area = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width * r.height;
+        };
         const nodes = [...document.querySelectorAll('flt-semantics')].filter(visible);
-        // 1) 라벨이 일치하는 노드 안의 input
-        for (const n of nodes) {
-          const t = (n.getAttribute('aria-label') || '') + ' ' + (n.textContent || '');
-          if (!t.includes(want)) continue;
-          const input = n.querySelector('input, textarea');
-          if (input) return input;
-        }
-        // 2) 라벨 매칭 실패 — 화면에 보이는 첫 입력 필드
-        return (
-          [...document.querySelectorAll('flt-semantics input, flt-semantics textarea')].find(
-            visible,
-          ) ?? null
+        // 1) 텍스트 필드 역할을 가진 노드 우선
+        const fields = nodes.filter(
+          (n) =>
+            n.getAttribute('role') === 'textbox' ||
+            n.querySelector('input, textarea'),
         );
-      }, step.label ?? '');
-      const input = handle.asElement();
-      if (!input) throw new Error(`"${step.label}" 입력 필드를 찾지 못했습니다`);
-      await input.click({ timeout: step.timeout ?? 45000 });
+        const byLabel = (list) =>
+          list.filter((n) =>
+            ((n.getAttribute('aria-label') || '') + (n.textContent || '')).includes(want),
+          );
+        const hit = byLabel(fields).sort((a, b) => area(a) - area(b))[0];
+        if (hit) return hit;
+        // 2) 라벨만 맞는 노드 (라벨이 필드 바깥에 그려진 경우)
+        const labeled = byLabel(nodes).sort((a, b) => area(a) - area(b))[0];
+        if (labeled) return labeled;
+        // 3) 화면의 첫 입력 필드
+        return fields[0] ?? null;
+      }, label);
+      const target = handle.asElement();
+      if (!target) throw new Error(`"${label}" 입력 필드를 찾지 못했습니다`);
+      await clickElement(page, target, step.timeout ?? 45000);
       await page.waitForTimeout(600);
-      // 한 글자씩 치면(keyboard.type) 첫 글자의 onChanged로 위젯이 리빌드되면서
-      // 편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다. (검증됨: "삼겹살" → "삼")
-      // insertText는 문자열을 한 번의 input 이벤트로 넣어 그 문제를 피합니다.
       await page.keyboard.insertText(step.text ?? '');
       await settle(page, step.wait ?? 2500);
+      await enableSemantics(page);
+      break;
+    }
+    case 'key': {
+      // 키 입력 (Tab으로 다음 필드 이동, Enter로 제출 등)
+      await page.keyboard.press(step.key ?? 'Tab');
+      await settle(page, step.wait ?? 900);
       await enableSemantics(page);
       break;
     }
@@ -398,6 +438,10 @@ async function runStep(page, step, ctxState) {
     }
     case 'shot': {
       const file = path.join(OUT_DIR, `${step.name}.png`);
+      // 커서를 화면 밖 구석으로 치웁니다. scroll이 마우스를 (200,500)에 두고 가는데,
+      // 그 자리가 차트 위면 hover 툴팁이 뜬 채로 찍힙니다 (투자 지표에서 발생).
+      await page.mouse.move(1, 1);
+      await page.waitForTimeout(500);
       await page.evaluate(() => document.fonts.ready).catch(() => {});
       await page.waitForTimeout(400);
       await page.screenshot({ path: file, fullPage: step.fullPage ?? false });

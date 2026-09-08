@@ -44,6 +44,7 @@ node .claude/skills/manual-create/scripts/seed.mjs --dry-run       # 먼저 확�
 node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"          # 가계부
 node .claude/skills/manual-create/scripts/seed-dashboard.mjs --group "김가네 가족" # 대시보드 위젯
 node .claude/skills/manual-create/scripts/seed-fridge.mjs --group "김가네 가족"    # 냉장고
+node .claude/skills/manual-create/scripts/seed-shopping.mjs --group "김가네 가족"  # 장보기 (냉장고 뒤에)
 ```
 
 **촬영 전에는 `seed-all.mjs` 한 번이면 됩니다.**
@@ -157,7 +158,8 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 | `back` | 뒤로가기 | — |
 | `tapContains` | 부분 일치 탭 (가장 작은 노드) | `contains` |
 | `tapRole` | 역할로 탭 (스위치·체크박스) | `role`, `index` |
-| `type` | 텍스트 입력 | `label`(필드 라벨), `text` |
+| `type` | 텍스트 입력 | `label`(필드 라벨) 또는 `focused: true`, `text` |
+| `key` | 키 입력 (Tab·Enter 등) | `key` (기본 `Tab`) |
 | `shot` | 스크린샷 | `name`, `caption`, `fullPage` |
 | `wait` | 대기 | `wait` |
 
@@ -176,6 +178,27 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 `insertText`로 한 번에 넣습니다. 한 글자씩 치면 첫 글자의 onChanged로 위젯이 리빌드되며
 편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다(검증됨: "삼겹살" → "삼").
 디바운스가 있는 화면은 `wait`를 넉넉히(5초) 주세요.
+
+**포커스가 안 잡히는 필드는 `key`로 옮겨옵니다.** 로그인 폼의 비밀번호처럼 클릭으로
+포커스가 잡히지 않는 필드가 있습니다. 앞 필드를 `type`으로 채운 뒤 `key: "Tab"` 으로
+이동하고, `type`에 `focused: true` 를 주면 클릭 없이 현재 포커스에 넣습니다.
+
+### 프로덕션 화면 찍기 (`origin`)
+
+기본 대상은 로컬 정적 서버(`localhost:3001`)입니다. 다만 **개발 서버 데이터로는 의미가
+없는 화면**이 있습니다. 투자 지표가 그렇습니다 — 개발 서버는 지표 수집 크론이 꺼져 있어
+시세가 몇 달 전에 멈춰 있고, AI 시황 브리핑도 비어 있어 섹션 자체가 안 그려집니다.
+
+이럴 때는 플로우에 `"origin": "https://app.familyplanner.hmncorp.org"` 를 주어
+**배포된 웹앱**에 직접 붙습니다. 로컬에 프로덕션 빌드를 띄우는 방법은 통하지 않습니다 —
+프로덕션 API의 CORS 허용 목록에 `localhost:3001`이 없어 로그인이 막힙니다(검증됨).
+
+프로덕션에서 찍을 때 지켜야 할 것:
+
+- **읽기 전용 조작만.** 즐겨찾기 별·저장·삭제처럼 쓰기가 일어나는 버튼은 누르지 않습니다
+- 테스트 계정 원클릭 버튼이 없으므로(`isTestAccountLoginEnabled`는 local/development 전용)
+  이메일·비밀번호를 `type`으로 직접 넣습니다
+- **`goto`로 페이지를 다시 열면 로그인이 풀립니다.** 화면 이동은 앱 내 탭과 `back`으로만 하세요
 
 **아이콘 버튼은 `tooltip` 문구로 찾습니다.** 추측하지 말고 코드에서 확인하세요.
 (자산 화면 통계 아이콘의 tooltip은 "자산 통계"가 아니라 **"통계"** 입니다.)

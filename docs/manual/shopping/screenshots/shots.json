@@ -1,0 +1,50 @@
+{
+  "flow": "장보기",
+  "shots": [
+    {
+      "name": "01-cart",
+      "file": "docs/manual/shopping/screenshots/01-cart.png",
+      "caption": "장바구니 — 합계와 담은 품목"
+    },
+    {
+      "name": "02-cart-add",
+      "file": "docs/manual/shopping/screenshots/02-cart-add.png",
+      "caption": "품목 추가 — 이름·수량·금액을 넣습니다"
+    },
+    {
+      "name": "03-cart-edit",
+      "file": "docs/manual/shopping/screenshots/03-cart-edit.png",
+      "caption": "품목 수정 — 이름·단위·메모"
+    },
+    {
+      "name": "04-frequent",
+      "file": "docs/manual/shopping/screenshots/04-frequent.png",
+      "caption": "자주 사는 것 — 소진 시 자동 장바구니 스위치"
+    },
+    {
+      "name": "05-frequent-form",
+      "file": "docs/manual/shopping/screenshots/05-frequent-form.png",
+      "caption": "자주 사는 항목 추가"
+    },
+    {
+      "name": "06-history",
+      "file": "docs/manual/shopping/screenshots/06-history.png",
+      "caption": "구매 이력 — 날짜별 장보기 기록"
+    },
+    {
+      "name": "07-history-detail",
+      "file": "docs/manual/shopping/screenshots/07-history-detail.png",
+      "caption": "구매 이력 상세 — 품목별 금액과 냉장고 이관 여부"
+    },
+    {
+      "name": "08-complete-step1",
+      "file": "docs/manual/shopping/screenshots/08-complete-step1.png",
+      "caption": "장보기 완료 1단계 — 냉장고 이관과 가계부 등록"
+    },
+    {
+      "name": "09-complete-step2",
+      "file": "docs/manual/shopping/screenshots/09-complete-step2.png",
+      "caption": "장보기 완료 2단계 — 이관 품목의 수량과 유통기한"
+    }
+  ]
+}

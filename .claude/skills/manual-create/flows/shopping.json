@@ -1,0 +1,42 @@
+{
+  "name": "장보기",
+  "outDir": "docs/manual/shopping/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "자주 사는 항목 시트는 X 아이콘으로만 닫히는데 tooltip이 없어 라벨로 잡히지 않습니다(시맨틱스에 남는 건 모달 배리어 '스크림'뿐). back은 모달만 닫는 게 아니라 홈까지 가버려서(검증됨) goto로 화면을 다시 엽니다. 장보기 완료 다이얼로그는 마지막에 찍습니다. 이관 대상을 하나도 고르지 않으면 버튼이 '장보기 완료'라서 누르는 순간 실제로 완료되어 장바구니가 비고 시드가 날아갑니다. 그래서 Step 1을 찍은 뒤 보관소를 하나 골라 '다음'으로만 넘어가고, '장보기 완료'는 절대 누르지 않습니다. (라벨을 못 찾으면 촬영이 실패로 끝나므로 오발주 위험이 없습니다.)",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+    { "action": "goto", "path": "/shopping", "wait": 14000 },
+    { "action": "shot", "name": "01-cart", "caption": "장바구니 — 합계와 담은 품목" },
+
+    { "action": "tapFab", "wait": 6000 },
+    { "action": "shot", "name": "02-cart-add", "caption": "품목 추가 — 이름·수량·금액을 넣습니다" },
+    { "action": "tap", "label": "취소", "wait": 3000 },
+
+    { "action": "tapContains", "contains": "사과", "wait": 6000 },
+    { "action": "shot", "name": "03-cart-edit", "caption": "품목 수정 — 이름·단위·메모" },
+    { "action": "tap", "label": "취소", "wait": 3000 },
+
+    { "action": "tap", "label": "자주 사는 것", "wait": 8000 },
+    { "action": "shot", "name": "04-frequent", "caption": "자주 사는 것 — 소진 시 자동 장바구니 스위치" },
+    { "action": "tapFab", "wait": 6000 },
+    { "action": "shot", "name": "05-frequent-form", "caption": "자주 사는 항목 추가" },
+    { "action": "goto", "path": "/shopping", "wait": 12000 },
+
+    { "action": "tap", "label": "구매 이력", "wait": 8000 },
+    { "action": "shot", "name": "06-history", "caption": "구매 이력 — 날짜별 장보기 기록" },
+    { "action": "tapContains", "contains": "가계부 연결됨", "wait": 9000 },
+    { "action": "shot", "name": "07-history-detail", "caption": "구매 이력 상세 — 품목별 금액과 냉장고 이관 여부" },
+
+    { "action": "goto", "path": "/shopping", "wait": 12000 },
+    { "action": "tap", "label": "장보기 완료", "wait": 8000 },
+    { "action": "shot", "name": "08-complete-step1", "caption": "장보기 완료 1단계 — 냉장고 이관과 가계부 등록" },
+    { "action": "tap", "label": "이관 안 함", "wait": 3500 },
+    { "action": "tap", "label": "냉장실", "wait": 3500 },
+    { "action": "tap", "label": "다음", "wait": 6000 },
+    { "action": "tapContains", "contains": "계란", "wait": 4000 },
+    { "action": "shot", "name": "09-complete-step2", "caption": "장보기 완료 2단계 — 이관 품목의 수량과 유통기한" }
+  ]
+}
