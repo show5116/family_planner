@@ -1,0 +1,40 @@
+{
+  "flow": "투자 지표 (프로덕션)",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/investment/screenshots/01-main.png",
+      "caption": "투자 지표 — AI 시황 브리핑과 즐겨찾기"
+    },
+    {
+      "name": "02-ai-briefing",
+      "file": "docs/manual/investment/screenshots/02-ai-briefing.png",
+      "caption": "브리핑 카드를 누르면 펼쳐져 본문과 갱신 시각이 나옵니다"
+    },
+    {
+      "name": "03-all",
+      "file": "docs/manual/investment/screenshots/03-all.png",
+      "caption": "전체 지표 — 지수·환율·원자재·채권·암호화폐"
+    },
+    {
+      "name": "04-detail",
+      "file": "docs/manual/investment/screenshots/04-detail.png",
+      "caption": "지표 상세 — 현재가와 시세 추이"
+    },
+    {
+      "name": "05-chart-1y",
+      "file": "docs/manual/investment/screenshots/05-chart-1y.png",
+      "caption": "기간 칩으로 차트 범위를 바꿉니다 — 1년"
+    },
+    {
+      "name": "06-spread",
+      "file": "docs/manual/investment/screenshots/06-spread.png",
+      "caption": "금 (국내) — 국제 환산가 대비 이격률"
+    },
+    {
+      "name": "07-spread-chart",
+      "file": "docs/manual/investment/screenshots/07-spread-chart.png",
+      "caption": "이격률 추이 — 0% 기준선 위아래로 프리미엄·디스카운트"
+    }
+  ]
+}

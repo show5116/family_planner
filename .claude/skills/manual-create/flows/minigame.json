@@ -1,0 +1,40 @@
+{
+  "name": "미니게임",
+  "outDir": "docs/manual/minigame/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "이 화면의 입력칸은 라벨이 없어(hintText만 있음) 시맨틱스로는 라벨을 못 찾습니다. 그래서 type의 index(화면 위→아래·왼쪽→오른쪽 순번)로 지정합니다. 사다리 설정은 제목0 / 참여자1·항목이름2·항목수량3 / 참여자4·항목이름5·항목수량6 순입니다. 그룹이 '그룹 없음'으로 시작합니다. 그룹을 골라야 게임 이력이 보이고, 사다리 설정 화면에 '멤버 선택' 버튼도 생깁니다. 게임을 끝까지 진행하면 그룹이 선택돼 있을 때 결과가 자동 저장돼 이력이 늘어납니다(정상 동작). 사다리는 setup→playing→done 3단계라 '사다리 생성' 후 '전체 스킵'으로 끝냅니다. 룰렛은 돌리기 애니메이션이 있어 대기를 넉넉히 줍니다.",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+    { "action": "goto", "path": "/mini-games", "wait": 13000 },
+    { "action": "tapContains", "contains": "그룹 없음", "wait": 3500 },
+    { "action": "tapContains", "contains": "김가네 가족", "wait": 6000 },
+    { "action": "shot", "name": "01-main", "caption": "미니게임 — 게임 선택과 지난 이력" },
+
+    { "action": "tap", "label": "사다리타기", "wait": 9000 },
+    { "action": "tap", "label": "멤버 선택", "wait": 5000 },
+    { "action": "tapContains", "contains": "김아빠", "wait": 2000 },
+    { "action": "tapContains", "contains": "박엄마", "wait": 2000 },
+    { "action": "tapContains", "contains": "추가", "wait": 4000 },
+    { "action": "type", "index": 2, "text": "설거지", "wait": 2000 },
+    { "action": "type", "index": 5, "text": "빨래", "wait": 2000 },
+    { "action": "shot", "name": "02-ladder-setup", "caption": "사다리타기 설정 — 참여자와 결과 항목" },
+
+    { "action": "tap", "label": "사다리 생성", "wait": 7000 },
+    { "action": "shot", "name": "03-ladder-play", "caption": "이름을 눌러 사다리를 탑니다" },
+    { "action": "tap", "label": "전체 스킵", "wait": 9000 },
+    { "action": "scroll", "dy": 600, "wait": 3000 },
+    { "action": "shot", "name": "04-ladder-result", "caption": "사다리타기 결과 — 누가 무엇을 맡았는지" },
+
+    { "action": "goto", "path": "/mini-games", "wait": 12000 },
+    { "action": "tap", "label": "룰렛", "wait": 9000 },
+    { "action": "type", "index": 1, "text": "삼겹살", "wait": 2000 },
+    { "action": "type", "index": 3, "text": "치킨", "wait": 2000 },
+    { "action": "type", "index": 5, "text": "피자", "wait": 2500 },
+    { "action": "shot", "name": "05-roulette-setup", "caption": "룰렛 설정 — 항목과 비율" },
+    { "action": "tap", "label": "돌리기", "wait": 14000 },
+    { "action": "shot", "name": "06-roulette-result", "caption": "룰렛 결과" }
+  ]
+}

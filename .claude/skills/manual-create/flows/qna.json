@@ -1,0 +1,37 @@
+{
+  "name": "Q&A",
+  "outDir": "docs/manual/qna/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "답변은 운영자만 달 수 있어 seed-qna.mjs를 돌릴 때만 개발 DB에서 계정을 잠깐 운영자로 올립니다. ⚠️ 촬영은 반드시 되돌린 뒤에 하세요 — 운영자 상태로 찍으면 상세 화면에 답변 작성 폼이 함께 나옵니다. 질문하기 버튼은 FloatingActionButton.extended(라벨 있음)라 tapFab이 못 잡습니다 — tapFab은 '라벨 없는 정사각형 버튼'을 찾기 때문에 엉뚱하게 앱바 검색이 눌립니다. 라벨 '질문 작성'으로 누르세요. '내 질문만'은 라벨을 누르면 반응하지 않습니다(텍스트만 잡힘). tapRole role=switch 로 스위치를 직접 누르세요. 작성 화면에서 제목은 type index 0으로 넣습니다. 내용은 리치 텍스트 에디터(이미지 첨부·굵게·글머리 기호 툴바)라 일반 입력칸이 아니어서 type으로 넣지 못합니다.",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+    { "action": "goto", "path": "/qna", "wait": 13000 },
+    { "action": "shot", "name": "01-list", "caption": "Q&A 목록 — 상태 탭과 질문 카드" },
+
+    { "action": "tap", "label": "대기중", "wait": 6000 },
+    { "action": "shot", "name": "02-tab-pending", "caption": "상태 탭으로 답변 대기 중인 질문만 봅니다" },
+    { "action": "tap", "label": "전체", "wait": 6000 },
+
+    { "action": "tapContains", "contains": "가계부 지출을 잘못", "wait": 10000 },
+    { "action": "shot", "name": "03-detail-answered", "caption": "답변이 달린 질문 — 해결완료로 표시된 상태" },
+    { "action": "goto", "path": "/qna", "wait": 11000 },
+
+    { "action": "tapContains", "contains": "위젯에 이번 주", "wait": 10000 },
+    { "action": "shot", "name": "04-detail-pending", "caption": "아직 답변을 기다리는 질문" },
+    { "action": "goto", "path": "/qna", "wait": 11000 },
+
+    { "action": "tapRole", "role": "switch", "index": 0, "wait": 6000 },
+    { "action": "scroll", "dy": 900, "wait": 3500 },
+    { "action": "shot", "name": "05-mine", "caption": "내 질문만 — 비공개 질문도 함께 보입니다" },
+    { "action": "tapRole", "role": "switch", "index": 0, "wait": 5000 },
+
+    { "action": "tap", "label": "질문 작성", "wait": 9000 },
+    { "action": "type", "index": 0, "text": "알림이 오지 않는 경우가 있어요", "wait": 2000 },
+    { "action": "shot", "name": "06-create", "caption": "질문 작성 — 카테고리와 공개 범위를 고릅니다" },
+    { "action": "scroll", "dy": 600, "wait": 3000 },
+    { "action": "shot", "name": "07-create-content", "caption": "제목과 내용 — 굵게·글머리 기호 같은 간단한 서식을 쓸 수 있습니다" }
+  ]
+}

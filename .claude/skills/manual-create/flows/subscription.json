@@ -1,0 +1,35 @@
+{
+  "name": "구독",
+  "outDir": "docs/manual/subscription/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "구독 화면의 가격과 구독 버튼은 스토어에서 상품 정보를 받아와 그립니다. 웹에는 스토어가 없어 그 자리에 '구독 상품을 준비 중입니다'가 뜹니다. 그래서 01-plans.png는 실기기 캡처(docs/manual/subscription/device/)를 잘라서 씁니다. 이 플로우는 진입 경로만 찍습니다. ⚠️ capture.mjs는 시작할 때 outDir의 PNG를 모두 지우므로, 촬영 뒤에 반드시 다시 잘라 넣으세요: node .claude/skills/manual-create/scripts/crop.mjs docs/manual/subscription/device/subscription-ios-original.png docs/manual/subscription/screenshots/01-plans.png 150",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 8000
+    },
+    {
+      "action": "login",
+      "as": "owner",
+      "wait": 16000
+    },
+    {
+      "action": "tap",
+      "label": "더보기",
+      "wait": 8000
+    },
+    {
+      "action": "scroll",
+      "dy": 380,
+      "wait": 3500
+    },
+    {
+      "action": "shot",
+      "name": "02-entry",
+      "caption": "더보기 탭의 구독 관리 — 오른쪽에 지금 쓰는 플랜이 표시됩니다"
+    }
+  ]
+}

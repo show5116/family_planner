@@ -44,6 +44,16 @@ node .claude/skills/manual-create/scripts/seed.mjs --dry-run       # 먼저 확�
 node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"          # 가계부
 node .claude/skills/manual-create/scripts/seed-dashboard.mjs --group "김가네 가족" # 대시보드 위젯
 node .claude/skills/manual-create/scripts/seed-fridge.mjs --group "김가네 가족"    # 냉장고
+node .claude/skills/manual-create/scripts/seed-shopping.mjs --group "김가네 가족"  # 장보기 (냉장고 뒤에)
+node .claude/skills/manual-create/scripts/seed-minigame.mjs --group "김가네 가족"  # 미니게임
+node .claude/skills/manual-create/scripts/seed-vote.mjs --group "김가네 가족"      # 투표
+
+# Q&A — 답변은 운영자(ADMIN)만 달 수 있습니다.
+# 개발 DB에서 테스트 계정을 잠깐 운영자로 올렸다가 **반드시 되돌린 뒤** 촬영합니다.
+# (운영자 상태로 찍으면 Q&A 상세에 답변 작성 폼이, 투자 지표·공지사항에 관리자 버튼이 나옵니다.)
+cd ../family_planner_back_end && node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.user.update({where:{email:'test-owner@familyplanner.test'},data:{isAdmin:true}}).then(()=>p.\$disconnect())" && cd -
+node .claude/skills/manual-create/scripts/seed-qna.mjs
+cd ../family_planner_back_end && node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.user.update({where:{email:'test-owner@familyplanner.test'},data:{isAdmin:false}}).then(()=>p.\$disconnect())" && cd -
 ```
 
 **촬영 전에는 `seed-all.mjs` 한 번이면 됩니다.**
@@ -157,7 +167,8 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 | `back` | 뒤로가기 | — |
 | `tapContains` | 부분 일치 탭 (가장 작은 노드) | `contains` |
 | `tapRole` | 역할로 탭 (스위치·체크박스) | `role`, `index` |
-| `type` | 텍스트 입력 | `label`(필드 라벨), `text` |
+| `type` | 텍스트 입력 | `label`(필드 라벨) · `index`(순번) · `focused: true` 중 하나, `text` |
+| `key` | 키 입력 (Tab·Enter 등) | `key` (기본 `Tab`) |
 | `shot` | 스크린샷 | `name`, `caption`, `fullPage` |
 | `wait` | 대기 | `wait` |
 
@@ -176,6 +187,33 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 `insertText`로 한 번에 넣습니다. 한 글자씩 치면 첫 글자의 onChanged로 위젯이 리빌드되며
 편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다(검증됨: "삼겹살" → "삼").
 디바운스가 있는 화면은 `wait`를 넉넉히(5초) 주세요.
+
+**라벨이 없는 입력칸은 `index`로 지정합니다.** `labelText` 없이 `hintText`만 있는 필드는
+값이 비어 있는 동안 시맨틱스에 아무 라벨도 남기지 않아 라벨로는 못 찾습니다
+(미니게임의 참여자·결과 항목 칸이 그렇습니다). `index`는 **화면 위→아래, 왼쪽→오른쪽**
+순번입니다. 순번은 `{ "action": "dump", "fields": true }` 로 먼저 확인하세요 —
+입력 필드만 좌표와 함께 번호를 매겨 출력합니다.
+
+**포커스가 안 잡히는 필드는 `key`로 옮겨옵니다.** 로그인 폼의 비밀번호처럼 클릭으로
+포커스가 잡히지 않는 필드가 있습니다. 앞 필드를 `type`으로 채운 뒤 `key: "Tab"` 으로
+이동하고, `type`에 `focused: true` 를 주면 클릭 없이 현재 포커스에 넣습니다.
+
+### 프로덕션 화면 찍기 (`origin`)
+
+기본 대상은 로컬 정적 서버(`localhost:3001`)입니다. 다만 **개발 서버 데이터로는 의미가
+없는 화면**이 있습니다. 투자 지표가 그렇습니다 — 개발 서버는 지표 수집 크론이 꺼져 있어
+시세가 몇 달 전에 멈춰 있고, AI 시황 브리핑도 비어 있어 섹션 자체가 안 그려집니다.
+
+이럴 때는 플로우에 `"origin": "https://app.familyplanner.hmncorp.org"` 를 주어
+**배포된 웹앱**에 직접 붙습니다. 로컬에 프로덕션 빌드를 띄우는 방법은 통하지 않습니다 —
+프로덕션 API의 CORS 허용 목록에 `localhost:3001`이 없어 로그인이 막힙니다(검증됨).
+
+프로덕션에서 찍을 때 지켜야 할 것:
+
+- **읽기 전용 조작만.** 즐겨찾기 별·저장·삭제처럼 쓰기가 일어나는 버튼은 누르지 않습니다
+- 테스트 계정 원클릭 버튼이 없으므로(`isTestAccountLoginEnabled`는 local/development 전용)
+  이메일·비밀번호를 `type`으로 직접 넣습니다
+- **`goto`로 페이지를 다시 열면 로그인이 풀립니다.** 화면 이동은 앱 내 탭과 `back`으로만 하세요
 
 **아이콘 버튼은 `tooltip` 문구로 찾습니다.** 추측하지 말고 코드에서 확인하세요.
 (자산 화면 통계 아이콘의 tooltip은 "자산 통계"가 아니라 **"통계"** 입니다.)
@@ -300,4 +338,19 @@ screenshots: 5
 
 웹 브라우저 렌더링이라 **네이티브 전용 요소는 다르게 보이거나 안 보입니다**:
 광고 배너, 인앱결제 시트, 푸시 권한 팝업.
-구독·결제 화면 매뉴얼이 필요하면 그 부분만 실기기에서 수동 촬영해 보완하세요.
+
+### 실기기 캡처로 보완하기
+
+구독 화면이 그런 경우입니다. 가격과 구독 버튼을 스토어 상품 정보로 그리는데,
+웹에는 스토어가 없어 그 자리에 `구독 상품을 준비 중입니다`가 뜹니다.
+
+실기기에서 찍은 스크린샷은 **원본을 `docs/manual/<메뉴>/device/` 에 보관**하고,
+`crop.mjs`로 iOS 상태바를 잘라 `screenshots/`에 넣습니다.
+
+```bash
+node .claude/skills/manual-create/scripts/crop.mjs <원본> <출력> 150   # 상단 150px 제거
+```
+
+⚠️ **capture.mjs는 시작할 때 outDir의 PNG를 모두 지웁니다.** 그래서 순서가 중요합니다 —
+플로우를 돌린 **뒤에** 실기기 캡처를 다시 잘라 넣으세요. 플로우 `_note`에 그 명령을 적어두면
+다음 사람이 헤매지 않습니다.

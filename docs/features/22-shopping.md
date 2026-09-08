@@ -8,9 +8,12 @@
 ## UI 구현
 - ✅ 장보기 화면 (ShoppingScreen) — 그룹 선택 드롭다운 + 3탭 구조
   - **탭1: 장바구니** (CartTab)
-    - 품목 목록 (체크박스로 구매 완료 표시, 완료 항목 취소선)
-    - FAB(작은) — 품목 추가
-    - FAB(큰) — 장보기 완료 (items > 0일 때만 표시)
+    - 상단 합계 바 (_TotalPriceBar) — 금액이 있는 품목의 합, 동기화 중 표시
+    - 품목 줄 — 수량 ±, 금액 입력칸 + `총액`/`개당` 토글 칩, 스와이프 시 삭제 표시
+      - `isChecked`는 모델·API에만 있고 화면에는 그리지 않습니다 (체크박스 없음)
+    - FAB — 품목 추가
+    - 하단 고정 바 (_CompleteBottomBar) — 장보기 완료 (items > 0일 때만 표시)
+    - **저장 버튼 없음** — 변경 3초 뒤 자동 동기화 (`_scheduleSync` → `_flushSync`)
     - 장보기 완료 폼 — DraggableScrollableSheet 풀스크린 바텀시트
       - Step1: 냉장고 이관 보관소 선택 + 항목 제외(excludes) 기능
       - Step2: 냉장고 이관 시 유통기한 추천 자동 적용, 금액 입력 제거
@@ -36,11 +39,11 @@
   - 삭제 확인 다이얼로그: 가계부/냉장고 데이터 유지 안내 문구 포함
 
 ## 다이얼로그 / 바텀시트
-- ✅ 장바구니 품목 추가 바텀시트 — 이름, 수량, 단위, 메모
+- ✅ 장바구니 품목 추가 바텀시트 — 이름(자동완성), 수량 ±, 금액(`총액`/`개당` 토글), 단위·메모(접힘)
 - ✅ 장보기 완료 바텀시트 (DraggableScrollableSheet)
   - Step1: 품목별 이관 보관소 선택, 항목 제외 체크박스, 아코디언 자동 닫힘
   - Step2: 유통기한 추천 자동 매칭, 금액 입력 없음, 날짜 필드 라벨링
-  - 가계부 등록: 금액(읽기전용), 결제수단, 소비처(merchant) 선택
+  - 가계부 등록: 금액(품목 금액 합계로 자동 채움 · 직접 수정 가능), 메모, 소비처(merchant), 결제수단
 - ✅ 자주 사는 것 추가/수정 바텀시트 — 이름, 기본 단위, autoAdd 토글
 
 ## 데이터 모델
@@ -55,8 +58,8 @@
 
 ## 기능 구현
 - ✅ 장바구니 조회/품목 추가/수정/삭제
-- ✅ 품목 체크/체크 해제 (낙관적 업데이트)
-- ✅ pending 항목 디바운스 자동 동기화
+- ✅ 낙관적 UI — 새 품목은 임시 ID(`__pending_N__`)로 먼저 그리고 뒤이어 동기화
+- ✅ 변경 3초 뒤 디바운스 자동 동기화 (동기화 중 변경이 생기면 완료 후 재실행)
 - ✅ 완료 버튼 누를 때 pending flush 후 완료 폼 열기
 - ✅ 장보기 완료 — excludes(제외 항목) 지원, 완료 후 서버 re-fetch로 UI 즉시 반영
 - ✅ 냉장고 이관 — 유통기한 추천(ExpiryPresetModel 매칭), 아코디언 자동 닫힘
@@ -105,6 +108,9 @@ lib/features/main/household/
 - `fridgeSelectedGroupIdProvider` — 냉장고·장보기 공유 (동일 그룹 선택 유지)
 - 장보기 완료 후 → `storagesWithItemsProvider.refresh()` + 서버 re-fetch로 카트 갱신
 - 가계부 등록 옵션 활성 시 → LinkedExpense 생성 → 이력 상세에서 가계부로 이동 가능
-- 수량 소진(냉장고) → 서버가 autoAdd 항목 자동 장바구니 등재 → cartProvider 갱신
+- 냉장고에서 품목 삭제(bulk `deletes`) → `frequentItemId`가 연결돼 있고 `autoAdd`면
+  서버가 장바구니 자동 등재 → cartProvider 갱신
+  - 연결은 **냉장고 품목을 만들 때** 이름으로 걸립니다. 자주 사는 항목을 먼저 등록해야
+    이후 넣는 품목이 연결됩니다 (기존 품목은 bulk update로 `name`을 다시 보낼 때 재연결)
 - `expiryPresetsProvider` — 냉장고 이관 시 유통기한 자동 추천
 - `merchantsProvider` — 소비처 목록 조회 (household 공유)

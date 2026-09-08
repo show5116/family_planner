@@ -1,0 +1,137 @@
+{
+  "name": "투자 지표 (프로덕션)",
+  "origin": "https://app.familyplanner.hmncorp.org",
+  "outDir": "docs/manual/investment/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "투자 지표만 프로덕션에서 찍습니다. 개발 서버는 지표 데이터가 2026-05에서 멈춰 있고 AI 시황 브리핑도 비어 있습니다. 로컬 프로덕션 빌드로는 안 됩니다 — 프로덕션 API의 CORS 허용 목록에 localhost:3001이 없어 로그인이 막힙니다(검증됨). 그래서 배포된 웹앱(origin)에 직접 붙습니다. 테스트 계정 원클릭 버튼은 production 빌드에 없으므로 이메일·비밀번호를 직접 넣습니다(비밀번호 필드는 클릭으로 포커스가 안 잡혀 Tab으로 옮깁니다). ⚠️ 배포된 웹앱은 goto로 페이지를 다시 열면 로그인이 풀립니다. 화면 이동은 반드시 앱 내 탭·뒤로가기로만 하세요. ⚠️ 읽기 전용 조작만 — 즐겨찾기 별을 누르면 프로덕션 계정 데이터가 바뀝니다. AI 시황 브리핑 카드는 탭하면 펼쳐집니다. 매크로 카드는 프로덕션에서 본문이 '죄송합니다. 요청을 처리하는 중에 문제가 발생했습니다.'로 저장돼 있어, 본문이 정상인 '국내 시장' 카드를 펼쳐 찍습니다. 매크로 카드는 본문이 생성 실패 메시지라 매뉴얼에 담지 않습니다 — 국내 시장 카드를 펼친 뒤 살짝 스크롤해 매크로 카드가 프레임 밖으로 나가게 찍습니다.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 9000
+    },
+    {
+      "action": "type",
+      "label": "이메일",
+      "text": "test-owner@familyplanner.test",
+      "wait": 1500
+    },
+    {
+      "action": "key",
+      "key": "Tab",
+      "wait": 1200
+    },
+    {
+      "action": "type",
+      "focused": true,
+      "text": "Test1234!",
+      "wait": 1500
+    },
+    {
+      "action": "tap",
+      "label": "로그인",
+      "wait": 20000
+    },
+    {
+      "action": "tap",
+      "label": "더보기",
+      "wait": 7000
+    },
+    {
+      "action": "tapContains",
+      "contains": "투자 지표",
+      "wait": 14000
+    },
+    {
+      "action": "shot",
+      "name": "01-main",
+      "caption": "투자 지표 — AI 시황 브리핑과 즐겨찾기"
+    },
+    {
+      "action": "tapContains",
+      "contains": "국내 증시 시황",
+      "wait": 5000
+    },
+    {
+      "action": "scroll",
+      "dy": 300,
+      "wait": 2500
+    },
+    {
+      "action": "shot",
+      "name": "02-ai-briefing",
+      "caption": "브리핑 카드를 누르면 펼쳐져 본문과 갱신 시각이 나옵니다"
+    },
+    {
+      "action": "tapContains",
+      "contains": "국내 증시 시황",
+      "wait": 4000
+    },
+    {
+      "action": "scroll",
+      "dy": 900,
+      "wait": 3500
+    },
+    {
+      "action": "shot",
+      "name": "03-all",
+      "caption": "전체 지표 — 지수·환율·원자재·채권·암호화폐"
+    },
+    {
+      "action": "scroll",
+      "dy": -900,
+      "wait": 3500
+    },
+    {
+      "action": "tapContains",
+      "contains": "코스피",
+      "wait": 11000
+    },
+    {
+      "action": "shot",
+      "name": "04-detail",
+      "caption": "지표 상세 — 현재가와 시세 추이"
+    },
+    {
+      "action": "tap",
+      "label": "1년",
+      "wait": 8000
+    },
+    {
+      "action": "shot",
+      "name": "05-chart-1y",
+      "caption": "기간 칩으로 차트 범위를 바꿉니다 — 1년"
+    },
+    {
+      "action": "back",
+      "wait": 7000
+    },
+    {
+      "action": "scroll",
+      "dy": 900,
+      "wait": 3500
+    },
+    {
+      "action": "tapContains",
+      "contains": "금 (국내)",
+      "wait": 11000
+    },
+    {
+      "action": "shot",
+      "name": "06-spread",
+      "caption": "금 (국내) — 국제 환산가 대비 이격률"
+    },
+    {
+      "action": "scroll",
+      "dy": 1100,
+      "wait": 4000
+    },
+    {
+      "action": "shot",
+      "name": "07-spread-chart",
+      "caption": "이격률 추이 — 0% 기준선 위아래로 프리미엄·디스카운트"
+    }
+  ]
+}

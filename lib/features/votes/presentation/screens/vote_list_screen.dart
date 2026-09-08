@@ -8,6 +8,7 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
+import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
 import 'package:family_planner/shared/widgets/group_filter_bar.dart';
@@ -48,7 +49,12 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
   Future<void> _initGroupSelection() async {
     if (ref.read(voteSelectedGroupIdProvider) != null) return;
     final defaultId = ref.read(defaultGroupProvider);
-    final groups = ref.read(myGroupsProvider).valueOrNull ?? [];
+    // valueOrNull로 읽으면 첫 진입 때 아직 로딩 중이라 빈 배열을 보고 그냥 빠져나가,
+    // 그룹 바에는 이름이 보이는데 본문은 "그룹을 선택하면 …"으로 남았습니다.
+    // 냉장고·장보기처럼 목록이 올 때까지 기다립니다.
+    final groups = await ref
+        .read(myGroupsProvider.future)
+        .catchError((_) => <Group>[]);
     if (groups.isEmpty || !mounted) return;
     final resolved = (defaultId != null && groups.any((g) => g.id == defaultId))
         ? defaultId

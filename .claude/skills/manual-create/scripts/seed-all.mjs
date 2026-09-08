@@ -38,6 +38,11 @@ const STEPS = [
   { file: 'seed-childcare.mjs', label: '육아 포인트', dateSensitive: true, cleanupSafe: true },
   { file: 'seed-savings.mjs', label: '그룹 저금통', dateSensitive: false, cleanupSafe: true },
   { file: 'seed-fridge.mjs', label: '냉장고', dateSensitive: true, cleanupSafe: true },
+  // 장보기는 냉장고 뒤에 와야 합니다 — 구매 이력 하나가 품목을 팬트리로 이관합니다
+  { file: 'seed-shopping.mjs', label: '장보기', dateSensitive: true, cleanupSafe: true },
+  { file: 'seed-minigame.mjs', label: '미니게임', dateSensitive: false, cleanupSafe: true },
+  { file: 'seed-vote.mjs', label: '투표', dateSensitive: true, cleanupSafe: true },
+  // Q&A 답변은 운영자만 달 수 있어 수동 시딩입니다 (seed-qna.mjs 주석 참고) — 여기서는 제외
 ];
 
 const run = (file, args) => {

@@ -1,0 +1,10 @@
+{
+  "flow": "구독",
+  "shots": [
+    {
+      "name": "02-entry",
+      "file": "docs/manual/subscription/screenshots/02-entry.png",
+      "caption": "더보기 탭의 구독 관리 — 오른쪽에 지금 쓰는 플랜이 표시됩니다"
+    }
+  ]
+}
