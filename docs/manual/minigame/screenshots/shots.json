@@ -1,0 +1,35 @@
+{
+  "flow": "미니게임",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/minigame/screenshots/01-main.png",
+      "caption": "미니게임 — 게임 선택과 지난 이력"
+    },
+    {
+      "name": "02-ladder-setup",
+      "file": "docs/manual/minigame/screenshots/02-ladder-setup.png",
+      "caption": "사다리타기 설정 — 참여자와 결과 항목"
+    },
+    {
+      "name": "03-ladder-play",
+      "file": "docs/manual/minigame/screenshots/03-ladder-play.png",
+      "caption": "이름을 눌러 사다리를 탑니다"
+    },
+    {
+      "name": "04-ladder-result",
+      "file": "docs/manual/minigame/screenshots/04-ladder-result.png",
+      "caption": "사다리타기 결과 — 누가 무엇을 맡았는지"
+    },
+    {
+      "name": "05-roulette-setup",
+      "file": "docs/manual/minigame/screenshots/05-roulette-setup.png",
+      "caption": "룰렛 설정 — 항목과 비율"
+    },
+    {
+      "name": "06-roulette-result",
+      "file": "docs/manual/minigame/screenshots/06-roulette-result.png",
+      "caption": "룰렛 결과"
+    }
+  ]
+}

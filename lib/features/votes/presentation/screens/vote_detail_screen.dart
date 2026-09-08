@@ -63,6 +63,10 @@ class _DeleteButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    // 삭제는 작성자 또는 그룹장만 가능합니다(서버 규칙). 권한이 없으면
+    // 버튼을 아예 숨깁니다 — 예전에는 눌린 뒤 403으로 실패 안내만 떴습니다.
+    if (!vote.canDelete) return const SizedBox.shrink();
+
     return IconButton(
       icon: const Icon(Icons.delete_outline),
       tooltip: l10n.vote_delete,

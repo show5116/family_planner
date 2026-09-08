@@ -124,3 +124,17 @@
 
 ## API 문서
 [docs/api/votes.md](../api/votes.md)
+
+## 수정 이력 (2026-09-08 매뉴얼 작성 중 발견)
+- ✅ **투표 목록의 그룹이 자동 선택되지 않던 문제**
+  `_initGroupSelection`이 `ref.read(myGroupsProvider).valueOrNull`로 읽어 첫 진입 때
+  아직 로딩 중이면 빈 배열을 보고 빠져나갔습니다. 그룹 바에는 이름이 보이는데 본문은
+  `그룹을 선택하면 투표 목록이 표시됩니다`로 남았습니다.
+  냉장고·장보기처럼 `await ref.read(myGroupsProvider.future)`로 기다리도록 고쳤습니다.
+- ✅ **삭제 버튼이 권한과 무관하게 항상 보이던 문제**
+  서버는 작성자 또는 그룹 OWNER만 허용하는데 `_DeleteButton`이 조건 없이 렌더돼,
+  권한 없는 멤버가 누르면 403 → `삭제하지 못했습니다`만 떴습니다.
+  백엔드 응답에 `canDelete`(작성자 또는 그룹장)를 추가하고 앱이 그 값으로 버튼을 감춥니다.
+  - 서버가 이 필드를 안 주면 `true`로 봅니다 (구버전 서버에서 기존 동작 유지)
+  - 백엔드: `vote.service.ts` `assertGroupMember`가 OWNER 여부를 반환하도록 바꿔
+    `toDto`에 넘깁니다. `remove`의 중복 멤버 조회도 함께 제거했습니다

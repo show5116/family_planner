@@ -1,0 +1,118 @@
+{
+  "name": "투표",
+  "outDir": "docs/manual/vote/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "그룹은 화면이 기본 그룹으로 자동 선택합니다(_initGroupSelection이 myGroupsProvider.future를 기다립니다). 상세는 /votes/:groupId/:voteId 라 직접 goto가 어려워 목록에서 카드를 tapContains로 엽니다. 새 투표 화면은 제목·설명 칸의 aria-label이 '100자 남음'·'300자 남음'(글자수 안내)이라 라벨로 못 잡습니다. 네 칸 모두 type의 index를 씁니다 — 제목0·설명1·선택지2·선택지3.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/",
+      "wait": 8000
+    },
+    {
+      "action": "login",
+      "as": "owner",
+      "wait": 16000
+    },
+    {
+      "action": "goto",
+      "path": "/votes",
+      "wait": 13000
+    },
+    {
+      "action": "shot",
+      "name": "01-list",
+      "caption": "투표 목록 — 진행중과 종료된 투표"
+    },
+    {
+      "action": "tap",
+      "label": "종료됨",
+      "wait": 6000
+    },
+    {
+      "action": "shot",
+      "name": "02-filter-closed",
+      "caption": "필터로 종료된 투표만 봅니다"
+    },
+    {
+      "action": "tap",
+      "label": "전체",
+      "wait": 6000
+    },
+    {
+      "action": "tapContains",
+      "contains": "이번 주말 나들이",
+      "wait": 10000
+    },
+    {
+      "action": "shot",
+      "name": "03-detail-voted",
+      "caption": "투표한 뒤 — 항목별 득표와 비율"
+    },
+    {
+      "action": "goto",
+      "path": "/votes",
+      "wait": 11000
+    },
+    {
+      "action": "tapContains",
+      "contains": "가족 여행 시기",
+      "wait": 10000
+    },
+    {
+      "action": "shot",
+      "name": "04-detail-vote",
+      "caption": "아직 투표하지 않은 투표 — 항목을 고르고 투표하기"
+    },
+    {
+      "action": "goto",
+      "path": "/votes",
+      "wait": 11000
+    },
+    {
+      "action": "tapFab",
+      "wait": 8000
+    },
+    {
+      "action": "type",
+      "index": 0,
+      "text": "주말 저녁 메뉴",
+      "wait": 1800
+    },
+    {
+      "action": "type",
+      "index": 1,
+      "text": "토요일 저녁에 뭐 먹을지 정해요",
+      "wait": 1800
+    },
+    {
+      "action": "type",
+      "index": 2,
+      "text": "삼겹살",
+      "wait": 1800
+    },
+    {
+      "action": "type",
+      "index": 3,
+      "text": "치킨",
+      "wait": 2000
+    },
+    {
+      "action": "shot",
+      "name": "05-create",
+      "caption": "새 투표 만들기 — 제목과 선택지"
+    },
+    {
+      "action": "scroll",
+      "dy": 700,
+      "wait": 3000
+    },
+    {
+      "action": "shot",
+      "name": "06-create-options",
+      "caption": "복수 선택·익명·마감 시각 설정"
+    }
+  ]
+}

@@ -66,6 +66,10 @@ class VoteModel {
   final int totalVoters;
   final bool hasVoted;
   final String creatorName;
+
+  /// 삭제 가능 여부 (작성자 본인 또는 그룹장) — 서버가 판단해 내려줍니다.
+  /// 이 필드를 아직 안 주는 서버에서는 기존처럼 버튼을 노출합니다.
+  final bool canDelete;
   final DateTime createdAt;
   final List<VoteOptionModel> options;
 
@@ -81,6 +85,7 @@ class VoteModel {
     required this.totalVoters,
     required this.hasVoted,
     required this.creatorName,
+    this.canDelete = true,
     required this.createdAt,
     required this.options,
   });
@@ -100,6 +105,7 @@ class VoteModel {
       totalVoters: json['totalVoters'] as int,
       hasVoted: json['hasVoted'] as bool,
       creatorName: json['creatorName'] as String,
+      canDelete: json['canDelete'] as bool? ?? true,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       options: (json['options'] as List)
           .map((e) => VoteOptionModel.fromJson(e as Map<String, dynamic>))
@@ -125,6 +131,7 @@ class VoteModel {
       totalVoters: totalVoters ?? this.totalVoters,
       hasVoted: hasVoted ?? this.hasVoted,
       creatorName: creatorName,
+      canDelete: canDelete,
       createdAt: createdAt,
       options: options ?? this.options,
     );

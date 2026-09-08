@@ -326,7 +326,7 @@ async function runStep(page, step, ctxState) {
         break;
       }
       const label = step.label ?? '';
-      const handle = await page.evaluateHandle((want) => {
+      const handle = await page.evaluateHandle(({ want, index }) => {
         const visible = (n) => {
           const r = n.getBoundingClientRect();
           return r.width > 0 && r.height > 0;
@@ -336,6 +336,30 @@ async function runStep(page, step, ctxState) {
           return r.width * r.height;
         };
         const nodes = [...document.querySelectorAll('flt-semantics')].filter(visible);
+
+        // index가 오면 라벨을 무시하고 **화면 위→아래, 왼쪽→오른쪽 순서의 N번째**
+        // 입력 필드를 씁니다. 값이 비어 있는 필드는 시맨틱스에 라벨이 남지 않아
+        // 라벨로는 잡을 수 없습니다 (사다리 설정의 결과 항목 칸이 그렇습니다).
+        if (index != null) {
+          // 상위 컨테이너도 input을 품고 있어 그대로 세면 어긋납니다.
+          // 자기 아래에 또 다른 입력 노드가 없는 **가장 안쪽 노드**만 셉니다.
+          const isField = (n) =>
+            (n.getAttribute('role') === 'textbox' ||
+              !!n.querySelector('input, textarea')) &&
+            ![...n.querySelectorAll('flt-semantics')].some(
+              (d) =>
+                d.getAttribute('role') === 'textbox' ||
+                !!d.querySelector('input, textarea'),
+            );
+          const fields = nodes
+            .filter(isField)
+            .sort((a, b) => {
+              const ra = a.getBoundingClientRect();
+              const rb = b.getBoundingClientRect();
+              return ra.y - rb.y || ra.x - rb.x;
+            });
+          return fields[index] ?? null;
+        }
         // 1) 텍스트 필드 역할을 가진 노드 우선
         const fields = nodes.filter(
           (n) =>
@@ -353,7 +377,7 @@ async function runStep(page, step, ctxState) {
         if (labeled) return labeled;
         // 3) 화면의 첫 입력 필드
         return fields[0] ?? null;
-      }, label);
+      }, { want: label, index: step.index ?? null });
       const target = handle.asElement();
       if (!target) throw new Error(`"${label}" 입력 필드를 찾지 못했습니다`);
       await clickElement(page, target, step.timeout ?? 45000);
@@ -418,22 +442,41 @@ async function runStep(page, step, ctxState) {
     case 'dump': {
       // 플로우를 짤 때 실제 시맨틱 라벨과 크기를 확인하는 용도.
       await enableSemantics(page);
-      const rows = await page.evaluate((role) => {
+      const rows = await page.evaluate(({ role, fields }) => {
         return [...document.querySelectorAll('flt-semantics')]
-          .filter((n) => !role || n.getAttribute('role') === role)
+          .filter((n) => {
+            if (fields) {
+              // 입력 필드만 — 값이 비어 라벨이 없어도 보여줍니다.
+              // 상위 컨테이너를 빼려고 가장 안쪽 노드만 남깁니다.
+              const has = (el) =>
+                el.getAttribute('role') === 'textbox' ||
+                !!el.querySelector('input, textarea');
+              return (
+                has(n) &&
+                ![...n.querySelectorAll('flt-semantics')].some(has)
+              );
+            }
+            return !role || n.getAttribute('role') === role;
+          })
           .map((n) => {
             const r = n.getBoundingClientRect();
             return {
               role: n.getAttribute('role') || '-',
               label: (n.getAttribute('aria-label') || n.textContent || '').split('\n')[0].slice(0, 30),
+              x: Math.round(r.x),
+              y: Math.round(r.y),
               w: Math.round(r.width),
               h: Math.round(r.height),
             };
           })
-          .filter((r) => r.w > 0 && r.label);
-      }, step.role ?? null);
+          .filter((r) => r.w > 0 && (fields || r.label));
+      }, { role: step.role ?? null, fields: step.fields ?? false });
       console.log(`  [dump] ${rows.length}개`);
-      for (const r of rows) console.log(`    ${r.role.padEnd(12)} ${String(r.w).padStart(4)}x${String(r.h).padStart(3)}  ${r.label}`);
+      rows.forEach((r, i) =>
+        console.log(
+          `    #${String(i).padStart(2)} ${r.role.padEnd(10)} (${String(r.x).padStart(4)},${String(r.y).padStart(4)}) ${String(r.w).padStart(4)}x${String(r.h).padStart(3)}  ${r.label}`,
+        ),
+      );
       break;
     }
     case 'shot': {

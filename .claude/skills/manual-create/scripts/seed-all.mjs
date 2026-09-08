@@ -40,6 +40,8 @@ const STEPS = [
   { file: 'seed-fridge.mjs', label: '냉장고', dateSensitive: true, cleanupSafe: true },
   // 장보기는 냉장고 뒤에 와야 합니다 — 구매 이력 하나가 품목을 팬트리로 이관합니다
   { file: 'seed-shopping.mjs', label: '장보기', dateSensitive: true, cleanupSafe: true },
+  { file: 'seed-minigame.mjs', label: '미니게임', dateSensitive: false, cleanupSafe: true },
+  { file: 'seed-vote.mjs', label: '투표', dateSensitive: true, cleanupSafe: true },
 ];
 
 const run = (file, args) => {

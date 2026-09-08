@@ -45,6 +45,8 @@ node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"   
 node .claude/skills/manual-create/scripts/seed-dashboard.mjs --group "김가네 가족" # 대시보드 위젯
 node .claude/skills/manual-create/scripts/seed-fridge.mjs --group "김가네 가족"    # 냉장고
 node .claude/skills/manual-create/scripts/seed-shopping.mjs --group "김가네 가족"  # 장보기 (냉장고 뒤에)
+node .claude/skills/manual-create/scripts/seed-minigame.mjs --group "김가네 가족"  # 미니게임
+node .claude/skills/manual-create/scripts/seed-vote.mjs --group "김가네 가족"      # 투표
 ```
 
 **촬영 전에는 `seed-all.mjs` 한 번이면 됩니다.**
@@ -158,7 +160,7 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 | `back` | 뒤로가기 | — |
 | `tapContains` | 부분 일치 탭 (가장 작은 노드) | `contains` |
 | `tapRole` | 역할로 탭 (스위치·체크박스) | `role`, `index` |
-| `type` | 텍스트 입력 | `label`(필드 라벨) 또는 `focused: true`, `text` |
+| `type` | 텍스트 입력 | `label`(필드 라벨) · `index`(순번) · `focused: true` 중 하나, `text` |
 | `key` | 키 입력 (Tab·Enter 등) | `key` (기본 `Tab`) |
 | `shot` | 스크린샷 | `name`, `caption`, `fullPage` |
 | `wait` | 대기 | `wait` |
@@ -178,6 +180,12 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 `insertText`로 한 번에 넣습니다. 한 글자씩 치면 첫 글자의 onChanged로 위젯이 리빌드되며
 편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다(검증됨: "삼겹살" → "삼").
 디바운스가 있는 화면은 `wait`를 넉넉히(5초) 주세요.
+
+**라벨이 없는 입력칸은 `index`로 지정합니다.** `labelText` 없이 `hintText`만 있는 필드는
+값이 비어 있는 동안 시맨틱스에 아무 라벨도 남기지 않아 라벨로는 못 찾습니다
+(미니게임의 참여자·결과 항목 칸이 그렇습니다). `index`는 **화면 위→아래, 왼쪽→오른쪽**
+순번입니다. 순번은 `{ "action": "dump", "fields": true }` 로 먼저 확인하세요 —
+입력 필드만 좌표와 함께 번호를 매겨 출력합니다.
 
 **포커스가 안 잡히는 필드는 `key`로 옮겨옵니다.** 로그인 폼의 비밀번호처럼 클릭으로
 포커스가 잡히지 않는 필드가 있습니다. 앞 필드를 `type`으로 채운 뒤 `key: "Tab"` 으로

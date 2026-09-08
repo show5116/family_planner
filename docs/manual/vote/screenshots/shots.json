@@ -1,0 +1,35 @@
+{
+  "flow": "투표",
+  "shots": [
+    {
+      "name": "01-list",
+      "file": "docs/manual/vote/screenshots/01-list.png",
+      "caption": "투표 목록 — 진행중과 종료된 투표"
+    },
+    {
+      "name": "02-filter-closed",
+      "file": "docs/manual/vote/screenshots/02-filter-closed.png",
+      "caption": "필터로 종료된 투표만 봅니다"
+    },
+    {
+      "name": "03-detail-voted",
+      "file": "docs/manual/vote/screenshots/03-detail-voted.png",
+      "caption": "투표한 뒤 — 항목별 득표와 비율"
+    },
+    {
+      "name": "04-detail-vote",
+      "file": "docs/manual/vote/screenshots/04-detail-vote.png",
+      "caption": "아직 투표하지 않은 투표 — 항목을 고르고 투표하기"
+    },
+    {
+      "name": "05-create",
+      "file": "docs/manual/vote/screenshots/05-create.png",
+      "caption": "새 투표 만들기 — 제목과 선택지"
+    },
+    {
+      "name": "06-create-options",
+      "file": "docs/manual/vote/screenshots/06-create-options.png",
+      "caption": "복수 선택·익명·마감 시각 설정"
+    }
+  ]
+}
