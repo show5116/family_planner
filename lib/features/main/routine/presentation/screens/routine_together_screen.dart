@@ -5,6 +5,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_challenge_tab.dart';
 import 'package:family_planner/features/main/routine/presentation/screens/routine_group_members_screen.dart';
@@ -84,7 +85,10 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
           title: Text(l10n.routine_together_title),
           actions: [
             _settingsAction(appBarForeground, l10n),
-            AppBarMoreMenu(onReplayOnboarding: _showCoachMark),
+            AppBarMoreMenu(
+              onReplayOnboarding: _showCoachMark,
+              guideUrl: GuideLinks.routineTogether,
+            ),
           ],
         ),
         body: AppEmptyState(
@@ -103,7 +107,10 @@ class _RoutineTogetherScreenState extends ConsumerState<RoutineTogetherScreen> {
           title: Text(l10n.routine_together_title),
           actions: [
             _settingsAction(appBarForeground, l10n),
-            AppBarMoreMenu(onReplayOnboarding: _showCoachMark),
+            AppBarMoreMenu(
+              onReplayOnboarding: _showCoachMark,
+              guideUrl: GuideLinks.routineTogether,
+            ),
           ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(

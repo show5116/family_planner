@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
@@ -76,7 +77,10 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
               onPressed: () => context.push(AppRoutes.assetStatistics),
             ),
           if (!_isDemo)
-            AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
+            AppBarMoreMenu(
+              onReplayOnboarding: _replayOnboarding,
+              guideUrl: GuideLinks.assets,
+            ),
         ],
       ),
       body: Column(

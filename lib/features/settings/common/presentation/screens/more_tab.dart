@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
@@ -70,7 +71,10 @@ class _MoreTabState extends ConsumerState<MoreTab> {
           appBar: AppBar(
             title: Text(l10n.nav_more),
             actions: [
-              AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
+              AppBarMoreMenu(
+                onReplayOnboarding: _replayOnboarding,
+                guideUrl: GuideLinks.settings,
+              ),
             ],
           ),
           body: ListView(

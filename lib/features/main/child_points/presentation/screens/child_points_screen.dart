@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 import 'package:family_planner/features/main/child_points/presentation/screens/history_tab.dart';
@@ -104,6 +105,7 @@ class _ChildPointsScreenState extends ConsumerState<ChildPointsScreen>
             ),
           AppBarMoreMenu(
             onReplayOnboarding: _replayOnboarding,
+            guideUrl: GuideLinks.childcare,
             extraItems: [
               if (selectedChildId != null && !_isDemo) ...[
                 MoreMenuItem(

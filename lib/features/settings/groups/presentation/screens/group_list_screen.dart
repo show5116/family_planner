@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/utils/error_handler.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -83,8 +84,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
             ),
             AppBarMoreMenu(
               onReplayOnboarding: _replayOnboarding,
-              guideUrl:
-                  'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%95%B1%EC%9D%98-%ED%95%B5%EC%8B%AC-%EA%B7%B8%EB%A3%B9-%EC%83%9D%EC%84%B1-%EB%B0%8F-%EB%A9%A4%EB%B2%84-%EC%B4%88%EB%8C%80%ED%95%98%EA%B8%B0-1%ED%8E%B8',
+              guideUrl: GuideLinks.groups,
             ),
           ],
         ],

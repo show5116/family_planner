@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -78,7 +79,12 @@ class _VoteListScreenState extends ConsumerState<VoteListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        actions: [AppBarMoreMenu(onReplayOnboarding: _replayOnboarding)],
+        actions: [
+          AppBarMoreMenu(
+            onReplayOnboarding: _replayOnboarding,
+            guideUrl: GuideLinks.vote,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         key: _fabKey,

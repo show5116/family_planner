@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/minigame/data/repositories/minigame_repository.dart';
@@ -145,6 +146,7 @@ class _RouletteGameScreenState extends ConsumerState<RouletteGameScreen>
               OnboardingService.resetCoachMark(CoachMarkKeys.miniGamesRoulette);
               _showCoachMark();
             },
+            guideUrl: GuideLinks.minigameRoulette,
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
@@ -128,6 +129,7 @@ class _ShoppingScreenState extends ConsumerState<ShoppingScreen>
         actions: [
           AppBarMoreMenu(
             onReplayOnboarding: _replayCurrentTabOnboarding,
+            guideUrl: GuideLinks.shopping,
           ),
         ],
         bottom: PreferredSize(

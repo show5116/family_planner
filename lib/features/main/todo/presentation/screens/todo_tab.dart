@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
 import 'package:family_planner/features/onboarding/services/onboarding_service.dart';
@@ -144,6 +145,7 @@ class _TodoTabState extends ConsumerState<TodoTab> {
                 ),
               AppBarMoreMenu(
                 onReplayOnboarding: _replayOnboarding,
+                guideUrl: GuideLinks.todo,
                 extraItems: [
                   MoreMenuItem(
                     id: 'categories',

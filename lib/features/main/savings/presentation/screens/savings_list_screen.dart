@@ -4,6 +4,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/presentation/screens/savings_detail_screen.dart';
@@ -84,7 +85,10 @@ class _SavingsListScreenState extends ConsumerState<SavingsListScreen> {
                         .refresh();
                   },
                 ),
-              AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
+              AppBarMoreMenu(
+                onReplayOnboarding: _replayOnboarding,
+                guideUrl: GuideLinks.savings,
+              ),
             ],
           ),
           body: Column(

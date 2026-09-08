@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
@@ -113,6 +114,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
           ),
           AppBarMoreMenu(
             onReplayOnboarding: _replayOnboarding,
+            guideUrl: GuideLinks.calendar,
             extraItems: [
               MoreMenuItem(
                 id: 'anniversaries',

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
@@ -191,6 +192,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               OnboardingService.resetCoachMark(CoachMarkKeys.miniGames);
               _showCoachMark();
             },
+            guideUrl: GuideLinks.minigame,
           ),
         ],
       ),

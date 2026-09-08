@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/features/home/presentation/widgets/anniversary_summary_widget.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/home/presentation/widgets/fridge_expiry_widget.dart';
@@ -90,7 +91,7 @@ class DashboardTab extends ConsumerWidget {
           ),
           AppBarMoreMenu(
             onReplayOnboarding: onReplayOnboarding,
-            guideUrl: 'https://show5116.tistory.com/entry/Family-Planner-%EA%B0%80%EC%9D%B4%EB%93%9C-%EB%82%98%EB%A7%8C%EC%9D%98-%EB%A7%9E%EC%B6%A4%ED%98%95-%EB%AA%A8%EC%9E%84-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-%ED%99%88-%EC%9C%84%EC%A0%AF-%EC%84%A4%EC%A0%95-%EB%B0%A9%EB%B2%95',
+            guideUrl: GuideLinks.dashboard,
           ),
         ],
       ),

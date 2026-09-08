@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_bottom_sheet.dart';
 
@@ -11,14 +12,14 @@ import 'package:family_planner/features/ai_chat/presentation/widgets/ai_chat_bot
 ///
 /// 모든 화면에 일관된 더보기(⋮) 버튼을 제공합니다.
 /// - AI 어시스턴트 (운영자 전용, 일반 사용자에게는 준비 중 안내)
-/// - 도움말 (온보딩 다시보기 / 가이드 홈페이지)
+/// - 도움말 (온보딩 다시보기 / 사용 설명서)
 /// - 화면별 추가 항목 [extraItems]
 class AppBarMoreMenu extends ConsumerWidget {
   const AppBarMoreMenu({
     super.key,
     this.onReplayOnboarding,
     this.extraItems = const [],
-    this.guideUrl = _defaultGuideUrl,
+    this.guideUrl = GuideLinks.home,
   });
 
   /// 눌렸을 때 튜토리얼을 즉시 재실행하는 콜백 (null이면 메뉴 항목 미표시)
@@ -27,11 +28,9 @@ class AppBarMoreMenu extends ConsumerWidget {
   /// 화면별 추가 메뉴 항목 (AI·도움말 위에 표시)
   final List<MoreMenuItem> extraItems;
 
-  /// 사용 가이드 링크 (화면별로 다르게 지정 가능)
+  /// 사용 설명서 링크 — 화면에 맞는 [GuideLinks] 상수를 넘긴다.
+  /// 넘기지 않으면 설명서 목록으로 보낸다.
   final String guideUrl;
-
-  static const _defaultGuideUrl =
-      'https://show5116.tistory.com/category/Family%20Planner/%EC%82%AC%EC%9A%A9%20%EA%B0%80%EC%9D%B4%EB%93%9C';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -5,6 +5,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
@@ -71,6 +72,7 @@ class _InvestmentIndicatorsScreenState
                   CoachMarkKeys.investmentIndicators);
               _showCoachMark();
             },
+            guideUrl: GuideLinks.investment,
           ),
         ],
       ),

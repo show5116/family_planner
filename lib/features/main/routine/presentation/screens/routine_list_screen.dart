@@ -6,6 +6,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/main/routine/data/models/routine_model.dart';
 import 'package:family_planner/features/main/routine/data/repositories/routine_repository.dart';
@@ -1030,6 +1031,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
               AppBarMoreMenu(
                 key: _moreMenuKey,
                 onReplayOnboarding: _showCoachMark,
+                guideUrl: GuideLinks.routine,
                 extraItems: [
                   // 그룹원 현황·랭킹·공유 설정이 모두 이 화면에 모여 있다.
                   MoreMenuItem(

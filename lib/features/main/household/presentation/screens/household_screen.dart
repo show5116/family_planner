@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/guide_links.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/main/assets/data/models/account_model.dart';
@@ -111,6 +112,7 @@ class _HouseholdScreenState extends ConsumerState<HouseholdScreen> {
           AppBarMoreMenu(
             key: _moreMenuKey,
             onReplayOnboarding: _replayOnboarding,
+            guideUrl: GuideLinks.household,
             extraItems: [
               MoreMenuItem(
                 id: 'budget',
