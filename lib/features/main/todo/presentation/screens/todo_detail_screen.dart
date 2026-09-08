@@ -138,7 +138,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
 
             _DetailRow(
               icon: Icons.event_outlined,
-              label: '마감일',
+              label: l10n.todo_label_dueDate,
               child: _DueDateDisplay(task: currentTask, l10n: l10n),
             ),
             const Divider(height: AppSizes.spaceXL),
@@ -146,7 +146,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
             if (currentTask.category != null) ...[
               _DetailRow(
                 icon: Icons.label_outline,
-                label: '카테고리',
+                label: l10n.todo_label_category,
                 child: Row(
                   children: [
                     if (currentTask.category!.emoji != null) ...[
@@ -217,7 +217,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
 
             _DetailRow(
               icon: Icons.schedule_outlined,
-              label: '등록일',
+              label: l10n.todo_label_createdAt,
               child: Text(
                 _formatDate(currentTask.createdAt),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -230,7 +230,7 @@ class _TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
               const Divider(height: AppSizes.spaceXL),
               _DetailRow(
                 icon: Icons.check_circle_outline,
-                label: '완료일',
+                label: l10n.todo_label_completedAt,
                 child: Text(
                   _formatDate(currentTask.completedAt!),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -346,7 +346,7 @@ class _StatusSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '상태',
+          l10n.todo_label_status,
           style: theme.textTheme.labelSmall?.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSizes.spaceS),

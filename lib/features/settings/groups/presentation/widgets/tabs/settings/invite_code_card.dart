@@ -180,6 +180,7 @@ class InviteCodeCard extends StatelessWidget {
   }
 
   void _copyInviteCode(BuildContext context, AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     Clipboard.setData(ClipboardData(text: group.inviteCode));
     ScaffoldMessenger.of(
       context,

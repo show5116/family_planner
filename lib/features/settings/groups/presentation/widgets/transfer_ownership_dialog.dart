@@ -18,7 +18,7 @@ class TransferOwnershipDialog {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('그룹장 양도'),
+        title: Text(l10n.group_transfer_ownership),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class TransferOwnershipDialog {
               backgroundColor: Colors.orange,
               foregroundColor: Colors.white,
             ),
-            child: const Text('양도하기'),
+            child: Text(l10n.group_transfer_confirm),
           ),
         ],
       ),
@@ -47,14 +47,13 @@ class TransferOwnershipDialog {
 
     if (confirmed == true && context.mounted) {
       try {
-        await ref.read(groupNotifierProvider.notifier).transferOwnership(
-              groupId,
-              member.user!.id,
-            );
+        await ref
+            .read(groupNotifierProvider.notifier)
+            .transferOwnership(groupId, member.user!.id);
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${member.user?.name}님에게 그룹장 권한이 양도되었습니다'),
+              content: Text(l10n.group_transfer_done(member.user?.name ?? '')),
               backgroundColor: Colors.green,
             ),
           );
@@ -62,7 +61,7 @@ class TransferOwnershipDialog {
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('그룹장 양도 실패: $e')),
+            SnackBar(content: Text('${l10n.group_transfer_failed}\n$e')),
           );
         }
       }
@@ -96,10 +95,7 @@ class TransferOwnershipDialog {
           const SizedBox(height: 8),
           Text(
             '• 양도 후 귀하는 기본 역할로 변경됩니다\n• 이 작업은 되돌릴 수 없습니다\n• 새 그룹장만 다시 권한을 양도할 수 있습니다',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.orange[900],
-            ),
+            style: TextStyle(fontSize: 13, color: Colors.orange[900]),
           ),
         ],
       ),

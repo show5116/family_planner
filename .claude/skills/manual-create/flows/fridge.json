@@ -1,0 +1,36 @@
+{
+  "name": "냉장고",
+  "outDir": "docs/manual/fridge/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "품목 추가(+)는 보관소마다 있고 aria 완전일치가 DOM 첫 번째를 잡습니다. 스크롤이나 시트를 거친 뒤에는 어떤 보관소가 잡힐지 확실하지 않아(냉동실이 잡히면 추천 칩의 보관 방법이 빨갛게 나옵니다) 화면을 새로 연 직후에 누릅니다. 추천 칩은 품목명을 실제로 입력해야 나오므로 type 액션을 씁니다(디바운스 800ms).",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+    { "action": "goto", "path": "/fridge", "wait": 14000 },
+    { "action": "shot", "name": "01-main", "caption": "냉장고 — 보관소별 품목과 유통기한 뱃지" },
+
+    { "action": "tap", "label": "품목 추가", "wait": 6000 },
+    { "action": "shot", "name": "04-add-item", "caption": "품목 추가 — 여러 개를 목록에 담아 한 번에 저장합니다" },
+    { "action": "type", "label": "품목명", "text": "소고기", "wait": 5000 },
+    { "action": "shot", "name": "05-expiry-suggestion", "caption": "품목명을 입력하면 유통기한을 자동으로 추천합니다" },
+    { "action": "tap", "label": "취소", "wait": 3000 },
+
+    { "action": "tapContains", "contains": "우유", "wait": 6000 },
+    { "action": "shot", "name": "06-item-edit", "caption": "품목 수정 — 이름·단위·메모·유통기한·알림일" },
+    { "action": "tap", "label": "취소", "wait": 3000 },
+
+    { "action": "tapFab", "wait": 6000 },
+    { "action": "shot", "name": "02-storage-form", "caption": "보관소 추가 — 이름과 보관 방법을 고릅니다" },
+    { "action": "tap", "label": "취소", "wait": 3000 },
+
+    { "action": "scroll", "dy": 700, "wait": 3000 },
+    { "action": "shot", "name": "03-storages", "caption": "보관 방법이 다른 보관소는 아이콘으로 구분됩니다" },
+
+    { "action": "goto", "path": "/fridge", "wait": 12000 },
+    { "action": "tap", "label": "더보기", "wait": 4000 },
+    { "action": "tap", "label": "유통기한 프리셋 관리", "wait": 9000 },
+    { "action": "shot", "name": "07-presets", "caption": "유통기한 프리셋 관리 — 품목별 기준 일수를 직접 바꿉니다" }
+  ]
+}

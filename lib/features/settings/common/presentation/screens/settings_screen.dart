@@ -85,7 +85,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     if (shouldSetupPassword == true && mounted) {
       final email = ref.read(authProvider).user?['email'] as String? ?? '';
-      context.push('${AppRoutes.forgotPassword}?setup=true&email=${Uri.encodeComponent(email)}');
+      context.push(
+        '${AppRoutes.forgotPassword}?setup=true&email=${Uri.encodeComponent(email)}',
+      );
     }
   }
 
@@ -97,9 +99,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final hasPassword = userInfo?['hasPassword'] as bool? ?? false;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.settings_title),
-      ),
+      appBar: AppBar(title: Text(l10n.settings_title)),
       body: ListView(
         children: [
           // 구독 상태 카드
@@ -171,8 +171,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _buildSettingTile(
             context,
             icon: Icons.flag_outlined,
-            title: '내 신고 내역',
-            subtitle: '내가 신고한 목록을 확인합니다',
+            title: l10n.settings_myReportsTitle,
+            subtitle: l10n.settings_myReportsSubtitle,
             onTap: () => context.push(AppRoutes.myGroupReports),
           ),
           const Divider(),
@@ -192,8 +192,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _buildSettingTile(
               context,
               icon: Icons.admin_panel_settings_outlined,
-              title: '공통 역할 관리',
-              subtitle: '시스템 전체에 적용되는 공통 역할 관리',
+              title: l10n.settings_commonRolesTitle,
+              subtitle: l10n.settings_commonRolesSubtitle,
               onTap: () {
                 context.push(AppRoutes.commonRoleManagement);
               },
@@ -201,8 +201,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _buildSettingTile(
               context,
               icon: Icons.manage_accounts_outlined,
-              title: '사용자 및 계정 관리',
-              subtitle: '구독 수정, 계정 삭제 예약 및 처리',
+              title: l10n.settings_userAdminTitle,
+              subtitle: l10n.settings_userAdminSubtitle,
               onTap: () {
                 context.push(AppRoutes.adminUserManagement);
               },
@@ -210,8 +210,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _buildSettingTile(
               context,
               icon: Icons.report_outlined,
-              title: '신고 관리',
-              subtitle: '그룹원 신고 접수 및 처리',
+              title: l10n.settings_reportAdminTitle,
+              subtitle: l10n.settings_reportAdminSubtitle,
               onTap: () => context.push(AppRoutes.adminGroupReports),
             ),
             const Divider(),
@@ -223,16 +223,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             context,
             icon: Icons.info_outlined,
             title: l10n.settings_appInfoTitle,
-            subtitle: _appVersion.isEmpty ? l10n.settings_appInfoSubtitle : _appVersion,
+            subtitle: _appVersion.isEmpty
+                ? l10n.settings_appInfoSubtitle
+                : _appVersion,
             onTap: () {
               showAboutDialog(
                 context: context,
                 applicationName: 'Family Planner',
                 applicationVersion: _appVersion,
                 applicationIcon: const FlutterLogo(size: 48),
-                children: [
-                  Text(l10n.settings_appDescription),
-                ],
+                children: [Text(l10n.settings_appDescription)],
               );
             },
           ),
@@ -263,27 +263,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _showOnboardingResetDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.replay_outlined),
-            SizedBox(width: 8),
-            Text('튜토리얼 다시 보기'),
+            const Icon(Icons.replay_outlined),
+            const SizedBox(width: 8),
+            Text(l10n.settings_replayTutorial),
           ],
         ),
-        content: const Text(
-          '앱 소개 슬라이드와 각 기능의 안내를\n처음부터 다시 볼 수 있습니다.',
-        ),
+        content: Text(l10n.settings_replayTutorialBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('다시 보기'),
+            child: Text(l10n.settings_replayTutorialConfirm),
           ),
         ],
       ),
@@ -293,7 +292,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final messenger = ScaffoldMessenger.of(context);
       await OnboardingService.resetAll();
       messenger.showSnackBar(
-        const SnackBar(content: Text('다음 앱 실행 시 튜토리얼이 표시됩니다.')),
+        SnackBar(content: Text(l10n.settings_replayTutorialDone)),
       );
     }
   }
@@ -309,9 +308,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -353,37 +352,46 @@ class _SubscriptionCard extends ConsumerWidget {
         String formatDate(DateTime dt) =>
             '${dt.year}.${dt.month.toString().padLeft(2, '0')}.${dt.day.toString().padLeft(2, '0')}';
 
-        final (IconData icon, Color color, String label, String sublabel) = switch (tier) {
+        final (
+          IconData icon,
+          Color color,
+          String label,
+          String sublabel,
+        ) = switch (tier) {
           SubscriptionTier.free => (
-              Icons.sentiment_neutral_outlined,
-              Colors.grey,
-              l10n.subscription_free_label,
-              l10n.subscription_free_sublabel,
-            ),
+            Icons.sentiment_neutral_outlined,
+            Colors.grey,
+            l10n.subscription_free_label,
+            l10n.subscription_free_sublabel,
+          ),
           SubscriptionTier.adFree when isTrial => (
-              Icons.card_giftcard_outlined,
-              colorScheme.primary,
-              l10n.subscription_trial_label,
-              daysLeft > 0
-                  ? l10n.subscription_trial_sublabel_days(daysLeft)
-                  : l10n.subscription_trial_sublabel_today,
-            ),
+            Icons.card_giftcard_outlined,
+            colorScheme.primary,
+            l10n.subscription_trial_label,
+            daysLeft > 0
+                ? l10n.subscription_trial_sublabel_days(daysLeft)
+                : l10n.subscription_trial_sublabel_today,
+          ),
           SubscriptionTier.adFree => (
-              Icons.block_outlined,
-              Colors.blue,
-              l10n.subscription_ad_free_label,
-              expiresAt != null
-                  ? l10n.subscription_ad_free_sublabel_expires(formatDate(expiresAt))
-                  : l10n.subscription_ad_free_sublabel_active,
-            ),
+            Icons.block_outlined,
+            Colors.blue,
+            l10n.subscription_ad_free_label,
+            expiresAt != null
+                ? l10n.subscription_ad_free_sublabel_expires(
+                    formatDate(expiresAt),
+                  )
+                : l10n.subscription_ad_free_sublabel_active,
+          ),
           SubscriptionTier.premium => (
-              Icons.workspace_premium_outlined,
-              const Color(0xFFFF9800),
-              l10n.subscription_premium_label,
-              expiresAt != null
-                  ? l10n.subscription_premium_sublabel_expires(formatDate(expiresAt))
-                  : l10n.subscription_premium_sublabel_active,
-            ),
+            Icons.workspace_premium_outlined,
+            const Color(0xFFFF9800),
+            l10n.subscription_premium_label,
+            expiresAt != null
+                ? l10n.subscription_premium_sublabel_expires(
+                    formatDate(expiresAt),
+                  )
+                : l10n.subscription_premium_sublabel_active,
+          ),
         };
 
         return Padding(
@@ -417,18 +425,16 @@ class _SubscriptionCard extends ConsumerWidget {
                         children: [
                           Text(
                             label,
-                            style:
-                                Theme.of(context).textTheme.titleSmall?.copyWith(
-                                      color: color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  color: color,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           Text(
                             sublabel,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.onSurfaceVariant,
-                                    ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.onSurfaceVariant),
                           ),
                         ],
                       ),

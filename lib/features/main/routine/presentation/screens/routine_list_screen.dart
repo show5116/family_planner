@@ -1046,6 +1046,7 @@ class _RoutineListScreenState extends ConsumerState<RoutineListScreen> {
             ? null
             : FloatingActionButton(
                 key: _addButtonKey,
+                tooltip: l10n.routine_add,
                 // 온보딩 중에는 코치마크가 이 버튼을 가리키기만 하므로
                 // 실제 생성 화면이 열리지 않게 막는다.
                 onPressed: isDemo ? null : () => _showAddPicker(context),

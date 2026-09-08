@@ -144,7 +144,9 @@ class _HomeWidgetSettingsBodyState
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.widgetSettings_saveSuccess),
+          content: Text(
+            AppLocalizations.of(context)!.widgetSettings_saveSuccess,
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -155,10 +157,7 @@ class _HomeWidgetSettingsBodyState
     final notifier = ref.read(dashboardWidgetSettingsProvider.notifier);
     final current = ref.read(dashboardWidgetSettingsProvider).valueOrNull;
     if (current == null) return;
-    final updated = current.copyWith(
-      widgetOrder: _order,
-      anniversaryIds: ids,
-    );
+    final updated = current.copyWith(widgetOrder: _order, anniversaryIds: ids);
     await notifier.save(updated);
   }
 
@@ -191,10 +190,8 @@ class _HomeWidgetSettingsBodyState
           top: Radius.circular(AppSizes.radiusMedium),
         ),
       ),
-      builder: (ctx) => _AddWidgetSheet(
-        currentOrder: _order,
-        onAdd: _addWidget,
-      ),
+      builder: (ctx) =>
+          _AddWidgetSheet(currentOrder: _order, onAdd: _addWidget),
     );
   }
 
@@ -215,8 +212,8 @@ class _HomeWidgetSettingsBodyState
                 child: Text(
                   '드래그해서 순서를 변경하고, X 버튼으로 위젯을 제거할 수 있습니다.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],
@@ -245,13 +242,11 @@ class _HomeWidgetSettingsBodyState
                           child: Text(
                             '표시 중인 위젯이 없습니다\n아래 버튼으로 위젯을 추가해보세요',
                             textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                           ),
                         ),
@@ -263,7 +258,8 @@ class _HomeWidgetSettingsBodyState
                       left: AppSizes.spaceM,
                       right: AppSizes.spaceM,
                       top: AppSizes.spaceS,
-                      bottom: AppSizes.spaceM +
+                      bottom:
+                          AppSizes.spaceM +
                           MediaQuery.paddingOf(context).bottom,
                     ),
                     buildDefaultDragHandles: false,
@@ -290,8 +286,7 @@ class _HomeWidgetSettingsBodyState
                       }
                       return Card(
                         key: ValueKey(key),
-                        margin:
-                            const EdgeInsets.only(bottom: AppSizes.spaceM),
+                        margin: const EdgeInsets.only(bottom: AppSizes.spaceM),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppSizes.spaceM,
@@ -305,12 +300,13 @@ class _HomeWidgetSettingsBodyState
                                   cursor: SystemMouseCursors.grab,
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        right: AppSizes.spaceM),
+                                      right: AppSizes.spaceM,
+                                    ),
                                     child: Icon(
                                       Icons.drag_handle,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 ),
@@ -319,31 +315,32 @@ class _HomeWidgetSettingsBodyState
                                 width: 44,
                                 height: 44,
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
                                   borderRadius: BorderRadius.circular(
-                                      AppSizes.radiusSmall),
+                                    AppSizes.radiusSmall,
+                                  ),
                                 ),
                                 child: Icon(
                                   _widgetIcon(key),
-                                  color:
-                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                               const SizedBox(width: AppSizes.spaceM),
                               Expanded(
                                 child: Text(
                                   _widgetLabel(key, l10n),
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
                                 ),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.close),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 onPressed: () => _removeWidget(key),
                               ),
                             ],
@@ -366,7 +363,7 @@ class _HomeWidgetSettingsBodyState
                 child: FilledButton.icon(
                   onPressed: _showAddSheet,
                   icon: const Icon(Icons.add),
-                  label: const Text('위젯 추가하기'),
+                  label: Text(l10n.widgetSettings_addWidget),
                 ),
               ),
             ),
@@ -404,8 +401,7 @@ class _AnniversaryWidgetCardState
   Group? _selectedGroup;
 
   void _removeAnniversary(String id) {
-    final updated =
-        widget.anniversaryIds.where((i) => i != id).toList();
+    final updated = widget.anniversaryIds.where((i) => i != id).toList();
     widget.onAnniversaryIdsChanged(updated);
   }
 
@@ -421,6 +417,7 @@ class _AnniversaryWidgetCardState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final allAsync = ref.watch(allGroupsAnniversariesProvider);
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
@@ -444,8 +441,7 @@ class _AnniversaryWidgetCardState
                   child: MouseRegion(
                     cursor: SystemMouseCursors.grab,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(right: AppSizes.spaceM),
+                      padding: const EdgeInsets.only(right: AppSizes.spaceM),
                       child: Icon(
                         Icons.drag_handle,
                         color: colorScheme.onSurfaceVariant,
@@ -458,8 +454,7 @@ class _AnniversaryWidgetCardState
                   height: 44,
                   decoration: BoxDecoration(
                     color: colorScheme.primaryContainer,
-                    borderRadius:
-                        BorderRadius.circular(AppSizes.radiusSmall),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                   ),
                   child: Icon(
                     Icons.celebration_outlined,
@@ -496,12 +491,13 @@ class _AnniversaryWidgetCardState
                 if (widget.anniversaryIds.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: AppSizes.spaceS),
+                      vertical: AppSizes.spaceS,
+                    ),
                     child: Text(
                       '기념일을 추가해보세요',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   )
                 else
@@ -533,25 +529,22 @@ class _AnniversaryWidgetCardState
                   if (_selectedGroup == null)
                     _InlineGroupList(
                       groups: groups,
-                      onSelect: (g) =>
-                          setState(() => _selectedGroup = g),
+                      onSelect: (g) => setState(() => _selectedGroup = g),
                     )
                   else
                     _InlineAnniversaryList(
                       group: _selectedGroup!,
                       selectedIds: widget.anniversaryIds,
                       onAdd: _addAnniversary,
-                      onBack: () =>
-                          setState(() => _selectedGroup = null),
+                      onBack: () => setState(() => _selectedGroup = null),
                     ),
                 ],
                 // 기념일 추가 버튼
                 if (!_showPicker)
                   TextButton.icon(
-                    onPressed: () =>
-                        setState(() => _showPicker = true),
+                    onPressed: () => setState(() => _showPicker = true),
                     icon: const Icon(Icons.add, size: 16),
-                    label: const Text('기념일 추가'),
+                    label: Text(l10n.widgetSettings_addAnniversary),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       visualDensity: VisualDensity.compact,
@@ -570,10 +563,7 @@ class _AnniversaryWidgetCardState
 // ── 인라인 그룹 선택 ──────────────────────────────────────────────────────────
 
 class _InlineGroupList extends StatelessWidget {
-  const _InlineGroupList({
-    required this.groups,
-    required this.onSelect,
-  });
+  const _InlineGroupList({required this.groups, required this.onSelect});
   final List<Group> groups;
   final void Function(Group) onSelect;
 
@@ -585,8 +575,8 @@ class _InlineGroupList extends StatelessWidget {
         child: Text(
           '속한 그룹이 없습니다',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       );
     }
@@ -596,17 +586,19 @@ class _InlineGroupList extends StatelessWidget {
         Text(
           '그룹 선택',
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
-        ...groups.map((g) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.group_outlined),
-              title: Text(g.name),
-              trailing: const Icon(Icons.chevron_right),
-              visualDensity: VisualDensity.compact,
-              onTap: () => onSelect(g),
-            )),
+        ...groups.map(
+          (g) => ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.group_outlined),
+            title: Text(g.name),
+            trailing: const Icon(Icons.chevron_right),
+            visualDensity: VisualDensity.compact,
+            onTap: () => onSelect(g),
+          ),
+        ),
       ],
     );
   }
@@ -644,8 +636,8 @@ class _InlineAnniversaryList extends ConsumerWidget {
             Text(
               group.name,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -657,21 +649,18 @@ class _InlineAnniversaryList extends ConsumerWidget {
           error: (_, _) => Text(
             '기념일을 불러오지 못했습니다',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           data: (anniversaries) {
             if (anniversaries.isEmpty) {
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceS),
                 child: Text(
                   '${group.name}에 기념일이 없습니다',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               );
             }
@@ -691,13 +680,11 @@ class _InlineAnniversaryList extends ConsumerWidget {
                   trailing: alreadyAdded
                       ? Text(
                           '추가됨',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
+                          style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                         )
                       : const Icon(Icons.add),
@@ -716,18 +703,16 @@ class _InlineAnniversaryList extends ConsumerWidget {
 // ── 위젯 추가 바텀시트 ────────────────────────────────────────────────────────
 
 class _AddWidgetSheet extends ConsumerWidget {
-  const _AddWidgetSheet({
-    required this.currentOrder,
-    required this.onAdd,
-  });
+  const _AddWidgetSheet({required this.currentOrder, required this.onAdd});
   final List<String> currentOrder;
   final void Function(String key) onAdd;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final available =
-        _addableWidgetKeys.where((key) => !currentOrder.contains(key)).toList();
+    final available = _addableWidgetKeys
+        .where((key) => !currentOrder.contains(key))
+        .toList();
 
     return DraggableScrollableSheet(
       expand: false,
@@ -771,10 +756,8 @@ class _AddWidgetSheet extends ConsumerWidget {
                     child: Text(
                       '추가할 수 있는 위젯이 없습니다',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   )
                 : ListView(
@@ -785,11 +768,12 @@ class _AddWidgetSheet extends ConsumerWidget {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer,
-                            borderRadius:
-                                BorderRadius.circular(AppSizes.radiusSmall),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusSmall,
+                            ),
                           ),
                           child: Icon(
                             _widgetIcon(key),

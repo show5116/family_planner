@@ -179,6 +179,7 @@ class _PlaceSearchSheetState extends State<_PlaceSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Padding(
@@ -208,7 +209,7 @@ class _PlaceSearchSheetState extends State<_PlaceSearchSheet> {
                 controller: _controller,
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: '장소명 또는 주소 검색',
+                  hintText: l10n.task_place_search_hint,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: _controller.text.isNotEmpty
@@ -237,7 +238,9 @@ class _PlaceSearchSheetState extends State<_PlaceSearchSheet> {
                   : _results.isEmpty
                       ? Center(
                           child: Text(
-                            _controller.text.isEmpty ? '장소를 검색해보세요' : '검색 결과가 없습니다',
+                            _controller.text.isEmpty
+                                ? l10n.task_place_search_prompt
+                                : l10n.common_noSearchResults,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),

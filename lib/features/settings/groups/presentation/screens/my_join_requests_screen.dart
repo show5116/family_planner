@@ -42,6 +42,7 @@ class _MyJoinRequestsScreenState extends ConsumerState<MyJoinRequestsScreen>
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.common_refresh,
             onPressed: () => ref.invalidate(myJoinRequestsProvider),
           ),
         ],
@@ -110,8 +111,8 @@ class _MyJoinRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     final (statusLabel, statusColor, statusBg) = switch (request.status) {
       'PENDING' => (l10n.group_pending, Colors.orange[700]!, Colors.orange[50]!),

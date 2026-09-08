@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/core/routes/app_routes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -63,6 +64,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final ladderPos = _keyToPosition(_ladderCardKey);
@@ -91,8 +93,8 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '미니게임',
-              description: '사다리타기와 룰렛 게임을 즐길 수 있어요.\n공정한 결정이 필요할 때 활용해보세요!',
+              title: l10n.minigame_title,
+              description: l10n.minigame_coach_desc,
               icon: Icons.casino_outlined,
               color: Colors.indigo,
             ),
@@ -109,8 +111,8 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '그룹 선택',
-              description: '그룹을 선택하면 게임 결과가\n자동으로 저장돼요.\n그룹 멤버 누구나 이력을 확인할 수 있어요.',
+              title: l10n.minigame_coach_group,
+              description: l10n.minigame_coach_group_desc,
               icon: Icons.group_outlined,
               color: Colors.teal,
             ),
@@ -127,8 +129,8 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '게임 이력',
-              description: '지금까지 진행한 게임 결과를\n이곳에서 확인할 수 있어요.\n누가 어떤 결과를 받았는지 투명하게 공개됩니다.',
+              title: l10n.minigame_history,
+              description: l10n.minigame_coach_history_desc,
               icon: Icons.history,
               color: Colors.orange,
             ),
@@ -144,7 +146,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: _skipWidget,
       onFinish: () => OnboardingService.completeCoachMark(CoachMarkKeys.miniGames),
@@ -158,27 +160,31 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
     ).show(context: context);
   }
 
-  Widget get _skipWidget => Container(
+  Widget get _skipWidget {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
     final resultsAsync = ref.watch(minigameResultsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('미니게임'),
+        title: Text(l10n.minigame_title),
         actions: [
           AppBarMoreMenu(
             onReplayOnboarding: () {
@@ -199,7 +205,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
                   child: _GameCard(
                     key: _ladderCardKey,
                     icon: Icons.view_week,
-                    title: '사다리타기',
+                    title: l10n.minigame_ladder,
                     color: Colors.indigo,
                     onTap: () => context.push(AppRoutes.ladderGame),
                   ),
@@ -209,7 +215,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
                   child: _GameCard(
                     key: _rouletteCardKey,
                     icon: Icons.circle_outlined,
-                    title: '룰렛',
+                    title: l10n.minigame_roulette,
                     color: Colors.orange,
                     onTap: () => context.push(AppRoutes.rouletteGame),
                   ),
@@ -222,7 +228,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
             key: _groupDropdownKey,
             selectedGroupId: selectedGroupId,
             showPersonal: true,
-            personalLabel: '그룹 없음 (이력 저장 안 함)',
+            personalLabel: l10n.minigame_no_group,
             onChanged: (value) {
               ref.read(minigameSelectedGroupIdProvider.notifier).state = value;
             },
@@ -236,8 +242,8 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    '게임 이력',
+                  Text(
+                    l10n.minigame_history,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
@@ -252,9 +258,9 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
               child: resultsAsync.when(
                 loading: () =>
                     const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('오류: $e')),
+                error: (e, _) => Center(child: Text('${l10n.common_error}: $e')),
                 data: (results) => results.isEmpty
-                    ? const Center(child: Text('게임 이력이 없습니다'))
+                    ? Center(child: Text(l10n.minigame_history_empty))
                     : ListView.separated(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: results.length,
@@ -279,7 +285,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
                         color: Theme.of(context).colorScheme.outline),
                     const SizedBox(height: 8),
                     Text(
-                      '그룹을 선택하면\n게임 이력이 자동 저장됩니다',
+                      l10n.minigame_select_group_hint,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.outline),
@@ -294,19 +300,21 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
   }
 
   Future<void> _deleteResult(String id) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('이력 삭제'),
-        content: const Text('이 게임 이력을 삭제하시겠습니까?'),
+        title: Text(l10n.minigame_history_delete),
+        content: Text(l10n.minigame_history_delete_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('삭제', style: TextStyle(color: Colors.red)),
+            child: Text(l10n.common_delete,
+                style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -319,7 +327,7 @@ class _MiniGamesScreenState extends ConsumerState<MiniGamesScreen> {
     if (!success && mounted) {
       final error = ref.read(minigameManagementProvider).error;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('삭제 실패: $error')),
+        SnackBar(content: Text('${l10n.common_deleteFailed}\n$error')),
       );
     }
   }
@@ -374,12 +382,13 @@ class _HistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isLadder = result.gameType == MinigameType.ladder;
     final subtitle = isLadder
         ? result.ladderAssignments
             .map((a) => '${a.participant} → ${a.option}')
             .join(', ')
-        : '당첨: ${result.rouletteWinner ?? '-'}';
+        : l10n.minigame_winner(result.rouletteWinner ?? '-');
 
     return ListTile(
       leading: Icon(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/shared/widgets/rich_text_editor.dart';
 import 'package:family_planner/core/services/storage_service.dart';
@@ -20,6 +21,7 @@ class AnswerForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -56,7 +58,7 @@ class AnswerForm extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSizes.spaceS),
                 Text(
-                  '답변 작성',
+                  l10n.qna_writeAnswer,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -69,7 +71,7 @@ class AnswerForm extends StatelessWidget {
             RichTextEditor(
               controller: controller,
               labelText: '',
-              hintText: '답변 내용을 입력하세요',
+              hintText: l10n.qna_answerContentHint,
               minLines: 8,
               simpleMode: true,
               imageUploadType: EditorImageType.qna,
@@ -91,7 +93,9 @@ class AnswerForm extends StatelessWidget {
                         ),
                       )
                     : const Icon(Icons.send),
-                label: Text(isSubmitting ? '답변 등록 중...' : '답변 등록'),
+                label: Text(isSubmitting
+                    ? l10n.qna_submittingAnswer
+                    : l10n.qna_submitAnswer),
               ),
             ),
           ],
@@ -112,6 +116,7 @@ class ResolveSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(AppSizes.spaceL),
       decoration: BoxDecoration(
@@ -134,7 +139,7 @@ class ResolveSection extends StatelessWidget {
               ),
               const SizedBox(width: AppSizes.spaceS),
               Text(
-                '문제가 해결되셨나요?',
+                l10n.qna_resolvedPrompt,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.success,
@@ -144,7 +149,7 @@ class ResolveSection extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '답변이 도움이 되셨다면 해결 완료로 변경해주세요.\n1주일간 상태를 변경하지 않으면 자동으로 해결 완료로 변경됩니다.',
+            l10n.qna_resolvedPromptBody,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -155,7 +160,7 @@ class ResolveSection extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onResolve,
               icon: const Icon(Icons.check_circle),
-              label: const Text('해결 완료'),
+              label: Text(l10n.qna_resolve),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.success,
                 foregroundColor: Colors.white,

@@ -4,38 +4,59 @@ part of 'memo_list_screen.dart';
 
 final _demoNow = DateTime(2025, 5, 10, 9, 0);
 
-// 데모 일반 메모 Delta JSON (굵은 제목 + 일반 텍스트 혼합)
-const _demoNoteDelta =
-    '[{"insert":"항공권 예약 완료","attributes":{"bold":true}},'
-    '{"insert":"\\n숙소는 한림읍 게스트하우스로 결정.\\n렌터카 예약 필요. 우도, 성산일출봉 방문 예정.\\n"}]';
+// 데모 일반 메모 Delta JSON (굵은 첫 줄 + 일반 텍스트).
+// 번역이 필요해 상수로 둘 수 없어 l10n에서 만든다.
+String _demoNoteDelta(AppLocalizations l10n) {
+  final lines = l10n.demo_memo_trip_body.split('\n');
+  return jsonEncode([
+    {
+      'insert': lines.first,
+      'attributes': {'bold': true},
+    },
+    {'insert': '\n${lines.skip(1).join('\n')}\n'},
+  ]);
+}
 
-final _demoNoteMemo = MemoModel(
+MemoModel _demoNoteMemo(AppLocalizations l10n) => MemoModel(
   id: '__demo_note__',
-  title: '제주도 여행 준비',
-  content: _demoNoteDelta,
+  title: l10n.demo_memo_trip,
+  content: _demoNoteDelta(l10n),
   format: MemoFormat.delta,
   visibility: MemoVisibility.private_,
-  user: const MemoAuthor(id: '__demo_user__', name: '나'),
-  tags: const [MemoTag(id: '__t1__', name: '여행'), MemoTag(id: '__t2__', name: '제주')],
+  user: MemoAuthor(id: '__demo_user__', name: l10n.common_me),
+  tags: [
+    MemoTag(id: '__t1__', name: l10n.demo_tag_travel),
+    MemoTag(id: '__t2__', name: l10n.demo_tag_jeju),
+  ],
   createdAt: _demoNow,
   updatedAt: _demoNow,
 );
 
-// 데모 체크리스트 Delta JSON (우유 2개✓, 달걀 한 판✓, 두부, 사과 1kg)
-const _demoChecklistDelta =
-    '[{"insert":"여권 / 신분증\\n","attributes":{"list":"checked"}},'
-    '{"insert":"세면도구\\n","attributes":{"list":"checked"}},'
-    '{"insert":"여벌 옷\\n","attributes":{"list":"unchecked"}},'
-    '{"insert":"충전기\\n","attributes":{"list":"unchecked"}},'
-    '{"insert":"상비약\\n","attributes":{"list":"unchecked"}}]';
+// 데모 체크리스트 Delta JSON (앞의 두 항목만 체크된 상태)
+String _demoChecklistDelta(AppLocalizations l10n) {
+  final items = <(String, bool)>[
+    (l10n.demo_check_passport, true),
+    (l10n.demo_check_toiletries, true),
+    (l10n.demo_check_clothes, false),
+    (l10n.demo_check_charger, false),
+    (l10n.demo_check_meds, false),
+  ];
+  return jsonEncode([
+    for (final (text, checked) in items)
+      {
+        'insert': '$text\n',
+        'attributes': {'list': checked ? 'checked' : 'unchecked'},
+      },
+  ]);
+}
 
-final _demoChecklistMemo = MemoModel(
+MemoModel _demoChecklistMemo(AppLocalizations l10n) => MemoModel(
   id: '__demo_checklist__',
-  title: '외박 준비물',
-  content: _demoChecklistDelta,
+  title: l10n.demo_memo_packing,
+  content: _demoChecklistDelta(l10n),
   format: MemoFormat.delta,
   visibility: MemoVisibility.private_,
-  user: const MemoAuthor(id: '__demo_user__', name: '나'),
+  user: MemoAuthor(id: '__demo_user__', name: l10n.common_me),
   checklistMeta: const ChecklistMeta(total: 5, checked: 2),
   createdAt: _demoNow,
   updatedAt: _demoNow,
@@ -79,6 +100,7 @@ extension _MemoListOnboarding on _MemoListScreenState {
   // ── 1단계: 일반 메모 설명 ────────────────────────────────────────────────
 
   Future<void> _showPhase1() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final targets = <TargetFocus>[
       TargetFocus(
@@ -90,8 +112,8 @@ extension _MemoListOnboarding on _MemoListScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '리치 텍스트 메모',
-              description: '굵게, 기울임, 제목 등 서식을 자유롭게 적용할 수 있어요.\n태그로 분류하고 URL을 붙여넣으면\n링크 카드가 자동으로 생성됩니다.',
+              title: l10n.coach_memo_richtext,
+              description: l10n.coach_memo_richtext_desc,
               icon: Icons.edit_note,
               color: AppColors.primary,
             ),
@@ -105,7 +127,7 @@ extension _MemoListOnboarding on _MemoListScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase2,
@@ -119,6 +141,7 @@ extension _MemoListOnboarding on _MemoListScreenState {
   // ── 2단계: 체크리스트 메모 설명 ──────────────────────────────────────────
 
   Future<void> _showPhase2() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final targets = <TargetFocus>[
       TargetFocus(
@@ -130,8 +153,8 @@ extension _MemoListOnboarding on _MemoListScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '체크리스트',
-              description: '메모 중간 어디에든 체크리스트를 삽입할 수 있어요.\n완료된 항목 수가 카드에 바로 표시되고\n상세 화면에서 탭해 체크할 수 있습니다.',
+              title: l10n.coach_memo_checklist,
+              description: l10n.coach_memo_checklist_desc,
               icon: Icons.checklist,
               color: Colors.teal,
             ),
@@ -145,7 +168,7 @@ extension _MemoListOnboarding on _MemoListScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: _showPhase3Detail,
@@ -159,11 +182,12 @@ extension _MemoListOnboarding on _MemoListScreenState {
   // ── 3단계: 체크리스트 상세 화면 데모 ─────────────────────────────────────
 
   Future<void> _showPhase3Detail() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => _DemoChecklistDetailScreen(
-          memo: _demoChecklistMemo,
+          memo: _demoChecklistMemo(l10n),
           onDone: _completeOnboarding,
         ),
       ),
@@ -176,26 +200,31 @@ extension _MemoListOnboarding on _MemoListScreenState {
     _endDemo();
   }
 
-  Widget get _skipWidget => Container(
+  Widget get _skipWidget {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       );
+  }
 
   Widget _buildDemoList() {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       padding: const EdgeInsets.all(AppSizes.spaceM),
       children: [
-        MemoCard(key: _noteCardKey, memo: _demoNoteMemo, isDemo: true),
+        MemoCard(key: _noteCardKey, memo: _demoNoteMemo(l10n), isDemo: true),
         const SizedBox(height: AppSizes.spaceM),
-        MemoCard(key: _checklistCardKey, memo: _demoChecklistMemo, isDemo: true),
+        MemoCard(
+            key: _checklistCardKey, memo: _demoChecklistMemo(l10n), isDemo: true),
       ],
     );
   }
@@ -254,6 +283,7 @@ class _DemoChecklistDetailScreenState
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final targets = <TargetFocus>[
       TargetFocus(
@@ -265,8 +295,8 @@ class _DemoChecklistDetailScreenState
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '진행률',
-              description: '완료된 항목 수를 한눈에 볼 수 있어요.\n전체 선택/초기화 버튼도 있습니다.',
+              title: l10n.coach_memo_progress,
+              description: l10n.coach_memo_progress_desc,
               icon: Icons.checklist,
               color: Colors.teal,
             ),
@@ -282,8 +312,8 @@ class _DemoChecklistDetailScreenState
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '항목 체크',
-              description: '체크박스를 탭하면 완료 처리돼요.\n저장 버튼을 누르면 변경사항이 한 번에 저장됩니다.',
+              title: l10n.coach_memo_check,
+              description: l10n.coach_memo_check_desc,
               icon: Icons.check_circle_outline,
               color: AppColors.primary,
             ),
@@ -299,8 +329,8 @@ class _DemoChecklistDetailScreenState
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '수정 모드',
-              description: '수정 버튼을 누르면 에디터가 열려요.\n툴바의 체크리스트 버튼으로 항목을 자유롭게 추가·수정할 수 있습니다.',
+              title: l10n.coach_memo_edit,
+              description: l10n.coach_memo_edit_desc,
               icon: Icons.edit_outlined,
               color: Colors.orange,
             ),
@@ -315,7 +345,7 @@ class _DemoChecklistDetailScreenState
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomRight,
       skipWidget: _skipWidget,
       onFinish: () => Navigator.of(context).pop(),
@@ -326,27 +356,31 @@ class _DemoChecklistDetailScreenState
     ).show(context: context);
   }
 
-  Widget get _skipWidget => Container(
+  Widget get _skipWidget {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final checked = widget.memo.checklistMeta.checked;
     final total = widget.memo.checklistMeta.total;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('메모 상세'),
+        title: Text(l10n.memo_detail),
         actions: [
           // 실제 MemoDetailScreen의 수정 메뉴 버튼과 동일한 위치에 key 부착
           IconButton(
@@ -395,7 +429,7 @@ class _DemoChecklistDetailScreenState
                       size: AppSizes.iconSmall, color: AppColors.primary),
                   const SizedBox(width: AppSizes.spaceXS),
                   Text(
-                    '$checked/$total 완료',
+                    l10n.memo_checklistProgress(checked, total),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -404,7 +438,7 @@ class _DemoChecklistDetailScreenState
                   TextButton.icon(
                     onPressed: null,
                     icon: const Icon(Icons.check_box, size: AppSizes.iconSmall),
-                    label: const Text('전체 선택'),
+                    label: Text(l10n.memo_checklistSelectAll),
                     style: TextButton.styleFrom(
                         foregroundColor: AppColors.textSecondary),
                   ),

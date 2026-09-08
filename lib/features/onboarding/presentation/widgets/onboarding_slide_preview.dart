@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 
 /// 슬라이드별 앱 UI 미리보기 위젯 모음
@@ -11,17 +12,18 @@ class GroupPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groups = [
-      (Icons.home_rounded, '우리 가족', AppColors.primary, 4),
-      (Icons.favorite_rounded, '❤️ 연인', Colors.pink, 2),
-      (Icons.people_rounded, '친구 모임', Colors.green, 6),
-      (Icons.work_rounded, '팀 프로젝트', Colors.orange, 3),
+      (Icons.home_rounded, l10n.demo_group_family, AppColors.primary, 4),
+      (Icons.favorite_rounded, '❤️ ${l10n.intro_preview_couple}', Colors.pink, 2),
+      (Icons.people_rounded, l10n.intro_preview_friends, Colors.green, 6),
+      (Icons.work_rounded, l10n.intro_preview_team, Colors.orange, 3),
     ];
 
     return _PhoneMockup(
       child: Column(
         children: [
-          _MockAppBar(title: '내 그룹'),
+          _MockAppBar(title: l10n.intro_preview_mygroups),
           Expanded(
             child: ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
@@ -72,7 +74,7 @@ class GroupPreviewWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          '$count명',
+                          l10n.intro_preview_members('$count'),
                           style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -96,17 +98,18 @@ class CalendarPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final today = DateTime.now();
     final events = [
-      (Colors.blue, '가족 외식', '오후 6:00'),
-      (Colors.green, '병원 예약', '오전 10:30'),
-      (Colors.orange, '생일 파티 🎂', '오후 3:00'),
+      (Colors.blue, l10n.intro_preview_dining, '오후 6:00'),
+      (Colors.green, l10n.intro_preview_hospital, '오전 10:30'),
+      (Colors.orange, l10n.intro_preview_birthday, '오후 3:00'),
     ];
 
     return _PhoneMockup(
       child: Column(
         children: [
-          _MockAppBar(title: '일정'),
+          _MockAppBar(title: l10n.calendar_type_event),
           // 미니 달력 헤더
           Container(
             color: AppColors.primary,
@@ -189,25 +192,26 @@ class TodoPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final todos = [
-      (true, '마트 장보기', '오늘'),
-      (true, '청소기 돌리기', '오늘'),
-      (false, '보험 갱신 확인', '내일'),
-      (false, '가족사진 앨범 정리', '이번 주'),
-      (false, '아이 숙제 확인', '이번 주'),
+      (true, l10n.intro_preview_todo1, l10n.intro_preview_today),
+      (true, l10n.intro_preview_todo2, l10n.intro_preview_today),
+      (false, l10n.intro_preview_todo3, l10n.intro_preview_tomorrow),
+      (false, l10n.intro_preview_todo4, l10n.intro_preview_thisweek),
+      (false, l10n.intro_preview_todo5, l10n.intro_preview_thisweek),
     ];
 
     return _PhoneMockup(
       child: Column(
         children: [
-          _MockAppBar(title: '할 일'),
+          _MockAppBar(title: l10n.calendar_type_todo),
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
             child: Row(
               children: [
-                _StatusChip(label: '전체 ${todos.length}', color: AppColors.primary),
+                _StatusChip(label: l10n.intro_preview_total('${todos.length}'), color: AppColors.primary),
                 const SizedBox(width: 6),
-                _StatusChip(label: '완료 2', color: Colors.green),
+                _StatusChip(label: l10n.intro_preview_done('2'), color: Colors.green),
               ],
             ),
           ),
@@ -260,17 +264,18 @@ class HouseholdPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final expenses = [
-      (Icons.local_grocery_store, '마트', '-42,000원', Colors.red),
-      (Icons.restaurant, '외식', '-28,500원', Colors.red),
-      (Icons.account_balance, '월급', '+3,200,000원', Colors.green),
-      (Icons.directions_bus, '교통비', '-15,000원', Colors.red),
+      (Icons.local_grocery_store, l10n.intro_preview_mart, '-42,000원', Colors.red),
+      (Icons.restaurant, l10n.intro_preview_eatout, '-28,500원', Colors.red),
+      (Icons.account_balance, l10n.intro_preview_salary, '+3,200,000원', Colors.green),
+      (Icons.directions_bus, l10n.intro_preview_transport, '-15,000원', Colors.red),
     ];
 
     return _PhoneMockup(
       child: Column(
         children: [
-          _MockAppBar(title: '가계부'),
+          _MockAppBar(title: l10n.nav_household),
           // 요약 카드
           Container(
             margin: const EdgeInsets.all(10),
@@ -286,11 +291,11 @@ class HouseholdPreviewWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _SummaryItem(label: '수입', amount: '3,200,000', color: Colors.greenAccent),
+                _SummaryItem(label: l10n.childcare_income, amount: '3,200,000', color: Colors.greenAccent),
                 Container(width: 1, height: 30, color: Colors.white30),
-                _SummaryItem(label: '지출', amount: '85,500', color: Colors.redAccent),
+                _SummaryItem(label: l10n.childcare_expense, amount: '85,500', color: Colors.redAccent),
                 Container(width: 1, height: 30, color: Colors.white30),
-                _SummaryItem(label: '잔액', amount: '3,114,500', color: Colors.white),
+                _SummaryItem(label: l10n.asset_balance, amount: '3,114,500', color: Colors.white),
               ],
             ),
           ),
@@ -330,19 +335,20 @@ class MoreFeaturesPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final features = [
-      (Icons.account_balance_wallet, '자산 관리', AppColors.primary),
-      (Icons.edit_note, '메모', Colors.orange),
-      (Icons.savings, '적금 관리', Colors.green),
-      (Icons.child_care, '육아 포인트', Colors.purple),
-      (Icons.how_to_vote, '투표', Colors.teal),
-      (Icons.games, '미니게임', Colors.pink),
+      (Icons.account_balance_wallet, l10n.intro_preview_assets, AppColors.primary),
+      (Icons.edit_note, l10n.memo_title, Colors.orange),
+      (Icons.savings, l10n.intro_preview_savings, Colors.green),
+      (Icons.child_care, l10n.childcare_title, Colors.purple),
+      (Icons.how_to_vote, l10n.vote_title, Colors.teal),
+      (Icons.games, l10n.minigame_title, Colors.pink),
     ];
 
     return _PhoneMockup(
       child: Column(
         children: [
-          _MockAppBar(title: '더보기'),
+          _MockAppBar(title: l10n.nav_more),
           Padding(
             padding: const EdgeInsets.all(10),
             child: GridView.count(

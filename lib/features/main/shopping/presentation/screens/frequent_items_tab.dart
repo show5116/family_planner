@@ -81,7 +81,7 @@ class _FrequentItemsTabState extends ConsumerState<FrequentItemsTab>
             });
           }
           return _OnboardingFrequentView(
-            items: _demoFrequentItems,
+            items: _demoFrequentItems(AppLocalizations.of(context)!),
             fabKey: _fabKey,
             firstItemKey: _firstItemKey,
             autoAddKey: _autoAddKey,
@@ -236,6 +236,7 @@ class _RealFrequentItemsView extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'frequent_add',
+        tooltip: l10n.fridge_frequent_add,
         onPressed: onAdd,
         child: const Icon(Icons.add),
       ),

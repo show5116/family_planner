@@ -122,7 +122,7 @@ class _HouseholdStatisticsScreenState
                     Text(
                       _tabIndex == 0
                           ? _formatMonth(_selectedMonth)
-                          : '$_selectedYear년',
+                          : l10n.household_year_label('$_selectedYear'),
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -148,7 +148,7 @@ class _HouseholdStatisticsScreenState
                 indicatorColor: Colors.white,
                 tabs: [
                   Tab(text: l10n.household_monthly_statistics),
-                  Tab(text: '연간 통계'),
+                  Tab(text: l10n.household_yearly_stats),
                 ],
               ),
             ],
@@ -252,7 +252,7 @@ class _MonthlyStatisticsContentState
             ),
             const SizedBox(width: 4),
             Text(
-              '환불금 및 이월 입금은 통계에서 제외됩니다',
+              l10n.household_stats_exclude_note,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
                 fontSize: 11,
@@ -266,32 +266,32 @@ class _MonthlyStatisticsContentState
         SegmentedButton<_StatViewMode>(
           showSelectedIcon: false,
           segments: [
-            const ButtonSegment(
+            ButtonSegment(
               value: _StatViewMode.category,
               icon: Tooltip(
-                message: '카테고리별',
+                message: l10n.household_by_category,
                 child: Icon(Icons.pie_chart_outline, size: 18),
               ),
             ),
-            const ButtonSegment(
+            ButtonSegment(
               value: _StatViewMode.merchant,
               icon: Tooltip(
-                message: '소비처별',
+                message: l10n.household_by_merchant,
                 child: Icon(Icons.storefront_outlined, size: 18),
               ),
             ),
             if (selectedGroupId != null)
-              const ButtonSegment(
+              ButtonSegment(
                 value: _StatViewMode.member,
                 icon: Tooltip(
-                  message: '멤버별',
+                  message: l10n.household_by_member,
                   child: Icon(Icons.people_outline, size: 18),
                 ),
               ),
-            const ButtonSegment(
+            ButtonSegment(
               value: _StatViewMode.filter,
               icon: Tooltip(
-                message: '직접 필터링',
+                message: l10n.household_custom_filter,
                 child: Icon(Icons.filter_list, size: 18),
               ),
             ),
@@ -422,7 +422,7 @@ class _MonthlyStatisticsContentState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '카테고리별 지출',
+                        l10n.household_category_spending,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
@@ -516,7 +516,7 @@ class _MonthlyStatisticsContentState
       ],
       if (widget.stats.categories.isNotEmpty) ...[
         Text(
-          '카테고리별 지출',
+          l10n.household_category_spending,
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -604,7 +604,7 @@ class _MonthlyStatisticsContentState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '소비처별 지출',
+                l10n.household_merchant_spending,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -629,7 +629,7 @@ class _MonthlyStatisticsContentState
                 _MerchantStatItem(
                   stat: _MerchantStat(
                     id: '',
-                    name: '소비처 없음',
+                    name: l10n.household_no_merchant,
                     total: noMerchantTotal,
                     count: noMerchantCount,
                   ),
@@ -722,7 +722,7 @@ class _MonthlyStatisticsContentState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '멤버별 지출',
+                  l10n.household_member_spending,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -752,7 +752,7 @@ class _MonthlyStatisticsContentState
                 }),
                 if (unassignedCount > 0)
                   _MemberExpenseStatItem(
-                    name: '미지정',
+                    name: l10n.household_unassigned,
                     amount: unassignedTotal,
                     count: unassignedCount,
                     ratio: grandTotal > 0
@@ -799,16 +799,16 @@ class _MonthlyStatisticsContentState
                     return Column(
                       children: [
                         _FilterDropdownRow(
-                          label: '멤버',
+                          label: l10n.household_member,
                           child: DropdownButton<String?>(
                             value: _filterMemberId,
                             isExpanded: true,
                             underline: const SizedBox(),
-                            hint: const Text('전체'),
+                            hint: Text(l10n.common_all),
                             items: [
-                              const DropdownMenuItem<String?>(
+                              DropdownMenuItem<String?>(
                                 value: null,
-                                child: Text('전체'),
+                                child: Text(l10n.common_all),
                               ),
                               ...members.map((m) {
                                 final userId = m.user?.id ?? m.userId;
@@ -831,16 +831,16 @@ class _MonthlyStatisticsContentState
             const SizedBox.shrink(),
       // 카테고리 필터
       _FilterDropdownRow(
-        label: '카테고리',
+        label: l10n.qna_category,
         child: DropdownButton<ExpenseCategory?>(
           value: _filterCategory,
           isExpanded: true,
           underline: const SizedBox(),
-          hint: const Text('전체'),
+          hint: Text(l10n.common_all),
           items: [
-            const DropdownMenuItem<ExpenseCategory?>(
+            DropdownMenuItem<ExpenseCategory?>(
               value: null,
-              child: Text('전체'),
+              child: Text(l10n.common_all),
             ),
             ...ExpenseCategory.values.map(
               (c) => DropdownMenuItem(
@@ -856,14 +856,15 @@ class _MonthlyStatisticsContentState
       // 소비처 필터
       merchantsAsync.when(
         data: (merchants) => _FilterDropdownRow(
-          label: '소비처',
+          label: l10n.household_by_merchant,
           child: DropdownButton<String?>(
             value: _filterMerchantId,
             isExpanded: true,
             underline: const SizedBox(),
-            hint: const Text('전체'),
+            hint: Text(l10n.common_all),
             items: [
-              const DropdownMenuItem<String?>(value: null, child: Text('전체')),
+              DropdownMenuItem<String?>(
+                  value: null, child: Text(l10n.common_all)),
               ...merchants.map(
                 (m) => DropdownMenuItem(value: m.id, child: Text(m.name)),
               ),
@@ -1714,6 +1715,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final expenseMonths = stats.months
         .where((m) => m.totalExpense > 0)
         .toList();
@@ -1877,7 +1879,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '환불금 및 이월 입금은 통계에서 제외됩니다',
+              l10n.household_stats_exclude_note,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
                 fontSize: 11,
@@ -1891,7 +1893,7 @@ class _YearlyStatisticsContent extends StatelessWidget {
           Row(
             children: [
               Text(
-                '월별 지출',
+                l10n.household_monthly_spending,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -2262,6 +2264,7 @@ class _MonthComparisonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final thisDaily = _dailyExpense(thisExpenses);
     final prevDaily = _dailyExpense(prevExpenses);
 
@@ -2332,7 +2335,7 @@ class _MonthComparisonContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '지난달 비교',
+          l10n.household_compare_last_month,
           style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSizes.spaceS),
@@ -2407,7 +2410,7 @@ class _MonthComparisonContent extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '누적 지출 추이',
+                      l10n.household_cumulative_trend,
                       style: textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),

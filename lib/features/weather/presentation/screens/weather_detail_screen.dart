@@ -17,6 +17,7 @@ class WeatherDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final weatherAsync = ref.watch(weatherProvider);
     final forecastAsync = ref.watch(weatherForecastProvider);
     final isFallbackLocation =
@@ -24,11 +25,11 @@ class WeatherDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('날씨'),
+        title: Text(l10n.weather_title),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: '새로고침',
+            tooltip: l10n.common_refresh,
             onPressed: () {
               ref.invalidate(locationProvider);
               ref.invalidate(weatherProvider);
@@ -75,7 +76,7 @@ class WeatherDetailScreen extends ConsumerWidget {
                 ),
               ),
               error: (_, _) => _RetryCard(
-                message: '현재 날씨를 불러올 수 없습니다',
+                message: l10n.weather_current_failed,
                 onRetry: () => ref.invalidate(weatherProvider),
               ),
               data: (weather) => _CurrentWeatherCard(weather: weather),
@@ -91,7 +92,7 @@ class WeatherDetailScreen extends ConsumerWidget {
                 ),
               ),
               error: (_, _) => _RetryCard(
-                message: '예보를 불러올 수 없습니다',
+                message: l10n.weather_forecast_failed,
                 onRetry: () => ref.invalidate(weatherForecastProvider),
               ),
               data: (forecast) => _ForecastSection(forecast: forecast),
@@ -112,6 +113,7 @@ class _CurrentWeatherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final iconData = WeatherHelper.icon(weather.precipitationType);
     final iconColor = WeatherHelper.color(weather.precipitationType, context);
     final now = DateTime.now();
@@ -180,17 +182,17 @@ class _CurrentWeatherCard extends StatelessWidget {
               children: [
                 _DetailStat(
                   icon: Icons.water_drop_outlined,
-                  label: '습도',
+                  label: l10n.weather_humidity,
                   value: '${weather.humidity}%',
                 ),
                 _DetailStat(
                   icon: Icons.air,
-                  label: '풍속',
+                  label: l10n.weather_wind,
                   value: '${weather.windSpeed}m/s',
                 ),
                 _DetailStat(
                   icon: Icons.umbrella_outlined,
-                  label: '강수량',
+                  label: l10n.weather_precipitation,
                   value: '${weather.precipitation}mm',
                 ),
               ],
@@ -200,7 +202,7 @@ class _CurrentWeatherCard extends StatelessWidget {
               const Divider(),
               const SizedBox(height: AppSizes.spaceS),
               Text(
-                '대기질',
+                l10n.weather_air_quality,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -211,13 +213,13 @@ class _CurrentWeatherCard extends StatelessWidget {
                 children: [
                   if (weather.pm10 != null)
                     _DustStat(
-                      label: '미세먼지',
+                      label: l10n.weather_pm10,
                       value: '${weather.pm10}㎍/㎥',
                       grade: weather.pm10Grade,
                     ),
                   if (weather.pm25 != null)
                     _DustStat(
-                      label: '초미세먼지',
+                      label: l10n.weather_pm25,
                       value: '${weather.pm25}㎍/㎥',
                       grade: weather.pm25Grade,
                     ),
@@ -226,7 +228,7 @@ class _CurrentWeatherCard extends StatelessWidget {
               if (weather.sidoName != null) ...[
                 const SizedBox(height: AppSizes.spaceXS),
                 Text(
-                  '측정 기준: ${weather.sidoName}',
+                  l10n.weather_measured_at(weather.sidoName!),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -389,6 +391,7 @@ class _ForecastSectionState extends State<_ForecastSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final byDate = widget.forecast.byDate;
     final hourlyItems = _buildHourlyItems();
 
@@ -397,7 +400,7 @@ class _ForecastSectionState extends State<_ForecastSection> {
       children: [
         // 시간별 예보 (오늘 + 내일)
         Text(
-          '시간별 예보',
+          l10n.weather_hourly,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -407,7 +410,7 @@ class _ForecastSectionState extends State<_ForecastSection> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceM),
             child: Text(
-              '시간별 예보 정보가 없습니다',
+              l10n.weather_hourly_empty,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -444,7 +447,7 @@ class _ForecastSectionState extends State<_ForecastSection> {
 
         // 날짜별 예보
         Text(
-          '날짜별 예보',
+          l10n.weather_daily,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -485,6 +488,7 @@ class _HourlyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hour = item.fcstTime.substring(0, 2);
     final isMidnight = hour == '00';
     final iconData = WeatherHelper.icon(item.precipitationType, sky: item.sky);
@@ -493,7 +497,7 @@ class _HourlyItem extends StatelessWidget {
     // 자정(00시)에는 날짜 표시
     final timeLabel = isMidnight
         ? '${item.fcstDate.substring(4, 6)}/${item.fcstDate.substring(6, 8)}'
-        : '$hour시';
+        : l10n.weather_hour(hour);
 
     return Card(
       color: isMidnight
@@ -563,12 +567,13 @@ class _DayCardState extends State<_DayCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final today = DateTime.now();
     final isToday = widget.date.year == today.year &&
         widget.date.month == today.month &&
         widget.date.day == today.day;
     final dayLabel = isToday
-        ? '오늘'
+        ? l10n.weather_today
         : DateFormat('M/d (E)', 'ko').format(widget.date);
 
     final iconData = WeatherHelper.icon(
@@ -728,6 +733,7 @@ class _RetryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.spaceL),
@@ -740,7 +746,7 @@ class _RetryCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(message),
-            TextButton(onPressed: onRetry, child: const Text('다시 시도')),
+            TextButton(onPressed: onRetry, child: Text(l10n.common_retry)),
           ],
         ),
       ),

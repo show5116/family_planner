@@ -111,6 +111,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           floatingActionButton: FloatingActionButton(
             key: _fabKey,
             heroTag: 'fridge_add_storage',
+            tooltip: l10n.fridge_storage_add,
             onPressed: isDemo
                 ? null
                 : () => showDialog<void>(
@@ -121,7 +122,7 @@ class _FridgeTabState extends ConsumerState<FridgeTab> {
           ),
           body: isDemo
               ? _OnboardingFridgeView(
-                  swis: _demoSwis,
+                  swis: _demoSwis(AppLocalizations.of(context)!),
                   sortOrder: _sortOrder,
                   firstSectionKey: _firstSectionKey,
                   firstItemKey: _firstItemKey,

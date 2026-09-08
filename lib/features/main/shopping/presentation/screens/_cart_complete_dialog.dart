@@ -42,7 +42,8 @@ class _CompleteShoppingDialogState
   DateTime _completedAt = DateTime.now();
   bool _addExpense = false;
   final _amountController = TextEditingController();
-  final _descController = TextEditingController(text: '마트 장보기');
+  final _descController = TextEditingController();
+  bool _descInitialized = false;
   PaymentMethod _paymentMethod = PaymentMethod.card;
   String? _selectedMerchantId;
 
@@ -61,6 +62,16 @@ class _CompleteShoppingDialogState
         });
     if (total > 0) {
       _amountController.text = total.toInt().toString();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 필드 초기화 시점에는 context가 없어 여기서 기본 설명을 넣는다.
+    if (!_descInitialized) {
+      _descInitialized = true;
+      _descController.text = AppLocalizations.of(context)!.cart_default_description;
     }
   }
 
@@ -413,7 +424,8 @@ class _Step1Content extends ConsumerWidget {
         const Divider(height: AppSizes.spaceL),
         ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text('장보기 날짜', style: Theme.of(context).textTheme.bodyMedium),
+          title: Text(l10n.cart_shopping_date,
+              style: Theme.of(context).textTheme.bodyMedium),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -465,10 +477,16 @@ class _Step1Content extends ConsumerWidget {
           const SizedBox(height: AppSizes.spaceS),
           SegmentedButton<PaymentMethod>(
             showSelectedIcon: false,
-            segments: const [
-              ButtonSegment(value: PaymentMethod.card, label: Text('카드')),
-              ButtonSegment(value: PaymentMethod.cash, label: Text('현금')),
-              ButtonSegment(value: PaymentMethod.transfer, label: Text('이체')),
+            segments: [
+              ButtonSegment(
+                  value: PaymentMethod.card,
+                  label: Text(l10n.household_payment_card)),
+              ButtonSegment(
+                  value: PaymentMethod.cash,
+                  label: Text(l10n.household_payment_cash)),
+              ButtonSegment(
+                  value: PaymentMethod.transfer,
+                  label: Text(l10n.household_payment_transfer)),
             ],
             selected: {paymentMethod},
             onSelectionChanged: (s) => onPaymentMethodChanged(s.first),
@@ -693,7 +711,7 @@ class _Step2ContentState extends ConsumerState<_Step2Content> {
                         title: Text(
                           d.expiresAt != null
                               ? DateFormat('yyyy-MM-dd').format(d.expiresAt!)
-                              : '날짜 선택',
+                              : l10n.cart_select_date,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: d.expiresAt != null

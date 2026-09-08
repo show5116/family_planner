@@ -87,6 +87,7 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.of(context);
     return Padding(
       padding: EdgeInsets.only(
@@ -114,7 +115,8 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
               AppSizes.spaceL,
               AppSizes.spaceS,
             ),
-            child: Text('필터', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(l10n.common_filter,
+                style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
           if (_viewMode != null) ...[
@@ -124,7 +126,7 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
                 vertical: AppSizes.spaceS,
               ),
               child: Text(
-                '기간',
+                l10n.home_period,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -163,8 +165,8 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
             const Divider(),
           ],
           SwitchListTile(
-            title: const Text('개인 일정'),
-            subtitle: const Text('내 개인 일정 포함'),
+            title: Text(l10n.home_personal_schedule),
+            subtitle: Text(l10n.home_personal_schedule_desc),
             value: _includePersonal,
             onChanged: (v) => setState(() => _includePersonal = v),
           ),
@@ -219,7 +221,7 @@ class _ScheduleFilterSheetState extends State<ScheduleFilterSheet> {
                   _includePersonal,
                   _viewMode,
                 ),
-                child: const Text('적용'),
+                child: Text(l10n.common_apply),
               ),
             ),
           ),

@@ -74,6 +74,10 @@ struct ScheduleListEntryView: View {
         .padding(12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .widgetURL(URL(string: "familyplanner://widget/calendar"))
+        // iOS 17+ 필수. 배경을 이 API로 선언하지 않으면 WidgetKit이 콘텐츠 대신
+        // "Please adopt containerBackground API" 안내를 그린다. 시스템이 상황에
+        // 따라(대기 모드, 잠금 화면 등) 배경을 걷어낼 수 있게 하려는 것이다.
+        .containerBackground(for: .widget) { Color(.systemBackground) }
     }
 }
 

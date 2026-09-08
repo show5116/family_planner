@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 import 'package:family_planner/features/main/assets/utils/asset_utils.dart';
 
@@ -21,6 +22,7 @@ class HoldingRecordsComparison extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final asyncA = ref.watch(holdingRecordsProvider((accountId: accountId, recordDate: dateA)));
     final asyncB = ref.watch(holdingRecordsProvider((accountId: accountId, recordDate: dateB)));
 
@@ -33,7 +35,7 @@ class HoldingRecordsComparison extends ConsumerWidget {
     if (asyncA.hasError || asyncB.hasError) {
       return Padding(
         padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Text('오류가 발생했습니다.',
+        child: Text(l10n.common_errorOccurred,
             style: TextStyle(color: Theme.of(context).colorScheme.error)),
       );
     }
@@ -88,7 +90,7 @@ class HoldingRecordsComparison extends ConsumerWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  '변화',
+                  l10n.asset_change,
                   style: Theme.of(context)
                       .textTheme
                       .labelSmall
@@ -127,7 +129,7 @@ class HoldingRecordsComparison extends ConsumerWidget {
                             color: Theme.of(context).colorScheme.secondary)
                       else if (isGone)
                         CompareTag(
-                            label: '삭제',
+                            label: l10n.common_delete,
                             color: Theme.of(context).colorScheme.outline),
                       const SizedBox(width: 4),
                       Expanded(
@@ -183,7 +185,7 @@ class HoldingRecordsComparison extends ConsumerWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: Text('합계',
+                child: Text(l10n.asset_total,
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall

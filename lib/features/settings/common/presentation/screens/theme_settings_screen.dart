@@ -10,8 +10,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(themeSettingsProvider);
     final l10n = AppLocalizations.of(context)!;
+    final settings = ref.watch(themeSettingsProvider);
 
     return Scaffold(
       appBar: AppBar(

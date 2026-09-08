@@ -78,6 +78,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     AppLocalizations l10n,
     List<Role> roles,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final displayRoles = _reorderedRoles ?? roles;
 
     if (displayRoles.isEmpty) {
@@ -145,6 +146,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     BuildContext context,
     AppLocalizations l10n,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return ListView(
@@ -161,6 +163,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
 
   /// 빈 상태
   Widget _buildEmptyState(ThemeData theme, AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.spaceXL),
@@ -180,6 +183,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     AppLocalizations l10n,
     Role role,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     // 고정 역할(groupId == null)은 조회만 가능 — 운영자 전용 수정 항목
     if (role.groupId == null) {
       GroupRoleViewDialog.show(context, ref, l10n, role);
@@ -202,6 +206,7 @@ class _RolesTabState extends ConsumerState<RolesTab> {
     AppLocalizations l10n,
     Role role,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       builder: (context) => SafeArea(

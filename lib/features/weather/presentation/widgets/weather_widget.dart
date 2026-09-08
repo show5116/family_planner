@@ -77,11 +77,11 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final weatherAsync = ref.watch(weatherProvider);
     final isFallbackLocation =
         ref.watch(locationProvider).valueOrNull?.isFallback ?? false;
 
-    final l10n = AppLocalizations.of(context)!;
     return DashboardCard(
       title: l10n.weather_widgetTitle,
       icon: Icons.wb_sunny_outlined,

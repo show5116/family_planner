@@ -1,0 +1,40 @@
+{
+  "flow": "루틴",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/routine/screenshots/01-main.png",
+      "caption": "루틴 — 오늘 체크 목록과 일일 목표"
+    },
+    {
+      "name": "02-list",
+      "file": "docs/manual/routine/screenshots/02-list.png",
+      "caption": "습관 목록 — 묶음별 섹션과 기록 방식"
+    },
+    {
+      "name": "03-detail",
+      "file": "docs/manual/routine/screenshots/03-detail.png",
+      "caption": "습관 상세 — 히트맵으로 보는 체크 기록"
+    },
+    {
+      "name": "04-stats",
+      "file": "docs/manual/routine/screenshots/04-stats.png",
+      "caption": "통계 탭 — 스트릭과 기간별 달성률"
+    },
+    {
+      "name": "05-overview",
+      "file": "docs/manual/routine/screenshots/05-overview.png",
+      "caption": "전체 현황 — 기간별 달성률 한눈에"
+    },
+    {
+      "name": "06-badges",
+      "file": "docs/manual/routine/screenshots/06-badges.png",
+      "caption": "배지 — 꾸준히 하면 받는 보상"
+    },
+    {
+      "name": "07-add",
+      "file": "docs/manual/routine/screenshots/07-add.png",
+      "caption": "추가하기 — 습관과 루틴 중에서 고릅니다"
+    }
+  ]
+}

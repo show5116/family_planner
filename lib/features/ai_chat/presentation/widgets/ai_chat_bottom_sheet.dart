@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/ai_chat/data/models/ai_chat_model.dart';
 import 'package:family_planner/features/ai_chat/providers/ai_chat_provider.dart';
 
-/// 추천 질문 목록
-const _suggestedQuestions = [
-  '이번 달 지출 분석해줘',
-  '가족 일정 요약해줘',
-  '저축 목표 달성률 알려줘',
-  '미결 할 일 목록 보여줘',
-  '투자 포트폴리오 현황은?',
-  '이번 주 중요한 일정 뭐 있어?',
+/// 추천 질문 목록. 번역이 필요해 const로 둘 수 없다.
+List<String> _suggestedQuestions(AppLocalizations l10n) => [
+  l10n.ai_suggest1,
+  l10n.ai_suggest2,
+  l10n.ai_suggest3,
+  l10n.ai_suggest4,
+  l10n.ai_suggest5,
+  l10n.ai_suggest6,
 ];
 
 /// AI 챗봇 바텀 시트
@@ -129,6 +130,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
   }
 
   Widget _buildHeader(BuildContext context, ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSizes.spaceM,
@@ -153,13 +155,13 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'AI 어시스턴트',
+                l10n.ai_assistant,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                '무엇이든 물어보세요',
+                l10n.ai_ask_anything,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -169,12 +171,12 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
           const Spacer(),
           IconButton(
             icon: const Icon(Icons.refresh_outlined),
-            tooltip: '대화 초기화',
+            tooltip: l10n.ai_reset_chat,
             onPressed: () => ref.read(aiChatProvider.notifier).reset(),
           ),
           IconButton(
             icon: const Icon(Icons.close),
-            tooltip: '닫기',
+            tooltip: l10n.common_close,
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],
@@ -183,6 +185,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
   }
 
   Widget _buildEmptyState(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -194,14 +197,14 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
           ),
           const SizedBox(height: AppSizes.spaceM),
           Text(
-            '안녕하세요! 가족 플래너 AI입니다.',
+            l10n.ai_greeting,
             style: theme.textTheme.titleSmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppSizes.spaceXS),
           Text(
-            '아래 추천 질문을 눌러보거나\n직접 질문을 입력해보세요.',
+            l10n.ai_greeting_desc,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
@@ -230,6 +233,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
   }
 
   Widget _buildSessionDivider(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -238,7 +242,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
-              '새 대화가 시작되었습니다',
+              l10n.ai_new_chat,
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -379,6 +383,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
   }
 
   Widget _buildSuggestedQuestions(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     final messages = ref.watch(aiChatProvider);
     if (messages.isNotEmpty) return const SizedBox.shrink();
 
@@ -387,7 +392,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
       child: Wrap(
         spacing: AppSizes.spaceXS,
         runSpacing: AppSizes.spaceXS,
-        children: _suggestedQuestions.map((question) {
+        children: _suggestedQuestions(l10n).map((question) {
           return ActionChip(
             label: Text(question, style: theme.textTheme.bodySmall),
             onPressed: () => _sendMessage(question),
@@ -400,6 +405,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
   }
 
   Widget _buildInputBar(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSizes.spaceM,
@@ -417,7 +423,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
             child: TextField(
               controller: _textController,
               decoration: InputDecoration(
-                hintText: '메시지를 입력하세요...',
+                hintText: l10n.ai_message_hint,
                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -450,7 +456,7 @@ class _AiChatBottomSheetState extends ConsumerState<AiChatBottomSheet> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.send, size: 18),
-            label: const Text('전송'),
+            label: Text(l10n.ai_send),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSizes.spaceM,

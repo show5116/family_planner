@@ -1,0 +1,31 @@
+{
+  "name": "메모",
+  "outDir": "docs/manual/memo/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "상세는 /memos/:id 라 직접 goto가 안 됩니다. 목록에서 제목을 탭해 들어갑니다. 목록으로 돌아갈 때는 back 대신 goto를 씁니다(상세를 push로 열어 back이 홈까지 갈 수 있음).",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+
+    { "action": "goto", "path": "/memo", "wait": 14000 },
+    { "action": "shot", "name": "01-main", "caption": "메모 목록 — 고정된 메모와 태그 필터" },
+    { "action": "scroll", "dy": 700, "wait": 2500 },
+    { "action": "shot", "name": "02-cards", "caption": "메모 카드 — 체크리스트 진행률과 공개 범위" },
+    { "action": "scroll", "dy": -700, "wait": 2500 },
+
+    { "action": "tap", "label": "우리 집 규칙", "wait": 9000 },
+    { "action": "shot", "name": "03-detail", "caption": "메모 상세 — 서식이 그대로 보입니다" },
+
+    { "action": "goto", "path": "/memo", "wait": 12000 },
+    { "action": "tapContains", "contains": "여행 준비물", "wait": 9000 },
+    { "action": "shot", "name": "04-checklist", "caption": "체크리스트 메모 — 상세에서 바로 체크합니다" },
+
+    { "action": "goto", "path": "/memo", "wait": 12000 },
+    { "action": "tap", "label": "메모 작성", "wait": 10000 },
+    { "action": "shot", "name": "05-form", "caption": "메모 작성 — 제목·본문·서식 도구" },
+    { "action": "tap", "label": "나만의 메모", "wait": 4000 },
+    { "action": "shot", "name": "06-visibility", "caption": "공개 범위 — 나만 볼지, 어느 그룹에 보일지 고릅니다" }
+  ]
+}

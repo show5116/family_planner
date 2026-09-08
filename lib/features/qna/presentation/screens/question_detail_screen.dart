@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
@@ -44,6 +45,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final questionAsync = ref.watch(questionDetailProvider(widget.questionId));
     final authState = ref.watch(authProvider);
     final currentUserId = authState.userId;
@@ -51,7 +53,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('질문 상세'),
+        title: Text(l10n.qna_questionDetail),
         actions: [
           questionAsync.when(
             data: (question) {
@@ -76,12 +78,13 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 질문 메뉴 (수정/해결완료/삭제)
   Widget _buildQuestionMenu(BuildContext context, QuestionModel question) {
+    final l10n = AppLocalizations.of(context)!;
     return PopupMenuButton<String>(
       onSelected: (value) async {
         if (value == 'edit') {
           if (question.status == QuestionStatus.resolved) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('해결 완료된 질문은 수정할 수 없습니다')),
+              SnackBar(content: Text(l10n.qna_cannotEditResolved)),
             );
           } else {
             context.push('/qna/${question.id}/edit', extra: question);
@@ -94,34 +97,36 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
       },
       itemBuilder: (context) => [
         if (question.status != QuestionStatus.resolved)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'edit',
             child: Row(
               children: [
                 Icon(Icons.edit, size: AppSizes.iconSmall),
                 SizedBox(width: AppSizes.spaceS),
-                Text('수정'),
+                Text(l10n.common_edit),
               ],
             ),
           ),
         if (question.status == QuestionStatus.answered)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'resolve',
             child: Row(
               children: [
                 Icon(Icons.check_circle, size: AppSizes.iconSmall, color: AppColors.success),
                 SizedBox(width: AppSizes.spaceS),
-                Text('해결완료', style: TextStyle(color: AppColors.success)),
+                Text(l10n.qna_resolve,
+                    style: const TextStyle(color: AppColors.success)),
               ],
             ),
           ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
               Icon(Icons.delete, size: AppSizes.iconSmall, color: AppColors.error),
               SizedBox(width: AppSizes.spaceS),
-              Text('삭제', style: TextStyle(color: AppColors.error)),
+              Text(l10n.common_delete,
+                  style: const TextStyle(color: AppColors.error)),
             ],
           ),
         ),
@@ -196,11 +201,12 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 첨부파일 섹션
   Widget _buildAttachmentsSection(BuildContext context, List<Attachment> attachments) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '첨부파일',
+          l10n.qna_attachments,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -217,7 +223,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                 icon: const Icon(Icons.download),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('파일 다운로드 기능은 추후 구현 예정입니다')),
+                    SnackBar(content: Text(l10n.qna_downloadNotReady)),
                   );
                 },
               ),
@@ -230,6 +236,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 답변 목록 섹션
   Widget _buildAnswersSection(BuildContext context, QuestionModel question, bool isAdmin) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -242,7 +249,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
             ),
             const SizedBox(width: AppSizes.spaceS),
             Text(
-              '답변 (${question.answers.length})',
+              l10n.qna_answersCount(question.answers.length),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -264,6 +271,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 에러 상태 위젯
   Widget _buildErrorState(BuildContext context, String error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -275,7 +283,7 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
           ),
           const SizedBox(height: AppSizes.spaceL),
           Text(
-            '질문을 불러올 수 없습니다',
+            l10n.qna_loadError,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: AppSizes.spaceS),
@@ -293,11 +301,12 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 답변 제출
   Future<void> _submitAnswer(String questionId) async {
+    final l10n = AppLocalizations.of(context)!;
     final content = _answerController.text.trim();
     if (content.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('답변 내용을 입력해주세요'),
+        SnackBar(
+          content: Text(l10n.qna_answerRequired),
           backgroundColor: AppColors.error,
         ),
       );
@@ -313,8 +322,8 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
       if (mounted) {
         _answerController.clear();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('답변이 등록되었습니다'),
+          SnackBar(
+            content: Text(l10n.qna_answerSuccess),
             backgroundColor: AppColors.success,
           ),
         );
@@ -323,7 +332,9 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('답변 등록 실패: $e'), backgroundColor: AppColors.error),
+          SnackBar(
+              content: Text('${l10n.qna_answerError}\n$e'),
+              backgroundColor: AppColors.error),
         );
       }
     } finally {
@@ -335,15 +346,16 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 해결완료 확인 다이얼로그
   void _showResolveConfirmDialog(BuildContext context, String questionId) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('해결완료 처리'),
-        content: const Text('이 질문을 해결완료로 처리하시겠습니까?\n해결완료 후에는 질문을 수정할 수 없습니다.'),
+        title: Text(l10n.qna_resolveTitle),
+        content: Text(l10n.qna_resolveMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -352,8 +364,8 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                 await ref.read(questionManagementProvider.notifier).resolveQuestion(questionId);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('질문이 해결완료 처리되었습니다'),
+                    SnackBar(
+                      content: Text(l10n.qna_resolveSuccess),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -361,13 +373,15 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('해결완료 처리 실패: $e'), backgroundColor: AppColors.error),
+                    SnackBar(
+                        content: Text('${l10n.qna_resolveError}\n$e'),
+                        backgroundColor: AppColors.error),
                   );
                 }
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.success),
-            child: const Text('해결완료'),
+            child: Text(l10n.qna_resolve),
           ),
         ],
       ),
@@ -376,15 +390,16 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 삭제 확인 다이얼로그
   void _showDeleteConfirmDialog(BuildContext context, String questionId) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('질문 삭제'),
-        content: const Text('이 질문을 삭제하시겠습니까?\n삭제된 질문은 복구할 수 없습니다.'),
+        title: Text(l10n.qna_deleteDialogTitle),
+        content: Text(l10n.qna_deleteDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -393,20 +408,22 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                 await ref.read(questionManagementProvider.notifier).deleteQuestion(questionId);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('질문이 삭제되었습니다')),
+                    SnackBar(content: Text(l10n.qna_deleteSuccess)),
                   );
                   context.pop();
                 }
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('질문 삭제 실패: $e'), backgroundColor: AppColors.error),
+                    SnackBar(
+                        content: Text('${l10n.qna_deleteError}\n$e'),
+                        backgroundColor: AppColors.error),
                   );
                 }
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -415,19 +432,20 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 답변 수정 다이얼로그
   void _showEditAnswerDialog(BuildContext context, String questionId, AnswerModel answer) {
+    final l10n = AppLocalizations.of(context)!;
     final editController = TextEditingController(text: answer.content);
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('답변 수정'),
+        title: Text(l10n.qna_editAnswer),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
           child: RichTextEditor(
             controller: editController,
             labelText: '',
-            hintText: '답변 내용을 입력하세요',
+            hintText: l10n.qna_answerContentHint,
             minLines: 8,
             simpleMode: true,
             imageUploadType: EditorImageType.qna,
@@ -439,14 +457,16 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
               Navigator.of(dialogContext).pop();
               editController.dispose();
             },
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () async {
               final content = editController.text.trim();
               if (content.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('답변 내용을 입력해주세요'), backgroundColor: AppColors.error),
+                  SnackBar(
+                      content: Text(l10n.qna_answerRequired),
+                      backgroundColor: AppColors.error),
                 );
                 return;
               }
@@ -460,19 +480,23 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
                 if (mounted) {
                   ScaffoldMessenger.of(this.context).showSnackBar(
-                    const SnackBar(content: Text('답변이 수정되었습니다'), backgroundColor: AppColors.success),
+                    SnackBar(
+                        content: Text(l10n.qna_answerUpdateSuccess),
+                        backgroundColor: AppColors.success),
                   );
                   ref.invalidate(questionDetailProvider(questionId));
                 }
               } catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(this.context).showSnackBar(
-                    SnackBar(content: Text('답변 수정 실패: $e'), backgroundColor: AppColors.error),
+                    SnackBar(
+                        content: Text('${l10n.qna_answerUpdateError}\n$e'),
+                        backgroundColor: AppColors.error),
                   );
                 }
               }
             },
-            child: const Text('수정'),
+            child: Text(l10n.common_edit),
           ),
         ],
       ),
@@ -481,15 +505,16 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
 
   /// 답변 삭제 확인 다이얼로그
   void _showDeleteAnswerDialog(BuildContext context, String questionId, String answerId) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('답변 삭제'),
-        content: const Text('이 답변을 삭제하시겠습니까?\n삭제된 답변은 복구할 수 없습니다.'),
+        title: Text(l10n.qna_deleteAnswer),
+        content: Text(l10n.qna_deleteAnswerMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -498,20 +523,24 @@ class _QuestionDetailScreenState extends ConsumerState<QuestionDetailScreen> {
                 await ref.read(questionManagementProvider.notifier).deleteAnswer(questionId, answerId);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('답변이 삭제되었습니다'), backgroundColor: AppColors.success),
+                    SnackBar(
+                        content: Text(l10n.qna_answerDeleteSuccess),
+                        backgroundColor: AppColors.success),
                   );
                   ref.invalidate(questionDetailProvider(questionId));
                 }
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('답변 삭제 실패: $e'), backgroundColor: AppColors.error),
+                    SnackBar(
+                        content: Text('${l10n.qna_answerDeleteError}\n$e'),
+                        backgroundColor: AppColors.error),
                   );
                 }
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('삭제'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),

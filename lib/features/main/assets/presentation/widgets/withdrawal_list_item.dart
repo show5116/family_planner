@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
@@ -20,6 +21,7 @@ class WithdrawalListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final dateStr =
         '${record.date.year}.${record.date.month.toString().padLeft(2, '0')}.${record.date.day.toString().padLeft(2, '0')}';
     final typeColor = record.withdrawalType == WithdrawalType.profit
@@ -104,7 +106,7 @@ class WithdrawalListItem extends ConsumerWidget {
                 children: [
                   if (record.principalAfter != null)
                     AssetAmountChip(
-                      label: '원금',
+                      label: l10n.asset_principal,
                       amount: record.principalAfter!,
                       color: Theme.of(context).colorScheme.secondaryContainer,
                       textColor:
@@ -115,7 +117,7 @@ class WithdrawalListItem extends ConsumerWidget {
                     const SizedBox(width: AppSizes.spaceS),
                   if (record.profitAfter != null)
                     AssetAmountChip(
-                      label: '수익금',
+                      label: l10n.asset_profit,
                       amount: record.profitAfter!,
                       color: record.profitAfter! >= 0
                           ? Colors.green.shade100
@@ -143,18 +145,19 @@ class WithdrawalListItem extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('출금 기록 삭제'),
-        content: const Text('삭제하면 출금일 이후 원금/수익이 원복됩니다. 계속하시겠어요?'),
+        title: Text(l10n.asset_withdrawal_delete),
+        content: Text(l10n.asset_withdrawal_delete_message),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('취소')),
+              child: Text(l10n.common_cancel)),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('삭제',
+            child: Text(l10n.common_delete,
                 style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
           ),
         ],

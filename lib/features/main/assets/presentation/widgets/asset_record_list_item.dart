@@ -104,6 +104,7 @@ class AssetRecordListItem extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations l10n,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(

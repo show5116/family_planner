@@ -29,6 +29,7 @@ extension _RouletteGameOnboarding on _RouletteGameScreenState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final itemsPos = _keyToPosition(_itemsEditorKey);
     final wheelPos = _keyToPosition(_wheelKey);
@@ -45,8 +46,8 @@ extension _RouletteGameOnboarding on _RouletteGameScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '항목 입력',
-              description: '룰렛에 올릴 항목을 입력해요.\n비율을 조정하면 당첨 확률을\n다르게 설정할 수 있어요.',
+              title: l10n.coach_roulette_items,
+              description: l10n.coach_roulette_items_desc,
               icon: Icons.list_alt_outlined,
               color: Colors.indigo,
             ),
@@ -63,8 +64,8 @@ extension _RouletteGameOnboarding on _RouletteGameScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '룰렛 원판',
-              description: '항목을 2개 이상 입력하면\n룰렛 원판이 나타나요.\n가운데 버튼을 눌러도 돌릴 수 있어요.',
+              title: l10n.coach_roulette_wheel,
+              description: l10n.coach_roulette_wheel_desc,
               icon: Icons.circle_outlined,
               color: Colors.orange,
             ),
@@ -81,8 +82,8 @@ extension _RouletteGameOnboarding on _RouletteGameScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '돌리기',
-              description: '버튼을 누르면 룰렛이 회전해요.\n결과는 자동으로 그룹 이력에\n저장되어 모두가 확인할 수 있어요.',
+              title: l10n.coach_roulette_spin,
+              description: l10n.coach_roulette_spin_desc,
               icon: Icons.refresh,
               color: Colors.teal,
             ),
@@ -98,7 +99,7 @@ extension _RouletteGameOnboarding on _RouletteGameScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: _skipWidget,
       onFinish: () =>
@@ -113,16 +114,19 @@ extension _RouletteGameOnboarding on _RouletteGameScreenState {
     ).show(context: context);
   }
 
-  Widget get _skipWidget => Container(
+  Widget get _skipWidget {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       );
+  }
 }

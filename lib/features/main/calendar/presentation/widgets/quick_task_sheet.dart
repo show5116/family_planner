@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/task/data/models/task_model.dart';
 import 'package:family_planner/features/main/task/providers/task_provider.dart';
 import 'package:family_planner/features/settings/groups/providers/default_group_provider.dart';
@@ -82,6 +83,7 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     final title = _titleController.text.trim();
     if (title.isEmpty) {
       _focusNode.requestFocus();
@@ -115,8 +117,8 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
       Navigator.pop(context);
       if (task != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('일정이 추가되었습니다.'),
+          SnackBar(
+            content: Text(l10n.calendar_task_added),
             duration: Duration(seconds: 2),
           ),
         );
@@ -164,6 +166,7 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
@@ -199,7 +202,7 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
                 onSubmitted: (_) => _submit(),
                 style: theme.textTheme.titleMedium,
                 decoration: InputDecoration(
-                  hintText: '일정 제목',
+                  hintText: l10n.calendar_task_title_hint,
                   border: InputBorder.none,
                   hintStyle: theme.textTheme.titleMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
@@ -262,7 +265,7 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
                   children: [
                     // 개인
                     _ChoiceChip(
-                      label: '개인',
+                      label: l10n.calendar_personal,
                       selected: _groupId == null,
                       onTap: () => setState(() => _groupId = null),
                     ),
@@ -288,19 +291,19 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
               child: Row(
                 children: [
                   _ChoiceChip(
-                    label: '일정',
+                    label: l10n.calendar_type_event,
                     selected: _taskType == TaskType.calendarOnly,
                     onTap: () => setState(() => _taskType = TaskType.calendarOnly),
                   ),
                   const SizedBox(width: 6),
                   _ChoiceChip(
-                    label: '할일',
+                    label: l10n.calendar_type_todo,
                     selected: _taskType == TaskType.todoOnly,
                     onTap: () => setState(() => _taskType = TaskType.todoOnly),
                   ),
                   const SizedBox(width: 6),
                   _ChoiceChip(
-                    label: '일정+할일',
+                    label: l10n.calendar_type_both,
                     selected: _taskType == TaskType.todoLinked,
                     onTap: () => setState(() => _taskType = TaskType.todoLinked),
                   ),
@@ -349,7 +352,7 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
                   TextButton.icon(
                     onPressed: _openFullForm,
                     icon: const Icon(Icons.open_in_full, size: 16),
-                    label: const Text('더 보기'),
+                    label: Text(l10n.calendar_more),
                     style: TextButton.styleFrom(
                       foregroundColor: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -363,7 +366,7 @@ class _QuickTaskSheetState extends ConsumerState<_QuickTaskSheet> {
                             height: 18,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('저장'),
+                        : Text(l10n.common_save),
                   ),
                 ],
               ),

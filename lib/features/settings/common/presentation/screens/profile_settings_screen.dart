@@ -110,11 +110,11 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   }
 
   Future<void> _updateProfile() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final l10n = AppLocalizations.of(context)!;
 
     // 비밀번호 변경 모드인 경우 비밀번호 일치 확인
     if (_isPasswordChangeMode) {
@@ -193,19 +193,23 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   }
 
   Widget _buildPersonalColorSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final displayColor = _personalColor ?? Colors.grey;
     return Row(
       children: [
         Icon(Icons.palette_outlined, color: Colors.grey[600]),
         const SizedBox(width: AppSizes.spaceS),
         Expanded(
-          child: Text('개인 색상', style: Theme.of(context).textTheme.bodyMedium),
+          child: Text(
+            l10n.settings_personalColor,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
         GestureDetector(
           onTap: () async {
             final picked = await showColorPickerDialog(
               context: context,
-              title: '개인 색상 선택',
+              title: l10n.settings_personalColorPick,
               initialColor: _personalColor,
             );
             if (picked != null) {
@@ -295,9 +299,9 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final userInfo = ref.watch(authProvider).user;
     final profileImageUrl = userInfo?['profileImageUrl'] as String?;
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profile_title)),

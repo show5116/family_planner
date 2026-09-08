@@ -31,18 +31,21 @@ class MemberCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final String roleName = GroupUtils.getRoleName(l10n, member.role?.name ?? 'MEMBER');
+    final String roleName = GroupUtils.getRoleName(
+      l10n,
+      member.role?.name ?? 'MEMBER',
+    );
     final bool isOwner = member.role?.name == 'OWNER';
     final bool isCurrentUser = member.user?.id == currentUserId;
 
     // Group의 myRole을 사용하여 MANAGE_MEMBER 권한이 있고, 본인이 아니고, OWNER가 아닌 경우에만 메뉴 표시
-    final bool canManage = group.hasPermission('MANAGE_MEMBER')
-        && !isCurrentUser
-        && !isOwner;
+    final bool canManage =
+        group.hasPermission('MANAGE_MEMBER') && !isCurrentUser && !isOwner;
 
     // 현재 사용자가 OWNER이고, 대상이 본인이 아닌 경우 그룹장 양도 가능
     final bool isCurrentUserOwner = group.myRole?.name == 'OWNER';
-    final bool canTransfer = isCurrentUserOwner && !isCurrentUser && onTransferOwnership != null;
+    final bool canTransfer =
+        isCurrentUserOwner && !isCurrentUser && onTransferOwnership != null;
 
     // 본인이 아닌 경우 신고 가능
     final bool canReport = !isCurrentUser;
@@ -75,10 +78,7 @@ class MemberCard extends StatelessWidget {
             if (isCurrentUser) ...[
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 2,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: Colors.green[100],
                   borderRadius: BorderRadius.circular(12),
@@ -106,7 +106,10 @@ class MemberCard extends StatelessWidget {
                   roleName: roleName,
                   color: member.role?.color != null
                       ? Color(
-                          int.parse(member.role!.color!.substring(1), radix: 16) +
+                          int.parse(
+                                member.role!.color!.substring(1),
+                                radix: 16,
+                              ) +
                               0xFF000000,
                         )
                       : Colors.grey,
@@ -149,44 +152,62 @@ class MemberCard extends StatelessWidget {
                       value: 'transferOwnership',
                       child: Row(
                         children: [
-                          const Icon(Icons.swap_horiz, size: 20, color: Colors.orange),
+                          const Icon(
+                            Icons.swap_horiz,
+                            size: 20,
+                            color: Colors.orange,
+                          ),
                           const SizedBox(width: 8),
-                          const Text('그룹장 양도'),
+                          Text(l10n.group_transfer_ownership),
                         ],
                       ),
                     ),
                   // 역할 변경 및 삭제 옵션 (MANAGE_MEMBER 권한 있는 경우)
                   if (canManage) ...[
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'changeRole',
                       child: Row(
                         children: [
-                          Icon(Icons.manage_accounts_outlined, size: 20),
-                          SizedBox(width: 8),
-                          Text('역할 변경'),
+                          const Icon(Icons.manage_accounts_outlined, size: 20),
+                          const SizedBox(width: 8),
+                          Text(l10n.group_role_change),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'remove',
                       child: Row(
                         children: [
-                          Icon(Icons.person_remove_outlined, size: 20, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('멤버 탈퇴', style: TextStyle(color: Colors.red)),
+                          const Icon(
+                            Icons.person_remove_outlined,
+                            size: 20,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            l10n.group_member_remove,
+                            style: const TextStyle(color: Colors.red),
+                          ),
                         ],
                       ),
                     ),
                   ],
                   // 신고 옵션 (본인 제외 항상 표시)
                   if (canReport)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'report',
                       child: Row(
                         children: [
-                          Icon(Icons.flag_outlined, size: 20, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('신고하기', style: TextStyle(color: Colors.red)),
+                          const Icon(
+                            Icons.flag_outlined,
+                            size: 20,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            l10n.report_title,
+                            style: const TextStyle(color: Colors.red),
+                          ),
                         ],
                       ),
                     ),

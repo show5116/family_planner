@@ -154,6 +154,7 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
   }
 
   Widget _buildTargetChips(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -227,6 +228,7 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
     BuildContext context,
     Map<int, AsyncValue<IndicatorHistoryModel>> histories,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final sortedPoints = [...widget.assetPoints]
       ..sort((a, b) => a.period.compareTo(b.period));
@@ -407,7 +409,8 @@ class _AssetComparisonChartState extends ConsumerState<AssetComparisonChart> {
                     return const SizedBox.shrink();
                   }
                   final label = widget.period == TrendPeriod.monthly
-                      ? '${int.parse(periods[idx].substring(5))}월'
+                      ? l10n.asset_month_unit(
+                          '${int.parse(periods[idx].substring(5))}')
                       : periods[idx]; // YYYY
                   return Padding(
                     padding: const EdgeInsets.only(top: 4),

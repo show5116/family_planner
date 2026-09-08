@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 
 /// 규칙 항목 아이템
@@ -22,6 +23,7 @@ class RuleListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     final (iconData, iconColor, bgColor, badgeColor, badgeText) =
@@ -45,7 +47,7 @@ class RuleListItem extends StatelessWidget {
           colorScheme.primary,
           colorScheme.primaryContainer,
           colorScheme.primary,
-          '일반',
+          l10n.childcare_rule_type_info_short,
         ),
     };
 
@@ -122,17 +124,19 @@ class RuleListItem extends StatelessWidget {
               },
               itemBuilder: (context) => [
                 if (onEdit != null)
-                  const PopupMenuItem(value: 'edit', child: Text('수정')),
+                  PopupMenuItem(value: 'edit', child: Text(l10n.common_edit)),
                 if (onToggleActive != null)
                   PopupMenuItem(
                     value: 'toggle',
-                    child: Text(rule.isActive ? '비활성화' : '활성화'),
+                    child: Text(rule.isActive
+                        ? l10n.common_deactivate
+                        : l10n.common_activate),
                   ),
                 if (onDelete != null)
                   PopupMenuItem(
                     value: 'delete',
                     child: Text(
-                      '삭제',
+                      l10n.common_delete,
                       style: TextStyle(color: colorScheme.error),
                     ),
                   ),

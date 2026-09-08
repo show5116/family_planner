@@ -104,6 +104,7 @@ class RecurringExpensesScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: l10n.household_recurring_add,
         onPressed: () => context.push(
           AppRoutes.householdRecurringAdd,
           extra: {'groupId': selectedGroupId},

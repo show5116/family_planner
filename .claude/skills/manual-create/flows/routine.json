@@ -1,0 +1,33 @@
+{
+  "name": "루틴",
+  "outDir": "docs/manual/routine/screenshots",
+  "device": "iPhone 13",
+  "locale": "ko-KR",
+  "timezone": "Asia/Seoul",
+  "_note": "상세는 extra로 routineId를 넘겨야 해서 직접 goto가 안 됩니다. 목록에서 습관 이름을 탭해 들어갑니다. 전체 현황·배지·일일 목표는 라우트로 직접 goto 가능합니다.",
+  "steps": [
+    { "action": "goto", "path": "/", "wait": 8000 },
+    { "action": "login", "as": "owner", "wait": 16000 },
+
+    { "action": "goto", "path": "/routines", "wait": 15000 },
+    { "action": "shot", "name": "01-main", "caption": "루틴 — 오늘 체크 목록과 일일 목표" },
+    { "action": "scroll", "dy": 700, "wait": 2500 },
+    { "action": "shot", "name": "02-list", "caption": "습관 목록 — 묶음별 섹션과 기록 방식" },
+    { "action": "scroll", "dy": -700, "wait": 2500 },
+
+    { "action": "tap", "label": "아침 물 한 잔", "wait": 9000 },
+    { "action": "shot", "name": "03-detail", "caption": "습관 상세 — 히트맵으로 보는 체크 기록" },
+    { "action": "tap", "label": "통계", "wait": 6000 },
+    { "action": "shot", "name": "04-stats", "caption": "통계 탭 — 스트릭과 기간별 달성률" },
+
+    { "action": "goto", "path": "/routines/overview", "wait": 12000 },
+    { "action": "shot", "name": "05-overview", "caption": "전체 현황 — 기간별 달성률 한눈에" },
+
+    { "action": "goto", "path": "/routines/badges", "wait": 11000 },
+    { "action": "shot", "name": "06-badges", "caption": "배지 — 꾸준히 하면 받는 보상" },
+
+    { "action": "goto", "path": "/routines", "wait": 12000 },
+    { "action": "tapFab", "wait": 6000 },
+    { "action": "shot", "name": "07-add", "caption": "추가하기 — 습관·루틴·카테고리 중에서 고릅니다" }
+  ]
+}

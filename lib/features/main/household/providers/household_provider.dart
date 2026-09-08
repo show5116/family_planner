@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
+import 'package:family_planner/core/utils/localization_loader.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/repositories/asset_repository.dart';
 import 'package:family_planner/features/main/household/data/models/budget_model.dart';
@@ -429,6 +430,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     required double balance,
     required String currentMonth, // YYYY-MM
   }) async {
+    final l10n = await LocalizationLoader.load();
     if (balance <= 0) return false;
 
     state = const AsyncValue.loading();
@@ -455,7 +457,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         amount: balance,
         category: ExpenseCategory.carryover,
         date: lastDayStr,
-        description: '잔금 이월',
+        description: l10n.household_carryover_out,
       ));
 
       // 2) 다음 달 1일: INCOME + CARRYOVER 카테고리로 이월
@@ -464,7 +466,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         type: TransactionType.income,
         amount: balance,
         date: nextMonthFirstStr,
-        description: '전월 이월',
+        description: l10n.household_carryover_in,
         incomeCategory: IncomeCategory.carryover,
       ));
 
@@ -490,6 +492,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     required double? currentBalance,
     required String currentMonth,
   }) async {
+    final l10n = await LocalizationLoader.load();
     if (amount <= 0) return false;
 
     state = const AsyncValue.loading();
@@ -504,7 +507,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         amount: amount,
         category: ExpenseCategory.assetTransfer,
         date: dateStr,
-        description: '자산 이동 ($accountName)',
+        description: l10n.household_transfer_asset(accountName),
       ));
 
       final newBalance = (currentBalance ?? 0) + amount;
@@ -538,6 +541,7 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
     required String savingsName,
     required String currentMonth,
   }) async {
+    final l10n = await LocalizationLoader.load();
     if (amount <= 0) return false;
 
     state = const AsyncValue.loading();
@@ -552,13 +556,13 @@ class HouseholdManagementNotifier extends StateNotifier<AsyncValue<void>> {
         amount: amount,
         category: ExpenseCategory.assetTransfer,
         date: dateStr,
-        description: '저금통 이동 ($savingsName)',
+        description: l10n.household_transfer_savings(savingsName),
       ));
 
       await _ref.read(savingsRepositoryProvider).deposit(
             savingsId,
             amount: amount,
-            description: '가계부 잔금 이동',
+            description: l10n.household_transfer_from_ledger,
           );
 
       _ref.invalidate(householdMonthlyStatisticsProvider);

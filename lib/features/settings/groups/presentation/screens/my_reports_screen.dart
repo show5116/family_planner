@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:family_planner/features/settings/groups/models/group_report.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 내가 신고한 목록 화면
@@ -10,22 +11,26 @@ class MyReportsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final reportsAsync = ref.watch(myReportsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('내 신고 내역')),
+      appBar: AppBar(title: Text(l10n.settings_myReportsTitle)),
       body: reportsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('오류가 발생했습니다: $e')),
+        error: (e, _) => Center(child: Text('${l10n.common_error}: $e')),
         data: (reports) {
           if (reports.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.flag_outlined, size: 48, color: Colors.grey),
-                  SizedBox(height: 12),
-                  Text('신고 내역이 없습니다', style: TextStyle(color: Colors.grey)),
+                  const Icon(Icons.flag_outlined, size: 48, color: Colors.grey),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.report_empty,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
                 ],
               ),
             );
@@ -66,7 +71,9 @@ class _ReportCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     report.reason.label,
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 _StatusBadge(status: report.status, color: statusColor),
@@ -76,7 +83,9 @@ class _ReportCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 report.detail!,
-                style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[700],
+                ),
               ),
             ],
             const SizedBox(height: 8),
@@ -117,7 +126,11 @@ class _StatusBadge extends StatelessWidget {
       ),
       child: Text(
         status.label,
-        style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 12,
+          color: color,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

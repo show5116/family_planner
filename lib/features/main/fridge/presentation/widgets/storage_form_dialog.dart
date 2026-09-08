@@ -79,7 +79,7 @@ class _StorageFormDialogState extends ConsumerState<StorageFormDialog> {
           TextField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: l10n.fridge_item_name,
+              labelText: l10n.fridge_storage_name,
               hintText: l10n.fridge_storage_name_hint,
             ),
             textCapitalization: TextCapitalization.sentences,

@@ -1,0 +1,30 @@
+{
+  "flow": "그룹 저금통",
+  "shots": [
+    {
+      "name": "01-main",
+      "file": "docs/manual/savings/screenshots/01-main.png",
+      "caption": "그룹 저금통 — 목표 목록과 달성률"
+    },
+    {
+      "name": "02-goals",
+      "file": "docs/manual/savings/screenshots/02-goals.png",
+      "caption": "목표 카드 — 달성률과 자동 적립 표시"
+    },
+    {
+      "name": "03-detail",
+      "file": "docs/manual/savings/screenshots/03-detail.png",
+      "caption": "목표 상세 — 모은 금액과 입출금 버튼"
+    },
+    {
+      "name": "04-recent",
+      "file": "docs/manual/savings/screenshots/04-recent.png",
+      "caption": "최근 내역 — 입금과 출금이 함께 표시됩니다"
+    },
+    {
+      "name": "05-form",
+      "file": "docs/manual/savings/screenshots/05-form.png",
+      "caption": "저금통 추가 — 이름만 넣어도 만들 수 있습니다"
+    }
+  ]
+}

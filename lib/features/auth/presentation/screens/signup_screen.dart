@@ -45,11 +45,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Future<void> _handleSignup() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final l10n = AppLocalizations.of(context)!;
 
     if (!_agreedToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -175,6 +175,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildNameField(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _nameController,
       decoration: InputDecoration(
@@ -198,6 +199,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildEmailField(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _emailController,
       decoration: InputDecoration(
@@ -214,6 +216,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildPasswordField(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _passwordController,
       obscureText: _obscurePassword,
@@ -239,6 +242,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildConfirmPasswordField(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _confirmPasswordController,
       obscureText: _obscureConfirmPassword,
@@ -272,6 +276,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildTermsAgreement(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     final primary = Theme.of(context).colorScheme.primary;
 
     return Column(
@@ -317,6 +322,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildSignupButton(AppLocalizations l10n) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(

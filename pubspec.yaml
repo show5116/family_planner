@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.2.0+8
+version: 1.2.0+9
 
 environment:
   sdk: ^3.10.0
@@ -178,6 +178,20 @@ flutter:
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
+
+  # 한글 본문 폰트. 웹(CanvasKit)은 한글을 덮는 폰트가 없으면 Noto 폴백을
+  # 글자 단위로 내려받는데, 폰트가 등록되기 전에 배치된 텍스트가 잘못된 폭으로
+  # 굳어 글자가 잘린 채 그려진다. 번들해두면 그 경합 자체가 없어진다.
+  # Material이 쓰는 400/500/700만 넣는다(웨이트당 1.5MB).
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/pretendard/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/pretendard/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/pretendard/Pretendard-Bold.otf
+          weight: 700
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

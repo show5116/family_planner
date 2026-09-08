@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_notification_listener/flutter_notification_listener.dart';
 
 import 'package:family_planner/features/main/household/data/models/expense_model.dart';
+import 'package:family_planner/core/utils/localization_loader.dart';
 
 /// 카드사·은행 결제 알림을 파싱해 지출 정보를 추출한 결과
 class ParsedExpense {
@@ -115,10 +116,11 @@ class PushExpenseListenerService {
     _PushCallbackHolder.onParsed = onParsed;
 
     await NotificationsListener.initialize(callbackHandle: onNotificationEvent);
+    final l10n = await LocalizationLoader.load();
     await NotificationsListener.startService(
       foreground: false,
-      title: '가계부 자동 등록',
-      description: '결제 알림을 감지해 가계부에 자동 등록합니다',
+      title: l10n.household_auto_service,
+      description: l10n.household_auto_service_desc,
     );
     _started = true;
     debugPrint('[PushExpenseListener] 서비스 시작');

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/assets/data/models/withdrawal_model.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
 
@@ -70,6 +71,7 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: AppSizes.spaceM,
@@ -86,24 +88,26 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('출금 기록', style: Theme.of(context).textTheme.titleLarge),
+              Text(l10n.asset_withdrawal_record,
+                  style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: AppSizes.spaceM),
 
               // 날짜 선택
               OutlinedButton.icon(
                 onPressed: _pickDate,
                 icon: const Icon(Icons.calendar_today, size: 16),
-                label: Text('출금 날짜: $_dateStr'),
+                label: Text(l10n.asset_withdrawal_date(_dateStr)),
               ),
               const SizedBox(height: AppSizes.spaceM),
 
               // 출금 유형
               Row(
                 children: [
-                  Text('출금 유형', style: Theme.of(context).textTheme.labelLarge),
+                  Text(l10n.asset_withdrawal_type,
+                      style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(width: 4),
                   Text(
-                    '(필수)',
+                    l10n.common_required_mark,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.error,
                         ),
@@ -112,7 +116,7 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
               ),
               const SizedBox(height: 4),
               Text(
-                '출금한 금액이 원금에서 나간 것인지, 수익에서 나간 것인지 선택해 주세요.\n잔액 기록 시 원금과 수익을 자동으로 재계산하는 데 사용됩니다.',
+                l10n.asset_withdrawal_type_desc_full,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),
@@ -125,7 +129,7 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
               if (_typeError) ...[
                 const SizedBox(height: 4),
                 Text(
-                  '출금 유형을 선택해 주세요',
+                  l10n.asset_withdrawal_type_required,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.error,
                       ),
@@ -138,15 +142,17 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
                 controller: _amountCtrl,
                 keyboardType: TextInputType.number,
                 inputFormatters: [_ThousandsFormatter()],
-                decoration: const InputDecoration(
-                  labelText: '출금 금액',
+                decoration: InputDecoration(
+                  labelText: l10n.asset_withdrawal_amount,
                   prefixText: '₩ ',
                   border: OutlineInputBorder(),
                 ),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty) return '금액을 입력해주세요';
+                  if (v == null || v.trim().isEmpty) {
+                    return l10n.asset_amount_required;
+                  }
                   final n = double.tryParse(v.replaceAll(',', ''));
-                  if (n == null || n <= 0) return '유효한 금액을 입력해주세요';
+                  if (n == null || n <= 0) return l10n.asset_amount_invalid;
                   return null;
                 },
               ),
@@ -155,9 +161,9 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
               // 메모
               TextFormField(
                 controller: _noteCtrl,
-                decoration: const InputDecoration(
-                  labelText: '메모 (선택)',
-                  hintText: '예: 생활비, 수익 실현',
+                decoration: InputDecoration(
+                  labelText: l10n.asset_memo_optional,
+                  hintText: l10n.asset_memo_hint,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -173,7 +179,7 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
                 style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
                 child: _loading
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Text('저장'),
+                    : Text(l10n.common_save),
               ),
             ],
           ),
@@ -193,6 +199,7 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_type == null) {
       setState(() => _typeError = true);
     }
@@ -220,7 +227,10 @@ class _AddWithdrawalSheetState extends ConsumerState<AddWithdrawalSheet> {
             .addWithdrawal(result);
         Navigator.of(context).pop();
       } else {
-        setState(() { _loading = false; _errorMsg = '저장에 실패했습니다.'; });
+        setState(() {
+          _loading = false;
+          _errorMsg = l10n.asset_save_failed;
+        });
       }
     } catch (e) {
       if (!mounted) return;
@@ -268,6 +278,7 @@ class _TypeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isPrincipal = type == WithdrawalType.principal;
 
@@ -304,7 +315,9 @@ class _TypeTile extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    isPrincipal ? '원금에서 차감 (생활비, 계좌 이동 등)' : '수익에서 차감 (세금, 수익 인출 등)',
+                    isPrincipal
+                        ? l10n.asset_withdrawal_from_principal
+                        : l10n.asset_withdrawal_from_profit,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorScheme.outline,
                         ),

@@ -98,7 +98,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                 children: [
                   AccountListItem(
                     key: _demoCardKey,
-                    account: _demoAccount,
+                    account: _demoAccount(AppLocalizations.of(context)!),
                     showDragHandle: false,
                     dragIndex: 0,
                     onTap: _goToDemo,
@@ -115,6 +115,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
       ),
       floatingActionButton: (!_isDemo && selectedGroupId != null)
           ? FloatingActionButton(
+              tooltip: l10n.asset_account_add,
               onPressed: () => context.push(
                 AppRoutes.assetAccountAdd,
                 extra: {'groupId': selectedGroupId},
@@ -342,6 +343,7 @@ class _AssetListState extends ConsumerState<_AssetList> {
   }
 
   Future<void> _saveReorder() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_reorderedAccounts == null) return;
     final groupId = widget.selectedGroupId;
     if (groupId == null) return;
@@ -360,7 +362,7 @@ class _AssetListState extends ConsumerState<_AssetList> {
         _hasChanges = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('계좌 순서가 저장되었습니다')),
+        SnackBar(content: Text(l10n.asset_account_order_saved)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -377,6 +379,7 @@ class _AssetListState extends ConsumerState<_AssetList> {
     AppLocalizations l10n,
     AccountModel account,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(

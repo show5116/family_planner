@@ -21,6 +21,8 @@ class NavigationLabelHelper {
         return l10n.nav_childPoints;
       case 'memo':
         return l10n.nav_memo;
+      case 'diary':
+        return l10n.diary_title;
       case 'miniGames':
         return l10n.nav_miniGames;
       case 'investmentIndicators':

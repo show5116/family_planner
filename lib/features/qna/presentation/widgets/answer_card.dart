@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/features/qna/data/models/qna_model.dart';
 import 'package:family_planner/shared/widgets/rich_text_viewer.dart';
@@ -89,6 +90,7 @@ class _AnswerCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Container(
@@ -110,7 +112,7 @@ class _AnswerCardHeader extends StatelessWidget {
         ),
         const SizedBox(width: AppSizes.spaceS),
         Text(
-          answer.admin?.name ?? '관리자',
+          answer.admin?.name ?? l10n.common_admin,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -147,24 +149,25 @@ class _AnswerCardHeader extends StatelessWidget {
             },
             itemBuilder: (context) => [
               if (onEdit != null)
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'edit',
                   child: Row(
                     children: [
                       Icon(Icons.edit, size: AppSizes.iconSmall),
                       SizedBox(width: AppSizes.spaceS),
-                      Text('수정'),
+                      Text(l10n.common_edit),
                     ],
                   ),
                 ),
               if (onDelete != null)
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
                   child: Row(
                     children: [
                       Icon(Icons.delete, size: AppSizes.iconSmall, color: AppColors.error),
                       SizedBox(width: AppSizes.spaceS),
-                      Text('삭제', style: TextStyle(color: AppColors.error)),
+                      Text(l10n.common_delete,
+                          style: const TextStyle(color: AppColors.error)),
                     ],
                   ),
                 ),
@@ -184,6 +187,7 @@ class _AttachmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: AppSizes.spaceS),
       child: ListTile(
@@ -196,8 +200,8 @@ class _AttachmentItem extends StatelessWidget {
           icon: const Icon(Icons.download),
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('파일 다운로드 기능은 추후 구현 예정입니다'),
+              SnackBar(
+                content: Text(l10n.qna_downloadNotReady),
               ),
             );
           },

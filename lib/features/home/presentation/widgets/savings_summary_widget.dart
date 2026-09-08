@@ -107,6 +107,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
     List<Group> groups,
     List<SavingsGoalModel> goals,
     bool hasActiveFilter, {VoidCallback? onRetry}) {
+    final l10n = AppLocalizations.of(context)!;
     final activeGoals = goals.where((g) => g.status == SavingsGoalStatus.active).toList();
     final totalCurrent = goals.fold<double>(0, (s, g) => s + g.currentAmount);
     final goalsWithTarget = goals.where((g) => g.targetAmount != null && g.targetAmount! > 0).toList();
@@ -124,7 +125,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '그룹 선택',
+              tooltip: l10n.common_selectGroup,
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
@@ -156,13 +157,13 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '총 적립액',
+                      l10n.home_total_savings,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                     Text(
-                      '${activeGoals.length}개 진행 중',
+                      l10n.home_active_goals(activeGoals.length),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -194,13 +195,14 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '목표 ${totalTarget.toCurrency()}',
+                        l10n.home_goal_amount(totalTarget.toCurrency()),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                       ),
                       Text(
-                        '${((targetCurrent / totalTarget) * 100).clamp(0, 100).toInt()}% 달성',
+                        l10n.savings_achievement_rate(
+                            '${((targetCurrent / totalTarget) * 100).clamp(0, 100).toInt()}'),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: AppColors.success,
                             ),
@@ -216,7 +218,7 @@ class _SavingsSummaryWidgetState extends ConsumerState<SavingsSummaryWidget> {
                   if (goals.length > 3) ...[
                     const SizedBox(height: AppSizes.spaceS),
                     Text(
-                      '외 ${goals.length - 3}개',
+                      l10n.home_more_goals(goals.length - 3),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -346,6 +348,7 @@ class _SavingsGroupPickerSheetState extends State<_SavingsGroupPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mq = MediaQuery.of(context);
     return Padding(
       padding: EdgeInsets.only(bottom: mq.viewInsets.bottom + mq.padding.bottom),
@@ -368,7 +371,8 @@ class _SavingsGroupPickerSheetState extends State<_SavingsGroupPickerSheet> {
             padding: const EdgeInsets.fromLTRB(
               AppSizes.spaceL, AppSizes.spaceM, AppSizes.spaceL, AppSizes.spaceS,
             ),
-            child: Text('그룹 선택', style: Theme.of(context).textTheme.titleLarge),
+            child: Text(l10n.common_selectGroup,
+                style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(),
           RadioGroup<String>(
@@ -392,7 +396,7 @@ class _SavingsGroupPickerSheetState extends State<_SavingsGroupPickerSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () => widget.onApply(_selectedGroupId),
-                child: const Text('적용'),
+                child: Text(l10n.common_apply),
               ),
             ),
           ),

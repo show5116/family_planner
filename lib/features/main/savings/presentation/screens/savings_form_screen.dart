@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/home/providers/dashboard_provider.dart';
 import 'package:family_planner/features/main/savings/data/models/savings_model.dart';
 import 'package:family_planner/features/main/savings/data/repositories/savings_repository.dart';
@@ -121,7 +122,9 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('저장 실패: $e')));
+        ).showSnackBar(SnackBar(
+          content: Text('${AppLocalizations.of(context)!.savings_form_save_error}\n$e'),
+        ));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -130,6 +133,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final groupName = ref
         .watch(myGroupsProvider)
         .whenOrNull(
@@ -142,7 +146,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_isEdit ? '저금통 수정' : '저금통 추가'),
+            Text(_isEdit ? l10n.savings_form_title_edit : l10n.savings_form_title_add),
             if (groupName != null)
               Text(
                 groupName,
@@ -166,12 +170,12 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                     // 이름
                     TextFormField(
                       controller: _nameCtrl,
-                      decoration: const InputDecoration(
-                        labelText: '목표 이름 *',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.savings_field_name,
+                        border: const OutlineInputBorder(),
                       ),
                       validator: (v) => (v == null || v.trim().isEmpty)
-                          ? '목표 이름을 입력해 주세요'
+                          ? l10n.savings_field_name_required
                           : null,
                       textInputAction: TextInputAction.next,
                     ),
@@ -180,9 +184,9 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                     // 설명
                     TextFormField(
                       controller: _descCtrl,
-                      decoration: const InputDecoration(
-                        labelText: '설명 (선택)',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.savings_field_description,
+                        border: const OutlineInputBorder(),
                       ),
                       maxLines: 2,
                       textInputAction: TextInputAction.next,
@@ -192,11 +196,11 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                     // 목표 금액
                     TextFormField(
                       controller: _targetCtrl,
-                      decoration: const InputDecoration(
-                        labelText: '목표 금액 (선택, 원)',
-                        border: OutlineInputBorder(),
-                        hintText: '예: 1000000',
-                        helperText: '목표 금액을 지정하지 않으면 비상금·계처럼 계속 모아서 사용할 수 있어요.',
+                      decoration: InputDecoration(
+                        labelText: l10n.savings_field_target,
+                        border: const OutlineInputBorder(),
+                        hintText: l10n.savings_field_target_hint,
+                        helperText: l10n.savings_field_target_helper,
                         helperMaxLines: 2,
                       ),
                       keyboardType: TextInputType.number,
@@ -206,7 +210,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                           v.trim().replaceAll(',', ''),
                         );
                         if (parsed == null || parsed <= 0)
-                          return '올바른 금액을 입력해 주세요';
+                          return l10n.savings_field_amount_invalid;
                         return null;
                       },
                       textInputAction: TextInputAction.next,
@@ -217,8 +221,8 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                     Card(
                       margin: EdgeInsets.zero,
                       child: SwitchListTile(
-                        title: const Text('자동 적립'),
-                        subtitle: const Text('매월 자동으로 적립합니다'),
+                        title: Text(l10n.savings_auto_deposit),
+                        subtitle: Text(l10n.savings_field_auto_deposit_desc),
                         value: _autoDeposit,
                         activeThumbColor: AppColors.investment,
                         onChanged: (v) => setState(() => _autoDeposit = v),
@@ -234,21 +238,21 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                           children: [
                             TextFormField(
                               controller: _monthlyCtrl,
-                              decoration: const InputDecoration(
-                                labelText: '월 적립금 (원)',
-                                border: OutlineInputBorder(),
-                                hintText: '예: 100000',
+                              decoration: InputDecoration(
+                                labelText: l10n.savings_field_monthly_amount,
+                                border: const OutlineInputBorder(),
+                                hintText: l10n.savings_field_monthly_amount_hint,
                               ),
                               keyboardType: TextInputType.number,
                               validator: (v) {
                                 if (!_autoDeposit) return null;
                                 if (v == null || v.trim().isEmpty)
-                                  return '월 적립금을 입력해 주세요';
+                                  return l10n.savings_field_monthly_amount_required;
                                 final parsed = double.tryParse(
                                   v.trim().replaceAll(',', ''),
                                 );
                                 if (parsed == null || parsed <= 0)
-                                  return '올바른 금액을 입력해 주세요';
+                                  return l10n.savings_field_amount_invalid;
                                 return null;
                               },
                               textInputAction: TextInputAction.next,
@@ -256,11 +260,11 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                             const SizedBox(height: AppSizes.spaceM),
                             TextFormField(
                               controller: _depositDayCtrl,
-                              decoration: const InputDecoration(
-                                labelText: '매달 적립일 (1~31일)',
-                                border: OutlineInputBorder(),
-                                hintText: '예: 25',
-                                helperText: '해당 월에 날짜가 없으면 말일에 자동 처리돼요.',
+                              decoration: InputDecoration(
+                                labelText: l10n.savings_field_deposit_day,
+                                border: const OutlineInputBorder(),
+                                hintText: l10n.savings_field_deposit_day_hint,
+                                helperText: l10n.savings_field_deposit_day_helper,
                               ),
                               keyboardType: TextInputType.number,
                               validator: (v) {
@@ -269,7 +273,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                                 if (parsed == null ||
                                     parsed < 1 ||
                                     parsed > 31) {
-                                  return '1~31 사이의 날짜를 입력해 주세요';
+                                  return l10n.savings_field_deposit_day_invalid;
                                 }
                                 return null;
                               },
@@ -292,8 +296,8 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
                     Card(
                       margin: EdgeInsets.zero,
                       child: SwitchListTile(
-                        title: const Text('자산 통계에 포함'),
-                        subtitle: const Text('자산 현황에서 적립금 잔액을 함께 확인할 수 있어요'),
+                        title: Text(l10n.savings_field_include_assets),
+                        subtitle: Text(l10n.savings_field_include_assets_desc),
                         value: _includeInAssets,
                         activeThumbColor: AppColors.investment,
                         onChanged: (v) => setState(() => _includeInAssets = v),
@@ -304,7 +308,7 @@ class _SavingsFormScreenState extends ConsumerState<SavingsFormScreen>
               ),
             ),
             FormBottomBar(
-              label: _isEdit ? '수정 완료' : '저금통 추가',
+              label: _isEdit ? l10n.savings_form_submit_edit : l10n.savings_goal_add,
               isLoading: _loading,
               onPressed: _submit,
               backgroundColor: AppColors.investment,

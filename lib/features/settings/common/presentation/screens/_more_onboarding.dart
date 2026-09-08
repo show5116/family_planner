@@ -31,8 +31,8 @@ extension _MoreOnboarding on _MoreTabState {
   void _replayOnboarding() => _showCoachMark(force: true);
 
   Future<void> _showCoachMark({bool force = false}) async {
-    final groupPos = _keyToPosition(_groupManagementKey);
     final l10n = AppLocalizations.of(context)!;
+    final groupPos = _keyToPosition(_groupManagementKey);
 
     await FeatureCoachMark.show(
       context: context,

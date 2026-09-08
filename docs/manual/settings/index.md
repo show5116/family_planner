@@ -1,7 +1,7 @@
 ---
 title: 사용자 설정
 menu: settings
-order: 10
+order: 18
 updated: 2026-08-31
 screenshots: 11
 ---

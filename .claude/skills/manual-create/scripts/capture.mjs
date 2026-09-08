@@ -41,7 +41,9 @@ mkdirSync(OUT_DIR, { recursive: true });
 // 이전 실행의 스크린샷을 지웁니다. 플로우에서 이름을 바꾸면 옛 파일이 남아
 // 매뉴얼이 참조하지 않는 유령 이미지가 쌓입니다.
 for (const f of readdirSync(OUT_DIR)) {
-  if (f.endsWith('.png')) rmSync(path.join(OUT_DIR, f), { force: true });
+  if (f.endsWith('.png') || f === '_failure-labels.txt') {
+    rmSync(path.join(OUT_DIR, f), { force: true });
+  }
 }
 
 /** Flutter 엔진 기동 + 시맨틱스 활성화 대기 */
@@ -52,70 +54,126 @@ async function bootFlutter(page) {
 }
 
 /** 시맨틱스 플레이스홀더를 클릭해 접근성 트리를 켭니다 (라벨 기반 탐색의 전제). */
-async function enableSemantics(page) {
+async function enableSemantics(page, { minNodes = 1, timeout = 6000 } = {}) {
   await page.evaluate(() => {
     const el = document.querySelector('flt-semantics-placeholder');
     if (el) el.click();
   });
-  await page.waitForTimeout(1200);
-}
-
-/**
- * 라벨이 정확히 일치하는 시맨틱 노드 (가장 안쪽 = 실제 조작 대상).
- *
- * Flutter 시맨틱스는 위젯에 따라 텍스트를 노드 본문에 넣기도 하고
- * aria-label에만 넣기도 합니다(팝업 메뉴 항목 등). 둘 다 매칭해야 합니다.
- */
-/** 텍스트가 정확히 일치하는 시맨틱 노드 (가장 안쪽 = 실제 조작 대상) */
-function nodeByText(page, label) {
-  return page.locator('flt-semantics', { hasText: new RegExp(`^${escapeRe(label)}$`) });
-}
-
-/**
- * 라벨로 요소를 클릭합니다.
- *
- * aria-label 완전일치 → 텍스트 완전일치 순으로 시도합니다.
- * aria-label 탐색은 CSS 선택자 대신 DOM을 직접 훑어 좌표를 얻습니다
- * (줄바꿈·따옴표가 든 라벨도 안전하게 처리하기 위함).
- */
-async function clickLabel(page, label, timeout = 45000) {
-  // 1) aria-label 완전일치
-  // 2) 첫 줄 완전일치 — ListTile은 시맨틱 텍스트가 "제목\n부제목"으로 합쳐져서
-  //    제목만으로는 완전일치가 되지 않습니다. 후보 중 **가장 작은** 노드를 고릅니다
-  //    (자식 텍스트를 모두 품은 스크롤 컨테이너 같은 상위 노드를 피하기 위함).
-  //
-  // 좌표(page.mouse)가 아니라 요소 핸들로 클릭합니다. 화면 밖에 있는 버튼은
-  // 좌표 클릭이 통하지 않는데(스크롤을 하지 않음), 핸들 클릭은 먼저 스크롤합니다.
-  // 로그인 화면의 테스트 계정 버튼처럼 접힌 아래쪽 버튼이 여기에 해당합니다.
-  const handle = await page.evaluateHandle((want) => {
-    const visible = (n) => {
-      const r = n.getBoundingClientRect();
-      return r.width > 0 && r.height > 0;
-    };
-    const area = (n) => {
-      const r = n.getBoundingClientRect();
-      return r.width * r.height;
-    };
-    const nodes = [...document.querySelectorAll('flt-semantics')];
-
-    const byAria = nodes.find(
-      (n) => (n.getAttribute('aria-label') || '') === want && visible(n),
+  // 고정 대기 대신 시맨틱 노드가 실제로 생길 때까지 기다립니다.
+  // Flutter 웹은 스크롤·화면 전환 직후 트리를 곧바로 갱신하지 않아,
+  // 화면에는 보이는데 시맨틱스에는 없어서 탭이 실패하는 일이 있었습니다.
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    const n = await page.evaluate(
+      () => document.querySelectorAll('flt-semantics').length,
     );
-    if (byAria) return byAria;
+    if (n >= minNodes) break;
+    await page.waitForTimeout(300);
+  }
+  await page.waitForTimeout(400);
+}
 
-    const byFirstLine = nodes
-      .filter((n) => (n.textContent || '').split('\n')[0].trim() === want && visible(n))
-      .sort((a, b) => area(a) - area(b));
-    return byFirstLine[0] ?? null;
-  }, label);
+/** 현재 화면의 시맨틱 라벨 목록 (실패 디버깅용) */
+async function dumpLabels(page) {
+  return page
+    .evaluate(() =>
+      [...document.querySelectorAll('flt-semantics')]
+        .map((n) => ({
+          role: n.getAttribute('role') || '',
+          aria: n.getAttribute('aria-label') || '',
+          text: (n.textContent || '').replace(/\n/g, ' | ').trim().slice(0, 90),
+        }))
+        .filter((o) => o.aria || o.text),
+    )
+    .catch(() => []);
+}
 
-  const el = handle.asElement();
-  if (el) {
-    await el.click({ timeout });
+/// 요소를 누릅니다. 핸들 클릭이 flt-glass-pane에 막히면 좌표로 직접 누릅니다.
+///
+/// Flutter 웹은 시맨틱 노드 위를 glass-pane이 덮고 있고 좌표로 히트 테스트합니다.
+/// 대부분은 핸들 클릭이 그대로 통하지만, 노드가 pane에 완전히 가려져 Playwright가
+/// 계속 재시도만 하는 경우가 있어(메모 목록의 체크리스트 카드) 그때는 노드 위치를
+/// 구해 그 좌표를 직접 누릅니다. 실제 사용자의 탭과 같은 경로입니다.
+async function clickElement(page, el, timeout = 45000) {
+  try {
+    await el.click({ timeout: Math.min(timeout, 8000) });
     return;
+  } catch {
+    // 아래 좌표 클릭으로 넘어갑니다
+  }
+  await el.scrollIntoViewIfNeeded().catch(() => {});
+  const box = await el.boundingBox();
+  if (!box) throw new Error('요소의 위치를 구하지 못했습니다');
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+}
+
+async function clickLabel(page, label, timeout = 45000) {
+  // 매칭을 3단계로 넓혀가며 시도합니다. 실제 촬영에서 아래 경우를 모두 만났습니다.
+  //  1) aria-label 완전일치 — 대부분의 버튼
+  //  2) 텍스트 첫 줄 일치 — ListTile은 "제목\n부제목"으로 합쳐집니다
+  //  3) 부분 포함 — 일정 카드처럼 "제목\n오전 10:30"이 통째로 aria-label이거나,
+  //     기념일처럼 이모지·D-day가 앞뒤에 붙는 경우
+  //
+  // 좌표(page.mouse)가 아니라 요소 핸들로 클릭합니다. 화면 밖 요소는 좌표 클릭이
+  // 통하지 않지만(스크롤을 하지 않음) 핸들 클릭은 먼저 스크롤합니다.
+  //
+  // 다만 시맨틱 노드 위를 flt-glass-pane이 덮고 있으면 핸들 클릭이 계속 막힙니다.
+  // (메모 목록의 체크리스트 카드가 그랬습니다.) 이때는 노드 위치를 구해 그 좌표를
+  // 직접 누릅니다 — Flutter는 원래 glass-pane에서 좌표로 히트 테스트하므로
+  // 이쪽이 실제 사용자의 탭에 더 가깝습니다.
+  const find = (mode) =>
+    page.evaluateHandle(
+      ({ want, mode }) => {
+        const visible = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width > 0 && r.height > 0;
+        };
+        const area = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width * r.height;
+        };
+        const nodes = [...document.querySelectorAll('flt-semantics')].filter(visible);
+
+        if (mode === 'aria') {
+          return nodes.find((n) => (n.getAttribute('aria-label') || '') === want) ?? null;
+        }
+        if (mode === 'firstLine') {
+          return (
+            nodes
+              .filter((n) => (n.textContent || '').split('\n')[0].trim() === want)
+              .sort((a, b) => area(a) - area(b))[0] ?? null
+          );
+        }
+        // contains — 가장 작은 노드를 골라 상위 컨테이너를 피합니다
+        return (
+          nodes
+            .filter((n) =>
+              ((n.getAttribute('aria-label') || '') + (n.textContent || '')).includes(want),
+            )
+            .sort((a, b) => area(a) - area(b))[0] ?? null
+        );
+      },
+      { want: label, mode },
+    );
+
+  for (const mode of ['aria', 'firstLine', 'contains']) {
+    const handle = await find(mode);
+    const el = handle.asElement();
+    if (el) {
+      await clickElement(page, el, timeout);
+      return;
+    }
   }
 
-  await nodeByText(page, label).last().click({ timeout });
+  // 세 방식 모두 실패 — 시맨틱스를 한 번 더 켜고 마지막으로 시도
+  await enableSemantics(page);
+  const retry = await find('contains');
+  const el = retry.asElement();
+  if (el) {
+    await clickElement(page, el, timeout);
+    return;
+  }
+  throw new Error(`"${label}" 을(를) 찾지 못했습니다 (aria/첫줄/부분일치 모두 실패)`);
 }
 
 function escapeRe(s) {
@@ -169,7 +227,7 @@ async function runStep(page, step, ctxState) {
       }, { role: step.role, index: step.index });
       const target = handle.asElement();
       if (!target) throw new Error(`role="${step.role}" 요소를 찾지 못했습니다`);
-      await target.click({ timeout: step.timeout ?? 45000 });
+      await clickElement(page, target, step.timeout ?? 45000);
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -195,7 +253,7 @@ async function runStep(page, step, ctxState) {
       }, step.contains);
       const target = handle.asElement();
       if (!target) throw new Error(`"${step.contains}" 를 포함한 요소를 찾지 못했습니다`);
-      await target.click({ timeout: step.timeout ?? 45000 });
+      await clickElement(page, target, step.timeout ?? 45000);
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -205,7 +263,7 @@ async function runStep(page, step, ctxState) {
       const loc = page.locator('flt-semantics', {
         hasText: new RegExp(escapeRe(step.contains)),
       });
-      await loc.nth(step.index ?? 0).click({ timeout: 45000 });
+      await clickElement(page, loc.nth(step.index ?? 0), 45000);
       await settle(page, step.wait ?? 3500);
       await enableSemantics(page);
       break;
@@ -235,10 +293,69 @@ async function runStep(page, step, ctxState) {
       await enableSemantics(page);
       break;
     }
+    case 'type': {
+      // 텍스트 입력. Flutter 웹은 포커스된 TextField 자리에 실제 <input>을 얹으므로,
+      // 라벨로 시맨틱 노드를 찾아 그 안의 input을 클릭해 포커스한 뒤 키보드로 칩니다.
+      // (유통기한 자동 추천처럼 "입력해야만 보이는 UI"를 찍을 때 씁니다.)
+      await enableSemantics(page);
+      const handle = await page.evaluateHandle((want) => {
+        const visible = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width > 0 && r.height > 0;
+        };
+        const nodes = [...document.querySelectorAll('flt-semantics')].filter(visible);
+        // 1) 라벨이 일치하는 노드 안의 input
+        for (const n of nodes) {
+          const t = (n.getAttribute('aria-label') || '') + ' ' + (n.textContent || '');
+          if (!t.includes(want)) continue;
+          const input = n.querySelector('input, textarea');
+          if (input) return input;
+        }
+        // 2) 라벨 매칭 실패 — 화면에 보이는 첫 입력 필드
+        return (
+          [...document.querySelectorAll('flt-semantics input, flt-semantics textarea')].find(
+            visible,
+          ) ?? null
+        );
+      }, step.label ?? '');
+      const input = handle.asElement();
+      if (!input) throw new Error(`"${step.label}" 입력 필드를 찾지 못했습니다`);
+      await input.click({ timeout: step.timeout ?? 45000 });
+      await page.waitForTimeout(600);
+      // 한 글자씩 치면(keyboard.type) 첫 글자의 onChanged로 위젯이 리빌드되면서
+      // 편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다. (검증됨: "삼겹살" → "삼")
+      // insertText는 문자열을 한 번의 input 이벤트로 넣어 그 문제를 피합니다.
+      await page.keyboard.insertText(step.text ?? '');
+      await settle(page, step.wait ?? 2500);
+      await enableSemantics(page);
+      break;
+    }
     case 'scroll': {
+      // 스크롤 전 시맨틱 지문을 남겨, 트리가 실제로 갱신될 때까지 기다립니다.
+      const before = await page
+        .evaluate(() =>
+          [...document.querySelectorAll('flt-semantics')]
+            .map((n) => (n.textContent || '').slice(0, 40))
+            .join('§'),
+        )
+        .catch(() => '');
       await page.mouse.move(200, 500);
       await page.mouse.wheel(0, step.dy ?? 400);
       await settle(page, step.wait ?? 1800);
+      await enableSemantics(page);
+      // 목록이 길면 갱신이 늦습니다. 최대 4초까지 바뀌기를 기다립니다.
+      const deadline = Date.now() + 4000;
+      while (Date.now() < deadline) {
+        const after = await page
+          .evaluate(() =>
+            [...document.querySelectorAll('flt-semantics')]
+              .map((n) => (n.textContent || '').slice(0, 40))
+              .join('§'),
+          )
+          .catch(() => '');
+        if (after !== before) break;
+        await page.waitForTimeout(300);
+      }
       await enableSemantics(page);
       break;
     }
@@ -252,8 +369,37 @@ async function runStep(page, step, ctxState) {
       await settle(page, step.wait ?? 2000);
       break;
     }
+    case 'reload': {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(step.wait ?? 15000);
+      await enableSemantics(page);
+      break;
+    }
+    case 'dump': {
+      // 플로우를 짤 때 실제 시맨틱 라벨과 크기를 확인하는 용도.
+      await enableSemantics(page);
+      const rows = await page.evaluate((role) => {
+        return [...document.querySelectorAll('flt-semantics')]
+          .filter((n) => !role || n.getAttribute('role') === role)
+          .map((n) => {
+            const r = n.getBoundingClientRect();
+            return {
+              role: n.getAttribute('role') || '-',
+              label: (n.getAttribute('aria-label') || n.textContent || '').split('\n')[0].slice(0, 30),
+              w: Math.round(r.width),
+              h: Math.round(r.height),
+            };
+          })
+          .filter((r) => r.w > 0 && r.label);
+      }, step.role ?? null);
+      console.log(`  [dump] ${rows.length}개`);
+      for (const r of rows) console.log(`    ${r.role.padEnd(12)} ${String(r.w).padStart(4)}x${String(r.h).padStart(3)}  ${r.label}`);
+      break;
+    }
     case 'shot': {
       const file = path.join(OUT_DIR, `${step.name}.png`);
+      await page.evaluate(() => document.fonts.ready).catch(() => {});
+      await page.waitForTimeout(400);
       await page.screenshot({ path: file, fullPage: step.fullPage ?? false });
       ctxState.shots.push({
         name: step.name,
@@ -298,6 +444,15 @@ async function main() {
 
   const page = await context.newPage();
   page.on('pageerror', (e) => console.log('  [pageerror]', String(e).slice(0, 160)));
+  if (process.env.CAPTURE_DEBUG_NET) {
+    page.on('requestfailed', (r) =>
+      console.log('  [netfail]', r.failure()?.errorText, r.url().slice(0, 110)),
+    );
+    page.on('response', (r) => {
+      if (/font|\.ttf|\.otf|\.woff/i.test(r.url()))
+        console.log('  [font]', r.status(), r.url().slice(0, 110));
+    });
+  }
 
   const state = { shots: [] };
   let failed = null;
@@ -310,9 +465,19 @@ async function main() {
     }
   } catch (e) {
     failed = e;
-    // 실패 지점 스냅샷을 남겨 디버깅을 돕습니다.
+    // 실패 지점 스냅샷 + 그 화면의 시맨틱 라벨 목록을 남깁니다.
+    // 스크린샷만으로는 "왜 못 찾았는지"를 알 수 없어 매번 프로브 스크립트를
+    // 따로 만들어야 했습니다.
     await page.screenshot({ path: path.join(OUT_DIR, '_failure.png') }).catch(() => {});
+    const labels = await dumpLabels(page);
+    writeFileSync(
+      path.join(OUT_DIR, '_failure-labels.txt'),
+      labels
+        .map((o) => `${(o.role || '-').padEnd(8)} aria=${JSON.stringify(o.aria)}  text=${JSON.stringify(o.text)}`)
+        .join('\n'),
+    );
     console.error('\n촬영 중단:', e.message);
+    console.error(`실패 화면의 시맨틱 라벨 ${labels.length}개 → ${path.relative(PROJECT_ROOT, path.join(OUT_DIR, '_failure-labels.txt'))}`);
   }
 
   const manifest = path.join(OUT_DIR, 'shots.json');

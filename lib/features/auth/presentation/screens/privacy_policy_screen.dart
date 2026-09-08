@@ -81,6 +81,7 @@ class _ContactText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final style = Theme.of(context).textTheme.bodySmall?.copyWith(
       color: Theme.of(context).colorScheme.outline,
     );
@@ -111,7 +112,7 @@ class _ContactText extends StatelessWidget {
                   await Clipboard.setData(const ClipboardData(text: _email));
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('이메일 주소가 복사되었습니다.')),
+                      SnackBar(content: Text(l10n.auth_email_copied)),
                     );
                   }
                 }

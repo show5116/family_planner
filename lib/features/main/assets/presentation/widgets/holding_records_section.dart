@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/assets/data/models/asset_record_model.dart';
 import 'package:family_planner/features/main/assets/data/models/holding_record_model.dart';
 import 'package:family_planner/features/main/assets/providers/asset_provider.dart';
@@ -86,9 +87,10 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
   String _toDateString(DateTime dt) =>
       '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
 
-  String _formatDateLabel(String date) {
+  String _formatDateLabel(AppLocalizations l10n, String date) {
     final parts = date.split('-');
-    return '${parts[0]}년 ${int.parse(parts[1])}월 ${int.parse(parts[2])}일';
+    return l10n.asset_date_full(
+        parts[0], '${int.parse(parts[1])}', '${int.parse(parts[2])}');
   }
 
   String _formatDateLabelShort(String date) {
@@ -98,6 +100,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final sortedRecords = [...widget.assetRecords]
       ..sort((a, b) => b.recordDate.compareTo(a.recordDate));
     final snapshotRecords = sortedRecords.where((r) => r.isSnapshot).toList();
@@ -113,7 +116,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '포트폴리오',
+                l10n.asset_portfolio,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               Row(
@@ -122,7 +125,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
                     TextButton.icon(
                       onPressed: () => _showAddSheet(context, _selectedDate!),
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('종목 추가'),
+                      label: Text(l10n.asset_holding_add_button),
                     ),
                   if (dateOptions.length >= 2)
                     TextButton.icon(
@@ -134,7 +137,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
                         }
                       }),
                       icon: Icon(_compareMode ? Icons.close : Icons.compare_arrows, size: 18),
-                      label: Text(_compareMode ? '닫기' : '비교'),
+                      label: Text(_compareMode ? l10n.common_close : l10n.asset_compare),
                     ),
                 ],
               ),
@@ -147,7 +150,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
           Padding(
             padding: const EdgeInsets.all(AppSizes.spaceM),
             child: Text(
-              '잔액 기록을 먼저 추가하면 포트폴리오를 기록할 수 있습니다.',
+              l10n.asset_record_first,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -198,7 +201,7 @@ class _HoldingRecordsSectionState extends ConsumerState<HoldingRecordsSection> {
               dates: dateOptions,
               selected: _selectedDate,
               onChanged: (d) => setState(() => _selectedDate = d),
-              formatLabel: _formatDateLabel,
+              formatLabel: (d) => _formatDateLabel(l10n, d),
             ),
           ),
           if (_selectedDate != null)
@@ -297,6 +300,7 @@ class _HoldingRecordsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final args = (accountId: accountId, recordDate: recordDate);
     final recordsAsync = ref.watch(holdingRecordsProvider(args));
 
@@ -307,7 +311,8 @@ class _HoldingRecordsList extends ConsumerWidget {
       ),
       error: (_, _) => Padding(
         padding: const EdgeInsets.all(AppSizes.spaceM),
-        child: Text('오류가 발생했습니다.', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        child: Text(l10n.common_errorOccurred,
+            style: TextStyle(color: Theme.of(context).colorScheme.error)),
       ),
       data: (rawRecords) {
         final records = [...rawRecords]
@@ -317,7 +322,7 @@ class _HoldingRecordsList extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceL),
             child: Center(
               child: Text(
-                '이 날짜에 등록된 종목이 없습니다.',
+                l10n.asset_no_holdings,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),
@@ -362,12 +367,13 @@ class _HoldingRecordsList extends ConsumerWidget {
   }
 
   Future<void> _fillCash(BuildContext context, WidgetRef ref, double amount) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ref
           .read(holdingRecordsProvider((accountId: accountId, recordDate: recordDate)).notifier)
           .create(CreateHoldingRecordDto(
             recordDate: recordDate,
-            name: '현금',
+            name: l10n.asset_cash,
             amount: amount,
           ));
     } catch (e) {
@@ -380,16 +386,20 @@ class _HoldingRecordsList extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref, HoldingRecordModel record) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('종목 삭제'),
-        content: Text('${record.name} 기록을 삭제할까요?'),
+        title: Text(l10n.asset_holding_delete),
+        content: Text(l10n.asset_holding_delete_message(record.name)),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('취소')),
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(l10n.common_cancel)),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('삭제', style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
+            child: Text(l10n.common_delete,
+                style: TextStyle(color: Theme.of(ctx).colorScheme.error)),
           ),
         ],
       ),
@@ -402,7 +412,7 @@ class _HoldingRecordsList extends ConsumerWidget {
       } catch (_) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('삭제에 실패했습니다.')),
+            SnackBar(content: Text(l10n.asset_delete_failed)),
           );
         }
       }
@@ -445,6 +455,7 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final records = widget.records;
     final total = widget.totalAmount;
 
@@ -553,7 +564,7 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
         ] else if (isOthersTouched) ...[
           const SizedBox(height: AppSizes.spaceXS),
           Text(
-            '기타 (${otherRecords.length}개)',
+            l10n.asset_others_count(otherRecords.length),
             style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -592,7 +603,7 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
               if (hasOthers && !_othersExpanded)
                 _LegendChip(
                   color: _othersColor,
-                  label: '기타 ${otherRecords.length}개',
+                  label: l10n.asset_others_count(otherRecords.length),
                   ratio: othersRatio,
                   isTouched: isOthersTouched,
                   trailing: Icon(
@@ -617,7 +628,7 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                     )),
                 _LegendChip(
                   color: _othersColor,
-                  label: '접기',
+                  label: l10n.common_collapse,
                   ratio: othersRatio,
                   isTouched: false,
                   trailing: Icon(
@@ -645,7 +656,8 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                   TextButton.icon(
                     onPressed: widget.onFillCash,
                     icon: const Icon(Icons.account_balance_wallet_outlined, size: 16),
-                    label: Text('현금으로 채우기 (₩${formatAssetAmount(widget.remaining)})'),
+                    label: Text(l10n.asset_fill_with_cash(
+                        '₩${formatAssetAmount(widget.remaining)}')),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       visualDensity: VisualDensity.compact,
@@ -654,7 +666,8 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                 else
                   const SizedBox.shrink(),
                 Text(
-                  '잔액: ₩${formatAssetAmount(widget.assetBalance!)}',
+                  l10n.asset_balance_value(
+                      '₩${formatAssetAmount(widget.assetBalance!)}'),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.outline,
                       ),
@@ -691,7 +704,8 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                   ),
                   const SizedBox(width: AppSizes.spaceS),
                   Text(
-                    '기타 ${otherRecords.length}개  ${othersRatio.toStringAsFixed(1)}%',
+                    l10n.asset_others_ratio(
+                        otherRecords.length, othersRatio.toStringAsFixed(1)),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const Spacer(),
@@ -725,7 +739,7 @@ class _HoldingRecordsBodyState extends State<_HoldingRecordsBody> {
                   Icon(Icons.expand_less, size: 18,
                       color: Theme.of(context).colorScheme.outline),
                   const SizedBox(width: 4),
-                  Text('접기',
+                  Text(l10n.common_collapse,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.outline,
                           )),
@@ -811,6 +825,7 @@ class _HoldingRecordListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceM),
       leading: Container(
@@ -840,10 +855,11 @@ class _HoldingRecordListItem extends StatelessWidget {
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, size: 18),
             itemBuilder: (_) => [
-              const PopupMenuItem(value: 'edit', child: Text('수정')),
+              PopupMenuItem(value: 'edit', child: Text(l10n.common_edit)),
               PopupMenuItem(
                 value: 'delete',
-                child: Text('삭제', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                child: Text(l10n.common_delete,
+                    style: TextStyle(color: Theme.of(context).colorScheme.error)),
               ),
             ],
             onSelected: (v) {

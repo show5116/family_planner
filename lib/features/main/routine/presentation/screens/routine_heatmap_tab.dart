@@ -85,8 +85,7 @@ class _RoutineHeatmapTabState extends ConsumerState<RoutineHeatmapTab> {
               ),
               const SizedBox(height: AppSizes.spaceL),
               RoutineWeeklyStrip(
-                routineId: widget.routine.id,
-                targetCount: widget.routine.targetCount,
+                routine: widget.routine,
                 accentColor: _accentColor(),
               ),
             ],

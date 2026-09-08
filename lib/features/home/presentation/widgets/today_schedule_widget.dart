@@ -125,6 +125,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hasGroups = (ref.watch(myGroupsProvider).valueOrNull ?? []).isNotEmpty;
     final tasksAsync = ref.watch(
       dashboardTodayTasksProvider(
@@ -146,7 +147,7 @@ class _TodayScheduleWidgetState extends ConsumerState<TodayScheduleWidget> {
             IconButton(
               iconSize: 20,
               visualDensity: VisualDensity.compact,
-              tooltip: '일정 필터',
+              tooltip: l10n.home_schedule_filter,
               icon: Badge(
                 isLabelVisible: hasActiveFilter,
                 smallSize: 7,
@@ -201,6 +202,7 @@ class _ScheduleItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final personalHex = ref.watch(authProvider).user?['personalColor'] as String?;
     final color = ColorUtils.taskColor(
@@ -208,7 +210,6 @@ class _ScheduleItem extends ConsumerWidget {
       groups: groups,
       personalColorHex: personalHex,
     );
-    final l10n = AppLocalizations.of(context)!;
     String timeText;
     if (task.scheduledAt == null) {
       timeText = '-';

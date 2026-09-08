@@ -1,11 +1,12 @@
 part of 'frequent_items_tab.dart';
 
-final _demoFrequentItems = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<FrequentItemModel> _demoFrequentItems(AppLocalizations l10n) => [
   FrequentItemModel(
     id: '__demo_freq_1__',
     groupId: '__demo__',
-    name: '우유',
-    defaultUnit: '개',
+    name: l10n.demo_milk,
+    defaultUnit: l10n.demo_unit_piece,
     autoAdd: true,
     sortOrder: 0,
     createdAt: DateTime(2025, 1, 1),
@@ -14,8 +15,8 @@ final _demoFrequentItems = [
   FrequentItemModel(
     id: '__demo_freq_2__',
     groupId: '__demo__',
-    name: '계란',
-    defaultUnit: '판',
+    name: l10n.demo_eggs,
+    defaultUnit: l10n.demo_unit_pack,
     autoAdd: false,
     sortOrder: 1,
     createdAt: DateTime(2025, 1, 2),
@@ -24,7 +25,7 @@ final _demoFrequentItems = [
   FrequentItemModel(
     id: '__demo_freq_3__',
     groupId: '__demo__',
-    name: '두부',
+    name: l10n.demo_tofu,
     defaultUnit: null,
     autoAdd: false,
     sortOrder: 2,
@@ -64,6 +65,7 @@ extension _FrequentItemsOnboarding on _FrequentItemsTabState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final fabPos = _keyToPosition(_fabKey);
@@ -71,7 +73,6 @@ extension _FrequentItemsOnboarding on _FrequentItemsTabState {
     final autoAddPos = _keyToPosition(_autoAddKey);
     final addToCartPos = _keyToPosition(_addToCartKey);
 
-    final l10n = AppLocalizations.of(context)!;
 
     final targets = <TargetFocus>[
       TargetFocus(

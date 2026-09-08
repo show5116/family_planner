@@ -127,6 +127,19 @@ class UpdateStorageDto {
 
 // ── FridgeItem ───────────────────────────────────────────────────────────────
 
+/// 유통기한 파싱.
+///
+/// 유통기한은 **시각이 없는 날짜**인데 서버는 UTC 자정(`2026-09-06T00:00:00.000Z`)으로
+/// 내려줍니다. 여기에 `toLocal()`을 태우면 타임존만큼 밀려서, KST에서는 어제 지난 품목이
+/// `D-Day`로 보이고 UTC-5 지역에서는 날짜 자체가 하루 앞당겨 표시됐습니다.
+/// 그래서 앞 10자리(YYYY-MM-DD)만 읽어 로컬 날짜로 만듭니다.
+DateTime? _parseExpiryDate(String? raw) {
+  if (raw == null || raw.isEmpty) return null;
+  final parsed = DateTime.tryParse(raw.length >= 10 ? raw.substring(0, 10) : raw);
+  if (parsed == null) return null;
+  return DateTime(parsed.year, parsed.month, parsed.day);
+}
+
 class FridgeItemModel {
   final String id;
   final String groupId;
@@ -165,9 +178,7 @@ class FridgeItemModel {
       quantity: int.parse(json['quantity'].toString()),
       unit: json['unit'] as String?,
       registeredAt: DateTime.parse(json['registeredAt'] as String).toLocal(),
-      expiresAt: json['expiresAt'] != null
-          ? DateTime.parse(json['expiresAt'] as String).toLocal()
-          : null,
+      expiresAt: _parseExpiryDate(json['expiresAt'] as String?),
       alertDaysBefore: json['alertDaysBefore'] != null ? int.parse(json['alertDaysBefore'].toString()) : 3,
       memo: json['memo'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
@@ -179,8 +190,10 @@ class FridgeItemModel {
   int? get daysUntilExpiry {
     if (expiresAt == null) return null;
     final now = DateTime.now();
-    final diff = expiresAt!.difference(DateTime(now.year, now.month, now.day));
-    return diff.inDays;
+    final e = expiresAt!;
+    return DateTime(e.year, e.month, e.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
   }
 
   FridgeItemModel copyWith({

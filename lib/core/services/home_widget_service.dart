@@ -19,7 +19,12 @@ class HomeWidgetService {
   static const String appGroupId = 'group.com.hmncorp.familyplanner';
   static const String androidProviderName = 'ScheduleListWidgetReceiver';
   static const String androidCalendarProviderName = 'MonthCalendarWidgetReceiver';
-  static const String iosKind = 'ScheduleWidget';
+  /// iOS 위젯 kind — Swift의 `let kind: String` 값과 **글자 단위로 같아야** 한다.
+  /// `WidgetCenter.reloadTimelines(ofKind:)`는 없는 kind를 조용히 무시하므로,
+  /// 어긋나면 에러 없이 "앱을 켜도 위젯이 갱신되지 않는" 증상만 남는다.
+  /// (`ScheduleListWidget.swift`, `MonthCalendarWidget.swift` 참조)
+  static const String iosScheduleListKind = 'ScheduleListWidget';
+  static const String iosCalendarKind = 'MonthCalendarWidget';
 
   static const String _todayTasksKey = 'today_tasks';
   static const String _monthTasksKey = 'month_tasks';
@@ -196,13 +201,13 @@ class HomeWidgetService {
       androidName: androidProviderName,
       qualifiedAndroidName:
           'com.hmncorp.familyplanner.widget.$androidProviderName',
-      iOSName: iosKind,
+      iOSName: iosScheduleListKind,
     );
     await HomeWidget.updateWidget(
       androidName: androidCalendarProviderName,
       qualifiedAndroidName:
           'com.hmncorp.familyplanner.widget.$androidCalendarProviderName',
-      iOSName: iosKind,
+      iOSName: iosCalendarKind,
     );
   }
 

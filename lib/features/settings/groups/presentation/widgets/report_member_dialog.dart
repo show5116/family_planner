@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/features/settings/groups/models/group_report.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 그룹원 신고 다이얼로그
@@ -32,27 +33,32 @@ class _ReportMemberDialogState extends ConsumerState<ReportMemberDialog> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedReason == null) return;
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(groupNotifierProvider.notifier).reportMember(
+      await ref
+          .read(groupNotifierProvider.notifier)
+          .reportMember(
             widget.groupId,
             widget.userId,
             reason: _selectedReason!,
-            detail: _detailController.text.trim().isEmpty ? null : _detailController.text.trim(),
+            detail: _detailController.text.trim().isEmpty
+                ? null
+                : _detailController.text.trim(),
           );
       if (mounted) {
         Navigator.of(context).pop(true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('신고가 접수되었습니다.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.report_submitted)));
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('신고 접수에 실패했습니다: $e')),
+          SnackBar(content: Text('${l10n.report_submit_failed}\n$e')),
         );
       }
     }
@@ -60,16 +66,19 @@ class _ReportMemberDialogState extends ConsumerState<ReportMemberDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return AlertDialog(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('신고하기'),
+          Text(l10n.report_title),
           Text(
             widget.userName,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.primary),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
           ),
         ],
       ),
@@ -78,7 +87,7 @@ class _ReportMemberDialogState extends ConsumerState<ReportMemberDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('신고 사유', style: theme.textTheme.titleSmall),
+            Text(l10n.report_reason, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             RadioGroup<ReportReason>(
               groupValue: _selectedReason,
@@ -97,15 +106,15 @@ class _ReportMemberDialogState extends ConsumerState<ReportMemberDialog> {
               ),
             ),
             const SizedBox(height: 12),
-            Text('상세 내용 (선택)', style: theme.textTheme.titleSmall),
+            Text(l10n.report_detail, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             TextField(
               controller: _detailController,
               maxLines: 3,
               maxLength: 200,
-              decoration: const InputDecoration(
-                hintText: '추가 설명을 입력하세요',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: l10n.report_detail_hint,
+                border: const OutlineInputBorder(),
                 isDense: true,
               ),
             ),
@@ -115,13 +124,17 @@ class _ReportMemberDialogState extends ConsumerState<ReportMemberDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(false),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: (_selectedReason == null || _isLoading) ? null : _submit,
           child: _isLoading
-              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('신고 접수'),
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(l10n.report_submit),
         ),
       ],
     );

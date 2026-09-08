@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/features/main/calendar/presentation/widgets/quick_task_sheet.dart';
 import 'package:family_planner/core/utils/color_utils.dart';
@@ -652,6 +653,7 @@ class _WeekNavHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
     final first = weekDays.first;
     final last = weekDays.last;
@@ -700,7 +702,7 @@ class _WeekNavHeader extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              viewModeLabel ?? '주',
+                              viewModeLabel ?? l10n.calendar_view_week,
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -744,6 +746,7 @@ class _AllDayRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final List<Group> groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final personalHex = ref.watch(authProvider).user?['personalColor'] as String?;
 
@@ -800,7 +803,7 @@ class _AllDayRow extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Text(
-                '종일',
+                l10n.calendar_allday,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AppColors.textSecondary,

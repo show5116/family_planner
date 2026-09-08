@@ -189,6 +189,7 @@ class _PieChartBodyState extends State<_PieChartBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final slices = widget.slices;
     final total = slices.fold<double>(0, (s, e) => s + e.amount);
     final touched = widget.touchedIndex != null &&
@@ -340,8 +341,9 @@ class _PieChartBodyState extends State<_PieChartBody> {
                       const SizedBox(width: 2),
                       Text(
                         _legendExpanded
-                            ? '접기'
-                            : '+${slices.length - _legendInitialCount}개 더보기',
+                            ? l10n.common_collapse
+                            : l10n.asset_legend_more(
+                                slices.length - _legendInitialCount),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),

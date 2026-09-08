@@ -62,6 +62,7 @@ class _InvestmentIndicatorsScreenState
             ),
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.common_refresh,
             onPressed: () => ref.read(indicatorsProvider.notifier).refresh(),
           ),
           AppBarMoreMenu(

@@ -1,13 +1,13 @@
 part of 'asset_screen.dart';
 
-// 온보딩용 가짜 계좌 데이터
-final _demoAccount = AccountModel(
+// 온보딩용 가짜 계좌 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+AccountModel _demoAccount(AppLocalizations l10n) => AccountModel(
   id: '__demo_asset__',
   groupId: '__demo__',
   userId: '__demo__',
-  name: '국민은행 적금',
+  name: l10n.demo_bank_savings,
   accountNumber: '****-****-1234',
-  institution: '국민은행',
+  institution: l10n.demo_bank_kb,
   type: AccountType.savings,
   createdAt: DateTime(2025, 1, 1),
   updatedAt: DateTime(2025, 5, 1),
@@ -49,13 +49,14 @@ extension _AssetOnboarding on _AssetScreenState {
   }
 
   void _goToDemo() {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     setState(() => _isDemo = false); // ignore: invalid_use_of_protected_member
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => AccountDetailScreen(
-          account: _demoAccount,
+          account: _demoAccount(l10n),
           isDemo: true,
         ),
       ),
@@ -72,6 +73,7 @@ extension _AssetOnboarding on _AssetScreenState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     debugPrint('🎯 [Coach] _showCoachMark 시작, mounted=$mounted');
     if (!mounted) return;
     final cardPos = _keyToPosition(_demoCardKey);
@@ -88,8 +90,8 @@ extension _AssetOnboarding on _AssetScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '계좌 카드',
-              description: '계좌명, 금융기관, 최신 잔액과 수익률을\n한눈에 확인할 수 있어요.\n탭하면 잔액 기록과 포트폴리오를 관리할 수 있습니다.',
+              title: l10n.coach_asset_card,
+              description: l10n.coach_asset_card_desc,
               icon: Icons.account_balance_outlined,
               color: AppColors.primary,
             ),
@@ -106,8 +108,8 @@ extension _AssetOnboarding on _AssetScreenState {
             TargetContent(
               align: ContentAlign.bottom,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '자산 통계',
-                description: '전체 자산의 합계, 수익률, 유형별 분포를\n차트로 한눈에 확인할 수 있어요.\nKOSPI·S&P500 등 지수와 비교도 가능합니다.',
+                title: l10n.coach_asset_stats,
+                description: l10n.coach_asset_stats_desc,
                 icon: Icons.bar_chart,
                 color: Colors.indigo,
               ),
@@ -123,7 +125,7 @@ extension _AssetOnboarding on _AssetScreenState {
       targets: FeatureCoachMark.refreshPositions(activeTargets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -132,8 +134,8 @@ extension _AssetOnboarding on _AssetScreenState {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),

@@ -87,6 +87,7 @@ class GroupInfoCard extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations l10n,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController(text: group.name);
     final descriptionController = TextEditingController(
       text: group.description,
@@ -189,7 +190,7 @@ class GroupInfoCard extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('오류: $e')));
+        ).showSnackBar(SnackBar(content: Text('${l10n.common_error}: $e')));
       }
     }
 

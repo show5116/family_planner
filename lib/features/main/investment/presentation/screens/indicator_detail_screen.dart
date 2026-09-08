@@ -51,6 +51,10 @@ class _IndicatorDetailScreenState
                     ? AppColors.investment
                     : null,
               ),
+              // 토글이라 현재 상태에 따라 안내 문구가 달라야 합니다
+              tooltip: indicator.isBookmarked
+                  ? AppLocalizations.of(context)!.investment_bookmarkRemove
+                  : AppLocalizations.of(context)!.investment_bookmarkAdd,
               onPressed: () => ref
                   .read(indicatorsProvider.notifier)
                   .toggleBookmark(widget.symbol),

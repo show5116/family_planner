@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:family_planner/features/settings/groups/models/group_report.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/providers/admin_report_provider.dart';
 
 /// 어드민 전용 신고 목록 화면
@@ -9,7 +10,8 @@ class AdminReportListScreen extends ConsumerStatefulWidget {
   const AdminReportListScreen({super.key});
 
   @override
-  ConsumerState<AdminReportListScreen> createState() => _AdminReportListScreenState();
+  ConsumerState<AdminReportListScreen> createState() =>
+      _AdminReportListScreenState();
 }
 
 class _AdminReportListScreenState extends ConsumerState<AdminReportListScreen>
@@ -37,9 +39,10 @@ class _AdminReportListScreenState extends ConsumerState<AdminReportListScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('신고 관리'),
+        title: Text(l10n.report_admin_title),
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
@@ -65,20 +68,24 @@ class _ReportTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final reportsAsync = ref.watch(adminReportsProvider(status));
 
     return reportsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('오류가 발생했습니다: $e')),
+      error: (e, _) => Center(child: Text('${l10n.common_error}: $e')),
       data: (reports) {
         if (reports.isEmpty) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.flag_outlined, size: 48, color: Colors.grey),
-                SizedBox(height: 12),
-                Text('신고 내역이 없습니다', style: TextStyle(color: Colors.grey)),
+                const Icon(Icons.flag_outlined, size: 48, color: Colors.grey),
+                const SizedBox(height: 12),
+                Text(
+                  l10n.report_empty,
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ],
             ),
           );
@@ -121,7 +128,9 @@ class _AdminReportCard extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       report.groupName,
-                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[600],
+                      ),
                     ),
                   ),
                   _StatusBadge(status: report.status, color: statusColor),
@@ -130,12 +139,18 @@ class _AdminReportCard extends ConsumerWidget {
               const SizedBox(height: 6),
               Text(
                 report.reason.label,
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const Icon(Icons.person_outline, size: 14, color: Colors.grey),
+                  const Icon(
+                    Icons.person_outline,
+                    size: 14,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${report.reporterName} → ${report.reportedName}',
@@ -147,7 +162,9 @@ class _AdminReportCard extends ConsumerWidget {
                 const SizedBox(height: 6),
                 Text(
                   report.detail!,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[700],
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -157,18 +174,23 @@ class _AdminReportCard extends ConsumerWidget {
                 children: [
                   Text(
                     '신고일: ${DateFormat('yyyy.MM.dd HH:mm').format(report.createdAt)}',
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.grey,
+                    ),
                   ),
                   if (report.resolvedAt != null) ...[
                     const SizedBox(width: 12),
                     Text(
                       '처리일: ${DateFormat('yyyy.MM.dd').format(report.resolvedAt!)}',
-                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ],
               ),
-              if (report.resolveNote != null && report.resolveNote!.isNotEmpty) ...[
+              if (report.resolveNote != null &&
+                  report.resolveNote!.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Text(
                   '처리 메모: ${report.resolveNote}',
@@ -209,7 +231,8 @@ class _ReportProcessDialog extends ConsumerStatefulWidget {
   const _ReportProcessDialog({required this.report});
 
   @override
-  ConsumerState<_ReportProcessDialog> createState() => _ReportProcessDialogState();
+  ConsumerState<_ReportProcessDialog> createState() =>
+      _ReportProcessDialogState();
 }
 
 class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
@@ -231,24 +254,29 @@ class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
     try {
-      await ref.read(adminReportNotifierProvider.notifier).updateReport(
+      await ref
+          .read(adminReportNotifierProvider.notifier)
+          .updateReport(
             widget.report.id,
             status: _selectedStatus,
-            resolveNote: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
+            resolveNote: _noteController.text.trim().isEmpty
+                ? null
+                : _noteController.text.trim(),
           );
       if (mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('신고가 처리되었습니다.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.report_handled)));
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('처리에 실패했습니다: $e')),
+          SnackBar(content: Text('${l10n.report_handle_failed}\n$e')),
         );
       }
     }
@@ -256,10 +284,11 @@ class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return AlertDialog(
-      title: const Text('신고 처리'),
+      title: Text(l10n.report_handle_title),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -275,8 +304,10 @@ class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.report.reason.label,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.report.reason.label,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     '${widget.report.reporterName} → ${widget.report.reportedName}',
@@ -284,13 +315,16 @@ class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
                   ),
                   if (widget.report.detail != null) ...[
                     const SizedBox(height: 4),
-                    Text(widget.report.detail!, style: theme.textTheme.bodySmall),
+                    Text(
+                      widget.report.detail!,
+                      style: theme.textTheme.bodySmall,
+                    ),
                   ],
                 ],
               ),
             ),
             const SizedBox(height: 16),
-            Text('처리 상태', style: theme.textTheme.titleSmall),
+            Text(l10n.report_handle_status, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             RadioGroup<ReportStatus>(
               groupValue: _selectedStatus,
@@ -311,15 +345,15 @@ class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
               ),
             ),
             const SizedBox(height: 12),
-            Text('처리 메모 (선택)', style: theme.textTheme.titleSmall),
+            Text(l10n.report_handle_memo, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             TextField(
               controller: _noteController,
               maxLines: 3,
               maxLength: 300,
-              decoration: const InputDecoration(
-                hintText: '처리 내용을 입력하세요',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: l10n.report_handle_memo_hint,
+                border: const OutlineInputBorder(),
                 isDense: true,
               ),
             ),
@@ -329,13 +363,17 @@ class _ReportProcessDialogState extends ConsumerState<_ReportProcessDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _isLoading ? null : _submit,
           child: _isLoading
-              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('처리 완료'),
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(l10n.report_handle_done),
         ),
       ],
     );
@@ -359,7 +397,11 @@ class _StatusBadge extends StatelessWidget {
       ),
       child: Text(
         status.label,
-        style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 12,
+          color: color,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
 
 /// 자녀 프로필과 앱 계정 연동 화면
@@ -21,6 +22,7 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final childrenAsync = ref.watch(childcareChildrenProvider);
 
     final child = childrenAsync.maybeWhen(
@@ -38,7 +40,8 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${child?.name ?? '자녀'} 계정 연동'),
+        title: Text(
+            l10n.childcare_link_title(child?.name ?? l10n.childcare_child)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -70,7 +73,9 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isLinked ? '앱 계정 연동됨' : '앱 계정 미연동',
+                            isLinked
+                                ? l10n.childcare_link_linked
+                                : l10n.childcare_link_unlinked,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall
@@ -78,7 +83,8 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
                           ),
                           if (isLinked)
                             Text(
-                              '연동된 계정 ID: ${child!.userId!.substring(0, 8)}...',
+                              l10n.childcare_link_account_id(
+                                  child!.userId!.substring(0, 8)),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                         ],
@@ -92,24 +98,24 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
 
             if (!isLinked) ...[
               Text(
-                '계정 연동 안내',
+                l10n.childcare_link_guide,
                 style: Theme.of(context)
                     .textTheme
                     .titleSmall
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: AppSizes.spaceS),
-              const _InfoItem(
+              _InfoItem(
                 icon: Icons.child_care,
-                text: '자녀가 앱에 직접 가입해야 연동이 가능합니다.',
+                text: l10n.childcare_link_guide1,
               ),
-              const _InfoItem(
+              _InfoItem(
                 icon: Icons.manage_accounts,
-                text: '연동 후 자녀가 직접 포인트 현황을 확인할 수 있습니다.',
+                text: l10n.childcare_link_guide2,
               ),
-              const _InfoItem(
+              _InfoItem(
                 icon: Icons.savings,
-                text: '자녀 계정으로 적금 입금이 가능해집니다.',
+                text: l10n.childcare_link_guide3,
               ),
               const SizedBox(height: AppSizes.spaceXL),
               SizedBox(
@@ -122,26 +128,26 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('앱 계정 연동하기'),
+                      : Text(l10n.childcare_link_button),
                   onPressed: _isSubmitting ? null : _handleLinkUser,
                 ),
               ),
             ] else ...[
               Text(
-                '연동 정보',
+                l10n.childcare_link_info,
                 style: Theme.of(context)
                     .textTheme
                     .titleSmall
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: AppSizes.spaceS),
-              const _InfoItem(
+              _InfoItem(
                 icon: Icons.check_circle_outline,
-                text: '자녀가 앱으로 직접 포인트를 확인할 수 있습니다.',
+                text: l10n.childcare_link_info1,
               ),
-              const _InfoItem(
+              _InfoItem(
                 icon: Icons.savings_outlined,
-                text: '자녀 계정으로 적금 입금이 가능합니다.',
+                text: l10n.childcare_link_info2,
               ),
             ],
           ],
@@ -151,6 +157,7 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
   }
 
   Future<void> _handleLinkUser() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isSubmitting = true);
 
     final result = await ref
@@ -162,12 +169,12 @@ class _ChildLinkUserScreenState extends ConsumerState<ChildLinkUserScreen> {
 
     if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('앱 계정이 연동되었습니다')),
+        SnackBar(content: Text(l10n.childcare_link_done)),
       );
       context.pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('연동에 실패했습니다. 자녀가 앱에 가입되어 있는지 확인해주세요')),
+        SnackBar(content: Text(l10n.childcare_link_failed)),
       );
     }
   }

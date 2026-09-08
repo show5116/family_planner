@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/votes/data/repositories/vote_repository.dart';
 import 'package:family_planner/features/votes/providers/vote_list_provider.dart';
@@ -45,12 +46,13 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
       .toList();
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     final options = _validOptions;
     if (options.length < 2) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('선택지를 2개 이상 입력해주세요')));
+      ).showSnackBar(SnackBar(content: Text(l10n.vote_options_min)));
       return;
     }
 
@@ -82,7 +84,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('투표 생성에 실패했습니다')));
+      ).showSnackBar(SnackBar(content: Text(l10n.vote_create_failed)));
     }
   }
 
@@ -116,6 +118,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final groupId = ref.watch(voteSelectedGroupIdProvider);
     final groupName = ref
@@ -130,7 +133,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('새 투표 만들기'),
+            Text(l10n.vote_create_title),
             if (groupName != null)
               Text(
                 groupName,
@@ -160,21 +163,23 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
                       // 제목
                       TextFormField(
                         controller: _titleController,
-                        decoration: const InputDecoration(
-                          labelText: '투표 제목 *',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.vote_field_title,
+                          border: const OutlineInputBorder(),
                         ),
                         validator: (v) =>
-                            v == null || v.trim().isEmpty ? '제목을 입력해주세요' : null,
+                            v == null || v.trim().isEmpty
+                                ? l10n.vote_field_title_required
+                                : null,
                         maxLength: 100,
                       ),
                       const SizedBox(height: AppSizes.spaceM),
                       // 설명
                       TextFormField(
                         controller: _descController,
-                        decoration: const InputDecoration(
-                          labelText: '설명 (선택)',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.vote_field_description,
+                          border: const OutlineInputBorder(),
                         ),
                         maxLines: 2,
                         maxLength: 300,
@@ -184,7 +189,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
                       Row(
                         children: [
                           Text(
-                            '선택지',
+                            l10n.vote_options_section,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -197,7 +202,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
                               ),
                             ),
                             icon: const Icon(Icons.add, size: 16),
-                            label: const Text('추가'),
+                            label: Text(l10n.common_add),
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
@@ -219,7 +224,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
                                 child: TextFormField(
                                   controller: entry.value,
                                   decoration: InputDecoration(
-                                    hintText: '선택지 ${i + 1}',
+                                    hintText: l10n.vote_option_hint(i + 1),
                                     border: const OutlineInputBorder(),
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12,
@@ -248,15 +253,15 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
                       const Divider(),
                       // 옵션
                       SwitchListTile(
-                        title: const Text('복수 선택 허용'),
-                        subtitle: const Text('여러 항목을 동시에 선택할 수 있습니다'),
+                        title: Text(l10n.vote_allow_multiple),
+                        subtitle: Text(l10n.vote_allow_multiple_desc),
                         value: _isMultiple,
                         onChanged: (v) => setState(() => _isMultiple = v),
                         contentPadding: EdgeInsets.zero,
                       ),
                       SwitchListTile(
-                        title: const Text('익명 투표'),
-                        subtitle: const Text('투표자 이름이 공개되지 않습니다'),
+                        title: Text(l10n.vote_anonymous),
+                        subtitle: Text(l10n.vote_anonymous_desc),
                         value: _isAnonymous,
                         onChanged: (v) => setState(() => _isAnonymous = v),
                         contentPadding: EdgeInsets.zero,
@@ -265,10 +270,10 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
                       // 마감 시각
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: const Text('마감 시각'),
+                        title: Text(l10n.vote_deadline),
                         subtitle: Text(
                           _endsAt == null
-                              ? '설정 안 함 (수동 종료)'
+                              ? l10n.vote_deadline_none
                               : _formatDateTime(_endsAt!),
                         ),
                         trailing: Row(
@@ -292,7 +297,7 @@ class _VoteCreateScreenState extends ConsumerState<VoteCreateScreen> {
               ),
             ),
             FormBottomBar(
-              label: '투표 만들기',
+              label: l10n.vote_create,
               isLoading: _isSubmitting,
               onPressed: _submit,
             ),

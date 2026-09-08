@@ -3,6 +3,7 @@ import 'package:flutter/services.dart' show Clipboard;
 import 'package:flutter_quill/flutter_quill.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 메모 전용 Quill 툴바
 ///
@@ -41,16 +42,18 @@ class MemoEditorToolbar extends StatelessWidget {
   }
 
   Future<void> _pasteWithFormat(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
     final pasted = await controller.clipboardPaste();
     if (!pasted) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('클립보드 붙여넣기에 실패했습니다.')),
+        SnackBar(content: Text(l10n.memo_editor_paste_failed)),
       );
     }
   }
 
   Future<void> _showLinkDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     // 클립보드에 URL이 있으면 바로 사용, 없으면 입력창
     final clipboard = await Clipboard.getData(Clipboard.kTextPlain);
     final clipText = clipboard?.text?.trim() ?? '';
@@ -62,7 +65,7 @@ class MemoEditorToolbar extends StatelessWidget {
     final url = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('링크 카드 추가'),
+        title: Text(l10n.memo_editor_link_card_add),
         content: TextField(
           controller: controller_,
           autofocus: true,
@@ -76,11 +79,11 @@ class MemoEditorToolbar extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(null),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(ctx).pop(controller_.text.trim()),
-            child: const Text('추가'),
+            child: Text(l10n.common_add),
           ),
         ],
       ),
@@ -93,6 +96,7 @@ class MemoEditorToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: EdgeInsets.zero,
       child: Padding(
@@ -114,7 +118,7 @@ class MemoEditorToolbar extends StatelessWidget {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.image, size: 18),
-                  tooltip: '이미지',
+                  tooltip: l10n.memo_editor_image,
                   onPressed: isUploadingImage ? null : onImagePressed,
                 ),
                 _divider(context),
@@ -131,7 +135,7 @@ class MemoEditorToolbar extends StatelessWidget {
                         ? Theme.of(context).colorScheme.primary
                         : null,
                   ),
-                  tooltip: '체크리스트',
+                  tooltip: l10n.memo_checklist,
                   isActive: _isChecklistActive,
                   onPressed: _toggleChecklist,
                 ),
@@ -140,7 +144,7 @@ class MemoEditorToolbar extends StatelessWidget {
               // 서식 유지 붙여넣기 (웹 Ctrl+V 서식 유실 대응)
               _ToolbarBtn(
                 icon: const Icon(Icons.content_paste_go, size: 18),
-                tooltip: '서식 유지 붙여넣기',
+                tooltip: l10n.memo_editor_paste_formatted,
                 onPressed: () => _pasteWithFormat(context),
               ),
               _divider(context),
@@ -158,7 +162,9 @@ class MemoEditorToolbar extends StatelessWidget {
                         size: 18,
                         color: hasSelection ? null : Theme.of(context).disabledColor,
                       ),
-                      tooltip: hasSelection ? '하이퍼링크 적용' : '텍스트를 선택하세요',
+                      tooltip: hasSelection
+                          ? l10n.memo_editor_link_apply
+                          : l10n.memo_editor_link_select_first,
                       onPressed: hasSelection ? () => _showLinkDialog(context) : null,
                     );
                   },
@@ -172,7 +178,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 attribute: Attribute.bold,
                 icon: Icons.format_bold,
-                tooltip: '굵게',
+                tooltip: l10n.memo_editor_bold,
               ),
 
               // 기울임
@@ -180,7 +186,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 attribute: Attribute.italic,
                 icon: Icons.format_italic,
-                tooltip: '기울임',
+                tooltip: l10n.memo_editor_italic,
               ),
 
               // 취소선
@@ -188,7 +194,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 attribute: Attribute.strikeThrough,
                 icon: Icons.strikethrough_s,
-                tooltip: '취소선',
+                tooltip: l10n.memo_editor_strikethrough,
               ),
 
               _divider(context),
@@ -198,7 +204,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 level: 1,
                 label: 'H1',
-                tooltip: '제목 1',
+                tooltip: l10n.memo_editor_heading1,
               ),
 
               // H2 (섹션 구분자로도 사용)
@@ -206,7 +212,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 level: 2,
                 label: 'H2',
-                tooltip: '제목 2 (체크리스트 섹션)',
+                tooltip: l10n.memo_editor_heading2,
               ),
 
               _divider(context),
@@ -216,7 +222,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 attribute: Attribute.ul,
                 icon: Icons.format_list_bulleted,
-                tooltip: '글머리 기호',
+                tooltip: l10n.memo_editor_bullet_list,
               ),
 
               // 번호 리스트
@@ -224,7 +230,7 @@ class MemoEditorToolbar extends StatelessWidget {
                 controller: controller,
                 attribute: Attribute.ol,
                 icon: Icons.format_list_numbered,
-                tooltip: '번호 목록',
+                tooltip: l10n.memo_editor_numbered_list,
               ),
 
               _divider(context),
@@ -232,7 +238,7 @@ class MemoEditorToolbar extends StatelessWidget {
               // 실행 취소
               IconButton(
                 icon: const Icon(Icons.undo, size: 18),
-                tooltip: '실행 취소',
+                tooltip: l10n.memo_editor_undo,
                 onPressed: () => controller.undo(),
                 padding: const EdgeInsets.all(4),
                 constraints: const BoxConstraints(),
@@ -241,7 +247,7 @@ class MemoEditorToolbar extends StatelessWidget {
               // 다시 실행
               IconButton(
                 icon: const Icon(Icons.redo, size: 18),
-                tooltip: '다시 실행',
+                tooltip: l10n.memo_editor_redo,
                 onPressed: () => controller.redo(),
                 padding: const EdgeInsets.all(4),
                 constraints: const BoxConstraints(),

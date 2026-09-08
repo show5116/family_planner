@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/features/settings/roles/providers/common_role_provider.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 역할 삭제 확인 다이얼로그
 class RoleDeleteDialog {
@@ -11,19 +12,23 @@ class RoleDeleteDialog {
     String roleId,
     String roleName,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('역할 삭제'),
-        content: Text('$roleName 역할을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.'),
+        title: Text(l10n.role_delete),
+        content: Text(l10n.role_delete_message(roleName)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('취소'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => _handleDelete(dialogContext, context, ref, roleId),
-            child: const Text('삭제', style: TextStyle(color: Colors.red)),
+            child: Text(
+              l10n.common_delete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -36,19 +41,20 @@ class RoleDeleteDialog {
     WidgetRef ref,
     String roleId,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     Navigator.pop(dialogContext);
     try {
       await ref.read(commonRoleProvider.notifier).deleteRole(roleId);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('역할이 삭제되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.role_deleted)));
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('삭제 실패: ${e.toString()}'),
+            content: Text('${l10n.common_deleteFailed}\n$e'),
             backgroundColor: Colors.red,
           ),
         );

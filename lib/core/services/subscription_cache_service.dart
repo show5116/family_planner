@@ -33,6 +33,7 @@ class SubscriptionCacheService {
           'tier': subscription.tier.name,
           'expiresAt': subscription.expiresAt?.toIso8601String(),
           'isTrial': subscription.isTrial,
+          'autoRenewing': subscription.autoRenewing,
         }),
       );
     } catch (e) {
@@ -72,6 +73,7 @@ class SubscriptionCacheService {
         isActive: true,
         isTrial: json['isTrial'] as bool? ?? false,
         daysLeft: expiresAt.difference(DateTime.now()).inDays,
+        autoRenewing: json['autoRenewing'] as bool?,
       );
     } catch (e) {
       debugPrint('🟡 [SubscriptionCache] 읽기 실패: $e');

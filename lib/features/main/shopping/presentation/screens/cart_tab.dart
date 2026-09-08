@@ -55,13 +55,14 @@ void _applyPriceFormat(TextEditingController ctrl) {
 
 // ── 온보딩용 샘플 데이터 ─────────────────────────────────────────────────────────
 
-final _demoCartItems = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<CartItemModel> _demoCartItems(AppLocalizations l10n) => [
   CartItemModel(
     id: '__demo_cart_1__',
     cartId: '__demo_cart__',
-    name: '우유',
+    name: l10n.demo_milk,
     quantity: 2,
-    unit: '개',
+    unit: l10n.demo_unit_piece,
     isChecked: true,
     memo: null,
     createdAt: DateTime.now(),
@@ -69,9 +70,9 @@ final _demoCartItems = [
   CartItemModel(
     id: '__demo_cart_2__',
     cartId: '__demo_cart__',
-    name: '계란',
+    name: l10n.demo_eggs,
     quantity: 1,
-    unit: '판',
+    unit: l10n.demo_unit_pack,
     isChecked: false,
     memo: null,
     createdAt: DateTime.now(),
@@ -79,11 +80,11 @@ final _demoCartItems = [
   CartItemModel(
     id: '__demo_cart_3__',
     cartId: '__demo_cart__',
-    name: '두부',
+    name: l10n.demo_tofu,
     quantity: 1,
     unit: null,
     isChecked: false,
-    memo: '국산',
+    memo: l10n.demo_memo_domestic,
     createdAt: DateTime.now(),
   ),
 ];
@@ -216,6 +217,7 @@ class _CartTabState extends ConsumerState<CartTab>
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final addFabPos = _keyToPosition(_addFabKey);
@@ -233,8 +235,8 @@ class _CartTabState extends ConsumerState<CartTab>
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '품목 추가',
-              description: '구매할 품목을 추가해요.\n추가하면 자동으로 저장됩니다.',
+              title: l10n.coach_cart_add,
+              description: l10n.coach_cart_add_desc,
               icon: Icons.add,
               color: AppColors.primary,
             ),
@@ -252,8 +254,8 @@ class _CartTabState extends ConsumerState<CartTab>
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '품목 관리',
-              description: '• 탭하면 이름·수량·메모를 수정할 수 있어요\n• ± 버튼으로 수량을 조절하세요\n• 왼쪽으로 스와이프하면 삭제돼요\n• 변경하면 잠시 후 자동으로 저장됩니다',
+              title: l10n.coach_cart_manage,
+              description: l10n.coach_cart_manage_desc,
               icon: Icons.edit_outlined,
               color: AppColors.primary,
             ),
@@ -271,8 +273,8 @@ class _CartTabState extends ConsumerState<CartTab>
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '장보기 완료',
-              description: '쇼핑을 마치면 여기를 눌러요.\n다음 화면에서 상세 기능을 확인해 보세요!',
+              title: l10n.coach_cart_finish,
+              description: l10n.coach_cart_finish_desc,
               icon: Icons.check,
               color: AppColors.primary,
             ),
@@ -308,7 +310,7 @@ class _CartTabState extends ConsumerState<CartTab>
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -317,8 +319,8 @@ class _CartTabState extends ConsumerState<CartTab>
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
@@ -336,6 +338,7 @@ class _CartTabState extends ConsumerState<CartTab>
   }
 
   Future<void> _showDialogCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     // 다이얼로그가 렌더링될 때까지 대기
@@ -366,8 +369,8 @@ class _CartTabState extends ConsumerState<CartTab>
             TargetContent(
               align: ContentAlign.bottom,
               builder: (_, _) => FeatureCoachMark.buildContent(
-                title: '탭하면 다음 기능으로 넘어가요!',
-                description: '자주 사는 물건 탭에서 더 많은 기능을 안내해 드릴게요.',
+                title: l10n.coach_cart_next,
+                description: l10n.coach_cart_next_desc,
                 icon: Icons.touch_app_outlined,
                 color: AppColors.primary,
               ),
@@ -377,7 +380,7 @@ class _CartTabState extends ConsumerState<CartTab>
       ],
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.75,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -386,8 +389,8 @@ class _CartTabState extends ConsumerState<CartTab>
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
@@ -519,7 +522,9 @@ class _CartTabState extends ConsumerState<CartTab>
       // dispose 후에는 스낵바 표시 불가 — 조용히 무시
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('저장 중 오류가 발생했습니다')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.cart_save_error),
+          ),
         );
       }
     } finally {
@@ -537,8 +542,8 @@ class _CartTabState extends ConsumerState<CartTab>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final l10n = AppLocalizations.of(context)!;
+    super.build(context);
 
     // build() 안의 ref.listen은 Riverpod이 빌드 사이클 종료 후 안전한 타이밍에
     // 콜백을 실행하므로 setState() 충돌 없음. initState()에서 등록하면 빌드 도중
@@ -558,7 +563,7 @@ class _CartTabState extends ConsumerState<CartTab>
       builder: (context, isDemo, _) {
         if (isDemo) {
           return _OnboardingCartView(
-            items: _demoCartItems,
+            items: _demoCartItems(l10n),
             addFabKey: _addFabKey,
             completeFabKey: _completeFabKey,
             firstItemKey: _firstItemKey,
@@ -629,6 +634,7 @@ class _CartTabState extends ConsumerState<CartTab>
               floatingActionButton: FloatingActionButton(
                 key: _addFabKey,
                 heroTag: 'cart_add',
+                tooltip: l10n.cart_item_add,
                 onPressed: () => _showAddItemDialog(context),
                 child: const Icon(Icons.add),
               ),

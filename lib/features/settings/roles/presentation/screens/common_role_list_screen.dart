@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/settings/roles/models/common_role.dart';
@@ -28,42 +29,36 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(commonRoleProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('공통 역할 관리'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(l10n.role_common_title), elevation: 0),
       body: Column(
         children: [
           if (_hasChanges)
-            ReorderChangesBar(
-              onSave: _saveSortOrder,
-              onCancel: _cancelReorder,
-            ),
-          Expanded(
-            child: _buildBody(state),
-          ),
+            ReorderChangesBar(onSave: _saveSortOrder, onCancel: _cancelReorder),
+          Expanded(child: _buildBody(state)),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => CommonRoleCreateDialog.show(context, ref),
         icon: const Icon(Icons.add),
-        label: const Text('역할 생성'),
+        label: Text(l10n.role_create),
       ),
     );
   }
 
   Widget _buildBody(CommonRoleState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (state.error != null) {
       return AppErrorState(
-        error: state.error ?? '알 수 없는 오류',
-        title: '역할 목록을 불러오는데 실패했습니다',
+        error: state.error ?? l10n.common_unknownError,
+        title: l10n.role_list_load_error,
         onRetry: () => ref.read(commonRoleProvider.notifier).loadRoles(),
       );
     }
@@ -71,10 +66,10 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
     final roles = _reorderedRoles ?? state.roles;
 
     if (roles.isEmpty) {
-      return const AppEmptyState(
+      return AppEmptyState(
         icon: Icons.admin_panel_settings_outlined,
-        message: '등록된 공통 역할이 없습니다',
-        subtitle: '+ 버튼을 눌러 새로운 역할을 생성하세요',
+        message: l10n.role_list_empty,
+        subtitle: l10n.role_list_empty_subtitle,
       );
     }
 
@@ -93,7 +88,8 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
           onTap: () => _navigateToPermissions(role.id),
           onPermissions: () => _navigateToPermissions(role.id),
           onEdit: () => CommonRoleEditDialog.show(context, ref, role),
-          onDelete: () => RoleDeleteDialog.show(context, ref, role.id, role.name),
+          onDelete: () =>
+              RoleDeleteDialog.show(context, ref, role.id, role.name),
         );
       },
     );
@@ -112,9 +108,7 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
   }
 
   void _navigateToPermissions(String roleId) {
-    context.push(
-      AppRoutes.commonRolePermissions.replaceFirst(':id', roleId),
-    );
+    context.push(AppRoutes.commonRolePermissions.replaceFirst(':id', roleId));
   }
 
   Future<void> _cancelReorder() async {
@@ -128,6 +122,7 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
   }
 
   Future<void> _saveSortOrder() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_reorderedRoles == null) return;
 
     final confirm = await showReorderSaveDialog(context);
@@ -139,10 +134,9 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
         sortOrders[_reorderedRoles![i].id] = i;
       }
 
-      await ref.read(commonRoleProvider.notifier).updateSortOrders(
-            sortOrders,
-            _reorderedRoles!,
-          );
+      await ref
+          .read(commonRoleProvider.notifier)
+          .updateSortOrders(sortOrders, _reorderedRoles!);
 
       if (mounted) {
         setState(() {
@@ -150,15 +144,15 @@ class _CommonRoleListScreenState extends ConsumerState<CommonRoleListScreen> {
           _hasChanges = false;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('정렬 순서가 저장되었습니다')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.common_sortOrderSaved)));
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('저장 실패: ${e.toString()}'),
+            content: Text('${l10n.common_saveFailed}\n$e'),
             backgroundColor: Colors.red,
           ),
         );

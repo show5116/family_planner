@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/notification/data/models/notification_model.dart';
 import 'package:family_planner/features/notification/data/repositories/notification_repository.dart';
@@ -17,6 +18,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final notificationsAsync = ref.watch(unreadNotificationsProvider);
 
     return Card(
@@ -35,7 +37,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: Text(
-                    '읽지 않은 알림',
+                    l10n.notif_unread,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -43,13 +45,13 @@ class UnreadNotificationsWidget extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () => _onMarkAllAsRead(context, ref),
-                  child: const Text('전체 읽음'),
+                  child: Text(l10n.notif_mark_all_read),
                 ),
                 TextButton(
                   onPressed: () {
                     context.push(AppRoutes.notificationHistory);
                   },
-                  child: const Text('전체보기'),
+                  child: Text(l10n.notif_view_all),
                 ),
               ],
             ),
@@ -101,6 +103,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
     WidgetRef ref,
     NotificationModel notification,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       // 읽음 처리
       final repository = ref.read(notificationRepositoryProvider);
@@ -117,7 +120,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('알림 처리 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_action_failed}\n$e')),
         );
       }
     }
@@ -134,6 +137,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
     WidgetRef ref,
     NotificationModel notification,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       await repository.markAsRead(notification.id);
@@ -144,7 +148,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('알림 처리 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_action_failed}\n$e')),
         );
       }
     }
@@ -152,6 +156,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
   /// 전체 읽음 처리
   Future<void> _onMarkAllAsRead(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final repository = ref.read(notificationRepositoryProvider);
       final count = await repository.markAllAsRead();
@@ -162,13 +167,13 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$count개의 알림을 읽음 처리했습니다')),
+          SnackBar(content: Text(l10n.notif_marked_read_count(count))),
         );
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('전체 읽음 처리 실패: $e')),
+          SnackBar(content: Text('${l10n.notif_mark_all_failed}\n$e')),
         );
       }
     }
@@ -176,6 +181,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
   /// 빈 상태 위젯
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppSizes.spaceL),
       child: Center(
@@ -188,7 +194,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(
-              '새로운 알림이 없습니다',
+              l10n.notif_none_new,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
@@ -201,6 +207,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
 
   /// 에러 상태 위젯
   Widget _buildErrorState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(AppSizes.spaceL),
       child: Center(
@@ -213,7 +220,7 @@ class UnreadNotificationsWidget extends ConsumerWidget {
             ),
             const SizedBox(height: AppSizes.spaceS),
             Text(
-              '알림을 불러올 수 없습니다',
+              l10n.notif_load_failed,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
@@ -237,6 +244,7 @@ class _NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final dateFormat = DateFormat('MM/dd HH:mm');
 
@@ -317,7 +325,7 @@ class _NotificationItem extends StatelessWidget {
                 color: theme.colorScheme.primary,
                 size: 20,
               ),
-              tooltip: '읽음 처리',
+              tooltip: l10n.notif_mark_read,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),

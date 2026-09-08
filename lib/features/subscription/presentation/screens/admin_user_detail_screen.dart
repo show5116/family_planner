@@ -718,10 +718,16 @@ class _EditSubscriptionDialogState extends State<_EditSubscriptionDialog> {
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
+    // 과거 날짜도 고를 수 있어야 한다. 두 가지 이유:
+    // 1. 스토어 심사용 "구독 만료" 계정을 여기서 직접 만들 수 있어야 한다.
+    // 2. firstDate가 now면, 이미 만료된 사용자를 열었을 때
+    //    initialDate(과거 만료일)가 firstDate보다 앞서 showDatePicker가
+    //    assert에 걸린다.
+    final firstDate = DateTime(now.year - 2);
     final picked = await showDatePicker(
       context: context,
       initialDate: _expiresAt ?? now.add(const Duration(days: 30)),
-      firstDate: now,
+      firstDate: firstDate,
       lastDate: DateTime(now.year + 10),
     );
     if (picked != null) {

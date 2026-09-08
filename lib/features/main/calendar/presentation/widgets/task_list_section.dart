@@ -200,6 +200,7 @@ class _DateHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final holidayAsync = ref.watch(holidayForDateProvider(date));
     final holiday = holidayAsync.valueOrNull;
     final specialDayAsync = ref.watch(specialDayForDateProvider(date));
@@ -225,7 +226,7 @@ class _DateHeader extends ConsumerWidget {
           if (lunarLabel != null) ...[
             const SizedBox(width: AppSizes.spaceS),
             Text(
-              '음력 $lunarLabel',
+              l10n.calendar_lunar_label(lunarLabel),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),

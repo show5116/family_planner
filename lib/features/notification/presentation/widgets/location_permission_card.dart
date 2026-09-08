@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/auth/services/auth_service.dart';
 import 'package:family_planner/features/weather/providers/weather_provider.dart';
 
@@ -50,6 +51,7 @@ class _LocationPermissionCardState
   }
 
   Future<void> _requestPermission() async {
+    final l10n = AppLocalizations.of(context)!;
     if (kIsWeb) return;
 
     if (!_serviceEnabled) {
@@ -81,13 +83,13 @@ class _LocationPermissionCardState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('위치 권한이 허용되었습니다')),
+          SnackBar(content: Text(l10n.location_permission_granted)),
         );
       }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('위치 권한이 거부되었습니다')),
+          SnackBar(content: Text(l10n.location_permission_denied)),
         );
       }
     }
@@ -99,6 +101,7 @@ class _LocationPermissionCardState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_permission == null) {
       return const Card(
         child: Padding(
@@ -129,7 +132,7 @@ class _LocationPermissionCardState
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: Text(
-                    '위치 권한',
+                    l10n.location_permission,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -145,7 +148,9 @@ class _LocationPermissionCardState
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    _isGranted ? '활성화됨' : '비활성화됨',
+                    _isGranted
+                        ? l10n.notif_permission_on
+                        : l10n.notif_permission_off,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -158,8 +163,8 @@ class _LocationPermissionCardState
             const SizedBox(height: AppSizes.spaceM),
             Text(
               _isGranted
-                  ? '날씨 알림 발송에 현재 위치가 사용됩니다.'
-                  : '날씨 알림을 받으려면 위치 권한을 허용해주세요.\n위치 정보는 날씨 알림 발송 목적으로만 사용되며 서버에 저장됩니다.',
+                  ? l10n.location_permission_on_desc
+                  : l10n.location_permission_off_desc,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             if (!_isGranted) ...[
@@ -169,7 +174,9 @@ class _LocationPermissionCardState
                 child: ElevatedButton.icon(
                   onPressed: _requestPermission,
                   icon: const Icon(Icons.location_on),
-                  label: Text(isDeniedForever ? '설정에서 권한 허용' : '권한 요청'),
+                  label: Text(isDeniedForever
+                      ? l10n.notif_permission_settings
+                      : l10n.notif_permission_request),
                 ),
               ),
             ],

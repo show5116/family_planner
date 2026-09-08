@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:family_planner/features/minigame/data/models/minigame_model.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/minigame/data/repositories/minigame_repository.dart';
 import 'package:family_planner/features/minigame/providers/minigame_provider.dart';
 import 'package:family_planner/features/onboarding/presentation/widgets/feature_coach_mark.dart';
@@ -99,7 +100,8 @@ class LadderGameScreen extends ConsumerStatefulWidget {
 
 class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
     with SingleTickerProviderStateMixin {
-  final _titleController = TextEditingController(text: '사다리타기');
+  final _titleController = TextEditingController();
+  bool _titleInitialized = false;
   final List<TextEditingController> _participantControllers = [
     TextEditingController(),
     TextEditingController(),
@@ -133,6 +135,16 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
   final _participantsKey = GlobalKey();
   final _optionsKey = GlobalKey();
   final _startButtonKey = GlobalKey();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 필드 초기화 시점에는 context가 없어 여기서 기본 제목을 넣는다.
+    if (!_titleInitialized) {
+      _titleInitialized = true;
+      _titleController.text = AppLocalizations.of(context)!.minigame_ladder_default_title;
+    }
+  }
 
   @override
   void initState() {
@@ -203,6 +215,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedGroupId = ref.watch(minigameSelectedGroupIdProvider);
     final groups = ref.watch(myGroupsProvider).valueOrNull ?? [];
     final selectedGroup = selectedGroupId != null
@@ -212,7 +225,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('사다리타기'),
+        title: Text(l10n.minigame_ladder),
         actions: [
           AppBarMoreMenu(
             onReplayOnboarding: () {
@@ -238,7 +251,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                   key: _startButtonKey,
                   onPressed: _canStart ? _buildLadder : null,
                   icon: const Icon(Icons.play_arrow),
-                  label: const Text('사다리 생성'),
+                  label: Text(l10n.minigame_create_ladder),
                 ),
               ],
               if (_phase != _GamePhase.setup && _ladderData != null) ...[
@@ -246,7 +259,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                 const SizedBox(height: 12),
                 if (_phase == _GamePhase.playing) ...[
                   Text(
-                    '참여자 이름을 눌러 사다리를 타세요!',
+                    l10n.minigame_ladder_hint,
                     style: Theme.of(context).textTheme.bodySmall,
                     textAlign: TextAlign.center,
                   ),
@@ -254,7 +267,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                   OutlinedButton.icon(
                     onPressed: _animatingCol != null ? null : _skipAll,
                     icon: const Icon(Icons.fast_forward, size: 18),
-                    label: const Text('전체 스킵'),
+                    label: Text(l10n.minigame_skip_all),
                   ),
                 ],
                 if (_phase == _GamePhase.done) ...[
@@ -264,7 +277,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
                 const SizedBox(height: 12),
                 OutlinedButton(
                   onPressed: _animatingCol != null ? null : _reset,
-                  child: const Text('다시 설정'),
+                  child: Text(l10n.minigame_reset),
                 ),
               ],
             ],
@@ -275,13 +288,14 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
   }
 
   Widget _buildSetupSection(String? groupId) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
           controller: _titleController,
-          decoration: const InputDecoration(
-            labelText: '게임 제목',
+          decoration: InputDecoration(
+            labelText: l10n.minigame_game_title,
             border: OutlineInputBorder(),
           ),
         ),
@@ -292,9 +306,9 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
             Expanded(
               child: _ListEditor(
                 key: _participantsKey,
-                label: '참여자',
+                label: l10n.minigame_participants,
                 controllers: _participantControllers,
-                hintPrefix: '참여자',
+                hintPrefix: l10n.minigame_participants,
                 groupId: groupId,
                 onAdd: () => setState(
                     () => _participantControllers.add(TextEditingController())),
@@ -483,6 +497,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
   }
 
   Widget _buildResultCard() {
+    final l10n = AppLocalizations.of(context)!;
     final participants = _participants;
     final n = participants.length;
     final assignments = List.generate(n, (col) {
@@ -499,7 +514,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('최종 결과',
+            Text(l10n.minigame_final_result,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             ...assignments.map((a) => Padding(
@@ -597,6 +612,7 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
   }
 
   void _autoSaveIfGroupSelected() {
+    final l10n = AppLocalizations.of(context)!;
     final groupId = ref.read(minigameSelectedGroupIdProvider);
     if (groupId == null) return;
 
@@ -624,13 +640,16 @@ class _LadderGameScreenState extends ConsumerState<LadderGameScreen>
     ).then((saved) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(saved != null ? '게임 결과가 저장되었습니다' : '저장 실패')),
+          SnackBar(
+              content: Text(saved != null
+                  ? l10n.minigame_saved
+                  : l10n.minigame_save_failed)),
         );
       }
     }).catchError((_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('저장 실패')),
+          SnackBar(content: Text(l10n.minigame_save_failed)),
         );
       }
     });
@@ -793,6 +812,7 @@ class _OptionsEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isMatch = totalOptionCount == participantCount;
     final statusColor = isMatch ? Colors.green : Colors.orange;
 
@@ -801,7 +821,7 @@ class _OptionsEditor extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Text('결과 항목',
+            Text(l10n.minigame_result_items,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             const Spacer(),
             Text(
@@ -827,7 +847,7 @@ class _OptionsEditor extends StatelessWidget {
                     controller: entry.value,
                     onChanged: (_) => onChanged(),
                     decoration: InputDecoration(
-                      hintText: '항목 ${i + 1}',
+                      hintText: l10n.minigame_item_hint(i + 1),
                       border: const OutlineInputBorder(),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 8),
@@ -864,14 +884,15 @@ class _OptionsEditor extends StatelessWidget {
         TextButton.icon(
           onPressed: onAdd,
           icon: const Icon(Icons.add, size: 16),
-          label: const Text('항목 추가'),
+          label: Text(l10n.minigame_add_item),
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 4),
           ),
         ),
         if (!isMatch)
           Text(
-            '수량 합계($totalOptionCount)가 참여자 수($participantCount)와 같아야 합니다',
+            l10n.minigame_count_mismatch(
+                '$totalOptionCount', '$participantCount'),
             style: TextStyle(fontSize: 11, color: statusColor),
           ),
       ],
@@ -888,6 +909,7 @@ class _GroupBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -911,7 +933,7 @@ class _GroupBanner extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            '그룹으로 플레이 중',
+            l10n.minigame_playing_with_group,
             style: TextStyle(
               fontSize: 12,
               color: Theme.of(context)
@@ -951,12 +973,13 @@ class _ListEditor extends ConsumerWidget {
   });
 
   Future<void> _showMemberPicker(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final membersAsync = ref.read(groupMembersProvider(groupId!));
     final members = membersAsync.valueOrNull ?? [];
 
     if (members.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('그룹 멤버를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')),
+        SnackBar(content: Text(l10n.minigame_members_loading)),
       );
       return;
     }
@@ -978,6 +1001,7 @@ class _ListEditor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     // groupId가 있으면 미리 로딩
     if (groupId != null) {
       ref.watch(groupMembersProvider(groupId!));
@@ -1023,7 +1047,7 @@ class _ListEditor extends ConsumerWidget {
               child: TextButton.icon(
                 onPressed: onAdd,
                 icon: const Icon(Icons.edit, size: 16),
-                label: Text('$label 직접 추가'),
+                label: Text(l10n.minigame_add_manually(label)),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                 ),
@@ -1034,7 +1058,7 @@ class _ListEditor extends ConsumerWidget {
                 child: TextButton.icon(
                   onPressed: () => _showMemberPicker(context, ref),
                   icon: const Icon(Icons.person_add, size: 16),
-                  label: const Text('멤버 선택'),
+                  label: Text(l10n.minigame_select_members),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                   ),
@@ -1069,8 +1093,9 @@ class _MemberPickerDialogState extends State<_MemberPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('그룹 멤버 선택'),
+      title: Text(l10n.minigame_select_group_members),
       content: SizedBox(
         width: double.maxFinite,
         child: ListView.builder(
@@ -1078,7 +1103,7 @@ class _MemberPickerDialogState extends State<_MemberPickerDialog> {
           itemCount: widget.members.length,
           itemBuilder: (ctx, i) {
             final member = widget.members[i];
-            final name = member.user?.name ?? '알 수 없음';
+            final name = member.user?.name ?? l10n.minigame_unknown;
             final isAlreadyAdded = widget.alreadyAdded.contains(name);
             final isSelected = _selected.contains(name);
 
@@ -1097,7 +1122,7 @@ class _MemberPickerDialogState extends State<_MemberPickerDialog> {
                     },
               title: Text(name),
               subtitle: isAlreadyAdded
-                  ? const Text('이미 추가됨',
+                  ? Text(l10n.minigame_already_added,
                       style: TextStyle(fontSize: 11, color: Colors.grey))
                   : null,
               secondary: CircleAvatar(
@@ -1115,7 +1140,7 @@ class _MemberPickerDialogState extends State<_MemberPickerDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(l10n.common_cancel),
         ),
         FilledButton(
           onPressed: _selected.isEmpty
@@ -1124,7 +1149,7 @@ class _MemberPickerDialogState extends State<_MemberPickerDialog> {
                   widget.onSelect(_selected.toList());
                   Navigator.pop(context);
                 },
-          child: Text('추가 (${_selected.length})'),
+          child: Text(l10n.minigame_add_count(_selected.length)),
         ),
       ],
     );

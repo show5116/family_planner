@@ -85,11 +85,13 @@ private func selectedDateLabel(_ selected: String) -> String {
 }
 
 private enum CalendarPalette {
-    static let textPrimary = Color(red: 0.11, green: 0.11, blue: 0.12)
-    static let textSecondary = Color(red: 0.47, green: 0.45, blue: 0.49)
+    // 배경(systemBackground)이 다크 모드에서 어두워지므로 텍스트도 함께
+    // 뒤집혀야 한다. 고정 진회색으로 두면 다크 모드에서 글자가 사라진다.
+    static let textPrimary = Color(.label)
+    static let textSecondary = Color(.secondaryLabel)
     static let todayBg = Color(red: 0.10, green: 0.45, blue: 0.91)
     static let dot = Color(red: 0.10, green: 0.45, blue: 0.91)
-    static let divider = Color(red: 0.91, green: 0.92, blue: 0.92)
+    static let divider = Color(.separator)
     static let sunday = Color(red: 0.90, green: 0.22, blue: 0.21)
 }
 
@@ -167,6 +169,8 @@ struct MonthCalendarEntryView: View {
         .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .widgetURL(URL(string: "familyplanner://widget/calendar"))
+        // iOS 17+ 필수 — ScheduleListWidget.swift의 같은 주석 참조.
+        .containerBackground(for: .widget) { Color(.systemBackground) }
     }
 }
 

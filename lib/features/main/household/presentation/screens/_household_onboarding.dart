@@ -18,40 +18,41 @@ final _demoStats = MonthlyStatisticsModel(
 );
 
 final _now = DateTime(2025, 6, 19);
-final _demoExpenses = [
+// 온보딩용 가짜 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<ExpenseModel> _demoExpenses(AppLocalizations l10n) => [
   ExpenseModel(
     id: '__demo_1__', groupId: '__demo__', userId: '__demo__',
     type: TransactionType.income, amount: 3000000,
     incomeCategory: IncomeCategory.salary,
-    date: DateTime(2025, 6, 5), description: '6월 급여',
+    date: DateTime(2025, 6, 5), description: l10n.demo_expense_salary,
     createdAt: _now, updatedAt: _now,
   ),
   ExpenseModel(
     id: '__demo_2__', groupId: '__demo__', userId: '__demo__',
     type: TransactionType.expense, amount: 68000,
     category: ExpenseCategory.food,
-    date: DateTime(2025, 6, 18), description: '저녁 외식',
+    date: DateTime(2025, 6, 18), description: l10n.demo_expense_dining,
     createdAt: _now, updatedAt: _now,
   ),
   ExpenseModel(
     id: '__demo_3__', groupId: '__demo__', userId: '__demo__',
     type: TransactionType.expense, amount: 142000,
     category: ExpenseCategory.groceries,
-    date: DateTime(2025, 6, 17), description: '마트 장보기',
+    date: DateTime(2025, 6, 17), description: l10n.cart_default_description,
     createdAt: _now, updatedAt: _now,
   ),
   ExpenseModel(
     id: '__demo_4__', groupId: '__demo__', userId: '__demo__',
     type: TransactionType.expense, amount: 45000,
     category: ExpenseCategory.transportation,
-    date: DateTime(2025, 6, 16), description: '주유',
+    date: DateTime(2025, 6, 16), description: l10n.demo_expense_fuel,
     createdAt: _now, updatedAt: _now,
   ),
   ExpenseModel(
     id: '__demo_5__', groupId: '__demo__', userId: '__demo__',
     type: TransactionType.expense, amount: 350000,
     category: ExpenseCategory.living,
-    date: DateTime(2025, 6, 10), description: '전기/가스 요금',
+    date: DateTime(2025, 6, 10), description: l10n.demo_expense_utility,
     createdAt: _now, updatedAt: _now,
   ),
 ];
@@ -111,6 +112,7 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
 
     final summaryPos = _keyToPosition(_budgetKey);
@@ -130,8 +132,8 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '월간 요약',
-              description: '이번 달 수입·지출·잔액을 한눈에 확인하고,\n예산 대비 사용량을 진척도 바로 볼 수 있어요.',
+              title: l10n.coach_household_summary,
+              description: l10n.coach_household_summary_desc,
               icon: Icons.account_balance_wallet_outlined,
               color: Colors.teal,
             ),
@@ -147,8 +149,8 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '예산 설정',
-              description: '여기 더보기 메뉴를 열면 월별 예산을\n카테고리별로 설정할 수 있어요.',
+              title: l10n.coach_household_budget,
+              description: l10n.coach_household_budget_desc,
               icon: Icons.more_vert,
               color: Colors.teal,
             ),
@@ -164,8 +166,8 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '고정 지출',
-              description: '월세, 구독료 등 매달 반복되는 지출을\n등록하면 자동으로 기록해 드려요.',
+              title: l10n.coach_household_recurring,
+              description: l10n.coach_household_recurring_desc,
               icon: Icons.repeat,
               color: Colors.indigo,
             ),
@@ -181,8 +183,8 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '통계',
-              description: '카테고리별 지출 비율과 월별 추이를\n차트로 확인할 수 있어요.',
+              title: l10n.coach_household_stats,
+              description: l10n.coach_household_stats_desc,
               icon: Icons.bar_chart,
               color: Colors.purple,
             ),
@@ -198,8 +200,8 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
           TargetContent(
             align: ContentAlign.top,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '지출/수입 추가',
-              description: '새 지출이나 수입을 기록하세요.\n그룹별로 나눠서 관리할 수 있어요.',
+              title: l10n.coach_household_add,
+              description: l10n.coach_household_add_desc,
               icon: Icons.add,
               color: Colors.orange,
             ),
@@ -213,7 +215,7 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: const Color(0xFF212121),
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.bottomLeft,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -222,8 +224,8 @@ extension _HouseholdOnboarding on _HouseholdScreenState {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),

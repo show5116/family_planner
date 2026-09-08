@@ -4,16 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:family_planner/core/services/analytics_service.dart';
 
 /// 하단 네비게이션 아이템 모델
+///
+/// 표시 이름은 [NavigationLabelHelper.getLabel]이 id로 만들어 준다.
+/// 여기에 라벨을 들고 있으면 번역과 어긋나므로 두지 않는다.
 class NavigationItem {
   final String id;
-  final String label;
   final IconData icon;
   final IconData selectedIcon;
   final bool isFixed; // 고정 여부 (홈, 더보기)
 
   const NavigationItem({
     required this.id,
-    required this.label,
     required this.icon,
     required this.selectedIcon,
     this.isFixed = false,
@@ -21,14 +22,12 @@ class NavigationItem {
 
   NavigationItem copyWith({
     String? id,
-    String? label,
     IconData? icon,
     IconData? selectedIcon,
     bool? isFixed,
   }) {
     return NavigationItem(
       id: id ?? this.id,
-      label: label ?? this.label,
       icon: icon ?? this.icon,
       selectedIcon: selectedIcon ?? this.selectedIcon,
       isFixed: isFixed ?? this.isFixed,
@@ -68,7 +67,6 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
   // 고정 아이템
   static const NavigationItem _fixedHome = NavigationItem(
     id: 'home',
-    label: '홈',
     icon: Icons.home_outlined,
     selectedIcon: Icons.home,
     isFixed: true,
@@ -76,7 +74,6 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
 
   static const NavigationItem _fixedMore = NavigationItem(
     id: 'more',
-    label: '더보기',
     icon: Icons.more_horiz,
     selectedIcon: Icons.more_horiz,
     isFixed: true,
@@ -86,79 +83,66 @@ class BottomNavigationSettingsNotifier extends StateNotifier<BottomNavigationSet
   static const Map<String, NavigationItem> _availableItems = {
     'assets': NavigationItem(
       id: 'assets',
-      label: '자산',
       icon: Icons.account_balance_wallet_outlined,
       selectedIcon: Icons.account_balance_wallet,
     ),
     'calendar': NavigationItem(
       id: 'calendar',
-      label: '일정',
       icon: Icons.calendar_today_outlined,
       selectedIcon: Icons.calendar_today,
     ),
     'todo': NavigationItem(
       id: 'todo',
-      label: '할일',
       icon: Icons.check_box_outlined,
       selectedIcon: Icons.check_box,
     ),
     'household': NavigationItem(
       id: 'household',
-      label: '가계관리',
       icon: Icons.attach_money,
       selectedIcon: Icons.attach_money,
     ),
     'childPoints': NavigationItem(
       id: 'childPoints',
-      label: '육아포인트',
       icon: Icons.child_care,
       selectedIcon: Icons.child_care,
     ),
     'memo': NavigationItem(
       id: 'memo',
-      label: '메모',
       icon: Icons.note_outlined,
       selectedIcon: Icons.note,
     ),
     'diary': NavigationItem(
       id: 'diary',
-      label: '다이어리',
       icon: Icons.auto_stories_outlined,
       selectedIcon: Icons.auto_stories,
     ),
     'miniGames': NavigationItem(
       id: 'miniGames',
-      label: '미니게임',
       icon: Icons.games_outlined,
       selectedIcon: Icons.games,
     ),
     'investmentIndicators': NavigationItem(
       id: 'investmentIndicators',
-      label: '투자 지표',
       icon: Icons.trending_up_outlined,
       selectedIcon: Icons.trending_up,
     ),
     'savings': NavigationItem(
       id: 'savings',
-      label: '그룹 저금통',
       icon: Icons.savings_outlined,
       selectedIcon: Icons.savings,
     ),
     'fridge': NavigationItem(
       id: 'fridge',
-      label: '냉장고',
       icon: Icons.kitchen_outlined,
       selectedIcon: Icons.kitchen,
     ),
     'shopping': NavigationItem(
       id: 'shopping',
-      label: '장보기',
       icon: Icons.shopping_cart_outlined,
       selectedIcon: Icons.shopping_cart,
     ),
     'routines': NavigationItem(
       id: 'routines',
-      label: '루틴',
       icon: Icons.check_circle_outline,
       selectedIcon: Icons.check_circle,
     ),

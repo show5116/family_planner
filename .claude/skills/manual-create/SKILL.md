@@ -43,12 +43,22 @@ node .claude/skills/manual-create/scripts/seed-profile.mjs         # 계정·그
 node .claude/skills/manual-create/scripts/seed.mjs --dry-run       # 먼저 확인
 node .claude/skills/manual-create/scripts/seed.mjs --group "김가네 가족"          # 가계부
 node .claude/skills/manual-create/scripts/seed-dashboard.mjs --group "김가네 가족" # 대시보드 위젯
+node .claude/skills/manual-create/scripts/seed-fridge.mjs --group "김가네 가족"    # 냉장고
 ```
 
-`seed-dashboard.mjs`는 대시보드 위젯이 빈 화면으로 찍히지 않도록 일정·할일·기념일·
-자녀 포인트·투자 지표 즐겨찾기·메모를 채웁니다. **재실행 전에 반드시 `--cleanup`**
-을 돌리세요. 일정·할일·메모는 중복 생성을 막지 않습니다.
-(포인트 거래와 자녀 프로필은 삭제 API가 없어 되돌릴 수 없습니다.)
+**촬영 전에는 `seed-all.mjs` 한 번이면 됩니다.**
+
+```bash
+node .claude/skills/manual-create/scripts/seed-all.mjs --group "김가네 가족"
+node .claude/skills/manual-create/scripts/seed-all.mjs --group "김가네 가족" --refresh
+```
+
+시딩 스크립트 상당수가 **실행 시점 날짜**로 데이터를 만듭니다(오늘 일정, 이번 달 가계부,
+이번 달 포인트 거래). 하루만 지나도 "오늘 일정이 없습니다" 같은 빈 화면이 찍히므로,
+날짜가 바뀌었으면 `--refresh` 로 날짜 민감 데이터를 다시 만드세요.
+
+개별 스크립트는 모두 **이름 기준 중복 가드**가 있어 재실행해도 늘지 않습니다.
+다만 포인트 거래와 자녀 프로필은 삭제 API가 없어 `--cleanup` 으로도 되돌릴 수 없습니다.
 
 **이름은 정감 있게.** 스크린샷에 계정 이름과 그룹 이름이 그대로 찍힙니다.
 `seed-profile.mjs`가 테스트 계정을 아래처럼 바꿔둡니다.
@@ -147,16 +157,39 @@ node .claude/skills/manual-create/scripts/capture.mjs .claude/skills/manual-crea
 | `back` | 뒤로가기 | — |
 | `tapContains` | 부분 일치 탭 (가장 작은 노드) | `contains` |
 | `tapRole` | 역할로 탭 (스위치·체크박스) | `role`, `index` |
+| `type` | 텍스트 입력 | `label`(필드 라벨), `text` |
 | `shot` | 스크린샷 | `name`, `caption`, `fullPage` |
 | `wait` | 대기 | `wait` |
 
-**`tap`은 시맨틱 노드의 aria-label 또는 텍스트 첫 줄과 완전일치**로 찾습니다.
-ListTile은 시맨틱 텍스트가 `제목\n부제목`으로 합쳐지므로 **제목만 적으면 됩니다.**
+**`tap`은 세 단계로 넓혀가며 찾습니다** — aria-label 완전일치 → 텍스트 첫 줄 일치 →
+부분 포함. 그래서 대부분 **화면에 보이는 제목만 적으면** 됩니다.
 
-라벨 앞뒤에 이모지·D-day가 붙는 항목(`💍결혼기념일10/12 · D+3976`)은 `tapContains`,
-라벨이 아예 없는 스위치는 `tapRole`(`role: "switch"`)을 쓰세요.
+- ListTile: 시맨틱 텍스트가 `제목\n부제목`으로 합쳐져도 제목만으로 잡힙니다
+- 일정 카드: aria-label이 `제목\n오전 10:30`이어도 제목만으로 잡힙니다
+- 기념일처럼 이모지·D-day가 붙어도(`💍결혼기념일10/12 · D+3976`) 잡힙니다
 
-**FAB(＋ 버튼)은 `tapFab`을 쓰세요.** aria-label이 없어 `tap`으로는 찾지 못합니다.
+`tapContains`는 명시적으로 부분일치만 쓰고 싶을 때, `tapRole`(`role: "switch"`)은
+라벨이 아예 없는 스위치·체크박스에 씁니다.
+
+**`type`은 "입력해야만 보이는 UI"를 찍을 때 씁니다.** (냉장고의 유통기한 추천 칩처럼
+품목명을 쳐야 나타나는 화면.) 라벨로 시맨틱 노드를 찾아 그 안의 `<input>`을 포커스한 뒤
+`insertText`로 한 번에 넣습니다. 한 글자씩 치면 첫 글자의 onChanged로 위젯이 리빌드되며
+편집용 엘리먼트가 새로 만들어져 나머지 글자가 사라집니다(검증됨: "삼겹살" → "삼").
+디바운스가 있는 화면은 `wait`를 넉넉히(5초) 주세요.
+
+**아이콘 버튼은 `tooltip` 문구로 찾습니다.** 추측하지 말고 코드에서 확인하세요.
+(자산 화면 통계 아이콘의 tooltip은 "자산 통계"가 아니라 **"통계"** 입니다.)
+
+```bash
+grep -n "tooltip:" lib/features/<메뉴>/presentation/screens/<화면>.dart
+grep -n '"<키>"' lib/l10n/app_ko.arb    # l10n 키라면 실제 값 확인
+```
+
+tooltip이 아예 없으면 시맨틱스에 라벨이 남지 않아 찾을 수 없습니다.
+그런 버튼을 만나면 **앱에 tooltip을 추가하는 편이 낫습니다** — 접근성에도 필요합니다.
+
+**FAB은 `tapFab`을 쓰세요.** 대부분 tooltip이 없어 라벨로는 찾지 못하고,
+`tapFab`이 "오른쪽 아래 정사각형 버튼"을 좌표로 추론해 누릅니다.
 
 **다이얼로그는 Escape로 닫히지 않습니다.** `취소` 버튼을 탭하세요.
 
@@ -174,13 +207,27 @@ ListTile은 시맨틱 텍스트가 `제목\n부제목`으로 합쳐지므로 **�
   .filter(t => t && t.length < 25)
 ```
 
-촬영이 실패하면 `_failure.png`가 남으므로 그것부터 확인합니다.
+촬영이 실패하면 출력 폴더에 두 가지가 남습니다.
+
+- `_failure.png` — 실패 시점 화면
+- `_failure-labels.txt` — 그 화면의 시맨틱 라벨 전체 목록
+
+**라벨을 못 찾아 실패했다면 `_failure-labels.txt` 부터 보세요.** 실제로 어떤 라벨이
+있었는지 바로 알 수 있어, 별도 프로브 스크립트를 만들 필요가 없습니다.
 
 **빈 목록이 보이면 데이터가 없는 게 아니라 파싱이 깨진 것일 수 있습니다.**
 위젯 상당수가 `error:`를 빈 상태와 **똑같은 화면**으로 그려서 둘을 구분할 수 없습니다.
 (실제 사례: `TaskLocation.fromJson`이 `address`·`lat`·`lng`를 필수로 읽어서,
 장소명만 있는 일정 하나 때문에 일정 목록 전체가 "오늘 일정이 없습니다"로 보였습니다.)
 API를 직접 호출해 건수를 확인한 뒤, 값이 있는데 화면이 비었다면 모델 파싱을 의심하세요.
+
+**스크롤 뒤 곧바로 탭해도 됩니다.** Flutter 웹은 스크롤 직후 시맨틱 트리를 바로
+갱신하지 않아 "화면에는 보이는데 탭이 실패"하는 일이 있었는데, `scroll` 액션이
+트리가 실제로 바뀔 때까지(최대 4초) 기다리도록 고쳤습니다. 플로우에 수동 `wait`를
+넣을 필요가 없습니다.
+
+**목록이 길면 정렬 순서를 확인하세요.** 예를 들어 저금통 목표 카드는 이름 가나다순이라,
+뒤쪽 이름을 탭하려면 먼저 스크롤해야 합니다.
 
 **코치마크(반투명 안내 오버레이)가 화면을 가리면** 스크린샷을 못 씁니다.
 `capture.mjs`가 localStorage에 완료 플래그를 미리 심어 막습니다.

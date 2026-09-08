@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/child_points/data/models/childcare_model.dart';
 import 'package:family_planner/features/main/child_points/data/repositories/childcare_repository.dart';
 import 'package:family_planner/features/main/child_points/providers/childcare_provider.dart';
@@ -34,9 +35,10 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('보너스 지급'),
+        title: Text(l10n.childcare_bonus_give),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
@@ -66,7 +68,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                             const SizedBox(width: AppSizes.spaceS),
                             Expanded(
                               child: Text(
-                                '아이에게 보너스 포인트를 지급합니다.\n규칙이나 상점 외에 특별히 칭찬하고 싶을 때 사용하세요.',
+                                l10n.childcare_bonus_desc,
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: Theme.of(
@@ -85,15 +87,19 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                       controller: _amountController,
                       keyboardType: TextInputType.number,
                       autofocus: true,
-                      decoration: const InputDecoration(
-                        labelText: '지급 포인트',
-                        prefixIcon: Icon(Icons.star_rounded),
+                      decoration: InputDecoration(
+                        labelText: l10n.childcare_bonus_points,
+                        prefixIcon: const Icon(Icons.star_rounded),
                         suffixText: 'P',
                       ),
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return '포인트를 입력해주세요';
+                        if (v == null || v.trim().isEmpty) {
+                          return l10n.childcare_bonus_points_required;
+                        }
                         final n = double.tryParse(v);
-                        if (n == null || n <= 0) return '올바른 포인트를 입력해주세요';
+                        if (n == null || n <= 0) {
+                          return l10n.childcare_bonus_points_positive;
+                        }
                         return null;
                       },
                     ),
@@ -101,13 +107,13 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                     // 설명 입력
                     TextFormField(
                       controller: _descriptionController,
-                      decoration: const InputDecoration(
-                        labelText: '지급 이유',
-                        hintText: '예: 방 청소를 스스로 해서',
-                        prefixIcon: Icon(Icons.notes),
+                      decoration: InputDecoration(
+                        labelText: l10n.childcare_bonus_reason,
+                        hintText: l10n.childcare_bonus_reason_hint,
+                        prefixIcon: const Icon(Icons.notes),
                       ),
                       validator: (v) => v == null || v.trim().isEmpty
-                          ? '지급 이유를 입력해주세요'
+                          ? l10n.childcare_bonus_reason_required
                           : null,
                     ),
                   ],
@@ -115,7 +121,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
               ),
             ),
             FormBottomBar(
-              label: '보너스 지급',
+              label: l10n.childcare_bonus_give,
               icon: Icons.card_giftcard_outlined,
               isLoading: _isSubmitting,
               onPressed: _handleSubmit,
@@ -127,6 +133,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   Future<void> _handleSubmit() async {
+          final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
@@ -148,11 +155,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     if (result != null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('보너스가 지급되었습니다')));
+      ).showSnackBar(SnackBar(content: Text(l10n.childcare_bonus_given)));
       context.pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('저장에 실패했습니다. 잠시 후 다시 시도해주세요.')),
+        SnackBar(content: Text(l10n.childcare_save_failed)),
       );
     }
   }

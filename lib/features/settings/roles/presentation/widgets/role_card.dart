@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/widgets/reorderable_widgets.dart';
 import 'package:family_planner/features/settings/roles/models/common_role.dart';
 
@@ -71,13 +72,14 @@ class RoleCard extends StatelessWidget {
   }
 
   Widget _buildRoleTitle(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Text(
           role.name,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         if (role.isDefaultRole) ...[
           const SizedBox(width: AppSizes.spaceS),
@@ -91,11 +93,11 @@ class RoleCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
             ),
             child: Text(
-              '기본',
+              l10n.role_default_badge,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.blue.shade900,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Colors.blue.shade900,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -104,6 +106,7 @@ class RoleCard extends StatelessWidget {
   }
 
   Widget _buildPopupMenu(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return PopupMenuButton<String>(
       onSelected: (value) {
         switch (value) {
@@ -119,33 +122,36 @@ class RoleCard extends StatelessWidget {
         }
       },
       itemBuilder: (context) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'permissions',
           child: Row(
             children: [
               Icon(Icons.security),
               SizedBox(width: AppSizes.spaceS),
-              Text('권한 관리'),
+              Text(l10n.role_manage_permissions),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'edit',
           child: Row(
             children: [
               Icon(Icons.edit),
               SizedBox(width: AppSizes.spaceS),
-              Text('수정'),
+              Text(l10n.common_edit),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
               Icon(Icons.delete, color: Colors.red),
               SizedBox(width: AppSizes.spaceS),
-              Text('삭제', style: TextStyle(color: Colors.red)),
+              Text(
+                l10n.common_delete,
+                style: const TextStyle(color: Colors.red),
+              ),
             ],
           ),
         ),

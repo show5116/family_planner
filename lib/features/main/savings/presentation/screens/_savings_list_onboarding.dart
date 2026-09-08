@@ -1,12 +1,12 @@
 part of 'savings_list_screen.dart';
 
-// 온보딩용 가짜 저금통 데이터
-final _demoGoals = [
+// 온보딩용 가짜 저금통 데이터. 번역이 필요해 최상위 상수로 둘 수 없다.
+List<SavingsGoalModel> _demoGoals(AppLocalizations l10n) => [
   SavingsGoalModel(
     id: '__demo_1__',
     groupId: '__demo__',
-    name: '제주도 여행',
-    description: '올해 여름 가족 여행 목표',
+    name: l10n.coach_savings_demo_jeju,
+    description: l10n.coach_savings_demo_desc,
     targetAmount: 1500000,
     currentAmount: 870000,
     autoDeposit: true,
@@ -21,7 +21,7 @@ final _demoGoals = [
   SavingsGoalModel(
     id: '__demo_2__',
     groupId: '__demo__',
-    name: '비상금',
+    name: l10n.coach_savings_demo_emergency,
     description: null,
     targetAmount: 3000000,
     currentAmount: 1200000,
@@ -60,7 +60,7 @@ extension _SavingsListOnboarding on _SavingsListScreenState {
   }
 
   void _startDemo() {
-    _onboardingGoals.value = _demoGoals;
+    _onboardingGoals.value = _demoGoals(AppLocalizations.of(context)!);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final animation = ModalRoute.of(context)?.animation;
@@ -84,12 +84,13 @@ extension _SavingsListOnboarding on _SavingsListScreenState {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => SavingsDetailScreen.demo(demoGoal: _demoGoals.first),
+        builder: (_) => SavingsDetailScreen.demo(demoGoal: _demoGoals(AppLocalizations.of(context)!).first),
       ),
     );
   }
 
   Future<void> _showCoachMark() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!mounted) return;
     final firstCardPos = _keyToPosition(_firstCardKey);
     final targets = <TargetFocus>[
@@ -103,8 +104,8 @@ extension _SavingsListOnboarding on _SavingsListScreenState {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (_, _) => FeatureCoachMark.buildContent(
-              title: '저금통',
-              description: '목표 이름, 현재 적립금, 달성률을 한눈에 확인할 수 있어요.\n자동 적립을 켜두면 매달 자동으로 입금돼요.',
+              title: l10n.coach_savings_goal,
+              description: l10n.coach_savings_goal_desc,
               icon: Icons.savings_outlined,
               color: AppColors.investment,
             ),
@@ -118,7 +119,7 @@ extension _SavingsListOnboarding on _SavingsListScreenState {
       targets: FeatureCoachMark.refreshPositions(targets),
       colorShadow: AppColors.textPrimary,
       opacityShadow: 0.85,
-      textSkip: '건너뛰기',
+      textSkip: l10n.common_skip,
       alignSkip: Alignment.topRight,
       skipWidget: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -127,8 +128,8 @@ extension _SavingsListOnboarding on _SavingsListScreenState {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white30),
         ),
-        child: const Text(
-          '건너뛰기',
+        child: Text(
+          l10n.common_skip,
           style: TextStyle(
               color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
         ),

@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
@@ -33,10 +34,11 @@ class _EmailVerificationScreenState
   }
 
   Future<void> _handleVerifyEmail() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_codeController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('인증 코드를 입력해주세요'),
+        SnackBar(
+          content: Text(l10n.auth_code_required),
           backgroundColor: AppColors.error,
         ),
       );
@@ -56,8 +58,8 @@ class _EmailVerificationScreenState
 
       // 인증 성공 시 로그인 화면으로 이동
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('이메일 인증이 완료되었습니다. 로그인해주세요.'),
+        SnackBar(
+          content: Text(l10n.auth_email_verified),
           backgroundColor: AppColors.success,
         ),
       );
@@ -80,6 +82,7 @@ class _EmailVerificationScreenState
   }
 
   Future<void> _handleResendVerification() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isResending = true;
     });
@@ -92,8 +95,8 @@ class _EmailVerificationScreenState
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('인증 이메일을 재전송했습니다.'),
+        SnackBar(
+          content: Text(l10n.auth_email_resent),
           backgroundColor: AppColors.success,
         ),
       );
@@ -114,8 +117,9 @@ class _EmailVerificationScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('이메일 인증'), centerTitle: true),
+      appBar: AppBar(title: Text(l10n.auth_email_verification), centerTitle: true),
       body: ScrollableFormBody(
         maxWidth: 500,
         padding: EdgeInsets.symmetric(
@@ -143,7 +147,7 @@ class _EmailVerificationScreenState
 
                   // 제목
                   Text(
-                    '이메일을 확인해주세요',
+                    l10n.auth_check_email,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -153,7 +157,7 @@ class _EmailVerificationScreenState
 
                   // 설명
                   Text(
-                    '${widget.email}\n으로 인증 이메일을 보냈습니다.',
+                    l10n.auth_email_sent_to(widget.email),
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -170,13 +174,13 @@ class _EmailVerificationScreenState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '인증 코드 입력',
+                            l10n.auth_enter_code,
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: AppSizes.spaceM),
                           Text(
-                            '이메일에 포함된 6자리 인증 코드를 입력해주세요.',
+                            l10n.auth_enter_code_desc,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: AppColors.textSecondary),
                           ),
@@ -184,8 +188,8 @@ class _EmailVerificationScreenState
                           TextField(
                             controller: _codeController,
                             decoration: InputDecoration(
-                              labelText: '인증 코드',
-                              hintText: '예: 123456',
+                              labelText: l10n.auth_code_label,
+                              hintText: l10n.auth_code_hint,
                               prefixIcon: const Icon(Icons.vpn_key_outlined),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(
@@ -219,7 +223,7 @@ class _EmailVerificationScreenState
                                             ),
                                       ),
                                     )
-                                  : const Text('인증하기'),
+                                  : Text(l10n.auth_verify),
                             ),
                           ),
                         ],
@@ -237,7 +241,7 @@ class _EmailVerificationScreenState
                           horizontal: AppSizes.spaceM,
                         ),
                         child: Text(
-                          '또는',
+                          l10n.auth_or,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: AppColors.textSecondary),
                         ),
@@ -249,7 +253,7 @@ class _EmailVerificationScreenState
 
                   // 재전송 안내
                   Text(
-                    '이메일을 받지 못하셨나요?',
+                    l10n.auth_no_email,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -275,7 +279,7 @@ class _EmailVerificationScreenState
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.refresh),
-                      label: const Text('인증 이메일 재전송'),
+                      label: Text(l10n.auth_resend_email),
                     ),
                   ),
                   const SizedBox(height: AppSizes.spaceXL),
@@ -285,14 +289,14 @@ class _EmailVerificationScreenState
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '나중에 인증하기 ',
+                        l10n.auth_verify_later,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       TextButton(
                         onPressed: () {
                           context.go(AppRoutes.login);
                         },
-                        child: const Text('로그인으로 돌아가기'),
+                        child: Text(l10n.auth_back_to_signin),
                       ),
                     ],
                   ),

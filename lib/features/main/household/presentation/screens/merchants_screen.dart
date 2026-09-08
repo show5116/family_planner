@@ -60,6 +60,7 @@ class _MerchantsScreenState extends ConsumerState<MerchantsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: l10n.household_merchants_add,
         onPressed: () => _showAddSheet(context, l10n),
         child: const Icon(Icons.add),
       ),

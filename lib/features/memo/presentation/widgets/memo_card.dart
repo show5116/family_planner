@@ -225,6 +225,7 @@ class MemoCard extends ConsumerWidget {
   }
 
   Widget _buildHeader(BuildContext context, WidgetRef ref, DateFormat dateFormat, Group? group, Color personalColor) {
+    final l10n = AppLocalizations.of(context)!;
     final badgeColor = group != null
         ? ColorUtils.groupColor(group)
         : personalColor;
@@ -268,7 +269,7 @@ class MemoCard extends ConsumerWidget {
             borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
           ),
           child: Text(
-            group?.name ?? '나만 보기',
+            group?.name ?? l10n.memo_visibilityPrivate,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: badgeColor,
                   fontWeight: FontWeight.w500,
@@ -313,13 +314,14 @@ class _PinButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final pinState = ref.watch(memoPinProvider);
     final isLoading = pinState.isLoading;
 
     ref.listen(memoPinProvider, (_, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('핀 설정에 실패했습니다')),
+          SnackBar(content: Text(l10n.memo_pin_error)),
         );
       }
     });
@@ -343,9 +345,8 @@ class _PinButton extends ConsumerWidget {
         final updated =
             await ref.read(memoPinProvider.notifier).togglePin(memoId);
         if (!context.mounted || updated == null) return;
-        final msg = updated.isPinned
-            ? '메모가 상단에 고정되고, 대시보드에 추가되었습니다.'
-            : '고정이 해제되었습니다.';
+        final msg =
+            updated.isPinned ? l10n.memo_pin_added : l10n.memo_pin_removed;
         ScaffoldMessenger.of(context)
           ..clearSnackBars()
           ..showSnackBar(SnackBar(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 알림 권한 상태 카드
 class NotificationPermissionCard extends ConsumerStatefulWidget {
@@ -31,6 +32,7 @@ class _NotificationPermissionCardState
   }
 
   Future<void> _requestPermission() async {
+    final l10n = AppLocalizations.of(context)!;
     final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       badge: true,
@@ -44,11 +46,11 @@ class _NotificationPermissionCardState
     if (mounted) {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('알림 권한이 허용되었습니다')),
+          SnackBar(content: Text(l10n.notif_permission_granted)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('알림 권한이 거부되었습니다')),
+          SnackBar(content: Text(l10n.notif_permission_denied)),
         );
       }
     }
@@ -56,6 +58,7 @@ class _NotificationPermissionCardState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_permissionStatus == null) {
       return const Card(
         child: Padding(
@@ -83,7 +86,7 @@ class _NotificationPermissionCardState
                 const SizedBox(width: AppSizes.spaceS),
                 Expanded(
                   child: Text(
-                    '알림 권한',
+                    l10n.notif_permission,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -99,7 +102,7 @@ class _NotificationPermissionCardState
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    isGranted ? '활성화됨' : '비활성화됨',
+                    isGranted ? l10n.notif_permission_on : l10n.notif_permission_off,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -112,8 +115,8 @@ class _NotificationPermissionCardState
             const SizedBox(height: AppSizes.spaceM),
             Text(
               isGranted
-                  ? '푸시 알림을 받을 수 있습니다.'
-                  : '알림을 받으려면 권한을 허용해주세요.',
+                  ? l10n.notif_permission_on_desc
+                  : l10n.notif_permission_off_desc,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             if (!isGranted) ...[
@@ -123,7 +126,7 @@ class _NotificationPermissionCardState
                 child: ElevatedButton.icon(
                   onPressed: _requestPermission,
                   icon: const Icon(Icons.notifications_active),
-                  label: const Text('권한 요청'),
+                  label: Text(l10n.notif_permission_request),
                 ),
               ),
             ],

@@ -101,6 +101,7 @@ class RecurringSection extends StatelessWidget {
 class _RecurringInfoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return IconButton(
       icon: const Icon(Icons.help_outline, size: 18),
       padding: EdgeInsets.zero,
@@ -111,31 +112,45 @@ class _RecurringInfoButton extends StatelessWidget {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('반복 일정 안내'),
-            content: const Column(
+            title: Text(l10n.task_recurring_guide),
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('반복 일정은 아래 기준으로 자동 생성됩니다.'),
+                Text(l10n.task_recurring_guide_body),
                 SizedBox(height: 12),
-                _InfoRow(label: '매일 / 매주', value: '3개월치 사전 생성'),
+                _InfoRow(
+                    label: l10n.task_recurring_daily_weekly,
+                    value: l10n.task_recurring_ahead_3months),
                 SizedBox(height: 8),
-                Text('월 단위', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(l10n.task_recurring_monthly_unit,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 4),
-                _InfoRow(label: '매월 (1개월마다)', value: '3개월치'),
-                _InfoRow(label: '격월 (2개월마다)', value: '6개월치'),
-                _InfoRow(label: '3개월마다', value: '9개월치'),
+                _InfoRow(
+                    label: l10n.task_recurring_every_month,
+                    value: l10n.task_recurring_ahead_months('3')),
+                _InfoRow(
+                    label: l10n.task_recurring_every_2months,
+                    value: l10n.task_recurring_ahead_months('6')),
+                _InfoRow(
+                    label: l10n.task_recurring_every_3months,
+                    value: l10n.task_recurring_ahead_months('9')),
                 SizedBox(height: 8),
-                Text('연 단위', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(l10n.task_recurring_yearly_unit,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 4),
-                _InfoRow(label: '매년 (1년마다)', value: '13개월치'),
-                _InfoRow(label: '2년마다', value: '25개월치'),
+                _InfoRow(
+                    label: l10n.task_recurring_every_year,
+                    value: l10n.task_recurring_ahead_months('13')),
+                _InfoRow(
+                    label: l10n.task_recurring_every_2years,
+                    value: l10n.task_recurring_ahead_months('25')),
               ],
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('확인'),
+                child: Text(l10n.common_confirm),
               ),
             ],
           ),
@@ -640,7 +655,7 @@ class _YearlySection extends StatelessWidget {
                   : (_) => formNotifier.setYearlyType(YearlyType.weekOfMonth),
             ),
             ChoiceChip(
-              label: const Text('음력'),
+              label: Text(l10n.task_lunar),
               selected: formState.yearlyType == YearlyType.lunar,
               onSelected: readOnly
                   ? null
@@ -876,9 +891,10 @@ class _YearlyLunarPickerButton extends StatelessWidget {
     this.readOnly = false,
   });
 
-  String get _label {
-    final prefix = formState.lunarIsLeap ? '윤' : '';
-    return '음력 $prefix${formState.lunarMonth}월 ${formState.lunarDay}일';
+  String _label(AppLocalizations l10n) {
+    final prefix = formState.lunarIsLeap ? l10n.task_lunar_leap_prefix : '';
+    return l10n.task_lunar_date(
+        prefix, '${formState.lunarMonth}', '${formState.lunarDay}');
   }
 
   void _showPicker(BuildContext context) {
@@ -927,7 +943,8 @@ class _YearlyLunarPickerButton extends StatelessWidget {
               color: theme.colorScheme.primary,
             ),
             const SizedBox(width: AppSizes.spaceS),
-            Text(_label, style: theme.textTheme.bodyMedium),
+            Text(_label(AppLocalizations.of(context)!),
+                style: theme.textTheme.bodyMedium),
             const SizedBox(width: AppSizes.spaceS),
             Icon(
               Icons.arrow_drop_down,
@@ -984,6 +1001,7 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Padding(
@@ -1010,7 +1028,7 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
           ),
           const SizedBox(height: AppSizes.spaceL),
           Text(
-            '음력 날짜 선택',
+            l10n.task_lunar_pick,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -1018,7 +1036,7 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
           const SizedBox(height: AppSizes.spaceL),
           // 월 선택
           Text(
-            '월',
+            l10n.task_month,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -1035,7 +1053,7 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
                 final m = i + 1;
                 final selected = _month == m;
                 return ChoiceChip(
-                  label: Text('$m월'),
+                  label: Text(l10n.task_month_value('$m')),
                   selected: selected,
                   visualDensity: VisualDensity.compact,
                   onSelected: (_) => setState(() => _month = m),
@@ -1046,7 +1064,7 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
           const SizedBox(height: AppSizes.spaceM),
           // 일 선택
           Text(
-            '일',
+            l10n.task_day,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -1063,7 +1081,7 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
                 final d = i + 1;
                 final selected = _day == d;
                 return ChoiceChip(
-                  label: Text('$d일'),
+                  label: Text(l10n.task_day_value('$d')),
                   selected: selected,
                   visualDensity: VisualDensity.compact,
                   onSelected: (_) => setState(() => _day = d),
@@ -1079,11 +1097,11 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
                 value: _isLeap,
                 onChanged: (v) => setState(() => _isLeap = v ?? false),
               ),
-              Text('윤달', style: theme.textTheme.bodyMedium),
+              Text(l10n.task_leap_month, style: theme.textTheme.bodyMedium),
               const SizedBox(width: AppSizes.spaceS),
               Flexible(
                 child: Text(
-                  '윤달이 없는 해에는 해당 달의 같은 날로 처리됩니다',
+                  l10n.task_leap_month_desc,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -1094,7 +1112,8 @@ class _LunarPickerSheetState extends State<_LunarPickerSheet> {
           const SizedBox(height: AppSizes.spaceL),
           SizedBox(
             width: double.infinity,
-            child: FilledButton(onPressed: _apply, child: const Text('확인')),
+            child: FilledButton(
+                onPressed: _apply, child: Text(l10n.common_confirm)),
           ),
         ],
       ),
@@ -1258,6 +1277,7 @@ class _SkipSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final hasSkip = formState.skipWeekends || formState.skipHolidays;
 
@@ -1265,7 +1285,7 @@ class _SkipSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '건너뜀 설정',
+          l10n.task_skip_settings,
           style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -1274,7 +1294,7 @@ class _SkipSection extends StatelessWidget {
         Row(
           children: [
             _SkipChip(
-              label: '주말',
+              label: l10n.task_skip_weekend,
               icon: Icons.weekend_outlined,
               selected: formState.skipWeekends,
               readOnly: readOnly,
@@ -1283,7 +1303,7 @@ class _SkipSection extends StatelessWidget {
             ),
             const SizedBox(width: AppSizes.spaceS),
             _SkipChip(
-              label: '공휴일',
+              label: l10n.task_skip_holiday,
               icon: Icons.celebration_outlined,
               selected: formState.skipHolidays,
               readOnly: readOnly,
@@ -1295,7 +1315,7 @@ class _SkipSection extends StatelessWidget {
         if (hasSkip) ...[
           const SizedBox(height: AppSizes.spaceS),
           Text(
-            '건너뛸 때',
+            l10n.task_skip_when,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -1303,15 +1323,15 @@ class _SkipSection extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceXS),
           SegmentedButton<SkipBehavior>(
             showSelectedIcon: false,
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: SkipBehavior.skip,
-                label: Text('건너뜀'),
+                label: Text(l10n.task_skip_do),
                 icon: Icon(Icons.skip_next_outlined),
               ),
               ButtonSegment(
                 value: SkipBehavior.moveToNextWeekday,
-                label: Text('다음 평일로'),
+                label: Text(l10n.task_skip_next_weekday),
                 icon: Icon(Icons.arrow_forward_outlined),
               ),
             ],
