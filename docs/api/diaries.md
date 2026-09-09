@@ -23,7 +23,8 @@
   "visibility": null, // 공개 범위 (기본값: PRIVATE) (DiaryVisibility?)
   "groupId": "", // 그룹 ID (GROUP 공개 시 필수) (string?)
   "mood": "😊", // 기분 이모지/코드 (string?)
-  "weather": "SUNNY" // 날씨 코드 (string?)
+  "weather": "SUNNY", // 날씨 코드 (string?)
+  "mediaIds": "<String>" // 첨부할 미디어 ID 배열 (reserve → confirm까지 끝난 것) (string[]?)
 }
 ```
 
@@ -47,11 +48,27 @@
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
 ```
+
+#### 400 - 본문이 없거나 미래 날짜입니다
+
+#### 409 - 해당 날짜에 이미 일기가 있습니다
 
 ---
 
@@ -64,7 +81,8 @@
 ```json
 {
   "date": "2026-09-01", // 일기 날짜 ('YYYY-MM-DD', 생략 시 오늘 — 하루 경계 새벽 4시) (string?)
-  "text": "점심에 본 고양이", // 텍스트 조각 (string)
+  "text": "점심에 본 고양이", // 텍스트 조각 (mediaIds가 있으면 생략 가능) (string?)
+  "mediaIds": "<String>", // 함께 첨부할 미디어 ID 배열 (confirm까지 끝난 것) (string[]?)
   "capturedAt": "14:32", // 조각 시각 마커 ('HH:mm') (string?)
   "visibility": null, // 공개 범위 (일기가 새로 생성될 때만 적용, 기본값 PRIVATE) (DiaryVisibility?)
   "groupId": "" // 그룹 ID (일기가 새로 생성되고 GROUP 공개일 때만 적용) (string?)
@@ -81,12 +99,14 @@
   "date": "2026-09-01", // 일기 날짜 ('YYYY-MM-DD') (string)
   "created": true, // 이 요청으로 일기가 새로 생성되었는지 (boolean)
   "appended": {
-    "text": "점심에 본 고양이", // 추가된 텍스트 조각 (string)
+    "text": "점심에 본 고양이", // 추가된 텍스트 조각 (첨부만 추가한 경우 null) (string | null)
     "capturedAt": "14:32" // 조각 시각 마커 ('HH:mm') (string | null)
   }, // 추가된 조각 (AppendedFragmentDto)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
 ```
+
+#### 400 - 텍스트가 비어 있거나 미래 날짜입니다
 
 ---
 
@@ -126,7 +146,17 @@
         "id": "uuid-1234",
         "name": "홍길동"
       }, // 작성자 정보 (DiaryAuthorDto)
-      "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+      "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+      "media": {
+        "id": "",
+        "type": null,
+        "url": "",
+        "thumbnailUrl": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sortOrder": 0
+      }, // 첨부 미디어 목록 (DiaryMediaDto[])
       "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
       "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
     }
@@ -160,7 +190,7 @@
       "userId": "uuid-1234", // 작성자 ID (string)
       "authorName": "홍길동", // 작성자 이름 (string)
       "mood": "😊", // 기분 이모지/코드 (string | null)
-      "hasMedia": false // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+      "hasMedia": false // 첨부 미디어 존재 여부 (boolean)
     }
   ] // 작성 현황 (그룹 조회 시 같은 날짜가 여러 건일 수 있음) (DiaryCalendarDayDto[])
 }
@@ -202,10 +232,14 @@
     {
       "id": "uuid-1234", // 일기 ID (string)
       "date": "2025-09-01", // 일기 날짜 ('YYYY-MM-DD') (string)
-      "label": "1년 전 오늘", // 회고 라벨 (string)
+      "label": "1년 전 오늘", // 회고 라벨 (한국어 고정 — 구버전 앱 호환용. 신규 앱은 unit·amount로 문구를 만든다) (string)
+      "unit": null, // 회고 시점 단위 (가능한 값: MONTH, YEAR) (FlashbackUnit)
+      "amount": 1, // 회고 시점 수치 (개월 수 또는 연 수) (number)
       "title": "가을 첫날", // 제목 (string | null)
       "excerpt": null, // 본문 발췌 (평문 앞부분) (string | null)
-      "mood": "😊" // 기분 이모지/코드 (string | null)
+      "mood": "😊", // 기분 이모지/코드 (string | null)
+      "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+      "thumbnailUrl": null // 대표 썸네일 URL (sortOrder가 가장 앞선 첨부, 단기 만료 presigned GET) (string | null)
     }
   ] // 회고 목록 (없으면 빈 배열) (DiaryFlashbackItemDto[])
 }
@@ -241,7 +275,19 @@
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -279,7 +325,19 @@
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -325,7 +383,19 @@
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -389,7 +459,19 @@
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -398,5 +480,7 @@
 #### 404 - 복구할 일기를 찾을 수 없거나 복구 기간이 지났습니다
 
 #### 403 - 본인의 일기만 복구할 수 있습니다
+
+#### 409 - 해당 날짜에 이미 일기가 있습니다
 
 ---

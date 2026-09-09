@@ -462,6 +462,8 @@
 
 #### 403 - 해당 그룹의 멤버가 아닙니다
 
+#### 400 - 해당 그룹에 속하지 않은 계좌가 포함되어 있습니다
+
 ---
 
 ### PATCH `assets/accounts/:id`
@@ -910,6 +912,8 @@ entryType=SNAPSHOT: 잔액 스냅샷, entryType=WITHDRAWAL: 출금 기록. 날�
 #### 404 - 기록을 찾을 수 없습니다
 
 #### 403 - 본인의 계좌 기록만 수정할 수 있습니다
+
+#### 400 - 금액이 계좌 잔액을 초과하거나 동일한 종목명의 기록이 이미 존재합니다
 
 ---
 
@@ -2700,7 +2704,8 @@ period=monthly 시 year 필수.
   "visibility": null, // 공개 범위 (기본값: PRIVATE) (DiaryVisibility?)
   "groupId": "", // 그룹 ID (GROUP 공개 시 필수) (string?)
   "mood": "😊", // 기분 이모지/코드 (string?)
-  "weather": "SUNNY" // 날씨 코드 (string?)
+  "weather": "SUNNY", // 날씨 코드 (string?)
+  "mediaIds": "<String>" // 첨부할 미디어 ID 배열 (reserve → confirm까지 끝난 것) (string[]?)
 }
 ```
 
@@ -2724,11 +2729,27 @@ period=monthly 시 year 필수.
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
 ```
+
+#### 400 - 본문이 없거나 미래 날짜입니다
+
+#### 409 - 해당 날짜에 이미 일기가 있습니다
 
 ---
 
@@ -2741,7 +2762,8 @@ period=monthly 시 year 필수.
 ```json
 {
   "date": "2026-09-01", // 일기 날짜 ('YYYY-MM-DD', 생략 시 오늘 — 하루 경계 새벽 4시) (string?)
-  "text": "점심에 본 고양이", // 텍스트 조각 (string)
+  "text": "점심에 본 고양이", // 텍스트 조각 (mediaIds가 있으면 생략 가능) (string?)
+  "mediaIds": "<String>", // 함께 첨부할 미디어 ID 배열 (confirm까지 끝난 것) (string[]?)
   "capturedAt": "14:32", // 조각 시각 마커 ('HH:mm') (string?)
   "visibility": null, // 공개 범위 (일기가 새로 생성될 때만 적용, 기본값 PRIVATE) (DiaryVisibility?)
   "groupId": "" // 그룹 ID (일기가 새로 생성되고 GROUP 공개일 때만 적용) (string?)
@@ -2758,12 +2780,14 @@ period=monthly 시 year 필수.
   "date": "2026-09-01", // 일기 날짜 ('YYYY-MM-DD') (string)
   "created": true, // 이 요청으로 일기가 새로 생성되었는지 (boolean)
   "appended": {
-    "text": "점심에 본 고양이", // 추가된 텍스트 조각 (string)
+    "text": "점심에 본 고양이", // 추가된 텍스트 조각 (첨부만 추가한 경우 null) (string | null)
     "capturedAt": "14:32" // 조각 시각 마커 ('HH:mm') (string | null)
   }, // 추가된 조각 (AppendedFragmentDto)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
 ```
+
+#### 400 - 텍스트가 비어 있거나 미래 날짜입니다
 
 ---
 
@@ -2803,7 +2827,17 @@ period=monthly 시 year 필수.
         "id": "uuid-1234",
         "name": "홍길동"
       }, // 작성자 정보 (DiaryAuthorDto)
-      "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+      "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+      "media": {
+        "id": "",
+        "type": null,
+        "url": "",
+        "thumbnailUrl": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sortOrder": 0
+      }, // 첨부 미디어 목록 (DiaryMediaDto[])
       "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
       "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
     }
@@ -2837,7 +2871,7 @@ period=monthly 시 year 필수.
       "userId": "uuid-1234", // 작성자 ID (string)
       "authorName": "홍길동", // 작성자 이름 (string)
       "mood": "😊", // 기분 이모지/코드 (string | null)
-      "hasMedia": false // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+      "hasMedia": false // 첨부 미디어 존재 여부 (boolean)
     }
   ] // 작성 현황 (그룹 조회 시 같은 날짜가 여러 건일 수 있음) (DiaryCalendarDayDto[])
 }
@@ -2879,10 +2913,14 @@ period=monthly 시 year 필수.
     {
       "id": "uuid-1234", // 일기 ID (string)
       "date": "2025-09-01", // 일기 날짜 ('YYYY-MM-DD') (string)
-      "label": "1년 전 오늘", // 회고 라벨 (string)
+      "label": "1년 전 오늘", // 회고 라벨 (한국어 고정 — 구버전 앱 호환용. 신규 앱은 unit·amount로 문구를 만든다) (string)
+      "unit": null, // 회고 시점 단위 (가능한 값: MONTH, YEAR) (FlashbackUnit)
+      "amount": 1, // 회고 시점 수치 (개월 수 또는 연 수) (number)
       "title": "가을 첫날", // 제목 (string | null)
       "excerpt": null, // 본문 발췌 (평문 앞부분) (string | null)
-      "mood": "😊" // 기분 이모지/코드 (string | null)
+      "mood": "😊", // 기분 이모지/코드 (string | null)
+      "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+      "thumbnailUrl": null // 대표 썸네일 URL (sortOrder가 가장 앞선 첨부, 단기 만료 presigned GET) (string | null)
     }
   ] // 회고 목록 (없으면 빈 배열) (DiaryFlashbackItemDto[])
 }
@@ -2918,7 +2956,19 @@ period=monthly 시 year 필수.
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -2956,7 +3006,19 @@ period=monthly 시 year 필수.
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -3002,7 +3064,19 @@ period=monthly 시 year 필수.
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -3066,7 +3140,19 @@ period=monthly 시 year 필수.
     "id": "uuid-1234", // 작성자 ID (string)
     "name": "홍길동" // 작성자 이름 (string)
   }, // 작성자 정보 (DiaryAuthorDto)
-  "hasMedia": false, // 첨부 미디어 존재 여부 (Phase 1에서는 항상 false) (boolean)
+  "hasMedia": false, // 첨부 미디어 존재 여부 (boolean)
+  "media": [
+    {
+      "id": "", // 미디어 ID (string)
+      "type": null, // 미디어 종류 (MediaType)
+      "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "width": null, // 가로 픽셀 (number | null)
+      "height": null, // 세로 픽셀 (number | null)
+      "durationMs": null, // 영상 길이 (ms) (number | null)
+      "sortOrder": 0 // 정렬 순서 (number)
+    }
+  ], // 첨부 미디어 목록 (DiaryMediaDto[])
   "createdAt": "2025-01-01T00:00:00Z", // 생성일 (Date)
   "updatedAt": "2025-01-01T00:00:00Z" // 수정일 (Date)
 }
@@ -3075,6 +3161,236 @@ period=monthly 시 year 필수.
 #### 404 - 복구할 일기를 찾을 수 없거나 복구 기간이 지났습니다
 
 #### 403 - 본인의 일기만 복구할 수 있습니다
+
+#### 409 - 해당 날짜에 이미 일기가 있습니다
+
+---
+
+## 다이어리 미디어
+
+**Base Path:** `/diaries/media`
+
+### GET `diaries/media/quota`
+
+**요약:** 용량 한도 상태 조회 (업로드 전 필수 — 유효한 예약분 포함)
+
+**Responses:**
+
+#### 200 - 한도 조회 성공
+
+```json
+{
+  "tier": null, // 구독 등급 (SubscriptionTier)
+  "monthly": {
+    "usedBytes": 0, // 이번 달 사용량 (bytes, 유효 예약분 포함) (number)
+    "limitBytes": 0, // 이번 달 한도 (bytes) (number)
+    "remainingBytes": 0, // 이번 달 잔여 (bytes) (number)
+    "resetsAt": "2025-01-01T00:00:00Z" // 월간 한도 리셋 시각 (다음 달 1일 04:00 KST) (Date)
+  }, // 월간 한도 상태 (MediaQuotaMonthlyDto)
+  "total": {
+    "usedBytes": 0, // 누적 사용량 (bytes, 유효 예약분 포함) (number)
+    "limitBytes": 0, // 누적 한도 (bytes) (number)
+    "remainingBytes": 0 // 누적 잔여 (bytes) (number)
+  }, // 누적 한도 상태 (MediaQuotaTotalDto)
+  "perFileLimitBytes": 0, // 파일 1개 최대 크기 (bytes) (number)
+  "videoAllowed": false, // 영상 첨부 가능 여부 (boolean)
+  "maxVideoDurationMs": null // 영상 최대 길이 (ms) (number | null)
+}
+```
+
+---
+
+### GET `diaries/media/large`
+
+**요약:** 용량 큰 미디어 조회 (저장공간 관리 화면용)
+
+**Query Parameters:**
+
+- `limit` (`number`) (Optional): 조회 개수
+- `onlyOriginal` (`boolean`) (Optional): 원본으로 올린 것만 (압축본 교체 유도용)
+
+**Responses:**
+
+#### 200 - 조회 성공
+
+```json
+{
+  "items": [
+    {
+      "id": "", // 미디어 ID (string)
+      "diaryId": null, // 연결된 일기 ID (string | null)
+      "date": null, // 일기 날짜 ('YYYY-MM-DD') (string | null)
+      "type": null, // 미디어 종류 (MediaType)
+      "fileName": "", // 파일명 (string)
+      "fileSize": 0, // 실제 크기 (bytes) (number)
+      "originalSize": null, // 압축 전 원본 크기 (bytes) (number | null)
+      "isOriginal": false, // 원본으로 업로드했는지 (boolean)
+      "thumbnailUrl": null, // 썸네일 URL (string | null)
+      "uploadedAt": "2025-01-01T00:00:00Z" // 업로드 확정 시각 (Date | null)
+    }
+  ] // 용량 큰 미디어 목록 (LargeMediaItemDto[])
+}
+```
+
+---
+
+### POST `diaries/media/reserve`
+
+**요약:** 업로드 예약 — 한도 검증 후 presigned PUT URL 발급
+
+**Request Body:**
+
+```json
+{
+  "diaryId": "", // 연결할 일기 ID (없으면 나중에 일기 저장 시 연결) (string?)
+  "date": "2026-09-07", // diaryId가 없을 때 어느 날짜에 붙일지 ('YYYY-MM-DD'). 그날 일기가 이미 있으면 바로 연결한다 (string?)
+  "type": null, // 미디어 종류 (MediaType)
+  "fileName": "IMG_1234.jpg", // 파일명 (string)
+  "mimeType": "image/jpeg", // MIME 타입 (string)
+  "declaredSize": 3145728, // 클라이언트 신고 크기 (bytes) (number)
+  "originalSize": 0, // 압축 전 원본 크기 (bytes, 절약량 표시용) (number?)
+  "isOriginal": false, // 사용자가 "원본으로 업로드"를 골랐는지 (boolean?)
+  "width": 0, // 가로 픽셀 (number?)
+  "height": 0, // 세로 픽셀 (number?)
+  "durationMs": 0 // 영상 길이 (ms, 영상일 때) (number?)
+}
+```
+
+**Responses:**
+
+#### 201 - 예약 성공
+
+```json
+{
+  "mediaId": "", // 미디어 ID (confirm에 사용) (string)
+  "uploadUrl": "", // R2 직접 업로드용 presigned PUT URL (string)
+  "storageKey": "", // R2 저장 키 (string)
+  "expiresIn": 0, // presigned URL 유효 시간 (초) (number)
+  "thumbnailUploadUrl": "", // 썸네일 업로드용 presigned PUT URL (JPEG, 최대 변 640px, 품질 80). 선택 — 올리지 않아도 확정된다 (string)
+  "thumbnailKey": "" // 썸네일 R2 저장 키 (string)
+}
+```
+
+#### 400 - 지원하지 않는 형식이거나 영상 길이가 너무 깁니다 (길이 초과 시 maxVideoDurationMs 동봉)
+
+#### 402 - 용량 한도를 초과했습니다 (남은 용량 quota 동봉)
+
+#### 403 - 현재 요금제에서는 영상을 첨부할 수 없습니다
+
+#### 413 - 파일 하나의 최대 크기를 초과했습니다
+
+#### 404 - 일기를 찾을 수 없습니다
+
+---
+
+### POST `diaries/media/:id/confirm`
+
+**요약:** 업로드 완료 확정 (실측 크기로 한도 재검증)
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Responses:**
+
+#### 201 - 확정 성공
+
+```json
+{
+  "media": {
+    "id": "", // 미디어 ID (string)
+    "type": null, // 미디어 종류 (MediaType)
+    "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+    "thumbnailUrl": null, // 썸네일 URL (string | null)
+    "width": null, // 가로 픽셀 (number | null)
+    "height": null, // 세로 픽셀 (number | null)
+    "durationMs": null, // 영상 길이 (ms) (number | null)
+    "sortOrder": 0 // 정렬 순서 (number)
+  }, // 확정된 미디어 (DiaryMediaDto)
+  "quota": {
+    "tier": null, // 구독 등급 (SubscriptionTier)
+    "monthly": {
+      "usedBytes": 0,
+      "limitBytes": 0,
+      "remainingBytes": 0,
+      "resetsAt": "2025-01-01T00:00:00Z"
+    }, // 월간 한도 상태 (MediaQuotaMonthlyDto)
+    "total": {
+      "usedBytes": 0,
+      "limitBytes": 0,
+      "remainingBytes": 0
+    }, // 누적 한도 상태 (MediaQuotaTotalDto)
+    "perFileLimitBytes": 0, // 파일 1개 최대 크기 (bytes) (number)
+    "videoAllowed": false, // 영상 첨부 가능 여부 (boolean)
+    "maxVideoDurationMs": null // 영상 최대 길이 (ms) (number | null)
+  } // 갱신된 한도 상태 (MediaQuotaDto)
+}
+```
+
+#### 400 - 업로드된 파일을 찾을 수 없거나 형식이 다릅니다
+
+#### 402 - 실측 크기가 용량 한도를 초과했습니다 (R2 파일 삭제됨)
+
+#### 413 - 실측 크기가 파일 최대 크기를 초과했습니다 (R2 파일 삭제됨)
+
+#### 404 - 첨부를 찾을 수 없습니다
+
+---
+
+### PATCH `diaries/media/reorder`
+
+**요약:** 첨부 순서 변경
+
+**Request Body:**
+
+```json
+{
+  "mediaIds": "<String>" // 표시할 순서대로 나열한 미디어 ID 배열 (한 일기의 전체 첨부) (string[])
+}
+```
+
+**Responses:**
+
+#### 200 - 순서 변경 성공
+
+```json
+{
+  "id": "", // 미디어 ID (string)
+  "type": null, // 미디어 종류 (MediaType)
+  "url": "", // 조회용 URL (단기 만료 presigned GET) (string)
+  "thumbnailUrl": null, // 썸네일 URL (string | null)
+  "width": null, // 가로 픽셀 (number | null)
+  "height": null, // 세로 픽셀 (number | null)
+  "durationMs": null, // 영상 길이 (ms) (number | null)
+  "sortOrder": 0 // 정렬 순서 (number)
+}
+```
+
+#### 404 - 첨부를 찾을 수 없습니다
+
+---
+
+### DELETE `diaries/media/:id`
+
+**요약:** 미디어 삭제 (R2 즉시 영구 삭제, 누적 한도만 회복)
+
+**Path Parameters:**
+
+- `id` (`string`)
+
+**Responses:**
+
+#### 200 - 삭제 성공
+
+```json
+{
+  "message": "작업이 완료되었습니다" // string
+}
+```
+
+#### 404 - 첨부를 찾을 수 없습니다
+
+#### 403 - 삭제 권한이 없습니다
 
 ---
 
@@ -3882,6 +4198,8 @@ period=monthly 시 year 필수.
 
 #### 404 - 유효하지 않은 초대 코드 또는 만료된 초대 코드
 
+#### 409 - 이미 그룹 멤버이거나 가입 요청이 대기 중
+
 ---
 
 ### POST `groups/:id/leave`
@@ -3901,6 +4219,8 @@ period=monthly 시 year 필수.
   "message": "그룹에서 나갔습니다" // string
 }
 ```
+
+#### 400 - OWNER는 나갈 수 없음
 
 #### 404 - 그룹 멤버를 찾을 수 없음
 
@@ -3997,6 +4317,8 @@ period=monthly 시 year 필수.
 }
 ```
 
+#### 400 - 자신의 역할은 변경 불가
+
 #### 403 - 권한 없음
 
 #### 404 - 멤버를 찾을 수 없음
@@ -4060,6 +4382,8 @@ period=monthly 시 year 필수.
   "message": "멤버가 삭제되었습니다" // string
 }
 ```
+
+#### 400 - 자신은 삭제 불가 또는 OWNER 삭제 불가
 
 #### 403 - 권한 없음
 
@@ -4163,6 +4487,8 @@ period=monthly 시 year 필수.
 }
 ```
 
+#### 400 - 자기 자신에게는 양도 불가
+
 #### 403 - 현재 OWNER가 아니거나 그룹 멤버가 아님
 
 #### 404 - 새로운 OWNER가 될 사용자를 그룹에서 찾을 수 없음
@@ -4254,6 +4580,10 @@ PENDING 상태의 가입 요청을 승인하고 그룹 멤버로 추가
 }
 ```
 
+#### 400 - 해당 이메일로 가입된 사용자가 없음
+
+#### 409 - 이미 처리된 요청 또는 이미 그룹 멤버임
+
 #### 403 - 권한 없음
 
 #### 404 - 가입 요청을 찾을 수 없음
@@ -4285,6 +4615,8 @@ PENDING 상태의 가입 요청을 거부
   "message": "가입 요청이 거부되었습니다" // string
 }
 ```
+
+#### 409 - 이미 처리된 요청
 
 #### 403 - 권한 없음
 
@@ -4356,6 +4688,10 @@ PENDING 상태의 가입 요청을 거부
   "createdAt": "2026-06-12T00:00:00Z" // 신고일 (Date)
 }
 ```
+
+#### 400 - 자기 자신 신고 불가
+
+#### 409 - 이미 신고한 멤버
 
 #### 404 - 그룹 또는 멤버를 찾을 수 없음
 
@@ -4437,6 +4773,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
 
 #### 404 - 신고를 찾을 수 없음
 
+#### 409 - 이미 처리 완료된 신고
+
 ---
 
 ## 그룹 역할
@@ -4497,6 +4835,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
 
 #### 403 - MANAGE_ROLE 권한 없음
 
+#### 409 - 역할명 중복
+
 ---
 
 ### PATCH `groups/:groupId/roles/:id`
@@ -4532,6 +4872,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
 
 #### 404 - 역할을 찾을 수 없음
 
+#### 409 - 역할명 중복
+
 ---
 
 ### DELETE `groups/:groupId/roles/:id`
@@ -4550,6 +4892,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
 **Responses:**
 
 #### 200 - 역할 삭제 성공
+
+#### 400 - 사용 중인 역할
 
 #### 403 - MANAGE_ROLE 권한 없음
 
@@ -4703,6 +5047,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
   "message": "그룹 순서가 변경되었습니다" // string
 }
 ```
+
+#### 400 - 본인이 속하지 않은 그룹 포함
 
 ---
 
@@ -6167,6 +6513,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
 }
 ```
 
+#### 400 - 유효하지 않은 URL입니다
+
 #### 403 - 내부 네트워크 주소는 허용되지 않습니다
 
 ---
@@ -6713,6 +7061,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
 
 #### 404 - 메모를 찾을 수 없습니다
 
+#### 409 - 다른 사용자가 편집 중입니다
+
 ---
 
 ### DELETE `memos/:id/lock`
@@ -6752,6 +7102,8 @@ status 쿼리로 필터 가능 (PENDING, REVIEWING, RESOLVED, DISMISSED)
   "message": "작업이 완료되었습니다" // string
 }
 ```
+
+#### 409 - 잠금이 만료되었거나 다른 사용자에게 이전되었습니다
 
 ---
 
@@ -7248,6 +7600,8 @@ UI에서 권한 선택 시 사용. 카테고리별 필터링 가능
 }
 ```
 
+#### 409 - 권한 코드 중복
+
 ---
 
 ### PATCH `permissions/:id`
@@ -7298,6 +7652,8 @@ UI에서 권한 선택 시 사용. 카테고리별 필터링 가능
   } // 수정된 권한 정보 (PermissionDto)
 }
 ```
+
+#### 409 - 권한 코드 중복
 
 ---
 
@@ -7374,6 +7730,8 @@ UI에서 권한 선택 시 사용. 카테고리별 필터링 가능
   } // 삭제된 권한 정보 (PermissionDto)
 }
 ```
+
+#### 400 - 권한을 사용하는 역할이 존재함
 
 ---
 
@@ -7968,6 +8326,10 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 }
 ```
 
+#### 400 - groupId가 제공된 경우 (그룹별 역할은 다른 엔드포인트 사용)
+
+#### 409 - 역할명 중복
+
 ---
 
 ### PATCH `roles/:id`
@@ -8008,6 +8370,10 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 }
 ```
 
+#### 400 - OWNER 역할은 수정 불가 또는 groupId가 null이 아닌 경우 (그룹별 역할은 다른 엔드포인트 사용)
+
+#### 409 - 역할명 중복
+
 ---
 
 ### DELETE `roles/:id`
@@ -8036,6 +8402,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
   } // RoleDto
 }
 ```
+
+#### 400 - OWNER 역할은 삭제 불가 또는 사용 중인 역할 또는 groupId가 null이 아닌 경우 (그룹별 역할은 다른 엔드포인트 사용)
 
 ---
 
@@ -9559,6 +9927,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 
 #### 403 - 본인의 루틴만 일시정지할 수 있습니다
 
+#### 409 - 이미 일시정지된 루틴입니다
+
 ---
 
 ### PATCH `routines/:id/resume`
@@ -9610,6 +9980,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 #### 404 - 루틴을 찾을 수 없습니다
 
 #### 403 - 본인의 루틴만 재개할 수 있습니다
+
+#### 409 - 일시정지 상태가 아닙니다
 
 ---
 
@@ -9667,6 +10039,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 ```
 
 #### 404 - 루틴을 찾을 수 없습니다
+
+#### 409 - 이미 체크된 날짜입니다
 
 ---
 
@@ -9729,6 +10103,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 #### 404 - 루틴 또는 카테고리를 찾을 수 없습니다
 
 #### 403 - 본인의 루틴만 카테고리를 연결할 수 있습니다
+
+#### 409 - 이미 연결된 카테고리입니다
 
 ---
 
@@ -9931,6 +10307,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 }
 ```
 
+#### 400 - autoDeposit=true 시 monthlyAmount 필수
+
 #### 403 - 해당 그룹의 멤버가 아닙니다
 
 ---
@@ -10100,6 +10478,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 
 #### 404 - 적립 목표를 찾을 수 없습니다
 
+#### 400 - 자동 적립 미설정 또는 이미 일시 중지 상태
+
 #### 403 - 해당 그룹의 멤버가 아닙니다
 
 ---
@@ -10123,6 +10503,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 ```
 
 #### 404 - 적립 목표를 찾을 수 없습니다
+
+#### 400 - 자동 적립 미설정 또는 이미 활성 상태
 
 #### 403 - 해당 그룹의 멤버가 아닙니다
 
@@ -10162,6 +10544,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 
 #### 404 - 적립 목표를 찾을 수 없습니다
 
+#### 400 - 완료된 목표
+
 #### 403 - 해당 그룹의 멤버가 아닙니다
 
 ---
@@ -10199,6 +10583,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 ```
 
 #### 404 - 적립 목표를 찾을 수 없습니다
+
+#### 400 - 잔액 부족 또는 완료된 목표
 
 #### 403 - 해당 그룹의 멤버가 아닙니다
 
@@ -10641,6 +11027,8 @@ ANSWERED 상태의 질문을 RESOLVED로 변경
 }
 ```
 
+#### 400 - 파일이 제공되지 않음 또는 유효하지 않은 타입
+
 ---
 
 ### POST `storage/upload`
@@ -10866,6 +11254,31 @@ R2에 파일이 존재하는지 확인합니다.
 
 ---
 
+### GET `subscription/quota-plans`
+
+**요약:** 등급별 미디어 용량 한도표 (플랜 비교 카드용)
+
+**Responses:**
+
+#### 200 -
+
+```json
+{
+  "plans": [
+    {
+      "tier": null, // 구독 등급 (SubscriptionTier)
+      "monthlyBytes": 0, // 월간 업로드 한도 (bytes) (number)
+      "totalBytes": 0, // 계정 누적 한도 (bytes) (number)
+      "perFileBytes": 0, // 파일 1개 최대 크기 (bytes) (number)
+      "videoAllowed": false, // 영상 첨부 가능 여부 (boolean)
+      "maxVideoDurationMs": null // 영상 최대 길이 (ms) (number | null)
+    }
+  ] // 등급별 한도표 (MediaQuotaPlanDto[])
+}
+```
+
+---
+
 ### POST `subscription/verify`
 
 **요약:** 인앱 구매 검증 (Google Play / App Store 서버 검증 후 tier 반영)
@@ -10894,6 +11307,10 @@ R2에 파일이 존재하는지 확인합니다.
   "autoRenewing": true // 자동 갱신 예약 여부 (false면 해지·체험 상태로, expiresAt에 혜택이 끝난다) (boolean)
 }
 ```
+
+#### 422 - 영수증이 무효하거나 이미 사용됨 (재시도해도 동일하므로 completePurchase 호출 금지)
+
+#### 503 - 스토어 검증 서버 일시 장애 (네트워크 오류로 처리 후 재시도 가능)
 
 ---
 
@@ -11893,6 +12310,7 @@ R2에 파일이 존재하는지 확인합니다.
       "totalVoters": 5, // 총 투표 참여자 수 (number)
       "hasVoted": false, // 현재 사용자 참여 여부 (boolean)
       "creatorName": "홍길동", // 작성자 이름 (string)
+      "canDelete": true, // 삭제 가능 여부 (작성자 본인 또는 그룹장). 앱의 삭제 버튼 노출 판단에 씁니다 (boolean)
       "createdAt": "2025-01-01T00:00:00Z", // 생성 시각 (Date)
       "options": {
         "id": "uuid-1234",
@@ -11938,6 +12356,7 @@ R2에 파일이 존재하는지 확인합니다.
   "totalVoters": 5, // 총 투표 참여자 수 (number)
   "hasVoted": false, // 현재 사용자 참여 여부 (boolean)
   "creatorName": "홍길동", // 작성자 이름 (string)
+  "canDelete": true, // 삭제 가능 여부 (작성자 본인 또는 그룹장). 앱의 삭제 버튼 노출 판단에 씁니다 (boolean)
   "createdAt": "2025-01-01T00:00:00Z", // 생성 시각 (Date)
   "options": [
     {
@@ -11993,6 +12412,7 @@ R2에 파일이 존재하는지 확인합니다.
   "totalVoters": 5, // 총 투표 참여자 수 (number)
   "hasVoted": false, // 현재 사용자 참여 여부 (boolean)
   "creatorName": "홍길동", // 작성자 이름 (string)
+  "canDelete": true, // 삭제 가능 여부 (작성자 본인 또는 그룹장). 앱의 삭제 버튼 노출 판단에 씁니다 (boolean)
   "createdAt": "2025-01-01T00:00:00Z", // 생성 시각 (Date)
   "options": [
     {
@@ -12067,6 +12487,7 @@ R2에 파일이 존재하는지 확인합니다.
   "totalVoters": 5, // 총 투표 참여자 수 (number)
   "hasVoted": false, // 현재 사용자 참여 여부 (boolean)
   "creatorName": "홍길동", // 작성자 이름 (string)
+  "canDelete": true, // 삭제 가능 여부 (작성자 본인 또는 그룹장). 앱의 삭제 버튼 노출 판단에 씁니다 (boolean)
   "createdAt": "2025-01-01T00:00:00Z", // 생성 시각 (Date)
   "options": [
     {
@@ -12081,6 +12502,8 @@ R2에 파일이 존재하는지 확인합니다.
 ```
 
 #### 404 - 투표를 찾을 수 없습니다
+
+#### 400 - 마감된 투표이거나 유효하지 않은 선택지
 
 ---
 
@@ -12110,6 +12533,7 @@ R2에 파일이 존재하는지 확인합니다.
   "totalVoters": 5, // 총 투표 참여자 수 (number)
   "hasVoted": false, // 현재 사용자 참여 여부 (boolean)
   "creatorName": "홍길동", // 작성자 이름 (string)
+  "canDelete": true, // 삭제 가능 여부 (작성자 본인 또는 그룹장). 앱의 삭제 버튼 노출 판단에 씁니다 (boolean)
   "createdAt": "2025-01-01T00:00:00Z", // 생성 시각 (Date)
   "options": [
     {
@@ -12124,6 +12548,8 @@ R2에 파일이 존재하는지 확인합니다.
 ```
 
 #### 404 - 투표를 찾을 수 없습니다
+
+#### 400 - 마감된 투표는 취소할 수 없습니다
 
 ---
 
