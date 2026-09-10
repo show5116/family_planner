@@ -9564,4 +9564,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diary_search_empty => 'No diaries match';
+
+  @override
+  String get subscription_manage_on_device =>
+      'Manage your subscription in the mobile app';
 }

@@ -9747,5 +9747,6 @@
   "diary_video_too_long": "動画は最大{seconds}秒までです",
   "diary_media_skipped": "{count, plural, =1{{fileName}は対応していない形式のため除きました} other{{fileName}ほか{count}件は対応していない形式のため除きました}}",
   "diary_search_hint": "タイトル・本文で検索",
-  "diary_search_empty": "条件に合う日記がありません"
+  "diary_search_empty": "条件に合う日記がありません",
+  "subscription_manage_on_device": "購読の管理と決済はモバイルアプリから行えます"
 }

@@ -111,13 +111,8 @@ class DiaryMediaRepository {
     try {
       await _uploadDio.put(
         uploadUrl,
-        data: Stream.fromIterable([bytes]),
-        options: Options(
-          headers: {
-            'Content-Type': mimeType,
-            Headers.contentLengthHeader: bytes.length,
-          },
-        ),
+        data: _bodyFor(bytes),
+        options: Options(headers: _uploadHeaders(mimeType, bytes.length)),
         onSendProgress: onProgress,
         cancelToken: cancelToken,
       );
@@ -140,14 +135,9 @@ class DiaryMediaRepository {
     try {
       await _uploadDio.put(
         uploadUrl,
-        data: Stream.fromIterable([bytes]),
-        options: Options(
-          headers: {
-            // 서버와 합의한 규격 — JPEG 고정
-            'Content-Type': 'image/jpeg',
-            Headers.contentLengthHeader: bytes.length,
-          },
-        ),
+        data: _bodyFor(bytes),
+        // 서버와 합의한 규격 — JPEG 고정
+        options: Options(headers: _uploadHeaders('image/jpeg', bytes.length)),
         cancelToken: cancelToken,
       );
     } catch (e) {
@@ -209,6 +199,23 @@ class DiaryMediaRepository {
       throw Exception('저장 공간 조회에 실패했습니다: ${e.message}');
     }
   }
+
+  /// R2로 보낼 요청 바디
+  ///
+  /// 브라우저 어댑터는 스트림 바디를 다루지 못하므로 웹에서는 바이트를 그대로
+  /// 넘긴다. 모바일에서 스트림을 쓰는 이유는 큰 파일을 한 번에 메모리에
+  /// 올리지 않기 위해서다.
+  Object _bodyFor(Uint8List bytes) =>
+      kIsWeb ? bytes : Stream.fromIterable([bytes]);
+
+  /// presigned PUT 헤더
+  ///
+  /// **웹에서는 Content-Length를 직접 붙이면 안 된다.** 브라우저가 금지된
+  /// 헤더로 보고 요청을 거부한다 — 길이는 브라우저가 알아서 채운다.
+  Map<String, dynamic> _uploadHeaders(String mimeType, int length) => {
+        'Content-Type': mimeType,
+        if (!kIsWeb) Headers.contentLengthHeader: length,
+      };
 
   /// 업로드 계열 에러를 화면이 분기할 수 있는 타입으로 바꾼다
   ///

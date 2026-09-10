@@ -9738,5 +9738,6 @@
   "diary_video_too_long": "视频最长可上传 {seconds} 秒",
   "diary_media_skipped": "{count, plural, =1{{fileName} 格式不受支持，已跳过} other{{fileName} 等 {count} 个文件格式不受支持，已跳过}}",
   "diary_search_hint": "按标题或内容搜索",
-  "diary_search_empty": "没有符合条件的日记"
+  "diary_search_empty": "没有符合条件的日记",
+  "subscription_manage_on_device": "订阅管理和支付请在手机应用中进行"
 }

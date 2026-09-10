@@ -9311,4 +9311,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get diary_search_empty => '条件に合う日記がありません';
+
+  @override
+  String get subscription_manage_on_device => '購読の管理と決済はモバイルアプリから行えます';
 }

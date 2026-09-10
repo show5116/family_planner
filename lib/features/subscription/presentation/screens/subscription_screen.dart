@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -95,7 +96,20 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
   }
 
   /// 스토어 구독 관리 화면으로 이동 (해지 경로 제공 — 애플 심사 필수)
+  ///
+  /// 웹에는 스토어가 없다. `Platform.isIOS`는 웹에서 던지므로 먼저 갈라야 한다
+  /// — 구독은 앱에서 산 것이라 해지도 그 스토어에서 해야 하고, 브라우저에서는
+  /// 어느 쪽으로 보낼지 알 수 없으니 안내만 한다.
   Future<void> _onManageSubscription() async {
+    if (kIsWeb) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.subscription_manage_on_device)),
+      );
+      return;
+    }
+
     final uri = Uri.parse(
       Platform.isIOS
           ? 'https://apps.apple.com/account/subscriptions'

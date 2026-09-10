@@ -17503,6 +17503,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'조건에 맞는 일기가 없어요'**
   String get diary_search_empty;
+
+  /// 웹에서 구독 관리 불가 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리와 결제는 모바일 앱에서 할 수 있어요'**
+  String get subscription_manage_on_device;
 }
 
 class _AppLocalizationsDelegate

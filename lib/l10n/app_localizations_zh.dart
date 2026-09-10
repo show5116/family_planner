@@ -9222,4 +9222,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get diary_search_empty => '没有符合条件的日记';
+
+  @override
+  String get subscription_manage_on_device => '订阅管理和支付请在手机应用中进行';
 }

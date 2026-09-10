@@ -68,6 +68,13 @@ class InAppPurchaseService {
     if (_initialized) return;
     _initialized = true;
 
+    // 웹에는 in_app_purchase 구현이 없다. 가드가 없으면 플러그인 호출이
+    // 그대로 터져 구독 화면이 상품을 영영 못 불러온다 (AdService와 같은 방침).
+    if (kIsWeb) {
+      debugPrint('🟡 [IAP] 웹에서는 스토어 결제를 지원하지 않는다');
+      return;
+    }
+
     final available = await _iap.isAvailable();
     if (!available) {
       debugPrint('🟡 [IAP] 스토어 사용 불가 (isAvailable == false)');

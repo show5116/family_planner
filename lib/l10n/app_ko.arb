@@ -5338,5 +5338,7 @@
   "diary_search_hint": "제목, 내용으로 검색",
   "@diary_search_hint": { "description": "다이어리 검색 입력 힌트" },
   "diary_search_empty": "조건에 맞는 일기가 없어요",
-  "@diary_search_empty": { "description": "검색·필터 결과 없음" }
+  "@diary_search_empty": { "description": "검색·필터 결과 없음" },
+  "subscription_manage_on_device": "구독 관리와 결제는 모바일 앱에서 할 수 있어요",
+  "@subscription_manage_on_device": { "description": "웹에서 구독 관리 불가 안내" }
 }

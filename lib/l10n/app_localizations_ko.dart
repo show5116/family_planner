@@ -9343,4 +9343,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get diary_search_empty => '조건에 맞는 일기가 없어요';
+
+  @override
+  String get subscription_manage_on_device => '구독 관리와 결제는 모바일 앱에서 할 수 있어요';
 }

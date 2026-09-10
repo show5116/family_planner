@@ -9747,5 +9747,6 @@
   "diary_video_too_long": "Videos can be up to {seconds} seconds",
   "diary_media_skipped": "{count, plural, =1{{fileName} was skipped — unsupported format} other{{fileName} and {count} others were skipped — unsupported format}}",
   "diary_search_hint": "Search by title or content",
-  "diary_search_empty": "No diaries match"
+  "diary_search_empty": "No diaries match",
+  "subscription_manage_on_device": "Manage your subscription in the mobile app"
 }

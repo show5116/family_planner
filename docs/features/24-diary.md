@@ -76,6 +76,37 @@ HEIC는 그게 처음 눈에 띈 사례였을 뿐이다.
 > 클라이언트가 PUT에 붙인 `Content-Type`을 볼 뿐이라 바이트를 위조하면 통과한다
 > → [백엔드 요청서](../api-proposals/2026-09-10-media-mime-enforcement.md)
 
+### 웹 첨부 — 캔버스로 압축한다
+
+기획서는 웹을 Phase 2에서 제외했지만(`flutter_image_compress`가 웹에서 안 돈다),
+**웹은 CI에서 빌드해 배포하는 운영 플랫폼**이라 버튼만 보이고 실패하는 상태로
+둘 수 없었다. 브라우저 캔버스로 압축하면 제외할 이유가 사라진다.
+
+- 재인코딩을 플랫폼별 구현으로 갈랐다 (`image_transcoder.dart` 조건부 import).
+  모바일은 `flutter_image_compress`, 웹은 `createImageBitmap` → canvas → `toBlob`.
+  **순수 Dart 디코더(`package:image`)는 쓰지 않는다** — 12MP 사진 한 장에 UI가 멈춘다.
+- ⚠️ `createImageBitmap`에 **`imageOrientation: 'from-image'`가 없으면 EXIF 회전이
+  무시되어 세로 사진이 눕는다.** 모바일은 플랫폼 코덱이 알아서 해줘서 웹에서만
+  터지는 함정이다.
+- `OffscreenCanvas.convertToBlob` 대신 `HTMLCanvasElement.toBlob`을 쓴다 —
+  전자는 Safari 16.4 미만에서 못 쓰고, 그러면 그 브라우저는 첨부를 통째로 못 한다.
+- **presigned PUT은 웹에서 헤더가 다르다.** 브라우저 어댑터가 스트림 바디를
+  못 다루고, `Content-Length`는 브라우저가 금지된 헤더로 보고 요청을 거부한다.
+- HEIC는 Chrome·Firefox가 아예 못 연다 → `toUploadable`이 null → **파일을 빼고
+  안내**하는 기존 경로로 흘러간다 (Safari는 열린다).
+- ⚠️ **R2 버킷 CORS 설정이 필요하다** — `PUT` 허용 + 앱 오리진(운영 + `localhost:3001`)
+  + `AllowedHeaders`에 `Content-Type`. 없으면 preflight에서 막힌다.
+
+#### 웹의 구독
+
+한도는 등급에 걸려 있지만 **앱의 구독 상태를 보지 않는다** — `GET /diaries/media/quota`가
+서버에서 tier를 판정해 내려주므로 웹에서도 한도가 정확하다. 업로드 허용 여부의
+최종 판단도 서버다.
+
+다만 **결제는 웹에서 불가능**하다. `in_app_purchase`에 웹 구현이 없고 `Platform.isIOS`는
+웹에서 던지므로, 둘 다 `kIsWeb`으로 가드하고 "모바일 앱에서" 안내로 대체했다.
+저장공간 관리의 "용량 늘리기" CTA도 이 안내로 이어진다.
+
 ### Phase 2에서 미룬 것 (Phase 3로)
 
 - **영상** — `video_compress`·`video_player` 미도입. 모델·한도 검증·썸네일 업로드 경로는
