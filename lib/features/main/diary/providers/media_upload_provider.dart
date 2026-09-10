@@ -8,6 +8,39 @@ import 'package:family_planner/features/main/diary/data/utils/media_compressor.d
 import 'package:family_planner/features/main/diary/providers/diary_provider.dart';
 import 'package:family_planner/features/main/diary/providers/media_quota_provider.dart';
 
+/// 압축 선택까지 끝나 업로드 준비가 된 항목
+///
+/// 압축 선택 시트가 두 가지 결과(압축본·원본)를 실제로 만들어보고 사용자가 고른
+/// 쪽을 이 형태로 넘긴다. 큐에 넣을 때 다시 압축하지 않기 위한 것이다 —
+/// 사진 여러 장을 두 번 압축하면 시트가 눈에 띄게 느려진다.
+class PreparedMedia {
+  final Uint8List bytes;
+  final String fileName;
+  final String mimeType;
+  final MediaType type;
+
+  /// 압축 전 크기 (압축하지 않았으면 [bytes].length와 같다)
+  final int originalSize;
+  final bool isOriginal;
+  final int? width;
+  final int? height;
+  final int? durationMs;
+
+  const PreparedMedia({
+    required this.bytes,
+    required this.fileName,
+    required this.mimeType,
+    required this.type,
+    required this.originalSize,
+    required this.isOriginal,
+    this.width,
+    this.height,
+    this.durationMs,
+  });
+
+  int get size => bytes.length;
+}
+
 /// 업로드 대기/진행 항목
 ///
 /// 압축까지 마친 상태로 만들어진다 — 압축 후 크기를 알아야 한도 예약이 가능하고,
@@ -28,7 +61,12 @@ class PendingUpload {
   /// 0.0 ~ 1.0
   final double progress;
   final bool isUploading;
-  final String? error;
+
+  /// 실패 원인 (예외 객체 그대로)
+  ///
+  /// 문자열이 아니라 객체로 들고 있는다 — 사유마다 안내 문구가 다른데,
+  /// 레포지토리에서 문장을 만들면 다국어 처리를 할 수 없다.
+  final Object? error;
 
   /// 업로드 확정 후 채워진다
   final DiaryMedia? uploaded;
@@ -57,7 +95,7 @@ class PendingUpload {
   PendingUpload copyWith({
     double? progress,
     bool? isUploading,
-    String? error,
+    Object? error,
     bool clearError = false,
     DiaryMedia? uploaded,
   }) {
@@ -88,6 +126,10 @@ class MediaUploadState {
 
   bool get isUploading => items.any((i) => i.isUploading);
   bool get hasErrors => items.any((i) => i.hasError);
+
+  /// 가장 먼저 실패한 항목의 원인 (없으면 null)
+  Object? get firstError =>
+      items.where((i) => i.hasError).firstOrNull?.error;
 
   /// 아직 서버에 확정되지 않은 항목의 합 (게이지 예상치 표시용)
   int get pendingBytes =>
@@ -139,20 +181,39 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
       // 영상 압축은 Phase 3(video_compress 도입) 이후에 붙인다
       result = CompressionResult.original(bytes);
     } else {
-      result = await MediaCompressor.compressImage(bytes, fileName);
+      result = await MediaCompressor.compressImage(bytes);
     }
 
     final item = PendingUpload(
       localId: 'local_${_localIdSeq++}',
       bytes: result.bytes,
       fileName: fileName,
-      mimeType: mimeType,
+      mimeType: result.mimeType,
       type: type,
       originalSize: result.originalSize,
       isOriginal: !result.compressed,
       width: width,
       height: height,
       durationMs: durationMs,
+    );
+
+    state = state.copyWith(items: [...state.items, item]);
+    return item;
+  }
+
+  /// 압축 선택이 끝난 항목을 큐에 넣는다 (다시 압축하지 않는다)
+  PendingUpload enqueuePrepared(PreparedMedia prepared) {
+    final item = PendingUpload(
+      localId: 'local_${_localIdSeq++}',
+      bytes: prepared.bytes,
+      fileName: prepared.fileName,
+      mimeType: prepared.mimeType,
+      type: prepared.type,
+      originalSize: prepared.originalSize,
+      isOriginal: prepared.isOriginal,
+      width: prepared.width,
+      height: prepared.height,
+      durationMs: prepared.durationMs,
     );
 
     state = state.copyWith(items: [...state.items, item]);
@@ -193,6 +254,8 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
           fileName: item.fileName,
           mimeType: item.mimeType,
           declaredSize: item.size,
+          originalSize:
+              item.originalSize == item.size ? null : item.originalSize,
           isOriginal: item.isOriginal,
           width: item.width,
           height: item.height,
@@ -200,19 +263,35 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
         ),
       );
 
-      // 2. R2에 직접 업로드
-      await repo.uploadToStorage(
-        uploadUrl: reservation.uploadUrl,
-        bytes: item.bytes,
-        mimeType: item.mimeType,
-        cancelToken: cancelToken,
-        onProgress: (sent, total) {
-          if (total <= 0) return;
-          _update(localId, (i) => i.copyWith(progress: sent / total));
-        },
-      );
+      // 2. R2에 직접 업로드 — 본체와 썸네일을 나란히 올린다
+      //
+      // 썸네일은 서버가 만들 수 없어(바이트를 보지 않는 설계) 클라이언트 몫이다.
+      // 본체 뒤에 순차로 붙이면 업로드 시간이 그만큼 늘어나므로 함께 보낸다.
+      final thumbnailBytes = reservation.thumbnailUploadUrl == null
+          ? null
+          : await MediaCompressor.makeThumbnail(item.bytes);
 
-      // 3. 완료 확정 (서버가 실측으로 재검증)
+      await Future.wait([
+        repo.uploadToStorage(
+          uploadUrl: reservation.uploadUrl,
+          bytes: item.bytes,
+          mimeType: item.mimeType,
+          cancelToken: cancelToken,
+          // 진행률은 본체만 센다 — 수십 KB짜리 썸네일이 섞이면 게이지가 튄다
+          onProgress: (sent, total) {
+            if (total <= 0) return;
+            _update(localId, (i) => i.copyWith(progress: sent / total));
+          },
+        ),
+        if (thumbnailBytes != null)
+          repo.uploadThumbnail(
+            uploadUrl: reservation.thumbnailUploadUrl!,
+            bytes: thumbnailBytes,
+            cancelToken: cancelToken,
+          ),
+      ]);
+
+      // 3. 완료 확정 (서버가 실측으로 재검증 + 썸네일 존재 확인)
       final confirmed = await repo.confirm(reservation.mediaId);
 
       _update(localId, (i) => i.copyWith(
@@ -230,10 +309,7 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
         return false;
       }
       debugPrint('❌ [MediaUpload] 업로드 실패: $e');
-      _update(localId, (i) => i.copyWith(
-            isUploading: false,
-            error: e.toString(),
-          ));
+      _update(localId, (i) => i.copyWith(isUploading: false, error: e));
       // 예약만 되고 실패했을 수 있으므로 한도를 다시 읽는다
       _invalidateQuota();
       return false;
@@ -283,6 +359,16 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
         debugPrint('⚠️ [MediaUpload] 서버 삭제 실패(무시): $e');
       }
     }
+  }
+
+  /// 확정된 항목만 큐에서 뺀다
+  ///
+  /// 첨부 흐름이 끝나면 화면이 일기 쪽 목록으로 첨부를 그리므로, 큐에 남겨두면
+  /// 같은 사진이 두 번 보인다. 실패·진행 중인 항목은 재시도해야 하니 남긴다.
+  void clearCompleted() {
+    state = state.copyWith(
+      items: state.items.where((i) => !i.isDone).toList(),
+    );
   }
 
   /// 큐 비우기 (화면을 벗어날 때)

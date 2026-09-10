@@ -9244,4 +9244,97 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get diary_media_original_badge => '원본';
+
+  @override
+  String get diary_view_photos => '사진';
+
+  @override
+  String get diary_photos_empty => '아직 사진이 없어요';
+
+  @override
+  String get diary_pick_gallery => '갤러리에서 고르기';
+
+  @override
+  String get diary_pick_camera => '사진 찍기';
+
+  @override
+  String get subscription_quota_section_title => '다이어리 첨부 용량';
+
+  @override
+  String subscription_quota_monthly(String size) {
+    return '매월 $size 제공';
+  }
+
+  @override
+  String subscription_quota_total(String size) {
+    return '저장 공간 $size';
+  }
+
+  @override
+  String subscription_quota_per_file(String size) {
+    return '파일 1개 최대 $size';
+  }
+
+  @override
+  String get subscription_quota_video_none => '사진 첨부';
+
+  @override
+  String get subscription_quota_video_supported => '영상 첨부';
+
+  @override
+  String subscription_quota_video_minutes(int minutes) {
+    return '영상 최대 $minutes분';
+  }
+
+  @override
+  String diary_exif_date_question(String date) {
+    return '이 사진은 $date에 찍었어요. 어느 날 일기에 넣을까요?';
+  }
+
+  @override
+  String diary_exif_use_captured(String date) {
+    return '$date 일기에 넣기';
+  }
+
+  @override
+  String get diary_exif_use_today => '오늘 일기에 넣기';
+
+  @override
+  String diary_flashback_months(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count개월 전 오늘',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diary_flashback_years(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count년 전 오늘',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diary_unsupported_format => '지원하지 않는 형식이에요';
+
+  @override
+  String diary_video_too_long(int seconds) {
+    return '영상은 최대 $seconds초까지 올릴 수 있어요';
+  }
+
+  @override
+  String diary_media_skipped(int count, String fileName) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$fileName 외 $count개는 지원하지 않는 형식이라 빼두었어요',
+      one: '$fileName은 지원하지 않는 형식이라 빼두었어요',
+    );
+    return '$_temp0';
+  }
 }

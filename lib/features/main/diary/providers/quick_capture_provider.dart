@@ -12,25 +12,37 @@ import 'package:family_planner/features/main/diary/providers/diary_provider.dart
 class QuickCaptureState {
   final bool isSending;
   final String? failedText;
+
+  /// 전송에 실패한 요청에 실려 있던 첨부 ID
+  ///
+  /// 파일은 이미 R2에 올라가 있으므로 재시도할 때 다시 올리지 않고 이 ID를
+  /// 그대로 재사용한다 (다시 올리면 월간 한도만 두 번 깎인다).
+  final List<String>? failedMediaIds;
   final String? errorMessage;
 
   const QuickCaptureState({
     this.isSending = false,
     this.failedText,
+    this.failedMediaIds,
     this.errorMessage,
   });
 
-  bool get hasFailure => failedText != null;
+  bool get hasFailure =>
+      (failedText != null && failedText!.isNotEmpty) ||
+      (failedMediaIds != null && failedMediaIds!.isNotEmpty);
 
   QuickCaptureState copyWith({
     bool? isSending,
     String? failedText,
+    List<String>? failedMediaIds,
     String? errorMessage,
     bool clearFailure = false,
   }) {
     return QuickCaptureState(
       isSending: isSending ?? this.isSending,
       failedText: clearFailure ? null : (failedText ?? this.failedText),
+      failedMediaIds:
+          clearFailure ? null : (failedMediaIds ?? this.failedMediaIds),
       errorMessage: clearFailure ? null : (errorMessage ?? this.errorMessage),
     );
   }
@@ -50,14 +62,18 @@ class QuickCaptureNotifier extends Notifier<QuickCaptureState> {
   /// false를 반환한다 (화면이 입력창을 복원할 수 있도록).
   ///
   /// [date]를 주지 않으면 기기 로컬 기준 "오늘"(새벽 4시 경계)로 보낸다.
+  /// [mediaIds]는 confirm까지 끝난 첨부다. 텍스트 없이 사진만 던지는 것도
+  /// 허용한다 — 오히려 이쪽이 더 잦다.
   Future<bool> send(
     String text, {
     String? date,
+    List<String>? mediaIds,
     DiaryVisibility? visibility,
     String? groupId,
   }) async {
     final trimmed = text.trim();
-    if (trimmed.isEmpty) return false;
+    final hasMedia = mediaIds != null && mediaIds.isNotEmpty;
+    if (trimmed.isEmpty && !hasMedia) return false;
 
     state = state.copyWith(isSending: true, clearFailure: true);
 
@@ -65,7 +81,8 @@ class QuickCaptureNotifier extends Notifier<QuickCaptureState> {
       final result = await ref.read(diaryRepositoryProvider).append(
             AppendDiaryDto(
               date: date ?? diaryToday(),
-              text: trimmed,
+              text: trimmed.isEmpty ? null : trimmed,
+              mediaIds: mediaIds,
               capturedAt: diaryCapturedAt(),
               visibility: visibility,
               groupId: groupId,
@@ -78,7 +95,10 @@ class QuickCaptureNotifier extends Notifier<QuickCaptureState> {
       return true;
     } catch (e) {
       state = QuickCaptureState(
+        // 첨부만 보낸 경우엔 되돌릴 입력이 없다. 빈 문자열로 두면 재시도 배너가
+        // "복원할 텍스트가 있다"고 오해하게 만드므로 사유만 남긴다.
         failedText: trimmed,
+        failedMediaIds: mediaIds,
         errorMessage: e.toString(),
       );
       return false;
@@ -91,9 +111,14 @@ class QuickCaptureNotifier extends Notifier<QuickCaptureState> {
     DiaryVisibility? visibility,
     String? groupId,
   }) async {
-    final text = state.failedText;
-    if (text == null) return false;
-    return send(text, date: date, visibility: visibility, groupId: groupId);
+    if (!state.hasFailure) return false;
+    return send(
+      state.failedText ?? '',
+      date: date,
+      mediaIds: state.failedMediaIds,
+      visibility: visibility,
+      groupId: groupId,
+    );
   }
 
   /// 실패 상태를 버린다 (사용자가 입력을 직접 지웠을 때)

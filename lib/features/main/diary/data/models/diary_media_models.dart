@@ -226,6 +226,15 @@ class MediaReservation {
   final String uploadUrl;
   final String storageKey;
 
+  /// 썸네일 업로드용 presigned PUT URL
+  ///
+  /// 서버는 바이트를 보지 않아 ffmpeg·sharp를 돌릴 수 없으므로, 썸네일은
+  /// **클라이언트가 만들어 본체와 함께 올린다**. 올리지 않아도 confirm은
+  /// 성공하므로(서버가 없으면 비운 채 확정) 실패해도 업로드를 막지 않는다.
+  final String? thumbnailUploadUrl;
+
+  final String? thumbnailKey;
+
   /// presigned URL 유효 시간 (초)
   final int expiresIn;
 
@@ -233,14 +242,22 @@ class MediaReservation {
     required this.mediaId,
     required this.uploadUrl,
     required this.storageKey,
+    this.thumbnailUploadUrl,
+    this.thumbnailKey,
     this.expiresIn = 600,
   });
 
   factory MediaReservation.fromJson(Map<String, dynamic> json) {
+    // 구버전 서버는 이 필드를 주지 않는다 — 빈 문자열도 없는 것으로 본다
+    final thumbnailUrl = json['thumbnailUploadUrl'] as String?;
+
     return MediaReservation(
       mediaId: json['mediaId'] as String,
       uploadUrl: json['uploadUrl'] as String,
       storageKey: json['storageKey'] as String? ?? '',
+      thumbnailUploadUrl:
+          (thumbnailUrl != null && thumbnailUrl.isNotEmpty) ? thumbnailUrl : null,
+      thumbnailKey: json['thumbnailKey'] as String?,
       expiresIn: json['expiresIn'] as int? ?? 600,
     );
   }
@@ -254,6 +271,9 @@ class ReserveMediaDto {
   final String fileName;
   final String mimeType;
   final int declaredSize;
+
+  /// 압축 전 원본 크기 (절약량 통계용 — 압축하지 않았으면 null)
+  final int? originalSize;
   final bool isOriginal;
   final int? width;
   final int? height;
@@ -266,6 +286,7 @@ class ReserveMediaDto {
     required this.fileName,
     required this.mimeType,
     required this.declaredSize,
+    this.originalSize,
     this.isOriginal = false,
     this.width,
     this.height,
@@ -279,6 +300,7 @@ class ReserveMediaDto {
         'fileName': fileName,
         'mimeType': mimeType,
         'declaredSize': declaredSize,
+        if (originalSize != null) 'originalSize': originalSize,
         'isOriginal': isOriginal,
         if (width != null) 'width': width,
         if (height != null) 'height': height,

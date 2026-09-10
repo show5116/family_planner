@@ -5,6 +5,8 @@
 /// 모델에서도 문자열 그대로 보관하고 표시할 때만 변환한다.
 library;
 
+import 'package:family_planner/features/main/diary/data/models/diary_media_models.dart';
+
 /// 일기 저장 포맷
 ///
 /// 값은 서버가 받는 문자열과 같아야 한다 (DELTA · PLAIN · MARKDOWN).
@@ -77,8 +79,14 @@ class DiaryModel {
   final String? groupId;
   final DiaryAuthor? user;
 
-  /// Phase 1에서는 항상 false (Phase 2에서 미디어 첨부 시 사용)
+  /// 첨부 미디어가 하나라도 있는지 (목록에서 카드 레이아웃을 가르는 기준)
   final bool hasMedia;
+
+  /// 첨부 미디어 목록 (sortOrder 순)
+  ///
+  /// 목록·상세 응답 모두에 담겨 온다. [url]은 **단기 만료 presigned GET**이므로
+  /// 캐시에 오래 들고 있지 말고, 화면을 다시 열 때 받은 값을 쓴다.
+  final List<DiaryMedia> media;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -95,6 +103,7 @@ class DiaryModel {
     this.groupId,
     this.user,
     this.hasMedia = false,
+    this.media = const [],
     required this.createdAt,
     required this.updatedAt,
   });
@@ -115,6 +124,7 @@ class DiaryModel {
           ? DiaryAuthor.fromJson(json['user'] as Map<String, dynamic>)
           : null,
       hasMedia: json['hasMedia'] as bool? ?? false,
+      media: _parseMedia(json['media']),
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
       updatedAt: DateTime.parse(json['updatedAt'] as String).toLocal(),
     );
@@ -131,6 +141,7 @@ class DiaryModel {
     String? groupId,
     bool clearGroupId = false,
     bool? hasMedia,
+    List<DiaryMedia>? media,
     DateTime? updatedAt,
   }) {
     return DiaryModel(
@@ -146,10 +157,28 @@ class DiaryModel {
       groupId: clearGroupId ? null : (groupId ?? this.groupId),
       user: user,
       hasMedia: hasMedia ?? this.hasMedia,
+      media: media ?? this.media,
       createdAt: createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+}
+
+/// 응답의 media를 파싱한다
+///
+/// API 문서의 목록 예시는 배열 대신 객체 하나로 표기돼 있다(문서 생성기의 한계).
+/// 어느 쪽으로 와도 깨지지 않게 둘 다 받는다.
+List<DiaryMedia> _parseMedia(dynamic raw) {
+  if (raw is List) {
+    return raw
+        .whereType<Map<String, dynamic>>()
+        .map(DiaryMedia.fromJson)
+        .toList();
+  }
+  if (raw is Map<String, dynamic> && raw['id'] is String) {
+    return [DiaryMedia.fromJson(raw)];
+  }
+  return const [];
 }
 
 /// 일기 목록 조회 결과 (페이지네이션 포함)
@@ -194,14 +223,15 @@ class DiaryListResult {
 
 /// 빠른 기록으로 추가된 조각
 class AppendedFragment {
-  final String text;
+  /// 첨부만 추가한 경우 null이다 (사진만 던지는 것도 허용하므로)
+  final String? text;
   final String? capturedAt;
 
-  const AppendedFragment({required this.text, this.capturedAt});
+  const AppendedFragment({this.text, this.capturedAt});
 
   factory AppendedFragment.fromJson(Map<String, dynamic> json) {
     return AppendedFragment(
-      text: json['text'] as String? ?? '',
+      text: json['text'] as String?,
       capturedAt: json['capturedAt'] as String?,
     );
   }
@@ -290,24 +320,55 @@ class DiaryStreak {
   }
 }
 
+/// 회고 시점 단위
+enum FlashbackUnit {
+  month,
+  year;
+
+  static FlashbackUnit? fromJson(String? value) => switch (value) {
+        'MONTH' => FlashbackUnit.month,
+        'YEAR' => FlashbackUnit.year,
+        _ => null,
+      };
+}
+
 /// 회고 항목 ("n개월 전 오늘")
 class DiaryFlashbackItem {
   final String id;
   final String date;
 
-  /// 서버가 만들어 내려주는 라벨 ("1년 전 오늘" 등)
+  /// 서버가 만든 한국어 라벨 ("1년 전 오늘")
+  ///
+  /// **표시에는 [unit]·[amount]로 만든 번역 문구를 쓴다.** 이 필드는 서버가
+  /// 구버전 앱 호환용으로 남겨둔 것이라, 새 필드가 없을 때만 폴백으로 쓴다.
   final String label;
+
+  /// 회고 시점 단위 (구버전 서버면 null)
+  final FlashbackUnit? unit;
+
+  /// 회고 시점 수치 (개월 수 또는 연 수)
+  final int? amount;
   final String? title;
   final String? excerpt;
   final String? mood;
+
+  /// 첨부 미디어 존재 여부
+  final bool hasMedia;
+
+  /// 대표 썸네일 (sortOrder가 가장 앞선 첨부, 단기 만료 presigned GET)
+  final String? thumbnailUrl;
 
   const DiaryFlashbackItem({
     required this.id,
     required this.date,
     required this.label,
+    this.unit,
+    this.amount,
     this.title,
     this.excerpt,
     this.mood,
+    this.hasMedia = false,
+    this.thumbnailUrl,
   });
 
   factory DiaryFlashbackItem.fromJson(Map<String, dynamic> json) {
@@ -315,9 +376,13 @@ class DiaryFlashbackItem {
       id: json['id'] as String,
       date: json['date'] as String,
       label: json['label'] as String? ?? '',
+      unit: FlashbackUnit.fromJson(json['unit'] as String?),
+      amount: json['amount'] as int?,
       title: json['title'] as String?,
       excerpt: json['excerpt'] as String?,
       mood: json['mood'] as String?,
+      hasMedia: json['hasMedia'] as bool? ?? false,
+      thumbnailUrl: json['thumbnailUrl'] as String?,
     );
   }
 }
@@ -335,6 +400,9 @@ class CreateDiaryDto {
   final String? mood;
   final String? weather;
 
+  /// 함께 연결할 미디어 ID (reserve → confirm까지 끝난 것)
+  final List<String>? mediaIds;
+
   const CreateDiaryDto({
     this.date,
     this.title,
@@ -344,6 +412,7 @@ class CreateDiaryDto {
     this.groupId,
     this.mood,
     this.weather,
+    this.mediaIds,
   });
 
   Map<String, dynamic> toJson() => {
@@ -355,6 +424,7 @@ class CreateDiaryDto {
         if (groupId != null) 'groupId': groupId,
         if (mood != null) 'mood': mood,
         if (weather != null) 'weather': weather,
+        if (mediaIds != null && mediaIds!.isNotEmpty) 'mediaIds': mediaIds,
       };
 }
 
@@ -406,22 +476,34 @@ class UpdateDiaryDto {
 /// 이미 그날 일기가 있으면 서버가 기존 공개 범위를 유지한다.
 class AppendDiaryDto {
   final String? date;
-  final String text;
+
+  /// 텍스트 조각 — [mediaIds]가 있으면 생략할 수 있다 (사진만 던지는 경우)
+  final String? text;
+
+  /// 함께 첨부할 미디어 ID (confirm까지 끝난 것)
+  final List<String>? mediaIds;
   final String? capturedAt;
   final DiaryVisibility? visibility;
   final String? groupId;
 
   const AppendDiaryDto({
     this.date,
-    required this.text,
+    this.text,
+    this.mediaIds,
     this.capturedAt,
     this.visibility,
     this.groupId,
   });
 
+  /// text와 mediaIds 중 최소 하나는 있어야 서버가 받는다
+  bool get isEmpty =>
+      (text == null || text!.trim().isEmpty) &&
+      (mediaIds == null || mediaIds!.isEmpty);
+
   Map<String, dynamic> toJson() => {
         if (date != null) 'date': date,
-        'text': text,
+        if (text != null && text!.isNotEmpty) 'text': text,
+        if (mediaIds != null && mediaIds!.isNotEmpty) 'mediaIds': mediaIds,
         if (capturedAt != null) 'capturedAt': capturedAt,
         if (visibility != null) 'visibility': visibility!.toJson(),
         if (groupId != null) 'groupId': groupId,

@@ -10,6 +10,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/main/diary/data/models/diary_models.dart';
 import 'package:family_planner/features/main/diary/data/utils/diary_date.dart';
+import 'package:family_planner/features/main/diary/presentation/widgets/diary_media_grid.dart';
 import 'package:family_planner/features/main/diary/providers/diary_provider.dart';
 import 'package:family_planner/features/memo/data/utils/memo_editor_converter.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
@@ -41,7 +42,11 @@ class DiaryDetailScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.delete_outline),
               tooltip: MaterialLocalizations.of(context).deleteButtonTooltip,
-              onPressed: () => _confirmDelete(context, ref),
+              onPressed: () => _confirmDelete(
+                context,
+                ref,
+                hasMedia: detail.valueOrNull?.media.isNotEmpty ?? false,
+              ),
             ),
           ],
         ],
@@ -58,13 +63,23 @@ class DiaryDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool hasMedia,
+  }) async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.diary_delete_confirm_title),
-        content: Text(l10n.diary_delete_confirm_message),
+        // 본문은 30일 복구되지만 첨부는 즉시·영구 삭제다. 이 문구가 없으면 CS가 들어온다.
+        content: Text(
+          hasMedia
+              ? '${l10n.diary_delete_confirm_message}\n\n'
+                  '${l10n.diary_media_delete_permanent}'
+              : l10n.diary_delete_confirm_message,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -187,6 +202,10 @@ class _DiaryBodyState extends State<_DiaryBody> {
           if (diary.title != null && diary.title!.isNotEmpty) ...[
             const SizedBox(height: AppSizes.spaceM),
             Text(diary.title!, style: theme.textTheme.titleLarge),
+          ],
+          if (diary.media.isNotEmpty) ...[
+            const SizedBox(height: AppSizes.spaceM),
+            DiaryMediaGallery(media: diary.media),
           ],
           const SizedBox(height: AppSizes.spaceM),
           _buildContent(theme),

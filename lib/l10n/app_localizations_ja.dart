@@ -9212,4 +9212,97 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get diary_media_original_badge => 'オリジナル';
+
+  @override
+  String get diary_view_photos => '写真';
+
+  @override
+  String get diary_photos_empty => 'まだ写真がありません';
+
+  @override
+  String get diary_pick_gallery => 'ギャラリーから選ぶ';
+
+  @override
+  String get diary_pick_camera => '写真を撮る';
+
+  @override
+  String get subscription_quota_section_title => '日記の添付容量';
+
+  @override
+  String subscription_quota_monthly(String size) {
+    return '毎月 $size 利用可能';
+  }
+
+  @override
+  String subscription_quota_total(String size) {
+    return '保存容量 $size';
+  }
+
+  @override
+  String subscription_quota_per_file(String size) {
+    return '1ファイル最大 $size';
+  }
+
+  @override
+  String get subscription_quota_video_none => '写真のみ';
+
+  @override
+  String get subscription_quota_video_supported => '写真と動画';
+
+  @override
+  String subscription_quota_video_minutes(int minutes) {
+    return '動画は最大 $minutes 分';
+  }
+
+  @override
+  String diary_exif_date_question(String date) {
+    return 'この写真は$dateに撮影されています。どちらの日記に入れますか？';
+  }
+
+  @override
+  String diary_exif_use_captured(String date) {
+    return '$dateの日記に入れる';
+  }
+
+  @override
+  String get diary_exif_use_today => '今日の日記に入れる';
+
+  @override
+  String diary_flashback_months(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countか月前の今日',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diary_flashback_years(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count年前の今日',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diary_unsupported_format => '対応していない形式です';
+
+  @override
+  String diary_video_too_long(int seconds) {
+    return '動画は最大$seconds秒までです';
+  }
+
+  @override
+  String diary_media_skipped(int count, String fileName) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$fileNameほか$count件は対応していない形式のため除きました',
+      one: '$fileNameは対応していない形式のため除きました',
+    );
+    return '$_temp0';
+  }
 }

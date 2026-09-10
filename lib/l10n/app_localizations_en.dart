@@ -9463,4 +9463,99 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diary_media_original_badge => 'Original';
+
+  @override
+  String get diary_view_photos => 'Photos';
+
+  @override
+  String get diary_photos_empty => 'No photos yet';
+
+  @override
+  String get diary_pick_gallery => 'Choose from gallery';
+
+  @override
+  String get diary_pick_camera => 'Take a photo';
+
+  @override
+  String get subscription_quota_section_title => 'Diary attachment storage';
+
+  @override
+  String subscription_quota_monthly(String size) {
+    return '$size every month';
+  }
+
+  @override
+  String subscription_quota_total(String size) {
+    return '$size of storage';
+  }
+
+  @override
+  String subscription_quota_per_file(String size) {
+    return 'Up to $size per file';
+  }
+
+  @override
+  String get subscription_quota_video_none => 'Photos';
+
+  @override
+  String get subscription_quota_video_supported => 'Photos and videos';
+
+  @override
+  String subscription_quota_video_minutes(int minutes) {
+    return 'Videos up to $minutes min';
+  }
+
+  @override
+  String diary_exif_date_question(String date) {
+    return 'This photo was taken on $date. Which day should it go to?';
+  }
+
+  @override
+  String diary_exif_use_captured(String date) {
+    return 'Add to $date';
+  }
+
+  @override
+  String get diary_exif_use_today => 'Add to today';
+
+  @override
+  String diary_flashback_months(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months ago today',
+      one: '1 month ago today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diary_flashback_years(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years ago today',
+      one: '1 year ago today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diary_unsupported_format => 'That format isn\'t supported';
+
+  @override
+  String diary_video_too_long(int seconds) {
+    return 'Videos can be up to $seconds seconds';
+  }
+
+  @override
+  String diary_media_skipped(int count, String fileName) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$fileName and $count others were skipped — unsupported format',
+      one: '$fileName was skipped — unsupported format',
+    );
+    return '$_temp0';
+  }
 }

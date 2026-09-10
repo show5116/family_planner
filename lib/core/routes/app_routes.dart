@@ -77,6 +77,7 @@ class AppRoutes {
   static const String diary = '/diary';
   static const String diaryDetail = '/diary/:id';
   static const String diaryForm = '/diary/form';
+  static const String diaryStorage = '/diary/storage';
   static const String miniGames = '/mini-games';
   static const String ladderGame = '/mini-games/ladder';
   static const String rouletteGame = '/mini-games/roulette';

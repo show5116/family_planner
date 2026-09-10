@@ -1,11 +1,89 @@
 # 24. 다이어리 (일기) 🟨
 
 ## 상태
-🟨 진행 중 — **Phase 1 완료** (텍스트 일기 + 빠른 기록 + 캘린더 + 회고 + 온보딩)
+🟨 진행 중 — **Phase 2 완료** (텍스트 일기 + 빠른 기록 + 사진 첨부 + 용량 한도)
 
 - ✅ Phase 1: 백엔드 API 완료, 프론트 구현 완료 (l10n 4개 언어 포함)
-- ⬜ Phase 2: 이미지 첨부 + 용량 한도
+- ✅ Phase 2: 백엔드 API 완료, 프론트 구현 완료 (이미지 첨부 + 용량 한도, 모바일 전용)
 - ⬜ Phase 3: 영상 + 프리미엄 판매
+
+### Phase 2에서 실제로 구현한 것
+
+| 항목 | 위치 |
+|------|------|
+| 압축 유틸 (이미지) | `data/utils/media_compressor.dart` |
+| 파일 선택 (갤러리/카메라 + 크기·EXIF 촬영일 추출) | `data/utils/media_picker.dart` |
+| reserve → R2 PUT → confirm | `data/repositories/diary_media_repository.dart` |
+| 업로드 큐 (진행률·취소·재시도) | `providers/media_upload_provider.dart` |
+| 압축 선택 시트 | `presentation/widgets/media_upload_sheet.dart` |
+| 첨부 흐름 한 벌 (선택→시트→업로드) | `presentation/widgets/media_attach_flow.dart` |
+| 첨부 그리드 · 편집 스트립 | `presentation/widgets/diary_media_grid.dart` |
+| 전체화면 뷰어 (핀치 줌) | `presentation/screens/diary_media_viewer_screen.dart` |
+| 사진 그리드 뷰 | `presentation/widgets/diary_photo_grid.dart` |
+| 저장 공간 관리 | `presentation/screens/diary_storage_screen.dart` |
+| 한도 게이지 | `presentation/widgets/quota_indicator.dart` |
+| EXIF 촬영일 확인 (0-4) | `presentation/widgets/media_attach_flow.dart` |
+| 회고 카드 (사진 + 다국어 라벨) | `presentation/widgets/flashback_card.dart` |
+| 썸네일 생성·병렬 업로드 | `data/utils/media_compressor.dart`, `providers/media_upload_provider.dart` |
+| 이미지 형식 판정 (매직 넘버) | `lib/core/utils/image_format.dart` (+ 단위 테스트 13종) |
+| 등급별 한도표 (구독 화면) | `features/subscription/.../subscription_screen.dart` |
+
+### 백엔드 요청서 (2026-09-09) 반영 완료
+
+[요청서](../api-proposals/2026-09-09-diary-media-flashback-video.md) 1~4번이
+백엔드에 반영되어(`1d43320`) 앱도 맞췄다.
+
+- **회고 카드가 제 모습이 됐다** — `hasMedia`·`thumbnailUrl`로 사진을 앞에 세우고,
+  `unit`·`amount`로 라벨을 각 언어의 복수형에 맞게 조립한다.
+  서버가 주던 한국어 `label`은 **구버전 서버 폴백으로만** 쓴다.
+- **썸네일을 앱이 만들어 올린다** — `reserve`가 본체와 썸네일 업로드 URL을 함께 주고,
+  둘을 `Future.wait`로 나란히 올린다(JPEG · 최대 변 640px · 품질 80).
+  썸네일 실패는 삼킨다 — 본체가 올라갔는데 썸네일 때문에 전체가 날아가면 안 된다.
+  **이미지에도 열려 있어** 목록·그리드가 원본 대신 썸네일을 받는다.
+- **업로드 실패 사유를 번역해 안내한다** — 402·413·403·400을 구분하고,
+  영상 길이 초과 400에 실려오는 `maxVideoDurationMs`로 "최대 n초까지"를 보여준다.
+
+### 이미지 형식은 파일명이 아니라 **바이트로** 판정한다 ★
+
+HEIC를 올리면 `reserve`가 400으로 막던 문제를 고치면서, 원인이 HEIC가 아니라
+**형식을 확장자로 추론한 것**이었음이 드러났다. 앱이 두 가지를 서로 다른 근거로
+결정하고 있었다 — 신고 MIME은 *파일명*에서, 실제 보낼 바이트는 *돌 수도 안 돌
+수도 있는 트랜스코더*에서. 둘이 어긋나면 서버가 거부한다.
+
+확장자가 거짓인 경우는 흔하다. 메신저로 받은 `.jpg`가 실제로는 WebP이거나,
+이름만 바꾼 스크린샷이거나, 공유 인텐트로 들어온 `image/*`가 그렇다.
+HEIC는 그게 처음 눈에 띈 사례였을 뿐이다.
+
+| 규칙 | 근거 |
+|------|------|
+| 형식 판정은 **앞 12바이트 매직 넘버**로 (`sniffImageFormat`) | 파일명·플랫폼 MIME은 믿지 않는다 |
+| 정규화는 **선택 시점 한 곳**에서 (`DiaryMediaPicker`) | 여러 곳에서 하면 한 곳만 고쳐진다 |
+| 신고 MIME은 **변환 결과를 다시 판정**해서 | 추론이 아니라 관측이어야 검증과 안 어긋난다 |
+| 변환 실패는 **파일을 빼고 사용자에게 알린다** | 서버 400으로 떠넘기면 사유를 알 수 없다 |
+
+**HEIC를 서버 화이트리스트에 넣지 않는 이유**: Flutter 내장 디코더가 HEIC를
+지원하지 않는다(JPEG/PNG/GIF/WebP/BMP만). `flutter_image_compress`가 HEIC를
+다룰 수 있는 건 Skia가 아니라 **플랫폼 코덱**을 쓰기 때문이라 *변환은 되지만
+표시는 안 된다.* 저장해두면 뷰어가 모든 플랫폼에서 깨진다.
+
+> ⚠️ `minSdk`가 24인데 **안드로이드 HEIF 디코딩은 API 28부터**다. 구형 기기에서는
+> 변환 자체가 실패할 수 있어, 그때는 해당 파일만 빼고 안내한다.
+
+> 같은 병이 공용 에디터(`editor_image_handler.dart`)에도 있었다 — 메모·공지 본문에
+> HEIC를 심어 이미지가 깨질 수 있었다. 같은 유틸로 함께 고쳤다.
+
+> **서버 화이트리스트는 아직 강제가 아니다.** `reserve`는 신고값을, `confirm`은
+> 클라이언트가 PUT에 붙인 `Content-Type`을 볼 뿐이라 바이트를 위조하면 통과한다
+> → [백엔드 요청서](../api-proposals/2026-09-10-media-mime-enforcement.md)
+
+### Phase 2에서 미룬 것 (Phase 3로)
+
+- **영상** — `video_compress`·`video_player` 미도입. 모델·한도 검증·썸네일 업로드 경로는
+  영상까지 열려 있고 **UI와 압축만 이미지 전용**이다. 서버 선행 조건은 해소됐다.
+- **프리미엄 판매** — 스토어 상품 등록이 선행이라 요청서 5번은 남아 있다
+  (verify·웹훅·다운그레이드 정책).
+- **핀치 줌은 `photo_view` 대신 `InteractiveViewer`** — 의존성을 늘리지 않고 프레임워크
+  기본 기능으로 해결했다. 영상이 붙는 시점에 다시 판단한다.
 
 ---
 

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/main/diary/data/utils/diary_date.dart';
+import 'package:family_planner/features/main/diary/presentation/widgets/media_attach_flow.dart';
 import 'package:family_planner/features/main/diary/providers/diary_provider.dart';
 import 'package:family_planner/features/main/diary/providers/quick_capture_provider.dart';
 
@@ -21,6 +23,9 @@ class QuickCaptureBar extends ConsumerStatefulWidget {
 class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
+  /// 사진 첨부 흐름이 도는 중 (선택 → 압축 선택 → 업로드)
+  bool _isAttaching = false;
 
   @override
   void dispose() {
@@ -44,6 +49,52 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
       _controller.selection = TextSelection.fromPosition(
         TextPosition(offset: text.length),
       );
+    }
+  }
+
+  /// 사진만 던지기 — 텍스트가 입력돼 있으면 함께 보낸다
+  ///
+  /// 업로드가 끝나야 append에 실을 mediaId가 생기므로, 여기서는 낙관적 갱신을
+  /// 하지 않고 업로드 완료 후에 보낸다.
+  ///
+  /// EXIF 촬영일이 오늘과 다르면 첨부 흐름이 어느 날 일기에 넣을지 물어보고,
+  /// 그 결과를 [DiaryAttachResult.date]로 돌려준다. 글도 같은 날짜로 보내야
+  /// 사진과 글이 다른 날에 흩어지지 않는다.
+  Future<void> _attachPhoto() async {
+    if (_isAttaching) return;
+    setState(() => _isAttaching = true);
+
+    try {
+      final result = await attachDiaryMedia(
+        context,
+        ref,
+        date: diaryToday(),
+        askCaptureDate: true,
+      );
+
+      if (!mounted) return;
+      if (result.isEmpty) {
+        showAttachFailureIfAny(context, ref);
+        return;
+      }
+
+      final text = _controller.text.trim();
+      _controller.clear();
+
+      final ok = await ref.read(quickCaptureProvider.notifier).send(
+            text,
+            date: result.date,
+            mediaIds: result.mediaIds,
+          );
+
+      if (!ok && mounted && text.isNotEmpty) {
+        _controller.text = text;
+        _controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: text.length),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isAttaching = false);
     }
   }
 
@@ -84,6 +135,10 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  _AttachButton(
+                    isBusy: _isAttaching,
+                    onPressed: _attachPhoto,
+                  ),
                   Expanded(
                     child: TextField(
                       controller: _controller,
@@ -114,6 +169,43 @@ class _QuickCaptureBarState extends ConsumerState<QuickCaptureBar> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 사진 첨부 버튼
+///
+/// 텍스트 없이 사진만 던지는 것도 허용한다 — 이쪽이 더 잦은 사용 방식이다.
+class _AttachButton extends StatelessWidget {
+  const _AttachButton({required this.isBusy, required this.onPressed});
+
+  final bool isBusy;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    if (isBusy) {
+      return const SizedBox(
+        width: AppSizes.minTouchTarget,
+        height: AppSizes.minTouchTarget,
+        child: Center(
+          child: SizedBox(
+            width: AppSizes.iconSmall,
+            height: AppSizes.iconSmall,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    return IconButton(
+      onPressed: onPressed,
+      icon: const Icon(Icons.add_a_photo_outlined),
+      tooltip: l10n.diary_add_photo,
+      color: colorScheme.onSurfaceVariant,
     );
   }
 }

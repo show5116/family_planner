@@ -9123,4 +9123,97 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get diary_media_original_badge => '原图';
+
+  @override
+  String get diary_view_photos => '照片';
+
+  @override
+  String get diary_photos_empty => '还没有照片';
+
+  @override
+  String get diary_pick_gallery => '从相册选择';
+
+  @override
+  String get diary_pick_camera => '拍照';
+
+  @override
+  String get subscription_quota_section_title => '日记附件容量';
+
+  @override
+  String subscription_quota_monthly(String size) {
+    return '每月可用 $size';
+  }
+
+  @override
+  String subscription_quota_total(String size) {
+    return '存储空间 $size';
+  }
+
+  @override
+  String subscription_quota_per_file(String size) {
+    return '单个文件最大 $size';
+  }
+
+  @override
+  String get subscription_quota_video_none => '仅照片';
+
+  @override
+  String get subscription_quota_video_supported => '照片和视频';
+
+  @override
+  String subscription_quota_video_minutes(int minutes) {
+    return '视频最长 $minutes 分钟';
+  }
+
+  @override
+  String diary_exif_date_question(String date) {
+    return '这张照片拍摄于$date。要放进哪一天的日记？';
+  }
+
+  @override
+  String diary_exif_use_captured(String date) {
+    return '放进$date的日记';
+  }
+
+  @override
+  String get diary_exif_use_today => '放进今天的日记';
+
+  @override
+  String diary_flashback_months(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count个月前的今天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diary_flashback_years(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count年前的今天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diary_unsupported_format => '不支持这种格式';
+
+  @override
+  String diary_video_too_long(int seconds) {
+    return '视频最长可上传 $seconds 秒';
+  }
+
+  @override
+  String diary_media_skipped(int count, String fileName) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$fileName 等 $count 个文件格式不受支持，已跳过',
+      one: '$fileName 格式不受支持，已跳过',
+    );
+    return '$_temp0';
+  }
 }

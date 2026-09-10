@@ -65,6 +65,7 @@ import 'package:family_planner/features/main/shopping/presentation/screens/shopp
 import 'package:family_planner/features/main/diary/presentation/screens/diary_timeline_screen.dart';
 import 'package:family_planner/features/main/diary/presentation/screens/diary_detail_screen.dart';
 import 'package:family_planner/features/main/diary/presentation/screens/diary_form_screen.dart';
+import 'package:family_planner/features/main/diary/presentation/screens/diary_storage_screen.dart';
 import 'package:family_planner/features/subscription/presentation/screens/subscription_screen.dart';
 
 /// 메인 기능 라우트 목록
@@ -407,8 +408,13 @@ List<RouteBase> getMainRoutes() {
       name: 'diaryTimeline',
       builder: (context, state) => const DiaryTimelineScreen(),
     ),
-    // '/diary/form'은 '/diary/:id'보다 먼저 선언해야 한다.
-    // 순서가 바뀌면 'form'이 id로 잡혀 상세 화면이 열린다.
+    // '/diary/form'·'/diary/storage'는 '/diary/:id'보다 먼저 선언해야 한다.
+    // 순서가 바뀌면 'form'·'storage'가 id로 잡혀 상세 화면이 열린다.
+    GoRoute(
+      path: AppRoutes.diaryStorage,
+      name: 'diaryStorage',
+      builder: (context, state) => const DiaryStorageScreen(),
+    ),
     GoRoute(
       path: AppRoutes.diaryForm,
       name: 'diaryForm',

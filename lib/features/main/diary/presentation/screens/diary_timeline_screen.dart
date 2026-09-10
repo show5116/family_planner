@@ -13,6 +13,7 @@ import 'package:family_planner/features/main/diary/data/models/diary_models.dart
 import 'package:family_planner/features/main/diary/data/utils/diary_date.dart';
 import 'package:family_planner/features/main/diary/presentation/widgets/diary_calendar_view.dart';
 import 'package:family_planner/features/main/diary/presentation/widgets/diary_card.dart';
+import 'package:family_planner/features/main/diary/presentation/widgets/diary_photo_grid.dart';
 import 'package:family_planner/features/main/diary/presentation/widgets/flashback_card.dart';
 import 'package:family_planner/features/main/diary/presentation/widgets/quick_capture_bar.dart';
 import 'package:family_planner/features/main/diary/providers/diary_provider.dart';
@@ -37,7 +38,11 @@ class DiaryTimelineScreen extends ConsumerStatefulWidget {
       _DiaryTimelineScreenState();
 }
 
-enum _DiaryView { timeline, calendar }
+/// 뷰 3종 — 기본은 타임라인
+///
+/// 캘린더를 기본에서 뺀 이유: 캘린더는 **날짜를 이미 알 때** 쓰는 뷰다.
+/// 대부분의 열람은 "그냥 보고 싶어서"이므로 타임라인이 기본이어야 한다.
+enum _DiaryView { timeline, photos, calendar }
 
 class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
   final ScrollController _scrollController = ScrollController();
@@ -74,6 +79,32 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
       ref.read(diaryListProvider.notifier).loadMore();
     }
   }
+
+  /// 다음 뷰로 넘긴다 (타임라인 → 사진 → 캘린더 → 타임라인)
+  ///
+  /// 뷰가 3종이라 아이콘 하나로 토글하면 어디로 가는지 알 수 없다.
+  /// 버튼 아이콘이 **다음에 갈 뷰**를 가리키게 해서 방향을 드러낸다.
+  void _cycleView() {
+    setState(() {
+      _view = switch (_view) {
+        _DiaryView.timeline => _DiaryView.photos,
+        _DiaryView.photos => _DiaryView.calendar,
+        _DiaryView.calendar => _DiaryView.timeline,
+      };
+    });
+  }
+
+  IconData get _viewIcon => switch (_view) {
+        _DiaryView.timeline => Icons.photo_library_outlined,
+        _DiaryView.photos => Icons.calendar_month_outlined,
+        _DiaryView.calendar => Icons.view_agenda_outlined,
+      };
+
+  String _viewTooltip(AppLocalizations l10n) => switch (_view) {
+        _DiaryView.timeline => l10n.diary_view_photos,
+        _DiaryView.photos => l10n.diary_view_calendar,
+        _DiaryView.calendar => l10n.diary_view_timeline,
+      };
 
   /// 코치마크 다시 보기 (더보기 메뉴)
   void _replayOnboarding() {
@@ -136,26 +167,27 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
         title: Text(l10n.diary_title),
         actions: [
           IconButton(
-            icon: Icon(
-              _view == _DiaryView.timeline
-                  ? Icons.calendar_month_outlined
-                  : Icons.view_agenda_outlined,
-            ),
-            tooltip: _view == _DiaryView.timeline
-                ? l10n.diary_view_calendar
-                : l10n.diary_view_timeline,
-            onPressed: () => setState(() {
-              _view = _view == _DiaryView.timeline
-                  ? _DiaryView.calendar
-                  : _DiaryView.timeline;
-            }),
+            icon: Icon(_viewIcon),
+            tooltip: _viewTooltip(l10n),
+            onPressed: _cycleView,
           ),
-          AppBarMoreMenu(onReplayOnboarding: _replayOnboarding),
+          AppBarMoreMenu(
+            onReplayOnboarding: _replayOnboarding,
+            extraItems: [
+              MoreMenuItem(
+                id: 'diary-storage',
+                icon: Icons.sd_storage_outlined,
+                label: l10n.diary_storage_manage,
+                onTap: (context) => context.push(AppRoutes.diaryStorage),
+              ),
+            ],
+          ),
         ],
       ),
-      body: _view == _DiaryView.calendar
-          ? DiaryCalendarView(onDayTap: _onCalendarDayTap)
-          : listState.when(
+      body: switch (_view) {
+        _DiaryView.calendar => DiaryCalendarView(onDayTap: _onCalendarDayTap),
+        _DiaryView.photos => DiaryPhotoGrid(onDiaryTap: _openDetail),
+        _DiaryView.timeline => listState.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => AppErrorState(
                 error: error,
@@ -167,6 +199,7 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
                 child: _buildTimeline(state),
               ),
             ),
+      },
       bottomNavigationBar: QuickCaptureBar(key: _captureBarKey),
     );
   }

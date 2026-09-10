@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/main/diary/data/models/diary_media_models.dart';
-import 'package:family_planner/features/main/diary/data/utils/media_compressor.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 용량 게이지
@@ -56,9 +56,10 @@ class QuotaIndicator extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            // 남은 용량을 앞세운다
+            // 남은 용량을 앞세운다 (쓴 양이 아니라)
             Text(
-              '${formatBytes(remaining)} 남음',
+              AppLocalizations.of(context)!
+                  .diary_quota_remaining(formatBytes(remaining)),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: ratio >= 0.9 ? AppColors.error : colorScheme.onSurface,
                 fontWeight: FontWeight.bold,

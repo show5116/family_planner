@@ -41,6 +41,29 @@ class MediaNotAllowedException implements Exception {
   String toString() => message;
 }
 
+/// 서버가 받지 않는 형식 (400)
+class UnsupportedMediaException implements Exception {
+  final String message;
+  const UnsupportedMediaException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+/// 영상이 너무 길다 (400)
+///
+/// 서버가 등급별 최대 길이를 함께 주므로, 화면에서 "최대 60초까지"처럼
+/// 구체적으로 안내할 수 있다.
+class VideoTooLongException implements Exception {
+  final int? maxDurationMs;
+  final String message;
+
+  const VideoTooLongException({this.maxDurationMs, required this.message});
+
+  @override
+  String toString() => message;
+}
+
 class DiaryMediaRepository {
   final Dio _dio = ApiClient.instance.dio;
 
@@ -105,6 +128,33 @@ class DiaryMediaRepository {
     }
   }
 
+  /// 썸네일을 R2에 올린다 (실패해도 예외를 던지지 않는다)
+  ///
+  /// 썸네일이 없어도 서버는 확정을 성공시킨다. 본체가 올라갔는데 썸네일 때문에
+  /// 업로드 전체가 날아가는 쪽이 훨씬 나쁘므로, 여기서 조용히 삼킨다.
+  Future<void> uploadThumbnail({
+    required String uploadUrl,
+    required Uint8List bytes,
+    CancelToken? cancelToken,
+  }) async {
+    try {
+      await _uploadDio.put(
+        uploadUrl,
+        data: Stream.fromIterable([bytes]),
+        options: Options(
+          headers: {
+            // 서버와 합의한 규격 — JPEG 고정
+            'Content-Type': 'image/jpeg',
+            Headers.contentLengthHeader: bytes.length,
+          },
+        ),
+        cancelToken: cancelToken,
+      );
+    } catch (e) {
+      debugPrint('⚠️ [DiaryMediaRepository] 썸네일 업로드 실패(무시): $e');
+    }
+  }
+
   /// 업로드 완료 확정
   ///
   /// 서버가 HeadObject로 실제 크기를 재고, 신고값보다 크면 여기서 402가 난다.
@@ -128,12 +178,12 @@ class DiaryMediaRepository {
   }
 
   /// 첨부 순서 변경
-  Future<void> reorder(String diaryId, List<String> mediaIds) async {
+  ///
+  /// [mediaIds]는 **한 일기의 전체 첨부**를 표시할 순서대로 나열한 것이다.
+  /// 서버가 소유 일기를 미디어에서 역추적하므로 diaryId는 보내지 않는다.
+  Future<void> reorder(List<String> mediaIds) async {
     try {
-      await _dio.patch(
-        '$_base/reorder',
-        data: {'diaryId': diaryId, 'mediaIds': mediaIds},
-      );
+      await _dio.patch('$_base/reorder', data: {'mediaIds': mediaIds});
     } on DioException catch (e) {
       debugPrint('❌ [DiaryMediaRepository] 순서 변경 실패: ${e.message}');
       throw Exception('순서 변경에 실패했습니다: ${e.message}');
@@ -191,6 +241,19 @@ class DiaryMediaRepository {
         return const MediaNotAllowedException(
           '이 첨부는 상위 요금제에서 이용할 수 있어요',
         );
+      case 400:
+        // 영상 길이 초과일 때만 maxVideoDurationMs가 함께 온다.
+        // 그 값으로 형식 오류와 길이 초과를 가른다.
+        final maxDurationMs = data is Map<String, dynamic>
+            ? data['maxVideoDurationMs'] as int?
+            : null;
+        if (maxDurationMs != null) {
+          return VideoTooLongException(
+            maxDurationMs: maxDurationMs,
+            message: '영상이 너무 깁니다',
+          );
+        }
+        return const UnsupportedMediaException('지원하지 않는 형식입니다');
       default:
         return Exception('업로드에 실패했습니다: ${e.message}');
     }

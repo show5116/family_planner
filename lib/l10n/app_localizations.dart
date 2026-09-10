@@ -17377,6 +17377,120 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'원본'**
   String get diary_media_original_badge;
+
+  /// 사진 그리드 뷰 전환
+  ///
+  /// In ko, this message translates to:
+  /// **'사진'**
+  String get diary_view_photos;
+
+  /// 사진 그리드 빈 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 사진이 없어요'**
+  String get diary_photos_empty;
+
+  /// 사진 선택 - 갤러리
+  ///
+  /// In ko, this message translates to:
+  /// **'갤러리에서 고르기'**
+  String get diary_pick_gallery;
+
+  /// 사진 선택 - 카메라
+  ///
+  /// In ko, this message translates to:
+  /// **'사진 찍기'**
+  String get diary_pick_camera;
+
+  /// 등급별 첨부 용량 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'다이어리 첨부 용량'**
+  String get subscription_quota_section_title;
+
+  /// 월간 제공 용량
+  ///
+  /// In ko, this message translates to:
+  /// **'매월 {size} 제공'**
+  String subscription_quota_monthly(String size);
+
+  /// 계정 누적 저장 공간
+  ///
+  /// In ko, this message translates to:
+  /// **'저장 공간 {size}'**
+  String subscription_quota_total(String size);
+
+  /// 파일 1개 최대 크기
+  ///
+  /// In ko, this message translates to:
+  /// **'파일 1개 최대 {size}'**
+  String subscription_quota_per_file(String size);
+
+  /// 영상 불가 등급
+  ///
+  /// In ko, this message translates to:
+  /// **'사진 첨부'**
+  String get subscription_quota_video_none;
+
+  /// 영상 가능(길이 제한 없음)
+  ///
+  /// In ko, this message translates to:
+  /// **'영상 첨부'**
+  String get subscription_quota_video_supported;
+
+  /// 영상 최대 길이(분)
+  ///
+  /// In ko, this message translates to:
+  /// **'영상 최대 {minutes}분'**
+  String subscription_quota_video_minutes(int minutes);
+
+  /// 촬영일이 오늘과 다를 때 묻는 문구
+  ///
+  /// In ko, this message translates to:
+  /// **'이 사진은 {date}에 찍었어요. 어느 날 일기에 넣을까요?'**
+  String diary_exif_date_question(String date);
+
+  /// 촬영일 일기에 넣기
+  ///
+  /// In ko, this message translates to:
+  /// **'{date} 일기에 넣기'**
+  String diary_exif_use_captured(String date);
+
+  /// 오늘 일기에 넣기
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 일기에 넣기'**
+  String get diary_exif_use_today;
+
+  /// n개월 전 오늘 (회고 라벨)
+  ///
+  /// In ko, this message translates to:
+  /// **'{count, plural, other{{count}개월 전 오늘}}'**
+  String diary_flashback_months(int count);
+
+  /// n년 전 오늘 (회고 라벨)
+  ///
+  /// In ko, this message translates to:
+  /// **'{count, plural, other{{count}년 전 오늘}}'**
+  String diary_flashback_years(int count);
+
+  /// 서버가 받지 않는 형식 (400)
+  ///
+  /// In ko, this message translates to:
+  /// **'지원하지 않는 형식이에요'**
+  String get diary_unsupported_format;
+
+  /// 영상 길이 초과 (400)
+  ///
+  /// In ko, this message translates to:
+  /// **'영상은 최대 {seconds}초까지 올릴 수 있어요'**
+  String diary_video_too_long(int seconds);
+
+  /// 형식을 바꾸지 못해 제외한 파일 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'{count, plural, =1{{fileName}은 지원하지 않는 형식이라 빼두었어요} other{{fileName} 외 {count}개는 지원하지 않는 형식이라 빼두었어요}}'**
+  String diary_media_skipped(int count, String fileName);
 }
 
 class _AppLocalizationsDelegate
