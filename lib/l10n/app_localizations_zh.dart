@@ -9298,4 +9298,98 @@ class AppLocalizationsZh extends AppLocalizations {
   String routineWidget_myChallengeProgress(int checked, int target) {
     return '我的进度 $checked/$target';
   }
+
+  @override
+  String get greeting_settingsTitle => '仪表板问候语';
+
+  @override
+  String get greeting_settingsSubtitle => '自定义每天显示的一句话';
+
+  @override
+  String get greeting_guide => '每天会从内置文案和你添加的文案中显示一条。下拉刷新仪表板即可切换到下一条。';
+
+  @override
+  String get greeting_useCustom => '使用自定义问候语';
+
+  @override
+  String get greeting_useCustomDesc => '关闭后将显示按时段的问候语';
+
+  @override
+  String get greeting_previewTitle => '今日预览';
+
+  @override
+  String get greeting_previewEmpty => '暂无文案，将显示按时段的问候语';
+
+  @override
+  String get greeting_presetSection => '内置文案';
+
+  @override
+  String get greeting_customSection => '我的文案';
+
+  @override
+  String greeting_customCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get greeting_packQuote => '名言与谚语';
+
+  @override
+  String get greeting_packCheer => '鼓励的话';
+
+  @override
+  String greeting_packMessageCount(int count) {
+    return '$count 条文案';
+  }
+
+  @override
+  String get greeting_addMessage => '添加文案';
+
+  @override
+  String get greeting_editMessage => '编辑文案';
+
+  @override
+  String get greeting_messageHint => '请输入要显示在仪表板上的文案';
+
+  @override
+  String get greeting_emptyMessages => '还没有文案';
+
+  @override
+  String get greeting_emptyMessagesDesc => '添加你想经常看到的文案吧';
+
+  @override
+  String get greeting_deleteConfirm => '要删除这条文案吗？';
+
+  @override
+  String greeting_maxReached(int max) {
+    return '最多可添加 $max 条文案';
+  }
+
+  @override
+  String get greeting_duplicated => '该文案已存在';
+
+  @override
+  String get greeting_todayLabel => '今日一句';
+
+  @override
+  String get greeting_packInfant => '婴儿（0-12个月）';
+
+  @override
+  String get greeting_packToddler => '学步期（1-3岁）';
+
+  @override
+  String get greeting_packPreschool => '学龄前（3-5岁）';
+
+  @override
+  String get greeting_packSchool => '学龄期（6-12岁）';
+
+  @override
+  String get greeting_packTeen => '青少年（13岁以上）';
+
+  @override
+  String get greeting_packParenting => '育儿心法（全年龄）';
+
+  @override
+  String get greeting_presetSourceNote =>
+      '内置文案参考美国CDC、美国儿科学会（AAP）与韩国儿童权利保障院公开的育儿指南整理而成';
 }

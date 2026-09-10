@@ -122,6 +122,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           _buildSettingTile(
             context,
+            icon: Icons.format_quote_outlined,
+            title: l10n.greeting_settingsTitle,
+            subtitle: l10n.greeting_settingsSubtitle,
+            onTap: () => context.push(AppRoutes.greetingSettings),
+          ),
+          _buildSettingTile(
+            context,
             icon: Icons.palette_outlined,
             title: l10n.settings_themeTitle,
             subtitle: l10n.settings_themeSubtitle,

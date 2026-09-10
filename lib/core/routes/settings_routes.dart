@@ -3,6 +3,7 @@ import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/bottom_navigation_settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/home_widget_settings_screen.dart';
+import 'package:family_planner/features/settings/common/presentation/screens/greeting_settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/theme_settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/language_settings_screen.dart';
 import 'package:family_planner/features/settings/common/presentation/screens/profile_settings_screen.dart';
@@ -20,6 +21,7 @@ import 'package:family_planner/features/notification/presentation/screens/notifi
 /// - Settings (설정 메인)
 /// - Bottom Navigation Settings (하단 네비게이션 설정)
 /// - Home Widget Settings (홈 위젯 설정)
+/// - Greeting Settings (대시보드 인사말 설정)
 /// - Theme Settings (테마 설정)
 /// - Language Settings (언어 설정)
 /// - Profile Settings (프로필 설정)
@@ -40,6 +42,11 @@ List<RouteBase> getSettingsRoutes() {
       path: AppRoutes.homeWidgetSettings,
       name: 'homeWidgetSettings',
       builder: (context, state) => const HomeWidgetSettingsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.greetingSettings,
+      name: 'greetingSettings',
+      builder: (context, state) => const GreetingSettingsScreen(),
     ),
     GoRoute(
       path: AppRoutes.theme,

@@ -9641,4 +9641,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String routineWidget_myChallengeProgress(int checked, int target) {
     return 'My progress $checked/$target';
   }
+
+  @override
+  String get greeting_settingsTitle => 'Dashboard Greeting';
+
+  @override
+  String get greeting_settingsSubtitle => 'Choose the message shown each day';
+
+  @override
+  String get greeting_guide =>
+      'One message a day is picked from the built-in packs and your own list. Pull down to refresh the dashboard to move to the next one.';
+
+  @override
+  String get greeting_useCustom => 'Use my own greeting';
+
+  @override
+  String get greeting_useCustomDesc =>
+      'When off, the time-based greeting is shown';
+
+  @override
+  String get greeting_previewTitle => 'Today\'s preview';
+
+  @override
+  String get greeting_previewEmpty =>
+      'No messages yet — the time-based greeting is shown';
+
+  @override
+  String get greeting_presetSection => 'Built-in packs';
+
+  @override
+  String get greeting_customSection => 'My messages';
+
+  @override
+  String greeting_customCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get greeting_packQuote => 'Quotes & proverbs';
+
+  @override
+  String get greeting_packCheer => 'Words of encouragement';
+
+  @override
+  String greeting_packMessageCount(int count) {
+    return '$count messages';
+  }
+
+  @override
+  String get greeting_addMessage => 'Add message';
+
+  @override
+  String get greeting_editMessage => 'Edit message';
+
+  @override
+  String get greeting_messageHint => 'Enter a message to show on the dashboard';
+
+  @override
+  String get greeting_emptyMessages => 'No messages yet';
+
+  @override
+  String get greeting_emptyMessagesDesc =>
+      'Add the messages you want to see often';
+
+  @override
+  String get greeting_deleteConfirm => 'Delete this message?';
+
+  @override
+  String greeting_maxReached(int max) {
+    return 'You can add up to $max messages';
+  }
+
+  @override
+  String get greeting_duplicated => 'That message is already in your list';
+
+  @override
+  String get greeting_todayLabel => 'Today\'s message';
+
+  @override
+  String get greeting_packInfant => 'Babies (0–12 months)';
+
+  @override
+  String get greeting_packToddler => 'Toddlers (1–3 years)';
+
+  @override
+  String get greeting_packPreschool => 'Preschoolers (3–5 years)';
+
+  @override
+  String get greeting_packSchool => 'School age (6–12 years)';
+
+  @override
+  String get greeting_packTeen => 'Teens (13+)';
+
+  @override
+  String get greeting_packParenting => 'Parenting basics (all ages)';
+
+  @override
+  String get greeting_presetSourceNote =>
+      'Built-in tips are one-line summaries of public parenting guidance from the CDC, the AAP (HealthyChildren.org), and Korea’s National Center for the Rights of the Child';
 }

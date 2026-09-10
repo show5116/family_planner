@@ -20,7 +20,9 @@ import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/features/notification/presentation/widgets/notification_popup_card.dart';
 import 'package:family_planner/features/notification/providers/unread_count_provider.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/constants/greeting_presets.dart';
 import 'package:family_planner/core/providers/dashboard_widget_settings_provider.dart';
+import 'package:family_planner/core/providers/greeting_settings_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/utils/responsive.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
@@ -100,6 +102,8 @@ class DashboardTab extends ConsumerWidget {
         onRefresh: () async {
           // 알림 새로고침
           ref.invalidate(unreadCountProvider);
+          // 오늘의 한마디를 다음 문구로 넘김
+          ref.read(greetingRotationProvider.notifier).next();
         },
         child: _buildDashboardBody(context),
       ),
@@ -403,13 +407,41 @@ class _TrialBannerCard extends ConsumerWidget {
 }
 
 /// 인사말 섹션
-class _GreetingSection extends StatelessWidget {
+///
+/// 사용자가 등록한 문구(기본 팩 + 내 문구)가 있으면 "오늘의 한마디"를 보여주고,
+/// 없거나 기능을 꺼두면 기존 시간대별 인사말로 되돌아간다.
+class _GreetingSection extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final settings = ref.watch(greetingSettingsProvider).valueOrNull;
+    final rotation = ref.watch(greetingRotationProvider);
+
+    final message = settings == null
+        ? null
+        : GreetingPresets.pickMessage(
+            GreetingPresets.buildPool(
+              Localizations.localeOf(context).languageCode,
+              settings,
+            ),
+            date: DateTime.now(),
+            rotation: rotation,
+          );
+
+    if (message != null) {
+      return _GreetingLayout(
+        icon: Icons.format_quote,
+        title: message,
+        titleStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+        subtitle: l10n.greeting_todayLabel,
+      );
+    }
+
     final hour = DateTime.now().hour;
-    String greeting;
-    IconData icon;
+    final String greeting;
+    final IconData icon;
 
     if (hour < 12) {
       greeting = l10n.dashboard_greetingMorning;
@@ -422,11 +454,37 @@ class _GreetingSection extends StatelessWidget {
       icon = Icons.nights_stay;
     }
 
+    return _GreetingLayout(
+      icon: icon,
+      title: greeting,
+      titleStyle: Theme.of(context).textTheme.headlineSmall,
+      subtitle: l10n.dashboard_greetingSubtitle,
+    );
+  }
+}
+
+/// 인사말 섹션 공통 레이아웃 (아이콘 + 본문 + 보조 문구)
+class _GreetingLayout extends StatelessWidget {
+  const _GreetingLayout({
+    required this.icon,
+    required this.title,
+    required this.titleStyle,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final TextStyle? titleStyle;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(
           icon,
-          size: 32,
+          size: AppSizes.iconLarge,
           color: Theme.of(context).colorScheme.primary,
         ),
         const SizedBox(width: AppSizes.spaceM),
@@ -434,13 +492,16 @@ class _GreetingSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 사용자 문구가 길어도 대시보드 상단 높이가 크게 흔들리지 않게 제한
               Text(
-                greeting,
-                style: Theme.of(context).textTheme.headlineSmall,
+                title,
+                style: titleStyle,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSizes.spaceXS),
               Text(
-                l10n.dashboard_greetingSubtitle,
+                subtitle,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),

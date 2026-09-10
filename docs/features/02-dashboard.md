@@ -8,7 +8,18 @@
 ## 기본 구조
 - ✅ Bottom Navigation 5개 탭 구조
 - ✅ 홈 탭 대시보드 레이아웃
-- ✅ 인사말 섹션 (시간대별 메시지)
+- ✅ 인사말 섹션 — 사용자가 등록한 "오늘의 한마디" (문구가 없으면 시간대별 메시지로 폴백)
+  - 기본 제공 팩 8종을 개별로 켜고 끄기 (총 172문구 × 4개 국어)
+    - 나이대별 육아: 아기(0~12개월) 20 · 걸음마(1~3세) 24 · 유아(3~5세) 20 ·
+      초등(6~12세) 20 · 청소년(13세~) 20
+    - 연령 무관: 부모 마음 20 · 명언과 속담 24 · 응원 한마디 24
+    - 출처: CDC Positive Parenting Tips, AAP HealthyChildren.org,
+      아동권리보장원 긍정양육 129 원칙의 공개 가이드를 한 줄로 요약
+    - 문구 본문은 ARB가 아니라 `lib/core/constants/greeting_presets/`의
+      언어별 상수 파일에 둔다 (688개 문자열을 ARB에 넣으면 생성 코드가 과도하게 커짐)
+  - 사용자가 직접 문구 등록 (최대 100개, 1건 200자)
+  - 날짜를 시드로 뽑아 **하루 동안 같은 문구** 유지, 당겨서 새로고침하면 다음 문구
+  - 설정 저장은 기기 로컬(SharedPreferences) — `GreetingSettings`
 - ✅ 위젯 기반 커스터마이징 시스템
 - ✅ 위젯 설정 화면 (활성화/비활성화, 드래그 순서 변경)
 - ✅ 위젯 설정 저장 (SharedPreferences) — `DashboardWidgetSettings`
@@ -106,7 +117,7 @@
 기본 표시: 날씨 · 오늘의 일정 · 내 루틴 · 가계 현황 · 투자 지표 요약 · 육아 포인트
 
 ## 공통 동작
-- ✅ 대시보드 전체 새로고침 (RefreshIndicator — 알림 개수 재조회)
+- ✅ 대시보드 전체 새로고침 (RefreshIndicator — 알림 개수 재조회 + 오늘의 한마디 다음 문구)
 - ✅ 카드 탭 시 해당 메뉴로 이동, `전체보기` 버튼도 동일
 - ✅ 그룹·기간 필터 (일정·할일·가계·자산·메모·육아·저금통·냉장고 위젯)
   - ScheduleFilterSheet — 기간(오늘/금주/이번달), 개인 일정 포함, 볼 그룹 선택
@@ -125,4 +136,9 @@
 - `lib/features/home/presentation/widgets/`
 - `lib/features/home/providers/dashboard_provider.dart`
 - `lib/core/models/dashboard_widget_settings.dart`
+- `lib/core/models/greeting_settings.dart`
+- `lib/core/providers/greeting_settings_provider.dart`
+- `lib/core/constants/greeting_presets.dart` (팩 라벨·아이콘·선택 로직)
+- `lib/core/constants/greeting_presets/greeting_preset_{ko,en,ja,zh}.dart` (문구 데이터)
+- `lib/features/settings/common/presentation/screens/greeting_settings_screen.dart`
 - `lib/features/settings/common/presentation/screens/home_widget_settings_screen.dart`

@@ -17623,6 +17623,180 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'내 진행 {checked}/{target}'**
   String routineWidget_myChallengeProgress(int checked, int target);
+
+  /// 인사말 설정 화면 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'대시보드 인사말'**
+  String get greeting_settingsTitle;
+
+  /// 설정 목록의 인사말 항목 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 한마디를 직접 골라요'**
+  String get greeting_settingsSubtitle;
+
+  /// 인사말 설정 안내문
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 문구와 내가 등록한 문구 중에서 하루에 하나씩 표시돼요. 대시보드를 당겨서 새로고침하면 다음 문구로 넘어갑니다.'**
+  String get greeting_guide;
+
+  /// 내 인사말 사용 스위치
+  ///
+  /// In ko, this message translates to:
+  /// **'나만의 인사말 사용'**
+  String get greeting_useCustom;
+
+  /// 내 인사말 사용 스위치 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'끄면 시간대별 인사말이 표시돼요'**
+  String get greeting_useCustomDesc;
+
+  /// 오늘 표시될 문구 미리보기 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 미리보기'**
+  String get greeting_previewTitle;
+
+  /// 문구 후보가 없을 때 미리보기 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'표시할 문구가 없어 시간대 인사말이 표시돼요'**
+  String get greeting_previewEmpty;
+
+  /// 기본 제공 문구 팩 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 문구'**
+  String get greeting_presetSection;
+
+  /// 사용자 등록 문구 섹션 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'내 문구'**
+  String get greeting_customSection;
+
+  /// 등록한 문구 개수 표시
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}/{max}'**
+  String greeting_customCount(int count, int max);
+
+  /// 명언 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'명언과 속담'**
+  String get greeting_packQuote;
+
+  /// 응원 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'응원 한마디'**
+  String get greeting_packCheer;
+
+  /// 팩에 포함된 문구 개수
+  ///
+  /// In ko, this message translates to:
+  /// **'문구 {count}개'**
+  String greeting_packMessageCount(int count);
+
+  /// 문구 추가 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'문구 추가'**
+  String get greeting_addMessage;
+
+  /// 문구 수정 다이얼로그 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'문구 수정'**
+  String get greeting_editMessage;
+
+  /// 문구 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'대시보드에 표시할 문구를 입력하세요'**
+  String get greeting_messageHint;
+
+  /// 내 문구 빈 상태
+  ///
+  /// In ko, this message translates to:
+  /// **'등록한 문구가 없어요'**
+  String get greeting_emptyMessages;
+
+  /// 내 문구 빈 상태 설명
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 보고 싶은 문구를 추가해보세요'**
+  String get greeting_emptyMessagesDesc;
+
+  /// 문구 삭제 확인
+  ///
+  /// In ko, this message translates to:
+  /// **'이 문구를 삭제할까요?'**
+  String get greeting_deleteConfirm;
+
+  /// 문구 개수 초과 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'문구는 최대 {max}개까지 등록할 수 있어요'**
+  String greeting_maxReached(int max);
+
+  /// 중복 문구 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 등록된 문구예요'**
+  String get greeting_duplicated;
+
+  /// 대시보드 인사말 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘의 한마디'**
+  String get greeting_todayLabel;
+
+  /// 영아 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'아기 (0~12개월)'**
+  String get greeting_packInfant;
+
+  /// 걸음마기 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'걸음마 (1~3세)'**
+  String get greeting_packToddler;
+
+  /// 유아 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'유아 (3~5세)'**
+  String get greeting_packPreschool;
+
+  /// 초등 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'초등 (6~12세)'**
+  String get greeting_packSchool;
+
+  /// 청소년 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'청소년 (13세~)'**
+  String get greeting_packTeen;
+
+  /// 연령 공통 육아 원칙 팩 이름
+  ///
+  /// In ko, this message translates to:
+  /// **'부모 마음 (모든 연령)'**
+  String get greeting_packParenting;
+
+  /// 기본 문구 출처 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 문구는 미국 질병통제예방센터(CDC), 미국소아과학회(AAP), 아동권리보장원의 공개 육아 가이드를 참고해 한 줄로 정리한 것입니다'**
+  String get greeting_presetSourceNote;
 }
 
 class _AppLocalizationsDelegate

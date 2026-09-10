@@ -86,6 +86,7 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String bottomNavigationSettings = '/settings/bottom-navigation';
   static const String homeWidgetSettings = '/settings/home-widgets';
+  static const String greetingSettings = '/settings/greeting';
   static const String profile = '/settings/profile';
   static const String groupManagement = '/settings/groups';
   static const String groupDetail = '/settings/groups/:id';

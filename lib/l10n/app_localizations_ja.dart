@@ -9387,4 +9387,99 @@ class AppLocalizationsJa extends AppLocalizations {
   String routineWidget_myChallengeProgress(int checked, int target) {
     return '進捗 $checked/$target';
   }
+
+  @override
+  String get greeting_settingsTitle => 'ダッシュボードの挨拶';
+
+  @override
+  String get greeting_settingsSubtitle => '毎日表示する一言を選べます';
+
+  @override
+  String get greeting_guide =>
+      '基本の文言と自分で登録した文言から、1日に1つ表示されます。ダッシュボードを引っ張って更新すると次の文言に切り替わります。';
+
+  @override
+  String get greeting_useCustom => '自分の挨拶を使う';
+
+  @override
+  String get greeting_useCustomDesc => 'オフにすると時間帯の挨拶が表示されます';
+
+  @override
+  String get greeting_previewTitle => '今日のプレビュー';
+
+  @override
+  String get greeting_previewEmpty => '表示する文言がないため時間帯の挨拶が表示されます';
+
+  @override
+  String get greeting_presetSection => '基本の文言';
+
+  @override
+  String get greeting_customSection => '自分の文言';
+
+  @override
+  String greeting_customCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get greeting_packQuote => '名言・ことわざ';
+
+  @override
+  String get greeting_packCheer => '応援メッセージ';
+
+  @override
+  String greeting_packMessageCount(int count) {
+    return '$count件の文言';
+  }
+
+  @override
+  String get greeting_addMessage => '文言を追加';
+
+  @override
+  String get greeting_editMessage => '文言を編集';
+
+  @override
+  String get greeting_messageHint => 'ダッシュボードに表示する文言を入力してください';
+
+  @override
+  String get greeting_emptyMessages => '登録した文言がありません';
+
+  @override
+  String get greeting_emptyMessagesDesc => 'よく見たい文言を追加してみましょう';
+
+  @override
+  String get greeting_deleteConfirm => 'この文言を削除しますか？';
+
+  @override
+  String greeting_maxReached(int max) {
+    return '文言は最大$max件まで登録できます';
+  }
+
+  @override
+  String get greeting_duplicated => 'すでに登録されている文言です';
+
+  @override
+  String get greeting_todayLabel => '今日の一言';
+
+  @override
+  String get greeting_packInfant => '赤ちゃん（0〜12か月）';
+
+  @override
+  String get greeting_packToddler => 'よちよち期（1〜3歳）';
+
+  @override
+  String get greeting_packPreschool => '幼児（3〜5歳）';
+
+  @override
+  String get greeting_packSchool => '小学生（6〜12歳）';
+
+  @override
+  String get greeting_packTeen => '中高生（13歳〜）';
+
+  @override
+  String get greeting_packParenting => '親の心構え（全年齢）';
+
+  @override
+  String get greeting_presetSourceNote =>
+      '基本の文言は、米国CDC・米国小児科学会(AAP)・韓国児童権利保障院の公開育児ガイドを参考に一行にまとめたものです';
 }

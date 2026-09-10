@@ -11,6 +11,7 @@
 - ✅ 설정 메인 화면
   - ✅ 테마 설정 메뉴
   - ✅ 홈 위젯 설정 메뉴
+  - ✅ 대시보드 인사말 설정 메뉴
   - ✅ 프로필 설정 메뉴
   - ✅ 그룹 관리 메뉴 (→ [12-groups.md](12-groups.md) 참고)
   - ✅ 알림 설정 메뉴
@@ -24,6 +25,16 @@
 ### 홈 위젯 설정 화면
 - ✅ 홈 위젯 활성화/비활성화
 - ✅ 홈 위젯 설정 저장
+
+### 대시보드 인사말 설정 화면
+- ✅ 내 인사말 사용 on/off (끄면 시간대별 인사말)
+- ✅ 기본 제공 문구 팩 8종 개별 on/off (총 172문구)
+  - 나이대별: 아기(0~12개월) / 걸음마(1~3세) / 유아(3~5세) / 초등(6~12세) / 청소년(13세~)
+  - 연령 무관: 부모 마음 / 명언과 속담 / 응원 한마디
+- ✅ 기본 문구 출처 안내 문구 표기 (CDC·AAP·아동권리보장원)
+- ✅ 내 문구 추가·수정·삭제 (최대 100개, 1건 200자, 중복 차단)
+- ✅ 오늘 표시될 문구 미리보기
+- ✅ 설정 저장 (SharedPreferences) — `GreetingSettings`
 
 ### 프로필 설정 화면
 - ✅ 프로필 설정 화면
@@ -109,6 +120,10 @@
 ### 테마 설정
 - ✅ Theme Mode Provider 구현
 
+### 대시보드 인사말
+- ✅ `greetingSettingsProvider` (AsyncNotifier + SharedPreferences)
+- ✅ `greetingRotationProvider` — 새로고침 시 다음 문구로 넘기는 인메모리 오프셋
+
 ### 프로필 설정
 - ✅ Auth Provider의 updateProfile 메서드 활용
 - ✅ SecureStorageService로 로컬 사용자 정보 관리
@@ -129,6 +144,13 @@
 - `lib/features/settings/providers/` - 설정 관련 상태 관리
 - `lib/features/settings/services/` - 설정 관련 API 서비스
 - `lib/features/settings/models/` - 설정 관련 데이터 모델
+
+### 대시보드 인사말 설정
+- `lib/features/settings/common/presentation/screens/greeting_settings_screen.dart`
+- `lib/core/providers/greeting_settings_provider.dart`
+- `lib/core/models/greeting_settings.dart`
+- `lib/core/constants/greeting_presets.dart`
+- `lib/core/constants/greeting_presets/` (언어별 문구 데이터)
 
 ### 테마 설정
 - `lib/core/providers/theme_provider.dart`

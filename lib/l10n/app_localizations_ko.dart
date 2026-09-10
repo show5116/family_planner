@@ -9419,4 +9419,99 @@ class AppLocalizationsKo extends AppLocalizations {
   String routineWidget_myChallengeProgress(int checked, int target) {
     return '내 진행 $checked/$target';
   }
+
+  @override
+  String get greeting_settingsTitle => '대시보드 인사말';
+
+  @override
+  String get greeting_settingsSubtitle => '오늘의 한마디를 직접 골라요';
+
+  @override
+  String get greeting_guide =>
+      '기본 문구와 내가 등록한 문구 중에서 하루에 하나씩 표시돼요. 대시보드를 당겨서 새로고침하면 다음 문구로 넘어갑니다.';
+
+  @override
+  String get greeting_useCustom => '나만의 인사말 사용';
+
+  @override
+  String get greeting_useCustomDesc => '끄면 시간대별 인사말이 표시돼요';
+
+  @override
+  String get greeting_previewTitle => '오늘의 미리보기';
+
+  @override
+  String get greeting_previewEmpty => '표시할 문구가 없어 시간대 인사말이 표시돼요';
+
+  @override
+  String get greeting_presetSection => '기본 문구';
+
+  @override
+  String get greeting_customSection => '내 문구';
+
+  @override
+  String greeting_customCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get greeting_packQuote => '명언과 속담';
+
+  @override
+  String get greeting_packCheer => '응원 한마디';
+
+  @override
+  String greeting_packMessageCount(int count) {
+    return '문구 $count개';
+  }
+
+  @override
+  String get greeting_addMessage => '문구 추가';
+
+  @override
+  String get greeting_editMessage => '문구 수정';
+
+  @override
+  String get greeting_messageHint => '대시보드에 표시할 문구를 입력하세요';
+
+  @override
+  String get greeting_emptyMessages => '등록한 문구가 없어요';
+
+  @override
+  String get greeting_emptyMessagesDesc => '자주 보고 싶은 문구를 추가해보세요';
+
+  @override
+  String get greeting_deleteConfirm => '이 문구를 삭제할까요?';
+
+  @override
+  String greeting_maxReached(int max) {
+    return '문구는 최대 $max개까지 등록할 수 있어요';
+  }
+
+  @override
+  String get greeting_duplicated => '이미 등록된 문구예요';
+
+  @override
+  String get greeting_todayLabel => '오늘의 한마디';
+
+  @override
+  String get greeting_packInfant => '아기 (0~12개월)';
+
+  @override
+  String get greeting_packToddler => '걸음마 (1~3세)';
+
+  @override
+  String get greeting_packPreschool => '유아 (3~5세)';
+
+  @override
+  String get greeting_packSchool => '초등 (6~12세)';
+
+  @override
+  String get greeting_packTeen => '청소년 (13세~)';
+
+  @override
+  String get greeting_packParenting => '부모 마음 (모든 연령)';
+
+  @override
+  String get greeting_presetSourceNote =>
+      '기본 문구는 미국 질병통제예방센터(CDC), 미국소아과학회(AAP), 아동권리보장원의 공개 육아 가이드를 참고해 한 줄로 정리한 것입니다';
 }
