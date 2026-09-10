@@ -16,6 +16,8 @@ import 'package:family_planner/core/providers/subscription_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/services/in_app_purchase_service.dart';
 import 'package:family_planner/features/subscription/data/models/subscription_model.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
+import 'package:family_planner/features/subscription/data/models/media_quota_plan.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 
 /// 구독 관리 화면
@@ -71,6 +73,11 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
             isTrial: subscriptionAsync.valueOrNull?.isTrial ?? false,
             isPurchasing: _isPurchasing,
             onPurchase: _onPurchase,
+          ),
+          const SizedBox(height: AppSizes.spaceM),
+          _MediaQuotaTable(
+            currentTier:
+                subscriptionAsync.valueOrNull?.tier ?? SubscriptionTier.free,
           ),
           const SizedBox(height: AppSizes.spaceM),
           _RestoreButton(onRestore: _onRestore),
@@ -441,6 +448,127 @@ class _PlanComparison extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+// ── 다이어리 첨부 용량 한도표 ────────────────────────────────
+
+/// 등급별 첨부 용량을 나란히 보여준다.
+///
+/// 수치는 **서버가 내려주는 값**을 그대로 쓴다 (앱 하드코딩 금지 — 한도 조정에
+/// 앱 재배포가 필요해지면 출시 후 조정이 불가능해진다).
+/// 문구는 "제한"이 아니라 "제공"으로 쓴다 — 같은 사실도 결제 압박으로 읽힐 수 있다.
+class _MediaQuotaTable extends ConsumerWidget {
+  const _MediaQuotaTable({required this.currentTier});
+
+  final SubscriptionTier currentTier;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final plans = ref.watch(mediaQuotaPlansProvider);
+
+    // 한도표를 못 받아도 구독 화면 자체는 멀쩡해야 한다 — 이 섹션만 접는다
+    final items = plans.valueOrNull;
+    if (items == null || items.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.subscription_quota_section_title,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: AppSizes.spaceS),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.spaceM,
+              vertical: AppSizes.spaceS,
+            ),
+            child: Column(
+              children: [
+                for (var i = 0; i < items.length; i++) ...[
+                  if (i > 0) const Divider(height: AppSizes.spaceM),
+                  _QuotaPlanRow(
+                    plan: items[i],
+                    isCurrent: items[i].tier == currentTier,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _QuotaPlanRow extends StatelessWidget {
+  const _QuotaPlanRow({required this.plan, required this.isCurrent});
+
+  final MediaQuotaPlan plan;
+  final bool isCurrent;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.spaceXS),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                plan.tier.displayName,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: plan.tier.color,
+                ),
+              ),
+              if (isCurrent) ...[
+                const SizedBox(width: AppSizes.spaceS),
+                Text(
+                  l10n.subscription_current_plan_label,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            [
+              l10n.subscription_quota_monthly(formatBytes(plan.monthlyBytes)),
+              l10n.subscription_quota_total(formatBytes(plan.totalBytes)),
+            ].join(' · '),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          Text(
+            [
+              l10n.subscription_quota_per_file(formatBytes(plan.perFileBytes)),
+              _videoLabel(l10n),
+            ].join(' · '),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _videoLabel(AppLocalizations l10n) {
+    if (!plan.videoAllowed) return l10n.subscription_quota_video_none;
+    final ms = plan.maxVideoDurationMs;
+    if (ms == null) return l10n.subscription_quota_video_supported;
+    return l10n.subscription_quota_video_minutes((ms / 60000).round());
   }
 }
 

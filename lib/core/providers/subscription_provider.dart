@@ -6,6 +6,7 @@ import 'package:family_planner/core/services/analytics_service.dart';
 import 'package:family_planner/core/services/subscription_cache_service.dart';
 import 'package:family_planner/core/utils/user_utils.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/subscription/data/models/media_quota_plan.dart';
 import 'package:family_planner/features/subscription/data/models/subscription_model.dart';
 import 'package:family_planner/features/subscription/data/repositories/subscription_repository.dart';
 
@@ -90,6 +91,15 @@ final subscriptionProvider =
     AsyncNotifierProvider<SubscriptionNotifier, SubscriptionModel>(
   SubscriptionNotifier.new,
 );
+
+/// 등급별 미디어 용량 한도표
+///
+/// 구독 화면의 플랜 비교에서 쓴다. 한도 수치는 서버가 조정할 수 있으므로
+/// 앱이 값을 들고 있지 않는다 — 실패하면 표만 접고 나머지 화면은 그대로 둔다.
+final mediaQuotaPlansProvider =
+    FutureProvider<List<MediaQuotaPlan>>((ref) async {
+  return ref.read(subscriptionRepositoryProvider).getQuotaPlans();
+});
 
 /// 광고 표시 여부만 빠르게 읽는 편의 provider
 /// admin/테스트 계정은 구독 tier 무관하게 항상 광고 표시 (테스트 광고 확인용)
