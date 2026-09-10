@@ -161,13 +161,25 @@ class MediaCompressor {
   /// 업로드용 썸네일 (JPEG, 최대 변 640px, 품질 80 — 서버와 합의한 규격)
   ///
   /// 실패하면 null. 썸네일이 없어도 서버는 확정을 성공시키므로 업로드를 막지 않는다.
+  ///
+  /// 서버가 썸네일 바이트도 매직바이트로 검사해 JPEG가 아니면 폐기하므로,
+  /// 결과가 정말 JPEG인지 여기서 먼저 확인한다 — 아니면 올려봐야 버려진다.
+  /// (`toBlob`은 요청한 형식을 지원하지 않으면 조용히 PNG를 돌려준다)
   static Future<Uint8List?> makeThumbnail(Uint8List bytes) async {
-    return reencodeImage(
+    final thumbnail = await reencodeImage(
       bytes,
       target: ImageFormat.jpeg,
       maxDimension: thumbnailDimension,
       quality: thumbnailQuality,
     );
+    if (thumbnail == null) return null;
+
+    if (sniffImageFormat(thumbnail) != ImageFormat.jpeg) {
+      debugPrint('⚠️ [MediaCompressor] 썸네일이 JPEG가 아니라 보내지 않는다');
+      return null;
+    }
+
+    return thumbnail;
   }
 
   /// 원본 형식을 유지하는 재인코딩 대상 (PNG·WebP만 유지, 나머지는 JPEG)

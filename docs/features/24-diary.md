@@ -72,9 +72,11 @@ HEIC는 그게 처음 눈에 띈 사례였을 뿐이다.
 > 같은 병이 공용 에디터(`editor_image_handler.dart`)에도 있었다 — 메모·공지 본문에
 > HEIC를 심어 이미지가 깨질 수 있었다. 같은 유틸로 함께 고쳤다.
 
-> **서버 화이트리스트는 아직 강제가 아니다.** `reserve`는 신고값을, `confirm`은
-> 클라이언트가 PUT에 붙인 `Content-Type`을 볼 뿐이라 바이트를 위조하면 통과한다
-> → [백엔드 요청서](../api-proposals/2026-09-10-media-mime-enforcement.md)
+> **서버도 바이트로 검증한다** (2026-09-10 반영). `confirm`이 Range GET으로 선두
+> 32바이트를 받아 매직바이트로 판별하고, 화이트리스트 밖이면 R2 파일을 지우고 400.
+> 실측 형식을 저장해 조회 URL의 `ResponseContentType`으로 강제한다.
+> **썸네일도 JPEG인지 확인해 아니면 폐기**하므로, 앱도 올리기 전에 결과가 정말
+> JPEG인지 확인한다 → [요청서](../api-proposals/2026-09-10-media-mime-enforcement.md)
 
 ### 웹 첨부 — 캔버스로 압축한다
 
