@@ -23,6 +23,8 @@ import 'package:family_planner/features/onboarding/services/onboarding_service.d
 import 'package:family_planner/core/constants/app_colors.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
 import 'package:family_planner/shared/widgets/app_error_state.dart';
+import 'package:family_planner/shared/widgets/app_search_bar.dart';
+import 'package:family_planner/shared/widgets/group_filter_bar.dart';
 
 part '_diary_onboarding.dart';
 
@@ -47,6 +49,7 @@ enum _DiaryView { timeline, photos, calendar }
 class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
   final ScrollController _scrollController = ScrollController();
   _DiaryView _view = _DiaryView.timeline;
+  bool _isSearching = false;
 
   // 코치마크 타겟
   final GlobalKey _captureBarKey = GlobalKey();
@@ -78,6 +81,19 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
     if (position.pixels >= position.maxScrollExtent - 300) {
       ref.read(diaryListProvider.notifier).loadMore();
     }
+  }
+
+  /// 검색창 열고 닫기
+  ///
+  /// 닫을 때 검색어를 비운다 — 창만 접히고 결과가 걸러진 채 남아 있으면
+  /// 목록이 왜 비어 보이는지 알 수 없다.
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (!_isSearching) {
+        ref.read(diarySearchQueryProvider.notifier).state = '';
+      }
+    });
   }
 
   /// 다음 뷰로 넘긴다 (타임라인 → 사진 → 캘린더 → 타임라인)
@@ -166,6 +182,13 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
       appBar: AppBar(
         title: Text(l10n.diary_title),
         actions: [
+          // 캘린더는 날짜로 찾는 뷰라 검색이 겹친다 — 목록 계열에서만 연다
+          if (_view != _DiaryView.calendar)
+            IconButton(
+              icon: const Icon(Icons.search),
+              tooltip: l10n.common_search,
+              onPressed: _toggleSearch,
+            ),
           IconButton(
             icon: Icon(_viewIcon),
             tooltip: _viewTooltip(l10n),
@@ -184,22 +207,45 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
           ),
         ],
       ),
-      body: switch (_view) {
-        _DiaryView.calendar => DiaryCalendarView(onDayTap: _onCalendarDayTap),
-        _DiaryView.photos => DiaryPhotoGrid(onDiaryTap: _openDetail),
-        _DiaryView.timeline => listState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => AppErrorState(
-                error: error,
-                title: l10n.diary_load_error,
-                onRetry: _refresh,
-              ),
-              data: (state) => RefreshIndicator(
-                onRefresh: _refresh,
-                child: _buildTimeline(state),
-              ),
+      body: Column(
+        children: [
+          if (_isSearching && _view != _DiaryView.calendar)
+            AppSearchBar(
+              hintText: l10n.diary_search_hint,
+              initialQuery: ref.read(diarySearchQueryProvider),
+              onSearch: (query) {
+                ref.read(diarySearchQueryProvider.notifier).state = query ?? '';
+              },
+              onClose: _toggleSearch,
             ),
-      },
+          // 그룹 일기가 섞여 있는 줄 모르고 쓰면 사생활 사고가 난다.
+          // 걸러낼 수단은 뷰와 무관하게 항상 보여야 한다.
+          ColoredBox(
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            child: const _DiaryGroupFilterBar(),
+          ),
+          Expanded(
+            child: switch (_view) {
+              _DiaryView.calendar =>
+                DiaryCalendarView(onDayTap: _onCalendarDayTap),
+              _DiaryView.photos => DiaryPhotoGrid(onDiaryTap: _openDetail),
+              _DiaryView.timeline => listState.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, _) => AppErrorState(
+                    error: error,
+                    title: l10n.diary_load_error,
+                    onRetry: _refresh,
+                  ),
+                  data: (state) => RefreshIndicator(
+                    onRefresh: _refresh,
+                    child: _buildTimeline(state),
+                  ),
+                ),
+            },
+          ),
+        ],
+      ),
       bottomNavigationBar: QuickCaptureBar(key: _captureBarKey),
     );
   }
@@ -224,11 +270,18 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
             ),
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.5,
-            child: AppEmptyState(
-              icon: Icons.auto_stories_outlined,
-              message: l10n.diary_empty,
-              subtitle: l10n.diary_empty_subtitle,
-            ),
+            child: ref.watch(diaryHasActiveFilterProvider)
+                // 필터 때문에 비었는데 "첫 기록을 남겨보세요"라고 하면
+                // 이미 쓴 일기가 사라진 줄 알게 된다
+                ? AppEmptyState(
+                    icon: Icons.search_off,
+                    message: l10n.diary_search_empty,
+                  )
+                : AppEmptyState(
+                    icon: Icons.auto_stories_outlined,
+                    message: l10n.diary_empty,
+                    subtitle: l10n.diary_empty_subtitle,
+                  ),
           ),
         ],
       );
@@ -302,6 +355,48 @@ class _DiaryTimelineScreenState extends ConsumerState<DiaryTimelineScreen> {
     // 로케일을 고정하지 않는다 — 기기 언어에 맞춰 월 표기가 달라져야 한다
     final locale = Localizations.localeOf(context).toLanguageTag();
     return DateFormat.yMMMM(locale).format(parseDiaryDate(date));
+  }
+}
+
+// ── 그룹 필터 바 ────────────────────────────────────────────────────────────
+
+/// 다이어리 그룹 필터
+///
+/// 서버 목록 API는 `groupId` **또는** `visibility` 하나로만 좁힐 수 있어서,
+/// 다중 선택은 단일 필터로 접어 넘긴다 (메모 화면과 같은 방식).
+class _DiaryGroupFilterBar extends ConsumerWidget {
+  const _DiaryGroupFilterBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GroupFilterBar(
+      filterMode: FilterMode.withAll,
+      savedKey: 'diary_group_filter',
+      onMultiFilterChanged: (selection) {
+        final groupId = ref.read(diarySelectedGroupIdProvider.notifier);
+        final visibility = ref.read(diaryVisibilityFilterProvider.notifier);
+
+        if (selection.isAll) {
+          groupId.state = null;
+          visibility.state = null;
+          return;
+        }
+
+        final ids = selection.groupIds ?? const <String>[];
+
+        // 개인만 골랐으면 비공개 일기로 좁힌다 ("내 일기만 보기")
+        if (selection.includePersonal && ids.isEmpty) {
+          groupId.state = null;
+          visibility.state = DiaryVisibility.private;
+          return;
+        }
+
+        // 그룹을 하나만 골랐을 때만 그 그룹으로 좁힌다.
+        // 여러 개를 고르면 서버가 표현할 수 없어 전체로 둔다.
+        groupId.state = ids.length == 1 ? ids.first : null;
+        visibility.state = null;
+      },
+    );
   }
 }
 

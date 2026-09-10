@@ -9337,4 +9337,10 @@ class AppLocalizationsKo extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get diary_search_hint => '제목, 내용으로 검색';
+
+  @override
+  String get diary_search_empty => '조건에 맞는 일기가 없어요';
 }

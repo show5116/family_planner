@@ -9216,4 +9216,10 @@ class AppLocalizationsZh extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get diary_search_hint => '按标题或内容搜索';
+
+  @override
+  String get diary_search_empty => '没有符合条件的日记';
 }

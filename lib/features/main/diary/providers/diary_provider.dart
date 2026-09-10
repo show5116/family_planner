@@ -6,11 +6,28 @@ import 'package:family_planner/features/main/diary/data/utils/diary_date.dart';
 
 // ── 필터 상태 ────────────────────────────────────────────────────────────────
 
-/// 목록에서 선택된 그룹 필터 (null이면 전체)
+/// 목록에서 선택된 그룹 필터 (null이면 그룹으로 좁히지 않음)
 final diarySelectedGroupIdProvider = StateProvider<String?>((ref) => null);
+
+/// 공개 범위 필터 (null이면 전체)
+///
+/// "내 일기만 보기"를 위해 필요하다. 그룹 일기가 섞여 있는 줄 모르고 쓰면
+/// 사생활 사고가 나므로, 걸러낼 수단이 항상 있어야 한다.
+final diaryVisibilityFilterProvider =
+    StateProvider<DiaryVisibility?>((ref) => null);
 
 /// 목록 검색어
 final diarySearchQueryProvider = StateProvider<String>((ref) => '');
+
+/// 검색·필터가 걸려 있는지
+///
+/// 빈 목록의 문구를 가르는 데 쓴다. 필터 때문에 비었는데 "첫 기록을 남겨보세요"라고
+/// 하면 이미 쓴 일기가 사라진 줄 알게 된다.
+final diaryHasActiveFilterProvider = Provider<bool>((ref) {
+  return ref.watch(diarySearchQueryProvider).isNotEmpty ||
+      ref.watch(diarySelectedGroupIdProvider) != null ||
+      ref.watch(diaryVisibilityFilterProvider) != null;
+});
 
 // ── 타임라인 목록 ────────────────────────────────────────────────────────────
 
@@ -51,11 +68,13 @@ class DiaryListNotifier extends AsyncNotifier<DiaryListState> {
   @override
   Future<DiaryListState> build() async {
     final groupId = ref.watch(diarySelectedGroupIdProvider);
+    final visibility = ref.watch(diaryVisibilityFilterProvider);
     final search = ref.watch(diarySearchQueryProvider);
 
     final result = await ref.read(diaryRepositoryProvider).getDiaries(
           page: 1,
           groupId: groupId,
+          visibility: visibility,
           search: search,
         );
 
@@ -82,6 +101,7 @@ class DiaryListNotifier extends AsyncNotifier<DiaryListState> {
       final result = await ref.read(diaryRepositoryProvider).getDiaries(
             page: current.page + 1,
             groupId: ref.read(diarySelectedGroupIdProvider),
+            visibility: ref.read(diaryVisibilityFilterProvider),
             search: ref.read(diarySearchQueryProvider),
           );
 
@@ -134,12 +154,6 @@ class DiaryListNotifier extends AsyncNotifier<DiaryListState> {
 final diaryDetailProvider =
     FutureProvider.family<DiaryModel, String>((ref, id) async {
   return ref.read(diaryRepositoryProvider).getDiary(id);
-});
-
-/// 특정 날짜의 내 일기 (없으면 null)
-final diaryByDateProvider =
-    FutureProvider.family<DiaryModel?, String>((ref, date) async {
-  return ref.read(diaryRepositoryProvider).getDiaryByDate(date);
 });
 
 /// 오늘 일기 (빠른 기록 바의 placeholder 분기에 쓴다)

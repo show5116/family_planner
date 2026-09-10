@@ -5334,5 +5334,9 @@
   "diary_video_too_long": "영상은 최대 {seconds}초까지 올릴 수 있어요",
   "@diary_video_too_long": { "description": "영상 길이 초과 (400)", "placeholders": { "seconds": { "type": "int" } } },
   "diary_media_skipped": "{count, plural, =1{{fileName}은 지원하지 않는 형식이라 빼두었어요} other{{fileName} 외 {count}개는 지원하지 않는 형식이라 빼두었어요}}",
-  "@diary_media_skipped": { "description": "형식을 바꾸지 못해 제외한 파일 안내", "placeholders": { "count": { "type": "int" }, "fileName": { "type": "String" } } }
+  "@diary_media_skipped": { "description": "형식을 바꾸지 못해 제외한 파일 안내", "placeholders": { "count": { "type": "int" }, "fileName": { "type": "String" } } },
+  "diary_search_hint": "제목, 내용으로 검색",
+  "@diary_search_hint": { "description": "다이어리 검색 입력 힌트" },
+  "diary_search_empty": "조건에 맞는 일기가 없어요",
+  "@diary_search_empty": { "description": "검색·필터 결과 없음" }
 }

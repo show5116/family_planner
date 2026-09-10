@@ -9745,5 +9745,7 @@
   "diary_flashback_years": "{count, plural, other{{count}年前の今日}}",
   "diary_unsupported_format": "対応していない形式です",
   "diary_video_too_long": "動画は最大{seconds}秒までです",
-  "diary_media_skipped": "{count, plural, =1{{fileName}は対応していない形式のため除きました} other{{fileName}ほか{count}件は対応していない形式のため除きました}}"
+  "diary_media_skipped": "{count, plural, =1{{fileName}は対応していない形式のため除きました} other{{fileName}ほか{count}件は対応していない形式のため除きました}}",
+  "diary_search_hint": "タイトル・本文で検索",
+  "diary_search_empty": "条件に合う日記がありません"
 }

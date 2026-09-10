@@ -9558,4 +9558,10 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get diary_search_hint => 'Search by title or content';
+
+  @override
+  String get diary_search_empty => 'No diaries match';
 }

@@ -9305,4 +9305,10 @@ class AppLocalizationsJa extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get diary_search_hint => 'タイトル・本文で検索';
+
+  @override
+  String get diary_search_empty => '条件に合う日記がありません';
 }

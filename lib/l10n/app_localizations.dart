@@ -17491,6 +17491,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'{count, plural, =1{{fileName}은 지원하지 않는 형식이라 빼두었어요} other{{fileName} 외 {count}개는 지원하지 않는 형식이라 빼두었어요}}'**
   String diary_media_skipped(int count, String fileName);
+
+  /// 다이어리 검색 입력 힌트
+  ///
+  /// In ko, this message translates to:
+  /// **'제목, 내용으로 검색'**
+  String get diary_search_hint;
+
+  /// 검색·필터 결과 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'조건에 맞는 일기가 없어요'**
+  String get diary_search_empty;
 }
 
 class _AppLocalizationsDelegate

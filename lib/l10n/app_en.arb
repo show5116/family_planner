@@ -9745,5 +9745,7 @@
   "diary_flashback_years": "{count, plural, =1{1 year ago today} other{{count} years ago today}}",
   "diary_unsupported_format": "That format isn't supported",
   "diary_video_too_long": "Videos can be up to {seconds} seconds",
-  "diary_media_skipped": "{count, plural, =1{{fileName} was skipped — unsupported format} other{{fileName} and {count} others were skipped — unsupported format}}"
+  "diary_media_skipped": "{count, plural, =1{{fileName} was skipped — unsupported format} other{{fileName} and {count} others were skipped — unsupported format}}",
+  "diary_search_hint": "Search by title or content",
+  "diary_search_empty": "No diaries match"
 }

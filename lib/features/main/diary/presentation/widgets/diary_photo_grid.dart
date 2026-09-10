@@ -71,10 +71,15 @@ class _DiaryPhotoGridState extends ConsumerState<DiaryPhotoGrid> {
               children: [
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.6,
-                  child: AppEmptyState(
-                    icon: Icons.photo_library_outlined,
-                    message: l10n.diary_photos_empty,
-                  ),
+                  child: ref.watch(diaryHasActiveFilterProvider)
+                      ? AppEmptyState(
+                          icon: Icons.search_off,
+                          message: l10n.diary_search_empty,
+                        )
+                      : AppEmptyState(
+                          icon: Icons.photo_library_outlined,
+                          message: l10n.diary_photos_empty,
+                        ),
                 ),
               ],
             ),
