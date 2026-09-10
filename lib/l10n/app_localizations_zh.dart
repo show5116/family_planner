@@ -4924,7 +4924,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routine_error_generic => '发生错误';
 
   @override
-  String get widgetSettings_routineSummary => '今日习惯';
+  String get widgetSettings_routineSummary => '我的习惯';
 
   @override
   String get nav_routines => '日常习惯';
@@ -9225,4 +9225,77 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get subscription_manage_on_device => '订阅管理和支付请在手机应用中进行';
+
+  @override
+  String get widgetSettings_routineFamily => '家庭习惯看板';
+
+  @override
+  String get routineWidget_tabToday => '今天';
+
+  @override
+  String get routineWidget_tabWeekly => '本周';
+
+  @override
+  String get routineWidget_viewToggleTooltip => '切换视图';
+
+  @override
+  String get routineWidget_allDone => '今日目标已达成 🎉';
+
+  @override
+  String get routineWidget_noTargetToday => '今天没有待完成的习惯';
+
+  @override
+  String routineWidget_moreCount(int count) {
+    return '还有 $count 个';
+  }
+
+  @override
+  String routineWidget_streakAtRisk(int days) {
+    return '$days 天连续记录今天将中断';
+  }
+
+  @override
+  String routineWidget_achievementRate(int rate) {
+    return '完成率 $rate%';
+  }
+
+  @override
+  String routineWidget_goalDays(int achieved, int total) {
+    return '达成目标 $achieved/$total 天';
+  }
+
+  @override
+  String routineWidget_nextBadge(String title, int days) {
+    return '距离$title还有$days天';
+  }
+
+  @override
+  String get routineWidget_groupTooltip => '选择群组';
+
+  @override
+  String get routineWidget_familyNoGroup => '你还没有加入群组';
+
+  @override
+  String get routineWidget_familyEmpty => '还没有共享的习惯';
+
+  @override
+  String get routineWidget_familyShareCta => '分享给家人';
+
+  @override
+  String routineWidget_familyRank(int rank) {
+    return '今日第$rank名';
+  }
+
+  @override
+  String routineWidget_challengeDday(int days) {
+    return '还剩$days天';
+  }
+
+  @override
+  String get routineWidget_challengeLastDay => '今天结束';
+
+  @override
+  String routineWidget_myChallengeProgress(int checked, int target) {
+    return '我的进度 $checked/$target';
+  }
 }

@@ -52,6 +52,29 @@
   - 핀 없을 때 안내 문구 표시
   - 기본값 비활성화 (위젯 설정에서 직접 켜야 함)
 
+### 내 루틴 (RoutineSummaryWidget)
+- ✅ 하나의 키(`routineSummary`)에 뷰 모드 2종 — 카드 헤더 아이콘으로 토글, 선택은 `routineViewMode`로 저장
+- ✅ **오늘 뷰** (`routineDailyStreakProvider` + `routineListProvider(null)`)
+  - 일일 목표 진행 링(`todayCheckedCount`/`todayTargetCount`) + 연속 달성 일수(🔥)
+  - 미체크 → 현재 시간대(`timeFilter`) → 중요도 → 정렬순 우선순위로 최대 3개만 노출, 나머지는 "외 N개"
+  - `recordType`이 BOOLEAN이 아니면 체크 전에 값 입력 다이얼로그(`showRoutineCheckValueDialog`) 호출
+  - 일시정지(PAUSED)/종료(ENDED) 습관은 후보에서 제외
+  - 18시 이후 목표 미달성 + 스트릭 보유 시 끊김 경고 문구 노출
+  - 오늘 목표를 다 채우면 리스트 대신 축하 문구로 전환
+- ✅ **이번 주 뷰** (`routineOverviewProvider(period: week)`)
+  - 7칸 히트맵(일일 목표 달성 여부 기준, 오늘 테두리 강조, 미래일 흐리게)
+  - 달성률 % + 일일 목표 달성 일수
+  - 아직 못 받은 "연속 달성 N일" 배지까지 남은 일수 (배지 조회 실패 시 조용히 생략)
+
+### 가족 루틴 보드 (RoutineFamilyWidget) — 신규
+- ✅ 실제 데이터 연동 (`routineGroupMembersProvider` + `routineChallengesProvider`)
+  - 그룹원별 오늘 진행률 바(활성 습관 기준 checked/total), 진행률 순 정렬
+  - 오늘 기준 내 순위 표시 (`authProvider.userId`로 본인 식별)
+  - 진행 중인 챌린지 1건 — 참여 중인 것 우선, 남은 일수(D-day)와 내 진행률
+  - 그룹이 2개 이상이면 헤더에서 그룹 선택 (`routineFamilySelectedGroupId`로 저장)
+  - 공유된 루틴이 없으면 빈 카드 대신 공유 설정 CTA
+  - 기본값 비활성화 (위젯 설정에서 직접 켜야 함)
+
 ## 대시보드 전용 Provider
 `lib/features/home/providers/dashboard_provider.dart` — 각 탭의 UI 상태와 **독립적으로**
 조회해, 탭에서 필터를 바꿔도 대시보드가 흔들리지 않게 합니다. 5분 캐시(keepAlive + Timer).
@@ -63,7 +86,7 @@
 - `dashboardSavingsProvider` — 저금통 목표
 - `dashboardWidgetSyncProvider` — OS 홈 위젯 데이터 동기화
 
-## 위젯 전체 목록 (12종)
+## 위젯 전체 목록 (13종)
 | 위젯 | 클래스 | 표시 내용 |
 |---|---|---|
 | 날씨 | WeatherWidget | 현재 위치 날씨·미세먼지 |
@@ -77,9 +100,10 @@
 | 저금통 | SavingsSummaryWidget | 그룹별 적립 목표·달성률 |
 | 유통기한 임박 | FridgeExpiryWidget | 냉장고 임박 식품 |
 | 기념일 | AnniversarySummaryWidget | 다가오는 기념일과 D-day |
-| 오늘의 루틴 | RoutineSummaryWidget | 오늘 해야 할 루틴 (인라인 체크) |
+| 내 루틴 | RoutineSummaryWidget | 오늘 ⇄ 이번 주 토글 (일일 목표 링 + 인라인 체크 / 주간 히트맵) |
+| 가족 루틴 보드 | RoutineFamilyWidget | 그룹원별 오늘 진행률 + 진행 중인 챌린지 |
 
-기본 표시: 날씨 · 오늘의 일정 · 가계 현황 · 투자 지표 요약 · 육아 포인트
+기본 표시: 날씨 · 오늘의 일정 · 내 루틴 · 가계 현황 · 투자 지표 요약 · 육아 포인트
 
 ## 공통 동작
 - ✅ 대시보드 전체 새로고침 (RefreshIndicator — 알림 개수 재조회)

@@ -5086,7 +5086,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routine_error_generic => 'Something went wrong';
 
   @override
-  String get widgetSettings_routineSummary => 'Today\'s Routines';
+  String get widgetSettings_routineSummary => 'My Routines';
 
   @override
   String get nav_routines => 'Routines';
@@ -9568,4 +9568,77 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscription_manage_on_device =>
       'Manage your subscription in the mobile app';
+
+  @override
+  String get widgetSettings_routineFamily => 'Family Routine Board';
+
+  @override
+  String get routineWidget_tabToday => 'Today';
+
+  @override
+  String get routineWidget_tabWeekly => 'This week';
+
+  @override
+  String get routineWidget_viewToggleTooltip => 'Switch view';
+
+  @override
+  String get routineWidget_allDone => 'Today\'s goal reached 🎉';
+
+  @override
+  String get routineWidget_noTargetToday => 'No habits due today';
+
+  @override
+  String routineWidget_moreCount(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String routineWidget_streakAtRisk(int days) {
+    return '$days-day streak ends today';
+  }
+
+  @override
+  String routineWidget_achievementRate(int rate) {
+    return '$rate% complete';
+  }
+
+  @override
+  String routineWidget_goalDays(int achieved, int total) {
+    return 'Goal met $achieved/$total days';
+  }
+
+  @override
+  String routineWidget_nextBadge(String title, int days) {
+    return '$days days to $title';
+  }
+
+  @override
+  String get routineWidget_groupTooltip => 'Select group';
+
+  @override
+  String get routineWidget_familyNoGroup => 'You\'re not in any group';
+
+  @override
+  String get routineWidget_familyEmpty => 'No shared routines yet';
+
+  @override
+  String get routineWidget_familyShareCta => 'Share with family';
+
+  @override
+  String routineWidget_familyRank(int rank) {
+    return '#$rank today';
+  }
+
+  @override
+  String routineWidget_challengeDday(int days) {
+    return '$days days left';
+  }
+
+  @override
+  String get routineWidget_challengeLastDay => 'Ends today';
+
+  @override
+  String routineWidget_myChallengeProgress(int checked, int target) {
+    return 'My progress $checked/$target';
+  }
 }

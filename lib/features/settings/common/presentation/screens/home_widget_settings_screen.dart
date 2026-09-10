@@ -23,6 +23,7 @@ const _addableWidgetKeys = [
   'savingsSummary',
   'anniversary',
   'routineSummary',
+  'routineFamily',
 ];
 
 /// 위젯 이름.
@@ -56,6 +57,8 @@ String _widgetLabel(String key, AppLocalizations l10n) {
       return l10n.widgetSettings_anniversarySummary;
     case 'routineSummary':
       return l10n.widgetSettings_routineSummary;
+    case 'routineFamily':
+      return l10n.widgetSettings_routineFamily;
     default:
       return key;
   }
@@ -88,6 +91,8 @@ IconData _widgetIcon(String key) {
       return Icons.celebration_outlined;
     case 'routineSummary':
       return Icons.check_circle_outline;
+    case 'routineFamily':
+      return Icons.groups_outlined;
     default:
       return Icons.widgets_outlined;
   }

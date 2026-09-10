@@ -9527,7 +9527,7 @@ abstract class AppLocalizations {
   /// 홈 위젯 설정 - 루틴 요약 위젯 라벨
   ///
   /// In ko, this message translates to:
-  /// **'오늘의 루틴'**
+  /// **'내 루틴'**
   String get widgetSettings_routineSummary;
 
   /// 루틴 네비게이션 라벨
@@ -17509,6 +17509,120 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'구독 관리와 결제는 모바일 앱에서 할 수 있어요'**
   String get subscription_manage_on_device;
+
+  /// 홈 위젯 설정 - 가족 루틴 보드 위젯 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'가족 루틴 보드'**
+  String get widgetSettings_routineFamily;
+
+  /// 내 루틴 위젯 - 오늘 뷰 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get routineWidget_tabToday;
+
+  /// 내 루틴 위젯 - 이번 주 뷰 라벨
+  ///
+  /// In ko, this message translates to:
+  /// **'이번 주'**
+  String get routineWidget_tabWeekly;
+
+  /// 내 루틴 위젯 - 뷰 전환 버튼 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'보기 전환'**
+  String get routineWidget_viewToggleTooltip;
+
+  /// 내 루틴 위젯 - 오늘 일일 목표를 모두 채웠을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 목표 달성 🎉'**
+  String get routineWidget_allDone;
+
+  /// 내 루틴 위젯 - 오늘 수행 대상 습관이 없을 때
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 대상 습관이 없어요'**
+  String get routineWidget_noTargetToday;
+
+  /// 내 루틴 위젯 - 표시 개수 초과분
+  ///
+  /// In ko, this message translates to:
+  /// **'외 {count}개'**
+  String routineWidget_moreCount(int count);
+
+  /// 내 루틴 위젯 - 스트릭 끊김 경고
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 연속이 오늘 끊겨요'**
+  String routineWidget_streakAtRisk(int days);
+
+  /// 내 루틴 위젯 - 주간 달성률
+  ///
+  /// In ko, this message translates to:
+  /// **'달성률 {rate}%'**
+  String routineWidget_achievementRate(int rate);
+
+  /// 내 루틴 위젯 - 주간 일일 목표 달성 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'목표 달성 {achieved}/{total}일'**
+  String routineWidget_goalDays(int achieved, int total);
+
+  /// 내 루틴 위젯 - 다음 배지까지 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'{title}까지 {days}일'**
+  String routineWidget_nextBadge(String title, int days);
+
+  /// 가족 루틴 보드 위젯 - 그룹 선택 툴팁
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 선택'**
+  String get routineWidget_groupTooltip;
+
+  /// 가족 루틴 보드 위젯 - 참여 그룹 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'참여 중인 그룹이 없어요'**
+  String get routineWidget_familyNoGroup;
+
+  /// 가족 루틴 보드 위젯 - 공유 루틴 없음
+  ///
+  /// In ko, this message translates to:
+  /// **'공유된 루틴이 없어요'**
+  String get routineWidget_familyEmpty;
+
+  /// 가족 루틴 보드 위젯 - 공유 유도 CTA
+  ///
+  /// In ko, this message translates to:
+  /// **'가족에게 공유하기'**
+  String get routineWidget_familyShareCta;
+
+  /// 가족 루틴 보드 위젯 - 오늘 기준 내 순위
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 {rank}위'**
+  String routineWidget_familyRank(int rank);
+
+  /// 가족 루틴 보드 위젯 - 챌린지 남은 일수
+  ///
+  /// In ko, this message translates to:
+  /// **'D-{days}'**
+  String routineWidget_challengeDday(int days);
+
+  /// 가족 루틴 보드 위젯 - 챌린지 오늘 마감
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 마감'**
+  String get routineWidget_challengeLastDay;
+
+  /// 가족 루틴 보드 위젯 - 내 챌린지 진행률
+  ///
+  /// In ko, this message translates to:
+  /// **'내 진행 {checked}/{target}'**
+  String routineWidget_myChallengeProgress(int checked, int target);
 }
 
 class _AppLocalizationsDelegate

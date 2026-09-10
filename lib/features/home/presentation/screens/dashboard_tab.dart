@@ -13,6 +13,7 @@ import 'package:family_planner/features/home/presentation/widgets/memo_summary_w
 import 'package:family_planner/features/home/presentation/widgets/childcare_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/household_summary_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/routine_summary_widget.dart';
+import 'package:family_planner/features/home/presentation/widgets/routine_family_widget.dart';
 import 'package:family_planner/features/home/presentation/widgets/savings_summary_widget.dart';
 import 'package:family_planner/features/weather/presentation/widgets/weather_widget.dart';
 import 'package:family_planner/shared/widgets/app_bar_more_menu.dart';
@@ -246,7 +247,14 @@ class _DashboardGrid extends ConsumerWidget {
             );
             break;
           case 'routineSummary':
-            widget = const RoutineSummaryWidget();
+            widget = RoutineSummaryWidget(
+              viewMode: settings.routineViewMode,
+            );
+            break;
+          case 'routineFamily':
+            widget = RoutineFamilyWidget(
+              initialSelectedGroupId: settings.routineFamilySelectedGroupId,
+            );
             break;
         }
       }

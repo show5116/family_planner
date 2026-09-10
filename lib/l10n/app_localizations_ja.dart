@@ -4958,7 +4958,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routine_error_generic => 'エラーが発生しました';
 
   @override
-  String get widgetSettings_routineSummary => '今日のルーティン';
+  String get widgetSettings_routineSummary => 'マイルーティン';
 
   @override
   String get nav_routines => 'ルーティン';
@@ -9314,4 +9314,77 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get subscription_manage_on_device => '購読の管理と決済はモバイルアプリから行えます';
+
+  @override
+  String get widgetSettings_routineFamily => '家族ルーティンボード';
+
+  @override
+  String get routineWidget_tabToday => '今日';
+
+  @override
+  String get routineWidget_tabWeekly => '今週';
+
+  @override
+  String get routineWidget_viewToggleTooltip => '表示切り替え';
+
+  @override
+  String get routineWidget_allDone => '今日の目標達成 🎉';
+
+  @override
+  String get routineWidget_noTargetToday => '今日対象の習慣はありません';
+
+  @override
+  String routineWidget_moreCount(int count) {
+    return '他 $count件';
+  }
+
+  @override
+  String routineWidget_streakAtRisk(int days) {
+    return '$days日連続が今日途切れます';
+  }
+
+  @override
+  String routineWidget_achievementRate(int rate) {
+    return '達成率 $rate%';
+  }
+
+  @override
+  String routineWidget_goalDays(int achieved, int total) {
+    return '目標達成 $achieved/$total日';
+  }
+
+  @override
+  String routineWidget_nextBadge(String title, int days) {
+    return '$titleまで$days日';
+  }
+
+  @override
+  String get routineWidget_groupTooltip => 'グループ選択';
+
+  @override
+  String get routineWidget_familyNoGroup => '参加中のグループがありません';
+
+  @override
+  String get routineWidget_familyEmpty => '共有されたルーティンがありません';
+
+  @override
+  String get routineWidget_familyShareCta => '家族に共有する';
+
+  @override
+  String routineWidget_familyRank(int rank) {
+    return '本日$rank位';
+  }
+
+  @override
+  String routineWidget_challengeDday(int days) {
+    return 'あと$days日';
+  }
+
+  @override
+  String get routineWidget_challengeLastDay => '本日終了';
+
+  @override
+  String routineWidget_myChallengeProgress(int checked, int target) {
+    return '進捗 $checked/$target';
+  }
 }

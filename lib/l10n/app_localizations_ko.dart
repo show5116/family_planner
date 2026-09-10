@@ -4967,7 +4967,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routine_error_generic => '오류가 발생했습니다';
 
   @override
-  String get widgetSettings_routineSummary => '오늘의 루틴';
+  String get widgetSettings_routineSummary => '내 루틴';
 
   @override
   String get nav_routines => '루틴';
@@ -9346,4 +9346,77 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get subscription_manage_on_device => '구독 관리와 결제는 모바일 앱에서 할 수 있어요';
+
+  @override
+  String get widgetSettings_routineFamily => '가족 루틴 보드';
+
+  @override
+  String get routineWidget_tabToday => '오늘';
+
+  @override
+  String get routineWidget_tabWeekly => '이번 주';
+
+  @override
+  String get routineWidget_viewToggleTooltip => '보기 전환';
+
+  @override
+  String get routineWidget_allDone => '오늘 목표 달성 🎉';
+
+  @override
+  String get routineWidget_noTargetToday => '오늘 대상 습관이 없어요';
+
+  @override
+  String routineWidget_moreCount(int count) {
+    return '외 $count개';
+  }
+
+  @override
+  String routineWidget_streakAtRisk(int days) {
+    return '$days일 연속이 오늘 끊겨요';
+  }
+
+  @override
+  String routineWidget_achievementRate(int rate) {
+    return '달성률 $rate%';
+  }
+
+  @override
+  String routineWidget_goalDays(int achieved, int total) {
+    return '목표 달성 $achieved/$total일';
+  }
+
+  @override
+  String routineWidget_nextBadge(String title, int days) {
+    return '$title까지 $days일';
+  }
+
+  @override
+  String get routineWidget_groupTooltip => '그룹 선택';
+
+  @override
+  String get routineWidget_familyNoGroup => '참여 중인 그룹이 없어요';
+
+  @override
+  String get routineWidget_familyEmpty => '공유된 루틴이 없어요';
+
+  @override
+  String get routineWidget_familyShareCta => '가족에게 공유하기';
+
+  @override
+  String routineWidget_familyRank(int rank) {
+    return '오늘 $rank위';
+  }
+
+  @override
+  String routineWidget_challengeDday(int days) {
+    return 'D-$days';
+  }
+
+  @override
+  String get routineWidget_challengeLastDay => '오늘 마감';
+
+  @override
+  String routineWidget_myChallengeProgress(int checked, int target) {
+    return '내 진행 $checked/$target';
+  }
 }

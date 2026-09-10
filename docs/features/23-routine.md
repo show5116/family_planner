@@ -32,7 +32,7 @@
 - ✅ 챌린지 대상 습관 선택기 (RoutineChallengeRoutinePicker)
 - ✅ 챌린지 참여/참여 취소, 참여자별 진행률 표시
 - ✅ 루틴 목록 화면에 "공유 루틴 볼 그룹 선택" 진입점 (내 그룹 선택 → 그룹원 현황 화면 이동, 내 루틴이 없어도 공유받은 그룹의 현황 확인 가능)
-- ✅ 홈 대시보드 위젯 (오늘의 루틴 요약 + 인라인 체크 토글)
+- ✅ 홈 대시보드 위젯 2종 — **내 루틴**(오늘 ⇄ 이번 주 토글: 일일 목표 링 + 시간대 우선 인라인 체크 / 주간 히트맵 + 다음 배지)과 **가족 루틴 보드**(그룹원별 오늘 진행률 + 챌린지 D-day). 상세는 [02-dashboard.md](02-dashboard.md)
 - ✅ 더보기 탭 / 하단 네비게이션 메뉴 노출
 - ✅ 통계 탭 달성률 원형 게이지 (fl_chart, 달성률 구간별 success/warning/error 색상)
 - ✅ 스트릭 카드 레이아웃 개선 (현재 연속 일수 하이라이트 승격)
@@ -92,6 +92,7 @@
 - ✅ 스트릭 조회 (현재/최장, 일 단위 + 주 단위)
 - ✅ 기간별 달성률 조회 (주/월 토글)
 - ✅ 대시보드 위젯용 전체 루틴 요약 (오늘 체크 + 스트릭 + 이번 주 진행)
+- ✅ 대시보드 위젯은 `GET /routines/stats/summary` 대신 `GET /routines`를 쓴다 — summary 응답에는 `timeFilter`/`recordType`/`status`가 없어 시간대 우선순위·값 입력 다이얼로그·일시정지 제외를 할 수 없다
 - ✅ 배지 카탈로그 조회 및 획득 여부 표시 (연속 7/30/100일, 연속 4/12/52주, 누적 50/200/500회 총 9종)
 - ✅ 체크 시 신규 배지 자동 판정 (백엔드가 판정, 체크 응답에 결과 포함)
 - ✅ 그룹 랭킹보드 조회 (공유한 루틴 소유자만 집계, 비공유자는 미노출)
@@ -189,7 +190,7 @@
 - 내 배지 목록 화면: `lib/features/main/routine/presentation/screens/routine_badges_screen.dart`
 - 랭킹보드 화면: `lib/features/main/routine/presentation/screens/routine_leaderboard_screen.dart`
 - 위젯: `lib/features/main/routine/presentation/widgets/` (routine_list_item, routine_heatmap_calendar, routine_streak_card, routine_rate_card, routine_share_group_tile, routine_weekly_strip, routine_badge_celebration_dialog, routine_group_section(루틴 섹션 접기/펼치기+드래그정렬), routine_group_form_dialog(루틴 생성/수정 다이얼로그), **routine_check_value_dialog**(recordType별 체크 값 입력 다이얼로그), **routine_category_form_dialog**(카테고리 생성/수정 다이얼로그))
-- 홈 대시보드 위젯: `lib/features/home/presentation/widgets/routine_summary_widget.dart`
+- 홈 대시보드 위젯: `lib/features/home/presentation/widgets/routine_summary_widget.dart`(내 루틴), `routine_family_widget.dart`(가족 루틴 보드)
 - 알림 설정: `lib/features/notification/data/models/notification_settings_model.dart`, `notification_settings_provider.dart`, `notification_settings_section.dart` (routineEnabled/routineReminderHour 확장)
 - 목록 온보딩: `lib/features/main/routine/presentation/screens/_routine_list_onboarding.dart`
 - 유닛 테스트: `test/features/main/routine/routine_provider_test.dart` (체크 낙관적 업데이트/롤백, 체크취소, 스트릭 갱신 감지, 배지 전달 5건 + 루틴 목록 조회/생성/삭제 3건 + 목록 status 무필터 조회 1건 + recordType별 체크 값 전달 3건 + pause/resume 2건 + 카테고리 조회/생성/삭제 3건, 총 17건)

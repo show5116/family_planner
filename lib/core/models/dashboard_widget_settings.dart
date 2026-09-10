@@ -2,6 +2,9 @@ enum ScheduleViewMode { today, week, month }
 
 enum HouseholdWidgetViewMode { budget, category }
 
+/// 내 루틴 위젯 뷰 모드 (오늘 ⇄ 이번 주)
+enum RoutineWidgetViewMode { today, weekly }
+
 /// 모든 싱글톤 위젯 키 (widgetOrder에 1개까지만 허용)
 const kSingletonWidgetKeys = {
   'weather',
@@ -16,6 +19,7 @@ const kSingletonWidgetKeys = {
   'savingsSummary',
   'anniversary',
   'routineSummary',
+  'routineFamily',
 };
 
 /// 대시보드 위젯 설정 모델
@@ -48,11 +52,16 @@ class DashboardWidgetSettings {
   final String? savingsSelectedGroupId;
   // 냉장고 유통기한 위젯
   final String? fridgeExpirySelectedGroupId;
+  // 내 루틴 위젯 (오늘 ⇄ 이번 주 토글)
+  final RoutineWidgetViewMode routineViewMode;
+  // 가족 루틴 보드 위젯
+  final String? routineFamilySelectedGroupId;
 
   const DashboardWidgetSettings({
     this.widgetOrder = const [
       'weather',
       'todaySchedule',
+      'routineSummary',
       'householdSummary',
       'investmentSummary',
       'childcareSummary',
@@ -72,6 +81,8 @@ class DashboardWidgetSettings {
     this.childcareSelectedGroupId,
     this.savingsSelectedGroupId,
     this.fridgeExpirySelectedGroupId,
+    this.routineViewMode = RoutineWidgetViewMode.today,
+    this.routineFamilySelectedGroupId,
   });
 
   factory DashboardWidgetSettings.defaultSettings() {
@@ -179,6 +190,7 @@ class DashboardWidgetSettings {
       widgetOrder = const [
         'weather',
         'todaySchedule',
+        'routineSummary',
         'householdSummary',
         'investmentSummary',
         'childcareSummary',
@@ -207,6 +219,12 @@ class DashboardWidgetSettings {
       savingsSelectedGroupId: json['savingsSelectedGroupId'] as String?,
       fridgeExpirySelectedGroupId:
           json['fridgeExpirySelectedGroupId'] as String?,
+      routineViewMode: RoutineWidgetViewMode.values.firstWhere(
+        (e) => e.name == (json['routineViewMode'] as String? ?? ''),
+        orElse: () => RoutineWidgetViewMode.today,
+      ),
+      routineFamilySelectedGroupId:
+          json['routineFamilySelectedGroupId'] as String?,
     );
   }
 
@@ -228,6 +246,8 @@ class DashboardWidgetSettings {
       'childcareSelectedGroupId': childcareSelectedGroupId,
       'savingsSelectedGroupId': savingsSelectedGroupId,
       'fridgeExpirySelectedGroupId': fridgeExpirySelectedGroupId,
+      'routineViewMode': routineViewMode.name,
+      'routineFamilySelectedGroupId': routineFamilySelectedGroupId,
     };
   }
 
@@ -248,6 +268,8 @@ class DashboardWidgetSettings {
     Object? childcareSelectedGroupId = _sentinel,
     Object? savingsSelectedGroupId = _sentinel,
     Object? fridgeExpirySelectedGroupId = _sentinel,
+    RoutineWidgetViewMode? routineViewMode,
+    Object? routineFamilySelectedGroupId = _sentinel,
   }) {
     return DashboardWidgetSettings(
       widgetOrder: widgetOrder ?? this.widgetOrder,
@@ -285,6 +307,11 @@ class DashboardWidgetSettings {
       fridgeExpirySelectedGroupId: fridgeExpirySelectedGroupId == _sentinel
           ? this.fridgeExpirySelectedGroupId
           : fridgeExpirySelectedGroupId as String?,
+      routineViewMode: routineViewMode ?? this.routineViewMode,
+      routineFamilySelectedGroupId:
+          routineFamilySelectedGroupId == _sentinel
+          ? this.routineFamilySelectedGroupId
+          : routineFamilySelectedGroupId as String?,
     );
   }
 }

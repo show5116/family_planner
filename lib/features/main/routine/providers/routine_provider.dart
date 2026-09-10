@@ -522,6 +522,9 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
       _ref.invalidate(routineSummaryProvider);
       // 체크 개수가 바뀌면 오늘의 일일 목표 진행/달성 여부도 달라진다.
       _ref.invalidate(routineDailyStreakProvider);
+      // 대시보드 '이번 주' 뷰와 통합 통계 화면의 히트맵/달성률도 오늘 체크를
+      // 반영해야 한다.
+      _ref.invalidate(routineOverviewProvider);
       if (newlyEarnedBadges.isNotEmpty) {
         _ref.invalidate(routineMyBadgesProvider);
       }

@@ -83,6 +83,7 @@ class DashboardWidgetSettingsNotifier
       childcareSelectedGroupId: null,
       savingsSelectedGroupId: null,
       fridgeExpirySelectedGroupId: null,
+      routineFamilySelectedGroupId: null,
     );
     await save(cleared);
   }
