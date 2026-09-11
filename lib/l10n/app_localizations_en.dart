@@ -9613,6 +9613,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String routineWidget_nextBadgeWeeks(String title, int weeks) {
+    return '$weeks weeks to $title';
+  }
+
+  @override
+  String routineWidget_challengeGroup(String group, String title) {
+    return '$group · $title';
+  }
+
+  @override
   String get routineWidget_groupTooltip => 'Select group';
 
   @override

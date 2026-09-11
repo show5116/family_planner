@@ -281,17 +281,22 @@ class _MemberRow extends StatelessWidget {
   }
 }
 
-/// 진행 중인 챌린지 한 건 요약. 참여 중인 챌린지를 우선 노출한다.
+/// 진행 중인 챌린지 한 건 요약.
+///
+/// 선택된 그룹이 아니라 **내가 속한 모든 그룹**을 대상으로 한다
+/// (`GET /routines/challenges/me`). 마감이 임박한 챌린지가 다른 그룹에 있으면
+/// 그룹을 바꿔보기 전까지 모르는 문제를 막기 위해서다.
 class _ChallengeFooter extends ConsumerWidget {
   const _ChallengeFooter({required this.groupId});
 
+  /// 현재 보고 있는 그룹. 다른 그룹의 챌린지면 그룹명을 함께 보여주기 위해 쓴다.
   final String groupId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     // 챌린지는 부가 정보라 로딩/에러 시 조용히 생략한다.
-    final challenges = ref.watch(routineChallengesProvider(groupId)).valueOrNull;
+    final challenges = ref.watch(routineMyChallengesProvider).valueOrNull;
     if (challenges == null) return const SizedBox.shrink();
 
     final ongoing = challenges
@@ -300,11 +305,23 @@ class _ChallengeFooter extends ConsumerWidget {
     if (ongoing.isEmpty) return const SizedBox.shrink();
 
     // 참여 중인 챌린지가 있으면 그것을, 없으면 가장 먼저 끝나는 것을 보여준다.
+    // (서버가 이미 마감 임박순으로 주지만 참여 여부는 클라이언트 기준이다)
     ongoing.sort((a, b) {
       if (a.joined != b.joined) return a.joined ? -1 : 1;
       return a.endDate.compareTo(b.endDate);
     });
     final challenge = ongoing.first;
+
+    // 지금 보고 있는 그룹의 챌린지가 아니면 어디 것인지 밝힌다.
+    final isOtherGroup =
+        challenge.groupId != null && challenge.groupId != groupId;
+    final challengeLabel =
+        isOtherGroup && (challenge.groupName?.isNotEmpty ?? false)
+        ? l10n.routineWidget_challengeGroup(
+            challenge.groupName!,
+            challenge.title,
+          )
+        : challenge.title;
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -327,7 +344,7 @@ class _ChallengeFooter extends ConsumerWidget {
               const SizedBox(width: AppSizes.spaceXS),
               Expanded(
                 child: Text(
-                  challenge.title,
+                  challengeLabel,
                   style: Theme.of(context).textTheme.bodyMedium,
                   overflow: TextOverflow.ellipsis,
                 ),

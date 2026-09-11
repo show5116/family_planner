@@ -81,7 +81,9 @@
 - ✅ 실제 데이터 연동 (`routineGroupMembersProvider` + `routineChallengesProvider`)
   - 그룹원별 오늘 진행률 바(활성 습관 기준 checked/total), 진행률 순 정렬
   - 오늘 기준 내 순위 표시 (`authProvider.userId`로 본인 식별)
-  - 진행 중인 챌린지 1건 — 참여 중인 것 우선, 남은 일수(D-day)와 내 진행률
+  - 진행 중인 챌린지 1건 — **선택된 그룹이 아니라 내가 속한 모든 그룹**이 대상
+    (`GET /routines/challenges/me`). 참여 중인 것 우선, 남은 일수(D-day)와 내 진행률.
+    다른 그룹 챌린지면 그룹명을 함께 표시 — 마감 임박한 챌린지를 그룹 전환 없이 보기 위함
   - 그룹이 2개 이상이면 헤더에서 그룹 선택 (`routineFamilySelectedGroupId`로 저장)
   - 공유된 루틴이 없으면 빈 카드 대신 공유 설정 CTA
   - 기본값 비활성화 (위젯 설정에서 직접 켜야 함)

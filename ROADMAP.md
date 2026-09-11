@@ -120,6 +120,22 @@
 ## 📈 최근 완료된 기능
 
 ### 2026-09-10
+- ✅ **루틴 대시보드 위젯 — 백엔드 신규 API 3건 반영** ([23-routine.md](docs/features/23-routine.md))
+  - 요청서(`docs/requests/2026-09-10-routine-dashboard-widgets.md`)로 넘긴 3건이 모두 반영되어
+    프론트를 맞춤. 셋 다 기존 필드를 건드리지 않는 추가라 배포 순서 제약 없음
+  - `daily-streak`에 `totalAchievedDays`/`perfectWeeksCount` 추가 → **배지 9종 전부**가
+    "다음 배지까지" 대상이 됨 (기존에는 연속 달성 기준 3종만 가능)
+    - 기준별 단위가 달라(일/주) 비교는 일수 환산, 표시는 원래 단위로 분기
+  - `GET /routines/challenges/me` 신설 → 가족 루틴 보드가 **선택된 그룹이 아니라 모든 그룹**의
+    임박 챌린지를 노출. 다른 그룹 것이면 그룹명을 함께 표시
+  - `stats/summary`에 `timeFilter`/`recordType` 추가 → 모델은 맞췄지만 '오늘' 뷰는 계속
+    `GET /routines`를 사용. 인라인 체크의 낙관적 업데이트가 `routineListProvider`를 통해서만
+    동작하고, summary에는 우선순위 3순위 기준인 `importance`가 없기 때문
+  - 체크 시 `routineOverviewProvider` 무효화 누락 수정 — '이번 주' 뷰와 통합 통계 화면의
+    히트맵·달성률이 오늘 체크를 반영하지 못하던 문제
+  - 유닛 테스트 6건 추가 (전체 그룹 챌린지 2건, daily-streak 신규 필드 2건, summary 신규 필드 2건)
+
+### 2026-09-10
 - ✅ **루틴 대시보드 위젯 재설계 + 가족 루틴 보드 신설** ([02-dashboard.md](docs/features/02-dashboard.md), [23-routine.md](docs/features/23-routine.md))
   - 기존 `routineSummary` 위젯은 1차 구현 그대로라 일일 목표·시간대·기록방식·일시정지 등
     이후 추가된 기능이 전혀 반영되지 않았고, 습관 전체를 개수 제한 없이 나열하고 있었음

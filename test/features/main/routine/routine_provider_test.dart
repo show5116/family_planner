@@ -95,6 +95,33 @@ UserRoutineBadge _buildBadge(String code) {
 }
 
 /// 테스트용 가짜 Repository — 실제 HTTP 호출 없이 동작을 흉내낸다.
+RoutineChallenge _buildChallenge({
+  required String id,
+  required RoutineChallengeStatus status,
+  required DateTime endDate,
+  String? groupId,
+  String? groupName,
+  bool joined = false,
+}) {
+  final now = _fixedDate();
+  return RoutineChallenge(
+    id: id,
+    title: '물 마시기',
+    startDate: now,
+    endDate: endDate,
+    targetCount: 21,
+    status: status,
+    participantCount: 3,
+    joined: joined,
+    myCheckedCount: joined ? 12 : null,
+    myAchieved: false,
+    createdBy: 'user-1',
+    isMine: false,
+    groupId: groupId,
+    groupName: groupName,
+  );
+}
+
 class _FakeRoutineRepository extends RoutineRepository {
   _FakeRoutineRepository({
     List<Routine>? routines,
@@ -104,6 +131,7 @@ class _FakeRoutineRepository extends RoutineRepository {
     this.newlyEarnedBadgesOnCheck = const [],
     this.streakAfterCheck,
     this.streakBeforeCheck,
+    this.myChallenges = const [],
   }) : _routines = routines ?? [_buildRoutine()];
 
   final List<Routine> _routines;
@@ -113,6 +141,7 @@ class _FakeRoutineRepository extends RoutineRepository {
   final List<UserRoutineBadge> newlyEarnedBadgesOnCheck;
   final RoutineStreak? streakAfterCheck;
   final RoutineStreak? streakBeforeCheck;
+  final List<RoutineChallenge> myChallenges;
 
   int checkCallCount = 0;
   int uncheckCallCount = 0;
@@ -122,6 +151,18 @@ class _FakeRoutineRepository extends RoutineRepository {
   int resumeCallCount = 0;
   int deleteRoutineCategoryCallCount = 0;
   CheckRoutineDto? lastCheckDto;
+  RoutineChallengeStatus? lastMyChallengesStatus;
+  int getMyChallengesCallCount = 0;
+
+  @override
+  Future<List<RoutineChallenge>> getMyChallenges({
+    RoutineChallengeStatus? status,
+  }) async {
+    getMyChallengesCallCount += 1;
+    lastMyChallengesStatus = status;
+    if (status == null) return myChallenges;
+    return myChallenges.where((c) => c.status == status).toList();
+  }
 
   @override
   Future<List<Routine>> getRoutines({
@@ -166,6 +207,8 @@ class _FakeRoutineRepository extends RoutineRepository {
   Future<RoutineDailyStreak> getDailyStreak() async => const RoutineDailyStreak(
     currentStreakDays: 0,
     longestStreakDays: 0,
+    totalAchievedDays: 0,
+    perfectWeeksCount: 0,
     todayAchieved: false,
     todayCheckedCount: 0,
     todayTargetCount: 0,
@@ -633,6 +676,123 @@ void main() {
       expect(repository.deleteRoutineCategoryCallCount, 1);
       final categories = container.read(routineCategoryListProvider).value!;
       expect(categories, isEmpty);
+    });
+  });
+
+  group('routineMyChallenges (전체 그룹 챌린지)', () {
+    test('소속 그룹 전체의 챌린지를 groupId/groupName과 함께 반환한다', () async {
+      final repository = _FakeRoutineRepository(
+        myChallenges: [
+          _buildChallenge(
+            id: 'challenge-1',
+            status: RoutineChallengeStatus.ongoing,
+            endDate: DateTime(2026, 7, 5),
+            groupId: 'group-2',
+            groupName: '러닝 크루',
+          ),
+        ],
+      );
+      final container = ProviderContainer(
+        overrides: [routineRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+
+      final challenges = await container.read(
+        routineMyChallengesProvider.future,
+      );
+
+      expect(repository.getMyChallengesCallCount, 1);
+      // 상태 필터 없이 호출한다 (서버가 ENDED를 항상 제외한다)
+      expect(repository.lastMyChallengesStatus, isNull);
+      expect(challenges, hasLength(1));
+      expect(challenges.first.groupId, 'group-2');
+      expect(challenges.first.groupName, '러닝 크루');
+    });
+
+    test('그룹별 조회 응답에는 groupId/groupName이 없어 null로 파싱된다', () {
+      final challenge = RoutineChallenge.fromJson({
+        'id': 'challenge-1',
+        'title': '물 마시기',
+        'startDate': '2026-07-01T00:00:00Z',
+        'endDate': '2026-07-21T00:00:00Z',
+        'targetCount': 21,
+        'status': 'ONGOING',
+        'participantCount': 3,
+        'joined': true,
+        'myCheckedCount': 12,
+        'myAchieved': false,
+        'createdBy': 'user-1',
+        'isMine': false,
+      });
+
+      expect(challenge.groupId, isNull);
+      expect(challenge.groupName, isNull);
+      expect(challenge.myCheckedCount, 12);
+    });
+  });
+
+  group('RoutineDailyStreak (배지 판정 기준 3종)', () {
+    test('배지 기준 3종의 현재값을 모두 파싱한다', () {
+      final streak = RoutineDailyStreak.fromJson({
+        'currentStreakDays': 5,
+        'longestStreakDays': 12,
+        'totalAchievedDays': 40,
+        'perfectWeeksCount': 3,
+        'todayAchieved': true,
+        'todayCheckedCount': 2,
+        'todayTargetCount': 2,
+        'recent14Days': {
+          'achievedDays': 10,
+          'exceededDays': 2,
+          'totalDays': 14,
+          'averageCheckedCount': 2.5,
+        },
+      });
+
+      expect(streak.totalAchievedDays, 40);
+      expect(streak.perfectWeeksCount, 3);
+    });
+
+    test('신규 필드가 없는 응답도 0으로 파싱해 하위호환을 유지한다', () {
+      final streak = RoutineDailyStreak.fromJson({
+        'currentStreakDays': 5,
+        'longestStreakDays': 12,
+        'todayAchieved': false,
+        'todayCheckedCount': 1,
+        'todayTargetCount': 2,
+        'recent14Days': <String, dynamic>{},
+      });
+
+      expect(streak.totalAchievedDays, 0);
+      expect(streak.perfectWeeksCount, 0);
+    });
+  });
+
+  group('RoutineSummaryItem (위젯 정렬/체크 분기 필드)', () {
+    test('timeFilter와 recordType을 파싱한다', () {
+      final item = RoutineSummaryItem.fromJson({
+        'routineId': 'routine-1',
+        'title': '물 마시기',
+        'timeFilter': 'EVENING',
+        'recordType': 'NUMERIC',
+        'checkedToday': false,
+        'currentStreakDays': 3,
+      });
+
+      expect(item.timeFilter, RoutineTimeFilter.evening);
+      expect(item.recordType, RoutineRecordType.numeric);
+    });
+
+    test('두 필드가 없으면 timeFilter는 null, recordType은 BOOLEAN으로 떨어진다', () {
+      final item = RoutineSummaryItem.fromJson({
+        'routineId': 'routine-1',
+        'title': '물 마시기',
+        'checkedToday': true,
+        'currentStreakDays': 0,
+      });
+
+      expect(item.timeFilter, isNull);
+      expect(item.recordType, RoutineRecordType.boolean_);
     });
   });
 }

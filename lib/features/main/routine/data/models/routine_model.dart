@@ -964,6 +964,12 @@ class RoutineSummaryItem {
   final String routineId;
   final String title;
   final String? emoji;
+
+  /// 시간대 분류 (위젯 우선순위 정렬용)
+  final RoutineTimeFilter? timeFilter;
+
+  /// 기록 방식 (체크 시 값 입력 분기용)
+  final RoutineRecordType recordType;
   final bool checkedToday;
   final int currentStreakDays;
   final RoutinePeriodProgress? thisWeekProgress;
@@ -973,6 +979,8 @@ class RoutineSummaryItem {
     required this.routineId,
     required this.title,
     this.emoji,
+    this.timeFilter,
+    this.recordType = RoutineRecordType.boolean_,
     required this.checkedToday,
     required this.currentStreakDays,
     this.thisWeekProgress,
@@ -984,6 +992,8 @@ class RoutineSummaryItem {
       routineId: json['routineId'] as String,
       title: json['title'] as String,
       emoji: json['emoji'] as String?,
+      timeFilter: RoutineTimeFilter.fromString(json['timeFilter'] as String?),
+      recordType: RoutineRecordType.fromString(json['recordType'] as String?),
       checkedToday: json['checkedToday'] as bool? ?? false,
       currentStreakDays: json['currentStreakDays'] as int? ?? 0,
       thisWeekProgress: json['thisWeekProgress'] != null
@@ -1202,6 +1212,12 @@ class RoutineRecent14Days {
 class RoutineDailyStreak {
   final int currentStreakDays;
   final int longestStreakDays;
+
+  /// 목표를 달성한 날의 누적 수(전체 기간). `GOAL_TOTAL_DAYS` 배지의 현재값.
+  final int totalAchievedDays;
+
+  /// 월~일 7일 전부 달성한 주의 수. `GOAL_PERFECT_WEEK` 배지의 현재값.
+  final int perfectWeeksCount;
   final bool todayAchieved;
   final int todayCheckedCount;
 
@@ -1212,6 +1228,8 @@ class RoutineDailyStreak {
   const RoutineDailyStreak({
     required this.currentStreakDays,
     required this.longestStreakDays,
+    required this.totalAchievedDays,
+    required this.perfectWeeksCount,
     required this.todayAchieved,
     required this.todayCheckedCount,
     required this.todayTargetCount,
@@ -1222,6 +1240,8 @@ class RoutineDailyStreak {
     return RoutineDailyStreak(
       currentStreakDays: json['currentStreakDays'] as int? ?? 0,
       longestStreakDays: json['longestStreakDays'] as int? ?? 0,
+      totalAchievedDays: json['totalAchievedDays'] as int? ?? 0,
+      perfectWeeksCount: json['perfectWeeksCount'] as int? ?? 0,
       todayAchieved: json['todayAchieved'] as bool? ?? false,
       todayCheckedCount: json['todayCheckedCount'] as int? ?? 0,
       todayTargetCount: json['todayTargetCount'] as int? ?? 0,
@@ -1249,6 +1269,17 @@ enum RoutineChallengeStatus {
       case 'ONGOING':
       default:
         return RoutineChallengeStatus.ongoing;
+    }
+  }
+
+  String toJsonString() {
+    switch (this) {
+      case RoutineChallengeStatus.upcoming:
+        return 'UPCOMING';
+      case RoutineChallengeStatus.ended:
+        return 'ENDED';
+      case RoutineChallengeStatus.ongoing:
+        return 'ONGOING';
     }
   }
 }
@@ -1322,6 +1353,11 @@ class RoutineChallenge {
   /// 상세 조회일 때만 채워진다. 목록에서는 비어 있다.
   final List<RoutineChallengeParticipant> participants;
 
+  /// `GET /routines/challenges/me`(전체 그룹 조회)에서만 채워진다.
+  /// 그룹별 조회는 groupId를 이미 알고 호출하므로 서버가 내려주지 않는다.
+  final String? groupId;
+  final String? groupName;
+
   const RoutineChallenge({
     required this.id,
     required this.title,
@@ -1338,6 +1374,8 @@ class RoutineChallenge {
     required this.createdBy,
     required this.isMine,
     this.participants = const [],
+    this.groupId,
+    this.groupName,
   });
 
   /// 내 진행률(0.0~1.0). 참가 중이 아니면 0.
@@ -1368,6 +1406,8 @@ class RoutineChallenge {
                 RoutineChallengeParticipant.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
+      groupId: json['groupId'] as String?,
+      groupName: json['groupName'] as String?,
     );
   }
 }

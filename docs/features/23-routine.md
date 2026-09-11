@@ -77,7 +77,9 @@
 - ✅ 루틴 카테고리 상세 모델 (RoutineCategoryDetail) — RoutineCategory + 소속 습관 목록(routines)
 - ✅ 체크 로그 모델 (RoutineLog) — note 외 textValue/numericValue/timeValue 필드 추가(recordType별 기록값)
 - ✅ 그룹 공유 모델 (RoutineShare) — 가족그룹 공유용, RoutineGroup(습관 묶음)과 무관
-- ✅ 통계 응답 모델 (RoutineHeatmap, RoutineStreak, RoutineRate, RoutineSummaryItem)
+- ✅ 통계 응답 모델 (RoutineHeatmap, RoutineStreak, RoutineRate, RoutineSummaryItem — `timeFilter`/`recordType` 확장)
+- ✅ 일일 목표 스트릭 모델 (RoutineDailyStreak) — 배지 판정 기준 3종의 현재값을 모두 보유
+  (`currentStreakDays`/`totalAchievedDays`/`perfectWeeksCount`)
 - ✅ 가족그룹 멤버별 습관 목록 모델 (RoutineGroupMemberRoutines) — 이름이 RoutineGroup과 비슷하지만 가족그룹 공유 기능 전용, 무관한 별개 개념
 - ✅ 배지 모델 (RoutineBadge, UserRoutineBadge, BadgeCriteriaType) — RoutineLog에 newlyEarnedBadges 필드 추가
 - ✅ 랭킹보드 모델 (RoutineLeaderboard, LeaderboardEntry, LeaderboardPeriod, LeaderboardMetric)
@@ -92,7 +94,12 @@
 - ✅ 스트릭 조회 (현재/최장, 일 단위 + 주 단위)
 - ✅ 기간별 달성률 조회 (주/월 토글)
 - ✅ 대시보드 위젯용 전체 루틴 요약 (오늘 체크 + 스트릭 + 이번 주 진행)
-- ✅ 대시보드 위젯은 `GET /routines/stats/summary` 대신 `GET /routines`를 쓴다 — summary 응답에는 `timeFilter`/`recordType`/`status`가 없어 시간대 우선순위·값 입력 다이얼로그·일시정지 제외를 할 수 없다
+- ✅ 대시보드 '오늘' 뷰는 `GET /routines/stats/summary`가 아니라 `GET /routines`를 쓴다.
+  summary에도 `timeFilter`/`recordType`이 추가됐지만, **인라인 체크의 낙관적 업데이트**가
+  `routineListProvider`를 통해서만 동작하기 때문이다 — `RoutineManagementNotifier.toggleCheck`는
+  목록 provider에 즉시 반영하고 실패 시 롤백하는 반면, summary는 invalidate 후 재조회라
+  체크가 네트워크 왕복만큼 늦게 보인다. `importance`가 summary에 없어 우선순위 정렬의
+  3순위 기준이 빠지는 문제도 있다.
 - ✅ 배지 카탈로그 조회 및 획득 여부 표시 (연속 7/30/100일, 연속 4/12/52주, 누적 50/200/500회 총 9종)
 - ✅ 체크 시 신규 배지 자동 판정 (백엔드가 판정, 체크 응답에 결과 포함)
 - ✅ 그룹 랭킹보드 조회 (공유한 루틴 소유자만 집계, 비공유자는 미노출)
@@ -126,7 +133,8 @@
 - ✅ `GET /routines/:id/stats/heatmap` — 달력 히트맵
 - ✅ `GET /routines/:id/stats/streak` — 스트릭
 - ✅ `GET /routines/:id/stats/rate` — 기간별 달성률
-- ✅ `GET /routines/stats/summary` — 대시보드 위젯용 요약
+- ✅ `GET /routines/stats/summary` — 대시보드 위젯용 요약 (`timeFilter`/`recordType` 포함)
+- ✅ `GET /routines/challenges/me` — 내가 속한 모든 그룹의 챌린지 (마감 임박순, ENDED 제외, `groupId`/`groupName` 포함)
 - ✅ `GET /routines/badges` — 전체 배지 카탈로그
 - ✅ `GET /routines/me/badges` — 내가 획득한 통산 배지 목록
 - ✅ `GET /routines/:id/badges` — 특정 루틴에서 획득한 배지 목록
@@ -166,6 +174,8 @@
 - ✅ RoutineManagementNotifier (StateNotifier) — 생성/수정/삭제/순서변경/체크토글/공유관리 통합, 체크 시 newlyEarnedBadges 반환
 - ✅ routineBadgeCatalogProvider / routineMyBadgesProvider / routineBadgesProvider(routineId) (함수형 @riverpod)
 - ✅ routineLeaderboardProvider(groupId, period, metric) (함수형 @riverpod)
+- ✅ routineMyChallengesProvider (함수형 @riverpod) — 전체 그룹 챌린지, 대시보드 위젯용.
+  챌린지 생성/수정/삭제/참여 시 `_invalidateChallenges`가 그룹별 목록과 함께 무효화한다
 - ✅ NotificationSettings Provider(기존) — routineEnabled/routineReminderHour 필드 확장
 - ✅ RoutineGroupList Provider (@riverpod AsyncNotifier) — 루틴 목록 조회, upsert/remove/reorder
 - ✅ RoutineGroupDetailNotifier Provider (@riverpod AsyncNotifier, family: groupId) — 루틴 상세(소속 습관 포함)

@@ -922,6 +922,31 @@ class RoutineRepository {
     }
   }
 
+  /// 내가 속한 모든 그룹의 챌린지 (마감 임박순, ENDED 제외).
+  /// [status]를 생략하면 ONGOING + UPCOMING을 함께 조회한다.
+  Future<List<RoutineChallenge>> getMyChallenges({
+    RoutineChallengeStatus? status,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/routines/challenges/me',
+        queryParameters: status == null
+            ? null
+            : {'status': status.toJsonString()},
+      );
+      final data = response.data;
+      if (data is List) {
+        return data
+            .map((e) => RoutineChallenge.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      return [];
+    } on DioException catch (e) {
+      debugPrint('❌ [RoutineRepository] 내 챌린지 목록 조회 실패: ${e.message}');
+      throw Exception('내 챌린지 목록 조회 실패: ${e.message}');
+    }
+  }
+
   Future<RoutineChallenge> getChallenge(String id) async {
     try {
       final response = await _dio.get('/routines/challenges/$id');

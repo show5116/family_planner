@@ -12,6 +12,8 @@ RoutineDailyStreak _streak({
   return RoutineDailyStreak(
     currentStreakDays: 0,
     longestStreakDays: 0,
+    totalAchievedDays: 0,
+    perfectWeeksCount: 0,
     todayAchieved: false,
     todayCheckedCount: 0,
     todayTargetCount: 0,

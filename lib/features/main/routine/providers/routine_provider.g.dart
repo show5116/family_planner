@@ -1172,6 +1172,29 @@ class _RoutineChallengesProviderElement
   String get groupId => (origin as RoutineChallengesProvider).groupId;
 }
 
+String _$routineMyChallengesHash() =>
+    r'25aa5a4e40948c422d77f42c35f1f8cea9e830ba';
+
+/// 내가 속한 모든 그룹의 챌린지 (마감 임박순, ENDED 제외).
+/// 그룹을 고르지 않고도 임박한 챌린지를 볼 수 있어야 하는 대시보드 위젯용.
+///
+/// Copied from [routineMyChallenges].
+@ProviderFor(routineMyChallenges)
+final routineMyChallengesProvider =
+    AutoDisposeFutureProvider<List<RoutineChallenge>>.internal(
+      routineMyChallenges,
+      name: r'routineMyChallengesProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$routineMyChallengesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoutineMyChallengesRef =
+    AutoDisposeFutureProviderRef<List<RoutineChallenge>>;
 String _$routineChallengeDetailHash() =>
     r'cf0175d7b3822e208cdbd56dc8687ef04c3ea6c4';
 

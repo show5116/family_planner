@@ -39,6 +39,8 @@ Routine _demoRoutine({
 RoutineDailyStreak _demoStreak() => const RoutineDailyStreak(
   currentStreakDays: 3,
   longestStreakDays: 12,
+  totalAchievedDays: 18,
+  perfectWeeksCount: 1,
   todayAchieved: false,
   todayCheckedCount: 1,
   todayTargetCount: 2,

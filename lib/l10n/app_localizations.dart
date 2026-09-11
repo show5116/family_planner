@@ -17576,6 +17576,18 @@ abstract class AppLocalizations {
   /// **'{title}까지 {days}일'**
   String routineWidget_nextBadge(String title, int days);
 
+  /// 내 루틴 위젯 - 다음 배지까지 남은 주 수 (퍼펙트위크 기준 배지)
+  ///
+  /// In ko, this message translates to:
+  /// **'{title}까지 {weeks}주'**
+  String routineWidget_nextBadgeWeeks(String title, int weeks);
+
+  /// 가족 루틴 보드 위젯 - 다른 그룹 챌린지일 때 그룹명 접두
+  ///
+  /// In ko, this message translates to:
+  /// **'{group} · {title}'**
+  String routineWidget_challengeGroup(String group, String title);
+
   /// 가족 루틴 보드 위젯 - 그룹 선택 툴팁
   ///
   /// In ko, this message translates to:

@@ -9270,6 +9270,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String routineWidget_nextBadgeWeeks(String title, int weeks) {
+    return '距离$title还有$weeks周';
+  }
+
+  @override
+  String routineWidget_challengeGroup(String group, String title) {
+    return '$group · $title';
+  }
+
+  @override
   String get routineWidget_groupTooltip => '选择群组';
 
   @override

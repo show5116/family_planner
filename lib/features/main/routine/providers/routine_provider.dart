@@ -303,6 +303,14 @@ Future<List<RoutineChallenge>> routineChallenges(
   return repository.getChallenges(groupId);
 }
 
+/// 내가 속한 모든 그룹의 챌린지 (마감 임박순, ENDED 제외).
+/// 그룹을 고르지 않고도 임박한 챌린지를 볼 수 있어야 하는 대시보드 위젯용.
+@riverpod
+Future<List<RoutineChallenge>> routineMyChallenges(Ref ref) async {
+  final repository = ref.watch(routineRepositoryProvider);
+  return repository.getMyChallenges();
+}
+
 /// 챌린지 상세 (참가자별 진행률 포함)
 @riverpod
 Future<RoutineChallenge> routineChallengeDetail(
@@ -580,6 +588,8 @@ class RoutineManagementNotifier extends StateNotifier<AsyncValue<void>> {
   /// 챌린지 생성/수정/삭제/참가 후 목록과 상세를 함께 갱신한다.
   void _invalidateChallenges(String groupId, [String? challengeId]) {
     _ref.invalidate(routineChallengesProvider(groupId));
+    // 대시보드 위젯이 보는 전체 그룹 목록도 같이 갱신해야 한다.
+    _ref.invalidate(routineMyChallengesProvider);
     if (challengeId != null) {
       _ref.invalidate(routineChallengeDetailProvider(challengeId));
     }

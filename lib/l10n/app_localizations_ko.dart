@@ -9391,6 +9391,16 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String routineWidget_nextBadgeWeeks(String title, int weeks) {
+    return '$title까지 $weeks주';
+  }
+
+  @override
+  String routineWidget_challengeGroup(String group, String title) {
+    return '$group · $title';
+  }
+
+  @override
   String get routineWidget_groupTooltip => '그룹 선택';
 
   @override

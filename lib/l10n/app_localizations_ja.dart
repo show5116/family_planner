@@ -9359,6 +9359,16 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String routineWidget_nextBadgeWeeks(String title, int weeks) {
+    return '$titleまで$weeks週';
+  }
+
+  @override
+  String routineWidget_challengeGroup(String group, String title) {
+    return '$group · $title';
+  }
+
+  @override
   String get routineWidget_groupTooltip => 'グループ選択';
 
   @override

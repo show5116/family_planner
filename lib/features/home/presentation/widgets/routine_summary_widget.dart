@@ -429,23 +429,41 @@ class _TodayRoutineRow extends StatelessWidget {
 class _WeeklyView extends ConsumerWidget {
   const _WeeklyView();
 
-  /// 아직 못 받은 배지 중 "연속 달성 N일" 기준으로 가장 가까운 것을 찾는다.
-  /// 누적/퍼펙트위크 기준 배지는 현재 진행값을 알 수 없어 대상에서 제외한다.
-  ({RoutineBadge badge, int remainingDays})? _nextStreakBadge(
+  /// 아직 못 받은 배지 중 가장 가까운 것을 찾는다. 판정 기준 3종의 현재값은
+  /// 모두 `daily-streak` 응답에 들어 있으므로 배지 카탈로그 전체가 대상이다.
+  ///
+  /// 남은 양의 단위가 기준마다 다르므로(일 vs 주), 어느 배지가 더 가까운지는
+  /// 일 단위로 환산해 비교하고 표시만 원래 단위로 한다.
+  ({RoutineBadge badge, int remaining, bool inWeeks})? _nextBadge(
     List<RoutineBadge> catalog,
     List<UserRoutineBadge> earned,
-    int currentStreakDays,
+    RoutineDailyStreak streak,
   ) {
+    int currentValue(BadgeCriteriaType type) {
+      switch (type) {
+        case BadgeCriteriaType.goalStreakDays:
+          return streak.currentStreakDays;
+        case BadgeCriteriaType.goalTotalDays:
+          return streak.totalAchievedDays;
+        case BadgeCriteriaType.goalPerfectWeek:
+          return streak.perfectWeeksCount;
+      }
+    }
+
     final earnedIds = earned.map((e) => e.badgeId).toSet();
-    ({RoutineBadge badge, int remainingDays})? best;
+    ({RoutineBadge badge, int remaining, bool inWeeks})? best;
+    int? bestInDays;
 
     for (final badge in catalog) {
       if (earnedIds.contains(badge.id)) continue;
-      if (badge.criteriaType != BadgeCriteriaType.goalStreakDays) continue;
-      final remaining = badge.criteriaValue - currentStreakDays;
+      final remaining = badge.criteriaValue - currentValue(badge.criteriaType);
       if (remaining <= 0) continue;
-      if (best == null || remaining < best.remainingDays) {
-        best = (badge: badge, remainingDays: remaining);
+
+      final inWeeks = badge.criteriaType == BadgeCriteriaType.goalPerfectWeek;
+      final remainingInDays = inWeeks ? remaining * 7 : remaining;
+      if (bestInDays == null || remainingInDays < bestInDays) {
+        best = (badge: badge, remaining: remaining, inWeeks: inWeeks);
+        bestInDays = remainingInDays;
       }
     }
     return best;
@@ -482,7 +500,7 @@ class _WeeklyView extends ConsumerWidget {
     final myBadges = ref.watch(routineMyBadgesProvider).valueOrNull;
     final streak = ref.watch(routineDailyStreakProvider).valueOrNull;
     final nextBadge = (catalog != null && myBadges != null && streak != null)
-        ? _nextStreakBadge(catalog, myBadges, streak.currentStreakDays)
+        ? _nextBadge(catalog, myBadges, streak)
         : null;
 
     return Column(
@@ -501,7 +519,7 @@ class _WeeklyView extends ConsumerWidget {
             padding: const EdgeInsets.only(top: AppSizes.spaceXS),
             child: Text(
               '${nextBadge.badge.iconEmoji ?? '🏅'} '
-              '${l10n.routineWidget_nextBadge(nextBadge.badge.title, nextBadge.remainingDays)}',
+              '${nextBadge.inWeeks ? l10n.routineWidget_nextBadgeWeeks(nextBadge.badge.title, nextBadge.remaining) : l10n.routineWidget_nextBadge(nextBadge.badge.title, nextBadge.remaining)}',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
