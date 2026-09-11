@@ -42,8 +42,36 @@ class GreetingPresets {
         return l10n.greeting_packQuote;
       case GreetingPackIds.cheer:
         return l10n.greeting_packCheer;
+      case GreetingPackIds.choreKitchen:
+        return l10n.greeting_packChoreKitchen;
+      case GreetingPackIds.choreLaundry:
+        return l10n.greeting_packChoreLaundry;
+      case GreetingPackIds.choreCleaning:
+        return l10n.greeting_packChoreCleaning;
+      case GreetingPackIds.englishDaily:
+        return l10n.greeting_packEnglishDaily;
+      case GreetingPackIds.englishTravel:
+        return l10n.greeting_packEnglishTravel;
+      case GreetingPackIds.englishWork:
+        return l10n.greeting_packEnglishWork;
       default:
         return packId;
+    }
+  }
+
+  /// 팩 묶음 이름 (설정 화면 소제목)
+  ///
+  /// [groupIndex]는 [GreetingPackIds.groups]의 순서와 같다.
+  static String groupLabel(AppLocalizations l10n, int groupIndex) {
+    switch (groupIndex) {
+      case 0:
+        return l10n.greeting_groupChild;
+      case 1:
+        return l10n.greeting_groupMind;
+      case 2:
+        return l10n.greeting_groupChore;
+      default:
+        return l10n.greeting_groupEnglish;
     }
   }
 
@@ -66,6 +94,18 @@ class GreetingPresets {
         return Icons.format_quote_outlined;
       case GreetingPackIds.cheer:
         return Icons.emoji_emotions_outlined;
+      case GreetingPackIds.choreKitchen:
+        return Icons.kitchen_outlined;
+      case GreetingPackIds.choreLaundry:
+        return Icons.local_laundry_service_outlined;
+      case GreetingPackIds.choreCleaning:
+        return Icons.cleaning_services_outlined;
+      case GreetingPackIds.englishDaily:
+        return Icons.chat_outlined;
+      case GreetingPackIds.englishTravel:
+        return Icons.flight_takeoff_outlined;
+      case GreetingPackIds.englishWork:
+        return Icons.mail_outlined;
       default:
         return Icons.chat_bubble_outline;
     }

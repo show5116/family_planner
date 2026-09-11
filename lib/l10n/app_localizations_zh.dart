@@ -9401,5 +9401,35 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get greeting_presetSourceNote =>
-      '内置文案参考美国CDC、美国儿科学会（AAP）与韩国儿童权利保障院公开的育儿指南整理而成';
+      '内置文案参考美国CDC、美国儿科学会（AAP）、美国农业部（USDA）、美国清洁协会（ACI）、美国环保署（EPA）与韩国儿童权利保障院的公开指南整理而成';
+
+  @override
+  String get greeting_groupChild => '按孩子年龄';
+
+  @override
+  String get greeting_groupMind => '心灵关怀';
+
+  @override
+  String get greeting_groupChore => '家务';
+
+  @override
+  String get greeting_groupEnglish => '每日英语';
+
+  @override
+  String get greeting_packChoreKitchen => '厨房与食品';
+
+  @override
+  String get greeting_packChoreLaundry => '洗衣与衣物';
+
+  @override
+  String get greeting_packChoreCleaning => '清洁与防霉';
+
+  @override
+  String get greeting_packEnglishDaily => '日常会话';
+
+  @override
+  String get greeting_packEnglishTravel => '旅行与餐厅';
+
+  @override
+  String get greeting_packEnglishWork => '职场与邮件';
 }

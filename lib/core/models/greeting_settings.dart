@@ -28,25 +28,64 @@ class GreetingPackIds {
   /// 응원 한마디
   static const String cheer = 'cheer';
 
-  /// 전체 팩 목록 (설정 화면 노출 순서)
-  static const List<String> all = [
+  /// 집안일 — 주방과 식품
+  static const String choreKitchen = 'choreKitchen';
+
+  /// 집안일 — 세탁과 옷
+  static const String choreLaundry = 'choreLaundry';
+
+  /// 집안일 — 청소와 곰팡이
+  static const String choreCleaning = 'choreCleaning';
+
+  /// 영어 한 문장 — 생활 회화
+  static const String englishDaily = 'englishDaily';
+
+  /// 영어 한 문장 — 여행과 외식
+  static const String englishTravel = 'englishTravel';
+
+  /// 영어 한 문장 — 직장과 이메일
+  static const String englishWork = 'englishWork';
+
+  /// 아이 나이대별 팩
+  static const List<String> childPacks = [
     infant,
     toddler,
     preschool,
     school,
     teen,
-    parenting,
-    quote,
-    cheer,
   ];
 
-  /// 아이 나이대별 팩 (설정 화면에서 한 묶음으로 보여준다)
-  static const List<String> byAge = [
-    infant,
-    toddler,
-    preschool,
-    school,
-    teen,
+  /// 마음 챙기기 팩 (연령 무관)
+  static const List<String> mindPacks = [parenting, quote, cheer];
+
+  /// 집안일 팩
+  static const List<String> chorePacks = [
+    choreKitchen,
+    choreLaundry,
+    choreCleaning,
+  ];
+
+  /// 영어 한 문장 팩
+  static const List<String> englishPacks = [
+    englishDaily,
+    englishTravel,
+    englishWork,
+  ];
+
+  /// 설정 화면에 보여줄 묶음 순서
+  static const List<List<String>> groups = [
+    childPacks,
+    mindPacks,
+    chorePacks,
+    englishPacks,
+  ];
+
+  /// 전체 팩 목록
+  static const List<String> all = [
+    ...childPacks,
+    ...mindPacks,
+    ...chorePacks,
+    ...englishPacks,
   ];
 }
 

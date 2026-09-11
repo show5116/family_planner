@@ -17807,8 +17807,68 @@ abstract class AppLocalizations {
   /// 기본 문구 출처 안내
   ///
   /// In ko, this message translates to:
-  /// **'기본 문구는 미국 질병통제예방센터(CDC), 미국소아과학회(AAP), 아동권리보장원의 공개 육아 가이드를 참고해 한 줄로 정리한 것입니다'**
+  /// **'기본 문구는 CDC, 미국소아과학회(AAP), 미국 농무부(USDA), 미국세정협회(ACI), 환경보호청(EPA), 아동권리보장원의 공개 가이드를 참고해 한 줄로 정리한 것입니다'**
   String get greeting_presetSourceNote;
+
+  /// 인사말 팩 묶음 - 나이대별 육아
+  ///
+  /// In ko, this message translates to:
+  /// **'아이 나이대별'**
+  String get greeting_groupChild;
+
+  /// 인사말 팩 묶음 - 부모 마음/명언/응원
+  ///
+  /// In ko, this message translates to:
+  /// **'마음 챙기기'**
+  String get greeting_groupMind;
+
+  /// 인사말 팩 묶음 - 집안일
+  ///
+  /// In ko, this message translates to:
+  /// **'집안일'**
+  String get greeting_groupChore;
+
+  /// 인사말 팩 묶음 - 영어 회화
+  ///
+  /// In ko, this message translates to:
+  /// **'영어 한 문장'**
+  String get greeting_groupEnglish;
+
+  /// 집안일 팩 - 주방
+  ///
+  /// In ko, this message translates to:
+  /// **'주방과 식품'**
+  String get greeting_packChoreKitchen;
+
+  /// 집안일 팩 - 세탁
+  ///
+  /// In ko, this message translates to:
+  /// **'세탁과 옷'**
+  String get greeting_packChoreLaundry;
+
+  /// 집안일 팩 - 청소
+  ///
+  /// In ko, this message translates to:
+  /// **'청소와 곰팡이'**
+  String get greeting_packChoreCleaning;
+
+  /// 영어 팩 - 생활 회화
+  ///
+  /// In ko, this message translates to:
+  /// **'생활 회화'**
+  String get greeting_packEnglishDaily;
+
+  /// 영어 팩 - 여행
+  ///
+  /// In ko, this message translates to:
+  /// **'여행과 외식'**
+  String get greeting_packEnglishTravel;
+
+  /// 영어 팩 - 직장
+  ///
+  /// In ko, this message translates to:
+  /// **'직장과 이메일'**
+  String get greeting_packEnglishWork;
 }
 
 class _AppLocalizationsDelegate

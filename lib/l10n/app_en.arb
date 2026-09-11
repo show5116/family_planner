@@ -9819,5 +9819,15 @@
   "greeting_packSchool": "School age (6–12 years)",
   "greeting_packTeen": "Teens (13+)",
   "greeting_packParenting": "Parenting basics (all ages)",
-  "greeting_presetSourceNote": "Built-in tips are one-line summaries of public parenting guidance from the CDC, the AAP (HealthyChildren.org), and Korea’s National Center for the Rights of the Child"
+  "greeting_presetSourceNote": "Built-in tips are one-line summaries of public guidance from the CDC, AAP, USDA, the American Cleaning Institute, the EPA, and Korea’s National Center for the Rights of the Child",
+  "greeting_groupChild": "By child's age",
+  "greeting_groupMind": "For you",
+  "greeting_groupChore": "Home & chores",
+  "greeting_groupEnglish": "English phrase",
+  "greeting_packChoreKitchen": "Kitchen & food",
+  "greeting_packChoreLaundry": "Laundry & clothes",
+  "greeting_packChoreCleaning": "Cleaning & mold",
+  "greeting_packEnglishDaily": "Everyday phrases",
+  "greeting_packEnglishTravel": "Travel & dining",
+  "greeting_packEnglishWork": "Work & email"
 }

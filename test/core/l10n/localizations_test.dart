@@ -43,6 +43,16 @@ void main() {
         l10n.greeting_packParenting,
         l10n.greeting_packQuote,
         l10n.greeting_packCheer,
+        l10n.greeting_packChoreKitchen,
+        l10n.greeting_packChoreLaundry,
+        l10n.greeting_packChoreCleaning,
+        l10n.greeting_packEnglishDaily,
+        l10n.greeting_packEnglishTravel,
+        l10n.greeting_packEnglishWork,
+        l10n.greeting_groupChild,
+        l10n.greeting_groupMind,
+        l10n.greeting_groupChore,
+        l10n.greeting_groupEnglish,
       ]) {
         expect(label, isNotEmpty, reason: reason);
       }

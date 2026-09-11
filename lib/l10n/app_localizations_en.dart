@@ -9748,5 +9748,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greeting_presetSourceNote =>
-      'Built-in tips are one-line summaries of public parenting guidance from the CDC, the AAP (HealthyChildren.org), and Korea’s National Center for the Rights of the Child';
+      'Built-in tips are one-line summaries of public guidance from the CDC, AAP, USDA, the American Cleaning Institute, the EPA, and Korea’s National Center for the Rights of the Child';
+
+  @override
+  String get greeting_groupChild => 'By child\'s age';
+
+  @override
+  String get greeting_groupMind => 'For you';
+
+  @override
+  String get greeting_groupChore => 'Home & chores';
+
+  @override
+  String get greeting_groupEnglish => 'English phrase';
+
+  @override
+  String get greeting_packChoreKitchen => 'Kitchen & food';
+
+  @override
+  String get greeting_packChoreLaundry => 'Laundry & clothes';
+
+  @override
+  String get greeting_packChoreCleaning => 'Cleaning & mold';
+
+  @override
+  String get greeting_packEnglishDaily => 'Everyday phrases';
+
+  @override
+  String get greeting_packEnglishTravel => 'Travel & dining';
+
+  @override
+  String get greeting_packEnglishWork => 'Work & email';
 }

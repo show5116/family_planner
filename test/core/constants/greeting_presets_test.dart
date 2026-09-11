@@ -90,6 +90,24 @@ void main() {
       }
     });
 
+    test('묶음에 모든 팩이 빠짐없이 들어 있다', () {
+      final grouped = [
+        for (final group in GreetingPackIds.groups) ...group,
+      ];
+      expect(grouped.toSet(), GreetingPackIds.all.toSet());
+      expect(grouped.length, GreetingPackIds.all.length);
+    });
+
+    test('영어 팩은 문장과 뜻이 구분자로 이어져 있다', () {
+      for (final packId in GreetingPackIds.englishPacks) {
+        for (final lang in ['ko', 'en', 'ja', 'zh']) {
+          for (final message in GreetingPresets.messages(lang, packId)) {
+            expect(message, contains(' — '), reason: '$packId / $lang');
+          }
+        }
+      }
+    });
+
     test('지원하지 않는 언어는 한국어로 폴백한다', () {
       expect(
         GreetingPresets.messages('fr', GreetingPackIds.quote),

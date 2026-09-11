@@ -9523,5 +9523,35 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get greeting_presetSourceNote =>
-      '기본 문구는 미국 질병통제예방센터(CDC), 미국소아과학회(AAP), 아동권리보장원의 공개 육아 가이드를 참고해 한 줄로 정리한 것입니다';
+      '기본 문구는 CDC, 미국소아과학회(AAP), 미국 농무부(USDA), 미국세정협회(ACI), 환경보호청(EPA), 아동권리보장원의 공개 가이드를 참고해 한 줄로 정리한 것입니다';
+
+  @override
+  String get greeting_groupChild => '아이 나이대별';
+
+  @override
+  String get greeting_groupMind => '마음 챙기기';
+
+  @override
+  String get greeting_groupChore => '집안일';
+
+  @override
+  String get greeting_groupEnglish => '영어 한 문장';
+
+  @override
+  String get greeting_packChoreKitchen => '주방과 식품';
+
+  @override
+  String get greeting_packChoreLaundry => '세탁과 옷';
+
+  @override
+  String get greeting_packChoreCleaning => '청소와 곰팡이';
+
+  @override
+  String get greeting_packEnglishDaily => '생활 회화';
+
+  @override
+  String get greeting_packEnglishTravel => '여행과 외식';
+
+  @override
+  String get greeting_packEnglishWork => '직장과 이메일';
 }

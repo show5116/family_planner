@@ -9491,5 +9491,35 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get greeting_presetSourceNote =>
-      '基本の文言は、米国CDC・米国小児科学会(AAP)・韓国児童権利保障院の公開育児ガイドを参考に一行にまとめたものです';
+      '基本の文言は、米国CDC・米国小児科学会(AAP)・米国農務省(USDA)・米国洗浄製品協会(ACI)・米国環境保護庁(EPA)・韓国児童権利保障院の公開ガイドを参考に一行にまとめたものです';
+
+  @override
+  String get greeting_groupChild => '子どもの年齢別';
+
+  @override
+  String get greeting_groupMind => '心のケア';
+
+  @override
+  String get greeting_groupChore => '家事';
+
+  @override
+  String get greeting_groupEnglish => '英語ひとこと';
+
+  @override
+  String get greeting_packChoreKitchen => '台所と食品';
+
+  @override
+  String get greeting_packChoreLaundry => '洗濯と衣類';
+
+  @override
+  String get greeting_packChoreCleaning => '掃除とカビ';
+
+  @override
+  String get greeting_packEnglishDaily => '日常会話';
+
+  @override
+  String get greeting_packEnglishTravel => '旅行と外食';
+
+  @override
+  String get greeting_packEnglishWork => '仕事とメール';
 }

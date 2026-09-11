@@ -105,19 +105,37 @@ class _GreetingSettingsBody extends ConsumerWidget {
             ),
           ),
         ),
-        ...GreetingPackIds.all.map(
-          (packId) => SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            secondary: Icon(GreetingPresets.packIcon(packId)),
-            title: Text(GreetingPresets.packLabel(l10n, packId)),
-            subtitle: Text(
-              l10n.greeting_packMessageCount(
-                GreetingPresets.messages(languageCode, packId).length,
+        // 팩이 14종이라 묶음별 소제목을 두고 나눠 보여준다
+        ...GreetingPackIds.groups.indexed.expand(
+          (entry) => [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: AppSizes.spaceM,
+                bottom: AppSizes.spaceXS,
+              ),
+              child: Text(
+                GreetingPresets.groupLabel(l10n, entry.$1),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            value: settings.enabledPacks.contains(packId),
-            onChanged: (value) => notifier.setPackEnabled(packId, value),
-          ),
+            ...entry.$2.map(
+              (packId) => SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                secondary: Icon(GreetingPresets.packIcon(packId)),
+                title: Text(GreetingPresets.packLabel(l10n, packId)),
+                subtitle: Text(
+                  l10n.greeting_packMessageCount(
+                    GreetingPresets.messages(languageCode, packId).length,
+                  ),
+                ),
+                value: settings.enabledPacks.contains(packId),
+                onChanged: (value) => notifier.setPackEnabled(packId, value),
+              ),
+            ),
+          ],
         ),
         const Divider(),
 
