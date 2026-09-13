@@ -9522,4 +9522,39 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get greeting_packEnglishWork => '仕事とメール';
+
+  @override
+  String get subscription_limits_section_title => 'プラン別の上限';
+
+  @override
+  String subscription_quota_groups(int count) {
+    return 'グループ$count個';
+  }
+
+  @override
+  String get groupQuota_createTitle => 'これ以上グループを作成できません';
+
+  @override
+  String get groupQuota_joinTitle => 'これ以上グループに参加できません';
+
+  @override
+  String get groupQuota_applicantTitle => '申請者のグループ上限に達しています';
+
+  @override
+  String groupQuota_body(String tier, int limit, int used) {
+    return '$tierプランではグループ$limit個まで参加できます。現在は$used個に参加しています。';
+  }
+
+  @override
+  String get groupQuota_bodyUnknown => '現在のプランのグループ数の上限に達しました。';
+
+  @override
+  String get groupQuota_applicantBody =>
+      '申請者がプランのグループ数の上限に達しています。申請者がプランを変更するか、他のグループから退出した後に承認してください。';
+
+  @override
+  String get groupQuota_leaveHint => '他のグループから退出すると空きができます。';
+
+  @override
+  String get groupQuota_upgrade => 'プランを見る';
 }

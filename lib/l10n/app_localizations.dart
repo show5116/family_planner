@@ -17869,6 +17869,66 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'직장과 이메일'**
   String get greeting_packEnglishWork;
+
+  /// 등급별 한도표 섹션 제목 (첨부 용량 + 그룹 수)
+  ///
+  /// In ko, this message translates to:
+  /// **'등급별 한도'**
+  String get subscription_limits_section_title;
+
+  /// 등급별 그룹 수 한도
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹 {count}개'**
+  String subscription_quota_groups(int count);
+
+  /// 그룹 생성 402 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹을 더 만들 수 없어요'**
+  String get groupQuota_createTitle;
+
+  /// 그룹 가입 402 안내 제목
+  ///
+  /// In ko, this message translates to:
+  /// **'그룹에 더 참여할 수 없어요'**
+  String get groupQuota_joinTitle;
+
+  /// 가입요청 승인 402 안내 제목 (한도를 넘긴 쪽은 승인자가 아니라 신청자)
+  ///
+  /// In ko, this message translates to:
+  /// **'신청자의 그룹 한도가 찼어요'**
+  String get groupQuota_applicantTitle;
+
+  /// 그룹 한도 안내 본문 (서버가 내려준 groupQuota 기준)
+  ///
+  /// In ko, this message translates to:
+  /// **'{tier} 요금제는 그룹 {limit}개까지 참여할 수 있어요. 지금 {used}개에 속해 있어요.'**
+  String groupQuota_body(String tier, int limit, int used);
+
+  /// 그룹 한도 안내 본문 (서버가 한도를 안 내려준 경우)
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 요금제의 그룹 개수 한도를 모두 사용했어요.'**
+  String get groupQuota_bodyUnknown;
+
+  /// 가입요청 승인 402 안내 본문
+  ///
+  /// In ko, this message translates to:
+  /// **'신청한 분이 요금제의 그룹 개수 한도를 모두 사용했어요. 신청자가 요금제를 올리거나 다른 그룹에서 나온 뒤 다시 승인해 주세요.'**
+  String get groupQuota_applicantBody;
+
+  /// 최상위 요금제라 업그레이드 제안이 불가능할 때의 대안 안내
+  ///
+  /// In ko, this message translates to:
+  /// **'다른 그룹에서 나오면 자리가 생겨요.'**
+  String get groupQuota_leaveHint;
+
+  /// 그룹 한도 안내에서 구독 화면으로 가는 버튼
+  ///
+  /// In ko, this message translates to:
+  /// **'요금제 보기'**
+  String get groupQuota_upgrade;
 }
 
 class _AppLocalizationsDelegate

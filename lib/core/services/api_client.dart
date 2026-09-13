@@ -246,8 +246,14 @@ class ApiClient {
             }
           }
 
-          // 401 (인증 실패, 이미 처리됨), 429 (재시도 로직에서 처리), 500 (서버 내부 오류) 제외한 에러 메시지 표시
-          if (statusCode != null && statusCode != 401 && statusCode != 429 && statusCode != 500) {
+          // 401 (인증 실패, 이미 처리됨), 402 (한도 초과 — 화면이 남은 한도까지
+          // 안내하므로 여기서 또 띄우면 문구가 겹친다), 429 (재시도 로직에서 처리),
+          // 500 (서버 내부 오류) 제외한 에러 메시지 표시
+          if (statusCode != null &&
+              statusCode != 401 &&
+              statusCode != 402 &&
+              statusCode != 429 &&
+              statusCode != 500) {
             final errorMessage = _extractErrorMessage(error.response?.data);
             if (errorMessage != null && onError != null) {
               onError!(errorMessage);

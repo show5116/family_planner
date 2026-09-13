@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
+import 'package:family_planner/features/subscription/data/models/admin_storage_stats.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
 import 'package:family_planner/features/subscription/data/repositories/admin_subscription_repository.dart';
 
@@ -309,3 +310,10 @@ final adminUserAdminRoleProvider =
     AsyncNotifierProvider<AdminUserAdminRoleNotifier, void>(
   AdminUserAdminRoleNotifier.new,
 );
+
+// ── 저장 사용량 분포 ──────────────────────────────────────────
+
+final adminStorageStatsProvider =
+    FutureProvider.autoDispose<AdminStorageStats>((ref) {
+  return ref.read(adminSubscriptionRepositoryProvider).getStorageStats();
+});

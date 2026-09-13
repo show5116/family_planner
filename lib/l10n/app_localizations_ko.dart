@@ -9554,4 +9554,39 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get greeting_packEnglishWork => '직장과 이메일';
+
+  @override
+  String get subscription_limits_section_title => '등급별 한도';
+
+  @override
+  String subscription_quota_groups(int count) {
+    return '그룹 $count개';
+  }
+
+  @override
+  String get groupQuota_createTitle => '그룹을 더 만들 수 없어요';
+
+  @override
+  String get groupQuota_joinTitle => '그룹에 더 참여할 수 없어요';
+
+  @override
+  String get groupQuota_applicantTitle => '신청자의 그룹 한도가 찼어요';
+
+  @override
+  String groupQuota_body(String tier, int limit, int used) {
+    return '$tier 요금제는 그룹 $limit개까지 참여할 수 있어요. 지금 $used개에 속해 있어요.';
+  }
+
+  @override
+  String get groupQuota_bodyUnknown => '현재 요금제의 그룹 개수 한도를 모두 사용했어요.';
+
+  @override
+  String get groupQuota_applicantBody =>
+      '신청한 분이 요금제의 그룹 개수 한도를 모두 사용했어요. 신청자가 요금제를 올리거나 다른 그룹에서 나온 뒤 다시 승인해 주세요.';
+
+  @override
+  String get groupQuota_leaveHint => '다른 그룹에서 나오면 자리가 생겨요.';
+
+  @override
+  String get groupQuota_upgrade => '요금제 보기';
 }

@@ -105,6 +105,7 @@ class AppRoutes {
   static const String adminUserManagement = '/settings/admin/users';
   static const String adminUserDetail = '/settings/admin/users/:userId';
   static const String adminGroupReports = '/settings/admin/group-reports';
+  static const String adminStorageStats = '/settings/admin/storage-stats';
 
   // Group Report Routes
   static const String myGroupReports = '/settings/groups/my-reports';

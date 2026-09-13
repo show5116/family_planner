@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:family_planner/core/constants/app_sizes.dart';
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/core/widgets/color_picker.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/settings/groups/models/group_quota.dart';
+import 'package:family_planner/features/settings/groups/presentation/widgets/group_quota_dialog.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 그룹 생성 다이얼로그
@@ -148,6 +152,20 @@ class GroupCreateDialog {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(l10n.group_createSuccess)));
+        }
+      } on GroupQuotaExceededException catch (e) {
+        // 한도 초과는 실패가 아니라 요금제 안내다 — 입력을 살려둔 채 안내만 띄운다
+        if (!dialogContext.mounted) return;
+        setLoading(false);
+        final goUpgrade = await GroupQuotaDialog.show(
+          dialogContext,
+          e,
+          action: GroupQuotaAction.create,
+        );
+        // 다이얼로그를 닫고 나서 이동한다 — 열린 채로 밀면 새 화면 위에 남는다
+        if (goUpgrade && dialogContext.mounted) {
+          Navigator.pop(dialogContext);
+          if (context.mounted) context.push(AppRoutes.subscription);
         }
       } catch (e) {
         if (dialogContext.mounted) {

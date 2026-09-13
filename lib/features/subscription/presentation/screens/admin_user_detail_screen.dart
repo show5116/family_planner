@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
 import 'package:family_planner/features/subscription/providers/admin_subscription_provider.dart';
 
@@ -676,6 +677,12 @@ class _ActivityCard extends StatelessWidget {
               value: user.lastLoginAt != null
                   ? _formatDate(user.lastLoginAt!)
                   : '없음',
+            ),
+            const SizedBox(height: AppSizes.spaceS),
+            // R2에 실제 올라간 것만 세므로 사용자 화면의 한도 게이지와 다를 수 있다
+            _InfoRow(
+              label: '다이어리 저장 사용량',
+              value: formatBytes(user.storageUsedBytes),
             ),
           ],
         ),

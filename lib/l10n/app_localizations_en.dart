@@ -9779,4 +9779,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greeting_packEnglishWork => 'Work & email';
+
+  @override
+  String get subscription_limits_section_title => 'Plan limits';
+
+  @override
+  String subscription_quota_groups(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count groups',
+      one: '1 group',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get groupQuota_createTitle => 'You can\'t create more groups';
+
+  @override
+  String get groupQuota_joinTitle => 'You can\'t join more groups';
+
+  @override
+  String get groupQuota_applicantTitle =>
+      'The applicant has reached their group limit';
+
+  @override
+  String groupQuota_body(String tier, int limit, int used) {
+    return 'The $tier plan includes up to $limit groups. You\'re in $used right now.';
+  }
+
+  @override
+  String get groupQuota_bodyUnknown =>
+      'You\'ve used up the group allowance on your current plan.';
+
+  @override
+  String get groupQuota_applicantBody =>
+      'The applicant has used up the group allowance on their plan. Approve again once they upgrade or leave another group.';
+
+  @override
+  String get groupQuota_leaveHint => 'Leaving another group frees up a slot.';
+
+  @override
+  String get groupQuota_upgrade => 'See plans';
 }

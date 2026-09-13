@@ -9820,5 +9820,15 @@
   "greeting_packChoreCleaning": "清洁与防霉",
   "greeting_packEnglishDaily": "日常会话",
   "greeting_packEnglishTravel": "旅行与餐厅",
-  "greeting_packEnglishWork": "职场与邮件"
+  "greeting_packEnglishWork": "职场与邮件",
+  "subscription_limits_section_title": "各等级限额",
+  "subscription_quota_groups": "群组{count}个",
+  "groupQuota_createTitle": "无法创建更多群组",
+  "groupQuota_joinTitle": "无法加入更多群组",
+  "groupQuota_applicantTitle": "申请人的群组数量已达上限",
+  "groupQuota_body": "{tier} 等级最多可加入 {limit} 个群组，您目前已加入 {used} 个。",
+  "groupQuota_bodyUnknown": "您已用完当前等级的群组数量。",
+  "groupQuota_applicantBody": "申请人已用完其等级的群组数量。请在对方升级或退出其他群组后再次批准。",
+  "groupQuota_leaveHint": "退出其他群组即可空出名额。",
+  "groupQuota_upgrade": "查看套餐"
 }

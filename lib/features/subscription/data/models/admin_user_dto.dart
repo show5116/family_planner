@@ -12,6 +12,11 @@ class AdminUserDto {
   final DateTime? lastLoginAt;
   final DateTime? deletedAt;
 
+  /// 다이어리 미디어 저장 사용량 (bytes)
+  ///
+  /// R2에 실제로 올라간 것만 세므로 앱의 한도 게이지보다 작을 수 있다.
+  final int storageUsedBytes;
+
   const AdminUserDto({
     required this.id,
     required this.name,
@@ -23,6 +28,7 @@ class AdminUserDto {
     required this.createdAt,
     this.lastLoginAt,
     this.deletedAt,
+    this.storageUsedBytes = 0,
   });
 
   bool get isPendingDelete => deletedAt != null;
@@ -48,6 +54,7 @@ class AdminUserDto {
       deletedAt: json['deletedAt'] != null
           ? DateTime.tryParse(json['deletedAt'] as String)
           : null,
+      storageUsedBytes: json['storageUsedBytes'] as int? ?? 0,
     );
   }
 
@@ -73,6 +80,7 @@ class AdminUserDto {
       createdAt: createdAt,
       lastLoginAt: lastLoginAt,
       deletedAt: clearDeletedAt ? null : (deletedAt ?? this.deletedAt),
+      storageUsedBytes: storageUsedBytes,
     );
   }
 }

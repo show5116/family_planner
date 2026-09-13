@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/auth/providers/auth_provider.dart';
+import 'package:family_planner/features/settings/groups/models/group_quota.dart';
+import 'package:family_planner/features/settings/groups/presentation/widgets/group_quota_dialog.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 딥링크 초대 코드 처리 화면
@@ -26,6 +28,9 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
   String? _errorMessage;
   bool _isSuccess = false;
 
+  /// 그룹 개수 한도 초과(402) — 재시도해도 같은 결과라 별도 안내로 갈라 놓는다
+  GroupQuotaExceededException? _quotaError;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +49,7 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _quotaError = null;
     });
 
     try {
@@ -52,6 +58,13 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
           .joinGroup(widget.inviteCode);
       ref.read(pendingInviteCodeProvider.notifier).state = null;
       if (mounted) setState(() => _isSuccess = true);
+    } on GroupQuotaExceededException catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _quotaError = e;
+        });
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -141,6 +154,8 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
       );
     }
 
+    if (_quotaError != null) return _buildQuotaState(theme, _quotaError!);
+
     // 에러 상태
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -155,6 +170,60 @@ class _InviteLandingScreenState extends ConsumerState<InviteLandingScreen> {
         ),
         const SizedBox(height: 24),
         FilledButton(onPressed: _joinGroup, child: Text(l10n.common_retry)),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: () => context.go(AppRoutes.home),
+          child: Text(l10n.invite_go_home),
+        ),
+      ],
+    );
+  }
+
+  /// 그룹 개수 한도 초과 안내
+  ///
+  /// 재시도 버튼을 주지 않는다 — 한도가 그대로인 한 결과도 그대로다.
+  Widget _buildQuotaState(
+    ThemeData theme,
+    GroupQuotaExceededException error,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+    final canUpgrade = GroupQuotaDialog.canUpgradeFrom(error);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.workspace_premium_outlined,
+          size: 64,
+          color: theme.colorScheme.primary,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          GroupQuotaDialog.titleFor(l10n, GroupQuotaAction.join, false),
+          style: theme.textTheme.titleLarge,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          GroupQuotaDialog.bodyFor(l10n, error),
+          textAlign: TextAlign.center,
+        ),
+        if (!canUpgrade) ...[
+          const SizedBox(height: 8),
+          Text(
+            l10n.groupQuota_leaveHint,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+        const SizedBox(height: 24),
+        if (canUpgrade)
+          FilledButton(
+            onPressed: () => context.push(AppRoutes.subscription),
+            child: Text(l10n.groupQuota_upgrade),
+          ),
         const SizedBox(height: 8),
         TextButton(
           onPressed: () => context.go(AppRoutes.home),

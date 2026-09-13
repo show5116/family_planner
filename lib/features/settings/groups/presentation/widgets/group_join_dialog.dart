@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:family_planner/core/routes/app_routes.dart';
 import 'package:family_planner/l10n/app_localizations.dart';
+import 'package:family_planner/features/settings/groups/models/group_quota.dart';
+import 'package:family_planner/features/settings/groups/presentation/widgets/group_quota_dialog.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 
 /// 그룹 가입 다이얼로그
@@ -85,6 +89,17 @@ class GroupJoinDialog {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(message)));
+        }
+      } on GroupQuotaExceededException catch (e) {
+        if (!dialogContext.mounted) return;
+        final goUpgrade = await GroupQuotaDialog.show(
+          dialogContext,
+          e,
+          action: GroupQuotaAction.join,
+        );
+        if (goUpgrade && dialogContext.mounted) {
+          Navigator.pop(dialogContext);
+          if (context.mounted) context.push(AppRoutes.subscription);
         }
       } catch (e) {
         if (dialogContext.mounted) {

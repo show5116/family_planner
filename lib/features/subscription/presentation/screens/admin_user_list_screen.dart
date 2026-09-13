@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:family_planner/core/constants/app_sizes.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
+import 'package:family_planner/core/utils/format_utils.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
 import 'package:family_planner/features/subscription/providers/admin_subscription_provider.dart';
 import 'package:family_planner/core/routes/app_routes.dart';
@@ -67,6 +68,11 @@ class _AdminUserListScreenState extends ConsumerState<AdminUserListScreen> {
       appBar: AppBar(
         title: const Text('사용자 및 계정 관리'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.pie_chart_outline),
+            onPressed: () => context.push(AppRoutes.adminStorageStats),
+            tooltip: '저장 사용량 분포',
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () =>
@@ -369,6 +375,13 @@ class _UserListTile extends StatelessWidget {
                 color: user.isSubscriptionActive
                     ? colorScheme.onSurfaceVariant
                     : Colors.red,
+              ),
+            ),
+          if (user.storageUsedBytes > 0)
+            Text(
+              '저장 ${formatBytes(user.storageUsedBytes)}',
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
         ],

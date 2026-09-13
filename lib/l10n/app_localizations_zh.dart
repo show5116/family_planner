@@ -9432,4 +9432,38 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get greeting_packEnglishWork => '职场与邮件';
+
+  @override
+  String get subscription_limits_section_title => '各等级限额';
+
+  @override
+  String subscription_quota_groups(int count) {
+    return '群组$count个';
+  }
+
+  @override
+  String get groupQuota_createTitle => '无法创建更多群组';
+
+  @override
+  String get groupQuota_joinTitle => '无法加入更多群组';
+
+  @override
+  String get groupQuota_applicantTitle => '申请人的群组数量已达上限';
+
+  @override
+  String groupQuota_body(String tier, int limit, int used) {
+    return '$tier 等级最多可加入 $limit 个群组，您目前已加入 $used 个。';
+  }
+
+  @override
+  String get groupQuota_bodyUnknown => '您已用完当前等级的群组数量。';
+
+  @override
+  String get groupQuota_applicantBody => '申请人已用完其等级的群组数量。请在对方升级或退出其他群组后再次批准。';
+
+  @override
+  String get groupQuota_leaveHint => '退出其他群组即可空出名额。';
+
+  @override
+  String get groupQuota_upgrade => '查看套餐';
 }

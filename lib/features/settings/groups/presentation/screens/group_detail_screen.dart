@@ -6,6 +6,8 @@ import 'package:family_planner/l10n/app_localizations.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
 import 'package:family_planner/features/settings/groups/models/join_request.dart';
+import 'package:family_planner/features/settings/groups/models/group_quota.dart';
+import 'package:family_planner/features/settings/groups/presentation/widgets/group_quota_dialog.dart';
 import 'package:family_planner/features/settings/groups/providers/group_provider.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/common_widgets.dart';
 import 'package:family_planner/features/settings/groups/presentation/widgets/tabs/members/members_tab.dart';
@@ -173,6 +175,11 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.group_acceptSuccess)));
+      }
+    } on GroupQuotaExceededException catch (e) {
+      // 한도를 넘긴 쪽은 승인자가 아니라 신청자다 — 그 사실을 분명히 보여준다
+      if (mounted) {
+        await GroupQuotaDialog.show(context, e, action: GroupQuotaAction.join);
       }
     } catch (e) {
       if (mounted) {

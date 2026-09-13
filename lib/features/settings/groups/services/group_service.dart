@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:family_planner/core/services/api_client.dart';
 import 'package:family_planner/features/settings/groups/models/group.dart';
 import 'package:family_planner/features/settings/groups/models/group_member.dart';
+import 'package:family_planner/features/settings/groups/models/group_quota.dart';
 import 'package:family_planner/features/settings/groups/models/group_report.dart';
 import 'package:family_planner/features/settings/groups/models/join_request.dart';
 
@@ -28,8 +30,8 @@ class GroupService {
         },
       );
       return Group.fromJson(response.data);
-    } catch (e) {
-      rethrow;
+    } on DioException catch (e) {
+      throw _quotaExceptionOr(e);
     }
   }
 
@@ -104,8 +106,8 @@ class GroupService {
         data: {'inviteCode': inviteCode},
       );
       return response.data as Map<String, dynamic>;
-    } catch (e) {
-      rethrow;
+    } on DioException catch (e) {
+      throw _quotaExceptionOr(e);
     }
   }
 
@@ -342,8 +344,9 @@ class GroupService {
         '/groups/$groupId/join-requests/$requestId/accept',
       );
       return GroupMember.fromJson(response.data['member']);
-    } catch (e) {
-      rethrow;
+    } on DioException catch (e) {
+      // 여기서의 402는 승인자가 아니라 **신청자**의 한도 초과다
+      throw _quotaExceptionOr(e, isApplicant: true);
     }
   }
 
@@ -456,5 +459,33 @@ class GroupService {
     } catch (e) {
       rethrow;
     }
+  }
+
+  /// 402면 [GroupQuotaExceededException]으로, 아니면 원래 에러 그대로 돌려준다
+  ///
+  /// 한도 초과는 "실패"가 아니라 "요금제 안내"로 보여줘야 해서, 화면이 분기할 수
+  /// 있도록 여기서 타입을 바꿔둔다.
+  Object _quotaExceptionOr(DioException e, {bool isApplicant = false}) {
+    if (e.response?.statusCode != 402) return e;
+
+    final data = e.response?.data;
+    GroupQuota? quota;
+    String? message;
+    if (data is Map<String, dynamic>) {
+      message = data['message'] as String?;
+      final raw = data['groupQuota'];
+      if (raw is Map<String, dynamic>) {
+        try {
+          quota = GroupQuota.fromJson(raw);
+        } catch (_) {
+          // 한도 파싱이 실패해도 402라는 사실은 전달해야 한다
+        }
+      }
+    }
+    return GroupQuotaExceededException(
+      quota: quota,
+      message: message,
+      isApplicant: isApplicant,
+    );
   }
 }

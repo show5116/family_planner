@@ -9829,5 +9829,15 @@
   "greeting_packChoreCleaning": "Cleaning & mold",
   "greeting_packEnglishDaily": "Everyday phrases",
   "greeting_packEnglishTravel": "Travel & dining",
-  "greeting_packEnglishWork": "Work & email"
+  "greeting_packEnglishWork": "Work & email",
+  "subscription_limits_section_title": "Plan limits",
+  "subscription_quota_groups": "{count, plural, =1{1 group} other{{count} groups}}",
+  "groupQuota_createTitle": "You can't create more groups",
+  "groupQuota_joinTitle": "You can't join more groups",
+  "groupQuota_applicantTitle": "The applicant has reached their group limit",
+  "groupQuota_body": "The {tier} plan includes up to {limit} groups. You're in {used} right now.",
+  "groupQuota_bodyUnknown": "You've used up the group allowance on your current plan.",
+  "groupQuota_applicantBody": "The applicant has used up the group allowance on their plan. Approve again once they upgrade or leave another group.",
+  "groupQuota_leaveHint": "Leaving another group frees up a slot.",
+  "groupQuota_upgrade": "See plans"
 }

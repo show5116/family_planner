@@ -21,6 +21,9 @@ class MediaQuotaPlan {
   /// 영상 최대 길이 (ms) — 영상 불가 등급이면 null
   final int? maxVideoDurationMs;
 
+  /// 속할 수 있는 그룹 수 한도
+  final int maxGroups;
+
   const MediaQuotaPlan({
     required this.tier,
     required this.monthlyBytes,
@@ -28,6 +31,7 @@ class MediaQuotaPlan {
     required this.perFileBytes,
     this.videoAllowed = false,
     this.maxVideoDurationMs,
+    this.maxGroups = 1,
   });
 
   factory MediaQuotaPlan.fromJson(Map<String, dynamic> json) {
@@ -38,6 +42,7 @@ class MediaQuotaPlan {
       perFileBytes: json['perFileBytes'] as int? ?? 0,
       videoAllowed: json['videoAllowed'] as bool? ?? false,
       maxVideoDurationMs: json['maxVideoDurationMs'] as int?,
+      maxGroups: json['maxGroups'] as int? ?? 1,
     );
   }
 

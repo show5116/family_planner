@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:family_planner/core/models/subscription_tier.dart';
 import 'package:family_planner/core/services/api_client.dart';
+import 'package:family_planner/features/subscription/data/models/admin_storage_stats.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
 
 class AdminSubscriptionRepository {
@@ -22,6 +23,14 @@ class AdminSubscriptionRepository {
       },
     );
     return AdminUserListResult.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// 저장 사용량 분포 (등급별 요약 + 구간별 인원)
+  Future<AdminStorageStats> getStorageStats() async {
+    final response = await ApiClient.instance.dio.get(
+      '/subscription/admin/storage-stats',
+    );
+    return AdminStorageStats.fromJson(response.data as Map<String, dynamic>);
   }
 
   Future<AdminUserDto> getUser(String userId) async {

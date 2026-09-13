@@ -467,7 +467,7 @@ class _PlanComparison extends StatelessWidget {
 
 // ── 다이어리 첨부 용량 한도표 ────────────────────────────────
 
-/// 등급별 첨부 용량을 나란히 보여준다.
+/// 등급별 첨부 용량과 그룹 수 한도를 나란히 보여준다.
 ///
 /// 수치는 **서버가 내려주는 값**을 그대로 쓴다 (앱 하드코딩 금지 — 한도 조정에
 /// 앱 재배포가 필요해지면 출시 후 조정이 불가능해진다).
@@ -490,7 +490,7 @@ class _MediaQuotaTable extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.subscription_quota_section_title,
+          l10n.subscription_limits_section_title,
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: AppSizes.spaceS),
@@ -568,6 +568,7 @@ class _QuotaPlanRow extends StatelessWidget {
             [
               l10n.subscription_quota_per_file(formatBytes(plan.perFileBytes)),
               _videoLabel(l10n),
+              l10n.subscription_quota_groups(plan.maxGroups),
             ].join(' · '),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,

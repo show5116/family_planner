@@ -4,6 +4,7 @@ import 'package:family_planner/features/settings/permissions/presentation/screen
 import 'package:family_planner/features/settings/roles/presentation/screens/common_role_list_screen.dart';
 import 'package:family_planner/features/settings/roles/presentation/screens/common_role_permissions_screen.dart';
 import 'package:family_planner/features/subscription/data/models/admin_user_dto.dart';
+import 'package:family_planner/features/subscription/presentation/screens/admin_storage_stats_screen.dart';
 import 'package:family_planner/features/subscription/presentation/screens/admin_user_list_screen.dart';
 import 'package:family_planner/features/subscription/presentation/screens/admin_user_detail_screen.dart';
 import 'package:family_planner/features/settings/groups/presentation/screens/admin_report_list_screen.dart';
@@ -45,6 +46,11 @@ List<RouteBase> getAdminRoutes() {
         final user = state.extra as AdminUserDto;
         return AdminUserDetailScreen(user: user);
       },
+    ),
+    GoRoute(
+      path: AppRoutes.adminStorageStats,
+      name: 'adminStorageStats',
+      builder: (context, state) => const AdminStorageStatsScreen(),
     ),
     GoRoute(
       path: AppRoutes.adminGroupReports,

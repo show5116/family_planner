@@ -20,6 +20,7 @@ import 'package:family_planner/features/notification/data/models/notification_mo
 /// - savings: { "savingsId": "uuid" }
 /// - system (공지사항): { "announcementId": "uuid" }
 /// - system (QnA): { "questionId": "uuid" }
+/// - system (구독 만료 임박): { "action": "view_subscription" }
 class NotificationNavigationService {
   NotificationNavigationService._();
 
@@ -237,6 +238,13 @@ class NotificationNavigationService {
     BuildContext context,
     Map<String, dynamic> data,
   ) {
+    // 구독 만료 임박 — 자동 갱신을 끈 사용자에게 만료 7일 전 발송된다.
+    // 남은 기간 안에 갱신할 수 있도록 구독 화면으로 바로 보낸다.
+    if (data['action'] == 'view_subscription') {
+      context.push(AppRoutes.subscription);
+      return true;
+    }
+
     // 공지사항
     final announcementId = data['announcementId'] as String?;
     if (announcementId != null) {
@@ -283,6 +291,8 @@ class NotificationNavigationService {
         return NotificationCategory.weather;
       case 'FRIDGE':
         return NotificationCategory.fridge;
+      case 'ROUTINE':
+        return NotificationCategory.routine;
       default:
         return null;
     }
